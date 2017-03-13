@@ -19,7 +19,7 @@ func NewCmdRun() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "run",
-		Short: "Run Kubernetes 3rd Party Controller",
+		Short: "Run Snapshotter",
 		Run: func(cmd *cobra.Command, args []string) {
 			config, err := clientcmd.BuildConfigFromFlags(masterURL, kubeconfigPath)
 			if err != nil {
@@ -30,7 +30,6 @@ func NewCmdRun() *cobra.Command {
 			defer runtime.HandleCrash()
 
 			w := controller.New(config)
-			fmt.Println("Starting tillerc...")
 			w.RunAndHold()
 		},
 	}
