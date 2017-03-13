@@ -4,18 +4,23 @@ import (
 	"time"
 
 	tcs "github.com/k8sdb/apimachinery/client/clientset"
+	clientset "k8s.io/kubernetes/pkg/client/clientset_generated/internalclientset"
 	rest "k8s.io/kubernetes/pkg/client/restclient"
 )
 
 type Controller struct {
-	Client tcs.ExtensionInterface
+	// Kubernetes client to apiserver
+	Client clientset.Interface
+	// ThirdPartyExtension client to apiserver
+	ExtClient tcs.ExtensionInterface
 	// sync time to sync the list.
 	SyncPeriod time.Duration
 }
 
 func New(c *rest.Config) *Controller {
 	return &Controller{
-		Client:     tcs.NewExtensionsForConfigOrDie(c),
+		Client:     clientset.NewForConfigOrDie(c),
+		ExtClient:  tcs.NewExtensionsForConfigOrDie(c),
 		SyncPeriod: time.Minute * 2,
 	}
 }
