@@ -1,5 +1,5 @@
-hash: c2d338e2e5075d2082cb16b90abebe775c59c0e9dcc28661d3c292b26bb5b017
-updated: 2017-03-11T19:22:11.657755286-08:00
+hash: db091f42ea0f6af62567318113f6afe2f17596fe940e4cbbc197aa2900bcbe66
+updated: 2017-03-13T15:21:02.093235153+06:00
 imports:
 - name: cloud.google.com/go
   version: 3b1ae45394a234c385be014e9a488f2bb6eef821
@@ -192,7 +192,7 @@ imports:
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/kubernetes
-  version: 7243c69eb523aa4377bce883e7c0dd76b84709a1
+  version: 00a1fb254bd8e5235575fba1398b958943e39078
   subpackages:
   - pkg/api
   - pkg/api/errors
@@ -238,7 +238,6 @@ imports:
   - pkg/apis/storage/install
   - pkg/apis/storage/v1beta1
   - pkg/auth/user
-  - pkg/client/cache
   - pkg/client/clientset_generated/release_1_5
   - pkg/client/clientset_generated/release_1_5/fake
   - pkg/client/clientset_generated/release_1_5/typed/apps/v1beta1
@@ -293,7 +292,6 @@ imports:
   - pkg/util
   - pkg/util/cert
   - pkg/util/clock
-  - pkg/util/diff
   - pkg/util/errors
   - pkg/util/flowcontrol
   - pkg/util/framer

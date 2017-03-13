@@ -18,11 +18,12 @@ var (
 // Adds the list of known types to api.Scheme.
 func v1addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(V1beta1SchemeGroupVersion,
-		&Certificate{},
-		&CertificateList{},
+		&DatabaseSnapshot{},
+		&DatabaseSnapshotList{},
+		&DeletedDatabase{},
+		&DeletedDatabaseList{},
 
 		&v1.ListOptions{},
-		&v1.DeleteOptions{},
 	)
 	versionedwatch.AddToGroupVersion(scheme, V1beta1SchemeGroupVersion)
 	return nil

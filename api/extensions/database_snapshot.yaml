@@ -1,0 +1,7 @@
+metadata:
+  name: database-snapshot.k8sdb.com
+apiVersion: extensions/v1beta1
+kind: ThirdPartyResource
+description: "Snapshot of k8sdb databases"
+versions:
+  - name: v1beta1

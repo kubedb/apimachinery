@@ -7,55 +7,68 @@ import (
 	"k8s.io/kubernetes/pkg/api/unversioned"
 )
 
-type Certificate struct {
+type DatabaseSnapshot struct {
 	unversioned.TypeMeta `json:",inline,omitempty"`
 	api.ObjectMeta       `json:"metadata,omitempty"`
-	Spec                 CertificateSpec   `json:"spec,omitempty"`
-	Status               CertificateStatus `json:"status,omitempty"`
+	Spec                 DatabaseSnapshotSpec   `json:"spec,omitempty"`
+	Status               DatabaseSnapshotStatus `json:"status,omitempty"`
 }
 
-type CertificateSpec struct {
-	// Tries to obtain a single certificate using all domains passed into Domains.
-	// The first domain in domains is used for the CommonName field of the certificate, all other
-	// domains are added using the Subject Alternate Names extension.
-	Domains []string `json:"domains,omitempty"`
-
-	// DNS Provider.
-	Provider string `json:"provider,omitempty"`
-	Email    string `json:"email,omitempty"`
-
-	// This is the ingress Reference that will be used if provider is http
-	HTTPProviderIngressReference api.ObjectReference `json:"httpProviderIngressReference,omitempty"`
-
-	// ProviderCredentialSecretName is used to create the acme client, that will do
-	// needed processing in DNS.
-	ProviderCredentialSecretName string `json:"providerCredentialSecretName,omitempty"`
-
-	// Secret contains ACMEUser information. If empty tries to find an Secret via domains
-	// if not found create an ACMEUser and stores as a secret.
-	ACMEUserSecretName string `json:"acmeUserSecretName"`
-
-	// ACME server that will be used to obtain this certificate.
-	ACMEServerURL string `json:"acmeStagingURL"`
+type DatabaseSnapshotSpec struct {
+	// Database name
+	DatabaseName string `json:"databaseName,omitempty"`
+	// Cloud credential secret
+	CredSecret *api.SecretVolumeSource `json:"credSecret,omitempty"`
+	// Database authentication secret
+	// +optional
+	AuthSecret *api.SecretVolumeSource `json:"authSecret,omitempty"`
+	// Cloud bucket name
+	BucketName string `json:"bucketName,omitempty"`
+	// Database snapshot id
+	// +optional
+	SnapshotID string `json:"snapshotID,omitempty"`
 }
 
-type CertificateStatus struct {
-	CertificateObtained bool                   `json:"certificateObtained"`
-	Message             string                 `json:"message"`
-	Created             time.Time              `json:"created,omitempty"`
-	ACMEUserSecretName  string                 `json:"acmeUserSecretName,omitempty"`
-	Details             ACMECertificateDetails `json:"details,omitempty"`
+type DatabaseSnapshotStatus struct {
+	Message string    `json:"message,omitempty"`
+	Created time.Time `json:"created,omitempty"`
+	Success time.Time `json:"success,omitempty"`
 }
 
-type ACMECertificateDetails struct {
-	Domain        string `json:"domain"`
-	CertURL       string `json:"certUrl"`
-	CertStableURL string `json:"certStableUrl"`
-	AccountRef    string `json:"accountRef,omitempty"`
-}
-
-type CertificateList struct {
+type DatabaseSnapshotList struct {
 	unversioned.TypeMeta `json:",inline"`
 	unversioned.ListMeta `json:"metadata,omitempty"`
-	Items                []Certificate `json:"items,omitempty"`
+	// Items is a list of DatabaseSnapshot TPR objects
+	Items []DatabaseSnapshot `json:"items,omitempty"`
+}
+
+type DeletedDatabase struct {
+	unversioned.TypeMeta `json:",inline,omitempty"`
+	api.ObjectMeta       `json:"metadata,omitempty"`
+	Spec                 DeletedDatabaseSpec   `json:"spec,omitempty"`
+	Status               DeletedDatabaseStatus `json:"status,omitempty"`
+}
+
+type DeletedDatabaseSpec struct {
+	// Database name
+	DatabaseName string `json:"databaseName,omitempty"`
+	// Database authentication secret
+	// +optional
+	AuthSecret *api.SecretVolumeSource `json:"authSecret,omitempty"`
+	// If true, invoke destroy operation
+	// +optional
+	Destroy *bool `json:"destroy,omitempty"`
+}
+
+type DeletedDatabaseStatus struct {
+	Message string    `json:"message,omitempty"`
+	Created time.Time `json:"created,omitempty"`
+	Success time.Time `json:"success,omitempty"`
+}
+
+type DeletedDatabaseList struct {
+	unversioned.TypeMeta `json:",inline"`
+	unversioned.ListMeta `json:"metadata,omitempty"`
+	// Items is a list of DatabaseSnapshot TPR objects
+	Items []DeletedDatabase `json:"items,omitempty"`
 }
