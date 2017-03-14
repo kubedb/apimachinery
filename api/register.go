@@ -30,10 +30,18 @@ var (
 // Adds the list of known types to api.Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
+		// DatabaseSnapshot
 		&DatabaseSnapshot{},
 		&DatabaseSnapshotList{},
+		// DeletedDatabase
 		&DeletedDatabase{},
 		&DeletedDatabaseList{},
+		// k8sdb Elastic
+		&Elastic{},
+		&ElasticList{},
+		// k8sdb Postgres
+		&Postgres{},
+		&PostgresList{},
 
 		&api.ListOptions{},
 	)
@@ -45,3 +53,9 @@ func (obj *DatabaseSnapshotList) GetObjectKind() schema.ObjectKind { return &obj
 
 func (obj *DeletedDatabase) GetObjectKind() schema.ObjectKind     { return &obj.TypeMeta }
 func (obj *DeletedDatabaseList) GetObjectKind() schema.ObjectKind { return &obj.TypeMeta }
+
+func (obj *Elastic) GetObjectKind() schema.ObjectKind     { return &obj.TypeMeta }
+func (obj *ElasticList) GetObjectKind() schema.ObjectKind { return &obj.TypeMeta }
+
+func (obj *Postgres) GetObjectKind() schema.ObjectKind     { return &obj.TypeMeta }
+func (obj *PostgresList) GetObjectKind() schema.ObjectKind { return &obj.TypeMeta }

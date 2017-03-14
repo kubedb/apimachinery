@@ -38,3 +38,11 @@ func (m *FakeExtensionClient) DatabaseSnapshots(ns string) client.DatabaseSnapsh
 func (m *FakeExtensionClient) DeletedDatabases(ns string) client.DeletedDatabaseInterface {
 	return &FakeDeletedDatabase{m.Fake, ns}
 }
+
+func (m *FakeExtensionClient) Elastic(ns string) client.ElasticInterface {
+	return &FakeElastic{m.Fake, ns}
+}
+
+func (m *FakeExtensionClient) Postgres(ns string) client.PostgresInterface {
+	return &FakePostgres{m.Fake, ns}
+}
