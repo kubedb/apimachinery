@@ -18,10 +18,18 @@ var (
 // Adds the list of known types to api.Scheme.
 func v1addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(V1beta1SchemeGroupVersion,
+		// DatabaseSnapshot
 		&DatabaseSnapshot{},
 		&DatabaseSnapshotList{},
+		// DeletedDatabase
 		&DeletedDatabase{},
 		&DeletedDatabaseList{},
+		// k8sdb Elastic
+		&Elastic{},
+		&ElasticList{},
+		// k8sdb Postgres
+		&Postgres{},
+		&PostgresList{},
 
 		&v1.ListOptions{},
 	)
