@@ -16,6 +16,8 @@ type ExtensionInterface interface {
 	RESTClient() rest.Interface
 	DatabaseSnapshotNamespacer
 	DeletedDatabaseNamespacer
+	ElasticNamespacer
+	PostgresNamespacer
 }
 
 // AppsCodeExtensionsClient is used to interact with experimental Kubernetes features.
@@ -31,6 +33,14 @@ func (a *AppsCodeExtensionsClient) DatabaseSnapshot(namespace string) DatabaseSn
 
 func (a *AppsCodeExtensionsClient) DeletedDatabase(namespace string) DeletedDatabaseInterface {
 	return newDeletedDatabase(a, namespace)
+}
+
+func (a *AppsCodeExtensionsClient) Elastic(namespace string) ElasticInterface {
+	return newElastic(a, namespace)
+}
+
+func (a *AppsCodeExtensionsClient) Postgres(namespace string) PostgresInterface {
+	return newPostgres(a, namespace)
 }
 
 // NewAppsCodeExtensions creates a new AppsCodeExtensionsClient for the given config. This client
