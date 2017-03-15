@@ -1,8 +1,6 @@
 package api
 
 import (
-	"time"
-
 	"k8s.io/kubernetes/pkg/api"
 	"k8s.io/kubernetes/pkg/api/unversioned"
 )
@@ -22,9 +20,12 @@ type DatabaseSnapshotSpec struct {
 }
 
 type DatabaseSnapshotStatus struct {
-	Message string    `json:"message,omitempty"`
-	Created time.Time `json:"created,omitempty"`
-	Success time.Time `json:"success,omitempty"`
+	StartTime      *unversioned.Time `json:"startTime,omitempty"`
+	CompletionTime *unversioned.Time `json:"completionTime,omitempty"`
+	Active         *bool             `json:"active,omitempty"`
+	Succeeded      *bool             `json:"succeeded,omitempty"`
+	Failed         *bool             `json:"failed,omitempty"`
+	Message        string            `json:"message,omitempty"`
 }
 
 type DatabaseSnapshotList struct {

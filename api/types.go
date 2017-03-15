@@ -31,4 +31,6 @@ type BackupSpec struct {
 	// Database snapshot id
 	// +optional
 	SnapshotID string `json:"snapshotID,omitempty"`
+	// Backup storage cloud provider
+	CloudProvider string `json:"cloudProvider,omitempty"`
 }
