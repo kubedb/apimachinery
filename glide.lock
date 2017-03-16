@@ -1,5 +1,5 @@
 hash: db091f42ea0f6af62567318113f6afe2f17596fe940e4cbbc197aa2900bcbe66
-updated: 2017-03-16T12:07:25.979479208+06:00
+updated: 2017-03-16T16:38:23.1915658+06:00
 imports:
 - name: cloud.google.com/go
   version: 3b1ae45394a234c385be014e9a488f2bb6eef821
@@ -356,11 +356,5 @@ imports:
   - third_party/forked/golang/reflect
   - third_party/forked/golang/template
 testImports:
-- name: github.com/pmezard/go-difflib
-  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
-  subpackages:
-  - difflib
 - name: github.com/stretchr/testify
   version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
-  subpackages:
-  - assert
