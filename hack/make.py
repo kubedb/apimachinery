@@ -89,11 +89,9 @@ def lint():
     call('golint ./cmd/...')
     call('golint ./pkg/...')
 
-def gen_extpoints():
-    die(call('go-extpoints pkg/provider/extpoints'))
 
 def gen():
-    gen_extpoints()
+    return
 
 
 def build_cmd(name):

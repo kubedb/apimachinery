@@ -16,16 +16,25 @@ type DatabaseSnapshotSpec struct {
 	// Database name
 	DatabaseName string `json:"databaseName,omitempty"`
 	// Backup Spec
-	Backup BackupSpec `json:"backup,omitempty"`
+	SnapshotSpec `json:"backup,omitempty"`
 }
+
+type SnapshoStatus string
+
+const (
+	// used for DatabaseSnapshots that are currently running
+	SnapshotRunning SnapshoStatus = "Running"
+	// used for DatabaseSnapshots that are Successed
+	SnapshotSuccessed SnapshoStatus = "Successed"
+	// used for PersistentVolumes that are Failed
+	SnapshotFailed SnapshoStatus = "Failed"
+)
 
 type DatabaseSnapshotStatus struct {
 	StartTime      *unversioned.Time `json:"startTime,omitempty"`
 	CompletionTime *unversioned.Time `json:"completionTime,omitempty"`
-	Active         *bool             `json:"active,omitempty"`
-	Succeeded      *bool             `json:"succeeded,omitempty"`
-	Failed         *bool             `json:"failed,omitempty"`
-	Message        string            `json:"message,omitempty"`
+	Status         SnapshoStatus     `json:"status,omitempty"`
+	Reason         *string           `json:"reason,omitempty"`
 }
 
 type DatabaseSnapshotList struct {
