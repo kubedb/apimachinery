@@ -136,30 +136,27 @@ func (w *Controller) CheckDatabaseSnapshotJob(snapshot *tapi.DatabaseSnapshot, j
 		log.Errorln(err)
 	}
 
-	_snapshot, err := w.ExtClient.DatabaseSnapshot(snapshot.Namespace).Get(snapshot.Name)
-	if err != nil {
+	if snapshot, err = w.ExtClient.DatabaseSnapshot(snapshot.Namespace).Get(snapshot.Name); err != nil {
 		log.Errorln(err)
 		return
 	}
 
 	unversionedNow = unversioned.Now()
-	_snapshot.Status.CompletionTime = &unversionedNow
-
+	snapshot.Status.CompletionTime = &unversionedNow
 	if jobSuccess {
-		_snapshot.Status.Status = tapi.SnapshotSuccessed
+		snapshot.Status.Status = tapi.SnapshotSuccessed
 	} else {
-		_snapshot.Status.Status = tapi.SnapshotFailed
+		snapshot.Status.Status = tapi.SnapshotFailed
 	}
 
-	delete(_snapshot.Labels, LabelSnapshotActive)
+	delete(snapshot.Labels, LabelSnapshotActive)
 
-	if _, err := w.ExtClient.DatabaseSnapshot(_snapshot.Namespace).Update(_snapshot); err != nil {
+	if _, err := w.ExtClient.DatabaseSnapshot(snapshot.Namespace).Update(snapshot); err != nil {
 		log.Errorln(err)
 	}
 }
 
 func (w *Controller) CheckStatefulSets(statefulSet *kapps.StatefulSet, checkTime float64) error {
-
 	podName := fmt.Sprintf("%v-%v", statefulSet.Name, 0)
 
 	podReady := false
@@ -187,7 +184,6 @@ func (w *Controller) CheckStatefulSets(statefulSet *kapps.StatefulSet, checkTime
 		time.Sleep(time.Minute)
 		now = time.Now()
 	}
-
 	if !podReady {
 		return errors.New("Database fails to be Ready")
 	}
@@ -267,6 +263,5 @@ func (w *Controller) CheckBucketAccess(bucketName, secretName, namespace string)
 	if err := container.RemoveItem(item.ID()); err != nil {
 		return err
 	}
-
 	return nil
 }
