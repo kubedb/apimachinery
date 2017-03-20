@@ -15,8 +15,8 @@ type DatabaseSnapshot struct {
 type DatabaseSnapshotSpec struct {
 	// Database name
 	DatabaseName string `json:"databaseName,omitempty"`
-	// Backup Spec
-	SnapshotSpec `json:"backup,omitempty"`
+	// Snapshot Spec
+	SnapshotSpec `json:",inline,omitempty"`
 }
 
 type SnapshoStatus string
