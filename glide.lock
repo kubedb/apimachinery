@@ -1,5 +1,5 @@
 hash: db091f42ea0f6af62567318113f6afe2f17596fe940e4cbbc197aa2900bcbe66
-updated: 2017-03-13T17:54:29.017049273+06:00
+updated: 2017-03-20T11:52:55.56343413+06:00
 imports:
 - name: cloud.google.com/go
   version: 3b1ae45394a234c385be014e9a488f2bb6eef821
@@ -14,6 +14,38 @@ imports:
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
   subpackages:
   - golog
+- name: github.com/aws/aws-sdk-go
+  version: c924893c38ecc04b18d7aab8a7aa561cb8b4c4cc
+  subpackages:
+  - aws
+  - aws/awserr
+  - aws/awsutil
+  - aws/client
+  - aws/client/metadata
+  - aws/corehandlers
+  - aws/credentials
+  - aws/credentials/ec2rolecreds
+  - aws/defaults
+  - aws/ec2metadata
+  - aws/request
+  - aws/session
+  - private/endpoints
+  - private/protocol/ec2query
+  - private/protocol/json/jsonutil
+  - private/protocol/jsonrpc
+  - private/protocol/query
+  - private/protocol/query/queryutil
+  - private/protocol/rest
+  - private/protocol/restxml
+  - private/protocol/xml/xmlutil
+  - private/signer/v4
+  - private/waiter
+  - service/autoscaling
+  - service/ec2
+  - service/ecr
+  - service/elb
+  - service/route53
+  - service/s3
 - name: github.com/blang/semver
   version: 31b736133b98f26d5e078ec9eb591666edfd091f
 - name: github.com/coreos/go-oidc
@@ -48,6 +80,8 @@ imports:
   - swagger
 - name: github.com/ghodss/yaml
   version: 73d445a93680fa1a78ae23a5839bad48f32ba1ee
+- name: github.com/go-ini/ini
+  version: 2e44421e256d82ebbf3d4d4fcabe8930b905eff3
 - name: github.com/go-openapi/jsonpointer
   version: 46af16f9f7b149af66e5d1bd010e3574dc06de98
 - name: github.com/go-openapi/jsonreference
@@ -93,12 +127,19 @@ imports:
   - proto
 - name: github.com/google/gofuzz
   version: bbcb9da2d746f8bdbd6a936686a0a6067ada0ec5
+- name: github.com/graymeta/stow
+  version: 0f16e170afc5e1b89434469a3b52a81f792c9038
+  subpackages:
+  - google
+  - s3
 - name: github.com/howeyc/gopass
   version: 3ca23474a7c7203e0a0a070fd33508f6efdb9b3d
 - name: github.com/imdario/mergo
   version: 6633656539c1639d9d78127b7d47c622b5d7b6dc
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
+- name: github.com/jmespath/go-jmespath
+  version: 3433f3ea46d9f8019119e7dd41274e112a2359a9
 - name: github.com/jonboulle/clockwork
   version: 72f9bd7c4e0c2a40055ab3d0f09654f730cce982
 - name: github.com/juju/ratelimit
@@ -111,6 +152,8 @@ imports:
   - jwriter
 - name: github.com/pborman/uuid
   version: ca53cad383cad2479bbba7f7a1a05797ec1386e4
+- name: github.com/pkg/errors
+  version: a22138067af1c4942683050411a841ade67fe1eb
 - name: github.com/PuerkitoBio/purell
   version: 8a290539e2e8629dbc4e6bad948158f790ec31f4
 - name: github.com/PuerkitoBio/urlesc
@@ -175,6 +218,17 @@ imports:
   - unicode/bidi
   - unicode/norm
   - width
+- name: google.golang.org/api
+  version: a69f0f19d246419bb931b0ac8f4f8d3f3e6d4feb
+  subpackages:
+  - cloudmonitoring/v2beta2
+  - compute/v1
+  - container/v1
+  - dns/v1
+  - gensupport
+  - googleapi
+  - googleapi/internal/uritemplates
+  - storage/v1
 - name: google.golang.org/appengine
   version: 4f7eeb5305a4ba1966344836ba4af9996b7b4e05
   subpackages:
