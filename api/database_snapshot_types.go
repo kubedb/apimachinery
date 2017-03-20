@@ -24,8 +24,8 @@ type SnapshoStatus string
 const (
 	// used for DatabaseSnapshots that are currently running
 	SnapshotRunning SnapshoStatus = "Running"
-	// used for DatabaseSnapshots that are Successed
-	SnapshotSuccessed SnapshoStatus = "Successed"
+	// used for DatabaseSnapshots that are Succeeded
+	SnapshotSuccessed SnapshoStatus = "Succeeded"
 	// used for PersistentVolumes that are Failed
 	SnapshotFailed SnapshoStatus = "Failed"
 )
@@ -34,7 +34,7 @@ type DatabaseSnapshotStatus struct {
 	StartTime      *unversioned.Time `json:"startTime,omitempty"`
 	CompletionTime *unversioned.Time `json:"completionTime,omitempty"`
 	Status         SnapshoStatus     `json:"status,omitempty"`
-	Reason         *string           `json:"reason,omitempty"`
+	Reason         string            `json:"reason,omitempty"`
 }
 
 type DatabaseSnapshotList struct {

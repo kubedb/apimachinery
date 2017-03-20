@@ -25,7 +25,7 @@ type SnapshotSpec struct {
 	StorageSecret *api.SecretVolumeSource `json:"storageSecret,omitempty"`
 	// Database authentication secret
 	// +optional
-	AuthSecret *api.SecretVolumeSource `json:"authSecret,omitempty"`
+	DatabaseSecret *api.SecretVolumeSource `json:"databaseSecret,omitempty"`
 	// Cloud bucket name
 	BucketName string `json:"bucketName,omitempty"`
 }

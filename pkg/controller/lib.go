@@ -10,6 +10,7 @@ import (
 	"github.com/appscode/log"
 	"github.com/graymeta/stow"
 	_ "github.com/graymeta/stow/google"
+	_ "github.com/graymeta/stow/s3"
 	tapi "github.com/k8sdb/apimachinery/api"
 	kapi "k8s.io/kubernetes/pkg/api"
 	k8serr "k8s.io/kubernetes/pkg/api/errors"
@@ -17,6 +18,7 @@ import (
 	kapps "k8s.io/kubernetes/pkg/apis/apps"
 	"k8s.io/kubernetes/pkg/apis/batch"
 	"k8s.io/kubernetes/pkg/apis/extensions"
+	"k8s.io/kubernetes/pkg/labels"
 )
 
 func (w *Controller) EnsureDatabaseSnapshot() {
@@ -120,6 +122,22 @@ func (w *Controller) CheckDatabaseSnapshotJob(snapshot *tapi.DatabaseSnapshot, j
 
 		time.Sleep(time.Minute)
 		now = time.Now()
+	}
+
+	podList, err := w.Client.Core().Pods(job.Namespace).List(
+		kapi.ListOptions{
+			LabelSelector: labels.SelectorFromSet(job.Spec.Selector.MatchLabels),
+		},
+	)
+	if err != nil {
+		log.Errorln(err)
+		return
+	}
+
+	for _, pod := range podList.Items {
+		if err := w.Client.Core().Pods(pod.Namespace).Delete(pod.Name, nil); err != nil {
+			log.Errorln(err)
+		}
 	}
 
 	for _, volume := range job.Spec.Template.Spec.Volumes {
@@ -254,7 +272,7 @@ func (w *Controller) CheckBucketAccess(bucketName, secretName, namespace string)
 		return err
 	}
 
-	r := bytes.NewReader([]byte(""))
+	r := bytes.NewReader([]byte("CheckBucketAccess"))
 	item, err := container.Put(".k8sdb", r, r.Size(), nil)
 	if err != nil {
 		return err
