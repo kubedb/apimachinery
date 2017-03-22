@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	KindDatabaseSnapshot           = "DatabaseSnapshot"
-	ResourcePrefixDatabaseSnapshot = "database-snapshot"
-	ResourceTypeDatabaseSnapshot   = "databasesnapshots"
+	KindDatabaseSnapshot         = "DatabaseSnapshot"
+	ResourceNameDatabaseSnapshot = "database-snapshot"
+	ResourceTypeDatabaseSnapshot = "databasesnapshots"
 )
 
 type DatabaseSnapshot struct {

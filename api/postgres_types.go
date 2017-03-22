@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	KindPostgres           = "Postgres"
-	ResourcePrefixPostgres = "postgres"
-	ResourceTypePostgres   = "postgreses"
+	KindPostgres         = "Postgres"
+	ResourceNamePostgres = "postgres"
+	ResourceTypePostgres = "postgreses"
 )
 
 // Postgres defines a Postgres database.

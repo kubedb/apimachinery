@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	KindElastic           = "Elastic"
-	ResourcePrefixElastic = "elastic"
-	ResourceTypeElastic   = "elastics"
+	KindElastic         = "Elastic"
+	ResourceNameElastic = "elastic"
+	ResourceTypeElastic = "elastics"
 )
 
 // Elastic defines a Elasticsearch database.

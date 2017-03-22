@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	KindDeletedDatabase           = "DeletedDatabase"
-	ResourcePrefixDeletedDatabase = "deleted-database"
-	ResourceTypeDeletedDatabase   = "deleteddatabases"
+	KindDeletedDatabase         = "DeletedDatabase"
+	ResourceNameDeletedDatabase = "deleted-database"
+	ResourceTypeDeletedDatabase = "deleteddatabases"
 )
 
 type DeletedDatabase struct {
