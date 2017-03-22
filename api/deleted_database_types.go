@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	KindDeletedDatabase         = "DeletedDatabase"
+	ResourceKindDeletedDatabase = "DeletedDatabase"
 	ResourceNameDeletedDatabase = "deleted-database"
 	ResourceTypeDeletedDatabase = "deleteddatabases"
 )
