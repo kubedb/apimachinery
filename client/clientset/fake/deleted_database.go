@@ -14,7 +14,7 @@ type FakeDeletedDatabase struct {
 	ns   string
 }
 
-var deletedDatabaseResource = schema.GroupVersionResource{Group: "k8sdb.com", Version: "v1beta1", Resource: "deleteddatabases"}
+var deletedDatabaseResource = schema.GroupVersionResource{Group: "k8sdb.com", Version: "v1beta1", Resource: aci.ResourceTypeDeletedDatabase}
 
 // Get returns the DeletedDatabase by name.
 func (mock *FakeDeletedDatabase) Get(name string) (*aci.DeletedDatabase, error) {
