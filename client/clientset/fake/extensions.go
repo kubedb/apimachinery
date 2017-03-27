@@ -7,6 +7,7 @@ import (
 	testing "k8s.io/kubernetes/pkg/client/testing/core"
 	"k8s.io/kubernetes/pkg/runtime"
 	"k8s.io/kubernetes/pkg/watch"
+	rest "k8s.io/kubernetes/pkg/client/restclient"
 )
 
 type FakeExtensionClient struct {
@@ -31,11 +32,11 @@ func NewFakeExtensionClient(objects ...runtime.Object) *FakeExtensionClient {
 	return &FakeExtensionClient{&fakePtr}
 }
 
-func (m *FakeExtensionClient) DatabaseSnapshots(ns string) client.DatabaseSnapshotInterface {
+func (m *FakeExtensionClient) DatabaseSnapshot(ns string) client.DatabaseSnapshotInterface {
 	return &FakeDatabaseSnapshot{m.Fake, ns}
 }
 
-func (m *FakeExtensionClient) DeletedDatabases(ns string) client.DeletedDatabaseInterface {
+func (m *FakeExtensionClient) DeletedDatabase(ns string) client.DeletedDatabaseInterface {
 	return &FakeDeletedDatabase{m.Fake, ns}
 }
 
@@ -45,4 +46,11 @@ func (m *FakeExtensionClient) Elastic(ns string) client.ElasticInterface {
 
 func (m *FakeExtensionClient) Postgres(ns string) client.PostgresInterface {
 	return &FakePostgres{m.Fake, ns}
+}
+
+// RESTClient returns a RESTClient that is used to communicate
+// with API server by this client implementation.
+func (c *FakeExtensionClient) RESTClient() rest.Interface {
+	var ret *rest.RESTClient
+	return ret
 }
