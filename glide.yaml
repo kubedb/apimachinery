@@ -10,11 +10,11 @@ import:
   vcs: git
   version: v7.0.1-beta
 - package: github.com/Azure/go-autorest
-  version: e0c77ecbe74311e03f2a629834d2110f031f1453
+  version: v7.2.3
 - package: github.com/Azure/go-ansiterm
-  version: fa152c58bc15761d0200cb75fe958b89a9d4888e
+  version: 70b2c90b260171e829f1ebd7c17f600c11858dbe
 - package: github.com/aws/aws-sdk-go
-  version: v1.1.36
+  version: v1.6.10
 testImport:
 - package: github.com/stretchr/testify
   version: v1.1.4

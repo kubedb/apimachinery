@@ -1,5 +1,5 @@
-hash: 6b1b985eedc216b63451acc6948a5b1499414452b834bcfbfbbba5fe306f2fa3
-updated: 2017-03-28T01:40:53.513974153-07:00
+hash: 112ff0c1f30852b046458dfa7c33d5e4aeb40f23e4aa9d105055f80cd7a84466
+updated: 2017-03-28T15:02:26.258871555-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -15,7 +15,7 @@ imports:
   subpackages:
   - golog
 - name: github.com/aws/aws-sdk-go
-  version: 8f2725740345a0561fa09669f5f75f905404ef8b
+  version: 63ce630574a5ec05ecd8e8de5cea16332a5a684d
   subpackages:
   - aws
   - aws/awserr
@@ -25,27 +25,30 @@ imports:
   - aws/corehandlers
   - aws/credentials
   - aws/credentials/ec2rolecreds
+  - aws/credentials/endpointcreds
+  - aws/credentials/stscreds
   - aws/defaults
   - aws/ec2metadata
+  - aws/endpoints
   - aws/request
   - aws/session
-  - private/endpoints
+  - aws/signer/v4
   - private/protocol
   - private/protocol/query
   - private/protocol/query/queryutil
   - private/protocol/rest
   - private/protocol/restxml
   - private/protocol/xml/xmlutil
-  - private/signer/v4
   - private/waiter
   - service/s3
+  - service/sts
 - name: github.com/Azure/azure-sdk-for-go
   version: 0984e0641ae43b89283223034574d6465be93bf4
   vcs: git
 - name: github.com/Azure/go-ansiterm
-  version: fa152c58bc15761d0200cb75fe958b89a9d4888e
+  version: 70b2c90b260171e829f1ebd7c17f600c11858dbe
 - name: github.com/Azure/go-autorest
-  version: e0c77ecbe74311e03f2a629834d2110f031f1453
+  version: d7c034a8af24eda120dd6460bfcd6d9ed14e43ca
 - name: github.com/blang/semver
   version: 31b736133b98f26d5e078ec9eb591666edfd091f
 - name: github.com/coreos/go-oidc
@@ -246,7 +249,7 @@ imports:
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/kubernetes
-  version: 894ff23729bbc0055907dd3a496afb725396adda
+  version: 114f8911f9597be669a747ab72787e0bd74c9359
   subpackages:
   - pkg/api
   - pkg/api/errors
