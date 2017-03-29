@@ -94,7 +94,7 @@ func (w *Controller) CheckDatabaseSnapshotJob(snapshot *tapi.DatabaseSnapshot, j
 	snapshot.Status.Status = tapi.SnapshotRunning
 	snapshot.Labels[LabelSnapshotActive] = string(tapi.SnapshotRunning)
 	var err error
-	if snapshot, err = w.ExtClient.DatabaseSnapshot(snapshot.Namespace).Update(snapshot); err != nil {
+	if snapshot, err = w.ExtClient.DatabaseSnapshots(snapshot.Namespace).Update(snapshot); err != nil {
 		log.Errorln(err)
 	}
 
@@ -153,7 +153,7 @@ func (w *Controller) CheckDatabaseSnapshotJob(snapshot *tapi.DatabaseSnapshot, j
 		log.Errorln(err)
 	}
 
-	if snapshot, err = w.ExtClient.DatabaseSnapshot(snapshot.Namespace).Get(snapshot.Name); err != nil {
+	if snapshot, err = w.ExtClient.DatabaseSnapshots(snapshot.Namespace).Get(snapshot.Name); err != nil {
 		log.Errorln(err)
 		return
 	}
@@ -168,7 +168,7 @@ func (w *Controller) CheckDatabaseSnapshotJob(snapshot *tapi.DatabaseSnapshot, j
 
 	delete(snapshot.Labels, LabelSnapshotActive)
 
-	if _, err := w.ExtClient.DatabaseSnapshot(snapshot.Namespace).Update(snapshot); err != nil {
+	if _, err := w.ExtClient.DatabaseSnapshots(snapshot.Namespace).Update(snapshot); err != nil {
 		log.Errorln(err)
 	}
 }

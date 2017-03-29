@@ -4,15 +4,17 @@ import (
 	"github.com/k8sdb/apimachinery/client/clientset"
 	"k8s.io/kubernetes/pkg/api"
 	"k8s.io/kubernetes/pkg/apimachinery/registered"
+	rest "k8s.io/kubernetes/pkg/client/restclient"
 	testing "k8s.io/kubernetes/pkg/client/testing/core"
 	"k8s.io/kubernetes/pkg/runtime"
 	"k8s.io/kubernetes/pkg/watch"
-	rest "k8s.io/kubernetes/pkg/client/restclient"
 )
 
 type FakeExtensionClient struct {
 	*testing.Fake
 }
+
+var _ clientset.ExtensionInterface = &FakeExtensionClient{}
 
 func NewFakeExtensionClient(objects ...runtime.Object) *FakeExtensionClient {
 	o := testing.NewObjectTracker(api.Scheme, api.Codecs.UniversalDecoder())
@@ -32,19 +34,19 @@ func NewFakeExtensionClient(objects ...runtime.Object) *FakeExtensionClient {
 	return &FakeExtensionClient{&fakePtr}
 }
 
-func (m *FakeExtensionClient) DatabaseSnapshot(ns string) client.DatabaseSnapshotInterface {
+func (m *FakeExtensionClient) DatabaseSnapshots(ns string) clientset.DatabaseSnapshotInterface {
 	return &FakeDatabaseSnapshot{m.Fake, ns}
 }
 
-func (m *FakeExtensionClient) DeletedDatabase(ns string) client.DeletedDatabaseInterface {
+func (m *FakeExtensionClient) DeletedDatabases(ns string) clientset.DeletedDatabaseInterface {
 	return &FakeDeletedDatabase{m.Fake, ns}
 }
 
-func (m *FakeExtensionClient) Elastic(ns string) client.ElasticInterface {
+func (m *FakeExtensionClient) Elastics(ns string) clientset.ElasticInterface {
 	return &FakeElastic{m.Fake, ns}
 }
 
-func (m *FakeExtensionClient) Postgres(ns string) client.PostgresInterface {
+func (m *FakeExtensionClient) Postgreses(ns string) clientset.PostgresInterface {
 	return &FakePostgres{m.Fake, ns}
 }
 
