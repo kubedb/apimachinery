@@ -52,37 +52,6 @@ func (w *Controller) EnsureDatabaseSnapshot() {
 	}
 }
 
-func (w *Controller) EnsureDeletedDatabase() {
-	resourceName := tapi.ResourceNameDeletedDatabase + "." + tapi.V1beta1SchemeGroupVersion.Group
-
-	if _, err := w.Client.Extensions().ThirdPartyResources().Get(resourceName); err != nil {
-		if !k8serr.IsNotFound(err) {
-			log.Fatalln(err)
-		}
-	} else {
-		return
-	}
-
-	thirdPartyResource := &extensions.ThirdPartyResource{
-		TypeMeta: unversioned.TypeMeta{
-			APIVersion: "extensions/v1beta1",
-			Kind:       "ThirdPartyResource",
-		},
-		ObjectMeta: kapi.ObjectMeta{
-			Name: resourceName,
-		},
-		Versions: []extensions.APIVersion{
-			{
-				Name: tapi.V1beta1SchemeGroupVersion.Version,
-			},
-		},
-	}
-
-	if _, err := w.Client.Extensions().ThirdPartyResources().Create(thirdPartyResource); err != nil {
-		log.Fatalln(err)
-	}
-}
-
 const (
 	LabelSnapshotActive = "elastic.k8sdb.com/status"
 )

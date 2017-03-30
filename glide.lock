@@ -1,5 +1,5 @@
 hash: 112ff0c1f30852b046458dfa7c33d5e4aeb40f23e4aa9d105055f80cd7a84466
-updated: 2017-03-28T15:02:26.258871555-07:00
+updated: 2017-03-30T17:21:44.715246216+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -9,7 +9,9 @@ imports:
 - name: github.com/appscode/go
   version: c8deaa7e2fdb25334d9d1f8589a13183703c7158
   subpackages:
+  - runtime
   - version
+  - wait
 - name: github.com/appscode/log
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
   subpackages:
@@ -224,14 +226,15 @@ imports:
 - name: google.golang.org/api
   version: a69f0f19d246419bb931b0ac8f4f8d3f3e6d4feb
   subpackages:
-  - cloudmonitoring/v2beta2
   - compute/v1
   - container/v1
   - dns/v1
   - gensupport
-  - googleapi
-  - googleapi/internal/uritemplates
   - storage/v1
+- name: google.golang.org/api/googleapi
+  version: a69f0f19d246419bb931b0ac8f4f8d3f3e6d4feb
+  subpackages:
+  - internal/uritemplates
 - name: google.golang.org/appengine
   version: 4f7eeb5305a4ba1966344836ba4af9996b7b4e05
   subpackages:
@@ -249,7 +252,7 @@ imports:
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/kubernetes
-  version: 114f8911f9597be669a747ab72787e0bd74c9359
+  version: ea8f6637b639246faa14a8d5c6f864100fcb77a9
   subpackages:
   - pkg/api
   - pkg/api/errors
@@ -298,6 +301,7 @@ imports:
   - pkg/apis/storage/install
   - pkg/apis/storage/v1beta1
   - pkg/auth/user
+  - pkg/client/cache
   - pkg/client/clientset_generated/internalclientset
   - pkg/client/clientset_generated/internalclientset/typed/apps/internalversion
   - pkg/client/clientset_generated/internalclientset/typed/authentication/internalversion
@@ -341,6 +345,7 @@ imports:
   - pkg/util/cert
   - pkg/util/clock
   - pkg/util/config
+  - pkg/util/diff
   - pkg/util/errors
   - pkg/util/flowcontrol
   - pkg/util/framer
