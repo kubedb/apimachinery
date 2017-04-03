@@ -24,7 +24,7 @@ import (
 type Snapshotter interface {
 	Validate(*tapi.DatabaseSnapshot) error
 	GetDatabase(*tapi.DatabaseSnapshot) (runtime.Object, error)
-	GetSnapshotJob(*tapi.DatabaseSnapshot) (*kbatch.Job, error)
+	GetSnapshotter(*tapi.DatabaseSnapshot) (*kbatch.Job, error)
 	DestroySnapshot(*tapi.DatabaseSnapshot) error
 }
 
@@ -154,7 +154,7 @@ func (c *DatabaseSnapshotController) create(dbSnapshot *tapi.DatabaseSnapshot) {
 		runtimeObj, dbSnapshot,
 	)
 
-	job, err := c.snapshoter.GetSnapshotJob(dbSnapshot)
+	job, err := c.snapshoter.GetSnapshotter(dbSnapshot)
 	if err != nil {
 		message := fmt.Sprintf(`Failed to take snapshot. Reason: %v`, err)
 		c.eventRecorder.PushEvent(
