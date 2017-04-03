@@ -25,7 +25,7 @@ type Snapshotter interface {
 	Validate(*tapi.DatabaseSnapshot) error
 	GetDatabaseRuntimeObject(*tapi.DatabaseSnapshot) (runtime.Object, error)
 	GetSnapshotObjects(*tapi.DatabaseSnapshot) (*kbatch.Job, error)
-	Destroy(*tapi.DatabaseSnapshot) error
+	DestroySnapshot(*tapi.DatabaseSnapshot) error
 }
 
 type DatabaseSnapshotController struct {
@@ -185,7 +185,7 @@ func (c *DatabaseSnapshotController) delete(dbSnapshot *tapi.DatabaseSnapshot) {
 		c.eventRecorder.PushEvent(kapi.EventTypeNormal, eventer.EventReasonDestroying, message, dbSnapshot)
 	}
 
-	if err := c.snapshoter.Destroy(dbSnapshot); err != nil {
+	if err := c.snapshoter.DestroySnapshot(dbSnapshot); err != nil {
 		if runtimeObj != nil {
 			message := fmt.Sprintf(`Failed to  destroying. Reason: %v`, err)
 			c.eventRecorder.PushEvent(
