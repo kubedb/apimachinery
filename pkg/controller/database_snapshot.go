@@ -207,8 +207,8 @@ func (c *DatabaseSnapshotController) delete(dbSnapshot *tapi.DatabaseSnapshot) {
 func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.DatabaseSnapshot, jobName string, checkDuration time.Duration) {
 	unversionedNow := unversioned.Now()
 	dbSnapshot.Status.StartTime = &unversionedNow
-	dbSnapshot.Status.Status = tapi.SnapshotRunning
-	dbSnapshot.Labels[LabelSnapshotStatus] = string(tapi.SnapshotRunning)
+	dbSnapshot.Status.Status = tapi.StatusSnapshotRunning
+	dbSnapshot.Labels[LabelSnapshotStatus] = string(tapi.StatusSnapshotRunning)
 	var err error
 	if dbSnapshot, err = c.extClient.DatabaseSnapshots(dbSnapshot.Namespace).Update(dbSnapshot); err != nil {
 		message := fmt.Sprintf(`Failed to update DatabaseSnapshot. Reason: %v`, err)
@@ -294,9 +294,9 @@ func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.D
 	unversionedNow = unversioned.Now()
 	dbSnapshot.Status.CompletionTime = &unversionedNow
 	if jobSuccess {
-		dbSnapshot.Status.Status = tapi.SnapshotSuccessed
+		dbSnapshot.Status.Status = tapi.StatusSnapshotSuccessed
 	} else {
-		dbSnapshot.Status.Status = tapi.SnapshotFailed
+		dbSnapshot.Status.Status = tapi.StatusSnapshotFailed
 	}
 
 	delete(dbSnapshot.Labels, LabelSnapshotStatus)
