@@ -1,24 +1,26 @@
 package controller
 
 import (
+	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/appscode/go/wait"
 	"github.com/appscode/log"
 	tapi "github.com/k8sdb/apimachinery/api"
 	tcs "github.com/k8sdb/apimachinery/client/clientset"
+	"github.com/k8sdb/apimachinery/pkg/eventer"
 	kapi "k8s.io/kubernetes/pkg/api"
 	k8serr "k8s.io/kubernetes/pkg/api/errors"
 	"k8s.io/kubernetes/pkg/api/unversioned"
 	"k8s.io/kubernetes/pkg/apis/extensions"
 	"k8s.io/kubernetes/pkg/client/cache"
 	clientset "k8s.io/kubernetes/pkg/client/clientset_generated/internalclientset"
-	"reflect"
 )
 
 type Deleter interface {
 	// Check Database TPR
-	Exists(*tapi.DeletedDatabase) bool
+	Exists(*tapi.DeletedDatabase) (bool, error)
 	// Delete operation
 	Delete(*tapi.DeletedDatabase) error
 	// Destroy operation
@@ -34,6 +36,8 @@ type DeletedDatabaseController struct {
 	deleter Deleter
 	// ListerWatcher
 	lw *cache.ListWatch
+	// Event Recorder
+	eventRecorder eventer.EventRecorderInterface
 	// sync time to sync the list.
 	syncPeriod time.Duration
 }
@@ -48,11 +52,12 @@ func NewDeletedDbController(
 ) *DeletedDatabaseController {
 	// return new DeletedDatabase Controller
 	return &DeletedDatabaseController{
-		client:     client,
-		extClient:  extClient,
-		deleter:    deleter,
-		lw:         lw,
-		syncPeriod: syncPeriod,
+		client:        client,
+		extClient:     extClient,
+		deleter:       deleter,
+		lw:            lw,
+		eventRecorder: eventer.NewEventRecorder(client, "DeletedDatabase Controller"),
+		syncPeriod:    syncPeriod,
 	}
 }
 
@@ -131,76 +136,70 @@ func (c *DeletedDatabaseController) watch() {
 
 func (c *DeletedDatabaseController) create(deletedDb *tapi.DeletedDatabase) {
 	// Check if DB TPR object exists
-	if c.deleter.Exists(deletedDb) {
-		/*
-			TODO: Record event in DB TPR
-			// Failed to delete. Reason: Delete DB TPR.
-		*/
+	found, err := c.deleter.Exists(deletedDb)
+	if err != nil {
+		message := fmt.Sprintf(`Failed to delete Database. Reason: "%v"`, err)
+		c.eventRecorder.PushEvent(kapi.EventTypeWarning, eventer.EventReasonFailedToDelete, message, deletedDb)
+		return
+	}
+
+	if found {
+		message := "Failed to delete Database. Delete Database TPR object first"
+		c.eventRecorder.PushEvent(kapi.EventTypeWarning, eventer.EventReasonFailedToDelete, message, deletedDb)
 
 		// Delete DeletedDatabase object
 		if err := c.extClient.DeletedDatabases(deletedDb.Namespace).Delete(deletedDb.Name); err != nil {
-			// TODO: Do we need event for this?? ask @admin
+			message := fmt.Sprintf(`Failed to delete DeletedDatabase. Reason: %v`, err)
+			c.eventRecorder.PushEvent(
+				kapi.EventTypeWarning, eventer.EventReasonFailedToDelete, message, deletedDb,
+			)
 			log.Errorln(err)
 		}
 		return
 	}
 
-	/*
-		TODO: Record event in DDB TPR
-		// Deleting
-	*/
+	c.eventRecorder.PushEvent(kapi.EventTypeNormal, eventer.EventReasonDeleting, "Deleting Database", deletedDb)
 
 	// Delete Database workload
 	if err := c.deleter.Delete(deletedDb); err != nil {
-		/*
-			TODO: Record event in DDB TPR
-			// Failed to delete. Reason: err
-		*/
+		message := fmt.Sprintf(`Failed to delete. Reason: %v`, err)
+		c.eventRecorder.PushEvent(kapi.EventTypeWarning, eventer.EventReasonFailedToDelete, message, deletedDb)
 		log.Errorln(err)
 		return
 	}
 
-	/*
-		TODO: Record event in DDB TPR
-		// Successfully deleted
-	*/
-
-	/*
-		TODO: Discuss with @admin
-		// I think we do not need to check destroy.
-		// Because, user can't create DeletedDatabase obbject manually.
-		// It will always be created with Destroy=False
-	*/
-	// Destroy Database workload
-	if deletedDb.Spec.Destroy {
-		/*
-			TODO: Record event in DDB TPR
-			// Destroying
-		*/
-		if err := c.deleter.Destroy(deletedDb); err != nil {
-			/*
-				TODO: Record event in DDB TPR
-				// Failed to destroy. Reason: err
-			*/
-			log.Errorln(err)
-			return
-		}
-		/*
-			TODO: Record event in DDB TPR
-			// Successfully destroyed
-		*/
-	}
-
+	c.eventRecorder.PushEvent(
+		kapi.EventTypeNormal, eventer.EventReasonSuccessfulDelete, "Successfully deleted Database workload",
+		deletedDb,
+	)
 	return
 }
 
 func (c *DeletedDatabaseController) update(deletedDb *tapi.DeletedDatabase) {
+	if !deletedDb.Spec.Destroy {
+		message := fmt.Sprintf(`Invalid update`)
+		c.eventRecorder.PushEvent(kapi.EventTypeWarning, eventer.EventReasonInvalidUpdate, message, deletedDb)
+		return
+	}
+
 	// Check if DB TPR object exists
-	if c.deleter.Exists(deletedDb) {
-		// TODO: Record event in DB TPR
+	found, err := c.deleter.Exists(deletedDb)
+	if err != nil {
+		message := fmt.Sprintf(`Failed to destroy Database. Reason: "%v"`, err)
+		c.eventRecorder.PushEvent(kapi.EventTypeWarning, eventer.EventReasonFailedToDelete, message, deletedDb)
+		return
+	}
+
+	if found {
+		message := "Failed to destroy Database. Delete Database TPR object first"
+		c.eventRecorder.PushEvent(kapi.EventTypeWarning, eventer.EventReasonFailedToDestroy, message, deletedDb)
+
 		// Delete DeletedDatabase object
 		if err := c.extClient.DeletedDatabases(deletedDb.Namespace).Delete(deletedDb.Name); err != nil {
-			// TODO: Do we need event for this?? ask @admin
+			message := fmt.Sprintf(`Failed to delete DeletedDatabase. Reason: %v`, err)
+			c.eventRecorder.PushEvent(
+				kapi.EventTypeWarning, eventer.EventReasonFailedToDelete, message, deletedDb,
+			)
 			log.Errorln(err)
 		}
 		return
@@ -208,21 +207,21 @@ func (c *DeletedDatabaseController) update(deletedDb *tapi.DeletedDatabase) {
 
 	// Destroy Database workload
 	if deletedDb.Spec.Destroy {
-		/*
-			TODO: Record event in DDB TPR
-			// Destroying
-		*/
+		c.eventRecorder.PushEvent(
+			kapi.EventTypeNormal, eventer.EventReasonDestroying, "Destroying Database", deletedDb,
+		)
 		if err := c.deleter.Destroy(deletedDb); err != nil {
-			/*
-				TODO: Record event in DDB TPR
-				// Failed to destroy. Reason: err
-			*/
+			message := fmt.Sprintf(`Failed to destroy. Reason: %v`, err)
+			c.eventRecorder.PushEvent(
+				kapi.EventTypeWarning, eventer.EventReasonFailedToDestroy, message, deletedDb,
+			)
 			log.Errorln(err)
 			return
 		}
-		/*
-			TODO: Record event in DDB TPR
-			// Successfully destroyed
-		*/
+
+		c.eventRecorder.PushEvent(
+			kapi.EventTypeNormal, eventer.EventReasonSuccessfulDestroy,
+			"Successfully destroyed Database workload", deletedDb,
+		)
 	}
 }

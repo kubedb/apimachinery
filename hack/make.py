@@ -75,23 +75,18 @@ def version():
 
 
 def fmt():
-    die(call('goimports -w api client cmd pkg'))
-    call('gofmt -s -w api client cmd pkg')
+    die(call('goimports -w api client pkg'))
+    call('gofmt -s -w api client pkg')
 
 
 def vet():
-    call('go vet ./api/... ./client/... ./cmd/... ./pkg/...')
+    call('go vet ./api/... ./client/... ./pkg/...')
 
 
 def lint():
     call('golint ./api/...')
     call('golint ./client/...')
-    call('golint ./cmd/...')
     call('golint ./pkg/...')
-
-
-def gen():
-    return
 
 
 def build_cmd(name):
@@ -106,7 +101,6 @@ def build_cmd(name):
 
 
 def build_cmds():
-    gen()
     for name in libbuild.BIN_MATRIX:
         build_cmd(name)
 
@@ -115,7 +109,6 @@ def build(name=None):
     if name:
         cfg = libbuild.BIN_MATRIX[name]
         if cfg['type'] == 'go':
-            gen()
             build_cmd(name)
     else:
         build_cmds()
@@ -145,15 +138,8 @@ def update_registry():
     libbuild.update_registry(BUILD_METADATA['version'])
 
 
-def install():
-    die(call('GO15VENDOREXPERIMENT=1 ' + libbuild.GOC + ' install ./cmd/...'))
-
-
 def default():
-    gen()
     fmt()
-    die(call('GO15VENDOREXPERIMENT=1 ' + libbuild.GOC + ' install ./cmd/...'))
-
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

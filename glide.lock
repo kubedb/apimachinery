@@ -1,5 +1,5 @@
 hash: 112ff0c1f30852b046458dfa7c33d5e4aeb40f23e4aa9d105055f80cd7a84466
-updated: 2017-03-30T17:21:44.715246216+06:00
+updated: 2017-03-31T18:12:59.951129266+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -10,12 +10,9 @@ imports:
   version: c8deaa7e2fdb25334d9d1f8589a13183703c7158
   subpackages:
   - runtime
-  - version
   - wait
 - name: github.com/appscode/log
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
-  subpackages:
-  - golog
 - name: github.com/aws/aws-sdk-go
   version: 63ce630574a5ec05ecd8e8de5cea16332a5a684d
   subpackages:
@@ -125,6 +122,10 @@ imports:
   - vanity/command
 - name: github.com/golang/glog
   version: 44145f04b68cf362d9c4df2182967c2275eaefed
+- name: github.com/golang/groupcache
+  version: 02826c3e79038b59d737d3b1c0a1d937f71a4433
+  subpackages:
+  - lru
 - name: github.com/golang/protobuf
   version: 8616e8ee5e20a1704615e6c8d7afcdac06087a67
   subpackages:
@@ -137,12 +138,6 @@ imports:
   subpackages:
   - google
   - s3
-- name: github.com/howeyc/gopass
-  version: 3ca23474a7c7203e0a0a070fd33508f6efdb9b3d
-- name: github.com/imdario/mergo
-  version: 6633656539c1639d9d78127b7d47c622b5d7b6dc
-- name: github.com/inconshreveable/mousetrap
-  version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/jmespath/go-jmespath
   version: 3433f3ea46d9f8019119e7dd41274e112a2359a9
 - name: github.com/jonboulle/clockwork
@@ -155,6 +150,8 @@ imports:
   - buffer
   - jlexer
   - jwriter
+- name: github.com/orcaman/concurrent-map
+  version: 2ae17bc4c860c83513ee50feb9746f3e50d7515d
 - name: github.com/pborman/uuid
   version: ca53cad383cad2479bbba7f7a1a05797ec1386e4
 - name: github.com/pkg/errors
@@ -163,10 +160,6 @@ imports:
   version: 8a290539e2e8629dbc4e6bad948158f790ec31f4
 - name: github.com/PuerkitoBio/urlesc
   version: 5bd2802263f21d8788851d5305584c82a5c75d7e
-- name: github.com/spf13/cobra
-  version: f62e98d28ab7ad31d707ba837a966378465c7b57
-  subpackages:
-  - doc
 - name: github.com/spf13/pflag
   version: 5ccb023bc27df288a957c5e994cd44fd19619465
 - name: github.com/ugorji/go
@@ -174,16 +167,6 @@ imports:
   subpackages:
   - codec
   - codec/codecgen
-- name: golang.org/x/crypto
-  version: 1f22c0103821b9390939b6776727195525381532
-  subpackages:
-  - bcrypt
-  - blowfish
-  - curve25519
-  - pkcs12
-  - pkcs12/internal/rc2
-  - ssh
-  - ssh/terminal
 - name: golang.org/x/net
   version: e90d6d0afc4c315a0d87a568ae68577cc15149a0
   subpackages:
@@ -206,10 +189,6 @@ imports:
   - internal
   - jws
   - jwt
-- name: golang.org/x/sys
-  version: 8f0908ab3b2457e2e15403d3697c9ef5cb4b57a9
-  subpackages:
-  - unix
 - name: golang.org/x/text
   version: 2910a502d2bf9e43193af9d68ca516529614eed3
   subpackages:
@@ -226,15 +205,14 @@ imports:
 - name: google.golang.org/api
   version: a69f0f19d246419bb931b0ac8f4f8d3f3e6d4feb
   subpackages:
+  - cloudmonitoring/v2beta2
   - compute/v1
   - container/v1
   - dns/v1
   - gensupport
+  - googleapi
+  - googleapi/internal/uritemplates
   - storage/v1
-- name: google.golang.org/api/googleapi
-  version: a69f0f19d246419bb931b0ac8f4f8d3f3e6d4feb
-  subpackages:
-  - internal/uritemplates
 - name: google.golang.org/appengine
   version: 4f7eeb5305a4ba1966344836ba4af9996b7b4e05
   subpackages:
@@ -249,6 +227,8 @@ imports:
   - urlfetch
 - name: gopkg.in/inf.v0
   version: 3887ee99ecf07df5b447e9b00d9c0b2adaa9f3e4
+- name: gopkg.in/robfig/cron.v2
+  version: be2e0b0deed5a68ffee390b4583a13aff8321535
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/kubernetes
@@ -315,15 +295,12 @@ imports:
   - pkg/client/clientset_generated/internalclientset/typed/rbac/internalversion
   - pkg/client/clientset_generated/internalclientset/typed/storage/internalversion
   - pkg/client/metrics
+  - pkg/client/record
   - pkg/client/restclient
   - pkg/client/testing/core
   - pkg/client/transport
   - pkg/client/typed/discovery
-  - pkg/client/unversioned/auth
-  - pkg/client/unversioned/clientcmd
   - pkg/client/unversioned/clientcmd/api
-  - pkg/client/unversioned/clientcmd/api/latest
-  - pkg/client/unversioned/clientcmd/api/v1
   - pkg/conversion
   - pkg/conversion/queryparams
   - pkg/fields
@@ -349,7 +326,6 @@ imports:
   - pkg/util/errors
   - pkg/util/flowcontrol
   - pkg/util/framer
-  - pkg/util/homedir
   - pkg/util/integer
   - pkg/util/intstr
   - pkg/util/json
@@ -360,6 +336,7 @@ imports:
   - pkg/util/rand
   - pkg/util/runtime
   - pkg/util/sets
+  - pkg/util/strategicpatch
   - pkg/util/uuid
   - pkg/util/validation
   - pkg/util/validation/field
@@ -371,6 +348,7 @@ imports:
   - plugin/pkg/client/auth
   - plugin/pkg/client/auth/gcp
   - plugin/pkg/client/auth/oidc
+  - third_party/forked/golang/json
   - third_party/forked/golang/reflect
   - third_party/forked/golang/template
 testImports:
