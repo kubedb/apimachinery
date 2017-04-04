@@ -197,14 +197,14 @@ func (c *DatabaseSnapshotController) delete(dbSnapshot *tapi.DatabaseSnapshot) {
 
 	if runtimeObj != nil {
 		message := fmt.Sprintf(`Destroying DatabaseSnapshot: "%v"`, dbSnapshot.Name)
-		c.eventRecorder.PushEvent(kapi.EventTypeNormal, eventer.EventReasonDestroying, message, dbSnapshot)
+		c.eventRecorder.PushEvent(kapi.EventTypeNormal, eventer.EventReasonDestroying, message, runtimeObj)
 	}
 
 	if err := c.snapshoter.DestroySnapshot(dbSnapshot); err != nil {
 		if runtimeObj != nil {
-			message := fmt.Sprintf(`Failed to  destroying. Reason: %v`, err)
+			message := fmt.Sprintf(`Failed to  destroy. Reason: %v`, err)
 			c.eventRecorder.PushEvent(
-				kapi.EventTypeWarning, eventer.EventReasonFailedToDestroy, message, dbSnapshot,
+				kapi.EventTypeWarning, eventer.EventReasonFailedToDestroy, message, runtimeObj,
 			)
 		}
 		log.Errorln(err)
@@ -214,7 +214,7 @@ func (c *DatabaseSnapshotController) delete(dbSnapshot *tapi.DatabaseSnapshot) {
 	if runtimeObj != nil {
 		message := fmt.Sprintf(`Successfully destroyed DatabaseSnapshot: "%v"`, dbSnapshot.Name)
 		c.eventRecorder.PushEvent(
-			kapi.EventTypeNormal, eventer.EventReasonSuccessfulDestroy, message, dbSnapshot,
+			kapi.EventTypeNormal, eventer.EventReasonSuccessfulDestroy, message, runtimeObj,
 		)
 	}
 }
