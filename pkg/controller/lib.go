@@ -136,7 +136,6 @@ func (c *Controller) CreateGoverningServiceAccount(name, namespace string) error
 	var err error
 	if _, err = c.Client.Core().ServiceAccounts(namespace).Get(name); err == nil {
 		return nil
-
 	}
 	if !k8serr.IsNotFound(err) {
 		return err
