@@ -305,19 +305,26 @@ func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.D
 		return
 	}
 
+	runtimeObj, err := c.snapshoter.GetDatabase(dbSnapshot)
+	if err != nil {
+		c.eventRecorder.PushEvent(kapi.EventTypeWarning, eventer.EventReasonFailedToGet, err.Error(), dbSnapshot)
+		log.Errorln(err)
+		return
+	}
+
 	unversionedNow = unversioned.Now()
 	dbSnapshot.Status.CompletionTime = &unversionedNow
 	if jobSuccess {
 		dbSnapshot.Status.Status = tapi.StatusSnapshotSuccessed
 		c.eventRecorder.PushEvent(
 			kapi.EventTypeNormal, eventer.EventReasonSuccessfulSnapshot, "Successfully completed snapshot",
-			dbSnapshot,
+			runtimeObj, dbSnapshot,
 		)
 	} else {
 		dbSnapshot.Status.Status = tapi.StatusSnapshotFailed
 		c.eventRecorder.PushEvent(
 			kapi.EventTypeWarning, eventer.EventReasonSnapshotFailed, "Failed to complete snapshot",
-			dbSnapshot,
+			runtimeObj, dbSnapshot,
 		)
 	}
 
