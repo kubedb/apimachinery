@@ -90,8 +90,8 @@ const (
 	keyConfig   = "config"
 )
 
-func (c *Controller) CheckBucketAccess(dbSnapshot *tapi.DatabaseSnapshot) error {
-	secret, err := c.Client.Core().Secrets(dbSnapshot.Namespace).Get(dbSnapshot.Spec.StorageSecret.SecretName)
+func (c *Controller) CheckBucketAccess(snapshotSpec *tapi.SnapshotSpec, namespace string) error {
+	secret, err := c.Client.Core().Secrets(namespace).Get(snapshotSpec.StorageSecret.SecretName)
 	if err != nil {
 		return err
 	}
@@ -115,7 +115,7 @@ func (c *Controller) CheckBucketAccess(dbSnapshot *tapi.DatabaseSnapshot) error 
 		return err
 	}
 
-	container, err := loc.Container(dbSnapshot.Spec.BucketName)
+	container, err := loc.Container(snapshotSpec.BucketName)
 	if err != nil {
 		return err
 	}
