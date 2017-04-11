@@ -90,7 +90,7 @@ const (
 	keyConfig   = "config"
 )
 
-func (c *Controller) CheckBucketAccess(snapshotSpec *tapi.SnapshotSpec, namespace string) error {
+func (c *Controller) CheckBucketAccess(snapshotSpec tapi.SnapshotSpec, namespace string) error {
 	secret, err := c.Client.Core().Secrets(namespace).Get(snapshotSpec.StorageSecret.SecretName)
 	if err != nil {
 		return err
