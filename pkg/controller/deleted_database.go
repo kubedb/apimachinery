@@ -215,7 +215,17 @@ func (c *DeletedDatabaseController) update(oldDeletedDb, updatedDeletedDb *tapi.
 	}
 
 	if oldDeletedDb.Spec.Recover != updatedDeletedDb.Spec.Recover && updatedDeletedDb.Spec.Recover {
-		c.recover(updatedDeletedDb)
+		if oldDeletedDb.Status == tapi.PhaseDatabaseDeleted {
+			c.recover(updatedDeletedDb)
+		} else {
+			message := "Failed to recover Database. " +
+				"Only DeletedDatabase with Phase \"Deleted\" can be recovered"
+			c.eventRecorder.PushEvent(
+				kapi.EventTypeWarning, eventer.EventReasonFailedToUpdate, message, updatedDeletedDb,
+			)
+			return
+		}
+
 	}
 }
 
