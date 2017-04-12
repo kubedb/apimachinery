@@ -215,7 +215,7 @@ func (c *DeletedDatabaseController) update(oldDeletedDb, updatedDeletedDb *tapi.
 	}
 
 	if oldDeletedDb.Spec.Recover != updatedDeletedDb.Spec.Recover && updatedDeletedDb.Spec.Recover {
-		if oldDeletedDb.Status == tapi.PhaseDatabaseDeleted {
+		if oldDeletedDb.Status.Phase == tapi.PhaseDatabaseDeleted {
 			c.recover(updatedDeletedDb)
 		} else {
 			message := "Failed to recover Database. " +
@@ -309,16 +309,26 @@ func (c *DeletedDatabaseController) recover(deletedDb *tapi.DeletedDatabase) {
 		return
 	}
 
-	if err = c.deleter.RecoverDatabase(deletedDb); err != nil {
-		message := fmt.Sprintf(`Failed to recover Database. Reason: "%v"`, err)
-		c.eventRecorder.PushEvent(kapi.EventTypeWarning, eventer.EventReasonFailedToRecover, message, deletedDb)
-		return
-	}
-
 	deletedDb.Status.Phase = tapi.PhaseDatabaseRecovering
-	if _, err = c.extClient.DeletedDatabases(deletedDb.Namespace).Update(deletedDb); err != nil {
+	if deletedDb, err = c.extClient.DeletedDatabases(deletedDb.Namespace).Update(deletedDb); err != nil {
 		message := fmt.Sprintf(`Failed to update DeletedDatabase. Reason: "%v"`, err)
 		c.eventRecorder.PushEvent(kapi.EventTypeWarning, eventer.EventReasonFailedToUpdate, message, deletedDb)
 		return
 	}
+
+	if err = c.deleter.RecoverDatabase(deletedDb); err != nil {
+		message := fmt.Sprintf(`Failed to recover Database. Reason: "%v"`, err)
+		c.eventRecorder.PushEvent(kapi.EventTypeWarning, eventer.EventReasonFailedToRecover, message, deletedDb)
+
+		deletedDb.Status.Phase = tapi.PhaseDatabaseDeleted
+		if deletedDb, err = c.extClient.DeletedDatabases(deletedDb.Namespace).Update(deletedDb); err != nil {
+			message := fmt.Sprintf(`Failed to update DeletedDatabase. Reason: "%v"`, err)
+			c.eventRecorder.PushEvent(
+				kapi.EventTypeWarning, eventer.EventReasonFailedToUpdate, message, deletedDb,
+			)
+			return
+		}
+		return
+	}
+
 }
