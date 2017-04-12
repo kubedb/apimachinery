@@ -19,7 +19,7 @@ import (
 type CronControllerInterface interface {
 	StartCron()
 	ScheduleBackup(runtime.Object, kapi.ObjectMeta, *tapi.BackupScheduleSpec) error
-	StopScheduledBackup(kapi.ObjectMeta)
+	StopScheduleBackup(kapi.ObjectMeta)
 	StopCron()
 }
 
@@ -86,7 +86,7 @@ func (c *cronController) ScheduleBackup(
 	return nil
 }
 
-func (c *cronController) StopScheduledBackup(om kapi.ObjectMeta) {
+func (c *cronController) StopScheduleBackup(om kapi.ObjectMeta) {
 	// cronEntry name
 	cronEntryName := fmt.Sprintf("%v@%v", om.Name, om.Namespace)
 
