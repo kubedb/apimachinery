@@ -36,7 +36,7 @@ type cronController struct {
 
 /*
  NewCronController returns CronControllerInterface.
- You need to call StartCron() method to start Cron.
+ Need to call StartCron() method to start Cron.
 */
 func NewCronController(client clientset.Interface, extClient tcs.ExtensionInterface) CronControllerInterface {
 	return &cronController{
