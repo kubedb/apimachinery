@@ -132,7 +132,7 @@ const (
 )
 
 func (c *DatabaseSnapshotController) create(dbSnapshot *tapi.DatabaseSnapshot) {
-	// ValidateSnapshot DatabaseSnapshot spec
+	// Validate DatabaseSnapshot spec
 	if err := c.snapshoter.ValidateSnapshot(dbSnapshot); err != nil {
 		c.eventRecorder.PushEvent(kapi.EventTypeWarning, eventer.EventReasonInvalid, err.Error(), dbSnapshot)
 		log.Errorln(err)
