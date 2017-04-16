@@ -22,7 +22,7 @@ import (
 )
 
 type Snapshotter interface {
-	Validate(*tapi.DatabaseSnapshot) error
+	ValidateSnapshot(*tapi.DatabaseSnapshot) error
 	GetDatabase(*tapi.DatabaseSnapshot) (runtime.Object, error)
 	GetSnapshotter(*tapi.DatabaseSnapshot) (*kbatch.Job, error)
 	DestroySnapshot(*tapi.DatabaseSnapshot) error
@@ -132,8 +132,8 @@ const (
 )
 
 func (c *DatabaseSnapshotController) create(dbSnapshot *tapi.DatabaseSnapshot) {
-	// Validate DatabaseSnapshot spec
-	if err := c.snapshoter.Validate(dbSnapshot); err != nil {
+	// ValidateSnapshot DatabaseSnapshot spec
+	if err := c.snapshoter.ValidateSnapshot(dbSnapshot); err != nil {
 		c.eventRecorder.PushEvent(kapi.EventTypeWarning, eventer.EventReasonInvalid, err.Error(), dbSnapshot)
 		log.Errorln(err)
 		return

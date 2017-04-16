@@ -20,7 +20,7 @@ import (
 
 type Deleter interface {
 	// Check Database TPR
-	Exists(*tapi.DeletedDatabase) (bool, error)
+	Exists(kapi.ObjectMeta) (bool, error)
 	// Delete operation
 	DeleteDatabase(*tapi.DeletedDatabase) error
 	// Destroy operation
