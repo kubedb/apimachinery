@@ -21,8 +21,8 @@ type ScriptSource struct {
 }
 
 type SnapshotSource struct {
-	namespace string `json:"namespace,omitempty"`
-	name      string `json:"name,omitempty"`
+	Namespace string `json:"namespace,omitempty"`
+	Name      string `json:"name,omitempty"`
 }
 
 type BackupScheduleSpec struct {
@@ -47,6 +47,8 @@ const (
 	StatusDatabaseRunning DatabaseStatus = "Running"
 	// used for Databases that are currently creating
 	StatusDatabaseCreating DatabaseStatus = "Creating"
+	// used for Databases that are currently initializing
+	StatusDatabaseInitializing DatabaseStatus = "Initializing"
 	// used for Databases that are Failed
 	StatusDatabaseFailed DatabaseStatus = "Failed"
 )
