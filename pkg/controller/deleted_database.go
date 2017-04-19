@@ -109,7 +109,7 @@ func (c *DeletedDatabaseController) watch() {
 		cache.ResourceEventHandlerFuncs{
 			AddFunc: func(obj interface{}) {
 				deletedDb := obj.(*tapi.DeletedDatabase)
-				if deletedDb.Status.Created == nil {
+				if deletedDb.Status.CreateTime == nil {
 					c.create(deletedDb)
 				}
 			},
@@ -137,7 +137,7 @@ func (c *DeletedDatabaseController) create(deletedDb *tapi.DeletedDatabase) {
 
 	// Set DeletedDatabase Phase: Deleting
 	unversionedNow := unversioned.Now()
-	deletedDb.Status.Created = &unversionedNow
+	deletedDb.Status.CreateTime = &unversionedNow
 	_deletedDb, err := c.extClient.DeletedDatabases(deletedDb.Namespace).Update(deletedDb)
 	if err != nil {
 		message := fmt.Sprintf(`Failed to update DeletedDatabase. Reason: "%v"`, err)
@@ -197,7 +197,7 @@ func (c *DeletedDatabaseController) create(deletedDb *tapi.DeletedDatabase) {
 
 	// Set DeletedDatabase Phase: Deleted
 	unversionedNow = unversioned.Now()
-	deletedDb.Status.Deleted = &unversionedNow
+	deletedDb.Status.DeleteTime = &unversionedNow
 	deletedDb.Status.Phase = tapi.PhaseDatabaseDeleted
 	_, err = c.extClient.DeletedDatabases(deletedDb.Namespace).Update(deletedDb)
 	if err != nil {
@@ -284,7 +284,7 @@ func (c *DeletedDatabaseController) destroy(deletedDb *tapi.DeletedDatabase) {
 
 	// Set DeletedDatabase Phase: Deleted
 	unversionedNow = unversioned.Now()
-	deletedDb.Status.Destroyed = &unversionedNow
+	deletedDb.Status.DestroyTime = &unversionedNow
 	deletedDb.Status.Phase = tapi.PhaseDatabaseDestroyed
 	_, err = c.extClient.DeletedDatabases(deletedDb.Namespace).Update(deletedDb)
 	if err != nil {
