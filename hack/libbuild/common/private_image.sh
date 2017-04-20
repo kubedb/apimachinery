@@ -1,12 +1,15 @@
 #!/bin/bash
 
+DOCKER_REGISTRY=${DOCKER_REGISTRY:-appscode}
+source $(dirname "${BASH_SOURCE}")/lib.sh
+
 # override this one if you need to change push & pull
 docker_push() {
-	attic_up appscode
+	attic_up
 }
 
 docker_pull() {
-	attic_pull appscode
+	attic_pull
 }
 
 
@@ -21,7 +24,7 @@ source_repo() {
 
 	case "$1" in
 		build)
-			build appscode
+			build
 			;;
 		build_binary)
 			build_binary
@@ -42,16 +45,16 @@ source_repo() {
 			docker_pull
 			;;
 		gcr)
-			gcr_pull appscode
+			gcr_pull
 			;;
 		check)
-			docker_check appscode
+			docker_check
 			;;
 		run)
-			docker_run appscode
+			docker_run
 			;;
 		sh)
-			docker_sh appscode
+			docker_sh
 			;;
 		rm)
 			docker_rm
@@ -77,7 +80,7 @@ binary_repo() {
 
 	case "$1" in
 		build)
-			build appscode
+			build
 			;;
 		clean)
 			clean
@@ -89,16 +92,16 @@ binary_repo() {
 			docker_pull
 			;;
 		gcr)
-			gcr_pull appscode
+			gcr_pull
 			;;
 		check)
-			docker_check appscode
+			docker_check
 			;;
 		run)
-			docker_run appscode
+			docker_run
 			;;
 		sh)
-			docker_sh appscode
+			docker_sh
 			;;
 		rm)
 			docker_rm
