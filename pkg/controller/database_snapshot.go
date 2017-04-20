@@ -317,7 +317,7 @@ func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.D
 	}
 
 	unversionedNow = unversioned.Now()
-	dbSnapshot.Status.CompletionTime = &unversionedNow
+	dbSnapshot.Status.CompleteTime = &unversionedNow
 	if jobSuccess {
 		dbSnapshot.Status.Status = tapi.StatusSnapshotSuccessed
 		c.eventRecorder.PushEvent(
