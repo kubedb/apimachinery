@@ -2,11 +2,11 @@
 
 # override this one if you need to change push & pull
 docker_push() {
-	attic_up appscode
+	hub_canary cowrypay
 }
 
 docker_pull() {
-	attic_pull appscode
+	hub_pull cowrypay
 }
 
 
@@ -21,7 +21,7 @@ source_repo() {
 
 	case "$1" in
 		build)
-			build appscode
+			build cowrypay
 			;;
 		build_binary)
 			build_binary
@@ -38,20 +38,17 @@ source_repo() {
 		pull)
 			docker_pull
 			;;
-		gcr)
-			gcr_pull appscode
-			;;
 		release)
-			docker_release appscode
+			docker_release cowrypay
 			;;
 		check)
-			docker_check appscode
+			docker_check cowrypay
 			;;
 		run)
-			docker_run appscode
+			docker_run cowrypay
 			;;
 		sh)
-			docker_sh appscode
+			docker_sh cowrypay
 			;;
 		rm)
 			docker_rm
@@ -77,31 +74,28 @@ binary_repo() {
 
 	case "$1" in
 		build)
-			build appscode
+			build cowrypay
 			;;
 		clean)
 			clean
 			;;
 		push)
-			docker_push
+			docker_up cowrypay $IMG:$TAG
 			;;
 		pull)
-			docker_pull
-			;;
-		gcr)
-			gcr_pull appscode
+			docker_pull cowrypay
 			;;
 		release)
-			docker_release appscode
+			docker_release cowrypay
 			;;
 		check)
-			docker_check appscode
+			docker_check cowrypay
 			;;
 		run)
-			docker_run appscode
+			docker_run cowrypay
 			;;
 		sh)
-			docker_sh appscode
+			docker_sh cowrypay
 			;;
 		rm)
 			docker_rm

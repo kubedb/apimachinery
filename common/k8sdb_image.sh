@@ -2,11 +2,11 @@
 
 # override this one if you need to change push & pull
 docker_push() {
-	attic_up appscode
+	hub_canary k8sdb
 }
 
 docker_pull() {
-	attic_pull appscode
+	hub_pull k8sdb
 }
 
 
@@ -21,7 +21,7 @@ source_repo() {
 
 	case "$1" in
 		build)
-			build appscode
+			build k8sdb
 			;;
 		build_binary)
 			build_binary
@@ -38,20 +38,17 @@ source_repo() {
 		pull)
 			docker_pull
 			;;
-		gcr)
-			gcr_pull appscode
-			;;
 		release)
-			docker_release appscode
+			docker_release k8sdb
 			;;
 		check)
-			docker_check appscode
+			docker_check k8sdb
 			;;
 		run)
-			docker_run appscode
+			docker_run k8sdb
 			;;
 		sh)
-			docker_sh appscode
+			docker_sh k8sdb
 			;;
 		rm)
 			docker_rm
@@ -77,31 +74,28 @@ binary_repo() {
 
 	case "$1" in
 		build)
-			build appscode
+			build k8sdb
 			;;
 		clean)
 			clean
 			;;
 		push)
-			docker_push
+			docker_up k8sdb $IMG:$TAG
 			;;
 		pull)
-			docker_pull
-			;;
-		gcr)
-			gcr_pull appscode
+			docker_pull k8sdb
 			;;
 		release)
-			docker_release appscode
+			docker_release k8sdb
 			;;
 		check)
-			docker_check appscode
+			docker_check k8sdb
 			;;
 		run)
-			docker_run appscode
+			docker_run k8sdb
 			;;
 		sh)
-			docker_sh appscode
+			docker_sh k8sdb
 			;;
 		rm)
 			docker_rm
