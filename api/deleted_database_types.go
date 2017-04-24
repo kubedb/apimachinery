@@ -28,17 +28,17 @@ type DeletedDatabaseSpec struct {
 	// If true, invoke recover operation
 	// +optional
 	Recover bool `json:"recover,omitempty"`
-	// Origin Spec to store original database information
-	Origin OriginSpec `json:"origin,omitempty"`
+	// Origin to store original database information
+	Origin Origin `json:"origin,omitempty"`
+}
+
+type Origin struct {
+	api.ObjectMeta `json:"metadata,omitempty"`
+	// Origin Spec to store original database Spec
+	Spec OriginSpec `json:"spec,omitempty"`
 }
 
 type OriginSpec struct {
-	api.ObjectMeta `json:"metadata,omitempty"`
-	// OriginDatabase Spec to store original database Spec
-	OriginDatabase OriginDatabaseSpec `json:"originDatabase,omitempty"`
-}
-
-type OriginDatabaseSpec struct {
 	// Elastic Spec
 	// +optional
 	Elastic *ElasticSpec `json:"elastic,omitempty"`
