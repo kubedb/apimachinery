@@ -23,7 +23,7 @@ type Deleter interface {
 	Exists(*kapi.ObjectMeta) (bool, error)
 	// Delete operation
 	DeleteDatabase(*tapi.DeletedDatabase) error
-	// WipeOut operation
+	// Wipe out operation
 	WipeOutDatabase(*tapi.DeletedDatabase) error
 	// Recover operation
 	RecoverDatabase(*tapi.DeletedDatabase) error
