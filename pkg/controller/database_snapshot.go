@@ -220,8 +220,8 @@ func (c *DatabaseSnapshotController) delete(dbSnapshot *tapi.DatabaseSnapshot) {
 func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.DatabaseSnapshot, jobName string, checkDuration time.Duration) {
 	t := unversioned.Now()
 	dbSnapshot.Status.StartTime = &t
-	dbSnapshot.Status.Phase = tapi.PhaseSnapshotRunning
-	dbSnapshot.Labels[LabelSnapshotStatus] = string(tapi.PhaseSnapshotRunning)
+	dbSnapshot.Status.Phase = tapi.SnapshotRunning
+	dbSnapshot.Labels[LabelSnapshotStatus] = string(tapi.SnapshotRunning)
 	var err error
 	if dbSnapshot, err = c.extClient.DatabaseSnapshots(dbSnapshot.Namespace).Update(dbSnapshot); err != nil {
 		message := fmt.Sprintf(`Failed to update DatabaseSnapshot. Reason: %v`, err)
@@ -319,13 +319,13 @@ func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.D
 	t = unversioned.Now()
 	dbSnapshot.Status.CompletionTime = &t
 	if jobSuccess {
-		dbSnapshot.Status.Phase = tapi.PhaseSnapshotSuccessed
+		dbSnapshot.Status.Phase = tapi.SnapshotSuccessed
 		c.eventRecorder.PushEvent(
 			kapi.EventTypeNormal, eventer.EventReasonSuccessfulSnapshot, "Successfully completed snapshot",
 			runtimeObj, dbSnapshot,
 		)
 	} else {
-		dbSnapshot.Status.Phase = tapi.PhaseSnapshotFailed
+		dbSnapshot.Status.Phase = tapi.SnapshotFailed
 		c.eventRecorder.PushEvent(
 			kapi.EventTypeWarning, eventer.EventReasonSnapshotFailed, "Failed to complete snapshot",
 			runtimeObj, dbSnapshot,

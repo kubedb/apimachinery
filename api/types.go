@@ -44,11 +44,11 @@ type DatabasePhase string
 
 const (
 	// used for Databases that are currently running
-	PhaseDatabaseRunning DatabasePhase = "Running"
+	DatabaseRunning DatabasePhase = "Running"
 	// used for Databases that are currently creating
-	PhaseDatabaseCreating DatabasePhase = "Creating"
+	DatabaseCreating DatabasePhase = "Creating"
 	// used for Databases that are currently initializing
-	PhaseDatabaseInitializing DatabasePhase = "Initializing"
+	DatabaseInitializing DatabasePhase = "Initializing"
 	// used for Databases that are Failed
-	PhaseDatabaseFailed DatabasePhase = "Failed"
+	DatabaseFailed DatabasePhase = "Failed"
 )

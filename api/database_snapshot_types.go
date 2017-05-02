@@ -29,11 +29,11 @@ type SnapshotPhase string
 
 const (
 	// used for DatabaseSnapshots that are currently running
-	PhaseSnapshotRunning SnapshotPhase = "Running"
+	SnapshotRunning SnapshotPhase = "Running"
 	// used for DatabaseSnapshots that are Succeeded
-	PhaseSnapshotSuccessed SnapshotPhase = "Succeeded"
+	SnapshotSuccessed SnapshotPhase = "Succeeded"
 	// used for DatabaseSnapshots that are Failed
-	PhaseSnapshotFailed SnapshotPhase = "Failed"
+	SnapshotFailed SnapshotPhase = "Failed"
 )
 
 type DatabaseSnapshotStatus struct {
