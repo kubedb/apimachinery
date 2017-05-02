@@ -1,5 +1,5 @@
 hash: 112ff0c1f30852b046458dfa7c33d5e4aeb40f23e4aa9d105055f80cd7a84466
-updated: 2017-04-07T11:50:13.060069401+06:00
+updated: 2017-05-02T10:20:08.880979542+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -7,7 +7,7 @@ imports:
   - compute/metadata
   - internal
 - name: github.com/appscode/go
-  version: 46d947ba0fae9cf11054828772d6f8a0ad160434
+  version: 16dae34745b8c485f42293ad6d16ea7d6c129564
   subpackages:
   - runtime
   - wait
@@ -232,7 +232,7 @@ imports:
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/kubernetes
-  version: ea8f6637b639246faa14a8d5c6f864100fcb77a9
+  version: f07eea23494be1e7c11a8e2cf51bd96d1ec9fdf1
   subpackages:
   - pkg/api
   - pkg/api/errors
