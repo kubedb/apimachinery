@@ -1,10 +1,9 @@
 package controller
 
 import (
+	"errors"
 	"reflect"
 	"time"
-
-	"errors"
 
 	"github.com/appscode/go/wait"
 	"github.com/appscode/log"
