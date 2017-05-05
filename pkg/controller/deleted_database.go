@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"reflect"
 	"time"
 
@@ -110,7 +111,9 @@ func (c *DeletedDatabaseController) watch() {
 			AddFunc: func(obj interface{}) {
 				deletedDb := obj.(*tapi.DeletedDatabase)
 				if deletedDb.Status.CreationTime == nil {
-					c.create(deletedDb)
+					if err := c.create(deletedDb); err != nil {
+						log.Errorln(err)
+					}
 				}
 			},
 			UpdateFunc: func(old, new interface{}) {
@@ -125,7 +128,9 @@ func (c *DeletedDatabaseController) watch() {
 				// TODO: Find appropriate checking
 				// Only allow if Spec varies
 				if !reflect.DeepEqual(oldDeletedDb.Spec, newDeletedDb.Spec) {
-					c.update(oldDeletedDb, newDeletedDb)
+					if err := c.update(oldDeletedDb, newDeletedDb); err != nil {
+						log.Errorln(err)
+					}
 				}
 			},
 		},
@@ -133,7 +138,7 @@ func (c *DeletedDatabaseController) watch() {
 	cacheController.Run(wait.NeverStop)
 }
 
-func (c *DeletedDatabaseController) create(deletedDb *tapi.DeletedDatabase) {
+func (c *DeletedDatabaseController) create(deletedDb *tapi.DeletedDatabase) error {
 
 	// Set DeletedDatabase Phase: Deleting
 	t := unversioned.Now()
@@ -147,7 +152,7 @@ func (c *DeletedDatabaseController) create(deletedDb *tapi.DeletedDatabase) {
 			"Failed to update DeletedDatabase. Reason: %v",
 			err,
 		)
-		return
+		return err
 	}
 	deletedDb = _deletedDb
 
@@ -161,15 +166,16 @@ func (c *DeletedDatabaseController) create(deletedDb *tapi.DeletedDatabase) {
 			"Failed to delete Database. Reason: %v",
 			err,
 		)
-		return
+		return err
 	}
 
 	if found {
+		message := "Failed to delete Database. Delete Database TPR object first"
 		c.eventRecorder.Event(
 			deletedDb,
 			kapi.EventTypeWarning,
 			eventer.EventReasonFailedToDelete,
-			"Failed to delete Database. Delete Database TPR object first",
+			message,
 		)
 
 		// Delete DeletedDatabase object
@@ -183,7 +189,7 @@ func (c *DeletedDatabaseController) create(deletedDb *tapi.DeletedDatabase) {
 			)
 			log.Errorln(err)
 		}
-		return
+		return errors.New(message)
 	}
 
 	// Set DeletedDatabase Phase: Deleting
@@ -198,7 +204,7 @@ func (c *DeletedDatabaseController) create(deletedDb *tapi.DeletedDatabase) {
 			"Failed to update DeletedDatabase. Reason: %v",
 			err,
 		)
-		return
+		return err
 	}
 	deletedDb = _deletedDb
 
@@ -213,8 +219,7 @@ func (c *DeletedDatabaseController) create(deletedDb *tapi.DeletedDatabase) {
 			"Failed to delete. Reason: %v",
 			err,
 		)
-		log.Errorln(err)
-		return
+		return err
 	}
 
 	c.eventRecorder.Event(
@@ -237,20 +242,20 @@ func (c *DeletedDatabaseController) create(deletedDb *tapi.DeletedDatabase) {
 			"Failed to update DeletedDatabase. Reason: %v",
 			err,
 		)
-		return
+		return err
 	}
 
-	return
+	return nil
 }
 
-func (c *DeletedDatabaseController) update(oldDeletedDb, updatedDeletedDb *tapi.DeletedDatabase) {
+func (c *DeletedDatabaseController) update(oldDeletedDb, updatedDeletedDb *tapi.DeletedDatabase) error {
 	if oldDeletedDb.Spec.WipeOut != updatedDeletedDb.Spec.WipeOut && updatedDeletedDb.Spec.WipeOut {
-		c.wipeOut(updatedDeletedDb)
+		return c.wipeOut(updatedDeletedDb)
 	}
 
 	if oldDeletedDb.Spec.Recover != updatedDeletedDb.Spec.Recover && updatedDeletedDb.Spec.Recover {
 		if oldDeletedDb.Status.Phase == tapi.DeletedDatabasePhaseDeleted {
-			c.recover(updatedDeletedDb)
+			return c.recover(updatedDeletedDb)
 		} else {
 			message := "Failed to recover Database. " +
 				"Only DeletedDatabase of \"Deleted\" Phase can be recovered"
@@ -260,13 +265,12 @@ func (c *DeletedDatabaseController) update(oldDeletedDb, updatedDeletedDb *tapi.
 				eventer.EventReasonFailedToUpdate,
 				message,
 			)
-			return
 		}
-
 	}
+	return nil
 }
 
-func (c *DeletedDatabaseController) wipeOut(deletedDb *tapi.DeletedDatabase) {
+func (c *DeletedDatabaseController) wipeOut(deletedDb *tapi.DeletedDatabase) error {
 	// Check if DB TPR object exists
 	found, err := c.deleter.Exists(&deletedDb.ObjectMeta)
 	if err != nil {
@@ -277,7 +281,7 @@ func (c *DeletedDatabaseController) wipeOut(deletedDb *tapi.DeletedDatabase) {
 			"Failed to wipeOut Database. Reason: %v",
 			err,
 		)
-		return
+		return err
 	}
 
 	if found {
@@ -300,7 +304,7 @@ func (c *DeletedDatabaseController) wipeOut(deletedDb *tapi.DeletedDatabase) {
 			)
 			log.Errorln(err)
 		}
-		return
+		return errors.New(message)
 	}
 
 	// Set DeletedDatabase Phase: Wiping out
@@ -315,7 +319,7 @@ func (c *DeletedDatabaseController) wipeOut(deletedDb *tapi.DeletedDatabase) {
 			"Failed to update DeletedDatabase. Reason: %v",
 			err,
 		)
-		return
+		return err
 	}
 	deletedDb = _deletedDb
 
@@ -329,8 +333,7 @@ func (c *DeletedDatabaseController) wipeOut(deletedDb *tapi.DeletedDatabase) {
 			"Failed to wipeOut. Reason: %v",
 			err,
 		)
-		log.Errorln(err)
-		return
+		return err
 	}
 
 	c.eventRecorder.Event(
@@ -353,11 +356,13 @@ func (c *DeletedDatabaseController) wipeOut(deletedDb *tapi.DeletedDatabase) {
 			"Failed to update DeletedDatabase. Reason: %v",
 			err,
 		)
-		return
+		return err
 	}
+
+	return nil
 }
 
-func (c *DeletedDatabaseController) recover(deletedDb *tapi.DeletedDatabase) {
+func (c *DeletedDatabaseController) recover(deletedDb *tapi.DeletedDatabase) error {
 	// Check if DB TPR object exists
 	found, err := c.deleter.Exists(&deletedDb.ObjectMeta)
 	if err != nil {
@@ -368,17 +373,18 @@ func (c *DeletedDatabaseController) recover(deletedDb *tapi.DeletedDatabase) {
 			"Failed to recover Database. Reason: %v",
 			err,
 		)
-		return
+		return err
 	}
 
 	if found {
+		message := "Failed to recover Database. One Database TPR object exists with same name"
 		c.eventRecorder.Event(
 			deletedDb,
 			kapi.EventTypeWarning,
 			eventer.EventReasonFailedToRecover,
-			"Failed to recover Database. One Database TPR object exists with same name",
+			message,
 		)
-		return
+		return errors.New(message)
 	}
 
 	deletedDb.Status.Phase = tapi.DeletedDatabasePhaseRecovering
@@ -390,7 +396,7 @@ func (c *DeletedDatabaseController) recover(deletedDb *tapi.DeletedDatabase) {
 			"Failed to update DeletedDatabase. Reason: %v",
 			err,
 		)
-		return
+		return err
 	}
 
 	if err = c.deleter.RecoverDatabase(deletedDb); err != nil {
@@ -411,6 +417,11 @@ func (c *DeletedDatabaseController) recover(deletedDb *tapi.DeletedDatabase) {
 				"Failed to update DeletedDatabase. Reason: %v",
 				err,
 			)
+			log.Errorln(err)
 		}
+
+		return err
 	}
+
+	return nil
 }
