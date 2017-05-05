@@ -115,12 +115,16 @@ func (c *DatabaseSnapshotController) watch() {
 			AddFunc: func(obj interface{}) {
 				dbSnapshot := obj.(*tapi.DatabaseSnapshot)
 				if dbSnapshot.Status.StartTime == nil {
-					c.create(dbSnapshot)
+					if err := c.create(dbSnapshot); err != nil {
+						log.Errorln(err)
+					}
 				}
 			},
 			DeleteFunc: func(obj interface{}) {
 				dbSnapshot := obj.(*tapi.DatabaseSnapshot)
-				c.delete(dbSnapshot)
+				if err := c.delete(dbSnapshot); err != nil {
+					log.Errorln(err)
+				}
 			},
 		},
 	)
@@ -131,26 +135,23 @@ const (
 	durationCheckSnapshotJob = time.Minute * 30
 )
 
-func (c *DatabaseSnapshotController) create(dbSnapshot *tapi.DatabaseSnapshot) {
+func (c *DatabaseSnapshotController) create(dbSnapshot *tapi.DatabaseSnapshot) error {
 	// Validate DatabaseSnapshot spec
 	if err := c.snapshoter.ValidateSnapshot(dbSnapshot); err != nil {
 		c.eventRecorder.Event(dbSnapshot, kapi.EventTypeWarning, eventer.EventReasonInvalid, err.Error())
-		log.Errorln(err)
-		return
+		return err
 	}
 
 	runtimeObj, err := c.snapshoter.GetDatabase(dbSnapshot)
 	if err != nil {
 		c.eventRecorder.Event(dbSnapshot, kapi.EventTypeWarning, eventer.EventReasonFailedToGet, err.Error())
-		log.Errorln(err)
-		return
+		return err
 	}
 
 	dbSnapshot.Labels[LabelDatabaseName] = dbSnapshot.Spec.DatabaseName
 	if dbSnapshot, err = c.extClient.DatabaseSnapshots(dbSnapshot.Namespace).Update(dbSnapshot); err != nil {
 		c.eventRecorder.Event(dbSnapshot, kapi.EventTypeWarning, eventer.EventReasonFailedToGet, err.Error())
-		log.Errorln(err)
-		return
+		return err
 	}
 
 	c.eventRecorder.Event(runtimeObj, kapi.EventTypeNormal, eventer.EventReasonStarting, "Backup running")
@@ -161,22 +162,26 @@ func (c *DatabaseSnapshotController) create(dbSnapshot *tapi.DatabaseSnapshot) {
 		message := fmt.Sprintf("Failed to take snapshot. Reason: %v", err)
 		c.eventRecorder.Event(runtimeObj, kapi.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
 		c.eventRecorder.Event(dbSnapshot, kapi.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
-		log.Errorln(err)
-		return
+		return err
 	}
 
 	if _, err := c.client.Batch().Jobs(dbSnapshot.Namespace).Create(job); err != nil {
 		message := fmt.Sprintf("Failed to take snapshot. Reason: %v", err)
 		c.eventRecorder.Event(runtimeObj, kapi.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
 		c.eventRecorder.Event(dbSnapshot, kapi.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
-		log.Errorln(err)
-		return
+		return err
 	}
 
-	go c.checkDatabaseSnapshotJob(dbSnapshot, job.Name, durationCheckSnapshotJob)
+	go func() {
+		if err := c.checkDatabaseSnapshotJob(dbSnapshot, job.Name, durationCheckSnapshotJob); err != nil {
+			log.Errorln(err)
+		}
+	}()
+
+	return nil
 }
 
-func (c *DatabaseSnapshotController) delete(dbSnapshot *tapi.DatabaseSnapshot) {
+func (c *DatabaseSnapshotController) delete(dbSnapshot *tapi.DatabaseSnapshot) error {
 	runtimeObj, err := c.snapshoter.GetDatabase(dbSnapshot)
 	if err != nil {
 		if !k8serr.IsNotFound(err) {
@@ -186,8 +191,7 @@ func (c *DatabaseSnapshotController) delete(dbSnapshot *tapi.DatabaseSnapshot) {
 				eventer.EventReasonFailedToGet,
 				err.Error(),
 			)
-			log.Errorln(err)
-			return
+			return err
 		}
 	}
 
@@ -211,8 +215,7 @@ func (c *DatabaseSnapshotController) delete(dbSnapshot *tapi.DatabaseSnapshot) {
 				err,
 			)
 		}
-		log.Errorln(err)
-		return
+		return err
 	}
 
 	if runtimeObj != nil {
@@ -224,9 +227,10 @@ func (c *DatabaseSnapshotController) delete(dbSnapshot *tapi.DatabaseSnapshot) {
 			dbSnapshot.Name,
 		)
 	}
+	return nil
 }
 
-func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.DatabaseSnapshot, jobName string, checkDuration time.Duration) {
+func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.DatabaseSnapshot, jobName string, checkDuration time.Duration) error {
 	t := unversioned.Now()
 	dbSnapshot.Status.StartTime = &t
 	dbSnapshot.Status.Phase = tapi.SnapshotPhaseRunning
@@ -240,8 +244,7 @@ func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.D
 			"Failed to update DatabaseSnapshot. Reason: %v",
 			err,
 		)
-		log.Errorln(err)
-		return
+		return err
 	}
 
 	var jobSuccess bool = false
@@ -260,8 +263,7 @@ func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.D
 				"Failed to get Job. Reason: %v",
 				err,
 			)
-			log.Errorln(err)
-			return
+			return err
 		}
 		log.Debugf("Pods Statuses:	%d Running / %d Succeeded / %d Failed",
 			job.Status.Active, job.Status.Succeeded, job.Status.Failed)
@@ -290,8 +292,7 @@ func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.D
 			"Failed to list Pods. Reason: %v",
 			err,
 		)
-		log.Errorln(err)
-		return
+		return err
 	}
 
 	for _, pod := range podList.Items {
@@ -343,15 +344,13 @@ func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.D
 			"Failed to get DatabaseSnapshot. Reason: %v",
 			err,
 		)
-		log.Errorln(err)
-		return
+		return err
 	}
 
 	runtimeObj, err := c.snapshoter.GetDatabase(dbSnapshot)
 	if err != nil {
 		c.eventRecorder.Event(dbSnapshot, kapi.EventTypeWarning, eventer.EventReasonFailedToGet, err.Error())
-		log.Errorln(err)
-		return
+		return err
 	}
 
 	t = unversioned.Now()
@@ -398,4 +397,5 @@ func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.D
 		)
 		log.Errorln(err)
 	}
+	return nil
 }
