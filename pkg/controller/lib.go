@@ -361,3 +361,38 @@ func (c *Controller) CheckDatabaseRestoreJob(
 
 	return jobSuccess
 }
+
+func (c *Controller) checkGoverningService(name, namespace string) (bool, error) {
+	_, err := c.Client.Core().Services(namespace).Get(name)
+	if err != nil {
+		if k8serr.IsNotFound(err) {
+			return false, nil
+		} else {
+			return false, err
+		}
+	}
+
+	return true, nil
+}
+
+func (c *Controller) CreateGoverningService(name, namespace string) error {
+	// Check if service name exists
+	found, err := c.checkGoverningService(name, namespace)
+	if err != nil {
+		return err
+	}
+	if found {
+		return nil
+	}
+
+	service := &kapi.Service{
+		ObjectMeta: kapi.ObjectMeta{
+			Name: name,
+		},
+		Spec: kapi.ServiceSpec{
+			ClusterIP: kapi.ClusterIPNone,
+		},
+	}
+	_, err = c.Client.Core().Services(namespace).Create(service)
+	return err
+}
