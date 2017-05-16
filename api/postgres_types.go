@@ -22,8 +22,6 @@ type Postgres struct {
 type PostgresSpec struct {
 	// Version of Postgres to be deployed.
 	Version string `json:"version,omitempty"`
-	// Number of instances to deploy for a Postgres database.
-	Replicas int32 `json:"replicas,omitempty"`
 	// Storage spec to specify how storage shall be used.
 	Storage *StorageSpec `json:"storage,omitempty"`
 	// ServiceAccountName is the name of the ServiceAccount to use to run the
