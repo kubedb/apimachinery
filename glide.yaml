@@ -16,6 +16,9 @@ import:
 - package: github.com/aws/aws-sdk-go
   version: v1.6.10
 - package: github.com/heroku/docker-registry-client
+  version: 95467b6cacee2a06f112a3cf7e47a70fad6000cf
+- package: github.com/Sirupsen/logrus
+  version: v0.10.0
 testImport:
 - package: github.com/stretchr/testify
   version: v1.1.4

@@ -1,12 +1,11 @@
-// Based on ssh/terminal:
 // Copyright 2013 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package logrus
+// +build dragonfly freebsd netbsd openbsd
 
-import "syscall"
+package unix
 
-const ioctlReadTermios = syscall.TIOCGETA
+const ImplementsGetwd = false
 
-type Termios syscall.Termios
+func Getwd() (string, error) { return "", ENOTSUP }
