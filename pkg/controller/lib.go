@@ -390,6 +390,7 @@ func (c *Controller) CreateGoverningService(name, namespace string) error {
 			Name: name,
 		},
 		Spec: kapi.ServiceSpec{
+			Type:      kapi.ServiceTypeClusterIP,
 			ClusterIP: kapi.ClusterIPNone,
 		},
 	}
