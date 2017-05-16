@@ -136,24 +136,6 @@ func (c *Controller) CheckBucketAccess(snapshotSpec tapi.SnapshotSpec, namespace
 	return nil
 }
 
-func (c *Controller) CreateGoverningServiceAccount(name, namespace string) error {
-	var err error
-	if _, err = c.Client.Core().ServiceAccounts(namespace).Get(name); err == nil {
-		return nil
-	}
-	if !k8serr.IsNotFound(err) {
-		return err
-	}
-
-	serviceAccount := &kapi.ServiceAccount{
-		ObjectMeta: kapi.ObjectMeta{
-			Name: name,
-		},
-	}
-	_, err = c.Client.Core().ServiceAccounts(namespace).Create(serviceAccount)
-	return err
-}
-
 func (c *Controller) CheckStatefulSetPodStatus(statefulSet *kapps.StatefulSet, checkDuration time.Duration) error {
 	podName := fmt.Sprintf("%v-%v", statefulSet.Name, 0)
 
