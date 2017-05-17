@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"errors"
+
 	"github.com/appscode/log"
 	tapi "github.com/k8sdb/apimachinery/api"
 	tcs "github.com/k8sdb/apimachinery/client/clientset"
@@ -11,6 +13,7 @@ import (
 	cmap "github.com/orcaman/concurrent-map"
 	"gopkg.in/robfig/cron.v2"
 	kapi "k8s.io/kubernetes/pkg/api"
+	k8serr "k8s.io/kubernetes/pkg/api/errors"
 	clientset "k8s.io/kubernetes/pkg/client/clientset_generated/internalclientset"
 	"k8s.io/kubernetes/pkg/client/record"
 	"k8s.io/kubernetes/pkg/labels"
@@ -76,8 +79,12 @@ func (c *cronController) ScheduleBackup(
 		eventRecorder: c.eventRecorder,
 	}
 
+	if err := invoker.validateScheduler(durationCheckSnapshotJob); err != nil {
+		return err
+	}
+
 	// Set cron job
-	entryID, err := c.cron.AddFunc(spec.CronExpression, invoker.createDatabaseSnapshot)
+	entryID, err := c.cron.AddFunc(spec.CronExpression, invoker.createScheduledDatabaseSnapshot)
 	if err != nil {
 		return err
 	}
@@ -108,7 +115,49 @@ type snapshotInvoker struct {
 	eventRecorder record.EventRecorder
 }
 
-func (s *snapshotInvoker) createDatabaseSnapshot() {
+func (s *snapshotInvoker) validateScheduler(checkDuration time.Duration) error {
+	utc := time.Now().UTC()
+	snapshotName := fmt.Sprintf("%v-%v", s.om.Name, utc.Format("20060102-150405"))
+	if err := s.createDatabaseSnapshot(snapshotName); err != nil {
+		return err
+	}
+
+	var snapshotSuccess bool = false
+
+	then := time.Now()
+	now := time.Now()
+	for now.Sub(then) < checkDuration {
+		dbSnapshot, err := s.extClient.DatabaseSnapshots(s.om.Namespace).Get(snapshotName)
+		if err != nil {
+			if k8serr.IsNotFound(err) {
+				time.Sleep(sleepDuration)
+				now = time.Now()
+				continue
+			} else {
+				return err
+			}
+		}
+
+		if dbSnapshot.Status.Phase == tapi.SnapshotPhaseSuccessed {
+			snapshotSuccess = true
+			break
+		}
+		if dbSnapshot.Status.Phase == tapi.SnapshotPhaseFailed {
+			break
+		}
+
+		time.Sleep(sleepDuration)
+		now = time.Now()
+	}
+
+	if !snapshotSuccess {
+		return errors.New("Failed to complete initial snapshot")
+	}
+
+	return nil
+}
+
+func (s *snapshotInvoker) createScheduledDatabaseSnapshot() {
 	kind := s.runtimeObject.GetObjectKind().GroupVersionKind().Kind
 	name := s.om.Name
 
@@ -153,6 +202,17 @@ func (s *snapshotInvoker) createDatabaseSnapshot() {
 	now := time.Now().UTC()
 	snapshotName := fmt.Sprintf("%v-%v", s.om.Name, now.Format("20060102-150405"))
 
+	if err = s.createDatabaseSnapshot(snapshotName); err != nil {
+		log.Errorln(err)
+	}
+}
+
+func (s *snapshotInvoker) createDatabaseSnapshot(snapshotName string) error {
+	labelMap := map[string]string{
+		LabelDatabaseKind: s.runtimeObject.GetObjectKind().GroupVersionKind().Kind,
+		LabelDatabaseName: s.om.Name,
+	}
+
 	snapshot := &tapi.DatabaseSnapshot{
 		ObjectMeta: kapi.ObjectMeta{
 			Name:      snapshotName,
@@ -173,6 +233,8 @@ func (s *snapshotInvoker) createDatabaseSnapshot() {
 			"Failed to create DatabaseSnapshot. Reason: %v",
 			err,
 		)
-		log.Errorln(err)
+		return err
 	}
+
+	return nil
 }
