@@ -285,7 +285,7 @@ func (c *DatabaseSnapshotController) checkDatabaseSnapshotJob(dbSnapshot *tapi.D
 			break
 		}
 
-		time.Sleep(time.Minute)
+		time.Sleep(sleepDuration)
 		now = time.Now()
 	}
 
