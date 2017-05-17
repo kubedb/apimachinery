@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	ResourceCodeDatabaseSnapshot = "dbs"
+	ResourceCodeDatabaseSnapshot = "snp"
 	ResourceKindDatabaseSnapshot = "DatabaseSnapshot"
 	ResourceNameDatabaseSnapshot = "database-snapshot"
 	ResourceTypeDatabaseSnapshot = "databasesnapshots"
