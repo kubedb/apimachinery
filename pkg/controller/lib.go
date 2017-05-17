@@ -66,10 +66,10 @@ func (c *Controller) ValidateBackupSchedule(spec *tapi.BackupScheduleSpec) error
 		return errors.New("Invalid cron expression")
 	}
 
-	return c.ValidateSnapshotSpec(spec.SnapshotSpec)
+	return c.ValidateSnapshotSpec(spec.SnapshotStorageSpec)
 }
 
-func (c *Controller) ValidateSnapshotSpec(spec tapi.SnapshotSpec) error {
+func (c *Controller) ValidateSnapshotSpec(spec tapi.SnapshotStorageSpec) error {
 	// BucketName can't be empty
 	bucketName := spec.BucketName
 	if bucketName == "" {
@@ -95,7 +95,7 @@ const (
 	keyConfig   = "config"
 )
 
-func (c *Controller) CheckBucketAccess(snapshotSpec tapi.SnapshotSpec, namespace string) error {
+func (c *Controller) CheckBucketAccess(snapshotSpec tapi.SnapshotStorageSpec, namespace string) error {
 	secret, err := c.Client.Core().Secrets(namespace).Get(snapshotSpec.StorageSecret.SecretName)
 	if err != nil {
 		return err
