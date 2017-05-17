@@ -152,7 +152,7 @@ func (c *Controller) CheckStatefulSetPodStatus(statefulSet *kapps.StatefulSet, c
 					break
 				}
 
-				time.Sleep(time.Second * 10)
+				time.Sleep(sleepDuration)
 				now = time.Now()
 				continue
 			} else {
@@ -167,7 +167,7 @@ func (c *Controller) CheckStatefulSetPodStatus(statefulSet *kapps.StatefulSet, c
 			break
 		}
 
-		time.Sleep(time.Minute)
+		time.Sleep(sleepDuration)
 		now = time.Now()
 	}
 	if !podReady {
@@ -298,7 +298,7 @@ func (c *Controller) CheckDatabaseRestoreJob(
 			break
 		}
 
-		time.Sleep(time.Minute)
+		time.Sleep(sleepDuration)
 		now = time.Now()
 	}
 
