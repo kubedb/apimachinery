@@ -83,7 +83,7 @@ func (c *cronController) ScheduleBackup(
 	}
 
 	// Set cron job
-	entryID, err := c.cron.AddFunc(spec.CronExpression, invoker.createScheduledDatabaseSnapshot)
+	entryID, err := c.cron.AddFunc(spec.CronExpression, invoker.createScheduledSnapshot)
 	if err != nil {
 		return err
 	}
@@ -117,7 +117,7 @@ type snapshotInvoker struct {
 func (s *snapshotInvoker) validateScheduler(checkDuration time.Duration) error {
 	utc := time.Now().UTC()
 	snapshotName := fmt.Sprintf("%v-%v", s.om.Name, utc.Format("20060102-150405"))
-	if err := s.createDatabaseSnapshot(snapshotName); err != nil {
+	if err := s.createSnapshot(snapshotName); err != nil {
 		return err
 	}
 
@@ -126,7 +126,7 @@ func (s *snapshotInvoker) validateScheduler(checkDuration time.Duration) error {
 	then := time.Now()
 	now := time.Now()
 	for now.Sub(then) < checkDuration {
-		dbSnapshot, err := s.extClient.DatabaseSnapshots(s.om.Namespace).Get(snapshotName)
+		dbSnapshot, err := s.extClient.Snapshots(s.om.Namespace).Get(snapshotName)
 		if err != nil {
 			if k8serr.IsNotFound(err) {
 				time.Sleep(sleepDuration)
@@ -156,7 +156,7 @@ func (s *snapshotInvoker) validateScheduler(checkDuration time.Duration) error {
 	return nil
 }
 
-func (s *snapshotInvoker) createScheduledDatabaseSnapshot() {
+func (s *snapshotInvoker) createScheduledSnapshot() {
 	kind := s.runtimeObject.GetObjectKind().GroupVersionKind().Kind
 	name := s.om.Name
 
@@ -166,7 +166,7 @@ func (s *snapshotInvoker) createScheduledDatabaseSnapshot() {
 		LabelSnapshotStatus: string(tapi.SnapshotPhaseRunning),
 	}
 
-	snapshotList, err := s.extClient.DatabaseSnapshots(s.om.Namespace).List(kapi.ListOptions{
+	snapshotList, err := s.extClient.Snapshots(s.om.Namespace).List(kapi.ListOptions{
 		LabelSelector: labels.SelectorFromSet(labels.Set(labelMap)),
 	})
 	if err != nil {
@@ -174,7 +174,7 @@ func (s *snapshotInvoker) createScheduledDatabaseSnapshot() {
 			s.runtimeObject,
 			kapi.EventTypeWarning,
 			eventer.EventReasonFailedToList,
-			"Failed to list DatabaseSnapshots. Reason: %v",
+			"Failed to list Snapshots. Reason: %v",
 			err,
 		)
 		log.Errorln(err)
@@ -201,35 +201,35 @@ func (s *snapshotInvoker) createScheduledDatabaseSnapshot() {
 	now := time.Now().UTC()
 	snapshotName := fmt.Sprintf("%v-%v", s.om.Name, now.Format("20060102-150405"))
 
-	if err = s.createDatabaseSnapshot(snapshotName); err != nil {
+	if err = s.createSnapshot(snapshotName); err != nil {
 		log.Errorln(err)
 	}
 }
 
-func (s *snapshotInvoker) createDatabaseSnapshot(snapshotName string) error {
+func (s *snapshotInvoker) createSnapshot(snapshotName string) error {
 	labelMap := map[string]string{
 		LabelDatabaseKind: s.runtimeObject.GetObjectKind().GroupVersionKind().Kind,
 		LabelDatabaseName: s.om.Name,
 	}
 
-	snapshot := &tapi.DatabaseSnapshot{
+	snapshot := &tapi.Snapshot{
 		ObjectMeta: kapi.ObjectMeta{
 			Name:      snapshotName,
 			Namespace: s.om.Namespace,
 			Labels:    labelMap,
 		},
-		Spec: tapi.DatabaseSnapshotSpec{
-			DatabaseName: s.om.Name,
-			SnapshotSpec: s.spec.SnapshotSpec,
+		Spec: tapi.SnapshotSpec{
+			DatabaseName:        s.om.Name,
+			SnapshotStorageSpec: s.spec.SnapshotStorageSpec,
 		},
 	}
 
-	if _, err := s.extClient.DatabaseSnapshots(snapshot.Namespace).Create(snapshot); err != nil {
+	if _, err := s.extClient.Snapshots(snapshot.Namespace).Create(snapshot); err != nil {
 		s.eventRecorder.Eventf(
 			s.runtimeObject,
 			kapi.EventTypeWarning,
 			eventer.EventReasonFailedToCreate,
-			"Failed to create DatabaseSnapshot. Reason: %v",
+			"Failed to create Snapshot. Reason: %v",
 			err,
 		)
 		return err

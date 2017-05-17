@@ -34,8 +34,10 @@ func NewFakeExtensionClient(objects ...runtime.Object) *FakeExtensionClient {
 	return &FakeExtensionClient{&fakePtr}
 }
 
-func (m *FakeExtensionClient) DatabaseSnapshots(ns string) clientset.DatabaseSnapshotInterface {
-	return &FakeDatabaseSnapshot{m.Fake, ns}
+var _ clientset.ExtensionInterface = &FakeExtensionClient{}
+
+func (m *FakeExtensionClient) Snapshots(ns string) clientset.SnapshotInterface {
+	return &FakeSnapshot{m.Fake, ns}
 }
 
 func (m *FakeExtensionClient) DeletedDatabases(ns string) clientset.DeletedDatabaseInterface {
