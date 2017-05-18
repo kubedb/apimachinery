@@ -116,6 +116,11 @@ func (c *DeletedDatabaseController) watch() {
 					}
 				}
 			},
+			DeleteFunc: func(obj interface{}) {
+				if err := c.delete(obj.(*tapi.DeletedDatabase)); err != nil {
+					log.Errorln(err)
+				}
+			},
 			UpdateFunc: func(old, new interface{}) {
 				oldDeletedDb, ok := old.(*tapi.DeletedDatabase)
 				if !ok {
@@ -253,6 +258,43 @@ func (c *DeletedDatabaseController) create(deletedDb *tapi.DeletedDatabase) erro
 		return err
 	}
 
+	return nil
+}
+
+func (c *DeletedDatabaseController) delete(deletedDb *tapi.DeletedDatabase) error {
+	if deletedDb.Status.Phase != tapi.DeletedDatabasePhaseWipedOut {
+		c.eventRecorder.Eventf(
+			deletedDb,
+			kapi.EventTypeWarning,
+			eventer.EventReasonFailedToDelete,
+			`DeletedDatabase "%v" is not %v.`,
+			deletedDb.Name,
+			tapi.DeletedDatabasePhaseWipedOut,
+		)
+
+		_deletedDb := &tapi.DeletedDatabase{
+			ObjectMeta: kapi.ObjectMeta{
+				Name:        deletedDb.Name,
+				Namespace:   deletedDb.Namespace,
+				Labels:      deletedDb.Labels,
+				Annotations: deletedDb.Annotations,
+			},
+			Spec:   deletedDb.Spec,
+			Status: deletedDb.Status,
+		}
+
+		if _, err := c.extClient.DeletedDatabases(_deletedDb.Namespace).Create(_deletedDb); err != nil {
+			c.eventRecorder.Eventf(
+				deletedDb,
+				kapi.EventTypeWarning,
+				eventer.EventReasonFailedToCreate,
+				`Failed to recreate DeletedDatabase: "%v". Reason: %v`,
+				deletedDb.Name,
+				err,
+			)
+			return err
+		}
+	}
 	return nil
 }
 
