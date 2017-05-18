@@ -461,6 +461,18 @@ func (c *Controller) DeleteStatefulSet(name, namespace string) error {
 	return c.Client.Apps().StatefulSets(statefulSet.Namespace).Delete(statefulSet.Name, nil)
 }
 
+func (c *Controller) DeleteSecret(name, namespace string) error {
+	if _, err := c.Client.Core().Secrets(namespace).Get(name); err != nil {
+		if k8serr.IsNotFound(err) {
+			return nil
+		} else {
+			return err
+		}
+	}
+
+	return c.Client.Core().Secrets(namespace).Delete(name, nil)
+}
+
 const (
 	registryUrl = "https://registry-1.docker.io/"
 )
