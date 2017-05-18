@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	ResourceCodeSnapshot = "snp"
+	ResourceCodeSnapshot = "sanp"
 	ResourceKindSnapshot = "Snapshot"
 	ResourceNameSnapshot = "snapshot"
 	ResourceTypeSnapshot = "snapshots"
