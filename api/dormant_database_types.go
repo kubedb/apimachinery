@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	ResourceCodeDormantDatabase = "ddb"
+	ResourceCodeDormantDatabase = "drmn"
 	ResourceKindDormantDatabase = "DormantDatabase"
 	ResourceNameDormantDatabase = "dormant-database"
 	ResourceTypeDormantDatabase = "dormantdatabases"
