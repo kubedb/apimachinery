@@ -40,8 +40,8 @@ func (m *FakeExtensionClient) Snapshots(ns string) clientset.SnapshotInterface {
 	return &FakeSnapshot{m.Fake, ns}
 }
 
-func (m *FakeExtensionClient) DeletedDatabases(ns string) clientset.DeletedDatabaseInterface {
-	return &FakeDeletedDatabase{m.Fake, ns}
+func (m *FakeExtensionClient) DormantDatabases(ns string) clientset.DormantDatabaseInterface {
+	return &FakeDormantDatabase{m.Fake, ns}
 }
 
 func (m *FakeExtensionClient) Elastics(ns string) clientset.ElasticInterface {
