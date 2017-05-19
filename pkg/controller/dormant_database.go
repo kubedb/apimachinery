@@ -308,7 +308,7 @@ func (c *DormantDbController) update(oldDormantDb, updatedDormantDb *tapi.Dorman
 			return c.resume(updatedDormantDb)
 		} else {
 			message := "Failed to resume Database. " +
-				"Only DormantDatabase of \"Deleted\" Phase can be resumeed"
+				"Only DormantDatabase of \"Deleted\" Phase can be resumed"
 			c.eventRecorder.Event(
 				updatedDormantDb,
 				kapi.EventTypeWarning,
