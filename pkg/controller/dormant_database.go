@@ -305,10 +305,10 @@ func (c *DormantDbController) update(oldDormantDb, updatedDormantDb *tapi.Dorman
 
 	if oldDormantDb.Spec.Resume != updatedDormantDb.Spec.Resume && updatedDormantDb.Spec.Resume {
 		if oldDormantDb.Status.Phase == tapi.DormantDatabasePhaseStopped {
-			return c.recover(updatedDormantDb)
+			return c.resume(updatedDormantDb)
 		} else {
-			message := "Failed to recover Database. " +
-				"Only DormantDatabase of \"Deleted\" Phase can be recovered"
+			message := "Failed to resume Database. " +
+				"Only DormantDatabase of \"Deleted\" Phase can be resumeed"
 			c.eventRecorder.Event(
 				updatedDormantDb,
 				kapi.EventTypeWarning,
@@ -418,26 +418,26 @@ func (c *DormantDbController) wipeOut(dormantDb *tapi.DormantDatabase) error {
 	return nil
 }
 
-func (c *DormantDbController) recover(dormantDb *tapi.DormantDatabase) error {
+func (c *DormantDbController) resume(dormantDb *tapi.DormantDatabase) error {
 	// Check if DB TPR object exists
 	found, err := c.deleter.Exists(&dormantDb.ObjectMeta)
 	if err != nil {
 		c.eventRecorder.Eventf(
 			dormantDb,
 			kapi.EventTypeWarning,
-			eventer.EventReasonFailedToRecover,
-			"Failed to recover Database. Reason: %v",
+			eventer.EventReasonFailedToResume,
+			"Failed to resume Database. Reason: %v",
 			err,
 		)
 		return err
 	}
 
 	if found {
-		message := "Failed to recover Database. One Database TPR object exists with same name"
+		message := "Failed to resume Database. One Database TPR object exists with same name"
 		c.eventRecorder.Event(
 			dormantDb,
 			kapi.EventTypeWarning,
-			eventer.EventReasonFailedToRecover,
+			eventer.EventReasonFailedToResume,
 			message,
 		)
 		return errors.New(message)
@@ -463,8 +463,8 @@ func (c *DormantDbController) recover(dormantDb *tapi.DormantDatabase) error {
 		c.eventRecorder.Eventf(
 			dormantDb,
 			kapi.EventTypeWarning,
-			eventer.EventReasonFailedToRecover,
-			"Failed to recover Database. Reason: %v",
+			eventer.EventReasonFailedToResume,
+			"Failed to resume Database. Reason: %v",
 			err,
 		)
 
