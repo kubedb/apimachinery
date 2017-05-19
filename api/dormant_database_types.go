@@ -48,16 +48,16 @@ type OriginSpec struct {
 type DormantDatabasePhase string
 
 const (
-	// used for Databases that are deleted
-	DormantDatabasePhaseDeleted DormantDatabasePhase = "Deleted"
-	// used for Databases that are currently deleting
-	DormantDatabasePhaseDeleting DormantDatabasePhase = "Deleting"
+	// used for Databases that are stopped
+	DormantDatabasePhaseStopped DormantDatabasePhase = "Stopped"
+	// used for Databases that are currently stopping
+	DormantDatabasePhaseStopping DormantDatabasePhase = "Stopping"
 	// used for Databases that are wiped out
 	DormantDatabasePhaseWipedOut DormantDatabasePhase = "WipedOut"
 	// used for Databases that are currently wiping out
 	DormantDatabasePhaseWipingOut DormantDatabasePhase = "WipingOut"
 	// used for Databases that are currently recovering
-	DormantDatabasePhaseRecovering DormantDatabasePhase = "Recovering"
+	DormantDatabasePhaseResuming DormantDatabasePhase = "Resuming"
 )
 
 type DormantDatabaseStatus struct {
