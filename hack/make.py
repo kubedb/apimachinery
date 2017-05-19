@@ -75,6 +75,7 @@ def version():
 
 
 def fmt():
+    libbuild.ungroup_go_imports('api', 'client', 'pkg')
     die(call('goimports -w api client pkg'))
     call('gofmt -s -w api client pkg')
 
