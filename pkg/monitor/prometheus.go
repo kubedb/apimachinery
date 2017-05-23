@@ -1,28 +1,16 @@
 package monitor
 
 import (
-	"context"
-
 	tapi "github.com/k8sdb/apimachinery/api"
 	kapi "k8s.io/kubernetes/pkg/api"
 )
 
-type promuKey struct{}
-
-func NewPrometheusContext(ctx context.Context, params map[string]string) context.Context {
-	return context.WithValue(ctx, promuKey{}, params)
+type PrometheusController struct {
 }
-
-func FromPrometheusContext(ctx context.Context) (params map[string]string, ok bool) {
-	params, ok = ctx.Value(promuKey{}).(map[string]string)
-	return
-}
-
-type PrometheusController struct{}
 
 var _ Monitor = &PrometheusController{}
 
-func (c *PrometheusController) AddMonitor(ctx context.Context, meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
+func (c *PrometheusController) AddMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
 	err := c.ensureExporter(meta)
 	if err != nil {
 		return err
@@ -35,7 +23,7 @@ func (c *PrometheusController) AddMonitor(ctx context.Context, meta *kapi.Object
 	return c.ensureMonitor(meta, spec)
 }
 
-func (c *PrometheusController) UpdateMonitor(ctx context.Context, meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
+func (c *PrometheusController) UpdateMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
 	err := c.ensureExporter(meta)
 	if err != nil {
 		return err
@@ -48,7 +36,7 @@ func (c *PrometheusController) UpdateMonitor(ctx context.Context, meta *kapi.Obj
 	return c.ensureMonitor(meta, spec)
 }
 
-func (c *PrometheusController) DeleteMonitor(ctx context.Context, meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
+func (c *PrometheusController) DeleteMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
 	if ok, err := c.supportPrometheusOperator(); err != nil {
 		return err
 	} else if !ok {
