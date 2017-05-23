@@ -20,7 +20,9 @@ func FromPrometheusContext(ctx context.Context) (params map[string]string, ok bo
 
 type PrometheusController struct{}
 
-func (c *PrometheusController) AddMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
+var _ Monitor = &PrometheusController{}
+
+func (c *PrometheusController) AddMonitor(ctx context.Context, meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
 	err := c.ensureExporter(meta)
 	if err != nil {
 		return err
@@ -33,7 +35,7 @@ func (c *PrometheusController) AddMonitor(meta *kapi.ObjectMeta, spec *tapi.Moni
 	return c.ensureMonitor(meta, spec)
 }
 
-func (c *PrometheusController) UpdateMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
+func (c *PrometheusController) UpdateMonitor(ctx context.Context, meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
 	err := c.ensureExporter(meta)
 	if err != nil {
 		return err
@@ -46,7 +48,7 @@ func (c *PrometheusController) UpdateMonitor(meta *kapi.ObjectMeta, spec *tapi.M
 	return c.ensureMonitor(meta, spec)
 }
 
-func (c *PrometheusController) DeleteMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
+func (c *PrometheusController) DeleteMonitor(ctx context.Context, meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
 	if ok, err := c.supportPrometheusOperator(); err != nil {
 		return err
 	} else if !ok {

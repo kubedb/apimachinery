@@ -46,6 +46,12 @@ type PrometheusSpec struct {
 	// +optional
 	Labels map[string]string `json:"labels,omitempty"`
 
+	// JobLabel is used to retrieve the job name from.
+	JobLabel string `json:"jobLabel,omitempty"`
+
+	// Interval at which metrics should be scraped
+	Interval string `json:"interval,omitempty"`
+
 	// Parameters are key value pairs that are passed as flags to exporters.
 	// Parameters map[string]string `json:"parameters,omitempty"`
 }
