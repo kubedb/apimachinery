@@ -37,7 +37,7 @@ type SnapshotStorageSpec struct {
 	BucketName string `json:"bucketName,omitempty"`
 }
 
-type MonitoringSpec struct {
+type MonitorSpec struct {
 	Prometheus *PrometheusSpec `json:"prometheus,omitempty"`
 }
 

@@ -8,7 +8,7 @@ import (
 )
 
 type Monitor interface {
-	AddMonitor(context.Context, *kapi.ObjectMeta, *tapi.MonitoringSpec) error
-	UpdateMonitor(context.Context, *kapi.ObjectMeta, *tapi.MonitoringSpec) error
-	DeleteMonitor(context.Context, *kapi.ObjectMeta, *tapi.MonitoringSpec) error
+	AddMonitor(context.Context, *kapi.ObjectMeta, *tapi.MonitorSpec) error
+	UpdateMonitor(context.Context, *kapi.ObjectMeta, *tapi.MonitorSpec) error
+	DeleteMonitor(context.Context, *kapi.ObjectMeta, *tapi.MonitorSpec) error
 }

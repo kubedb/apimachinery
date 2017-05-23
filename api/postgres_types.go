@@ -42,7 +42,7 @@ type PostgresSpec struct {
 	DoNotPause bool `json:"doNotPause,omitempty"`
 	// Monitor is used monitor database instance
 	// +optional
-	Monitor *MonitoringSpec `json:"monitor,omitempty"`
+	Monitor *MonitorSpec `json:"monitor,omitempty"`
 }
 
 type PostgresStatus struct {

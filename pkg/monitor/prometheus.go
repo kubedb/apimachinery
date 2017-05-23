@@ -20,7 +20,7 @@ func FromPrometheusContext(ctx context.Context) (params map[string]string, ok bo
 
 type PrometheusController struct{}
 
-func (c *PrometheusController) AddMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitoringSpec) error {
+func (c *PrometheusController) AddMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
 	err := c.ensureExporter(meta)
 	if err != nil {
 		return err
@@ -33,7 +33,7 @@ func (c *PrometheusController) AddMonitor(meta *kapi.ObjectMeta, spec *tapi.Moni
 	return c.ensureMonitor(meta, spec)
 }
 
-func (c *PrometheusController) UpdateMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitoringSpec) error {
+func (c *PrometheusController) UpdateMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
 	err := c.ensureExporter(meta)
 	if err != nil {
 		return err
@@ -46,7 +46,7 @@ func (c *PrometheusController) UpdateMonitor(meta *kapi.ObjectMeta, spec *tapi.M
 	return c.ensureMonitor(meta, spec)
 }
 
-func (c *PrometheusController) DeleteMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitoringSpec) error {
+func (c *PrometheusController) DeleteMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
 	if ok, err := c.supportPrometheusOperator(); err != nil {
 		return err
 	} else if !ok {
@@ -67,7 +67,7 @@ func (c *PrometheusController) supportPrometheusOperator() (bool, error) {
 	return false, nil
 }
 
-func (c *PrometheusController) ensureMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitoringSpec) error {
+func (c *PrometheusController) ensureMonitor(meta *kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
 	// Check if a service monitor exists,
 	// If does not exist, create one.
 	// If exists, then update it only if update is needed.
