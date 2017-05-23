@@ -3,6 +3,7 @@ package monitor
 import (
 	tapi "github.com/k8sdb/apimachinery/api"
 	kapi "k8s.io/kubernetes/pkg/api"
+	_ "github.com/coreos/prometheus-operator/pkg/client/monitoring/v1alpha1"
 )
 
 type PrometheusController struct {

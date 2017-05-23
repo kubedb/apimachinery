@@ -1,5 +1,5 @@
-hash: 31b9f61a1a3eb298648ab85b071aafa782ad8622e6eb9cbe41b61981708f29c5
-updated: 2017-05-22T19:37:49.385520297-07:00
+hash: 8e4175c6cb6e445bc527dfd6a7d11e8d20f3c3f1595dbddc261ea6552e05a7f7
+updated: 2017-05-22T22:44:24.921558848-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -66,6 +66,10 @@ imports:
   - health
   - httputil
   - timeutil
+- name: github.com/coreos/prometheus-operator
+  version: 6eaca3f4ce6cd9d7384097ac484b0178a95bfc56
+  subpackages:
+  - pkg/client/monitoring/v1alpha1
 - name: github.com/davecgh/go-spew
   version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
   subpackages:
@@ -252,6 +256,65 @@ imports:
   version: be2e0b0deed5a68ffee390b4583a13aff8321535
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
+- name: k8s.io/client-go
+  version: e121606b0d09b2e1c467183ee46217fa85a6b672
+  subpackages:
+  - dynamic
+  - pkg/api
+  - pkg/api/errors
+  - pkg/api/meta
+  - pkg/api/meta/metatypes
+  - pkg/api/resource
+  - pkg/api/unversioned
+  - pkg/api/v1
+  - pkg/api/validation/path
+  - pkg/apis/autoscaling
+  - pkg/apis/batch
+  - pkg/apis/certificates
+  - pkg/apis/extensions
+  - pkg/auth/user
+  - pkg/conversion
+  - pkg/conversion/queryparams
+  - pkg/fields
+  - pkg/genericapiserver/openapi/common
+  - pkg/labels
+  - pkg/runtime
+  - pkg/runtime/serializer
+  - pkg/runtime/serializer/json
+  - pkg/runtime/serializer/protobuf
+  - pkg/runtime/serializer/recognizer
+  - pkg/runtime/serializer/streaming
+  - pkg/runtime/serializer/versioning
+  - pkg/selection
+  - pkg/third_party/forked/golang/reflect
+  - pkg/types
+  - pkg/util
+  - pkg/util/cert
+  - pkg/util/clock
+  - pkg/util/errors
+  - pkg/util/flowcontrol
+  - pkg/util/framer
+  - pkg/util/integer
+  - pkg/util/intstr
+  - pkg/util/json
+  - pkg/util/labels
+  - pkg/util/net
+  - pkg/util/parsers
+  - pkg/util/rand
+  - pkg/util/runtime
+  - pkg/util/sets
+  - pkg/util/uuid
+  - pkg/util/validation
+  - pkg/util/validation/field
+  - pkg/util/wait
+  - pkg/util/yaml
+  - pkg/version
+  - pkg/watch
+  - pkg/watch/versioned
+  - rest
+  - tools/clientcmd/api
+  - tools/metrics
+  - transport
 - name: k8s.io/kubernetes
   version: 8eb75a5810cba92ccad845ca360cf924f2385881
   subpackages:
