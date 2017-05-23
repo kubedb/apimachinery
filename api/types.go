@@ -47,7 +47,7 @@ type PrometheusSpec struct {
 	Labels map[string]string `json:"labels,omitempty"`
 
 	// Parameters are key value pairs that are passed as flags to exporters.
-	Parameters map[string]string `json:"parameters,omitempty"`
+	// Parameters map[string]string `json:"parameters,omitempty"`
 }
 
 type DatabasePhase string
