@@ -1,5 +1,5 @@
 hash: 8e4175c6cb6e445bc527dfd6a7d11e8d20f3c3f1595dbddc261ea6552e05a7f7
-updated: 2017-05-22T22:44:24.921558848-07:00
+updated: 2017-05-23T17:15:52.119739389+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -316,7 +316,7 @@ imports:
   - tools/metrics
   - transport
 - name: k8s.io/kubernetes
-  version: 8eb75a5810cba92ccad845ca360cf924f2385881
+  version: f07eea23494be1e7c11a8e2cf51bd96d1ec9fdf1
   subpackages:
   - pkg/api
   - pkg/api/errors
