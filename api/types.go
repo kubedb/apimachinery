@@ -42,7 +42,7 @@ type MonitorSpec struct {
 }
 
 type PrometheusSpec struct {
-	// Namespace of the prometheus. Servicemonitors will be created in namespace of prometheus.
+	// Namespace of Prometheus. Service monitors will be created in this namespace.
 	Namespace string `json:"namespace,omitempty"`
 	// Labels are key value pairs that is used to select Prometheus instance via ServiceMonitor labels.
 	// +optional
