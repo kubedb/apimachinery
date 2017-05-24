@@ -1,15 +1,16 @@
 package monitor
 
 import (
+	"errors"
 	"fmt"
-	"io/ioutil"
-	"os"
+	"reflect"
 	"strings"
 
 	"github.com/coreos/prometheus-operator/pkg/client/monitoring/v1alpha1"
 	_ "github.com/coreos/prometheus-operator/pkg/client/monitoring/v1alpha1"
 	prom "github.com/coreos/prometheus-operator/pkg/client/monitoring/v1alpha1"
 	tapi "github.com/k8sdb/apimachinery/api"
+	"k8s.io/client-go/pkg/api/v1"
 	kapi "k8s.io/kubernetes/pkg/api"
 	kerr "k8s.io/kubernetes/pkg/api/errors"
 	extensions "k8s.io/kubernetes/pkg/apis/extensions"
@@ -20,20 +21,21 @@ import (
 const (
 	k8sdbExporter         = "k8sdb-exporter"
 	ImageK8sdbExporter    = "k8sdb/exporter"
-	exporterContainerName = "exporter"
-	postgresPortName      = "pg_port"
+	exporterContainerName = "k8sdbExporter"
+	exporterPort          = "k8sdbExporter"
 )
 
 var exporterLabel = map[string]string{
-	"k8sdb/exporter": "appscode/exporter",
+	"run": "k8sdbExporter",
 }
 
 type PrometheusController struct {
-	monitoringClient v1alpha1.MonitoringV1alpha1Interface
-	kubeCLient       clientset.Interface
+	monitoringClient  v1alpha1.MonitoringV1alpha1Client
+	kubeCLient        clientset.Interface
+	exporterNamespace string
 }
 
-func NewPrometheusController(KubeCLient clientset.Interface, MonitoringClient v1alpha1.MonitoringV1alpha1Interface) Monitor {
+func NewPrometheusController(KubeCLient clientset.Interface, MonitoringClient v1alpha1.MonitoringV1alpha1Client) Monitor {
 	return &PrometheusController{
 		monitoringClient: MonitoringClient,
 		kubeCLient:       KubeCLient,
@@ -48,7 +50,7 @@ func (c *PrometheusController) AddMonitor(meta *kapi.ObjectMeta, spec *tapi.Moni
 	if ok, err := c.supportPrometheusOperator(); err != nil {
 		return err
 	} else if !ok {
-		return nil
+		return errors.New("This cluster lacks prometheus operator support")
 	}
 	return c.ensureMonitor(meta, spec)
 }
@@ -70,19 +72,19 @@ func (c *PrometheusController) DeleteMonitor(meta *kapi.ObjectMeta, spec *tapi.M
 	if ok, err := c.supportPrometheusOperator(); err != nil {
 		return err
 	} else if !ok {
-		return nil
+		return errors.New("This cluster lacks prometheus operator support")
 	}
 	// Delete a service monitor for this DB TPR, if does not exist
-	return nil
+	return c.monitoringClient.ServiceMonitors(spec.Prometheus.Namespace).Delete(getServiceMonitorName(meta), nil)
 }
 
 func (c *PrometheusController) ensureExporter(meta *kapi.ObjectMeta) error {
 	// check if the global exporter is running or not
 	// if not running, create a deployment of exporter pod
-	_, err := c.kubeCLient.Extensions().Deployments(namespace()).Get(k8sdbExporter)
+	_, err := c.kubeCLient.Extensions().Deployments(c.exporterNamespace).Get(k8sdbExporter)
 	if kerr.IsNotFound(err) {
 		//create exporter
-		if _, err = c.createk8sdbExporter(); err != nil {
+		if _, err = c.createK8sdbExporter(); err != nil {
 			return err
 		}
 		if err = c.createServiceForExporter(); err != nil {
@@ -109,31 +111,30 @@ func (c *PrometheusController) ensureMonitor(meta *kapi.ObjectMeta, spec *tapi.M
 	// Check if a service monitor exists,
 	// If does not exist, create one.
 	// If exists, then update it only if update is needed.
-	ok, err := c.checkServiceMonitor(spec.Prometheus.Namespace, meta.Name)
-	if err != nil {
+	serviceMonitorName := getServiceMonitorName(meta)
+	svcMonitor, err := c.monitoringClient.ServiceMonitors(spec.Prometheus.Namespace).Get(serviceMonitorName)
+	if err != nil && !kerr.IsNotFound(err) {
 		return err
 	}
-	if ok == true {
-		// TODO check if update needed
-		return nil
+	if err == nil {
+		return c.checkServiceMonitorUpdate(svcMonitor, spec)
 	}
 	//else create service monitor
 	serviceMonitor := &prom.ServiceMonitor{
-		ObjectMeta: kapi.ObjectMeta{
-			Name: meta.Name,
+		ObjectMeta: v1.ObjectMeta{
+			Name:      serviceMonitorName,
 			Namespace: spec.Prometheus.Namespace,
-			Labels: spec.Prometheus.Labels,
+			Labels:    spec.Prometheus.Labels,
 		},
-		Spec : prom.ServiceMonitorSpec{
-			JobLabel: getJobLabelFromMeta(meta),
+		Spec: prom.ServiceMonitorSpec{
 			NamespaceSelector: prom.NamespaceSelector{
 				MatchNames: []string{meta.Namespace},
 			},
 			Endpoints: []prom.Endpoint{
 				{
-					Port: "s",
+					Port:     exporterPort,
 					Interval: spec.Prometheus.Interval,
-					Path:
+					Path:     fmt.Sprintf("/k8sdb.com/v1beta1/namespaces/:%s/:%s/:%s/metrics", meta.Namespace, getTypeFromSelfLink(meta.SelfLink), meta.Name),
 				},
 			},
 		},
@@ -142,11 +143,11 @@ func (c *PrometheusController) ensureMonitor(meta *kapi.ObjectMeta, spec *tapi.M
 	return err
 }
 
-func (c *PrometheusController) createk8sdbExporter() (*extensions.Deployment, error) {
+func (c *PrometheusController) createK8sdbExporter() (*extensions.Deployment, error) {
 	exporter := &extensions.Deployment{
 		ObjectMeta: kapi.ObjectMeta{
 			Name:      k8sdbExporter,
-			Namespace: namespace(),
+			Namespace: c.exporterNamespace,
 			Labels:    exporterLabel,
 		},
 		Spec: extensions.DeploymentSpec{
@@ -159,12 +160,11 @@ func (c *PrometheusController) createk8sdbExporter() (*extensions.Deployment, er
 							Image:           ImageK8sdbExporter,
 							ImagePullPolicy: kapi.PullIfNotPresent,
 							Ports: []kapi.ContainerPort{
-								{ // ports for postgres
-									Name:          postgresPortName,
+								{
+									Name:          exporterPort,
 									Protocol:      kapi.ProtocolTCP,
-									ContainerPort: 5432,
+									ContainerPort: 9187,
 								},
-								// TODO add port for elastic search
 							},
 						},
 					},
@@ -172,7 +172,7 @@ func (c *PrometheusController) createk8sdbExporter() (*extensions.Deployment, er
 			},
 		},
 	}
-	return c.kubeCLient.Extensions().Deployments(namespace()).Create(exporter)
+	return c.kubeCLient.Extensions().Deployments(c.exporterNamespace).Create(exporter)
 }
 
 func (c *PrometheusController) createServiceForExporter() error {
@@ -186,69 +186,66 @@ func (c *PrometheusController) createServiceForExporter() error {
 	svc := &kapi.Service{
 		ObjectMeta: kapi.ObjectMeta{
 			Name:      k8sdbExporter,
-			Namespace: namespace(),
+			Namespace: c.exporterNamespace,
 			Labels:    exporterLabel,
 		},
 		Spec: kapi.ServiceSpec{
 			Type: kapi.ServiceTypeClusterIP,
 			Ports: []kapi.ServicePort{
 				{
-					Name:       postgresPortName,
+					Name:       exporterPort,
 					Port:       9187,
 					Protocol:   kapi.ProtocolTCP,
-					TargetPort: intstr.FromString(postgresPortName),
+					TargetPort: intstr.FromString(exporterPort),
 				},
-				// TODO Add ports for elasticsearch
 			},
 			Selector: exporterLabel,
 		},
 	}
-	_, err = c.kubeCLient.Core().Services(namespace()).Create(svc)
+	_, err = c.kubeCLient.Core().Services(c.exporterNamespace).Create(svc)
 	return err
 }
 
 func (c *PrometheusController) checkService() (bool, error) {
-	svc, err := c.kubeCLient.Core().Services(namespace()).Get(k8sdbExporter)
+	svc, err := c.kubeCLient.Core().Services(c.exporterNamespace).Get(k8sdbExporter)
 	if err != nil {
 		if kerr.IsNotFound(err) {
 			return false, nil
 		}
 		return false, err
 	}
-	if svc.Spec.Selector != exporterLabel {
+	if reflect.DeepEqual(svc.Spec.Selector, exporterLabel) /*svc.Spec.Selector != exporterLabel */ {
 		return false, fmt.Errorf("Service %v already exist but selector mismatch with k8sdbexporter", svc.Name)
 	}
 	return true, nil
 
 }
 
-func (c *PrometheusController) checkServiceMonitor(namespace, name string) (bool, error) {
-	_, err := c.monitoringClient.ServiceMonitors(namespace).Get(name)
-	if err != nil {
-		if kerr.IsNotFound(err) {
-			return false, nil
-		}
-		return false, err
+func (c *PrometheusController) checkServiceMonitorUpdate(svcMonitor *v1alpha1.ServiceMonitor, spec *tapi.MonitorSpec) error {
+	var needUpdate bool
+	if svcMonitor.Namespace != spec.Prometheus.Namespace {
+		needUpdate = true
+		svcMonitor.Namespace = spec.Prometheus.Namespace
 	}
-	return true, nil
+	if reflect.DeepEqual(svcMonitor.Labels, spec.Prometheus.Labels) /*svcMonitor.Labels != spec.Prometheus.Labels */ {
+		needUpdate = true
+		svcMonitor.Labels = spec.Prometheus.Labels
+	}
+	if needUpdate {
+		_, err := c.monitoringClient.ServiceMonitors(spec.Prometheus.Namespace).Update(svcMonitor)
+		return err
+	}
+	return nil
 }
 
-// namespace returns the namespace of kubedb operator
-func namespace() string {
-	if ns := os.Getenv("KUBEDB_OPERATOR_NAMESPACE"); ns != "" {
-		return ns
+func getTypeFromSelfLink(selfLink string) string {
+	if len(selfLink) == 0 {
+		return ""
 	}
-
-	// Fall back to the namespace associated with the service account token, if available
-	if data, err := ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/namespace"); err == nil {
-		if ns := strings.TrimSpace(string(data)); len(ns) > 0 {
-			return ns
-		}
-	}
-
-	return kapi.NamespaceDefault
+	s := strings.Split(selfLink, "/")
+	return s[len(s)-2]
 }
 
-func getJobLabelFromMeta(meta *kapi.ObjectMeta) string{
-	return fmt.Sprintf("k8sdb-%s-%s", meta.Name)
+func getServiceMonitorName(meta *kapi.ObjectMeta) string {
+	return fmt.Sprintf("kubedb-%s-%s", meta.Namespace, meta.Name)
 }
