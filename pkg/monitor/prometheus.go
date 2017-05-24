@@ -14,7 +14,7 @@ import (
 	"k8s.io/client-go/pkg/api/v1"
 	kapi "k8s.io/kubernetes/pkg/api"
 	kerr "k8s.io/kubernetes/pkg/api/errors"
-	extensions "k8s.io/kubernetes/pkg/apis/extensions"
+	kepi "k8s.io/kubernetes/pkg/apis/extensions"
 	clientset "k8s.io/kubernetes/pkg/client/clientset_generated/internalclientset"
 	"k8s.io/kubernetes/pkg/util/intstr"
 )
@@ -103,19 +103,22 @@ func (c *PrometheusController) ensureExporterPods() error {
 	if _, err := c.kubeClient.Extensions().Deployments(c.exporterNamespace).Get(exporterName); !kerr.IsNotFound(err) {
 		return err
 	}
-	d := &extensions.Deployment{
+	d := &kepi.Deployment{
 		ObjectMeta: kapi.ObjectMeta{
 			Name:      exporterName,
 			Namespace: c.exporterNamespace,
 			Labels:    exporterLabel,
 		},
-		Spec: extensions.DeploymentSpec{
+		Spec: kepi.DeploymentSpec{
 			Replicas: 1,
 			Template: kapi.PodTemplateSpec{
 				Spec: kapi.PodSpec{
 					Containers: []kapi.Container{
 						{
-							Name:            "exporter",
+							Name: "exporter",
+							Args: []string{
+								fmt.Sprintf("--address=:%d", portNumber),
+							},
 							Image:           c.exporterDockerImage,
 							ImagePullPolicy: kapi.PullIfNotPresent,
 							Ports: []kapi.ContainerPort{
