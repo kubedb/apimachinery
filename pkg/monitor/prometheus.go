@@ -214,7 +214,7 @@ func (c *PrometheusController) checkService() (bool, error) {
 		}
 		return false, err
 	}
-	if reflect.DeepEqual(svc.Spec.Selector, exporterLabel) /*svc.Spec.Selector != exporterLabel */ {
+	if reflect.DeepEqual(svc.Spec.Selector, exporterLabel) {
 		return false, fmt.Errorf("Service %v already exist but selector mismatch with k8sdbexporter", svc.Name)
 	}
 	return true, nil
@@ -227,7 +227,7 @@ func (c *PrometheusController) checkServiceMonitorUpdate(svcMonitor *v1alpha1.Se
 		needUpdate = true
 		svcMonitor.Namespace = spec.Prometheus.Namespace
 	}
-	if reflect.DeepEqual(svcMonitor.Labels, spec.Prometheus.Labels) /*svcMonitor.Labels != spec.Prometheus.Labels */ {
+	if reflect.DeepEqual(svcMonitor.Labels, spec.Prometheus.Labels) {
 		needUpdate = true
 		svcMonitor.Labels = spec.Prometheus.Labels
 	}
