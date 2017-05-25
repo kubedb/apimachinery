@@ -102,7 +102,7 @@ EOL
 }
 
 build() {
-	local cmd="docker build -t $1/$IMG:$TAG ."
+	local cmd="docker build -t $DOCKER_REGISTRY/$IMG:$TAG ."
 	echo $cmd; $cmd
 }
 
