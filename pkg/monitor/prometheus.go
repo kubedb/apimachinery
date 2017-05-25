@@ -17,6 +17,7 @@ import (
 	kepi "k8s.io/kubernetes/pkg/apis/extensions"
 	clientset "k8s.io/kubernetes/pkg/client/clientset_generated/internalclientset"
 	"k8s.io/kubernetes/pkg/util/intstr"
+	cgerr "k8s.io/client-go/pkg/api/errors"
 )
 
 const (
@@ -71,7 +72,7 @@ func (c *PrometheusController) DeleteMonitor(meta kapi.ObjectMeta, spec *tapi.Mo
 	if !c.SupportsCoreOSOperator() {
 		return errors.New("Cluster does not support CoreOS Prometheus operator")
 	}
-	if err := c.promClient.ServiceMonitors(spec.Prometheus.Namespace).Delete(getServiceMonitorName(meta), nil); !kerr.IsNotFound(err) {
+	if err := c.promClient.ServiceMonitors(spec.Prometheus.Namespace).Delete(getServiceMonitorName(meta), nil); !cgerr.IsNotFound(err) {
 		return err
 	}
 	return nil
@@ -117,6 +118,7 @@ func (c *PrometheusController) ensureExporterPods() error {
 						{
 							Name: "exporter",
 							Args: []string{
+								"run",
 								fmt.Sprintf("--address=:%d", portNumber),
 							},
 							Image:           c.exporterDockerImage,
@@ -141,7 +143,7 @@ func (c *PrometheusController) ensureExporterPods() error {
 }
 
 func (c *PrometheusController) ensureExporterService() error {
-	if _, err := c.kubeClient.Core().Services(c.exporterNamespace).Get(exporterName); !kerr.IsNotFound(err) {
+	if _, err := c.kubeClient.Core().Services(c.exporterNamespace).Get(exporterName); !cgerr.IsNotFound(err) {
 		return err
 	}
 	svc := &kapi.Service{
@@ -163,7 +165,7 @@ func (c *PrometheusController) ensureExporterService() error {
 			Selector: exporterLabel,
 		},
 	}
-	if _, err := c.kubeClient.Core().Services(c.exporterNamespace).Create(svc); !kerr.IsAlreadyExists(err) {
+	if _, err := c.kubeClient.Core().Services(c.exporterNamespace).Create(svc); !cgerr.IsAlreadyExists(err) {
 		return err
 	}
 	return nil
@@ -173,7 +175,7 @@ func (c *PrometheusController) ensureServiceMonitor(meta kapi.ObjectMeta, old, n
 	name := getServiceMonitorName(meta)
 	if new == nil || old.Prometheus.Namespace != new.Prometheus.Namespace {
 		err := c.promClient.ServiceMonitors(old.Prometheus.Namespace).Delete(name, nil)
-		if err != nil && !kerr.IsNotFound(err) {
+		if err != nil && !cgerr.IsNotFound(err) {
 			return err
 		}
 		if new == nil {
@@ -182,7 +184,7 @@ func (c *PrometheusController) ensureServiceMonitor(meta kapi.ObjectMeta, old, n
 	}
 
 	actual, err := c.promClient.ServiceMonitors(new.Prometheus.Namespace).Get(name)
-	if kerr.IsNotFound(err) {
+	if cgerr.IsNotFound(err) {
 		return c.createServiceMonitor(meta, new)
 	} else if err != nil {
 		return err
@@ -214,7 +216,7 @@ func (c *PrometheusController) createServiceMonitor(meta kapi.ObjectMeta, spec *
 				{
 					Port:     portName,
 					Interval: spec.Prometheus.Interval,
-					Path:     fmt.Sprintf("/kubedb.com/v1beta1/namespaces/:%s/:%s/:%s/metrics", meta.Namespace, getTypeFromSelfLink(meta.SelfLink), meta.Name),
+					Path:     fmt.Sprintf("/kubedb.com/v1beta1/namespaces/%s/%s/%s/metrics", meta.Namespace, getTypeFromSelfLink(meta.SelfLink), meta.Name),
 				},
 			},
 			Selector: unversioned.LabelSelector{
@@ -222,7 +224,7 @@ func (c *PrometheusController) createServiceMonitor(meta kapi.ObjectMeta, spec *
 			},
 		},
 	}
-	if _, err := c.promClient.ServiceMonitors(spec.Prometheus.Namespace).Create(sm); !kerr.IsAlreadyExists(err) {
+	if _, err := c.promClient.ServiceMonitors(spec.Prometheus.Namespace).Create(sm); !cgerr.IsAlreadyExists(err) {
 		return err
 	}
 	return nil
