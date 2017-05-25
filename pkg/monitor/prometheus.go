@@ -171,6 +171,17 @@ func (c *PrometheusController) ensureExporterService() error {
 
 func (c *PrometheusController) ensureServiceMonitor(meta *kapi.ObjectMeta, old, new *tapi.MonitorSpec) error {
 	name := getServiceMonitorName(meta)
+
+	if old == nil {
+		old = new
+	} else if new == nil {
+		err := c.promClient.ServiceMonitors(old.Prometheus.Namespace).Delete(name, nil)
+		if err != nil && !kerr.IsNotFound(err) {
+			return err
+		}
+		return nil
+	}
+
 	if old.Prometheus.Namespace != new.Prometheus.Namespace {
 		err := c.promClient.ServiceMonitors(old.Prometheus.Namespace).Delete(name, nil)
 		if err != nil && !kerr.IsNotFound(err) {
@@ -183,6 +194,7 @@ func (c *PrometheusController) ensureServiceMonitor(meta *kapi.ObjectMeta, old, 
 	} else if err != nil {
 		return err
 	}
+
 	if !reflect.DeepEqual(old.Prometheus.Labels, new.Prometheus.Labels) ||
 		old.Prometheus.Interval != new.Prometheus.Interval {
 		actual.Labels = new.Prometheus.Labels
