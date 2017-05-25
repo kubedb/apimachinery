@@ -2,6 +2,6 @@ metadata:
   name: snapshot.kubedb.com
 apiVersion: extensions/v1beta1
 kind: ThirdPartyResource
-description: "Snapshot of k8sdb databases"
+description: "Snapshot of kubedb databases"
 versions:
   - name: v1beta1
