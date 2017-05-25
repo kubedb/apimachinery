@@ -1,5 +1,5 @@
 metadata:
-  name: dormant-database.k8sdb.com
+  name: dormant-database.kubedb.com
 apiVersion: extensions/v1beta1
 kind: ThirdPartyResource
 description: "Dormant k8sdb databases"
