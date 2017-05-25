@@ -14,7 +14,7 @@ type FakeDormantDatabase struct {
 	ns   string
 }
 
-var dormantDatabaseResource = schema.GroupVersionResource{Group: "k8sdb.com", Version: "v1beta1", Resource: aci.ResourceTypeDormantDatabase}
+var dormantDatabaseResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1beta1", Resource: aci.ResourceTypeDormantDatabase}
 
 // Get returns the DormantDatabase by name.
 func (mock *FakeDormantDatabase) Get(name string) (*aci.DormantDatabase, error) {

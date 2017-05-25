@@ -19,7 +19,7 @@ var _ clientset.ExtensionInterface = &FakeExtensionClient{}
 func NewFakeExtensionClient(objects ...runtime.Object) *FakeExtensionClient {
 	o := testing.NewObjectTracker(api.Scheme, api.Codecs.UniversalDecoder())
 	for _, obj := range objects {
-		if obj.GetObjectKind().GroupVersionKind().Group == "k8sdb.com" {
+		if obj.GetObjectKind().GroupVersionKind().Group == "kubedb.com" {
 			if err := o.Add(obj); err != nil {
 				panic(err)
 			}

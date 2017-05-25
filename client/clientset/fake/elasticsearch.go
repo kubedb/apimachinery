@@ -14,7 +14,7 @@ type FakeElastic struct {
 	ns   string
 }
 
-var elasticResource = schema.GroupVersionResource{Group: "k8sdb.com", Version: "v1beta1", Resource: aci.ResourceTypeElastic}
+var elasticResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1beta1", Resource: aci.ResourceTypeElastic}
 
 // Get returns the Elastic by name.
 func (mock *FakeElastic) Get(name string) (*aci.Elastic, error) {
