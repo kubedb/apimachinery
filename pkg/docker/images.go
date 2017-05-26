@@ -1,11 +1,11 @@
 package docker
 
 const (
-	KubedbExporter      = "kubedb/exporter"
-	KubedbPostgres      = "kubedb/postgres"
-	KubedbEsOperator    = "kubedb/es-operator"
-	KubedbElasticsearch = "kubedb/elasticsearch"
-	KubedbElasticdump   = "kubedb/elasticdump"
-	KubedbPgOperator    = "kubedb/pg-operator"
-	KubedbOperator      = "kubedb/operator"
+	ImageKubedbExporter      = "kubedb/exporter"
+	ImageKubedbPostgres      = "kubedb/postgres"
+	ImageKubedbEsOperator    = "kubedb/es-operator"
+	ImageKubedbElasticsearch = "kubedb/elasticsearch"
+	ImageKubedbElasticdump   = "kubedb/elasticdump"
+	ImageKubedbPgOperator    = "kubedb/pg-operator"
+	ImageKubedbOperator      = "kubedb/operator"
 )
