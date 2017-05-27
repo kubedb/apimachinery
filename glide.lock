@@ -1,5 +1,5 @@
-hash: 8e4175c6cb6e445bc527dfd6a7d11e8d20f3c3f1595dbddc261ea6552e05a7f7
-updated: 2017-05-24T23:30:15.894926583-07:00
+hash: a5474a64cd35618ab871b2600d50eb4b39809a57b5db26f684b37015bc354b00
+updated: 2017-05-27T01:35:59.743063623-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -67,7 +67,9 @@ imports:
   - httputil
   - timeutil
 - name: github.com/coreos/prometheus-operator
-  version: 6eaca3f4ce6cd9d7384097ac484b0178a95bfc56
+  version: 77ed82f3c040007cea3015404637ac78cb1f968a
+  repo: https://github.com/appscode/prometheus-operator.git
+  vcs: git
   subpackages:
   - pkg/client/monitoring/v1alpha1
 - name: github.com/davecgh/go-spew
@@ -256,6 +258,38 @@ imports:
   version: be2e0b0deed5a68ffee390b4583a13aff8321535
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
+- name: k8s.io/apimachinery
+  version: 2de00c78cb6d6127fb51b9531c1b3def1cbcac8c
+  subpackages:
+  - pkg/api/resource
+  - pkg/apis/meta/v1
+  - pkg/apis/meta/v1/unstructured
+  - pkg/conversion
+  - pkg/conversion/queryparams
+  - pkg/fields
+  - pkg/labels
+  - pkg/openapi
+  - pkg/runtime
+  - pkg/runtime/schema
+  - pkg/runtime/serializer
+  - pkg/runtime/serializer/json
+  - pkg/runtime/serializer/protobuf
+  - pkg/runtime/serializer/recognizer
+  - pkg/runtime/serializer/versioning
+  - pkg/selection
+  - pkg/types
+  - pkg/util/errors
+  - pkg/util/framer
+  - pkg/util/intstr
+  - pkg/util/json
+  - pkg/util/net
+  - pkg/util/runtime
+  - pkg/util/sets
+  - pkg/util/validation
+  - pkg/util/wait
+  - pkg/util/yaml
+  - pkg/watch
+  - third_party/forked/golang/reflect
 - name: k8s.io/client-go
   version: e121606b0d09b2e1c467183ee46217fa85a6b672
   subpackages:

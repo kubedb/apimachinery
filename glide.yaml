@@ -20,7 +20,9 @@ import:
 - package: github.com/Sirupsen/logrus
   version: v0.10.0
 - package: github.com/coreos/prometheus-operator
-  version: v0.8.1
+  repo: https://github.com/appscode/prometheus-operator.git
+  vcs: git
+  version: off-car-exporter
 - package: k8s.io/client-go
   version: e121606b0d09b2e1c467183ee46217fa85a6b672
 testImport:
