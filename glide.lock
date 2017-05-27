@@ -1,5 +1,5 @@
-hash: a5474a64cd35618ab871b2600d50eb4b39809a57b5db26f684b37015bc354b00
-updated: 2017-05-27T01:35:59.743063623-07:00
+hash: 90acdfaa71f604675a5707756098aee63349266f4de7dd37a669e468ed60e7ea
+updated: 2017-05-27T02:03:02.240835297-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -108,31 +108,8 @@ imports:
 - name: github.com/gogo/protobuf
   version: e18d7aa8f8c624c915db340349aad4c49b10d173
   subpackages:
-  - gogoproto
-  - plugin/compare
-  - plugin/defaultcheck
-  - plugin/description
-  - plugin/embedcheck
-  - plugin/enumstringer
-  - plugin/equal
-  - plugin/face
-  - plugin/gostring
-  - plugin/marshalto
-  - plugin/oneofcheck
-  - plugin/populate
-  - plugin/size
-  - plugin/stringer
-  - plugin/testgen
-  - plugin/union
-  - plugin/unmarshal
   - proto
-  - protoc-gen-gogo/descriptor
-  - protoc-gen-gogo/generator
-  - protoc-gen-gogo/grpc
-  - protoc-gen-gogo/plugin
   - sortkeys
-  - vanity
-  - vanity/command
 - name: github.com/golang/glog
   version: 44145f04b68cf362d9c4df2182967c2275eaefed
 - name: github.com/golang/groupcache
@@ -259,9 +236,14 @@ imports:
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/apimachinery
-  version: 2de00c78cb6d6127fb51b9531c1b3def1cbcac8c
+  version: 75b8dd260ef0469d96d578705a87cffd0e09dab8
   subpackages:
+  - pkg/api/errors
+  - pkg/api/meta
   - pkg/api/resource
+  - pkg/apimachinery
+  - pkg/apimachinery/announced
+  - pkg/apimachinery/registered
   - pkg/apis/meta/v1
   - pkg/apis/meta/v1/unstructured
   - pkg/conversion
@@ -275,80 +257,44 @@ imports:
   - pkg/runtime/serializer/json
   - pkg/runtime/serializer/protobuf
   - pkg/runtime/serializer/recognizer
-  - pkg/runtime/serializer/versioning
-  - pkg/selection
-  - pkg/types
-  - pkg/util/errors
-  - pkg/util/framer
-  - pkg/util/intstr
-  - pkg/util/json
-  - pkg/util/net
-  - pkg/util/runtime
-  - pkg/util/sets
-  - pkg/util/validation
-  - pkg/util/wait
-  - pkg/util/yaml
-  - pkg/watch
-  - third_party/forked/golang/reflect
-- name: k8s.io/client-go
-  version: e121606b0d09b2e1c467183ee46217fa85a6b672
-  subpackages:
-  - dynamic
-  - pkg/api
-  - pkg/api/errors
-  - pkg/api/meta
-  - pkg/api/meta/metatypes
-  - pkg/api/resource
-  - pkg/api/unversioned
-  - pkg/api/v1
-  - pkg/api/validation/path
-  - pkg/apis/autoscaling
-  - pkg/apis/batch
-  - pkg/apis/certificates
-  - pkg/apis/extensions
-  - pkg/auth/user
-  - pkg/conversion
-  - pkg/conversion/queryparams
-  - pkg/fields
-  - pkg/genericapiserver/openapi/common
-  - pkg/labels
-  - pkg/runtime
-  - pkg/runtime/serializer
-  - pkg/runtime/serializer/json
-  - pkg/runtime/serializer/protobuf
-  - pkg/runtime/serializer/recognizer
   - pkg/runtime/serializer/streaming
   - pkg/runtime/serializer/versioning
   - pkg/selection
-  - pkg/third_party/forked/golang/reflect
   - pkg/types
-  - pkg/util
-  - pkg/util/cert
-  - pkg/util/clock
   - pkg/util/errors
-  - pkg/util/flowcontrol
   - pkg/util/framer
-  - pkg/util/integer
   - pkg/util/intstr
   - pkg/util/json
-  - pkg/util/labels
   - pkg/util/net
-  - pkg/util/parsers
   - pkg/util/rand
   - pkg/util/runtime
   - pkg/util/sets
-  - pkg/util/uuid
   - pkg/util/validation
   - pkg/util/validation/field
   - pkg/util/wait
   - pkg/util/yaml
   - pkg/version
   - pkg/watch
-  - pkg/watch/versioned
+  - third_party/forked/golang/reflect
+- name: k8s.io/client-go
+  version: 3627aeb7d4f6ade38f995d2c923e459146493c7e
+  subpackages:
+  - dynamic
+  - pkg/api
+  - pkg/api/v1
+  - pkg/apis/extensions
+  - pkg/util
+  - pkg/util/parsers
+  - pkg/version
   - rest
+  - rest/watch
   - tools/clientcmd/api
   - tools/metrics
   - transport
+  - util/cert
+  - util/clock
+  - util/flowcontrol
+  - util/integer
 - name: k8s.io/kubernetes
   version: 8eb75a5810cba92ccad845ca360cf924f2385881
   subpackages:
