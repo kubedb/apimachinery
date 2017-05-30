@@ -209,6 +209,11 @@ func (c *PrometheusController) ensureServiceMonitor(meta kapi.ObjectMeta, old, n
 }
 
 func (c *PrometheusController) createServiceMonitor(meta kapi.ObjectMeta, spec *tapi.MonitorSpec) error {
+	svc, err := c.kubeClient.Core().Services(meta.Namespace).Get(meta.Name)
+	if err != nil {
+		return err
+	}
+
 	sm := &prom.ServiceMonitor{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      getServiceMonitorName(meta),
@@ -217,7 +222,7 @@ func (c *PrometheusController) createServiceMonitor(meta kapi.ObjectMeta, spec *
 		},
 		Spec: prom.ServiceMonitorSpec{
 			NamespaceSelector: prom.NamespaceSelector{
-				MatchNames: []string{c.exporterNamespace},
+				MatchNames: []string{meta.Namespace},
 			},
 			Endpoints: []prom.Endpoint{
 				{
@@ -228,7 +233,7 @@ func (c *PrometheusController) createServiceMonitor(meta kapi.ObjectMeta, spec *
 				},
 			},
 			Selector: metav1.LabelSelector{
-				MatchLabels: exporterLabel,
+				MatchLabels: svc.Spec.Selector,
 			},
 		},
 	}
