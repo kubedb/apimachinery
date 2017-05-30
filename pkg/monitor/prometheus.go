@@ -213,6 +213,10 @@ func (c *PrometheusController) createServiceMonitor(meta kapi.ObjectMeta, spec *
 	if err != nil {
 		return err
 	}
+	ports := svc.Spec.Ports
+	if len(ports) == 0 {
+		return errors.New("No port found in database service")
+	}
 
 	sm := &prom.ServiceMonitor{
 		ObjectMeta: metav1.ObjectMeta{
@@ -222,12 +226,12 @@ func (c *PrometheusController) createServiceMonitor(meta kapi.ObjectMeta, spec *
 		},
 		Spec: prom.ServiceMonitorSpec{
 			NamespaceSelector: prom.NamespaceSelector{
-				MatchNames: []string{meta.Namespace},
+				MatchNames: []string{svc.Namespace},
 			},
 			Endpoints: []prom.Endpoint{
 				{
 					Address:  fmt.Sprintf("%s.%s.svc:%d", exporterName, c.exporterNamespace, portNumber),
-					Port:     portName,
+					Port:     svc.Spec.Ports[0].Name,
 					Interval: spec.Prometheus.Interval,
 					Path:     fmt.Sprintf("/kubedb.com/v1beta1/namespaces/%s/%s/%s/pods/${__meta_kubernetes_pod_ip}/metrics", meta.Namespace, getTypeFromSelfLink(meta.SelfLink), meta.Name),
 				},
