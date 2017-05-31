@@ -523,7 +523,7 @@ func (c *DormantDbController) reCreateDormantDatabase(dormantDb *tapi.DormantDat
 }
 
 const (
-	category = "dormantdatabase-controller"
+	category = tapi.ResourceNameDormantDatabase
 )
 
 func dormantDbSuccessfullyCreated() {

@@ -427,7 +427,7 @@ func (c *SnapshotController) checkSnapshotJob(snapshot *tapi.Snapshot, jobName s
 }
 
 const (
-	category = "snapshot-controller"
+	category = tapi.ResourceNameSnapshot
 )
 
 func snapshotSuccessfullyCreated() {
