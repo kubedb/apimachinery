@@ -30,7 +30,7 @@ import:
 - package: k8s.io/client-go
   version: v3.0.0-beta.0
 - package: github.com/jpillora/go-ogle-analytics
-  version: 14b04e0594ef6a9fd943363b135656f0ec8c9d0e
+  version: master
 testImport:
 - package: github.com/stretchr/testify
   version: v1.1.4

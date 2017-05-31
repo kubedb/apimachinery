@@ -426,22 +426,18 @@ func (c *SnapshotController) checkSnapshotJob(snapshot *tapi.Snapshot, jobName s
 	return nil
 }
 
-const (
-	category = tapi.ResourceNameSnapshot
-)
-
 func snapshotSuccessfullyCreated() {
-	analytics.Send(ga.NewEvent(category, "successfully_created"))
+	analytics.Send(ga.NewEvent(tapi.ResourceNameSnapshot, "successfully_created"))
 }
 
 func snapshotFailedToCreate() {
-	analytics.Send(ga.NewEvent(category, "failed_to_create"))
+	analytics.Send(ga.NewEvent(tapi.ResourceNameSnapshot, "failed_to_create"))
 }
 
 func snapshotSuccessfullyDeleted() {
-	analytics.Send(ga.NewEvent(category, "successfully_deleted"))
+	analytics.Send(ga.NewEvent(tapi.ResourceNameSnapshot, "successfully_deleted"))
 }
 
 func snapshotFailedToDelete() {
-	analytics.Send(ga.NewEvent(category, "failed_to_delete"))
+	analytics.Send(ga.NewEvent(tapi.ResourceNameSnapshot, "failed_to_delete"))
 }

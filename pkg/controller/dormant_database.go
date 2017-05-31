@@ -522,22 +522,18 @@ func (c *DormantDbController) reCreateDormantDatabase(dormantDb *tapi.DormantDat
 	return nil
 }
 
-const (
-	category = tapi.ResourceNameDormantDatabase
-)
-
 func dormantDbSuccessfullyCreated() {
-	analytics.Send(ga.NewEvent(category, "successfully_created"))
+	analytics.Send(ga.NewEvent(tapi.ResourceNameDormantDatabase, "successfully_created"))
 }
 
 func dormantDbFailedToCreate() {
-	analytics.Send(ga.NewEvent(category, "failed_to_create"))
+	analytics.Send(ga.NewEvent(tapi.ResourceNameDormantDatabase, "failed_to_create"))
 }
 
 func dormantDbSuccessfullyDeleted() {
-	analytics.Send(ga.NewEvent(category, "successfully_deleted"))
+	analytics.Send(ga.NewEvent(tapi.ResourceNameDormantDatabase, "successfully_deleted"))
 }
 
 func dormantDbFailedToDelete() {
-	analytics.Send(ga.NewEvent(category, "failed_to_delete"))
+	analytics.Send(ga.NewEvent(tapi.ResourceNameDormantDatabase, "failed_to_delete"))
 }
