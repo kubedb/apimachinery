@@ -7,8 +7,10 @@ import (
 
 	"github.com/appscode/go/wait"
 	"github.com/appscode/log"
+	"github.com/jpillora/go-ogle-analytics"
 	tapi "github.com/k8sdb/apimachinery/api"
 	tcs "github.com/k8sdb/apimachinery/client/clientset"
+	"github.com/k8sdb/apimachinery/pkg/analytics"
 	"github.com/k8sdb/apimachinery/pkg/eventer"
 	kapi "k8s.io/kubernetes/pkg/api"
 	k8serr "k8s.io/kubernetes/pkg/api/errors"
@@ -113,13 +115,20 @@ func (c *DormantDbController) watch() {
 				dormantDb := obj.(*tapi.DormantDatabase)
 				if dormantDb.Status.CreationTime == nil {
 					if err := c.create(dormantDb); err != nil {
+						dormantDbFailedToCreate()
 						log.Errorln(err)
+					} else {
+						dormantDbSuccessfullyCreated()
 					}
 				}
 			},
 			DeleteFunc: func(obj interface{}) {
+				dormantDbSuccessfullyDeleted()
 				if err := c.delete(obj.(*tapi.DormantDatabase)); err != nil {
+					dormantDbFailedToDelete()
 					log.Errorln(err)
+				} else {
+					dormantDbSuccessfullyDeleted()
 				}
 			},
 			UpdateFunc: func(old, new interface{}) {
@@ -511,4 +520,24 @@ func (c *DormantDbController) reCreateDormantDatabase(dormantDb *tapi.DormantDat
 	}
 
 	return nil
+}
+
+const (
+	category = "dormantdatabase-controller"
+)
+
+func dormantDbSuccessfullyCreated() {
+	analytics.Send(ga.NewEvent(category, "successfully_created"))
+}
+
+func dormantDbFailedToCreate() {
+	analytics.Send(ga.NewEvent(category, "failed_to_create"))
+}
+
+func dormantDbSuccessfullyDeleted() {
+	analytics.Send(ga.NewEvent(category, "successfully_deleted"))
+}
+
+func dormantDbFailedToDelete() {
+	analytics.Send(ga.NewEvent(category, "failed_to_delete"))
 }

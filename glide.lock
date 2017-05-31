@@ -1,5 +1,5 @@
-hash: 90acdfaa71f604675a5707756098aee63349266f4de7dd37a669e468ed60e7ea
-updated: 2017-05-31T11:41:23.672360475+06:00
+hash: 258a17eff2a217fab68112326667b84ae2556ccf55eb77bfed608cb7a760a290
+updated: 2017-05-31T12:14:31.321054674+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -141,7 +141,7 @@ imports:
 - name: github.com/jonboulle/clockwork
   version: 72f9bd7c4e0c2a40055ab3d0f09654f730cce982
 - name: github.com/jpillora/go-ogle-analytics
-  version: 2fcc54fe85cce40ab0d9ce84d974f3be9948b9c0
+  version: 14b04e0594ef6a9fd943363b135656f0ec8c9d0e
 - name: github.com/juju/ratelimit
   version: 77ed1c8a01217656d2080ad51981f6e99adaa177
 - name: github.com/mailru/easyjson
