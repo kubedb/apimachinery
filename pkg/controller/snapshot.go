@@ -6,7 +6,6 @@ import (
 
 	"github.com/appscode/go/wait"
 	"github.com/appscode/log"
-	"github.com/jpillora/go-ogle-analytics"
 	tapi "github.com/k8sdb/apimachinery/api"
 	tcs "github.com/k8sdb/apimachinery/client/clientset"
 	"github.com/k8sdb/apimachinery/pkg/analytics"
@@ -427,17 +426,17 @@ func (c *SnapshotController) checkSnapshotJob(snapshot *tapi.Snapshot, jobName s
 }
 
 func snapshotSuccessfullyCreated() {
-	analytics.Send(ga.NewEvent(tapi.ResourceNameSnapshot, "successfully_created"))
+	analytics.SendEvent(tapi.ResourceNameSnapshot, "created", "success")
 }
 
 func snapshotFailedToCreate() {
-	analytics.Send(ga.NewEvent(tapi.ResourceNameSnapshot, "failed_to_create"))
+	analytics.SendEvent(tapi.ResourceNameSnapshot, "created", "failure")
 }
 
 func snapshotSuccessfullyDeleted() {
-	analytics.Send(ga.NewEvent(tapi.ResourceNameSnapshot, "successfully_deleted"))
+	analytics.SendEvent(tapi.ResourceNameSnapshot, "deleted", "success")
 }
 
 func snapshotFailedToDelete() {
-	analytics.Send(ga.NewEvent(tapi.ResourceNameSnapshot, "failed_to_delete"))
+	analytics.SendEvent(tapi.ResourceNameSnapshot, "deleted", "failure")
 }

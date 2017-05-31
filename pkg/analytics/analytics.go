@@ -36,7 +36,7 @@ func Disable() {
 	client = nil
 }
 
-func Send(e *ga.Event) {
+func send(e *ga.Event) {
 	mu.Lock()
 	c := client
 	mu.Unlock()
@@ -45,4 +45,12 @@ func Send(e *ga.Event) {
 		return
 	}
 	c.Send(e)
+}
+
+func SendEvent(category string, action, label string) {
+	event := ga.NewEvent(category, action)
+	if label != "" {
+		event = event.Label(label)
+	}
+	send(event)
 }

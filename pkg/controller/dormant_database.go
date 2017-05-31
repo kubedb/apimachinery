@@ -7,7 +7,6 @@ import (
 
 	"github.com/appscode/go/wait"
 	"github.com/appscode/log"
-	"github.com/jpillora/go-ogle-analytics"
 	tapi "github.com/k8sdb/apimachinery/api"
 	tcs "github.com/k8sdb/apimachinery/client/clientset"
 	"github.com/k8sdb/apimachinery/pkg/analytics"
@@ -523,17 +522,17 @@ func (c *DormantDbController) reCreateDormantDatabase(dormantDb *tapi.DormantDat
 }
 
 func dormantDbSuccessfullyCreated() {
-	analytics.Send(ga.NewEvent(tapi.ResourceNameDormantDatabase, "successfully_created"))
+	analytics.SendEvent(tapi.ResourceNameDormantDatabase, "created", "success")
 }
 
 func dormantDbFailedToCreate() {
-	analytics.Send(ga.NewEvent(tapi.ResourceNameDormantDatabase, "failed_to_create"))
+	analytics.SendEvent(tapi.ResourceNameDormantDatabase, "created", "failure")
 }
 
 func dormantDbSuccessfullyDeleted() {
-	analytics.Send(ga.NewEvent(tapi.ResourceNameDormantDatabase, "successfully_deleted"))
+	analytics.SendEvent(tapi.ResourceNameDormantDatabase, "deleted", "success")
 }
 
 func dormantDbFailedToDelete() {
-	analytics.Send(ga.NewEvent(tapi.ResourceNameDormantDatabase, "failed_to_delete"))
+	analytics.SendEvent(tapi.ResourceNameDormantDatabase, "deleted", "failure")
 }
