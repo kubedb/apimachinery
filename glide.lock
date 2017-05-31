@@ -1,5 +1,5 @@
 hash: f3ee316308230d095958dac879b2c08af15bdfbf23336684d5b33d461f034930
-updated: 2017-05-31T13:17:52.651638115+06:00
+updated: 2017-05-31T15:19:37.220139079-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -7,8 +7,9 @@ imports:
   - compute/metadata
   - internal
 - name: github.com/appscode/go
-  version: 04abd631dc552c01c9448db0763611932590cbc4
+  version: 5eabd32a8a0fe824b5e12c37dc53a0afea8507c9
   subpackages:
+  - encoding/json/types
   - runtime
   - wait
 - name: github.com/appscode/log
@@ -298,7 +299,7 @@ imports:
   - util/flowcontrol
   - util/integer
 - name: k8s.io/kubernetes
-  version: f07eea23494be1e7c11a8e2cf51bd96d1ec9fdf1
+  version: 8eb75a5810cba92ccad845ca360cf924f2385881
   subpackages:
   - pkg/api
   - pkg/api/errors
