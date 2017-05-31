@@ -122,7 +122,6 @@ func (c *DormantDbController) watch() {
 				}
 			},
 			DeleteFunc: func(obj interface{}) {
-				dormantDbSuccessfullyDeleted()
 				if err := c.delete(obj.(*tapi.DormantDatabase)); err != nil {
 					dormantDbFailedToDelete()
 					log.Errorln(err)
