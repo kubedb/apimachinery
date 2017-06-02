@@ -45,11 +45,11 @@ func (a *ExtensionClient) Postgreses(namespace string) PostgresInterface {
 	return newPostgres(a, namespace)
 }
 
-// NewExtensionForConfig creates a new ExtensionClient for the given config. This client
+// NewForConfig creates a new ExtensionClient for the given config. This client
 // provides access to experimental Kubernetes features.
 // Features of Extensions group are not supported and may be changed or removed in
 // incompatible ways at any time.
-func NewExtensionForConfig(c *rest.Config) (*ExtensionClient, error) {
+func NewForConfig(c *rest.Config) (*ExtensionClient, error) {
 	config := *c
 	if err := setExtensionsDefaults(&config); err != nil {
 		return nil, err
@@ -61,20 +61,20 @@ func NewExtensionForConfig(c *rest.Config) (*ExtensionClient, error) {
 	return &ExtensionClient{client}, nil
 }
 
-// NewExtensionForConfigOrDie creates a new ExtensionClient for the given config and
+// NewForConfigOrDie creates a new ExtensionClient for the given config and
 // panics if there is an error in the config.
 // Features of Extensions group are not supported and may be changed or removed in
 // incompatible ways at any time.
-func NewExtensionForConfigOrDie(c *rest.Config) *ExtensionClient {
-	client, err := NewExtensionForConfig(c)
+func NewForConfigOrDie(c *rest.Config) *ExtensionClient {
+	client, err := NewForConfig(c)
 	if err != nil {
 		panic(err)
 	}
 	return client
 }
 
-// New creates a new NewExtension for the given RESTClient.
-func NewExtension(c rest.Interface) *ExtensionClient {
+// New creates a new New for the given RESTClient.
+func New(c rest.Interface) *ExtensionClient {
 	return &ExtensionClient{c}
 }
 
