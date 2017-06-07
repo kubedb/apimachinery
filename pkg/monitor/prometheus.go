@@ -18,18 +18,16 @@ import (
 )
 
 type PrometheusController struct {
-	kubeClient          clientset.Interface
-	promClient          *v1alpha1.MonitoringV1alpha1Client
-	exporterNamespace   string
-	exporterDockerImage string
+	kubeClient        clientset.Interface
+	promClient        *v1alpha1.MonitoringV1alpha1Client
+	operatorNamespace string
 }
 
-func NewPrometheusController(kubeClient clientset.Interface, promClient *v1alpha1.MonitoringV1alpha1Client, exporterNamespace, exporterDockerImage string) Monitor {
+func NewPrometheusController(kubeClient clientset.Interface, promClient *v1alpha1.MonitoringV1alpha1Client, operatorNamespace string) Monitor {
 	return &PrometheusController{
-		kubeClient:          kubeClient,
-		promClient:          promClient,
-		exporterNamespace:   exporterNamespace,
-		exporterDockerImage: exporterDockerImage,
+		kubeClient:        kubeClient,
+		promClient:        promClient,
+		operatorNamespace: operatorNamespace,
 	}
 }
 
@@ -121,7 +119,7 @@ func (c *PrometheusController) createServiceMonitor(meta kapi.ObjectMeta, spec *
 			},
 			Endpoints: []prom.Endpoint{
 				{
-					Address:  fmt.Sprintf("%s.%s.svc:%d", docker.OperatorName, c.exporterNamespace, docker.OperatorPortNumber),
+					Address:  fmt.Sprintf("%s.%s.svc:%d", docker.OperatorName, c.operatorNamespace, docker.OperatorPortNumber),
 					Port:     svc.Spec.Ports[0].Name,
 					Interval: spec.Prometheus.Interval,
 					Path:     fmt.Sprintf("/kubedb.com/v1beta1/namespaces/%s/%s/%s/pods/${__meta_kubernetes_pod_ip}/metrics", meta.Namespace, getTypeFromSelfLink(meta.SelfLink), meta.Name),
