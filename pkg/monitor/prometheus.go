@@ -69,7 +69,7 @@ func (c *PrometheusController) SupportsCoreOSOperator() bool {
 
 func (c *PrometheusController) ensureServiceMonitor(meta kapi.ObjectMeta, old, new *tapi.MonitorSpec) error {
 	name := getServiceMonitorName(meta)
-	if new == nil || old.Prometheus.Namespace != new.Prometheus.Namespace {
+	if old != nil && (new == nil || old.Prometheus.Namespace != new.Prometheus.Namespace) {
 		err := c.promClient.ServiceMonitors(old.Prometheus.Namespace).Delete(name, nil)
 		if err != nil && !cgerr.IsNotFound(err) {
 			return err
