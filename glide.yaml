@@ -4,6 +4,12 @@ import:
 - package: github.com/ghodss/yaml
 - package: k8s.io/kubernetes
   version: ~1.5.0
+- package: github.com/graymeta/stow
+  repo: https://github.com/appscode/stow.git
+  version: master
+  vcs: git
+- package: google.golang.org/api/storage/v1
+  version: master
 - package: cloud.google.com/go
   version: v0.2.0
 - package: github.com/Azure/azure-sdk-for-go

@@ -1,5 +1,5 @@
-hash: f3ee316308230d095958dac879b2c08af15bdfbf23336684d5b33d461f034930
-updated: 2017-05-31T15:19:37.220139079-07:00
+hash: 71baf4583a87152d17894592ee2a4593980b1ff480e02e50fbc2f7ed4546cf39
+updated: 2017-06-13T13:45:27.012773424-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -45,6 +45,8 @@ imports:
 - name: github.com/Azure/azure-sdk-for-go
   version: 0984e0641ae43b89283223034574d6465be93bf4
   vcs: git
+  subpackages:
+  - storage
 - name: github.com/Azure/go-ansiterm
   version: 70b2c90b260171e829f1ebd7c17f600c11858dbe
 - name: github.com/Azure/go-autorest
@@ -129,8 +131,11 @@ imports:
 - name: github.com/gorilla/mux
   version: 8096f47503459bcc74d1f4c487b7e6e42e5746b5
 - name: github.com/graymeta/stow
-  version: 0f16e170afc5e1b89434469a3b52a81f792c9038
+  version: d4b253dd4995360ae103b6460bbadeaa7fb3cdb4
+  repo: https://github.com/appscode/stow.git
+  vcs: git
   subpackages:
+  - azure
   - google
   - s3
 - name: github.com/heroku/docker-registry-client
@@ -210,12 +215,8 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: a69f0f19d246419bb931b0ac8f4f8d3f3e6d4feb
+  version: 324744a33f1f37e63dd1695cfb3ec9a3e4a1cb05
   subpackages:
-  - cloudmonitoring/v2beta2
-  - compute/v1
-  - container/v1
-  - dns/v1
   - gensupport
   - googleapi
   - googleapi/internal/uritemplates
