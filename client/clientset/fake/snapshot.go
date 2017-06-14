@@ -14,7 +14,7 @@ type FakeSnapshot struct {
 	ns   string
 }
 
-var snapshotResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1beta1", Resource: aci.ResourceTypeSnapshot}
+var snapshotResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1alpha1", Resource: aci.ResourceTypeSnapshot}
 
 // Get returns the Snapshot by name.
 func (mock *FakeSnapshot) Get(name string) (*aci.Snapshot, error) {

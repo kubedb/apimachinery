@@ -4,4 +4,4 @@ apiVersion: extensions/v1beta1
 kind: ThirdPartyResource
 description: "Kubedb dormant databases"
 versions:
-  - name: v1beta1
+  - name: v1alpha1
