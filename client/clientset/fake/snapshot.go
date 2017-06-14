@@ -2,11 +2,11 @@ package fake
 
 import (
 	aci "github.com/k8sdb/apimachinery/api"
-	"k8s.io/kubernetes/pkg/api"
-	schema "k8s.io/kubernetes/pkg/api/unversioned"
-	testing "k8s.io/kubernetes/pkg/client/testing/core"
-	"k8s.io/kubernetes/pkg/labels"
-	"k8s.io/kubernetes/pkg/watch"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/watch"
+	"k8s.io/client-go/testing"
 )
 
 type FakeSnapshot struct {
@@ -28,7 +28,7 @@ func (mock *FakeSnapshot) Get(name string) (*aci.Snapshot, error) {
 }
 
 // List returns the a of Snapshots.
-func (mock *FakeSnapshot) List(opts api.ListOptions) (*aci.SnapshotList, error) {
+func (mock *FakeSnapshot) List(opts metav1.ListOptions) (*aci.SnapshotList, error) {
 	obj, err := mock.Fake.
 		Invokes(testing.NewListAction(snapshotResource, mock.ns, opts), &aci.Snapshot{})
 
@@ -89,7 +89,7 @@ func (mock *FakeSnapshot) UpdateStatus(srv *aci.Snapshot) (*aci.Snapshot, error)
 	return obj.(*aci.Snapshot), err
 }
 
-func (mock *FakeSnapshot) Watch(opts api.ListOptions) (watch.Interface, error) {
+func (mock *FakeSnapshot) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 	return mock.Fake.
 		InvokesWatch(testing.NewWatchAction(snapshotResource, mock.ns, opts))
 }

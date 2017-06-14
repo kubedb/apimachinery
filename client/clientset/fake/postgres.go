@@ -2,11 +2,11 @@ package fake
 
 import (
 	aci "github.com/k8sdb/apimachinery/api"
-	"k8s.io/kubernetes/pkg/api"
-	schema "k8s.io/kubernetes/pkg/api/unversioned"
-	testing "k8s.io/kubernetes/pkg/client/testing/core"
-	"k8s.io/kubernetes/pkg/labels"
-	"k8s.io/kubernetes/pkg/watch"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/watch"
+	"k8s.io/client-go/testing"
 )
 
 type FakePostgres struct {
@@ -28,7 +28,7 @@ func (mock *FakePostgres) Get(name string) (*aci.Postgres, error) {
 }
 
 // List returns the a of Postgress.
-func (mock *FakePostgres) List(opts api.ListOptions) (*aci.PostgresList, error) {
+func (mock *FakePostgres) List(opts metav1.ListOptions) (*aci.PostgresList, error) {
 	obj, err := mock.Fake.
 		Invokes(testing.NewListAction(postgresResource, mock.ns, opts), &aci.Postgres{})
 
@@ -89,7 +89,7 @@ func (mock *FakePostgres) UpdateStatus(srv *aci.Postgres) (*aci.Postgres, error)
 	return obj.(*aci.Postgres), err
 }
 
-func (mock *FakePostgres) Watch(opts api.ListOptions) (watch.Interface, error) {
+func (mock *FakePostgres) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 	return mock.Fake.
 		InvokesWatch(testing.NewWatchAction(postgresResource, mock.ns, opts))
 }
