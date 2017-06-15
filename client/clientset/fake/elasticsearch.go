@@ -2,11 +2,11 @@ package fake
 
 import (
 	aci "github.com/k8sdb/apimachinery/api"
-	"k8s.io/kubernetes/pkg/api"
-	schema "k8s.io/kubernetes/pkg/api/unversioned"
-	testing "k8s.io/kubernetes/pkg/client/testing/core"
-	"k8s.io/kubernetes/pkg/labels"
-	"k8s.io/kubernetes/pkg/watch"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/watch"
+	"k8s.io/client-go/testing"
 )
 
 type FakeElastic struct {
@@ -28,7 +28,7 @@ func (mock *FakeElastic) Get(name string) (*aci.Elastic, error) {
 }
 
 // List returns a list of Elastics.
-func (mock *FakeElastic) List(opts api.ListOptions) (*aci.ElasticList, error) {
+func (mock *FakeElastic) List(opts metav1.ListOptions) (*aci.ElasticList, error) {
 	obj, err := mock.Fake.
 		Invokes(testing.NewListAction(elasticResource, mock.ns, opts), &aci.Elastic{})
 
@@ -89,7 +89,7 @@ func (mock *FakeElastic) UpdateStatus(srv *aci.Elastic) (*aci.Elastic, error) {
 	return obj.(*aci.Elastic), err
 }
 
-func (mock *FakeElastic) Watch(opts api.ListOptions) (watch.Interface, error) {
+func (mock *FakeElastic) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 	return mock.Fake.
 		InvokesWatch(testing.NewWatchAction(elasticResource, mock.ns, opts))
 }

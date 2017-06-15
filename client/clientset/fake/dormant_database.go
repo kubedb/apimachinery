@@ -2,11 +2,11 @@ package fake
 
 import (
 	aci "github.com/k8sdb/apimachinery/api"
-	"k8s.io/kubernetes/pkg/api"
-	schema "k8s.io/kubernetes/pkg/api/unversioned"
-	testing "k8s.io/kubernetes/pkg/client/testing/core"
-	"k8s.io/kubernetes/pkg/labels"
-	"k8s.io/kubernetes/pkg/watch"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/watch"
+	"k8s.io/client-go/testing"
 )
 
 type FakeDormantDatabase struct {
@@ -28,7 +28,7 @@ func (mock *FakeDormantDatabase) Get(name string) (*aci.DormantDatabase, error) 
 }
 
 // List returns the a of DormantDatabases.
-func (mock *FakeDormantDatabase) List(opts api.ListOptions) (*aci.DormantDatabaseList, error) {
+func (mock *FakeDormantDatabase) List(opts metav1.ListOptions) (*aci.DormantDatabaseList, error) {
 	obj, err := mock.Fake.
 		Invokes(testing.NewListAction(dormantDatabaseResource, mock.ns, opts), &aci.DormantDatabase{})
 
@@ -89,7 +89,7 @@ func (mock *FakeDormantDatabase) UpdateStatus(srv *aci.DormantDatabase) (*aci.Do
 	return obj.(*aci.DormantDatabase), err
 }
 
-func (mock *FakeDormantDatabase) Watch(opts api.ListOptions) (watch.Interface, error) {
+func (mock *FakeDormantDatabase) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 	return mock.Fake.
 		InvokesWatch(testing.NewWatchAction(dormantDatabaseResource, mock.ns, opts))
 }
