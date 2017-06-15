@@ -1,5 +1,5 @@
-hash: 71baf4583a87152d17894592ee2a4593980b1ff480e02e50fbc2f7ed4546cf39
-updated: 2017-06-14T16:48:17.564139414-07:00
+hash: 6db85b2c3c41806284181ede92c0321ed9fbaac42eef869b2c6d70f7c461bbbb
+updated: 2017-06-14T17:04:29.515778393-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -108,9 +108,9 @@ imports:
 - name: github.com/google/gofuzz
   version: 44d81051d367757e1c7c6a5a86423ece9afcf63c
 - name: github.com/gorilla/context
-  version: 215affda49addc4c8ef7e2534915df2c8c35c6cd
+  version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
-  version: 8096f47503459bcc74d1f4c487b7e6e42e5746b5
+  version: 0a192a193177452756c362c20087ddafcf6829c4
 - name: github.com/graymeta/stow
   version: d4b253dd4995360ae103b6460bbadeaa7fb3cdb4
   repo: https://github.com/appscode/stow.git
@@ -124,7 +124,7 @@ imports:
   subpackages:
   - registry
 - name: github.com/jmespath/go-jmespath
-  version: 3433f3ea46d9f8019119e7dd41274e112a2359a9
+  version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
 - name: github.com/jpillora/go-ogle-analytics
   version: 14b04e0594ef6a9fd943363b135656f0ec8c9d0e
 - name: github.com/juju/ratelimit
@@ -336,27 +336,6 @@ imports:
   - util/clock
   - util/flowcontrol
   - util/integer
-- name: k8s.io/kubernetes
-  version: 8eb75a5810cba92ccad845ca360cf924f2385881
-  subpackages:
-  - pkg/api/meta/metatypes
-  - pkg/api/unversioned
-  - pkg/conversion
-  - pkg/conversion/queryparams
-  - pkg/genericapiserver/openapi/common
-  - pkg/labels
-  - pkg/runtime
-  - pkg/runtime/serializer/json
-  - pkg/runtime/serializer/recognizer
-  - pkg/selection
-  - pkg/types
-  - pkg/util/errors
-  - pkg/util/framer
-  - pkg/util/json
-  - pkg/util/sets
-  - pkg/util/validation
-  - pkg/util/yaml
-  - third_party/forked/golang/reflect
 testImports:
 - name: github.com/stretchr/testify
   version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0

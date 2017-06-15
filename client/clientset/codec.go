@@ -14,7 +14,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/pkg/api"
-	kubejson "k8s.io/kubernetes/pkg/runtime/serializer/json"
+	kubejson "k8s.io/apimachinery/pkg/runtime/serializer/json"
 )
 
 // TODO(@sadlil): Find a better way to replace ExtendedCodec to encode and decode objects.
