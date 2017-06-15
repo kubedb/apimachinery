@@ -13,8 +13,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/client-go/pkg/api"
 	kubejson "k8s.io/apimachinery/pkg/runtime/serializer/json"
+	"k8s.io/client-go/pkg/api"
 )
 
 // TODO(@sadlil): Find a better way to replace ExtendedCodec to encode and decode objects.
