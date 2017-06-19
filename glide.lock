@@ -1,5 +1,5 @@
-hash: 6db85b2c3c41806284181ede92c0321ed9fbaac42eef869b2c6d70f7c461bbbb
-updated: 2017-06-14T17:04:29.515778393-07:00
+hash: e7f96c33e310efc6699fb598d70bf33115c5851dda8596d219f4ebf144853300
+updated: 2017-06-18T23:51:24.00268508-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -52,9 +52,7 @@ imports:
 - name: github.com/Azure/go-autorest
   version: d7c034a8af24eda120dd6460bfcd6d9ed14e43ca
 - name: github.com/coreos/prometheus-operator
-  version: 6d45d8c65343a5e6cbe23e7ef17aafbd64b29f03
-  repo: https://github.com/appscode/prometheus-operator.git
-  vcs: git
+  version: 0d446f3052e47b5ad95989d9a8ffe4f6675e69b5
   subpackages:
   - pkg/client/monitoring/v1alpha1
 - name: github.com/davecgh/go-spew
@@ -79,7 +77,7 @@ imports:
   - log
   - swagger
 - name: github.com/ghodss/yaml
-  version: 73d445a93680fa1a78ae23a5839bad48f32ba1ee
+  version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
   version: 2e44421e256d82ebbf3d4d4fcabe8930b905eff3
 - name: github.com/go-openapi/jsonpointer
