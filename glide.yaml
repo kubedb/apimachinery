@@ -34,8 +34,6 @@ import:
   version: v2
 - package: github.com/Sirupsen/logrus
   version: v0.10.0
-- package: github.com/coreos/prometheus-operator
-  version: v0.10.1
 - package: github.com/gogo/protobuf/proto
   version: e18d7aa8f8c624c915db340349aad4c49b10d173
 - package: k8s.io/apimachinery
