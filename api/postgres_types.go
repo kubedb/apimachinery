@@ -58,3 +58,18 @@ type PostgresList struct {
 	// Items is a list of Postgres TPR objects
 	Items []Postgres `json:"items,omitempty"`
 }
+
+// Following structures are used for audit summary report
+type PostgresTableInfo struct {
+	TotalRow int64 `json:"total_row"`
+	MaxID    int64 `json:"max_id"`
+	NextID   int64 `json:"next_id"`
+}
+
+type PostgresSchemaInfo struct {
+	Table map[string]*PostgresTableInfo `json:"table"`
+}
+
+type PostgresReport struct {
+	Schema map[string]*PostgresSchemaInfo `json:"schema"`
+}
