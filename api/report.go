@@ -7,8 +7,8 @@ import (
 type Report struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Report ReportSummary `json:"report,omitempty"`
-	Status ReportStatus `json:"status,omitempty"`
+	Summary           ReportSummary `json:"summary,omitempty"`
+	Status            ReportStatus  `json:"status,omitempty"`
 }
 
 type ReportSummary struct {
