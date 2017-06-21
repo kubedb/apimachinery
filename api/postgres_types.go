@@ -61,9 +61,9 @@ type PostgresList struct {
 
 // Following structures are used for audit summary report
 type PostgresTableInfo struct {
-	TotalRow int64 `json:"total_row"`
-	MaxID    int64 `json:"max_id"`
-	NextID   int64 `json:"next_id"`
+	TotalRow int64 `json:"totalRow"`
+	MaxID    int64 `json:"maxId"`
+	NextID   int64 `json:"nextId"`
 }
 
 type PostgresSchemaInfo struct {
