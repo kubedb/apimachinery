@@ -70,6 +70,6 @@ type PostgresSchemaInfo struct {
 	Table map[string]*PostgresTableInfo `json:"table"`
 }
 
-type PostgresReport struct {
+type PostgresSummary struct {
 	Schema map[string]*PostgresSchemaInfo `json:"schema"`
 }
