@@ -221,24 +221,6 @@ func (c *SnapshotController) create(snapshot *tapi.Snapshot) error {
 		c.eventRecorder.Event(snapshot, apiv1.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
 		return err
 	}
-
-	for i := range job.Spec.Template.Spec.Containers {
-		job.Spec.Template.Spec.Containers[i].VolumeMounts = append(job.Spec.Template.Spec.Containers[i].VolumeMounts, apiv1.VolumeMount{
-			Name:      "osmconfig",
-			ReadOnly:  true,
-			MountPath: storage.SecretMountPath,
-		})
-	}
-
-	job.Spec.Template.Spec.Volumes = append(job.Spec.Template.Spec.Volumes, apiv1.Volume{
-		Name: "osmconfig",
-		VolumeSource: apiv1.VolumeSource{
-			Secret: &apiv1.SecretVolumeSource{
-				SecretName: snapshot.Name,
-			},
-		},
-	})
-
 	if _, err := c.client.BatchV1().Jobs(snapshot.Namespace).Create(job); err != nil {
 		message := fmt.Sprintf("Failed to take snapshot. Reason: %v", err)
 		c.eventRecorder.Event(runtimeObj, apiv1.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
