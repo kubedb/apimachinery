@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	otx "github.com/appscode/osm/pkg/context"
+	"github.com/ghodss/yaml"
 	"github.com/graymeta/stow"
 	"github.com/graymeta/stow/azure"
 	gcs "github.com/graymeta/stow/google"
@@ -16,7 +17,36 @@ import (
 	tapi "github.com/k8sdb/apimachinery/api"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clientset "k8s.io/client-go/kubernetes"
+	apiv1 "k8s.io/client-go/pkg/api/v1"
 )
+
+const (
+	SecretMountPath = "/etc/osm"
+)
+
+func CreateOSMSecret(client clientset.Interface, snapshot *tapi.Snapshot, namespace string) (*apiv1.Secret, error) {
+	osmCtx, err := CreateOSMContext(client, snapshot.Spec.SnapshotStorageSpec, namespace)
+	if err != nil {
+		return nil, err
+	}
+	osmCfg := &otx.OSMConfig{
+		CurrentContext: osmCtx.Name,
+		Contexts:       []*otx.Context{osmCtx},
+	}
+	osmBytes, err := yaml.Marshal(osmCfg)
+	if err != nil {
+		return nil, err
+	}
+	return &apiv1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      snapshot.Name,
+			Namespace: snapshot.Namespace,
+		},
+		Data: map[string][]byte{
+			"config": osmBytes,
+		},
+	}, nil
+}
 
 func CheckBucketAccess(client clientset.Interface, spec tapi.SnapshotStorageSpec, namespace string) error {
 	cfg, err := CreateOSMContext(client, spec, namespace)

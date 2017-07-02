@@ -6,13 +6,11 @@ import (
 
 	"github.com/appscode/go/wait"
 	"github.com/appscode/log"
-	otx "github.com/appscode/osm/pkg/context"
 	tapi "github.com/k8sdb/apimachinery/api"
 	tcs "github.com/k8sdb/apimachinery/client/clientset"
 	"github.com/k8sdb/apimachinery/pkg/analytics"
 	"github.com/k8sdb/apimachinery/pkg/eventer"
 	"github.com/k8sdb/apimachinery/pkg/storage"
-	"gopkg.in/yaml.v2"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -201,37 +199,16 @@ func (c *SnapshotController) create(snapshot *tapi.Snapshot) error {
 	c.eventRecorder.Event(runtimeObj, apiv1.EventTypeNormal, eventer.EventReasonStarting, "Backup running")
 	c.eventRecorder.Event(snapshot, apiv1.EventTypeNormal, eventer.EventReasonStarting, "Backup running")
 
-	osmCtx, err := storage.CreateOSMContext(c.client, snapshot.Spec.SnapshotStorageSpec, snapshot.Namespace)
+	secret, err := storage.CreateOSMSecret(c.client, snapshot, snapshot.Namespace)
 	if err != nil {
-		message := fmt.Sprintf("Failed to take snapshot. Reason: %v", err)
+		message := fmt.Sprintf("Failed to generate osm secret. Reason: %v", err)
 		c.eventRecorder.Event(runtimeObj, apiv1.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
 		c.eventRecorder.Event(snapshot, apiv1.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
 		return err
 	}
-	osmCfg := &otx.OSMConfig{
-		CurrentContext: osmCtx.Name,
-		Contexts:       []*otx.Context{osmCtx},
-	}
-	osmBytes, err := yaml.Marshal(osmCfg)
+	_, err = c.client.CoreV1().Secrets(secret.Namespace).Create(secret)
 	if err != nil {
-		message := fmt.Sprintf("Failed to take snapshot. Reason: %v", err)
-		c.eventRecorder.Event(runtimeObj, apiv1.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
-		c.eventRecorder.Event(snapshot, apiv1.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
-		return err
-	}
-
-	secret := apiv1.Secret{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      snapshot.Name,
-			Namespace: snapshot.Namespace,
-		},
-		Data: map[string][]byte{
-			"config": osmBytes,
-		},
-	}
-	_, err = c.client.CoreV1().Secrets(secret.Namespace).Create(&secret)
-	if err != nil {
-		message := fmt.Sprintf("Failed to take snapshot. Reason: %v", err)
+		message := fmt.Sprintf("Failed to create osm secret. Reason: %v", err)
 		c.eventRecorder.Event(runtimeObj, apiv1.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
 		c.eventRecorder.Event(snapshot, apiv1.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
 		return err
@@ -249,7 +226,7 @@ func (c *SnapshotController) create(snapshot *tapi.Snapshot) error {
 		job.Spec.Template.Spec.Containers[i].VolumeMounts = append(job.Spec.Template.Spec.Containers[i].VolumeMounts, apiv1.VolumeMount{
 			Name:      "osmconfig",
 			ReadOnly:  true,
-			MountPath: "/etc/osm",
+			MountPath: storage.SecretMountPath,
 		})
 	}
 
