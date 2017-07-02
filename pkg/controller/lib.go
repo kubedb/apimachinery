@@ -81,7 +81,7 @@ func (c *Controller) DeletePersistentVolumeClaims(namespace string, selector lab
 }
 
 func (c *Controller) DeleteSnapshotData(snapshot *tapi.Snapshot) error {
-	cfg, err := storage.CreateOSMContext(c.Client, snapshot.Spec.SnapshotStorageSpec, snapshot.Namespace)
+	cfg, err := storage.NewOSMContext(c.Client, snapshot.Spec.SnapshotStorageSpec, snapshot.Namespace)
 	if err != nil {
 		return err
 	}

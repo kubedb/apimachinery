@@ -24,8 +24,8 @@ const (
 	SecretMountPath = "/etc/osm"
 )
 
-func CreateOSMSecret(client clientset.Interface, snapshot *tapi.Snapshot, namespace string) (*apiv1.Secret, error) {
-	osmCtx, err := CreateOSMContext(client, snapshot.Spec.SnapshotStorageSpec, namespace)
+func NewOSMSecret(client clientset.Interface, snapshot *tapi.Snapshot, namespace string) (*apiv1.Secret, error) {
+	osmCtx, err := NewOSMContext(client, snapshot.Spec.SnapshotStorageSpec, namespace)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func CreateOSMSecret(client clientset.Interface, snapshot *tapi.Snapshot, namesp
 }
 
 func CheckBucketAccess(client clientset.Interface, spec tapi.SnapshotStorageSpec, namespace string) error {
-	cfg, err := CreateOSMContext(client, spec, namespace)
+	cfg, err := NewOSMContext(client, spec, namespace)
 	if err != nil {
 		return err
 	}
@@ -76,7 +76,7 @@ func CheckBucketAccess(client clientset.Interface, spec tapi.SnapshotStorageSpec
 	return nil
 }
 
-func CreateOSMContext(client clientset.Interface, spec tapi.SnapshotStorageSpec, namespace string) (*otx.Context, error) {
+func NewOSMContext(client clientset.Interface, spec tapi.SnapshotStorageSpec, namespace string) (*otx.Context, error) {
 	secret, err := client.CoreV1().Secrets(namespace).Get(spec.StorageSecretName, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
