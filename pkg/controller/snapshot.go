@@ -262,7 +262,7 @@ func (c *SnapshotController) create(snapshot *tapi.Snapshot) error {
 		},
 	})
 
-	if _, err := c.client.Batch().Jobs(snapshot.Namespace).Create(job); err != nil {
+	if _, err := c.client.BatchV1().Jobs(snapshot.Namespace).Create(job); err != nil {
 		message := fmt.Sprintf("Failed to take snapshot. Reason: %v", err)
 		c.eventRecorder.Event(runtimeObj, apiv1.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
 		c.eventRecorder.Event(snapshot, apiv1.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
