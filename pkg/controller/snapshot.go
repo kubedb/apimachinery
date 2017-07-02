@@ -12,7 +12,6 @@ import (
 	"github.com/k8sdb/apimachinery/pkg/eventer"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientset "k8s.io/client-go/kubernetes"
 	apiv1 "k8s.io/client-go/pkg/api/v1"
@@ -315,33 +314,22 @@ func (c *SnapshotController) checkSnapshotJob(snapshot *tapi.Snapshot, jobName s
 		return err
 	}
 
-	podList, err := c.client.CoreV1().Pods(job.Namespace).List(
-		metav1.ListOptions{
-			LabelSelector: labels.Set(job.Spec.Selector.MatchLabels).AsSelector().String(),
-		},
-	)
+	r, err := metav1.LabelSelectorAsSelector(job.Spec.Selector)
+	if err != nil {
+		return err
+	}
+	err = c.client.CoreV1().Pods(job.Namespace).DeleteCollection(&metav1.DeleteOptions{}, metav1.ListOptions{
+		LabelSelector: r.String(),
+	})
 	if err != nil {
 		c.eventRecorder.Eventf(
 			snapshot,
 			apiv1.EventTypeWarning,
-			eventer.EventReasonFailedToList,
-			"Failed to list Pods. Reason: %v",
+			eventer.EventReasonFailedToDelete,
+			"Failed to delete Pods. Reason: %v",
 			err,
 		)
-		return err
-	}
-
-	for _, pod := range podList.Items {
-		if err := c.client.CoreV1().Pods(pod.Namespace).Delete(pod.Name, nil); err != nil {
-			c.eventRecorder.Eventf(
-				snapshot,
-				apiv1.EventTypeWarning,
-				eventer.EventReasonFailedToDelete,
-				"Failed to delete Pod. Reason: %v",
-				err,
-			)
-			log.Errorln(err)
-		}
+		log.Errorln(err)
 	}
 
 	for _, volume := range job.Spec.Template.Spec.Volumes {
