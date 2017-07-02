@@ -5,10 +5,17 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
+	"strconv"
 
 	"github.com/appscode/log"
-	"github.com/ghodss/yaml"
+	otx "github.com/appscode/osm/pkg/context"
 	"github.com/graymeta/stow"
+	"github.com/graymeta/stow/azure"
+	gcs "github.com/graymeta/stow/google"
+	"github.com/graymeta/stow/local"
+	"github.com/graymeta/stow/s3"
+	"github.com/graymeta/stow/swift"
 	tapi "github.com/k8sdb/apimachinery/api"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -64,70 +71,89 @@ func ValidateBackupSchedule(spec *tapi.BackupScheduleSpec) error {
 
 func ValidateSnapshotSpec(spec tapi.SnapshotStorageSpec) error {
 	// BucketName can't be empty
-	bucketName := spec.BucketName
-	if bucketName == "" {
-		return fmt.Errorf(`Object 'BucketName' is missing in '%v'`, spec)
+	if spec.S3 == nil && spec.GCS == nil && spec.Azure == nil && spec.Swift == nil && spec.Local == nil {
+		return errors.New("No storage provider is configured.")
 	}
 
 	// Need to provide Storage credential secret
-	storageSecret := spec.StorageSecret
-	if storageSecret == nil {
-		return fmt.Errorf(`Object 'StorageSecret' is missing in '%v'`, spec)
-	}
-
-	// Credential SecretName  can't be empty
-	storageSecretName := storageSecret.SecretName
-	if storageSecretName == "" {
-		return fmt.Errorf(`Object 'SecretName' is missing in '%v'`, *spec.StorageSecret)
+	if spec.StorageSecretName == "" {
+		return fmt.Errorf(`Object 'SecretName' is missing in '%v'`, spec.StorageSecretName)
 	}
 	return nil
 }
 
-const (
-	KeyProvider = "provider"
-	KeyConfig   = "config"
-)
-
-func CheckBucketAccess(client clientset.Interface, snapshotSpec tapi.SnapshotStorageSpec, namespace string) error {
-	secret, err := client.CoreV1().Secrets(namespace).Get(snapshotSpec.StorageSecret.SecretName, metav1.GetOptions{})
+func CheckBucketAccess(client clientset.Interface, spec tapi.SnapshotStorageSpec, namespace string) error {
+	cfg, err := CreateOSMContext(client, spec, namespace)
 	if err != nil {
 		return err
 	}
-
-	provider := secret.Data[KeyProvider]
-	if provider == nil {
-		return errors.New("Missing provider key")
-	}
-	configData := secret.Data[KeyConfig]
-	if configData == nil {
-		return errors.New("Missing config key")
-	}
-
-	var config stow.ConfigMap
-	if err := yaml.Unmarshal(configData, &config); err != nil {
-		return err
-	}
-
-	loc, err := stow.Dial(string(provider), config)
+	loc, err := stow.Dial(cfg.Provider, cfg.Config)
 	if err != nil {
 		return err
 	}
-
-	container, err := loc.Container(snapshotSpec.BucketName)
+	container, err := loc.Container(cfg.Name)
 	if err != nil {
 		return err
 	}
-
 	r := bytes.NewReader([]byte("CheckBucketAccess"))
 	item, err := container.Put(".kubedb", r, r.Size(), nil)
 	if err != nil {
 		return err
 	}
-
 	if err := container.RemoveItem(item.ID()); err != nil {
 		return err
 	}
 	return nil
+}
+
+func CreateOSMContext(client clientset.Interface, spec tapi.SnapshotStorageSpec, namespace string) (*otx.Context, error) {
+	secret, err := client.CoreV1().Secrets(namespace).Get(spec.StorageSecretName, metav1.GetOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	nc := &otx.Context{
+		Config: stow.ConfigMap{},
+	}
+
+	if spec.S3 != nil {
+		nc.Provider = s3.Kind
+		nc.Name = spec.S3.Bucket
+		nc.Config[s3.ConfigAccessKeyID] = string(secret.Data[tapi.AWS_ACCESS_KEY_ID])
+		nc.Config[s3.ConfigEndpoint] = spec.S3.Endpoint
+		nc.Config[s3.ConfigRegion] = spec.S3.Region
+		nc.Config[s3.ConfigSecretKey] = string(secret.Data[tapi.AWS_SECRET_ACCESS_KEY])
+		if u, err := url.Parse(spec.S3.Endpoint); err == nil {
+			nc.Config[s3.ConfigDisableSSL] = strconv.FormatBool(u.Scheme == "http")
+		}
+		return nc, nil
+	} else if spec.GCS != nil {
+		nc.Provider = gcs.Kind
+		nc.Name = spec.GCS.Bucket
+		nc.Config[gcs.ConfigProjectId] = string(secret.Data[tapi.GOOGLE_PROJECT_ID])
+		nc.Config[gcs.ConfigJSON] = string(secret.Data[tapi.GOOGLE_SERVICE_ACCOUNT_JSON_KEY])
+		return nc, nil
+	} else if spec.Azure != nil {
+		nc.Provider = azure.Kind
+		nc.Name = spec.Azure.Container
+		nc.Config[azure.ConfigAccount] = string(secret.Data[tapi.AZURE_ACCOUNT_NAME])
+		nc.Config[azure.ConfigKey] = string(secret.Data[tapi.AZURE_ACCOUNT_KEY])
+		return nc, nil
+	} else if spec.Local != nil {
+		nc.Provider = local.Kind
+		nc.Name = "stash"
+		nc.Config[local.ConfigKeyPath] = spec.Local.Path
+		return nc, nil
+	} else if spec.Swift != nil {
+		nc.Provider = swift.Kind
+		nc.Name = spec.Swift.Container
+		nc.Config[swift.ConfigKey] = string(secret.Data[tapi.OS_PASSWORD])
+		nc.Config[swift.ConfigTenantAuthURL] = string(secret.Data[tapi.OS_AUTH_URL])
+		nc.Config[swift.ConfigTenantName] = string(secret.Data[tapi.OS_TENANT_NAME])
+		nc.Config[swift.ConfigUsername] = string(secret.Data[tapi.OS_USERNAME])
+		return nc, nil
+	}
+	return nil, errors.New("No storage provider is configured.")
 }
 
 func ValidateMonitorSpec(monitorSpec *tapi.MonitorSpec) error {

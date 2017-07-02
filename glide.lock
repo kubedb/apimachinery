@@ -1,5 +1,5 @@
 hash: e7f96c33e310efc6699fb598d70bf33115c5851dda8596d219f4ebf144853300
-updated: 2017-06-18T23:51:24.00268508-07:00
+updated: 2017-07-01T18:54:28.457899054-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -7,13 +7,18 @@ imports:
   - compute/metadata
   - internal
 - name: github.com/appscode/go
-  version: 5eabd32a8a0fe824b5e12c37dc53a0afea8507c9
+  version: ecda61fa4e8943020e9948723e49c4ae544f7a3a
   subpackages:
   - encoding/json/types
+  - encoding/yaml
   - runtime
   - wait
 - name: github.com/appscode/log
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
+- name: github.com/appscode/osm
+  version: 8f987a6d8af9ef5fa56a8381af27aaa67de280db
+  subpackages:
+  - pkg/context
 - name: github.com/aws/aws-sdk-go
   version: 63ce630574a5ec05ecd8e8de5cea16332a5a684d
   subpackages:
@@ -79,7 +84,7 @@ imports:
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
-  version: 2e44421e256d82ebbf3d4d4fcabe8930b905eff3
+  version: d3de07a94d22b4a0972deb4b96d790c2c0ce8333
 - name: github.com/go-openapi/jsonpointer
   version: 46af16f9f7b149af66e5d1bd010e3574dc06de98
 - name: github.com/go-openapi/jsonreference
@@ -110,13 +115,15 @@ imports:
 - name: github.com/gorilla/mux
   version: 0a192a193177452756c362c20087ddafcf6829c4
 - name: github.com/graymeta/stow
-  version: d4b253dd4995360ae103b6460bbadeaa7fb3cdb4
+  version: 570a04814c391b8f71e078752d67d660b353947b
   repo: https://github.com/appscode/stow.git
   vcs: git
   subpackages:
   - azure
   - google
+  - local
   - s3
+  - swift
 - name: github.com/heroku/docker-registry-client
   version: 95467b6cacee2a06f112a3cf7e47a70fad6000cf
   subpackages:
@@ -133,6 +140,10 @@ imports:
   - buffer
   - jlexer
   - jwriter
+- name: github.com/mitchellh/go-homedir
+  version: d682a8f0cf139663a984ff12528da460ca963de9
+- name: github.com/ncw/swift
+  version: 8e9b10220613abdbc2896808ee6b43e411a4fa6c
 - name: github.com/orcaman/concurrent-map
   version: 2ae17bc4c860c83513ee50feb9746f3e50d7515d
 - name: github.com/pkg/errors
@@ -183,7 +194,7 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: 324744a33f1f37e63dd1695cfb3ec9a3e4a1cb05
+  version: e6586c9293b9d514c7f5d5076731ec977cff1be6
   subpackages:
   - gensupport
   - googleapi

@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/appscode/log"
-	"github.com/ghodss/yaml"
 	"github.com/graymeta/stow"
 	_ "github.com/graymeta/stow/azure"
 	_ "github.com/graymeta/stow/google"
@@ -82,31 +81,16 @@ func (c *Controller) DeletePersistentVolumeClaims(namespace string, selector lab
 }
 
 func (c *Controller) DeleteSnapshotData(snapshot *tapi.Snapshot) error {
-	secret, err := c.Client.CoreV1().Secrets(snapshot.Namespace).Get(snapshot.Spec.StorageSecret.SecretName, metav1.GetOptions{})
+	cfg, err := validator.CreateOSMContext(c.Client, snapshot.Spec.SnapshotStorageSpec, snapshot.Namespace)
 	if err != nil {
 		return err
 	}
 
-	provider := secret.Data[validator.KeyProvider]
-	if provider == nil {
-		return errors.New("Missing provider key")
-	}
-	configData := secret.Data[validator.KeyConfig]
-	if configData == nil {
-		return errors.New("Missing config key")
-	}
-
-	var config stow.ConfigMap
-	if err := yaml.Unmarshal(configData, &config); err != nil {
-		return err
-	}
-
-	loc, err := stow.Dial(string(provider), config)
+	loc, err := stow.Dial(cfg.Provider, cfg.Config)
 	if err != nil {
 		return err
 	}
-
-	container, err := loc.Container(snapshot.Spec.BucketName)
+	container, err := loc.Container(cfg.Name)
 	if err != nil {
 		return err
 	}
