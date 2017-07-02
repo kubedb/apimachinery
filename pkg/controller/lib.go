@@ -186,11 +186,13 @@ func (c *Controller) CheckDatabaseRestoreJob(
 		return false
 	}
 
-	podList, err := c.Client.CoreV1().Pods(job.Namespace).List(
-		metav1.ListOptions{
-			LabelSelector: labels.SelectorFromSet(job.Spec.Selector.MatchLabels).String(),
-		},
-	)
+	r, err := metav1.LabelSelectorAsSelector(job.Spec.Selector)
+	if err != nil {
+		return false
+	}
+	err = c.Client.CoreV1().Pods(job.Namespace).DeleteCollection(&metav1.DeleteOptions{}, metav1.ListOptions{
+		LabelSelector: r.String(),
+	})
 	if err != nil {
 		recorder.Eventf(
 			runtimeObj,
@@ -203,17 +205,9 @@ func (c *Controller) CheckDatabaseRestoreJob(
 		return jobSuccess
 	}
 
-	for _, pod := range podList.Items {
-		if err := c.Client.Core().Pods(pod.Namespace).Delete(pod.Name, nil); err != nil {
-			recorder.Eventf(
-				runtimeObj,
-				apiv1.EventTypeWarning,
-				eventer.EventReasonFailedToDelete,
-				"Failed to delete Pod. Reason: %v",
-				err,
-			)
-			log.Errorln(err)
-		}
+	err = c.Client.CoreV1().Secrets(job.Namespace).Delete(job.Name, &metav1.DeleteOptions{})
+	if err != nil {
+		return false
 	}
 
 	for _, volume := range job.Spec.Template.Spec.Volumes {
