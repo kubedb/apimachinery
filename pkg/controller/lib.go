@@ -12,7 +12,7 @@ import (
 	_ "github.com/graymeta/stow/s3"
 	tapi "github.com/k8sdb/apimachinery/api"
 	"github.com/k8sdb/apimachinery/pkg/eventer"
-	"github.com/k8sdb/apimachinery/pkg/validator"
+	"github.com/k8sdb/apimachinery/pkg/storage"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -81,7 +81,7 @@ func (c *Controller) DeletePersistentVolumeClaims(namespace string, selector lab
 }
 
 func (c *Controller) DeleteSnapshotData(snapshot *tapi.Snapshot) error {
-	cfg, err := validator.CreateOSMContext(c.Client, snapshot.Spec.SnapshotStorageSpec, snapshot.Namespace)
+	cfg, err := storage.CreateOSMContext(c.Client, snapshot.Spec.SnapshotStorageSpec, snapshot.Namespace)
 	if err != nil {
 		return err
 	}
@@ -90,7 +90,11 @@ func (c *Controller) DeleteSnapshotData(snapshot *tapi.Snapshot) error {
 	if err != nil {
 		return err
 	}
-	container, err := loc.Container(cfg.Name)
+	bucket, err := storage.GetContainer(snapshot.Spec.SnapshotStorageSpec)
+	if err != nil {
+		return err
+	}
+	container, err := loc.Container(bucket)
 	if err != nil {
 		return err
 	}
