@@ -113,6 +113,7 @@ func NewOSMContext(client clientset.Interface, spec tapi.SnapshotStorageSpec, na
 		return nc, nil
 	} else if spec.Swift != nil {
 		nc.Provider = swift.Kind
+		// https://github.com/restic/restic/blob/master/src/restic/backend/swift/config.go
 		for _, val := range []struct {
 			stowKey   string
 			secretKey string
