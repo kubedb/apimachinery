@@ -1,5 +1,5 @@
-hash: e7f96c33e310efc6699fb598d70bf33115c5851dda8596d219f4ebf144853300
-updated: 2017-07-01T18:54:28.457899054-07:00
+hash: 491ecc957d3953a369504b14b6e4f867f2ba2fac050b13eeeeea92211af649fa
+updated: 2017-07-03T11:42:35.514572598-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -7,7 +7,7 @@ imports:
   - compute/metadata
   - internal
 - name: github.com/appscode/go
-  version: ecda61fa4e8943020e9948723e49c4ae544f7a3a
+  version: 9fde097ebcef0add8325c8fbee63ae01e7da530e
   subpackages:
   - encoding/json/types
   - encoding/yaml
@@ -16,7 +16,7 @@ imports:
 - name: github.com/appscode/log
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
 - name: github.com/appscode/osm
-  version: 8f987a6d8af9ef5fa56a8381af27aaa67de280db
+  version: d9808d7feb230accb4af570345b93acdcbadc0be
   subpackages:
   - pkg/context
 - name: github.com/aws/aws-sdk-go
@@ -84,7 +84,7 @@ imports:
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
-  version: d3de07a94d22b4a0972deb4b96d790c2c0ce8333
+  version: 2e44421e256d82ebbf3d4d4fcabe8930b905eff3
 - name: github.com/go-openapi/jsonpointer
   version: 46af16f9f7b149af66e5d1bd010e3574dc06de98
 - name: github.com/go-openapi/jsonreference
@@ -115,7 +115,7 @@ imports:
 - name: github.com/gorilla/mux
   version: 0a192a193177452756c362c20087ddafcf6829c4
 - name: github.com/graymeta/stow
-  version: 570a04814c391b8f71e078752d67d660b353947b
+  version: 9457960a7989724e98ca759ed456e0e05ca69601
   repo: https://github.com/appscode/stow.git
   vcs: git
   subpackages:
@@ -128,6 +128,8 @@ imports:
   version: 95467b6cacee2a06f112a3cf7e47a70fad6000cf
   subpackages:
   - registry
+- name: github.com/inconshreveable/mousetrap
+  version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/jmespath/go-jmespath
   version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
 - name: github.com/jpillora/go-ogle-analytics
@@ -140,10 +142,8 @@ imports:
   - buffer
   - jlexer
   - jwriter
-- name: github.com/mitchellh/go-homedir
-  version: d682a8f0cf139663a984ff12528da460ca963de9
 - name: github.com/ncw/swift
-  version: 8e9b10220613abdbc2896808ee6b43e411a4fa6c
+  version: 9e6fdb8957a022d5780a78b58d6181c3580bb01f
 - name: github.com/orcaman/concurrent-map
   version: 2ae17bc4c860c83513ee50feb9746f3e50d7515d
 - name: github.com/pkg/errors
@@ -154,8 +154,10 @@ imports:
   version: 5bd2802263f21d8788851d5305584c82a5c75d7e
 - name: github.com/Sirupsen/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
+- name: github.com/spf13/cobra
+  version: 8c6fa02d2225de0f9bdcb7ca912556f68d172d8c
 - name: github.com/spf13/pflag
-  version: 9ff6c6923cfffbcd502984b8e0c80539a94968b7
+  version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: github.com/ugorji/go
   version: ded73eae5db7e7a0ef6f55aace87a2873c5d2b74
   subpackages:

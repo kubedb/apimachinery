@@ -16,6 +16,10 @@ import:
   version: master
 - package: cloud.google.com/go
   version: v0.2.0
+- package: github.com/spf13/cobra
+  version: master
+- package: github.com/spf13/pflag
+  version: master
 - package: github.com/Azure/azure-sdk-for-go
   vcs: git
   version: v7.0.1-beta
@@ -25,6 +29,8 @@ import:
   version: 70b2c90b260171e829f1ebd7c17f600c11858dbe
 - package: github.com/aws/aws-sdk-go
   version: v1.6.10
+- package: github.com/ncw/swift
+  version: master
 - package: github.com/heroku/docker-registry-client
   version: 95467b6cacee2a06f112a3cf7e47a70fad6000cf
 - package: github.com/jpillora/go-ogle-analytics
