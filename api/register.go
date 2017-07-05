@@ -51,8 +51,8 @@ func (obj *SnapshotList) GetObjectKind() schema.ObjectKind { return &obj.TypeMet
 func (obj *DormantDatabase) GetObjectKind() schema.ObjectKind     { return &obj.TypeMeta }
 func (obj *DormantDatabaseList) GetObjectKind() schema.ObjectKind { return &obj.TypeMeta }
 
-func (obj *Elastic) GetObjectKind() schema.ObjectKind     { return &obj.TypeMeta }
+func (e *Elastic) GetObjectKind() schema.ObjectKind       { return &e.TypeMeta }
 func (obj *ElasticList) GetObjectKind() schema.ObjectKind { return &obj.TypeMeta }
 
-func (obj *Postgres) GetObjectKind() schema.ObjectKind     { return &obj.TypeMeta }
+func (p *Postgres) GetObjectKind() schema.ObjectKind       { return &p.TypeMeta }
 func (obj *PostgresList) GetObjectKind() schema.ObjectKind { return &obj.TypeMeta }
