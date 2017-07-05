@@ -48,7 +48,7 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 func (obj *Snapshot) GetObjectKind() schema.ObjectKind     { return &obj.TypeMeta }
 func (obj *SnapshotList) GetObjectKind() schema.ObjectKind { return &obj.TypeMeta }
 
-func (obj *DormantDatabase) GetObjectKind() schema.ObjectKind     { return &obj.TypeMeta }
+func (d *DormantDatabase) GetObjectKind() schema.ObjectKind       { return &d.TypeMeta }
 func (obj *DormantDatabaseList) GetObjectKind() schema.ObjectKind { return &obj.TypeMeta }
 
 func (e *Elastic) GetObjectKind() schema.ObjectKind       { return &e.TypeMeta }

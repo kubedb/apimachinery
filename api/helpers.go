@@ -95,3 +95,21 @@ func (e Elastic) StatefulSetAnnotations() map[string]string {
 	annotations[ElasticDatabaseVersion] = string(e.Spec.Version)
 	return annotations
 }
+
+func (d DormantDatabase) OffshootName() string {
+	var kind string
+	if d.Labels != nil {
+		kind = d.Labels[LabelDatabaseKind]
+	}
+	switch kind {
+	case ResourceKindPostgres:
+		return fmt.Sprintf("%v-%v", d.Name, ResourceCodePostgres)
+	case ResourceKindElastic:
+		return fmt.Sprintf("%v-%v", d.Name, ResourceCodeElastic)
+	}
+	return ""
+}
+
+func (d DormantDatabase) ServiceName() string {
+	return d.Name
+}
