@@ -12,12 +12,16 @@ const (
 
 	LabelDatabaseKind = GenericKey + "/kind"
 	LabelDatabaseName = GenericKey + "/name"
+	LabelJobType      = GenericKey + "/job-type"
 
 	PostgresKey             = ResourceNamePostgres + "." + GenericKey
 	PostgresDatabaseVersion = PostgresKey + "/version"
 
 	ElasticKey             = ResourceNameElastic + ".kubedb.com"
 	ElasticDatabaseVersion = ElasticKey + "/version"
+
+	SnapshotKey         = ResourceNameSnapshot + "s.kubedb.com"
+	LabelSnapshotStatus = SnapshotKey + "/status"
 )
 
 func (p Postgres) OffshootName() string {
