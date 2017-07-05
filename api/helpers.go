@@ -1,14 +1,23 @@
 package api
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 const (
 	DatabaseNamePrefix = "kubedb"
-	LabelDatabaseKind  = "kubedb.com/kind"
-	LabelDatabaseName  = "kubedb.com/name"
 
-	PostgresDatabaseVersion = "postgres.kubedb.com/version"
-	ElasticDatabaseVersion  = "elastic.kubedb.com/version"
+	GenericKey = "kubedb.com"
+
+	LabelDatabaseKind = GenericKey + "/kind"
+	LabelDatabaseName = GenericKey + "/name"
+
+	PostgresKey             = ResourceNamePostgres + "." + GenericKey
+	PostgresDatabaseVersion = PostgresKey + "/version"
+
+	ElasticKey             = ResourceNameElastic + ".kubedb.com"
+	ElasticDatabaseVersion = ElasticKey + "/version"
 )
 
 func (p Postgres) OffshootName() string {
@@ -21,24 +30,27 @@ func (p Postgres) ServiceName() string {
 
 func (p Postgres) OffshootLabels() map[string]string {
 	return map[string]string{
-		"origin":          "kubedb",
-		LabelDatabaseKind: p.Name,
+		LabelDatabaseName: p.Name,
+		LabelDatabaseKind: ResourceKindPostgres,
 	}
 }
 
 func (p Postgres) StatefulSetLabels() map[string]string {
-	labels := make(map[string]string)
+	labels := p.OffshootLabels()
 	for key, val := range p.Labels {
-		labels[key] = val
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, PostgresKey+"/") {
+			labels[key] = val
+		}
 	}
-	labels[LabelDatabaseKind] = ResourceKindPostgres
 	return labels
 }
 
 func (p Postgres) StatefulSetAnnotations() map[string]string {
 	annotations := make(map[string]string)
 	for key, val := range p.Annotations {
-		annotations[key] = val
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, PostgresKey+"/") {
+			annotations[key] = val
+		}
 	}
 	annotations[PostgresDatabaseVersion] = string(p.Spec.Version)
 	return annotations
@@ -54,25 +66,28 @@ func (e Elastic) ServiceName() string {
 
 func (e Elastic) OffshootLabels() map[string]string {
 	return map[string]string{
-		"origin":          "kubedb",
-		LabelDatabaseKind: e.Name,
+		LabelDatabaseKind: ResourceKindElastic,
+		LabelDatabaseName: e.Name,
 	}
 }
 
-func (p Elastic) StatefulSetLabels() map[string]string {
-	labels := make(map[string]string)
-	for key, val := range p.Labels {
-		labels[key] = val
+func (e Elastic) StatefulSetLabels() map[string]string {
+	labels := e.OffshootLabels()
+	for key, val := range e.Labels {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, ElasticKey+"/") {
+			labels[key] = val
+		}
 	}
-	labels[LabelDatabaseKind] = ResourceKindElastic
 	return labels
 }
 
-func (p Elastic) StatefulSetAnnotations() map[string]string {
+func (e Elastic) StatefulSetAnnotations() map[string]string {
 	annotations := make(map[string]string)
-	for key, val := range p.Annotations {
-		annotations[key] = val
+	for key, val := range e.Annotations {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, ElasticKey+"/") {
+			annotations[key] = val
+		}
 	}
-	annotations[ElasticDatabaseVersion] = string(p.Spec.Version)
+	annotations[ElasticDatabaseVersion] = string(e.Spec.Version)
 	return annotations
 }
