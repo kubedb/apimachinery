@@ -99,7 +99,7 @@ func (c *Controller) DeleteSnapshotData(snapshot *tapi.Snapshot) error {
 		return err
 	}
 
-	prefix, _ := snapshot.Location()
+	prefix, _ := snapshot.Location() // error checked by .Container()
 	cursor := stow.CursorStart
 	for {
 		items, next, err := container.Items(prefix, cursor, 50)
