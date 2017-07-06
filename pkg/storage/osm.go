@@ -57,7 +57,7 @@ func CheckBucketAccess(client clientset.Interface, spec tapi.SnapshotStorageSpec
 	if err != nil {
 		return err
 	}
-	c, err := GetContainer(spec)
+	c, err := spec.Container()
 	if err != nil {
 		return err
 	}
@@ -149,34 +149,4 @@ func NewOSMContext(client clientset.Interface, spec tapi.SnapshotStorageSpec, na
 		return nc, nil
 	}
 	return nil, errors.New("No storage provider is configured.")
-}
-
-func GetContainer(spec tapi.SnapshotStorageSpec) (string, error) {
-	if spec.S3 != nil {
-		return spec.S3.Bucket, nil
-	} else if spec.GCS != nil {
-		return spec.GCS.Bucket, nil
-	} else if spec.Azure != nil {
-		return spec.Azure.Container, nil
-	} else if spec.Local != nil {
-		return "kubedb", nil
-	} else if spec.Swift != nil {
-		return spec.Swift.Container, nil
-	}
-	return "", errors.New("No storage provider is configured.")
-}
-
-func GetLocation(spec tapi.SnapshotStorageSpec) string {
-	if spec.S3 != nil {
-		return "s3://" + spec.S3.Bucket
-	} else if spec.GCS != nil {
-		return "gs://" + spec.GCS.Bucket
-	} else if spec.Azure != nil {
-		return "azure://" + spec.Azure.Container
-	} else if spec.Local != nil {
-		return "local://kubedb"
-	} else if spec.Swift != nil {
-		return "swift://" + spec.Swift.Container
-	}
-	return "Unknown"
 }
