@@ -80,8 +80,8 @@ type SnapshotStorageSpec struct {
 }
 
 type LocalSpec struct {
-	Volume apiv1.Volume `json:"volume,omitempty"`
-	Path   string       `json:"path,omitempty"`
+	Volume apiv1.VolumeSource `json:"volume,omitempty"`
+	Path   string             `json:"path,omitempty"`
 }
 
 type S3Spec struct {
