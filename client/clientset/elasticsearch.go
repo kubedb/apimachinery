@@ -12,13 +12,13 @@ type ElasticNamespacer interface {
 }
 
 type ElasticInterface interface {
-	List(opts metav1.ListOptions) (*aci.ElasticList, error)
-	Get(name string) (*aci.Elastic, error)
-	Create(elastic *aci.Elastic) (*aci.Elastic, error)
-	Update(elastic *aci.Elastic) (*aci.Elastic, error)
+	List(opts metav1.ListOptions) (*aci.ElasticsearchList, error)
+	Get(name string) (*aci.Elasticsearch, error)
+	Create(elastic *aci.Elasticsearch) (*aci.Elasticsearch, error)
+	Update(elastic *aci.Elasticsearch) (*aci.Elasticsearch, error)
 	Delete(name string) error
 	Watch(opts metav1.ListOptions) (watch.Interface, error)
-	UpdateStatus(elastic *aci.Elastic) (*aci.Elastic, error)
+	UpdateStatus(elastic *aci.Elasticsearch) (*aci.Elasticsearch, error)
 }
 
 type ElasticImpl struct {
@@ -32,8 +32,8 @@ func newElastic(c *ExtensionClient, namespace string) *ElasticImpl {
 	return &ElasticImpl{c.restClient, namespace}
 }
 
-func (c *ElasticImpl) List(opts metav1.ListOptions) (result *aci.ElasticList, err error) {
-	result = &aci.ElasticList{}
+func (c *ElasticImpl) List(opts metav1.ListOptions) (result *aci.ElasticsearchList, err error) {
+	result = &aci.ElasticsearchList{}
 	err = c.r.Get().
 		Namespace(c.ns).
 		Resource(aci.ResourceTypeElastic).
@@ -43,8 +43,8 @@ func (c *ElasticImpl) List(opts metav1.ListOptions) (result *aci.ElasticList, er
 	return
 }
 
-func (c *ElasticImpl) Get(name string) (result *aci.Elastic, err error) {
-	result = &aci.Elastic{}
+func (c *ElasticImpl) Get(name string) (result *aci.Elasticsearch, err error) {
+	result = &aci.Elasticsearch{}
 	err = c.r.Get().
 		Namespace(c.ns).
 		Resource(aci.ResourceTypeElastic).
@@ -54,8 +54,8 @@ func (c *ElasticImpl) Get(name string) (result *aci.Elastic, err error) {
 	return
 }
 
-func (c *ElasticImpl) Create(elastic *aci.Elastic) (result *aci.Elastic, err error) {
-	result = &aci.Elastic{}
+func (c *ElasticImpl) Create(elastic *aci.Elasticsearch) (result *aci.Elasticsearch, err error) {
+	result = &aci.Elasticsearch{}
 	err = c.r.Post().
 		Namespace(c.ns).
 		Resource(aci.ResourceTypeElastic).
@@ -65,8 +65,8 @@ func (c *ElasticImpl) Create(elastic *aci.Elastic) (result *aci.Elastic, err err
 	return
 }
 
-func (c *ElasticImpl) Update(elastic *aci.Elastic) (result *aci.Elastic, err error) {
-	result = &aci.Elastic{}
+func (c *ElasticImpl) Update(elastic *aci.Elasticsearch) (result *aci.Elasticsearch, err error) {
+	result = &aci.Elasticsearch{}
 	err = c.r.Put().
 		Namespace(c.ns).
 		Resource(aci.ResourceTypeElastic).
@@ -95,8 +95,8 @@ func (c *ElasticImpl) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 		Watch()
 }
 
-func (c *ElasticImpl) UpdateStatus(elastic *aci.Elastic) (result *aci.Elastic, err error) {
-	result = &aci.Elastic{}
+func (c *ElasticImpl) UpdateStatus(elastic *aci.Elasticsearch) (result *aci.Elasticsearch, err error) {
+	result = &aci.Elasticsearch{}
 	err = c.r.Put().
 		Namespace(c.ns).
 		Resource(aci.ResourceTypeElastic).

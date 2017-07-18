@@ -1,0 +1,12 @@
+M	api/dormant_database_types.go
+D	api/elastic_types.go
+D	api/extensions/dormant_database.yaml
+D	api/extensions/elasticsearch.yaml
+D	api/extensions/postgres.yaml
+D	api/extensions/snapshot.yaml
+M	api/helpers.go
+M	api/register.go
+M	api/register_v1alpha1.go
+M	api/report.go
+M	client/clientset/elasticsearch.go
+M	client/clientset/fake/elasticsearch.go

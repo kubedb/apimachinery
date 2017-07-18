@@ -1,0 +1,39 @@
+metadata:
+  name: elasticsearch.kubedb.com
+  labels:
+    app: kubedb
+apiVersion: extensions/v1beta1
+kind: ThirdPartyResource
+description: "Elasticsearch Database in Kubernetes by appscode.com"
+versions:
+  - name: v1alpha1
+---
+metadata:
+  name: dormant-database.kubedb.com
+  labels:
+    app: kubedb
+apiVersion: extensions/v1beta1
+kind: ThirdPartyResource
+description: "Kubedb dormant databases"
+versions:
+  - name: v1alpha1
+---
+metadata:
+  name: postgres.kubedb.com
+  labels:
+    app: kubedb
+apiVersion: extensions/v1beta1
+kind: ThirdPartyResource
+description: "Postgres Database in Kubernetes by appscode.com"
+versions:
+  - name: v1alpha1
+---
+metadata:
+  name: snapshot.kubedb.com
+  labels:
+    app: kubedb
+apiVersion: extensions/v1beta1
+kind: ThirdPartyResource
+description: "Snapshot of kubedb databases"
+versions:
+  - name: v1alpha1

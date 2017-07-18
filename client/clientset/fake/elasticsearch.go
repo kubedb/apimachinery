@@ -17,20 +17,20 @@ type FakeElastic struct {
 var elasticResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1alpha1", Resource: aci.ResourceTypeElastic}
 
 // Get returns the Elastic by name.
-func (mock *FakeElastic) Get(name string) (*aci.Elastic, error) {
+func (mock *FakeElastic) Get(name string) (*aci.Elasticsearch, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewGetAction(elasticResource, mock.ns, name), &aci.Elastic{})
+		Invokes(testing.NewGetAction(elasticResource, mock.ns, name), &aci.Elasticsearch{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*aci.Elastic), err
+	return obj.(*aci.Elasticsearch), err
 }
 
 // List returns a list of Elastics.
-func (mock *FakeElastic) List(opts metav1.ListOptions) (*aci.ElasticList, error) {
+func (mock *FakeElastic) List(opts metav1.ListOptions) (*aci.ElasticsearchList, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewListAction(elasticResource, mock.ns, opts), &aci.Elastic{})
+		Invokes(testing.NewListAction(elasticResource, mock.ns, opts), &aci.Elasticsearch{})
 
 	if obj == nil {
 		return nil, err
@@ -40,8 +40,8 @@ func (mock *FakeElastic) List(opts metav1.ListOptions) (*aci.ElasticList, error)
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &aci.ElasticList{}
-	for _, item := range obj.(*aci.ElasticList).Items {
+	list := &aci.ElasticsearchList{}
+	for _, item := range obj.(*aci.ElasticsearchList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -50,43 +50,43 @@ func (mock *FakeElastic) List(opts metav1.ListOptions) (*aci.ElasticList, error)
 }
 
 // Create creates a new Elastic.
-func (mock *FakeElastic) Create(svc *aci.Elastic) (*aci.Elastic, error) {
+func (mock *FakeElastic) Create(svc *aci.Elasticsearch) (*aci.Elasticsearch, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewCreateAction(elasticResource, mock.ns, svc), &aci.Elastic{})
+		Invokes(testing.NewCreateAction(elasticResource, mock.ns, svc), &aci.Elasticsearch{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*aci.Elastic), err
+	return obj.(*aci.Elasticsearch), err
 }
 
 // Update updates a Elastic.
-func (mock *FakeElastic) Update(svc *aci.Elastic) (*aci.Elastic, error) {
+func (mock *FakeElastic) Update(svc *aci.Elasticsearch) (*aci.Elasticsearch, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewUpdateAction(elasticResource, mock.ns, svc), &aci.Elastic{})
+		Invokes(testing.NewUpdateAction(elasticResource, mock.ns, svc), &aci.Elasticsearch{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*aci.Elastic), err
+	return obj.(*aci.Elasticsearch), err
 }
 
 // Delete deletes a Elastic by name.
 func (mock *FakeElastic) Delete(name string) error {
 	_, err := mock.Fake.
-		Invokes(testing.NewDeleteAction(elasticResource, mock.ns, name), &aci.Elastic{})
+		Invokes(testing.NewDeleteAction(elasticResource, mock.ns, name), &aci.Elasticsearch{})
 
 	return err
 }
 
-func (mock *FakeElastic) UpdateStatus(srv *aci.Elastic) (*aci.Elastic, error) {
+func (mock *FakeElastic) UpdateStatus(srv *aci.Elasticsearch) (*aci.Elasticsearch, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(elasticResource, "status", mock.ns, srv), &aci.Elastic{})
+		Invokes(testing.NewUpdateSubresourceAction(elasticResource, "status", mock.ns, srv), &aci.Elasticsearch{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*aci.Elastic), err
+	return obj.(*aci.Elasticsearch), err
 }
 
 func (mock *FakeElastic) Watch(opts metav1.ListOptions) (watch.Interface, error) {

@@ -38,7 +38,7 @@ type Origin struct {
 type OriginSpec struct {
 	// Elastic Spec
 	// +optional
-	Elastic *ElasticSpec `json:"elastic,omitempty"`
+	Elastic *ElasticsearchSpec `json:"elastic,omitempty"`
 	// Postgres Spec
 	// +optional
 	Postgres *PostgresSpec `json:"postgres,omitempty"`
