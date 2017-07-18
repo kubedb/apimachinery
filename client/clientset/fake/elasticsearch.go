@@ -16,7 +16,7 @@ type FakeElasticsearch struct {
 
 var elasticResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1alpha1", Resource: aci.ResourceTypeElasticsearch}
 
-// Get returns the Elastic by name.
+// Get returns the Elasticsearch by name.
 func (mock *FakeElasticsearch) Get(name string) (*aci.Elasticsearch, error) {
 	obj, err := mock.Fake.
 		Invokes(testing.NewGetAction(elasticResource, mock.ns, name), &aci.Elasticsearch{})
@@ -49,7 +49,7 @@ func (mock *FakeElasticsearch) List(opts metav1.ListOptions) (*aci.Elasticsearch
 	return list, err
 }
 
-// Create creates a new Elastic.
+// Create creates a new Elasticsearch.
 func (mock *FakeElasticsearch) Create(svc *aci.Elasticsearch) (*aci.Elasticsearch, error) {
 	obj, err := mock.Fake.
 		Invokes(testing.NewCreateAction(elasticResource, mock.ns, svc), &aci.Elasticsearch{})
@@ -60,7 +60,7 @@ func (mock *FakeElasticsearch) Create(svc *aci.Elasticsearch) (*aci.Elasticsearc
 	return obj.(*aci.Elasticsearch), err
 }
 
-// Update updates a Elastic.
+// Update updates a Elasticsearch.
 func (mock *FakeElasticsearch) Update(svc *aci.Elasticsearch) (*aci.Elasticsearch, error) {
 	obj, err := mock.Fake.
 		Invokes(testing.NewUpdateAction(elasticResource, mock.ns, svc), &aci.Elasticsearch{})
@@ -71,7 +71,7 @@ func (mock *FakeElasticsearch) Update(svc *aci.Elasticsearch) (*aci.Elasticsearc
 	return obj.(*aci.Elasticsearch), err
 }
 
-// Delete deletes a Elastic by name.
+// Delete deletes a Elasticsearch by name.
 func (mock *FakeElasticsearch) Delete(name string) error {
 	_, err := mock.Fake.
 		Invokes(testing.NewDeleteAction(elasticResource, mock.ns, name), &aci.Elasticsearch{})
