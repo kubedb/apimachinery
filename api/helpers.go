@@ -18,7 +18,7 @@ const (
 	PostgresKey             = ResourceNamePostgres + "." + GenericKey
 	PostgresDatabaseVersion = PostgresKey + "/version"
 
-	ElasticKey             = ResourceNameElastic + ".kubedb.com"
+	ElasticKey             = ResourceNameElasticsearch + ".kubedb.com"
 	ElasticDatabaseVersion = ElasticKey + "/version"
 
 	SnapshotKey         = ResourceNameSnapshot + "s.kubedb.com"
@@ -63,7 +63,7 @@ func (e Elasticsearch) OffshootName() string {
 
 func (e Elasticsearch) OffshootLabels() map[string]string {
 	return map[string]string{
-		LabelDatabaseKind: ResourceKindElastic,
+		LabelDatabaseKind: ResourceKindElasticsearch,
 		LabelDatabaseName: e.Name,
 	}
 }

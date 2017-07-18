@@ -7,10 +7,10 @@ import (
 )
 
 const (
-	ResourceCodeElastic = "es"
-	ResourceKindElastic = "Elasticsearch"
-	ResourceNameElastic = "elasticsearch"
-	ResourceTypeElastic = "elasticsearchs"
+	ResourceCodeElasticsearch = "es"
+	ResourceKindElasticsearch = "Elasticsearch"
+	ResourceNameElasticsearch = "elasticsearch"
+	ResourceTypeElasticsearch = "elasticsearchs"
 )
 
 // Elasticsearch defines a Elasticsearch database.

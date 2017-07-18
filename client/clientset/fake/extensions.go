@@ -43,8 +43,8 @@ func (m *FakeExtensionClient) DormantDatabases(ns string) clientset.DormantDatab
 	return &FakeDormantDatabase{m.Fake, ns}
 }
 
-func (m *FakeExtensionClient) Elastics(ns string) clientset.ElasticInterface {
-	return &FakeElastic{m.Fake, ns}
+func (m *FakeExtensionClient) Elasticsearches(ns string) clientset.ElasticsearchInterface {
+	return &FakeElasticsearch{m.Fake, ns}
 }
 
 func (m *FakeExtensionClient) Postgreses(ns string) clientset.PostgresInterface {
