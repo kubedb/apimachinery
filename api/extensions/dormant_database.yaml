@@ -1,7 +1,0 @@
-metadata:
-  name: dormant-database.kubedb.com
-apiVersion: extensions/v1beta1
-kind: ThirdPartyResource
-description: "Kubedb dormant databases"
-versions:
-  - name: v1alpha1

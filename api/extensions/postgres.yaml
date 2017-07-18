@@ -1,7 +1,0 @@
-metadata:
-  name: postgres.kubedb.com
-apiVersion: extensions/v1beta1
-kind: ThirdPartyResource
-description: "Postgres Database in Kubernetes by appscode.com"
-versions:
-  - name: v1alpha1
