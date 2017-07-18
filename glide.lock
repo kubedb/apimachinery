@@ -1,5 +1,5 @@
 hash: 491ecc957d3953a369504b14b6e4f867f2ba2fac050b13eeeeea92211af649fa
-updated: 2017-07-13T23:01:33.821653923-07:00
+updated: 2017-07-18T04:32:14.686232579-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -16,7 +16,7 @@ imports:
 - name: github.com/appscode/log
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
 - name: github.com/appscode/osm
-  version: c5e36f4aa99900641c2b592fc41d80556fa7f195
+  version: ec38ac9497280b0acb4742d02154ba5f18d8a994
   subpackages:
   - pkg/context
 - name: github.com/aws/aws-sdk-go
@@ -155,7 +155,7 @@ imports:
 - name: github.com/Sirupsen/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
 - name: github.com/spf13/cobra
-  version: c46add8a652801b61513ad36c56759f302fbb028
+  version: d994347edadc56d6a7f863775fb6887606685ae6
 - name: github.com/spf13/pflag
   version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: github.com/ugorji/go
