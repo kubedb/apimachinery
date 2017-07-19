@@ -1,5 +1,5 @@
 hash: 491ecc957d3953a369504b14b6e4f867f2ba2fac050b13eeeeea92211af649fa
-updated: 2017-07-18T04:32:14.686232579-07:00
+updated: 2017-07-18T19:15:15.97466341-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -84,7 +84,7 @@ imports:
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
-  version: 2e44421e256d82ebbf3d4d4fcabe8930b905eff3
+  version: d3de07a94d22b4a0972deb4b96d790c2c0ce8333
 - name: github.com/go-openapi/jsonpointer
   version: 46af16f9f7b149af66e5d1bd010e3574dc06de98
 - name: github.com/go-openapi/jsonreference
@@ -155,7 +155,7 @@ imports:
 - name: github.com/Sirupsen/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
 - name: github.com/spf13/cobra
-  version: d994347edadc56d6a7f863775fb6887606685ae6
+  version: 715f41bd7a70b5111f898b71ab484da52ee6266d
 - name: github.com/spf13/pflag
   version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: github.com/ugorji/go
@@ -196,7 +196,7 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: e665075b5ff79143ba49c58fab02df9dc122afd5
+  version: 295e4bb0ade057ae2cfb9876ab0b54635dbfcea4
   subpackages:
   - gensupport
   - googleapi
