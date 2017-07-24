@@ -14,18 +14,18 @@ import (
 	apiv1 "k8s.io/client-go/pkg/api/v1"
 )
 
-func ValidateStorageSpec(client clientset.Interface, spec *tapi.StorageSpec) (*tapi.StorageSpec, error) {
+func ValidatePersistentVolumeClaimSpec(client clientset.Interface, spec *apiv1.PersistentVolumeClaimSpec) (*apiv1.PersistentVolumeClaimSpec, error) {
 	if spec == nil {
 		return nil, nil
 	}
 
-	if spec.Class == "" {
-		return nil, fmt.Errorf(`Object 'Class' is missing in '%v'`, *spec)
+	if spec.StorageClassName == nil {
+		return nil, fmt.Errorf(`Object 'StorageClassName' is missing in '%v'`, *spec)
 	}
 
-	if _, err := client.StorageV1beta1().StorageClasses().Get(spec.Class, metav1.GetOptions{}); err != nil {
+	if _, err := client.StorageV1beta1().StorageClasses().Get(*spec.StorageClassName, metav1.GetOptions{}); err != nil {
 		if kerr.IsNotFound(err) {
-			return nil, fmt.Errorf(`Spec.Storage.Class "%v" not found`, spec.Class)
+			return nil, fmt.Errorf(`Spec.Storage.StorageClassName "%v" not found`, *spec.StorageClassName)
 		}
 		return nil, err
 	}
