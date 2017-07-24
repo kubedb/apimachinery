@@ -1,5 +1,5 @@
 hash: 491ecc957d3953a369504b14b6e4f867f2ba2fac050b13eeeeea92211af649fa
-updated: 2017-07-18T19:15:15.97466341-07:00
+updated: 2017-07-24T00:25:19.5098868-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -16,7 +16,7 @@ imports:
 - name: github.com/appscode/log
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
 - name: github.com/appscode/osm
-  version: ec38ac9497280b0acb4742d02154ba5f18d8a994
+  version: 1b226726867d14326735e243bd8fe50afe2d2e9d
   subpackages:
   - pkg/context
 - name: github.com/aws/aws-sdk-go
@@ -84,7 +84,7 @@ imports:
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
-  version: d3de07a94d22b4a0972deb4b96d790c2c0ce8333
+  version: 2e44421e256d82ebbf3d4d4fcabe8930b905eff3
 - name: github.com/go-openapi/jsonpointer
   version: 46af16f9f7b149af66e5d1bd010e3574dc06de98
 - name: github.com/go-openapi/jsonreference
@@ -143,7 +143,7 @@ imports:
   - jlexer
   - jwriter
 - name: github.com/ncw/swift
-  version: 9e6fdb8957a022d5780a78b58d6181c3580bb01f
+  version: 5068c3506cf003c630c94b92a64e978115394f26
 - name: github.com/orcaman/concurrent-map
   version: 2ae17bc4c860c83513ee50feb9746f3e50d7515d
 - name: github.com/pkg/errors
@@ -155,7 +155,7 @@ imports:
 - name: github.com/Sirupsen/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
 - name: github.com/spf13/cobra
-  version: 715f41bd7a70b5111f898b71ab484da52ee6266d
+  version: 90fc11bbc0a789c29272c21b5ff9e93db183f8dc
 - name: github.com/spf13/pflag
   version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: github.com/ugorji/go
