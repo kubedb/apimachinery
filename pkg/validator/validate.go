@@ -14,7 +14,7 @@ import (
 	apiv1 "k8s.io/client-go/pkg/api/v1"
 )
 
-func ValidatePersistentVolumeClaimSpec(client clientset.Interface, spec *apiv1.PersistentVolumeClaimSpec) (*apiv1.PersistentVolumeClaimSpec, error) {
+func ValidateStorage(client clientset.Interface, spec *apiv1.PersistentVolumeClaimSpec) (*apiv1.PersistentVolumeClaimSpec, error) {
 	if spec == nil {
 		return nil, nil
 	}
