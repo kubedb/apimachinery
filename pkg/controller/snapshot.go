@@ -427,8 +427,6 @@ func (c *SnapshotController) checkSnapshotJob(snapshot *tapi.Snapshot, jobName s
 		return err
 	}
 
-	t := metav1.Now()
-	snapshot.Status.CompletionTime = &t
 	if jobSuccess {
 		snapshot.Status.Phase = tapi.SnapshotPhaseSuccessed
 		c.eventRecorder.Event(
@@ -460,7 +458,10 @@ func (c *SnapshotController) checkSnapshotJob(snapshot *tapi.Snapshot, jobName s
 	}
 
 	err = c.UpdateSnapshot(snapshot.ObjectMeta, func(in tapi.Snapshot) tapi.Snapshot {
+		t := metav1.Now()
+		in.Status.CompletionTime = &t
 		delete(in.Labels, tapi.LabelSnapshotStatus)
+		in.Status.Phase = snapshot.Status.Phase
 		return in
 	})
 	if err != nil {
