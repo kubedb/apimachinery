@@ -359,9 +359,7 @@ func (c *SnapshotController) checkSnapshotJob(snapshot *tapi.Snapshot, jobName s
 		return err
 	}
 
-	if err := deleteJobResources(c.client, c.eventRecorder, snapshot, job); err != nil {
-		return err
-	}
+	deleteJobResources(c.client, c.eventRecorder, snapshot, job)
 
 	err = c.client.CoreV1().Secrets(snapshot.Namespace).Delete(snapshot.Name, &metav1.DeleteOptions{})
 	if err != nil && !kerr.IsNotFound(err) {

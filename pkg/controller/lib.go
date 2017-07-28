@@ -187,9 +187,7 @@ func (c *Controller) CheckDatabaseRestoreJob(
 		return false
 	}
 
-	if err := deleteJobResources(c.Client, recorder, runtimeObj, job); err != nil {
-		return false
-	}
+	deleteJobResources(c.Client, recorder, runtimeObj, job)
 
 	err = c.Client.CoreV1().Secrets(job.Namespace).Delete(job.Name, &metav1.DeleteOptions{})
 	if err != nil && !kerr.IsNotFound(err) {
@@ -313,8 +311,8 @@ func deleteJobResources(
 	recorder record.EventRecorder,
 	runtimeObj runtime.Object,
 	job *batch.Job,
-) error {
-	if err := client.BatchV1().Jobs(job.Namespace).Delete(job.Name, nil); err != nil {
+) {
+	if err := client.BatchV1().Jobs(job.Namespace).Delete(job.Name, nil); err != nil && !kerr.IsNotFound(err) {
 		recorder.Eventf(
 			runtimeObj,
 			apiv1.EventTypeWarning,
@@ -327,26 +325,27 @@ func deleteJobResources(
 
 	r, err := metav1.LabelSelectorAsSelector(job.Spec.Selector)
 	if err != nil {
-		return err
-	}
+		log.Errorln(err)
+	} else {
+		attempt := 0
+		for ; attempt < maxAttempts; attempt = attempt + 1 {
+			podList, err := client.CoreV1().Pods(job.Namespace).List(metav1.ListOptions{
+				LabelSelector: r.String(),
+			})
+			if err != nil {
+				log.Errorln(err)
+				break
+			}
 
-	attempt := 0
-	for ; attempt < maxAttempts; attempt = attempt + 1 {
-		podList, err := client.CoreV1().Pods(job.Namespace).List(metav1.ListOptions{
-			LabelSelector: r.String(),
-		})
-		if err != nil {
-			return err
-		}
+			if len(podList.Items) == 0 {
+				break
+			}
 
-		if len(podList.Items) == 0 {
-			break
+			for _, pod := range podList.Items {
+				client.CoreV1().Pods(pod.Namespace).Delete(pod.Name, &metav1.DeleteOptions{})
+			}
+			time.Sleep(updateRetryInterval)
 		}
-
-		for _, pod := range podList.Items {
-			client.CoreV1().Pods(pod.Namespace).Delete(pod.Name, &metav1.DeleteOptions{})
-		}
-		time.Sleep(updateRetryInterval)
 	}
 
 	for _, volume := range job.Spec.Template.Spec.Volumes {
@@ -366,5 +365,5 @@ func deleteJobResources(
 		}
 	}
 
-	return fmt.Errorf("Failed to delete jobs %s@%s after %d attempts.", job.Name, job.Namespace, attempt)
+	return
 }
