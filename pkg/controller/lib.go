@@ -327,24 +327,18 @@ func deleteJobResources(
 	if err != nil {
 		log.Errorln(err)
 	} else {
-		attempt := 0
-		for ; attempt < maxAttempts; attempt = attempt + 1 {
-			podList, err := client.CoreV1().Pods(job.Namespace).List(metav1.ListOptions{
-				LabelSelector: r.String(),
-			})
-			if err != nil {
-				log.Errorln(err)
-				break
-			}
-
-			if len(podList.Items) == 0 {
-				break
-			}
-
-			for _, pod := range podList.Items {
-				client.CoreV1().Pods(pod.Namespace).Delete(pod.Name, &metav1.DeleteOptions{})
-			}
-			time.Sleep(updateRetryInterval)
+		err = client.CoreV1().Pods(job.Namespace).DeleteCollection(&metav1.DeleteOptions{}, metav1.ListOptions{
+			LabelSelector: r.String(),
+		})
+		if err != nil {
+			recorder.Eventf(
+				runtimeObj,
+				apiv1.EventTypeWarning,
+				eventer.EventReasonFailedToDelete,
+				"Failed to delete Pods. Reason: %v",
+				err,
+			)
+			log.Errorln(err)
 		}
 	}
 
