@@ -37,6 +37,8 @@ import:
   version: master
 - package: github.com/orcaman/concurrent-map
 - package: gopkg.in/robfig/cron.v2
+  repo: https://github.com/appscode/cron.git
+  vcs: git
   version: v2
 - package: github.com/Sirupsen/logrus
   version: v0.10.0

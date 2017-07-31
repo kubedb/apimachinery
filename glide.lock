@@ -1,5 +1,5 @@
-hash: 491ecc957d3953a369504b14b6e4f867f2ba2fac050b13eeeeea92211af649fa
-updated: 2017-07-24T00:25:19.5098868-07:00
+hash: 7c28f9ca753f058674b3bdc9368d5fbc7356b92ffcbfca943383d231dcf38191
+updated: 2017-07-26T17:02:53.915749199+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -84,7 +84,7 @@ imports:
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
-  version: 2e44421e256d82ebbf3d4d4fcabe8930b905eff3
+  version: d3de07a94d22b4a0972deb4b96d790c2c0ce8333
 - name: github.com/go-openapi/jsonpointer
   version: 46af16f9f7b149af66e5d1bd010e3574dc06de98
 - name: github.com/go-openapi/jsonreference
@@ -143,7 +143,7 @@ imports:
   - jlexer
   - jwriter
 - name: github.com/ncw/swift
-  version: 5068c3506cf003c630c94b92a64e978115394f26
+  version: 5c1c9fb19fefe22621851104ecd08044e0de7bd5
 - name: github.com/orcaman/concurrent-map
   version: 2ae17bc4c860c83513ee50feb9746f3e50d7515d
 - name: github.com/pkg/errors
@@ -155,7 +155,7 @@ imports:
 - name: github.com/Sirupsen/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
 - name: github.com/spf13/cobra
-  version: 90fc11bbc0a789c29272c21b5ff9e93db183f8dc
+  version: 34594c771f2c18301dc152640ad40ece28795373
 - name: github.com/spf13/pflag
   version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: github.com/ugorji/go
@@ -217,7 +217,9 @@ imports:
 - name: gopkg.in/inf.v0
   version: 3887ee99ecf07df5b447e9b00d9c0b2adaa9f3e4
 - name: gopkg.in/robfig/cron.v2
-  version: be2e0b0deed5a68ffee390b4583a13aff8321535
+  version: ca60c6d796d4b1f7bb2a8fd5271d8a59aeffb4bf
+  repo: https://github.com/appscode/cron.git
+  vcs: git
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/apimachinery
