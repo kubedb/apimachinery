@@ -5,6 +5,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	types "k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/testing"
 )
@@ -92,4 +93,14 @@ func (mock *FakeElasticsearch) UpdateStatus(srv *aci.Elasticsearch) (*aci.Elasti
 func (mock *FakeElasticsearch) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 	return mock.Fake.
 		InvokesWatch(testing.NewWatchAction(elasticResource, mock.ns, opts))
+}
+
+func (mock *FakeElasticsearch) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (*aci.Elasticsearch, error) {
+	obj, err := mock.Fake.
+		Invokes(testing.NewPatchSubresourceAction(elasticResource, mock.ns, name, data, subresources...), &aci.Elasticsearch{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*aci.Elasticsearch), err
 }
