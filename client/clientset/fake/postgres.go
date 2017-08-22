@@ -5,6 +5,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	types "k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/testing"
 )
@@ -92,4 +93,14 @@ func (mock *FakePostgres) UpdateStatus(srv *aci.Postgres) (*aci.Postgres, error)
 func (mock *FakePostgres) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 	return mock.Fake.
 		InvokesWatch(testing.NewWatchAction(postgresResource, mock.ns, opts))
+}
+
+func (mock *FakePostgres) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (*aci.Postgres, error) {
+	obj, err := mock.Fake.
+		Invokes(testing.NewPatchSubresourceAction(postgresResource, mock.ns, name, data, subresources...), &aci.Postgres{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*aci.Postgres), err
 }

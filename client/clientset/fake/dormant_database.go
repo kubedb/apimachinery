@@ -5,6 +5,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	types "k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/testing"
 )
@@ -92,4 +93,14 @@ func (mock *FakeDormantDatabase) UpdateStatus(srv *aci.DormantDatabase) (*aci.Do
 func (mock *FakeDormantDatabase) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 	return mock.Fake.
 		InvokesWatch(testing.NewWatchAction(dormantDatabaseResource, mock.ns, opts))
+}
+
+func (mock *FakeDormantDatabase) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (*aci.DormantDatabase, error) {
+	obj, err := mock.Fake.
+		Invokes(testing.NewPatchSubresourceAction(dormantDatabaseResource, mock.ns, name, data, subresources...), &aci.DormantDatabase{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*aci.DormantDatabase), err
 }
