@@ -1,5 +1,5 @@
-hash: 7c28f9ca753f058674b3bdc9368d5fbc7356b92ffcbfca943383d231dcf38191
-updated: 2017-07-26T17:02:53.915749199+06:00
+hash: c4215273f2d211799c02e29855d0981a729800493a3d5cbf646315b716fae8c3
+updated: 2017-08-22T02:31:02.915567008-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -7,7 +7,7 @@ imports:
   - compute/metadata
   - internal
 - name: github.com/appscode/go
-  version: 9fde097ebcef0add8325c8fbee63ae01e7da530e
+  version: 45732d59b2277b9c7ffdc41d2d5c07a899a20a70
   subpackages:
   - encoding/json/types
   - encoding/yaml
@@ -16,9 +16,9 @@ imports:
 - name: github.com/appscode/log
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
 - name: github.com/appscode/osm
-  version: 1b226726867d14326735e243bd8fe50afe2d2e9d
+  version: c4eb9d9f2fa11a22cd4b5f358afa5c89245059b4
   subpackages:
-  - pkg/context
+  - context
 - name: github.com/aws/aws-sdk-go
   version: 63ce630574a5ec05ecd8e8de5cea16332a5a684d
   subpackages:
@@ -46,16 +46,22 @@ imports:
   - private/protocol/xml/xmlutil
   - private/waiter
   - service/s3
+  - service/s3/s3iface
+  - service/s3/s3manager
   - service/sts
 - name: github.com/Azure/azure-sdk-for-go
-  version: 0984e0641ae43b89283223034574d6465be93bf4
-  vcs: git
+  version: 2d49bb8f2cee530cc16f1f1a9f0aae763dee257d
   subpackages:
   - storage
 - name: github.com/Azure/go-ansiterm
   version: 70b2c90b260171e829f1ebd7c17f600c11858dbe
 - name: github.com/Azure/go-autorest
-  version: d7c034a8af24eda120dd6460bfcd6d9ed14e43ca
+  version: f6e08fe5e4d45c9a66e40196d3fed5f37331d224
+  subpackages:
+  - autorest
+  - autorest/adal
+  - autorest/azure
+  - autorest/date
 - name: github.com/coreos/prometheus-operator
   version: 0d446f3052e47b5ad95989d9a8ffe4f6675e69b5
   subpackages:
@@ -64,6 +70,8 @@ imports:
   version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
   subpackages:
   - spew
+- name: github.com/dgrijalva/jwt-go
+  version: 01aeca54ebda6e0fbfafd0a524d234159c05ec20
 - name: github.com/docker/distribution
   version: cd27f179f2c10c5d300e6d09025b538c475b0d51
   subpackages:
@@ -84,7 +92,7 @@ imports:
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
-  version: d3de07a94d22b4a0972deb4b96d790c2c0ce8333
+  version: 2e44421e256d82ebbf3d4d4fcabe8930b905eff3
 - name: github.com/go-openapi/jsonpointer
   version: 46af16f9f7b149af66e5d1bd010e3574dc06de98
 - name: github.com/go-openapi/jsonreference
@@ -115,7 +123,7 @@ imports:
 - name: github.com/gorilla/mux
   version: 0a192a193177452756c362c20087ddafcf6829c4
 - name: github.com/graymeta/stow
-  version: 9457960a7989724e98ca759ed456e0e05ca69601
+  version: 3c6848a44916f9a5c422d54979e46f12d6dea8e1
   repo: https://github.com/appscode/stow.git
   vcs: git
   subpackages:
@@ -143,7 +151,7 @@ imports:
   - jlexer
   - jwriter
 - name: github.com/ncw/swift
-  version: 5c1c9fb19fefe22621851104ecd08044e0de7bd5
+  version: af59a5adcdb59d343cc10d09804a9cbfbc32d385
 - name: github.com/orcaman/concurrent-map
   version: 2ae17bc4c860c83513ee50feb9746f3e50d7515d
 - name: github.com/pkg/errors
@@ -152,10 +160,12 @@ imports:
   version: 8a290539e2e8629dbc4e6bad948158f790ec31f4
 - name: github.com/PuerkitoBio/urlesc
   version: 5bd2802263f21d8788851d5305584c82a5c75d7e
+- name: github.com/satori/uuid
+  version: 5bf94b69c6b68ee1b541973bb8e1144db23a194b
 - name: github.com/Sirupsen/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
 - name: github.com/spf13/cobra
-  version: 34594c771f2c18301dc152640ad40ece28795373
+  version: 4a7b7e65864c064d48dce82efbbfed2bdc0bf2aa
 - name: github.com/spf13/pflag
   version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: github.com/ugorji/go
@@ -196,7 +206,7 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: 295e4bb0ade057ae2cfb9876ab0b54635dbfcea4
+  version: dd6bdadc5852eae2d133075a3690d6ad744add48
   subpackages:
   - gensupport
   - googleapi

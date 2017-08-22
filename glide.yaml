@@ -21,10 +21,9 @@ import:
 - package: github.com/spf13/pflag
   version: master
 - package: github.com/Azure/azure-sdk-for-go
-  vcs: git
-  version: v7.0.1-beta
+  version: v10.2.1-beta
 - package: github.com/Azure/go-autorest
-  version: v7.2.3
+  version: ~8.1.1
 - package: github.com/Azure/go-ansiterm
   version: 70b2c90b260171e829f1ebd7c17f600c11858dbe
 - package: github.com/aws/aws-sdk-go
