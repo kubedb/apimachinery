@@ -1,5 +1,5 @@
-hash: c4215273f2d211799c02e29855d0981a729800493a3d5cbf646315b716fae8c3
-updated: 2017-08-22T02:31:02.915567008-07:00
+hash: b49d63fe9138b1facaa66f7fca583f947e0c32853b75bb3ebaee2d4e4447d077
+updated: 2017-08-23T17:39:45.652705795+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -12,7 +12,17 @@ imports:
   - encoding/json/types
   - encoding/yaml
   - runtime
+  - types
   - wait
+- name: github.com/appscode/go-version
+  version: 97adb342c1792e9f59701c1d96bf3612d0fc7621
+- name: github.com/appscode/jsonpatch
+  version: 3cdd2454b5443228620ea11294085ec3489936a6
+- name: github.com/appscode/kutil
+  version: 5d208c60e3be8e3b244d64d8f76e0462afe2bcbd
+  subpackages:
+  - apps/v1beta1
+  - kubedb/v1alpha1
 - name: github.com/appscode/log
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
 - name: github.com/appscode/osm
@@ -62,6 +72,8 @@ imports:
   - autorest/adal
   - autorest/azure
   - autorest/date
+- name: github.com/cenkalti/backoff
+  version: 32cd0c5b3aef12c76ed64aaf678f6c79736be7dc
 - name: github.com/coreos/prometheus-operator
   version: 0d446f3052e47b5ad95989d9a8ffe4f6675e69b5
   subpackages:
@@ -92,7 +104,7 @@ imports:
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
-  version: 2e44421e256d82ebbf3d4d4fcabe8930b905eff3
+  version: d3de07a94d22b4a0972deb4b96d790c2c0ce8333
 - name: github.com/go-openapi/jsonpointer
   version: 46af16f9f7b149af66e5d1bd010e3574dc06de98
 - name: github.com/go-openapi/jsonreference
@@ -123,7 +135,7 @@ imports:
 - name: github.com/gorilla/mux
   version: 0a192a193177452756c362c20087ddafcf6829c4
 - name: github.com/graymeta/stow
-  version: 3c6848a44916f9a5c422d54979e46f12d6dea8e1
+  version: da3723e4375b7bee47c9709d437630d40f3379a1
   repo: https://github.com/appscode/stow.git
   vcs: git
   subpackages:
@@ -165,7 +177,7 @@ imports:
 - name: github.com/Sirupsen/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
 - name: github.com/spf13/cobra
-  version: 4a7b7e65864c064d48dce82efbbfed2bdc0bf2aa
+  version: 2df9a531813370438a4d79bfc33e21f58063ed87
 - name: github.com/spf13/pflag
   version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: github.com/ugorji/go

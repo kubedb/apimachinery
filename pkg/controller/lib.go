@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+kutilapps "github.com/appscode/kutil/apps/v1beta1"
 	"github.com/appscode/log"
 	"github.com/graymeta/stow"
 	_ "github.com/graymeta/stow/azure"
@@ -22,6 +23,7 @@ import (
 	apps "k8s.io/client-go/pkg/apis/apps/v1beta1"
 	batch "k8s.io/client-go/pkg/apis/batch/v1"
 	"k8s.io/client-go/tools/record"
+	"github.com/appscode/go/types"
 )
 
 func (c *Controller) CheckStatefulSetPodStatus(statefulSet *apps.StatefulSet, checkDuration time.Duration) error {
@@ -261,9 +263,11 @@ func (c *Controller) DeleteStatefulSet(name, namespace string) error {
 	}
 
 	// Update StatefulSet
-	replicas := int32(0)
-	statefulSet.Spec.Replicas = &replicas
-	if _, err := c.Client.AppsV1beta1().StatefulSets(statefulSet.Namespace).Update(statefulSet); err != nil {
+	_, err = kutilapps.EnsureStatefulSet(c.Client, statefulSet.ObjectMeta, func(in *apps.StatefulSet) *apps.StatefulSet {
+		in.Spec.Replicas = types.Int32P(0)
+		return in
+	})
+	if err != nil {
 		return err
 	}
 
