@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"time"
 
-kutilapps "github.com/appscode/kutil/apps/v1beta1"
+	"github.com/appscode/go/types"
+	kutilapps "github.com/appscode/kutil/apps/v1beta1"
 	"github.com/appscode/log"
 	"github.com/graymeta/stow"
 	_ "github.com/graymeta/stow/azure"
@@ -23,7 +24,6 @@ kutilapps "github.com/appscode/kutil/apps/v1beta1"
 	apps "k8s.io/client-go/pkg/apis/apps/v1beta1"
 	batch "k8s.io/client-go/pkg/apis/batch/v1"
 	"k8s.io/client-go/tools/record"
-	"github.com/appscode/go/types"
 )
 
 func (c *Controller) CheckStatefulSetPodStatus(statefulSet *apps.StatefulSet, checkDuration time.Duration) error {

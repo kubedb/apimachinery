@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	kutildb "github.com/appscode/kutil/kubedb/v1alpha1"
 	"github.com/appscode/go/wait"
+	kutildb "github.com/appscode/kutil/kubedb/v1alpha1"
 	"github.com/appscode/log"
 	tapi "github.com/k8sdb/apimachinery/api"
 	tcs "github.com/k8sdb/apimachinery/client/clientset"
