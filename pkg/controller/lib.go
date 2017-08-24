@@ -263,7 +263,7 @@ func (c *Controller) DeleteStatefulSet(name, namespace string) error {
 	}
 
 	// Update StatefulSet
-	_, err = kutilapps.EnsureStatefulSet(c.Client, statefulSet.ObjectMeta, func(in *apps.StatefulSet) *apps.StatefulSet {
+	_, err = kutilapps.TryPatchStatefulSet(c.Client, statefulSet.ObjectMeta, func(in *apps.StatefulSet) *apps.StatefulSet {
 		in.Spec.Replicas = types.Int32P(0)
 		return in
 	})
