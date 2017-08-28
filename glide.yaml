@@ -49,6 +49,8 @@ import:
   version: v4.0.0
 - package: github.com/appscode/kutil
   version: master
+- package: k8s.io/apiextensions-apiserver
+  version: 5fa44608f6b9b2180a2fd1ecb52e651fd0397794
 testImport:
 - package: github.com/stretchr/testify
   version: v1.1.4
