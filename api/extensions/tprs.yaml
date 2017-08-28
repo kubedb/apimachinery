@@ -1,39 +1,55 @@
 metadata:
-  name: elasticsearch.kubedb.com
+  name: elasticsearches.kubedb.com
   labels:
     app: kubedb
-apiVersion: extensions/v1beta1
-kind: ThirdPartyResource
-description: "Elasticsearch Database in Kubernetes by appscode.com"
-versions:
-  - name: v1alpha1
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+spec:
+  group: kubedb.com
+  names:
+    kind: Elasticsearch
+    plural: elasticsearches
+  scope: Namespaced
+  version: v1alpha1
 ---
 metadata:
-  name: dormant-database.kubedb.com
+  name: dormantdatabases.kubedb.com
   labels:
     app: kubedb
-apiVersion: extensions/v1beta1
-kind: ThirdPartyResource
-description: "Kubedb dormant databases"
-versions:
-  - name: v1alpha1
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+spec:
+  group: kubedb.com
+  names:
+    kind: DormantDatabase
+    plural: dormantdatabases
+  scope: Namespaced
+  version: v1alpha1
 ---
 metadata:
-  name: postgres.kubedb.com
+  name: postgreses.kubedb.com
   labels:
     app: kubedb
-apiVersion: extensions/v1beta1
-kind: ThirdPartyResource
-description: "Postgres Database in Kubernetes by appscode.com"
-versions:
-  - name: v1alpha1
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+spec:
+  group: kubedb.com
+  names:
+    kind: Postgres
+    plural: postgreses
+  scope: Namespaced
+  version: v1alpha1
 ---
 metadata:
-  name: snapshot.kubedb.com
+  name: snapshots.kubedb.com
   labels:
     app: kubedb
-apiVersion: extensions/v1beta1
-kind: ThirdPartyResource
-description: "Snapshot of kubedb databases"
-versions:
-  - name: v1alpha1
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+spec:
+  group: kubedb.com
+  names:
+    kind: Snapshot
+    plural: snapshots
+  scope: Namespaced
+  version: v1alpha1

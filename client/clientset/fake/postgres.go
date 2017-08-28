@@ -4,7 +4,6 @@ import (
 	aci "github.com/k8sdb/apimachinery/api"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/testing"
@@ -15,12 +14,13 @@ type FakePostgres struct {
 	ns   string
 }
 
-var postgresResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1alpha1", Resource: aci.ResourceTypePostgres}
+var resourcePostgres = aci.V1alpha1SchemeGroupVersion.WithResource(aci.ResourceTypePostgres)
+var kindPostgres = aci.V1alpha1SchemeGroupVersion.WithKind(aci.ResourceKindPostgres)
 
 // Get returns the Postgres by name.
 func (mock *FakePostgres) Get(name string) (*aci.Postgres, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewGetAction(postgresResource, mock.ns, name), &aci.Postgres{})
+		Invokes(testing.NewGetAction(resourcePostgres, mock.ns, name), &aci.Postgres{})
 
 	if obj == nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (mock *FakePostgres) Get(name string) (*aci.Postgres, error) {
 // List returns the a of Postgress.
 func (mock *FakePostgres) List(opts metav1.ListOptions) (*aci.PostgresList, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewListAction(postgresResource, mock.ns, opts), &aci.Postgres{})
+		Invokes(testing.NewListAction(resourcePostgres, kindPostgres, mock.ns, opts), &aci.Postgres{})
 
 	if obj == nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (mock *FakePostgres) List(opts metav1.ListOptions) (*aci.PostgresList, erro
 // Create creates a new Postgres.
 func (mock *FakePostgres) Create(svc *aci.Postgres) (*aci.Postgres, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewCreateAction(postgresResource, mock.ns, svc), &aci.Postgres{})
+		Invokes(testing.NewCreateAction(resourcePostgres, mock.ns, svc), &aci.Postgres{})
 
 	if obj == nil {
 		return nil, err
@@ -64,7 +64,7 @@ func (mock *FakePostgres) Create(svc *aci.Postgres) (*aci.Postgres, error) {
 // Update updates a Postgres.
 func (mock *FakePostgres) Update(svc *aci.Postgres) (*aci.Postgres, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewUpdateAction(postgresResource, mock.ns, svc), &aci.Postgres{})
+		Invokes(testing.NewUpdateAction(resourcePostgres, mock.ns, svc), &aci.Postgres{})
 
 	if obj == nil {
 		return nil, err
@@ -75,14 +75,14 @@ func (mock *FakePostgres) Update(svc *aci.Postgres) (*aci.Postgres, error) {
 // Delete deletes a Postgres by name.
 func (mock *FakePostgres) Delete(name string) error {
 	_, err := mock.Fake.
-		Invokes(testing.NewDeleteAction(postgresResource, mock.ns, name), &aci.Postgres{})
+		Invokes(testing.NewDeleteAction(resourcePostgres, mock.ns, name), &aci.Postgres{})
 
 	return err
 }
 
 func (mock *FakePostgres) UpdateStatus(srv *aci.Postgres) (*aci.Postgres, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(postgresResource, "status", mock.ns, srv), &aci.Postgres{})
+		Invokes(testing.NewUpdateSubresourceAction(resourcePostgres, "status", mock.ns, srv), &aci.Postgres{})
 
 	if obj == nil {
 		return nil, err
@@ -92,12 +92,12 @@ func (mock *FakePostgres) UpdateStatus(srv *aci.Postgres) (*aci.Postgres, error)
 
 func (mock *FakePostgres) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 	return mock.Fake.
-		InvokesWatch(testing.NewWatchAction(postgresResource, mock.ns, opts))
+		InvokesWatch(testing.NewWatchAction(resourcePostgres, mock.ns, opts))
 }
 
 func (mock *FakePostgres) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (*aci.Postgres, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewPatchSubresourceAction(postgresResource, mock.ns, name, data, subresources...), &aci.Postgres{})
+		Invokes(testing.NewPatchSubresourceAction(resourcePostgres, mock.ns, name, data, subresources...), &aci.Postgres{})
 
 	if obj == nil {
 		return nil, err

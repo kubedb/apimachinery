@@ -4,7 +4,6 @@ import (
 	aci "github.com/k8sdb/apimachinery/api"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/testing"
@@ -15,12 +14,13 @@ type FakeSnapshot struct {
 	ns   string
 }
 
-var snapshotResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1alpha1", Resource: aci.ResourceTypeSnapshot}
+var resourceSnapshot = aci.V1alpha1SchemeGroupVersion.WithResource(aci.ResourceTypeSnapshot)
+var kindSnapshot = aci.V1alpha1SchemeGroupVersion.WithKind(aci.ResourceKindSnapshot)
 
 // Get returns the Snapshot by name.
 func (mock *FakeSnapshot) Get(name string) (*aci.Snapshot, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewGetAction(snapshotResource, mock.ns, name), &aci.Snapshot{})
+		Invokes(testing.NewGetAction(resourceSnapshot, mock.ns, name), &aci.Snapshot{})
 
 	if obj == nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (mock *FakeSnapshot) Get(name string) (*aci.Snapshot, error) {
 // List returns the a of Snapshots.
 func (mock *FakeSnapshot) List(opts metav1.ListOptions) (*aci.SnapshotList, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewListAction(snapshotResource, mock.ns, opts), &aci.Snapshot{})
+		Invokes(testing.NewListAction(resourceSnapshot, kindSnapshot, mock.ns, opts), &aci.Snapshot{})
 
 	if obj == nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (mock *FakeSnapshot) List(opts metav1.ListOptions) (*aci.SnapshotList, erro
 // Create creates a new Snapshot.
 func (mock *FakeSnapshot) Create(svc *aci.Snapshot) (*aci.Snapshot, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewCreateAction(snapshotResource, mock.ns, svc), &aci.Snapshot{})
+		Invokes(testing.NewCreateAction(resourceSnapshot, mock.ns, svc), &aci.Snapshot{})
 
 	if obj == nil {
 		return nil, err
@@ -64,7 +64,7 @@ func (mock *FakeSnapshot) Create(svc *aci.Snapshot) (*aci.Snapshot, error) {
 // Update updates a Snapshot.
 func (mock *FakeSnapshot) Update(svc *aci.Snapshot) (*aci.Snapshot, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewUpdateAction(snapshotResource, mock.ns, svc), &aci.Snapshot{})
+		Invokes(testing.NewUpdateAction(resourceSnapshot, mock.ns, svc), &aci.Snapshot{})
 
 	if obj == nil {
 		return nil, err
@@ -75,14 +75,14 @@ func (mock *FakeSnapshot) Update(svc *aci.Snapshot) (*aci.Snapshot, error) {
 // Delete deletes a Snapshot by name.
 func (mock *FakeSnapshot) Delete(name string) error {
 	_, err := mock.Fake.
-		Invokes(testing.NewDeleteAction(snapshotResource, mock.ns, name), &aci.Snapshot{})
+		Invokes(testing.NewDeleteAction(resourceSnapshot, mock.ns, name), &aci.Snapshot{})
 
 	return err
 }
 
 func (mock *FakeSnapshot) UpdateStatus(srv *aci.Snapshot) (*aci.Snapshot, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(snapshotResource, "status", mock.ns, srv), &aci.Snapshot{})
+		Invokes(testing.NewUpdateSubresourceAction(resourceSnapshot, "status", mock.ns, srv), &aci.Snapshot{})
 
 	if obj == nil {
 		return nil, err
@@ -92,12 +92,12 @@ func (mock *FakeSnapshot) UpdateStatus(srv *aci.Snapshot) (*aci.Snapshot, error)
 
 func (mock *FakeSnapshot) Watch(opts metav1.ListOptions) (watch.Interface, error) {
 	return mock.Fake.
-		InvokesWatch(testing.NewWatchAction(snapshotResource, mock.ns, opts))
+		InvokesWatch(testing.NewWatchAction(resourceSnapshot, mock.ns, opts))
 }
 
 func (mock *FakeSnapshot) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (*aci.Snapshot, error) {
 	obj, err := mock.Fake.
-		Invokes(testing.NewPatchSubresourceAction(snapshotResource, mock.ns, name, data, subresources...), &aci.Snapshot{})
+		Invokes(testing.NewPatchSubresourceAction(resourceSnapshot, mock.ns, name, data, subresources...), &aci.Snapshot{})
 
 	if obj == nil {
 		return nil, err
