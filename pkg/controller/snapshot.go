@@ -82,7 +82,7 @@ func (c *SnapshotController) Run() {
 func (c *SnapshotController) ensureCustomResourceDefinition() {
 	log.Infoln("Ensuring DormantDatabase CustomResourceDefinition")
 
-	resourceName := tapi.ResourceKindSnapshot + "." + tapi.V1alpha1SchemeGroupVersion.Group
+	resourceName := tapi.ResourceTypeSnapshot + "." + tapi.V1alpha1SchemeGroupVersion.Group
 	var err error
 	if _, err = c.apiExtKubeClient.ApiextensionsV1beta1().CustomResourceDefinitions().Get(resourceName, metav1.GetOptions{}); err == nil {
 		return
@@ -103,7 +103,7 @@ func (c *SnapshotController) ensureCustomResourceDefinition() {
 			Version: tapi.V1alpha1SchemeGroupVersion.Version,
 			Scope:   extensionsobj.NamespaceScoped,
 			Names: extensionsobj.CustomResourceDefinitionNames{
-				Plural: tapi.ResourceKindSnapshot,
+				Plural: tapi.ResourceTypeSnapshot,
 				Kind:   tapi.ResourceKindSnapshot,
 			},
 		},
