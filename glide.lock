@@ -1,5 +1,5 @@
-hash: a577955fcc3bd1f653cb2715c6d91de6a1a88174042dbe6bdc4ef45816333b56
-updated: 2017-08-28T17:13:08.304799983+06:00
+hash: f909d079ff06ae3d622115778522e1b182b14f160d1aca60e5074f9e13f8070f
+updated: 2017-08-29T12:37:04.98432314+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -7,14 +7,12 @@ imports:
   - compute/metadata
   - internal
 - name: github.com/appscode/go
-  version: 45732d59b2277b9c7ffdc41d2d5c07a899a20a70
+  version: a6256fcfa308eb6aa22fe292930fec3dba84ba6a
   subpackages:
   - encoding/json/types
   - encoding/yaml
   - runtime
   - wait
-- name: github.com/appscode/kutil
-  version: 5b975b8e8797bd8f80f63ed15890aec201c2cb20
 - name: github.com/appscode/log
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
 - name: github.com/appscode/osm
@@ -65,7 +63,7 @@ imports:
   - autorest/azure
   - autorest/date
 - name: github.com/coreos/prometheus-operator
-  version: 0d446f3052e47b5ad95989d9a8ffe4f6675e69b5
+  version: f5284c9eddc956775e06f854a9bffc6bfece3d9c
   subpackages:
   - pkg/client/monitoring/v1alpha1
 - name: github.com/davecgh/go-spew
@@ -109,7 +107,7 @@ imports:
 - name: github.com/go-openapi/swag
   version: 1d0bd113de87027671077d3c71eb3ac5d7dbba72
 - name: github.com/gogo/protobuf
-  version: e18d7aa8f8c624c915db340349aad4c49b10d173
+  version: c0656edd0d9eab7c66d1eb0c568f9039345796f7
   subpackages:
   - proto
   - sortkeys
@@ -130,7 +128,7 @@ imports:
 - name: github.com/gorilla/mux
   version: 0a192a193177452756c362c20087ddafcf6829c4
 - name: github.com/graymeta/stow
-  version: fc5951aeb4e119648cd9755f637c0b2a1d1dda56
+  version: 3e5d4f8f1ce7e64da5adec4738010c679536f668
   repo: https://github.com/appscode/stow.git
   vcs: git
   subpackages:
@@ -139,8 +137,6 @@ imports:
   - local
   - s3
   - swift
-- name: github.com/hashicorp/go-version
-  version: 03c5bf6be031b6dd45afec16b1cf94fc8938bc77
 - name: github.com/hashicorp/golang-lru
   version: a0d98a5f288019575c6d1f4bb1573fef2d1fcdc4
   subpackages:
@@ -219,7 +215,7 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: 7940d22908577b9021e0931c99b3a1d7a12e0d0e
+  version: e0e0e6e500066ff47335c7717e2a090ad127adec
   subpackages:
   - gensupport
   - googleapi
