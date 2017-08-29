@@ -1,5 +1,5 @@
 hash: f909d079ff06ae3d622115778522e1b182b14f160d1aca60e5074f9e13f8070f
-updated: 2017-08-29T12:37:04.98432314+06:00
+updated: 2017-08-29T12:58:43.281083094+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -137,6 +137,8 @@ imports:
   - local
   - s3
   - swift
+- name: github.com/hashicorp/go-version
+  version: 03c5bf6be031b6dd45afec16b1cf94fc8938bc77
 - name: github.com/hashicorp/golang-lru
   version: a0d98a5f288019575c6d1f4bb1573fef2d1fcdc4
   subpackages:

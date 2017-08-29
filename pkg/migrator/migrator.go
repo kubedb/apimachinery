@@ -1,12 +1,10 @@
 package migrator
 
-/*
-
-
 import (
 	"errors"
 	"fmt"
 	"time"
+
 	"github.com/appscode/log"
 	"github.com/hashicorp/go-version"
 	aci "github.com/k8sdb/apimachinery/api"
@@ -320,4 +318,3 @@ func (m *migrator) WaitForTPRsReady(expectedTPR int) error {
 		return false, nil
 	})
 }
-*/
