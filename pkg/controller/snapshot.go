@@ -7,8 +7,9 @@ import (
 
 	"github.com/appscode/go/wait"
 	"github.com/appscode/log"
-	tapi "github.com/k8sdb/apimachinery/api"
-	tcs "github.com/k8sdb/apimachinery/client/clientset"
+	tapi "github.com/k8sdb/apimachinery/apis/kubedb"
+	tapi_v1alpha1 "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
+	tcs "github.com/k8sdb/apimachinery/client/internalclientset/typed/kubedb/internalversion"
 	"github.com/k8sdb/apimachinery/pkg/analytics"
 	"github.com/k8sdb/apimachinery/pkg/eventer"
 	"github.com/k8sdb/apimachinery/pkg/storage"
@@ -38,7 +39,7 @@ type SnapshotController struct {
 	// Api Extension Client
 	apiExtKubeClient apiextensionsclient.Interface
 	// ThirdPartyExtension client
-	extClient tcs.ExtensionInterface
+	extClient tcs.KubedbInterface
 	// Snapshotter interface
 	snapshoter Snapshotter
 	// ListerWatcher
@@ -53,7 +54,7 @@ type SnapshotController struct {
 func NewSnapshotController(
 	client clientset.Interface,
 	apiExtKubeClient apiextensionsclient.Interface,
-	extClient tcs.ExtensionInterface,
+	extClient tcs.KubedbInterface,
 	snapshoter Snapshotter,
 	lw *cache.ListWatch,
 	syncPeriod time.Duration,
@@ -82,7 +83,7 @@ func (c *SnapshotController) Run() {
 func (c *SnapshotController) ensureCustomResourceDefinition() {
 	log.Infoln("Ensuring DormantDatabase CustomResourceDefinition")
 
-	resourceName := tapi.ResourceTypeSnapshot + "." + tapi.V1alpha1SchemeGroupVersion.Group
+	resourceName := tapi.ResourceTypeSnapshot + "." + tapi_v1alpha1.SchemeGroupVersion.Group
 	var err error
 	if _, err = c.apiExtKubeClient.ApiextensionsV1beta1().CustomResourceDefinitions().Get(resourceName, metav1.GetOptions{}); err == nil {
 		return
@@ -99,8 +100,8 @@ func (c *SnapshotController) ensureCustomResourceDefinition() {
 			},
 		},
 		Spec: extensionsobj.CustomResourceDefinitionSpec{
-			Group:   tapi.V1alpha1SchemeGroupVersion.Group,
-			Version: tapi.V1alpha1SchemeGroupVersion.Version,
+			Group:   tapi_v1alpha1.SchemeGroupVersion.Group,
+			Version: tapi_v1alpha1.SchemeGroupVersion.Version,
 			Scope:   extensionsobj.NamespaceScoped,
 			Names: extensionsobj.CustomResourceDefinitionNames{
 				Plural:     tapi.ResourceTypeSnapshot,

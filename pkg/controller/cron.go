@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/appscode/log"
-	tapi "github.com/k8sdb/apimachinery/api"
-	tcs "github.com/k8sdb/apimachinery/client/clientset"
+	tapi "github.com/k8sdb/apimachinery/apis/kubedb"
+	tcs "github.com/k8sdb/apimachinery/client/internalclientset/typed/kubedb/internalversion"
 	"github.com/k8sdb/apimachinery/pkg/eventer"
 	cmap "github.com/orcaman/concurrent-map"
 	"gopkg.in/robfig/cron.v2"
@@ -30,7 +30,7 @@ type CronControllerInterface interface {
 
 type cronController struct {
 	// ThirdPartyExtension client
-	extClient tcs.ExtensionInterface
+	extClient tcs.KubedbInterface
 	// For Internal Cron Job
 	cron *cron.Cron
 	// Store Cron Job EntryID for further use
@@ -45,7 +45,7 @@ type cronController struct {
  NewCronController returns CronControllerInterface.
  Need to call StartCron() method to start Cron.
 */
-func NewCronController(client clientset.Interface, extClient tcs.ExtensionInterface) CronControllerInterface {
+func NewCronController(client clientset.Interface, extClient tcs.KubedbInterface) CronControllerInterface {
 	return &cronController{
 		extClient:     extClient,
 		cron:          cron.New(),
@@ -113,7 +113,7 @@ func (c *cronController) StopCron() {
 }
 
 type snapshotInvoker struct {
-	extClient     tcs.ExtensionInterface
+	extClient     tcs.KubedbInterface
 	runtimeObject runtime.Object
 	om            metav1.ObjectMeta
 	spec          *tapi.BackupScheduleSpec
@@ -132,7 +132,7 @@ func (s *snapshotInvoker) validateScheduler(checkDuration time.Duration) error {
 	then := time.Now()
 	now := time.Now()
 	for now.Sub(then) < checkDuration {
-		snapshot, err := s.extClient.Snapshots(s.om.Namespace).Get(snapshotName)
+		snapshot, err := s.extClient.Snapshots(s.om.Namespace).Get(snapshotName, metav1.GetOptions{})
 		if err != nil {
 			if kerr.IsNotFound(err) {
 				time.Sleep(sleepDuration)

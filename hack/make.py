@@ -75,17 +75,17 @@ def version():
 
 
 def fmt():
-    libbuild.ungroup_go_imports('api', 'client', 'pkg')
-    die(call('goimports -w api client pkg'))
-    call('gofmt -s -w api client pkg')
+    libbuild.ungroup_go_imports('apis', 'client', 'pkg')
+    die(call('goimports -w apis client pkg'))
+    call('gofmt -s -w apis client pkg')
 
 
 def vet():
-    call('go vet ./api/... ./client/... ./pkg/...')
+    call('go vet ./apis/... ./client/... ./pkg/...')
 
 
 def lint():
-    call('golint ./api/...')
+    call('golint ./apis/...')
     call('golint ./client/...')
     call('golint ./pkg/...')
 
@@ -141,7 +141,7 @@ def update_registry():
 
 def default():
     fmt()
-    die(call(libbuild.GOC + ' build ./pkg/... ./api/... ./client/...'))
+    die(call(libbuild.GOC + ' build ./pkg/... ./apis/... ./client/...'))
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

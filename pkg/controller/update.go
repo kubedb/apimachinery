@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/appscode/log"
-	tapi "github.com/k8sdb/apimachinery/api"
+	tapi "github.com/k8sdb/apimachinery/apis/kubedb"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -17,7 +17,7 @@ const (
 func (c *SnapshotController) UpdateSnapshot(meta metav1.ObjectMeta, transformer func(postgres tapi.Snapshot) tapi.Snapshot) error {
 	attempt := 0
 	for ; attempt < maxAttempts; attempt = attempt + 1 {
-		cur, err := c.extClient.Snapshots(meta.Namespace).Get(meta.Name)
+		cur, err := c.extClient.Snapshots(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
 		if err != nil {
 			return err
 		}
@@ -37,7 +37,7 @@ func (c *SnapshotController) UpdateSnapshot(meta metav1.ObjectMeta, transformer 
 func (c *DormantDbController) UpdateDormantDatabase(meta metav1.ObjectMeta, transformer func(postgres tapi.DormantDatabase) tapi.DormantDatabase) error {
 	attempt := 0
 	for ; attempt < maxAttempts; attempt = attempt + 1 {
-		cur, err := c.extClient.DormantDatabases(meta.Namespace).Get(meta.Name)
+		cur, err := c.extClient.DormantDatabases(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
 		if err != nil {
 			return err
 		}

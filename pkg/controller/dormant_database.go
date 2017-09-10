@@ -7,8 +7,9 @@ import (
 
 	"github.com/appscode/go/wait"
 	"github.com/appscode/log"
-	tapi "github.com/k8sdb/apimachinery/api"
-	tcs "github.com/k8sdb/apimachinery/client/clientset"
+	tapi "github.com/k8sdb/apimachinery/apis/kubedb"
+	tapi_v1alpha1 "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
+	tcs "github.com/k8sdb/apimachinery/client/internalclientset/typed/kubedb/internalversion"
 	"github.com/k8sdb/apimachinery/pkg/analytics"
 	"github.com/k8sdb/apimachinery/pkg/eventer"
 	extensionsobj "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
@@ -38,7 +39,7 @@ type DormantDbController struct {
 	// Api Extension Client
 	apiExtKubeClient apiextensionsclient.Interface
 	// ThirdPartyExtension client
-	extClient tcs.ExtensionInterface
+	extClient tcs.KubedbInterface
 	// Deleter interface
 	deleter Deleter
 	// ListerWatcher
@@ -53,7 +54,7 @@ type DormantDbController struct {
 func NewDormantDbController(
 	client clientset.Interface,
 	apiExtKubeClient apiextensionsclient.Interface,
-	extClient tcs.ExtensionInterface,
+	extClient tcs.KubedbInterface,
 	deleter Deleter,
 	lw *cache.ListWatch,
 	syncPeriod time.Duration,
@@ -81,7 +82,7 @@ func (c *DormantDbController) Run() {
 func (c *DormantDbController) ensureCustomResourceDefinition() {
 	log.Infoln("Ensuring DormantDatabase CustomResourceDefinition")
 
-	resourceName := tapi.ResourceTypeDormantDatabase + "." + tapi.V1alpha1SchemeGroupVersion.Group
+	resourceName := tapi.ResourceTypeDormantDatabase + "." + tapi_v1alpha1.SchemeGroupVersion.Group
 	var err error
 	if _, err = c.apiExtKubeClient.ApiextensionsV1beta1().CustomResourceDefinitions().Get(resourceName, metav1.GetOptions{}); err == nil {
 		return
@@ -98,8 +99,8 @@ func (c *DormantDbController) ensureCustomResourceDefinition() {
 			},
 		},
 		Spec: extensionsobj.CustomResourceDefinitionSpec{
-			Group:   tapi.V1alpha1SchemeGroupVersion.Group,
-			Version: tapi.V1alpha1SchemeGroupVersion.Version,
+			Group:   tapi_v1alpha1.SchemeGroupVersion.Group,
+			Version: tapi_v1alpha1.SchemeGroupVersion.Version,
 			Scope:   extensionsobj.NamespaceScoped,
 			Names: extensionsobj.CustomResourceDefinitionNames{
 				Plural:     tapi.ResourceTypeDormantDatabase,
@@ -194,7 +195,7 @@ func (c *DormantDbController) create(dormantDb *tapi.DormantDatabase) error {
 		)
 
 		// Delete DormantDatabase object
-		if err := c.extClient.DormantDatabases(dormantDb.Namespace).Delete(dormantDb.Name); err != nil {
+		if err := c.extClient.DormantDatabases(dormantDb.Namespace).Delete(dormantDb.Name, &metav1.DeleteOptions{}); err != nil {
 			c.eventRecorder.Eventf(
 				dormantDb,
 				apiv1.EventTypeWarning,
@@ -324,7 +325,7 @@ func (c *DormantDbController) wipeOut(dormantDb *tapi.DormantDatabase) error {
 		)
 
 		// Delete DormantDatabase object
-		if err := c.extClient.DormantDatabases(dormantDb.Namespace).Delete(dormantDb.Name); err != nil {
+		if err := c.extClient.DormantDatabases(dormantDb.Namespace).Delete(dormantDb.Name, &metav1.DeleteOptions{}); err != nil {
 			c.eventRecorder.Eventf(
 				dormantDb,
 				apiv1.EventTypeWarning,
@@ -421,7 +422,7 @@ func (c *DormantDbController) resume(dormantDb *tapi.DormantDatabase) error {
 		return err
 	}
 
-	if err = c.extClient.DormantDatabases(dormantDb.Namespace).Delete(dormantDb.Name); err != nil {
+	if err = c.extClient.DormantDatabases(dormantDb.Namespace).Delete(dormantDb.Name, &metav1.DeleteOptions{}); err != nil {
 		c.eventRecorder.Eventf(
 			dormantDb,
 			apiv1.EventTypeWarning,
