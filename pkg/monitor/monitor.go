@@ -1,7 +1,7 @@
 package monitor
 
 import (
-	tapi "github.com/k8sdb/apimachinery/api"
+	tapi "github.com/k8sdb/apimachinery/apis/kubedb"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
