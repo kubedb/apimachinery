@@ -12,7 +12,7 @@ import (
 	_ "github.com/graymeta/stow/azure"
 	_ "github.com/graymeta/stow/google"
 	_ "github.com/graymeta/stow/s3"
-	tapi "github.com/k8sdb/apimachinery/api"
+	tapi "github.com/k8sdb/apimachinery/apis/kubedb"
 	"github.com/k8sdb/apimachinery/pkg/eventer"
 	"github.com/k8sdb/apimachinery/pkg/storage"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
@@ -134,7 +134,7 @@ func (c *Controller) DeleteSnapshots(namespace string, selector labels.Selector)
 	}
 
 	for _, snapshot := range snapshotList.Items {
-		if err := c.ExtClient.Snapshots(snapshot.Namespace).Delete(snapshot.Name); err != nil {
+		if err := c.ExtClient.Snapshots(snapshot.Namespace).Delete(snapshot.Name, &metav1.DeleteOptions{}); err != nil {
 			return err
 		}
 	}
