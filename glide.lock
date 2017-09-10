@@ -1,5 +1,5 @@
-hash: f909d079ff06ae3d622115778522e1b182b14f160d1aca60e5074f9e13f8070f
-updated: 2017-09-10T14:20:36.892773788-07:00
+hash: e8df1870ade3b6ce97883d1d60f5ea523c586a27a71fd644a7971f0ca87b284f
+updated: 2017-09-10T15:39:33.519824073-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -12,7 +12,15 @@ imports:
   - encoding/json/types
   - encoding/yaml
   - runtime
+  - types
   - wait
+- name: github.com/appscode/jsonpatch
+  version: 3cdd2454b5443228620ea11294085ec3489936a6
+- name: github.com/appscode/kutil
+  version: 8d8e18c358ff0bd91a9b220bfd6927fa2c006ff1
+  subpackages:
+  - apps/v1beta1
+  - kubedb/v1alpha1
 - name: github.com/appscode/log
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
 - name: github.com/appscode/osm
@@ -138,7 +146,9 @@ imports:
   - s3
   - swift
 - name: github.com/hashicorp/go-version
-  version: 03c5bf6be031b6dd45afec16b1cf94fc8938bc77
+  version: ac737305c16432f4c660c6fc68cdcda4b5a0b5ae
+  repo: https://github.com/appscode/go-version.git
+  vcs: git
 - name: github.com/hashicorp/golang-lru
   version: a0d98a5f288019575c6d1f4bb1573fef2d1fcdc4
   subpackages:

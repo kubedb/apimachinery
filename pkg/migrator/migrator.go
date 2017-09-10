@@ -7,9 +7,9 @@ import (
 
 	"github.com/appscode/log"
 	"github.com/hashicorp/go-version"
-	aci "github.com/k8sdb/apimachinery/apis/kubedb"
+	aci "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
 	aci_v1alpha1 "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
-	tcs "github.com/k8sdb/apimachinery/client/internalclientset/typed/kubedb/internalversion"
+	tcs "github.com/k8sdb/apimachinery/client/typed/kubedb/v1alpha1"
 	extensionsobj "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	apiextensionsclient "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
@@ -28,12 +28,12 @@ type migrationState struct {
 type migrator struct {
 	kubeClient       clientset.Interface
 	apiExtKubeClient apiextensionsclient.Interface
-	extClient        tcs.KubedbInterface
+	extClient        tcs.KubedbV1alpha1Interface
 
 	migrationState *migrationState
 }
 
-func NewMigrator(kubeClient clientset.Interface, apiExtKubeClient apiextensionsclient.Interface, extClient tcs.KubedbInterface) *migrator {
+func NewMigrator(kubeClient clientset.Interface, apiExtKubeClient apiextensionsclient.Interface, extClient tcs.KubedbV1alpha1Interface) *migrator {
 	return &migrator{
 		migrationState:   &migrationState{},
 		kubeClient:       kubeClient,
