@@ -1,5 +1,5 @@
-hash: 8fb0334f4c60c063a23455407807302bbcab7d82646d3e8117f564b5c0c0ebfc
-updated: 2017-09-10T15:27:34.887803741-07:00
+hash: e8df1870ade3b6ce97883d1d60f5ea523c586a27a71fd644a7971f0ca87b284f
+updated: 2017-09-10T15:39:33.519824073-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -146,7 +146,9 @@ imports:
   - s3
   - swift
 - name: github.com/hashicorp/go-version
-  version: 03c5bf6be031b6dd45afec16b1cf94fc8938bc77
+  version: ac737305c16432f4c660c6fc68cdcda4b5a0b5ae
+  repo: https://github.com/appscode/go-version.git
+  vcs: git
 - name: github.com/hashicorp/golang-lru
   version: a0d98a5f288019575c6d1f4bb1573fef2d1fcdc4
   subpackages:

@@ -8,9 +8,9 @@ import (
 	"github.com/appscode/go/wait"
 	kutildb "github.com/appscode/kutil/kubedb/v1alpha1"
 	"github.com/appscode/log"
-	tapi "github.com/k8sdb/apimachinery/apis/kubedb"
+	tapi "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
 	tapi_v1alpha1 "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
-	tcs "github.com/k8sdb/apimachinery/client/internalclientset/typed/kubedb/internalversion"
+	tcs "github.com/k8sdb/apimachinery/client/typed/kubedb/v1alpha1"
 	"github.com/k8sdb/apimachinery/pkg/analytics"
 	"github.com/k8sdb/apimachinery/pkg/eventer"
 	extensionsobj "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
@@ -40,7 +40,7 @@ type DormantDbController struct {
 	// Api Extension Client
 	apiExtKubeClient apiextensionsclient.Interface
 	// ThirdPartyExtension client
-	extClient tcs.KubedbInterface
+	extClient tcs.KubedbV1alpha1Interface
 	// Deleter interface
 	deleter Deleter
 	// ListerWatcher
@@ -55,7 +55,7 @@ type DormantDbController struct {
 func NewDormantDbController(
 	client clientset.Interface,
 	apiExtKubeClient apiextensionsclient.Interface,
-	extClient tcs.KubedbInterface,
+	extClient tcs.KubedbV1alpha1Interface,
 	deleter Deleter,
 	lw *cache.ListWatch,
 	syncPeriod time.Duration,
