@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/appscode/jsonpatch"
 	"github.com/appscode/kutil"
 	"github.com/golang/glog"
 	aci "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
@@ -12,6 +11,7 @@ import (
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/strategicpatch"
 	"k8s.io/apimachinery/pkg/util/wait"
 )
 
@@ -40,19 +40,15 @@ func PatchDormantDatabase(c tcs.KubedbV1alpha1Interface, cur *aci.DormantDatabas
 		return nil, err
 	}
 
-	patch, err := jsonpatch.CreatePatch(curJson, modJson)
+	patch, err := strategicpatch.CreateTwoWayMergePatch(curJson, modJson, aci.DormantDatabase{})
 	if err != nil {
 		return nil, err
 	}
-	if len(patch) == 0 {
+	if len(patch) == 0 || string(patch) == "{}" {
 		return cur, nil
 	}
-	pb, err := json.MarshalIndent(patch, "", "  ")
-	if err != nil {
-		return nil, err
-	}
-	glog.V(5).Infof("Patching DormantDatabase %s@%s with %s.", cur.Name, cur.Namespace, string(pb))
-	result, err := c.DormantDatabases(cur.Namespace).Patch(cur.Name, types.JSONPatchType, pb)
+	glog.V(5).Infof("Patching DormantDatabase %s@%s with %s.", cur.Name, cur.Namespace, string(patch))
+	result, err := c.DormantDatabases(cur.Namespace).Patch(cur.Name, types.StrategicMergePatchType, patch)
 	return result, err
 }
 
