@@ -1,5 +1,5 @@
 hash: 5fb607eb34b0d50e960e0c2fbff2fa9d00e6a9e9ac82be893996183c1303ecbe
-updated: 2017-09-19T03:46:40.690588537-07:00
+updated: 2017-09-21T20:09:57.444947374-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -7,7 +7,7 @@ imports:
   - compute/metadata
   - internal
 - name: github.com/appscode/go
-  version: d1fbd14e5c6e78557c12f6d2c9c282b3c0d0c612
+  version: 40c185ab12c60de0218e5e5c319a032498c21695
   subpackages:
   - context
   - encoding/json/types
@@ -17,7 +17,7 @@ imports:
   - types
   - wait
 - name: github.com/appscode/kutil
-  version: 1f75c33d081d0e7e1073ed9e8a5774e5c8c93e86
+  version: 6788b3a7e56c2f71e4c41f44835b8f1fafca8c16
   subpackages:
   - apps/v1beta1
   - kubedb/v1alpha1
@@ -98,6 +98,8 @@ imports:
   - log
 - name: github.com/emicklei/go-restful-swagger12
   version: dcef7f55730566d41eae5db10e7d6981829720f6
+- name: github.com/evanphx/json-patch
+  version: ba18e35c5c1b36ef6334cad706eb681153d2d379
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
@@ -225,7 +227,7 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: f07af8828cedf46b54a535f7cd5b4d82a7d1cbbb
+  version: 586095a6e4078caf0dc0b64f8545fa8679442013
   subpackages:
   - gensupport
   - googleapi
@@ -295,6 +297,7 @@ imports:
   - pkg/util/framer
   - pkg/util/intstr
   - pkg/util/json
+  - pkg/util/jsonmergepatch
   - pkg/util/mergepatch
   - pkg/util/net
   - pkg/util/rand
