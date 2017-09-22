@@ -34,6 +34,10 @@ func (c *FakeKubedb) Elasticsearchs(namespace string) internalversion.Elasticsea
 	return &FakeElasticsearchs{c, namespace}
 }
 
+func (c *FakeKubedb) Mysqls(namespace string) internalversion.MysqlInterface {
+	return &FakeMysqls{c, namespace}
+}
+
 func (c *FakeKubedb) Postgreses(namespace string) internalversion.PostgresInterface {
 	return &FakePostgreses{c, namespace}
 }
