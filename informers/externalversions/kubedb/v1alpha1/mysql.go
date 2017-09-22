@@ -30,28 +30,28 @@ import (
 	time "time"
 )
 
-// MysqlInformer provides access to a shared informer and lister for
-// Mysqls.
-type MysqlInformer interface {
+// MySQLInformer provides access to a shared informer and lister for
+// MySQLs.
+type MySQLInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MysqlLister
+	Lister() v1alpha1.MySQLLister
 }
 
-type mysqlInformer struct {
+type mySQLInformer struct {
 	factory internalinterfaces.SharedInformerFactory
 }
 
-func newMysqlInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+func newMySQLInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 	sharedIndexInformer := cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
-				return client.KubedbV1alpha1().Mysqls(v1.NamespaceAll).List(options)
+				return client.KubedbV1alpha1().MySQLs(v1.NamespaceAll).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
-				return client.KubedbV1alpha1().Mysqls(v1.NamespaceAll).Watch(options)
+				return client.KubedbV1alpha1().MySQLs(v1.NamespaceAll).Watch(options)
 			},
 		},
-		&kubedb_v1alpha1.Mysql{},
+		&kubedb_v1alpha1.MySQL{},
 		resyncPeriod,
 		cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
 	)
@@ -59,10 +59,10 @@ func newMysqlInformer(client client.Interface, resyncPeriod time.Duration) cache
 	return sharedIndexInformer
 }
 
-func (f *mysqlInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedb_v1alpha1.Mysql{}, newMysqlInformer)
+func (f *mySQLInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&kubedb_v1alpha1.MySQL{}, newMySQLInformer)
 }
 
-func (f *mysqlInformer) Lister() v1alpha1.MysqlLister {
-	return v1alpha1.NewMysqlLister(f.Informer().GetIndexer())
+func (f *mySQLInformer) Lister() v1alpha1.MySQLLister {
+	return v1alpha1.NewMySQLLister(f.Informer().GetIndexer())
 }

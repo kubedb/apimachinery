@@ -25,64 +25,64 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-// MysqlLister helps list Mysqls.
-type MysqlLister interface {
-	// List lists all Mysqls in the indexer.
-	List(selector labels.Selector) (ret []*kubedb.Mysql, err error)
-	// Mysqls returns an object that can list and get Mysqls.
-	Mysqls(namespace string) MysqlNamespaceLister
-	MysqlListerExpansion
+// MySQLLister helps list MySQLs.
+type MySQLLister interface {
+	// List lists all MySQLs in the indexer.
+	List(selector labels.Selector) (ret []*kubedb.MySQL, err error)
+	// MySQLs returns an object that can list and get MySQLs.
+	MySQLs(namespace string) MySQLNamespaceLister
+	MySQLListerExpansion
 }
 
-// mysqlLister implements the MysqlLister interface.
-type mysqlLister struct {
+// mySQLLister implements the MySQLLister interface.
+type mySQLLister struct {
 	indexer cache.Indexer
 }
 
-// NewMysqlLister returns a new MysqlLister.
-func NewMysqlLister(indexer cache.Indexer) MysqlLister {
-	return &mysqlLister{indexer: indexer}
+// NewMySQLLister returns a new MySQLLister.
+func NewMySQLLister(indexer cache.Indexer) MySQLLister {
+	return &mySQLLister{indexer: indexer}
 }
 
-// List lists all Mysqls in the indexer.
-func (s *mysqlLister) List(selector labels.Selector) (ret []*kubedb.Mysql, err error) {
+// List lists all MySQLs in the indexer.
+func (s *mySQLLister) List(selector labels.Selector) (ret []*kubedb.MySQL, err error) {
 	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*kubedb.Mysql))
+		ret = append(ret, m.(*kubedb.MySQL))
 	})
 	return ret, err
 }
 
-// Mysqls returns an object that can list and get Mysqls.
-func (s *mysqlLister) Mysqls(namespace string) MysqlNamespaceLister {
-	return mysqlNamespaceLister{indexer: s.indexer, namespace: namespace}
+// MySQLs returns an object that can list and get MySQLs.
+func (s *mySQLLister) MySQLs(namespace string) MySQLNamespaceLister {
+	return mySQLNamespaceLister{indexer: s.indexer, namespace: namespace}
 }
 
-// MysqlNamespaceLister helps list and get Mysqls.
-type MysqlNamespaceLister interface {
-	// List lists all Mysqls in the indexer for a given namespace.
-	List(selector labels.Selector) (ret []*kubedb.Mysql, err error)
-	// Get retrieves the Mysql from the indexer for a given namespace and name.
-	Get(name string) (*kubedb.Mysql, error)
-	MysqlNamespaceListerExpansion
+// MySQLNamespaceLister helps list and get MySQLs.
+type MySQLNamespaceLister interface {
+	// List lists all MySQLs in the indexer for a given namespace.
+	List(selector labels.Selector) (ret []*kubedb.MySQL, err error)
+	// Get retrieves the MySQL from the indexer for a given namespace and name.
+	Get(name string) (*kubedb.MySQL, error)
+	MySQLNamespaceListerExpansion
 }
 
-// mysqlNamespaceLister implements the MysqlNamespaceLister
+// mySQLNamespaceLister implements the MySQLNamespaceLister
 // interface.
-type mysqlNamespaceLister struct {
+type mySQLNamespaceLister struct {
 	indexer   cache.Indexer
 	namespace string
 }
 
-// List lists all Mysqls in the indexer for a given namespace.
-func (s mysqlNamespaceLister) List(selector labels.Selector) (ret []*kubedb.Mysql, err error) {
+// List lists all MySQLs in the indexer for a given namespace.
+func (s mySQLNamespaceLister) List(selector labels.Selector) (ret []*kubedb.MySQL, err error) {
 	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*kubedb.Mysql))
+		ret = append(ret, m.(*kubedb.MySQL))
 	})
 	return ret, err
 }
 
-// Get retrieves the Mysql from the indexer for a given namespace and name.
-func (s mysqlNamespaceLister) Get(name string) (*kubedb.Mysql, error) {
+// Get retrieves the MySQL from the indexer for a given namespace and name.
+func (s mySQLNamespaceLister) Get(name string) (*kubedb.MySQL, error) {
 	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
@@ -90,5 +90,5 @@ func (s mysqlNamespaceLister) Get(name string) (*kubedb.Mysql, error) {
 	if !exists {
 		return nil, errors.NewNotFound(kubedb.Resource("mysql"), name)
 	}
-	return obj.(*kubedb.Mysql), nil
+	return obj.(*kubedb.MySQL), nil
 }

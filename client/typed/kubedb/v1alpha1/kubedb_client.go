@@ -27,7 +27,7 @@ type KubedbV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	DormantDatabasesGetter
 	ElasticsearchsGetter
-	MysqlsGetter
+	MySQLsGetter
 	PostgresesGetter
 	SnapshotsGetter
 }
@@ -45,8 +45,8 @@ func (c *KubedbV1alpha1Client) Elasticsearchs(namespace string) ElasticsearchInt
 	return newElasticsearchs(c, namespace)
 }
 
-func (c *KubedbV1alpha1Client) Mysqls(namespace string) MysqlInterface {
-	return newMysqls(c, namespace)
+func (c *KubedbV1alpha1Client) MySQLs(namespace string) MySQLInterface {
+	return newMySQLs(c, namespace)
 }
 
 func (c *KubedbV1alpha1Client) Postgreses(namespace string) PostgresInterface {

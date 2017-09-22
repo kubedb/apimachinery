@@ -25,60 +25,60 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-// MysqlsGetter has a method to return a MysqlInterface.
+// MySQLsGetter has a method to return a MySQLInterface.
 // A group's client should implement this interface.
-type MysqlsGetter interface {
-	Mysqls(namespace string) MysqlInterface
+type MySQLsGetter interface {
+	MySQLs(namespace string) MySQLInterface
 }
 
-// MysqlInterface has methods to work with Mysql resources.
-type MysqlInterface interface {
-	Create(*kubedb.Mysql) (*kubedb.Mysql, error)
-	Update(*kubedb.Mysql) (*kubedb.Mysql, error)
-	UpdateStatus(*kubedb.Mysql) (*kubedb.Mysql, error)
+// MySQLInterface has methods to work with MySQL resources.
+type MySQLInterface interface {
+	Create(*kubedb.MySQL) (*kubedb.MySQL, error)
+	Update(*kubedb.MySQL) (*kubedb.MySQL, error)
+	UpdateStatus(*kubedb.MySQL) (*kubedb.MySQL, error)
 	Delete(name string, options *v1.DeleteOptions) error
 	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
-	Get(name string, options v1.GetOptions) (*kubedb.Mysql, error)
-	List(opts v1.ListOptions) (*kubedb.MysqlList, error)
+	Get(name string, options v1.GetOptions) (*kubedb.MySQL, error)
+	List(opts v1.ListOptions) (*kubedb.MySQLList, error)
 	Watch(opts v1.ListOptions) (watch.Interface, error)
-	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *kubedb.Mysql, err error)
-	MysqlExpansion
+	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *kubedb.MySQL, err error)
+	MySQLExpansion
 }
 
-// mysqls implements MysqlInterface
-type mysqls struct {
+// mySQLs implements MySQLInterface
+type mySQLs struct {
 	client rest.Interface
 	ns     string
 }
 
-// newMysqls returns a Mysqls
-func newMysqls(c *KubedbClient, namespace string) *mysqls {
-	return &mysqls{
+// newMySQLs returns a MySQLs
+func newMySQLs(c *KubedbClient, namespace string) *mySQLs {
+	return &mySQLs{
 		client: c.RESTClient(),
 		ns:     namespace,
 	}
 }
 
-// Create takes the representation of a mysql and creates it.  Returns the server's representation of the mysql, and an error, if there is any.
-func (c *mysqls) Create(mysql *kubedb.Mysql) (result *kubedb.Mysql, err error) {
-	result = &kubedb.Mysql{}
+// Create takes the representation of a mySQL and creates it.  Returns the server's representation of the mySQL, and an error, if there is any.
+func (c *mySQLs) Create(mySQL *kubedb.MySQL) (result *kubedb.MySQL, err error) {
+	result = &kubedb.MySQL{}
 	err = c.client.Post().
 		Namespace(c.ns).
 		Resource("mysqls").
-		Body(mysql).
+		Body(mySQL).
 		Do().
 		Into(result)
 	return
 }
 
-// Update takes the representation of a mysql and updates it. Returns the server's representation of the mysql, and an error, if there is any.
-func (c *mysqls) Update(mysql *kubedb.Mysql) (result *kubedb.Mysql, err error) {
-	result = &kubedb.Mysql{}
+// Update takes the representation of a mySQL and updates it. Returns the server's representation of the mySQL, and an error, if there is any.
+func (c *mySQLs) Update(mySQL *kubedb.MySQL) (result *kubedb.MySQL, err error) {
+	result = &kubedb.MySQL{}
 	err = c.client.Put().
 		Namespace(c.ns).
 		Resource("mysqls").
-		Name(mysql.Name).
-		Body(mysql).
+		Name(mySQL.Name).
+		Body(mySQL).
 		Do().
 		Into(result)
 	return
@@ -87,21 +87,21 @@ func (c *mysqls) Update(mysql *kubedb.Mysql) (result *kubedb.Mysql, err error) {
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclientstatus=false comment above the type to avoid generating UpdateStatus().
 
-func (c *mysqls) UpdateStatus(mysql *kubedb.Mysql) (result *kubedb.Mysql, err error) {
-	result = &kubedb.Mysql{}
+func (c *mySQLs) UpdateStatus(mySQL *kubedb.MySQL) (result *kubedb.MySQL, err error) {
+	result = &kubedb.MySQL{}
 	err = c.client.Put().
 		Namespace(c.ns).
 		Resource("mysqls").
-		Name(mysql.Name).
+		Name(mySQL.Name).
 		SubResource("status").
-		Body(mysql).
+		Body(mySQL).
 		Do().
 		Into(result)
 	return
 }
 
-// Delete takes name of the mysql and deletes it. Returns an error if one occurs.
-func (c *mysqls) Delete(name string, options *v1.DeleteOptions) error {
+// Delete takes name of the mySQL and deletes it. Returns an error if one occurs.
+func (c *mySQLs) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
 		Namespace(c.ns).
 		Resource("mysqls").
@@ -112,7 +112,7 @@ func (c *mysqls) Delete(name string, options *v1.DeleteOptions) error {
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *mysqls) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+func (c *mySQLs) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
 	return c.client.Delete().
 		Namespace(c.ns).
 		Resource("mysqls").
@@ -122,9 +122,9 @@ func (c *mysqls) DeleteCollection(options *v1.DeleteOptions, listOptions v1.List
 		Error()
 }
 
-// Get takes name of the mysql, and returns the corresponding mysql object, and an error if there is any.
-func (c *mysqls) Get(name string, options v1.GetOptions) (result *kubedb.Mysql, err error) {
-	result = &kubedb.Mysql{}
+// Get takes name of the mySQL, and returns the corresponding mySQL object, and an error if there is any.
+func (c *mySQLs) Get(name string, options v1.GetOptions) (result *kubedb.MySQL, err error) {
+	result = &kubedb.MySQL{}
 	err = c.client.Get().
 		Namespace(c.ns).
 		Resource("mysqls").
@@ -135,9 +135,9 @@ func (c *mysqls) Get(name string, options v1.GetOptions) (result *kubedb.Mysql, 
 	return
 }
 
-// List takes label and field selectors, and returns the list of Mysqls that match those selectors.
-func (c *mysqls) List(opts v1.ListOptions) (result *kubedb.MysqlList, err error) {
-	result = &kubedb.MysqlList{}
+// List takes label and field selectors, and returns the list of MySQLs that match those selectors.
+func (c *mySQLs) List(opts v1.ListOptions) (result *kubedb.MySQLList, err error) {
+	result = &kubedb.MySQLList{}
 	err = c.client.Get().
 		Namespace(c.ns).
 		Resource("mysqls").
@@ -147,8 +147,8 @@ func (c *mysqls) List(opts v1.ListOptions) (result *kubedb.MysqlList, err error)
 	return
 }
 
-// Watch returns a watch.Interface that watches the requested mysqls.
-func (c *mysqls) Watch(opts v1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested mySQLs.
+func (c *mySQLs) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	opts.Watch = true
 	return c.client.Get().
 		Namespace(c.ns).
@@ -157,9 +157,9 @@ func (c *mysqls) Watch(opts v1.ListOptions) (watch.Interface, error) {
 		Watch()
 }
 
-// Patch applies the patch and returns the patched mysql.
-func (c *mysqls) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *kubedb.Mysql, err error) {
-	result = &kubedb.Mysql{}
+// Patch applies the patch and returns the patched mySQL.
+func (c *mySQLs) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *kubedb.MySQL, err error) {
+	result = &kubedb.MySQL{}
 	err = c.client.Patch(pt).
 		Namespace(c.ns).
 		Resource("mysqls").

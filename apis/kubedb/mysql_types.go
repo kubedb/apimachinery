@@ -7,24 +7,24 @@ import (
 )
 
 const (
-	ResourceCodeMysql = "ms"
-	ResourceKindMysql = "Mysql"
-	ResourceNameMysql = "mysql"
-	ResourceTypeMysql = "mysqls"
+	ResourceCodeMySQL = "ms"
+	ResourceKindMySQL = "MySQL"
+	ResourceNameMySQL = "mysql"
+	ResourceTypeMySQL = "mysqls"
 )
 
 // +genclient=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // Mysql defines a Mysql database.
-type Mysql struct {
+type MySQL struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              MysqlSpec   `json:"spec,omitempty"`
-	Status            MysqlStatus `json:"status,omitempty"`
+	Spec              MySQLSpec   `json:"spec,omitempty"`
+	Status            MySQLStatus `json:"status,omitempty"`
 }
 
-type MysqlSpec struct {
+type MySQLSpec struct {
 	// Version of Xdb to be deployed.
 	Version string `json:"version,omitempty"`
 	// Number of instances to deploy for a Xdb database.
@@ -63,7 +63,7 @@ type MysqlSpec struct {
 	Tolerations []apiv1.Toleration `json:"tolerations,omitempty" protobuf:"bytes,22,opt,name=tolerations"`
 }
 
-type MysqlStatus struct {
+type MySQLStatus struct {
 	CreationTime *metav1.Time  `json:"creationTime,omitempty"`
 	Phase        DatabasePhase `json:"phase,omitempty"`
 	Reason       string        `json:"reason,omitempty"`
@@ -71,9 +71,9 @@ type MysqlStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type MysqlList struct {
+type MySQLList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	// Items is a list of Xdb TPR objects
-	Items []*Mysql `json:"items,omitempty"`
+	Items []*MySQL `json:"items,omitempty"`
 }

@@ -37,8 +37,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ElasticsearchList{},
 		&Postgres{},
 		&PostgresList{},
-		&Mysql{},
-		&MysqlList{},
+		&MySQL{},
+		&MySQLList{},
 	)
 	return nil
 }

@@ -26,73 +26,73 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-// FakeMysqls implements MysqlInterface
-type FakeMysqls struct {
+// FakeMySQLs implements MySQLInterface
+type FakeMySQLs struct {
 	Fake *FakeKubedb
 	ns   string
 }
 
 var mysqlsResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "", Resource: "mysqls"}
 
-var mysqlsKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "", Kind: "Mysql"}
+var mysqlsKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "", Kind: "MySQL"}
 
-func (c *FakeMysqls) Create(mysql *kubedb.Mysql) (result *kubedb.Mysql, err error) {
+func (c *FakeMySQLs) Create(mySQL *kubedb.MySQL) (result *kubedb.MySQL, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mysqlsResource, c.ns, mysql), &kubedb.Mysql{})
+		Invokes(testing.NewCreateAction(mysqlsResource, c.ns, mySQL), &kubedb.MySQL{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubedb.Mysql), err
+	return obj.(*kubedb.MySQL), err
 }
 
-func (c *FakeMysqls) Update(mysql *kubedb.Mysql) (result *kubedb.Mysql, err error) {
+func (c *FakeMySQLs) Update(mySQL *kubedb.MySQL) (result *kubedb.MySQL, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mysqlsResource, c.ns, mysql), &kubedb.Mysql{})
+		Invokes(testing.NewUpdateAction(mysqlsResource, c.ns, mySQL), &kubedb.MySQL{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubedb.Mysql), err
+	return obj.(*kubedb.MySQL), err
 }
 
-func (c *FakeMysqls) UpdateStatus(mysql *kubedb.Mysql) (*kubedb.Mysql, error) {
+func (c *FakeMySQLs) UpdateStatus(mySQL *kubedb.MySQL) (*kubedb.MySQL, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mysqlsResource, "status", c.ns, mysql), &kubedb.Mysql{})
+		Invokes(testing.NewUpdateSubresourceAction(mysqlsResource, "status", c.ns, mySQL), &kubedb.MySQL{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubedb.Mysql), err
+	return obj.(*kubedb.MySQL), err
 }
 
-func (c *FakeMysqls) Delete(name string, options *v1.DeleteOptions) error {
+func (c *FakeMySQLs) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(mysqlsResource, c.ns, name), &kubedb.Mysql{})
+		Invokes(testing.NewDeleteAction(mysqlsResource, c.ns, name), &kubedb.MySQL{})
 
 	return err
 }
 
-func (c *FakeMysqls) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+func (c *FakeMySQLs) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(mysqlsResource, c.ns, listOptions)
 
-	_, err := c.Fake.Invokes(action, &kubedb.MysqlList{})
+	_, err := c.Fake.Invokes(action, &kubedb.MySQLList{})
 	return err
 }
 
-func (c *FakeMysqls) Get(name string, options v1.GetOptions) (result *kubedb.Mysql, err error) {
+func (c *FakeMySQLs) Get(name string, options v1.GetOptions) (result *kubedb.MySQL, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mysqlsResource, c.ns, name), &kubedb.Mysql{})
+		Invokes(testing.NewGetAction(mysqlsResource, c.ns, name), &kubedb.MySQL{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubedb.Mysql), err
+	return obj.(*kubedb.MySQL), err
 }
 
-func (c *FakeMysqls) List(opts v1.ListOptions) (result *kubedb.MysqlList, err error) {
+func (c *FakeMySQLs) List(opts v1.ListOptions) (result *kubedb.MySQLList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mysqlsResource, mysqlsKind, c.ns, opts), &kubedb.MysqlList{})
+		Invokes(testing.NewListAction(mysqlsResource, mysqlsKind, c.ns, opts), &kubedb.MySQLList{})
 
 	if obj == nil {
 		return nil, err
@@ -102,8 +102,8 @@ func (c *FakeMysqls) List(opts v1.ListOptions) (result *kubedb.MysqlList, err er
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &kubedb.MysqlList{}
-	for _, item := range obj.(*kubedb.MysqlList).Items {
+	list := &kubedb.MySQLList{}
+	for _, item := range obj.(*kubedb.MySQLList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -111,20 +111,20 @@ func (c *FakeMysqls) List(opts v1.ListOptions) (result *kubedb.MysqlList, err er
 	return list, err
 }
 
-// Watch returns a watch.Interface that watches the requested mysqls.
-func (c *FakeMysqls) Watch(opts v1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested mySQLs.
+func (c *FakeMySQLs) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(mysqlsResource, c.ns, opts))
 
 }
 
-// Patch applies the patch and returns the patched mysql.
-func (c *FakeMysqls) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *kubedb.Mysql, err error) {
+// Patch applies the patch and returns the patched mySQL.
+func (c *FakeMySQLs) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *kubedb.MySQL, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mysqlsResource, c.ns, name, data, subresources...), &kubedb.Mysql{})
+		Invokes(testing.NewPatchSubresourceAction(mysqlsResource, c.ns, name, data, subresources...), &kubedb.MySQL{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubedb.Mysql), err
+	return obj.(*kubedb.MySQL), err
 }

@@ -40,8 +40,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ElasticsearchList{},
 		&Postgres{},
 		&PostgresList{},
-		&Mysql{},
-		&MysqlList{},
+		&MySQL{},
+		&MySQLList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,
