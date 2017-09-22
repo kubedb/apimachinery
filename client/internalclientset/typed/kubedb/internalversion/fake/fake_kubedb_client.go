@@ -42,6 +42,10 @@ func (c *FakeKubedb) Snapshots(namespace string) internalversion.SnapshotInterfa
 	return &FakeSnapshots{c, namespace}
 }
 
+func (c *FakeKubedb) Xdbs(namespace string) internalversion.XdbInterface {
+	return &FakeXdbs{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeKubedb) RESTClient() rest.Interface {

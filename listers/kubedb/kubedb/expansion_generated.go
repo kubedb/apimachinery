@@ -49,3 +49,11 @@ type SnapshotListerExpansion interface{}
 // SnapshotNamespaceListerExpansion allows custom methods to be added to
 // SnapshotNamespaceLister.
 type SnapshotNamespaceListerExpansion interface{}
+
+// XdbListerExpansion allows custom methods to be added to
+// XdbLister.
+type XdbListerExpansion interface{}
+
+// XdbNamespaceListerExpansion allows custom methods to be added to
+// XdbNamespaceLister.
+type XdbNamespaceListerExpansion interface{}

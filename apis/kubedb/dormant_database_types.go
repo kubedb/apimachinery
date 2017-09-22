@@ -45,6 +45,9 @@ type OriginSpec struct {
 	// Postgres Spec
 	// +optional
 	Postgres *PostgresSpec `json:"postgres,omitempty"`
+	// Xdb Spec
+	// +optional
+	Xdb *XdbSpec `json:"xdb,omitempty"`
 }
 
 type DormantDatabasePhase string

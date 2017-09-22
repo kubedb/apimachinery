@@ -21,14 +21,19 @@ const (
 	ElasticsearchKey             = ResourceTypeElasticsearch + "." + GenericKey
 	ElasticsearchDatabaseVersion = ElasticsearchKey + "/version"
 
+	XdbKey             = ResourceTypeXdb + "." + GenericKey
+	XdbDatabaseVersion = XdbKey + "/version"
+
 	SnapshotKey         = ResourceTypeSnapshot + "." + GenericKey
 	LabelSnapshotStatus = SnapshotKey + "/status"
 
 	PostgresInitSpec      = PostgresKey + "/init"
 	ElasticsearchInitSpec = ElasticsearchKey + "/init"
+	XdbInitSpec           = XdbKey + "/init"
 
 	PostgresIgnore      = PostgresKey + "/ignore"
 	ElasticsearchIgnore = ElasticsearchKey + "/ignore"
+	XdbIgnore           = XdbKey + "/ignore"
 )
 
 type RuntimeObject interface {
