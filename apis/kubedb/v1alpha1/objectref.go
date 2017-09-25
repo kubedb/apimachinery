@@ -3,6 +3,7 @@ package v1alpha1
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 	apiv1 "k8s.io/client-go/pkg/api/v1"
+	"golang.org/x/tools/go/gcimporter15/testdata"
 )
 
 func (d DormantDatabase) ObjectReference() *apiv1.ObjectReference {
@@ -38,6 +39,17 @@ func (e Elasticsearch) ObjectReference() *apiv1.ObjectReference {
 	}
 }
 
+func (m MySQL) ObjectReference() *apiv1.ObjectReference {
+	return &apiv1.ObjectReference{
+		APIVersion:      SchemeGroupVersion.String(),
+		Kind:            ResourceKindMySQL,
+		Namespace:       m.Namespace,
+		Name:            m.Name,
+		UID:             m.UID,
+		ResourceVersion: m.ResourceVersion,
+	}
+}
+
 func (s Snapshot) ObjectReference() *apiv1.ObjectReference {
 	return &apiv1.ObjectReference{
 		APIVersion:      SchemeGroupVersion.String(),
@@ -56,6 +68,8 @@ func ObjectReferenceFor(obj runtime.Object) *apiv1.ObjectReference {
 	case *Postgres:
 		return u.ObjectReference()
 	case *Elasticsearch:
+		return u.ObjectReference()
+	case *MySQL:
 		return u.ObjectReference()
 	case *Snapshot:
 		return u.ObjectReference()
