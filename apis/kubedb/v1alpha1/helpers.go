@@ -27,9 +27,9 @@ const (
 	SnapshotKey         = ResourceTypeSnapshot + "." + GenericKey
 	LabelSnapshotStatus = SnapshotKey + "/status"
 
-	PostgresInitSpec        = PostgresKey + "/init"
-	ElasticsearchInitSpec   = ElasticsearchKey + "/init"
-	MySQLInitSpec           = MySQLKey + "/init"
+	PostgresInitSpec      = PostgresKey + "/init"
+	ElasticsearchInitSpec = ElasticsearchKey + "/init"
+	MySQLInitSpec         = MySQLKey + "/init"
 
 	PostgresIgnore      = PostgresKey + "/ignore"
 	ElasticsearchIgnore = ElasticsearchKey + "/ignore"
@@ -115,7 +115,7 @@ func (m MySQL) StatefulSetLabels() map[string]string {
 func (m MySQL) StatefulSetAnnotations() map[string]string {
 	annotations := make(map[string]string)
 	for key, val := range m.Annotations {
-		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MySQLKey +"/") {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MySQLKey+"/") {
 			annotations[key] = val
 		}
 	}

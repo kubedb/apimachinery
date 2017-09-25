@@ -680,6 +680,7 @@ func Convert_kubedb_Origin_To_v1alpha1_Origin(in *kubedb.Origin, out *Origin, s 
 func autoConvert_v1alpha1_OriginSpec_To_kubedb_OriginSpec(in *OriginSpec, out *kubedb.OriginSpec, s conversion.Scope) error {
 	out.Elasticsearch = (*kubedb.ElasticsearchSpec)(unsafe.Pointer(in.Elasticsearch))
 	out.Postgres = (*kubedb.PostgresSpec)(unsafe.Pointer(in.Postgres))
+	out.MySQL = (*kubedb.MySQLSpec)(unsafe.Pointer(in.MySQL))
 	return nil
 }
 
@@ -691,6 +692,7 @@ func Convert_v1alpha1_OriginSpec_To_kubedb_OriginSpec(in *OriginSpec, out *kubed
 func autoConvert_kubedb_OriginSpec_To_v1alpha1_OriginSpec(in *kubedb.OriginSpec, out *OriginSpec, s conversion.Scope) error {
 	out.Elasticsearch = (*ElasticsearchSpec)(unsafe.Pointer(in.Elasticsearch))
 	out.Postgres = (*PostgresSpec)(unsafe.Pointer(in.Postgres))
+	out.MySQL = (*MySQLSpec)(unsafe.Pointer(in.MySQL))
 	return nil
 }
 

@@ -29,11 +29,11 @@ const (
 
 	PostgresInitSpec      = PostgresKey + "/init"
 	ElasticsearchInitSpec = ElasticsearchKey + "/init"
-	MySQLInitSpec = MySQLKey + "/init"
+	MySQLInitSpec         = MySQLKey + "/init"
 
 	PostgresIgnore      = PostgresKey + "/ignore"
 	ElasticsearchIgnore = ElasticsearchKey + "/ignore"
-	MySQLIgnore = MySQLKey + "/ignore"
+	MySQLIgnore         = MySQLKey + "/ignore"
 )
 
 type RuntimeObject interface {

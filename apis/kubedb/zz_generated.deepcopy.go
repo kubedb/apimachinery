@@ -583,6 +583,13 @@ func DeepCopy_kubedb_OriginSpec(in interface{}, out interface{}, c *conversion.C
 				return err
 			}
 		}
+		if in.MySQL != nil {
+			in, out := &in.MySQL, &out.MySQL
+			*out = new(MySQLSpec)
+			if err := DeepCopy_kubedb_MySQLSpec(*in, *out, c); err != nil {
+				return err
+			}
+		}
 		return nil
 	}
 }

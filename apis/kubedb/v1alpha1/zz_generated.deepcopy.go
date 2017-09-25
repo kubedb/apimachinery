@@ -583,6 +583,13 @@ func DeepCopy_v1alpha1_OriginSpec(in interface{}, out interface{}, c *conversion
 				return err
 			}
 		}
+		if in.MySQL != nil {
+			in, out := &in.MySQL, &out.MySQL
+			*out = new(MySQLSpec)
+			if err := DeepCopy_v1alpha1_MySQLSpec(*in, *out, c); err != nil {
+				return err
+			}
+		}
 		return nil
 	}
 }
