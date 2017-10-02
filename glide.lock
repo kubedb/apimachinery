@@ -1,5 +1,5 @@
 hash: 5fb607eb34b0d50e960e0c2fbff2fa9d00e6a9e9ac82be893996183c1303ecbe
-updated: 2017-09-28T17:55:46.044687661+06:00
+updated: 2017-10-02T00:29:04.314942398-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -186,9 +186,9 @@ imports:
 - name: github.com/Sirupsen/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
 - name: github.com/spf13/cobra
-  version: b78744579491c1ceeaaa3b40205e56b0591b93a3
+  version: e5f66de850af3302fbe378c8acded2b0fa55472c
 - name: github.com/spf13/pflag
-  version: 7aff26db30c1be810f9de5038ec5ef96ac41fd7c
+  version: be7121dd7a937a85e1e4b1ddda6a3edce3466110
 - name: github.com/ugorji/go
   version: ded73eae5db7e7a0ef6f55aace87a2873c5d2b74
   subpackages:
@@ -227,7 +227,7 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: cf8a9e7cedca7843a0fdd8adc9d019e84349768d
+  version: 906273f42cdebd65de3a53f30dd9e23de1b55ba9
   subpackages:
   - gensupport
   - googleapi
