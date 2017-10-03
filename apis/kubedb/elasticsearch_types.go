@@ -27,8 +27,12 @@ type Elasticsearch struct {
 type ElasticsearchSpec struct {
 	// Version of Elasticsearch to be deployed.
 	Version types.StrYo `json:"version,omitempty"`
-	// Number of instances to deploy for a Elasticsearch database.
-	Replicas int32 `json:"replicas,omitempty"`
+	// List of elasticsearch node specification.
+	Nodes []ElasticsearchNode `json:"nodes,omitempty"`
+	// EnableSSL to enable ssl in transport & http layer
+	EnableSSL bool `json:"enableSSL,omitempty"`
+	// Secret with SSL certificates
+	CertificateSecret *apiv1.SecretVolumeSource `json:"certificateSecret,omitempty"`
 	// Storage to specify how storage shall be used.
 	Storage *apiv1.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 	// NodeSelector is a selector which must be true for the pod to fit on a node
@@ -59,6 +63,17 @@ type ElasticsearchSpec struct {
 	// If specified, the pod's tolerations.
 	// +optional
 	Tolerations []apiv1.Toleration `json:"tolerations,omitempty" protobuf:"bytes,22,opt,name=tolerations"`
+}
+
+type ElasticsearchNode struct {
+	Replicas int32 `json:"replicas,omitempty"`
+	// One of [1, 2, 3, 4, 5, 6, 7]
+	//	Value	Mater	Data	Client
+	//	1-> 001	false 	false 	true
+	//	5-> 101	true 	false 	true
+	// Default value is 7. (111 - master,data,client)
+	Mode   int32  `json:"mode,omitempty"`
+	Prefix string `json:"prefix,omitempty"`
 }
 
 type ElasticsearchStatus struct {
