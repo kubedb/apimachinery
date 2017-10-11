@@ -21,13 +21,14 @@ limitations under the License.
 package v1alpha1
 
 import (
+	unsafe "unsafe"
+
 	types "github.com/appscode/go/encoding/json/types"
 	kubedb "github.com/k8sdb/apimachinery/apis/kubedb"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	api_v1 "k8s.io/client-go/pkg/api/v1"
-	unsafe "unsafe"
 )
 
 func init() {
