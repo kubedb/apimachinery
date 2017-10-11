@@ -9,6 +9,37 @@ DOCKER_REPO_ROOT="/go/src/$PACKAGE_NAME"
 
 pushd $REPO_ROOT
 
+## Generate ugorji stuff
+docker run --rm -ti -u $(id -u):$(id -g) \
+    -v "$REPO_ROOT":"$DOCKER_REPO_ROOT" \
+    -w "$DOCKER_REPO_ROOT/apis/kubedb/v1alpha1" \
+    appscode/gengo:canary codecgen -o types.generated.go types.go
+
+docker run --rm -ti -u $(id -u):$(id -g) \
+    -v "$REPO_ROOT":"$DOCKER_REPO_ROOT" \
+    -w "$DOCKER_REPO_ROOT/apis/kubedb/v1alpha1" \
+    appscode/gengo:canary codecgen -o postgres_types.generated.go postgres_types.go
+
+docker run --rm -ti -u $(id -u):$(id -g) \
+    -v "$REPO_ROOT":"$DOCKER_REPO_ROOT" \
+    -w "$DOCKER_REPO_ROOT/apis/kubedb/v1alpha1" \
+    appscode/gengo:canary codecgen -o elasticsearch_types.generated.go elasticsearch_types.go
+
+docker run --rm -ti -u $(id -u):$(id -g) \
+    -v "$REPO_ROOT":"$DOCKER_REPO_ROOT" \
+    -w "$DOCKER_REPO_ROOT/apis/kubedb/v1alpha1" \
+    appscode/gengo:canary codecgen -o mysql_types.generated.go mysql_types.go
+
+docker run --rm -ti -u $(id -u):$(id -g) \
+    -v "$REPO_ROOT":"$DOCKER_REPO_ROOT" \
+    -w "$DOCKER_REPO_ROOT/apis/kubedb/v1alpha1" \
+    appscode/gengo:canary codecgen -o dormant_database_types.generated.go dormant_database_types.go
+
+docker run --rm -ti -u $(id -u):$(id -g) \
+    -v "$REPO_ROOT":"$DOCKER_REPO_ROOT" \
+    -w "$DOCKER_REPO_ROOT/apis/kubedb/v1alpha1" \
+    appscode/gengo:canary codecgen -o snapshot_types.generated.go snapshot_types.go
+
 # Generate defaults
 docker run --rm -ti -u $(id -u):$(id -g) \
     -v "$REPO_ROOT":"$DOCKER_REPO_ROOT" \
