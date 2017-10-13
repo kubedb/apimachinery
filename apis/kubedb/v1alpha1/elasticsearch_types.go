@@ -67,14 +67,21 @@ type ElasticsearchSpec struct {
 }
 
 type ElasticsearchNode struct {
-	Replicas int32 `json:"replicas,omitempty"`
-	// One of [1, 2, 3, 4, 5, 6, 7]
-	//	Value	Mater	Data	Client
-	//	1-> 001	false 	false 	true
-	//	5-> 101	true 	false 	true
-	// Default value is 7. (111 - master,data,client)
-	Mode   int32  `json:"mode,omitempty"`
-	Prefix string `json:"prefix,omitempty"`
+	/*
+		Replicas int32 `json:"replicas,omitempty"`
+		// One of [1, 2, 3, 4, 5, 6, 7]
+		//	Value	Mater	Data	Client
+		//	1-> 001	false 	false 	true
+		//	5-> 101	true 	false 	true
+		// Default value is 7. (111 - master,data,client)
+		Mode   int32  `json:"mode,omitempty"`
+		Prefix string `json:"prefix,omitempty"`
+	*/
+
+	CombinedNodeReplicas *int32 `json:"combinedNodeReplicas,omitempty"`
+	MasterNodeReplicas   *int32 `json:"masterNodeReplicas,omitempty"`
+	DataNodeReplicas     *int32 `json:"dataNodeReplicas,omitempty"`
+	ClientNodeReplicas   *int32 `json:"clientNodeReplicas,omitempty"`
 }
 
 type ElasticsearchStatus struct {
