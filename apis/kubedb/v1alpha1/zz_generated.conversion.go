@@ -332,9 +332,10 @@ func Convert_kubedb_ElasticsearchList_To_v1alpha1_ElasticsearchList(in *kubedb.E
 }
 
 func autoConvert_v1alpha1_ElasticsearchNode_To_kubedb_ElasticsearchNode(in *ElasticsearchNode, out *kubedb.ElasticsearchNode, s conversion.Scope) error {
-	out.Replicas = in.Replicas
-	out.Mode = in.Mode
-	out.Prefix = in.Prefix
+	out.CombinedNodeReplicas = (*int32)(unsafe.Pointer(in.CombinedNodeReplicas))
+	out.MasterNodeReplicas = (*int32)(unsafe.Pointer(in.MasterNodeReplicas))
+	out.DataNodeReplicas = (*int32)(unsafe.Pointer(in.DataNodeReplicas))
+	out.ClientNodeReplicas = (*int32)(unsafe.Pointer(in.ClientNodeReplicas))
 	return nil
 }
 
@@ -344,9 +345,10 @@ func Convert_v1alpha1_ElasticsearchNode_To_kubedb_ElasticsearchNode(in *Elastics
 }
 
 func autoConvert_kubedb_ElasticsearchNode_To_v1alpha1_ElasticsearchNode(in *kubedb.ElasticsearchNode, out *ElasticsearchNode, s conversion.Scope) error {
-	out.Replicas = in.Replicas
-	out.Mode = in.Mode
-	out.Prefix = in.Prefix
+	out.CombinedNodeReplicas = (*int32)(unsafe.Pointer(in.CombinedNodeReplicas))
+	out.MasterNodeReplicas = (*int32)(unsafe.Pointer(in.MasterNodeReplicas))
+	out.DataNodeReplicas = (*int32)(unsafe.Pointer(in.DataNodeReplicas))
+	out.ClientNodeReplicas = (*int32)(unsafe.Pointer(in.ClientNodeReplicas))
 	return nil
 }
 
@@ -357,7 +359,9 @@ func Convert_kubedb_ElasticsearchNode_To_v1alpha1_ElasticsearchNode(in *kubedb.E
 
 func autoConvert_v1alpha1_ElasticsearchSpec_To_kubedb_ElasticsearchSpec(in *ElasticsearchSpec, out *kubedb.ElasticsearchSpec, s conversion.Scope) error {
 	out.Version = types.StrYo(in.Version)
-	out.Nodes = *(*[]kubedb.ElasticsearchNode)(unsafe.Pointer(&in.Nodes))
+	if err := Convert_v1alpha1_ElasticsearchNode_To_kubedb_ElasticsearchNode(&in.Nodes, &out.Nodes, s); err != nil {
+		return err
+	}
 	out.EnableSSL = in.EnableSSL
 	out.CertificateSecret = (*api_v1.SecretVolumeSource)(unsafe.Pointer(in.CertificateSecret))
 	out.Storage = (*api_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
@@ -380,7 +384,9 @@ func Convert_v1alpha1_ElasticsearchSpec_To_kubedb_ElasticsearchSpec(in *Elastics
 
 func autoConvert_kubedb_ElasticsearchSpec_To_v1alpha1_ElasticsearchSpec(in *kubedb.ElasticsearchSpec, out *ElasticsearchSpec, s conversion.Scope) error {
 	out.Version = types.StrYo(in.Version)
-	out.Nodes = *(*[]ElasticsearchNode)(unsafe.Pointer(&in.Nodes))
+	if err := Convert_kubedb_ElasticsearchNode_To_v1alpha1_ElasticsearchNode(&in.Nodes, &out.Nodes, s); err != nil {
+		return err
+	}
 	out.EnableSSL = in.EnableSSL
 	out.CertificateSecret = (*api_v1.SecretVolumeSource)(unsafe.Pointer(in.CertificateSecret))
 	out.Storage = (*api_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))

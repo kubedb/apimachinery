@@ -229,6 +229,26 @@ func DeepCopy_v1alpha1_ElasticsearchNode(in interface{}, out interface{}, c *con
 		in := in.(*ElasticsearchNode)
 		out := out.(*ElasticsearchNode)
 		*out = *in
+		if in.CombinedNodeReplicas != nil {
+			in, out := &in.CombinedNodeReplicas, &out.CombinedNodeReplicas
+			*out = new(int32)
+			**out = **in
+		}
+		if in.MasterNodeReplicas != nil {
+			in, out := &in.MasterNodeReplicas, &out.MasterNodeReplicas
+			*out = new(int32)
+			**out = **in
+		}
+		if in.DataNodeReplicas != nil {
+			in, out := &in.DataNodeReplicas, &out.DataNodeReplicas
+			*out = new(int32)
+			**out = **in
+		}
+		if in.ClientNodeReplicas != nil {
+			in, out := &in.ClientNodeReplicas, &out.ClientNodeReplicas
+			*out = new(int32)
+			**out = **in
+		}
 		return nil
 	}
 }
@@ -239,10 +259,8 @@ func DeepCopy_v1alpha1_ElasticsearchSpec(in interface{}, out interface{}, c *con
 		in := in.(*ElasticsearchSpec)
 		out := out.(*ElasticsearchSpec)
 		*out = *in
-		if in.Nodes != nil {
-			in, out := &in.Nodes, &out.Nodes
-			*out = make([]ElasticsearchNode, len(*in))
-			copy(*out, *in)
+		if err := DeepCopy_v1alpha1_ElasticsearchNode(&in.Nodes, &out.Nodes, c); err != nil {
+			return err
 		}
 		if in.CertificateSecret != nil {
 			in, out := &in.CertificateSecret, &out.CertificateSecret

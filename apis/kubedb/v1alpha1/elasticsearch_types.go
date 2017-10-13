@@ -29,7 +29,7 @@ type ElasticsearchSpec struct {
 	// Version of Elasticsearch to be deployed.
 	Version types.StrYo `json:"version,omitempty"`
 	// List of elasticsearch node specification.
-	Nodes []ElasticsearchNode `json:"nodes,omitempty"`
+	Nodes ElasticsearchNode `json:"nodes,omitempty"`
 	// EnableSSL to enable ssl in transport & http layer
 	EnableSSL bool `json:"enableSSL,omitempty"`
 	// Secret with SSL certificates
