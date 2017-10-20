@@ -36,50 +36,7 @@ var snapshotsResource = schema.GroupVersionResource{Group: "kubedb.com", Version
 
 var snapshotsKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "", Kind: "Snapshot"}
 
-func (c *FakeSnapshots) Create(snapshot *kubedb.Snapshot) (result *kubedb.Snapshot, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(snapshotsResource, c.ns, snapshot), &kubedb.Snapshot{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*kubedb.Snapshot), err
-}
-
-func (c *FakeSnapshots) Update(snapshot *kubedb.Snapshot) (result *kubedb.Snapshot, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(snapshotsResource, c.ns, snapshot), &kubedb.Snapshot{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*kubedb.Snapshot), err
-}
-
-func (c *FakeSnapshots) UpdateStatus(snapshot *kubedb.Snapshot) (*kubedb.Snapshot, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(snapshotsResource, "status", c.ns, snapshot), &kubedb.Snapshot{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*kubedb.Snapshot), err
-}
-
-func (c *FakeSnapshots) Delete(name string, options *v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(snapshotsResource, c.ns, name), &kubedb.Snapshot{})
-
-	return err
-}
-
-func (c *FakeSnapshots) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(snapshotsResource, c.ns, listOptions)
-
-	_, err := c.Fake.Invokes(action, &kubedb.SnapshotList{})
-	return err
-}
-
+// Get takes name of the snapshot, and returns the corresponding snapshot object, and an error if there is any.
 func (c *FakeSnapshots) Get(name string, options v1.GetOptions) (result *kubedb.Snapshot, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewGetAction(snapshotsResource, c.ns, name), &kubedb.Snapshot{})
@@ -90,6 +47,7 @@ func (c *FakeSnapshots) Get(name string, options v1.GetOptions) (result *kubedb.
 	return obj.(*kubedb.Snapshot), err
 }
 
+// List takes label and field selectors, and returns the list of Snapshots that match those selectors.
 func (c *FakeSnapshots) List(opts v1.ListOptions) (result *kubedb.SnapshotList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewListAction(snapshotsResource, snapshotsKind, c.ns, opts), &kubedb.SnapshotList{})
@@ -116,6 +74,56 @@ func (c *FakeSnapshots) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(snapshotsResource, c.ns, opts))
 
+}
+
+// Create takes the representation of a snapshot and creates it.  Returns the server's representation of the snapshot, and an error, if there is any.
+func (c *FakeSnapshots) Create(snapshot *kubedb.Snapshot) (result *kubedb.Snapshot, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewCreateAction(snapshotsResource, c.ns, snapshot), &kubedb.Snapshot{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*kubedb.Snapshot), err
+}
+
+// Update takes the representation of a snapshot and updates it. Returns the server's representation of the snapshot, and an error, if there is any.
+func (c *FakeSnapshots) Update(snapshot *kubedb.Snapshot) (result *kubedb.Snapshot, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateAction(snapshotsResource, c.ns, snapshot), &kubedb.Snapshot{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*kubedb.Snapshot), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeSnapshots) UpdateStatus(snapshot *kubedb.Snapshot) (*kubedb.Snapshot, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(snapshotsResource, "status", c.ns, snapshot), &kubedb.Snapshot{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*kubedb.Snapshot), err
+}
+
+// Delete takes name of the snapshot and deletes it. Returns an error if one occurs.
+func (c *FakeSnapshots) Delete(name string, options *v1.DeleteOptions) error {
+	_, err := c.Fake.
+		Invokes(testing.NewDeleteAction(snapshotsResource, c.ns, name), &kubedb.Snapshot{})
+
+	return err
+}
+
+// DeleteCollection deletes a collection of objects.
+func (c *FakeSnapshots) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(snapshotsResource, c.ns, listOptions)
+
+	_, err := c.Fake.Invokes(action, &kubedb.SnapshotList{})
+	return err
 }
 
 // Patch applies the patch and returns the patched snapshot.
