@@ -41,8 +41,8 @@ import:
   repo: https://github.com/appscode/cron.git
   vcs: git
   version: v2
-- package: github.com/Sirupsen/logrus
-  version: v0.10.0
+- package: github.com/sirupsen/logrus
+  version: v1.0.3
 - package: github.com/gogo/protobuf/proto
   version: c0656edd0d9eab7c66d1eb0c568f9039345796f7
 - package: k8s.io/api
