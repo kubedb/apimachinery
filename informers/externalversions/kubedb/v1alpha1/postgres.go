@@ -41,26 +41,31 @@ type postgresInformer struct {
 	factory internalinterfaces.SharedInformerFactory
 }
 
-func newPostgresInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	sharedIndexInformer := cache.NewSharedIndexInformer(
+// NewPostgresInformer constructs a new informer for Postgres type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewPostgresInformer(client client.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
-				return client.KubedbV1alpha1().Postgreses(v1.NamespaceAll).List(options)
+				return client.KubedbV1alpha1().Postgreses(namespace).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
-				return client.KubedbV1alpha1().Postgreses(v1.NamespaceAll).Watch(options)
+				return client.KubedbV1alpha1().Postgreses(namespace).Watch(options)
 			},
 		},
 		&kubedb_v1alpha1.Postgres{},
 		resyncPeriod,
-		cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
+		indexers,
 	)
+}
 
-	return sharedIndexInformer
+func defaultPostgresInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewPostgresInformer(client, v1.NamespaceAll, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc})
 }
 
 func (f *postgresInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedb_v1alpha1.Postgres{}, newPostgresInformer)
+	return f.factory.InformerFor(&kubedb_v1alpha1.Postgres{}, defaultPostgresInformer)
 }
 
 func (f *postgresInformer) Lister() v1alpha1.PostgresLister {

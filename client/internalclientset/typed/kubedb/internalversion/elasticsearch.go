@@ -59,6 +59,41 @@ func newElasticsearchs(c *KubedbClient, namespace string) *elasticsearchs {
 	}
 }
 
+// Get takes name of the elasticsearch, and returns the corresponding elasticsearch object, and an error if there is any.
+func (c *elasticsearchs) Get(name string, options v1.GetOptions) (result *kubedb.Elasticsearch, err error) {
+	result = &kubedb.Elasticsearch{}
+	err = c.client.Get().
+		Namespace(c.ns).
+		Resource("elasticsearchs").
+		Name(name).
+		VersionedParams(&options, scheme.ParameterCodec).
+		Do().
+		Into(result)
+	return
+}
+
+// List takes label and field selectors, and returns the list of Elasticsearchs that match those selectors.
+func (c *elasticsearchs) List(opts v1.ListOptions) (result *kubedb.ElasticsearchList, err error) {
+	result = &kubedb.ElasticsearchList{}
+	err = c.client.Get().
+		Namespace(c.ns).
+		Resource("elasticsearchs").
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Do().
+		Into(result)
+	return
+}
+
+// Watch returns a watch.Interface that watches the requested elasticsearchs.
+func (c *elasticsearchs) Watch(opts v1.ListOptions) (watch.Interface, error) {
+	opts.Watch = true
+	return c.client.Get().
+		Namespace(c.ns).
+		Resource("elasticsearchs").
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Watch()
+}
+
 // Create takes the representation of a elasticsearch and creates it.  Returns the server's representation of the elasticsearch, and an error, if there is any.
 func (c *elasticsearchs) Create(elasticsearch *kubedb.Elasticsearch) (result *kubedb.Elasticsearch, err error) {
 	result = &kubedb.Elasticsearch{}
@@ -85,7 +120,7 @@ func (c *elasticsearchs) Update(elasticsearch *kubedb.Elasticsearch) (result *ku
 }
 
 // UpdateStatus was generated because the type contains a Status member.
-// Add a +genclientstatus=false comment above the type to avoid generating UpdateStatus().
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 
 func (c *elasticsearchs) UpdateStatus(elasticsearch *kubedb.Elasticsearch) (result *kubedb.Elasticsearch, err error) {
 	result = &kubedb.Elasticsearch{}
@@ -120,41 +155,6 @@ func (c *elasticsearchs) DeleteCollection(options *v1.DeleteOptions, listOptions
 		Body(options).
 		Do().
 		Error()
-}
-
-// Get takes name of the elasticsearch, and returns the corresponding elasticsearch object, and an error if there is any.
-func (c *elasticsearchs) Get(name string, options v1.GetOptions) (result *kubedb.Elasticsearch, err error) {
-	result = &kubedb.Elasticsearch{}
-	err = c.client.Get().
-		Namespace(c.ns).
-		Resource("elasticsearchs").
-		Name(name).
-		VersionedParams(&options, scheme.ParameterCodec).
-		Do().
-		Into(result)
-	return
-}
-
-// List takes label and field selectors, and returns the list of Elasticsearchs that match those selectors.
-func (c *elasticsearchs) List(opts v1.ListOptions) (result *kubedb.ElasticsearchList, err error) {
-	result = &kubedb.ElasticsearchList{}
-	err = c.client.Get().
-		Namespace(c.ns).
-		Resource("elasticsearchs").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Do().
-		Into(result)
-	return
-}
-
-// Watch returns a watch.Interface that watches the requested elasticsearchs.
-func (c *elasticsearchs) Watch(opts v1.ListOptions) (watch.Interface, error) {
-	opts.Watch = true
-	return c.client.Get().
-		Namespace(c.ns).
-		Resource("elasticsearchs").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Watch()
 }
 
 // Patch applies the patch and returns the patched elasticsearch.
