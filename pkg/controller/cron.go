@@ -12,7 +12,7 @@ import (
 	"github.com/k8sdb/apimachinery/pkg/eventer"
 	cmap "github.com/orcaman/concurrent-map"
 	"gopkg.in/robfig/cron.v2"
-	apiv1 "k8s.io/api/core/v1"
+	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -178,7 +178,7 @@ func (s *snapshotInvoker) createScheduledSnapshot() {
 	if err != nil {
 		s.eventRecorder.Eventf(
 			tapi.ObjectReferenceFor(s.runtimeObject),
-			apiv1.EventTypeWarning,
+			core.EventTypeWarning,
 			eventer.EventReasonFailedToList,
 			"Failed to list Snapshots. Reason: %v",
 			err,
@@ -190,7 +190,7 @@ func (s *snapshotInvoker) createScheduledSnapshot() {
 	if len(snapshotList.Items) > 0 {
 		s.eventRecorder.Event(
 			tapi.ObjectReferenceFor(s.runtimeObject),
-			apiv1.EventTypeNormal,
+			core.EventTypeNormal,
 			eventer.EventReasonIgnoredSnapshot,
 			"Skipping scheduled Backup. One is still active.",
 		)
@@ -234,7 +234,7 @@ func (s *snapshotInvoker) createSnapshot(snapshotName string) error {
 	if _, err := s.extClient.Snapshots(snapshot.Namespace).Create(snapshot); err != nil {
 		s.eventRecorder.Eventf(
 			s.runtimeObject,
-			apiv1.EventTypeWarning,
+			core.EventTypeWarning,
 			eventer.EventReasonFailedToCreate,
 			"Failed to create Snapshot. Reason: %v",
 			err,
