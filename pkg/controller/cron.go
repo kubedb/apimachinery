@@ -17,7 +17,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
-	clientset "k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/record"
 )
 
@@ -45,7 +45,7 @@ type cronController struct {
  NewCronController returns CronControllerInterface.
  Need to call StartCron() method to start Cron.
 */
-func NewCronController(client clientset.Interface, extClient tcs.KubedbV1alpha1Interface) CronControllerInterface {
+func NewCronController(client kubernetes.Interface, extClient tcs.KubedbV1alpha1Interface) CronControllerInterface {
 	return &cronController{
 		extClient:     extClient,
 		cron:          cron.New(),

@@ -22,7 +22,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
-	clientset "k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/record"
 )
 
@@ -311,7 +311,7 @@ func (c *Controller) DeleteSecret(name, namespace string) error {
 }
 
 func deleteJobResources(
-	client clientset.Interface,
+	client kubernetes.Interface,
 	recorder record.EventRecorder,
 	runtimeObj runtime.Object,
 	job *batch.Job,
