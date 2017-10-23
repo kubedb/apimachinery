@@ -36,50 +36,7 @@ var postgresesResource = schema.GroupVersionResource{Group: "kubedb.com", Versio
 
 var postgresesKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "v1alpha1", Kind: "Postgres"}
 
-func (c *FakePostgreses) Create(postgres *v1alpha1.Postgres) (result *v1alpha1.Postgres, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(postgresesResource, c.ns, postgres), &v1alpha1.Postgres{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Postgres), err
-}
-
-func (c *FakePostgreses) Update(postgres *v1alpha1.Postgres) (result *v1alpha1.Postgres, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(postgresesResource, c.ns, postgres), &v1alpha1.Postgres{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Postgres), err
-}
-
-func (c *FakePostgreses) UpdateStatus(postgres *v1alpha1.Postgres) (*v1alpha1.Postgres, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(postgresesResource, "status", c.ns, postgres), &v1alpha1.Postgres{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Postgres), err
-}
-
-func (c *FakePostgreses) Delete(name string, options *v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(postgresesResource, c.ns, name), &v1alpha1.Postgres{})
-
-	return err
-}
-
-func (c *FakePostgreses) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(postgresesResource, c.ns, listOptions)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.PostgresList{})
-	return err
-}
-
+// Get takes name of the postgres, and returns the corresponding postgres object, and an error if there is any.
 func (c *FakePostgreses) Get(name string, options v1.GetOptions) (result *v1alpha1.Postgres, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewGetAction(postgresesResource, c.ns, name), &v1alpha1.Postgres{})
@@ -90,6 +47,7 @@ func (c *FakePostgreses) Get(name string, options v1.GetOptions) (result *v1alph
 	return obj.(*v1alpha1.Postgres), err
 }
 
+// List takes label and field selectors, and returns the list of Postgreses that match those selectors.
 func (c *FakePostgreses) List(opts v1.ListOptions) (result *v1alpha1.PostgresList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewListAction(postgresesResource, postgresesKind, c.ns, opts), &v1alpha1.PostgresList{})
@@ -116,6 +74,56 @@ func (c *FakePostgreses) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(postgresesResource, c.ns, opts))
 
+}
+
+// Create takes the representation of a postgres and creates it.  Returns the server's representation of the postgres, and an error, if there is any.
+func (c *FakePostgreses) Create(postgres *v1alpha1.Postgres) (result *v1alpha1.Postgres, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewCreateAction(postgresesResource, c.ns, postgres), &v1alpha1.Postgres{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.Postgres), err
+}
+
+// Update takes the representation of a postgres and updates it. Returns the server's representation of the postgres, and an error, if there is any.
+func (c *FakePostgreses) Update(postgres *v1alpha1.Postgres) (result *v1alpha1.Postgres, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateAction(postgresesResource, c.ns, postgres), &v1alpha1.Postgres{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.Postgres), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakePostgreses) UpdateStatus(postgres *v1alpha1.Postgres) (*v1alpha1.Postgres, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(postgresesResource, "status", c.ns, postgres), &v1alpha1.Postgres{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.Postgres), err
+}
+
+// Delete takes name of the postgres and deletes it. Returns an error if one occurs.
+func (c *FakePostgreses) Delete(name string, options *v1.DeleteOptions) error {
+	_, err := c.Fake.
+		Invokes(testing.NewDeleteAction(postgresesResource, c.ns, name), &v1alpha1.Postgres{})
+
+	return err
+}
+
+// DeleteCollection deletes a collection of objects.
+func (c *FakePostgreses) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(postgresesResource, c.ns, listOptions)
+
+	_, err := c.Fake.Invokes(action, &v1alpha1.PostgresList{})
+	return err
 }
 
 // Patch applies the patch and returns the patched postgres.

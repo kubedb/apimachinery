@@ -36,50 +36,7 @@ var mysqlsResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "
 
 var mysqlsKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "v1alpha1", Kind: "MySQL"}
 
-func (c *FakeMySQLs) Create(mySQL *v1alpha1.MySQL) (result *v1alpha1.MySQL, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mysqlsResource, c.ns, mySQL), &v1alpha1.MySQL{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQL), err
-}
-
-func (c *FakeMySQLs) Update(mySQL *v1alpha1.MySQL) (result *v1alpha1.MySQL, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mysqlsResource, c.ns, mySQL), &v1alpha1.MySQL{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQL), err
-}
-
-func (c *FakeMySQLs) UpdateStatus(mySQL *v1alpha1.MySQL) (*v1alpha1.MySQL, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mysqlsResource, "status", c.ns, mySQL), &v1alpha1.MySQL{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQL), err
-}
-
-func (c *FakeMySQLs) Delete(name string, options *v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(mysqlsResource, c.ns, name), &v1alpha1.MySQL{})
-
-	return err
-}
-
-func (c *FakeMySQLs) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mysqlsResource, c.ns, listOptions)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MySQLList{})
-	return err
-}
-
+// Get takes name of the mySQL, and returns the corresponding mySQL object, and an error if there is any.
 func (c *FakeMySQLs) Get(name string, options v1.GetOptions) (result *v1alpha1.MySQL, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewGetAction(mysqlsResource, c.ns, name), &v1alpha1.MySQL{})
@@ -90,6 +47,7 @@ func (c *FakeMySQLs) Get(name string, options v1.GetOptions) (result *v1alpha1.M
 	return obj.(*v1alpha1.MySQL), err
 }
 
+// List takes label and field selectors, and returns the list of MySQLs that match those selectors.
 func (c *FakeMySQLs) List(opts v1.ListOptions) (result *v1alpha1.MySQLList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewListAction(mysqlsResource, mysqlsKind, c.ns, opts), &v1alpha1.MySQLList{})
@@ -116,6 +74,56 @@ func (c *FakeMySQLs) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(mysqlsResource, c.ns, opts))
 
+}
+
+// Create takes the representation of a mySQL and creates it.  Returns the server's representation of the mySQL, and an error, if there is any.
+func (c *FakeMySQLs) Create(mySQL *v1alpha1.MySQL) (result *v1alpha1.MySQL, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewCreateAction(mysqlsResource, c.ns, mySQL), &v1alpha1.MySQL{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.MySQL), err
+}
+
+// Update takes the representation of a mySQL and updates it. Returns the server's representation of the mySQL, and an error, if there is any.
+func (c *FakeMySQLs) Update(mySQL *v1alpha1.MySQL) (result *v1alpha1.MySQL, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateAction(mysqlsResource, c.ns, mySQL), &v1alpha1.MySQL{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.MySQL), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeMySQLs) UpdateStatus(mySQL *v1alpha1.MySQL) (*v1alpha1.MySQL, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(mysqlsResource, "status", c.ns, mySQL), &v1alpha1.MySQL{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.MySQL), err
+}
+
+// Delete takes name of the mySQL and deletes it. Returns an error if one occurs.
+func (c *FakeMySQLs) Delete(name string, options *v1.DeleteOptions) error {
+	_, err := c.Fake.
+		Invokes(testing.NewDeleteAction(mysqlsResource, c.ns, name), &v1alpha1.MySQL{})
+
+	return err
+}
+
+// DeleteCollection deletes a collection of objects.
+func (c *FakeMySQLs) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(mysqlsResource, c.ns, listOptions)
+
+	_, err := c.Fake.Invokes(action, &v1alpha1.MySQLList{})
+	return err
 }
 
 // Patch applies the patch and returns the patched mySQL.

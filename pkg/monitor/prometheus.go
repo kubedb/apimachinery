@@ -11,17 +11,17 @@ import (
 	apiextensionsclient "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	cgerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	clientset "k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/kubernetes"
 )
 
 type PrometheusController struct {
-	kubeClient        clientset.Interface
+	kubeClient        kubernetes.Interface
 	apiExtKubeClient  apiextensionsclient.Interface
 	promClient        prom.MonitoringV1alpha1Interface
 	operatorNamespace string
 }
 
-func NewPrometheusController(kubeClient clientset.Interface, apiExtKubeClient apiextensionsclient.Interface, promClient prom.MonitoringV1alpha1Interface, operatorNamespace string) Monitor {
+func NewPrometheusController(kubeClient kubernetes.Interface, apiExtKubeClient apiextensionsclient.Interface, promClient prom.MonitoringV1alpha1Interface, operatorNamespace string) Monitor {
 	return &PrometheusController{
 		kubeClient:        kubeClient,
 		apiExtKubeClient:  apiExtKubeClient,

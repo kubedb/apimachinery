@@ -13,7 +13,7 @@ const (
 	ResourceTypeMySQL = "mysqls"
 )
 
-// +genclient=true
+// +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // Mysql defines a Mysql database.
