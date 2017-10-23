@@ -9,7 +9,7 @@ DOCKER_REPO_ROOT="/go/src/$PACKAGE_NAME"
 
 pushd $REPO_ROOT
 
-## Generate ugorji stuff
+## Remove ugorji stuff
 rm "$REPO_ROOT"/apis/kubedb/v1alpha1/*.generated.go
 
 # Generate defaults
