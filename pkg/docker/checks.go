@@ -2,7 +2,6 @@ package docker
 
 import (
 	"net/http"
-
 	docker "github.com/heroku/docker-registry-client/registry"
 )
 

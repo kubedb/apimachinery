@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-
 	"github.com/appscode/kutil"
 	"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -21,6 +20,10 @@ func AssignTypeKind(v interface{}) error {
 
 	switch u := v.(type) {
 	case *v1alpha1.Postgres:
+		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
+		u.Kind = kutil.GetKind(v)
+		return nil
+	case *v1alpha1.MySQL:
 		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
 		u.Kind = kutil.GetKind(v)
 		return nil

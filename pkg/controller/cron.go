@@ -5,19 +5,18 @@ import (
 	"fmt"
 	"sync"
 	"time"
-
 	"github.com/appscode/go/log"
 	tapi "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
 	tcs "github.com/k8sdb/apimachinery/client/typed/kubedb/v1alpha1"
 	"github.com/k8sdb/apimachinery/pkg/eventer"
 	cmap "github.com/orcaman/concurrent-map"
 	"gopkg.in/robfig/cron.v2"
-	core "k8s.io/api/core/v1"
+core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/kubernetes"
+"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/record"
 )
 

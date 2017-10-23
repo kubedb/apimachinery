@@ -21,7 +21,7 @@ limitations under the License.
 package kubedb
 
 import (
-	core_v1 "k8s.io/api/core/v1"
+core "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -417,7 +417,7 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(core_v1.PersistentVolumeClaimSpec)
+			*out = new(core.PersistentVolumeClaimSpec)
 			(*in).DeepCopyInto(*out)
 		}
 	}
@@ -461,13 +461,13 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(core_v1.Affinity)
+			*out = new(core.Affinity)
 			(*in).DeepCopyInto(*out)
 		}
 	}
 	if in.Tolerations != nil {
 		in, out := &in.Tolerations, &out.Tolerations
-		*out = make([]core_v1.Toleration, len(*in))
+		*out = make([]core.Toleration, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
@@ -940,7 +940,7 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(core_v1.PersistentVolumeClaimSpec)
+			*out = new(core.PersistentVolumeClaimSpec)
 			(*in).DeepCopyInto(*out)
 		}
 	}
@@ -949,7 +949,7 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(core_v1.SecretVolumeSource)
+			*out = new(core.SecretVolumeSource)
 			(*in).DeepCopyInto(*out)
 		}
 	}
@@ -993,13 +993,13 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(core_v1.Affinity)
+			*out = new(core.Affinity)
 			(*in).DeepCopyInto(*out)
 		}
 	}
 	if in.Tolerations != nil {
 		in, out := &in.Tolerations, &out.Tolerations
-		*out = make([]core_v1.Toleration, len(*in))
+		*out = make([]core.Toleration, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
