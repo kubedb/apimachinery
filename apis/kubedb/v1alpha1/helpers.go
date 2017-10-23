@@ -21,6 +21,9 @@ const (
 	ElasticsearchKey             = ResourceTypeElasticsearch + "." + GenericKey
 	ElasticsearchDatabaseVersion = ElasticsearchKey + "/version"
 
+	MySQLKey             = ResourceTypeMySQL + "." + GenericKey
+	MySQLDatabaseVersion = MySQLKey + "/version"
+
 	XdbKey             = ResourceTypeXdb + "." + GenericKey
 	XdbDatabaseVersion = XdbKey + "/version"
 
@@ -29,10 +32,12 @@ const (
 
 	PostgresInitSpec      = PostgresKey + "/init"
 	ElasticsearchInitSpec = ElasticsearchKey + "/init"
+	MySQLInitSpec         = MySQLKey + "/init"
 	XdbInitSpec           = XdbKey + "/init"
 
 	PostgresIgnore      = PostgresKey + "/ignore"
 	ElasticsearchIgnore = ElasticsearchKey + "/ignore"
+	MySQLIgnore         = MySQLKey + "/ignore"
 	XdbIgnore           = XdbKey + "/ignore"
 )
 
@@ -89,6 +94,54 @@ func (p Postgres) ResourceName() string {
 
 func (p Postgres) ResourceType() string {
 	return ResourceTypePostgres
+}
+
+func (m MySQL) OffshootName() string {
+	return m.Name
+}
+
+func (m MySQL) OffshootLabels() map[string]string {
+	return map[string]string{
+		LabelDatabaseName: m.Name,
+		LabelDatabaseKind: ResourceKindMySQL,
+	}
+}
+
+func (m MySQL) StatefulSetLabels() map[string]string {
+	labels := m.OffshootLabels()
+	for key, val := range m.Labels {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MySQLKey+"/") {
+			labels[key] = val
+		}
+	}
+	return labels
+}
+
+func (m MySQL) StatefulSetAnnotations() map[string]string {
+	annotations := make(map[string]string)
+	for key, val := range m.Annotations {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MySQLKey+"/") {
+			annotations[key] = val
+		}
+	}
+	annotations[MySQLDatabaseVersion] = string(m.Spec.Version)
+	return annotations
+}
+
+func (m MySQL) ResourceCode() string {
+	return ResourceCodeMySQL
+}
+
+func (m MySQL) ResourceKind() string {
+	return ResourceKindMySQL
+}
+
+func (m MySQL) ResourceName() string {
+	return ResourceNameMySQL
+}
+
+func (m MySQL) ResourceType() string {
+	return ResourceTypeMySQL
 }
 
 func (e Elasticsearch) OffshootName() string {

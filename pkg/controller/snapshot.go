@@ -21,7 +21,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
-	clientset "k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
 )
@@ -35,7 +35,7 @@ type Snapshotter interface {
 
 type SnapshotController struct {
 	// Kubernetes client
-	client clientset.Interface
+	client kubernetes.Interface
 	// Api Extension Client
 	apiExtKubeClient apiextensionsclient.Interface
 	// ThirdPartyExtension client
@@ -52,7 +52,7 @@ type SnapshotController struct {
 
 // NewSnapshotController creates a new SnapshotController
 func NewSnapshotController(
-	client clientset.Interface,
+	client kubernetes.Interface,
 	apiExtKubeClient apiextensionsclient.Interface,
 	extClient tcs.KubedbV1alpha1Interface,
 	snapshoter Snapshotter,

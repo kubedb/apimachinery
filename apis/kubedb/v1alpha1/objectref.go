@@ -38,6 +38,17 @@ func (e Elasticsearch) ObjectReference() *core.ObjectReference {
 	}
 }
 
+func (m MySQL) ObjectReference() *core.ObjectReference {
+	return &core.ObjectReference{
+		APIVersion:      SchemeGroupVersion.String(),
+		Kind:            ResourceKindMySQL,
+		Namespace:       m.Namespace,
+		Name:            m.Name,
+		UID:             m.UID,
+		ResourceVersion: m.ResourceVersion,
+	}
+}
+
 func (s Xdb) ObjectReference() *core.ObjectReference {
 	return &core.ObjectReference{
 		APIVersion:      SchemeGroupVersion.String(),
@@ -67,6 +78,8 @@ func ObjectReferenceFor(obj runtime.Object) *core.ObjectReference {
 	case *Postgres:
 		return u.ObjectReference()
 	case *Elasticsearch:
+		return u.ObjectReference()
+	case *MySQL:
 		return u.ObjectReference()
 	case *Snapshot:
 		return u.ObjectReference()

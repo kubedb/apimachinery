@@ -34,6 +34,14 @@ type ElasticsearchListerExpansion interface{}
 // ElasticsearchNamespaceLister.
 type ElasticsearchNamespaceListerExpansion interface{}
 
+// MySQLListerExpansion allows custom methods to be added to
+// MySQLLister.
+type MySQLListerExpansion interface{}
+
+// MySQLNamespaceListerExpansion allows custom methods to be added to
+// MySQLNamespaceLister.
+type MySQLNamespaceListerExpansion interface{}
+
 // PostgresListerExpansion allows custom methods to be added to
 // PostgresLister.
 type PostgresListerExpansion interface{}

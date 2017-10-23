@@ -17,7 +17,7 @@ import (
 	apiextensionsclient "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	clientset "k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
 )
@@ -35,7 +35,7 @@ type Deleter interface {
 
 type DormantDbController struct {
 	// Kubernetes client
-	client clientset.Interface
+	client kubernetes.Interface
 	// Api Extension Client
 	apiExtKubeClient apiextensionsclient.Interface
 	// ThirdPartyExtension client
@@ -52,7 +52,7 @@ type DormantDbController struct {
 
 // NewDormantDbController creates a new DormantDatabase Controller
 func NewDormantDbController(
-	client clientset.Interface,
+	client kubernetes.Interface,
 	apiExtKubeClient apiextensionsclient.Interface,
 	extClient tcs.KubedbV1alpha1Interface,
 	deleter Deleter,

@@ -10,10 +10,10 @@ import (
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	clientset "k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/kubernetes"
 )
 
-func ValidateStorage(client clientset.Interface, spec *core.PersistentVolumeClaimSpec) error {
+func ValidateStorage(client kubernetes.Interface, spec *core.PersistentVolumeClaimSpec) error {
 	if spec == nil {
 		return nil
 	}
@@ -38,7 +38,7 @@ func ValidateStorage(client clientset.Interface, spec *core.PersistentVolumeClai
 	return nil
 }
 
-func ValidateBackupSchedule(client clientset.Interface, spec *tapi.BackupScheduleSpec, namespace string) error {
+func ValidateBackupSchedule(client kubernetes.Interface, spec *tapi.BackupScheduleSpec, namespace string) error {
 	if spec == nil {
 		return nil
 	}
@@ -50,7 +50,7 @@ func ValidateBackupSchedule(client clientset.Interface, spec *tapi.BackupSchedul
 	return ValidateSnapshotSpec(client, spec.SnapshotStorageSpec, namespace)
 }
 
-func ValidateSnapshotSpec(client clientset.Interface, spec tapi.SnapshotStorageSpec, namespace string) error {
+func ValidateSnapshotSpec(client kubernetes.Interface, spec tapi.SnapshotStorageSpec, namespace string) error {
 	// BucketName can't be empty
 	if spec.S3 == nil && spec.GCS == nil && spec.Azure == nil && spec.Swift == nil && spec.Local == nil {
 		return errors.New("No storage provider is configured.")

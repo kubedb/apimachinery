@@ -9,7 +9,7 @@ DOCKER_REPO_ROOT="/go/src/$PACKAGE_NAME"
 
 pushd $REPO_ROOT
 
-## Generate ugorji stuff
+## Remove ugorji stuff
 rm "$REPO_ROOT"/apis/kubedb/v1alpha1/*.generated.go
 
 # Generate defaults
@@ -46,6 +46,16 @@ docker run --rm -ti -u $(id -u):$(id -g) \
     --input-dirs "$PACKAGE_NAME/apis/kubedb" \
     --input-dirs "$PACKAGE_NAME/apis/kubedb/v1alpha1" \
     --output-file-base zz_generated.conversion
+
+# Generate openapi
+docker run --rm -ti -u $(id -u):$(id -g) \
+    -v "$REPO_ROOT":"$DOCKER_REPO_ROOT" \
+    -w "$DOCKER_REPO_ROOT" \
+    appscode/gengo:release-1.8 openapi-gen \
+    --v 1 --logtostderr \
+    --go-header-file "hack/gengo/boilerplate.go.txt" \
+    --input-dirs "$PACKAGE_NAME/apis/kubedb/v1alpha1" \
+    --output-package "$PACKAGE_NAME/apis/kubedb/v1alpha1"
 
 # Generate the internal clientset (client/clientset_generated/internalclientset)
 docker run --rm -ti -u $(id -u):$(id -g) \

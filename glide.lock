@@ -1,5 +1,5 @@
 hash: 497b439d10a30f1b0f7a4816481d7c67eb1e24e4c57149d6a4f886c3d0f4bc70
-updated: 2017-10-21T14:50:54.336672274-07:00
+updated: 2017-10-22T22:50:08.74051917-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -17,11 +17,13 @@ imports:
   - types
   - wait
 - name: github.com/appscode/kutil
-  version: eabdb551c80fc478815f57bb45dfe5fe622a0d8b
+  version: 4d8a2fab71adaeb35394044fae59b03735ea4e39
   subpackages:
   - apps/v1beta1
 - name: github.com/appscode/log
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
+- name: github.com/appscode/mergo
+  version: e3000cb3d28c72b837601cac94debd91032d19fe
 - name: github.com/appscode/osm
   version: c4eb9d9f2fa11a22cd4b5f358afa5c89245059b4
   subpackages:
@@ -70,7 +72,7 @@ imports:
   - autorest/azure
   - autorest/date
 - name: github.com/coreos/prometheus-operator
-  version: d239e39e68ac8068ecdfb6854697f1bee777644e
+  version: cbdd1b519796673cd02d53b0e21999acbcbfe6e4
   repo: https://github.com/appscode/prometheus-operator.git
   vcs: git
   subpackages:
@@ -139,7 +141,7 @@ imports:
 - name: github.com/google/uuid
   version: e367a344cbe8e08149f9951115dc299ebd42b919
 - name: github.com/googleapis/gnostic
-  version: 0c5108395e2debce0d731cf0287ddf7242066aba
+  version: 68f4ded48ba9414dab2ae69b3f0d69971da73aa5
   subpackages:
   - OpenAPIv2
   - compiler
@@ -199,7 +201,7 @@ imports:
 - name: github.com/peterbourgon/diskv
   version: 5f041e8faa004a95c88a202771f4cc3e991971e6
 - name: github.com/pkg/errors
-  version: a22138067af1c4942683050411a841ade67fe1eb
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/PuerkitoBio/purell
   version: 8a290539e2e8629dbc4e6bad948158f790ec31f4
 - name: github.com/PuerkitoBio/urlesc
@@ -259,7 +261,7 @@ imports:
   - googleapi/internal/uritemplates
   - storage/v1
 - name: google.golang.org/appengine
-  version: 12d5545dc1cfa6047a286d5e853841b6471f4c19
+  version: 4f7eeb5305a4ba1966344836ba4af9996b7b4e05
   subpackages:
   - internal
   - internal/app_identity
