@@ -2,8 +2,8 @@ package eventer
 
 import (
 	"github.com/appscode/go/log"
-core "k8s.io/api/core/v1"
-"k8s.io/client-go/kubernetes"
+	core "k8s.io/api/core/v1"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/record"
 )

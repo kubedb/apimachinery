@@ -21,11 +21,12 @@ limitations under the License.
 package v1alpha1
 
 import (
-core "k8s.io/api/core/v1"
+	reflect "reflect"
+
+	core_v1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
 	runtime "k8s.io/apimachinery/pkg/runtime"
-	reflect "reflect"
 )
 
 func init() {
@@ -417,7 +418,7 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(core.PersistentVolumeClaimSpec)
+			*out = new(core_v1.PersistentVolumeClaimSpec)
 			(*in).DeepCopyInto(*out)
 		}
 	}
@@ -461,13 +462,13 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(core.Affinity)
+			*out = new(core_v1.Affinity)
 			(*in).DeepCopyInto(*out)
 		}
 	}
 	if in.Tolerations != nil {
 		in, out := &in.Tolerations, &out.Tolerations
-		*out = make([]core.Toleration, len(*in))
+		*out = make([]core_v1.Toleration, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
@@ -678,7 +679,7 @@ func (in *MySQLSpec) DeepCopyInto(out *MySQLSpec) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(unnameable_Unsupported)
+			*out = new(core_v1.PersistentVolumeClaimSpec)
 			(*in).DeepCopyInto(*out)
 		}
 	}
@@ -687,7 +688,7 @@ func (in *MySQLSpec) DeepCopyInto(out *MySQLSpec) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(unnameable_Unsupported)
+			*out = new(core_v1.SecretVolumeSource)
 			(*in).DeepCopyInto(*out)
 		}
 	}
@@ -725,21 +726,21 @@ func (in *MySQLSpec) DeepCopyInto(out *MySQLSpec) {
 			(*in).DeepCopyInto(*out)
 		}
 	}
-	out.Resources = in.Resources.DeepCopy()
+	in.Resources.DeepCopyInto(&out.Resources)
 	if in.Affinity != nil {
 		in, out := &in.Affinity, &out.Affinity
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(unnameable_Unsupported)
+			*out = new(core_v1.Affinity)
 			(*in).DeepCopyInto(*out)
 		}
 	}
 	if in.Tolerations != nil {
 		in, out := &in.Tolerations, &out.Tolerations
-		*out = make([]unnameable_Unsupported, len(*in))
+		*out = make([]core_v1.Toleration, len(*in))
 		for i := range *in {
-			(*out)[i] = (*in)[i].DeepCopy()
+			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
 	return
@@ -940,7 +941,7 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(core.PersistentVolumeClaimSpec)
+			*out = new(core_v1.PersistentVolumeClaimSpec)
 			(*in).DeepCopyInto(*out)
 		}
 	}
@@ -949,7 +950,7 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(core.SecretVolumeSource)
+			*out = new(core_v1.SecretVolumeSource)
 			(*in).DeepCopyInto(*out)
 		}
 	}
@@ -993,13 +994,13 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(core.Affinity)
+			*out = new(core_v1.Affinity)
 			(*in).DeepCopyInto(*out)
 		}
 	}
 	if in.Tolerations != nil {
 		in, out := &in.Tolerations, &out.Tolerations
-		*out = make([]core.Toleration, len(*in))
+		*out = make([]core_v1.Toleration, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}

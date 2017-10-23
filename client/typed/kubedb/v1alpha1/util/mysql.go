@@ -3,6 +3,7 @@ package util
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/appscode/kutil"
 	"github.com/golang/glog"
 	aci "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
@@ -13,10 +14,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/jsonmergepatch"
 	"k8s.io/apimachinery/pkg/util/wait"
 )
-
-func EnsureMySQL(c tcs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, transform func(alert *aci.MySQL) *aci.MySQL) (*aci.MySQL, error) {
-	return CreateOrPatchMySQL(c, meta, transform)
-}
 
 func CreateOrPatchMySQL(c tcs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, transform func(alert *aci.MySQL) *aci.MySQL) (*aci.MySQL, error) {
 	cur, err := c.MySQLs(meta.Namespace).Get(meta.Name, metav1.GetOptions{})

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
+
 	"github.com/appscode/go/log"
 	"github.com/hashicorp/go-version"
 	aci "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
@@ -16,7 +17,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/wait"
-"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/kubernetes"
 )
 
 type migrationState struct {
