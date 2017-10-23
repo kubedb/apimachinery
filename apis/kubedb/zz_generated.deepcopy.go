@@ -270,6 +270,14 @@ func DeepCopy_kubedb_ElasticsearchSpec(in interface{}, out interface{}, c *conve
 				*out = newVal.(*v1.SecretVolumeSource)
 			}
 		}
+		if in.AuthSecret != nil {
+			in, out := &in.AuthSecret, &out.AuthSecret
+			if newVal, err := c.DeepCopy(*in); err != nil {
+				return err
+			} else {
+				*out = newVal.(*v1.SecretVolumeSource)
+			}
+		}
 		if in.Storage != nil {
 			in, out := &in.Storage, &out.Storage
 			if newVal, err := c.DeepCopy(*in); err != nil {

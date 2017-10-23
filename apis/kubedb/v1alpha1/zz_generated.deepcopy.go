@@ -270,6 +270,14 @@ func DeepCopy_v1alpha1_ElasticsearchSpec(in interface{}, out interface{}, c *con
 				*out = newVal.(*v1.SecretVolumeSource)
 			}
 		}
+		if in.AuthSecret != nil {
+			in, out := &in.AuthSecret, &out.AuthSecret
+			if newVal, err := c.DeepCopy(*in); err != nil {
+				return err
+			} else {
+				*out = newVal.(*v1.SecretVolumeSource)
+			}
+		}
 		if in.Storage != nil {
 			in, out := &in.Storage, &out.Storage
 			if newVal, err := c.DeepCopy(*in); err != nil {

@@ -34,6 +34,8 @@ type ElasticsearchSpec struct {
 	EnableSSL bool `json:"enableSSL,omitempty"`
 	// Secret with SSL certificates
 	CertificateSecret *apiv1.SecretVolumeSource `json:"certificateSecret,omitempty"`
+	// Secret for SearchGuard authentication
+	AuthSecret *apiv1.SecretVolumeSource `json:"authSecret,omitempty"`
 	// Storage to specify how storage shall be used.
 	Storage *apiv1.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 	// NodeSelector is a selector which must be true for the pod to fit on a node
