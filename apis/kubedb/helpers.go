@@ -24,8 +24,8 @@ const (
 	MySQLKey             = ResourceTypeMySQL + "." + GenericKey
 	MySQLDatabaseVersion = MySQLKey + "/version"
 
-	XdbKey             = ResourceTypeXdb + "." + GenericKey
-	XdbDatabaseVersion = XdbKey + "/version"
+	MongoDBKey             = ResourceTypeMongoDB + "." + GenericKey
+	MongoDBDatabaseVersion = MongoDBKey + "/version"
 
 	SnapshotKey         = ResourceTypeSnapshot + "." + GenericKey
 	LabelSnapshotStatus = SnapshotKey + "/status"
@@ -33,12 +33,12 @@ const (
 	PostgresInitSpec      = PostgresKey + "/init"
 	ElasticsearchInitSpec = ElasticsearchKey + "/init"
 	MySQLInitSpec         = MySQLKey + "/init"
-	XdbInitSpec           = XdbKey + "/init"
+	MongoDBInitSpec       = MongoDBKey + "/init"
 
 	PostgresIgnore      = PostgresKey + "/ignore"
 	ElasticsearchIgnore = ElasticsearchKey + "/ignore"
 	MySQLIgnore         = MySQLKey + "/ignore"
-	XdbIgnore           = XdbKey + "/ignore"
+	MongoDBIgnore       = MongoDBKey + "/ignore"
 )
 
 type RuntimeObject interface {

@@ -49,10 +49,10 @@ func (m MySQL) ObjectReference() *core.ObjectReference {
 	}
 }
 
-func (s Xdb) ObjectReference() *core.ObjectReference {
+func (s MongoDB) ObjectReference() *core.ObjectReference {
 	return &core.ObjectReference{
 		APIVersion:      SchemeGroupVersion.String(),
-		Kind:            ResourceKindXdb,
+		Kind:            ResourceKindMongoDB,
 		Namespace:       s.Namespace,
 		Name:            s.Name,
 		UID:             s.UID,
@@ -83,7 +83,7 @@ func ObjectReferenceFor(obj runtime.Object) *core.ObjectReference {
 		return u.ObjectReference()
 	case *Snapshot:
 		return u.ObjectReference()
-	case *Xdb:
+	case *MongoDB:
 		return u.ObjectReference()
 	}
 	return &core.ObjectReference{}

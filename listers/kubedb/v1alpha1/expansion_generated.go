@@ -34,6 +34,14 @@ type ElasticsearchListerExpansion interface{}
 // ElasticsearchNamespaceLister.
 type ElasticsearchNamespaceListerExpansion interface{}
 
+// MongoDBListerExpansion allows custom methods to be added to
+// MongoDBLister.
+type MongoDBListerExpansion interface{}
+
+// MongoDBNamespaceListerExpansion allows custom methods to be added to
+// MongoDBNamespaceLister.
+type MongoDBNamespaceListerExpansion interface{}
+
 // MySQLListerExpansion allows custom methods to be added to
 // MySQLLister.
 type MySQLListerExpansion interface{}
@@ -57,11 +65,3 @@ type SnapshotListerExpansion interface{}
 // SnapshotNamespaceListerExpansion allows custom methods to be added to
 // SnapshotNamespaceLister.
 type SnapshotNamespaceListerExpansion interface{}
-
-// XdbListerExpansion allows custom methods to be added to
-// XdbLister.
-type XdbListerExpansion interface{}
-
-// XdbNamespaceListerExpansion allows custom methods to be added to
-// XdbNamespaceLister.
-type XdbNamespaceListerExpansion interface{}

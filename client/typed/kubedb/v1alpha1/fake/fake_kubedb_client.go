@@ -34,6 +34,10 @@ func (c *FakeKubedbV1alpha1) Elasticsearchs(namespace string) v1alpha1.Elasticse
 	return &FakeElasticsearchs{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha1) MongoDBs(namespace string) v1alpha1.MongoDBInterface {
+	return &FakeMongoDBs{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha1) MySQLs(namespace string) v1alpha1.MySQLInterface {
 	return &FakeMySQLs{c, namespace}
 }
@@ -44,10 +48,6 @@ func (c *FakeKubedbV1alpha1) Postgreses(namespace string) v1alpha1.PostgresInter
 
 func (c *FakeKubedbV1alpha1) Snapshots(namespace string) v1alpha1.SnapshotInterface {
 	return &FakeSnapshots{c, namespace}
-}
-
-func (c *FakeKubedbV1alpha1) Xdbs(namespace string) v1alpha1.XdbInterface {
-	return &FakeXdbs{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

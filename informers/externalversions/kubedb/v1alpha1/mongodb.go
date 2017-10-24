@@ -30,44 +30,44 @@ import (
 	time "time"
 )
 
-// XdbInformer provides access to a shared informer and lister for
-// Xdbs.
-type XdbInformer interface {
+// MongoDBInformer provides access to a shared informer and lister for
+// MongoDBs.
+type MongoDBInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.XdbLister
+	Lister() v1alpha1.MongoDBLister
 }
 
-type xdbInformer struct {
+type mongoDBInformer struct {
 	factory internalinterfaces.SharedInformerFactory
 }
 
-// NewXdbInformer constructs a new informer for Xdb type.
+// NewMongoDBInformer constructs a new informer for MongoDB type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewXdbInformer(client client.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+func NewMongoDBInformer(client client.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
-				return client.KubedbV1alpha1().Xdbs(namespace).List(options)
+				return client.KubedbV1alpha1().MongoDBs(namespace).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
-				return client.KubedbV1alpha1().Xdbs(namespace).Watch(options)
+				return client.KubedbV1alpha1().MongoDBs(namespace).Watch(options)
 			},
 		},
-		&kubedb_v1alpha1.Xdb{},
+		&kubedb_v1alpha1.MongoDB{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func defaultXdbInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewXdbInformer(client, v1.NamespaceAll, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc})
+func defaultMongoDBInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewMongoDBInformer(client, v1.NamespaceAll, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc})
 }
 
-func (f *xdbInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedb_v1alpha1.Xdb{}, defaultXdbInformer)
+func (f *mongoDBInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&kubedb_v1alpha1.MongoDB{}, defaultMongoDBInformer)
 }
 
-func (f *xdbInformer) Lister() v1alpha1.XdbLister {
-	return v1alpha1.NewXdbLister(f.Informer().GetIndexer())
+func (f *mongoDBInformer) Lister() v1alpha1.MongoDBLister {
+	return v1alpha1.NewMongoDBLister(f.Informer().GetIndexer())
 }

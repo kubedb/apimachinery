@@ -28,14 +28,14 @@ type Interface interface {
 	DormantDatabases() DormantDatabaseInformer
 	// Elasticsearchs returns a ElasticsearchInformer.
 	Elasticsearchs() ElasticsearchInformer
+	// MongoDBs returns a MongoDBInformer.
+	MongoDBs() MongoDBInformer
 	// MySQLs returns a MySQLInformer.
 	MySQLs() MySQLInformer
 	// Postgreses returns a PostgresInformer.
 	Postgreses() PostgresInformer
 	// Snapshots returns a SnapshotInformer.
 	Snapshots() SnapshotInformer
-	// Xdbs returns a XdbInformer.
-	Xdbs() XdbInformer
 }
 
 type version struct {
@@ -57,6 +57,11 @@ func (v *version) Elasticsearchs() ElasticsearchInformer {
 	return &elasticsearchInformer{factory: v.SharedInformerFactory}
 }
 
+// MongoDBs returns a MongoDBInformer.
+func (v *version) MongoDBs() MongoDBInformer {
+	return &mongoDBInformer{factory: v.SharedInformerFactory}
+}
+
 // MySQLs returns a MySQLInformer.
 func (v *version) MySQLs() MySQLInformer {
 	return &mySQLInformer{factory: v.SharedInformerFactory}
@@ -70,9 +75,4 @@ func (v *version) Postgreses() PostgresInformer {
 // Snapshots returns a SnapshotInformer.
 func (v *version) Snapshots() SnapshotInformer {
 	return &snapshotInformer{factory: v.SharedInformerFactory}
-}
-
-// Xdbs returns a XdbInformer.
-func (v *version) Xdbs() XdbInformer {
-	return &xdbInformer{factory: v.SharedInformerFactory}
 }

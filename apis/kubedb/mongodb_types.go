@@ -1,32 +1,33 @@
-package v1alpha1
+package kubedb
 
 import (
+	"github.com/appscode/go/encoding/json/types"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
-	ResourceCodeXdb = "x"
-	ResourceKindXdb = "Xdb"
-	ResourceNameXdb = "xdb"
-	ResourceTypeXdb = "xdbs"
+	ResourceCodeMongoDB = "mn"
+	ResourceKindMongoDB = "MongoDB"
+	ResourceNameMongoDB = "mongodb"
+	ResourceTypeMongoDB = "mongodbs"
 )
 
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// Xdb defines a Xdb database.
-type Xdb struct {
+// MongoDB defines a MongoDB database.
+type MongoDB struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              XdbSpec   `json:"spec,omitempty"`
-	Status            XdbStatus `json:"status,omitempty"`
+	Spec              MongoDBSpec   `json:"spec,omitempty"`
+	Status            MongoDBStatus `json:"status,omitempty"`
 }
 
-type XdbSpec struct {
-	// Version of Xdb to be deployed.
-	Version string `json:"version,omitempty"`
-	// Number of instances to deploy for a Xdb database.
+type MongoDBSpec struct {
+	// Version of MongoDB to be deployed.
+	Version types.StrYo `json:"version,omitempty"`
+	// Number of instances to deploy for a MongoDB database.
 	Replicas int32 `json:"replicas,omitempty"`
 	// Storage spec to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
@@ -62,7 +63,7 @@ type XdbSpec struct {
 	Tolerations []core.Toleration `json:"tolerations,omitempty" protobuf:"bytes,22,opt,name=tolerations"`
 }
 
-type XdbStatus struct {
+type MongoDBStatus struct {
 	CreationTime *metav1.Time  `json:"creationTime,omitempty"`
 	Phase        DatabasePhase `json:"phase,omitempty"`
 	Reason       string        `json:"reason,omitempty"`
@@ -70,9 +71,9 @@ type XdbStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type XdbList struct {
+type MongoDBList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	// Items is a list of Xdb TPR objects
-	Items []*Xdb `json:"items,omitempty"`
+	// Items is a list of MongoDB TPR objects
+	Items []*MongoDB `json:"items,omitempty"`
 }

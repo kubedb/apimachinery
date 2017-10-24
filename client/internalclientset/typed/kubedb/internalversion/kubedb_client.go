@@ -25,10 +25,10 @@ type KubedbInterface interface {
 	RESTClient() rest.Interface
 	DormantDatabasesGetter
 	ElasticsearchsGetter
+	MongoDBsGetter
 	MySQLsGetter
 	PostgresesGetter
 	SnapshotsGetter
-	XdbsGetter
 }
 
 // KubedbClient is used to interact with features provided by the kubedb.com group.
@@ -44,6 +44,10 @@ func (c *KubedbClient) Elasticsearchs(namespace string) ElasticsearchInterface {
 	return newElasticsearchs(c, namespace)
 }
 
+func (c *KubedbClient) MongoDBs(namespace string) MongoDBInterface {
+	return newMongoDBs(c, namespace)
+}
+
 func (c *KubedbClient) MySQLs(namespace string) MySQLInterface {
 	return newMySQLs(c, namespace)
 }
@@ -54,10 +58,6 @@ func (c *KubedbClient) Postgreses(namespace string) PostgresInterface {
 
 func (c *KubedbClient) Snapshots(namespace string) SnapshotInterface {
 	return newSnapshots(c, namespace)
-}
-
-func (c *KubedbClient) Xdbs(namespace string) XdbInterface {
-	return newXdbs(c, namespace)
 }
 
 // NewForConfig creates a new KubedbClient for the given config.
