@@ -1,5 +1,5 @@
 hash: 497b439d10a30f1b0f7a4816481d7c67eb1e24e4c57149d6a4f886c3d0f4bc70
-updated: 2017-10-22T22:50:08.74051917-07:00
+updated: 2017-10-23T16:00:19.993047018-07:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -76,7 +76,7 @@ imports:
   repo: https://github.com/appscode/prometheus-operator.git
   vcs: git
   subpackages:
-  - pkg/client/monitoring/v1alpha1
+  - pkg/client/monitoring/v1
 - name: github.com/davecgh/go-spew
   version: 782f4967f2dc4564575ca782fe2d04090b5faca8
   subpackages:
@@ -201,7 +201,7 @@ imports:
 - name: github.com/peterbourgon/diskv
   version: 5f041e8faa004a95c88a202771f4cc3e991971e6
 - name: github.com/pkg/errors
-  version: 645ef00459ed84a119197bfb8d8205042c6df63d
+  version: a22138067af1c4942683050411a841ade67fe1eb
 - name: github.com/PuerkitoBio/purell
   version: 8a290539e2e8629dbc4e6bad948158f790ec31f4
 - name: github.com/PuerkitoBio/urlesc
@@ -254,7 +254,7 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: 7afc123cf726cd2f253faa3e144d2ab65477b18f
+  version: 1575df15c1bb8b18ad4d9bc5ca495cc85b0764fe
   subpackages:
   - gensupport
   - googleapi
@@ -312,7 +312,6 @@ imports:
   subpackages:
   - pkg/apis/apiextensions
   - pkg/apis/apiextensions/v1beta1
-  - pkg/client/clientset/clientset
   - pkg/client/clientset/clientset/scheme
   - pkg/client/clientset/clientset/typed/apiextensions/v1beta1
 - name: k8s.io/apimachinery
