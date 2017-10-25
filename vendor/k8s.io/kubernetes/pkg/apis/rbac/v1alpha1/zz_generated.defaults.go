@@ -21,7 +21,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "k8s.io/api/rbac/v1alpha1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -29,16 +28,14 @@ import (
 // Public to allow building arbitrary schemes.
 // All generated defaulters are covering - they call all nested defaulters.
 func RegisterDefaults(scheme *runtime.Scheme) error {
-	scheme.AddTypeDefaultingFunc(&v1alpha1.ClusterRoleBinding{}, func(obj interface{}) { SetObjectDefaults_ClusterRoleBinding(obj.(*v1alpha1.ClusterRoleBinding)) })
-	scheme.AddTypeDefaultingFunc(&v1alpha1.ClusterRoleBindingList{}, func(obj interface{}) {
-		SetObjectDefaults_ClusterRoleBindingList(obj.(*v1alpha1.ClusterRoleBindingList))
-	})
-	scheme.AddTypeDefaultingFunc(&v1alpha1.RoleBinding{}, func(obj interface{}) { SetObjectDefaults_RoleBinding(obj.(*v1alpha1.RoleBinding)) })
-	scheme.AddTypeDefaultingFunc(&v1alpha1.RoleBindingList{}, func(obj interface{}) { SetObjectDefaults_RoleBindingList(obj.(*v1alpha1.RoleBindingList)) })
+	scheme.AddTypeDefaultingFunc(&ClusterRoleBinding{}, func(obj interface{}) { SetObjectDefaults_ClusterRoleBinding(obj.(*ClusterRoleBinding)) })
+	scheme.AddTypeDefaultingFunc(&ClusterRoleBindingList{}, func(obj interface{}) { SetObjectDefaults_ClusterRoleBindingList(obj.(*ClusterRoleBindingList)) })
+	scheme.AddTypeDefaultingFunc(&RoleBinding{}, func(obj interface{}) { SetObjectDefaults_RoleBinding(obj.(*RoleBinding)) })
+	scheme.AddTypeDefaultingFunc(&RoleBindingList{}, func(obj interface{}) { SetObjectDefaults_RoleBindingList(obj.(*RoleBindingList)) })
 	return nil
 }
 
-func SetObjectDefaults_ClusterRoleBinding(in *v1alpha1.ClusterRoleBinding) {
+func SetObjectDefaults_ClusterRoleBinding(in *ClusterRoleBinding) {
 	SetDefaults_ClusterRoleBinding(in)
 	for i := range in.Subjects {
 		a := &in.Subjects[i]
@@ -46,14 +43,14 @@ func SetObjectDefaults_ClusterRoleBinding(in *v1alpha1.ClusterRoleBinding) {
 	}
 }
 
-func SetObjectDefaults_ClusterRoleBindingList(in *v1alpha1.ClusterRoleBindingList) {
+func SetObjectDefaults_ClusterRoleBindingList(in *ClusterRoleBindingList) {
 	for i := range in.Items {
 		a := &in.Items[i]
 		SetObjectDefaults_ClusterRoleBinding(a)
 	}
 }
 
-func SetObjectDefaults_RoleBinding(in *v1alpha1.RoleBinding) {
+func SetObjectDefaults_RoleBinding(in *RoleBinding) {
 	SetDefaults_RoleBinding(in)
 	for i := range in.Subjects {
 		a := &in.Subjects[i]
@@ -61,7 +58,7 @@ func SetObjectDefaults_RoleBinding(in *v1alpha1.RoleBinding) {
 	}
 }
 
-func SetObjectDefaults_RoleBindingList(in *v1alpha1.RoleBindingList) {
+func SetObjectDefaults_RoleBindingList(in *RoleBindingList) {
 	for i := range in.Items {
 		a := &in.Items[i]
 		SetObjectDefaults_RoleBinding(a)

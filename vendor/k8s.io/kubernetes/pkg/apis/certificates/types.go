@@ -18,9 +18,8 @@ package certificates
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-// +genclient
-// +genclient:nonNamespaced
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +genclient=true
+// +nonNamespaced=true
 
 // Describes a certificate signing request
 type CertificateSigningRequest struct {
@@ -102,8 +101,6 @@ type CertificateSigningRequestCondition struct {
 	// +optional
 	LastUpdateTime metav1.Time
 }
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type CertificateSigningRequestList struct {
 	metav1.TypeMeta
