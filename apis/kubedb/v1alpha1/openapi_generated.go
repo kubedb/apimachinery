@@ -331,6 +331,39 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Elasticsearch", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 		},
+		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode": {
+			Schema: spec.Schema{
+				SchemaProps: spec.SchemaProps{
+					Properties: map[string]spec.Schema{
+						"combinedNodeReplicas": {
+							SchemaProps: spec.SchemaProps{
+								Type:   []string{"integer"},
+								Format: "int32",
+							},
+						},
+						"masterNodeReplicas": {
+							SchemaProps: spec.SchemaProps{
+								Type:   []string{"integer"},
+								Format: "int32",
+							},
+						},
+						"dataNodeReplicas": {
+							SchemaProps: spec.SchemaProps{
+								Type:   []string{"integer"},
+								Format: "int32",
+							},
+						},
+						"clientNodeReplicas": {
+							SchemaProps: spec.SchemaProps{
+								Type:   []string{"integer"},
+								Format: "int32",
+							},
+						},
+					},
+				},
+			},
+			Dependencies: []string{},
+		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
@@ -342,11 +375,29 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Format:      "",
 							},
 						},
-						"replicas": {
+						"nodes": {
 							SchemaProps: spec.SchemaProps{
-								Description: "Number of instances to deploy for a Elasticsearch database.",
-								Type:        []string{"integer"},
-								Format:      "int32",
+								Description: "List of elasticsearch node specification.",
+								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
+							},
+						},
+						"enableSSL": {
+							SchemaProps: spec.SchemaProps{
+								Description: "EnableSSL to enable ssl in transport & http layer",
+								Type:        []string{"boolean"},
+								Format:      "",
+							},
+						},
+						"certificateSecret": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Secret with SSL certificates",
+								Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
+							},
+						},
+						"authSecret": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Secret for SearchGuard authentication",
+								Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
 							},
 						},
 						"storage": {
@@ -430,7 +481,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
+				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus": {
 			Schema: spec.Schema{
