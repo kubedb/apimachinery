@@ -59,6 +59,41 @@ func newSnapshots(c *KubedbClient, namespace string) *snapshots {
 	}
 }
 
+// Get takes name of the snapshot, and returns the corresponding snapshot object, and an error if there is any.
+func (c *snapshots) Get(name string, options v1.GetOptions) (result *kubedb.Snapshot, err error) {
+	result = &kubedb.Snapshot{}
+	err = c.client.Get().
+		Namespace(c.ns).
+		Resource("snapshots").
+		Name(name).
+		VersionedParams(&options, scheme.ParameterCodec).
+		Do().
+		Into(result)
+	return
+}
+
+// List takes label and field selectors, and returns the list of Snapshots that match those selectors.
+func (c *snapshots) List(opts v1.ListOptions) (result *kubedb.SnapshotList, err error) {
+	result = &kubedb.SnapshotList{}
+	err = c.client.Get().
+		Namespace(c.ns).
+		Resource("snapshots").
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Do().
+		Into(result)
+	return
+}
+
+// Watch returns a watch.Interface that watches the requested snapshots.
+func (c *snapshots) Watch(opts v1.ListOptions) (watch.Interface, error) {
+	opts.Watch = true
+	return c.client.Get().
+		Namespace(c.ns).
+		Resource("snapshots").
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Watch()
+}
+
 // Create takes the representation of a snapshot and creates it.  Returns the server's representation of the snapshot, and an error, if there is any.
 func (c *snapshots) Create(snapshot *kubedb.Snapshot) (result *kubedb.Snapshot, err error) {
 	result = &kubedb.Snapshot{}
@@ -85,7 +120,7 @@ func (c *snapshots) Update(snapshot *kubedb.Snapshot) (result *kubedb.Snapshot, 
 }
 
 // UpdateStatus was generated because the type contains a Status member.
-// Add a +genclientstatus=false comment above the type to avoid generating UpdateStatus().
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 
 func (c *snapshots) UpdateStatus(snapshot *kubedb.Snapshot) (result *kubedb.Snapshot, err error) {
 	result = &kubedb.Snapshot{}
@@ -120,41 +155,6 @@ func (c *snapshots) DeleteCollection(options *v1.DeleteOptions, listOptions v1.L
 		Body(options).
 		Do().
 		Error()
-}
-
-// Get takes name of the snapshot, and returns the corresponding snapshot object, and an error if there is any.
-func (c *snapshots) Get(name string, options v1.GetOptions) (result *kubedb.Snapshot, err error) {
-	result = &kubedb.Snapshot{}
-	err = c.client.Get().
-		Namespace(c.ns).
-		Resource("snapshots").
-		Name(name).
-		VersionedParams(&options, scheme.ParameterCodec).
-		Do().
-		Into(result)
-	return
-}
-
-// List takes label and field selectors, and returns the list of Snapshots that match those selectors.
-func (c *snapshots) List(opts v1.ListOptions) (result *kubedb.SnapshotList, err error) {
-	result = &kubedb.SnapshotList{}
-	err = c.client.Get().
-		Namespace(c.ns).
-		Resource("snapshots").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Do().
-		Into(result)
-	return
-}
-
-// Watch returns a watch.Interface that watches the requested snapshots.
-func (c *snapshots) Watch(opts v1.ListOptions) (watch.Interface, error) {
-	opts.Watch = true
-	return c.client.Get().
-		Namespace(c.ns).
-		Resource("snapshots").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Watch()
 }
 
 // Patch applies the patch and returns the patched snapshot.

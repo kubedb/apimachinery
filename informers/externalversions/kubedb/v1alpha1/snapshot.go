@@ -41,26 +41,31 @@ type snapshotInformer struct {
 	factory internalinterfaces.SharedInformerFactory
 }
 
-func newSnapshotInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	sharedIndexInformer := cache.NewSharedIndexInformer(
+// NewSnapshotInformer constructs a new informer for Snapshot type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewSnapshotInformer(client client.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
-				return client.KubedbV1alpha1().Snapshots(v1.NamespaceAll).List(options)
+				return client.KubedbV1alpha1().Snapshots(namespace).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
-				return client.KubedbV1alpha1().Snapshots(v1.NamespaceAll).Watch(options)
+				return client.KubedbV1alpha1().Snapshots(namespace).Watch(options)
 			},
 		},
 		&kubedb_v1alpha1.Snapshot{},
 		resyncPeriod,
-		cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
+		indexers,
 	)
+}
 
-	return sharedIndexInformer
+func defaultSnapshotInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewSnapshotInformer(client, v1.NamespaceAll, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc})
 }
 
 func (f *snapshotInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedb_v1alpha1.Snapshot{}, newSnapshotInformer)
+	return f.factory.InformerFor(&kubedb_v1alpha1.Snapshot{}, defaultSnapshotInformer)
 }
 
 func (f *snapshotInformer) Lister() v1alpha1.SnapshotLister {

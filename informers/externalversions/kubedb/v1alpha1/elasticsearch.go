@@ -41,26 +41,31 @@ type elasticsearchInformer struct {
 	factory internalinterfaces.SharedInformerFactory
 }
 
-func newElasticsearchInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	sharedIndexInformer := cache.NewSharedIndexInformer(
+// NewElasticsearchInformer constructs a new informer for Elasticsearch type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewElasticsearchInformer(client client.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
-				return client.KubedbV1alpha1().Elasticsearchs(v1.NamespaceAll).List(options)
+				return client.KubedbV1alpha1().Elasticsearchs(namespace).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
-				return client.KubedbV1alpha1().Elasticsearchs(v1.NamespaceAll).Watch(options)
+				return client.KubedbV1alpha1().Elasticsearchs(namespace).Watch(options)
 			},
 		},
 		&kubedb_v1alpha1.Elasticsearch{},
 		resyncPeriod,
-		cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
+		indexers,
 	)
+}
 
-	return sharedIndexInformer
+func defaultElasticsearchInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewElasticsearchInformer(client, v1.NamespaceAll, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc})
 }
 
 func (f *elasticsearchInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedb_v1alpha1.Elasticsearch{}, newElasticsearchInformer)
+	return f.factory.InformerFor(&kubedb_v1alpha1.Elasticsearch{}, defaultElasticsearchInformer)
 }
 
 func (f *elasticsearchInformer) Lister() v1alpha1.ElasticsearchLister {

@@ -59,6 +59,41 @@ func newDormantDatabases(c *KubedbClient, namespace string) *dormantDatabases {
 	}
 }
 
+// Get takes name of the dormantDatabase, and returns the corresponding dormantDatabase object, and an error if there is any.
+func (c *dormantDatabases) Get(name string, options v1.GetOptions) (result *kubedb.DormantDatabase, err error) {
+	result = &kubedb.DormantDatabase{}
+	err = c.client.Get().
+		Namespace(c.ns).
+		Resource("dormantdatabases").
+		Name(name).
+		VersionedParams(&options, scheme.ParameterCodec).
+		Do().
+		Into(result)
+	return
+}
+
+// List takes label and field selectors, and returns the list of DormantDatabases that match those selectors.
+func (c *dormantDatabases) List(opts v1.ListOptions) (result *kubedb.DormantDatabaseList, err error) {
+	result = &kubedb.DormantDatabaseList{}
+	err = c.client.Get().
+		Namespace(c.ns).
+		Resource("dormantdatabases").
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Do().
+		Into(result)
+	return
+}
+
+// Watch returns a watch.Interface that watches the requested dormantDatabases.
+func (c *dormantDatabases) Watch(opts v1.ListOptions) (watch.Interface, error) {
+	opts.Watch = true
+	return c.client.Get().
+		Namespace(c.ns).
+		Resource("dormantdatabases").
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Watch()
+}
+
 // Create takes the representation of a dormantDatabase and creates it.  Returns the server's representation of the dormantDatabase, and an error, if there is any.
 func (c *dormantDatabases) Create(dormantDatabase *kubedb.DormantDatabase) (result *kubedb.DormantDatabase, err error) {
 	result = &kubedb.DormantDatabase{}
@@ -85,7 +120,7 @@ func (c *dormantDatabases) Update(dormantDatabase *kubedb.DormantDatabase) (resu
 }
 
 // UpdateStatus was generated because the type contains a Status member.
-// Add a +genclientstatus=false comment above the type to avoid generating UpdateStatus().
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 
 func (c *dormantDatabases) UpdateStatus(dormantDatabase *kubedb.DormantDatabase) (result *kubedb.DormantDatabase, err error) {
 	result = &kubedb.DormantDatabase{}
@@ -120,41 +155,6 @@ func (c *dormantDatabases) DeleteCollection(options *v1.DeleteOptions, listOptio
 		Body(options).
 		Do().
 		Error()
-}
-
-// Get takes name of the dormantDatabase, and returns the corresponding dormantDatabase object, and an error if there is any.
-func (c *dormantDatabases) Get(name string, options v1.GetOptions) (result *kubedb.DormantDatabase, err error) {
-	result = &kubedb.DormantDatabase{}
-	err = c.client.Get().
-		Namespace(c.ns).
-		Resource("dormantdatabases").
-		Name(name).
-		VersionedParams(&options, scheme.ParameterCodec).
-		Do().
-		Into(result)
-	return
-}
-
-// List takes label and field selectors, and returns the list of DormantDatabases that match those selectors.
-func (c *dormantDatabases) List(opts v1.ListOptions) (result *kubedb.DormantDatabaseList, err error) {
-	result = &kubedb.DormantDatabaseList{}
-	err = c.client.Get().
-		Namespace(c.ns).
-		Resource("dormantdatabases").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Do().
-		Into(result)
-	return
-}
-
-// Watch returns a watch.Interface that watches the requested dormantDatabases.
-func (c *dormantDatabases) Watch(opts v1.ListOptions) (watch.Interface, error) {
-	opts.Watch = true
-	return c.client.Get().
-		Namespace(c.ns).
-		Resource("dormantdatabases").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Watch()
 }
 
 // Patch applies the patch and returns the patched dormantDatabase.
