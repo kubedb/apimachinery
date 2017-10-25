@@ -3,6 +3,7 @@ package storage
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 
@@ -29,6 +30,7 @@ func NewOSMSecret(client kubernetes.Interface, snapshot *tapi.Snapshot) (*core.S
 	if err != nil {
 		return nil, err
 	}
+
 	osmCfg := &otx.OSMConfig{
 		CurrentContext: osmCtx.Name,
 		Contexts:       []*otx.Context{osmCtx},
@@ -37,9 +39,10 @@ func NewOSMSecret(client kubernetes.Interface, snapshot *tapi.Snapshot) (*core.S
 	if err != nil {
 		return nil, err
 	}
+	osmSecretName := fmt.Sprintf("osm-%v", snapshot.Name)
 	return &core.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      snapshot.Name,
+			Name:      osmSecretName,
 			Namespace: snapshot.Namespace,
 		},
 		Data: map[string][]byte{
