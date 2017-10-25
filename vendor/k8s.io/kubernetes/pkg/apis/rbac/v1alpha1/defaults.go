@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	rbacv1alpha1 "k8s.io/api/rbac/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -25,24 +24,24 @@ func addDefaultingFuncs(scheme *runtime.Scheme) error {
 	return RegisterDefaults(scheme)
 }
 
-func SetDefaults_ClusterRoleBinding(obj *rbacv1alpha1.ClusterRoleBinding) {
+func SetDefaults_ClusterRoleBinding(obj *ClusterRoleBinding) {
 	if len(obj.RoleRef.APIGroup) == 0 {
 		obj.RoleRef.APIGroup = GroupName
 	}
 }
-func SetDefaults_RoleBinding(obj *rbacv1alpha1.RoleBinding) {
+func SetDefaults_RoleBinding(obj *RoleBinding) {
 	if len(obj.RoleRef.APIGroup) == 0 {
 		obj.RoleRef.APIGroup = GroupName
 	}
 }
-func SetDefaults_Subject(obj *rbacv1alpha1.Subject) {
+func SetDefaults_Subject(obj *Subject) {
 	if len(obj.APIVersion) == 0 {
 		switch obj.Kind {
-		case rbacv1alpha1.ServiceAccountKind:
+		case ServiceAccountKind:
 			obj.APIVersion = "v1"
-		case rbacv1alpha1.UserKind:
+		case UserKind:
 			obj.APIVersion = SchemeGroupVersion.String()
-		case rbacv1alpha1.GroupKind:
+		case GroupKind:
 			obj.APIVersion = SchemeGroupVersion.String()
 		}
 	}

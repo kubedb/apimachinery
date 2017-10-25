@@ -60,7 +60,7 @@ import:
 - package: k8s.io/client-go
   version: v5.0.0
 - package: github.com/appscode/kutil
-  version: release-5.0
+  version: master
 - package: github.com/hashicorp/go-version
   repo: https://github.com/appscode/go-version.git
   vcs: git

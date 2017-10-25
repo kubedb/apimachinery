@@ -35,10 +35,9 @@ const (
 	ImpersonateUserExtraHeaderPrefix = "Impersonate-Extra-"
 )
 
-// +genclient
-// +genclient:nonNamespaced
-// +genclient:noVerbs
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +genclient=true
+// +nonNamespaced=true
+// +noMethods=true
 
 // TokenReview attempts to authenticate a token to a known user.
 type TokenReview struct {

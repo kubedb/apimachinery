@@ -17,7 +17,6 @@ limitations under the License.
 package v1beta1
 
 import (
-	appsv1beta1 "k8s.io/api/apps/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -27,13 +26,13 @@ func addDefaultingFuncs(scheme *runtime.Scheme) error {
 	return RegisterDefaults(scheme)
 }
 
-func SetDefaults_StatefulSet(obj *appsv1beta1.StatefulSet) {
+func SetDefaults_StatefulSet(obj *StatefulSet) {
 	if len(obj.Spec.PodManagementPolicy) == 0 {
-		obj.Spec.PodManagementPolicy = appsv1beta1.OrderedReadyPodManagement
+		obj.Spec.PodManagementPolicy = OrderedReadyPodManagement
 	}
 
 	if obj.Spec.UpdateStrategy.Type == "" {
-		obj.Spec.UpdateStrategy.Type = appsv1beta1.OnDeleteStatefulSetStrategyType
+		obj.Spec.UpdateStrategy.Type = OnDeleteStatefulSetStrategyType
 	}
 	labels := obj.Spec.Template.Labels
 	if labels != nil {
@@ -54,7 +53,7 @@ func SetDefaults_StatefulSet(obj *appsv1beta1.StatefulSet) {
 		obj.Spec.RevisionHistoryLimit = new(int32)
 		*obj.Spec.RevisionHistoryLimit = 10
 	}
-	if obj.Spec.UpdateStrategy.Type == appsv1beta1.RollingUpdateStatefulSetStrategyType &&
+	if obj.Spec.UpdateStrategy.Type == RollingUpdateStatefulSetStrategyType &&
 		obj.Spec.UpdateStrategy.RollingUpdate != nil &&
 		obj.Spec.UpdateStrategy.RollingUpdate.Partition == nil {
 		obj.Spec.UpdateStrategy.RollingUpdate.Partition = new(int32)
@@ -69,7 +68,7 @@ func SetDefaults_StatefulSet(obj *appsv1beta1.StatefulSet) {
 // - MaxSurge value during rolling update set to 25% (1 in extensions)
 // - RevisionHistoryLimit set to 2 (not set in extensions)
 // - ProgressDeadlineSeconds set to 600s (not set in extensions)
-func SetDefaults_Deployment(obj *appsv1beta1.Deployment) {
+func SetDefaults_Deployment(obj *Deployment) {
 	// Default labels and selector to labels from pod template spec.
 	labels := obj.Spec.Template.Labels
 
@@ -81,19 +80,19 @@ func SetDefaults_Deployment(obj *appsv1beta1.Deployment) {
 			obj.Labels = labels
 		}
 	}
-	// Set appsv1beta1.DeploymentSpec.Replicas to 1 if it is not set.
+	// Set DeploymentSpec.Replicas to 1 if it is not set.
 	if obj.Spec.Replicas == nil {
 		obj.Spec.Replicas = new(int32)
 		*obj.Spec.Replicas = 1
 	}
 	strategy := &obj.Spec.Strategy
-	// Set default appsv1beta1.DeploymentStrategyType as RollingUpdate.
+	// Set default DeploymentStrategyType as RollingUpdate.
 	if strategy.Type == "" {
-		strategy.Type = appsv1beta1.RollingUpdateDeploymentStrategyType
+		strategy.Type = RollingUpdateDeploymentStrategyType
 	}
-	if strategy.Type == appsv1beta1.RollingUpdateDeploymentStrategyType {
+	if strategy.Type == RollingUpdateDeploymentStrategyType {
 		if strategy.RollingUpdate == nil {
-			rollingUpdate := appsv1beta1.RollingUpdateDeployment{}
+			rollingUpdate := RollingUpdateDeployment{}
 			strategy.RollingUpdate = &rollingUpdate
 		}
 		if strategy.RollingUpdate.MaxUnavailable == nil {
