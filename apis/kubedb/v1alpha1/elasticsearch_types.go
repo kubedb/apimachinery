@@ -28,8 +28,10 @@ type Elasticsearch struct {
 type ElasticsearchSpec struct {
 	// Version of Elasticsearch to be deployed.
 	Version types.StrYo `json:"version,omitempty"`
-	// List of elasticsearch node specification.
-	Nodes ElasticsearchNode `json:"nodes,omitempty"`
+	// Number of instances to deploy for a Elasticsearch database.
+	Replicas int32 `json:"replicas,omitempty"`
+	// Elasticsearch topology for node specification
+	Topology *ElasticsearchClusterTopology `json:"topology,omitempty"`
 	// EnableSSL to enable ssl in transport & http layer
 	EnableSSL bool `json:"enableSSL,omitempty"`
 	// Secret with SSL certificates
@@ -68,11 +70,15 @@ type ElasticsearchSpec struct {
 	Tolerations []core.Toleration `json:"tolerations,omitempty" protobuf:"bytes,22,opt,name=tolerations"`
 }
 
+type ElasticsearchClusterTopology struct {
+	Master ElasticsearchNode `json:"master,omitempty"`
+	Data   ElasticsearchNode `json:"data,omitempty"`
+	Client ElasticsearchNode `json:"client,omitempty"`
+}
+
 type ElasticsearchNode struct {
-	CombinedNodeReplicas *int32 `json:"combinedNodeReplicas,omitempty"`
-	MasterNodeReplicas   *int32 `json:"masterNodeReplicas,omitempty"`
-	DataNodeReplicas     *int32 `json:"dataNodeReplicas,omitempty"`
-	ClientNodeReplicas   *int32 `json:"clientNodeReplicas,omitempty"`
+	Replica int32  `json:"replica,omitempty"`
+	Prefix  string `json:"prefix,omitempty"`
 }
 
 type ElasticsearchStatus struct {

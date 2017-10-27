@@ -289,6 +289,31 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 		},
+		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology": {
+			Schema: spec.Schema{
+				SchemaProps: spec.SchemaProps{
+					Properties: map[string]spec.Schema{
+						"master": {
+							SchemaProps: spec.SchemaProps{
+								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
+							},
+						},
+						"data": {
+							SchemaProps: spec.SchemaProps{
+								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
+							},
+						},
+						"client": {
+							SchemaProps: spec.SchemaProps{
+								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
+							},
+						},
+					},
+				},
+			},
+			Dependencies: []string{
+				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"},
+		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchList": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
@@ -335,28 +360,16 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
-						"combinedNodeReplicas": {
+						"replica": {
 							SchemaProps: spec.SchemaProps{
 								Type:   []string{"integer"},
 								Format: "int32",
 							},
 						},
-						"masterNodeReplicas": {
+						"prefix": {
 							SchemaProps: spec.SchemaProps{
-								Type:   []string{"integer"},
-								Format: "int32",
-							},
-						},
-						"dataNodeReplicas": {
-							SchemaProps: spec.SchemaProps{
-								Type:   []string{"integer"},
-								Format: "int32",
-							},
-						},
-						"clientNodeReplicas": {
-							SchemaProps: spec.SchemaProps{
-								Type:   []string{"integer"},
-								Format: "int32",
+								Type:   []string{"string"},
+								Format: "",
 							},
 						},
 					},
@@ -375,10 +388,17 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Format:      "",
 							},
 						},
-						"nodes": {
+						"replicas": {
 							SchemaProps: spec.SchemaProps{
-								Description: "List of elasticsearch node specification.",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
+								Description: "Number of instances to deploy for a Elasticsearch database.",
+								Type:        []string{"integer"},
+								Format:      "int32",
+							},
+						},
+						"topology": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Elasticsearch topology for node specification",
+								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology"),
 							},
 						},
 						"enableSSL": {
@@ -481,7 +501,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
+				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus": {
 			Schema: spec.Schema{
