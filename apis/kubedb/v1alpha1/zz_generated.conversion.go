@@ -378,7 +378,7 @@ func Convert_kubedb_ElasticsearchList_To_v1alpha1_ElasticsearchList(in *kubedb.E
 }
 
 func autoConvert_v1alpha1_ElasticsearchNode_To_kubedb_ElasticsearchNode(in *ElasticsearchNode, out *kubedb.ElasticsearchNode, s conversion.Scope) error {
-	out.Replica = in.Replica
+	out.Replicas = in.Replicas
 	out.Prefix = in.Prefix
 	return nil
 }
@@ -389,7 +389,7 @@ func Convert_v1alpha1_ElasticsearchNode_To_kubedb_ElasticsearchNode(in *Elastics
 }
 
 func autoConvert_kubedb_ElasticsearchNode_To_v1alpha1_ElasticsearchNode(in *kubedb.ElasticsearchNode, out *ElasticsearchNode, s conversion.Scope) error {
-	out.Replica = in.Replica
+	out.Replicas = in.Replicas
 	out.Prefix = in.Prefix
 	return nil
 }

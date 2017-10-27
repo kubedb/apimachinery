@@ -76,8 +76,8 @@ type ElasticsearchClusterTopology struct {
 }
 
 type ElasticsearchNode struct {
-	Replica int32  `json:"replica,omitempty"`
-	Prefix  string `json:"prefix,omitempty"`
+	Replicas int32  `json:"replicas,omitempty"`
+	Prefix   string `json:"prefix,omitempty"`
 }
 
 type ElasticsearchStatus struct {
