@@ -30,7 +30,6 @@ func NewOSMSecret(client kubernetes.Interface, snapshot *tapi.Snapshot) (*core.S
 	if err != nil {
 		return nil, err
 	}
-
 	osmCfg := &otx.OSMConfig{
 		CurrentContext: osmCtx.Name,
 		Contexts:       []*otx.Context{osmCtx},
