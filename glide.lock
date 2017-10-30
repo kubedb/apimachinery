@@ -1,5 +1,5 @@
 hash: f7482362a455309105b44ff970767d6cfc0bbcb25601c525b57f7704864770ce
-updated: 2017-10-25T12:22:50.534046796+06:00
+updated: 2017-10-30T14:01:58.598579376+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -224,7 +224,7 @@ imports:
 - name: github.com/sirupsen/logrus
   version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
 - name: github.com/spf13/cobra
-  version: 7b2c5ac9fc04fc5efafb60700713d4fa609b777b
+  version: b3426bbac13d7110c4d8fce456ea0012f79f3b8b
 - name: github.com/spf13/pflag
   version: 97afa5e7ca8a08a383cb259e06636b5e2cc7897f
 - name: github.com/ugorji/go
@@ -272,7 +272,7 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: 52fedcc3d56e51c5f1a571d48092238ab2746c73
+  version: 672d215daf0631fcae4c08c2a4324a763aaaf789
   subpackages:
   - gensupport
   - googleapi
@@ -326,7 +326,7 @@ imports:
   - storage/v1
   - storage/v1beta1
 - name: k8s.io/apiextensions-apiserver
-  version: 89b2a556a65053a90552eaed26f810df4a266367
+  version: 5bc0d8f05a92b3a09bcf1a9db442a29c0b7a514d
   subpackages:
   - pkg/apis/apiextensions
   - pkg/apis/apiextensions/v1beta1
