@@ -562,7 +562,7 @@ func Convert_kubedb_MySQL_To_v1alpha1_MySQL(in *kubedb.MySQL, out *MySQL, s conv
 
 func autoConvert_v1alpha1_MySQLList_To_kubedb_MySQLList(in *MySQLList, out *kubedb.MySQLList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]*kubedb.MySQL)(unsafe.Pointer(&in.Items))
+	out.Items = *(*[]kubedb.MySQL)(unsafe.Pointer(&in.Items))
 	return nil
 }
 
@@ -573,7 +573,7 @@ func Convert_v1alpha1_MySQLList_To_kubedb_MySQLList(in *MySQLList, out *kubedb.M
 
 func autoConvert_kubedb_MySQLList_To_v1alpha1_MySQLList(in *kubedb.MySQLList, out *MySQLList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]*MySQL)(unsafe.Pointer(&in.Items))
+	out.Items = *(*[]MySQL)(unsafe.Pointer(&in.Items))
 	return nil
 }
 
