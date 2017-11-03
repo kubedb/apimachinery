@@ -25,9 +25,9 @@ type MySQL struct {
 }
 
 type MySQLSpec struct {
-	// Version of MongoDB to be deployed.
+	// Version of MySQL to be deployed.
 	Version types.StrYo `json:"version,omitempty"`
-	// Number of instances to deploy for a MongoDB database.
+	// Number of instances to deploy for a MySQL database.
 	Replicas int32 `json:"replicas,omitempty"`
 	// Storage spec to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
