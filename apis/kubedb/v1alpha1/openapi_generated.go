@@ -1061,11 +1061,17 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec"),
 							},
 						},
+						"redis": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Redis Spec",
+								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisSpec"),
+							},
+						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec"},
+				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisSpec"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Postgres": {
 			Schema: spec.Schema{

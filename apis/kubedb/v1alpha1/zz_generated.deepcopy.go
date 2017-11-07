@@ -1038,6 +1038,15 @@ func (in *OriginSpec) DeepCopyInto(out *OriginSpec) {
 			(*in).DeepCopyInto(*out)
 		}
 	}
+	if in.Redis != nil {
+		in, out := &in.Redis, &out.Redis
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(RedisSpec)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	return
 }
 

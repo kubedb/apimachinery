@@ -819,6 +819,7 @@ func autoConvert_v1alpha1_OriginSpec_To_kubedb_OriginSpec(in *OriginSpec, out *k
 	out.Postgres = (*kubedb.PostgresSpec)(unsafe.Pointer(in.Postgres))
 	out.MySQL = (*kubedb.MySQLSpec)(unsafe.Pointer(in.MySQL))
 	out.MongoDB = (*kubedb.MongoDBSpec)(unsafe.Pointer(in.MongoDB))
+	out.Redis = (*kubedb.RedisSpec)(unsafe.Pointer(in.Redis))
 	return nil
 }
 
@@ -832,6 +833,7 @@ func autoConvert_kubedb_OriginSpec_To_v1alpha1_OriginSpec(in *kubedb.OriginSpec,
 	out.Postgres = (*PostgresSpec)(unsafe.Pointer(in.Postgres))
 	out.MySQL = (*MySQLSpec)(unsafe.Pointer(in.MySQL))
 	out.MongoDB = (*MongoDBSpec)(unsafe.Pointer(in.MongoDB))
+	out.Redis = (*RedisSpec)(unsafe.Pointer(in.Redis))
 	return nil
 }
 

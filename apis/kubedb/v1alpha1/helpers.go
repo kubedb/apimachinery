@@ -27,6 +27,9 @@ const (
 	MongoDBKey             = ResourceTypeMongoDB + "." + GenericKey
 	MongoDBDatabaseVersion = MongoDBKey + "/version"
 
+	RedisKey             = ResourceTypeRedis + "." + GenericKey
+	RedisDatabaseVersion = RedisKey + "/version"
+
 	SnapshotKey         = ResourceTypeSnapshot + "." + GenericKey
 	LabelSnapshotStatus = SnapshotKey + "/status"
 
@@ -34,11 +37,13 @@ const (
 	ElasticsearchInitSpec = ElasticsearchKey + "/init"
 	MySQLInitSpec         = MySQLKey + "/init"
 	MongoDBInitSpec       = MongoDBKey + "/init"
+	RedisInitSpec         = RedisKey + "/init"
 
 	PostgresIgnore      = PostgresKey + "/ignore"
 	ElasticsearchIgnore = ElasticsearchKey + "/ignore"
 	MySQLIgnore         = MySQLKey + "/ignore"
 	MongoDBIgnore       = MongoDBKey + "/ignore"
+	RedisIgnore         = RedisKey + "/ignore"
 )
 
 type RuntimeObject interface {
@@ -238,6 +243,54 @@ func (p MongoDB) ResourceName() string {
 
 func (p MongoDB) ResourceType() string {
 	return ResourceTypeMongoDB
+}
+
+func (r Redis) OffshootName() string {
+	return r.Name
+}
+
+func (r Redis) OffshootLabels() map[string]string {
+	return map[string]string{
+		LabelDatabaseName: r.Name,
+		LabelDatabaseKind: ResourceKindRedis,
+	}
+}
+
+func (r Redis) StatefulSetLabels() map[string]string {
+	labels := r.OffshootLabels()
+	for key, val := range r.Labels {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, RedisKey+"/") {
+			labels[key] = val
+		}
+	}
+	return labels
+}
+
+func (r Redis) StatefulSetAnnotations() map[string]string {
+	annotations := make(map[string]string)
+	for key, val := range r.Annotations {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, RedisKey+"/") {
+			annotations[key] = val
+		}
+	}
+	annotations[RedisDatabaseVersion] = string(r.Spec.Version)
+	return annotations
+}
+
+func (r Redis) ResourceCode() string {
+	return ResourceCodeRedis
+}
+
+func (r Redis) ResourceKind() string {
+	return ResourceKindRedis
+}
+
+func (r Redis) ResourceName() string {
+	return ResourceNameRedis
+}
+
+func (r Redis) ResourceType() string {
+	return ResourceTypeRedis
 }
 
 func (d DormantDatabase) OffshootName() string {

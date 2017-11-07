@@ -60,6 +60,17 @@ func (s MongoDB) ObjectReference() *core.ObjectReference {
 	}
 }
 
+func (s Redis) ObjectReference() *core.ObjectReference {
+	return &core.ObjectReference{
+		APIVersion:      SchemeGroupVersion.String(),
+		Kind:            ResourceKindRedis,
+		Namespace:       s.Namespace,
+		Name:            s.Name,
+		UID:             s.UID,
+		ResourceVersion: s.ResourceVersion,
+	}
+}
+
 func (s Snapshot) ObjectReference() *core.ObjectReference {
 	return &core.ObjectReference{
 		APIVersion:      SchemeGroupVersion.String(),
@@ -84,6 +95,8 @@ func ObjectReferenceFor(obj runtime.Object) *core.ObjectReference {
 	case *Snapshot:
 		return u.ObjectReference()
 	case *MongoDB:
+		return u.ObjectReference()
+	case *Redis:
 		return u.ObjectReference()
 	}
 	return &core.ObjectReference{}

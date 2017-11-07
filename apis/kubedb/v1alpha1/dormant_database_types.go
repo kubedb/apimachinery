@@ -52,6 +52,9 @@ type OriginSpec struct {
 	// MongoDB Spec
 	// +optional
 	MongoDB *MongoDBSpec `json:"mongodb,omitempty"`
+	// Redis Spec
+	// +optional
+	Redis *RedisSpec `json:"redis,omitempty"`
 }
 
 type DormantDatabasePhase string
