@@ -34,6 +34,8 @@ type Interface interface {
 	MySQLs() MySQLInformer
 	// Postgreses returns a PostgresInformer.
 	Postgreses() PostgresInformer
+	// Redises returns a RedisInformer.
+	Redises() RedisInformer
 	// Snapshots returns a SnapshotInformer.
 	Snapshots() SnapshotInformer
 }
@@ -70,6 +72,11 @@ func (v *version) MySQLs() MySQLInformer {
 // Postgreses returns a PostgresInformer.
 func (v *version) Postgreses() PostgresInformer {
 	return &postgresInformer{factory: v.SharedInformerFactory}
+}
+
+// Redises returns a RedisInformer.
+func (v *version) Redises() RedisInformer {
+	return &redisInformer{factory: v.SharedInformerFactory}
 }
 
 // Snapshots returns a SnapshotInformer.

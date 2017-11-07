@@ -58,6 +58,14 @@ type PostgresListerExpansion interface{}
 // PostgresNamespaceLister.
 type PostgresNamespaceListerExpansion interface{}
 
+// RedisListerExpansion allows custom methods to be added to
+// RedisLister.
+type RedisListerExpansion interface{}
+
+// RedisNamespaceListerExpansion allows custom methods to be added to
+// RedisNamespaceLister.
+type RedisNamespaceListerExpansion interface{}
+
 // SnapshotListerExpansion allows custom methods to be added to
 // SnapshotLister.
 type SnapshotListerExpansion interface{}
