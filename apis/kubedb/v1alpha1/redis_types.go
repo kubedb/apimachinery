@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	"github.com/appscode/go/encoding/json/types"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -25,7 +26,7 @@ type Redis struct {
 
 type RedisSpec struct {
 	// Version of Redis to be deployed.
-	Version string `json:"version,omitempty"`
+	Version types.StrYo `json:"version,omitempty"`
 	// Number of instances to deploy for a Redis database.
 	Replicas int32 `json:"replicas,omitempty"`
 	// Storage spec to specify how storage shall be used.

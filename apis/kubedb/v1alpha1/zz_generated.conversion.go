@@ -1105,7 +1105,7 @@ func Convert_kubedb_RedisList_To_v1alpha1_RedisList(in *kubedb.RedisList, out *R
 }
 
 func autoConvert_v1alpha1_RedisSpec_To_kubedb_RedisSpec(in *RedisSpec, out *kubedb.RedisSpec, s conversion.Scope) error {
-	out.Version = in.Version
+	out.Version = types.StrYo(in.Version)
 	out.Replicas = in.Replicas
 	out.Storage = (*core_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.DatabaseSecret = (*core_v1.SecretVolumeSource)(unsafe.Pointer(in.DatabaseSecret))
@@ -1127,7 +1127,7 @@ func Convert_v1alpha1_RedisSpec_To_kubedb_RedisSpec(in *RedisSpec, out *kubedb.R
 }
 
 func autoConvert_kubedb_RedisSpec_To_v1alpha1_RedisSpec(in *kubedb.RedisSpec, out *RedisSpec, s conversion.Scope) error {
-	out.Version = in.Version
+	out.Version = types.StrYo(in.Version)
 	out.Replicas = in.Replicas
 	out.Storage = (*core_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.DatabaseSecret = (*core_v1.SecretVolumeSource)(unsafe.Pointer(in.DatabaseSecret))
