@@ -14,7 +14,7 @@ const (
 	ImageRedisOperator     = "kubedb/redis-operator"
 	ImageRedis             = "library/redis"
 	ImageMemcachedOperator = "kubedb/memcached-operator"
-	Imagememcached         = "library/memcached"
+	ImageMemcached         = "library/memcached"
 )
 
 const (
