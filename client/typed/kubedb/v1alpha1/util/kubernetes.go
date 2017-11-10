@@ -40,6 +40,10 @@ func AssignTypeKind(v interface{}) error {
 		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
 		u.Kind = kutil.GetKind(v)
 		return nil
+	case *v1alpha1.Memcached:
+		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
+		u.Kind = kutil.GetKind(v)
+		return nil
 	case *v1alpha1.Snapshot:
 		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
 		u.Kind = kutil.GetKind(v)

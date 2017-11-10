@@ -34,6 +34,10 @@ func (c *FakeKubedb) Elasticsearchs(namespace string) internalversion.Elasticsea
 	return &FakeElasticsearchs{c, namespace}
 }
 
+func (c *FakeKubedb) Memcacheds(namespace string) internalversion.MemcachedInterface {
+	return &FakeMemcacheds{c, namespace}
+}
+
 func (c *FakeKubedb) MongoDBs(namespace string) internalversion.MongoDBInterface {
 	return &FakeMongoDBs{c, namespace}
 }

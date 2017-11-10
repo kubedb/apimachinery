@@ -20,6 +20,8 @@ type DormantDatabaseExpansion interface{}
 
 type ElasticsearchExpansion interface{}
 
+type MemcachedExpansion interface{}
+
 type MongoDBExpansion interface{}
 
 type MySQLExpansion interface{}

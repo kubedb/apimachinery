@@ -30,6 +30,9 @@ const (
 	RedisKey             = ResourceTypeRedis + "." + GenericKey
 	RedisDatabaseVersion = RedisKey + "/version"
 
+	MemcachedKey             = ResourceTypeMemcached + "." + GenericKey
+	MemcachedDatabaseVersion = MemcachedKey + "/version"
+
 	SnapshotKey         = ResourceTypeSnapshot + "." + GenericKey
 	LabelSnapshotStatus = SnapshotKey + "/status"
 
@@ -38,12 +41,14 @@ const (
 	MySQLInitSpec         = MySQLKey + "/init"
 	MongoDBInitSpec       = MongoDBKey + "/init"
 	RedisInitSpec         = RedisKey + "/init"
+	MemcachedInitSpec     = MemcachedKey + "/init"
 
 	PostgresIgnore      = PostgresKey + "/ignore"
 	ElasticsearchIgnore = ElasticsearchKey + "/ignore"
 	MySQLIgnore         = MySQLKey + "/ignore"
 	MongoDBIgnore       = MongoDBKey + "/ignore"
 	RedisIgnore         = RedisKey + "/ignore"
+	MemcachedIgnore     = MemcachedKey + "/ignore"
 )
 
 type RuntimeObject interface {
@@ -291,6 +296,54 @@ func (r Redis) ResourceName() string {
 
 func (r Redis) ResourceType() string {
 	return ResourceTypeRedis
+}
+
+func (r Memcached) OffshootName() string {
+	return r.Name
+}
+
+func (r Memcached) OffshootLabels() map[string]string {
+	return map[string]string{
+		LabelDatabaseName: r.Name,
+		LabelDatabaseKind: ResourceKindMemcached,
+	}
+}
+
+func (r Memcached) StatefulSetLabels() map[string]string {
+	labels := r.OffshootLabels()
+	for key, val := range r.Labels {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MemcachedKey+"/") {
+			labels[key] = val
+		}
+	}
+	return labels
+}
+
+func (r Memcached) StatefulSetAnnotations() map[string]string {
+	annotations := make(map[string]string)
+	for key, val := range r.Annotations {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MemcachedKey+"/") {
+			annotations[key] = val
+		}
+	}
+	annotations[MemcachedDatabaseVersion] = string(r.Spec.Version)
+	return annotations
+}
+
+func (r Memcached) ResourceCode() string {
+	return ResourceCodeMemcached
+}
+
+func (r Memcached) ResourceKind() string {
+	return ResourceKindMemcached
+}
+
+func (r Memcached) ResourceName() string {
+	return ResourceNameMemcached
+}
+
+func (r Memcached) ResourceType() string {
+	return ResourceTypeMemcached
 }
 
 func (d DormantDatabase) OffshootName() string {
