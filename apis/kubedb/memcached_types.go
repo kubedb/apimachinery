@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	ResourceCodeMemcached = "rd"
+	ResourceCodeMemcached = "mc"
 	ResourceKindMemcached = "Memcached"
 	ResourceNameMemcached = "memcached"
 	ResourceTypeMemcached = "memcachedes"
