@@ -309,7 +309,7 @@ func (r Memcached) OffshootLabels() map[string]string {
 	}
 }
 
-func (r Memcached) StatefulSetLabels() map[string]string {
+func (r Memcached) DeploymentLabels() map[string]string {
 	labels := r.OffshootLabels()
 	for key, val := range r.Labels {
 		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MemcachedKey+"/") {
@@ -319,7 +319,7 @@ func (r Memcached) StatefulSetLabels() map[string]string {
 	return labels
 }
 
-func (r Memcached) StatefulSetAnnotations() map[string]string {
+func (r Memcached) DeploymentAnnotations() map[string]string {
 	annotations := make(map[string]string)
 	for key, val := range r.Annotations {
 		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MemcachedKey+"/") {
