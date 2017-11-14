@@ -29,19 +29,9 @@ type MemcachedSpec struct {
 	Version types.StrYo `json:"version,omitempty"`
 	// Number of instances to deploy for a Memcached database.
 	Replicas int32 `json:"replicas,omitempty"`
-	// Storage spec to specify how storage shall be used.
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
-	// Database authentication secret
-	DatabaseSecret *core.SecretVolumeSource `json:"databaseSecret,omitempty"`
 	// NodeSelector is a selector which must be true for the pod to fit on a node
 	// +optional
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
-	// Init is used to initialize database
-	// +optional
-	Init *InitSpec `json:"init,omitempty"`
-	// BackupSchedule spec to specify how database backup will be taken
-	// +optional
-	BackupSchedule *BackupScheduleSpec `json:"backupSchedule,omitempty"`
 	// If DoNotPause is true, controller will prevent to delete this Postgres object.
 	// Controller will create same Postgres object and ignore other process.
 	// +optional

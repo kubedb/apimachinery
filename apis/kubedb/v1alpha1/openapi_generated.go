@@ -658,18 +658,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Format:      "int32",
 							},
 						},
-						"storage": {
-							SchemaProps: spec.SchemaProps{
-								Description: "Storage spec to specify how storage shall be used.",
-								Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
-							},
-						},
-						"databaseSecret": {
-							SchemaProps: spec.SchemaProps{
-								Description: "Database authentication secret",
-								Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
-							},
-						},
 						"nodeSelector": {
 							SchemaProps: spec.SchemaProps{
 								Description: "NodeSelector is a selector which must be true for the pod to fit on a node",
@@ -682,18 +670,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 										},
 									},
 								},
-							},
-						},
-						"init": {
-							SchemaProps: spec.SchemaProps{
-								Description: "Init is used to initialize database",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
-							},
-						},
-						"backupSchedule": {
-							SchemaProps: spec.SchemaProps{
-								Description: "BackupSchedule spec to specify how database backup will be taken",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec"),
 							},
 						},
 						"doNotPause": {
@@ -745,7 +721,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
+				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MemcachedStatus": {
 			Schema: spec.Schema{

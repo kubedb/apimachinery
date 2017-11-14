@@ -587,11 +587,7 @@ func Convert_kubedb_MemcachedList_To_v1alpha1_MemcachedList(in *kubedb.Memcached
 func autoConvert_v1alpha1_MemcachedSpec_To_kubedb_MemcachedSpec(in *MemcachedSpec, out *kubedb.MemcachedSpec, s conversion.Scope) error {
 	out.Version = types.StrYo(in.Version)
 	out.Replicas = in.Replicas
-	out.Storage = (*core_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
-	out.DatabaseSecret = (*core_v1.SecretVolumeSource)(unsafe.Pointer(in.DatabaseSecret))
 	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
-	out.Init = (*kubedb.InitSpec)(unsafe.Pointer(in.Init))
-	out.BackupSchedule = (*kubedb.BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
 	out.DoNotPause = in.DoNotPause
 	out.Monitor = (*kubedb.MonitorSpec)(unsafe.Pointer(in.Monitor))
 	out.Resources = in.Resources
@@ -609,11 +605,7 @@ func Convert_v1alpha1_MemcachedSpec_To_kubedb_MemcachedSpec(in *MemcachedSpec, o
 func autoConvert_kubedb_MemcachedSpec_To_v1alpha1_MemcachedSpec(in *kubedb.MemcachedSpec, out *MemcachedSpec, s conversion.Scope) error {
 	out.Version = types.StrYo(in.Version)
 	out.Replicas = in.Replicas
-	out.Storage = (*core_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
-	out.DatabaseSecret = (*core_v1.SecretVolumeSource)(unsafe.Pointer(in.DatabaseSecret))
 	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
-	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
-	out.BackupSchedule = (*BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
 	out.DoNotPause = in.DoNotPause
 	out.Monitor = (*MonitorSpec)(unsafe.Pointer(in.Monitor))
 	out.Resources = in.Resources
