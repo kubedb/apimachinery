@@ -24,16 +24,31 @@ const (
 	MySQLKey             = ResourceTypeMySQL + "." + GenericKey
 	MySQLDatabaseVersion = MySQLKey + "/version"
 
+	MongoDBKey             = ResourceTypeMongoDB + "." + GenericKey
+	MongoDBDatabaseVersion = MongoDBKey + "/version"
+
+	RedisKey             = ResourceTypeRedis + "." + GenericKey
+	RedisDatabaseVersion = RedisKey + "/version"
+
+	MemcachedKey             = ResourceTypeMemcached + "." + GenericKey
+	MemcachedDatabaseVersion = MemcachedKey + "/version"
+
 	SnapshotKey         = ResourceTypeSnapshot + "." + GenericKey
 	LabelSnapshotStatus = SnapshotKey + "/status"
 
 	PostgresInitSpec      = PostgresKey + "/init"
 	ElasticsearchInitSpec = ElasticsearchKey + "/init"
 	MySQLInitSpec         = MySQLKey + "/init"
+	MongoDBInitSpec       = MongoDBKey + "/init"
+	RedisInitSpec         = RedisKey + "/init"
+	MemcachedInitSpec     = MemcachedKey + "/init"
 
 	PostgresIgnore      = PostgresKey + "/ignore"
 	ElasticsearchIgnore = ElasticsearchKey + "/ignore"
 	MySQLIgnore         = MySQLKey + "/ignore"
+	MongoDBIgnore       = MongoDBKey + "/ignore"
+	RedisIgnore         = RedisKey + "/ignore"
+	MemcachedIgnore     = MemcachedKey + "/ignore"
 )
 
 type RuntimeObject interface {
@@ -185,6 +200,150 @@ func (e Elasticsearch) ResourceName() string {
 
 func (e Elasticsearch) ResourceType() string {
 	return ResourceTypeElasticsearch
+}
+
+func (p MongoDB) OffshootName() string {
+	return p.Name
+}
+
+func (p MongoDB) OffshootLabels() map[string]string {
+	return map[string]string{
+		LabelDatabaseName: p.Name,
+		LabelDatabaseKind: ResourceKindMongoDB,
+	}
+}
+
+func (p MongoDB) StatefulSetLabels() map[string]string {
+	labels := p.OffshootLabels()
+	for key, val := range p.Labels {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MongoDBKey+"/") {
+			labels[key] = val
+		}
+	}
+	return labels
+}
+
+func (p MongoDB) StatefulSetAnnotations() map[string]string {
+	annotations := make(map[string]string)
+	for key, val := range p.Annotations {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MongoDBKey+"/") {
+			annotations[key] = val
+		}
+	}
+	annotations[MongoDBDatabaseVersion] = string(p.Spec.Version)
+	return annotations
+}
+
+func (p MongoDB) ResourceCode() string {
+	return ResourceCodeMongoDB
+}
+
+func (p MongoDB) ResourceKind() string {
+	return ResourceKindMongoDB
+}
+
+func (p MongoDB) ResourceName() string {
+	return ResourceNameMongoDB
+}
+
+func (p MongoDB) ResourceType() string {
+	return ResourceTypeMongoDB
+}
+
+func (r Redis) OffshootName() string {
+	return r.Name
+}
+
+func (r Redis) OffshootLabels() map[string]string {
+	return map[string]string{
+		LabelDatabaseName: r.Name,
+		LabelDatabaseKind: ResourceKindRedis,
+	}
+}
+
+func (r Redis) StatefulSetLabels() map[string]string {
+	labels := r.OffshootLabels()
+	for key, val := range r.Labels {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, RedisKey+"/") {
+			labels[key] = val
+		}
+	}
+	return labels
+}
+
+func (r Redis) StatefulSetAnnotations() map[string]string {
+	annotations := make(map[string]string)
+	for key, val := range r.Annotations {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, RedisKey+"/") {
+			annotations[key] = val
+		}
+	}
+	annotations[RedisDatabaseVersion] = string(r.Spec.Version)
+	return annotations
+}
+
+func (r Redis) ResourceCode() string {
+	return ResourceCodeRedis
+}
+
+func (r Redis) ResourceKind() string {
+	return ResourceKindRedis
+}
+
+func (r Redis) ResourceName() string {
+	return ResourceNameRedis
+}
+
+func (r Redis) ResourceType() string {
+	return ResourceTypeRedis
+}
+
+func (r Memcached) OffshootName() string {
+	return r.Name
+}
+
+func (r Memcached) OffshootLabels() map[string]string {
+	return map[string]string{
+		LabelDatabaseName: r.Name,
+		LabelDatabaseKind: ResourceKindMemcached,
+	}
+}
+
+func (r Memcached) StatefulSetLabels() map[string]string {
+	labels := r.OffshootLabels()
+	for key, val := range r.Labels {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MemcachedKey+"/") {
+			labels[key] = val
+		}
+	}
+	return labels
+}
+
+func (r Memcached) StatefulSetAnnotations() map[string]string {
+	annotations := make(map[string]string)
+	for key, val := range r.Annotations {
+		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MemcachedKey+"/") {
+			annotations[key] = val
+		}
+	}
+	annotations[MemcachedDatabaseVersion] = string(r.Spec.Version)
+	return annotations
+}
+
+func (r Memcached) ResourceCode() string {
+	return ResourceCodeMemcached
+}
+
+func (r Memcached) ResourceKind() string {
+	return ResourceKindMemcached
+}
+
+func (r Memcached) ResourceName() string {
+	return ResourceNameMemcached
+}
+
+func (r Memcached) ResourceType() string {
+	return ResourceTypeMemcached
 }
 
 func (d DormantDatabase) OffshootName() string {

@@ -28,10 +28,16 @@ type Interface interface {
 	DormantDatabases() DormantDatabaseInformer
 	// Elasticsearchs returns a ElasticsearchInformer.
 	Elasticsearchs() ElasticsearchInformer
+	// Memcacheds returns a MemcachedInformer.
+	Memcacheds() MemcachedInformer
+	// MongoDBs returns a MongoDBInformer.
+	MongoDBs() MongoDBInformer
 	// MySQLs returns a MySQLInformer.
 	MySQLs() MySQLInformer
 	// Postgreses returns a PostgresInformer.
 	Postgreses() PostgresInformer
+	// Redises returns a RedisInformer.
+	Redises() RedisInformer
 	// Snapshots returns a SnapshotInformer.
 	Snapshots() SnapshotInformer
 }
@@ -55,6 +61,16 @@ func (v *version) Elasticsearchs() ElasticsearchInformer {
 	return &elasticsearchInformer{factory: v.SharedInformerFactory}
 }
 
+// Memcacheds returns a MemcachedInformer.
+func (v *version) Memcacheds() MemcachedInformer {
+	return &memcachedInformer{factory: v.SharedInformerFactory}
+}
+
+// MongoDBs returns a MongoDBInformer.
+func (v *version) MongoDBs() MongoDBInformer {
+	return &mongoDBInformer{factory: v.SharedInformerFactory}
+}
+
 // MySQLs returns a MySQLInformer.
 func (v *version) MySQLs() MySQLInformer {
 	return &mySQLInformer{factory: v.SharedInformerFactory}
@@ -63,6 +79,11 @@ func (v *version) MySQLs() MySQLInformer {
 // Postgreses returns a PostgresInformer.
 func (v *version) Postgreses() PostgresInformer {
 	return &postgresInformer{factory: v.SharedInformerFactory}
+}
+
+// Redises returns a RedisInformer.
+func (v *version) Redises() RedisInformer {
+	return &redisInformer{factory: v.SharedInformerFactory}
 }
 
 // Snapshots returns a SnapshotInformer.
