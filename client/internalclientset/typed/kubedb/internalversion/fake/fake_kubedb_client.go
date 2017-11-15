@@ -46,6 +46,10 @@ func (c *FakeKubedb) Postgreses(namespace string) internalversion.PostgresInterf
 	return &FakePostgreses{c, namespace}
 }
 
+func (c *FakeKubedb) Redises(namespace string) internalversion.RedisInterface {
+	return &FakeRedises{c, namespace}
+}
+
 func (c *FakeKubedb) Snapshots(namespace string) internalversion.SnapshotInterface {
 	return &FakeSnapshots{c, namespace}
 }

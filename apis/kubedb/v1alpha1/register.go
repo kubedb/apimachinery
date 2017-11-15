@@ -44,6 +44,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MySQLList{},
 		&MongoDB{},
 		&MongoDBList{},
+		&Redis{},
+		&RedisList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

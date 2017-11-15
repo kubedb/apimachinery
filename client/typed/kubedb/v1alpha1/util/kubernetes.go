@@ -36,6 +36,10 @@ func AssignTypeKind(v interface{}) error {
 		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
 		u.Kind = meta.GetKind(v)
 		return nil
+	case *v1alpha1.Redis:
+		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
+		u.Kind = meta.GetKind(v)
+		return nil
 	case *v1alpha1.Snapshot:
 		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
 		u.Kind = meta.GetKind(v)

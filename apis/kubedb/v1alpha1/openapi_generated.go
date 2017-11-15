@@ -1039,11 +1039,17 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec"),
 							},
 						},
+						"redis": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Redis Spec",
+								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisSpec"),
+							},
+						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec"},
+				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisSpec"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Postgres": {
 			Schema: spec.Schema{
@@ -1328,6 +1334,204 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{},
+		},
+		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Redis": {
+			Schema: spec.Schema{
+				SchemaProps: spec.SchemaProps{
+					Description: "Redis defines a Redis database.",
+					Properties: map[string]spec.Schema{
+						"kind": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+								Type:        []string{"string"},
+								Format:      "",
+							},
+						},
+						"apiVersion": {
+							SchemaProps: spec.SchemaProps{
+								Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+								Type:        []string{"string"},
+								Format:      "",
+							},
+						},
+						"metadata": {
+							SchemaProps: spec.SchemaProps{
+								Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							},
+						},
+						"spec": {
+							SchemaProps: spec.SchemaProps{
+								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisSpec"),
+							},
+						},
+						"status": {
+							SchemaProps: spec.SchemaProps{
+								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisStatus"),
+							},
+						},
+					},
+				},
+			},
+			Dependencies: []string{
+				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+		},
+		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisList": {
+			Schema: spec.Schema{
+				SchemaProps: spec.SchemaProps{
+					Properties: map[string]spec.Schema{
+						"kind": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+								Type:        []string{"string"},
+								Format:      "",
+							},
+						},
+						"apiVersion": {
+							SchemaProps: spec.SchemaProps{
+								Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+								Type:        []string{"string"},
+								Format:      "",
+							},
+						},
+						"metadata": {
+							SchemaProps: spec.SchemaProps{
+								Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+							},
+						},
+						"items": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Items is a list of Redis TPR objects",
+								Type:        []string{"array"},
+								Items: &spec.SchemaOrArray{
+									Schema: &spec.Schema{
+										SchemaProps: spec.SchemaProps{
+											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Redis"),
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			Dependencies: []string{
+				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Redis", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+		},
+		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisSpec": {
+			Schema: spec.Schema{
+				SchemaProps: spec.SchemaProps{
+					Properties: map[string]spec.Schema{
+						"version": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Version of Redis to be deployed.",
+								Type:        []string{"string"},
+								Format:      "",
+							},
+						},
+						"replicas": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Number of instances to deploy for a Redis database.",
+								Type:        []string{"integer"},
+								Format:      "int32",
+							},
+						},
+						"storage": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Storage spec to specify how storage shall be used.",
+								Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+							},
+						},
+						"nodeSelector": {
+							SchemaProps: spec.SchemaProps{
+								Description: "NodeSelector is a selector which must be true for the pod to fit on a node",
+								Type:        []string{"object"},
+								AdditionalProperties: &spec.SchemaOrBool{
+									Schema: &spec.Schema{
+										SchemaProps: spec.SchemaProps{
+											Type:   []string{"string"},
+											Format: "",
+										},
+									},
+								},
+							},
+						},
+						"doNotPause": {
+							SchemaProps: spec.SchemaProps{
+								Description: "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
+								Type:        []string{"boolean"},
+								Format:      "",
+							},
+						},
+						"monitor": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Monitor is used monitor database instance",
+								Ref:         ref("github.com/appscode/kutil/tools/monitoring/api.AgentSpec"),
+							},
+						},
+						"resources": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Compute Resources required by the sidecar container.",
+								Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+							},
+						},
+						"affinity": {
+							SchemaProps: spec.SchemaProps{
+								Description: "If specified, the pod's scheduling constraints",
+								Ref:         ref("k8s.io/api/core/v1.Affinity"),
+							},
+						},
+						"schedulerName": {
+							SchemaProps: spec.SchemaProps{
+								Description: "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.",
+								Type:        []string{"string"},
+								Format:      "",
+							},
+						},
+						"tolerations": {
+							SchemaProps: spec.SchemaProps{
+								Description: "If specified, the pod's tolerations.",
+								Type:        []string{"array"},
+								Items: &spec.SchemaOrArray{
+									Schema: &spec.Schema{
+										SchemaProps: spec.SchemaProps{
+											Ref: ref("k8s.io/api/core/v1.Toleration"),
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			Dependencies: []string{
+				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
+		},
+		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisStatus": {
+			Schema: spec.Schema{
+				SchemaProps: spec.SchemaProps{
+					Properties: map[string]spec.Schema{
+						"creationTime": {
+							SchemaProps: spec.SchemaProps{
+								Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+							},
+						},
+						"phase": {
+							SchemaProps: spec.SchemaProps{
+								Type:   []string{"string"},
+								Format: "",
+							},
+						},
+						"reason": {
+							SchemaProps: spec.SchemaProps{
+								Type:   []string{"string"},
+								Format: "",
+							},
+						},
+					},
+				},
+			},
+			Dependencies: []string{
+				"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Report": {
 			Schema: spec.Schema{

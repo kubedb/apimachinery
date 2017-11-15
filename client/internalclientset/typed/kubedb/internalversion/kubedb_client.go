@@ -28,6 +28,7 @@ type KubedbInterface interface {
 	MongoDBsGetter
 	MySQLsGetter
 	PostgresesGetter
+	RedisesGetter
 	SnapshotsGetter
 }
 
@@ -54,6 +55,10 @@ func (c *KubedbClient) MySQLs(namespace string) MySQLInterface {
 
 func (c *KubedbClient) Postgreses(namespace string) PostgresInterface {
 	return newPostgreses(c, namespace)
+}
+
+func (c *KubedbClient) Redises(namespace string) RedisInterface {
+	return newRedises(c, namespace)
 }
 
 func (c *KubedbClient) Snapshots(namespace string) SnapshotInterface {
