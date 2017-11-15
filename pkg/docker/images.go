@@ -9,6 +9,8 @@ const (
 	ImageElasticOperator  = "kubedb/es-operator"
 	ImageElasticsearch    = "kubedb/elasticsearch"
 	ImageElasticdump      = "kubedb/elasticdump"
+	ImageMongoDBOperator  = "kubedb/mongodb-operator"
+	ImageMongoDB          = "library/mongo"
 )
 
 const (

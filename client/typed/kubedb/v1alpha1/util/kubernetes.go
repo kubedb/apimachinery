@@ -24,6 +24,10 @@ func AssignTypeKind(v interface{}) error {
 		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
 		u.Kind = meta.GetKind(v)
 		return nil
+	case *v1alpha1.MongoDB:
+		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
+		u.Kind = meta.GetKind(v)
+		return nil
 	case *v1alpha1.MySQL:
 		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
 		u.Kind = meta.GetKind(v)

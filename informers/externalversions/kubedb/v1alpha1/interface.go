@@ -28,6 +28,8 @@ type Interface interface {
 	DormantDatabases() DormantDatabaseInformer
 	// Elasticsearchs returns a ElasticsearchInformer.
 	Elasticsearchs() ElasticsearchInformer
+	// MongoDBs returns a MongoDBInformer.
+	MongoDBs() MongoDBInformer
 	// MySQLs returns a MySQLInformer.
 	MySQLs() MySQLInformer
 	// Postgreses returns a PostgresInformer.
@@ -53,6 +55,11 @@ func (v *version) DormantDatabases() DormantDatabaseInformer {
 // Elasticsearchs returns a ElasticsearchInformer.
 func (v *version) Elasticsearchs() ElasticsearchInformer {
 	return &elasticsearchInformer{factory: v.SharedInformerFactory}
+}
+
+// MongoDBs returns a MongoDBInformer.
+func (v *version) MongoDBs() MongoDBInformer {
+	return &mongoDBInformer{factory: v.SharedInformerFactory}
 }
 
 // MySQLs returns a MySQLInformer.

@@ -49,6 +49,9 @@ type OriginSpec struct {
 	// MySQL Spec
 	// +optional
 	MySQL *MySQLSpec `json:"mysql,omitempty"`
+	// MongoDB Spec
+	// +optional
+	MongoDB *MongoDBSpec `json:"mongodb,omitempty"`
 }
 
 type DormantDatabasePhase string
