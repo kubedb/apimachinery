@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	"github.com/appscode/kutil/tools/monitoring/api"
 	"github.com/appscode/go/encoding/json/types"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -48,7 +49,7 @@ type RedisSpec struct {
 	DoNotPause bool `json:"doNotPause,omitempty"`
 	// Monitor is used monitor database instance
 	// +optional
-	Monitor *MonitorSpec `json:"monitor,omitempty"`
+	Monitor *api.AgentSpec `json:"monitor,omitempty"`
 	// Compute Resources required by the sidecar container.
 	Resources core.ResourceRequirements `json:"resources,omitempty"`
 	// If specified, the pod's scheduling constraints

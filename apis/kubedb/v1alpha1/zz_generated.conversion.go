@@ -21,14 +21,14 @@ limitations under the License.
 package v1alpha1
 
 import (
-	unsafe "unsafe"
-
 	types "github.com/appscode/go/encoding/json/types"
+	api "github.com/appscode/kutil/tools/monitoring/api"
 	kubedb "github.com/k8sdb/apimachinery/apis/kubedb"
 	core_v1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
 	runtime "k8s.io/apimachinery/pkg/runtime"
+	unsafe "unsafe"
 )
 
 func init() {
@@ -75,8 +75,6 @@ func RegisterConversions(scheme *runtime.Scheme) error {
 		Convert_kubedb_MongoDBSpec_To_v1alpha1_MongoDBSpec,
 		Convert_v1alpha1_MongoDBStatus_To_kubedb_MongoDBStatus,
 		Convert_kubedb_MongoDBStatus_To_v1alpha1_MongoDBStatus,
-		Convert_v1alpha1_MonitorSpec_To_kubedb_MonitorSpec,
-		Convert_kubedb_MonitorSpec_To_v1alpha1_MonitorSpec,
 		Convert_v1alpha1_MySQL_To_kubedb_MySQL,
 		Convert_kubedb_MySQL_To_v1alpha1_MySQL,
 		Convert_v1alpha1_MySQLList_To_kubedb_MySQLList,
@@ -103,8 +101,6 @@ func RegisterConversions(scheme *runtime.Scheme) error {
 		Convert_kubedb_PostgresSummary_To_v1alpha1_PostgresSummary,
 		Convert_v1alpha1_PostgresTableInfo_To_kubedb_PostgresTableInfo,
 		Convert_kubedb_PostgresTableInfo_To_v1alpha1_PostgresTableInfo,
-		Convert_v1alpha1_PrometheusSpec_To_kubedb_PrometheusSpec,
-		Convert_kubedb_PrometheusSpec_To_v1alpha1_PrometheusSpec,
 		Convert_v1alpha1_Redis_To_kubedb_Redis,
 		Convert_kubedb_Redis_To_v1alpha1_Redis,
 		Convert_v1alpha1_RedisList_To_kubedb_RedisList,
@@ -224,7 +220,17 @@ func Convert_kubedb_DormantDatabase_To_v1alpha1_DormantDatabase(in *kubedb.Dorma
 
 func autoConvert_v1alpha1_DormantDatabaseList_To_kubedb_DormantDatabaseList(in *DormantDatabaseList, out *kubedb.DormantDatabaseList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]kubedb.DormantDatabase)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]kubedb.DormantDatabase, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha1_DormantDatabase_To_kubedb_DormantDatabase(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -235,7 +241,17 @@ func Convert_v1alpha1_DormantDatabaseList_To_kubedb_DormantDatabaseList(in *Dorm
 
 func autoConvert_kubedb_DormantDatabaseList_To_v1alpha1_DormantDatabaseList(in *kubedb.DormantDatabaseList, out *DormantDatabaseList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]DormantDatabase)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]DormantDatabase, len(*in))
+		for i := range *in {
+			if err := Convert_kubedb_DormantDatabase_To_v1alpha1_DormantDatabase(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -362,7 +378,7 @@ func autoConvert_v1alpha1_ElasticsearchSpec_To_kubedb_ElasticsearchSpec(in *Elas
 	out.Init = (*kubedb.InitSpec)(unsafe.Pointer(in.Init))
 	out.BackupSchedule = (*kubedb.BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
 	out.DoNotPause = in.DoNotPause
-	out.Monitor = (*kubedb.MonitorSpec)(unsafe.Pointer(in.Monitor))
+	out.Monitor = (*api.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.Resources = in.Resources
 	out.Affinity = (*core_v1.Affinity)(unsafe.Pointer(in.Affinity))
 	out.SchedulerName = in.SchedulerName
@@ -383,7 +399,7 @@ func autoConvert_kubedb_ElasticsearchSpec_To_v1alpha1_ElasticsearchSpec(in *kube
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.BackupSchedule = (*BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
 	out.DoNotPause = in.DoNotPause
-	out.Monitor = (*MonitorSpec)(unsafe.Pointer(in.Monitor))
+	out.Monitor = (*api.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.Resources = in.Resources
 	out.Affinity = (*core_v1.Affinity)(unsafe.Pointer(in.Affinity))
 	out.SchedulerName = in.SchedulerName
@@ -585,7 +601,7 @@ func autoConvert_v1alpha1_MongoDBSpec_To_kubedb_MongoDBSpec(in *MongoDBSpec, out
 	out.Init = (*kubedb.InitSpec)(unsafe.Pointer(in.Init))
 	out.BackupSchedule = (*kubedb.BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
 	out.DoNotPause = in.DoNotPause
-	out.Monitor = (*kubedb.MonitorSpec)(unsafe.Pointer(in.Monitor))
+	out.Monitor = (*api.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.Resources = in.Resources
 	out.Affinity = (*core_v1.Affinity)(unsafe.Pointer(in.Affinity))
 	out.SchedulerName = in.SchedulerName
@@ -607,7 +623,7 @@ func autoConvert_kubedb_MongoDBSpec_To_v1alpha1_MongoDBSpec(in *kubedb.MongoDBSp
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.BackupSchedule = (*BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
 	out.DoNotPause = in.DoNotPause
-	out.Monitor = (*MonitorSpec)(unsafe.Pointer(in.Monitor))
+	out.Monitor = (*api.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.Resources = in.Resources
 	out.Affinity = (*core_v1.Affinity)(unsafe.Pointer(in.Affinity))
 	out.SchedulerName = in.SchedulerName
@@ -642,28 +658,6 @@ func autoConvert_kubedb_MongoDBStatus_To_v1alpha1_MongoDBStatus(in *kubedb.Mongo
 // Convert_kubedb_MongoDBStatus_To_v1alpha1_MongoDBStatus is an autogenerated conversion function.
 func Convert_kubedb_MongoDBStatus_To_v1alpha1_MongoDBStatus(in *kubedb.MongoDBStatus, out *MongoDBStatus, s conversion.Scope) error {
 	return autoConvert_kubedb_MongoDBStatus_To_v1alpha1_MongoDBStatus(in, out, s)
-}
-
-func autoConvert_v1alpha1_MonitorSpec_To_kubedb_MonitorSpec(in *MonitorSpec, out *kubedb.MonitorSpec, s conversion.Scope) error {
-	out.Agent = in.Agent
-	out.Prometheus = (*kubedb.PrometheusSpec)(unsafe.Pointer(in.Prometheus))
-	return nil
-}
-
-// Convert_v1alpha1_MonitorSpec_To_kubedb_MonitorSpec is an autogenerated conversion function.
-func Convert_v1alpha1_MonitorSpec_To_kubedb_MonitorSpec(in *MonitorSpec, out *kubedb.MonitorSpec, s conversion.Scope) error {
-	return autoConvert_v1alpha1_MonitorSpec_To_kubedb_MonitorSpec(in, out, s)
-}
-
-func autoConvert_kubedb_MonitorSpec_To_v1alpha1_MonitorSpec(in *kubedb.MonitorSpec, out *MonitorSpec, s conversion.Scope) error {
-	out.Agent = in.Agent
-	out.Prometheus = (*PrometheusSpec)(unsafe.Pointer(in.Prometheus))
-	return nil
-}
-
-// Convert_kubedb_MonitorSpec_To_v1alpha1_MonitorSpec is an autogenerated conversion function.
-func Convert_kubedb_MonitorSpec_To_v1alpha1_MonitorSpec(in *kubedb.MonitorSpec, out *MonitorSpec, s conversion.Scope) error {
-	return autoConvert_kubedb_MonitorSpec_To_v1alpha1_MonitorSpec(in, out, s)
 }
 
 func autoConvert_v1alpha1_MySQL_To_kubedb_MySQL(in *MySQL, out *kubedb.MySQL, s conversion.Scope) error {
@@ -729,7 +723,7 @@ func autoConvert_v1alpha1_MySQLSpec_To_kubedb_MySQLSpec(in *MySQLSpec, out *kube
 	out.Init = (*kubedb.InitSpec)(unsafe.Pointer(in.Init))
 	out.BackupSchedule = (*kubedb.BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
 	out.DoNotPause = in.DoNotPause
-	out.Monitor = (*kubedb.MonitorSpec)(unsafe.Pointer(in.Monitor))
+	out.Monitor = (*api.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.Resources = in.Resources
 	out.Affinity = (*core_v1.Affinity)(unsafe.Pointer(in.Affinity))
 	out.SchedulerName = in.SchedulerName
@@ -751,7 +745,7 @@ func autoConvert_kubedb_MySQLSpec_To_v1alpha1_MySQLSpec(in *kubedb.MySQLSpec, ou
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.BackupSchedule = (*BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
 	out.DoNotPause = in.DoNotPause
-	out.Monitor = (*MonitorSpec)(unsafe.Pointer(in.Monitor))
+	out.Monitor = (*api.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.Resources = in.Resources
 	out.Affinity = (*core_v1.Affinity)(unsafe.Pointer(in.Affinity))
 	out.SchedulerName = in.SchedulerName
@@ -819,7 +813,15 @@ func autoConvert_v1alpha1_OriginSpec_To_kubedb_OriginSpec(in *OriginSpec, out *k
 	out.Postgres = (*kubedb.PostgresSpec)(unsafe.Pointer(in.Postgres))
 	out.MySQL = (*kubedb.MySQLSpec)(unsafe.Pointer(in.MySQL))
 	out.MongoDB = (*kubedb.MongoDBSpec)(unsafe.Pointer(in.MongoDB))
-	out.Redis = (*kubedb.RedisSpec)(unsafe.Pointer(in.Redis))
+	if in.Redis != nil {
+		in, out := &in.Redis, &out.Redis
+		*out = new(kubedb.RedisSpec)
+		if err := Convert_v1alpha1_RedisSpec_To_kubedb_RedisSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Redis = nil
+	}
 	return nil
 }
 
@@ -833,7 +835,15 @@ func autoConvert_kubedb_OriginSpec_To_v1alpha1_OriginSpec(in *kubedb.OriginSpec,
 	out.Postgres = (*PostgresSpec)(unsafe.Pointer(in.Postgres))
 	out.MySQL = (*MySQLSpec)(unsafe.Pointer(in.MySQL))
 	out.MongoDB = (*MongoDBSpec)(unsafe.Pointer(in.MongoDB))
-	out.Redis = (*RedisSpec)(unsafe.Pointer(in.Redis))
+	if in.Redis != nil {
+		in, out := &in.Redis, &out.Redis
+		*out = new(RedisSpec)
+		if err := Convert_kubedb_RedisSpec_To_v1alpha1_RedisSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Redis = nil
+	}
 	return nil
 }
 
@@ -924,7 +934,7 @@ func autoConvert_v1alpha1_PostgresSpec_To_kubedb_PostgresSpec(in *PostgresSpec, 
 	out.Init = (*kubedb.InitSpec)(unsafe.Pointer(in.Init))
 	out.BackupSchedule = (*kubedb.BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
 	out.DoNotPause = in.DoNotPause
-	out.Monitor = (*kubedb.MonitorSpec)(unsafe.Pointer(in.Monitor))
+	out.Monitor = (*api.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.Resources = in.Resources
 	out.Affinity = (*core_v1.Affinity)(unsafe.Pointer(in.Affinity))
 	out.SchedulerName = in.SchedulerName
@@ -945,7 +955,7 @@ func autoConvert_kubedb_PostgresSpec_To_v1alpha1_PostgresSpec(in *kubedb.Postgre
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.BackupSchedule = (*BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
 	out.DoNotPause = in.DoNotPause
-	out.Monitor = (*MonitorSpec)(unsafe.Pointer(in.Monitor))
+	out.Monitor = (*api.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.Resources = in.Resources
 	out.Affinity = (*core_v1.Affinity)(unsafe.Pointer(in.Affinity))
 	out.SchedulerName = in.SchedulerName
@@ -1026,30 +1036,6 @@ func Convert_kubedb_PostgresTableInfo_To_v1alpha1_PostgresTableInfo(in *kubedb.P
 	return autoConvert_kubedb_PostgresTableInfo_To_v1alpha1_PostgresTableInfo(in, out, s)
 }
 
-func autoConvert_v1alpha1_PrometheusSpec_To_kubedb_PrometheusSpec(in *PrometheusSpec, out *kubedb.PrometheusSpec, s conversion.Scope) error {
-	out.Namespace = in.Namespace
-	out.Labels = *(*map[string]string)(unsafe.Pointer(&in.Labels))
-	out.Interval = in.Interval
-	return nil
-}
-
-// Convert_v1alpha1_PrometheusSpec_To_kubedb_PrometheusSpec is an autogenerated conversion function.
-func Convert_v1alpha1_PrometheusSpec_To_kubedb_PrometheusSpec(in *PrometheusSpec, out *kubedb.PrometheusSpec, s conversion.Scope) error {
-	return autoConvert_v1alpha1_PrometheusSpec_To_kubedb_PrometheusSpec(in, out, s)
-}
-
-func autoConvert_kubedb_PrometheusSpec_To_v1alpha1_PrometheusSpec(in *kubedb.PrometheusSpec, out *PrometheusSpec, s conversion.Scope) error {
-	out.Namespace = in.Namespace
-	out.Labels = *(*map[string]string)(unsafe.Pointer(&in.Labels))
-	out.Interval = in.Interval
-	return nil
-}
-
-// Convert_kubedb_PrometheusSpec_To_v1alpha1_PrometheusSpec is an autogenerated conversion function.
-func Convert_kubedb_PrometheusSpec_To_v1alpha1_PrometheusSpec(in *kubedb.PrometheusSpec, out *PrometheusSpec, s conversion.Scope) error {
-	return autoConvert_kubedb_PrometheusSpec_To_v1alpha1_PrometheusSpec(in, out, s)
-}
-
 func autoConvert_v1alpha1_Redis_To_kubedb_Redis(in *Redis, out *kubedb.Redis, s conversion.Scope) error {
 	out.ObjectMeta = in.ObjectMeta
 	if err := Convert_v1alpha1_RedisSpec_To_kubedb_RedisSpec(&in.Spec, &out.Spec, s); err != nil {
@@ -1084,7 +1070,17 @@ func Convert_kubedb_Redis_To_v1alpha1_Redis(in *kubedb.Redis, out *Redis, s conv
 
 func autoConvert_v1alpha1_RedisList_To_kubedb_RedisList(in *RedisList, out *kubedb.RedisList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]kubedb.Redis)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]kubedb.Redis, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha1_Redis_To_kubedb_Redis(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -1095,7 +1091,17 @@ func Convert_v1alpha1_RedisList_To_kubedb_RedisList(in *RedisList, out *kubedb.R
 
 func autoConvert_kubedb_RedisList_To_v1alpha1_RedisList(in *kubedb.RedisList, out *RedisList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]Redis)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]Redis, len(*in))
+		for i := range *in {
+			if err := Convert_kubedb_Redis_To_v1alpha1_Redis(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -1113,7 +1119,16 @@ func autoConvert_v1alpha1_RedisSpec_To_kubedb_RedisSpec(in *RedisSpec, out *kube
 	out.Init = (*kubedb.InitSpec)(unsafe.Pointer(in.Init))
 	out.BackupSchedule = (*kubedb.BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
 	out.DoNotPause = in.DoNotPause
-	out.Monitor = (*kubedb.MonitorSpec)(unsafe.Pointer(in.Monitor))
+	if in.Monitor != nil {
+		in, out := &in.Monitor, &out.Monitor
+		*out = new(unnameable_Unsupported)
+		// TODO: Inefficient conversion - can we improve it?
+		if err := s.Convert(*in, *out, 0); err != nil {
+			return err
+		}
+	} else {
+		out.Monitor = nil
+	}
 	out.Resources = in.Resources
 	out.Affinity = (*core_v1.Affinity)(unsafe.Pointer(in.Affinity))
 	out.SchedulerName = in.SchedulerName
@@ -1135,7 +1150,16 @@ func autoConvert_kubedb_RedisSpec_To_v1alpha1_RedisSpec(in *kubedb.RedisSpec, ou
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.BackupSchedule = (*BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
 	out.DoNotPause = in.DoNotPause
-	out.Monitor = (*MonitorSpec)(unsafe.Pointer(in.Monitor))
+	if in.Monitor != nil {
+		in, out := &in.Monitor, &out.Monitor
+		*out = new(api.AgentSpec)
+		// TODO: Inefficient conversion - can we improve it?
+		if err := s.Convert(*in, *out, 0); err != nil {
+			return err
+		}
+	} else {
+		out.Monitor = nil
+	}
 	out.Resources = in.Resources
 	out.Affinity = (*core_v1.Affinity)(unsafe.Pointer(in.Affinity))
 	out.SchedulerName = in.SchedulerName
