@@ -1,5 +1,5 @@
 hash: 497b439d10a30f1b0f7a4816481d7c67eb1e24e4c57149d6a4f886c3d0f4bc70
-updated: 2017-11-14T23:01:08.584225634-08:00
+updated: 2017-11-15T17:00:18.429217772+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -24,8 +24,6 @@ imports:
   - tools/monitoring/api
 - name: github.com/appscode/log
   version: 68e0e42e42c01371f3950571fc87c2298a51dd8f
-- name: github.com/appscode/mergo
-  version: e3000cb3d28c72b837601cac94debd91032d19fe
 - name: github.com/appscode/osm
   version: c4eb9d9f2fa11a22cd4b5f358afa5c89245059b4
   subpackages:
@@ -77,8 +75,6 @@ imports:
   version: cbdd1b519796673cd02d53b0e21999acbcbfe6e4
   repo: https://github.com/appscode/prometheus-operator.git
   vcs: git
-  subpackages:
-  - pkg/client/monitoring/v1
 - name: github.com/davecgh/go-spew
   version: 782f4967f2dc4564575ca782fe2d04090b5faca8
   subpackages:
@@ -141,7 +137,7 @@ imports:
 - name: github.com/google/gofuzz
   version: 44d81051d367757e1c7c6a5a86423ece9afcf63c
 - name: github.com/google/uuid
-  version: 8c31c18f31ede9fc8eae72290a7e7a8064e9b3e3
+  version: e367a344cbe8e08149f9951115dc299ebd42b919
 - name: github.com/googleapis/gnostic
   version: 68f4ded48ba9414dab2ae69b3f0d69971da73aa5
   subpackages:
@@ -203,7 +199,7 @@ imports:
 - name: github.com/opencontainers/go-digest
   version: a6d0ee40d4207ea02364bd3b9e8e77b9159ba1eb
 - name: github.com/orcaman/concurrent-map
-  version: d4c23bd0e01134806215ffe65ba3fd22ec6721f7
+  version: 2ae17bc4c860c83513ee50feb9746f3e50d7515d
 - name: github.com/peterbourgon/diskv
   version: 5f041e8faa004a95c88a202771f4cc3e991971e6
 - name: github.com/pkg/errors
@@ -376,7 +372,6 @@ imports:
   subpackages:
   - discovery
   - discovery/fake
-  - dynamic
   - kubernetes
   - kubernetes/scheme
   - kubernetes/typed/admissionregistration/v1alpha1
@@ -422,7 +417,7 @@ imports:
   subpackages:
   - pkg/common
 - name: k8s.io/kubernetes
-  version: f0efb3cb883751c5ffdbe6d515f3cb4fbe7b7acd
+  version: 0b9efaeb34a2fc51ff8e4d34ad9bc6375459c4a4
   subpackages:
   - pkg/api
   - pkg/api/helper

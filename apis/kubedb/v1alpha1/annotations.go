@@ -18,16 +18,21 @@ const (
 	MySQLKey             = ResourceTypeMySQL + "." + GenericKey
 	MySQLDatabaseVersion = MySQLKey + "/version"
 
+	MongoDBKey             = ResourceTypeMongoDB + "." + GenericKey
+	MongoDBDatabaseVersion = MongoDBKey + "/version"
+
 	SnapshotKey         = ResourceTypeSnapshot + "." + GenericKey
 	LabelSnapshotStatus = SnapshotKey + "/status"
 
 	PostgresInitSpec      = PostgresKey + "/init"
 	ElasticsearchInitSpec = ElasticsearchKey + "/init"
 	MySQLInitSpec         = MySQLKey + "/init"
+	MongoDBInitSpec       = MongoDBKey + "/init"
 
 	PostgresIgnore      = PostgresKey + "/ignore"
 	ElasticsearchIgnore = ElasticsearchKey + "/ignore"
 	MySQLIgnore         = MySQLKey + "/ignore"
+	MongoDBIgnore       = MongoDBKey + "/ignore"
 
 	AgentCoreosPrometheus        = "coreos-prometheus-operator"
 	PrometheusExporterPortNumber = 56790
