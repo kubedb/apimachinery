@@ -38,7 +38,7 @@ func PatchMongoDB(c tcs.KubedbV1alpha1Interface, cur *aci.MongoDB, transform fun
 		return nil, err
 	}
 
-	modJson, err := json.Marshal(transform(cur))
+	modJson, err := json.Marshal(transform(cur.DeepCopy()))
 	if err != nil {
 		return nil, err
 	}
