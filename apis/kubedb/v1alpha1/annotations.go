@@ -24,7 +24,6 @@ const (
 	RedisKey             = ResourceTypeRedis + "." + GenericKey
 	RedisDatabaseVersion = RedisKey + "/version"
 
-
 	SnapshotKey         = ResourceTypeSnapshot + "." + GenericKey
 	LabelSnapshotStatus = SnapshotKey + "/status"
 

@@ -21,12 +21,13 @@ limitations under the License.
 package v1alpha1
 
 import (
+	reflect "reflect"
+
 	api "github.com/appscode/kutil/tools/monitoring/api"
 	core_v1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
 	runtime "k8s.io/apimachinery/pkg/runtime"
-	reflect "reflect"
 )
 
 func init() {
@@ -1347,38 +1348,11 @@ func (in *RedisSpec) DeepCopyInto(out *RedisSpec) {
 			(*in).DeepCopyInto(*out)
 		}
 	}
-	if in.DatabaseSecret != nil {
-		in, out := &in.DatabaseSecret, &out.DatabaseSecret
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(core_v1.SecretVolumeSource)
-			(*in).DeepCopyInto(*out)
-		}
-	}
 	if in.NodeSelector != nil {
 		in, out := &in.NodeSelector, &out.NodeSelector
 		*out = make(map[string]string, len(*in))
 		for key, val := range *in {
 			(*out)[key] = val
-		}
-	}
-	if in.Init != nil {
-		in, out := &in.Init, &out.Init
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(InitSpec)
-			(*in).DeepCopyInto(*out)
-		}
-	}
-	if in.BackupSchedule != nil {
-		in, out := &in.BackupSchedule, &out.BackupSchedule
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(BackupScheduleSpec)
-			(*in).DeepCopyInto(*out)
 		}
 	}
 	if in.Monitor != nil {
