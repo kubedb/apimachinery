@@ -623,7 +623,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"items": {
 							SchemaProps: spec.SchemaProps{
-								Description: "Items is a list of Xdb TPR objects",
+								Description: "Items is a list of MySQL TPR objects",
 								Type:        []string{"array"},
 								Items: &spec.SchemaOrArray{
 									Schema: &spec.Schema{
@@ -646,14 +646,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 					Properties: map[string]spec.Schema{
 						"version": {
 							SchemaProps: spec.SchemaProps{
-								Description: "Version of Xdb to be deployed.",
+								Description: "Version of MySQL to be deployed.",
 								Type:        []string{"string"},
 								Format:      "",
 							},
 						},
 						"replicas": {
 							SchemaProps: spec.SchemaProps{
-								Description: "Number of instances to deploy for a Xdb database.",
+								Description: "Number of instances to deploy for a MySQL database.",
 								Type:        []string{"integer"},
 								Format:      "int32",
 							},
