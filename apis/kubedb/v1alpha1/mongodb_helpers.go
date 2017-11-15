@@ -6,7 +6,6 @@ import (
 
 	"github.com/appscode/kutil/tools/monitoring/api"
 	core "k8s.io/api/core/v1"
-	"github.com/constabulary/gb/testdata/src/e"
 )
 
 func (p MongoDB) OffshootName() string {
@@ -57,8 +56,6 @@ func (p MongoDB) ResourceType() string {
 	return ResourceTypeMongoDB
 }
 
-
-
 func (p MongoDB) ObjectReference() *core.ObjectReference {
 	return &core.ObjectReference{
 		APIVersion:      SchemeGroupVersion.String(),
@@ -86,6 +83,6 @@ func (p MongoDB) Scheme() string {
 	return ""
 }
 
-func (p MongoDB) StatsAccessor() api.StatsAccessor {
+func (p *MongoDB) StatsAccessor() api.StatsAccessor {
 	return p
 }
