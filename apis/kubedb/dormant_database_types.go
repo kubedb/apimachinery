@@ -54,6 +54,9 @@ type OriginSpec struct {
 	// Redis Spec
 	// +optional
 	Redis *RedisSpec `json:"redis,omitempty"`
+	// Memcached Spec
+	// +optional
+	Memcached *MemcachedSpec `json:"memcached,omitempty"`
 }
 
 type DormantDatabasePhase string
