@@ -3,7 +3,6 @@ package util
 import (
 	"errors"
 
-	"github.com/appscode/kutil"
 	"github.com/appscode/kutil/meta"
 	"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
 	"github.com/kubernetes/apimachinery/pkg/conversion"
@@ -29,10 +28,6 @@ func AssignTypeKind(v interface{}) error {
 		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
 		u.Kind = meta.GetKind(v)
 		return nil
-	case *v1alpha1.MongoDB:
-		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
-		u.Kind = kutil.GetKind(v)
-		return nil
 	case *v1alpha1.MySQL:
 		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
 		u.Kind = meta.GetKind(v)
@@ -45,13 +40,9 @@ func AssignTypeKind(v interface{}) error {
 		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
 		u.Kind = meta.GetKind(v)
 		return nil
-	case *v1alpha1.Redis:
-		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
-		u.Kind = kutil.GetKind(v)
-		return nil
 	case *v1alpha1.Memcached:
 		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
-		u.Kind = kutil.GetKind(v)
+		u.Kind = meta.GetKind(v)
 		return nil
 	case *v1alpha1.Snapshot:
 		u.APIVersion = v1alpha1.SchemeGroupVersion.String()
