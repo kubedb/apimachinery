@@ -391,7 +391,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"monitor": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Monitor is used monitor database instance",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec"),
+								Ref:         ref("github.com/appscode/kutil/tools/monitoring/api.AgentSpec"),
 							},
 						},
 						"resources": {
@@ -430,7 +430,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
+				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus": {
 			Schema: spec.Schema{
@@ -682,7 +682,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"monitor": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Monitor is used monitor database instance",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec"),
+								Ref:         ref("github.com/appscode/kutil/tools/monitoring/api.AgentSpec"),
 							},
 						},
 						"resources": {
@@ -721,7 +721,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
+				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MemcachedStatus": {
 			Schema: spec.Schema{
@@ -898,7 +898,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"monitor": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Monitor is used monitor database instance",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec"),
+								Ref:         ref("github.com/appscode/kutil/tools/monitoring/api.AgentSpec"),
 							},
 						},
 						"resources": {
@@ -937,7 +937,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
+				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBStatus": {
 			Schema: spec.Schema{
@@ -965,28 +965,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			},
 			Dependencies: []string{
 				"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
-		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec": {
-			Schema: spec.Schema{
-				SchemaProps: spec.SchemaProps{
-					Properties: map[string]spec.Schema{
-						"agent": {
-							SchemaProps: spec.SchemaProps{
-								Description: "Valid values: coreos-prometheus-operator",
-								Type:        []string{"string"},
-								Format:      "",
-							},
-						},
-						"prometheus": {
-							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PrometheusSpec"),
-							},
-						},
-					},
-				},
-			},
-			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PrometheusSpec"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQL": {
 			Schema: spec.Schema{
@@ -1136,7 +1114,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"monitor": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Monitor is used monitor database instance",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec"),
+								Ref:         ref("github.com/appscode/kutil/tools/monitoring/api.AgentSpec"),
 							},
 						},
 						"resources": {
@@ -1175,7 +1153,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
+				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLStatus": {
 			Schema: spec.Schema{
@@ -1435,7 +1413,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"monitor": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Monitor is used monitor database instance",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec"),
+								Ref:         ref("github.com/appscode/kutil/tools/monitoring/api.AgentSpec"),
 							},
 						},
 						"resources": {
@@ -1474,7 +1452,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
+				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresStatus": {
 			Schema: spec.Schema{
@@ -1551,43 +1529,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 					},
 					Required: []string{"totalRow", "maxId", "nextId"},
-				},
-			},
-			Dependencies: []string{},
-		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PrometheusSpec": {
-			Schema: spec.Schema{
-				SchemaProps: spec.SchemaProps{
-					Properties: map[string]spec.Schema{
-						"namespace": {
-							SchemaProps: spec.SchemaProps{
-								Description: "Namespace of Prometheus. Service monitors will be created in this namespace.",
-								Type:        []string{"string"},
-								Format:      "",
-							},
-						},
-						"labels": {
-							SchemaProps: spec.SchemaProps{
-								Description: "Labels are key value pairs that is used to select Prometheus instance via ServiceMonitor labels.",
-								Type:        []string{"object"},
-								AdditionalProperties: &spec.SchemaOrBool{
-									Schema: &spec.Schema{
-										SchemaProps: spec.SchemaProps{
-											Type:   []string{"string"},
-											Format: "",
-										},
-									},
-								},
-							},
-						},
-						"interval": {
-							SchemaProps: spec.SchemaProps{
-								Description: "Interval at which metrics should be scraped",
-								Type:        []string{"string"},
-								Format:      "",
-							},
-						},
-					},
 				},
 			},
 			Dependencies: []string{},
@@ -1698,12 +1639,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 							},
 						},
-						"databaseSecret": {
-							SchemaProps: spec.SchemaProps{
-								Description: "Database authentication secret",
-								Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
-							},
-						},
 						"nodeSelector": {
 							SchemaProps: spec.SchemaProps{
 								Description: "NodeSelector is a selector which must be true for the pod to fit on a node",
@@ -1718,18 +1653,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								},
 							},
 						},
-						"init": {
-							SchemaProps: spec.SchemaProps{
-								Description: "Init is used to initialize database",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
-							},
-						},
-						"backupSchedule": {
-							SchemaProps: spec.SchemaProps{
-								Description: "BackupSchedule spec to specify how database backup will be taken",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec"),
-							},
-						},
 						"doNotPause": {
 							SchemaProps: spec.SchemaProps{
 								Description: "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
@@ -1740,7 +1663,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"monitor": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Monitor is used monitor database instance",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec"),
+								Ref:         ref("github.com/appscode/kutil/tools/monitoring/api.AgentSpec"),
 							},
 						},
 						"resources": {
@@ -1779,7 +1702,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MonitorSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
+				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
 		},
 		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisStatus": {
 			Schema: spec.Schema{
