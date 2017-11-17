@@ -1,6 +1,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/k8sdb/apimachinery)](https://goreportcard.com/report/github.com/k8sdb/apimachinery)
 
-[Website](https://appscode.com) • [Slack](https://slack.appscode.com) • [Twitter](https://twitter.com/AppsCodeHQ)
+[Website](https://kubedb.com) • [Slack](http://slack.kubernetes.io) • [Twitter](https://twitter.com/KubeDB)
 
 # apimachinery
 Common api objects for KubeDB
