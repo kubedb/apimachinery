@@ -32,12 +32,10 @@ type ElasticsearchSpec struct {
 	Replicas int32 `json:"replicas,omitempty"`
 	// Elasticsearch topology for node specification
 	Topology *ElasticsearchClusterTopology `json:"topology,omitempty"`
-	// EnableSSL to enable ssl in transport & http layer
-	EnableSSL bool `json:"enableSSL,omitempty"`
-	// Secret for SSL certificates
+	// Secret with SSL certificates
 	CertificateSecret *core.SecretVolumeSource `json:"certificateSecret,omitempty"`
-	// Secret for SearchGuard authentication
-	AuthSecret *core.SecretVolumeSource `json:"authSecret,omitempty"`
+	// Database authentication secret
+	DatabaseSecret *core.SecretVolumeSource `json:"databaseSecret,omitempty"`
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 	// NodeSelector is a selector which must be true for the pod to fit on a node

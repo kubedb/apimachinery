@@ -401,22 +401,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology"),
 							},
 						},
-						"enableSSL": {
-							SchemaProps: spec.SchemaProps{
-								Description: "EnableSSL to enable ssl in transport & http layer",
-								Type:        []string{"boolean"},
-								Format:      "",
-							},
-						},
 						"certificateSecret": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Secret with SSL certificates",
 								Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
 							},
 						},
-						"authSecret": {
+						"databaseSecret": {
 							SchemaProps: spec.SchemaProps{
-								Description: "Secret for SearchGuard authentication",
+								Description: "Database authentication secret",
 								Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
 							},
 						},

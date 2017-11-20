@@ -21,12 +21,13 @@ limitations under the License.
 package v1alpha1
 
 import (
+	reflect "reflect"
+
 	api "github.com/appscode/kutil/tools/monitoring/api"
 	core_v1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
 	runtime "k8s.io/apimachinery/pkg/runtime"
-	reflect "reflect"
 )
 
 func init() {
@@ -514,8 +515,8 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 			(*in).DeepCopyInto(*out)
 		}
 	}
-	if in.AuthSecret != nil {
-		in, out := &in.AuthSecret, &out.AuthSecret
+	if in.DatabaseSecret != nil {
+		in, out := &in.DatabaseSecret, &out.DatabaseSecret
 		if *in == nil {
 			*out = nil
 		} else {
