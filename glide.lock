@@ -1,5 +1,5 @@
-hash: 5426d5e33a1bc2c3e9289a92a6c016347674317e554b6b46f8c84d2145c78e9a
-updated: 2017-11-18T11:07:45.339333871-08:00
+hash: cf03cf4b50604e794a3adf6893d7e3c340b00cf51a35bd3f24e73416c5cf62fb
+updated: 2017-11-20T01:41:51.264606964-08:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -203,6 +203,10 @@ imports:
   version: 5f041e8faa004a95c88a202771f4cc3e991971e6
 - name: github.com/pkg/errors
   version: a22138067af1c4942683050411a841ade67fe1eb
+- name: github.com/prometheus/client_golang
+  version: c5b7fccd204277076155f10851dad72b76a49317
+- name: github.com/prometheus/common
+  version: 3233b24a36715a2fe36d162260457857a56d672d
 - name: github.com/PuerkitoBio/purell
   version: 8a290539e2e8629dbc4e6bad948158f790ec31f4
 - name: github.com/PuerkitoBio/urlesc
@@ -212,7 +216,7 @@ imports:
 - name: github.com/sirupsen/logrus
   version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
 - name: github.com/spf13/cobra
-  version: d6948b782c9f4799ea3cd225f6de4131c29c243a
+  version: 19e54c4a2b8a78c9d54b2bed61b1a6c5e1bfcf6f
 - name: github.com/spf13/pflag
   version: 4c012f6dcd9546820e378d0bdda4d8fc772cdfea
 - name: golang.org/x/crypto

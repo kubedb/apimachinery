@@ -196,7 +196,7 @@ func (c *SnapshotController) create(snapshot *api.Snapshot) error {
 		return err
 	}
 	_, err = c.client.CoreV1().Secrets(secret.Namespace).Create(secret)
-	if err != nil {
+	if err != nil && !kerr.IsAlreadyExists(err) {
 		message := fmt.Sprintf("Failed to create osm secret. Reason: %v", err)
 		c.eventRecorder.Event(api.ObjectReferenceFor(runtimeObj), core.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
 		c.eventRecorder.Event(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
