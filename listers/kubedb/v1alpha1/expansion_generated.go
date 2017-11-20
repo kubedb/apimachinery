@@ -34,6 +34,22 @@ type ElasticsearchListerExpansion interface{}
 // ElasticsearchNamespaceLister.
 type ElasticsearchNamespaceListerExpansion interface{}
 
+// MemcachedListerExpansion allows custom methods to be added to
+// MemcachedLister.
+type MemcachedListerExpansion interface{}
+
+// MemcachedNamespaceListerExpansion allows custom methods to be added to
+// MemcachedNamespaceLister.
+type MemcachedNamespaceListerExpansion interface{}
+
+// MongoDBListerExpansion allows custom methods to be added to
+// MongoDBLister.
+type MongoDBListerExpansion interface{}
+
+// MongoDBNamespaceListerExpansion allows custom methods to be added to
+// MongoDBNamespaceLister.
+type MongoDBNamespaceListerExpansion interface{}
+
 // MySQLListerExpansion allows custom methods to be added to
 // MySQLLister.
 type MySQLListerExpansion interface{}
@@ -49,6 +65,14 @@ type PostgresListerExpansion interface{}
 // PostgresNamespaceListerExpansion allows custom methods to be added to
 // PostgresNamespaceLister.
 type PostgresNamespaceListerExpansion interface{}
+
+// RedisListerExpansion allows custom methods to be added to
+// RedisLister.
+type RedisListerExpansion interface{}
+
+// RedisNamespaceListerExpansion allows custom methods to be added to
+// RedisNamespaceLister.
+type RedisNamespaceListerExpansion interface{}
 
 // SnapshotListerExpansion allows custom methods to be added to
 // SnapshotLister.

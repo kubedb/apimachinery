@@ -34,12 +34,24 @@ func (c *FakeKubedb) Elasticsearchs(namespace string) internalversion.Elasticsea
 	return &FakeElasticsearchs{c, namespace}
 }
 
+func (c *FakeKubedb) Memcacheds(namespace string) internalversion.MemcachedInterface {
+	return &FakeMemcacheds{c, namespace}
+}
+
+func (c *FakeKubedb) MongoDBs(namespace string) internalversion.MongoDBInterface {
+	return &FakeMongoDBs{c, namespace}
+}
+
 func (c *FakeKubedb) MySQLs(namespace string) internalversion.MySQLInterface {
 	return &FakeMySQLs{c, namespace}
 }
 
 func (c *FakeKubedb) Postgreses(namespace string) internalversion.PostgresInterface {
 	return &FakePostgreses{c, namespace}
+}
+
+func (c *FakeKubedb) Redises(namespace string) internalversion.RedisInterface {
+	return &FakeRedises{c, namespace}
 }
 
 func (c *FakeKubedb) Snapshots(namespace string) internalversion.SnapshotInterface {
