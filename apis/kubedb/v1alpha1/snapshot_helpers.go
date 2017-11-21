@@ -85,6 +85,6 @@ func (s Snapshot) ObjectReference() *core.ObjectReference {
 	}
 }
 
-func (s Snapshot) OSMSecret() string {
+func (s Snapshot) OSMSecretName() string {
 	return fmt.Sprintf("osm-%v", s.Name)
 }
