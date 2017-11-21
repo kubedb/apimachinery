@@ -3,7 +3,6 @@ package storage
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 
