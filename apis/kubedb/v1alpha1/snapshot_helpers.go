@@ -2,10 +2,10 @@ package v1alpha1
 
 import (
 	"errors"
+	"fmt"
 	"path/filepath"
 
 	core "k8s.io/api/core/v1"
-	"fmt"
 )
 
 func (s Snapshot) OffshootName() string {
