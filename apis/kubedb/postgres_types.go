@@ -32,6 +32,8 @@ type PostgresSpec struct {
 	Replicas int32 `json:"replicas,omitempty"`
 	// Database authentication secret
 	DatabaseSecret *core.SecretVolumeSource `json:"databaseSecret,omitempty"`
+	// Database HA configuration
+	Configuration *PostgresConfiguration `json:"configuration,omitempty"`
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 	// NodeSelector is a selector which must be true for the pod to fit on a node
@@ -62,6 +64,11 @@ type PostgresSpec struct {
 	// If specified, the pod's tolerations.
 	// +optional
 	Tolerations []core.Toleration `json:"tolerations,omitempty" protobuf:"bytes,22,opt,name=tolerations"`
+}
+
+type PostgresConfiguration struct {
+	Standby   string `json:"standby,omitempty"`
+	Streaming string `json:"streaming,omitempty"`
 }
 
 type PostgresStatus struct {
