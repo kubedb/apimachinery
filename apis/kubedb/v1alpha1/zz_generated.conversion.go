@@ -1087,8 +1087,9 @@ func Convert_kubedb_PostgresSchemaInfo_To_v1alpha1_PostgresSchemaInfo(in *kubedb
 
 func autoConvert_v1alpha1_PostgresSpec_To_kubedb_PostgresSpec(in *PostgresSpec, out *kubedb.PostgresSpec, s conversion.Scope) error {
 	out.Version = types.StrYo(in.Version)
-	out.Storage = (*core_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	out.Replicas = in.Replicas
 	out.DatabaseSecret = (*core_v1.SecretVolumeSource)(unsafe.Pointer(in.DatabaseSecret))
+	out.Storage = (*core_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
 	out.Init = (*kubedb.InitSpec)(unsafe.Pointer(in.Init))
 	out.BackupSchedule = (*kubedb.BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))
@@ -1108,8 +1109,9 @@ func Convert_v1alpha1_PostgresSpec_To_kubedb_PostgresSpec(in *PostgresSpec, out 
 
 func autoConvert_kubedb_PostgresSpec_To_v1alpha1_PostgresSpec(in *kubedb.PostgresSpec, out *PostgresSpec, s conversion.Scope) error {
 	out.Version = types.StrYo(in.Version)
-	out.Storage = (*core_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	out.Replicas = in.Replicas
 	out.DatabaseSecret = (*core_v1.SecretVolumeSource)(unsafe.Pointer(in.DatabaseSecret))
+	out.Storage = (*core_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.BackupSchedule = (*BackupScheduleSpec)(unsafe.Pointer(in.BackupSchedule))

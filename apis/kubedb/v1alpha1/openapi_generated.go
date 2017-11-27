@@ -1436,16 +1436,23 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Format:      "",
 							},
 						},
-						"storage": {
+						"replicas": {
 							SchemaProps: spec.SchemaProps{
-								Description: "Storage to specify how storage shall be used.",
-								Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+								Description: "Number of instances to deploy for a Postgres database.",
+								Type:        []string{"integer"},
+								Format:      "int32",
 							},
 						},
 						"databaseSecret": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Database authentication secret",
 								Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
+							},
+						},
+						"storage": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Storage to specify how storage shall be used.",
+								Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 							},
 						},
 						"nodeSelector": {

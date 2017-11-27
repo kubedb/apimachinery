@@ -28,10 +28,12 @@ type Postgres struct {
 type PostgresSpec struct {
 	// Version of Postgres to be deployed.
 	Version types.StrYo `json:"version,omitempty"`
-	// Storage to specify how storage shall be used.
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+	// Number of instances to deploy for a Postgres database.
+	Replicas int32 `json:"replicas,omitempty"`
 	// Database authentication secret
 	DatabaseSecret *core.SecretVolumeSource `json:"databaseSecret,omitempty"`
+	// Storage to specify how storage shall be used.
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 	// NodeSelector is a selector which must be true for the pod to fit on a node
 	// +optional
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
