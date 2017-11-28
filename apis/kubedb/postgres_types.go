@@ -33,7 +33,7 @@ type PostgresSpec struct {
 	// Database authentication secret
 	DatabaseSecret *core.SecretVolumeSource `json:"databaseSecret,omitempty"`
 	// Database HA configuration
-	Configuration *PostgresConfiguration `json:"configuration,omitempty"`
+	Configuration PostgresConfiguration `json:"configuration,omitempty"`
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 	// NodeSelector is a selector which must be true for the pod to fit on a node

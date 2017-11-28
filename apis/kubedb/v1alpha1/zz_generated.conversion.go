@@ -1113,7 +1113,9 @@ func autoConvert_v1alpha1_PostgresSpec_To_kubedb_PostgresSpec(in *PostgresSpec, 
 	out.Version = types.StrYo(in.Version)
 	out.Replicas = in.Replicas
 	out.DatabaseSecret = (*core_v1.SecretVolumeSource)(unsafe.Pointer(in.DatabaseSecret))
-	out.Configuration = (*kubedb.PostgresConfiguration)(unsafe.Pointer(in.Configuration))
+	if err := Convert_v1alpha1_PostgresConfiguration_To_kubedb_PostgresConfiguration(&in.Configuration, &out.Configuration, s); err != nil {
+		return err
+	}
 	out.Storage = (*core_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
 	out.Init = (*kubedb.InitSpec)(unsafe.Pointer(in.Init))
@@ -1136,7 +1138,9 @@ func autoConvert_kubedb_PostgresSpec_To_v1alpha1_PostgresSpec(in *kubedb.Postgre
 	out.Version = types.StrYo(in.Version)
 	out.Replicas = in.Replicas
 	out.DatabaseSecret = (*core_v1.SecretVolumeSource)(unsafe.Pointer(in.DatabaseSecret))
-	out.Configuration = (*PostgresConfiguration)(unsafe.Pointer(in.Configuration))
+	if err := Convert_kubedb_PostgresConfiguration_To_v1alpha1_PostgresConfiguration(&in.Configuration, &out.Configuration, s); err != nil {
+		return err
+	}
 	out.Storage = (*core_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))

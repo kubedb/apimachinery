@@ -1383,15 +1383,7 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 			(*in).DeepCopyInto(*out)
 		}
 	}
-	if in.Configuration != nil {
-		in, out := &in.Configuration, &out.Configuration
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(PostgresConfiguration)
-			**out = **in
-		}
-	}
+	out.Configuration = in.Configuration
 	if in.Storage != nil {
 		in, out := &in.Storage, &out.Storage
 		if *in == nil {
