@@ -1,5 +1,5 @@
-hash: cf03cf4b50604e794a3adf6893d7e3c340b00cf51a35bd3f24e73416c5cf62fb
-updated: 2017-11-20T01:41:51.264606964-08:00
+hash: ada496263866e0899a455d280e5f70b6a76b79e3087b03952c11c7db4fe7196d
+updated: 2017-11-28T23:00:30.637991809-08:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -7,7 +7,7 @@ imports:
   - compute/metadata
   - internal
 - name: github.com/appscode/go
-  version: 1cd97c853ad364376f9c792106deb0bfd197bca0
+  version: 85b510edd14fe8d6beb2ad365afd3c5b3afc8c49
   subpackages:
   - context
   - encoding/json/types
@@ -23,7 +23,7 @@ imports:
   - meta
   - tools/monitoring/api
 - name: github.com/appscode/osm
-  version: 7b0b6f4f329d8d1ed786020d7e7ad865c61f8e7f
+  version: b3ed1c7835d33f312616b260a949589cf33311ee
   subpackages:
   - context
 - name: github.com/aws/aws-sdk-go
@@ -117,7 +117,7 @@ imports:
   - proto
   - sortkeys
 - name: github.com/golang/glog
-  version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
+  version: 44145f04b68cf362d9c4df2182967c2275eaefed
 - name: github.com/golang/groupcache
   version: 02826c3e79038b59d737d3b1c0a1d937f71a4433
   subpackages:
@@ -136,7 +136,7 @@ imports:
 - name: github.com/google/gofuzz
   version: 44d81051d367757e1c7c6a5a86423ece9afcf63c
 - name: github.com/google/uuid
-  version: 8c31c18f31ede9fc8eae72290a7e7a8064e9b3e3
+  version: 4ebdd04351c754ab14fd5295c91fb901e07dfbcc
 - name: github.com/googleapis/gnostic
   version: 68f4ded48ba9414dab2ae69b3f0d69971da73aa5
   subpackages:
@@ -170,9 +170,7 @@ imports:
   subpackages:
   - simplelru
 - name: github.com/heroku/docker-registry-client
-  version: 63418fd485f793ab9a21e44f9a7511bb649cc9af
-  repo: https://github.com/appscode/docker-registry-client.git
-  vcs: git
+  version: fd2fe803496897db70c236ee244f41487ea92ec2
   subpackages:
   - registry
 - name: github.com/inconshreveable/mousetrap
@@ -216,7 +214,7 @@ imports:
 - name: github.com/sirupsen/logrus
   version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
 - name: github.com/spf13/cobra
-  version: 19e54c4a2b8a78c9d54b2bed61b1a6c5e1bfcf6f
+  version: 1be1d2841c773c01bee8289f55f7463b6e2c2539
 - name: github.com/spf13/pflag
   version: 4c012f6dcd9546820e378d0bdda4d8fc772cdfea
 - name: golang.org/x/crypto
@@ -259,14 +257,14 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: 790790d1b4a7d6b0d03d3725f980eedf80dc2707
+  version: 92db9b55d2aa90e54a33cfaa8caf354afae68157
   subpackages:
   - gensupport
   - googleapi
   - googleapi/internal/uritemplates
   - storage/v1
 - name: google.golang.org/appengine
-  version: 9d8544a6b2c7df9cff240fcf92d7b2f59bc13416
+  version: 4f7eeb5305a4ba1966344836ba4af9996b7b4e05
   subpackages:
   - internal
   - internal/app_identity
