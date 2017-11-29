@@ -1376,6 +1376,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Format: "",
 							},
 						},
+						"archive": {
+							SchemaProps: spec.SchemaProps{
+								Type:   []string{"string"},
+								Format: "",
+							},
+						},
 					},
 				},
 			},
@@ -1474,6 +1480,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 							SchemaProps: spec.SchemaProps{
 								Description: "Database HA configuration",
 								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresConfiguration"),
+							},
+						},
+						"restore": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Restore from wal-g archive",
+								Type:        []string{"boolean"},
+								Format:      "",
 							},
 						},
 						"storage": {

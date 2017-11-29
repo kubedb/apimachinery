@@ -1048,6 +1048,7 @@ func Convert_kubedb_Postgres_To_v1alpha1_Postgres(in *kubedb.Postgres, out *Post
 func autoConvert_v1alpha1_PostgresConfiguration_To_kubedb_PostgresConfiguration(in *PostgresConfiguration, out *kubedb.PostgresConfiguration, s conversion.Scope) error {
 	out.Standby = in.Standby
 	out.Streaming = in.Streaming
+	out.Archive = in.Archive
 	return nil
 }
 
@@ -1059,6 +1060,7 @@ func Convert_v1alpha1_PostgresConfiguration_To_kubedb_PostgresConfiguration(in *
 func autoConvert_kubedb_PostgresConfiguration_To_v1alpha1_PostgresConfiguration(in *kubedb.PostgresConfiguration, out *PostgresConfiguration, s conversion.Scope) error {
 	out.Standby = in.Standby
 	out.Streaming = in.Streaming
+	out.Archive = in.Archive
 	return nil
 }
 
@@ -1116,6 +1118,7 @@ func autoConvert_v1alpha1_PostgresSpec_To_kubedb_PostgresSpec(in *PostgresSpec, 
 	if err := Convert_v1alpha1_PostgresConfiguration_To_kubedb_PostgresConfiguration(&in.Configuration, &out.Configuration, s); err != nil {
 		return err
 	}
+	out.Restore = in.Restore
 	out.Storage = (*core_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
 	out.Init = (*kubedb.InitSpec)(unsafe.Pointer(in.Init))
@@ -1141,6 +1144,7 @@ func autoConvert_kubedb_PostgresSpec_To_v1alpha1_PostgresSpec(in *kubedb.Postgre
 	if err := Convert_kubedb_PostgresConfiguration_To_v1alpha1_PostgresConfiguration(&in.Configuration, &out.Configuration, s); err != nil {
 		return err
 	}
+	out.Restore = in.Restore
 	out.Storage = (*core_v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
