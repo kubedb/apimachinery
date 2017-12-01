@@ -28,7 +28,7 @@ type SnapshotSpec struct {
 	// Snapshot Spec
 	SnapshotStorageSpec `json:",inline,omitempty"`
 	// Snapshot Type
-	Type string `json:"type,omitempty"`
+	Type SnapshotType `json:"type,omitempty"`
 	// Compute Resources required by the sidecar container.
 	Resources core.ResourceRequirements `json:"resources,omitempty"`
 }
@@ -42,6 +42,13 @@ const (
 	SnapshotPhaseSuccessed SnapshotPhase = "Succeeded"
 	// used for Snapshots that are Failed
 	SnapshotPhaseFailed SnapshotPhase = "Failed"
+)
+
+type SnapshotType string
+
+const (
+	SnapshotTypePostgresDumpAll    SnapshotType = "pg_dumpall"
+	SnapshotTypePostgresBaseBackup SnapshotType = "pg_basebackup"
 )
 
 type SnapshotStatus struct {

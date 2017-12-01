@@ -72,7 +72,7 @@ type PostgresSpec struct {
 }
 
 type PostgresArchiverSpec struct {
-	Storage *SnapshotStorageSpec `json:"archive,omitempty"`
+	Storage *SnapshotStorageSpec `json:"storage,omitempty"`
 	// wal_keep_segments
 }
 
@@ -107,7 +107,8 @@ type PostgresSummary struct {
 }
 
 type PostgresWALSourceSpec struct {
-	PIT                 string `json:"pit,omitempty"`
+	BackupName          string `json:"backupName,omitempty"`
+	PITR                string `json:"pitr,omitempty"`
 	SnapshotStorageSpec `json:",inline,omitempty"`
 }
 

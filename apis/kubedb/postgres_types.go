@@ -106,7 +106,8 @@ type PostgresSummary struct {
 }
 
 type PostgresWALSourceSpec struct {
-	PIT                 string `json:"pit,omitempty"`
+	BackupName          string `json:"backupName,omitempty"`
+	PITR                string `json:"pitr,omitempty"`
 	SnapshotStorageSpec `json:",inline,omitempty"`
 }
 

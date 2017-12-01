@@ -1234,7 +1234,8 @@ func Convert_kubedb_PostgresTableInfo_To_v1alpha1_PostgresTableInfo(in *kubedb.P
 }
 
 func autoConvert_v1alpha1_PostgresWALSourceSpec_To_kubedb_PostgresWALSourceSpec(in *PostgresWALSourceSpec, out *kubedb.PostgresWALSourceSpec, s conversion.Scope) error {
-	out.PIT = in.PIT
+	out.BackupName = in.BackupName
+	out.PITR = in.PITR
 	if err := Convert_v1alpha1_SnapshotStorageSpec_To_kubedb_SnapshotStorageSpec(&in.SnapshotStorageSpec, &out.SnapshotStorageSpec, s); err != nil {
 		return err
 	}
@@ -1247,7 +1248,8 @@ func Convert_v1alpha1_PostgresWALSourceSpec_To_kubedb_PostgresWALSourceSpec(in *
 }
 
 func autoConvert_kubedb_PostgresWALSourceSpec_To_v1alpha1_PostgresWALSourceSpec(in *kubedb.PostgresWALSourceSpec, out *PostgresWALSourceSpec, s conversion.Scope) error {
-	out.PIT = in.PIT
+	out.BackupName = in.BackupName
+	out.PITR = in.PITR
 	if err := Convert_kubedb_SnapshotStorageSpec_To_v1alpha1_SnapshotStorageSpec(&in.SnapshotStorageSpec, &out.SnapshotStorageSpec, s); err != nil {
 		return err
 	}
@@ -1578,7 +1580,7 @@ func autoConvert_v1alpha1_SnapshotSpec_To_kubedb_SnapshotSpec(in *SnapshotSpec, 
 	if err := Convert_v1alpha1_SnapshotStorageSpec_To_kubedb_SnapshotStorageSpec(&in.SnapshotStorageSpec, &out.SnapshotStorageSpec, s); err != nil {
 		return err
 	}
-	out.Type = in.Type
+	out.Type = kubedb.SnapshotType(in.Type)
 	out.Resources = in.Resources
 	return nil
 }
@@ -1593,7 +1595,7 @@ func autoConvert_kubedb_SnapshotSpec_To_v1alpha1_SnapshotSpec(in *kubedb.Snapsho
 	if err := Convert_kubedb_SnapshotStorageSpec_To_v1alpha1_SnapshotStorageSpec(&in.SnapshotStorageSpec, &out.SnapshotStorageSpec, s); err != nil {
 		return err
 	}
-	out.Type = in.Type
+	out.Type = SnapshotType(in.Type)
 	out.Resources = in.Resources
 	return nil
 }
