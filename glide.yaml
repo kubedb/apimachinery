@@ -1,4 +1,4 @@
-package: github.com/k8sdb/apimachinery
+package: github.com/kubedb/apimachinery
 import:
 - package: github.com/appscode/go
   version: master

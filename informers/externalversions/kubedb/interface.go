@@ -19,8 +19,8 @@ limitations under the License.
 package kubedb
 
 import (
-	internalinterfaces "github.com/k8sdb/apimachinery/informers/externalversions/internalinterfaces"
-	v1alpha1 "github.com/k8sdb/apimachinery/informers/externalversions/kubedb/v1alpha1"
+	internalinterfaces "github.com/kubedb/apimachinery/informers/externalversions/internalinterfaces"
+	v1alpha1 "github.com/kubedb/apimachinery/informers/externalversions/kubedb/v1alpha1"
 )
 
 // Interface provides access to each of this group's versions.

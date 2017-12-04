@@ -17,7 +17,7 @@ limitations under the License.
 package fake
 
 import (
-	v1alpha1 "github.com/k8sdb/apimachinery/client/typed/kubedb/v1alpha1"
+	v1alpha1 "github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1"
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 )

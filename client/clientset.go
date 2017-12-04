@@ -18,7 +18,7 @@ package client
 
 import (
 	glog "github.com/golang/glog"
-	kubedbv1alpha1 "github.com/k8sdb/apimachinery/client/typed/kubedb/v1alpha1"
+	kubedbv1alpha1 "github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"

@@ -27,7 +27,7 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.AzureSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.AzureSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -48,7 +48,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			},
 			Dependencies: []string{},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -66,27 +66,27 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"local": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.LocalSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.LocalSpec"),
 							},
 						},
 						"s3": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.S3Spec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.S3Spec"),
 							},
 						},
 						"gcs": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.GCSSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.GCSSpec"),
 							},
 						},
 						"azure": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.AzureSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.AzureSpec"),
 							},
 						},
 						"swift": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec"),
 							},
 						},
 						"resources": {
@@ -99,9 +99,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.AzureSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.GCSSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.LocalSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.S3Spec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec", "k8s.io/api/core/v1.ResourceRequirements"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.AzureSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.GCSSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.LocalSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.S3Spec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec", "k8s.io/api/core/v1.ResourceRequirements"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.DormantDatabase": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabase": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -126,21 +126,21 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"spec": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseSpec"),
 							},
 						},
 						"status": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseStatus"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseStatus"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseList": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseList": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -170,7 +170,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Items: &spec.SchemaOrArray{
 									Schema: &spec.Schema{
 										SchemaProps: spec.SchemaProps{
-											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.DormantDatabase"),
+											Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabase"),
 										},
 									},
 								},
@@ -180,9 +180,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.DormantDatabase", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabase", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -203,16 +203,16 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"origin": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Origin to store original database information",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Origin"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Origin"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Origin"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Origin"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseStatus": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseStatus": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -249,7 +249,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Elasticsearch": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Elasticsearch": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Description: "Elasticsearch defines a Elasticsearch database.",
@@ -275,46 +275,46 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"spec": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec"),
 							},
 						},
 						"status": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
 						"master": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
 							},
 						},
 						"data": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
 							},
 						},
 						"client": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchList": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchList": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -344,7 +344,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Items: &spec.SchemaOrArray{
 									Schema: &spec.Schema{
 										SchemaProps: spec.SchemaProps{
-											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Elasticsearch"),
+											Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Elasticsearch"),
 										},
 									},
 								},
@@ -354,9 +354,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Elasticsearch", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Elasticsearch", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -377,7 +377,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			},
 			Dependencies: []string{},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -398,7 +398,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"topology": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Elasticsearch topology for node specification",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology"),
 							},
 						},
 						"enableSSL": {
@@ -443,13 +443,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"init": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Init is used to initialize database",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
 							},
 						},
 						"backupSchedule": {
 							SchemaProps: spec.SchemaProps{
 								Description: "BackupSchedule spec to specify how database backup will be taken",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec"),
 							},
 						},
 						"doNotPause": {
@@ -501,9 +501,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
+				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -530,7 +530,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSummary": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSummary": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Description: "Following structure is used for audit summary report",
@@ -566,7 +566,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			},
 			Dependencies: []string{},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.GCSSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.GCSSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -588,32 +588,32 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			},
 			Dependencies: []string{},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
 						"scriptSource": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ScriptSourceSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ScriptSourceSpec"),
 							},
 						},
 						"snapshotSource": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotSourceSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotSourceSpec"),
 							},
 						},
 						"postgresWAL": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresWALSourceSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresWALSourceSpec"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresWALSourceSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ScriptSourceSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotSourceSpec"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresWALSourceSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ScriptSourceSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotSourceSpec"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.LocalSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.LocalSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -634,7 +634,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"k8s.io/api/core/v1.VolumeSource"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Memcached": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Memcached": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Description: "Memcached defines a Memcached database.",
@@ -660,21 +660,21 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"spec": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec"),
 							},
 						},
 						"status": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MemcachedStatus"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedStatus"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MemcachedStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MemcachedList": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedList": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -704,7 +704,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Items: &spec.SchemaOrArray{
 									Schema: &spec.Schema{
 										SchemaProps: spec.SchemaProps{
-											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Memcached"),
+											Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Memcached"),
 										},
 									},
 								},
@@ -714,9 +714,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Memcached", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Memcached", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -799,7 +799,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MemcachedStatus": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedStatus": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -826,7 +826,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDB": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDB": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Description: "MongoDB defines a MongoDB database.",
@@ -852,21 +852,21 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"spec": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec"),
 							},
 						},
 						"status": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBStatus"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBStatus"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBList": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBList": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -896,7 +896,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Items: &spec.SchemaOrArray{
 									Schema: &spec.Schema{
 										SchemaProps: spec.SchemaProps{
-											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDB"),
+											Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDB"),
 										},
 									},
 								},
@@ -906,9 +906,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDB", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDB", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -955,13 +955,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"init": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Init is used to initialize database",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
 							},
 						},
 						"backupSchedule": {
 							SchemaProps: spec.SchemaProps{
 								Description: "BackupSchedule spec to specify how database backup will be taken",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec"),
 							},
 						},
 						"doNotPause": {
@@ -1013,9 +1013,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
+				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBStatus": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBStatus": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1042,7 +1042,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQL": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQL": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Description: "Mysql defines a Mysql database.",
@@ -1068,21 +1068,21 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"spec": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec"),
 							},
 						},
 						"status": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLStatus"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLStatus"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLList": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLList": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1112,7 +1112,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Items: &spec.SchemaOrArray{
 									Schema: &spec.Schema{
 										SchemaProps: spec.SchemaProps{
-											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQL"),
+											Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQL"),
 										},
 									},
 								},
@@ -1122,9 +1122,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQL", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQL", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1171,13 +1171,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"init": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Init is used to initialize database",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
 							},
 						},
 						"backupSchedule": {
 							SchemaProps: spec.SchemaProps{
 								Description: "BackupSchedule spec to specify how database backup will be taken",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec"),
 							},
 						},
 						"doNotPause": {
@@ -1229,9 +1229,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
+				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLStatus": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLStatus": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1258,7 +1258,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Origin": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Origin": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1270,62 +1270,62 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"spec": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Origin Spec to store original database Spec",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.OriginSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.OriginSpec"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.OriginSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.OriginSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.OriginSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.OriginSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
 						"elasticsearch": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Elasticsearch Spec",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec"),
 							},
 						},
 						"postgres": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Postgres Spec",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec"),
 							},
 						},
 						"mysql": {
 							SchemaProps: spec.SchemaProps{
 								Description: "MySQL Spec",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec"),
 							},
 						},
 						"mongodb": {
 							SchemaProps: spec.SchemaProps{
 								Description: "MongoDB Spec",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec"),
 							},
 						},
 						"redis": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Redis Spec",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisSpec"),
 							},
 						},
 						"memcached": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Memcached Spec",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisSpec"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisSpec"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Postgres": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Postgres": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Description: "Postgres defines a Postgres database.",
@@ -1351,36 +1351,36 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"spec": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec"),
 							},
 						},
 						"status": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresStatus"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresStatus"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresArchiverSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresArchiverSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
 						"storage": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotStorageSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotStorageSpec"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotStorageSpec"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotStorageSpec"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresList": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresList": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1410,7 +1410,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Items: &spec.SchemaOrArray{
 									Schema: &spec.Schema{
 										SchemaProps: spec.SchemaProps{
-											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Postgres"),
+											Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Postgres"),
 										},
 									},
 								},
@@ -1420,9 +1420,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Postgres", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Postgres", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSchemaInfo": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSchemaInfo": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1432,7 +1432,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								AdditionalProperties: &spec.SchemaOrBool{
 									Schema: &spec.Schema{
 										SchemaProps: spec.SchemaProps{
-											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresTableInfo"),
+											Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresTableInfo"),
 										},
 									},
 								},
@@ -1443,9 +1443,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresTableInfo"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresTableInfo"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1480,7 +1480,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"archiver": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Archive for wal files",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresArchiverSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresArchiverSpec"),
 							},
 						},
 						"databaseSecret": {
@@ -1512,13 +1512,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						"init": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Init is used to initialize database",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
 							},
 						},
 						"backupSchedule": {
 							SchemaProps: spec.SchemaProps{
 								Description: "BackupSchedule spec to specify how database backup will be taken",
-								Ref:         ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec"),
+								Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec"),
 							},
 						},
 						"doNotPause": {
@@ -1570,9 +1570,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresArchiverSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
+				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresArchiverSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresStatus": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresStatus": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1599,7 +1599,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSummary": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSummary": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1609,7 +1609,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								AdditionalProperties: &spec.SchemaOrBool{
 									Schema: &spec.Schema{
 										SchemaProps: spec.SchemaProps{
-											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSchemaInfo"),
+											Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSchemaInfo"),
 										},
 									},
 								},
@@ -1620,9 +1620,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSchemaInfo"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSchemaInfo"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresTableInfo": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresTableInfo": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Description: "Following structures are used for audit summary report",
@@ -1651,7 +1651,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			},
 			Dependencies: []string{},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresWALSourceSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresWALSourceSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1675,36 +1675,36 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"local": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.LocalSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.LocalSpec"),
 							},
 						},
 						"s3": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.S3Spec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.S3Spec"),
 							},
 						},
 						"gcs": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.GCSSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.GCSSpec"),
 							},
 						},
 						"azure": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.AzureSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.AzureSpec"),
 							},
 						},
 						"swift": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.AzureSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.GCSSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.LocalSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.S3Spec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.AzureSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.GCSSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.LocalSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.S3Spec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Redis": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Redis": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Description: "Redis defines a Redis database.",
@@ -1730,21 +1730,21 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"spec": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisSpec"),
 							},
 						},
 						"status": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisStatus"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisStatus"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisList": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisList": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1774,7 +1774,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Items: &spec.SchemaOrArray{
 									Schema: &spec.Schema{
 										SchemaProps: spec.SchemaProps{
-											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Redis"),
+											Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Redis"),
 										},
 									},
 								},
@@ -1784,9 +1784,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Redis", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Redis", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1875,7 +1875,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"github.com/appscode/kutil/tools/monitoring/api.AgentSpec", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.RedisStatus": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisStatus": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1902,7 +1902,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Report": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Report": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1927,21 +1927,21 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"summary": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ReportSummary"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ReportSummary"),
 							},
 						},
 						"status": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ReportStatus"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ReportStatus"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ReportStatus", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ReportSummary", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ReportStatus", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ReportSummary", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ReportStatus": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ReportStatus": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1961,7 +1961,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ReportSummary": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ReportSummary": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -1971,7 +1971,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								AdditionalProperties: &spec.SchemaOrBool{
 									Schema: &spec.Schema{
 										SchemaProps: spec.SchemaProps{
-											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSummary"),
+											Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSummary"),
 										},
 									},
 								},
@@ -1983,7 +1983,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								AdditionalProperties: &spec.SchemaOrBool{
 									Schema: &spec.Schema{
 										SchemaProps: spec.SchemaProps{
-											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSummary"),
+											Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSummary"),
 										},
 									},
 								},
@@ -1993,9 +1993,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSummary", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.PostgresSummary"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSummary", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSummary"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.S3Spec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.S3Spec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -2023,7 +2023,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			},
 			Dependencies: []string{},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.ScriptSourceSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ScriptSourceSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -2201,7 +2201,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFileVolumeSource", "k8s.io/api/core/v1.CephFSVolumeSource", "k8s.io/api/core/v1.CinderVolumeSource", "k8s.io/api/core/v1.ConfigMapVolumeSource", "k8s.io/api/core/v1.DownwardAPIVolumeSource", "k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GitRepoVolumeSource", "k8s.io/api/core/v1.GlusterfsVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.PersistentVolumeClaimVolumeSource", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.ProjectedVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDVolumeSource", "k8s.io/api/core/v1.ScaleIOVolumeSource", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.StorageOSVolumeSource", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Snapshot": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Snapshot": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -2226,21 +2226,21 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"spec": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotSpec"),
 							},
 						},
 						"status": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotStatus"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotStatus"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotList": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotList": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -2270,7 +2270,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Items: &spec.SchemaOrArray{
 									Schema: &spec.Schema{
 										SchemaProps: spec.SchemaProps{
-											Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Snapshot"),
+											Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Snapshot"),
 										},
 									},
 								},
@@ -2280,9 +2280,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.Snapshot", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Snapshot", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotSourceSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotSourceSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -2303,7 +2303,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			},
 			Dependencies: []string{},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -2322,27 +2322,27 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"local": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.LocalSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.LocalSpec"),
 							},
 						},
 						"s3": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.S3Spec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.S3Spec"),
 							},
 						},
 						"gcs": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.GCSSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.GCSSpec"),
 							},
 						},
 						"azure": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.AzureSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.AzureSpec"),
 							},
 						},
 						"swift": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec"),
 							},
 						},
 						"type": {
@@ -2362,9 +2362,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.AzureSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.GCSSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.LocalSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.S3Spec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec", "k8s.io/api/core/v1.ResourceRequirements"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.AzureSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.GCSSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.LocalSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.S3Spec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec", "k8s.io/api/core/v1.ResourceRequirements"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotStatus": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotStatus": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -2396,7 +2396,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 			Dependencies: []string{
 				"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SnapshotStorageSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotStorageSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{
@@ -2408,36 +2408,36 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 						},
 						"local": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.LocalSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.LocalSpec"),
 							},
 						},
 						"s3": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.S3Spec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.S3Spec"),
 							},
 						},
 						"gcs": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.GCSSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.GCSSpec"),
 							},
 						},
 						"azure": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.AzureSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.AzureSpec"),
 							},
 						},
 						"swift": {
 							SchemaProps: spec.SchemaProps{
-								Ref: ref("github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec"),
+								Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec"),
 							},
 						},
 					},
 				},
 			},
 			Dependencies: []string{
-				"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.AzureSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.GCSSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.LocalSpec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.S3Spec", "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec"},
+				"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.AzureSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.GCSSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.LocalSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.S3Spec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec"},
 		},
-		"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec": {
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SwiftSpec": {
 			Schema: spec.Schema{
 				SchemaProps: spec.SchemaProps{
 					Properties: map[string]spec.Schema{

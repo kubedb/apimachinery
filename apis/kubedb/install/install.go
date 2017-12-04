@@ -1,8 +1,8 @@
 package install
 
 import (
-	aci "github.com/k8sdb/apimachinery/apis/kubedb"
-	"github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
+	aci "github.com/kubedb/apimachinery/apis/kubedb"
+	"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"k8s.io/apimachinery/pkg/apimachinery/announced"
 	"k8s.io/apimachinery/pkg/apimachinery/registered"
 	"k8s.io/apimachinery/pkg/runtime"

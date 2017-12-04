@@ -17,7 +17,7 @@ limitations under the License.
 package internalversion
 
 import (
-	"github.com/k8sdb/apimachinery/client/internalclientset/scheme"
+	"github.com/kubedb/apimachinery/client/internalclientset/scheme"
 	rest "k8s.io/client-go/rest"
 )
 

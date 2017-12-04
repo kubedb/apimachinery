@@ -19,10 +19,10 @@ limitations under the License.
 package v1alpha1
 
 import (
-	kubedb_v1alpha1 "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
-	client "github.com/k8sdb/apimachinery/client"
-	internalinterfaces "github.com/k8sdb/apimachinery/informers/externalversions/internalinterfaces"
-	v1alpha1 "github.com/k8sdb/apimachinery/listers/kubedb/v1alpha1"
+	kubedb_v1alpha1 "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
+	client "github.com/kubedb/apimachinery/client"
+	internalinterfaces "github.com/kubedb/apimachinery/informers/externalversions/internalinterfaces"
+	v1alpha1 "github.com/kubedb/apimachinery/listers/kubedb/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"

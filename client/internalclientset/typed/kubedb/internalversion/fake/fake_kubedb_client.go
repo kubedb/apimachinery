@@ -17,7 +17,7 @@ limitations under the License.
 package fake
 
 import (
-	internalversion "github.com/k8sdb/apimachinery/client/internalclientset/typed/kubedb/internalversion"
+	internalversion "github.com/kubedb/apimachinery/client/internalclientset/typed/kubedb/internalversion"
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 )

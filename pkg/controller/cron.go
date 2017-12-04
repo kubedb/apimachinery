@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/appscode/go/log"
-	api "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
-	cs "github.com/k8sdb/apimachinery/client/typed/kubedb/v1alpha1"
-	"github.com/k8sdb/apimachinery/pkg/eventer"
+	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
+	cs "github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1"
+	"github.com/kubedb/apimachinery/pkg/eventer"
 	"github.com/orcaman/concurrent-map"
 	"gopkg.in/robfig/cron.v2"
 	core "k8s.io/api/core/v1"

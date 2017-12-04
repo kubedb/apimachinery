@@ -25,7 +25,7 @@ import (
 
 	types "github.com/appscode/go/encoding/json/types"
 	api "github.com/appscode/kutil/tools/monitoring/api"
-	kubedb "github.com/k8sdb/apimachinery/apis/kubedb"
+	kubedb "github.com/kubedb/apimachinery/apis/kubedb"
 	core_v1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"

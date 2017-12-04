@@ -17,9 +17,9 @@ limitations under the License.
 package fake
 
 import (
-	clientset "github.com/k8sdb/apimachinery/client/internalclientset"
-	kubedbinternalversion "github.com/k8sdb/apimachinery/client/internalclientset/typed/kubedb/internalversion"
-	fakekubedbinternalversion "github.com/k8sdb/apimachinery/client/internalclientset/typed/kubedb/internalversion/fake"
+	clientset "github.com/kubedb/apimachinery/client/internalclientset"
+	kubedbinternalversion "github.com/kubedb/apimachinery/client/internalclientset/typed/kubedb/internalversion"
+	fakekubedbinternalversion "github.com/kubedb/apimachinery/client/internalclientset/typed/kubedb/internalversion/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"

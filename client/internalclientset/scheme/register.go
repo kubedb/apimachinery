@@ -19,7 +19,7 @@ package scheme
 import (
 	os "os"
 
-	kubedb "github.com/k8sdb/apimachinery/apis/kubedb/install"
+	kubedb "github.com/kubedb/apimachinery/apis/kubedb/install"
 	announced "k8s.io/apimachinery/pkg/apimachinery/announced"
 	registered "k8s.io/apimachinery/pkg/apimachinery/registered"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
