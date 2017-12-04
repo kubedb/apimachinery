@@ -7,8 +7,8 @@ import (
 
 	"github.com/appscode/go/log"
 	"github.com/hashicorp/go-version"
-	api "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
-	cs "github.com/k8sdb/apimachinery/client/typed/kubedb/v1alpha1"
+	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
+	cs "github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1"
 	extensions "k8s.io/api/extensions/v1beta1"
 	crd_api "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	crd_cs "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1beta1"

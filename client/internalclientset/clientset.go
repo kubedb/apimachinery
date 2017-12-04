@@ -18,7 +18,7 @@ package internalclientset
 
 import (
 	glog "github.com/golang/glog"
-	kubedbinternalversion "github.com/k8sdb/apimachinery/client/internalclientset/typed/kubedb/internalversion"
+	kubedbinternalversion "github.com/kubedb/apimachinery/client/internalclientset/typed/kubedb/internalversion"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"

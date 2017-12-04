@@ -17,8 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "github.com/k8sdb/apimachinery/apis/kubedb/v1alpha1"
-	scheme "github.com/k8sdb/apimachinery/client/scheme"
+	v1alpha1 "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
+	scheme "github.com/kubedb/apimachinery/client/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"

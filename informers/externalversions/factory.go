@@ -19,9 +19,9 @@ limitations under the License.
 package externalversions
 
 import (
-	client "github.com/k8sdb/apimachinery/client"
-	internalinterfaces "github.com/k8sdb/apimachinery/informers/externalversions/internalinterfaces"
-	kubedb "github.com/k8sdb/apimachinery/informers/externalversions/kubedb"
+	client "github.com/kubedb/apimachinery/client"
+	internalinterfaces "github.com/kubedb/apimachinery/informers/externalversions/internalinterfaces"
+	kubedb "github.com/kubedb/apimachinery/informers/externalversions/kubedb"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"

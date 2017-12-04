@@ -19,7 +19,7 @@ limitations under the License.
 package kubedb
 
 import (
-	kubedb "github.com/k8sdb/apimachinery/apis/kubedb"
+	kubedb "github.com/kubedb/apimachinery/apis/kubedb"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/tools/cache"

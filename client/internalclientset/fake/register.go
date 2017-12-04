@@ -17,7 +17,7 @@ limitations under the License.
 package fake
 
 import (
-	kubedbinternalversion "github.com/k8sdb/apimachinery/apis/kubedb"
+	kubedbinternalversion "github.com/kubedb/apimachinery/apis/kubedb"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

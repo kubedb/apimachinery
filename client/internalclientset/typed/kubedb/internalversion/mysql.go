@@ -17,8 +17,8 @@ limitations under the License.
 package internalversion
 
 import (
-	kubedb "github.com/k8sdb/apimachinery/apis/kubedb"
-	scheme "github.com/k8sdb/apimachinery/client/internalclientset/scheme"
+	kubedb "github.com/kubedb/apimachinery/apis/kubedb"
+	scheme "github.com/kubedb/apimachinery/client/internalclientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
