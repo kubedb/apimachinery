@@ -70,11 +70,11 @@ func NewDormantDbController(
 	}
 }
 
-func SetupDormantCRD(client crd_cs.ApiextensionsV1beta1Interface) error  {
+func (c *DormantDbController) Setup() error  {
 	crds := []*crd_api.CustomResourceDefinition{
 		api.DormantDatabase{}.CustomResourceDefinition(),
 	}
-	return apiext_util.RegisterCRDs(client,crds)
+	return apiext_util.RegisterCRDs(c.apiExtKubeClient,crds)
 }
 
 func (c *DormantDbController) Run() {

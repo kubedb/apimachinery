@@ -72,11 +72,11 @@ func NewSnapshotController(
 	}
 }
 
-func SetupSnapshotCRD(client crd_cs.ApiextensionsV1beta1Interface) error  {
+func (c *SnapshotController) Setup() error  {
 	crds := []*crd_api.CustomResourceDefinition{
 		api.Snapshot{}.CustomResourceDefinition(),
 	}
-	return apiext_util.RegisterCRDs(client,crds)
+	return apiext_util.RegisterCRDs(c.apiExtKubeClient,crds)
 }
 
 func (c *SnapshotController) Run() {
