@@ -1835,6 +1835,15 @@ func (in *SnapshotSourceSpec) DeepCopy() *SnapshotSourceSpec {
 func (in *SnapshotSpec) DeepCopyInto(out *SnapshotSpec) {
 	*out = *in
 	in.SnapshotStorageSpec.DeepCopyInto(&out.SnapshotStorageSpec)
+	if in.Type != nil {
+		in, out := &in.Type, &out.Type
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(SnapshotType)
+			**out = **in
+		}
+	}
 	in.Resources.DeepCopyInto(&out.Resources)
 	return
 }
