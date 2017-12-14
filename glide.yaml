@@ -50,7 +50,7 @@ import:
 - package: github.com/gogo/protobuf/proto
   version: c0656edd0d9eab7c66d1eb0c568f9039345796f7
 - package: k8s.io/api
-  version: release-1.8
+  version: kubernetes-1.8.3
 - package: k8s.io/apimachinery
   repo: https://github.com/tamalsaha/apimachinery.git
   version: release-1.8
@@ -58,7 +58,7 @@ import:
 - package: k8s.io/client-go
   version: kubernetes-1.8.3-beta.0
 - package: k8s.io/apiextensions-apiserver
-  version: release-1.8
+  version: kubernetes-1.8.3
 - package: k8s.io/kubernetes
   repo: https://github.com/appscode/kubernetes.git
   version: v1.8.3
