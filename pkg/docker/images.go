@@ -1,20 +1,23 @@
 package docker
 
 const (
-	ImageOperator          = "kubedb/operator"
-	ImagePostgresOperator  = "kubedb/pg-operator"
-	ImagePostgres          = "kubedb/postgres"
-	ImageMySQLOperator     = "kubedb/mysql-operator"
-	ImageMySQL             = "library/mysql"
-	ImageElasticOperator   = "kubedb/es-operator"
-	ImageElasticsearch     = "kubedb/elasticsearch"
-	ImageElasticdump       = "kubedb/elasticdump"
-	ImageMongoDBOperator   = "kubedb/mongodb-operator"
-	ImageMongoDB           = "library/mongo"
-	ImageRedisOperator     = "kubedb/redis-operator"
-	ImageRedis             = "library/redis"
-	ImageMemcachedOperator = "kubedb/mc-operator"
-	ImageMemcached         = "library/memcached"
+	ImageOperator              = "kubedb/operator"
+	ImagePostgresOperator      = "kubedb/pg-operator"
+	ImagePostgres              = "kubedb/postgres"
+	ImagePostgresTools         = "kubedb/postgres-tools"
+	ImageElasticsearchOperator = "kubedb/es-operator"
+	ImageElasticsearch         = "kubedb/elasticsearch"
+	ImageElasticsearchTools    = "kubedb/elasticsearch-tools"
+	ImageMySQLOperator         = "kubedb/ms-operator"
+	ImageMySQL                 = "library/mysql"
+	ImageMySQLTools            = "kubedb/mysql-tools"
+	ImageMongoDBOperator       = "kubedb/mg-operator"
+	ImageMongoDB               = "library/mongo"
+	ImageMongoDBTools          = "kubedb/mongo-tools"
+	ImageRedisOperator         = "kubedb/rd-operator"
+	ImageRedis                 = "library/redis"
+	ImageMemcachedOperator     = "kubedb/mc-operator"
+	ImageMemcached             = "library/memcached"
 )
 
 const (
