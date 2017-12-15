@@ -9,15 +9,15 @@ const (
 	ImageElasticsearch         = "kubedb/elasticsearch"
 	ImageElasticsearchTools    = "kubedb/elasticsearch-tools"
 	ImageMySQLOperator         = "kubedb/ms-operator"
-	ImageMySQL                 = "library/mysql"
+	ImageMySQL                 = "kubedb/mysql"
 	ImageMySQLTools            = "kubedb/mysql-tools"
 	ImageMongoDBOperator       = "kubedb/mg-operator"
-	ImageMongoDB               = "library/mongo"
+	ImageMongoDB               = "kubedb/mongo"
 	ImageMongoDBTools          = "kubedb/mongo-tools"
 	ImageRedisOperator         = "kubedb/rd-operator"
-	ImageRedis                 = "library/redis"
+	ImageRedis                 = "kubedb/redis"
 	ImageMemcachedOperator     = "kubedb/mc-operator"
-	ImageMemcached             = "library/memcached"
+	ImageMemcached             = "kubedb/memcached"
 )
 
 const (
