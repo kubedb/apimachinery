@@ -65,6 +65,41 @@ func (c *Controller) CheckStatefulSetPodStatus(statefulSet *apps.StatefulSet, ch
 	return nil
 }
 
+func (c *Controller) CheckDeploymentPodStatus(deployment *apps.Deployment, checkDuration time.Duration) error {
+	podReady := false
+	then := time.Now()
+	now := time.Now()
+	for now.Sub(then) < checkDuration {
+		dep, err := c.Client.AppsV1beta1().Deployments(deployment.Namespace).Get(deployment.Name, metav1.GetOptions{})
+		if err != nil {
+			if kerr.IsNotFound(err) {
+				if dep.Status.Replicas != 0 && dep.Status.Replicas == dep.Status.ReadyReplicas {
+					break
+				}
+				time.Sleep(sleepDuration)
+				now = time.Now()
+				continue
+			} else {
+				return err
+			}
+		}
+		log.Debugf("Available replicas: %v", dep.Status.ReadyReplicas)
+
+		// If job is success
+		if dep.Status.Replicas != 0 && dep.Status.Replicas == dep.Status.ReadyReplicas {
+			podReady = true
+			break
+		}
+
+		time.Sleep(sleepDuration)
+		now = time.Now()
+	}
+	if !podReady {
+		return errors.New("Database fails to be Ready")
+	}
+	return nil
+}
+
 func (c *Controller) DeletePersistentVolumeClaims(namespace string, selector labels.Selector) error {
 	pvcList, err := c.Client.CoreV1().PersistentVolumeClaims(namespace).List(
 		metav1.ListOptions{
@@ -297,6 +332,51 @@ func (c *Controller) DeleteStatefulSet(name, namespace string) error {
 
 	// Delete StatefulSet
 	return c.Client.AppsV1beta1().StatefulSets(statefulSet.Namespace).Delete(statefulSet.Name, nil)
+}
+
+func (c *Controller) DeleteDeployment(name, namespace string) error {
+	deployment, err := c.Client.AppsV1beta1().Deployments(namespace).Get(name, metav1.GetOptions{})
+	if err != nil {
+		if kerr.IsNotFound(err) {
+			return nil
+		} else {
+			return err
+		}
+	}
+
+	// Update Deployments
+	_, err = apps_util.TryPatchDeployment(c.Client, deployment.ObjectMeta, func(in *apps.Deployment) *apps.Deployment {
+		in.Spec.Replicas = types.Int32P(0)
+		return in
+	})
+	if err != nil {
+		return err
+	}
+
+	var checkSuccess bool = false
+	then := time.Now()
+	now := time.Now()
+	for now.Sub(then) < time.Minute*10 {
+		podList, err := c.Client.CoreV1().Pods(metav1.NamespaceAll).List(metav1.ListOptions{
+			LabelSelector: labels.Set(deployment.Spec.Selector.MatchLabels).AsSelector().String(),
+		})
+		if err != nil {
+			return err
+		}
+		if len(podList.Items) == 0 {
+			checkSuccess = true
+			break
+		}
+
+		time.Sleep(sleepDuration)
+		now = time.Now()
+	}
+
+	if !checkSuccess {
+		return errors.New("Fail to delete Deployments Pods")
+	}
+	// Delete Deployments
+	return c.Client.AppsV1beta1().Deployments(deployment.Namespace).Delete(deployment.Name, nil)
 }
 
 func (c *Controller) DeleteSecret(name, namespace string) error {
