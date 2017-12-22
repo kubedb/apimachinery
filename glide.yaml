@@ -65,6 +65,8 @@ import:
   vcs: git
 - package: github.com/appscode/kutil
   version: master
+- package: github.com/appscode/kube-mon
+  version: master
 - package: github.com/hashicorp/go-version
   repo: https://github.com/appscode/go-version.git
   vcs: git
