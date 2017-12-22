@@ -34,6 +34,7 @@ const (
 	EventReasonSnapshotFailed          string = "SnapshotFailed"
 	EventReasonStarting                string = "Starting"
 	EventReasonSuccessfulCreate        string = "SuccessfulCreate"
+	EventReasonSuccessfulPatch         string = "SuccessfulPatch"
 	EventReasonSuccessfulPause         string = "SuccessfulPause"
 	EventReasonSuccessfulMonitorAdd    string = "SuccessfulMonitorAdd"
 	EventReasonSuccessfulMonitorDelete string = "SuccessfulMonitorDelete"
