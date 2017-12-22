@@ -64,7 +64,7 @@ import:
   version: v1.8.3
   vcs: git
 - package: github.com/appscode/kutil
-  version: master
+  version: release-5.0
 - package: github.com/appscode/kube-mon
   version: master
 - package: github.com/hashicorp/go-version
