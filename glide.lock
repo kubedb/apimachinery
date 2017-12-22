@@ -1,5 +1,5 @@
-hash: 5af64e447b98844d82d299d47e606af6bef8886a89f38b5a6eb68e58901ae2f2
-updated: 2017-12-14T08:43:35.254607105-08:00
+hash: cb5d15a1ff08f80d47769490a26ec736a507bb90d83cdfa78f2d6324e1832d90
+updated: 2017-12-21T21:16:14.130034876-05:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -7,7 +7,7 @@ imports:
   - compute/metadata
   - internal
 - name: github.com/appscode/go
-  version: cb650d0b1a3c04a86595cf2a31fa704dbf1bc42a
+  version: f08cee5a2aa53a1ab6d30e4ae11e381d1b265f81
   subpackages:
   - context
   - encoding/json/types
@@ -16,15 +16,18 @@ imports:
   - runtime
   - types
   - wait
+- name: github.com/appscode/kube-mon
+  version: 10b8a840c201d97eb04fe83fb8875761d12feec6
+  subpackages:
+  - api
 - name: github.com/appscode/kutil
-  version: e0c1936a0ec86173f8278752bef81964b4ffbea5
+  version: 02e786c35ddd6db375126ab23e1b4307246be21d
   subpackages:
   - apiextensions/v1beta1
   - apps/v1beta1
   - meta
-  - tools/monitoring/api
 - name: github.com/appscode/osm
-  version: b3ed1c7835d33f312616b260a949589cf33311ee
+  version: 8e933dfca7c6a2730d77a63282369d843b1db1f4
   subpackages:
   - context
 - name: github.com/aws/aws-sdk-go
@@ -183,7 +186,7 @@ imports:
 - name: github.com/juju/ratelimit
   version: 5b9ff866471762aa2ab2dced63c9fb6f53921342
 - name: github.com/kubernetes/apimachinery
-  version: a04e753f5223cf882db01ac64212682ea28767b4
+  version: 20bbfef868144faf29af69ddb2f01646ead5c1a1
   subpackages:
   - pkg/conversion
 - name: github.com/mailru/easyjson
@@ -201,7 +204,7 @@ imports:
 - name: github.com/peterbourgon/diskv
   version: 5f041e8faa004a95c88a202771f4cc3e991971e6
 - name: github.com/pkg/errors
-  version: 645ef00459ed84a119197bfb8d8205042c6df63d
+  version: a22138067af1c4942683050411a841ade67fe1eb
 - name: github.com/prometheus/client_golang
   version: c5b7fccd204277076155f10851dad72b76a49317
 - name: github.com/prometheus/common
@@ -258,7 +261,7 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: 7219ace1c3535de1864b2706ea9397ad2d269f07
+  version: c0dae069ee96c9261a04c81efd9e0f1e55f565ac
   subpackages:
   - gensupport
   - googleapi
