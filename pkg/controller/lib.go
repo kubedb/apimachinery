@@ -22,8 +22,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/record"
+)
+
+const (
+	sleepDuration = time.Second * 10
 )
 
 func (c *Controller) CheckStatefulSetPodStatus(statefulSet *apps.StatefulSet, checkDuration time.Duration) error {
@@ -190,7 +193,7 @@ func (c *Controller) CheckDatabaseRestoreJob(
 		return false
 	}
 
-	deleteJobResources(c.Client, recorder, runtimeObj, job)
+	c.DeleteJobResources(recorder, runtimeObj, job)
 
 	err = c.Client.CoreV1().Secrets(job.Namespace).Delete(snapshot.OSMSecretName(), &metav1.DeleteOptions{})
 	if err != nil && !kerr.IsNotFound(err) {
@@ -311,13 +314,12 @@ func (c *Controller) DeleteSecret(name, namespace string) error {
 	return c.Client.CoreV1().Secrets(namespace).Delete(name, nil)
 }
 
-func deleteJobResources(
-	client kubernetes.Interface,
+func (c *Controller) DeleteJobResources(
 	recorder record.EventRecorder,
 	runtimeObj runtime.Object,
 	job *batch.Job,
 ) {
-	if err := client.BatchV1().Jobs(job.Namespace).Delete(job.Name, nil); err != nil && !kerr.IsNotFound(err) {
+	if err := c.Client.BatchV1().Jobs(job.Namespace).Delete(job.Name, nil); err != nil && !kerr.IsNotFound(err) {
 		recorder.Eventf(
 			api.ObjectReferenceFor(runtimeObj),
 			core.EventTypeWarning,
@@ -332,7 +334,7 @@ func deleteJobResources(
 	if err != nil {
 		log.Errorln(err)
 	} else {
-		err = client.CoreV1().Pods(job.Namespace).DeleteCollection(&metav1.DeleteOptions{}, metav1.ListOptions{
+		err = c.Client.CoreV1().Pods(job.Namespace).DeleteCollection(&metav1.DeleteOptions{}, metav1.ListOptions{
 			LabelSelector: r.String(),
 		})
 		if err != nil {
@@ -350,7 +352,7 @@ func deleteJobResources(
 	for _, volume := range job.Spec.Template.Spec.Volumes {
 		claim := volume.PersistentVolumeClaim
 		if claim != nil {
-			err := client.CoreV1().PersistentVolumeClaims(job.Namespace).Delete(claim.ClaimName, nil)
+			err := c.Client.CoreV1().PersistentVolumeClaims(job.Namespace).Delete(claim.ClaimName, nil)
 			if err != nil && !kerr.IsNotFound(err) {
 				recorder.Eventf(
 					api.ObjectReferenceFor(runtimeObj),

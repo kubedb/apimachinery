@@ -1,5 +1,5 @@
 hash: b5439a8544c460953c479f67ec6965008eb71389a61d83297466835c014b0938
-updated: 2017-12-22T04:07:48.365565565-05:00
+updated: 2017-12-25T11:48:14.788419629+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -7,25 +7,26 @@ imports:
   - compute/metadata
   - internal
 - name: github.com/appscode/go
-  version: f08cee5a2aa53a1ab6d30e4ae11e381d1b265f81
+  version: 9a3559e6132eda4069baad2c63689729f5d20ac4
   subpackages:
   - context
   - encoding/json/types
   - encoding/yaml
   - log
-  - runtime
   - types
-  - wait
 - name: github.com/appscode/kube-mon
   version: dd6884c63ee4615ca9ecdb7f0ca3e35c975bcca3
   subpackages:
   - api
 - name: github.com/appscode/kutil
-  version: 04124fd21c654188d7a11908d8c8af994a4cccef
+  version: e5c3cba960d607c3a2fcce50dad4ba14097a2a37
   subpackages:
   - apiextensions/v1beta1
   - apps/v1beta1
+  - core/v1
   - meta
+- name: github.com/appscode/mergo
+  version: e3000cb3d28c72b837601cac94debd91032d19fe
 - name: github.com/appscode/osm
   version: 8e933dfca7c6a2730d77a63282369d843b1db1f4
   subpackages:
@@ -121,7 +122,7 @@ imports:
   - proto
   - sortkeys
 - name: github.com/golang/glog
-  version: 44145f04b68cf362d9c4df2182967c2275eaefed
+  version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/groupcache
   version: 02826c3e79038b59d737d3b1c0a1d937f71a4433
   subpackages:
@@ -137,6 +138,13 @@ imports:
   - ptypes/timestamp
 - name: github.com/google/btree
   version: 7d79101e329e5a3adf994758c578dab82b90c017
+- name: github.com/google/go-cmp
+  version: 97a1ff3c48253a51c601f6e4420181273b6ca0ea
+  subpackages:
+  - cmp
+  - cmp/internal/diff
+  - cmp/internal/function
+  - cmp/internal/value
 - name: github.com/google/gofuzz
   version: 44d81051d367757e1c7c6a5a86423ece9afcf63c
 - name: github.com/google/uuid
@@ -186,7 +194,7 @@ imports:
 - name: github.com/juju/ratelimit
   version: 5b9ff866471762aa2ab2dced63c9fb6f53921342
 - name: github.com/kubernetes/apimachinery
-  version: 20bbfef868144faf29af69ddb2f01646ead5c1a1
+  version: bc1325710437b54535daa5d6877ca62df7bd76db
   subpackages:
   - pkg/conversion
 - name: github.com/mailru/easyjson
@@ -261,7 +269,7 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: 905d2b6c9443c02c46229c39d60442903a68c229
+  version: 272e2963aad1a56aba54e1167c47abff8d37ac08
   subpackages:
   - gensupport
   - googleapi
@@ -419,6 +427,7 @@ imports:
   - util/cert
   - util/flowcontrol
   - util/integer
+  - util/workqueue
 - name: k8s.io/kube-openapi
   version: 868f2f29720b192240e18284659231b440f9cda5
   subpackages:

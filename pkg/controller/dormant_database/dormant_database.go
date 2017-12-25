@@ -1,134 +1,18 @@
-package controller
+package dormant_database
 
 import (
 	"errors"
-	"reflect"
-	"time"
 
 	"github.com/appscode/go/log"
-	"github.com/appscode/go/wait"
-	apiext_util "github.com/appscode/kutil/apiextensions/v1beta1"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
-	cs "github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1"
 	"github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1/util"
 	"github.com/kubedb/apimachinery/pkg/eventer"
 	core "k8s.io/api/core/v1"
-	crd_api "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-	crd_cs "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/cache"
-	"k8s.io/client-go/tools/record"
 )
 
-type Deleter interface {
-	// Check Database CRD
-	Exists(*metav1.ObjectMeta) (bool, error)
-	// Pause operation
-	PauseDatabase(*api.DormantDatabase) error
-	// Wipe out operation
-	WipeOutDatabase(*api.DormantDatabase) error
-	// Resume operation
-	ResumeDatabase(*api.DormantDatabase) error
-}
-
-type DormantDbController struct {
-	// Kubernetes client
-	client kubernetes.Interface
-	// Api Extension Client
-	apiExtKubeClient crd_cs.ApiextensionsV1beta1Interface
-	// ThirdPartyExtension client
-	extClient cs.KubedbV1alpha1Interface
-	// Deleter interface
-	deleter Deleter
-	// ListerWatcher
-	lw *cache.ListWatch
-	// Event Recorder
-	recorder record.EventRecorder
-	// sync time to sync the list.
-	syncPeriod time.Duration
-}
-
-// NewDormantDbController creates a new DormantDatabase Controller
-func NewDormantDbController(
-	client kubernetes.Interface,
-	apiExtKubeClient crd_cs.ApiextensionsV1beta1Interface,
-	extClient cs.KubedbV1alpha1Interface,
-	deleter Deleter,
-	lw *cache.ListWatch,
-	syncPeriod time.Duration,
-) *DormantDbController {
-	// return new DormantDatabase Controller
-	return &DormantDbController{
-		client:           client,
-		apiExtKubeClient: apiExtKubeClient,
-		extClient:        extClient,
-		deleter:          deleter,
-		lw:               lw,
-		recorder:         eventer.NewEventRecorder(client, "DormantDatabase Controller"),
-		syncPeriod:       syncPeriod,
-	}
-}
-
-func (c *DormantDbController) Setup() error {
-	crds := []*crd_api.CustomResourceDefinition{
-		api.DormantDatabase{}.CustomResourceDefinition(),
-	}
-	return apiext_util.RegisterCRDs(c.apiExtKubeClient, crds)
-}
-
-func (c *DormantDbController) Run() {
-	// Watch DormantDatabase with provided ListerWatcher
-	c.watch()
-}
-
-func (c *DormantDbController) watch() {
-	_, cacheController := cache.NewInformer(c.lw,
-		&api.DormantDatabase{},
-		c.syncPeriod,
-		cache.ResourceEventHandlerFuncs{
-			AddFunc: func(obj interface{}) {
-				dormantDb := obj.(*api.DormantDatabase)
-				util.AssignTypeKind(dormantDb)
-				if dormantDb.Status.CreationTime == nil {
-					if err := c.create(dormantDb); err != nil {
-						log.Errorln(err)
-					}
-				}
-			},
-			DeleteFunc: func(obj interface{}) {
-				dormantDb := obj.(*api.DormantDatabase)
-				util.AssignTypeKind(dormantDb)
-				if err := c.delete(dormantDb); err != nil {
-					log.Errorln(err)
-				}
-			},
-			UpdateFunc: func(old, new interface{}) {
-				oldDormantDb, ok := old.(*api.DormantDatabase)
-				if !ok {
-					return
-				}
-				newDormantDb, ok := new.(*api.DormantDatabase)
-				if !ok {
-					return
-				}
-				// TODO: Find appropriate checking
-				// Only allow if Spec varies
-				util.AssignTypeKind(oldDormantDb)
-				util.AssignTypeKind(newDormantDb)
-				if !reflect.DeepEqual(oldDormantDb.Spec, newDormantDb.Spec) {
-					if err := c.update(oldDormantDb, newDormantDb); err != nil {
-						log.Errorln(err)
-					}
-				}
-			},
-		},
-	)
-	cacheController.Run(wait.NeverStop)
-}
-
 func (c *DormantDbController) create(dormantDb *api.DormantDatabase) error {
-	_, err := util.TryPatchDormantDatabase(c.extClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
+	_, err := util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
 		t := metav1.Now()
 		in.Status.CreationTime = &t
 		return in
@@ -161,7 +45,7 @@ func (c *DormantDbController) create(dormantDb *api.DormantDatabase) error {
 		)
 
 		// Delete DormantDatabase object
-		if err := c.extClient.DormantDatabases(dormantDb.Namespace).Delete(dormantDb.Name, &metav1.DeleteOptions{}); err != nil {
+		if err := c.ExtClient.DormantDatabases(dormantDb.Namespace).Delete(dormantDb.Name, &metav1.DeleteOptions{}); err != nil {
 			c.recorder.Eventf(
 				dormantDb.ObjectReference(),
 				core.EventTypeWarning,
@@ -174,7 +58,7 @@ func (c *DormantDbController) create(dormantDb *api.DormantDatabase) error {
 		return errors.New(message)
 	}
 
-	_, err = util.TryPatchDormantDatabase(c.extClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
+	_, err = util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
 		in.Status.Phase = api.DormantDatabasePhasePausing
 		return in
 	})
@@ -204,7 +88,7 @@ func (c *DormantDbController) create(dormantDb *api.DormantDatabase) error {
 		"Successfully paused Database workload",
 	)
 
-	_, err = util.TryPatchDormantDatabase(c.extClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
+	_, err = util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
 		t := metav1.Now()
 		in.Status.PausingTime = &t
 		in.Status.Phase = api.DormantDatabasePhasePaused
@@ -291,7 +175,7 @@ func (c *DormantDbController) wipeOut(dormantDb *api.DormantDatabase) error {
 		)
 
 		// Delete DormantDatabase object
-		if err := c.extClient.DormantDatabases(dormantDb.Namespace).Delete(dormantDb.Name, &metav1.DeleteOptions{}); err != nil {
+		if err := c.ExtClient.DormantDatabases(dormantDb.Namespace).Delete(dormantDb.Name, &metav1.DeleteOptions{}); err != nil {
 			c.recorder.Eventf(
 				dormantDb.ObjectReference(),
 				core.EventTypeWarning,
@@ -304,7 +188,7 @@ func (c *DormantDbController) wipeOut(dormantDb *api.DormantDatabase) error {
 		return errors.New(message)
 	}
 
-	_, err = util.TryPatchDormantDatabase(c.extClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
+	_, err = util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
 		in.Status.Phase = api.DormantDatabasePhaseWipingOut
 		return in
 	})
@@ -333,7 +217,7 @@ func (c *DormantDbController) wipeOut(dormantDb *api.DormantDatabase) error {
 		"Successfully wiped out Database workload",
 	)
 
-	_, err = util.TryPatchDormantDatabase(c.extClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
+	_, err = util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
 		t := metav1.Now()
 		in.Status.WipeOutTime = &t
 		in.Status.Phase = api.DormantDatabasePhaseWipedOut
@@ -379,7 +263,7 @@ func (c *DormantDbController) resume(dormantDb *api.DormantDatabase) error {
 		return errors.New(message)
 	}
 
-	_, err = util.TryPatchDormantDatabase(c.extClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
+	_, err = util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
 		in.Status.Phase = api.DormantDatabasePhaseResuming
 		return in
 	})
@@ -388,7 +272,7 @@ func (c *DormantDbController) resume(dormantDb *api.DormantDatabase) error {
 		return err
 	}
 
-	if err = c.extClient.DormantDatabases(dormantDb.Namespace).Delete(dormantDb.Name, &metav1.DeleteOptions{}); err != nil {
+	if err = c.ExtClient.DormantDatabases(dormantDb.Namespace).Delete(dormantDb.Name, &metav1.DeleteOptions{}); err != nil {
 		c.recorder.Eventf(
 			dormantDb.ObjectReference(),
 			core.EventTypeWarning,
@@ -436,7 +320,7 @@ func (c *DormantDbController) reCreateDormantDatabase(dormantDb *api.DormantData
 		Status: dormantDb.Status,
 	}
 
-	if _, err := c.extClient.DormantDatabases(_dormantDb.Namespace).Create(_dormantDb); err != nil {
+	if _, err := c.ExtClient.DormantDatabases(_dormantDb.Namespace).Create(_dormantDb); err != nil {
 		return err
 	}
 
