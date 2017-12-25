@@ -145,7 +145,7 @@ func (c *DormantDbController) processNextItem() bool {
 	log.Errorf("Failed to process DormantDatabase %v. Reason: %s\n", key, err)
 
 	// This controller retries 5 times if something goes wrong. After that, it stops trying.
-	if c.queue.NumRequeues(key) < c.MaxNumRequeues {
+	if c.queue.NumRequeues(key) < c.maxNumRequeues {
 		log.Infof("Error syncing crd %v: %v\n", key, err)
 
 		// Re-enqueue the key rate limited. Based on the rate limiter on the

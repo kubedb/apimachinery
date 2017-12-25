@@ -40,7 +40,7 @@ type DormantDbController struct {
 	queue    workqueue.RateLimitingInterface
 	informer cache.Controller
 	//Max number requests for retries
-	MaxNumRequeues int
+	maxNumRequeues int
 }
 
 // NewDormantDbController creates a new DormantDatabase Controller
@@ -52,11 +52,12 @@ func NewDormantDbController(
 ) *DormantDbController {
 	// return new DormantDatabase Controller
 	return &DormantDbController{
-		Controller: controller,
-		deleter:    deleter,
-		lw:         lw,
-		recorder:   eventer.NewEventRecorder(controller.Client, "DormantDatabase Controller"),
-		syncPeriod: syncPeriod,
+		Controller:     controller,
+		deleter:        deleter,
+		lw:             lw,
+		recorder:       eventer.NewEventRecorder(controller.Client, "DormantDatabase Controller"),
+		syncPeriod:     syncPeriod,
+		maxNumRequeues: 5,
 	}
 }
 

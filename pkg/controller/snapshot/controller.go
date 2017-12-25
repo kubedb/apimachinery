@@ -37,7 +37,7 @@ type SnapshotController struct {
 	queue    workqueue.RateLimitingInterface
 	informer cache.Controller
 	//Max number requests for retries
-	MaxNumRequeues int
+	maxNumRequeues int
 }
 
 // NewSnapshotController creates a new SnapshotController
@@ -50,11 +50,12 @@ func NewSnapshotController(
 
 	// return new DormantDatabase Controller
 	return &SnapshotController{
-		Controller:    controller,
-		snapshoter:    snapshoter,
-		lw:            lw,
-		eventRecorder: eventer.NewEventRecorder(controller.Client, "Snapshot Controller"),
-		syncPeriod:    syncPeriod,
+		Controller:     controller,
+		snapshoter:     snapshoter,
+		lw:             lw,
+		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Snapshot Controller"),
+		syncPeriod:     syncPeriod,
+		maxNumRequeues: 5,
 	}
 }
 

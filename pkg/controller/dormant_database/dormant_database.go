@@ -12,6 +12,25 @@ import (
 )
 
 func (c *DormantDbController) create(dormantDb *api.DormantDatabase) error {
+	if dormantDb.Spec.WipeOut {
+		return c.wipeOut(dormantDb)
+	}
+
+	if dormantDb.Spec.Resume {
+		if dormantDb.Status.Phase == api.DormantDatabasePhasePaused {
+			return c.resume(dormantDb)
+		}
+		message := "Failed to resume Database. " +
+			"Only DormantDatabase of \"Paused\" Phase can be resumed"
+		c.recorder.Event(
+			dormantDb.ObjectReference(),
+			core.EventTypeWarning,
+			eventer.EventReasonFailedToUpdate,
+			message,
+		)
+		return nil
+	}
+
 	_, err := util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
 		t := metav1.Now()
 		in.Status.CreationTime = &t
@@ -124,28 +143,6 @@ func (c *DormantDbController) delete(dormantDb *api.DormantDatabase) error {
 				err,
 			)
 			return err
-		}
-	}
-	return nil
-}
-
-func (c *DormantDbController) update(oldDormantDb, updatedDormantDb *api.DormantDatabase) error {
-	if oldDormantDb.Spec.WipeOut != updatedDormantDb.Spec.WipeOut && updatedDormantDb.Spec.WipeOut {
-		return c.wipeOut(updatedDormantDb)
-	}
-
-	if oldDormantDb.Spec.Resume != updatedDormantDb.Spec.Resume && updatedDormantDb.Spec.Resume {
-		if oldDormantDb.Status.Phase == api.DormantDatabasePhasePaused {
-			return c.resume(updatedDormantDb)
-		} else {
-			message := "Failed to resume Database. " +
-				"Only DormantDatabase of \"Paused\" Phase can be resumed"
-			c.recorder.Event(
-				updatedDormantDb.ObjectReference(),
-				core.EventTypeWarning,
-				eventer.EventReasonFailedToUpdate,
-				message,
-			)
 		}
 	}
 	return nil
