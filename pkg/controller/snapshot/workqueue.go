@@ -6,8 +6,11 @@ import (
 
 	"github.com/appscode/go/log"
 	core_util "github.com/appscode/kutil/core/v1"
+	"github.com/google/go-cmp/cmp"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1/util"
+	"k8s.io/apimachinery/pkg/api/resource"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/tools/cache"
@@ -38,7 +41,56 @@ func (c *SnapshotController) initWatcher() {
 				c.queue.Add(key)
 			}
 		},
+		UpdateFunc: func(old, new interface{}) {
+			oldObj, ok := old.(*api.Snapshot)
+			if !ok {
+				log.Errorln("Invalid Snapshot object")
+				return
+			}
+			newObj, ok := new.(*api.Snapshot)
+			if !ok {
+				log.Errorln("Invalid Snapshot object")
+				return
+			}
+			if newObj.DeletionTimestamp != nil || !SnapshotEqual(oldObj, newObj) {
+				key, err := cache.MetaNamespaceKeyFunc(new)
+				if err == nil {
+					c.queue.Add(key)
+				}
+			}
+		},
 	}, cache.Indexers{})
+}
+
+func SnapshotEqual(old, new *api.Snapshot) bool {
+	var oldSpec, newSpec *api.SnapshotSpec
+	if old != nil {
+		oldSpec = &old.Spec
+	}
+	if new != nil {
+		newSpec = &new.Spec
+	}
+
+	opts := []cmp.Option{
+		cmp.Comparer(func(x, y resource.Quantity) bool {
+			return x.Cmp(y) == 0
+		}),
+		cmp.Comparer(func(x, y *metav1.Time) bool {
+			if x == nil && y == nil {
+				return true
+			}
+			if x != nil && y != nil {
+				return x.Time.Equal(y.Time)
+			}
+			return false
+		}),
+	}
+	if !cmp.Equal(oldSpec, newSpec, opts...) {
+		diff := cmp.Diff(oldSpec, newSpec, opts...)
+		log.Infof("Snapshot %s/%s has changed. Diff: %s\n", new.Namespace, new.Name, diff)
+		return false
+	}
+	return true
 }
 
 func (c *SnapshotController) runWatcher(threadiness int, stopCh chan struct{}) {

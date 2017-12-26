@@ -52,7 +52,7 @@ func (c *DormantDbController) initWatcher() {
 				log.Errorln("Invalid DormantDatabase object")
 				return
 			}
-			if newObj.DeletionTimestamp != nil || !DormanrDatabaseEqual(oldObj, newObj) {
+			if newObj.DeletionTimestamp != nil || !DormantDatabaseEqual(oldObj, newObj) {
 				key, err := cache.MetaNamespaceKeyFunc(new)
 				if err == nil {
 					c.queue.Add(key)
@@ -62,7 +62,7 @@ func (c *DormantDbController) initWatcher() {
 	}, cache.Indexers{})
 }
 
-func DormanrDatabaseEqual(old, new *api.DormantDatabase) bool {
+func DormantDatabaseEqual(old, new *api.DormantDatabase) bool {
 	var oldSpec, newSpec *api.DormantDatabaseSpec
 	if old != nil {
 		oldSpec = &old.Spec
