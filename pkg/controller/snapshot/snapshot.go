@@ -94,13 +94,7 @@ func (c *SnapshotController) create(snapshot *api.Snapshot) error {
 		return err
 	}
 
-	go func() {
-		if err := c.checkSnapshotJob(snapshot, job.Name, durationCheckSnapshotJob); err != nil {
-			log.Errorln(err)
-		}
-	}()
-
-	return nil
+	return c.checkSnapshotJob(snapshot, job.Name, durationCheckSnapshotJob)
 }
 
 func (c *SnapshotController) delete(snapshot *api.Snapshot) error {
