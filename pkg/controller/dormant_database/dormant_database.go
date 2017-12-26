@@ -122,6 +122,15 @@ func (c *DormantDbController) create(dormantDb *api.DormantDatabase) error {
 }
 
 func (c *DormantDbController) delete(dormantDb *api.DormantDatabase) error {
+
+	exists, err := c.deleter.Exists(&dormantDb.ObjectMeta)
+	if err != nil {
+		return err
+	}
+	if exists {
+		return nil
+	}
+
 	phase := dormantDb.Status.Phase
 	if phase != api.DormantDatabasePhaseResuming && phase != api.DormantDatabasePhaseWipedOut {
 		c.recorder.Eventf(

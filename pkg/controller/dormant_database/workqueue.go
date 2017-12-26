@@ -175,27 +175,27 @@ func (c *DormantDbController) runDormantDatabase(key string) error {
 	} else {
 		// Note that you also have to check the uid if you have a local controlled resource, which
 		// is dependent on the actual instance, to detect that a DormantDatabase was recreated with the same name
-		dormant_database := obj.(*api.DormantDatabase).DeepCopy()
-		if dormant_database.DeletionTimestamp != nil {
-			if core_util.HasFinalizer(dormant_database.ObjectMeta, "kubedb.com") {
-				util.AssignTypeKind(dormant_database)
-				if err := c.delete(dormant_database); err != nil {
+		dormantDatabase := obj.(*api.DormantDatabase).DeepCopy()
+		if dormantDatabase.DeletionTimestamp != nil {
+			if core_util.HasFinalizer(dormantDatabase.ObjectMeta, "kubedb.com") {
+				util.AssignTypeKind(dormantDatabase)
+				if err := c.delete(dormantDatabase); err != nil {
 					log.Errorln(err)
 					return err
 				}
-				dormant_database, _, err = util.PatchDormantDatabase(c.ExtClient, dormant_database, func(in *api.DormantDatabase) *api.DormantDatabase {
+				dormantDatabase, _, err = util.PatchDormantDatabase(c.ExtClient, dormantDatabase, func(in *api.DormantDatabase) *api.DormantDatabase {
 					in.ObjectMeta = core_util.RemoveFinalizer(in.ObjectMeta, "kubedb.com")
 					return in
 				})
 				return err
 			}
 		} else {
-			dormant_database, _, err = util.PatchDormantDatabase(c.ExtClient, dormant_database, func(in *api.DormantDatabase) *api.DormantDatabase {
+			dormantDatabase, _, err = util.PatchDormantDatabase(c.ExtClient, dormantDatabase, func(in *api.DormantDatabase) *api.DormantDatabase {
 				in.ObjectMeta = core_util.AddFinalizer(in.ObjectMeta, "kubedb.com")
 				return in
 			})
-			util.AssignTypeKind(dormant_database)
-			if err := c.create(dormant_database); err != nil {
+			util.AssignTypeKind(dormantDatabase)
+			if err := c.create(dormantDatabase); err != nil {
 				log.Errorln(err)
 				return err
 			}
