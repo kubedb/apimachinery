@@ -267,7 +267,7 @@ func (c *Controller) DeleteStatefulSet(name, namespace string) error {
 	}
 
 	// Update StatefulSet
-	_, err = apps_util.TryPatchStatefulSet(c.Client, statefulSet.ObjectMeta, func(in *apps.StatefulSet) *apps.StatefulSet {
+	_, _, err = apps_util.PatchStatefulSet(c.Client, statefulSet, func(in *apps.StatefulSet) *apps.StatefulSet {
 		in.Spec.Replicas = types.Int32P(0)
 		return in
 	})
@@ -295,7 +295,7 @@ func (c *Controller) DeleteStatefulSet(name, namespace string) error {
 	}
 
 	if !checkSuccess {
-		return errors.New("Fail to delete StatefulSet Pods")
+		return errors.New("fail to delete StatefulSet Pods")
 	}
 
 	// Delete StatefulSet
