@@ -22,7 +22,7 @@ const (
 	sleepDuration            = time.Second
 )
 
-func (c *controller) create(snapshot *api.Snapshot) error {
+func (c *Controller) create(snapshot *api.Snapshot) error {
 	_, _, err := util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 		t := metav1.Now()
 		in.Status.StartTime = &t
@@ -97,7 +97,7 @@ func (c *controller) create(snapshot *api.Snapshot) error {
 	return c.checkSnapshotJob(snapshot, job.Name, durationCheckSnapshotJob)
 }
 
-func (c *controller) delete(snapshot *api.Snapshot) error {
+func (c *Controller) delete(snapshot *api.Snapshot) error {
 	runtimeObj, err := c.snapshotter.GetDatabase(snapshot)
 	if err != nil {
 		if !kerr.IsNotFound(err) {
@@ -146,7 +146,7 @@ func (c *controller) delete(snapshot *api.Snapshot) error {
 	return nil
 }
 
-func (c *controller) checkRunningSnapshot(snapshot *api.Snapshot) error {
+func (c *Controller) checkRunningSnapshot(snapshot *api.Snapshot) error {
 	labelMap := map[string]string{
 		api.LabelDatabaseKind:   snapshot.Labels[api.LabelDatabaseKind],
 		api.LabelDatabaseName:   snapshot.Spec.DatabaseName,
@@ -180,7 +180,7 @@ func (c *controller) checkRunningSnapshot(snapshot *api.Snapshot) error {
 	return nil
 }
 
-func (c *controller) checkSnapshotJob(snapshot *api.Snapshot, jobName string, checkDuration time.Duration) error {
+func (c *Controller) checkSnapshotJob(snapshot *api.Snapshot, jobName string, checkDuration time.Duration) error {
 
 	var jobSuccess bool = false
 	var job *batch.Job

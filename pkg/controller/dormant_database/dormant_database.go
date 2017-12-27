@@ -11,7 +11,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func (c *controller) create(dormantDb *api.DormantDatabase) error {
+func (c *Controller) create(dormantDb *api.DormantDatabase) error {
 	if dormantDb.Spec.WipeOut {
 		return c.wipeOut(dormantDb)
 	}
@@ -121,7 +121,7 @@ func (c *controller) create(dormantDb *api.DormantDatabase) error {
 	return nil
 }
 
-func (c *controller) delete(dormantDb *api.DormantDatabase) error {
+func (c *Controller) delete(dormantDb *api.DormantDatabase) error {
 
 	exists, err := c.deleter.Exists(&dormantDb.ObjectMeta)
 	if err != nil {
@@ -157,7 +157,7 @@ func (c *controller) delete(dormantDb *api.DormantDatabase) error {
 	return nil
 }
 
-func (c *controller) wipeOut(dormantDb *api.DormantDatabase) error {
+func (c *Controller) wipeOut(dormantDb *api.DormantDatabase) error {
 	// Check if DB TPR object exists
 	found, err := c.deleter.Exists(&dormantDb.ObjectMeta)
 	if err != nil {
@@ -237,7 +237,7 @@ func (c *controller) wipeOut(dormantDb *api.DormantDatabase) error {
 	return nil
 }
 
-func (c *controller) resume(dormantDb *api.DormantDatabase) error {
+func (c *Controller) resume(dormantDb *api.DormantDatabase) error {
 	c.recorder.Event(
 		dormantDb.ObjectReference(),
 		core.EventTypeNormal,
@@ -314,7 +314,7 @@ func (c *controller) resume(dormantDb *api.DormantDatabase) error {
 	return nil
 }
 
-func (c *controller) reCreateDormantDatabase(dormantDatabase *api.DormantDatabase) error {
+func (c *Controller) reCreateDormantDatabase(dormantDatabase *api.DormantDatabase) error {
 	dormantDb := &api.DormantDatabase{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        dormantDatabase.Name,

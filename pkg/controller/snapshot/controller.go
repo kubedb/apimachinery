@@ -22,7 +22,7 @@ type Snapshotter interface {
 	WipeOutSnapshot(*api.Snapshot) error
 }
 
-type controller struct {
+type Controller struct {
 	*amc.Controller
 	// Snapshotter interface
 	snapshotter Snapshotter
@@ -40,38 +40,38 @@ type controller struct {
 	maxNumRequests int
 }
 
-// NewController creates a new controller
+// NewController creates a new Controller
 func NewController(
 	controller *amc.Controller,
 	snapshotter Snapshotter,
 	lw *cache.ListWatch,
 	syncPeriod time.Duration,
-) *controller {
+) *Controller {
 
-	// return new DormantDatabase controller
-	return &controller{
+	// return new DormantDatabase Controller
+	return &Controller{
 		Controller:     controller,
 		snapshotter:    snapshotter,
 		lw:             lw,
-		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Snapshot controller"),
+		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Snapshot Controller"),
 		syncPeriod:     syncPeriod,
 		maxNumRequests: 5,
 	}
 }
 
-func (c *controller) Setup() error {
+func (c *Controller) Setup() error {
 	crd := []*crd_api.CustomResourceDefinition{
 		api.Snapshot{}.CustomResourceDefinition(),
 	}
 	return apiext_util.RegisterCRDs(c.ApiExtKubeClient, crd)
 }
 
-func (c *controller) Run() {
+func (c *Controller) Run() {
 	// Watch DormantDatabase with provided ListerWatcher
 	c.watchSnapshot()
 }
 
-func (c *controller) watchSnapshot() {
+func (c *Controller) watchSnapshot() {
 
 	c.initWatcher()
 

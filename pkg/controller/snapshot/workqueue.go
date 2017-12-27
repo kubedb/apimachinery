@@ -15,7 +15,7 @@ import (
 	"k8s.io/client-go/util/workqueue"
 )
 
-func (c *controller) initWatcher() {
+func (c *Controller) initWatcher() {
 
 	// create the workqueue
 	c.queue = workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "snapshot")
@@ -60,12 +60,12 @@ func (c *controller) initWatcher() {
 	}, cache.Indexers{})
 }
 
-func (c *controller) runWatcher(threadiness int, stopCh chan struct{}) {
+func (c *Controller) runWatcher(threadiness int, stopCh chan struct{}) {
 	defer runtime.HandleCrash()
 
 	// Let the workers stop when we are done
 	defer c.queue.ShutDown()
-	log.Infoln("Starting Snapshot controller")
+	log.Infoln("Starting Snapshot Controller")
 
 	go c.informer.Run(stopCh)
 
@@ -80,15 +80,15 @@ func (c *controller) runWatcher(threadiness int, stopCh chan struct{}) {
 	}
 
 	<-stopCh
-	log.Infoln("Stopping Snapshot controller")
+	log.Infoln("Stopping Snapshot Controller")
 }
 
-func (c *controller) runWorker() {
+func (c *Controller) runWorker() {
 	for c.processNextItem() {
 	}
 }
 
-func (c *controller) processNextItem() bool {
+func (c *Controller) processNextItem() bool {
 	// Wait until there is a new item in the working queue
 	key, quit := c.queue.Get()
 	if quit {
@@ -111,7 +111,7 @@ func (c *controller) processNextItem() bool {
 	}
 	log.Errorf("Failed to process Snapshot %v. Reason: %s\n", key, err)
 
-	// This controller retries 5 times if something goes wrong. After that, it stops trying.
+	// This Controller retries 5 times if something goes wrong. After that, it stops trying.
 	if c.queue.NumRequeues(key) < c.maxNumRequests {
 		log.Infof("Error syncing crd %v: %v\n", key, err)
 
@@ -129,7 +129,7 @@ func (c *controller) processNextItem() bool {
 	return true
 }
 
-func (c *controller) runSnapshot(key string) error {
+func (c *Controller) runSnapshot(key string) error {
 	log.Debugf("started processing, key: %v\n", key)
 	obj, exists, err := c.indexer.GetByKey(key)
 	if err != nil {

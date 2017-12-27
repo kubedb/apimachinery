@@ -25,7 +25,7 @@ type Deleter interface {
 	ResumeDatabase(*api.DormantDatabase) error
 }
 
-type controller struct {
+type Controller struct {
 	*amc.Controller
 	// Deleter interface
 	deleter Deleter
@@ -40,40 +40,40 @@ type controller struct {
 	queue    workqueue.RateLimitingInterface
 	informer cache.Controller
 	//Max number requests for retries
-	maxNumRequeues int
+	maxNumRequests int
 }
 
-// NewController creates a new DormantDatabase controller
+// NewController creates a new DormantDatabase Controller
 func NewController(
 	controller *amc.Controller,
 	deleter Deleter,
 	lw *cache.ListWatch,
 	syncPeriod time.Duration,
-) *controller {
-	// return new DormantDatabase controller
-	return &controller{
+) *Controller {
+	// return new DormantDatabase Controller
+	return &Controller{
 		Controller:     controller,
 		deleter:        deleter,
 		lw:             lw,
-		recorder:       eventer.NewEventRecorder(controller.Client, "DormantDatabase controller"),
+		recorder:       eventer.NewEventRecorder(controller.Client, "DormantDatabase Controller"),
 		syncPeriod:     syncPeriod,
-		maxNumRequeues: 5,
+		maxNumRequests: 5,
 	}
 }
 
-func (c *controller) Setup() error {
+func (c *Controller) Setup() error {
 	crd := []*crd_api.CustomResourceDefinition{
 		api.DormantDatabase{}.CustomResourceDefinition(),
 	}
 	return apiext_util.RegisterCRDs(c.ApiExtKubeClient, crd)
 }
 
-func (c *controller) Run() {
+func (c *Controller) Run() {
 	// Watch DormantDatabase with provided ListerWatcher
 	c.watchDormantDatabase()
 }
 
-func (c *controller) watchDormantDatabase() {
+func (c *Controller) watchDormantDatabase() {
 
 	c.initWatcher()
 
