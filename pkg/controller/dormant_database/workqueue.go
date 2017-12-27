@@ -15,7 +15,7 @@ import (
 	"k8s.io/client-go/util/workqueue"
 )
 
-func (c *DormantDbController) initWatcher() {
+func (c *controller) initWatcher() {
 
 	// create the workqueue
 	c.queue = workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "dormant_database")
@@ -61,7 +61,7 @@ func (c *DormantDbController) initWatcher() {
 	}, cache.Indexers{})
 }
 
-func (c *DormantDbController) runWatcher(threadiness int, stopCh chan struct{}) {
+func (c *controller) runWatcher(threadiness int, stopCh chan struct{}) {
 	defer runtime.HandleCrash()
 
 	// Let the workers stop when we are done
@@ -84,12 +84,12 @@ func (c *DormantDbController) runWatcher(threadiness int, stopCh chan struct{}) 
 	log.Infoln("Stopping DormantDatabase controller")
 }
 
-func (c *DormantDbController) runWorker() {
+func (c *controller) runWorker() {
 	for c.processNextItem() {
 	}
 }
 
-func (c *DormantDbController) processNextItem() bool {
+func (c *controller) processNextItem() bool {
 	// Wait until there is a new item in the working queue
 	key, quit := c.queue.Get()
 	if quit {
@@ -130,7 +130,7 @@ func (c *DormantDbController) processNextItem() bool {
 	return true
 }
 
-func (c *DormantDbController) runDormantDatabase(key string) error {
+func (c *controller) runDormantDatabase(key string) error {
 	log.Debugf("started processing, key: %v\n", key)
 	obj, exists, err := c.indexer.GetByKey(key)
 	if err != nil {

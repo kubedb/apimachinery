@@ -22,10 +22,10 @@ type Snapshotter interface {
 	WipeOutSnapshot(*api.Snapshot) error
 }
 
-type SnapshotController struct {
+type controller struct {
 	*amc.Controller
 	// Snapshotter interface
-	snapshoter Snapshotter
+	snapshotter Snapshotter
 	// ListerWatcher
 	lw *cache.ListWatch
 	// Event Recorder
@@ -37,41 +37,41 @@ type SnapshotController struct {
 	queue    workqueue.RateLimitingInterface
 	informer cache.Controller
 	//Max number requests for retries
-	maxNumRequeues int
+	maxNumRequests int
 }
 
-// NewSnapshotController creates a new SnapshotController
-func NewSnapshotController(
+// NewController creates a new controller
+func NewController(
 	controller *amc.Controller,
-	snapshoter Snapshotter,
+	snapshotter Snapshotter,
 	lw *cache.ListWatch,
 	syncPeriod time.Duration,
-) *SnapshotController {
+) *controller {
 
-	// return new DormantDatabase Controller
-	return &SnapshotController{
+	// return new DormantDatabase controller
+	return &controller{
 		Controller:     controller,
-		snapshoter:     snapshoter,
+		snapshotter:    snapshotter,
 		lw:             lw,
-		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Snapshot Controller"),
+		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Snapshot controller"),
 		syncPeriod:     syncPeriod,
-		maxNumRequeues: 5,
+		maxNumRequests: 5,
 	}
 }
 
-func (c *SnapshotController) Setup() error {
-	crds := []*crd_api.CustomResourceDefinition{
+func (c *controller) Setup() error {
+	crd := []*crd_api.CustomResourceDefinition{
 		api.Snapshot{}.CustomResourceDefinition(),
 	}
-	return apiext_util.RegisterCRDs(c.ApiExtKubeClient, crds)
+	return apiext_util.RegisterCRDs(c.ApiExtKubeClient, crd)
 }
 
-func (c *SnapshotController) Run() {
+func (c *controller) Run() {
 	// Watch DormantDatabase with provided ListerWatcher
 	c.watchSnapshot()
 }
 
-func (c *SnapshotController) watchSnapshot() {
+func (c *controller) watchSnapshot() {
 
 	c.initWatcher()
 

@@ -22,8 +22,8 @@ const (
 	sleepDuration            = time.Second
 )
 
-func (c *SnapshotController) create(snapshot *api.Snapshot) error {
-	_, err := util.TryPatchSnapshot(c.ExtClient, snapshot.ObjectMeta, func(in *api.Snapshot) *api.Snapshot {
+func (c *controller) create(snapshot *api.Snapshot) error {
+	_, _, err := util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 		t := metav1.Now()
 		in.Status.StartTime = &t
 		return in
@@ -34,7 +34,7 @@ func (c *SnapshotController) create(snapshot *api.Snapshot) error {
 	}
 
 	// Validate DatabaseSnapshot spec
-	if err := c.snapshoter.ValidateSnapshot(snapshot); err != nil {
+	if err := c.snapshotter.ValidateSnapshot(snapshot); err != nil {
 		c.eventRecorder.Event(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonInvalid, err.Error())
 		return err
 	}
@@ -45,13 +45,13 @@ func (c *SnapshotController) create(snapshot *api.Snapshot) error {
 		return err
 	}
 
-	runtimeObj, err := c.snapshoter.GetDatabase(snapshot)
+	runtimeObj, err := c.snapshotter.GetDatabase(snapshot)
 	if err != nil {
 		c.eventRecorder.Event(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonFailedToGet, err.Error())
 		return err
 	}
 
-	_, err = util.TryPatchSnapshot(c.ExtClient, snapshot.ObjectMeta, func(in *api.Snapshot) *api.Snapshot {
+	_, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 		in.Labels[api.LabelDatabaseName] = snapshot.Spec.DatabaseName
 		in.Labels[api.LabelSnapshotStatus] = string(api.SnapshotPhaseRunning)
 		in.Status.Phase = api.SnapshotPhaseRunning
@@ -80,7 +80,7 @@ func (c *SnapshotController) create(snapshot *api.Snapshot) error {
 		return err
 	}
 
-	job, err := c.snapshoter.GetSnapshotter(snapshot)
+	job, err := c.snapshotter.GetSnapshotter(snapshot)
 	if err != nil {
 		message := fmt.Sprintf("Failed to take snapshot. Reason: %v", err)
 		c.eventRecorder.Event(api.ObjectReferenceFor(runtimeObj), core.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
@@ -97,8 +97,8 @@ func (c *SnapshotController) create(snapshot *api.Snapshot) error {
 	return c.checkSnapshotJob(snapshot, job.Name, durationCheckSnapshotJob)
 }
 
-func (c *SnapshotController) delete(snapshot *api.Snapshot) error {
-	runtimeObj, err := c.snapshoter.GetDatabase(snapshot)
+func (c *controller) delete(snapshot *api.Snapshot) error {
+	runtimeObj, err := c.snapshotter.GetDatabase(snapshot)
 	if err != nil {
 		if !kerr.IsNotFound(err) {
 			c.eventRecorder.Event(
@@ -121,7 +121,7 @@ func (c *SnapshotController) delete(snapshot *api.Snapshot) error {
 		)
 	}
 
-	if err := c.snapshoter.WipeOutSnapshot(snapshot); err != nil {
+	if err := c.snapshotter.WipeOutSnapshot(snapshot); err != nil {
 		if runtimeObj != nil {
 			c.eventRecorder.Eventf(
 				api.ObjectReferenceFor(runtimeObj),
@@ -146,7 +146,7 @@ func (c *SnapshotController) delete(snapshot *api.Snapshot) error {
 	return nil
 }
 
-func (c *SnapshotController) checkRunningSnapshot(snapshot *api.Snapshot) error {
+func (c *controller) checkRunningSnapshot(snapshot *api.Snapshot) error {
 	labelMap := map[string]string{
 		api.LabelDatabaseKind:   snapshot.Labels[api.LabelDatabaseKind],
 		api.LabelDatabaseName:   snapshot.Spec.DatabaseName,
@@ -161,7 +161,7 @@ func (c *SnapshotController) checkRunningSnapshot(snapshot *api.Snapshot) error 
 	}
 
 	if len(snapshotList.Items) > 0 {
-		_, err = util.TryPatchSnapshot(c.ExtClient, snapshot.ObjectMeta, func(in *api.Snapshot) *api.Snapshot {
+		_, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 			t := metav1.Now()
 			in.Status.StartTime = &t
 			in.Status.CompletionTime = &t
@@ -180,7 +180,7 @@ func (c *SnapshotController) checkRunningSnapshot(snapshot *api.Snapshot) error 
 	return nil
 }
 
-func (c *SnapshotController) checkSnapshotJob(snapshot *api.Snapshot, jobName string, checkDuration time.Duration) error {
+func (c *controller) checkSnapshotJob(snapshot *api.Snapshot, jobName string, checkDuration time.Duration) error {
 
 	var jobSuccess bool = false
 	var job *batch.Job
@@ -237,7 +237,7 @@ func (c *SnapshotController) checkSnapshotJob(snapshot *api.Snapshot, jobName st
 		log.Errorln(err)
 	}
 
-	runtimeObj, err := c.snapshoter.GetDatabase(snapshot)
+	runtimeObj, err := c.snapshotter.GetDatabase(snapshot)
 	if err != nil {
 		c.eventRecorder.Event(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonFailedToGet, err.Error())
 		return err
@@ -273,7 +273,7 @@ func (c *SnapshotController) checkSnapshotJob(snapshot *api.Snapshot, jobName st
 		)
 	}
 
-	_, err = util.TryPatchSnapshot(c.ExtClient, snapshot.ObjectMeta, func(in *api.Snapshot) *api.Snapshot {
+	_, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 		t := metav1.Now()
 		in.Status.CompletionTime = &t
 		delete(in.Labels, api.LabelSnapshotStatus)

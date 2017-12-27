@@ -11,7 +11,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func (c *DormantDbController) create(dormantDb *api.DormantDatabase) error {
+func (c *controller) create(dormantDb *api.DormantDatabase) error {
 	if dormantDb.Spec.WipeOut {
 		return c.wipeOut(dormantDb)
 	}
@@ -31,7 +31,7 @@ func (c *DormantDbController) create(dormantDb *api.DormantDatabase) error {
 		return nil
 	}
 
-	_, err := util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
+	_, _, err := util.PatchDormantDatabase(c.ExtClient, dormantDb, func(in *api.DormantDatabase) *api.DormantDatabase {
 		t := metav1.Now()
 		in.Status.CreationTime = &t
 		return in
@@ -55,7 +55,7 @@ func (c *DormantDbController) create(dormantDb *api.DormantDatabase) error {
 	}
 
 	if found {
-		message := "Failed to pause Database. Delete Database TPR object first"
+		message := "failed to pause Database. Delete Database TPR object first"
 		c.recorder.Event(
 			dormantDb.ObjectReference(),
 			core.EventTypeWarning,
@@ -77,7 +77,7 @@ func (c *DormantDbController) create(dormantDb *api.DormantDatabase) error {
 		return errors.New(message)
 	}
 
-	_, err = util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
+	_, _, err = util.PatchDormantDatabase(c.ExtClient, dormantDb, func(in *api.DormantDatabase) *api.DormantDatabase {
 		in.Status.Phase = api.DormantDatabasePhasePausing
 		return in
 	})
@@ -107,7 +107,7 @@ func (c *DormantDbController) create(dormantDb *api.DormantDatabase) error {
 		"Successfully paused Database workload",
 	)
 
-	_, err = util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
+	_, _, err = util.PatchDormantDatabase(c.ExtClient, dormantDb, func(in *api.DormantDatabase) *api.DormantDatabase {
 		t := metav1.Now()
 		in.Status.PausingTime = &t
 		in.Status.Phase = api.DormantDatabasePhasePaused
@@ -121,7 +121,7 @@ func (c *DormantDbController) create(dormantDb *api.DormantDatabase) error {
 	return nil
 }
 
-func (c *DormantDbController) delete(dormantDb *api.DormantDatabase) error {
+func (c *controller) delete(dormantDb *api.DormantDatabase) error {
 
 	exists, err := c.deleter.Exists(&dormantDb.ObjectMeta)
 	if err != nil {
@@ -157,7 +157,7 @@ func (c *DormantDbController) delete(dormantDb *api.DormantDatabase) error {
 	return nil
 }
 
-func (c *DormantDbController) wipeOut(dormantDb *api.DormantDatabase) error {
+func (c *controller) wipeOut(dormantDb *api.DormantDatabase) error {
 	// Check if DB TPR object exists
 	found, err := c.deleter.Exists(&dormantDb.ObjectMeta)
 	if err != nil {
@@ -172,7 +172,7 @@ func (c *DormantDbController) wipeOut(dormantDb *api.DormantDatabase) error {
 	}
 
 	if found {
-		message := "Failed to wipeOut Database. Delete Database TPR object first"
+		message := "failed to wipeOut Database. Delete Database TPR object first"
 		c.recorder.Event(
 			dormantDb.ObjectReference(),
 			core.EventTypeWarning,
@@ -194,7 +194,7 @@ func (c *DormantDbController) wipeOut(dormantDb *api.DormantDatabase) error {
 		return errors.New(message)
 	}
 
-	_, err = util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
+	_, _, err = util.PatchDormantDatabase(c.ExtClient, dormantDb, func(in *api.DormantDatabase) *api.DormantDatabase {
 		in.Status.Phase = api.DormantDatabasePhaseWipingOut
 		return in
 	})
@@ -223,7 +223,7 @@ func (c *DormantDbController) wipeOut(dormantDb *api.DormantDatabase) error {
 		"Successfully wiped out Database workload",
 	)
 
-	_, err = util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
+	_, _, err = util.PatchDormantDatabase(c.ExtClient, dormantDb, func(in *api.DormantDatabase) *api.DormantDatabase {
 		t := metav1.Now()
 		in.Status.WipeOutTime = &t
 		in.Status.Phase = api.DormantDatabasePhaseWipedOut
@@ -237,7 +237,7 @@ func (c *DormantDbController) wipeOut(dormantDb *api.DormantDatabase) error {
 	return nil
 }
 
-func (c *DormantDbController) resume(dormantDb *api.DormantDatabase) error {
+func (c *controller) resume(dormantDb *api.DormantDatabase) error {
 	c.recorder.Event(
 		dormantDb.ObjectReference(),
 		core.EventTypeNormal,
@@ -259,7 +259,7 @@ func (c *DormantDbController) resume(dormantDb *api.DormantDatabase) error {
 	}
 
 	if found {
-		message := "Failed to resume DormantDatabase. One Database TPR object exists with same name"
+		message := "failed to resume DormantDatabase. One Database TPR object exists with same name"
 		c.recorder.Event(
 			dormantDb.ObjectReference(),
 			core.EventTypeWarning,
@@ -269,7 +269,7 @@ func (c *DormantDbController) resume(dormantDb *api.DormantDatabase) error {
 		return errors.New(message)
 	}
 
-	_, err = util.TryPatchDormantDatabase(c.ExtClient, dormantDb.ObjectMeta, func(in *api.DormantDatabase) *api.DormantDatabase {
+	_, _, err = util.PatchDormantDatabase(c.ExtClient, dormantDb, func(in *api.DormantDatabase) *api.DormantDatabase {
 		in.Status.Phase = api.DormantDatabasePhaseResuming
 		return in
 	})
@@ -314,19 +314,19 @@ func (c *DormantDbController) resume(dormantDb *api.DormantDatabase) error {
 	return nil
 }
 
-func (c *DormantDbController) reCreateDormantDatabase(dormantDb *api.DormantDatabase) error {
-	_dormantDb := &api.DormantDatabase{
+func (c *controller) reCreateDormantDatabase(dormantDatabase *api.DormantDatabase) error {
+	dormantDb := &api.DormantDatabase{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        dormantDb.Name,
-			Namespace:   dormantDb.Namespace,
-			Labels:      dormantDb.Labels,
-			Annotations: dormantDb.Annotations,
+			Name:        dormantDatabase.Name,
+			Namespace:   dormantDatabase.Namespace,
+			Labels:      dormantDatabase.Labels,
+			Annotations: dormantDatabase.Annotations,
 		},
-		Spec:   dormantDb.Spec,
-		Status: dormantDb.Status,
+		Spec:   dormantDatabase.Spec,
+		Status: dormantDatabase.Status,
 	}
 
-	if _, err := c.ExtClient.DormantDatabases(_dormantDb.Namespace).Create(_dormantDb); err != nil {
+	if _, err := c.ExtClient.DormantDatabases(dormantDb.Namespace).Create(dormantDb); err != nil {
 		return err
 	}
 
