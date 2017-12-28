@@ -51,7 +51,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		return err
 	}
 
-	_, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+	snap, _, err := util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 		in.Labels[api.LabelDatabaseName] = snapshot.Spec.DatabaseName
 		in.Labels[api.LabelSnapshotStatus] = string(api.SnapshotPhaseRunning)
 		in.Status.Phase = api.SnapshotPhaseRunning
@@ -61,6 +61,8 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		c.eventRecorder.Eventf(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonFailedToUpdate, err.Error())
 		return err
 	}
+	snapshot.Labels = snap.Labels
+	snapshot.Status = snap.Status
 
 	c.eventRecorder.Event(api.ObjectReferenceFor(runtimeObj), core.EventTypeNormal, eventer.EventReasonStarting, "Backup running")
 	c.eventRecorder.Event(snapshot.ObjectReference(), core.EventTypeNormal, eventer.EventReasonStarting, "Backup running")
@@ -274,7 +276,7 @@ func (c *Controller) checkSnapshotJob(snapshot *api.Snapshot, jobName string, ch
 		)
 	}
 
-	_, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+	snap, _, err := util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 		t := metav1.Now()
 		in.Status.CompletionTime = &t
 		delete(in.Labels, api.LabelSnapshotStatus)
@@ -285,6 +287,8 @@ func (c *Controller) checkSnapshotJob(snapshot *api.Snapshot, jobName string, ch
 		c.eventRecorder.Eventf(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonFailedToUpdate, err.Error())
 		return err
 	}
+	snapshot.Labels = snap.Labels
+	snapshot.Status = snap.Status
 
 	return nil
 }
