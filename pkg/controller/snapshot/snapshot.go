@@ -243,8 +243,9 @@ func (c *Controller) checkSnapshotJob(snapshot *api.Snapshot, jobName string, ch
 		return err
 	}
 
+	var snapshotPhase api.SnapshotPhase
 	if jobSuccess {
-		snapshot.Status.Phase = api.SnapshotPhaseSuccessed
+		snapshotPhase = api.SnapshotPhaseSuccessed
 		c.eventRecorder.Event(
 			api.ObjectReferenceFor(runtimeObj),
 			core.EventTypeNormal,
@@ -258,7 +259,7 @@ func (c *Controller) checkSnapshotJob(snapshot *api.Snapshot, jobName string, ch
 			"Successfully completed snapshot",
 		)
 	} else {
-		snapshot.Status.Phase = api.SnapshotPhaseFailed
+		snapshotPhase = api.SnapshotPhaseFailed
 		c.eventRecorder.Event(
 			api.ObjectReferenceFor(runtimeObj),
 			core.EventTypeWarning,
@@ -277,7 +278,7 @@ func (c *Controller) checkSnapshotJob(snapshot *api.Snapshot, jobName string, ch
 		t := metav1.Now()
 		in.Status.CompletionTime = &t
 		delete(in.Labels, api.LabelSnapshotStatus)
-		in.Status.Phase = snapshot.Status.Phase
+		in.Status.Phase = snapshotPhase
 		return in
 	})
 	if err != nil {
