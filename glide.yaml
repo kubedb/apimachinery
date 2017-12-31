@@ -29,7 +29,7 @@ import:
 - package: github.com/Azure/go-ansiterm
   version: 70b2c90b260171e829f1ebd7c17f600c11858dbe
 - package: github.com/aws/aws-sdk-go
-  version: v1.6.10
+  version: v1.7.0
 - package: github.com/ncw/swift
   version: master
 - package: github.com/heroku/docker-registry-client
