@@ -114,7 +114,7 @@ func NewOSMContext(client kubernetes.Interface, spec api.SnapshotStorageSpec, na
 		return nc, nil
 	} else if spec.Local != nil {
 		nc.Provider = local.Kind
-		nc.Config[local.ConfigKeyPath] = spec.Local.Path
+		nc.Config[local.ConfigKeyPath] = spec.Local.MountPath
 		return nc, nil
 	} else if spec.Swift != nil {
 		nc.Provider = swift.Kind
