@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	stringz "github.com/appscode/go/strings"
 	"github.com/appscode/go/types"
 	otx "github.com/appscode/osm/context"
 	"github.com/aws/aws-sdk-go/aws"
@@ -141,7 +142,7 @@ func NewOSMContext(client kubernetes.Interface, spec api.SnapshotStorageSpec, na
 			out, err := svc.GetBucketLocation(&_s3.GetBucketLocationInput{
 				Bucket: types.StringP(spec.S3.Bucket),
 			})
-			nc.Config[s3.ConfigRegion] = types.String(out.LocationConstraint)
+			nc.Config[s3.ConfigRegion] = stringz.Val(types.String(out.LocationConstraint), "us-east-1")
 		} else {
 			nc.Config[s3.ConfigEndpoint] = spec.S3.Endpoint
 			if u, err := url.Parse(spec.S3.Endpoint); err == nil {

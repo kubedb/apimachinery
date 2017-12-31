@@ -1,5 +1,5 @@
 hash: d173d8bb46474c7014a1b9cf496b0117206a3d77f353ec4fa761c69bc5c31fbf
-updated: 2017-12-31T15:20:11.218477353-05:00
+updated: 2017-12-31T16:53:12.786589815-05:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -14,6 +14,7 @@ imports:
   - encoding/yaml
   - log
   - runtime
+  - strings
   - types
   - wait
 - name: github.com/appscode/kube-mon
