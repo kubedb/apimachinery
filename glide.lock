@@ -1,5 +1,5 @@
 hash: d173d8bb46474c7014a1b9cf496b0117206a3d77f353ec4fa761c69bc5c31fbf
-updated: 2017-12-31T16:53:12.786589815-05:00
+updated: 2017-12-31T17:45:56.904977592-05:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -13,10 +13,8 @@ imports:
   - encoding/json/types
   - encoding/yaml
   - log
-  - runtime
   - strings
   - types
-  - wait
 - name: github.com/appscode/kube-mon
   version: dd6884c63ee4615ca9ecdb7f0ca3e35c975bcca3
   subpackages:
@@ -25,7 +23,10 @@ imports:
   version: a506fd42d3c4d688675c639c9c14c27b79275e73
   subpackages:
   - apiextensions/v1beta1
+  - core/v1
   - meta
+- name: github.com/appscode/mergo
+  version: e3000cb3d28c72b837601cac94debd91032d19fe
 - name: github.com/appscode/osm
   version: 8e933dfca7c6a2730d77a63282369d843b1db1f4
   subpackages:
@@ -426,6 +427,7 @@ imports:
   - util/cert
   - util/flowcontrol
   - util/integer
+  - util/workqueue
 - name: k8s.io/kube-openapi
   version: 868f2f29720b192240e18284659231b440f9cda5
   subpackages:
