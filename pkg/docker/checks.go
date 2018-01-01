@@ -10,11 +10,11 @@ const (
 	registryUrl = "https://registry-1.docker.io/"
 )
 
-func CheckDockerImageVersion(repository, reference string) error {
+func CheckDockerImageVersion(repository, reference, username, password string) error {
 	registry := &docker.Registry{
 		URL: registryUrl,
 		Client: &http.Client{
-			Transport: docker.WrapTransport(http.DefaultTransport, registryUrl, "", ""),
+			Transport: docker.WrapTransport(http.DefaultTransport, registryUrl, username, password),
 		},
 		Logf: docker.Quiet,
 	}
