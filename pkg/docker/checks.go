@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/appscode/go/io"
+	"github.com/appscode/go/ioutil"
 	docker "github.com/heroku/docker-registry-client/registry"
 )
 
@@ -26,8 +26,8 @@ type RegistrySecret struct {
 func CheckDockerImageVersion(repository, reference string) error {
 
 	var registrySecret RegistrySecret
-	if io.IsFileExists(registrySecretPath) {
-		if err := io.ReadFileAs(registrySecretPath, &registrySecret); err != nil {
+	if ioutil.IsFileExists(registrySecretPath) {
+		if err := ioutil.ReadFileAs(registrySecretPath, &registrySecret); err != nil {
 			return err
 		}
 
