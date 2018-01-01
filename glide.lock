@@ -1,5 +1,5 @@
 hash: d173d8bb46474c7014a1b9cf496b0117206a3d77f353ec4fa761c69bc5c31fbf
-updated: 2017-12-31T17:45:56.904977592-05:00
+updated: 2018-01-01T12:05:46.042170771+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -7,11 +7,12 @@ imports:
   - compute/metadata
   - internal
 - name: github.com/appscode/go
-  version: f08cee5a2aa53a1ab6d30e4ae11e381d1b265f81
+  version: 9a3559e6132eda4069baad2c63689729f5d20ac4
   subpackages:
   - context
   - encoding/json/types
   - encoding/yaml
+  - ioutil
   - log
   - strings
   - types
@@ -122,7 +123,7 @@ imports:
   - proto
   - sortkeys
 - name: github.com/golang/glog
-  version: 44145f04b68cf362d9c4df2182967c2275eaefed
+  version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/groupcache
   version: 02826c3e79038b59d737d3b1c0a1d937f71a4433
   subpackages:
@@ -276,7 +277,7 @@ imports:
   - googleapi/internal/uritemplates
   - storage/v1
 - name: google.golang.org/appengine
-  version: 4f7eeb5305a4ba1966344836ba4af9996b7b4e05
+  version: 5bee14b453b4c71be47ec1781b0fa61c2ea182db
   subpackages:
   - internal
   - internal/app_identity
