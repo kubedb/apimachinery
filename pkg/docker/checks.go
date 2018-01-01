@@ -12,7 +12,7 @@ const (
 	registryUrl = "https://registry-1.docker.io/"
 )
 
-const registrySecretPath = "/srv/docker/secrets/.dockercfg"
+const dockerConfigPath = "/srv/docker/secrets/.dockercfg"
 
 type RegistrySecret struct {
 	Secret map[string]struct {
@@ -26,8 +26,8 @@ type RegistrySecret struct {
 func CheckDockerImageVersion(repository, reference string) error {
 
 	var registrySecret RegistrySecret
-	if ioutil.IsFileExists(registrySecretPath) {
-		if err := ioutil.ReadFileAs(registrySecretPath, &registrySecret); err != nil {
+	if ioutil.IsFileExists(dockerConfigPath) {
+		if err := ioutil.ReadFileAs(dockerConfigPath, &registrySecret); err != nil {
 			return err
 		}
 
