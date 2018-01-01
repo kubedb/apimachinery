@@ -15,23 +15,21 @@ const (
 const dockerConfigPath = "/srv/docker/secrets/.dockercfg"
 
 type RegistrySecret struct {
-	Secret map[string]struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-		Email    string `json:"email"`
-		Auth     string `json:"auth"`
-	} `json:"secret"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+	Auth     string `json:"auth"`
 }
 
 func CheckDockerImageVersion(repository, reference string) error {
 
-	var registrySecret RegistrySecret
+	registrySecret := make(map[string]RegistrySecret)
 	if ioutil.IsFileExists(dockerConfigPath) {
 		if err := ioutil.ReadFileAs(dockerConfigPath, &registrySecret); err != nil {
 			return err
 		}
 
-		for key, val := range registrySecret.Secret {
+		for key, val := range registrySecret {
 			dockerRegistry := &docker.Registry{
 				URL: key,
 				Client: &http.Client{
