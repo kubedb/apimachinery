@@ -22,13 +22,11 @@ type RegistrySecret struct {
 }
 
 func CheckDockerImageVersion(repository, reference string) error {
-
-	registrySecret := make(map[string]RegistrySecret)
 	if ioutil.IsFileExists(dockerConfigPath) {
+		registrySecret := make(map[string]RegistrySecret)
 		if err := ioutil.ReadFileAs(dockerConfigPath, &registrySecret); err != nil {
 			return err
 		}
-
 		for key, val := range registrySecret {
 			dockerRegistry := &docker.Registry{
 				URL: key,
@@ -37,7 +35,6 @@ func CheckDockerImageVersion(repository, reference string) error {
 				},
 				Logf: docker.Quiet,
 			}
-
 			_, err := dockerRegistry.Manifest(repository, reference)
 			if err == nil {
 				return nil
@@ -52,10 +49,8 @@ func CheckDockerImageVersion(repository, reference string) error {
 		},
 		Logf: docker.Quiet,
 	}
-
 	if _, err := dockerRegistry.Manifest(repository, reference); err == nil {
 		return nil
 	}
-
 	return errors.New("failed to verify docker image")
 }
