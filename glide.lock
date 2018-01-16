@@ -1,5 +1,5 @@
 hash: d8179c59f5e41db508feb8e63ecddf89759ca273f94d1b0e9cccdace0b51fc0a
-updated: 2018-01-15T22:18:47.340705093-08:00
+updated: 2018-01-16T16:54:30.149301058+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -122,7 +122,7 @@ imports:
   - proto
   - sortkeys
 - name: github.com/golang/glog
-  version: 44145f04b68cf362d9c4df2182967c2275eaefed
+  version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/groupcache
   version: 02826c3e79038b59d737d3b1c0a1d937f71a4433
   subpackages:
@@ -148,7 +148,7 @@ imports:
 - name: github.com/google/gofuzz
   version: 44d81051d367757e1c7c6a5a86423ece9afcf63c
 - name: github.com/google/uuid
-  version: dec09d789f3dba190787f8b4454c7d3c936fed9e
+  version: e367a344cbe8e08149f9951115dc299ebd42b919
 - name: github.com/googleapis/gnostic
   version: 0c5108395e2debce0d731cf0287ddf7242066aba
   subpackages:
@@ -174,7 +174,7 @@ imports:
   subpackages:
   - diskcache
 - name: github.com/hashicorp/go-version
-  version: 1b1de86cf2ec13494b6814b48157884efaf71c54
+  version: 5b737306c678d7052849144de676800e5b0dc2c1
   repo: https://github.com/appscode/go-version.git
   vcs: git
 - name: github.com/hashicorp/golang-lru
@@ -204,11 +204,11 @@ imports:
   - jlexer
   - jwriter
 - name: github.com/ncw/swift
-  version: 067578e41c8dd06bf557d02a92a77bd35e97c05a
+  version: ae9f0ea1605b9aa6434ed5c731ca35d83ba67c55
 - name: github.com/opencontainers/go-digest
   version: a6d0ee40d4207ea02364bd3b9e8e77b9159ba1eb
 - name: github.com/orcaman/concurrent-map
-  version: d4c23bd0e01134806215ffe65ba3fd22ec6721f7
+  version: 2ae17bc4c860c83513ee50feb9746f3e50d7515d
 - name: github.com/peterbourgon/diskv
   version: 5f041e8faa004a95c88a202771f4cc3e991971e6
 - name: github.com/pkg/errors
