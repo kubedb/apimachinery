@@ -1,5 +1,5 @@
-hash: d173d8bb46474c7014a1b9cf496b0117206a3d77f353ec4fa761c69bc5c31fbf
-updated: 2018-01-12T17:33:08.245558784+06:00
+hash: d8179c59f5e41db508feb8e63ecddf89759ca273f94d1b0e9cccdace0b51fc0a
+updated: 2018-01-15T22:18:47.340705093-08:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f
@@ -7,7 +7,7 @@ imports:
   - compute/metadata
   - internal
 - name: github.com/appscode/go
-  version: 979b75cb554996ed0e5c2ba4a3538ca163a329b8
+  version: 702364e848d80e8f4d6af7045aef800f36b3db80
   subpackages:
   - context
   - encoding/json/types
@@ -18,7 +18,7 @@ imports:
   - strings
   - types
 - name: github.com/appscode/kube-mon
-  version: bb1241cf66767ebcca781fef3bdd2c2769e11658
+  version: bbf9306e9c161e411f0ddc5d946e67a3685530ee
   subpackages:
   - api
 - name: github.com/appscode/kutil
@@ -77,9 +77,7 @@ imports:
   - autorest/azure
   - autorest/date
 - name: github.com/coreos/prometheus-operator
-  version: cbdd1b519796673cd02d53b0e21999acbcbfe6e4
-  repo: https://github.com/appscode/prometheus-operator.git
-  vcs: git
+  version: 0b87bfa150cf57bdc7b081d9b48ef48a9350b47b
 - name: github.com/davecgh/go-spew
   version: 782f4967f2dc4564575ca782fe2d04090b5faca8
   subpackages:
@@ -124,7 +122,7 @@ imports:
   - proto
   - sortkeys
 - name: github.com/golang/glog
-  version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
+  version: 44145f04b68cf362d9c4df2182967c2275eaefed
 - name: github.com/golang/groupcache
   version: 02826c3e79038b59d737d3b1c0a1d937f71a4433
   subpackages:
@@ -150,7 +148,7 @@ imports:
 - name: github.com/google/gofuzz
   version: 44d81051d367757e1c7c6a5a86423ece9afcf63c
 - name: github.com/google/uuid
-  version: e367a344cbe8e08149f9951115dc299ebd42b919
+  version: dec09d789f3dba190787f8b4454c7d3c936fed9e
 - name: github.com/googleapis/gnostic
   version: 0c5108395e2debce0d731cf0287ddf7242066aba
   subpackages:
@@ -176,7 +174,7 @@ imports:
   subpackages:
   - diskcache
 - name: github.com/hashicorp/go-version
-  version: 5b737306c678d7052849144de676800e5b0dc2c1
+  version: 1b1de86cf2ec13494b6814b48157884efaf71c54
   repo: https://github.com/appscode/go-version.git
   vcs: git
 - name: github.com/hashicorp/golang-lru
@@ -196,7 +194,7 @@ imports:
 - name: github.com/juju/ratelimit
   version: 5b9ff866471762aa2ab2dced63c9fb6f53921342
 - name: github.com/kubernetes/apimachinery
-  version: d86399872a1f1082d33982f7f9b37a2ce7c2e307
+  version: d0c8c1c78cacdef77dfcc0ff70d9b7b01faeaf08
   subpackages:
   - pkg/conversion
 - name: github.com/mailru/easyjson
@@ -210,7 +208,7 @@ imports:
 - name: github.com/opencontainers/go-digest
   version: a6d0ee40d4207ea02364bd3b9e8e77b9159ba1eb
 - name: github.com/orcaman/concurrent-map
-  version: 2ae17bc4c860c83513ee50feb9746f3e50d7515d
+  version: d4c23bd0e01134806215ffe65ba3fd22ec6721f7
 - name: github.com/peterbourgon/diskv
   version: 5f041e8faa004a95c88a202771f4cc3e991971e6
 - name: github.com/pkg/errors
@@ -228,7 +226,7 @@ imports:
 - name: github.com/sirupsen/logrus
   version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
 - name: github.com/spf13/cobra
-  version: b95ab734e27d33e0d8fbabf71ca990568d4e2020
+  version: 0c34d16c3123764e413b9ed982ada58b1c3d53ea
 - name: github.com/spf13/pflag
   version: 4c012f6dcd9546820e378d0bdda4d8fc772cdfea
 - name: golang.org/x/crypto
@@ -271,7 +269,7 @@ imports:
   - unicode/norm
   - width
 - name: google.golang.org/api
-  version: 37df4fabefb044819e927f44b8487d4cd926d06c
+  version: de3aa2cfa7f1c18dcb7f91738099bad280117b8e
   subpackages:
   - gensupport
   - googleapi
