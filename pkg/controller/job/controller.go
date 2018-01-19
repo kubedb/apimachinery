@@ -12,8 +12,7 @@ import (
 )
 
 type Job interface {
-	Update(job *batch.Job) error
-	Delete(job *batch.Job) error
+	DeleteJobResources(job *batch.Job) error
 }
 
 type Controller struct {
