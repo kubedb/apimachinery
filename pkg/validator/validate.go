@@ -84,9 +84,8 @@ func ValidateMonitorSpec(monitorSpec *mona.AgentSpec) error {
 	}
 
 	if monitorSpec.Agent.Vendor() == mona.VendorPrometheus {
-		if monitorSpec.Agent == mona.AgentCoreOSPrometheus && monitorSpec.Prometheus != nil {
-			return nil
-		} else if monitorSpec.Agent == mona.AgentPrometheusBuiltin {
+		if monitorSpec.Agent == mona.AgentPrometheusBuiltin ||
+			(monitorSpec.Agent == mona.AgentCoreOSPrometheus && monitorSpec.Prometheus != nil) {
 			return nil
 		}
 	}
