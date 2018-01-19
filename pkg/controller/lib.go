@@ -107,7 +107,7 @@ func (c *Controller) CheckDatabaseRestoreJob(
 	recorder record.EventRecorder,
 	checkDuration time.Duration,
 ) bool {
-	var jobSuccess bool = false
+	var jobSuccess = false
 	var err error
 
 	then := time.Now()
@@ -137,8 +137,6 @@ func (c *Controller) CheckDatabaseRestoreJob(
 		if job.Status.Succeeded > 0 {
 			jobSuccess = true
 			break
-		} else if job.Status.Failed > 0 {
-			break
 		}
 
 		time.Sleep(sleepDuration)
@@ -146,14 +144,14 @@ func (c *Controller) CheckDatabaseRestoreJob(
 	}
 
 	if err != nil {
-		return false
+		log.Errorln(err)
 	}
 
 	c.DeleteJobResources(recorder, runtimeObj, job)
 
 	err = c.Client.CoreV1().Secrets(job.Namespace).Delete(snapshot.OSMSecretName(), &metav1.DeleteOptions{})
 	if err != nil && !kerr.IsNotFound(err) {
-		return false
+		log.Errorln(err)
 	}
 
 	return jobSuccess
