@@ -184,7 +184,7 @@ func (c *Controller) checkRunningSnapshot(snapshot *api.Snapshot) error {
 
 func (c *Controller) checkSnapshotJob(snapshot *api.Snapshot, jobName string, checkDuration time.Duration) error {
 
-	var jobSuccess bool = false
+	var jobSuccess = false
 	var job *batch.Job
 	var err error
 	then := time.Now()
