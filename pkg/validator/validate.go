@@ -84,14 +84,12 @@ func ValidateMonitorSpec(monitorSpec *mona.AgentSpec) error {
 	}
 
 	if monitorSpec.Agent.Vendor() == mona.VendorPrometheus {
-		if monitorSpec.Agent == mona.AgentCoreOSPrometheus {
-			if monitorSpec.Prometheus == nil {
-				return fmt.Errorf(`invalid 'Agent' in '%v'`, string(specData))
-			}
-		} else if monitorSpec.Agent != mona.AgentPrometheusBuiltin {
-			return fmt.Errorf(`invalid 'Agent' in '%v'`, string(specData))
+		if monitorSpec.Agent == mona.AgentCoreOSPrometheus && monitorSpec.Prometheus != nil {
+			return nil
+		} else if monitorSpec.Agent == mona.AgentPrometheusBuiltin {
+			return nil
 		}
 	}
 
-	return nil
+	return fmt.Errorf(`invalid 'Agent' in '%v'`, string(specData))
 }
