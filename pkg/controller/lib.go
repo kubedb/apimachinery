@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"time"
-
 	"github.com/appscode/go/log"
 	"github.com/graymeta/stow"
 	_ "github.com/graymeta/stow/azure"
@@ -18,10 +16,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/record"
-)
-
-const (
-	sleepDuration = time.Second * 10
 )
 
 func (c *Controller) DeletePersistentVolumeClaims(namespace string, selector labels.Selector) error {
@@ -100,63 +94,6 @@ func (c *Controller) DeleteSnapshots(namespace string, selector labels.Selector)
 	return nil
 }
 
-func (c *Controller) CheckDatabaseRestoreJob(
-	snapshot *api.Snapshot,
-	job *batch.Job,
-	runtimeObj runtime.Object,
-	recorder record.EventRecorder,
-	checkDuration time.Duration,
-) bool {
-	var jobSuccess = false
-	var err error
-
-	then := time.Now()
-	now := time.Now()
-	for now.Sub(then) < checkDuration {
-		log.Debugln("Checking for Job ", job.Name)
-		job, err = c.Client.BatchV1().Jobs(job.Namespace).Get(job.Name, metav1.GetOptions{})
-		if err != nil {
-			if kerr.IsNotFound(err) {
-				time.Sleep(sleepDuration)
-				now = time.Now()
-				continue
-			}
-			recorder.Eventf(
-				api.ObjectReferenceFor(runtimeObj),
-				core.EventTypeWarning,
-				eventer.EventReasonFailedToList,
-				"Failed to get Job. Reason: %v",
-				err,
-			)
-			log.Errorln(err)
-			return jobSuccess
-		}
-		log.Debugf("Pods Statuses:	%d Running / %d Succeeded / %d Failed",
-			job.Status.Active, job.Status.Succeeded, job.Status.Failed)
-		// If job is success
-		if job.Status.Succeeded > 0 {
-			jobSuccess = true
-			break
-		}
-
-		time.Sleep(sleepDuration)
-		now = time.Now()
-	}
-
-	if err != nil {
-		log.Errorln(err)
-	}
-
-	c.DeleteJobResources(recorder, runtimeObj, job)
-
-	err = c.Client.CoreV1().Secrets(job.Namespace).Delete(snapshot.OSMSecretName(), &metav1.DeleteOptions{})
-	if err != nil && !kerr.IsNotFound(err) {
-		log.Errorln(err)
-	}
-
-	return jobSuccess
-}
-
 func (c *Controller) checkGoverningService(name, namespace string) (bool, error) {
 	_, err := c.Client.CoreV1().Services(namespace).Get(name, metav1.GetOptions{})
 	if err != nil {
@@ -194,9 +131,10 @@ func (c *Controller) CreateGoverningService(name, namespace string) error {
 }
 
 func (c *Controller) DeleteJobResources(
-	recorder record.EventRecorder,
-	runtimeObj runtime.Object,
+	snapshot *api.Snapshot,
 	job *batch.Job,
+	runtimeObj runtime.Object,
+	recorder record.EventRecorder,
 ) {
 	if err := c.Client.BatchV1().Jobs(job.Namespace).Delete(job.Name, nil); err != nil && !kerr.IsNotFound(err) {
 		recorder.Eventf(
@@ -243,6 +181,18 @@ func (c *Controller) DeleteJobResources(
 				log.Errorln(err)
 			}
 		}
+	}
+
+	err = c.Client.CoreV1().Secrets(snapshot.Namespace).Delete(snapshot.OSMSecretName(), &metav1.DeleteOptions{})
+	if err != nil && !kerr.IsNotFound(err) {
+		recorder.Eventf(
+			api.ObjectReferenceFor(runtimeObj),
+			core.EventTypeWarning,
+			eventer.EventReasonFailedToDelete,
+			"Failed to delete Secret. Reason: %v",
+			err,
+		)
+		log.Errorln(err)
 	}
 
 	return
