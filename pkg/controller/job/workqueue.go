@@ -51,14 +51,14 @@ func (c *Controller) initWatcher() {
 				}
 			}
 		},
-		UpdateFunc: func(_obj, obj interface{}) {
+		UpdateFunc: func(_, obj interface{}) {
 			job, ok := obj.(*batch.Job)
 			if !ok {
 				log.Errorln("Invalid Job object")
 				return
 			}
 			if len(job.Status.Conditions) != 0 {
-				key, err := cache.MetaNamespaceKeyFunc(new)
+				key, err := cache.MetaNamespaceKeyFunc(obj)
 				if err == nil {
 					c.queue.Add(key)
 				}
