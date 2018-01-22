@@ -49,19 +49,6 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		return err
 	}
 
-	snap, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
-		in.Labels[api.LabelDatabaseName] = snapshot.Spec.DatabaseName
-		in.Labels[api.LabelSnapshotStatus] = string(api.SnapshotPhaseRunning)
-		in.Status.Phase = api.SnapshotPhaseRunning
-		return in
-	})
-	if err != nil {
-		c.eventRecorder.Eventf(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonFailedToUpdate, err.Error())
-		return err
-	}
-	snapshot.Labels = snap.Labels
-	snapshot.Status = snap.Status
-
 	c.eventRecorder.Event(api.ObjectReferenceFor(runtimeObj), core.EventTypeNormal, eventer.EventReasonStarting, "Backup running")
 	c.eventRecorder.Event(snapshot.ObjectReference(), core.EventTypeNormal, eventer.EventReasonStarting, "Backup running")
 
@@ -98,6 +85,19 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 	if err := c.SetJobOwnerReference(snapshot, job); err != nil {
 		return err
 	}
+
+	snap, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+		in.Labels[api.LabelDatabaseName] = snapshot.Spec.DatabaseName
+		in.Labels[api.LabelSnapshotStatus] = string(api.SnapshotPhaseRunning)
+		in.Status.Phase = api.SnapshotPhaseRunning
+		return in
+	})
+	if err != nil {
+		c.eventRecorder.Eventf(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonFailedToUpdate, err.Error())
+		return err
+	}
+	snapshot.Labels = snap.Labels
+	snapshot.Status = snap.Status
 
 	snap, err = util.WaitUntilSnapshotCompletion(c.ExtClient, snapshot.ObjectMeta)
 	if err != nil {
