@@ -1,21 +1,16 @@
 package controller
 
 import (
-	"github.com/appscode/go/log"
 	"github.com/graymeta/stow"
 	_ "github.com/graymeta/stow/azure"
 	_ "github.com/graymeta/stow/google"
 	_ "github.com/graymeta/stow/s3"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
-	"github.com/kubedb/apimachinery/pkg/eventer"
 	"github.com/kubedb/apimachinery/pkg/storage"
-	batch "k8s.io/api/batch/v1"
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/tools/record"
 )
 
 func (c *Controller) DeletePersistentVolumeClaims(namespace string, selector labels.Selector) error {
@@ -128,72 +123,4 @@ func (c *Controller) CreateGoverningService(name, namespace string) error {
 	}
 	_, err = c.Client.CoreV1().Services(namespace).Create(service)
 	return err
-}
-
-func (c *Controller) DeleteJobResources(
-	snapshot *api.Snapshot,
-	job *batch.Job,
-	runtimeObj runtime.Object,
-	recorder record.EventRecorder,
-) {
-	if err := c.Client.BatchV1().Jobs(job.Namespace).Delete(job.Name, nil); err != nil && !kerr.IsNotFound(err) {
-		recorder.Eventf(
-			api.ObjectReferenceFor(runtimeObj),
-			core.EventTypeWarning,
-			eventer.EventReasonFailedToDelete,
-			"Failed to delete Job. Reason: %v",
-			err,
-		)
-		log.Errorln(err)
-	}
-
-	r, err := metav1.LabelSelectorAsSelector(job.Spec.Selector)
-	if err != nil {
-		log.Errorln(err)
-	} else {
-		err = c.Client.CoreV1().Pods(job.Namespace).DeleteCollection(&metav1.DeleteOptions{}, metav1.ListOptions{
-			LabelSelector: r.String(),
-		})
-		if err != nil {
-			recorder.Eventf(
-				api.ObjectReferenceFor(runtimeObj),
-				core.EventTypeWarning,
-				eventer.EventReasonFailedToDelete,
-				"Failed to delete Pods. Reason: %v",
-				err,
-			)
-			log.Errorln(err)
-		}
-	}
-
-	for _, volume := range job.Spec.Template.Spec.Volumes {
-		claim := volume.PersistentVolumeClaim
-		if claim != nil {
-			err := c.Client.CoreV1().PersistentVolumeClaims(job.Namespace).Delete(claim.ClaimName, nil)
-			if err != nil && !kerr.IsNotFound(err) {
-				recorder.Eventf(
-					api.ObjectReferenceFor(runtimeObj),
-					core.EventTypeWarning,
-					eventer.EventReasonFailedToDelete,
-					"Failed to delete PersistentVolumeClaim. Reason: %v",
-					err,
-				)
-				log.Errorln(err)
-			}
-		}
-	}
-
-	err = c.Client.CoreV1().Secrets(snapshot.Namespace).Delete(snapshot.OSMSecretName(), &metav1.DeleteOptions{})
-	if err != nil && !kerr.IsNotFound(err) {
-		recorder.Eventf(
-			api.ObjectReferenceFor(runtimeObj),
-			core.EventTypeWarning,
-			eventer.EventReasonFailedToDelete,
-			"Failed to delete Secret. Reason: %v",
-			err,
-		)
-		log.Errorln(err)
-	}
-
-	return
 }

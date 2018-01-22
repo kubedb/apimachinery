@@ -8,16 +8,13 @@ import (
 	"github.com/kubedb/apimachinery/pkg/eventer"
 	batch "k8s.io/api/batch/v1"
 	core "k8s.io/api/core/v1"
+	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func (c *Controller) completeJob(job *batch.Job) error {
 
-	snapshotName, found := job.Annotations[api.AnnotationSnapshotName]
-	if !found {
-		return fmt.Errorf(`invalid Job "%s/%s" to handle`, job.Namespace, job.Name)
-	}
-	snapshot, err := c.ExtClient.Snapshots(job.Namespace).Get(snapshotName, metav1.GetOptions{})
+	snapshot, err := c.ExtClient.Snapshots(job.Namespace).Get(job.Name, metav1.GetOptions{})
 	if err != nil {
 		return err
 	}
@@ -40,12 +37,14 @@ func (c *Controller) completeJob(job *batch.Job) error {
 		return err
 	}
 
-	dbRuntineObject, err := c.job.GetDatabase(snapshot)
-	if err != nil {
-		return err
-	}
+	deletePolicy := metav1.DeletePropagationBackground
+	err = c.Client.BatchV1().Jobs(job.Namespace).Delete(job.Name, &metav1.DeleteOptions{
+		PropagationPolicy: &deletePolicy,
+	})
 
-	c.DeleteJobResources(snapshot, job, dbRuntineObject, c.eventRecorder)
+	if err != nil && !kerr.IsNotFound(err) {
+		return fmt.Errorf("failed to delete job: %s, reason: %s", job.Name, err)
+	}
 
 	return nil
 }

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/appscode/go/log"
+	"github.com/appscode/go/types"
 	batch "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	rt "k8s.io/apimachinery/pkg/runtime"
@@ -47,7 +48,8 @@ func (c *Controller) initWatcher() {
 				log.Errorln("Invalid Job object")
 				return
 			}
-			if job.Status.Succeeded == 0 && job.Status.Failed == 0 {
+
+			if job.Status.Succeeded == 0 && job.Status.Failed <= types.Int32(job.Spec.BackoffLimit) {
 				// IndexerInformer uses a delta queue, therefore for deletes we have to use this
 				// key function.
 				key, err := cache.DeletionHandlingMetaNamespaceKeyFunc(obj)
@@ -81,7 +83,7 @@ func jobStatusEqual(old, new *batch.Job) bool {
 	if old.Status.Succeeded == 0 && new.Status.Succeeded > 0 {
 		return false
 	}
-	if old.Status.Failed == 0 && new.Status.Failed > 0 {
+	if new.Status.Failed > types.Int32(new.Spec.BackoffLimit) {
 		return false
 	}
 	return true

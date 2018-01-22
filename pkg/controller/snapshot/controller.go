@@ -72,7 +72,7 @@ func (c *Controller) Run() {
 	// Watch Snapshot with provided ListerWatcher
 	go c.watchSnapshot()
 	// Watch Job with provided ListerWatcher
-	go jobc.NewController(c.Controller, c.snapshotter, c.selector, c.syncPeriod).Run()
+	go jobc.NewController(c.Controller, c.selector, c.syncPeriod).Run()
 }
 
 func (c *Controller) watchSnapshot() {
