@@ -19,7 +19,6 @@ const (
 
 	GenericInitSpec = GenericKey + "/init"
 
-	AnnotationSnapshotName = GenericKey + "/snapshot-name"
 	AnnotationJobType      = GenericKey + "/job-type"
 
 	PrometheusExporterPortNumber = 56790
