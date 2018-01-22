@@ -76,3 +76,16 @@ func TryUpdateSnapshot(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, tra
 	}
 	return
 }
+
+func WaitUntilSnapshotCompletion(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta) error {
+	return wait.PollImmediate(kutil.RetryInterval, kutil.ReadinessTimeout, func() (bool, error) {
+		snap, err := c.Snapshots(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+		if err != nil {
+			return false, err
+		}
+		if snap.Status.CompletionTime != nil {
+			return true, nil
+		}
+		return false, nil
+	})
+}

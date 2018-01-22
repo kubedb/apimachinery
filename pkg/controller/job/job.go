@@ -25,11 +25,13 @@ func (c *Controller) completeJob(job *batch.Job) error {
 	jobSucceeded := job.Status.Succeeded > 0
 
 	_, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+		t := metav1.Now()
 		if jobSucceeded {
 			in.Status.Phase = api.SnapshotPhaseSucceeded
 		} else {
 			in.Status.Phase = api.SnapshotPhaseFailed
 		}
+		in.Status.CompletionTime = &t
 		return in
 	})
 	if err != nil {
