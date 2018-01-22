@@ -24,16 +24,10 @@ func (c *Controller) initWatcher() {
 	// Watch with label selector
 	lw := &cache.ListWatch{
 		ListFunc: func(opts metav1.ListOptions) (rt.Object, error) {
-			return c.ExtClient.Snapshots(metav1.NamespaceAll).List(
-				metav1.ListOptions{
-					LabelSelector: c.selector.String(),
-				})
+			return c.ExtClient.Snapshots(metav1.NamespaceAll).List(c.listOption)
 		},
 		WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
-			return c.ExtClient.Snapshots(metav1.NamespaceAll).Watch(
-				metav1.ListOptions{
-					LabelSelector: c.selector.String(),
-				})
+			return c.ExtClient.Snapshots(metav1.NamespaceAll).Watch(c.listOption)
 		},
 	}
 

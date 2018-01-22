@@ -5,7 +5,7 @@ import (
 
 	amc "github.com/kubedb/apimachinery/pkg/controller"
 	"github.com/kubedb/apimachinery/pkg/eventer"
-	"k8s.io/apimachinery/pkg/labels"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
 	"k8s.io/client-go/util/workqueue"
@@ -13,8 +13,8 @@ import (
 
 type Controller struct {
 	*amc.Controller
-	// Watcher selector
-	selector labels.Selector
+	// ListOptions for watcher
+	listOption metav1.ListOptions
 	// Event Recorder
 	eventRecorder record.EventRecorder
 	// sync time to sync the list.
@@ -30,14 +30,14 @@ type Controller struct {
 // NewController creates a new Controller
 func NewController(
 	controller *amc.Controller,
-	selector labels.Selector,
+	listOption metav1.ListOptions,
 	syncPeriod time.Duration,
 ) *Controller {
 
 	// return new DormantDatabase Controller
 	return &Controller{
 		Controller:     controller,
-		selector:       selector,
+		listOption:     listOption,
 		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Job Controller"),
 		syncPeriod:     syncPeriod,
 		maxNumRequests: 2,

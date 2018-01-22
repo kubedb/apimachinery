@@ -19,7 +19,7 @@ const (
 
 	GenericInitSpec = GenericKey + "/init"
 
-	AnnotationJobType      = GenericKey + "/job-type"
+	AnnotationJobType = GenericKey + "/job-type"
 
 	PrometheusExporterPortNumber = 56790
 	PrometheusExporterPortName   = "prom-http"
