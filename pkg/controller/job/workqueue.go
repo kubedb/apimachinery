@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/appscode/go/log"
-	"github.com/appscode/go/types"
 	batch "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	rt "k8s.io/apimachinery/pkg/runtime"
@@ -43,7 +42,7 @@ func (c *Controller) initWatcher() {
 				return
 			}
 
-			if job.Status.Succeeded == 0 && job.Status.Failed <= types.Int32(job.Spec.BackoffLimit) {
+			if len(job.Status.Conditions) == 0 {
 				// IndexerInformer uses a delta queue, therefore for deletes we have to use this
 				// key function.
 				key, err := cache.DeletionHandlingMetaNamespaceKeyFunc(obj)
@@ -52,18 +51,13 @@ func (c *Controller) initWatcher() {
 				}
 			}
 		},
-		UpdateFunc: func(old, new interface{}) {
-			oldObj, ok := old.(*batch.Job)
+		UpdateFunc: func(_obj, obj interface{}) {
+			job, ok := obj.(*batch.Job)
 			if !ok {
 				log.Errorln("Invalid Job object")
 				return
 			}
-			newObj, ok := new.(*batch.Job)
-			if !ok {
-				log.Errorln("Invalid Job object")
-				return
-			}
-			if !jobStatusEqual(oldObj, newObj) {
+			if len(job.Status.Conditions) != 0 {
 				key, err := cache.MetaNamespaceKeyFunc(new)
 				if err == nil {
 					c.queue.Add(key)
@@ -71,16 +65,6 @@ func (c *Controller) initWatcher() {
 			}
 		},
 	}, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc})
-}
-
-func jobStatusEqual(old, new *batch.Job) bool {
-	if old.Status.Succeeded == 0 && new.Status.Succeeded > 0 {
-		return false
-	}
-	if new.Status.Failed > types.Int32(new.Spec.BackoffLimit) {
-		return false
-	}
-	return true
 }
 
 func (c *Controller) runWatcher(threadiness int, stopCh chan struct{}) {
