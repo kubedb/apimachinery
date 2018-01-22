@@ -51,8 +51,9 @@ func NewOSMSecret(client kubernetes.Interface, snapshot *api.Snapshot) (*core.Se
 			Namespace: snapshot.Namespace,
 			OwnerReferences: []metav1.OwnerReference{
 				{
-					Kind: snapshot.Kind,
-					Name: snapshot.OffshootName(),
+					APIVersion: snapshot.APIVersion,
+					Kind:       snapshot.Kind,
+					Name:       snapshot.OffshootName(),
 				},
 			},
 		},

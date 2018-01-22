@@ -6,7 +6,6 @@ import (
 
 	"github.com/appscode/go/log"
 	core_util "github.com/appscode/kutil/core/v1"
-	meta_util "github.com/appscode/kutil/meta"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -39,9 +38,16 @@ func (c *Controller) initWatcher() {
 	// of the Snapshot than the version which was responsible for triggering the update.
 	c.indexer, c.informer = cache.NewIndexerInformer(lw, &api.Snapshot{}, c.syncPeriod, cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
-			key, err := cache.MetaNamespaceKeyFunc(obj)
-			if err == nil {
-				c.queue.Add(key)
+			snapshot, ok := obj.(*api.Snapshot)
+			if !ok {
+				log.Errorln("Invalid Snapshot object")
+				return
+			}
+			if snapshot.Status.StartTime != nil {
+				key, err := cache.MetaNamespaceKeyFunc(obj)
+				if err == nil {
+					c.queue.Add(key)
+				}
 			}
 		},
 		DeleteFunc: func(obj interface{}) {
@@ -52,34 +58,20 @@ func (c *Controller) initWatcher() {
 				c.queue.Add(key)
 			}
 		},
-		UpdateFunc: func(old, new interface{}) {
-			oldObj, ok := old.(*api.Snapshot)
+		UpdateFunc: func(_, obj interface{}) {
+			snapshot, ok := obj.(*api.Snapshot)
 			if !ok {
 				log.Errorln("Invalid Snapshot object")
 				return
 			}
-			newObj, ok := new.(*api.Snapshot)
-			if !ok {
-				log.Errorln("Invalid Snapshot object")
-				return
-			}
-			if newObj.DeletionTimestamp != nil || !snapshotEqual(oldObj, newObj) {
-				key, err := cache.MetaNamespaceKeyFunc(new)
+			if snapshot.DeletionTimestamp != nil {
+				key, err := cache.MetaNamespaceKeyFunc(snapshot)
 				if err == nil {
 					c.queue.Add(key)
 				}
 			}
 		},
 	}, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc})
-}
-
-func snapshotEqual(old, new *api.Snapshot) bool {
-	if !meta_util.Equal(old.Spec, new.Spec) {
-		diff := meta_util.Diff(old.Spec, new.Spec)
-		log.Debugf("Snapshot %s/%s has changed. Diff: %s\n", new.Namespace, new.Name, diff)
-		return false
-	}
-	return true
 }
 
 func (c *Controller) runWatcher(threadiness int, stopCh chan struct{}) {
