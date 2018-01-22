@@ -43,7 +43,7 @@ func (c *Controller) initWatcher() {
 				log.Errorln("Invalid Snapshot object")
 				return
 			}
-			if snapshot.Status.StartTime != nil {
+			if snapshot.Status.StartTime == nil {
 				key, err := cache.MetaNamespaceKeyFunc(obj)
 				if err == nil {
 					c.queue.Add(key)
