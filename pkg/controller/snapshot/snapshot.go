@@ -87,10 +87,15 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		c.eventRecorder.Event(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
 		return err
 	}
-	if _, err := c.Client.BatchV1().Jobs(snapshot.Namespace).Create(job); err != nil {
+	job, err = c.Client.BatchV1().Jobs(snapshot.Namespace).Create(job)
+	if err != nil {
 		message := fmt.Sprintf("Failed to take snapshot. Reason: %v", err)
 		c.eventRecorder.Event(api.ObjectReferenceFor(runtimeObj), core.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
 		c.eventRecorder.Event(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
+		return err
+	}
+
+	if err := c.SetJobOwnerReference(snapshot, job); err != nil {
 		return err
 	}
 
