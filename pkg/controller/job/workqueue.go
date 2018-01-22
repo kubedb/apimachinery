@@ -1,14 +1,16 @@
-package snapshot
+package job
 
 import (
 	"fmt"
 	"time"
 
 	"github.com/appscode/go/log"
-	meta_util "github.com/appscode/kutil/meta"
 	batch "k8s.io/api/batch/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	rt "k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
 )
@@ -18,23 +20,40 @@ func (c *Controller) initWatcher() {
 	// create the workqueue
 	c.queue = workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "job")
 
+	// Watch with label selector
+	lw := &cache.ListWatch{
+		ListFunc: func(opts metav1.ListOptions) (rt.Object, error) {
+			return c.ExtClient.Snapshots(metav1.NamespaceAll).List(
+				metav1.ListOptions{
+					LabelSelector: c.selector.String(),
+				})
+		},
+		WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
+			return c.ExtClient.Snapshots(metav1.NamespaceAll).Watch(
+				metav1.ListOptions{
+					LabelSelector: c.selector.String(),
+				})
+		},
+	}
+
 	// Bind the workqueue to a cache with the help of an informer. This way we make sure that
 	// whenever the cache is updated, the Job key is added to the workqueue.
 	// Note that when we finally process the item from the workqueue, we might see a newer version
 	// of the Job than the version which was responsible for triggering the update.
-	c.indexer, c.informer = cache.NewIndexerInformer(c.lw, &batch.Job{}, c.syncPeriod, cache.ResourceEventHandlerFuncs{
-		AddFunc: func(obj interface{}) {
-			key, err := cache.MetaNamespaceKeyFunc(obj)
-			if err == nil {
-				c.queue.Add(key)
-			}
-		},
+	c.indexer, c.informer = cache.NewIndexerInformer(lw, &batch.Job{}, c.syncPeriod, cache.ResourceEventHandlerFuncs{
 		DeleteFunc: func(obj interface{}) {
-			// IndexerInformer uses a delta queue, therefore for deletes we have to use this
-			// key function.
-			key, err := cache.DeletionHandlingMetaNamespaceKeyFunc(obj)
-			if err == nil {
-				c.queue.Add(key)
+			job, ok := obj.(*batch.Job)
+			if !ok {
+				log.Errorln("Invalid Job object")
+				return
+			}
+			if job.Status.Succeeded == 0 && job.Status.Failed == 0 {
+				// IndexerInformer uses a delta queue, therefore for deletes we have to use this
+				// key function.
+				key, err := cache.DeletionHandlingMetaNamespaceKeyFunc(obj)
+				if err == nil {
+					c.queue.Add(key)
+				}
 			}
 		},
 		UpdateFunc: func(old, new interface{}) {
@@ -59,9 +78,10 @@ func (c *Controller) initWatcher() {
 }
 
 func jobStatusEqual(old, new *batch.Job) bool {
-	if !meta_util.Equal(old.Status, new.Status) {
-		diff := meta_util.Diff(old.Status, new.Status)
-		log.Debugf("Job %s/%s has changed. Diff: %s\n", new.Namespace, new.Name, diff)
+	if old.Status.Succeeded == 0 && new.Status.Succeeded > 0 {
+		return false
+	}
+	if old.Status.Failed == 0 && new.Status.Failed > 0 {
 		return false
 	}
 	return true
@@ -150,16 +170,9 @@ func (c *Controller) runJob(key string) error {
 		// Note that you also have to check the uid if you have a local controlled resource, which
 		// is dependent on the actual instance, to detect that a Job was recreated with the same name
 		job := obj.(*batch.Job).DeepCopy()
-		if job.DeletionTimestamp != nil {
-			if err := c.job.Delete(job); err != nil {
-				log.Errorln(err)
-				return err
-			}
-		} else {
-			if err := c.job.Update(job); err != nil {
-				log.Errorln(err)
-				return err
-			}
+		if err := c.completeJob(job); err != nil {
+			log.Errorln(err)
+			return err
 		}
 	}
 	return nil

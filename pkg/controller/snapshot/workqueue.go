@@ -9,8 +9,11 @@ import (
 	meta_util "github.com/appscode/kutil/meta"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1/util"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	rt "k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
 )
@@ -20,11 +23,27 @@ func (c *Controller) initWatcher() {
 	// create the workqueue
 	c.queue = workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "snapshot")
 
+	// Watch with label selector
+	lw := &cache.ListWatch{
+		ListFunc: func(opts metav1.ListOptions) (rt.Object, error) {
+			return c.ExtClient.Snapshots(metav1.NamespaceAll).List(
+				metav1.ListOptions{
+					LabelSelector: c.selector.String(),
+				})
+		},
+		WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
+			return c.ExtClient.Snapshots(metav1.NamespaceAll).Watch(
+				metav1.ListOptions{
+					LabelSelector: c.selector.String(),
+				})
+		},
+	}
+
 	// Bind the workqueue to a cache with the help of an informer. This way we make sure that
 	// whenever the cache is updated, the Snapshot key is added to the workqueue.
 	// Note that when we finally process the item from the workqueue, we might see a newer version
 	// of the Snapshot than the version which was responsible for triggering the update.
-	c.indexer, c.informer = cache.NewIndexerInformer(c.lw, &api.Snapshot{}, c.syncPeriod, cache.ResourceEventHandlerFuncs{
+	c.indexer, c.informer = cache.NewIndexerInformer(lw, &api.Snapshot{}, c.syncPeriod, cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			key, err := cache.MetaNamespaceKeyFunc(obj)
 			if err == nil {

@@ -7,7 +7,6 @@ const (
 
 	LabelDatabaseKind = GenericKey + "/kind"
 	LabelDatabaseName = GenericKey + "/name"
-	LabelJobType      = GenericKey + "/job-type"
 
 	PostgresKey         = ResourceTypePostgres + "." + GenericKey
 	ElasticsearchKey    = ResourceTypeElasticsearch + "." + GenericKey
@@ -19,6 +18,9 @@ const (
 	LabelSnapshotStatus = SnapshotKey + "/status"
 
 	GenericInitSpec = GenericKey + "/init"
+
+	AnnotationSnapshotName = GenericKey + "/snapshot-name"
+	AnnotationJobType      = GenericKey + "/job-type"
 
 	PrometheusExporterPortNumber = 56790
 	PrometheusExporterPortName   = "prom-http"

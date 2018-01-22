@@ -1,26 +1,28 @@
-package snapshot
+package job
 
 import (
 	"time"
 
+	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	amc "github.com/kubedb/apimachinery/pkg/controller"
 	"github.com/kubedb/apimachinery/pkg/eventer"
-	batch "k8s.io/api/batch/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
 	"k8s.io/client-go/util/workqueue"
 )
 
 type Job interface {
-	DeleteJobResources(job *batch.Job) error
+	GetDatabase(*api.Snapshot) (runtime.Object, error)
 }
 
 type Controller struct {
 	*amc.Controller
-	// Snapshotter interface
+	// Job interface
 	job Job
-	// ListerWatcher
-	lw *cache.ListWatch
+	// Watcher selector
+	selector labels.Selector
 	// Event Recorder
 	eventRecorder record.EventRecorder
 	// sync time to sync the list.
@@ -37,7 +39,7 @@ type Controller struct {
 func NewController(
 	controller *amc.Controller,
 	job Job,
-	lw *cache.ListWatch,
+	selector labels.Selector,
 	syncPeriod time.Duration,
 ) *Controller {
 
@@ -45,7 +47,7 @@ func NewController(
 	return &Controller{
 		Controller:     controller,
 		job:            job,
-		lw:             lw,
+		selector:       selector,
 		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Job Controller"),
 		syncPeriod:     syncPeriod,
 		maxNumRequests: 2,
