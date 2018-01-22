@@ -32,6 +32,7 @@ func (c *Controller) completeJob(job *batch.Job) error {
 			in.Status.Phase = api.SnapshotPhaseFailed
 		}
 		in.Status.CompletionTime = &t
+		delete(in.Labels, api.LabelSnapshotStatus)
 		return in
 	})
 	if err != nil {

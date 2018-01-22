@@ -94,6 +94,39 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		return err
 	}
 
+	snap, err = util.WaitUntilSnapshotCompletion(c.ExtClient, snapshot.ObjectMeta)
+	if err != nil {
+		return err
+	}
+
+	if snap.Status.Phase == api.SnapshotPhaseSucceeded {
+		c.eventRecorder.Event(
+			api.ObjectReferenceFor(runtimeObj),
+			core.EventTypeNormal,
+			eventer.EventReasonSuccessfulSnapshot,
+			"Successfully completed snapshot",
+		)
+		c.eventRecorder.Event(
+			snapshot.ObjectReference(),
+			core.EventTypeNormal,
+			eventer.EventReasonSuccessfulSnapshot,
+			"Successfully completed snapshot",
+		)
+	} else {
+		c.eventRecorder.Event(
+			api.ObjectReferenceFor(runtimeObj),
+			core.EventTypeWarning,
+			eventer.EventReasonSnapshotFailed,
+			"Failed to complete snapshot",
+		)
+		c.eventRecorder.Event(
+			snapshot.ObjectReference(),
+			core.EventTypeWarning,
+			eventer.EventReasonSnapshotFailed,
+			"Failed to complete snapshot",
+		)
+	}
+
 	return nil
 }
 
