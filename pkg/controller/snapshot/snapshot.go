@@ -17,11 +17,10 @@ import (
 
 const (
 	durationCheckSnapshotJob = time.Minute * 30
-	sleepDuration            = time.Second
 )
 
 func (c *Controller) create(snapshot *api.Snapshot) error {
-	_, _, err := util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+	snap, _, err := util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 		t := metav1.Now()
 		in.Status.StartTime = &t
 		return in
@@ -30,6 +29,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		c.eventRecorder.Eventf(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonFailedToUpdate, err.Error())
 		return err
 	}
+	snapshot.Status = snap.Status
 
 	// Validate DatabaseSnapshot spec
 	if err := c.snapshotter.ValidateSnapshot(snapshot); err != nil {
@@ -49,7 +49,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		return err
 	}
 
-	snap, _, err := util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+	snap, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 		in.Labels[api.LabelDatabaseName] = snapshot.Spec.DatabaseName
 		in.Labels[api.LabelSnapshotStatus] = string(api.SnapshotPhaseRunning)
 		in.Status.Phase = api.SnapshotPhaseRunning
