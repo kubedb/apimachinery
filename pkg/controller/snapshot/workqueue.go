@@ -44,7 +44,6 @@ func (c *Controller) initWatcher() {
 				return
 			}
 			if snapshot.Status.StartTime == nil {
-				fmt.Println("---------------------- 01")
 				key, err := cache.MetaNamespaceKeyFunc(obj)
 				if err == nil {
 					c.queue.Add(key)
@@ -54,7 +53,6 @@ func (c *Controller) initWatcher() {
 		DeleteFunc: func(obj interface{}) {
 			// IndexerInformer uses a delta queue, therefore for deletes we have to use this
 			// key function.
-			fmt.Println("---------------------- 02")
 			key, err := cache.DeletionHandlingMetaNamespaceKeyFunc(obj)
 			if err == nil {
 				c.queue.Add(key)
@@ -67,7 +65,6 @@ func (c *Controller) initWatcher() {
 				return
 			}
 			if snapshot.DeletionTimestamp != nil {
-				fmt.Println("---------------------- 03")
 				key, err := cache.MetaNamespaceKeyFunc(snapshot)
 				if err == nil {
 					c.queue.Add(key)
@@ -174,7 +171,6 @@ func (c *Controller) runSnapshot(key string) error {
 				return err
 			}
 		} else {
-			fmt.Println("--------------------- 04")
 			snapshot, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 				in.ObjectMeta = core_util.AddFinalizer(in.ObjectMeta, "kubedb.com")
 				return in
