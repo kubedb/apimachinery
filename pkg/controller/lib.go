@@ -156,15 +156,17 @@ func (c *Controller) SetJobOwnerReference(snapshot *api.Snapshot, job *batch.Job
 			return err
 		}
 	} else {
-		pvc.SetOwnerReferences([]metav1.OwnerReference{
-			{
-				APIVersion: batch.SchemeGroupVersion.String(),
-				Kind:       "Job",
-				Name:       job.Name,
-				UID:        job.UID,
-			},
+		_, _, err := core_util.PatchPVC(c.Client, pvc, func(in *core.PersistentVolumeClaim) *core.PersistentVolumeClaim {
+			in.SetOwnerReferences([]metav1.OwnerReference{
+				{
+					APIVersion: batch.SchemeGroupVersion.String(),
+					Kind:       "Job",
+					Name:       job.Name,
+					UID:        job.UID,
+				},
+			})
+			return in
 		})
-		_, err = c.Client.CoreV1().PersistentVolumeClaims(job.Namespace).Update(pvc)
 		if err != nil {
 			return err
 		}
