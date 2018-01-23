@@ -14,7 +14,15 @@ import (
 )
 
 func (c *Controller) completeJob(job *batch.Job) error {
-	snapshotName := strings.TrimLeft(job.Name, fmt.Sprintf("%v-", api.DatabaseNamePrefix))
+	var snapshotName string
+	for _, o := range job.OwnerReferences {
+		if o.Kind == api.ResourceKindSnapshot {
+			snapshotName = o.Name
+		}
+	}
+	if snapshotName == "" {
+		snapshotName = strings.TrimLeft(job.Name, fmt.Sprintf("%v-", api.DatabaseNamePrefix))
+	}
 	snapshot, err := c.ExtClient.Snapshots(job.Namespace).Get(snapshotName, metav1.GetOptions{})
 	if err != nil {
 		return err
