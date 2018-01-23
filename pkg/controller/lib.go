@@ -137,8 +137,8 @@ func (c *Controller) SetJobOwnerReference(snapshot *api.Snapshot, job *batch.Job
 		_, _, err := core_util.PatchSecret(c.Client, secret, func(in *core.Secret) *core.Secret {
 			in.SetOwnerReferences([]metav1.OwnerReference{
 				{
-					APIVersion: job.APIVersion,
-					Kind:       job.Kind,
+					APIVersion: batch.SchemeGroupVersion.String(),
+					Kind:       "Job",
 					Name:       job.Name,
 					UID:        job.UID,
 				},
@@ -158,8 +158,8 @@ func (c *Controller) SetJobOwnerReference(snapshot *api.Snapshot, job *batch.Job
 	} else {
 		pvc.SetOwnerReferences([]metav1.OwnerReference{
 			{
-				APIVersion: job.APIVersion,
-				Kind:       job.Kind,
+				APIVersion: batch.SchemeGroupVersion.String(),
+				Kind:       "Job",
 				Name:       job.Name,
 				UID:        job.UID,
 			},

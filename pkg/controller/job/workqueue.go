@@ -35,7 +35,11 @@ func (c *Controller) initWatcher() {
 	// Note that when we finally process the item from the workqueue, we might see a newer version
 	// of the Job than the version which was responsible for triggering the update.
 	c.indexer, c.informer = cache.NewIndexerInformer(lw, &batch.Job{}, c.syncPeriod, cache.ResourceEventHandlerFuncs{
+		AddFunc: func(obj interface{}) {
+			fmt.Println("----------------- 011")
+		},
 		DeleteFunc: func(obj interface{}) {
+			fmt.Println("----------------- 022")
 			job, ok := obj.(*batch.Job)
 			if !ok {
 				log.Errorln("Invalid Job object")
@@ -52,6 +56,7 @@ func (c *Controller) initWatcher() {
 			}
 		},
 		UpdateFunc: func(_, obj interface{}) {
+			fmt.Println("----------------- 033")
 			job, ok := obj.(*batch.Job)
 			if !ok {
 				log.Errorln("Invalid Job object")
