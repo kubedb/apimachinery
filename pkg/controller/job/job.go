@@ -2,7 +2,6 @@ package job
 
 import (
 	"fmt"
-	"strings"
 
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1/util"
@@ -21,8 +20,9 @@ func (c *Controller) completeJob(job *batch.Job) error {
 		}
 	}
 	if snapshotName == "" {
-		snapshotName = strings.TrimLeft(job.Name, fmt.Sprintf("%v-", api.DatabaseNamePrefix))
+		return fmt.Errorf(`resource Job "%s/%s" doesn't have OwnerReference for Snapshot`, job.Namespace, job.Name)
 	}
+
 	snapshot, err := c.ExtClient.Snapshots(job.Namespace).Get(snapshotName, metav1.GetOptions{})
 	if err != nil {
 		return err
