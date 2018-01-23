@@ -2,6 +2,7 @@ package job
 
 import (
 	"fmt"
+	"strings"
 
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1/util"
@@ -13,8 +14,8 @@ import (
 )
 
 func (c *Controller) completeJob(job *batch.Job) error {
-
-	snapshot, err := c.ExtClient.Snapshots(job.Namespace).Get(job.Name, metav1.GetOptions{})
+	snapshotName := strings.TrimLeft(job.Name, fmt.Sprintf("%v-", api.DatabaseNamePrefix))
+	snapshot, err := c.ExtClient.Snapshots(job.Namespace).Get(snapshotName, metav1.GetOptions{})
 	if err != nil {
 		return err
 	}
