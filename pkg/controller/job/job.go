@@ -20,7 +20,7 @@ func (c *Controller) completeJob(job *batch.Job) error {
 		}
 	}
 	if snapshotName == "" {
-		return fmt.Errorf(`resource Job "%s/%s" doesn't have OwnerReference for Snapshot`, job.Namespace, job.Name)
+		return fmt.Errorf(`resource Job "%s/%s" doesn't have any OwnerReference for Snapshot`, job.Namespace, job.Name)
 	}
 
 	snapshot, err := c.ExtClient.Snapshots(job.Namespace).Get(snapshotName, metav1.GetOptions{})
