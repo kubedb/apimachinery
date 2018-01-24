@@ -4,24 +4,29 @@ import (
 	"time"
 
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
+	cs "github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1"
 	amc "github.com/kubedb/apimachinery/pkg/controller"
 	"github.com/kubedb/apimachinery/pkg/eventer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
 	"k8s.io/client-go/util/workqueue"
 )
 
 type SnapshotDoer interface {
-	GetDatabase(*api.Snapshot) (runtime.Object, error)
+	GetDatabase(metav1.ObjectMeta) (runtime.Object, error)
 	SetDatabaseStatus(metav1.ObjectMeta, api.DatabasePhase, string) error
 }
 
 type Controller struct {
-	*amc.Controller
+	// Kubernetes client
+	client kubernetes.Interface
+	// ThirdPartyExtension client
+	extClient cs.KubedbV1alpha1Interface
 	// SnapshotDoer interface
-	SnapshotDoer
+	snapshotDoer SnapshotDoer
 	// ListOptions for watcher
 	listOption metav1.ListOptions
 	// Event Recorder
@@ -46,8 +51,9 @@ func NewController(
 
 	// return new DormantDatabase Controller
 	return &Controller{
-		Controller:     controller,
-		SnapshotDoer:   snapshotDoer,
+		client:         controller.Client,
+		extClient:      controller.ExtClient,
+		snapshotDoer:   snapshotDoer,
 		listOption:     listOption,
 		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Job Controller"),
 		syncPeriod:     syncPeriod,

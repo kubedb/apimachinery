@@ -15,7 +15,7 @@ import (
 
 func (c *Controller) completeJob(job *batch.Job) error {
 	deletePolicy := metav1.DeletePropagationBackground
-	err := c.Client.BatchV1().Jobs(job.Namespace).Delete(job.Name, &metav1.DeleteOptions{
+	err := c.client.BatchV1().Jobs(job.Namespace).Delete(job.Name, &metav1.DeleteOptions{
 		PropagationPolicy: &deletePolicy,
 	})
 
@@ -36,14 +36,14 @@ func (c *Controller) completeJob(job *batch.Job) error {
 func (c *Controller) handleBackupJob(job *batch.Job) error {
 	for _, o := range job.OwnerReferences {
 		if o.Kind == api.ResourceKindSnapshot {
-			snapshot, err := c.ExtClient.Snapshots(job.Namespace).Get(o.Name, metav1.GetOptions{})
+			snapshot, err := c.extClient.Snapshots(job.Namespace).Get(o.Name, metav1.GetOptions{})
 			if err != nil {
 				return err
 			}
 
 			jobSucceeded := job.Status.Succeeded > 0
 
-			_, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+			_, _, err = util.PatchSnapshot(c.extClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 				if jobSucceeded {
 					in.Status.Phase = api.SnapshotPhaseSucceeded
 				} else {
@@ -59,7 +59,7 @@ func (c *Controller) handleBackupJob(job *batch.Job) error {
 				return err
 			}
 
-			runtimeObj, err := c.GetDatabase(snapshot)
+			runtimeObj, err := c.snapshotDoer.GetDatabase(metav1.ObjectMeta{Name: snapshot.Spec.DatabaseName, Namespace: snapshot.Namespace})
 			if err != nil {
 				return nil
 			}
@@ -102,21 +102,40 @@ func (c *Controller) handleBackupJob(job *batch.Job) error {
 func (c *Controller) handleRestoreJob(job *batch.Job) error {
 	for _, o := range job.OwnerReferences {
 		if o.Kind == job.Labels[api.LabelDatabaseKind] {
+			jobSucceeded := job.Status.Succeeded > 0
+
 			var phase api.DatabasePhase
 			var reason string
-			if job.Status.Succeeded > 0 {
+			if jobSucceeded {
 				phase = api.DatabasePhaseRunning
 			} else {
 				phase = api.DatabasePhaseFailed
 				reason = "Failed to complete initialization"
 			}
-			err := c.SetDatabaseStatus(
-				metav1.ObjectMeta{Name: o.Name, Namespace: job.Namespace},
-				phase,
-				reason,
-			)
+			objectMeta := metav1.ObjectMeta{Name: o.Name, Namespace: job.Namespace}
+			err := c.snapshotDoer.SetDatabaseStatus(objectMeta, phase, reason)
 			if err != nil {
 				return err
+			}
+
+			runtimeObj, err := c.snapshotDoer.GetDatabase(objectMeta)
+			if err != nil {
+				return nil
+			}
+			if jobSucceeded {
+				c.eventRecorder.Event(
+					api.ObjectReferenceFor(runtimeObj),
+					core.EventTypeNormal,
+					eventer.EventReasonSuccessfulSnapshot,
+					"Successfully completed snapshot",
+				)
+			} else {
+				c.eventRecorder.Event(
+					api.ObjectReferenceFor(runtimeObj),
+					core.EventTypeWarning,
+					eventer.EventReasonSnapshotFailed,
+					"Failed to complete snapshot",
+				)
 			}
 			return nil
 		}

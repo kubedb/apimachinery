@@ -27,7 +27,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 	snapshot.Status = snap.Status
 
 	// Validate DatabaseSnapshot spec
-	if err := c.ValidateSnapshot(snapshot); err != nil {
+	if err := c.snapshotter.ValidateSnapshot(snapshot); err != nil {
 		c.eventRecorder.Event(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonInvalid, err.Error())
 		_, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 			t := metav1.Now()
@@ -66,7 +66,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		return nil
 	}
 
-	runtimeObj, err := c.GetDatabase(snapshot)
+	runtimeObj, err := c.snapshotter.GetDatabase(metav1.ObjectMeta{Name: snapshot.Spec.DatabaseName, Namespace: snapshot.Namespace})
 	if err != nil {
 		c.eventRecorder.Event(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonFailedToGet, err.Error())
 		return err
@@ -90,7 +90,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		return err
 	}
 
-	job, err := c.GetSnapshotter(snapshot)
+	job, err := c.snapshotter.GetSnapshotter(snapshot)
 	if err != nil {
 		message := fmt.Sprintf("Failed to take snapshot. Reason: %v", err)
 		c.eventRecorder.Event(api.ObjectReferenceFor(runtimeObj), core.EventTypeWarning, eventer.EventReasonSnapshotFailed, message)
@@ -125,7 +125,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 }
 
 func (c *Controller) delete(snapshot *api.Snapshot) error {
-	runtimeObj, err := c.GetDatabase(snapshot)
+	runtimeObj, err := c.snapshotter.GetDatabase(metav1.ObjectMeta{Name: snapshot.Spec.DatabaseName, Namespace: snapshot.Namespace})
 	if err != nil {
 		if !kerr.IsNotFound(err) {
 			c.eventRecorder.Event(
@@ -148,7 +148,7 @@ func (c *Controller) delete(snapshot *api.Snapshot) error {
 		)
 	}
 
-	if err := c.WipeOutSnapshot(snapshot); err != nil {
+	if err := c.snapshotter.WipeOutSnapshot(snapshot); err != nil {
 		if runtimeObj != nil {
 			c.eventRecorder.Eventf(
 				api.ObjectReferenceFor(runtimeObj),
