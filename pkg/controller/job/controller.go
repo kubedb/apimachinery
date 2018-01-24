@@ -27,8 +27,6 @@ type ControllerInterface interface {
 
 type Controller struct {
 	ControllerInterface
-
-	*amc.Controller
 	// SnapshotDoer interface
 	snapshotDoer SnapshotDoer
 	// ListOptions for watcher
