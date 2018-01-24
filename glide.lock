@@ -1,5 +1,5 @@
 hash: d8179c59f5e41db508feb8e63ecddf89759ca273f94d1b0e9cccdace0b51fc0a
-updated: 2018-01-24T14:27:55.230672342+06:00
+updated: 2018-01-24T17:58:11.06058121+06:00
 imports:
 - name: cloud.google.com/go
   version: fe3d41e1ecb2ce36ad3a979037c9b9a2b726226f

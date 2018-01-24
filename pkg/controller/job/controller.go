@@ -4,12 +4,10 @@ import (
 	"time"
 
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
-	cs "github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1"
 	amc "github.com/kubedb/apimachinery/pkg/controller"
 	"github.com/kubedb/apimachinery/pkg/eventer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
 	"k8s.io/client-go/util/workqueue"
@@ -20,13 +18,16 @@ type SnapshotDoer interface {
 	SetDatabaseStatus(metav1.ObjectMeta, api.DatabasePhase, string) error
 }
 
+type ControllerInterface interface {
+	// client interface
+	amc.ClientInterface
+	// helper method for Job watcher
+	SnapshotDoer
+}
+
 type Controller struct {
-	// Kubernetes client
-	client kubernetes.Interface
-	// ThirdPartyExtension client
-	extClient cs.KubedbV1alpha1Interface
-	// SnapshotDoer interface
-	snapshotDoer SnapshotDoer
+	ControllerInterface
+
 	// ListOptions for watcher
 	listOption metav1.ListOptions
 	// Event Recorder
@@ -43,21 +44,18 @@ type Controller struct {
 
 // NewController creates a new Controller
 func NewController(
-	controller *amc.Controller,
-	snapshotDoer SnapshotDoer,
+	controller ControllerInterface,
 	listOption metav1.ListOptions,
 	syncPeriod time.Duration,
-) *Controller {
+) amc.ControllerInterface {
 
 	// return new DormantDatabase Controller
 	return &Controller{
-		client:         controller.Client,
-		extClient:      controller.ExtClient,
-		snapshotDoer:   snapshotDoer,
-		listOption:     listOption,
-		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Job Controller"),
-		syncPeriod:     syncPeriod,
-		maxNumRequests: 5,
+		ControllerInterface: controller,
+		listOption:          listOption,
+		eventRecorder:       eventer.NewEventRecorder(controller.Client(), "Job Controller"),
+		syncPeriod:          syncPeriod,
+		maxNumRequests:      5,
 	}
 }
 
@@ -75,4 +73,11 @@ func (c *Controller) watchJob() {
 
 	c.runWatcher(5, stop)
 	select {}
+}
+
+func (c *Controller) Setup() error {
+	return nil
+}
+
+func (c *Controller) RunAndHold() {
 }
