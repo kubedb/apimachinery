@@ -16,7 +16,7 @@ import (
 )
 
 func (c *Controller) DeletePersistentVolumeClaims(namespace string, selector labels.Selector) error {
-	pvcList, err := c.Client.CoreV1().PersistentVolumeClaims(namespace).List(
+	pvcList, err := c.Client().CoreV1().PersistentVolumeClaims(namespace).List(
 		metav1.ListOptions{
 			LabelSelector: selector.String(),
 		},
@@ -26,7 +26,7 @@ func (c *Controller) DeletePersistentVolumeClaims(namespace string, selector lab
 	}
 
 	for _, pvc := range pvcList.Items {
-		if err := c.Client.CoreV1().PersistentVolumeClaims(pvc.Namespace).Delete(pvc.Name, nil); err != nil {
+		if err := c.Client().CoreV1().PersistentVolumeClaims(pvc.Namespace).Delete(pvc.Name, nil); err != nil {
 			return err
 		}
 	}
@@ -34,7 +34,7 @@ func (c *Controller) DeletePersistentVolumeClaims(namespace string, selector lab
 }
 
 func (c *Controller) DeleteSnapshotData(snapshot *api.Snapshot) error {
-	cfg, err := storage.NewOSMContext(c.Client, snapshot.Spec.SnapshotStorageSpec, snapshot.Namespace)
+	cfg, err := storage.NewOSMContext(c.Client(), snapshot.Spec.SnapshotStorageSpec, snapshot.Namespace)
 	if err != nil {
 		return err
 	}
@@ -74,7 +74,7 @@ func (c *Controller) DeleteSnapshotData(snapshot *api.Snapshot) error {
 }
 
 func (c *Controller) DeleteSnapshots(namespace string, selector labels.Selector) error {
-	snapshotList, err := c.ExtClient.Snapshots(namespace).List(
+	snapshotList, err := c.ExtClient().Snapshots(namespace).List(
 		metav1.ListOptions{
 			LabelSelector: selector.String(),
 		},
@@ -84,7 +84,7 @@ func (c *Controller) DeleteSnapshots(namespace string, selector labels.Selector)
 	}
 
 	for _, snapshot := range snapshotList.Items {
-		if err := c.ExtClient.Snapshots(snapshot.Namespace).Delete(snapshot.Name, &metav1.DeleteOptions{}); err != nil {
+		if err := c.ExtClient().Snapshots(snapshot.Namespace).Delete(snapshot.Name, &metav1.DeleteOptions{}); err != nil {
 			return err
 		}
 	}
@@ -92,7 +92,7 @@ func (c *Controller) DeleteSnapshots(namespace string, selector labels.Selector)
 }
 
 func (c *Controller) checkGoverningService(name, namespace string) (bool, error) {
-	_, err := c.Client.CoreV1().Services(namespace).Get(name, metav1.GetOptions{})
+	_, err := c.Client().CoreV1().Services(namespace).Get(name, metav1.GetOptions{})
 	if err != nil {
 		if kerr.IsNotFound(err) {
 			return false, nil
@@ -123,18 +123,18 @@ func (c *Controller) CreateGoverningService(name, namespace string) error {
 			ClusterIP: core.ClusterIPNone,
 		},
 	}
-	_, err = c.Client.CoreV1().Services(namespace).Create(service)
+	_, err = c.Client().CoreV1().Services(namespace).Create(service)
 	return err
 }
 
 func (c *Controller) SetJobOwnerReference(snapshot *api.Snapshot, job *batch.Job) error {
-	secret, err := c.Client.CoreV1().Secrets(snapshot.Namespace).Get(snapshot.OSMSecretName(), metav1.GetOptions{})
+	secret, err := c.Client().CoreV1().Secrets(snapshot.Namespace).Get(snapshot.OSMSecretName(), metav1.GetOptions{})
 	if err != nil {
 		if !kerr.IsNotFound(err) {
 			return err
 		}
 	} else {
-		_, _, err := core_util.PatchSecret(c.Client, secret, func(in *core.Secret) *core.Secret {
+		_, _, err := core_util.PatchSecret(c.Client(), secret, func(in *core.Secret) *core.Secret {
 			in.SetOwnerReferences([]metav1.OwnerReference{
 				{
 					APIVersion: batch.SchemeGroupVersion.String(),
@@ -150,13 +150,13 @@ func (c *Controller) SetJobOwnerReference(snapshot *api.Snapshot, job *batch.Job
 		}
 	}
 
-	pvc, err := c.Client.CoreV1().PersistentVolumeClaims(snapshot.Namespace).Get(snapshot.OffshootName(), metav1.GetOptions{})
+	pvc, err := c.Client().CoreV1().PersistentVolumeClaims(snapshot.Namespace).Get(snapshot.OffshootName(), metav1.GetOptions{})
 	if err != nil {
 		if !kerr.IsNotFound(err) {
 			return err
 		}
 	} else {
-		_, _, err := core_util.PatchPVC(c.Client, pvc, func(in *core.PersistentVolumeClaim) *core.PersistentVolumeClaim {
+		_, _, err := core_util.PatchPVC(c.Client(), pvc, func(in *core.PersistentVolumeClaim) *core.PersistentVolumeClaim {
 			in.SetOwnerReferences([]metav1.OwnerReference{
 				{
 					APIVersion: batch.SchemeGroupVersion.String(),

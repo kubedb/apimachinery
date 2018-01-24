@@ -18,8 +18,15 @@ type SnapshotDoer interface {
 	SetDatabaseStatus(metav1.ObjectMeta, api.DatabasePhase, string) error
 }
 
+type ControllerInterface interface {
+	// client interface
+	amc.ClientInterface
+	// helper method for Job watcher
+	SnapshotDoer
+}
+
 type Controller struct {
-	*amc.Controller
+	ControllerInterface
 	// SnapshotDoer interface
 	snapshotDoer SnapshotDoer
 	// ListOptions for watcher
@@ -38,20 +45,18 @@ type Controller struct {
 
 // NewController creates a new Controller
 func NewController(
-	controller *amc.Controller,
-	snapshotDoer SnapshotDoer,
+	controller ControllerInterface,
 	listOption metav1.ListOptions,
 	syncPeriod time.Duration,
-) *Controller {
+) amc.ControllerInterface {
 
 	// return new DormantDatabase Controller
 	return &Controller{
-		Controller:     controller,
-		snapshotDoer:   snapshotDoer,
-		listOption:     listOption,
-		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Job Controller"),
-		syncPeriod:     syncPeriod,
-		maxNumRequests: 5,
+		ControllerInterface: controller,
+		listOption:          listOption,
+		eventRecorder:       eventer.NewEventRecorder(controller.Client(), "Job Controller"),
+		syncPeriod:          syncPeriod,
+		maxNumRequests:      5,
 	}
 }
 
@@ -69,4 +74,11 @@ func (c *Controller) watchJob() {
 
 	c.runWatcher(5, stop)
 	select {}
+}
+
+func (c *Controller) Setup() error {
+	return nil
+}
+
+func (c *Controller) RunAndHold() {
 }
