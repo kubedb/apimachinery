@@ -18,19 +18,17 @@ import (
 )
 
 type Snapshotter interface {
-	// SnapshotDoer interface
-	jobc.SnapshotDoer
-	// Snapshotter methods
 	ValidateSnapshot(*api.Snapshot) error
 	GetDatabase(*api.Snapshot) (runtime.Object, error)
 	GetSnapshotter(*api.Snapshot) (*batch.Job, error)
 	WipeOutSnapshot(*api.Snapshot) error
+	SetDatabaseStatus(metav1.ObjectMeta, api.DatabasePhase, string) error
 }
 
 type Controller struct {
 	*amc.Controller
 	// Snapshotter interface
-	snapshotter Snapshotter
+	Snapshotter
 	// ListOptions for watcher
 	listOption metav1.ListOptions
 	// Event Recorder
@@ -56,11 +54,11 @@ func NewController(
 	// return new DormantDatabase Controller
 	return &Controller{
 		Controller:     controller,
-		snapshotter:    snapshotter,
+		Snapshotter:    snapshotter,
 		listOption:     listOption,
 		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Snapshot Controller"),
 		syncPeriod:     syncPeriod,
-		maxNumRequests: 1,
+		maxNumRequests: 5,
 	}
 }
 
@@ -75,7 +73,7 @@ func (c *Controller) Run() {
 	// Watch Snapshot with provided ListOption
 	go c.watchSnapshot()
 	// Watch Job with provided ListOption
-	go jobc.NewController(c.Controller, c.snapshotter, c.listOption, c.syncPeriod).Run()
+	go jobc.NewController(c.Controller, c, c.listOption, c.syncPeriod).Run()
 }
 
 func (c *Controller) watchSnapshot() {

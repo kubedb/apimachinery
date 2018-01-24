@@ -23,6 +23,6 @@ const (
 	PrometheusExporterPortNumber = 56790
 	PrometheusExporterPortName   = "prom-http"
 
-	SnapshotProcessRestore = "restore"
-	SnapshotProcessBackup  = "backup"
+	JobTypeBackup  = "backup"
+	JobTypeRestore = "restore"
 )
