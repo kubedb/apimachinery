@@ -18,6 +18,9 @@ import (
 )
 
 type Snapshotter interface {
+	// SnapshotDoer interface
+	jobc.SnapshotDoer
+	// Snapshotter methods
 	ValidateSnapshot(*api.Snapshot) error
 	GetDatabase(*api.Snapshot) (runtime.Object, error)
 	GetSnapshotter(*api.Snapshot) (*batch.Job, error)
@@ -72,11 +75,10 @@ func (c *Controller) Run() {
 	// Watch Snapshot with provided ListOption
 	go c.watchSnapshot()
 	// Watch Job with provided ListOption
-	go jobc.NewController(c.Controller, c.listOption, c.syncPeriod).Run()
+	go jobc.NewController(c.Controller, c.snapshotter, c.listOption, c.syncPeriod).Run()
 }
 
 func (c *Controller) watchSnapshot() {
-
 	c.initWatcher()
 
 	stop := make(chan struct{})

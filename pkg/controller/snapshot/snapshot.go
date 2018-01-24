@@ -131,7 +131,6 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 			"Failed to complete snapshot",
 		)
 	}
-
 	return nil
 }
 

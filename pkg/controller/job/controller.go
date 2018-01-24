@@ -3,6 +3,7 @@ package job
 import (
 	"time"
 
+	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	amc "github.com/kubedb/apimachinery/pkg/controller"
 	"github.com/kubedb/apimachinery/pkg/eventer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -11,8 +12,14 @@ import (
 	"k8s.io/client-go/util/workqueue"
 )
 
+type SnapshotDoer interface {
+	SetDatabaseStatus(meta metav1.ObjectMeta, phase api.DatabasePhase, reason string) error
+}
+
 type Controller struct {
 	*amc.Controller
+	// SnapshotDoer interface
+	snapshotDoer SnapshotDoer
 	// ListOptions for watcher
 	listOption metav1.ListOptions
 	// Event Recorder
@@ -30,6 +37,7 @@ type Controller struct {
 // NewController creates a new Controller
 func NewController(
 	controller *amc.Controller,
+	snapshotDoer SnapshotDoer,
 	listOption metav1.ListOptions,
 	syncPeriod time.Duration,
 ) *Controller {
@@ -37,6 +45,7 @@ func NewController(
 	// return new DormantDatabase Controller
 	return &Controller{
 		Controller:     controller,
+		snapshotDoer:   snapshotDoer,
 		listOption:     listOption,
 		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Job Controller"),
 		syncPeriod:     syncPeriod,
