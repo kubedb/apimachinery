@@ -15,7 +15,7 @@ import (
 
 func (c *Controller) completeJob(job *batch.Job) error {
 	deletePolicy := metav1.DeletePropagationBackground
-	err := c.client.BatchV1().Jobs(job.Namespace).Delete(job.Name, &metav1.DeleteOptions{
+	err := c.Client.BatchV1().Jobs(job.Namespace).Delete(job.Name, &metav1.DeleteOptions{
 		PropagationPolicy: &deletePolicy,
 	})
 
@@ -36,14 +36,14 @@ func (c *Controller) completeJob(job *batch.Job) error {
 func (c *Controller) handleBackupJob(job *batch.Job) error {
 	for _, o := range job.OwnerReferences {
 		if o.Kind == api.ResourceKindSnapshot {
-			snapshot, err := c.extClient.Snapshots(job.Namespace).Get(o.Name, metav1.GetOptions{})
+			snapshot, err := c.ExtClient.Snapshots(job.Namespace).Get(o.Name, metav1.GetOptions{})
 			if err != nil {
 				return err
 			}
 
 			jobSucceeded := job.Status.Succeeded > 0
 
-			_, _, err = util.PatchSnapshot(c.extClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+			_, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 				if jobSucceeded {
 					in.Status.Phase = api.SnapshotPhaseSucceeded
 				} else {

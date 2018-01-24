@@ -4,12 +4,10 @@ import (
 	"time"
 
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
-	cs "github.com/kubedb/apimachinery/client/typed/kubedb/v1alpha1"
 	amc "github.com/kubedb/apimachinery/pkg/controller"
 	"github.com/kubedb/apimachinery/pkg/eventer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
 	"k8s.io/client-go/util/workqueue"
@@ -21,10 +19,7 @@ type SnapshotDoer interface {
 }
 
 type Controller struct {
-	// Kubernetes client
-	client kubernetes.Interface
-	// ThirdPartyExtension client
-	extClient cs.KubedbV1alpha1Interface
+	*amc.Controller
 	// SnapshotDoer interface
 	snapshotDoer SnapshotDoer
 	// ListOptions for watcher
@@ -51,8 +46,7 @@ func NewController(
 
 	// return new DormantDatabase Controller
 	return &Controller{
-		client:         controller.Client,
-		extClient:      controller.ExtClient,
+		Controller:     controller,
 		snapshotDoer:   snapshotDoer,
 		listOption:     listOption,
 		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Job Controller"),
