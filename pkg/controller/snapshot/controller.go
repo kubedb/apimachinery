@@ -22,6 +22,8 @@ type Snapshotter interface {
 	GetDatabase(metav1.ObjectMeta) (runtime.Object, error)
 	GetSnapshotter(*api.Snapshot) (*batch.Job, error)
 	WipeOutSnapshot(*api.Snapshot) error
+	SetDatabaseStatus(metav1.ObjectMeta, api.DatabasePhase, string) error
+	UpsertDatabaseAnnotation(metav1.ObjectMeta, map[string]string) error
 }
 
 type Controller struct {
@@ -48,7 +50,6 @@ type Controller struct {
 func NewController(
 	controller *amc.Controller,
 	snapshotter Snapshotter,
-	snapshotDoer jobc.SnapshotDoer,
 	listOption metav1.ListOptions,
 	syncPeriod time.Duration,
 ) *Controller {
@@ -56,7 +57,7 @@ func NewController(
 	// return new DormantDatabase Controller
 	return &Controller{
 		Controller:     controller,
-		jobController:  jobc.NewController(controller, snapshotDoer, listOption, syncPeriod),
+		jobController:  jobc.NewController(controller, snapshotter, listOption, syncPeriod),
 		snapshotter:    snapshotter,
 		listOption:     listOption,
 		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Snapshot Controller"),
