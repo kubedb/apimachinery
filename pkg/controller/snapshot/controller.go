@@ -28,8 +28,6 @@ type Snapshotter interface {
 
 type Controller struct {
 	*amc.Controller
-	// Job Controller
-	jobController *jobc.Controller
 	// Snapshotter interface
 	snapshotter Snapshotter
 	// ListOptions for watcher
@@ -57,7 +55,6 @@ func NewController(
 	// return new DormantDatabase Controller
 	return &Controller{
 		Controller:     controller,
-		jobController:  jobc.NewController(controller, snapshotter, listOption, syncPeriod),
 		snapshotter:    snapshotter,
 		listOption:     listOption,
 		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Snapshot Controller"),
@@ -77,7 +74,7 @@ func (c *Controller) Run() {
 	// Watch Snapshot with provided ListOption
 	go c.watchSnapshot()
 	// Watch Job with provided ListOption
-	go c.jobController.Run()
+	go jobc.NewController(c.Controller, c.snapshotter, c.listOption, c.syncPeriod).Run()
 }
 
 func (c *Controller) watchSnapshot() {
