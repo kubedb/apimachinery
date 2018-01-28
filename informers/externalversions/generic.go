@@ -51,7 +51,7 @@ func (f *genericInformer) Lister() cache.GenericLister {
 // TODO extend this to unknown resources with a client pool
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
-	// Group=Kubedb, Version=V1alpha1
+	// Group=kubedb.com, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithResource("dormantdatabases"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().DormantDatabases().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("elasticsearchs"):
