@@ -5,7 +5,8 @@ import:
 - package: github.com/appscode/osm
   version: master
 - package: github.com/coreos/prometheus-operator
-  version: v0.16.0
+  repo: https://github.com/tamalsaha/prometheus-operator.git
+  version: k-1.9
 - package: github.com/ghodss/yaml
   version: v1.0.0
 - package: github.com/graymeta/stow
@@ -42,29 +43,25 @@ import:
 - package: github.com/prometheus/client_golang
   version: v0.8.0
 - package: github.com/prometheus/common
-  version: 3233b24a36715a2fe36d162260457857a56d672d
+  version: 13ba4ddd0caa9c28ca7b7bffe1dfa9ed8d5ef207
 - package: github.com/sirupsen/logrus
   version: v1.0.3
 - package: github.com/gogo/protobuf/proto
   version: c0656edd0d9eab7c66d1eb0c568f9039345796f7
 - package: k8s.io/api
-  version: kubernetes-1.8.3
+  version: kubernetes-1.9.0
 - package: k8s.io/apimachinery
-  repo: https://github.com/tamalsaha/apimachinery.git
-  version: release-1.8
-  vcs: git
+  version: kubernetes-1.9.0
 - package: k8s.io/client-go
-  version: kubernetes-1.8.3-beta.0
+  version: v6.0.0
 - package: k8s.io/apiextensions-apiserver
-  version: kubernetes-1.8.3
+  version: kubernetes-1.9.0
 - package: k8s.io/kubernetes
-  repo: https://github.com/appscode/kubernetes.git
-  version: v1.8.3
-  vcs: git
+  version: v1.9.0
 - package: github.com/appscode/kutil
-  version: release-5.0
+  version: release-6.0
 - package: github.com/appscode/kube-mon
-  version: master
+  version: release-6.0
 - package: github.com/hashicorp/go-version
   repo: https://github.com/appscode/go-version.git
   vcs: git

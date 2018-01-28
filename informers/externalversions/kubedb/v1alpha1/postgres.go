@@ -38,19 +38,34 @@ type PostgresInformer interface {
 }
 
 type postgresInformer struct {
-	factory internalinterfaces.SharedInformerFactory
+	factory          internalinterfaces.SharedInformerFactory
+	tweakListOptions internalinterfaces.TweakListOptionsFunc
+	namespace        string
 }
 
 // NewPostgresInformer constructs a new informer for Postgres type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewPostgresInformer(client client.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredPostgresInformer(client, namespace, resyncPeriod, indexers, nil)
+}
+
+// NewFilteredPostgresInformer constructs a new informer for Postgres type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewFilteredPostgresInformer(client client.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
 				return client.KubedbV1alpha1().Postgreses(namespace).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
 				return client.KubedbV1alpha1().Postgreses(namespace).Watch(options)
 			},
 		},
@@ -60,12 +75,12 @@ func NewPostgresInformer(client client.Interface, namespace string, resyncPeriod
 	)
 }
 
-func defaultPostgresInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewPostgresInformer(client, v1.NamespaceAll, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc})
+func (f *postgresInformer) defaultInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredPostgresInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
 func (f *postgresInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedb_v1alpha1.Postgres{}, defaultPostgresInformer)
+	return f.factory.InformerFor(&kubedb_v1alpha1.Postgres{}, f.defaultInformer)
 }
 
 func (f *postgresInformer) Lister() v1alpha1.PostgresLister {

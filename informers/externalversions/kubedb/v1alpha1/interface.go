@@ -43,50 +43,52 @@ type Interface interface {
 }
 
 type version struct {
-	internalinterfaces.SharedInformerFactory
+	factory          internalinterfaces.SharedInformerFactory
+	namespace        string
+	tweakListOptions internalinterfaces.TweakListOptionsFunc
 }
 
 // New returns a new Interface.
-func New(f internalinterfaces.SharedInformerFactory) Interface {
-	return &version{f}
+func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
+	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
 // DormantDatabases returns a DormantDatabaseInformer.
 func (v *version) DormantDatabases() DormantDatabaseInformer {
-	return &dormantDatabaseInformer{factory: v.SharedInformerFactory}
+	return &dormantDatabaseInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Elasticsearchs returns a ElasticsearchInformer.
 func (v *version) Elasticsearchs() ElasticsearchInformer {
-	return &elasticsearchInformer{factory: v.SharedInformerFactory}
+	return &elasticsearchInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Memcacheds returns a MemcachedInformer.
 func (v *version) Memcacheds() MemcachedInformer {
-	return &memcachedInformer{factory: v.SharedInformerFactory}
+	return &memcachedInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MongoDBs returns a MongoDBInformer.
 func (v *version) MongoDBs() MongoDBInformer {
-	return &mongoDBInformer{factory: v.SharedInformerFactory}
+	return &mongoDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MySQLs returns a MySQLInformer.
 func (v *version) MySQLs() MySQLInformer {
-	return &mySQLInformer{factory: v.SharedInformerFactory}
+	return &mySQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Postgreses returns a PostgresInformer.
 func (v *version) Postgreses() PostgresInformer {
-	return &postgresInformer{factory: v.SharedInformerFactory}
+	return &postgresInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Redises returns a RedisInformer.
 func (v *version) Redises() RedisInformer {
-	return &redisInformer{factory: v.SharedInformerFactory}
+	return &redisInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Snapshots returns a SnapshotInformer.
 func (v *version) Snapshots() SnapshotInformer {
-	return &snapshotInformer{factory: v.SharedInformerFactory}
+	return &snapshotInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

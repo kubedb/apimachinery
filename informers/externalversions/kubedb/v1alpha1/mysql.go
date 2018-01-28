@@ -38,19 +38,34 @@ type MySQLInformer interface {
 }
 
 type mySQLInformer struct {
-	factory internalinterfaces.SharedInformerFactory
+	factory          internalinterfaces.SharedInformerFactory
+	tweakListOptions internalinterfaces.TweakListOptionsFunc
+	namespace        string
 }
 
 // NewMySQLInformer constructs a new informer for MySQL type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewMySQLInformer(client client.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredMySQLInformer(client, namespace, resyncPeriod, indexers, nil)
+}
+
+// NewFilteredMySQLInformer constructs a new informer for MySQL type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewFilteredMySQLInformer(client client.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
 				return client.KubedbV1alpha1().MySQLs(namespace).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
 				return client.KubedbV1alpha1().MySQLs(namespace).Watch(options)
 			},
 		},
@@ -60,12 +75,12 @@ func NewMySQLInformer(client client.Interface, namespace string, resyncPeriod ti
 	)
 }
 
-func defaultMySQLInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewMySQLInformer(client, v1.NamespaceAll, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc})
+func (f *mySQLInformer) defaultInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredMySQLInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
 func (f *mySQLInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedb_v1alpha1.MySQL{}, defaultMySQLInformer)
+	return f.factory.InformerFor(&kubedb_v1alpha1.MySQL{}, f.defaultInformer)
 }
 
 func (f *mySQLInformer) Lister() v1alpha1.MySQLLister {
