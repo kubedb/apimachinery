@@ -31,7 +31,7 @@ import (
 )
 
 // ElasticsearchInformer provides access to a shared informer and lister for
-// Elasticsearchs.
+// Elasticsearches.
 type ElasticsearchInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() v1alpha1.ElasticsearchLister
@@ -60,13 +60,13 @@ func NewFilteredElasticsearchInformer(client client.Interface, namespace string,
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha1().Elasticsearchs(namespace).List(options)
+				return client.KubedbV1alpha1().Elasticsearches(namespace).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha1().Elasticsearchs(namespace).Watch(options)
+				return client.KubedbV1alpha1().Elasticsearches(namespace).Watch(options)
 			},
 		},
 		&kubedb_v1alpha1.Elasticsearch{},

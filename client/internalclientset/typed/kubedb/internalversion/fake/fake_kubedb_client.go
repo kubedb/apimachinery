@@ -30,8 +30,8 @@ func (c *FakeKubedb) DormantDatabases(namespace string) internalversion.DormantD
 	return &FakeDormantDatabases{c, namespace}
 }
 
-func (c *FakeKubedb) Elasticsearchs(namespace string) internalversion.ElasticsearchInterface {
-	return &FakeElasticsearchs{c, namespace}
+func (c *FakeKubedb) Elasticsearches(namespace string) internalversion.ElasticsearchInterface {
+	return &FakeElasticsearches{c, namespace}
 }
 
 func (c *FakeKubedb) Memcacheds(namespace string) internalversion.MemcachedInterface {

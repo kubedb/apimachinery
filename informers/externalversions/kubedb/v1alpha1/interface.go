@@ -26,8 +26,8 @@ import (
 type Interface interface {
 	// DormantDatabases returns a DormantDatabaseInformer.
 	DormantDatabases() DormantDatabaseInformer
-	// Elasticsearchs returns a ElasticsearchInformer.
-	Elasticsearchs() ElasticsearchInformer
+	// Elasticsearches returns a ElasticsearchInformer.
+	Elasticsearches() ElasticsearchInformer
 	// Memcacheds returns a MemcachedInformer.
 	Memcacheds() MemcachedInformer
 	// MongoDBs returns a MongoDBInformer.
@@ -58,8 +58,8 @@ func (v *version) DormantDatabases() DormantDatabaseInformer {
 	return &dormantDatabaseInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// Elasticsearchs returns a ElasticsearchInformer.
-func (v *version) Elasticsearchs() ElasticsearchInformer {
+// Elasticsearches returns a ElasticsearchInformer.
+func (v *version) Elasticsearches() ElasticsearchInformer {
 	return &elasticsearchInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 

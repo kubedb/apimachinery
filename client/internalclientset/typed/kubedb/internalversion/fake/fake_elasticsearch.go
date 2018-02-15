@@ -26,20 +26,20 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-// FakeElasticsearchs implements ElasticsearchInterface
-type FakeElasticsearchs struct {
+// FakeElasticsearches implements ElasticsearchInterface
+type FakeElasticsearches struct {
 	Fake *FakeKubedb
 	ns   string
 }
 
-var elasticsearchsResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "", Resource: "elasticsearchs"}
+var elasticsearchesResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "", Resource: "elasticsearches"}
 
-var elasticsearchsKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "", Kind: "Elasticsearch"}
+var elasticsearchesKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "", Kind: "Elasticsearch"}
 
 // Get takes name of the elasticsearch, and returns the corresponding elasticsearch object, and an error if there is any.
-func (c *FakeElasticsearchs) Get(name string, options v1.GetOptions) (result *kubedb.Elasticsearch, err error) {
+func (c *FakeElasticsearches) Get(name string, options v1.GetOptions) (result *kubedb.Elasticsearch, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(elasticsearchsResource, c.ns, name), &kubedb.Elasticsearch{})
+		Invokes(testing.NewGetAction(elasticsearchesResource, c.ns, name), &kubedb.Elasticsearch{})
 
 	if obj == nil {
 		return nil, err
@@ -47,10 +47,10 @@ func (c *FakeElasticsearchs) Get(name string, options v1.GetOptions) (result *ku
 	return obj.(*kubedb.Elasticsearch), err
 }
 
-// List takes label and field selectors, and returns the list of Elasticsearchs that match those selectors.
-func (c *FakeElasticsearchs) List(opts v1.ListOptions) (result *kubedb.ElasticsearchList, err error) {
+// List takes label and field selectors, and returns the list of Elasticsearches that match those selectors.
+func (c *FakeElasticsearches) List(opts v1.ListOptions) (result *kubedb.ElasticsearchList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(elasticsearchsResource, elasticsearchsKind, c.ns, opts), &kubedb.ElasticsearchList{})
+		Invokes(testing.NewListAction(elasticsearchesResource, elasticsearchesKind, c.ns, opts), &kubedb.ElasticsearchList{})
 
 	if obj == nil {
 		return nil, err
@@ -69,17 +69,17 @@ func (c *FakeElasticsearchs) List(opts v1.ListOptions) (result *kubedb.Elasticse
 	return list, err
 }
 
-// Watch returns a watch.Interface that watches the requested elasticsearchs.
-func (c *FakeElasticsearchs) Watch(opts v1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested elasticsearches.
+func (c *FakeElasticsearches) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(elasticsearchsResource, c.ns, opts))
+		InvokesWatch(testing.NewWatchAction(elasticsearchesResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a elasticsearch and creates it.  Returns the server's representation of the elasticsearch, and an error, if there is any.
-func (c *FakeElasticsearchs) Create(elasticsearch *kubedb.Elasticsearch) (result *kubedb.Elasticsearch, err error) {
+func (c *FakeElasticsearches) Create(elasticsearch *kubedb.Elasticsearch) (result *kubedb.Elasticsearch, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(elasticsearchsResource, c.ns, elasticsearch), &kubedb.Elasticsearch{})
+		Invokes(testing.NewCreateAction(elasticsearchesResource, c.ns, elasticsearch), &kubedb.Elasticsearch{})
 
 	if obj == nil {
 		return nil, err
@@ -88,9 +88,9 @@ func (c *FakeElasticsearchs) Create(elasticsearch *kubedb.Elasticsearch) (result
 }
 
 // Update takes the representation of a elasticsearch and updates it. Returns the server's representation of the elasticsearch, and an error, if there is any.
-func (c *FakeElasticsearchs) Update(elasticsearch *kubedb.Elasticsearch) (result *kubedb.Elasticsearch, err error) {
+func (c *FakeElasticsearches) Update(elasticsearch *kubedb.Elasticsearch) (result *kubedb.Elasticsearch, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(elasticsearchsResource, c.ns, elasticsearch), &kubedb.Elasticsearch{})
+		Invokes(testing.NewUpdateAction(elasticsearchesResource, c.ns, elasticsearch), &kubedb.Elasticsearch{})
 
 	if obj == nil {
 		return nil, err
@@ -100,9 +100,9 @@ func (c *FakeElasticsearchs) Update(elasticsearch *kubedb.Elasticsearch) (result
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeElasticsearchs) UpdateStatus(elasticsearch *kubedb.Elasticsearch) (*kubedb.Elasticsearch, error) {
+func (c *FakeElasticsearches) UpdateStatus(elasticsearch *kubedb.Elasticsearch) (*kubedb.Elasticsearch, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(elasticsearchsResource, "status", c.ns, elasticsearch), &kubedb.Elasticsearch{})
+		Invokes(testing.NewUpdateSubresourceAction(elasticsearchesResource, "status", c.ns, elasticsearch), &kubedb.Elasticsearch{})
 
 	if obj == nil {
 		return nil, err
@@ -111,25 +111,25 @@ func (c *FakeElasticsearchs) UpdateStatus(elasticsearch *kubedb.Elasticsearch) (
 }
 
 // Delete takes name of the elasticsearch and deletes it. Returns an error if one occurs.
-func (c *FakeElasticsearchs) Delete(name string, options *v1.DeleteOptions) error {
+func (c *FakeElasticsearches) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(elasticsearchsResource, c.ns, name), &kubedb.Elasticsearch{})
+		Invokes(testing.NewDeleteAction(elasticsearchesResource, c.ns, name), &kubedb.Elasticsearch{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeElasticsearchs) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(elasticsearchsResource, c.ns, listOptions)
+func (c *FakeElasticsearches) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(elasticsearchesResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &kubedb.ElasticsearchList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched elasticsearch.
-func (c *FakeElasticsearchs) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *kubedb.Elasticsearch, err error) {
+func (c *FakeElasticsearches) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *kubedb.Elasticsearch, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(elasticsearchsResource, c.ns, name, data, subresources...), &kubedb.Elasticsearch{})
+		Invokes(testing.NewPatchSubresourceAction(elasticsearchesResource, c.ns, name, data, subresources...), &kubedb.Elasticsearch{})
 
 	if obj == nil {
 		return nil, err
