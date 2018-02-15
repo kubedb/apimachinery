@@ -24,7 +24,7 @@ import (
 type KubedbInterface interface {
 	RESTClient() rest.Interface
 	DormantDatabasesGetter
-	ElasticsearchsGetter
+	ElasticsearchesGetter
 	MemcachedsGetter
 	MongoDBsGetter
 	MySQLsGetter
@@ -42,8 +42,8 @@ func (c *KubedbClient) DormantDatabases(namespace string) DormantDatabaseInterfa
 	return newDormantDatabases(c, namespace)
 }
 
-func (c *KubedbClient) Elasticsearchs(namespace string) ElasticsearchInterface {
-	return newElasticsearchs(c, namespace)
+func (c *KubedbClient) Elasticsearches(namespace string) ElasticsearchInterface {
+	return newElasticsearches(c, namespace)
 }
 
 func (c *KubedbClient) Memcacheds(namespace string) MemcachedInterface {
