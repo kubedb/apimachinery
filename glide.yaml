@@ -40,6 +40,8 @@ import:
   repo: https://github.com/appscode/cron.git
   vcs: git
   version: v2
+- package: github.com/pkg/errors
+  version: v0.8.0
 - package: github.com/prometheus/client_golang
   version: v0.8.0
 - package: github.com/prometheus/common
