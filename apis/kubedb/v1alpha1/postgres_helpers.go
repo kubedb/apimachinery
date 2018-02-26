@@ -97,7 +97,7 @@ func (p *Postgres) GetMonitoringVendor() string {
 	return ""
 }
 
-func (p Postgres) StandbyName() string {
+func (p Postgres) StandbyServiceName() string {
 	return fmt.Sprintf("%v-standby", p.Name)
 }
 
