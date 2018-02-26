@@ -97,8 +97,8 @@ func (p *Postgres) GetMonitoringVendor() string {
 	return ""
 }
 
-func (p Postgres) StandbyServiceName() string {
-	return fmt.Sprintf("%v-standby", p.Name)
+func (p Postgres) ReplicasServiceName() string {
+	return fmt.Sprintf("%v-replicas", p.Name)
 }
 
 func (p Postgres) CustomResourceDefinition() *crd_api.CustomResourceDefinition {
