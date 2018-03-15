@@ -29,5 +29,5 @@ type Snapshotter interface {
 }
 
 type Deleter interface {
-	PauseDatabaseStatus(*api.DormantDatabase) error
+	ExDatabaseStatus(*api.DormantDatabase) error
 }
