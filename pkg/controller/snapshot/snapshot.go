@@ -27,7 +27,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 	snapshot.Status = snap.Status
 
 	// DatabaseSnapshot spec validation is checked in ValidatingWebhook.
-	// So Snapshot is a valid object!
+	// As Snapshot is already a valid object, skip checking bucket access to reduce request overhead to the storage!
 
 	// Check running snapshot
 	running, err := c.isSnapshotRunning(snapshot)
