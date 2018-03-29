@@ -25,9 +25,9 @@ type Controller struct {
 	indexer  cache.Indexer
 	queue    workqueue.RateLimitingInterface
 	informer cache.Controller
-	//Max number requests for retries
+	// Max number requests for retries
 	maxNumRequests int
-	// threadiness of
+	// threadiness of Job handler
 	numThreads int
 }
 
