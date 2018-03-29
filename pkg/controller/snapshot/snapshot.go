@@ -27,8 +27,6 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 	snapshot.Status = snap.Status
 
 	// Validate DatabaseSnapshot
-	// N.B. ValidateSnapshotSpec has already checked in ValidatingWebhook.
-	// As Storage Access is already valid, skip checking it to reduce request overhead to the storage!
 	if err := c.snapshotter.ValidateSnapshot(snapshot); err != nil {
 		log.Errorln(err)
 		c.eventRecorder.Event(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonInvalid, err.Error())

@@ -27,6 +27,8 @@ type Controller struct {
 	informer cache.Controller
 	//Max number requests for retries
 	maxNumRequests int
+	// threadiness of
+	numThreads int
 }
 
 // NewController creates a new Controller
@@ -35,8 +37,9 @@ func NewController(
 	snapshotter amc.Snapshotter,
 	listOption metav1.ListOptions,
 	syncPeriod time.Duration,
+	maxNumRequests int,
+	numThreads int,
 ) *Controller {
-
 	// return new DormantDatabase Controller
 	return &Controller{
 		Controller:     controller,
@@ -44,7 +47,8 @@ func NewController(
 		listOption:     listOption,
 		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Job Controller"),
 		syncPeriod:     syncPeriod,
-		maxNumRequests: 5,
+		maxNumRequests: maxNumRequests,
+		numThreads:     numThreads,
 	}
 }
 
@@ -60,6 +64,6 @@ func (c *Controller) watchJob() {
 	stop := make(chan struct{})
 	defer close(stop)
 
-	c.runWatcher(5, stop)
+	c.runWatcher(c.numThreads, stop)
 	select {}
 }
