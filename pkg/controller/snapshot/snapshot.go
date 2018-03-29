@@ -26,24 +26,8 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 	}
 	snapshot.Status = snap.Status
 
-	// Validate DatabaseSnapshot spec
-	if err := c.snapshotter.ValidateSnapshot(snapshot); err != nil {
-		c.eventRecorder.Event(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonInvalid, err.Error())
-		_, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
-			t := metav1.Now()
-			in.Status.CompletionTime = &t
-			in.Labels[api.LabelDatabaseName] = snapshot.Spec.DatabaseName
-			in.Status.Phase = api.SnapshotPhaseFailed
-			in.Status.Reason = "Invalid Snapshot"
-			return in
-		})
-		if err != nil {
-			c.eventRecorder.Eventf(snapshot.ObjectReference(), core.EventTypeWarning, eventer.EventReasonFailedToUpdate, err.Error())
-			return err
-		}
-		log.Errorln(err)
-		return nil
-	}
+	// DatabaseSnapshot spec validation is checked in ValidatingWebhook.
+	// So Snapshot is a valid object!
 
 	// Check running snapshot
 	running, err := c.isSnapshotRunning(snapshot)
