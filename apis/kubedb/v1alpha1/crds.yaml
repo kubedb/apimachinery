@@ -1,55 +1,2563 @@
-metadata:
-  name: elasticsearchs.kubedb.com
-  labels:
-    app: kubedb
+---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
-spec:
-  group: kubedb.com
-  names:
-    kind: Elasticsearch
-    plural: elasticsearchs
-  scope: Namespaced
-  version: v1alpha1
----
 metadata:
-  name: dormantdatabases.kubedb.com
+  creationTimestamp: null
   labels:
     app: kubedb
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
-spec:
-  group: kubedb.com
-  names:
-    kind: DormantDatabase
-    plural: dormantdatabases
-  scope: Namespaced
-  version: v1alpha1
----
-metadata:
   name: postgreses.kubedb.com
-  labels:
-    app: kubedb
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
 spec:
   group: kubedb.com
   names:
     kind: Postgres
+    listKind: PostgresList
     plural: postgreses
+    shortNames:
+    - pg
+    singular: postgres
   scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      description: Postgres defines a Postgres database.
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata: {}
+        spec:
+          properties:
+            affinity: {}
+            archiver:
+              properties:
+                storage:
+                  properties:
+                    azure:
+                      properties:
+                        container:
+                          type: string
+                        prefix:
+                          type: string
+                    gcs:
+                      properties:
+                        bucket:
+                          type: string
+                        prefix:
+                          type: string
+                      required:
+                      - bucket
+                    local:
+                      properties:
+                        awsElasticBlockStore: {}
+                        azureDisk: {}
+                        azureFile: {}
+                        cephfs: {}
+                        cinder: {}
+                        configMap: {}
+                        downwardAPI: {}
+                        emptyDir: {}
+                        fc: {}
+                        flexVolume: {}
+                        flocker: {}
+                        gcePersistentDisk: {}
+                        gitRepo: {}
+                        glusterfs: {}
+                        hostPath: {}
+                        iscsi: {}
+                        mountPath:
+                          type: string
+                        nfs: {}
+                        persistentVolumeClaim: {}
+                        photonPersistentDisk: {}
+                        portworxVolume: {}
+                        projected: {}
+                        quobyte: {}
+                        rbd: {}
+                        scaleIO: {}
+                        secret: {}
+                        storageos: {}
+                        subPath:
+                          type: string
+                        vsphereVolume: {}
+                    s3:
+                      properties:
+                        bucket:
+                          type: string
+                        endpoint:
+                          type: string
+                        prefix:
+                          type: string
+                      required:
+                      - bucket
+                    storageSecretName:
+                      type: string
+                    swift:
+                      properties:
+                        container:
+                          type: string
+                        prefix:
+                          type: string
+            backupSchedule:
+              properties:
+                azure:
+                  properties:
+                    container:
+                      type: string
+                    prefix:
+                      type: string
+                cronExpression:
+                  type: string
+                gcs:
+                  properties:
+                    bucket:
+                      type: string
+                    prefix:
+                      type: string
+                  required:
+                  - bucket
+                local:
+                  properties:
+                    awsElasticBlockStore: {}
+                    azureDisk: {}
+                    azureFile: {}
+                    cephfs: {}
+                    cinder: {}
+                    configMap: {}
+                    downwardAPI: {}
+                    emptyDir: {}
+                    fc: {}
+                    flexVolume: {}
+                    flocker: {}
+                    gcePersistentDisk: {}
+                    gitRepo: {}
+                    glusterfs: {}
+                    hostPath: {}
+                    iscsi: {}
+                    mountPath:
+                      type: string
+                    nfs: {}
+                    persistentVolumeClaim: {}
+                    photonPersistentDisk: {}
+                    portworxVolume: {}
+                    projected: {}
+                    quobyte: {}
+                    rbd: {}
+                    scaleIO: {}
+                    secret: {}
+                    storageos: {}
+                    subPath:
+                      type: string
+                    vsphereVolume: {}
+                resources: {}
+                s3:
+                  properties:
+                    bucket:
+                      type: string
+                    endpoint:
+                      type: string
+                    prefix:
+                      type: string
+                  required:
+                  - bucket
+                storageSecretName:
+                  type: string
+                swift:
+                  properties:
+                    container:
+                      type: string
+                    prefix:
+                      type: string
+            databaseSecret: {}
+            doNotPause:
+              description: If DoNotPause is true, controller will prevent to delete
+                this Postgres object. Controller will create same Postgres object
+                and ignore other process.
+              type: boolean
+            imagePullSecrets:
+              description: ImagePullSecrets is an optional list of references to secrets
+                in the same namespace to use for pulling any of the images used by
+                this PodSpec. If specified, these secrets will be passed to individual
+                puller implementations for them to use.
+              items: {}
+              type: array
+            init:
+              properties:
+                postgresWAL:
+                  properties:
+                    azure:
+                      properties:
+                        container:
+                          type: string
+                        prefix:
+                          type: string
+                    backupName:
+                      type: string
+                    gcs:
+                      properties:
+                        bucket:
+                          type: string
+                        prefix:
+                          type: string
+                      required:
+                      - bucket
+                    local:
+                      properties:
+                        awsElasticBlockStore: {}
+                        azureDisk: {}
+                        azureFile: {}
+                        cephfs: {}
+                        cinder: {}
+                        configMap: {}
+                        downwardAPI: {}
+                        emptyDir: {}
+                        fc: {}
+                        flexVolume: {}
+                        flocker: {}
+                        gcePersistentDisk: {}
+                        gitRepo: {}
+                        glusterfs: {}
+                        hostPath: {}
+                        iscsi: {}
+                        mountPath:
+                          type: string
+                        nfs: {}
+                        persistentVolumeClaim: {}
+                        photonPersistentDisk: {}
+                        portworxVolume: {}
+                        projected: {}
+                        quobyte: {}
+                        rbd: {}
+                        scaleIO: {}
+                        secret: {}
+                        storageos: {}
+                        subPath:
+                          type: string
+                        vsphereVolume: {}
+                    pitr:
+                      type: string
+                    s3:
+                      properties:
+                        bucket:
+                          type: string
+                        endpoint:
+                          type: string
+                        prefix:
+                          type: string
+                      required:
+                      - bucket
+                    storageSecretName:
+                      type: string
+                    swift:
+                      properties:
+                        container:
+                          type: string
+                        prefix:
+                          type: string
+                scriptSource:
+                  properties:
+                    awsElasticBlockStore: {}
+                    azureDisk: {}
+                    azureFile: {}
+                    cephfs: {}
+                    cinder: {}
+                    configMap: {}
+                    downwardAPI: {}
+                    emptyDir: {}
+                    fc: {}
+                    flexVolume: {}
+                    flocker: {}
+                    gcePersistentDisk: {}
+                    gitRepo: {}
+                    glusterfs: {}
+                    hostPath: {}
+                    iscsi: {}
+                    nfs: {}
+                    persistentVolumeClaim: {}
+                    photonPersistentDisk: {}
+                    portworxVolume: {}
+                    projected: {}
+                    quobyte: {}
+                    rbd: {}
+                    scaleIO: {}
+                    scriptPath:
+                      type: string
+                    secret: {}
+                    storageos: {}
+                    vsphereVolume: {}
+                snapshotSource:
+                  properties:
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+            monitor: {}
+            nodeSelector:
+              description: NodeSelector is a selector which must be true for the pod
+                to fit on a node
+              type: object
+            replicas:
+              description: Number of instances to deploy for a Postgres database.
+              format: int32
+              type: integer
+            resources: {}
+            schedulerName:
+              description: If specified, the pod will be dispatched by specified scheduler.
+                If not specified, the pod will be dispatched by default scheduler.
+              type: string
+            standbyMode:
+              description: Standby mode
+              type: string
+            storage: {}
+            streamingMode:
+              description: Streaming mode
+              type: string
+            tolerations:
+              description: If specified, the pod's tolerations.
+              items: {}
+              type: array
+            version:
+              description: Version of Postgres to be deployed.
+              type: string
+        status:
+          properties:
+            creationTime: {}
+            phase:
+              type: string
+            reason:
+              type: string
   version: v1alpha1
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
 ---
-metadata:
-  name: snapshots.kubedb.com
-  labels:
-    app: kubedb
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app: kubedb
+  name: elasticsearches.kubedb.com
+spec:
+  group: kubedb.com
+  names:
+    kind: Elasticsearch
+    listKind: ElasticsearchList
+    plural: elasticsearches
+    shortNames:
+    - es
+    singular: elasticsearch
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      description: Elasticsearch defines a Elasticsearch database.
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata: {}
+        spec:
+          properties:
+            affinity: {}
+            backupSchedule:
+              properties:
+                azure:
+                  properties:
+                    container:
+                      type: string
+                    prefix:
+                      type: string
+                cronExpression:
+                  type: string
+                gcs:
+                  properties:
+                    bucket:
+                      type: string
+                    prefix:
+                      type: string
+                  required:
+                  - bucket
+                local:
+                  properties:
+                    awsElasticBlockStore: {}
+                    azureDisk: {}
+                    azureFile: {}
+                    cephfs: {}
+                    cinder: {}
+                    configMap: {}
+                    downwardAPI: {}
+                    emptyDir: {}
+                    fc: {}
+                    flexVolume: {}
+                    flocker: {}
+                    gcePersistentDisk: {}
+                    gitRepo: {}
+                    glusterfs: {}
+                    hostPath: {}
+                    iscsi: {}
+                    mountPath:
+                      type: string
+                    nfs: {}
+                    persistentVolumeClaim: {}
+                    photonPersistentDisk: {}
+                    portworxVolume: {}
+                    projected: {}
+                    quobyte: {}
+                    rbd: {}
+                    scaleIO: {}
+                    secret: {}
+                    storageos: {}
+                    subPath:
+                      type: string
+                    vsphereVolume: {}
+                resources: {}
+                s3:
+                  properties:
+                    bucket:
+                      type: string
+                    endpoint:
+                      type: string
+                    prefix:
+                      type: string
+                  required:
+                  - bucket
+                storageSecretName:
+                  type: string
+                swift:
+                  properties:
+                    container:
+                      type: string
+                    prefix:
+                      type: string
+            certificateSecret: {}
+            databaseSecret: {}
+            doNotPause:
+              description: If DoNotPause is true, controller will prevent to delete
+                this Elasticsearch object. Controller will create same Elasticsearch
+                object and ignore other process.
+              type: boolean
+            enableSSL:
+              description: To enable ssl in transport & http layer
+              type: boolean
+            imagePullSecrets:
+              description: ImagePullSecrets is an optional list of references to secrets
+                in the same namespace to use for pulling any of the images used by
+                this PodSpec. If specified, these secrets will be passed to individual
+                puller implementations for them to use.
+              items: {}
+              type: array
+            init:
+              properties:
+                postgresWAL:
+                  properties:
+                    azure:
+                      properties:
+                        container:
+                          type: string
+                        prefix:
+                          type: string
+                    backupName:
+                      type: string
+                    gcs:
+                      properties:
+                        bucket:
+                          type: string
+                        prefix:
+                          type: string
+                      required:
+                      - bucket
+                    local:
+                      properties:
+                        awsElasticBlockStore: {}
+                        azureDisk: {}
+                        azureFile: {}
+                        cephfs: {}
+                        cinder: {}
+                        configMap: {}
+                        downwardAPI: {}
+                        emptyDir: {}
+                        fc: {}
+                        flexVolume: {}
+                        flocker: {}
+                        gcePersistentDisk: {}
+                        gitRepo: {}
+                        glusterfs: {}
+                        hostPath: {}
+                        iscsi: {}
+                        mountPath:
+                          type: string
+                        nfs: {}
+                        persistentVolumeClaim: {}
+                        photonPersistentDisk: {}
+                        portworxVolume: {}
+                        projected: {}
+                        quobyte: {}
+                        rbd: {}
+                        scaleIO: {}
+                        secret: {}
+                        storageos: {}
+                        subPath:
+                          type: string
+                        vsphereVolume: {}
+                    pitr:
+                      type: string
+                    s3:
+                      properties:
+                        bucket:
+                          type: string
+                        endpoint:
+                          type: string
+                        prefix:
+                          type: string
+                      required:
+                      - bucket
+                    storageSecretName:
+                      type: string
+                    swift:
+                      properties:
+                        container:
+                          type: string
+                        prefix:
+                          type: string
+                scriptSource:
+                  properties:
+                    awsElasticBlockStore: {}
+                    azureDisk: {}
+                    azureFile: {}
+                    cephfs: {}
+                    cinder: {}
+                    configMap: {}
+                    downwardAPI: {}
+                    emptyDir: {}
+                    fc: {}
+                    flexVolume: {}
+                    flocker: {}
+                    gcePersistentDisk: {}
+                    gitRepo: {}
+                    glusterfs: {}
+                    hostPath: {}
+                    iscsi: {}
+                    nfs: {}
+                    persistentVolumeClaim: {}
+                    photonPersistentDisk: {}
+                    portworxVolume: {}
+                    projected: {}
+                    quobyte: {}
+                    rbd: {}
+                    scaleIO: {}
+                    scriptPath:
+                      type: string
+                    secret: {}
+                    storageos: {}
+                    vsphereVolume: {}
+                snapshotSource:
+                  properties:
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+            monitor: {}
+            nodeSelector:
+              description: NodeSelector is a selector which must be true for the pod
+                to fit on a node
+              type: object
+            replicas:
+              description: Number of instances to deploy for a Elasticsearch database.
+              format: int32
+              type: integer
+            resources: {}
+            schedulerName:
+              description: If specified, the pod will be dispatched by specified scheduler.
+                If not specified, the pod will be dispatched by default scheduler.
+              type: string
+            storage: {}
+            tolerations:
+              description: If specified, the pod's tolerations.
+              items: {}
+              type: array
+            topology:
+              properties:
+                client:
+                  properties:
+                    prefix:
+                      type: string
+                    replicas:
+                      format: int32
+                      type: integer
+                data:
+                  properties:
+                    prefix:
+                      type: string
+                    replicas:
+                      format: int32
+                      type: integer
+                master:
+                  properties:
+                    prefix:
+                      type: string
+                    replicas:
+                      format: int32
+                      type: integer
+            version:
+              description: Version of Elasticsearch to be deployed.
+              type: string
+        status:
+          properties:
+            creationTime: {}
+            phase:
+              type: string
+            reason:
+              type: string
+  version: v1alpha1
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app: kubedb
+  name: mysqls.kubedb.com
+spec:
+  group: kubedb.com
+  names:
+    kind: MySQL
+    listKind: MySQLList
+    plural: mysqls
+    shortNames:
+    - my
+    singular: mysql
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      description: Mysql defines a Mysql database.
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata: {}
+        spec:
+          properties:
+            affinity: {}
+            backupSchedule:
+              properties:
+                azure:
+                  properties:
+                    container:
+                      type: string
+                    prefix:
+                      type: string
+                cronExpression:
+                  type: string
+                gcs:
+                  properties:
+                    bucket:
+                      type: string
+                    prefix:
+                      type: string
+                  required:
+                  - bucket
+                local:
+                  properties:
+                    awsElasticBlockStore: {}
+                    azureDisk: {}
+                    azureFile: {}
+                    cephfs: {}
+                    cinder: {}
+                    configMap: {}
+                    downwardAPI: {}
+                    emptyDir: {}
+                    fc: {}
+                    flexVolume: {}
+                    flocker: {}
+                    gcePersistentDisk: {}
+                    gitRepo: {}
+                    glusterfs: {}
+                    hostPath: {}
+                    iscsi: {}
+                    mountPath:
+                      type: string
+                    nfs: {}
+                    persistentVolumeClaim: {}
+                    photonPersistentDisk: {}
+                    portworxVolume: {}
+                    projected: {}
+                    quobyte: {}
+                    rbd: {}
+                    scaleIO: {}
+                    secret: {}
+                    storageos: {}
+                    subPath:
+                      type: string
+                    vsphereVolume: {}
+                resources: {}
+                s3:
+                  properties:
+                    bucket:
+                      type: string
+                    endpoint:
+                      type: string
+                    prefix:
+                      type: string
+                  required:
+                  - bucket
+                storageSecretName:
+                  type: string
+                swift:
+                  properties:
+                    container:
+                      type: string
+                    prefix:
+                      type: string
+            databaseSecret: {}
+            doNotPause:
+              description: If DoNotPause is true, controller will prevent to delete
+                this Mysql object. Controller will create same Mysql object and ignore
+                other process.
+              type: boolean
+            imagePullSecrets:
+              description: ImagePullSecrets is an optional list of references to secrets
+                in the same namespace to use for pulling any of the images used by
+                this PodSpec. If specified, these secrets will be passed to individual
+                puller implementations for them to use.
+              items: {}
+              type: array
+            init:
+              properties:
+                postgresWAL:
+                  properties:
+                    azure:
+                      properties:
+                        container:
+                          type: string
+                        prefix:
+                          type: string
+                    backupName:
+                      type: string
+                    gcs:
+                      properties:
+                        bucket:
+                          type: string
+                        prefix:
+                          type: string
+                      required:
+                      - bucket
+                    local:
+                      properties:
+                        awsElasticBlockStore: {}
+                        azureDisk: {}
+                        azureFile: {}
+                        cephfs: {}
+                        cinder: {}
+                        configMap: {}
+                        downwardAPI: {}
+                        emptyDir: {}
+                        fc: {}
+                        flexVolume: {}
+                        flocker: {}
+                        gcePersistentDisk: {}
+                        gitRepo: {}
+                        glusterfs: {}
+                        hostPath: {}
+                        iscsi: {}
+                        mountPath:
+                          type: string
+                        nfs: {}
+                        persistentVolumeClaim: {}
+                        photonPersistentDisk: {}
+                        portworxVolume: {}
+                        projected: {}
+                        quobyte: {}
+                        rbd: {}
+                        scaleIO: {}
+                        secret: {}
+                        storageos: {}
+                        subPath:
+                          type: string
+                        vsphereVolume: {}
+                    pitr:
+                      type: string
+                    s3:
+                      properties:
+                        bucket:
+                          type: string
+                        endpoint:
+                          type: string
+                        prefix:
+                          type: string
+                      required:
+                      - bucket
+                    storageSecretName:
+                      type: string
+                    swift:
+                      properties:
+                        container:
+                          type: string
+                        prefix:
+                          type: string
+                scriptSource:
+                  properties:
+                    awsElasticBlockStore: {}
+                    azureDisk: {}
+                    azureFile: {}
+                    cephfs: {}
+                    cinder: {}
+                    configMap: {}
+                    downwardAPI: {}
+                    emptyDir: {}
+                    fc: {}
+                    flexVolume: {}
+                    flocker: {}
+                    gcePersistentDisk: {}
+                    gitRepo: {}
+                    glusterfs: {}
+                    hostPath: {}
+                    iscsi: {}
+                    nfs: {}
+                    persistentVolumeClaim: {}
+                    photonPersistentDisk: {}
+                    portworxVolume: {}
+                    projected: {}
+                    quobyte: {}
+                    rbd: {}
+                    scaleIO: {}
+                    scriptPath:
+                      type: string
+                    secret: {}
+                    storageos: {}
+                    vsphereVolume: {}
+                snapshotSource:
+                  properties:
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+            monitor: {}
+            nodeSelector:
+              description: NodeSelector is a selector which must be true for the pod
+                to fit on a node
+              type: object
+            replicas:
+              description: Number of instances to deploy for a MySQL database.
+              format: int32
+              type: integer
+            resources: {}
+            schedulerName:
+              description: If specified, the pod will be dispatched by specified scheduler.
+                If not specified, the pod will be dispatched by default scheduler.
+              type: string
+            storage: {}
+            tolerations:
+              description: If specified, the pod's tolerations.
+              items: {}
+              type: array
+            version:
+              description: Version of MySQL to be deployed.
+              type: string
+        status:
+          properties:
+            creationTime: {}
+            phase:
+              type: string
+            reason:
+              type: string
+  version: v1alpha1
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app: kubedb
+  name: mongodbs.kubedb.com
+spec:
+  group: kubedb.com
+  names:
+    kind: MongoDB
+    listKind: MongoDBList
+    plural: mongodbs
+    shortNames:
+    - mg
+    singular: mongodb
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      description: MongoDB defines a MongoDB database.
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata: {}
+        spec:
+          properties:
+            affinity: {}
+            backupSchedule:
+              properties:
+                azure:
+                  properties:
+                    container:
+                      type: string
+                    prefix:
+                      type: string
+                cronExpression:
+                  type: string
+                gcs:
+                  properties:
+                    bucket:
+                      type: string
+                    prefix:
+                      type: string
+                  required:
+                  - bucket
+                local:
+                  properties:
+                    awsElasticBlockStore: {}
+                    azureDisk: {}
+                    azureFile: {}
+                    cephfs: {}
+                    cinder: {}
+                    configMap: {}
+                    downwardAPI: {}
+                    emptyDir: {}
+                    fc: {}
+                    flexVolume: {}
+                    flocker: {}
+                    gcePersistentDisk: {}
+                    gitRepo: {}
+                    glusterfs: {}
+                    hostPath: {}
+                    iscsi: {}
+                    mountPath:
+                      type: string
+                    nfs: {}
+                    persistentVolumeClaim: {}
+                    photonPersistentDisk: {}
+                    portworxVolume: {}
+                    projected: {}
+                    quobyte: {}
+                    rbd: {}
+                    scaleIO: {}
+                    secret: {}
+                    storageos: {}
+                    subPath:
+                      type: string
+                    vsphereVolume: {}
+                resources: {}
+                s3:
+                  properties:
+                    bucket:
+                      type: string
+                    endpoint:
+                      type: string
+                    prefix:
+                      type: string
+                  required:
+                  - bucket
+                storageSecretName:
+                  type: string
+                swift:
+                  properties:
+                    container:
+                      type: string
+                    prefix:
+                      type: string
+            databaseSecret: {}
+            doNotPause:
+              description: If DoNotPause is true, controller will prevent to delete
+                this Postgres object. Controller will create same Postgres object
+                and ignore other process.
+              type: boolean
+            imagePullSecrets:
+              description: ImagePullSecrets is an optional list of references to secrets
+                in the same namespace to use for pulling any of the images used by
+                this PodSpec. If specified, these secrets will be passed to individual
+                puller implementations for them to use.
+              items: {}
+              type: array
+            init:
+              properties:
+                postgresWAL:
+                  properties:
+                    azure:
+                      properties:
+                        container:
+                          type: string
+                        prefix:
+                          type: string
+                    backupName:
+                      type: string
+                    gcs:
+                      properties:
+                        bucket:
+                          type: string
+                        prefix:
+                          type: string
+                      required:
+                      - bucket
+                    local:
+                      properties:
+                        awsElasticBlockStore: {}
+                        azureDisk: {}
+                        azureFile: {}
+                        cephfs: {}
+                        cinder: {}
+                        configMap: {}
+                        downwardAPI: {}
+                        emptyDir: {}
+                        fc: {}
+                        flexVolume: {}
+                        flocker: {}
+                        gcePersistentDisk: {}
+                        gitRepo: {}
+                        glusterfs: {}
+                        hostPath: {}
+                        iscsi: {}
+                        mountPath:
+                          type: string
+                        nfs: {}
+                        persistentVolumeClaim: {}
+                        photonPersistentDisk: {}
+                        portworxVolume: {}
+                        projected: {}
+                        quobyte: {}
+                        rbd: {}
+                        scaleIO: {}
+                        secret: {}
+                        storageos: {}
+                        subPath:
+                          type: string
+                        vsphereVolume: {}
+                    pitr:
+                      type: string
+                    s3:
+                      properties:
+                        bucket:
+                          type: string
+                        endpoint:
+                          type: string
+                        prefix:
+                          type: string
+                      required:
+                      - bucket
+                    storageSecretName:
+                      type: string
+                    swift:
+                      properties:
+                        container:
+                          type: string
+                        prefix:
+                          type: string
+                scriptSource:
+                  properties:
+                    awsElasticBlockStore: {}
+                    azureDisk: {}
+                    azureFile: {}
+                    cephfs: {}
+                    cinder: {}
+                    configMap: {}
+                    downwardAPI: {}
+                    emptyDir: {}
+                    fc: {}
+                    flexVolume: {}
+                    flocker: {}
+                    gcePersistentDisk: {}
+                    gitRepo: {}
+                    glusterfs: {}
+                    hostPath: {}
+                    iscsi: {}
+                    nfs: {}
+                    persistentVolumeClaim: {}
+                    photonPersistentDisk: {}
+                    portworxVolume: {}
+                    projected: {}
+                    quobyte: {}
+                    rbd: {}
+                    scaleIO: {}
+                    scriptPath:
+                      type: string
+                    secret: {}
+                    storageos: {}
+                    vsphereVolume: {}
+                snapshotSource:
+                  properties:
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+            monitor: {}
+            nodeSelector:
+              description: NodeSelector is a selector which must be true for the pod
+                to fit on a node
+              type: object
+            replicas:
+              description: Number of instances to deploy for a MongoDB database.
+              format: int32
+              type: integer
+            resources: {}
+            schedulerName:
+              description: If specified, the pod will be dispatched by specified scheduler.
+                If not specified, the pod will be dispatched by default scheduler.
+              type: string
+            storage: {}
+            tolerations:
+              description: If specified, the pod's tolerations.
+              items: {}
+              type: array
+            version:
+              description: Version of MongoDB to be deployed.
+              type: string
+        status:
+          properties:
+            creationTime: {}
+            phase:
+              type: string
+            reason:
+              type: string
+  version: v1alpha1
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app: kubedb
+  name: redises.kubedb.com
+spec:
+  group: kubedb.com
+  names:
+    kind: Redis
+    listKind: RedisList
+    plural: redises
+    shortNames:
+    - rd
+    singular: redis
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      description: Redis defines a Redis database.
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata: {}
+        spec:
+          properties:
+            affinity: {}
+            doNotPause:
+              description: If DoNotPause is true, controller will prevent to delete
+                this Postgres object. Controller will create same Postgres object
+                and ignore other process.
+              type: boolean
+            imagePullSecrets:
+              description: ImagePullSecrets is an optional list of references to secrets
+                in the same namespace to use for pulling any of the images used by
+                this PodSpec. If specified, these secrets will be passed to individual
+                puller implementations for them to use.
+              items: {}
+              type: array
+            monitor: {}
+            nodeSelector:
+              description: NodeSelector is a selector which must be true for the pod
+                to fit on a node
+              type: object
+            replicas:
+              description: Number of instances to deploy for a Redis database.
+              format: int32
+              type: integer
+            resources: {}
+            schedulerName:
+              description: If specified, the pod will be dispatched by specified scheduler.
+                If not specified, the pod will be dispatched by default scheduler.
+              type: string
+            storage: {}
+            tolerations:
+              description: If specified, the pod's tolerations.
+              items: {}
+              type: array
+            version:
+              description: Version of Redis to be deployed.
+              type: string
+        status:
+          properties:
+            creationTime: {}
+            phase:
+              type: string
+            reason:
+              type: string
+  version: v1alpha1
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app: kubedb
+  name: memcacheds.kubedb.com
+spec:
+  group: kubedb.com
+  names:
+    kind: Memcached
+    listKind: MemcachedList
+    plural: memcacheds
+    shortNames:
+    - mc
+    singular: memcached
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      description: Memcached defines a Memcached database.
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata: {}
+        spec:
+          properties:
+            affinity: {}
+            doNotPause:
+              description: If DoNotPause is true, controller will prevent to delete
+                this Postgres object. Controller will create same Postgres object
+                and ignore other process.
+              type: boolean
+            imagePullSecrets:
+              description: ImagePullSecrets is an optional list of references to secrets
+                in the same namespace to use for pulling any of the images used by
+                this PodSpec. If specified, these secrets will be passed to individual
+                puller implementations for them to use.
+              items: {}
+              type: array
+            monitor: {}
+            nodeSelector:
+              description: NodeSelector is a selector which must be true for the pod
+                to fit on a node
+              type: object
+            replicas:
+              description: Number of instances to deploy for a Memcached database.
+              format: int32
+              type: integer
+            resources: {}
+            schedulerName:
+              description: If specified, the pod will be dispatched by specified scheduler.
+                If not specified, the pod will be dispatched by default scheduler.
+              type: string
+            tolerations:
+              description: If specified, the pod's tolerations.
+              items: {}
+              type: array
+            version:
+              description: Version of Memcached to be deployed.
+              type: string
+        status:
+          properties:
+            creationTime: {}
+            phase:
+              type: string
+            reason:
+              type: string
+  version: v1alpha1
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app: kubedb
+  name: snapshots.kubedb.com
 spec:
   group: kubedb.com
   names:
     kind: Snapshot
+    listKind: SnapshotList
     plural: snapshots
+    shortNames:
+    - snap
+    singular: snapshot
   scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata: {}
+        spec:
+          properties:
+            azure:
+              properties:
+                container:
+                  type: string
+                prefix:
+                  type: string
+            databaseName:
+              description: Database name
+              type: string
+            gcs:
+              properties:
+                bucket:
+                  type: string
+                prefix:
+                  type: string
+              required:
+              - bucket
+            local:
+              properties:
+                awsElasticBlockStore: {}
+                azureDisk: {}
+                azureFile: {}
+                cephfs: {}
+                cinder: {}
+                configMap: {}
+                downwardAPI: {}
+                emptyDir: {}
+                fc: {}
+                flexVolume: {}
+                flocker: {}
+                gcePersistentDisk: {}
+                gitRepo: {}
+                glusterfs: {}
+                hostPath: {}
+                iscsi: {}
+                mountPath:
+                  type: string
+                nfs: {}
+                persistentVolumeClaim: {}
+                photonPersistentDisk: {}
+                portworxVolume: {}
+                projected: {}
+                quobyte: {}
+                rbd: {}
+                scaleIO: {}
+                secret: {}
+                storageos: {}
+                subPath:
+                  type: string
+                vsphereVolume: {}
+            resources: {}
+            s3:
+              properties:
+                bucket:
+                  type: string
+                endpoint:
+                  type: string
+                prefix:
+                  type: string
+              required:
+              - bucket
+            storageSecretName:
+              type: string
+            swift:
+              properties:
+                container:
+                  type: string
+                prefix:
+                  type: string
+        status:
+          properties:
+            completionTime: {}
+            phase:
+              type: string
+            reason:
+              type: string
+            startTime: {}
   version: v1alpha1
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app: kubedb
+  name: dormantdatabases.kubedb.com
+spec:
+  group: kubedb.com
+  names:
+    kind: DormantDatabase
+    listKind: DormantDatabaseList
+    plural: dormantdatabases
+    shortNames:
+    - drmn
+    singular: dormantdatabase
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata: {}
+        spec:
+          properties:
+            origin:
+              properties:
+                metadata: {}
+                spec:
+                  properties:
+                    elasticsearch:
+                      properties:
+                        affinity: {}
+                        backupSchedule:
+                          properties:
+                            azure:
+                              properties:
+                                container:
+                                  type: string
+                                prefix:
+                                  type: string
+                            cronExpression:
+                              type: string
+                            gcs:
+                              properties:
+                                bucket:
+                                  type: string
+                                prefix:
+                                  type: string
+                              required:
+                              - bucket
+                            local:
+                              properties:
+                                awsElasticBlockStore: {}
+                                azureDisk: {}
+                                azureFile: {}
+                                cephfs: {}
+                                cinder: {}
+                                configMap: {}
+                                downwardAPI: {}
+                                emptyDir: {}
+                                fc: {}
+                                flexVolume: {}
+                                flocker: {}
+                                gcePersistentDisk: {}
+                                gitRepo: {}
+                                glusterfs: {}
+                                hostPath: {}
+                                iscsi: {}
+                                mountPath:
+                                  type: string
+                                nfs: {}
+                                persistentVolumeClaim: {}
+                                photonPersistentDisk: {}
+                                portworxVolume: {}
+                                projected: {}
+                                quobyte: {}
+                                rbd: {}
+                                scaleIO: {}
+                                secret: {}
+                                storageos: {}
+                                subPath:
+                                  type: string
+                                vsphereVolume: {}
+                            resources: {}
+                            s3:
+                              properties:
+                                bucket:
+                                  type: string
+                                endpoint:
+                                  type: string
+                                prefix:
+                                  type: string
+                              required:
+                              - bucket
+                            storageSecretName:
+                              type: string
+                            swift:
+                              properties:
+                                container:
+                                  type: string
+                                prefix:
+                                  type: string
+                        certificateSecret: {}
+                        databaseSecret: {}
+                        doNotPause:
+                          description: If DoNotPause is true, controller will prevent
+                            to delete this Elasticsearch object. Controller will create
+                            same Elasticsearch object and ignore other process.
+                          type: boolean
+                        enableSSL:
+                          description: To enable ssl in transport & http layer
+                          type: boolean
+                        imagePullSecrets:
+                          description: ImagePullSecrets is an optional list of references
+                            to secrets in the same namespace to use for pulling any
+                            of the images used by this PodSpec. If specified, these
+                            secrets will be passed to individual puller implementations
+                            for them to use.
+                          items: {}
+                          type: array
+                        init:
+                          properties:
+                            postgresWAL:
+                              properties:
+                                azure:
+                                  properties:
+                                    container:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                backupName:
+                                  type: string
+                                gcs:
+                                  properties:
+                                    bucket:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                  required:
+                                  - bucket
+                                local:
+                                  properties:
+                                    awsElasticBlockStore: {}
+                                    azureDisk: {}
+                                    azureFile: {}
+                                    cephfs: {}
+                                    cinder: {}
+                                    configMap: {}
+                                    downwardAPI: {}
+                                    emptyDir: {}
+                                    fc: {}
+                                    flexVolume: {}
+                                    flocker: {}
+                                    gcePersistentDisk: {}
+                                    gitRepo: {}
+                                    glusterfs: {}
+                                    hostPath: {}
+                                    iscsi: {}
+                                    mountPath:
+                                      type: string
+                                    nfs: {}
+                                    persistentVolumeClaim: {}
+                                    photonPersistentDisk: {}
+                                    portworxVolume: {}
+                                    projected: {}
+                                    quobyte: {}
+                                    rbd: {}
+                                    scaleIO: {}
+                                    secret: {}
+                                    storageos: {}
+                                    subPath:
+                                      type: string
+                                    vsphereVolume: {}
+                                pitr:
+                                  type: string
+                                s3:
+                                  properties:
+                                    bucket:
+                                      type: string
+                                    endpoint:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                  required:
+                                  - bucket
+                                storageSecretName:
+                                  type: string
+                                swift:
+                                  properties:
+                                    container:
+                                      type: string
+                                    prefix:
+                                      type: string
+                            scriptSource:
+                              properties:
+                                awsElasticBlockStore: {}
+                                azureDisk: {}
+                                azureFile: {}
+                                cephfs: {}
+                                cinder: {}
+                                configMap: {}
+                                downwardAPI: {}
+                                emptyDir: {}
+                                fc: {}
+                                flexVolume: {}
+                                flocker: {}
+                                gcePersistentDisk: {}
+                                gitRepo: {}
+                                glusterfs: {}
+                                hostPath: {}
+                                iscsi: {}
+                                nfs: {}
+                                persistentVolumeClaim: {}
+                                photonPersistentDisk: {}
+                                portworxVolume: {}
+                                projected: {}
+                                quobyte: {}
+                                rbd: {}
+                                scaleIO: {}
+                                scriptPath:
+                                  type: string
+                                secret: {}
+                                storageos: {}
+                                vsphereVolume: {}
+                            snapshotSource:
+                              properties:
+                                name:
+                                  type: string
+                                namespace:
+                                  type: string
+                        monitor: {}
+                        nodeSelector:
+                          description: NodeSelector is a selector which must be true
+                            for the pod to fit on a node
+                          type: object
+                        replicas:
+                          description: Number of instances to deploy for a Elasticsearch
+                            database.
+                          format: int32
+                          type: integer
+                        resources: {}
+                        schedulerName:
+                          description: If specified, the pod will be dispatched by
+                            specified scheduler. If not specified, the pod will be
+                            dispatched by default scheduler.
+                          type: string
+                        storage: {}
+                        tolerations:
+                          description: If specified, the pod's tolerations.
+                          items: {}
+                          type: array
+                        topology:
+                          properties:
+                            client:
+                              properties:
+                                prefix:
+                                  type: string
+                                replicas:
+                                  format: int32
+                                  type: integer
+                            data:
+                              properties:
+                                prefix:
+                                  type: string
+                                replicas:
+                                  format: int32
+                                  type: integer
+                            master:
+                              properties:
+                                prefix:
+                                  type: string
+                                replicas:
+                                  format: int32
+                                  type: integer
+                        version:
+                          description: Version of Elasticsearch to be deployed.
+                          type: string
+                    memcached:
+                      properties:
+                        affinity: {}
+                        doNotPause:
+                          description: If DoNotPause is true, controller will prevent
+                            to delete this Postgres object. Controller will create
+                            same Postgres object and ignore other process.
+                          type: boolean
+                        imagePullSecrets:
+                          description: ImagePullSecrets is an optional list of references
+                            to secrets in the same namespace to use for pulling any
+                            of the images used by this PodSpec. If specified, these
+                            secrets will be passed to individual puller implementations
+                            for them to use.
+                          items: {}
+                          type: array
+                        monitor: {}
+                        nodeSelector:
+                          description: NodeSelector is a selector which must be true
+                            for the pod to fit on a node
+                          type: object
+                        replicas:
+                          description: Number of instances to deploy for a Memcached
+                            database.
+                          format: int32
+                          type: integer
+                        resources: {}
+                        schedulerName:
+                          description: If specified, the pod will be dispatched by
+                            specified scheduler. If not specified, the pod will be
+                            dispatched by default scheduler.
+                          type: string
+                        tolerations:
+                          description: If specified, the pod's tolerations.
+                          items: {}
+                          type: array
+                        version:
+                          description: Version of Memcached to be deployed.
+                          type: string
+                    mongodb:
+                      properties:
+                        affinity: {}
+                        backupSchedule:
+                          properties:
+                            azure:
+                              properties:
+                                container:
+                                  type: string
+                                prefix:
+                                  type: string
+                            cronExpression:
+                              type: string
+                            gcs:
+                              properties:
+                                bucket:
+                                  type: string
+                                prefix:
+                                  type: string
+                              required:
+                              - bucket
+                            local:
+                              properties:
+                                awsElasticBlockStore: {}
+                                azureDisk: {}
+                                azureFile: {}
+                                cephfs: {}
+                                cinder: {}
+                                configMap: {}
+                                downwardAPI: {}
+                                emptyDir: {}
+                                fc: {}
+                                flexVolume: {}
+                                flocker: {}
+                                gcePersistentDisk: {}
+                                gitRepo: {}
+                                glusterfs: {}
+                                hostPath: {}
+                                iscsi: {}
+                                mountPath:
+                                  type: string
+                                nfs: {}
+                                persistentVolumeClaim: {}
+                                photonPersistentDisk: {}
+                                portworxVolume: {}
+                                projected: {}
+                                quobyte: {}
+                                rbd: {}
+                                scaleIO: {}
+                                secret: {}
+                                storageos: {}
+                                subPath:
+                                  type: string
+                                vsphereVolume: {}
+                            resources: {}
+                            s3:
+                              properties:
+                                bucket:
+                                  type: string
+                                endpoint:
+                                  type: string
+                                prefix:
+                                  type: string
+                              required:
+                              - bucket
+                            storageSecretName:
+                              type: string
+                            swift:
+                              properties:
+                                container:
+                                  type: string
+                                prefix:
+                                  type: string
+                        databaseSecret: {}
+                        doNotPause:
+                          description: If DoNotPause is true, controller will prevent
+                            to delete this Postgres object. Controller will create
+                            same Postgres object and ignore other process.
+                          type: boolean
+                        imagePullSecrets:
+                          description: ImagePullSecrets is an optional list of references
+                            to secrets in the same namespace to use for pulling any
+                            of the images used by this PodSpec. If specified, these
+                            secrets will be passed to individual puller implementations
+                            for them to use.
+                          items: {}
+                          type: array
+                        init:
+                          properties:
+                            postgresWAL:
+                              properties:
+                                azure:
+                                  properties:
+                                    container:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                backupName:
+                                  type: string
+                                gcs:
+                                  properties:
+                                    bucket:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                  required:
+                                  - bucket
+                                local:
+                                  properties:
+                                    awsElasticBlockStore: {}
+                                    azureDisk: {}
+                                    azureFile: {}
+                                    cephfs: {}
+                                    cinder: {}
+                                    configMap: {}
+                                    downwardAPI: {}
+                                    emptyDir: {}
+                                    fc: {}
+                                    flexVolume: {}
+                                    flocker: {}
+                                    gcePersistentDisk: {}
+                                    gitRepo: {}
+                                    glusterfs: {}
+                                    hostPath: {}
+                                    iscsi: {}
+                                    mountPath:
+                                      type: string
+                                    nfs: {}
+                                    persistentVolumeClaim: {}
+                                    photonPersistentDisk: {}
+                                    portworxVolume: {}
+                                    projected: {}
+                                    quobyte: {}
+                                    rbd: {}
+                                    scaleIO: {}
+                                    secret: {}
+                                    storageos: {}
+                                    subPath:
+                                      type: string
+                                    vsphereVolume: {}
+                                pitr:
+                                  type: string
+                                s3:
+                                  properties:
+                                    bucket:
+                                      type: string
+                                    endpoint:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                  required:
+                                  - bucket
+                                storageSecretName:
+                                  type: string
+                                swift:
+                                  properties:
+                                    container:
+                                      type: string
+                                    prefix:
+                                      type: string
+                            scriptSource:
+                              properties:
+                                awsElasticBlockStore: {}
+                                azureDisk: {}
+                                azureFile: {}
+                                cephfs: {}
+                                cinder: {}
+                                configMap: {}
+                                downwardAPI: {}
+                                emptyDir: {}
+                                fc: {}
+                                flexVolume: {}
+                                flocker: {}
+                                gcePersistentDisk: {}
+                                gitRepo: {}
+                                glusterfs: {}
+                                hostPath: {}
+                                iscsi: {}
+                                nfs: {}
+                                persistentVolumeClaim: {}
+                                photonPersistentDisk: {}
+                                portworxVolume: {}
+                                projected: {}
+                                quobyte: {}
+                                rbd: {}
+                                scaleIO: {}
+                                scriptPath:
+                                  type: string
+                                secret: {}
+                                storageos: {}
+                                vsphereVolume: {}
+                            snapshotSource:
+                              properties:
+                                name:
+                                  type: string
+                                namespace:
+                                  type: string
+                        monitor: {}
+                        nodeSelector:
+                          description: NodeSelector is a selector which must be true
+                            for the pod to fit on a node
+                          type: object
+                        replicas:
+                          description: Number of instances to deploy for a MongoDB
+                            database.
+                          format: int32
+                          type: integer
+                        resources: {}
+                        schedulerName:
+                          description: If specified, the pod will be dispatched by
+                            specified scheduler. If not specified, the pod will be
+                            dispatched by default scheduler.
+                          type: string
+                        storage: {}
+                        tolerations:
+                          description: If specified, the pod's tolerations.
+                          items: {}
+                          type: array
+                        version:
+                          description: Version of MongoDB to be deployed.
+                          type: string
+                    mysql:
+                      properties:
+                        affinity: {}
+                        backupSchedule:
+                          properties:
+                            azure:
+                              properties:
+                                container:
+                                  type: string
+                                prefix:
+                                  type: string
+                            cronExpression:
+                              type: string
+                            gcs:
+                              properties:
+                                bucket:
+                                  type: string
+                                prefix:
+                                  type: string
+                              required:
+                              - bucket
+                            local:
+                              properties:
+                                awsElasticBlockStore: {}
+                                azureDisk: {}
+                                azureFile: {}
+                                cephfs: {}
+                                cinder: {}
+                                configMap: {}
+                                downwardAPI: {}
+                                emptyDir: {}
+                                fc: {}
+                                flexVolume: {}
+                                flocker: {}
+                                gcePersistentDisk: {}
+                                gitRepo: {}
+                                glusterfs: {}
+                                hostPath: {}
+                                iscsi: {}
+                                mountPath:
+                                  type: string
+                                nfs: {}
+                                persistentVolumeClaim: {}
+                                photonPersistentDisk: {}
+                                portworxVolume: {}
+                                projected: {}
+                                quobyte: {}
+                                rbd: {}
+                                scaleIO: {}
+                                secret: {}
+                                storageos: {}
+                                subPath:
+                                  type: string
+                                vsphereVolume: {}
+                            resources: {}
+                            s3:
+                              properties:
+                                bucket:
+                                  type: string
+                                endpoint:
+                                  type: string
+                                prefix:
+                                  type: string
+                              required:
+                              - bucket
+                            storageSecretName:
+                              type: string
+                            swift:
+                              properties:
+                                container:
+                                  type: string
+                                prefix:
+                                  type: string
+                        databaseSecret: {}
+                        doNotPause:
+                          description: If DoNotPause is true, controller will prevent
+                            to delete this Mysql object. Controller will create same
+                            Mysql object and ignore other process.
+                          type: boolean
+                        imagePullSecrets:
+                          description: ImagePullSecrets is an optional list of references
+                            to secrets in the same namespace to use for pulling any
+                            of the images used by this PodSpec. If specified, these
+                            secrets will be passed to individual puller implementations
+                            for them to use.
+                          items: {}
+                          type: array
+                        init:
+                          properties:
+                            postgresWAL:
+                              properties:
+                                azure:
+                                  properties:
+                                    container:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                backupName:
+                                  type: string
+                                gcs:
+                                  properties:
+                                    bucket:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                  required:
+                                  - bucket
+                                local:
+                                  properties:
+                                    awsElasticBlockStore: {}
+                                    azureDisk: {}
+                                    azureFile: {}
+                                    cephfs: {}
+                                    cinder: {}
+                                    configMap: {}
+                                    downwardAPI: {}
+                                    emptyDir: {}
+                                    fc: {}
+                                    flexVolume: {}
+                                    flocker: {}
+                                    gcePersistentDisk: {}
+                                    gitRepo: {}
+                                    glusterfs: {}
+                                    hostPath: {}
+                                    iscsi: {}
+                                    mountPath:
+                                      type: string
+                                    nfs: {}
+                                    persistentVolumeClaim: {}
+                                    photonPersistentDisk: {}
+                                    portworxVolume: {}
+                                    projected: {}
+                                    quobyte: {}
+                                    rbd: {}
+                                    scaleIO: {}
+                                    secret: {}
+                                    storageos: {}
+                                    subPath:
+                                      type: string
+                                    vsphereVolume: {}
+                                pitr:
+                                  type: string
+                                s3:
+                                  properties:
+                                    bucket:
+                                      type: string
+                                    endpoint:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                  required:
+                                  - bucket
+                                storageSecretName:
+                                  type: string
+                                swift:
+                                  properties:
+                                    container:
+                                      type: string
+                                    prefix:
+                                      type: string
+                            scriptSource:
+                              properties:
+                                awsElasticBlockStore: {}
+                                azureDisk: {}
+                                azureFile: {}
+                                cephfs: {}
+                                cinder: {}
+                                configMap: {}
+                                downwardAPI: {}
+                                emptyDir: {}
+                                fc: {}
+                                flexVolume: {}
+                                flocker: {}
+                                gcePersistentDisk: {}
+                                gitRepo: {}
+                                glusterfs: {}
+                                hostPath: {}
+                                iscsi: {}
+                                nfs: {}
+                                persistentVolumeClaim: {}
+                                photonPersistentDisk: {}
+                                portworxVolume: {}
+                                projected: {}
+                                quobyte: {}
+                                rbd: {}
+                                scaleIO: {}
+                                scriptPath:
+                                  type: string
+                                secret: {}
+                                storageos: {}
+                                vsphereVolume: {}
+                            snapshotSource:
+                              properties:
+                                name:
+                                  type: string
+                                namespace:
+                                  type: string
+                        monitor: {}
+                        nodeSelector:
+                          description: NodeSelector is a selector which must be true
+                            for the pod to fit on a node
+                          type: object
+                        replicas:
+                          description: Number of instances to deploy for a MySQL database.
+                          format: int32
+                          type: integer
+                        resources: {}
+                        schedulerName:
+                          description: If specified, the pod will be dispatched by
+                            specified scheduler. If not specified, the pod will be
+                            dispatched by default scheduler.
+                          type: string
+                        storage: {}
+                        tolerations:
+                          description: If specified, the pod's tolerations.
+                          items: {}
+                          type: array
+                        version:
+                          description: Version of MySQL to be deployed.
+                          type: string
+                    postgres:
+                      properties:
+                        affinity: {}
+                        archiver:
+                          properties:
+                            storage:
+                              properties:
+                                azure:
+                                  properties:
+                                    container:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                gcs:
+                                  properties:
+                                    bucket:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                  required:
+                                  - bucket
+                                local:
+                                  properties:
+                                    awsElasticBlockStore: {}
+                                    azureDisk: {}
+                                    azureFile: {}
+                                    cephfs: {}
+                                    cinder: {}
+                                    configMap: {}
+                                    downwardAPI: {}
+                                    emptyDir: {}
+                                    fc: {}
+                                    flexVolume: {}
+                                    flocker: {}
+                                    gcePersistentDisk: {}
+                                    gitRepo: {}
+                                    glusterfs: {}
+                                    hostPath: {}
+                                    iscsi: {}
+                                    mountPath:
+                                      type: string
+                                    nfs: {}
+                                    persistentVolumeClaim: {}
+                                    photonPersistentDisk: {}
+                                    portworxVolume: {}
+                                    projected: {}
+                                    quobyte: {}
+                                    rbd: {}
+                                    scaleIO: {}
+                                    secret: {}
+                                    storageos: {}
+                                    subPath:
+                                      type: string
+                                    vsphereVolume: {}
+                                s3:
+                                  properties:
+                                    bucket:
+                                      type: string
+                                    endpoint:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                  required:
+                                  - bucket
+                                storageSecretName:
+                                  type: string
+                                swift:
+                                  properties:
+                                    container:
+                                      type: string
+                                    prefix:
+                                      type: string
+                        backupSchedule:
+                          properties:
+                            azure:
+                              properties:
+                                container:
+                                  type: string
+                                prefix:
+                                  type: string
+                            cronExpression:
+                              type: string
+                            gcs:
+                              properties:
+                                bucket:
+                                  type: string
+                                prefix:
+                                  type: string
+                              required:
+                              - bucket
+                            local:
+                              properties:
+                                awsElasticBlockStore: {}
+                                azureDisk: {}
+                                azureFile: {}
+                                cephfs: {}
+                                cinder: {}
+                                configMap: {}
+                                downwardAPI: {}
+                                emptyDir: {}
+                                fc: {}
+                                flexVolume: {}
+                                flocker: {}
+                                gcePersistentDisk: {}
+                                gitRepo: {}
+                                glusterfs: {}
+                                hostPath: {}
+                                iscsi: {}
+                                mountPath:
+                                  type: string
+                                nfs: {}
+                                persistentVolumeClaim: {}
+                                photonPersistentDisk: {}
+                                portworxVolume: {}
+                                projected: {}
+                                quobyte: {}
+                                rbd: {}
+                                scaleIO: {}
+                                secret: {}
+                                storageos: {}
+                                subPath:
+                                  type: string
+                                vsphereVolume: {}
+                            resources: {}
+                            s3:
+                              properties:
+                                bucket:
+                                  type: string
+                                endpoint:
+                                  type: string
+                                prefix:
+                                  type: string
+                              required:
+                              - bucket
+                            storageSecretName:
+                              type: string
+                            swift:
+                              properties:
+                                container:
+                                  type: string
+                                prefix:
+                                  type: string
+                        databaseSecret: {}
+                        doNotPause:
+                          description: If DoNotPause is true, controller will prevent
+                            to delete this Postgres object. Controller will create
+                            same Postgres object and ignore other process.
+                          type: boolean
+                        imagePullSecrets:
+                          description: ImagePullSecrets is an optional list of references
+                            to secrets in the same namespace to use for pulling any
+                            of the images used by this PodSpec. If specified, these
+                            secrets will be passed to individual puller implementations
+                            for them to use.
+                          items: {}
+                          type: array
+                        init:
+                          properties:
+                            postgresWAL:
+                              properties:
+                                azure:
+                                  properties:
+                                    container:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                backupName:
+                                  type: string
+                                gcs:
+                                  properties:
+                                    bucket:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                  required:
+                                  - bucket
+                                local:
+                                  properties:
+                                    awsElasticBlockStore: {}
+                                    azureDisk: {}
+                                    azureFile: {}
+                                    cephfs: {}
+                                    cinder: {}
+                                    configMap: {}
+                                    downwardAPI: {}
+                                    emptyDir: {}
+                                    fc: {}
+                                    flexVolume: {}
+                                    flocker: {}
+                                    gcePersistentDisk: {}
+                                    gitRepo: {}
+                                    glusterfs: {}
+                                    hostPath: {}
+                                    iscsi: {}
+                                    mountPath:
+                                      type: string
+                                    nfs: {}
+                                    persistentVolumeClaim: {}
+                                    photonPersistentDisk: {}
+                                    portworxVolume: {}
+                                    projected: {}
+                                    quobyte: {}
+                                    rbd: {}
+                                    scaleIO: {}
+                                    secret: {}
+                                    storageos: {}
+                                    subPath:
+                                      type: string
+                                    vsphereVolume: {}
+                                pitr:
+                                  type: string
+                                s3:
+                                  properties:
+                                    bucket:
+                                      type: string
+                                    endpoint:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                  required:
+                                  - bucket
+                                storageSecretName:
+                                  type: string
+                                swift:
+                                  properties:
+                                    container:
+                                      type: string
+                                    prefix:
+                                      type: string
+                            scriptSource:
+                              properties:
+                                awsElasticBlockStore: {}
+                                azureDisk: {}
+                                azureFile: {}
+                                cephfs: {}
+                                cinder: {}
+                                configMap: {}
+                                downwardAPI: {}
+                                emptyDir: {}
+                                fc: {}
+                                flexVolume: {}
+                                flocker: {}
+                                gcePersistentDisk: {}
+                                gitRepo: {}
+                                glusterfs: {}
+                                hostPath: {}
+                                iscsi: {}
+                                nfs: {}
+                                persistentVolumeClaim: {}
+                                photonPersistentDisk: {}
+                                portworxVolume: {}
+                                projected: {}
+                                quobyte: {}
+                                rbd: {}
+                                scaleIO: {}
+                                scriptPath:
+                                  type: string
+                                secret: {}
+                                storageos: {}
+                                vsphereVolume: {}
+                            snapshotSource:
+                              properties:
+                                name:
+                                  type: string
+                                namespace:
+                                  type: string
+                        monitor: {}
+                        nodeSelector:
+                          description: NodeSelector is a selector which must be true
+                            for the pod to fit on a node
+                          type: object
+                        replicas:
+                          description: Number of instances to deploy for a Postgres
+                            database.
+                          format: int32
+                          type: integer
+                        resources: {}
+                        schedulerName:
+                          description: If specified, the pod will be dispatched by
+                            specified scheduler. If not specified, the pod will be
+                            dispatched by default scheduler.
+                          type: string
+                        standbyMode:
+                          description: Standby mode
+                          type: string
+                        storage: {}
+                        streamingMode:
+                          description: Streaming mode
+                          type: string
+                        tolerations:
+                          description: If specified, the pod's tolerations.
+                          items: {}
+                          type: array
+                        version:
+                          description: Version of Postgres to be deployed.
+                          type: string
+                    redis:
+                      properties:
+                        affinity: {}
+                        doNotPause:
+                          description: If DoNotPause is true, controller will prevent
+                            to delete this Postgres object. Controller will create
+                            same Postgres object and ignore other process.
+                          type: boolean
+                        imagePullSecrets:
+                          description: ImagePullSecrets is an optional list of references
+                            to secrets in the same namespace to use for pulling any
+                            of the images used by this PodSpec. If specified, these
+                            secrets will be passed to individual puller implementations
+                            for them to use.
+                          items: {}
+                          type: array
+                        monitor: {}
+                        nodeSelector:
+                          description: NodeSelector is a selector which must be true
+                            for the pod to fit on a node
+                          type: object
+                        replicas:
+                          description: Number of instances to deploy for a Redis database.
+                          format: int32
+                          type: integer
+                        resources: {}
+                        schedulerName:
+                          description: If specified, the pod will be dispatched by
+                            specified scheduler. If not specified, the pod will be
+                            dispatched by default scheduler.
+                          type: string
+                        storage: {}
+                        tolerations:
+                          description: If specified, the pod's tolerations.
+                          items: {}
+                          type: array
+                        version:
+                          description: Version of Redis to be deployed.
+                          type: string
+            resume:
+              description: If true, resumes database
+              type: boolean
+            wipeOut:
+              description: If true, invoke wipe out operation
+              type: boolean
+        status:
+          properties:
+            creationTime: {}
+            pausingTime: {}
+            phase:
+              type: string
+            reason:
+              type: string
+            wipeOutTime: {}
+  version: v1alpha1
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
