@@ -103,7 +103,6 @@ func (p MongoDB) CustomResourceDefinition() *crd_api.CustomResourceDefinition {
 		Plural:        ResourcePluralMongoDB,
 		Singular:      ResourceSingularMongoDB,
 		Kind:          ResourceKindMongoDB,
-		ListKind:      ResourceKindMongoDB + "List",
 		ShortNames:    []string{ResourceCodeMongoDB},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Labels: crdutils.Labels{

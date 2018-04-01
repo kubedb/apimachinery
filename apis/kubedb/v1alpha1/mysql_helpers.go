@@ -105,7 +105,6 @@ func (m MySQL) CustomResourceDefinition() *crd_api.CustomResourceDefinition {
 		Plural:        ResourcePluralMySQL,
 		Singular:      ResourceSingularMySQL,
 		Kind:          ResourceKindMySQL,
-		ListKind:      ResourceKindMySQL + "List",
 		ShortNames:    []string{ResourceCodeMySQL},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Labels: crdutils.Labels{

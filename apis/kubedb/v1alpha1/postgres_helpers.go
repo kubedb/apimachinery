@@ -109,7 +109,6 @@ func (p Postgres) CustomResourceDefinition() *crd_api.CustomResourceDefinition {
 		Plural:        ResourcePluralPostgres,
 		Singular:      ResourceSingularPostgres,
 		Kind:          ResourceKindPostgres,
-		ListKind:      ResourceKindPostgres + "List",
 		ShortNames:    []string{ResourceCodePostgres},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Labels: crdutils.Labels{

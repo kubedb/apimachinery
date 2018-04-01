@@ -99,7 +99,6 @@ func (s Snapshot) CustomResourceDefinition() *crd_api.CustomResourceDefinition {
 		Plural:        ResourcePluralSnapshot,
 		Singular:      ResourceSingularSnapshot,
 		Kind:          ResourceKindSnapshot,
-		ListKind:      ResourceKindSnapshot + "List",
 		ShortNames:    []string{ResourceCodeSnapshot},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Labels: crdutils.Labels{
