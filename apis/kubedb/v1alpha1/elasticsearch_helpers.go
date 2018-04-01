@@ -109,7 +109,6 @@ func (r Elasticsearch) CustomResourceDefinition() *crd_api.CustomResourceDefinit
 		Plural:        ResourcePluralElasticsearch,
 		Singular:      ResourceSingularElasticsearch,
 		Kind:          ResourceKindElasticsearch,
-		ListKind:      ResourceKindElasticsearch + "List",
 		ShortNames:    []string{ResourceCodeElasticsearch},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Labels: crdutils.Labels{

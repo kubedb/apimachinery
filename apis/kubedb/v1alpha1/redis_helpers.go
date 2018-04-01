@@ -103,7 +103,6 @@ func (r Redis) CustomResourceDefinition() *crd_api.CustomResourceDefinition {
 		Plural:        ResourcePluralRedis,
 		Singular:      ResourceSingularRedis,
 		Kind:          ResourceKindRedis,
-		ListKind:      ResourceKindRedis + "List",
 		ShortNames:    []string{ResourceCodeRedis},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Labels: crdutils.Labels{

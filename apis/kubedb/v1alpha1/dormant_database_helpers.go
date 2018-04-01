@@ -45,7 +45,6 @@ func (d DormantDatabase) CustomResourceDefinition() *crd_api.CustomResourceDefin
 		Plural:        ResourcePluralDormantDatabase,
 		Singular:      ResourceSingularDormantDatabase,
 		Kind:          ResourceKindDormantDatabase,
-		ListKind:      ResourceKindDormantDatabase + "List",
 		ShortNames:    []string{ResourceCodeDormantDatabase},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Labels: crdutils.Labels{

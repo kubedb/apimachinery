@@ -103,7 +103,6 @@ func (m Memcached) CustomResourceDefinition() *crd_api.CustomResourceDefinition 
 		Plural:        ResourcePluralMemcached,
 		Singular:      ResourceSingularMemcached,
 		Kind:          ResourceKindMemcached,
-		ListKind:      ResourceKindMemcached + "List",
 		ShortNames:    []string{ResourceCodeMemcached},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Labels: crdutils.Labels{
