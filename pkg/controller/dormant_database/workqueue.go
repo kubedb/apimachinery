@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/appscode/go/log"
-	core_util "github.com/appscode/kutil/core/v1"
 	meta_util "github.com/appscode/kutil/meta"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"github.com/kubedb/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
@@ -32,12 +31,8 @@ func (c *Controller) initWatcher() {
 			}
 		},
 		DeleteFunc: func(obj interface{}) {
-			// IndexerInformer uses a delta queue, therefore for deletes we have to use this
-			// key function.
-			key, err := cache.DeletionHandlingMetaNamespaceKeyFunc(obj)
-			if err == nil {
-				c.queue.Add(key)
-			}
+			// Deletion of Resources are handled in MutatingWebhook
+			// So, no need to handle DeleteFunc
 		},
 		UpdateFunc: func(old, new interface{}) {
 			oldObj, ok := old.(*api.DormantDatabase)
@@ -51,7 +46,7 @@ func (c *Controller) initWatcher() {
 				return
 			}
 
-			if newObj.DeletionTimestamp != nil || !dormantDatabaseEqual(oldObj, newObj) {
+			if !dormantDatabaseEqual(oldObj, newObj) {
 				key, err := cache.MetaNamespaceKeyFunc(new)
 				if err == nil {
 					c.queue.Add(key)
@@ -153,29 +148,10 @@ func (c *Controller) runDormantDatabase(key string) error {
 		// Note that you also have to check the uid if you have a local controlled resource, which
 		// is dependent on the actual instance, to detect that a DormantDatabase was recreated with the same name
 		dormantDatabase := obj.(*api.DormantDatabase).DeepCopy()
-		if dormantDatabase.DeletionTimestamp != nil {
-			if core_util.HasFinalizer(dormantDatabase.ObjectMeta, "kubedb.com") {
-				util.AssignTypeKind(dormantDatabase)
-				if err := c.delete(dormantDatabase); err != nil {
-					log.Errorln(err)
-					return err
-				}
-				dormantDatabase, _, err = util.PatchDormantDatabase(c.ExtClient, dormantDatabase, func(in *api.DormantDatabase) *api.DormantDatabase {
-					in.ObjectMeta = core_util.RemoveFinalizer(in.ObjectMeta, "kubedb.com")
-					return in
-				})
-				return err
-			}
-		} else {
-			dormantDatabase, _, err = util.PatchDormantDatabase(c.ExtClient, dormantDatabase, func(in *api.DormantDatabase) *api.DormantDatabase {
-				in.ObjectMeta = core_util.AddFinalizer(in.ObjectMeta, "kubedb.com")
-				return in
-			})
-			util.AssignTypeKind(dormantDatabase)
-			if err := c.create(dormantDatabase); err != nil {
-				log.Errorln(err)
-				return err
-			}
+		util.AssignTypeKind(dormantDatabase)
+		if err := c.create(dormantDatabase); err != nil {
+			log.Errorln(err)
+			return err
 		}
 	}
 	return nil
