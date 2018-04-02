@@ -23,13 +23,13 @@ const (
 type MySQL struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              MySQLSpec   `json:"spec,omitempty"`
+	Spec              MySQLSpec   `json:"spec"`
 	Status            MySQLStatus `json:"status,omitempty"`
 }
 
 type MySQLSpec struct {
 	// Version of MySQL to be deployed.
-	Version types.StrYo `json:"version,omitempty"`
+	Version types.StrYo `json:"version"`
 	// Number of instances to deploy for a MySQL database.
 	Replicas *int32 `json:"replicas,omitempty"`
 	// Storage spec to specify how storage shall be used.

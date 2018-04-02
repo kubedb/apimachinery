@@ -10,7 +10,6 @@ spec:
   group: kubedb.com
   names:
     kind: Postgres
-    listKind: PostgresList
     plural: postgreses
     shortNames:
     - pg
@@ -324,6 +323,8 @@ spec:
             version:
               description: Version of Postgres to be deployed.
               type: string
+          required:
+          - version
         status:
           properties:
             creationTime: {}
@@ -331,6 +332,8 @@ spec:
               type: string
             reason:
               type: string
+      required:
+      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -349,7 +352,6 @@ spec:
   group: kubedb.com
   names:
     kind: Elasticsearch
-    listKind: ElasticsearchList
     plural: elasticsearches
     shortNames:
     - es
@@ -615,6 +617,8 @@ spec:
             version:
               description: Version of Elasticsearch to be deployed.
               type: string
+          required:
+          - version
         status:
           properties:
             creationTime: {}
@@ -622,6 +626,8 @@ spec:
               type: string
             reason:
               type: string
+      required:
+      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -640,7 +646,6 @@ spec:
   group: kubedb.com
   names:
     kind: MySQL
-    listKind: MySQLList
     plural: mysqls
     shortNames:
     - my
@@ -879,6 +884,8 @@ spec:
             version:
               description: Version of MySQL to be deployed.
               type: string
+          required:
+          - version
         status:
           properties:
             creationTime: {}
@@ -886,6 +893,8 @@ spec:
               type: string
             reason:
               type: string
+      required:
+      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -904,7 +913,6 @@ spec:
   group: kubedb.com
   names:
     kind: MongoDB
-    listKind: MongoDBList
     plural: mongodbs
     shortNames:
     - mg
@@ -1143,6 +1151,8 @@ spec:
             version:
               description: Version of MongoDB to be deployed.
               type: string
+          required:
+          - version
         status:
           properties:
             creationTime: {}
@@ -1150,6 +1160,8 @@ spec:
               type: string
             reason:
               type: string
+      required:
+      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -1168,7 +1180,6 @@ spec:
   group: kubedb.com
   names:
     kind: Redis
-    listKind: RedisList
     plural: redises
     shortNames:
     - rd
@@ -1226,6 +1237,8 @@ spec:
             version:
               description: Version of Redis to be deployed.
               type: string
+          required:
+          - version
         status:
           properties:
             creationTime: {}
@@ -1233,6 +1246,8 @@ spec:
               type: string
             reason:
               type: string
+      required:
+      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -1251,7 +1266,6 @@ spec:
   group: kubedb.com
   names:
     kind: Memcached
-    listKind: MemcachedList
     plural: memcacheds
     shortNames:
     - mc
@@ -1308,6 +1322,8 @@ spec:
             version:
               description: Version of Memcached to be deployed.
               type: string
+          required:
+          - version
         status:
           properties:
             creationTime: {}
@@ -1315,6 +1331,8 @@ spec:
               type: string
             reason:
               type: string
+      required:
+      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -1333,7 +1351,6 @@ spec:
   group: kubedb.com
   names:
     kind: Snapshot
-    listKind: SnapshotList
     plural: snapshots
     shortNames:
     - snap
@@ -1424,6 +1441,8 @@ spec:
                   type: string
                 prefix:
                   type: string
+          required:
+          - databaseName
         status:
           properties:
             completionTime: {}
@@ -1432,6 +1451,8 @@ spec:
             reason:
               type: string
             startTime: {}
+      required:
+      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -1450,7 +1471,6 @@ spec:
   group: kubedb.com
   names:
     kind: DormantDatabase
-    listKind: DormantDatabaseList
     plural: dormantdatabases
     shortNames:
     - drmn
@@ -1725,6 +1745,8 @@ spec:
                         version:
                           description: Version of Elasticsearch to be deployed.
                           type: string
+                      required:
+                      - version
                     memcached:
                       properties:
                         affinity: {}
@@ -1764,6 +1786,8 @@ spec:
                         version:
                           description: Version of Memcached to be deployed.
                           type: string
+                      required:
+                      - version
                     mongodb:
                       properties:
                         affinity: {}
@@ -1985,6 +2009,8 @@ spec:
                         version:
                           description: Version of MongoDB to be deployed.
                           type: string
+                      required:
+                      - version
                     mysql:
                       properties:
                         affinity: {}
@@ -2205,6 +2231,8 @@ spec:
                         version:
                           description: Version of MySQL to be deployed.
                           type: string
+                      required:
+                      - version
                     postgres:
                       properties:
                         affinity: {}
@@ -2501,6 +2529,8 @@ spec:
                         version:
                           description: Version of Postgres to be deployed.
                           type: string
+                      required:
+                      - version
                     redis:
                       properties:
                         affinity: {}
@@ -2540,12 +2570,19 @@ spec:
                         version:
                           description: Version of Redis to be deployed.
                           type: string
+                      required:
+                      - version
+              required:
+              - metadata
+              - spec
             resume:
               description: If true, resumes database
               type: boolean
             wipeOut:
               description: If true, invoke wipe out operation
               type: boolean
+          required:
+          - origin
         status:
           properties:
             creationTime: {}
@@ -2555,6 +2592,8 @@ spec:
             reason:
               type: string
             wipeOutTime: {}
+      required:
+      - spec
   version: v1alpha1
 status:
   acceptedNames:

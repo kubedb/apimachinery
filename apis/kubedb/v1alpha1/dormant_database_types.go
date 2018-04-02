@@ -19,7 +19,7 @@ const (
 type DormantDatabase struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              DormantDatabaseSpec   `json:"spec,omitempty"`
+	Spec              DormantDatabaseSpec   `json:"spec"`
 	Status            DormantDatabaseStatus `json:"status,omitempty"`
 }
 
@@ -31,13 +31,13 @@ type DormantDatabaseSpec struct {
 	// +optional
 	Resume bool `json:"resume,omitempty"`
 	// Origin to store original database information
-	Origin Origin `json:"origin,omitempty"`
+	Origin Origin `json:"origin"`
 }
 
 type Origin struct {
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata"`
 	// Origin Spec to store original database Spec
-	Spec OriginSpec `json:"spec,omitempty"`
+	Spec OriginSpec `json:"spec"`
 }
 
 type OriginSpec struct {

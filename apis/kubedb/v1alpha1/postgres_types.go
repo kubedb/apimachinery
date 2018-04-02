@@ -23,13 +23,13 @@ const (
 type Postgres struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              PostgresSpec   `json:"spec,omitempty"`
+	Spec              PostgresSpec   `json:"spec"`
 	Status            PostgresStatus `json:"status,omitempty"`
 }
 
 type PostgresSpec struct {
 	// Version of Postgres to be deployed.
-	Version types.StrYo `json:"version,omitempty"`
+	Version types.StrYo `json:"version"`
 	// Number of instances to deploy for a Postgres database.
 	Replicas *int32 `json:"replicas,omitempty"`
 	// Standby mode

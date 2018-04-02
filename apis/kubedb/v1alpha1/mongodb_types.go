@@ -23,13 +23,13 @@ const (
 type MongoDB struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              MongoDBSpec   `json:"spec,omitempty"`
+	Spec              MongoDBSpec   `json:"spec"`
 	Status            MongoDBStatus `json:"status,omitempty"`
 }
 
 type MongoDBSpec struct {
 	// Version of MongoDB to be deployed.
-	Version types.StrYo `json:"version,omitempty"`
+	Version types.StrYo `json:"version"`
 	// Number of instances to deploy for a MongoDB database.
 	Replicas *int32 `json:"replicas,omitempty"`
 	// Storage spec to specify how storage shall be used.

@@ -20,13 +20,13 @@ const (
 type Snapshot struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              SnapshotSpec   `json:"spec,omitempty"`
+	Spec              SnapshotSpec   `json:"spec"`
 	Status            SnapshotStatus `json:"status,omitempty"`
 }
 
 type SnapshotSpec struct {
 	// Database name
-	DatabaseName string `json:"databaseName,omitempty"`
+	DatabaseName string `json:"databaseName"`
 	// Snapshot Spec
 	SnapshotStorageSpec `json:",inline"`
 	// Compute Resources required by the sidecar container.

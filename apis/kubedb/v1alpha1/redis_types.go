@@ -23,13 +23,13 @@ const (
 type Redis struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              RedisSpec   `json:"spec,omitempty"`
+	Spec              RedisSpec   `json:"spec"`
 	Status            RedisStatus `json:"status,omitempty"`
 }
 
 type RedisSpec struct {
 	// Version of Redis to be deployed.
-	Version types.StrYo `json:"version,omitempty"`
+	Version types.StrYo `json:"version"`
 	// Number of instances to deploy for a Redis database.
 	Replicas *int32 `json:"replicas,omitempty"`
 	// Storage spec to specify how storage shall be used.
