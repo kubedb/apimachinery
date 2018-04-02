@@ -23,7 +23,7 @@ const (
 type MongoDB struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              MongoDBSpec   `json:"spec"`
+	Spec              MongoDBSpec   `json:"spec,omitempty"`
 	Status            MongoDBStatus `json:"status,omitempty"`
 }
 

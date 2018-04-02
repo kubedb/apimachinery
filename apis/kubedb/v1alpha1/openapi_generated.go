@@ -135,7 +135,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 							},
 						},
 					},
-					Required: []string{"spec"},
 				},
 			},
 			Dependencies: []string{
@@ -286,7 +285,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 							},
 						},
 					},
-					Required: []string{"spec"},
 				},
 			},
 			Dependencies: []string{
@@ -849,7 +847,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 							},
 						},
 					},
-					Required: []string{"spec"},
 				},
 			},
 			Dependencies: []string{
@@ -1056,7 +1053,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 							},
 						},
 					},
-					Required: []string{"spec"},
 				},
 			},
 			Dependencies: []string{
@@ -1287,7 +1283,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 							},
 						},
 					},
-					Required: []string{"spec"},
 				},
 			},
 			Dependencies: []string{
@@ -1499,7 +1494,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 							},
 						},
 					},
-					Required: []string{"metadata", "spec"},
+					Required: []string{"spec"},
 				},
 			},
 			Dependencies: []string{
@@ -1586,7 +1581,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 							},
 						},
 					},
-					Required: []string{"spec"},
 				},
 			},
 			Dependencies: []string{
@@ -1980,7 +1974,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 							},
 						},
 					},
-					Required: []string{"spec"},
 				},
 			},
 			Dependencies: []string{
@@ -2491,7 +2484,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 							},
 						},
 					},
-					Required: []string{"spec"},
 				},
 			},
 			Dependencies: []string{

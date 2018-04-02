@@ -332,8 +332,6 @@ spec:
               type: string
             reason:
               type: string
-      required:
-      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -626,8 +624,6 @@ spec:
               type: string
             reason:
               type: string
-      required:
-      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -893,8 +889,6 @@ spec:
               type: string
             reason:
               type: string
-      required:
-      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -1160,8 +1154,6 @@ spec:
               type: string
             reason:
               type: string
-      required:
-      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -1246,8 +1238,6 @@ spec:
               type: string
             reason:
               type: string
-      required:
-      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -1331,8 +1321,6 @@ spec:
               type: string
             reason:
               type: string
-      required:
-      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -1451,8 +1439,6 @@ spec:
             reason:
               type: string
             startTime: {}
-      required:
-      - spec
   version: v1alpha1
 status:
   acceptedNames:
@@ -2573,7 +2559,6 @@ spec:
                       required:
                       - version
               required:
-              - metadata
               - spec
             resume:
               description: If true, resumes database
@@ -2592,8 +2577,6 @@ spec:
             reason:
               type: string
             wipeOutTime: {}
-      required:
-      - spec
   version: v1alpha1
 status:
   acceptedNames:

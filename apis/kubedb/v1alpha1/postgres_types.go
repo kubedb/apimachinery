@@ -23,7 +23,7 @@ const (
 type Postgres struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              PostgresSpec   `json:"spec"`
+	Spec              PostgresSpec   `json:"spec,omitempty"`
 	Status            PostgresStatus `json:"status,omitempty"`
 }
 

@@ -23,7 +23,7 @@ const (
 type Elasticsearch struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              ElasticsearchSpec   `json:"spec"`
+	Spec              ElasticsearchSpec   `json:"spec,omitempty"`
 	Status            ElasticsearchStatus `json:"status,omitempty"`
 }
 

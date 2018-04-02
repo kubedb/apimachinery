@@ -20,7 +20,7 @@ const (
 type Snapshot struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              SnapshotSpec   `json:"spec"`
+	Spec              SnapshotSpec   `json:"spec,omitempty"`
 	Status            SnapshotStatus `json:"status,omitempty"`
 }
 

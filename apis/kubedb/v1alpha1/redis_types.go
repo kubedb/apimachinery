@@ -23,7 +23,7 @@ const (
 type Redis struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              RedisSpec   `json:"spec"`
+	Spec              RedisSpec   `json:"spec,omitempty"`
 	Status            RedisStatus `json:"status,omitempty"`
 }
 

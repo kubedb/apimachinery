@@ -23,7 +23,7 @@ const (
 type Memcached struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              MemcachedSpec   `json:"spec"`
+	Spec              MemcachedSpec   `json:"spec,omitempty"`
 	Status            MemcachedStatus `json:"status,omitempty"`
 }
 
