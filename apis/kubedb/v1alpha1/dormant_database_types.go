@@ -28,13 +28,13 @@ type DormantDatabaseSpec struct {
 	// +optional
 	WipeOut bool `json:"wipeOut,omitempty"`
 	// Origin to store original database information
-	Origin Origin `json:"origin,omitempty"`
+	Origin Origin `json:"origin"`
 }
 
 type Origin struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// Origin Spec to store original database Spec
-	Spec OriginSpec `json:"spec,omitempty"`
+	Spec OriginSpec `json:"spec"`
 }
 
 type OriginSpec struct {
