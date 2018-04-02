@@ -193,13 +193,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Format:      "",
 							},
 						},
-						"resume": {
-							SchemaProps: spec.SchemaProps{
-								Description: "If true, resumes database",
-								Type:        []string{"boolean"},
-								Format:      "",
-							},
-						},
 						"origin": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Origin to store original database information",
