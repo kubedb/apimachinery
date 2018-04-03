@@ -135,7 +135,7 @@ func (a *DormantDatabaseValidator) setOwnerReferenceToObjects(ddb *api.DormantDa
 	// Get object reference of dormant database
 	ref, rerr := reference.GetReference(clientsetscheme.Scheme, ddb)
 	if rerr != nil {
-		return err
+		return rerr
 	}
 
 	// Set Owner Reference of Snapshots to this Dormant Database Object
@@ -197,7 +197,7 @@ func (a *DormantDatabaseValidator) removeOwnerReferenceFromObjects(ddb *api.Dorm
 	// Get object reference of dormant database
 	ref, rerr := reference.GetReference(clientsetscheme.Scheme, ddb)
 	if rerr != nil {
-		return err
+		return rerr
 	}
 
 	// Set Owner Reference of Snapshots to this Dormant Database Object
