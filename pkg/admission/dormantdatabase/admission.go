@@ -10,6 +10,7 @@ import (
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	cs "github.com/kubedb/apimachinery/client/clientset/versioned"
 	"github.com/kubedb/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
+	plugin "github.com/kubedb/apimachinery/pkg/admission"
 	admission "k8s.io/api/admission/v1beta1"
 	coreV1 "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
@@ -97,7 +98,7 @@ func (a *DormantDatabaseValidator) Admit(req *admission.AdmissionRequest) *admis
 		if err != nil {
 			return hookapi.StatusBadRequest(err)
 		}
-		if err := validateUpdate(obj, OldObj, req.Kind.Kind); err != nil {
+		if err := plugin.ValidateUpdate(obj, OldObj, req.Kind.Kind); err != nil {
 			return hookapi.StatusBadRequest(fmt.Errorf("%v", err))
 		}
 	}

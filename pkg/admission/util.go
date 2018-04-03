@@ -1,15 +1,16 @@
-package dormantdatabase
+package admission
 
 import (
 	"fmt"
 	"strings"
 
 	meta_util "github.com/appscode/kutil/meta"
+	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 )
 
-func validateUpdate(obj, oldObj runtime.Object, kind string) error {
+func ValidateUpdate(obj, oldObj runtime.Object, kind string) error {
 	preconditions := getPreconditionFunc(kind)
 	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions...)
 	if err != nil {
@@ -29,20 +30,24 @@ func getPreconditionFunc(kind string) []mergepatch.PreconditionFunc {
 		mergepatch.RequireMetadataKeyUnchanged("namespace"),
 	}
 
-	for _, field := range preconditionSpecFields {
-		preconditions = append(preconditions,
-			meta_util.RequireChainKeyUnchanged(field),
-		)
+	if fields, found := preconditionSpecField[kind]; found {
+		for _, field := range fields {
+			preconditions = append(preconditions,
+				meta_util.RequireChainKeyUnchanged(field),
+			)
+		}
 	}
 	return preconditions
 }
 
-var preconditionSpecFields = []string{
-	"spec.origin",
+var preconditionSpecField = map[string][]string{
+	api.ResourceKindDormantDatabase: {
+		"spec.origin",
+	},
 }
 
 func preconditionFailedError(kind string) error {
-	str := preconditionSpecFields
+	str := preconditionSpecField[kind]
 	strList := strings.Join(str, "\n\t")
 	return fmt.Errorf(strings.Join([]string{`At least one of the following was changed:
 	apiVersion
