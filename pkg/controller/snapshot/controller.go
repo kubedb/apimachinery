@@ -4,15 +4,18 @@ import (
 	"time"
 
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
+	"github.com/appscode/kutil/tools/queue"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
+	kubedbinformers "github.com/kubedb/apimachinery/client/informers/externalversions"
+	api_listers "github.com/kubedb/apimachinery/client/listers/kubedb/v1alpha1"
 	amc "github.com/kubedb/apimachinery/pkg/controller"
 	jobc "github.com/kubedb/apimachinery/pkg/controller/job"
 	"github.com/kubedb/apimachinery/pkg/eventer"
 	crd_api "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/informers"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
-	"k8s.io/client-go/util/workqueue"
 )
 
 type Controller struct {
@@ -25,20 +28,27 @@ type Controller struct {
 	eventRecorder record.EventRecorder
 	// sync time to sync the list.
 	syncPeriod time.Duration
-	// Workqueue
-	indexer  cache.Indexer
-	queue    workqueue.RateLimitingInterface
-	informer cache.Controller
 	// Max number requests for retries
 	maxNumRequests int
 	// threadiness of Snapshot handler
 	numThreads int
+
+	// Informer factory
+	kubeInformerFactory   informers.SharedInformerFactory
+	kubedbInformerFactory kubedbinformers.SharedInformerFactory
+
+	// DormantDatabase
+	snQueue    *queue.Worker
+	snInformer cache.SharedIndexInformer
+	snLister   api_listers.SnapshotLister
 }
 
 // NewController creates a new Controller
 func NewController(
 	controller *amc.Controller,
 	snapshotter amc.Snapshotter,
+	kubeInformerFactory informers.SharedInformerFactory,
+	kubedbInformerFactory kubedbinformers.SharedInformerFactory,
 	listOption metav1.ListOptions,
 	syncPeriod time.Duration,
 	maxNumRequests int,
@@ -46,13 +56,15 @@ func NewController(
 ) *Controller {
 	// return new DormantDatabase Controller
 	return &Controller{
-		Controller:     controller,
-		snapshotter:    snapshotter,
-		listOption:     listOption,
-		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Snapshot Controller"),
-		syncPeriod:     syncPeriod,
-		maxNumRequests: maxNumRequests,
-		numThreads:     numThreads,
+		Controller:            controller,
+		snapshotter:           snapshotter,
+		kubedbInformerFactory: kubedbInformerFactory,
+		kubeInformerFactory:   kubeInformerFactory,
+		listOption:            listOption,
+		eventRecorder:         eventer.NewEventRecorder(controller.Client, "Snapshot Controller"),
+		syncPeriod:            syncPeriod,
+		maxNumRequests:        maxNumRequests,
+		numThreads:            numThreads,
 	}
 }
 
@@ -67,7 +79,7 @@ func (c *Controller) Run() {
 	// Watch Snapshot with provided ListOption
 	go c.watchSnapshot()
 	// Watch Job with provided ListOption
-	go jobc.NewController(c.Controller, c.snapshotter, c.listOption, c.syncPeriod, c.maxNumRequests, c.numThreads).Run()
+	go jobc.NewController(c.Controller, c.snapshotter, c.kubeInformerFactory, c.kubedbInformerFactory, c.listOption, c.syncPeriod, c.maxNumRequests, c.numThreads).Run()
 }
 
 func (c *Controller) watchSnapshot() {

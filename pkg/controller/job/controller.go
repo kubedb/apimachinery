@@ -3,12 +3,15 @@ package job
 import (
 	"time"
 
+	"github.com/appscode/kutil/tools/queue"
+	kubedbinformers "github.com/kubedb/apimachinery/client/informers/externalversions"
 	amc "github.com/kubedb/apimachinery/pkg/controller"
 	"github.com/kubedb/apimachinery/pkg/eventer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/informers"
+	batch_listers "k8s.io/client-go/listers/batch/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
-	"k8s.io/client-go/util/workqueue"
 )
 
 type Controller struct {
@@ -21,20 +24,27 @@ type Controller struct {
 	eventRecorder record.EventRecorder
 	// sync time to sync the list.
 	syncPeriod time.Duration
-	// Workqueue
-	indexer  cache.Indexer
-	queue    workqueue.RateLimitingInterface
-	informer cache.Controller
 	// Max number requests for retries
 	maxNumRequests int
 	// threadiness of Job handler
 	numThreads int
+
+	// Informer factory
+	kubeInformerFactory   informers.SharedInformerFactory
+	kubedbInformerFactory kubedbinformers.SharedInformerFactory
+
+	// DormantDatabase
+	jobQueue    *queue.Worker
+	jobInformer cache.SharedIndexInformer
+	jobLister   batch_listers.JobLister
 }
 
 // NewController creates a new Controller
 func NewController(
 	controller *amc.Controller,
 	snapshotter amc.Snapshotter,
+	kubeInformerFactory informers.SharedInformerFactory,
+	kubedbInformerFactory kubedbinformers.SharedInformerFactory,
 	listOption metav1.ListOptions,
 	syncPeriod time.Duration,
 	maxNumRequests int,
@@ -42,13 +52,15 @@ func NewController(
 ) *Controller {
 	// return new DormantDatabase Controller
 	return &Controller{
-		Controller:     controller,
-		snapshotter:    snapshotter,
-		listOption:     listOption,
-		eventRecorder:  eventer.NewEventRecorder(controller.Client, "Job Controller"),
-		syncPeriod:     syncPeriod,
-		maxNumRequests: maxNumRequests,
-		numThreads:     numThreads,
+		Controller:            controller,
+		snapshotter:           snapshotter,
+		kubedbInformerFactory: kubedbInformerFactory,
+		kubeInformerFactory:   kubeInformerFactory,
+		listOption:            listOption,
+		eventRecorder:         eventer.NewEventRecorder(controller.Client, "Job Controller"),
+		syncPeriod:            syncPeriod,
+		maxNumRequests:        maxNumRequests,
+		numThreads:            numThreads,
 	}
 }
 
