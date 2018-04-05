@@ -77,7 +77,7 @@ func isJobCompleted(old, new *batch.Job) bool {
 	if old.Status.Succeeded == 0 && new.Status.Succeeded > 0 {
 		return true
 	}
-	if old.Status.Failed <= types.Int32(old.Spec.BackoffLimit) && new.Status.Failed > types.Int32(new.Spec.BackoffLimit) {
+	if old.Status.Failed < types.Int32(old.Spec.BackoffLimit) && new.Status.Failed >= types.Int32(new.Spec.BackoffLimit) {
 		return true
 	}
 	return false
