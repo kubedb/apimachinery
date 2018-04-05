@@ -21,7 +21,7 @@ type Controller struct {
 	// Deleter interface
 	deleter amc.Deleter
 	// ListerWatcher
-	lw *cache.ListWatch
+	labelMap map[string]string
 	// Event Recorder
 	recorder record.EventRecorder
 	// sync time to sync the list.
@@ -29,7 +29,8 @@ type Controller struct {
 	// Max number requests for retries
 	maxNumRequests int
 	// threadiness of DormantDB handler
-	numThreads int
+	numThreads     int
+	watchNamespace string
 
 	// Informer factory
 	kubeInformerFactory   informers.SharedInformerFactory
@@ -47,7 +48,8 @@ func NewController(
 	deleter amc.Deleter,
 	kubeInformerFactory informers.SharedInformerFactory,
 	kubedbInformerFactory kubedbinformers.SharedInformerFactory,
-	lw *cache.ListWatch,
+	watchNamespace string,
+	labelmap map[string]string,
 	syncPeriod time.Duration,
 	maxNumRequests int,
 	numThreads int,
@@ -58,7 +60,8 @@ func NewController(
 		deleter:               deleter,
 		kubedbInformerFactory: kubedbInformerFactory,
 		kubeInformerFactory:   kubeInformerFactory,
-		lw:                    lw,
+		watchNamespace:        watchNamespace,
+		labelMap:              labelmap,
 		recorder:              eventer.NewEventRecorder(controller.Client, "DormantDatabase Controller"),
 		syncPeriod:            syncPeriod,
 		maxNumRequests:        maxNumRequests,
@@ -73,13 +76,18 @@ func (c *Controller) EnsureCustomResourceDefinitions() error {
 	return crdutils.RegisterCRDs(c.ApiExtKubeClient, crd)
 }
 
-func (c *Controller) Run() {
-	// Watch DormantDatabase with provided ListerWatcher
-	c.watchDormantDatabase()
-}
-
-func (c *Controller) watchDormantDatabase() {
-
-	c.initDormantDatabaseWatcher()
-
+func InitDormantDatabaseWatcher(
+	controller *amc.Controller,
+	deleter amc.Deleter,
+	kubeInformerFactory informers.SharedInformerFactory,
+	kubedbInformerFactory kubedbinformers.SharedInformerFactory,
+	watchNamespace string,
+	labelmap map[string]string,
+	syncPeriod time.Duration,
+	maxNumRequests int,
+	numThreads int,
+) *queue.Worker {
+	ctrl := NewController(controller, deleter, kubeInformerFactory, kubedbInformerFactory, watchNamespace, labelmap, syncPeriod, maxNumRequests, numThreads)
+	ctrl.initWatcher()
+	return ctrl.ddbQueue
 }

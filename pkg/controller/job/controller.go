@@ -7,7 +7,6 @@ import (
 	kubedbinformers "github.com/kubedb/apimachinery/client/informers/externalversions"
 	amc "github.com/kubedb/apimachinery/pkg/controller"
 	"github.com/kubedb/apimachinery/pkg/eventer"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/informers"
 	batch_listers "k8s.io/client-go/listers/batch/v1"
 	"k8s.io/client-go/tools/cache"
@@ -19,7 +18,7 @@ type Controller struct {
 	// SnapshotDoer interface
 	snapshotter amc.Snapshotter
 	// ListOptions for watcher
-	listOption metav1.ListOptions
+	labelMap map[string]string
 	// Event Recorder
 	eventRecorder record.EventRecorder
 	// sync time to sync the list.
@@ -27,7 +26,8 @@ type Controller struct {
 	// Max number requests for retries
 	maxNumRequests int
 	// threadiness of Job handler
-	numThreads int
+	numThreads     int
+	watchNamespace string
 
 	// Informer factory
 	kubeInformerFactory   informers.SharedInformerFactory
@@ -45,7 +45,8 @@ func NewController(
 	snapshotter amc.Snapshotter,
 	kubeInformerFactory informers.SharedInformerFactory,
 	kubedbInformerFactory kubedbinformers.SharedInformerFactory,
-	listOption metav1.ListOptions,
+	watchNamespace string,
+	labelmap map[string]string,
 	syncPeriod time.Duration,
 	maxNumRequests int,
 	numThreads int,
@@ -56,7 +57,8 @@ func NewController(
 		snapshotter:           snapshotter,
 		kubedbInformerFactory: kubedbInformerFactory,
 		kubeInformerFactory:   kubeInformerFactory,
-		listOption:            listOption,
+		watchNamespace:        watchNamespace,
+		labelMap:              labelmap,
 		eventRecorder:         eventer.NewEventRecorder(controller.Client, "Job Controller"),
 		syncPeriod:            syncPeriod,
 		maxNumRequests:        maxNumRequests,
@@ -64,18 +66,19 @@ func NewController(
 	}
 }
 
-func (c *Controller) Run() {
-	// Watch DormantDatabase with provided ListerWatcher
-	c.watchJob()
-}
+func InitJobWatcher(
+	controller *amc.Controller,
+	snapshotter amc.Snapshotter,
+	kubeInformerFactory informers.SharedInformerFactory,
+	kubedbInformerFactory kubedbinformers.SharedInformerFactory,
+	watchNamespace string,
+	labelmap map[string]string,
+	syncPeriod time.Duration,
+	maxNumRequests int,
+	numThreads int,
+) *queue.Worker {
 
-func (c *Controller) watchJob() {
-
-	c.initWatcher()
-
-	stop := make(chan struct{})
-	defer close(stop)
-
-	c.runWatcher(c.numThreads, stop)
-	select {}
+	ctrl := NewController(controller, snapshotter, kubeInformerFactory, kubedbInformerFactory, watchNamespace, labelmap, syncPeriod, maxNumRequests, numThreads)
+	ctrl.initWatcher()
+	return ctrl.jobQueue
 }

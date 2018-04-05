@@ -12,7 +12,6 @@ import (
 	jobc "github.com/kubedb/apimachinery/pkg/controller/job"
 	"github.com/kubedb/apimachinery/pkg/eventer"
 	crd_api "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
@@ -23,7 +22,7 @@ type Controller struct {
 	// Snapshotter interface
 	snapshotter amc.Snapshotter
 	// ListOptions for watcher
-	listOption metav1.ListOptions
+	labelMap map[string]string
 	// Event Recorder
 	eventRecorder record.EventRecorder
 	// sync time to sync the list.
@@ -31,7 +30,8 @@ type Controller struct {
 	// Max number requests for retries
 	maxNumRequests int
 	// threadiness of Snapshot handler
-	numThreads int
+	numThreads     int
+	watchNamespace string
 
 	// Informer factory
 	kubeInformerFactory   informers.SharedInformerFactory
@@ -49,7 +49,8 @@ func NewController(
 	snapshotter amc.Snapshotter,
 	kubeInformerFactory informers.SharedInformerFactory,
 	kubedbInformerFactory kubedbinformers.SharedInformerFactory,
-	listOption metav1.ListOptions,
+	watchNamespace string,
+	labelmap map[string]string,
 	syncPeriod time.Duration,
 	maxNumRequests int,
 	numThreads int,
@@ -60,7 +61,8 @@ func NewController(
 		snapshotter:           snapshotter,
 		kubedbInformerFactory: kubedbInformerFactory,
 		kubeInformerFactory:   kubeInformerFactory,
-		listOption:            listOption,
+		watchNamespace:        watchNamespace,
+		labelMap:              labelmap,
 		eventRecorder:         eventer.NewEventRecorder(controller.Client, "Snapshot Controller"),
 		syncPeriod:            syncPeriod,
 		maxNumRequests:        maxNumRequests,
@@ -75,19 +77,24 @@ func (c *Controller) Setup() error {
 	return crdutils.RegisterCRDs(c.ApiExtKubeClient, crd)
 }
 
-func (c *Controller) Run() {
-	// Watch Snapshot with provided ListOption
-	go c.watchSnapshot()
-	// Watch Job with provided ListOption
-	go jobc.NewController(c.Controller, c.snapshotter, c.kubeInformerFactory, c.kubedbInformerFactory, c.listOption, c.syncPeriod, c.maxNumRequests, c.numThreads).Run()
-}
+// InitSnapshotWatcher ensures snapshot watcher and returns queue.Worker.
+// So, it is possible to start queue.run from other package/repositories
+func InitSnapshotWatcher(
+	controller *amc.Controller,
+	snapshotter amc.Snapshotter,
+	kubeInformerFactory informers.SharedInformerFactory,
+	kubedbInformerFactory kubedbinformers.SharedInformerFactory,
+	watchNamespace string,
+	labelmap map[string]string,
+	syncPeriod time.Duration,
+	maxNumRequests int,
+	numThreads int,
+) (*queue.Worker, *queue.Worker) {
 
-func (c *Controller) watchSnapshot() {
-	c.initWatcher()
+	ctrl := NewController(controller, snapshotter, kubeInformerFactory, kubedbInformerFactory, watchNamespace, labelmap, syncPeriod, maxNumRequests, numThreads)
+	ctrl.initWatcher()
 
-	stop := make(chan struct{})
-	defer close(stop)
+	jobQueue := jobc.InitJobWatcher(controller, snapshotter, kubeInformerFactory, kubedbInformerFactory, watchNamespace, labelmap, syncPeriod, maxNumRequests, numThreads)
 
-	c.runWatcher(c.numThreads, stop)
-	select {}
+	return ctrl.snQueue, jobQueue
 }

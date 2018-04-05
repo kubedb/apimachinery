@@ -1,15 +1,32 @@
 package dormantdatabase
 
 import (
+	"time"
+
 	"github.com/appscode/go/log"
 	meta_util "github.com/appscode/kutil/meta"
 	"github.com/appscode/kutil/tools/queue"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
+	cs "github.com/kubedb/apimachinery/client/clientset/versioned"
 	"github.com/kubedb/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
+	kubedb_informers "github.com/kubedb/apimachinery/client/informers/externalversions/kubedb/v1alpha1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/client-go/tools/cache"
 )
 
-func (c *Controller) initDormantDatabaseWatcher() {
-	c.ddbInformer = c.kubedbInformerFactory.Kubedb().V1alpha1().MongoDBs().Informer()
+func (c *Controller) initWatcher() {
+	c.ddbInformer = c.kubedbInformerFactory.InformerFor(&api.DormantDatabase{}, func(client cs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+		return kubedb_informers.NewFilteredSnapshotInformer(
+			client,
+			c.watchNamespace, // need to provide namespace
+			resyncPeriod,
+			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
+			func(options *metav1.ListOptions) {
+				options.LabelSelector = labels.SelectorFromSet(c.labelMap).String()
+			},
+		)
+	})
 	c.ddbQueue = queue.New("MongoDB", c.maxNumRequests, c.numThreads, c.runDormantDatabase)
 	c.ddbInformer.AddEventHandler(queue.NewEventHandler(c.ddbQueue.GetQueue(), func(old interface{}, new interface{}) bool {
 		oldObj, ok := old.(*api.DormantDatabase)

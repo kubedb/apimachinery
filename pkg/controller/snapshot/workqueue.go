@@ -9,8 +9,9 @@ import (
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	cs "github.com/kubedb/apimachinery/client/clientset/versioned"
 	"github.com/kubedb/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
-	"github.com/kubedb/apimachinery/client/informers/externalversions/internalinterfaces"
 	kubedb_informers "github.com/kubedb/apimachinery/client/informers/externalversions/kubedb/v1alpha1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/tools/cache"
 )
 
@@ -18,10 +19,12 @@ func (c *Controller) initWatcher() {
 	c.snInformer = c.kubedbInformerFactory.InformerFor(&api.Snapshot{}, func(client cs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 		return kubedb_informers.NewFilteredSnapshotInformer(
 			client,
-			c.namespace, // need to provide namespace
+			c.watchNamespace, // need to provide namespace
 			resyncPeriod,
 			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
-			internalinterfaces.TweakListOptionsFunc(), // proper tweakListFunction
+			func(options *metav1.ListOptions) {
+				options.LabelSelector = labels.SelectorFromSet(c.labelMap).String()
+			},
 		)
 	})
 	c.snQueue = queue.New("MongoDB", c.maxNumRequests, c.numThreads, c.runSnapshot)
@@ -37,7 +40,6 @@ func (c *Controller) initWatcher() {
 		}
 		return false
 	}))
-
 }
 
 func (c *Controller) runSnapshot(key string) error {
