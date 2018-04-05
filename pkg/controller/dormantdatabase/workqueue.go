@@ -17,7 +17,7 @@ import (
 
 func (c *Controller) initWatcher() {
 	c.ddbInformer = c.kubedbInformerFactory.InformerFor(&api.DormantDatabase{}, func(client cs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-		return kubedb_informers.NewFilteredSnapshotInformer(
+		return kubedb_informers.NewFilteredDormantDatabaseInformer(
 			client,
 			c.watchNamespace, // need to provide namespace
 			resyncPeriod,
