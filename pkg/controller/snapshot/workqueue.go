@@ -27,7 +27,7 @@ func (c *Controller) initWatcher() {
 			},
 		)
 	})
-	c.snQueue = queue.New("MongoDB", c.maxNumRequests, c.numThreads, c.runSnapshot)
+	c.snQueue = queue.New("Snapshot", c.maxNumRequests, c.numThreads, c.runSnapshot)
 	c.snLister = c.kubedbInformerFactory.Kubedb().V1alpha1().Snapshots().Lister()
 	c.snInformer.AddEventHandler(queue.NewEventHandler(c.snQueue.GetQueue(), func(old interface{}, new interface{}) bool {
 		snapshot, ok := new.(*api.Snapshot)

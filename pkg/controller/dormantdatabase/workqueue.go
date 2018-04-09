@@ -27,7 +27,7 @@ func (c *Controller) initWatcher() {
 			},
 		)
 	})
-	c.ddbQueue = queue.New("MongoDB", c.maxNumRequests, c.numThreads, c.runDormantDatabase)
+	c.ddbQueue = queue.New("DormantDatabase", c.maxNumRequests, c.numThreads, c.runDormantDatabase)
 	c.ddbInformer.AddEventHandler(queue.NewEventHandler(c.ddbQueue.GetQueue(), func(old interface{}, new interface{}) bool {
 		oldObj, ok := old.(*api.DormantDatabase)
 		if !ok {

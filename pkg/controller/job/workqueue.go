@@ -26,7 +26,7 @@ func (c *Controller) initWatcher() {
 			},
 		)
 	})
-	c.jobQueue = queue.New("MongoDB", c.maxNumRequests, c.numThreads, c.runJob)
+	c.jobQueue = queue.New("Job", c.maxNumRequests, c.numThreads, c.runJob)
 	c.jobLister = c.kubeInformerFactory.Batch().V1().Jobs().Lister()
 	c.jobInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
