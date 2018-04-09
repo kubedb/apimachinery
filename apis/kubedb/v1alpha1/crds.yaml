@@ -5163,7 +5163,28 @@ spec:
                       type: string
                     namespace:
                       type: string
-            monitor: {}
+            monitor:
+              properties:
+                agent:
+                  description: 'Valid values: coreos-prometheus-operator'
+                  type: string
+                prometheus:
+                  properties:
+                    interval:
+                      description: Interval at which metrics should be scraped
+                      type: string
+                    labels:
+                      description: Labels are key value pairs that is used to select
+                        Prometheus instance via ServiceMonitor labels.
+                      type: object
+                    namespace:
+                      description: Namespace of Prometheus. Service monitors will
+                        be created in this namespace.
+                      type: string
+                    port:
+                      description: Port number for the exporter side car.
+                      format: int32
+                      type: integer
             nodeSelector:
               description: NodeSelector is a selector which must be true for the pod
                 to fit on a node
@@ -9462,7 +9483,28 @@ spec:
                       type: string
                     namespace:
                       type: string
-            monitor: {}
+            monitor:
+              properties:
+                agent:
+                  description: 'Valid values: coreos-prometheus-operator'
+                  type: string
+                prometheus:
+                  properties:
+                    interval:
+                      description: Interval at which metrics should be scraped
+                      type: string
+                    labels:
+                      description: Labels are key value pairs that is used to select
+                        Prometheus instance via ServiceMonitor labels.
+                      type: object
+                    namespace:
+                      description: Namespace of Prometheus. Service monitors will
+                        be created in this namespace.
+                      type: string
+                    port:
+                      description: Port number for the exporter side car.
+                      format: int32
+                      type: integer
             nodeSelector:
               description: NodeSelector is a selector which must be true for the pod
                 to fit on a node
@@ -13722,7 +13764,28 @@ spec:
                       type: string
                     namespace:
                       type: string
-            monitor: {}
+            monitor:
+              properties:
+                agent:
+                  description: 'Valid values: coreos-prometheus-operator'
+                  type: string
+                prometheus:
+                  properties:
+                    interval:
+                      description: Interval at which metrics should be scraped
+                      type: string
+                    labels:
+                      description: Labels are key value pairs that is used to select
+                        Prometheus instance via ServiceMonitor labels.
+                      type: object
+                    namespace:
+                      description: Namespace of Prometheus. Service monitors will
+                        be created in this namespace.
+                      type: string
+                    port:
+                      description: Port number for the exporter side car.
+                      format: int32
+                      type: integer
             nodeSelector:
               description: NodeSelector is a selector which must be true for the pod
                 to fit on a node
@@ -17959,7 +18022,28 @@ spec:
                       type: string
                     namespace:
                       type: string
-            monitor: {}
+            monitor:
+              properties:
+                agent:
+                  description: 'Valid values: coreos-prometheus-operator'
+                  type: string
+                prometheus:
+                  properties:
+                    interval:
+                      description: Interval at which metrics should be scraped
+                      type: string
+                    labels:
+                      description: Labels are key value pairs that is used to select
+                        Prometheus instance via ServiceMonitor labels.
+                      type: object
+                    namespace:
+                      description: Namespace of Prometheus. Service monitors will
+                        be created in this namespace.
+                      type: string
+                    port:
+                      description: Port number for the exporter side car.
+                      format: int32
+                      type: integer
             nodeSelector:
               description: NodeSelector is a selector which must be true for the pod
                 to fit on a node
@@ -18939,7 +19023,28 @@ spec:
                     description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                     type: string
               type: array
-            monitor: {}
+            monitor:
+              properties:
+                agent:
+                  description: 'Valid values: coreos-prometheus-operator'
+                  type: string
+                prometheus:
+                  properties:
+                    interval:
+                      description: Interval at which metrics should be scraped
+                      type: string
+                    labels:
+                      description: Labels are key value pairs that is used to select
+                        Prometheus instance via ServiceMonitor labels.
+                      type: object
+                    namespace:
+                      description: Namespace of Prometheus. Service monitors will
+                        be created in this namespace.
+                      type: string
+                    port:
+                      description: Port number for the exporter side car.
+                      format: int32
+                      type: integer
             nodeSelector:
               description: NodeSelector is a selector which must be true for the pod
                 to fit on a node
@@ -19919,7 +20024,28 @@ spec:
                     description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                     type: string
               type: array
-            monitor: {}
+            monitor:
+              properties:
+                agent:
+                  description: 'Valid values: coreos-prometheus-operator'
+                  type: string
+                prometheus:
+                  properties:
+                    interval:
+                      description: Interval at which metrics should be scraped
+                      type: string
+                    labels:
+                      description: Labels are key value pairs that is used to select
+                        Prometheus instance via ServiceMonitor labels.
+                      type: object
+                    namespace:
+                      description: Namespace of Prometheus. Service monitors will
+                        be created in this namespace.
+                      type: string
+                    port:
+                      description: Port number for the exporter side car.
+                      format: int32
+                      type: integer
             nodeSelector:
               description: NodeSelector is a selector which must be true for the pod
                 to fit on a node
@@ -26287,7 +26413,30 @@ spec:
                                   type: string
                                 namespace:
                                   type: string
-                        monitor: {}
+                        monitor:
+                          properties:
+                            agent:
+                              description: 'Valid values: coreos-prometheus-operator'
+                              type: string
+                            prometheus:
+                              properties:
+                                interval:
+                                  description: Interval at which metrics should be
+                                    scraped
+                                  type: string
+                                labels:
+                                  description: Labels are key value pairs that is
+                                    used to select Prometheus instance via ServiceMonitor
+                                    labels.
+                                  type: object
+                                namespace:
+                                  description: Namespace of Prometheus. Service monitors
+                                    will be created in this namespace.
+                                  type: string
+                                port:
+                                  description: Port number for the exporter side car.
+                                  format: int32
+                                  type: integer
                         nodeSelector:
                           description: NodeSelector is a selector which must be true
                             for the pod to fit on a node
@@ -27069,7 +27218,30 @@ spec:
                                 description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                 type: string
                           type: array
-                        monitor: {}
+                        monitor:
+                          properties:
+                            agent:
+                              description: 'Valid values: coreos-prometheus-operator'
+                              type: string
+                            prometheus:
+                              properties:
+                                interval:
+                                  description: Interval at which metrics should be
+                                    scraped
+                                  type: string
+                                labels:
+                                  description: Labels are key value pairs that is
+                                    used to select Prometheus instance via ServiceMonitor
+                                    labels.
+                                  type: object
+                                namespace:
+                                  description: Namespace of Prometheus. Service monitors
+                                    will be created in this namespace.
+                                  type: string
+                                port:
+                                  description: Port number for the exporter side car.
+                                  format: int32
+                                  type: integer
                         nodeSelector:
                           description: NodeSelector is a selector which must be true
                             for the pod to fit on a node
@@ -31408,7 +31580,30 @@ spec:
                                   type: string
                                 namespace:
                                   type: string
-                        monitor: {}
+                        monitor:
+                          properties:
+                            agent:
+                              description: 'Valid values: coreos-prometheus-operator'
+                              type: string
+                            prometheus:
+                              properties:
+                                interval:
+                                  description: Interval at which metrics should be
+                                    scraped
+                                  type: string
+                                labels:
+                                  description: Labels are key value pairs that is
+                                    used to select Prometheus instance via ServiceMonitor
+                                    labels.
+                                  type: object
+                                namespace:
+                                  description: Namespace of Prometheus. Service monitors
+                                    will be created in this namespace.
+                                  type: string
+                                port:
+                                  description: Port number for the exporter side car.
+                                  format: int32
+                                  type: integer
                         nodeSelector:
                           description: NodeSelector is a selector which must be true
                             for the pod to fit on a node
@@ -35833,7 +36028,30 @@ spec:
                                   type: string
                                 namespace:
                                   type: string
-                        monitor: {}
+                        monitor:
+                          properties:
+                            agent:
+                              description: 'Valid values: coreos-prometheus-operator'
+                              type: string
+                            prometheus:
+                              properties:
+                                interval:
+                                  description: Interval at which metrics should be
+                                    scraped
+                                  type: string
+                                labels:
+                                  description: Labels are key value pairs that is
+                                    used to select Prometheus instance via ServiceMonitor
+                                    labels.
+                                  type: object
+                                namespace:
+                                  description: Namespace of Prometheus. Service monitors
+                                    will be created in this namespace.
+                                  type: string
+                                port:
+                                  description: Port number for the exporter side car.
+                                  format: int32
+                                  type: integer
                         nodeSelector:
                           description: NodeSelector is a selector which must be true
                             for the pod to fit on a node
@@ -41502,7 +41720,30 @@ spec:
                                   type: string
                                 namespace:
                                   type: string
-                        monitor: {}
+                        monitor:
+                          properties:
+                            agent:
+                              description: 'Valid values: coreos-prometheus-operator'
+                              type: string
+                            prometheus:
+                              properties:
+                                interval:
+                                  description: Interval at which metrics should be
+                                    scraped
+                                  type: string
+                                labels:
+                                  description: Labels are key value pairs that is
+                                    used to select Prometheus instance via ServiceMonitor
+                                    labels.
+                                  type: object
+                                namespace:
+                                  description: Namespace of Prometheus. Service monitors
+                                    will be created in this namespace.
+                                  type: string
+                                port:
+                                  description: Port number for the exporter side car.
+                                  format: int32
+                                  type: integer
                         nodeSelector:
                           description: NodeSelector is a selector which must be true
                             for the pod to fit on a node
@@ -42267,7 +42508,30 @@ spec:
                                 description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                 type: string
                           type: array
-                        monitor: {}
+                        monitor:
+                          properties:
+                            agent:
+                              description: 'Valid values: coreos-prometheus-operator'
+                              type: string
+                            prometheus:
+                              properties:
+                                interval:
+                                  description: Interval at which metrics should be
+                                    scraped
+                                  type: string
+                                labels:
+                                  description: Labels are key value pairs that is
+                                    used to select Prometheus instance via ServiceMonitor
+                                    labels.
+                                  type: object
+                                namespace:
+                                  description: Namespace of Prometheus. Service monitors
+                                    will be created in this namespace.
+                                  type: string
+                                port:
+                                  description: Port number for the exporter side car.
+                                  format: int32
+                                  type: integer
                         nodeSelector:
                           description: NodeSelector is a selector which must be true
                             for the pod to fit on a node
