@@ -15,10 +15,10 @@ import (
 )
 
 func (c *Controller) initWatcher() {
-	c.jobInformer = c.kubeInformerFactory.InformerFor(&batch.Job{}, func(client kubernetes.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	c.jobInformer = c.KubeInformerFactory.InformerFor(&batch.Job{}, func(client kubernetes.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 		return batchinformer.NewFilteredJobInformer(
 			client,
-			c.watchNamespace, // need to provide namespace
+			c.WatchNamespace, // need to provide namespace
 			resyncPeriod,
 			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
 			func(options *metav1.ListOptions) {
@@ -26,8 +26,8 @@ func (c *Controller) initWatcher() {
 			},
 		)
 	})
-	c.jobQueue = queue.New("Job", c.maxNumRequests, c.numThreads, c.runJob)
-	c.jobLister = c.kubeInformerFactory.Batch().V1().Jobs().Lister()
+	c.jobQueue = queue.New("Job", c.MaxNumRequeues, c.NumThreads, c.runJob)
+	c.jobLister = c.KubeInformerFactory.Batch().V1().Jobs().Lister()
 	c.jobInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			job, ok := obj.(*batch.Job)

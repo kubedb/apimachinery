@@ -16,10 +16,10 @@ import (
 )
 
 func (c *Controller) initWatcher() {
-	c.snInformer = c.kubedbInformerFactory.InformerFor(&api.Snapshot{}, func(client cs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	c.snInformer = c.KubedbInformerFactory.InformerFor(&api.Snapshot{}, func(client cs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 		return kubedb_informers.NewFilteredSnapshotInformer(
 			client,
-			c.watchNamespace, // need to provide namespace
+			c.WatchNamespace, // need to provide namespace
 			resyncPeriod,
 			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
 			func(options *metav1.ListOptions) {
@@ -27,8 +27,8 @@ func (c *Controller) initWatcher() {
 			},
 		)
 	})
-	c.snQueue = queue.New("Snapshot", c.maxNumRequests, c.numThreads, c.runSnapshot)
-	c.snLister = c.kubedbInformerFactory.Kubedb().V1alpha1().Snapshots().Lister()
+	c.snQueue = queue.New("Snapshot", c.MaxNumRequeues, c.NumThreads, c.runSnapshot)
+	c.snLister = c.KubedbInformerFactory.Kubedb().V1alpha1().Snapshots().Lister()
 	c.snInformer.AddEventHandler(queue.NewEventHandler(c.snQueue.GetQueue(), func(old interface{}, new interface{}) bool {
 		snapshot, ok := new.(*api.Snapshot)
 		if !ok {

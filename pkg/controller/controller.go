@@ -25,15 +25,7 @@ type Controller struct {
 	ExtClient cs.KubedbV1alpha1Interface
 }
 
-type Docker struct {
-	// Docker Registry
-	Registry string
-	// Exporter tag
-	ExporterTag string
-}
-
 type Config struct {
-	Docker Docker
 	// Informer factory
 	KubeInformerFactory   informers.SharedInformerFactory
 	KubedbInformerFactory kubedbinformers.SharedInformerFactory

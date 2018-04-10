@@ -16,10 +16,10 @@ import (
 )
 
 func (c *Controller) initWatcher() {
-	c.ddbInformer = c.kubedbInformerFactory.InformerFor(&api.DormantDatabase{}, func(client cs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	c.ddbInformer = c.KubedbInformerFactory.InformerFor(&api.DormantDatabase{}, func(client cs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 		return kubedb_informers.NewFilteredDormantDatabaseInformer(
 			client,
-			c.watchNamespace, // need to provide namespace
+			c.WatchNamespace, // need to provide namespace
 			resyncPeriod,
 			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
 			func(options *metav1.ListOptions) {
@@ -27,7 +27,7 @@ func (c *Controller) initWatcher() {
 			},
 		)
 	})
-	c.ddbQueue = queue.New("DormantDatabase", c.maxNumRequests, c.numThreads, c.runDormantDatabase)
+	c.ddbQueue = queue.New("DormantDatabase", c.MaxNumRequeues, c.NumThreads, c.runDormantDatabase)
 	c.ddbInformer.AddEventHandler(queue.NewEventHandler(c.ddbQueue.GetQueue(), func(old interface{}, new interface{}) bool {
 		oldObj, ok := old.(*api.DormantDatabase)
 		if !ok {
@@ -45,7 +45,7 @@ func (c *Controller) initWatcher() {
 		}
 		return false
 	}))
-	c.ddbLister = c.kubedbInformerFactory.Kubedb().V1alpha1().DormantDatabases().Lister()
+	c.ddbLister = c.KubedbInformerFactory.Kubedb().V1alpha1().DormantDatabases().Lister()
 }
 
 func dormantDatabaseEqual(old, new *api.DormantDatabase) bool {
