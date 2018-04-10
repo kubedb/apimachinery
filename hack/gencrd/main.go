@@ -1,23 +1,23 @@
 package main
 
 import (
-	"os"
-	"github.com/appscode/kutil/openapi"
-	"k8s.io/apimachinery/pkg/runtime"
 	"github.com/appscode/go/log"
 	gort "github.com/appscode/go/runtime"
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
+	"github.com/appscode/kutil/openapi"
+	"github.com/go-openapi/spec"
+	"github.com/golang/glog"
+	"github.com/kubedb/apimachinery/apis/kubedb/install"
+	"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
+	"io/ioutil"
 	crd_api "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/apimachinery/announced"
 	"k8s.io/apimachinery/pkg/apimachinery/registered"
-	"k8s.io/apimachinery/pkg/runtime/serializer"
-	"github.com/kubedb/apimachinery/apis/kubedb/install"
-	"github.com/go-openapi/spec"
-	"k8s.io/kube-openapi/pkg/common"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"github.com/golang/glog"
-	"io/ioutil"
-	"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
+	"k8s.io/apimachinery/pkg/runtime/serializer"
+	"k8s.io/kube-openapi/pkg/common"
+	"os"
 )
 
 func generateCRDDefinitions() {
@@ -46,10 +46,10 @@ func generateCRDDefinitions() {
 
 func generateSwaggerJson() {
 	var (
-		groupFactoryRegistry= make(announced.APIGroupFactoryRegistry)
-		registry= registered.NewOrDie("")
-		Scheme= runtime.NewScheme()
-		Codecs= serializer.NewCodecFactory(Scheme)
+		groupFactoryRegistry = make(announced.APIGroupFactoryRegistry)
+		registry             = registered.NewOrDie("")
+		Scheme               = runtime.NewScheme()
+		Codecs               = serializer.NewCodecFactory(Scheme)
 	)
 
 	install.Install(groupFactoryRegistry, registry, Scheme)
@@ -89,7 +89,7 @@ func generateSwaggerJson() {
 		glog.Fatal(err)
 	}
 
-	filename := gort.GOPath() + "/src/github.com/kubedb/apimachinery/apis/swagger.json"
+	filename := gort.GOPath() + "/src/github.com/kubedb/apimachinery/openapi-spec/v2/swagger.json"
 	err = ioutil.WriteFile(filename, []byte(apispec), 0644)
 	if err != nil {
 		glog.Fatal(err)
