@@ -51,13 +51,7 @@ func (c *Controller) EnsureCustomResourceDefinitions() error {
 	return crdutils.RegisterCRDs(c.ApiExtKubeClient, crd)
 }
 
-func InitDormantDatabaseWatcher(
-	controller *amc.Controller,
-	deleter amc.Deleter,
-	config amc.Config,
-	labelmap map[string]string,
-) *queue.Worker {
-	ctrl := NewController(controller, deleter, config, labelmap)
-	ctrl.initWatcher()
-	return ctrl.ddbQueue
+func (c *Controller) InitDormantDatabaseWatcher() *queue.Worker {
+	c.initWatcher()
+	return c.ddbQueue
 }

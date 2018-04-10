@@ -41,13 +41,7 @@ func NewController(
 	}
 }
 
-func InitJobWatcher(
-	controller *amc.Controller,
-	snapshotter amc.Snapshotter,
-	config amc.Config,
-	labelmap map[string]string,
-) *queue.Worker {
-	ctrl := NewController(controller, snapshotter, config, labelmap)
-	ctrl.initWatcher()
-	return ctrl.jobQueue
+func (c *Controller) InitJobWatcher() *queue.Worker {
+	c.initWatcher()
+	return c.jobQueue
 }

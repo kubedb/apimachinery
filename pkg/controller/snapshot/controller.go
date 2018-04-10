@@ -54,16 +54,8 @@ func (c *Controller) Setup() error {
 
 // InitSnapshotWatcher ensures snapshot watcher and returns queue.Worker.
 // So, it is possible to start queue.run from other package/repositories
-func InitSnapshotWatcher(
-	controller *amc.Controller,
-	snapshotter amc.Snapshotter,
-	config amc.Config,
-	labelmap map[string]string,
-) (*queue.Worker, *queue.Worker) {
-	ctrl := NewController(controller, snapshotter, config, labelmap)
-
-	ctrl.initWatcher()
-	jobQueue := jobc.InitJobWatcher(controller, snapshotter, config, labelmap)
-
-	return ctrl.snQueue, jobQueue
+func (c *Controller) InitSnapshotWatcher() (*queue.Worker, *queue.Worker) {
+	c.initWatcher()
+	jobQueue := jobc.NewController(c.Controller, c.snapshotter, c.Config, c.labelMap).InitJobWatcher()
+	return c.snQueue, jobQueue
 }
