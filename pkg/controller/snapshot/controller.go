@@ -60,11 +60,9 @@ func InitSnapshotWatcher(
 	config amc.Config,
 	labelmap map[string]string,
 ) (*queue.Worker, *queue.Worker) {
-
 	ctrl := NewController(controller, snapshotter, config, labelmap)
 
 	ctrl.initWatcher()
-
 	jobQueue := jobc.InitJobWatcher(controller, snapshotter, config, labelmap)
 
 	return ctrl.snQueue, jobQueue
