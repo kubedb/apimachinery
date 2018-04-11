@@ -52,7 +52,7 @@ func (c *Controller) EnsureCustomResourceDefinitions() error {
 	return crdutils.RegisterCRDs(c.ApiExtKubeClient, crd)
 }
 
-func (c *Controller) InitDormantDatabaseWatcher() *queue.Worker {
+func (c *Controller) Init() *queue.Worker {
 	c.initWatcher()
 	return c.ddbQueue
 }

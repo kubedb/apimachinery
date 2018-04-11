@@ -53,11 +53,11 @@ func (c *Controller) EnsureCustomResourceDefinitions() error {
 	return crdutils.RegisterCRDs(c.ApiExtKubeClient, crd)
 }
 
-// InitSnapshotWatcher ensures snapshot watcher and returns queue.Worker.
+// Init ensures snapshot watcher and returns queue.Worker.
 // So, it is possible to start queue.run from other package/repositories
 // Return type: Snapshot queue as 1st parameter and Job.Queue as 2nd.
-func (c *Controller) InitSnapshotWatcher() (*queue.Worker, *queue.Worker) {
+func (c *Controller) Init() (*queue.Worker, *queue.Worker) {
 	c.initWatcher()
-	jobQueue := jobc.NewController(c.Controller, c.snapshotter, c.Config, c.tweakListOptions).InitJobWatcher()
+	jobQueue := jobc.NewController(c.Controller, c.snapshotter, c.Config, c.tweakListOptions).Init()
 	return c.snQueue, jobQueue
 }

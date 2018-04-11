@@ -42,7 +42,7 @@ func NewController(
 	}
 }
 
-func (c *Controller) InitJobWatcher() *queue.Worker {
+func (c *Controller) Init() *queue.Worker {
 	c.initWatcher()
 	return c.jobQueue
 }
