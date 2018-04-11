@@ -1,5 +1,5 @@
 hash: 76fc5519bc8e7feb3f2d2dc006b7148322a88da15e63567bc9c1605f4d25bf52
-updated: 2018-04-10T06:01:52.318418005-07:00
+updated: 2018-04-11T05:35:46.021750079-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -16,6 +16,7 @@ imports:
   - encoding/yaml
   - ioutil
   - log
+  - log/golog
   - runtime
   - sets
   - strings
@@ -37,6 +38,7 @@ imports:
   - core/v1
   - meta
   - openapi
+  - tools/queue
 - name: github.com/appscode/mergo
   version: e3000cb3d28c72b837601cac94debd91032d19fe
 - name: github.com/appscode/osm
@@ -149,7 +151,7 @@ imports:
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
-  version: 300e940a926eb277d3901b20bdfcc54928ad3642
+  version: 20b96f641a5ea98f2f8619ff4f3e061cff4833bd
 - name: github.com/go-openapi/jsonpointer
   version: 46af16f9f7b149af66e5d1bd010e3574dc06de98
 - name: github.com/go-openapi/jsonreference
@@ -309,7 +311,7 @@ imports:
 - name: github.com/spf13/cobra
   version: cd30c2a7e91a1d63fd9a0027accf18a681e9d50b
 - name: github.com/spf13/pflag
-  version: 1ce0cc6db4029d97571db82f85092fccedb572ce
+  version: 329ebf1e04800d11a25047832495199d366580f3
 - name: github.com/ugorji/go
   version: ded73eae5db7e7a0ef6f55aace87a2873c5d2b74
   subpackages:
