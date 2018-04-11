@@ -27,3 +27,4 @@ dist/
 .idea/
 .vscode/
 coverage.txt
+apiserver.local.config/
