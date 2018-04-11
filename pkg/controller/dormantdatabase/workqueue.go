@@ -19,7 +19,7 @@ func (c *Controller) initWatcher() {
 	c.ddbInformer = c.KubedbInformerFactory.InformerFor(&api.DormantDatabase{}, func(client cs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 		return kubedb_informers.NewFilteredDormantDatabaseInformer(
 			client,
-			c.WatchNamespace, // need to provide namespace
+			c.WatchNamespace,
 			resyncPeriod,
 			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
 			func(options *metav1.ListOptions) {

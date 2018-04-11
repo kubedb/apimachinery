@@ -45,7 +45,7 @@ func NewController(
 	}
 }
 
-func (c *Controller) Setup() error {
+func (c *Controller) EnsureCustomResourceDefinitions() error {
 	crd := []*crd_api.CustomResourceDefinition{
 		api.Snapshot{}.CustomResourceDefinition(),
 	}
@@ -54,6 +54,7 @@ func (c *Controller) Setup() error {
 
 // InitSnapshotWatcher ensures snapshot watcher and returns queue.Worker.
 // So, it is possible to start queue.run from other package/repositories
+// Return type: Snapshot queue as 1st parameter and Job.Queue as 2nd.
 func (c *Controller) InitSnapshotWatcher() (*queue.Worker, *queue.Worker) {
 	c.initWatcher()
 	jobQueue := jobc.NewController(c.Controller, c.snapshotter, c.Config, c.labelMap).InitJobWatcher()

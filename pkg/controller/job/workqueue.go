@@ -18,7 +18,7 @@ func (c *Controller) initWatcher() {
 	c.jobInformer = c.KubeInformerFactory.InformerFor(&batch.Job{}, func(client kubernetes.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 		return batchinformer.NewFilteredJobInformer(
 			client,
-			c.WatchNamespace, // need to provide namespace
+			c.WatchNamespace,
 			resyncPeriod,
 			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
 			func(options *metav1.ListOptions) {
@@ -35,7 +35,6 @@ func (c *Controller) initWatcher() {
 				log.Errorln("Invalid Job object")
 				return
 			}
-
 			if job.Status.Succeeded > 0 || job.Status.Failed > types.Int32(job.Spec.BackoffLimit) {
 				// IndexerInformer uses a delta queue, therefore for deletes we have to use this
 				// key function.
@@ -63,7 +62,6 @@ func (c *Controller) initWatcher() {
 				log.Errorln("Invalid Job object")
 				return
 			}
-
 			if job.Status.Succeeded == 0 && job.Status.Failed <= types.Int32(job.Spec.BackoffLimit) {
 				// IndexerInformer uses a delta queue, therefore for deletes we have to use this
 				// key function.
