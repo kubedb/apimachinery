@@ -41,7 +41,7 @@ type Config struct {
 	SnapQueue    *queue.Worker
 	SnapInformer cache.SharedIndexInformer
 
-	EnableRbac        bool
+	EnableRBAC        bool
 	OperatorNamespace string
 	GoverningService  string
 	ResyncPeriod      time.Duration
