@@ -6659,6 +6659,79 @@
         }
       }
     },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdSpec": {
+      "required": [
+        "version"
+      ],
+      "properties": {
+        "affinity": {
+          "description": "If specified, the pod's scheduling constraints",
+          "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
+        },
+        "backupSchedule": {
+          "description": "BackupSchedule spec to specify how database backup will be taken",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
+        },
+        "databaseSecret": {
+          "description": "Database authentication secret",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        },
+        "doNotPause": {
+          "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
+          "type": "boolean"
+        },
+        "imagePullSecrets": {
+          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          }
+        },
+        "init": {
+          "description": "Init is used to initialize database",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+        },
+        "monitor": {
+          "description": "Monitor is used monitor database instance",
+          "$ref": "#/definitions/com.github.appscode.kube-mon.api.AgentSpec"
+        },
+        "nodeSelector": {
+          "description": "NodeSelector is a selector which must be true for the pod to fit on a node",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "replicas": {
+          "description": "Number of instances to deploy for a Etcd database.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "resources": {
+          "description": "Compute Resources required by the sidecar container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "schedulerName": {
+          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.",
+          "type": "string"
+        },
+        "storage": {
+          "description": "Storage spec to specify how storage shall be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "tolerations": {
+          "description": "If specified, the pod's tolerations.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "version": {
+          "description": "Version of Etcd to be deployed.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.GCSSpec": {
       "required": [
         "bucket"
@@ -7238,6 +7311,10 @@
         "elasticsearch": {
           "description": "Elasticsearch Spec",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchSpec"
+        },
+        "etcd": {
+          "description": "Etcd Spec",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdSpec"
         },
         "memcached": {
           "description": "Memcached Spec",
