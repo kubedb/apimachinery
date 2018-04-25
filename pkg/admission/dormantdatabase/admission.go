@@ -176,9 +176,19 @@ func (a *DormantDatabaseValidator) setOwnerReferenceToObjects(ddb *api.DormantDa
 
 	// Set Owner Reference of Secret to this Dormant Database Object
 	// only if the secret is not used by other xDB (Similar kind) or DormantDB
-	if err := a.sterilizeSecrets(ddb); err != nil {
-		return err
+	secretVolList := getDatabaseSecretName(ddb, dbKind)
+	if secretVolList == nil {
+		return nil
 	}
+	for _, secretVolSrc := range secretVolList {
+		if secretVolSrc == nil {
+			continue
+		}
+		if err := a.sterilizeSecrets(ddb, secretVolSrc); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -237,47 +247,55 @@ func (a *DormantDatabaseValidator) removeOwnerReferenceFromObjects(ddb *api.Dorm
 	}
 
 	// Remove owner reference from Secrets
-	secretVolSrc := getDatabaseSecretName(ddb, dbKind)
-	if secretVolSrc == nil {
+	secretVolList := getDatabaseSecretName(ddb, dbKind)
+	if secretVolList == nil {
 		return nil
 	}
+	for _, secretVolSrc := range secretVolList {
+		if secretVolSrc == nil {
+			continue
+		}
 
-	secret, err := a.client.CoreV1().Secrets(ddb.Namespace).Get(secretVolSrc.SecretName, metav1.GetOptions{})
-	if err != nil && kerr.IsNotFound(err) {
-		return nil
-	} else if err != nil {
-		return err
-	}
+		secret, err := a.client.CoreV1().Secrets(ddb.Namespace).Get(secretVolSrc.SecretName, metav1.GetOptions{})
+		if err != nil && kerr.IsNotFound(err) {
+			return nil
+		} else if err != nil {
+			return err
+		}
 
-	if _, _, err := core_util.PatchSecret(a.client, secret, func(in *coreV1.Secret) *coreV1.Secret {
-		in.ObjectMeta = core_util.RemoveOwnerReference(in.ObjectMeta, ref)
-		return in
-	}); err != nil {
-		return err
+		if _, _, err := core_util.PatchSecret(a.client, secret, func(in *coreV1.Secret) *coreV1.Secret {
+			in.ObjectMeta = core_util.RemoveOwnerReference(in.ObjectMeta, ref)
+			return in
+		}); err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
-func getDatabaseSecretName(ddb *api.DormantDatabase, dbKind string) *coreV1.SecretVolumeSource {
+func getDatabaseSecretName(ddb *api.DormantDatabase, dbKind string) []*coreV1.SecretVolumeSource {
 	if dbKind == api.ResourceKindMemcached || dbKind == api.ResourceKindRedis {
 		return nil
 	}
 	switch dbKind {
 	case api.ResourceKindMongoDB:
-		return ddb.Spec.Origin.Spec.MongoDB.DatabaseSecret
+		return []*coreV1.SecretVolumeSource{ddb.Spec.Origin.Spec.MongoDB.DatabaseSecret}
 	case api.ResourceKindMySQL:
-		return ddb.Spec.Origin.Spec.MySQL.DatabaseSecret
+		return []*coreV1.SecretVolumeSource{ddb.Spec.Origin.Spec.MySQL.DatabaseSecret}
 	case api.ResourceKindPostgres:
-		return ddb.Spec.Origin.Spec.Postgres.DatabaseSecret
+		return []*coreV1.SecretVolumeSource{ddb.Spec.Origin.Spec.Postgres.DatabaseSecret}
 	case api.ResourceKindElasticsearch:
-		return ddb.Spec.Origin.Spec.Elasticsearch.DatabaseSecret
+		return []*coreV1.SecretVolumeSource{
+			ddb.Spec.Origin.Spec.Elasticsearch.DatabaseSecret,
+			ddb.Spec.Origin.Spec.Elasticsearch.CertificateSecret,
+		}
 	}
 	return nil
 }
 
 // SterilizeSecrets cleans secret that is created for this Ex-MongoDB (now DormantDatabase) database by KubeDB-Operator and
 // not used by any other MongoDB or DormantDatabases objects.
-func (a *DormantDatabaseValidator) sterilizeSecrets(ddb *api.DormantDatabase) error {
+func (a *DormantDatabaseValidator) sterilizeSecrets(ddb *api.DormantDatabase, secretVolume *coreV1.SecretVolumeSource) error {
 	secretFound := false
 
 	// Get object reference of dormant database
@@ -291,7 +309,6 @@ func (a *DormantDatabaseValidator) sterilizeSecrets(ddb *api.DormantDatabase) er
 		return err
 	}
 
-	secretVolume := getDatabaseSecretName(ddb, dbKind)
 	if secretVolume == nil {
 		return nil
 	}
@@ -332,11 +349,16 @@ func (a *DormantDatabaseValidator) sterilizeSecrets(ddb *api.DormantDatabase) er
 				continue
 			}
 
-			databaseSecret := getDatabaseSecretName(&ddb, dbKind)
-			if databaseSecret != nil {
-				if databaseSecret.SecretName == secretVolume.SecretName {
-					secretFound = true
-					break
+			databaseSecretList := getDatabaseSecretName(&ddb, dbKind)
+			if databaseSecretList != nil {
+				for _, databaseSecret := range databaseSecretList {
+					if databaseSecret == nil {
+						continue
+					}
+					if databaseSecret.SecretName == secretVolume.SecretName {
+						secretFound = true
+						break
+					}
 				}
 			}
 		}
@@ -407,6 +429,12 @@ func (a *DormantDatabaseValidator) isSecretUsedInExistingDB(ddb *api.DormantData
 			databaseSecret := es.Spec.DatabaseSecret
 			if databaseSecret != nil {
 				if databaseSecret.SecretName == secretVolume.SecretName {
+					return true, nil
+				}
+			}
+			certCertificate := es.Spec.CertificateSecret
+			if certCertificate != nil {
+				if certCertificate.SecretName == secretVolume.SecretName {
 					return true, nil
 				}
 			}
