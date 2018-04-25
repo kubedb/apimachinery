@@ -258,7 +258,7 @@ func (a *DormantDatabaseValidator) removeOwnerReferenceFromObjects(ddb *api.Dorm
 
 		secret, err := a.client.CoreV1().Secrets(ddb.Namespace).Get(secretVolSrc.SecretName, metav1.GetOptions{})
 		if err != nil && kerr.IsNotFound(err) {
-			return nil
+			continue
 		} else if err != nil {
 			return err
 		}
@@ -360,6 +360,9 @@ func (a *DormantDatabaseValidator) sterilizeSecrets(ddb *api.DormantDatabase, se
 						break
 					}
 				}
+			}
+			if secretFound {
+				break
 			}
 		}
 	}
