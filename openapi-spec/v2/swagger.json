@@ -7850,6 +7850,10 @@
       ]
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotSourceSpec": {
+      "required": [
+        "namespace",
+        "name"
+      ],
       "properties": {
         "name": {
           "type": "string"
