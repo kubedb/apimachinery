@@ -5163,6 +5163,9 @@ spec:
                       type: string
                     namespace:
                       type: string
+                  required:
+                  - namespace
+                  - name
             monitor:
               properties:
                 agent:
@@ -9483,6 +9486,9 @@ spec:
                       type: string
                     namespace:
                       type: string
+                  required:
+                  - namespace
+                  - name
             monitor:
               properties:
                 agent:
@@ -13764,6 +13770,9 @@ spec:
                       type: string
                     namespace:
                       type: string
+                  required:
+                  - namespace
+                  - name
             monitor:
               properties:
                 agent:
@@ -18022,6 +18031,9 @@ spec:
                       type: string
                     namespace:
                       type: string
+                  required:
+                  - namespace
+                  - name
             monitor:
               properties:
                 agent:
@@ -26413,6 +26425,9 @@ spec:
                                   type: string
                                 namespace:
                                   type: string
+                              required:
+                              - namespace
+                              - name
                         monitor:
                           properties:
                             agent:
@@ -30884,6 +30899,9 @@ spec:
                                   type: string
                                 namespace:
                                   type: string
+                              required:
+                              - namespace
+                              - name
                         monitor:
                           properties:
                             agent:
@@ -36027,6 +36045,9 @@ spec:
                                   type: string
                                 namespace:
                                   type: string
+                              required:
+                              - namespace
+                              - name
                         monitor:
                           properties:
                             agent:
@@ -40475,6 +40496,9 @@ spec:
                                   type: string
                                 namespace:
                                   type: string
+                              required:
+                              - namespace
+                              - name
                         monitor:
                           properties:
                             agent:
@@ -46167,6 +46191,9 @@ spec:
                                   type: string
                                 namespace:
                                   type: string
+                              required:
+                              - namespace
+                              - name
                         monitor:
                           properties:
                             agent:
