@@ -15,8 +15,6 @@ spec:
     - pg
     singular: postgres
   scope: Namespaced
-  subresources:
-    status: {}
   validation:
     openAPIV3Schema:
       description: Postgres defines a Postgres database.
@@ -5378,8 +5376,6 @@ spec:
     - es
     singular: elasticsearch
   scope: Namespaced
-  subresources:
-    status: {}
   validation:
     openAPIV3Schema:
       description: Elasticsearch defines a Elasticsearch database.
@@ -9720,8 +9716,6 @@ spec:
     - my
     singular: mysql
   scope: Namespaced
-  subresources:
-    status: {}
   validation:
     openAPIV3Schema:
       description: Mysql defines a Mysql database.
@@ -13983,8 +13977,6 @@ spec:
     - mg
     singular: mongodb
   scope: Namespaced
-  subresources:
-    status: {}
   validation:
     openAPIV3Schema:
       description: MongoDB defines a MongoDB database.
@@ -18246,8 +18238,6 @@ spec:
     - rd
     singular: redis
   scope: Namespaced
-  subresources:
-    status: {}
   validation:
     openAPIV3Schema:
       description: Redis defines a Redis database.
@@ -19249,8 +19239,6 @@ spec:
     - mc
     singular: memcached
   scope: Namespaced
-  subresources:
-    status: {}
   validation:
     openAPIV3Schema:
       description: Memcached defines a Memcached database.
@@ -20171,8 +20159,6 @@ spec:
     - snap
     singular: snapshot
   scope: Namespaced
-  subresources:
-    status: {}
   validation:
     openAPIV3Schema:
       properties:
@@ -21537,8 +21523,6 @@ spec:
     - drmn
     singular: dormantdatabase
   scope: Namespaced
-  subresources:
-    status: {}
   validation:
     openAPIV3Schema:
       properties:
