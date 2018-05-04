@@ -138,21 +138,23 @@ func (a *DormantDatabaseValidator) setOwnerReferenceToObjects(dormantDatabase *a
 		return rerr
 	}
 
-	// Set Owner Reference of Snapshots to this Dormant Database Object
-	snapshotList, err := a.extClient.KubedbV1alpha1().Snapshots(dormantDatabase.Namespace).List(
-		metav1.ListOptions{
-			LabelSelector: labelSelector.String(),
-		},
-	)
-	if err != nil {
-		return err
-	}
-	for _, snapshot := range snapshotList.Items {
-		if _, _, err := util.PatchSnapshot(a.extClient.KubedbV1alpha1(), &snapshot, func(in *api.Snapshot) *api.Snapshot {
-			in.ObjectMeta = core_util.EnsureOwnerReference(in.ObjectMeta, ref)
-			return in
-		}); err != nil {
+	if dbKind != api.ResourceSingularMemcached && dbKind != api.ResourceSingularRedis {
+		// Set Owner Reference of Snapshots to this Dormant Database Object
+		snapshotList, err := a.extClient.KubedbV1alpha1().Snapshots(dormantDatabase.Namespace).List(
+			metav1.ListOptions{
+				LabelSelector: labelSelector.String(),
+			},
+		)
+		if err != nil {
 			return err
+		}
+		for _, snapshot := range snapshotList.Items {
+			if _, _, err := util.PatchSnapshot(a.extClient.KubedbV1alpha1(), &snapshot, func(in *api.Snapshot) *api.Snapshot {
+				in.ObjectMeta = core_util.EnsureOwnerReference(in.ObjectMeta, ref)
+				return in
+			}); err != nil {
+				return err
+			}
 		}
 	}
 
