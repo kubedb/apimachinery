@@ -138,7 +138,7 @@ func (a *DormantDatabaseValidator) setOwnerReferenceToObjects(dormantDatabase *a
 		return rerr
 	}
 
-	if dbKind != api.ResourceSingularMemcached && dbKind != api.ResourceSingularRedis {
+	if dbKind != api.ResourceKindMemcached && dbKind != api.ResourceKindRedis {
 		// Set Owner Reference of Snapshots to this Dormant Database Object
 		snapshotList, err := a.extClient.KubedbV1alpha1().Snapshots(dormantDatabase.Namespace).List(
 			metav1.ListOptions{
