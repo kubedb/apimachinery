@@ -1,5 +1,5 @@
-hash: ddc9a680749607599e8de0599cb291bb60faf17e8a86ef971432ad0f12574ef7
-updated: 2018-05-04T09:25:12.343242725-07:00
+hash: d34b8827b7e0eae768973c5a336005a543071c15b80e704fd15974b71c985bc7
+updated: 2018-05-05T13:08:03.493799602-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -180,7 +180,7 @@ imports:
   - daemon
   - journal
 - name: github.com/coreos/prometheus-operator
-  version: 0608eb688913e3c2523bb503fc8ab76c771e4018
+  version: b21c4949708337d04b9a4d7de0b806dd799a0955
   repo: https://github.com/tamalsaha/prometheus-operator.git
 - name: github.com/cpuguy83/go-md2man
   version: 71acacd42f85e5e82f70a55327789582a5200a90
@@ -217,7 +217,7 @@ imports:
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
-  version: 20b96f641a5ea98f2f8619ff4f3e061cff4833bd
+  version: 300e940a926eb277d3901b20bdfcc54928ad3642
 - name: github.com/go-openapi/jsonpointer
   version: 46af16f9f7b149af66e5d1bd010e3574dc06de98
 - name: github.com/go-openapi/jsonreference
@@ -422,7 +422,7 @@ imports:
   subpackages:
   - rate
 - name: google.golang.org/api
-  version: db8ef494b6bdaf472489f97ad9c556e18c963444
+  version: bb395b674c9930450ea7243b3e3c8f43150f4c11
   subpackages:
   - gensupport
   - googleapi
@@ -574,7 +574,8 @@ imports:
   - third_party/forked/golang/json
   - third_party/forked/golang/reflect
 - name: k8s.io/apiserver
-  version: 5ae41ac86efd753e2ba012f097b83a914b268236
+  version: 6fdedd7050e542dd8c23fdababac0237aedd7f9e
+  repo: https://github.com/tamalsaha/apiserver.git
   subpackages:
   - pkg/admission
   - pkg/admission/configuration
