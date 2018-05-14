@@ -198,6 +198,11 @@ func NewOSMContext(client kubernetes.Interface, spec api.SnapshotStorageSpec, na
 				nc.Config[s3.ConfigCACertFile] = certFileName
 			}
 		}
+
+		if region, foundRegion := config[s3.ConfigRegion]; foundRegion {
+			nc.Config[s3.ConfigRegion] = string(region)
+		}
+
 		return nc, nil
 	} else if spec.GCS != nil {
 		nc.Provider = gcs.Kind
