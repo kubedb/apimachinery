@@ -145,7 +145,11 @@ func NewOSMContext(client kubernetes.Interface, spec api.SnapshotStorageSpec, na
 		} else {
 			nc.Config[s3.ConfigAuthType] = "iam"
 		}
-		if strings.HasSuffix(spec.S3.Endpoint, ".amazonaws.com") {
+
+		region := spec.S3.Region
+		if region != "" {
+			nc.Config[s3.ConfigRegion] = region
+		} else if strings.HasSuffix(spec.S3.Endpoint, ".amazonaws.com") {
 			// find region
 			var sess *session.Session
 			var err error
@@ -176,31 +180,27 @@ func NewOSMContext(client kubernetes.Interface, spec api.SnapshotStorageSpec, na
 				Bucket: types.StringP(spec.S3.Bucket),
 			})
 			nc.Config[s3.ConfigRegion] = stringz.Val(types.String(out.LocationConstraint), "us-east-1")
-		} else {
-			nc.Config[s3.ConfigEndpoint] = spec.S3.Endpoint
-			u, err := url.Parse(spec.S3.Endpoint)
+		}
+
+		nc.Config[s3.ConfigEndpoint] = spec.S3.Endpoint
+		u, err := url.Parse(spec.S3.Endpoint)
+		if err != nil {
+			return nil, err
+		}
+		nc.Config[s3.ConfigDisableSSL] = strconv.FormatBool(u.Scheme == "http")
+
+		cacertData, ok := config[api.CA_CERT_DATA]
+		if ok && u.Scheme == "https" {
+			certFileName := filepath.Join(SecretMountPath, CaCertFileName)
+			err = os.MkdirAll(filepath.Dir(certFileName), 0755)
 			if err != nil {
 				return nil, err
 			}
-			nc.Config[s3.ConfigDisableSSL] = strconv.FormatBool(u.Scheme == "http")
-
-			cacertData, ok := config[api.CA_CERT_DATA]
-			if ok && u.Scheme == "https" {
-				certFileName := filepath.Join(SecretMountPath, CaCertFileName)
-				err = os.MkdirAll(filepath.Dir(certFileName), 0755)
-				if err != nil {
-					return nil, err
-				}
-				err = ioutil.WriteFile(certFileName, cacertData, 0755)
-				if err != nil {
-					return nil, err
-				}
-				nc.Config[s3.ConfigCACertFile] = certFileName
+			err = ioutil.WriteFile(certFileName, cacertData, 0755)
+			if err != nil {
+				return nil, err
 			}
-		}
-
-		if region, foundRegion := config[s3.ConfigRegion]; foundRegion {
-			nc.Config[s3.ConfigRegion] = string(region)
+			nc.Config[s3.ConfigCACertFile] = certFileName
 		}
 
 		return nc, nil
