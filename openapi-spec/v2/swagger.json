@@ -7073,7 +7073,8 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBSpec": {
       "required": [
-        "version"
+        "version",
+        "storage"
       ],
       "properties": {
         "affinity": {
