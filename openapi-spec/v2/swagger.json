@@ -6569,8 +6569,17 @@
           "type": "string"
         },
         "replicas": {
+          "description": "Replicas represents number of replica for this specific type of node",
           "type": "integer",
           "format": "int32"
+        },
+        "resources": {
+          "description": "Compute Resources required by the sidecar container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "storage": {
+          "description": "Storage to specify how storage shall be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
         }
       }
     },
