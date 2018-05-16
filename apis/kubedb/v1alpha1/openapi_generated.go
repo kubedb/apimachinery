@@ -451,7 +451,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 							},
 						},
 					},
-					Required: []string{"replicas", "storage", "resources"},
+					Required: []string{"storage", "resources"},
 				},
 			},
 			Dependencies: []string{

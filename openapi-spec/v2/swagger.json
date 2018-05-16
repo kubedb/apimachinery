@@ -6570,7 +6570,6 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode": {
       "required": [
-        "replicas",
         "storage",
         "resources"
       ],

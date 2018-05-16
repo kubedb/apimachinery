@@ -9767,7 +9767,6 @@ spec:
                             PersistentVolume backing this claim.
                           type: string
                   required:
-                  - replicas
                   - storage
                   - resources
                 data:
@@ -9879,7 +9878,6 @@ spec:
                             PersistentVolume backing this claim.
                           type: string
                   required:
-                  - replicas
                   - storage
                   - resources
                 master:
@@ -9991,7 +9989,6 @@ spec:
                             PersistentVolume backing this claim.
                           type: string
                   required:
-                  - replicas
                   - storage
                   - resources
               required:
@@ -27051,7 +27048,6 @@ spec:
                                         to the PersistentVolume backing this claim.
                                       type: string
                               required:
-                              - replicas
                               - storage
                               - resources
                             data:
@@ -27175,7 +27171,6 @@ spec:
                                         to the PersistentVolume backing this claim.
                                       type: string
                               required:
-                              - replicas
                               - storage
                               - resources
                             master:
@@ -27299,7 +27294,6 @@ spec:
                                         to the PersistentVolume backing this claim.
                                       type: string
                               required:
-                              - replicas
                               - storage
                               - resources
                           required:

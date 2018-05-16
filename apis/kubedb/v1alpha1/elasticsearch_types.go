@@ -83,7 +83,7 @@ type ElasticsearchClusterTopology struct {
 
 type ElasticsearchNode struct {
 	// Replicas represents number of replica for this specific type of node
-	Replicas int32  `json:"replicas"`
+	Replicas *int32 `json:"replicas,omitempty"`
 	Prefix   string `json:"prefix,omitempty"`
 	// Storage to specify how storage shall be used.
 	Storage core.PersistentVolumeClaimSpec `json:"storage"`
