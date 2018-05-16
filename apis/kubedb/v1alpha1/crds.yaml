@@ -9766,6 +9766,10 @@ spec:
                           description: VolumeName is the binding reference to the
                             PersistentVolume backing this claim.
                           type: string
+                  required:
+                  - replicas
+                  - storage
+                  - resources
                 data:
                   properties:
                     prefix:
@@ -9874,6 +9878,10 @@ spec:
                           description: VolumeName is the binding reference to the
                             PersistentVolume backing this claim.
                           type: string
+                  required:
+                  - replicas
+                  - storage
+                  - resources
                 master:
                   properties:
                     prefix:
@@ -9982,6 +9990,14 @@ spec:
                           description: VolumeName is the binding reference to the
                             PersistentVolume backing this claim.
                           type: string
+                  required:
+                  - replicas
+                  - storage
+                  - resources
+              required:
+              - master
+              - data
+              - client
             version:
               description: Version of Elasticsearch to be deployed.
               type: string
@@ -27034,6 +27050,10 @@ spec:
                                       description: VolumeName is the binding reference
                                         to the PersistentVolume backing this claim.
                                       type: string
+                              required:
+                              - replicas
+                              - storage
+                              - resources
                             data:
                               properties:
                                 prefix:
@@ -27154,6 +27174,10 @@ spec:
                                       description: VolumeName is the binding reference
                                         to the PersistentVolume backing this claim.
                                       type: string
+                              required:
+                              - replicas
+                              - storage
+                              - resources
                             master:
                               properties:
                                 prefix:
@@ -27274,6 +27298,14 @@ spec:
                                       description: VolumeName is the binding reference
                                         to the PersistentVolume backing this claim.
                                       type: string
+                              required:
+                              - replicas
+                              - storage
+                              - resources
+                          required:
+                          - master
+                          - data
+                          - client
                         version:
                           description: Version of Elasticsearch to be deployed.
                           type: string
