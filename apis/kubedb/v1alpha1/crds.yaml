@@ -9768,7 +9768,6 @@ spec:
                           type: string
                   required:
                   - storage
-                  - resources
                 data:
                   properties:
                     prefix:
@@ -9879,7 +9878,6 @@ spec:
                           type: string
                   required:
                   - storage
-                  - resources
                 master:
                   properties:
                     prefix:
@@ -9990,7 +9988,6 @@ spec:
                           type: string
                   required:
                   - storage
-                  - resources
               required:
               - master
               - data
@@ -27049,7 +27046,6 @@ spec:
                                       type: string
                               required:
                               - storage
-                              - resources
                             data:
                               properties:
                                 prefix:
@@ -27172,7 +27168,6 @@ spec:
                                       type: string
                               required:
                               - storage
-                              - resources
                             master:
                               properties:
                                 prefix:
@@ -27295,7 +27290,6 @@ spec:
                                       type: string
                               required:
                               - storage
-                              - resources
                           required:
                           - master
                           - data
