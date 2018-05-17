@@ -6551,6 +6551,11 @@
       }
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchClusterTopology": {
+      "required": [
+        "master",
+        "data",
+        "client"
+      ],
       "properties": {
         "client": {
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode"
@@ -6564,6 +6569,9 @@
       }
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode": {
+      "required": [
+        "storage"
+      ],
       "properties": {
         "prefix": {
           "type": "string"
