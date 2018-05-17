@@ -2553,12 +2553,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Format: "",
 							},
 						},
-						"region": {
-							SchemaProps: spec.SchemaProps{
-								Type:   []string{"string"},
-								Format: "",
-							},
-						},
 						"bucket": {
 							SchemaProps: spec.SchemaProps{
 								Type:   []string{"string"},

@@ -7674,9 +7674,6 @@
         },
         "prefix": {
           "type": "string"
-        },
-        "region": {
-          "type": "string"
         }
       }
     },

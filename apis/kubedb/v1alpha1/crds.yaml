@@ -1878,8 +1878,6 @@ spec:
                           type: string
                         prefix:
                           type: string
-                        region:
-                          type: string
                       required:
                       - bucket
                     storageSecretName:
@@ -2955,8 +2953,6 @@ spec:
                     endpoint:
                       type: string
                     prefix:
-                      type: string
-                    region:
                       type: string
                   required:
                   - bucket
@@ -4126,8 +4122,6 @@ spec:
                         endpoint:
                           type: string
                         prefix:
-                          type: string
-                        region:
                           type: string
                       required:
                       - bucket
@@ -7227,8 +7221,6 @@ spec:
                       type: string
                     prefix:
                       type: string
-                    region:
-                      type: string
                   required:
                   - bucket
                 storageSecretName:
@@ -8453,8 +8445,6 @@ spec:
                         endpoint:
                           type: string
                         prefix:
-                          type: string
-                        region:
                           type: string
                       required:
                       - bucket
@@ -11571,8 +11561,6 @@ spec:
                       type: string
                     prefix:
                       type: string
-                    region:
-                      type: string
                   required:
                   - bucket
                 storageSecretName:
@@ -12741,8 +12729,6 @@ spec:
                         endpoint:
                           type: string
                         prefix:
-                          type: string
-                        region:
                           type: string
                       required:
                       - bucket
@@ -15836,8 +15822,6 @@ spec:
                       type: string
                     prefix:
                       type: string
-                    region:
-                      type: string
                   required:
                   - bucket
                 storageSecretName:
@@ -17006,8 +16990,6 @@ spec:
                         endpoint:
                           type: string
                         prefix:
-                          type: string
-                        region:
                           type: string
                       required:
                       - bucket
@@ -21494,8 +21476,6 @@ spec:
                   type: string
                 prefix:
                   type: string
-                region:
-                  type: string
               required:
               - bucket
             storageSecretName:
@@ -23888,8 +23868,6 @@ spec:
                                   type: string
                                 prefix:
                                   type: string
-                                region:
-                                  type: string
                               required:
                               - bucket
                             storageSecretName:
@@ -25281,8 +25259,6 @@ spec:
                                     endpoint:
                                       type: string
                                     prefix:
-                                      type: string
-                                    region:
                                       type: string
                                   required:
                                   - bucket
@@ -28429,8 +28405,6 @@ spec:
                                   type: string
                                 prefix:
                                   type: string
-                                region:
-                                  type: string
                               required:
                               - bucket
                             storageSecretName:
@@ -29759,8 +29733,6 @@ spec:
                                     endpoint:
                                       type: string
                                     prefix:
-                                      type: string
-                                    region:
                                       type: string
                                   required:
                                   - bucket
@@ -33579,8 +33551,6 @@ spec:
                                   type: string
                                 prefix:
                                   type: string
-                                region:
-                                  type: string
                               required:
                               - bucket
                             storageSecretName:
@@ -34909,8 +34879,6 @@ spec:
                                     endpoint:
                                       type: string
                                     prefix:
-                                      type: string
-                                    region:
                                       type: string
                                   required:
                                   - bucket
@@ -38034,8 +38002,6 @@ spec:
                                   type: string
                                 prefix:
                                   type: string
-                                region:
-                                  type: string
                               required:
                               - bucket
                             storageSecretName:
@@ -39364,8 +39330,6 @@ spec:
                                     endpoint:
                                       type: string
                                     prefix:
-                                      type: string
-                                    region:
                                       type: string
                                   required:
                                   - bucket
@@ -42531,8 +42495,6 @@ spec:
                                       type: string
                                     prefix:
                                       type: string
-                                    region:
-                                      type: string
                                   required:
                                   - bucket
                                 storageSecretName:
@@ -43734,8 +43696,6 @@ spec:
                                 endpoint:
                                   type: string
                                 prefix:
-                                  type: string
-                                region:
                                   type: string
                               required:
                               - bucket
@@ -45065,8 +45025,6 @@ spec:
                                     endpoint:
                                       type: string
                                     prefix:
-                                      type: string
-                                    region:
                                       type: string
                                   required:
                                   - bucket
