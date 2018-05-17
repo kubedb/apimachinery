@@ -5344,6 +5344,7 @@ spec:
               type: string
           required:
           - version
+          - storage
         status:
           properties:
             creationTime:
@@ -14258,6 +14259,7 @@ spec:
               type: string
           required:
           - version
+          - storage
         status:
           properties:
             creationTime:
@@ -18519,6 +18521,7 @@ spec:
               type: string
           required:
           - version
+          - storage
         status:
           properties:
             creationTime:
@@ -19520,6 +19523,7 @@ spec:
               type: string
           required:
           - version
+          - storage
         status:
           properties:
             creationTime:
@@ -36896,6 +36900,7 @@ spec:
                           type: string
                       required:
                       - version
+                      - storage
                     mysql:
                       properties:
                         affinity:
@@ -41346,6 +41351,7 @@ spec:
                           type: string
                       required:
                       - version
+                      - storage
                     postgres:
                       properties:
                         affinity:
@@ -47048,6 +47054,7 @@ spec:
                           type: string
                       required:
                       - version
+                      - storage
                     redis:
                       properties:
                         affinity:
@@ -47829,6 +47836,7 @@ spec:
                           type: string
                       required:
                       - version
+                      - storage
               required:
               - spec
             wipeOut:

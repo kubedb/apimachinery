@@ -7081,7 +7081,8 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBSpec": {
       "required": [
-        "version"
+        "version",
+        "storage"
       ],
       "properties": {
         "affinity": {
@@ -7225,7 +7226,8 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLSpec": {
       "required": [
-        "version"
+        "version",
+        "storage"
       ],
       "properties": {
         "affinity": {
@@ -7422,7 +7424,8 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresSpec": {
       "required": [
-        "version"
+        "version",
+        "storage"
       ],
       "properties": {
         "affinity": {
@@ -7606,7 +7609,8 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisSpec": {
       "required": [
-        "version"
+        "version",
+        "storage"
       ],
       "properties": {
         "affinity": {
