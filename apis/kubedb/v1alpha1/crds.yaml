@@ -5344,6 +5344,7 @@ spec:
               type: string
           required:
           - version
+          - storage
         status:
           properties:
             creationTime:
@@ -47053,6 +47054,7 @@ spec:
                           type: string
                       required:
                       - version
+                      - storage
                     redis:
                       properties:
                         affinity:

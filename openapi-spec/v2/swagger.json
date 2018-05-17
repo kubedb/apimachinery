@@ -7424,7 +7424,8 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresSpec": {
       "required": [
-        "version"
+        "version",
+        "storage"
       ],
       "properties": {
         "affinity": {
