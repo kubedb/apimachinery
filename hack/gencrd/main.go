@@ -11,6 +11,7 @@ import (
 	"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"io/ioutil"
 	crd_api "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
+	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/apimachinery/announced"
 	"k8s.io/apimachinery/pkg/apimachinery/registered"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -53,13 +54,19 @@ func generateSwaggerJson() {
 	)
 
 	install.Install(groupFactoryRegistry, registry, Scheme)
+	registry.GroupOrDie(v1alpha1.SchemeGroupVersion.Group).RESTMapper.AddSpecific(
+		v1alpha1.SchemeGroupVersion.WithKind(v1alpha1.ResourceKindElasticsearch),
+		v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralElasticsearch),
+		v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourceSingularElasticsearch),
+		meta.RESTScopeNamespace,
+	)
 
 	apispec, err := openapi.RenderOpenAPISpec(openapi.Config{
 		Registry: registry,
 		Scheme:   Scheme,
 		Codecs:   Codecs,
 		Info: spec.InfoProps{
-			Title:   "kubedb",
+			Title:   "KubeDB",
 			Version: "v0",
 			Contact: &spec.ContactInfo{
 				Name:  "AppsCode Inc.",
@@ -76,7 +83,7 @@ func generateSwaggerJson() {
 		},
 		Resources: []schema.GroupVersionResource{
 			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralPostgres),
-			// v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralElasticsearch),
+			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralElasticsearch),
 			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralMongoDB),
 			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralMySQL),
 			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralRedis),
