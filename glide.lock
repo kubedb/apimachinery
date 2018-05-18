@@ -1,5 +1,5 @@
-hash: d34b8827b7e0eae768973c5a336005a543071c15b80e704fd15974b71c985bc7
-updated: 2018-05-05T13:08:03.493799602-07:00
+hash: 7f9ede690b32b98d294396ed38e40792f19ce415b8f8eccac39097f4412b4280
+updated: 2018-05-18T16:15:56.517893976-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -32,7 +32,7 @@ imports:
   subpackages:
   - admission/v1beta1
 - name: github.com/appscode/kutil
-  version: ed8d181d523ddd37e5cb7a23fa457b4c370a5140
+  version: 7de9bdd06e30d7ad4df3452d6188a36134bcddee
   subpackages:
   - apiextensions/v1beta1
   - core/v1
@@ -240,11 +240,13 @@ imports:
 - name: github.com/golang/protobuf
   version: 1643683e1b54a9e88ad26d98f81400c8c9d9f4f9
   subpackages:
+  - jsonpb
   - proto
   - protoc-gen-go/descriptor
   - ptypes
   - ptypes/any
   - ptypes/duration
+  - ptypes/struct
   - ptypes/timestamp
 - name: github.com/google/go-cmp
   version: 5411ab924f9ffa6566244a9e504bc347edacffd3
@@ -422,7 +424,7 @@ imports:
   subpackages:
   - rate
 - name: google.golang.org/api
-  version: bb395b674c9930450ea7243b3e3c8f43150f4c11
+  version: aedc137bffcaca05f836e35c6d182fcb7a68b1c0
   subpackages:
   - gensupport
   - googleapi
@@ -515,7 +517,9 @@ imports:
   - pkg/client/clientset/clientset/scheme
   - pkg/client/clientset/clientset/typed/apiextensions/v1beta1
 - name: k8s.io/apimachinery
-  version: 302974c03f7e50f16561ba237db776ab93594ef6
+  version: e557b45efb5e379071ff79e03cb28c84432ae348
+  repo: https://github.com/pharmer/apimachinery.git
+  vcs: git
   subpackages:
   - pkg/api/equality
   - pkg/api/errors
