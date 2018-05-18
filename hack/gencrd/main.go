@@ -59,7 +59,7 @@ func generateSwaggerJson() {
 		Scheme:   Scheme,
 		Codecs:   Codecs,
 		Info: spec.InfoProps{
-			Title:   "kubedb",
+			Title:   "KubeDB",
 			Version: "v0",
 			Contact: &spec.ContactInfo{
 				Name:  "AppsCode Inc.",
@@ -76,7 +76,7 @@ func generateSwaggerJson() {
 		},
 		Resources: []schema.GroupVersionResource{
 			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralPostgres),
-			// v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralElasticsearch),
+			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralElasticsearch),
 			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralMongoDB),
 			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralMySQL),
 			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralRedis),
