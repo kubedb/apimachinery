@@ -1,5 +1,5 @@
 hash: 7f9ede690b32b98d294396ed38e40792f19ce415b8f8eccac39097f4412b4280
-updated: 2018-05-18T16:15:56.517893976-07:00
+updated: 2018-05-27T22:59:27.86843444-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -32,7 +32,7 @@ imports:
   subpackages:
   - admission/v1beta1
 - name: github.com/appscode/kutil
-  version: 7de9bdd06e30d7ad4df3452d6188a36134bcddee
+  version: e04d4d7ed42f54b68fc1e6a5926679883b0e5b56
   subpackages:
   - apiextensions/v1beta1
   - core/v1
@@ -213,7 +213,7 @@ imports:
 - name: github.com/evanphx/json-patch
   version: 944e07253867aacae43c04b2e6a239005443f33a
 - name: github.com/fsnotify/fsnotify
-  version: c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9
+  version: f12c6236fe7b5cf6bcf30e5935d08cb079d78334
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
@@ -424,7 +424,7 @@ imports:
   subpackages:
   - rate
 - name: google.golang.org/api
-  version: aedc137bffcaca05f836e35c6d182fcb7a68b1c0
+  version: 348810ff778af56686d572415ce79e6c9fad9613
   subpackages:
   - gensupport
   - googleapi
