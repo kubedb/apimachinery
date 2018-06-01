@@ -238,6 +238,8 @@ spec:
                 request the generation of an appropriate name automatically. Name
                 is primarily intended for creation idempotence and configuration definition.
                 Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names'
+              maxLength: 63
+              pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
               type: string
             namespace:
               description: |-
@@ -5600,6 +5602,8 @@ spec:
                 request the generation of an appropriate name automatically. Name
                 is primarily intended for creation idempotence and configuration definition.
                 Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names'
+              maxLength: 63
+              pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
               type: string
             namespace:
               description: |-
@@ -10253,6 +10257,8 @@ spec:
                 request the generation of an appropriate name automatically. Name
                 is primarily intended for creation idempotence and configuration definition.
                 Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names'
+              maxLength: 63
+              pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
               type: string
             namespace:
               description: |-
@@ -14515,6 +14521,8 @@ spec:
                 request the generation of an appropriate name automatically. Name
                 is primarily intended for creation idempotence and configuration definition.
                 Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names'
+              maxLength: 63
+              pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
               type: string
             namespace:
               description: |-
@@ -18777,6 +18785,8 @@ spec:
                 request the generation of an appropriate name automatically. Name
                 is primarily intended for creation idempotence and configuration definition.
                 Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names'
+              maxLength: 63
+              pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
               type: string
             namespace:
               description: |-
@@ -19779,6 +19789,8 @@ spec:
                 request the generation of an appropriate name automatically. Name
                 is primarily intended for creation idempotence and configuration definition.
                 Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names'
+              maxLength: 63
+              pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
               type: string
             namespace:
               description: |-
@@ -20698,6 +20710,8 @@ spec:
                 request the generation of an appropriate name automatically. Name
                 is primarily intended for creation idempotence and configuration definition.
                 Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names'
+              maxLength: 63
+              pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
               type: string
             namespace:
               description: |-
@@ -22062,6 +22076,8 @@ spec:
                 request the generation of an appropriate name automatically. Name
                 is primarily intended for creation idempotence and configuration definition.
                 Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names'
+              maxLength: 63
+              pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
               type: string
             namespace:
               description: |-
@@ -22349,6 +22365,8 @@ spec:
                         automatically. Name is primarily intended for creation idempotence
                         and configuration definition. Cannot be updated. More info:
                         http://kubernetes.io/docs/user-guide/identifiers#names'
+                      maxLength: 63
+                      pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
                       type: string
                     namespace:
                       description: |-
