@@ -10,6 +10,10 @@ import (
 	crd_api "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 )
 
+const (
+	ESSearchguardDisabled = ElasticsearchKey + "/searchguard-disabled"
+)
+
 func (e Elasticsearch) OffshootName() string {
 	return e.Name
 }
