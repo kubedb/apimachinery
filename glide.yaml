@@ -2,12 +2,6 @@ package: github.com/kubedb/apimachinery
 import:
 - package: github.com/appscode/go
   version: master
-- package: github.com/appscode/kube-mon
-  version: release-7.0
-- package: github.com/appscode/kubernetes-webhook-util
-  version: release-7.0
-- package: github.com/appscode/kutil
-  version: release-7.0
 - package: github.com/appscode/osm
   version: 0.7.0
 - package: github.com/ghodss/yaml
@@ -31,6 +25,7 @@ import:
 - package: github.com/ncw/swift
   version: master
 - package: github.com/appscode/docker-registry-client
+  version: master
 - package: github.com/orcaman/concurrent-map
 - package: github.com/pkg/errors
   version: v0.8.0
@@ -40,13 +35,25 @@ import:
   version: v2
 - package: k8s.io/api
   version: kubernetes-1.10.0
+- package: k8s.io/apiserver
+  repo: https://github.com/tamalsaha/apiserver.git
+  version: k-1.10
 - package: k8s.io/apiextensions-apiserver
   version: kubernetes-1.10.0
 - package: k8s.io/apimachinery
-  version: kubernetes-1.10.0
+  repo: https://github.com/pharmer/apimachinery.git
+  vcs: git
+  version: release-1.10
 - package: k8s.io/client-go
   version: v7.0.0
 - package: k8s.io/kube-openapi
+  version: master
+- package: github.com/appscode/kutil
+  version: release-7.0
+- package: github.com/appscode/kube-mon
+  version: release-7.0
+- package: github.com/appscode/kubernetes-webhook-util
+  version: release-7.0
 - package: github.com/openshift/api
   version: 09a4e3d50f1aae6613b1b86941ffb8bded21e674
 - package: github.com/openshift/client-go
