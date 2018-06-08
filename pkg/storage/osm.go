@@ -145,7 +145,7 @@ func NewOSMContext(client kubernetes.Interface, spec api.SnapshotStorageSpec, na
 		} else {
 			nc.Config[s3.ConfigAuthType] = "iam"
 		}
-		if strings.HasSuffix(spec.S3.Endpoint, ".amazonaws.com") {
+		if spec.S3.Endpoint == "" || strings.HasSuffix(spec.S3.Endpoint, ".amazonaws.com") {
 			// find region
 			var sess *session.Session
 			var err error
