@@ -3,8 +3,8 @@ package docker
 import (
 	"net/http"
 
+	docker "github.com/appscode/docker-registry-client/registry"
 	"github.com/appscode/go/ioutil"
-	docker "github.com/heroku/docker-registry-client/registry"
 	"github.com/pkg/errors"
 )
 
