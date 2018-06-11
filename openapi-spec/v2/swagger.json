@@ -8214,6 +8214,13 @@
           "description": "If DoNotPause is true, controller will prevent to delete this Mysql object. Controller will create same Mysql object and ignore other process.",
           "type": "boolean"
         },
+        "env": {
+          "description": "List of environment variables to set in the container. Cannot be updated.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.core.v1.EnvVar"
+          }
+        },
         "imagePullSecrets": {
           "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use.",
           "type": "array",
@@ -9084,6 +9091,26 @@
         }
       }
     },
+    "io.k8s.api.core.v1.ConfigMapKeySelector": {
+      "description": "Selects a key from a ConfigMap.",
+      "required": [
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "The key to select.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string"
+        },
+        "optional": {
+          "description": "Specify whether the ConfigMap or it's key must be defined",
+          "type": "boolean"
+        }
+      }
+    },
     "io.k8s.api.core.v1.ConfigMapProjection": {
       "description": "Adapts a ConfigMap into a projected volume.\n\nThe contents of the target ConfigMap's Data field will be presented in a projected volume as files using the keys in the Data field as the file names, unless the items element is populated with specific mappings of keys to paths. Note that this is identical to a configmap volume source without the default mode.",
       "properties": {
@@ -9193,6 +9220,47 @@
         "sizeLimit": {
           "description": "Total amount of local storage required for this EmptyDir volume. The size limit is also applicable for memory medium. The maximum usage on memory medium EmptyDir would be the minimum value between the SizeLimit specified here and the sum of memory limits of all containers in a pod. The default is nil which means that the limit is undefined. More info: http://kubernetes.io/docs/user-guide/volumes#emptydir",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        }
+      }
+    },
+    "io.k8s.api.core.v1.EnvVar": {
+      "description": "EnvVar represents an environment variable present in a Container.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "Name of the environment variable. Must be a C_IDENTIFIER.",
+          "type": "string"
+        },
+        "value": {
+          "description": "Variable references $(VAR_NAME) are expanded using the previous defined environment variables in the container and any service environment variables. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Defaults to \"\".",
+          "type": "string"
+        },
+        "valueFrom": {
+          "description": "Source for the environment variable's value. Cannot be used if value is not empty.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.EnvVarSource"
+        }
+      }
+    },
+    "io.k8s.api.core.v1.EnvVarSource": {
+      "description": "EnvVarSource represents a source for the value of an EnvVar.",
+      "properties": {
+        "configMapKeyRef": {
+          "description": "Selects a key of a ConfigMap.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ConfigMapKeySelector"
+        },
+        "fieldRef": {
+          "description": "Selects a field of the pod: supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ObjectFieldSelector"
+        },
+        "resourceFieldRef": {
+          "description": "Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceFieldSelector"
+        },
+        "secretKeyRef": {
+          "description": "Selects a key of a secret in the pod's namespace",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
         }
       }
     },
@@ -9892,6 +9960,26 @@
         "volumeName": {
           "description": "The name of a volume already created in the ScaleIO system that is associated with this volume source.",
           "type": "string"
+        }
+      }
+    },
+    "io.k8s.api.core.v1.SecretKeySelector": {
+      "description": "SecretKeySelector selects a key of a Secret.",
+      "required": [
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "The key of the secret to select from.  Must be a valid secret key.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string"
+        },
+        "optional": {
+          "description": "Specify whether the Secret or it's key must be defined",
+          "type": "boolean"
         }
       }
     },
