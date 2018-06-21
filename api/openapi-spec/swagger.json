@@ -8423,6 +8423,13 @@
           "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
           "type": "boolean"
         },
+        "env": {
+          "description": "List of environment variables to set in the container. Cannot be updated.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.core.v1.EnvVar"
+          }
+        },
         "imagePullSecrets": {
           "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use.",
           "type": "array",
