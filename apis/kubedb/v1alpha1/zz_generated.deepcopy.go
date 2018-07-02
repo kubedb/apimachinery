@@ -1510,6 +1510,15 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		*out = make([]v1.LocalObjectReference, len(*in))
 		copy(*out, *in)
 	}
+	if in.ConfigFile != nil {
+		in, out := &in.ConfigFile, &out.ConfigFile
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.VolumeSource)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	return
 }
 
