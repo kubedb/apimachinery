@@ -11,10 +11,7 @@ import (
 	"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"io/ioutil"
 	crd_api "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-	"k8s.io/apimachinery/pkg/apimachinery/announced"
-	"k8s.io/apimachinery/pkg/apimachinery/registered"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/kube-openapi/pkg/common"
 	"os"
@@ -47,18 +44,15 @@ func generateCRDDefinitions() {
 
 func generateSwaggerJson() {
 	var (
-		groupFactoryRegistry = make(announced.APIGroupFactoryRegistry)
-		registry             = registered.NewOrDie("")
-		Scheme               = runtime.NewScheme()
-		Codecs               = serializer.NewCodecFactory(Scheme)
+		Scheme = runtime.NewScheme()
+		Codecs = serializer.NewCodecFactory(Scheme)
 	)
 
-	install.Install(groupFactoryRegistry, registry, Scheme)
+	install.Install(Scheme)
 
 	apispec, err := openapi.RenderOpenAPISpec(openapi.Config{
-		Registry: registry,
-		Scheme:   Scheme,
-		Codecs:   Codecs,
+		Scheme: Scheme,
+		Codecs: Codecs,
 		Info: spec.InfoProps{
 			Title:   "KubeDB",
 			Version: "v0",
@@ -75,15 +69,15 @@ func generateSwaggerJson() {
 		OpenAPIDefinitions: []common.GetOpenAPIDefinitions{
 			v1alpha1.GetOpenAPIDefinitions,
 		},
-		Resources: []schema.GroupVersionResource{
-			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralPostgres),
-			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralElasticsearch),
-			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralMongoDB),
-			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralMySQL),
-			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralRedis),
-			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralMemcached),
-			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralSnapshot),
-			v1alpha1.SchemeGroupVersion.WithResource(v1alpha1.ResourcePluralDormantDatabase),
+		Resources: []openapi.TypeInfo{
+			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralPostgres, v1alpha1.ResourceKindPostgres, true},
+			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralElasticsearch, v1alpha1.ResourceKindElasticsearch, true},
+			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralMongoDB, v1alpha1.ResourceKindMongoDB, true},
+			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralMySQL, v1alpha1.ResourceKindMySQL, true},
+			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralRedis, v1alpha1.ResourceKindRedis, true},
+			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralMemcached, v1alpha1.ResourceKindMemcached, true},
+			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralSnapshot, v1alpha1.ResourceKindSnapshot, true},
+			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralDormantDatabase, v1alpha1.ResourceKindDormantDatabase, true},
 		},
 	})
 	if err != nil {

@@ -7808,7 +7808,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.GCEPersistentDiskVolumeSource"
         },
         "gitRepo": {
-          "description": "GitRepo represents a git repository at a particular revision.",
+          "description": "GitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
           "$ref": "#/definitions/io.k8s.api.core.v1.GitRepoVolumeSource"
         },
         "glusterfs": {
@@ -8766,7 +8766,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.GCEPersistentDiskVolumeSource"
         },
         "gitRepo": {
-          "description": "GitRepo represents a git repository at a particular revision.",
+          "description": "GitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
           "$ref": "#/definitions/io.k8s.api.core.v1.GitRepoVolumeSource"
         },
         "glusterfs": {
@@ -9127,6 +9127,10 @@
           "description": "Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md",
           "type": "boolean"
         },
+        "secretRef": {
+          "description": "Optional: points to a secret object containing parameters used to connect to OpenStack.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
         "volumeID": {
           "description": "volume id used to identify the volume in cinder More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md",
           "type": "string"
@@ -9408,7 +9412,7 @@
       }
     },
     "io.k8s.api.core.v1.GitRepoVolumeSource": {
-      "description": "Represents a volume that is populated with the contents of a git repository. Git repo volumes do not support ownership management. Git repo volumes support SELinux relabeling.",
+      "description": "Represents a volume that is populated with the contents of a git repository. Git repo volumes do not support ownership management. Git repo volumes support SELinux relabeling.\n\nDEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
       "required": [
         "repository"
       ],
@@ -9630,13 +9634,17 @@
       }
     },
     "io.k8s.api.core.v1.NodeSelectorTerm": {
-      "description": "A null or empty node selector term matches no objects.",
-      "required": [
-        "matchExpressions"
-      ],
+      "description": "A null or empty node selector term matches no objects. The requirements of them are ANDed. The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.",
       "properties": {
         "matchExpressions": {
-          "description": "Required. A list of node selector requirements. The requirements are ANDed.",
+          "description": "A list of node selector requirements by node's labels.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.core.v1.NodeSelectorRequirement"
+          }
+        },
+        "matchFields": {
+          "description": "A list of node selector requirements by node's fields.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.NodeSelectorRequirement"
@@ -10070,6 +10078,27 @@
         }
       }
     },
+    "io.k8s.api.core.v1.ServiceAccountTokenProjection": {
+      "description": "ServiceAccountTokenProjection represents a projected service account token volume. This projection can be used to insert a service account token into the pods runtime filesystem for use against APIs (Kubernetes API Server or otherwise).",
+      "required": [
+        "path"
+      ],
+      "properties": {
+        "audience": {
+          "description": "Audience is the intended audience of the token. A recipient of a token must identify itself with an identifier specified in the audience of the token, and otherwise should reject the token. The audience defaults to the identifier of the apiserver.",
+          "type": "string"
+        },
+        "expirationSeconds": {
+          "description": "ExpirationSeconds is the requested duration of validity of the service account token. As the token approaches expiration, the kubelet volume plugin will proactively rotate the service account token. The kubelet will start trying to rotate the token if the token is older than 80 percent of its time to live or if the token is older than 24 hours.Defaults to 1 hour and must be at least 10 minutes.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "path": {
+          "description": "Path is the path relative to the mount point of the file to project the token into.",
+          "type": "string"
+        }
+      }
+    },
     "io.k8s.api.core.v1.StorageOSVolumeSource": {
       "description": "Represents a StorageOS persistent volume resource.",
       "properties": {
@@ -10135,6 +10164,10 @@
         "secret": {
           "description": "information about the secret data to project",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretProjection"
+        },
+        "serviceAccountToken": {
+          "description": "information about the serviceAccountToken data to project",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ServiceAccountTokenProjection"
         }
       }
     },
@@ -10181,14 +10214,14 @@
       }
     },
     "io.k8s.apimachinery.pkg.api.resource.Quantity": {
+      "description": "Quantity is a fixed-point representation of a number. It provides convenient marshaling/unmarshaling in JSON and YAML, in addition to String() and Int64() accessors.\n\nThe serialization format is:\n\n\u003cquantity\u003e        ::= \u003csignedNumber\u003e\u003csuffix\u003e\n  (Note that \u003csuffix\u003e may be empty, from the \"\" case in \u003cdecimalSI\u003e.)\n\u003cdigit\u003e           ::= 0 | 1 | ... | 9 \u003cdigits\u003e          ::= \u003cdigit\u003e | \u003cdigit\u003e\u003cdigits\u003e \u003cnumber\u003e          ::= \u003cdigits\u003e | \u003cdigits\u003e.\u003cdigits\u003e | \u003cdigits\u003e. | .\u003cdigits\u003e \u003csign\u003e            ::= \"+\" | \"-\" \u003csignedNumber\u003e    ::= \u003cnumber\u003e | \u003csign\u003e\u003cnumber\u003e \u003csuffix\u003e          ::= \u003cbinarySI\u003e | \u003cdecimalExponent\u003e | \u003cdecimalSI\u003e \u003cbinarySI\u003e        ::= Ki | Mi | Gi | Ti | Pi | Ei\n  (International System of units; See: http://physics.nist.gov/cuu/Units/binary.html)\n\u003cdecimalSI\u003e       ::= m | \"\" | k | M | G | T | P | E\n  (Note that 1024 = 1Ki but 1000 = 1k; I didn't choose the capitalization.)\n\u003cdecimalExponent\u003e ::= \"e\" \u003csignedNumber\u003e | \"E\" \u003csignedNumber\u003e\n\nNo matter which of the three exponent forms is used, no quantity may represent a number greater than 2^63-1 in magnitude, nor may it have more than 3 decimal places. Numbers larger or more precise will be capped or rounded up. (E.g.: 0.1m will rounded up to 1m.) This may be extended in the future if we require larger or smaller quantities.\n\nWhen a Quantity is parsed from a string, it will remember the type of suffix it had, and will use the same type again when it is serialized.\n\nBefore serializing, Quantity will be put in \"canonical form\". This means that Exponent/suffix will be adjusted up or down (with a corresponding increase or decrease in Mantissa) such that:\n  a. No precision is lost\n  b. No fractional digits will be emitted\n  c. The exponent (or suffix) is as large as possible.\nThe sign will be omitted unless the number is negative.\n\nExamples:\n  1.5 will be serialized as \"1500m\"\n  1.5Gi will be serialized as \"1536Mi\"\n\nNOTE: We reserve the right to amend this canonical format, perhaps to\n  allow 1.5 to be canonical.\n  or after March 2015.\n\nNote that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.\n\nNon-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)\n\nThis format is intended to make it difficult to use these numbers without writing some sort of special handling code in the hopes that that will cause implementors to also use a fixed point implementation.",
       "type": "string"
     },
     "io.k8s.apimachinery.pkg.apis.meta.v1.APIGroup": {
       "description": "APIGroup contains the name, the supported versions, and the preferred version of a group.",
       "required": [
         "name",
-        "versions",
-        "serverAddressByClientCIDRs"
+        "versions"
       ],
       "properties": {
         "apiVersion": {
@@ -10757,6 +10790,7 @@
       }
     },
     "io.k8s.apimachinery.pkg.apis.meta.v1.Time": {
+      "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
       "type": "string",
       "format": "date-time"
     },
