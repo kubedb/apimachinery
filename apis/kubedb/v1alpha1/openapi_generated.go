@@ -2202,9 +2202,9 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQLSpec(ref common.ReferenceCall
 							},
 						},
 					},
-					"configFile": {
+					"configSource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConfigFile is an optional field to provide custom configuration file for database (i.e custom-mysql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+							Description: "ConfigSource is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
 							Ref:         ref("k8s.io/api/core/v1.VolumeSource"),
 						},
 					},
@@ -2607,9 +2607,9 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresSpec(ref common.ReferenceC
 							},
 						},
 					},
-					"configFile": {
+					"configSource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConfigFile is an optional field to provide custom configuration file for database (i.e postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+							Description: "ConfigSource is an optional field to provide custom configuration file for database (i.e postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
 							Ref:         ref("k8s.io/api/core/v1.VolumeSource"),
 						},
 					},

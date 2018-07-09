@@ -8234,8 +8234,8 @@
           "description": "BackupSchedule spec to specify how database backup will be taken",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
         },
-        "configFile": {
-          "description": "ConfigFile is an optional field to provide custom configuration file for database (i.e custom-mysql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+        "configSource": {
+          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
         },
         "databaseSecret": {
@@ -8447,8 +8447,8 @@
           "description": "BackupSchedule spec to specify how database backup will be taken",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
         },
-        "configFile": {
-          "description": "ConfigFile is an optional field to provide custom configuration file for database (i.e postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+        "configSource": {
+          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
         },
         "databaseSecret": {

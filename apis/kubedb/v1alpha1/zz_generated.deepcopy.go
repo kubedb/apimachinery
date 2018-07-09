@@ -1185,8 +1185,8 @@ func (in *MySQLSpec) DeepCopyInto(out *MySQLSpec) {
 		*out = make([]v1.LocalObjectReference, len(*in))
 		copy(*out, *in)
 	}
-	if in.ConfigFile != nil {
-		in, out := &in.ConfigFile, &out.ConfigFile
+	if in.ConfigSource != nil {
+		in, out := &in.ConfigSource, &out.ConfigSource
 		if *in == nil {
 			*out = nil
 		} else {
@@ -1554,8 +1554,8 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		*out = make([]v1.LocalObjectReference, len(*in))
 		copy(*out, *in)
 	}
-	if in.ConfigFile != nil {
-		in, out := &in.ConfigFile, &out.ConfigFile
+	if in.ConfigSource != nil {
+		in, out := &in.ConfigSource, &out.ConfigSource
 		if *in == nil {
 			*out = nil
 		} else {
