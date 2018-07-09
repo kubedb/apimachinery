@@ -76,6 +76,10 @@ type PostgresSpec struct {
 	// ConfigFile is an optional field to provide custom configuration file for database (i.e postgresql.conf).
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
 	ConfigFile *core.VolumeSource `json:"configFile,omitempty"`
+	// List of environment variables to set in the container.
+	// Cannot be updated.
+	// +optional
+	Env []core.EnvVar `json:"env,omitempty" protobuf:"bytes,7,rep,name=env"`
 }
 
 type PostgresArchiverSpec struct {
