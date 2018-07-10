@@ -8635,6 +8635,10 @@
           "description": "If specified, the pod's scheduling constraints",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
         },
+        "configSource": {
+          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e redis.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        },
         "doNotPause": {
           "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
           "type": "boolean"
