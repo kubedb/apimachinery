@@ -7,6 +7,16 @@ metadata:
     app: kubedb
   name: postgreses.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.version
+    name: Version
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: Postgres
@@ -6157,6 +6167,10 @@ spec:
             reason:
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -6166,6 +6180,16 @@ metadata:
     app: kubedb
   name: elasticsearches.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.version
+    name: Version
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: Elasticsearch
@@ -11456,6 +11480,10 @@ spec:
             reason:
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -11465,6 +11493,16 @@ metadata:
     app: kubedb
   name: mysqls.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.version
+    name: Version
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: MySQL
@@ -16364,6 +16402,10 @@ spec:
             reason:
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -21272,6 +21314,10 @@ spec:
             reason:
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -21281,6 +21327,16 @@ metadata:
     app: kubedb
   name: redises.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.version
+    name: Version
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: Redis
@@ -22467,6 +22523,10 @@ spec:
             reason:
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -22476,6 +22536,16 @@ metadata:
     app: kubedb
   name: memcacheds.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.version
+    name: Version
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: Memcached
@@ -23580,6 +23650,10 @@ spec:
             reason:
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -23589,6 +23663,16 @@ metadata:
     app: kubedb
   name: snapshots.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.databaseName
+    name: DatabaseName
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: Snapshot
@@ -25100,6 +25184,10 @@ spec:
               format: date-time
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -25109,6 +25197,13 @@ metadata:
     app: kubedb
   name: dormantdatabases.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: DormantDatabase
@@ -25118,3 +25213,7 @@ spec:
     singular: dormantdatabase
   scope: Namespaced
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
