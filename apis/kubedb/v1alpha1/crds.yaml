@@ -7,6 +7,16 @@ metadata:
     app: kubedb
   name: postgreses.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.version
+    name: Version
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: Postgres
@@ -7295,6 +7305,10 @@ spec:
             reason:
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -7304,6 +7318,16 @@ metadata:
     app: kubedb
   name: elasticsearches.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.version
+    name: Version
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: Elasticsearch
@@ -12594,6 +12618,10 @@ spec:
             reason:
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -12603,6 +12631,16 @@ metadata:
     app: kubedb
   name: mysqls.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.version
+    name: Version
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: MySQL
@@ -18640,6 +18678,10 @@ spec:
             reason:
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -24619,105 +24661,174 @@ spec:
                         - key
                         - path
                       type: array
-                    name:
-                      description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
-                      type: string
-                    optional:
-                      description: Specify whether the ConfigMap or it's keys must
-                        be defined
-                      type: boolean
-                downwardAPI:
-                  description: DownwardAPIVolumeSource represents a volume containing
-                    downward API info. Downward API volumes support ownership management
-                    and SELinux relabeling.
-                  properties:
-                    defaultMode:
-                      description: 'Optional: mode bits to use on created files by
-                        default. Must be a value between 0 and 0777. Defaults to 0644.
-                        Directories within the path are not affected by this setting.
-                        This might be in conflict with other options that affect the
-                        file mode, like fsGroup, and the result can be other mode
-                        bits set.'
-                      format: int32
-                      type: integer
-                    items:
-                      description: Items is a list of downward API volume file
-                      items:
-                        description: DownwardAPIVolumeFile represents information
-                          to create the file containing the pod field
-                        properties:
-                          fieldRef:
-                            description: ObjectFieldSelector selects an APIVersioned
-                              field of an object.
-                            properties:
-                              apiVersion:
-                                description: Version of the schema the FieldPath is
-                                  written in terms of, defaults to "v1".
-                                type: string
-                              fieldPath:
-                                description: Path of the field to select in the specified
-                                  API version.
-                                type: string
-                            required:
-                            - fieldPath
-                          mode:
-                            description: 'Optional: mode bits to use on this file,
-                              must be a value between 0 and 0777. If not specified,
-                              the volume defaultMode will be used. This might be in
-                              conflict with other options that affect the file mode,
-                              like fsGroup, and the result can be other mode bits
-                              set.'
-                            format: int32
-                            type: integer
-                          path:
-                            description: 'Required: Path is  the relative path name
-                              of the file to be created. Must not be absolute or contain
-                              the ''..'' path. Must be utf-8 encoded. The first item
-                              of the relative path must not start with ''..'''
-                            type: string
-                          resourceFieldRef:
-                            description: ResourceFieldSelector represents container
-                              resources (cpu, memory) and their output format
-                            properties:
-                              containerName:
-                                description: 'Container name: required for volumes,
-                                  optional for env vars'
-                                type: string
-                              divisor:
-                                description: |-
-                                  Quantity is a fixed-point representation of a number. It provides convenient marshaling/unmarshaling in JSON and YAML, in addition to String() and Int64() accessors.
-
-                                  The serialization format is:
-
-                                  <quantity>        ::= <signedNumber><suffix>
-                                    (Note that <suffix> may be empty, from the "" case in <decimalSI>.)
-                                  <digit>           ::= 0 | 1 | ... | 9 <digits>          ::= <digit> | <digit><digits> <number>          ::= <digits> | <digits>.<digits> | <digits>. | .<digits> <sign>            ::= "+" | "-" <signedNumber>    ::= <number> | <sign><number> <suffix>          ::= <binarySI> | <decimalExponent> | <decimalSI> <binarySI>        ::= Ki | Mi | Gi | Ti | Pi | Ei
-                                    (International System of units; See: http://physics.nist.gov/cuu/Units/binary.html)
-                                  <decimalSI>       ::= m | "" | k | M | G | T | P | E
-                                    (Note that 1024 = 1Ki but 1000 = 1k; I didn't choose the capitalization.)
-                                  <decimalExponent> ::= "e" <signedNumber> | "E" <signedNumber>
-
-                                  No matter which of the three exponent forms is used, no quantity may represent a number greater than 2^63-1 in magnitude, nor may it have more than 3 decimal places. Numbers larger or more precise will be capped or rounded up. (E.g.: 0.1m will rounded up to 1m.) This may be extended in the future if we require larger or smaller quantities.
-
-                                  When a Quantity is parsed from a string, it will remember the type of suffix it had, and will use the same type again when it is serialized.
-
-                                  Before serializing, Quantity will be put in "canonical form". This means that Exponent/suffix will be adjusted up or down (with a corresponding increase or decrease in Mantissa) such that:
-                                    a. No precision is lost
-                                    b. No fractional digits will be emitted
-                                    c. The exponent (or suffix) is as large as possible.
-                                  The sign will be omitted unless the number is negative.
-
-                                  Examples:
-                                    1.5 will be serialized as "1500m"
-                                    1.5Gi will be serialized as "1536Mi"
-
-                                  NOTE: We reserve the right to amend this canonical format, perhaps to
-                                    allow 1.5 to be canonical.
-                                    or after March 2015.
-
-                                  Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
-
-                                  Non-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)
+                    matchLabels:
+                      description: matchLabels is a map of {key,value} pairs. A single
+                        {key,value} in the matchLabels map is equivalent to an element
+                        of matchExpressions, whose key field is "key", the operator
+                        is "In", and the values array contains only "value". The requirements
+                        are ANDed.
+                      type: object
+                storageClassName:
+                  description: 'Name of the StorageClass required by the claim. More
+                    info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1'
+                  type: string
+                volumeMode:
+                  description: volumeMode defines what type of volume is required
+                    by the claim. Value of Filesystem is implied when not included
+                    in claim spec. This is an alpha feature and may change in the
+                    future.
+                  type: string
+                volumeName:
+                  description: VolumeName is the binding reference to the PersistentVolume
+                    backing this claim.
+                  type: string
+            tolerations:
+              description: If specified, the pod's tolerations.
+              items:
+                description: The pod this Toleration is attached to tolerates any
+                  taint that matches the triple <key,value,effect> using the matching
+                  operator <operator>.
+                properties:
+                  effect:
+                    description: Effect indicates the taint effect to match. Empty
+                      means match all taint effects. When specified, allowed values
+                      are NoSchedule, PreferNoSchedule and NoExecute.
+                    type: string
+                  key:
+                    description: Key is the taint key that the toleration applies
+                      to. Empty means match all taint keys. If the key is empty, operator
+                      must be Exists; this combination means to match all values and
+                      all keys.
+                    type: string
+                  operator:
+                    description: Operator represents a key's relationship to the value.
+                      Valid operators are Exists and Equal. Defaults to Equal. Exists
+                      is equivalent to wildcard for value, so that a pod can tolerate
+                      all taints of a particular category.
+                    type: string
+                  tolerationSeconds:
+                    description: TolerationSeconds represents the period of time the
+                      toleration (which must be of effect NoExecute, otherwise this
+                      field is ignored) tolerates the taint. By default, it is not
+                      set, which means tolerate the taint forever (do not evict).
+                      Zero and negative values will be treated as 0 (evict immediately)
+                      by the system.
+                    format: int64
+                    type: integer
+                  value:
+                    description: Value is the taint value the toleration matches to.
+                      If the operator is Exists, the value should be empty, otherwise
+                      just a regular string.
+                    type: string
+              type: array
+            version:
+              description: Version of MongoDB to be deployed.
+              type: string
+          required:
+          - version
+          - storage
+        status:
+          properties:
+            creationTime:
+              description: Time is a wrapper around time.Time which supports correct
+                marshaling to YAML and JSON.  Wrappers are provided for many of the
+                factory methods that the time package offers.
+              format: date-time
+              type: string
+            phase:
+              type: string
+            reason:
+              type: string
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app: kubedb
+  name: redises.kubedb.com
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.version
+    name: Version
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
+  group: kubedb.com
+  names:
+    kind: Redis
+    plural: redises
+    shortNames:
+    - rd
+    singular: redis
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          description: ObjectMeta is metadata that all persisted resources must have,
+            which includes all objects users must create.
+          properties:
+            annotations:
+              description: 'Annotations is an unstructured key value map stored with
+                a resource that may be set by external tools to store and retrieve
+                arbitrary metadata. They are not queryable and should be preserved
+                when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations'
+              type: object
+            clusterName:
+              description: The name of the cluster which the object belongs to. This
+                is used to distinguish resources with same name and namespace in different
+                clusters. This field is not set anywhere right now and apiserver is
+                going to ignore it if set in create or update request.
+              type: string
+            creationTimestamp:
+              description: Time is a wrapper around time.Time which supports correct
+                marshaling to YAML and JSON.  Wrappers are provided for many of the
+                factory methods that the time package offers.
+              format: date-time
+              type: string
+            deletionGracePeriodSeconds:
+              description: Number of seconds allowed for this object to gracefully
+                terminate before it will be removed from the system. Only set when
+                deletionTimestamp is also set. May only be shortened. Read-only.
+              format: int64
+              type: integer
+            deletionTimestamp:
+              description: Time is a wrapper around time.Time which supports correct
+                marshaling to YAML and JSON.  Wrappers are provided for many of the
+                factory methods that the time package offers.
+              format: date-time
+              type: string
+            finalizers:
+              description: Must be empty before the object is deleted from the registry.
+                Each entry is an identifier for the responsible component that will
+                remove the entry from the list. If the deletionTimestamp of the object
+                is non-nil, entries in this list can only be removed.
+              items:
+                type: string
+              type: array
+            generateName:
+              description: |-
+                GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.
 
                                   This format is intended to make it difficult to use these numbers without writing some sort of special handling code in the hopes that that will cause implementors to also use a fixed point implementation.
                                 type: string
@@ -25881,6 +25992,10 @@ spec:
             reason:
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -25890,6 +26005,16 @@ metadata:
     app: kubedb
   name: memcacheds.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.version
+    name: Version
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: Memcached
@@ -26994,6 +27119,10 @@ spec:
             reason:
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -27003,6 +27132,16 @@ metadata:
     app: kubedb
   name: snapshots.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.databaseName
+    name: DatabaseName
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: Snapshot
@@ -28514,6 +28653,10 @@ spec:
               format: date-time
               type: string
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -28523,6 +28666,13 @@ metadata:
     app: kubedb
   name: dormantdatabases.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: kubedb.com
   names:
     kind: DormantDatabase
@@ -28532,3 +28682,7 @@ spec:
     singular: dormantdatabase
   scope: Namespaced
   version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
