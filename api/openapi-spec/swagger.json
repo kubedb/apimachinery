@@ -7563,6 +7563,10 @@
           "description": "Secret with SSL certificates",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
+        "configSource": {
+          "description": "ConfigSource is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        },
         "databaseSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
