@@ -17,11 +17,11 @@ import (
 )
 
 func (c *Controller) create(snapshot *api.Snapshot) error {
-	snap, _, err := util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+	snap, err := util.UpdateSnapshotStatus(c.ExtClient, snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
 		t := metav1.Now()
-		in.Status.StartTime = &t
+		in.StartTime = &t
 		return in
-	})
+	},api.EnableStatusSubresource)
 	if err != nil {
 		if ref, rerr := reference.GetReference(clientsetscheme.Scheme, snapshot); rerr == nil {
 			c.eventRecorder.Eventf(
@@ -46,15 +46,30 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 				err.Error(),
 			)
 		}
-		_, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+
+		if _ , err := util.UpdateSnapshotStatus(c.ExtClient, snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
 			t := metav1.Now()
-			in.Status.CompletionTime = &t
-			in.Labels[api.LabelDatabaseName] = snapshot.Spec.DatabaseName
-			in.Status.Phase = api.SnapshotPhaseFailed
-			in.Status.Reason = "Invalid Snapshot"
+			in.CompletionTime = &t
+			in.Phase = api.SnapshotPhaseFailed
+			in.Reason = "Invalid Snapshot"
 			return in
-		})
-		if err != nil {
+		}, api.EnableStatusSubresource) ; err != nil {
+			log.Errorln(err)
+			if ref, rerr := reference.GetReference(clientsetscheme.Scheme, snapshot); rerr == nil {
+				c.eventRecorder.Eventf(
+					ref,
+					core.EventTypeWarning,
+					eventer.EventReasonFailedToUpdate,
+					err.Error(),
+				)
+			}
+			return err
+		}
+
+		if _, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+			in.Labels[api.LabelDatabaseName] = snapshot.Spec.DatabaseName
+			return in
+		}) ; err != nil {
 			log.Errorln(err)
 			if ref, rerr := reference.GetReference(clientsetscheme.Scheme, snapshot); rerr == nil {
 				c.eventRecorder.Eventf(
@@ -83,14 +98,13 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		return err
 	}
 	if running {
-		_, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+		if _, err := util.UpdateSnapshotStatus(c.ExtClient, snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
 			t := metav1.Now()
-			in.Status.CompletionTime = &t
-			in.Status.Phase = api.SnapshotPhaseFailed
-			in.Status.Reason = "One Snapshot is already Running"
+			in.CompletionTime = &t
+			in.Phase = api.SnapshotPhaseFailed
+			in.Reason = "One Snapshot is already Running"
 			return in
-		})
-		if err != nil {
+		}, api.EnableStatusSubresource) ; err != nil {
 			if ref, rerr := reference.GetReference(clientsetscheme.Scheme, snapshot); rerr == nil {
 				c.eventRecorder.Eventf(
 					ref,
