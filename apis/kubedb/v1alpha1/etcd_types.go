@@ -72,6 +72,9 @@ type EtcdSpec struct {
 	// +optional
 	Env []core.EnvVar `json:"env,omitempty"`
 
+	// etcd cluster TLS configuration
+	TLS *TLSPolicy `json:"TLS,omitempty"`
+
 	// Workload is an optional configuration for workload controller and pods used to expose database
 	Workload *WorkloadConfig `json:"workload,omitempty"`
 
@@ -115,6 +118,20 @@ type EtcdSpec struct {
 	// Optional: Defaults to empty.  See type description for default values of each field.
 	// +optional
 	SecurityContext *core.PodSecurityContext `json:"securityContext,omitempty"`
+}
+
+type TLSPolicy struct {
+	Member         *MemberSecret `json:"member,omitempty"`
+	OperatorSecret string        `json:"operatorSecret,omitempty"`
+}
+
+type MemberSecret struct {
+	// PeerSecret is the secret containing TLS certs used by each etcd member pod
+	// for the communication between etcd peers.
+	PeerSecret string `json:"peerSecret,omitempty"`
+	// ServerSecret is the secret containing TLS certs used by each etcd member pod
+	// for the communication between etcd server and its clients.
+	ServerSecret string `json:"serverSecret,omitempty"`
 }
 
 type EtcdStatus struct {

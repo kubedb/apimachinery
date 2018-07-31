@@ -49,6 +49,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdSpec":                     schema_apimachinery_apis_kubedb_v1alpha1_EtcdSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdStatus":                   schema_apimachinery_apis_kubedb_v1alpha1_EtcdStatus(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec":                     schema_apimachinery_apis_kubedb_v1alpha1_InitSpec(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemberSecret":                 schema_apimachinery_apis_kubedb_v1alpha1_MemberSecret(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Memcached":                    schema_apimachinery_apis_kubedb_v1alpha1_Memcached(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedList":                schema_apimachinery_apis_kubedb_v1alpha1_MemcachedList(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec":                schema_apimachinery_apis_kubedb_v1alpha1_MemcachedSpec(ref),
@@ -86,6 +87,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotSourceSpec":           schema_apimachinery_apis_kubedb_v1alpha1_SnapshotSourceSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotSpec":                 schema_apimachinery_apis_kubedb_v1alpha1_SnapshotSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotStatus":               schema_apimachinery_apis_kubedb_v1alpha1_SnapshotStatus(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.TLSPolicy":                    schema_apimachinery_apis_kubedb_v1alpha1_TLSPolicy(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.WorkloadConfig":               schema_apimachinery_apis_kubedb_v1alpha1_WorkloadConfig(ref),
 		"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource":                              schema_k8sio_api_core_v1_AWSElasticBlockStoreVolumeSource(ref),
 		"k8s.io/api/core/v1.Affinity":                                                      schema_k8sio_api_core_v1_Affinity(ref),
@@ -1206,6 +1208,12 @@ func schema_apimachinery_apis_kubedb_v1alpha1_EtcdSpec(ref common.ReferenceCallb
 							},
 						},
 					},
+					"TLS": {
+						SchemaProps: spec.SchemaProps{
+							Description: "etcd cluster TLS configuration",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.TLSPolicy"),
+						},
+					},
 					"workload": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Workload is an optional configuration for workload controller and pods used to expose database",
@@ -1262,7 +1270,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_EtcdSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ServiceConfig", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.WorkloadConfig", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration", "kmodules.xyz/monitoring-agent-api/api.AgentSpec"},
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ServiceConfig", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.TLSPolicy", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.WorkloadConfig", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.Toleration", "kmodules.xyz/monitoring-agent-api/api.AgentSpec"},
 	}
 }
 
@@ -1321,6 +1329,32 @@ func schema_apimachinery_apis_kubedb_v1alpha1_InitSpec(ref common.ReferenceCallb
 		},
 		Dependencies: []string{
 			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresWALSourceSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ScriptSourceSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotSourceSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MemberSecret(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Properties: map[string]spec.Schema{
+					"peerSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PeerSecret is the secret containing TLS certs used by each etcd member pod for the communication between etcd peers.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"serverSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServerSecret is the secret containing TLS certs used by each etcd member pod for the communication between etcd server and its clients.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{},
 	}
 }
 
@@ -3705,6 +3739,30 @@ func schema_apimachinery_apis_kubedb_v1alpha1_SnapshotStatus(ref common.Referenc
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_TLSPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Properties: map[string]spec.Schema{
+					"member": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemberSecret"),
+						},
+					},
+					"operatorSecret": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemberSecret"},
 	}
 }
 
