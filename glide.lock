@@ -1,5 +1,5 @@
-hash: 65731c83d40bf74aa4fe2d56b6eb08f4939fd1cd78e057382f12129d08c15c8e
-updated: 2018-07-11T17:32:25.585578954+06:00
+hash: 3a8071c3be46c693c048b067d7bad8122e7dcea0154ab3dfcf89c8e6d13a4be8
+updated: 2018-07-31T07:43:30.221070938-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -28,16 +28,12 @@ imports:
   - types
 - name: github.com/appscode/jsonpatch
   version: 1359b374de83fa14fd58ab10aa8ea4935f84d249
-- name: github.com/appscode/kube-mon
-  version: 6844d3b8506f97e79663419dfe8a3b7bfe1b3264
-  subpackages:
-  - api
 - name: github.com/appscode/kubernetes-webhook-util
   version: 73ca8be3135ee210b778c7dc19709c24bf3481eb
   subpackages:
   - admission/v1beta1
 - name: github.com/appscode/kutil
-  version: 2f50a9a96687d25cddd29f38bf4da10ebe888eca
+  version: c9b929cfcab96c233c1b0ab59cd4a5ab6a4ff96a
   subpackages:
   - apiextensions/v1beta1
   - core/v1
@@ -214,7 +210,7 @@ imports:
 - name: github.com/evanphx/json-patch
   version: 94e38aa1586e8a6c8a75770bddf5ff84c48a106b
 - name: github.com/fsnotify/fsnotify
-  version: c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9
+  version: f12c6236fe7b5cf6bcf30e5935d08cb079d78334
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
@@ -252,7 +248,7 @@ imports:
 - name: github.com/google/btree
   version: 7d79101e329e5a3adf994758c578dab82b90c017
 - name: github.com/google/go-cmp
-  version: 5411ab924f9ffa6566244a9e504bc347edacffd3
+  version: 3af367b6b30c263d47e8895973edcca9a49cf029
   subpackages:
   - cmp
   - cmp/internal/diff
@@ -327,7 +323,7 @@ imports:
 - name: github.com/openshift/origin
   version: fecffb2fce100260088a1b9f268c0901a778cf2b
 - name: github.com/orcaman/concurrent-map
-  version: a05df785d2dcc16310fb997ee1702100d047cfe1
+  version: b28018939af9022337862b94a463abb18abb3e0e
 - name: github.com/pborman/uuid
   version: ca53cad383cad2479bbba7f7a1a05797ec1386e4
 - name: github.com/peterbourgon/diskv
@@ -363,7 +359,7 @@ imports:
   subpackages:
   - diffmatchpatch
 - name: github.com/sirupsen/logrus
-  version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
+  version: 89742aefa4b206dcf400792f3bd35b542998eb3b
 - name: github.com/spf13/cobra
   version: c439c4fa093711d42e1b01acb1235b52004753c1
 - name: github.com/spf13/pflag
@@ -429,7 +425,7 @@ imports:
   subpackages:
   - rate
 - name: google.golang.org/api
-  version: 1d2d9cc0ae74226e8076e2a87e211c8fea38a160
+  version: 31ca0e01cd791f07750cb23fc99327721f753290
   subpackages:
   - gensupport
   - googleapi
@@ -831,11 +827,24 @@ imports:
   - util/retry
   - util/workqueue
 - name: k8s.io/kube-openapi
-  version: 0cf8f7e6ed1d2e3d47d02e3b6e559369af24d803
+  version: d8ea2fe547a448256204cfc68dfee7b26c720acb
   subpackages:
   - pkg/builder
   - pkg/common
   - pkg/handler
   - pkg/util
   - pkg/util/proto
+- name: kmodules.xyz/monitoring-agent-api
+  version: 323ed6f2129deea0309979d9396728c613f369d4
+  repo: https://github.com/kmodules/monitoring-agent-api.git
+  vcs: git
+  subpackages:
+  - api
+- name: kmodules.xyz/objectstore-api
+  version: f2d3726e2b0438b0b7264f8bf62edf928e5ca962
+  repo: https://github.com/kmodules/objectstore-api.git
+  vcs: git
+  subpackages:
+  - api
+  - osm
 testImports: []

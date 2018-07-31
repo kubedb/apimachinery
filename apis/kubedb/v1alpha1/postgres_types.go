@@ -2,9 +2,10 @@ package v1alpha1
 
 import (
 	"github.com/appscode/go/encoding/json/types"
-	"github.com/appscode/kube-mon/api"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"kmodules.xyz/monitoring-agent-api/api"
+	store "kmodules.xyz/objectstore-api/api"
 )
 
 const (
@@ -83,7 +84,7 @@ type PostgresSpec struct {
 }
 
 type PostgresArchiverSpec struct {
-	Storage *SnapshotStorageSpec `json:"storage,omitempty"`
+	Storage *store.Backend `json:"storage,omitempty"`
 	// wal_keep_segments
 }
 
@@ -118,9 +119,9 @@ type PostgresSummary struct {
 }
 
 type PostgresWALSourceSpec struct {
-	BackupName          string `json:"backupName,omitempty"`
-	PITR                string `json:"pitr,omitempty"`
-	SnapshotStorageSpec `json:",inline,omitempty"`
+	BackupName    string `json:"backupName,omitempty"`
+	PITR          string `json:"pitr,omitempty"`
+	store.Backend `json:",inline,omitempty"`
 }
 
 type StandbyMode string

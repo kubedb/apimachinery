@@ -164,7 +164,7 @@ func sampleSnapshot() api.Snapshot {
 		},
 		Spec: api.SnapshotSpec{
 			DatabaseName: "foo",
-			SnapshotStorageSpec: api.SnapshotStorageSpec{
+			Backend: api.Backend{
 				Local: &api.LocalSpec{
 					MountPath: "/repo",
 					VolumeSource: core.VolumeSource{
@@ -180,7 +180,7 @@ func getAwkwardSnapshot() api.Snapshot {
 	redis := sampleSnapshot()
 	redis.Spec = api.SnapshotSpec{
 		DatabaseName: "foo",
-		SnapshotStorageSpec: api.SnapshotStorageSpec{
+		Backend: api.Backend{
 			StorageSecretName: "foo-secret",
 			GCS: &api.GCSSpec{
 				Bucket: "bar",

@@ -49,7 +49,13 @@ import:
   version: master
 - package: github.com/appscode/kutil
   version: release-8.0
-- package: github.com/appscode/kube-mon
+- package: kmodules.xyz/monitoring-agent-api
+  repo: https://github.com/kmodules/monitoring-agent-api.git
+  vcs: git
+  version: release-8.0
+- package: kmodules.xyz/objectstore-api
+  repo: https://github.com/kmodules/objectstore-api.git
+  vcs: git
   version: release-8.0
 - package: github.com/appscode/kubernetes-webhook-util
   version: release-8.0
