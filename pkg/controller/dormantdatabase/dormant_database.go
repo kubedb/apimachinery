@@ -16,7 +16,7 @@ func (c *Controller) create(ddb *api.DormantDatabase) error {
 			t := metav1.Now()
 			in.CreationTime = &t
 			return in
-		},api.EnableStatusSubresource)
+		}, api.EnableStatusSubresource)
 		if err != nil {
 			if ref, rerr := reference.GetReference(clientsetscheme.Scheme, ddb); rerr == nil {
 				c.recorder.Eventf(
@@ -37,7 +37,7 @@ func (c *Controller) create(ddb *api.DormantDatabase) error {
 	_, err := util.UpdateDormantDatabaseStatus(c.ExtClient, ddb, func(in *api.DormantDatabaseStatus) *api.DormantDatabaseStatus {
 		in.Phase = api.DormantDatabasePhasePausing
 		return in
-	},api.EnableStatusSubresource)
+	}, api.EnableStatusSubresource)
 	if err != nil {
 		c.recorder.Eventf(ddb, core.EventTypeWarning, eventer.EventReasonFailedToUpdate, err.Error())
 		return err

@@ -54,7 +54,7 @@ func (c *Controller) handleBackupJob(job *batch.Job) error {
 				t := metav1.Now()
 				in.CompletionTime = &t
 				return in
-			}, api.EnableStatusSubresource) ; err != nil {
+			}, api.EnableStatusSubresource); err != nil {
 				if ref, rerr := reference.GetReference(clientsetscheme.Scheme, snapshot); rerr == nil {
 					c.eventRecorder.Eventf(
 						ref,
@@ -69,7 +69,7 @@ func (c *Controller) handleBackupJob(job *batch.Job) error {
 			if _, _, err := util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
 				delete(in.Labels, api.LabelSnapshotStatus)
 				return in
-			}) ; err != nil {
+			}); err != nil {
 				if ref, rerr := reference.GetReference(clientsetscheme.Scheme, snapshot); rerr == nil {
 					c.eventRecorder.Eventf(
 						ref,
