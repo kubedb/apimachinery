@@ -2,9 +2,9 @@ package v1alpha1
 
 import (
 	"github.com/appscode/go/encoding/json/types"
-	"github.com/appscode/kube-mon/api"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"kmodules.xyz/monitoring-agent-api/api"
 )
 
 const (

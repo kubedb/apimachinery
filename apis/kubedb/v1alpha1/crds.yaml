@@ -887,14 +887,18 @@ spec:
                           type: string
                         prefix:
                           type: string
+                    b2:
+                      properties:
+                        bucket:
+                          type: string
+                        prefix:
+                          type: string
                     gcs:
                       properties:
                         bucket:
                           type: string
                         prefix:
                           type: string
-                      required:
-                      - bucket
                     local:
                       properties:
                         awsElasticBlockStore:
@@ -2112,8 +2116,6 @@ spec:
                           type: string
                         prefix:
                           type: string
-                      required:
-                      - bucket
                     storageSecretName:
                       type: string
                     swift:
@@ -2130,6 +2132,12 @@ spec:
                       type: string
                     prefix:
                       type: string
+                b2:
+                  properties:
+                    bucket:
+                      type: string
+                    prefix:
+                      type: string
                 cronExpression:
                   type: string
                 gcs:
@@ -2138,8 +2146,6 @@ spec:
                       type: string
                     prefix:
                       type: string
-                  required:
-                  - bucket
                 local:
                   properties:
                     awsElasticBlockStore:
@@ -3339,8 +3345,6 @@ spec:
                       type: string
                     prefix:
                       type: string
-                  required:
-                  - bucket
                 storageSecretName:
                   type: string
                 swift:
@@ -4690,6 +4694,12 @@ spec:
                           type: string
                         prefix:
                           type: string
+                    b2:
+                      properties:
+                        bucket:
+                          type: string
+                        prefix:
+                          type: string
                     backupName:
                       type: string
                     gcs:
@@ -4698,8 +4708,6 @@ spec:
                           type: string
                         prefix:
                           type: string
-                      required:
-                      - bucket
                     local:
                       properties:
                         awsElasticBlockStore:
@@ -5919,8 +5927,6 @@ spec:
                           type: string
                         prefix:
                           type: string
-                      required:
-                      - bucket
                     storageSecretName:
                       type: string
                     swift:
@@ -8196,6 +8202,12 @@ spec:
                       type: string
                     prefix:
                       type: string
+                b2:
+                  properties:
+                    bucket:
+                      type: string
+                    prefix:
+                      type: string
                 cronExpression:
                   type: string
                 gcs:
@@ -8204,8 +8216,6 @@ spec:
                       type: string
                     prefix:
                       type: string
-                  required:
-                  - bucket
                 local:
                   properties:
                     awsElasticBlockStore:
@@ -9405,8 +9415,6 @@ spec:
                       type: string
                     prefix:
                       type: string
-                  required:
-                  - bucket
                 storageSecretName:
                   type: string
                 swift:
@@ -10812,6 +10820,12 @@ spec:
                           type: string
                         prefix:
                           type: string
+                    b2:
+                      properties:
+                        bucket:
+                          type: string
+                        prefix:
+                          type: string
                     backupName:
                       type: string
                     gcs:
@@ -10820,8 +10834,6 @@ spec:
                           type: string
                         prefix:
                           type: string
-                      required:
-                      - bucket
                     local:
                       properties:
                         awsElasticBlockStore:
@@ -12041,8 +12053,6 @@ spec:
                           type: string
                         prefix:
                           type: string
-                      required:
-                      - bucket
                     storageSecretName:
                       type: string
                     swift:
@@ -14647,6 +14657,12 @@ spec:
                       type: string
                     prefix:
                       type: string
+                b2:
+                  properties:
+                    bucket:
+                      type: string
+                    prefix:
+                      type: string
                 cronExpression:
                   type: string
                 gcs:
@@ -14655,8 +14671,6 @@ spec:
                       type: string
                     prefix:
                       type: string
-                  required:
-                  - bucket
                 local:
                   properties:
                     awsElasticBlockStore:
@@ -15856,8 +15870,6 @@ spec:
                       type: string
                     prefix:
                       type: string
-                  required:
-                  - bucket
                 storageSecretName:
                   type: string
                 swift:
@@ -17207,6 +17219,12 @@ spec:
                           type: string
                         prefix:
                           type: string
+                    b2:
+                      properties:
+                        bucket:
+                          type: string
+                        prefix:
+                          type: string
                     backupName:
                       type: string
                     gcs:
@@ -17215,8 +17233,6 @@ spec:
                           type: string
                         prefix:
                           type: string
-                      required:
-                      - bucket
                     local:
                       properties:
                         awsElasticBlockStore:
@@ -18436,8 +18452,6 @@ spec:
                           type: string
                         prefix:
                           type: string
-                      required:
-                      - bucket
                     storageSecretName:
                       type: string
                     swift:
@@ -20697,6 +20711,12 @@ spec:
                       type: string
                     prefix:
                       type: string
+                b2:
+                  properties:
+                    bucket:
+                      type: string
+                    prefix:
+                      type: string
                 cronExpression:
                   type: string
                 gcs:
@@ -20705,8 +20725,6 @@ spec:
                       type: string
                     prefix:
                       type: string
-                  required:
-                  - bucket
                 local:
                   properties:
                     awsElasticBlockStore:
@@ -21906,8 +21924,6 @@ spec:
                       type: string
                     prefix:
                       type: string
-                  required:
-                  - bucket
                 storageSecretName:
                   type: string
                 swift:
@@ -22119,6 +22135,12 @@ spec:
                           type: string
                         prefix:
                           type: string
+                    b2:
+                      properties:
+                        bucket:
+                          type: string
+                        prefix:
+                          type: string
                     backupName:
                       type: string
                     gcs:
@@ -22127,8 +22149,6 @@ spec:
                           type: string
                         prefix:
                           type: string
-                      required:
-                      - bucket
                     local:
                       properties:
                         awsElasticBlockStore:
@@ -23348,8 +23368,6 @@ spec:
                           type: string
                         prefix:
                           type: string
-                      required:
-                      - bucket
                     storageSecretName:
                       type: string
                     swift:
@@ -29671,6 +29689,12 @@ spec:
                   type: string
                 prefix:
                   type: string
+            b2:
+              properties:
+                bucket:
+                  type: string
+                prefix:
+                  type: string
             databaseName:
               description: Database name
               type: string
@@ -29680,8 +29704,6 @@ spec:
                   type: string
                 prefix:
                   type: string
-              required:
-              - bucket
             local:
               properties:
                 awsElasticBlockStore:
@@ -30843,8 +30865,6 @@ spec:
                   type: string
                 prefix:
                   type: string
-              required:
-              - bucket
             storageSecretName:
               type: string
             swift:

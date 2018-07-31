@@ -7,13 +7,13 @@ import (
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"github.com/kubedb/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
 	"github.com/kubedb/apimachinery/pkg/eventer"
-	"github.com/kubedb/apimachinery/pkg/storage"
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/reference"
+	"kmodules.xyz/objectstore-api/osm"
 )
 
 func (c *Controller) create(snapshot *api.Snapshot) error {
@@ -147,7 +147,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 			"Backup running",
 		)
 	}
-	secret, err := storage.NewOSMSecret(c.Client, snapshot)
+	secret, err := osm.NewOSMSecret(c.Client, snapshot.OSMSecretName(), snapshot.Namespace, snapshot.Spec.Backend)
 	if err != nil {
 		message := fmt.Sprintf("Failed to generate osm secret. Reason: %v", err)
 		if ref, rerr := reference.GetReference(clientsetscheme.Scheme, runtimeObj); rerr == nil {

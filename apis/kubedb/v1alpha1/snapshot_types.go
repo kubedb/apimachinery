@@ -3,6 +3,7 @@ package v1alpha1
 import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	store "kmodules.xyz/objectstore-api/api"
 )
 
 const (
@@ -27,7 +28,7 @@ type SnapshotSpec struct {
 	// Database name
 	DatabaseName string `json:"databaseName"`
 	// Snapshot Spec
-	SnapshotStorageSpec `json:",inline"`
+	store.Backend `json:",inline"`
 	// Compute Resources required by the sidecar container.
 	Resources core.ResourceRequirements `json:"resources,omitempty"`
 }
