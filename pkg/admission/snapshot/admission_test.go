@@ -18,6 +18,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes/fake"
 	clientSetScheme "k8s.io/client-go/kubernetes/scheme"
+	store "kmodules.xyz/objectstore-api/api"
 )
 
 func init() {
@@ -164,8 +165,8 @@ func sampleSnapshot() api.Snapshot {
 		},
 		Spec: api.SnapshotSpec{
 			DatabaseName: "foo",
-			Backend: api.Backend{
-				Local: &api.LocalSpec{
+			Backend: store.Backend{
+				Local: &store.LocalSpec{
 					MountPath: "/repo",
 					VolumeSource: core.VolumeSource{
 						EmptyDir: &core.EmptyDirVolumeSource{},
@@ -180,9 +181,9 @@ func getAwkwardSnapshot() api.Snapshot {
 	redis := sampleSnapshot()
 	redis.Spec = api.SnapshotSpec{
 		DatabaseName: "foo",
-		Backend: api.Backend{
+		Backend: store.Backend{
 			StorageSecretName: "foo-secret",
-			GCS: &api.GCSSpec{
+			GCS: &store.GCSSpec{
 				Bucket: "bar",
 			},
 		},
