@@ -398,6 +398,49 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.Workload != nil {
+		in, out := &in.Workload, &out.Workload
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(WorkloadConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.Service != nil {
+		in, out := &in.Service, &out.Service
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(ServiceConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.InitContainers != nil {
+		in, out := &in.InitContainers, &out.InitContainers
+		*out = make([]v1.Container, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.Priority != nil {
+		in, out := &in.Priority, &out.Priority
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(int32)
+			**out = **in
+		}
+	}
+	if in.SecurityContext != nil {
+		in, out := &in.SecurityContext, &out.SecurityContext
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PodSecurityContext)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	return
 }
 
@@ -587,6 +630,49 @@ func (in *EtcdSpec) DeepCopyInto(out *EtcdSpec) {
 		*out = make([]v1.EnvVar, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.Workload != nil {
+		in, out := &in.Workload, &out.Workload
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(WorkloadConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.Service != nil {
+		in, out := &in.Service, &out.Service
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(ServiceConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.InitContainers != nil {
+		in, out := &in.InitContainers, &out.InitContainers
+		*out = make([]v1.Container, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.Priority != nil {
+		in, out := &in.Priority, &out.Priority
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(int32)
+			**out = **in
+		}
+	}
+	if in.SecurityContext != nil {
+		in, out := &in.SecurityContext, &out.SecurityContext
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PodSecurityContext)
+			(*in).DeepCopyInto(*out)
 		}
 	}
 	return
@@ -796,6 +882,49 @@ func (in *MemcachedSpec) DeepCopyInto(out *MemcachedSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.Workload != nil {
+		in, out := &in.Workload, &out.Workload
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(WorkloadConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.Service != nil {
+		in, out := &in.Service, &out.Service
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(ServiceConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.InitContainers != nil {
+		in, out := &in.InitContainers, &out.InitContainers
+		*out = make([]v1.Container, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.Priority != nil {
+		in, out := &in.Priority, &out.Priority
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(int32)
+			**out = **in
+		}
+	}
+	if in.SecurityContext != nil {
+		in, out := &in.SecurityContext, &out.SecurityContext
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PodSecurityContext)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	return
 }
 
@@ -977,6 +1106,49 @@ func (in *MongoDBSpec) DeepCopyInto(out *MongoDBSpec) {
 		*out = make([]v1.EnvVar, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.Workload != nil {
+		in, out := &in.Workload, &out.Workload
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(WorkloadConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.Service != nil {
+		in, out := &in.Service, &out.Service
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(ServiceConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.InitContainers != nil {
+		in, out := &in.InitContainers, &out.InitContainers
+		*out = make([]v1.Container, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.Priority != nil {
+		in, out := &in.Priority, &out.Priority
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(int32)
+			**out = **in
+		}
+	}
+	if in.SecurityContext != nil {
+		in, out := &in.SecurityContext, &out.SecurityContext
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PodSecurityContext)
+			(*in).DeepCopyInto(*out)
 		}
 	}
 	return
@@ -1169,6 +1341,49 @@ func (in *MySQLSpec) DeepCopyInto(out *MySQLSpec) {
 		*out = make([]v1.EnvVar, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.Workload != nil {
+		in, out := &in.Workload, &out.Workload
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(WorkloadConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.Service != nil {
+		in, out := &in.Service, &out.Service
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(ServiceConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.InitContainers != nil {
+		in, out := &in.InitContainers, &out.InitContainers
+		*out = make([]v1.Container, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.Priority != nil {
+		in, out := &in.Priority, &out.Priority
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(int32)
+			**out = **in
+		}
+	}
+	if in.SecurityContext != nil {
+		in, out := &in.SecurityContext, &out.SecurityContext
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PodSecurityContext)
+			(*in).DeepCopyInto(*out)
 		}
 	}
 	return
@@ -1540,6 +1755,49 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.Workload != nil {
+		in, out := &in.Workload, &out.Workload
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(WorkloadConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.Service != nil {
+		in, out := &in.Service, &out.Service
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(ServiceConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.InitContainers != nil {
+		in, out := &in.InitContainers, &out.InitContainers
+		*out = make([]v1.Container, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.Priority != nil {
+		in, out := &in.Priority, &out.Priority
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(int32)
+			**out = **in
+		}
+	}
+	if in.SecurityContext != nil {
+		in, out := &in.SecurityContext, &out.SecurityContext
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PodSecurityContext)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	return
 }
 
@@ -1766,6 +2024,49 @@ func (in *RedisSpec) DeepCopyInto(out *RedisSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.Workload != nil {
+		in, out := &in.Workload, &out.Workload
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(WorkloadConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.Service != nil {
+		in, out := &in.Service, &out.Service
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(ServiceConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.InitContainers != nil {
+		in, out := &in.InitContainers, &out.InitContainers
+		*out = make([]v1.Container, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.Priority != nil {
+		in, out := &in.Priority, &out.Priority
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(int32)
+			**out = **in
+		}
+	}
+	if in.SecurityContext != nil {
+		in, out := &in.SecurityContext, &out.SecurityContext
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PodSecurityContext)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	return
 }
 
@@ -1816,6 +2117,48 @@ func (in *ScriptSourceSpec) DeepCopy() *ScriptSourceSpec {
 		return nil
 	}
 	out := new(ScriptSourceSpec)
+	in.DeepCopyInto(out)
+	return out
+}
+
+// DeepCopyInto is an autogenerated deepcopy function, copying the receiver, writing into out. in must be non-nil.
+func (in *ServiceConfig) DeepCopyInto(out *ServiceConfig) {
+	*out = *in
+	if in.Annotations != nil {
+		in, out := &in.Annotations, &out.Annotations
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
+	if in.ClusterIP != nil {
+		in, out := &in.ClusterIP, &out.ClusterIP
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(string)
+			**out = **in
+		}
+	}
+	if in.ExternalIPs != nil {
+		in, out := &in.ExternalIPs, &out.ExternalIPs
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
+	if in.LoadBalancerSourceRanges != nil {
+		in, out := &in.LoadBalancerSourceRanges, &out.LoadBalancerSourceRanges
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
+	return
+}
+
+// DeepCopy is an autogenerated deepcopy function, copying the receiver, creating a new ServiceConfig.
+func (in *ServiceConfig) DeepCopy() *ServiceConfig {
+	if in == nil {
+		return nil
+	}
+	out := new(ServiceConfig)
 	in.DeepCopyInto(out)
 	return out
 }
@@ -1902,6 +2245,33 @@ func (in *SnapshotSpec) DeepCopyInto(out *SnapshotSpec) {
 	*out = *in
 	in.Backend.DeepCopyInto(&out.Backend)
 	in.Resources.DeepCopyInto(&out.Resources)
+	if in.Workload != nil {
+		in, out := &in.Workload, &out.Workload
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(WorkloadConfig)
+			(*in).DeepCopyInto(*out)
+		}
+	}
+	if in.Priority != nil {
+		in, out := &in.Priority, &out.Priority
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(int32)
+			**out = **in
+		}
+	}
+	if in.SecurityContext != nil {
+		in, out := &in.SecurityContext, &out.SecurityContext
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PodSecurityContext)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	return
 }
 
@@ -1943,6 +2313,36 @@ func (in *SnapshotStatus) DeepCopy() *SnapshotStatus {
 		return nil
 	}
 	out := new(SnapshotStatus)
+	in.DeepCopyInto(out)
+	return out
+}
+
+// DeepCopyInto is an autogenerated deepcopy function, copying the receiver, writing into out. in must be non-nil.
+func (in *WorkloadConfig) DeepCopyInto(out *WorkloadConfig) {
+	*out = *in
+	if in.Annotations != nil {
+		in, out := &in.Annotations, &out.Annotations
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
+	if in.PodAnnotations != nil {
+		in, out := &in.PodAnnotations, &out.PodAnnotations
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
+	return
+}
+
+// DeepCopy is an autogenerated deepcopy function, copying the receiver, creating a new WorkloadConfig.
+func (in *WorkloadConfig) DeepCopy() *WorkloadConfig {
+	if in == nil {
+		return nil
+	}
+	out := new(WorkloadConfig)
 	in.DeepCopyInto(out)
 	return out
 }
