@@ -7563,6 +7563,10 @@
             "type": "string"
           }
         },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
         "replicas": {
           "description": "Number of instances to deploy for a Elasticsearch database.",
           "type": "integer",
