@@ -31,13 +31,16 @@ type SnapshotSpec struct {
 
 	// Snapshot Spec
 	store.Backend `json:",inline"`
-	// Compute Resources required by the sidecar container.
+
+	// PodTemplate is an optional configuration for pods used to take database snapshots
+	// +optional
+	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+
+	// -------------------------------------------------------------------------
+
+	// Compute Resources required by the pod used to take database snapshots
+	// Deprecated: Use podTemplate.spec.resources
 	Resources core.ResourceRequirements `json:"resources,omitempty"`
-
-	// Workload is an optional configuration for workload controller and pods used to expose database
-
-	// PodTemplate is an optional configuration for pods used to expose database
-	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 }
 
 type SnapshotPhase string

@@ -120,7 +120,7 @@ type ServiceSpec struct {
 	// type is ExternalName.
 	// More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
 	// +optional
-	ClusterIP *string `json:"clusterIP,omitempty"`
+	ClusterIP string `json:"clusterIP,omitempty"`
 
 	// type determines how the Service is exposed. Defaults to ClusterIP. Valid
 	// options are ExternalName, ClusterIP, NodePort, and LoadBalancer.

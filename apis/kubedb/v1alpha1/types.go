@@ -29,7 +29,7 @@ type BackupScheduleSpec struct {
 
 	// PodTemplate is an optional configuration for pods used for backup and recovery
 	// +optional
-	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// -------------------------------------------------------------------------
 

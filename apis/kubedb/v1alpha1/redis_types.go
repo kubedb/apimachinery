@@ -51,10 +51,12 @@ type RedisSpec struct {
 	ConfigSource *core.VolumeSource `json:"configSource,omitempty"`
 
 	// PodTemplate is an optional configuration for pods used to expose database
-	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	// +optional
+	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// ServiceTemplate is an optional configuration for service used to expose database
-	ServiceTemplate *ofst.ServiceTemplateSpec `json:"serviceTemplate,omitempty"`
+	// +optional
+	ServiceTemplate ofst.ServiceTemplateSpec `json:"serviceTemplate,omitempty"`
 
 	// -------------------------------------------------------------------------
 
