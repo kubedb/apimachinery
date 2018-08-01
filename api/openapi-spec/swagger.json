@@ -7648,10 +7648,6 @@
         "version"
       ],
       "properties": {
-        "TLS": {
-          "description": "etcd cluster TLS configuration",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.TLSPolicy"
-        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
@@ -7739,6 +7735,10 @@
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "tls": {
+          "description": "etcd cluster TLS configuration",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.TLSPolicy"
         },
         "tolerations": {
           "description": "If specified, the pod's tolerations.",

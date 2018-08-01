@@ -65,7 +65,7 @@ func (p Etcd) ServiceMonitorName() string {
 }
 
 func (p Etcd) Path() string {
-	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", p.Namespace, p.ResourcePlural(), p.Name)
+	return fmt.Sprintf("/metrics")
 }
 
 func (p Etcd) Scheme() string {
