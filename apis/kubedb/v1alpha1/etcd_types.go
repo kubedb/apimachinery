@@ -73,7 +73,7 @@ type EtcdSpec struct {
 	Env []core.EnvVar `json:"env,omitempty"`
 
 	// etcd cluster TLS configuration
-	TLS *TLSPolicy `json:"TLS,omitempty"`
+	TLS *TLSPolicy `json:"tls,omitempty"`
 
 	// Workload is an optional configuration for workload controller and pods used to expose database
 	Workload *WorkloadConfig `json:"workload,omitempty"`

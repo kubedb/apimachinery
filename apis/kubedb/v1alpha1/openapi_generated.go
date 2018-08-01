@@ -1208,7 +1208,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_EtcdSpec(ref common.ReferenceCallb
 							},
 						},
 					},
-					"TLS": {
+					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "etcd cluster TLS configuration",
 							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.TLSPolicy"),
