@@ -96,22 +96,43 @@ func WaitUntilSnapshotCompletion(c cs.KubedbV1alpha1Interface, meta metav1.Objec
 	return
 }
 
-func UpdateSnapshotStatus(c cs.KubedbV1alpha1Interface, cur *api.Snapshot, transform func(*api.SnapshotStatus) *api.SnapshotStatus, useSubresource ...bool) (*api.Snapshot, error) {
+func UpdateSnapshotStatus(c cs.KubedbV1alpha1Interface, cur *api.Snapshot, transform func(*api.SnapshotStatus) *api.SnapshotStatus, useSubresource ...bool) (result *api.Snapshot, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)
 	}
 
-	mod := &api.Snapshot{
-		TypeMeta:   cur.TypeMeta,
-		ObjectMeta: cur.ObjectMeta,
-		Spec:       cur.Spec,
-		Status:     *transform(cur.Status.DeepCopy()),
+	modFunc := func() *api.Snapshot {
+		return &api.Snapshot{
+			TypeMeta:   cur.TypeMeta,
+			ObjectMeta: cur.ObjectMeta,
+			Spec:       cur.Spec,
+			Status:     *transform(cur.Status.DeepCopy()),
+		}
 	}
 
 	if len(useSubresource) == 1 && useSubresource[0] {
-		return c.Snapshots(cur.Namespace).UpdateStatus(mod)
+		attempt := 0
+		err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
+			attempt++
+			var e2 error
+			mod := modFunc()
+			result, e2 = c.Snapshots(cur.Namespace).UpdateStatus(mod)
+			if kerr.IsNotFound(e2) {
+				return false, e2
+			} else if kerr.IsConflict(e2) {
+				cur, _ = c.Snapshots(cur.Namespace).Get(cur.Name, metav1.GetOptions{})
+				return false, nil
+			}
+			return e2 == nil, nil
+		})
+
+		if err != nil {
+			err = fmt.Errorf("failed to update SnapshotStatus %s/%s after %d attempts due to %v", cur.Namespace, cur.Name, attempt, err)
+		}
+		return
 	}
 
-	out, _, err := PatchSnapshotObject(c, cur, mod)
-	return out, err
+	mod := modFunc()
+	result, _, err = PatchSnapshotObject(c, cur, mod)
+	return result, err
 }

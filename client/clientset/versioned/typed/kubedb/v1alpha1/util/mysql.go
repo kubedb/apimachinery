@@ -82,22 +82,43 @@ func TryUpdateMySQL(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, transf
 	return
 }
 
-func UpdateMySQLStatus(c cs.KubedbV1alpha1Interface, cur *api.MySQL, transform func(*api.MySQLStatus) *api.MySQLStatus, useSubresource ...bool) (*api.MySQL, error) {
+func UpdateMySQLStatus(c cs.KubedbV1alpha1Interface, cur *api.MySQL, transform func(*api.MySQLStatus) *api.MySQLStatus, useSubresource ...bool) (result *api.MySQL, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)
 	}
 
-	mod := &api.MySQL{
-		TypeMeta:   cur.TypeMeta,
-		ObjectMeta: cur.ObjectMeta,
-		Spec:       cur.Spec,
-		Status:     *transform(cur.Status.DeepCopy()),
+	modFunc := func() *api.MySQL {
+		return &api.MySQL{
+			TypeMeta:   cur.TypeMeta,
+			ObjectMeta: cur.ObjectMeta,
+			Spec:       cur.Spec,
+			Status:     *transform(cur.Status.DeepCopy()),
+		}
 	}
 
 	if len(useSubresource) == 1 && useSubresource[0] {
-		return c.MySQLs(cur.Namespace).UpdateStatus(mod)
+		attempt := 0
+		err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
+			attempt++
+			var e2 error
+			mod := modFunc()
+			result, e2 = c.MySQLs(cur.Namespace).UpdateStatus(mod)
+			if kerr.IsNotFound(e2) {
+				return false, e2
+			} else if kerr.IsConflict(e2) {
+				cur, _ = c.MySQLs(cur.Namespace).Get(cur.Name, metav1.GetOptions{})
+				return false, nil
+			}
+			return e2 == nil, nil
+		})
+
+		if err != nil {
+			err = fmt.Errorf("failed to update MySQLStatus %s/%s after %d attempts due to %v", cur.Namespace, cur.Name, attempt, err)
+		}
+		return
 	}
 
-	out, _, err := PatchMySQLObject(c, cur, mod)
-	return out, err
+	mod := modFunc()
+	result, _, err = PatchMySQLObject(c, cur, mod)
+	return
 }

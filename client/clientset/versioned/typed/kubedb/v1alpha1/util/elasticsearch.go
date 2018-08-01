@@ -82,22 +82,43 @@ func TryUpdateElasticsearch(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta
 	return
 }
 
-func UpdateElasticsearchStatus(c cs.KubedbV1alpha1Interface, cur *api.Elasticsearch, transform func(*api.ElasticsearchStatus) *api.ElasticsearchStatus, useSubresource ...bool) (*api.Elasticsearch, error) {
+func UpdateElasticsearchStatus(c cs.KubedbV1alpha1Interface, cur *api.Elasticsearch, transform func(*api.ElasticsearchStatus) *api.ElasticsearchStatus, useSubresource ...bool) (result *api.Elasticsearch, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)
 	}
 
-	mod := &api.Elasticsearch{
-		TypeMeta:   cur.TypeMeta,
-		ObjectMeta: cur.ObjectMeta,
-		Spec:       cur.Spec,
-		Status:     *transform(cur.Status.DeepCopy()),
+	modFunc := func() *api.Elasticsearch {
+		return &api.Elasticsearch{
+			TypeMeta:   cur.TypeMeta,
+			ObjectMeta: cur.ObjectMeta,
+			Spec:       cur.Spec,
+			Status:     *transform(cur.Status.DeepCopy()),
+		}
 	}
 
 	if len(useSubresource) == 1 && useSubresource[0] {
-		return c.Elasticsearches(cur.Namespace).UpdateStatus(mod)
+		attempt := 0
+		err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
+			attempt++
+			var e2 error
+			mod := modFunc()
+			result, e2 = c.Elasticsearches(cur.Namespace).UpdateStatus(mod)
+			if kerr.IsNotFound(e2) {
+				return false, e2
+			} else if kerr.IsConflict(e2) {
+				cur, _ = c.Elasticsearches(cur.Namespace).Get(cur.Name, metav1.GetOptions{})
+				return false, nil
+			}
+			return e2 == nil, nil
+		})
+
+		if err != nil {
+			err = fmt.Errorf("failed to update ElasticsearchStatus %s/%s after %d attempts due to %v", cur.Namespace, cur.Name, attempt, err)
+		}
+		return
 	}
 
-	out, _, err := PatchElasticsearchObject(c, cur, mod)
-	return out, err
+	mod := modFunc()
+	result, _, err = PatchElasticsearchObject(c, cur, mod)
+	return
 }
