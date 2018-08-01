@@ -363,6 +363,7 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 			(*in).DeepCopyInto(*out)
 		}
 	}
+	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	in.ServiceTemplate.DeepCopyInto(&out.ServiceTemplate)
 	if in.NodeSelector != nil {
 		in, out := &in.NodeSelector, &out.NodeSelector
