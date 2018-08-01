@@ -26,26 +26,26 @@ type PostgresVersionSpec struct {
 	// Version
 	Version string `json:"version,omitempty"`
 	// Database Image
-	DB PostgresVersionDatabase `json:"db,omitempty"`
+	DB PostgresVersionDatabase `json:"db"`
 	// Exporter Image
-	Exporter PostgresVersionExporter `json:"exporter,omitempty"`
+	Exporter PostgresVersionExporter `json:"exporter"`
 	// Tools Image
-	Tools PostgresVersionTools `json:"tools,omitempty"`
+	Tools PostgresVersionTools `json:"tools"`
 }
 
 // PostgresVersionDatabase is the Postgres Database image
 type PostgresVersionDatabase struct {
-	Image string `json:"image,omitempty"`
+	Image string `json:"image"`
 }
 
 // PostgresVersionExporter is the image for the Postgres exporter
 type PostgresVersionExporter struct {
-	Image string `json:"image,omitempty"`
+	Image string `json:"image"`
 }
 
 // PostgresVersionTools is the image for the postgres tools
 type PostgresVersionTools struct {
-	Image string `json:"image,omitempty"`
+	Image string `json:"image"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

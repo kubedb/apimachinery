@@ -7563,10 +7563,6 @@
             "type": "string"
           }
         },
-        "podTemplate": {
-          "description": "PodTemplate is an optional configuration for pods used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
-        },
         "replicas": {
           "description": "Number of instances to deploy for a Elasticsearch database.",
           "type": "integer",
@@ -8751,11 +8747,11 @@
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.LocalSpec"
         },
         "podTemplate": {
-          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "description": "PodTemplate is an optional configuration for pods used to take database snapshots",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "resources": {
-          "description": "Compute Resources required by the sidecar container.",
+          "description": "Compute Resources required by the pod used to take database snapshots Deprecated: Use podTemplate.spec.resources",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "s3": {
