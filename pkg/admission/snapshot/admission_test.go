@@ -18,7 +18,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes/fake"
 	clientSetScheme "k8s.io/client-go/kubernetes/scheme"
-	store "kmodules.xyz/objectstore-api/api"
+	store "kmodules.xyz/objectstore-api/api/v1"
 )
 
 func init() {

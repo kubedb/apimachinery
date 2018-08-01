@@ -57,6 +57,10 @@ import:
   repo: https://github.com/kmodules/objectstore-api.git
   vcs: git
   version: release-8.0
+- package: kmodules.xyz/offshoot-api
+  repo: https://github.com/kmodules/offshoot-api.git
+  vcs: git
+  version: release-8.0
 - package: github.com/appscode/kubernetes-webhook-util
   version: release-8.0
 - package: github.com/openshift/api
