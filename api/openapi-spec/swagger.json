@@ -7285,32 +7285,36 @@
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec": {
       "properties": {
         "azure": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.AzureSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.AzureSpec"
         },
         "b2": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.B2Spec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.B2Spec"
         },
         "cronExpression": {
           "type": "string"
         },
         "gcs": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.GCSSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.GCSSpec"
         },
         "local": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.LocalSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.LocalSpec"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used for backup and recovery",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "resources": {
-          "description": "Compute Resources required by the sidecar container.",
+          "description": "Deprecated: Use podTemplate.spec.resources",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "s3": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.S3Spec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.S3Spec"
         },
         "storageSecretName": {
           "type": "string"
         },
         "swift": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.SwiftSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.SwiftSpec"
         }
       }
     },
@@ -7510,7 +7514,7 @@
       ],
       "properties": {
         "affinity": {
-          "description": "If specified, the pod's scheduling constraints",
+          "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
         },
         "backupSchedule": {
@@ -7537,15 +7541,8 @@
           "description": "To enable ssl in transport \u0026 http layer",
           "type": "boolean"
         },
-        "env": {
-          "description": "List of environment variables to set in the container. Cannot be updated.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.EnvVar"
-          }
-        },
         "imagePullSecrets": {
-          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use.",
+          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use. Deprecated: Use podTemplate.spec.imagePullSecrets",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -7555,34 +7552,20 @@
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
-        "initContainers": {
-          "description": "List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, or Liveness probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.Container"
-          },
-          "x-kubernetes-patch-merge-key": "name",
-          "x-kubernetes-patch-strategy": "merge"
-        },
         "monitor": {
           "description": "Monitor is used monitor database instance",
-          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.AgentSpec"
+          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "nodeSelector": {
-          "description": "NodeSelector is a selector which must be true for the pod to fit on a node",
+          "description": "NodeSelector is a selector which must be true for the pod to fit on a node Deprecated: Use podTemplate.spec.nodeSelector",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
-        "priority": {
-          "description": "The priority value. Various system components use this field to find the priority of the pod. When Priority Admission Controller is enabled, it prevents users from setting this field. The admission controller populates this field from PriorityClassName. The higher the value, the higher the priority.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "priorityClassName": {
-          "description": "If specified, indicates the pod's priority. \"system-node-critical\" and \"system-cluster-critical\" are two special keywords which indicate the highest priorities with the former being the highest priority. Any other name must be defined by creating a PriorityClass object with that name. If not specified, the pod priority will be default or zero if there is no default.",
-          "type": "string"
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "replicas": {
           "description": "Number of instances to deploy for a Elasticsearch database.",
@@ -7590,27 +7573,23 @@
           "format": "int32"
         },
         "resources": {
-          "description": "Compute Resources required by the sidecar container.",
+          "description": "Compute Resources required by the sidecar container. Deprecated: Use podTemplate.spec.resources",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "schedulerName": {
-          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.",
+          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler. Deprecated: Use podTemplate.spec.schedulerName",
           "type": "string"
         },
-        "securityContext": {
-          "description": "SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PodSecurityContext"
-        },
-        "service": {
-          "description": "Service is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ServiceConfig"
+        "serviceTemplate": {
+          "description": "ServiceTemplate is an optional configuration for service used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
         },
         "storage": {
           "description": "Storage to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
         },
         "tolerations": {
-          "description": "If specified, the pod's tolerations.",
+          "description": "If specified, the pod's tolerations. Deprecated: Use podTemplate.spec.tolerations",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
@@ -7623,10 +7602,6 @@
         "version": {
           "description": "Version of Elasticsearch to be deployed.",
           "type": "string"
-        },
-        "workload": {
-          "description": "Workload is an optional configuration for workload controller and pods used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.WorkloadConfig"
         }
       }
     },
@@ -7648,10 +7623,6 @@
         "version"
       ],
       "properties": {
-        "affinity": {
-          "description": "If specified, the pod's scheduling constraints",
-          "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
-        },
         "backupSchedule": {
           "description": "BackupSchedule spec to specify how database backup will be taken",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
@@ -7664,73 +7635,26 @@
           "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
           "type": "boolean"
         },
-        "env": {
-          "description": "List of environment variables to set in the container. Cannot be updated.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.EnvVar"
-          }
-        },
-        "imagePullSecrets": {
-          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
-          }
-        },
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
-        "initContainers": {
-          "description": "List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, or Liveness probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.Container"
-          },
-          "x-kubernetes-patch-merge-key": "name",
-          "x-kubernetes-patch-strategy": "merge"
-        },
         "monitor": {
           "description": "Monitor is used monitor database instance",
-          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.AgentSpec"
+          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
-        "nodeSelector": {
-          "description": "NodeSelector is a selector which must be true for the pod to fit on a node",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "priority": {
-          "description": "The priority value. Various system components use this field to find the priority of the pod. When Priority Admission Controller is enabled, it prevents users from setting this field. The admission controller populates this field from PriorityClassName. The higher the value, the higher the priority.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "priorityClassName": {
-          "description": "If specified, indicates the pod's priority. \"system-node-critical\" and \"system-cluster-critical\" are two special keywords which indicate the highest priorities with the former being the highest priority. Any other name must be defined by creating a PriorityClass object with that name. If not specified, the pod priority will be default or zero if there is no default.",
-          "type": "string"
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "replicas": {
           "description": "Number of instances to deploy for a Etcd database.",
           "type": "integer",
           "format": "int32"
         },
-        "resources": {
-          "description": "Compute Resources required by the sidecar container.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
-        "schedulerName": {
-          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.",
-          "type": "string"
-        },
-        "securityContext": {
-          "description": "SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PodSecurityContext"
-        },
-        "service": {
-          "description": "Service is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ServiceConfig"
+        "serviceTemplate": {
+          "description": "ServiceTemplate is an optional configuration for service used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
         },
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
@@ -7740,20 +7664,9 @@
           "description": "etcd cluster TLS configuration",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.TLSPolicy"
         },
-        "tolerations": {
-          "description": "If specified, the pod's tolerations.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
-          }
-        },
         "version": {
           "description": "Version of Etcd to be deployed.",
           "type": "string"
-        },
-        "workload": {
-          "description": "Workload is an optional configuration for workload controller and pods used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.WorkloadConfig"
         }
       }
     },
@@ -7846,7 +7759,7 @@
       ],
       "properties": {
         "affinity": {
-          "description": "If specified, the pod's scheduling constraints",
+          "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
         },
         "configSource": {
@@ -7857,48 +7770,27 @@
           "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
           "type": "boolean"
         },
-        "env": {
-          "description": "List of environment variables to set in the container. Cannot be updated.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.EnvVar"
-          }
-        },
         "imagePullSecrets": {
-          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use.",
+          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use. Deprecated: Use podTemplate.spec.imagePullSecrets",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
           }
         },
-        "initContainers": {
-          "description": "List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, or Liveness probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.Container"
-          },
-          "x-kubernetes-patch-merge-key": "name",
-          "x-kubernetes-patch-strategy": "merge"
-        },
         "monitor": {
           "description": "Monitor is used monitor database instance",
-          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.AgentSpec"
+          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "nodeSelector": {
-          "description": "NodeSelector is a selector which must be true for the pod to fit on a node",
+          "description": "NodeSelector is a selector which must be true for the pod to fit on a node Deprecated: Use podTemplate.spec.nodeSelector",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
-        "priority": {
-          "description": "The priority value. Various system components use this field to find the priority of the pod. When Priority Admission Controller is enabled, it prevents users from setting this field. The admission controller populates this field from PriorityClassName. The higher the value, the higher the priority.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "priorityClassName": {
-          "description": "If specified, indicates the pod's priority. \"system-node-critical\" and \"system-cluster-critical\" are two special keywords which indicate the highest priorities with the former being the highest priority. Any other name must be defined by creating a PriorityClass object with that name. If not specified, the pod priority will be default or zero if there is no default.",
-          "type": "string"
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "replicas": {
           "description": "Number of instances to deploy for a Memcached database.",
@@ -7906,23 +7798,19 @@
           "format": "int32"
         },
         "resources": {
-          "description": "Compute Resources required by the sidecar container.",
+          "description": "Compute Resources required by the sidecar container. Deprecated: Use podTemplate.spec.resources",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "schedulerName": {
-          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.",
+          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler. Deprecated: Use podTemplate.spec.schedulerName",
           "type": "string"
         },
-        "securityContext": {
-          "description": "SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PodSecurityContext"
-        },
-        "service": {
-          "description": "Service is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ServiceConfig"
+        "serviceTemplate": {
+          "description": "ServiceTemplate is an optional configuration for service used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
         },
         "tolerations": {
-          "description": "If specified, the pod's tolerations.",
+          "description": "If specified, the pod's tolerations. Deprecated: Use podTemplate.spec.tolerations",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
@@ -7931,10 +7819,6 @@
         "version": {
           "description": "Version of Memcached to be deployed.",
           "type": "string"
-        },
-        "workload": {
-          "description": "Workload is an optional configuration for workload controller and pods used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.WorkloadConfig"
         }
       }
     },
@@ -8016,7 +7900,7 @@
       ],
       "properties": {
         "affinity": {
-          "description": "If specified, the pod's scheduling constraints",
+          "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
         },
         "backupSchedule": {
@@ -8031,15 +7915,8 @@
           "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
           "type": "boolean"
         },
-        "env": {
-          "description": "List of environment variables to set in the container. Cannot be updated.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.EnvVar"
-          }
-        },
         "imagePullSecrets": {
-          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use.",
+          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use. Deprecated: Use podTemplate.spec.imagePullSecrets",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -8049,34 +7926,20 @@
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
-        "initContainers": {
-          "description": "List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, or Liveness probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.Container"
-          },
-          "x-kubernetes-patch-merge-key": "name",
-          "x-kubernetes-patch-strategy": "merge"
-        },
         "monitor": {
           "description": "Monitor is used monitor database instance",
-          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.AgentSpec"
+          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "nodeSelector": {
-          "description": "NodeSelector is a selector which must be true for the pod to fit on a node",
+          "description": "NodeSelector is a selector which must be true for the pod to fit on a node Deprecated: Use podTemplate.spec.nodeSelector",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
-        "priority": {
-          "description": "The priority value. Various system components use this field to find the priority of the pod. When Priority Admission Controller is enabled, it prevents users from setting this field. The admission controller populates this field from PriorityClassName. The higher the value, the higher the priority.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "priorityClassName": {
-          "description": "If specified, indicates the pod's priority. \"system-node-critical\" and \"system-cluster-critical\" are two special keywords which indicate the highest priorities with the former being the highest priority. Any other name must be defined by creating a PriorityClass object with that name. If not specified, the pod priority will be default or zero if there is no default.",
-          "type": "string"
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "replicas": {
           "description": "Number of instances to deploy for a MongoDB database.",
@@ -8084,27 +7947,23 @@
           "format": "int32"
         },
         "resources": {
-          "description": "Compute Resources required by the sidecar container.",
+          "description": "Compute Resources required by the sidecar container. Deprecated: Use podTemplate.spec.resources",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "schedulerName": {
-          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.",
+          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler. Deprecated: Use podTemplate.spec.schedulerName",
           "type": "string"
         },
-        "securityContext": {
-          "description": "SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PodSecurityContext"
-        },
-        "service": {
-          "description": "Service is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ServiceConfig"
+        "serviceTemplate": {
+          "description": "ServiceTemplate is an optional configuration for service used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
         },
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
         },
         "tolerations": {
-          "description": "If specified, the pod's tolerations.",
+          "description": "If specified, the pod's tolerations. Deprecated: Use podTemplate.spec.tolerations",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
@@ -8113,10 +7972,6 @@
         "version": {
           "description": "Version of MongoDB to be deployed.",
           "type": "string"
-        },
-        "workload": {
-          "description": "Workload is an optional configuration for workload controller and pods used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.WorkloadConfig"
         }
       }
     },
@@ -8198,7 +8053,7 @@
       ],
       "properties": {
         "affinity": {
-          "description": "If specified, the pod's scheduling constraints",
+          "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
         },
         "backupSchedule": {
@@ -8217,15 +8072,8 @@
           "description": "If DoNotPause is true, controller will prevent to delete this Mysql object. Controller will create same Mysql object and ignore other process.",
           "type": "boolean"
         },
-        "env": {
-          "description": "List of environment variables to set in the container. Cannot be updated.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.EnvVar"
-          }
-        },
         "imagePullSecrets": {
-          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use.",
+          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use. Deprecated: Use podTemplate.spec.imagePullSecrets",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -8235,34 +8083,20 @@
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
-        "initContainers": {
-          "description": "List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, or Liveness probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.Container"
-          },
-          "x-kubernetes-patch-merge-key": "name",
-          "x-kubernetes-patch-strategy": "merge"
-        },
         "monitor": {
           "description": "Monitor is used monitor database instance",
-          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.AgentSpec"
+          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "nodeSelector": {
-          "description": "NodeSelector is a selector which must be true for the pod to fit on a node",
+          "description": "NodeSelector is a selector which must be true for the pod to fit on a node Deprecated: Use podTemplate.spec.nodeSelector",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
-        "priority": {
-          "description": "The priority value. Various system components use this field to find the priority of the pod. When Priority Admission Controller is enabled, it prevents users from setting this field. The admission controller populates this field from PriorityClassName. The higher the value, the higher the priority.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "priorityClassName": {
-          "description": "If specified, indicates the pod's priority. \"system-node-critical\" and \"system-cluster-critical\" are two special keywords which indicate the highest priorities with the former being the highest priority. Any other name must be defined by creating a PriorityClass object with that name. If not specified, the pod priority will be default or zero if there is no default.",
-          "type": "string"
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "replicas": {
           "description": "Number of instances to deploy for a MySQL database.",
@@ -8270,27 +8104,23 @@
           "format": "int32"
         },
         "resources": {
-          "description": "Compute Resources required by the sidecar container.",
+          "description": "Compute Resources required by the sidecar container. Deprecated: Use podTemplate.spec.resources",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "schedulerName": {
-          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.",
+          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler. Deprecated: Use podTemplate.spec.schedulerName",
           "type": "string"
         },
-        "securityContext": {
-          "description": "SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PodSecurityContext"
-        },
-        "service": {
-          "description": "Service is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ServiceConfig"
+        "serviceTemplate": {
+          "description": "ServiceTemplate is an optional configuration for service used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
         },
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
         },
         "tolerations": {
-          "description": "If specified, the pod's tolerations.",
+          "description": "If specified, the pod's tolerations. Deprecated: Use podTemplate.spec.tolerations",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
@@ -8299,10 +8129,6 @@
         "version": {
           "description": "Version of MySQL to be deployed.",
           "type": "string"
-        },
-        "workload": {
-          "description": "Workload is an optional configuration for workload controller and pods used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.WorkloadConfig"
         }
       }
     },
@@ -8397,7 +8223,7 @@
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresArchiverSpec": {
       "properties": {
         "storage": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.Backend"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.Backend"
         }
       }
     },
@@ -8437,7 +8263,7 @@
       ],
       "properties": {
         "affinity": {
-          "description": "If specified, the pod's scheduling constraints",
+          "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
         },
         "archiver": {
@@ -8460,15 +8286,8 @@
           "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
           "type": "boolean"
         },
-        "env": {
-          "description": "List of environment variables to set in the container. Cannot be updated.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.EnvVar"
-          }
-        },
         "imagePullSecrets": {
-          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use.",
+          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use. Deprecated: Use podTemplate.spec.imagePullSecrets",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -8478,34 +8297,20 @@
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
-        "initContainers": {
-          "description": "List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, or Liveness probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.Container"
-          },
-          "x-kubernetes-patch-merge-key": "name",
-          "x-kubernetes-patch-strategy": "merge"
-        },
         "monitor": {
           "description": "Monitor is used monitor database instance",
-          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.AgentSpec"
+          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "nodeSelector": {
-          "description": "NodeSelector is a selector which must be true for the pod to fit on a node",
+          "description": "NodeSelector is a selector which must be true for the pod to fit on a node Deprecated: Use podTemplate.spec.nodeSelector",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
-        "priority": {
-          "description": "The priority value. Various system components use this field to find the priority of the pod. When Priority Admission Controller is enabled, it prevents users from setting this field. The admission controller populates this field from PriorityClassName. The higher the value, the higher the priority.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "priorityClassName": {
-          "description": "If specified, indicates the pod's priority. \"system-node-critical\" and \"system-cluster-critical\" are two special keywords which indicate the highest priorities with the former being the highest priority. Any other name must be defined by creating a PriorityClass object with that name. If not specified, the pod priority will be default or zero if there is no default.",
-          "type": "string"
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "replicas": {
           "description": "Number of instances to deploy for a Postgres database.",
@@ -8513,20 +8318,16 @@
           "format": "int32"
         },
         "resources": {
-          "description": "Compute Resources required by the sidecar container.",
+          "description": "Compute Resources required by the sidecar container. Deprecated: Use podTemplate.spec.resources",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "schedulerName": {
-          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.",
+          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler. Deprecated: Use podTemplate.spec.schedulerName",
           "type": "string"
         },
-        "securityContext": {
-          "description": "SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PodSecurityContext"
-        },
-        "service": {
-          "description": "Service is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ServiceConfig"
+        "serviceTemplate": {
+          "description": "ServiceTemplate is an optional configuration for service used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
         },
         "standbyMode": {
           "description": "Standby mode",
@@ -8541,7 +8342,7 @@
           "type": "string"
         },
         "tolerations": {
-          "description": "If specified, the pod's tolerations.",
+          "description": "If specified, the pod's tolerations. Deprecated: Use podTemplate.spec.tolerations",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
@@ -8550,10 +8351,6 @@
         "version": {
           "description": "Version of Postgres to be deployed.",
           "type": "string"
-        },
-        "workload": {
-          "description": "Workload is an optional configuration for workload controller and pods used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.WorkloadConfig"
         }
       }
     },
@@ -8573,31 +8370,31 @@
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresWALSourceSpec": {
       "properties": {
         "azure": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.AzureSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.AzureSpec"
         },
         "b2": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.B2Spec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.B2Spec"
         },
         "backupName": {
           "type": "string"
         },
         "gcs": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.GCSSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.GCSSpec"
         },
         "local": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.LocalSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.LocalSpec"
         },
         "pitr": {
           "type": "string"
         },
         "s3": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.S3Spec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.S3Spec"
         },
         "storageSecretName": {
           "type": "string"
         },
         "swift": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.SwiftSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.SwiftSpec"
         }
       }
     },
@@ -8666,7 +8463,7 @@
       ],
       "properties": {
         "affinity": {
-          "description": "If specified, the pod's scheduling constraints",
+          "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
         },
         "configSource": {
@@ -8677,48 +8474,27 @@
           "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
           "type": "boolean"
         },
-        "env": {
-          "description": "List of environment variables to set in the container. Cannot be updated.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.EnvVar"
-          }
-        },
         "imagePullSecrets": {
-          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use.",
+          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use. Deprecated: Use podTemplate.spec.imagePullSecrets",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
           }
         },
-        "initContainers": {
-          "description": "List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, or Liveness probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.Container"
-          },
-          "x-kubernetes-patch-merge-key": "name",
-          "x-kubernetes-patch-strategy": "merge"
-        },
         "monitor": {
           "description": "Monitor is used monitor database instance",
-          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.AgentSpec"
+          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "nodeSelector": {
-          "description": "NodeSelector is a selector which must be true for the pod to fit on a node",
+          "description": "NodeSelector is a selector which must be true for the pod to fit on a node Deprecated: Use podTemplate.spec.nodeSelector",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
-        "priority": {
-          "description": "The priority value. Various system components use this field to find the priority of the pod. When Priority Admission Controller is enabled, it prevents users from setting this field. The admission controller populates this field from PriorityClassName. The higher the value, the higher the priority.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "priorityClassName": {
-          "description": "If specified, indicates the pod's priority. \"system-node-critical\" and \"system-cluster-critical\" are two special keywords which indicate the highest priorities with the former being the highest priority. Any other name must be defined by creating a PriorityClass object with that name. If not specified, the pod priority will be default or zero if there is no default.",
-          "type": "string"
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "replicas": {
           "description": "Number of instances to deploy for a Redis database.",
@@ -8726,27 +8502,23 @@
           "format": "int32"
         },
         "resources": {
-          "description": "Compute Resources required by the sidecar container.",
+          "description": "Compute Resources required by the sidecar container. Deprecated: Use podTemplate.spec.resources",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "schedulerName": {
-          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.",
+          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler. Deprecated: Use podTemplate.spec.schedulerName",
           "type": "string"
         },
-        "securityContext": {
-          "description": "SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PodSecurityContext"
-        },
-        "service": {
-          "description": "Service is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ServiceConfig"
+        "serviceTemplate": {
+          "description": "ServiceTemplate is an optional configuration for service used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
         },
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
         },
         "tolerations": {
-          "description": "If specified, the pod's tolerations.",
+          "description": "If specified, the pod's tolerations. Deprecated: Use podTemplate.spec.tolerations",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
@@ -8755,10 +8527,6 @@
         "version": {
           "description": "Version of Redis to be deployed.",
           "type": "string"
-        },
-        "workload": {
-          "description": "Workload is an optional configuration for workload controller and pods used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.WorkloadConfig"
         }
       }
     },
@@ -8890,53 +8658,6 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ServiceConfig": {
-      "description": "ServiceConfig describes the attributes that a user creates on a service.",
-      "properties": {
-        "annotations": {
-          "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "clusterIP": {
-          "description": "clusterIP is the IP address of the service and is usually assigned randomly by the master. If an address is specified manually and is not in use by others, it will be allocated to the service; otherwise, creation of the service will fail. This field can not be changed through updates. Valid values are \"None\", empty string (\"\"), or a valid IP address. \"None\" can be specified for headless services when proxying is not required. Only applies to types ClusterIP, NodePort, and LoadBalancer. Ignored if type is ExternalName. More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies",
-          "type": "string"
-        },
-        "externalIPs": {
-          "description": "externalIPs is a list of IP addresses for which nodes in the cluster will also accept traffic for this service.  These IPs are not managed by Kubernetes.  The user is responsible for ensuring that traffic arrives at a node with this IP.  A common example is external load-balancers that are not part of the Kubernetes system.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "externalTrafficPolicy": {
-          "description": "externalTrafficPolicy denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints. \"Local\" preserves the client source IP and avoids a second hop for LoadBalancer and Nodeport type services, but risks potentially imbalanced traffic spreading. \"Cluster\" obscures the client source IP and may cause a second hop to another node, but should have good overall load-spreading.",
-          "type": "string"
-        },
-        "healthCheckNodePort": {
-          "description": "healthCheckNodePort specifies the healthcheck nodePort for the service. If not specified, HealthCheckNodePort is created by the service api backend with the allocated nodePort. Will use user-specified nodePort value if specified by the client. Only effects when Type is set to LoadBalancer and ExternalTrafficPolicy is set to Local.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "loadBalancerIP": {
-          "description": "Only applies to Service Type: LoadBalancer LoadBalancer will get created with the IP specified in this field. This feature depends on whether the underlying cloud-provider supports specifying the loadBalancerIP when a load balancer is created. This field will be ignored if the cloud-provider does not support the feature.",
-          "type": "string"
-        },
-        "loadBalancerSourceRanges": {
-          "description": "If specified and supported by the platform, this will restrict traffic through the cloud-provider load-balancer will be restricted to the specified client IPs. This field will be ignored if the cloud-provider does not support the feature.\" More info: https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "type": {
-          "description": "type determines how the Service is exposed. Defaults to ClusterIP. Valid options are ExternalName, ClusterIP, NodePort, and LoadBalancer. \"ExternalName\" maps to the specified externalName. \"ClusterIP\" allocates a cluster-internal IP address for load-balancing to endpoints. Endpoints are determined by the selector or if that is not specified, by manual construction of an Endpoints object. If clusterIP is \"None\", no virtual IP is allocated and the endpoints are published as a set of endpoints rather than a stable IP. \"NodePort\" builds on ClusterIP and allocates a port on every node which routes to the clusterIP. \"LoadBalancer\" builds on NodePort and creates an external load-balancer (if supported in the current cloud) which routes to the clusterIP. More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types",
-          "type": "string"
-        }
-      }
-    },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot": {
       "properties": {
         "apiVersion": {
@@ -9014,50 +8735,37 @@
       ],
       "properties": {
         "azure": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.AzureSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.AzureSpec"
         },
         "b2": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.B2Spec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.B2Spec"
         },
         "databaseName": {
           "description": "Database name",
           "type": "string"
         },
         "gcs": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.GCSSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.GCSSpec"
         },
         "local": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.LocalSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.LocalSpec"
         },
-        "priority": {
-          "description": "The priority value. Various system components use this field to find the priority of the pod. When Priority Admission Controller is enabled, it prevents users from setting this field. The admission controller populates this field from PriorityClassName. The higher the value, the higher the priority.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "priorityClassName": {
-          "description": "If specified, indicates the pod's priority. \"system-node-critical\" and \"system-cluster-critical\" are two special keywords which indicate the highest priorities with the former being the highest priority. Any other name must be defined by creating a PriorityClass object with that name. If not specified, the pod priority will be default or zero if there is no default.",
-          "type": "string"
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "resources": {
           "description": "Compute Resources required by the sidecar container.",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "s3": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.S3Spec"
-        },
-        "securityContext": {
-          "description": "SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PodSecurityContext"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.S3Spec"
         },
         "storageSecretName": {
           "type": "string"
         },
         "swift": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.SwiftSpec"
-        },
-        "workload": {
-          "description": "Workload is an optional configuration for workload controller and pods used to expose database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.WorkloadConfig"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.SwiftSpec"
         }
       }
     },
@@ -9084,24 +8792,6 @@
         },
         "operatorSecret": {
           "type": "string"
-        }
-      }
-    },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.WorkloadConfig": {
-      "properties": {
-        "annotations": {
-          "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "podAnnotations": {
-          "description": "PodAnnotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
         }
       }
     },
@@ -11603,18 +11293,18 @@
       "type": "string",
       "format": "int-or-string"
     },
-    "xyz.kmodules.monitoring-agent-api.api.AgentSpec": {
+    "xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec": {
       "properties": {
         "agent": {
           "description": "Valid values: coreos-prometheus-operator",
           "type": "string"
         },
         "prometheus": {
-          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.PrometheusSpec"
+          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.PrometheusSpec"
         }
       }
     },
-    "xyz.kmodules.monitoring-agent-api.api.PrometheusSpec": {
+    "xyz.kmodules.monitoring-agent-api.api.v1.PrometheusSpec": {
       "properties": {
         "interval": {
           "description": "Interval at which metrics should be scraped",
@@ -11638,7 +11328,7 @@
         }
       }
     },
-    "xyz.kmodules.objectstore-api.api.AzureSpec": {
+    "xyz.kmodules.objectstore-api.api.v1.AzureSpec": {
       "properties": {
         "container": {
           "type": "string"
@@ -11648,7 +11338,7 @@
         }
       }
     },
-    "xyz.kmodules.objectstore-api.api.B2Spec": {
+    "xyz.kmodules.objectstore-api.api.v1.B2Spec": {
       "properties": {
         "bucket": {
           "type": "string"
@@ -11658,32 +11348,32 @@
         }
       }
     },
-    "xyz.kmodules.objectstore-api.api.Backend": {
+    "xyz.kmodules.objectstore-api.api.v1.Backend": {
       "properties": {
         "azure": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.AzureSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.AzureSpec"
         },
         "b2": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.B2Spec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.B2Spec"
         },
         "gcs": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.GCSSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.GCSSpec"
         },
         "local": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.LocalSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.LocalSpec"
         },
         "s3": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.S3Spec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.S3Spec"
         },
         "storageSecretName": {
           "type": "string"
         },
         "swift": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.SwiftSpec"
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.SwiftSpec"
         }
       }
     },
-    "xyz.kmodules.objectstore-api.api.GCSSpec": {
+    "xyz.kmodules.objectstore-api.api.v1.GCSSpec": {
       "properties": {
         "bucket": {
           "type": "string"
@@ -11693,7 +11383,7 @@
         }
       }
     },
-    "xyz.kmodules.objectstore-api.api.LocalSpec": {
+    "xyz.kmodules.objectstore-api.api.v1.LocalSpec": {
       "properties": {
         "awsElasticBlockStore": {
           "description": "AWSElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
@@ -11811,7 +11501,7 @@
         }
       }
     },
-    "xyz.kmodules.objectstore-api.api.S3Spec": {
+    "xyz.kmodules.objectstore-api.api.v1.S3Spec": {
       "properties": {
         "bucket": {
           "type": "string"
@@ -11824,13 +11514,149 @@
         }
       }
     },
-    "xyz.kmodules.objectstore-api.api.SwiftSpec": {
+    "xyz.kmodules.objectstore-api.api.v1.SwiftSpec": {
       "properties": {
         "container": {
           "type": "string"
         },
         "prefix": {
           "type": "string"
+        }
+      }
+    },
+    "xyz.kmodules.offshoot-api.api.v1.PodSpec": {
+      "properties": {
+        "affinity": {
+          "description": "If specified, the pod's scheduling constraints",
+          "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
+        },
+        "env": {
+          "description": "List of environment variables to set in the container. Cannot be updated.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.core.v1.EnvVar"
+          }
+        },
+        "imagePullSecrets": {
+          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          }
+        },
+        "initContainers": {
+          "description": "List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, or Liveness probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.core.v1.Container"
+          },
+          "x-kubernetes-patch-merge-key": "name",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "nodeSelector": {
+          "description": "NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "priority": {
+          "description": "The priority value. Various system components use this field to find the priority of the pod. When Priority Admission Controller is enabled, it prevents users from setting this field. The admission controller populates this field from PriorityClassName. The higher the value, the higher the priority.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "priorityClassName": {
+          "description": "If specified, indicates the pod's priority. \"system-node-critical\" and \"system-cluster-critical\" are two special keywords which indicate the highest priorities with the former being the highest priority. Any other name must be defined by creating a PriorityClass object with that name. If not specified, the pod priority will be default or zero if there is no default.",
+          "type": "string"
+        },
+        "resources": {
+          "description": "Compute Resources required by the sidecar container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "schedulerName": {
+          "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.",
+          "type": "string"
+        },
+        "securityContext": {
+          "description": "SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PodSecurityContext"
+        },
+        "tolerations": {
+          "description": "If specified, the pod's tolerations.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        }
+      }
+    },
+    "xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec": {
+      "description": "PodTemplateSpec describes the data a pod should have when created from a template",
+      "properties": {
+        "controller": {
+          "description": "Workload controller's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "metadata": {
+          "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "Specification of the desired behavior of the pod. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodSpec"
+        }
+      }
+    },
+    "xyz.kmodules.offshoot-api.api.v1.ServiceSpec": {
+      "description": "ServiceSpec describes the attributes that a user creates on a service.",
+      "properties": {
+        "clusterIP": {
+          "description": "clusterIP is the IP address of the service and is usually assigned randomly by the master. If an address is specified manually and is not in use by others, it will be allocated to the service; otherwise, creation of the service will fail. This field can not be changed through updates. Valid values are \"None\", empty string (\"\"), or a valid IP address. \"None\" can be specified for headless services when proxying is not required. Only applies to types ClusterIP, NodePort, and LoadBalancer. Ignored if type is ExternalName. More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies",
+          "type": "string"
+        },
+        "externalIPs": {
+          "description": "externalIPs is a list of IP addresses for which nodes in the cluster will also accept traffic for this service.  These IPs are not managed by Kubernetes.  The user is responsible for ensuring that traffic arrives at a node with this IP.  A common example is external load-balancers that are not part of the Kubernetes system.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "externalTrafficPolicy": {
+          "description": "externalTrafficPolicy denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints. \"Local\" preserves the client source IP and avoids a second hop for LoadBalancer and Nodeport type services, but risks potentially imbalanced traffic spreading. \"Cluster\" obscures the client source IP and may cause a second hop to another node, but should have good overall load-spreading.",
+          "type": "string"
+        },
+        "healthCheckNodePort": {
+          "description": "healthCheckNodePort specifies the healthcheck nodePort for the service. If not specified, HealthCheckNodePort is created by the service api backend with the allocated nodePort. Will use user-specified nodePort value if specified by the client. Only effects when Type is set to LoadBalancer and ExternalTrafficPolicy is set to Local.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "loadBalancerIP": {
+          "description": "Only applies to Service Type: LoadBalancer LoadBalancer will get created with the IP specified in this field. This feature depends on whether the underlying cloud-provider supports specifying the loadBalancerIP when a load balancer is created. This field will be ignored if the cloud-provider does not support the feature.",
+          "type": "string"
+        },
+        "loadBalancerSourceRanges": {
+          "description": "If specified and supported by the platform, this will restrict traffic through the cloud-provider load-balancer will be restricted to the specified client IPs. This field will be ignored if the cloud-provider does not support the feature.\" More info: https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "description": "type determines how the Service is exposed. Defaults to ClusterIP. Valid options are ExternalName, ClusterIP, NodePort, and LoadBalancer. \"ExternalName\" maps to the specified externalName. \"ClusterIP\" allocates a cluster-internal IP address for load-balancing to endpoints. Endpoints are determined by the selector or if that is not specified, by manual construction of an Endpoints object. If clusterIP is \"None\", no virtual IP is allocated and the endpoints are published as a set of endpoints rather than a stable IP. \"NodePort\" builds on ClusterIP and allocates a port on every node which routes to the clusterIP. \"LoadBalancer\" builds on NodePort and creates an external load-balancer (if supported in the current cloud) which routes to the clusterIP. More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types",
+          "type": "string"
+        }
+      }
+    },
+    "xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec": {
+      "description": "ServiceTemplateSpec describes the data a service should have when created from a template",
+      "properties": {
+        "metadata": {
+          "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceSpec"
         }
       }
     }
