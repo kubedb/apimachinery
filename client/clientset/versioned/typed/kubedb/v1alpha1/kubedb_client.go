@@ -29,9 +29,13 @@ type KubedbV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	DormantDatabasesGetter
 	ElasticsearchesGetter
+	ElasticsearchVersionsGetter
 	EtcdsGetter
+	EtcdVersionsGetter
 	MemcachedsGetter
+	MemcachedVersionsGetter
 	MongoDBsGetter
+	MongoDBVersionsGetter
 	MySQLsGetter
 	MySQLVersionsGetter
 	PostgresesGetter
@@ -54,16 +58,32 @@ func (c *KubedbV1alpha1Client) Elasticsearches(namespace string) ElasticsearchIn
 	return newElasticsearches(c, namespace)
 }
 
+func (c *KubedbV1alpha1Client) ElasticsearchVersions() ElasticsearchVersionInterface {
+	return newElasticsearchVersions(c)
+}
+
 func (c *KubedbV1alpha1Client) Etcds(namespace string) EtcdInterface {
 	return newEtcds(c, namespace)
+}
+
+func (c *KubedbV1alpha1Client) EtcdVersions() EtcdVersionInterface {
+	return newEtcdVersions(c)
 }
 
 func (c *KubedbV1alpha1Client) Memcacheds(namespace string) MemcachedInterface {
 	return newMemcacheds(c, namespace)
 }
 
+func (c *KubedbV1alpha1Client) MemcachedVersions() MemcachedVersionInterface {
+	return newMemcachedVersions(c)
+}
+
 func (c *KubedbV1alpha1Client) MongoDBs(namespace string) MongoDBInterface {
 	return newMongoDBs(c, namespace)
+}
+
+func (c *KubedbV1alpha1Client) MongoDBVersions() MongoDBVersionInterface {
+	return newMongoDBVersions(c)
 }
 
 func (c *KubedbV1alpha1Client) MySQLs(namespace string) MySQLInterface {

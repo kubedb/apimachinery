@@ -44,20 +44,42 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec":            schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus":          schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchStatus(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSummary":         schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSummary(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersion":         schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersion(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionDatabase": schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersionDatabase(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionExporter": schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersionExporter(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionList":     schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersionList(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionSpec":     schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersionSpec(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionTools":    schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersionTools(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Etcd":                         schema_apimachinery_apis_kubedb_v1alpha1_Etcd(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdList":                     schema_apimachinery_apis_kubedb_v1alpha1_EtcdList(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdSpec":                     schema_apimachinery_apis_kubedb_v1alpha1_EtcdSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdStatus":                   schema_apimachinery_apis_kubedb_v1alpha1_EtcdStatus(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersion":                  schema_apimachinery_apis_kubedb_v1alpha1_EtcdVersion(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersionDatabase":          schema_apimachinery_apis_kubedb_v1alpha1_EtcdVersionDatabase(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersionExporter":          schema_apimachinery_apis_kubedb_v1alpha1_EtcdVersionExporter(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersionList":              schema_apimachinery_apis_kubedb_v1alpha1_EtcdVersionList(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersionSpec":              schema_apimachinery_apis_kubedb_v1alpha1_EtcdVersionSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec":                     schema_apimachinery_apis_kubedb_v1alpha1_InitSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemberSecret":                 schema_apimachinery_apis_kubedb_v1alpha1_MemberSecret(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Memcached":                    schema_apimachinery_apis_kubedb_v1alpha1_Memcached(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedList":                schema_apimachinery_apis_kubedb_v1alpha1_MemcachedList(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec":                schema_apimachinery_apis_kubedb_v1alpha1_MemcachedSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedStatus":              schema_apimachinery_apis_kubedb_v1alpha1_MemcachedStatus(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersion":             schema_apimachinery_apis_kubedb_v1alpha1_MemcachedVersion(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersionDatabase":     schema_apimachinery_apis_kubedb_v1alpha1_MemcachedVersionDatabase(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersionExporter":     schema_apimachinery_apis_kubedb_v1alpha1_MemcachedVersionExporter(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersionList":         schema_apimachinery_apis_kubedb_v1alpha1_MemcachedVersionList(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersionSpec":         schema_apimachinery_apis_kubedb_v1alpha1_MemcachedVersionSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDB":                      schema_apimachinery_apis_kubedb_v1alpha1_MongoDB(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBList":                  schema_apimachinery_apis_kubedb_v1alpha1_MongoDBList(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec":                  schema_apimachinery_apis_kubedb_v1alpha1_MongoDBSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBStatus":                schema_apimachinery_apis_kubedb_v1alpha1_MongoDBStatus(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersion":               schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersion(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionDatabase":       schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersionDatabase(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionExporter":       schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersionExporter(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionList":           schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersionList(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionSpec":           schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersionSpec(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionTools":          schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersionTools(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQL":                        schema_apimachinery_apis_kubedb_v1alpha1_MySQL(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLList":                    schema_apimachinery_apis_kubedb_v1alpha1_MySQLList(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec":                    schema_apimachinery_apis_kubedb_v1alpha1_MySQLSpec(ref),
@@ -966,6 +988,190 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSummary(ref common.Re
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchVersion defines a Elasticsearch database version.",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchVersionDatabase is the Elasticsearch Database image",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchVersionExporter is the image for the Elasticsearch exporter",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchVersionList is a list of ElasticsearchVersions",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of ElasticsearchVersion CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersion", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchVersionSpec is the spec for elasticsearch version",
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionDatabase"),
+						},
+					},
+					"exporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Exporter Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionExporter"),
+						},
+					},
+					"tools": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Tools Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionTools"),
+						},
+					},
+				},
+				Required: []string{"db", "exporter", "tools"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionDatabase", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionExporter", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchVersionTools"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersionTools(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchVersionTools is the image for the elasticsearch tools",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha1_Etcd(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -1164,6 +1370,164 @@ func schema_apimachinery_apis_kubedb_v1alpha1_EtcdStatus(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_EtcdVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EtcdVersion defines a Etcd database version.",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersionSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_EtcdVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EtcdVersionDatabase is the Etcd Database image",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_EtcdVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EtcdVersionExporter is the image for the Etcd exporter",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_EtcdVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EtcdVersionList is a list of EtcdVersions",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of EtcdVersion CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersion", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_EtcdVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EtcdVersionSpec is the spec for postgres version",
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersionDatabase"),
+						},
+					},
+					"exporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Exporter Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersionExporter"),
+						},
+					},
+				},
+				Required: []string{"db", "exporter"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersionDatabase", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.EtcdVersionExporter"},
 	}
 }
 
@@ -1457,6 +1821,164 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MemcachedStatus(ref common.Referen
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha1_MemcachedVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MemcachedVersion defines a Memcached database version.",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersionSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MemcachedVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MemcachedVersionDatabase is the Memcached Database image",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MemcachedVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MemcachedVersionExporter is the image for the Memcached exporter",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MemcachedVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MemcachedVersionList is a list of MemcachedVersions",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of MemcachedVersion CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersion", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MemcachedVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MemcachedVersionSpec is the spec for memcached version",
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersionDatabase"),
+						},
+					},
+					"exporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Exporter Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersionExporter"),
+						},
+					},
+				},
+				Required: []string{"db", "exporter"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersionDatabase", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MemcachedVersionExporter"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha1_MongoDB(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -1708,6 +2230,190 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBStatus(ref common.Reference
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MongoDBVersion defines a MongoDB database version.",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MongoDBVersionDatabase is the MongoDB Database image",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MongoDBVersionExporter is the image for the MongoDB exporter",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MongoDBVersionList is a list of MongoDBVersions",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of MongoDBVersion CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersion", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MongoDBVersionSpec is the spec for mongodb version",
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionDatabase"),
+						},
+					},
+					"exporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Exporter Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionExporter"),
+						},
+					},
+					"tools": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Tools Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionTools"),
+						},
+					},
+				},
+				Required: []string{"db", "exporter", "tools"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionDatabase", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionExporter", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBVersionTools"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersionTools(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MongoDBVersionTools is the image for the mongodb tools",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
 	}
 }
 

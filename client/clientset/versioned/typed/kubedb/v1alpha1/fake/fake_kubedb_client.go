@@ -36,16 +36,32 @@ func (c *FakeKubedbV1alpha1) Elasticsearches(namespace string) v1alpha1.Elastics
 	return &FakeElasticsearches{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha1) ElasticsearchVersions() v1alpha1.ElasticsearchVersionInterface {
+	return &FakeElasticsearchVersions{c}
+}
+
 func (c *FakeKubedbV1alpha1) Etcds(namespace string) v1alpha1.EtcdInterface {
 	return &FakeEtcds{c, namespace}
+}
+
+func (c *FakeKubedbV1alpha1) EtcdVersions() v1alpha1.EtcdVersionInterface {
+	return &FakeEtcdVersions{c}
 }
 
 func (c *FakeKubedbV1alpha1) Memcacheds(namespace string) v1alpha1.MemcachedInterface {
 	return &FakeMemcacheds{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha1) MemcachedVersions() v1alpha1.MemcachedVersionInterface {
+	return &FakeMemcachedVersions{c}
+}
+
 func (c *FakeKubedbV1alpha1) MongoDBs(namespace string) v1alpha1.MongoDBInterface {
 	return &FakeMongoDBs{c, namespace}
+}
+
+func (c *FakeKubedbV1alpha1) MongoDBVersions() v1alpha1.MongoDBVersionInterface {
+	return &FakeMongoDBVersions{c}
 }
 
 func (c *FakeKubedbV1alpha1) MySQLs(namespace string) v1alpha1.MySQLInterface {

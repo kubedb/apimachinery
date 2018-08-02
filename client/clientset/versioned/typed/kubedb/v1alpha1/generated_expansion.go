@@ -22,11 +22,19 @@ type DormantDatabaseExpansion interface{}
 
 type ElasticsearchExpansion interface{}
 
+type ElasticsearchVersionExpansion interface{}
+
 type EtcdExpansion interface{}
+
+type EtcdVersionExpansion interface{}
 
 type MemcachedExpansion interface{}
 
+type MemcachedVersionExpansion interface{}
+
 type MongoDBExpansion interface{}
+
+type MongoDBVersionExpansion interface{}
 
 type MySQLExpansion interface{}
 

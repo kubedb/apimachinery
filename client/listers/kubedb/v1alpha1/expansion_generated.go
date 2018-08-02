@@ -34,6 +34,10 @@ type ElasticsearchListerExpansion interface{}
 // ElasticsearchNamespaceLister.
 type ElasticsearchNamespaceListerExpansion interface{}
 
+// ElasticsearchVersionListerExpansion allows custom methods to be added to
+// ElasticsearchVersionLister.
+type ElasticsearchVersionListerExpansion interface{}
+
 // EtcdListerExpansion allows custom methods to be added to
 // EtcdLister.
 type EtcdListerExpansion interface{}
@@ -41,6 +45,10 @@ type EtcdListerExpansion interface{}
 // EtcdNamespaceListerExpansion allows custom methods to be added to
 // EtcdNamespaceLister.
 type EtcdNamespaceListerExpansion interface{}
+
+// EtcdVersionListerExpansion allows custom methods to be added to
+// EtcdVersionLister.
+type EtcdVersionListerExpansion interface{}
 
 // MemcachedListerExpansion allows custom methods to be added to
 // MemcachedLister.
@@ -50,6 +58,10 @@ type MemcachedListerExpansion interface{}
 // MemcachedNamespaceLister.
 type MemcachedNamespaceListerExpansion interface{}
 
+// MemcachedVersionListerExpansion allows custom methods to be added to
+// MemcachedVersionLister.
+type MemcachedVersionListerExpansion interface{}
+
 // MongoDBListerExpansion allows custom methods to be added to
 // MongoDBLister.
 type MongoDBListerExpansion interface{}
@@ -57,6 +69,10 @@ type MongoDBListerExpansion interface{}
 // MongoDBNamespaceListerExpansion allows custom methods to be added to
 // MongoDBNamespaceLister.
 type MongoDBNamespaceListerExpansion interface{}
+
+// MongoDBVersionListerExpansion allows custom methods to be added to
+// MongoDBVersionLister.
+type MongoDBVersionListerExpansion interface{}
 
 // MySQLListerExpansion allows custom methods to be added to
 // MySQLLister.
