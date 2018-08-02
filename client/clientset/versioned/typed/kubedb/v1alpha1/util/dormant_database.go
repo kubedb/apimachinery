@@ -100,7 +100,8 @@ func DeleteDormantDatabase(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta)
 func UpdateDormantDatabaseStatus(
 	c cs.KubedbV1alpha1Interface,
 	in *api.DormantDatabase,
-	transform func(*api.DormantDatabaseStatus) *api.DormantDatabaseStatus, useSubresource ...bool,
+	transform func(*api.DormantDatabaseStatus) *api.DormantDatabaseStatus,
+	useSubresource ...bool,
 ) (result *api.DormantDatabase, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)

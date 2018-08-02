@@ -85,7 +85,8 @@ func TryUpdateRedis(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, transf
 func UpdateRedisStatus(
 	c cs.KubedbV1alpha1Interface,
 	in *api.Redis,
-	transform func(*api.RedisStatus) *api.RedisStatus, useSubresource ...bool,
+	transform func(*api.RedisStatus) *api.RedisStatus,
+	useSubresource ...bool,
 ) (result *api.Redis, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)

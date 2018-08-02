@@ -98,7 +98,8 @@ func WaitUntilSnapshotCompletion(c cs.KubedbV1alpha1Interface, meta metav1.Objec
 func UpdateSnapshotStatus(
 	c cs.KubedbV1alpha1Interface,
 	in *api.Snapshot,
-	transform func(*api.SnapshotStatus) *api.SnapshotStatus, useSubresource ...bool,
+	transform func(*api.SnapshotStatus) *api.SnapshotStatus,
+	useSubresource ...bool,
 ) (result *api.Snapshot, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)

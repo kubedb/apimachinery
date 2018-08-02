@@ -84,7 +84,8 @@ func TryUpdateMemcached(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, tr
 func UpdateMemcachedStatus(
 	c cs.KubedbV1alpha1Interface,
 	in *api.Memcached,
-	transform func(*api.MemcachedStatus) *api.MemcachedStatus, useSubresource ...bool,
+	transform func(*api.MemcachedStatus) *api.MemcachedStatus,
+	useSubresource ...bool,
 ) (result *api.Memcached, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)

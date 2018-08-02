@@ -84,7 +84,8 @@ func TryUpdateElasticsearch(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta
 func UpdateElasticsearchStatus(
 	c cs.KubedbV1alpha1Interface,
 	in *api.Elasticsearch,
-	transform func(*api.ElasticsearchStatus) *api.ElasticsearchStatus, useSubresource ...bool,
+	transform func(*api.ElasticsearchStatus) *api.ElasticsearchStatus,
+	useSubresource ...bool,
 ) (result *api.Elasticsearch, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)

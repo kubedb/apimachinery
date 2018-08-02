@@ -85,7 +85,8 @@ func TryUpdateEtcd(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, transfo
 func UpdateEtcdStatus(
 	c cs.KubedbV1alpha1Interface,
 	in *api.Etcd,
-	transform func(*api.EtcdStatus) *api.EtcdStatus, useSubresource ...bool,
+	transform func(*api.EtcdStatus) *api.EtcdStatus,
+	useSubresource ...bool,
 ) (result *api.Etcd, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)

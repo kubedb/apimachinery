@@ -84,7 +84,8 @@ func TryUpdatePostgres(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, tra
 func UpdatePostgresStatus(
 	c cs.KubedbV1alpha1Interface,
 	in *api.Postgres,
-	transform func(*api.PostgresStatus) *api.PostgresStatus, useSubresource ...bool,
+	transform func(*api.PostgresStatus) *api.PostgresStatus,
+	useSubresource ...bool,
 ) (result *api.Postgres, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)
