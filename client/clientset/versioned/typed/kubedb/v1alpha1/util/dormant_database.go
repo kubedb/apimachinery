@@ -125,14 +125,16 @@ func UpdateDormantDatabaseStatus(c cs.KubedbV1alpha1Interface, in *api.DormantDa
 			var e2 error
 			result, e2 = c.DormantDatabases(in.Namespace).UpdateStatus(apply(cur, false))
 			if kerr.IsConflict(e2) {
-				temp, e2 := c.DormantDatabases(in.Namespace).Get(in.Name, metav1.GetOptions{})
-				if e2 == nil || kutil.IsRequestRetryable(e2) {
-					if e2 == nil {
-						cur = temp
-					}
+				latest, e3 := c.DormantDatabases(in.Namespace).Get(in.Name, metav1.GetOptions{})
+				switch {
+				case e3 == nil:
+					cur = latest
 					return false, nil
+				case kutil.IsRequestRetryable(e3):
+					return false, nil
+				default:
+					return false, e3
 				}
-				return false, e2
 			} else if !kutil.IsRequestRetryable(e2) {
 				return false, e2
 			}
