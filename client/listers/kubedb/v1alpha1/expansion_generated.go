@@ -66,6 +66,10 @@ type MySQLListerExpansion interface{}
 // MySQLNamespaceLister.
 type MySQLNamespaceListerExpansion interface{}
 
+// MySQLVersionListerExpansion allows custom methods to be added to
+// MySQLVersionLister.
+type MySQLVersionListerExpansion interface{}
+
 // PostgresListerExpansion allows custom methods to be added to
 // PostgresLister.
 type PostgresListerExpansion interface{}

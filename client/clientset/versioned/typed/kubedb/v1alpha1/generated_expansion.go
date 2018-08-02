@@ -30,6 +30,8 @@ type MongoDBExpansion interface{}
 
 type MySQLExpansion interface{}
 
+type MySQLVersionExpansion interface{}
+
 type PostgresExpansion interface{}
 
 type PostgresVersionExpansion interface{}

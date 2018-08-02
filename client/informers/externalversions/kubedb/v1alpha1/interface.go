@@ -36,6 +36,8 @@ type Interface interface {
 	MongoDBs() MongoDBInformer
 	// MySQLs returns a MySQLInformer.
 	MySQLs() MySQLInformer
+	// MySQLVersions returns a MySQLVersionInformer.
+	MySQLVersions() MySQLVersionInformer
 	// Postgreses returns a PostgresInformer.
 	Postgreses() PostgresInformer
 	// PostgresVersions returns a PostgresVersionInformer.
@@ -87,6 +89,11 @@ func (v *version) MongoDBs() MongoDBInformer {
 // MySQLs returns a MySQLInformer.
 func (v *version) MySQLs() MySQLInformer {
 	return &mySQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MySQLVersions returns a MySQLVersionInformer.
+func (v *version) MySQLVersions() MySQLVersionInformer {
+	return &mySQLVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // Postgreses returns a PostgresInformer.

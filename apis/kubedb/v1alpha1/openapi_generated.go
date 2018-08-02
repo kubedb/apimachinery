@@ -62,6 +62,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLList":                    schema_apimachinery_apis_kubedb_v1alpha1_MySQLList(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLSpec":                    schema_apimachinery_apis_kubedb_v1alpha1_MySQLSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLStatus":                  schema_apimachinery_apis_kubedb_v1alpha1_MySQLStatus(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersion":                 schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersion(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionDatabase":         schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersionDatabase(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionExporter":         schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersionExporter(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionList":             schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersionList(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionSpec":             schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersionSpec(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionTools":            schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersionTools(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Origin":                       schema_apimachinery_apis_kubedb_v1alpha1_Origin(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.OriginSpec":                   schema_apimachinery_apis_kubedb_v1alpha1_OriginSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Postgres":                     schema_apimachinery_apis_kubedb_v1alpha1_Postgres(ref),
@@ -1962,6 +1968,190 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQLStatus(ref common.ReferenceCa
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLVersion defines a MySQL database version.",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLVersionDatabase is the MySQL Database image",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLVersionExporter is the image for the MySQL exporter",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLVersionList is a list of MySQLVersions",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of MySQLVersion CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersion", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLVersionSpec is the spec for postgres version",
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionDatabase"),
+						},
+					},
+					"exporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Exporter Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionExporter"),
+						},
+					},
+					"tools": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Tools Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionTools"),
+						},
+					},
+				},
+				Required: []string{"db", "exporter", "tools"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionDatabase", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionExporter", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLVersionTools"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersionTools(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLVersionTools is the image for the postgres tools",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
 	}
 }
 

@@ -52,6 +52,10 @@ func (c *FakeKubedbV1alpha1) MySQLs(namespace string) v1alpha1.MySQLInterface {
 	return &FakeMySQLs{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha1) MySQLVersions() v1alpha1.MySQLVersionInterface {
+	return &FakeMySQLVersions{c}
+}
+
 func (c *FakeKubedbV1alpha1) Postgreses(namespace string) v1alpha1.PostgresInterface {
 	return &FakePostgreses{c, namespace}
 }
