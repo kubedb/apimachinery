@@ -98,43 +98,47 @@ func DeleteDormantDatabase(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta)
 	})
 }
 
-func UpdateDormantDatabaseStatus(c cs.KubedbV1alpha1Interface, cur *api.DormantDatabase, transform func(*api.DormantDatabaseStatus) *api.DormantDatabaseStatus, useSubresource ...bool) (result *api.DormantDatabase, err error) {
+func UpdateDormantDatabaseStatus(c cs.KubedbV1alpha1Interface, in *api.DormantDatabase, transform func(*api.DormantDatabaseStatus) *api.DormantDatabaseStatus, useSubresource ...bool) (result *api.DormantDatabase, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)
 	}
 
-	modFunc := func() *api.DormantDatabase {
-		return &api.DormantDatabase{
-			TypeMeta:   cur.TypeMeta,
-			ObjectMeta: cur.ObjectMeta,
-			Spec:       cur.Spec,
-			Status:     *transform(cur.Status.DeepCopy()),
+	apply := func(x *api.DormantDatabase, copy bool) *api.DormantDatabase {
+		out := &api.DormantDatabase{
+			TypeMeta:   x.TypeMeta,
+			ObjectMeta: x.ObjectMeta,
+			Spec:       x.Spec,
 		}
+		if copy {
+			out.Status = *transform(in.Status.DeepCopy())
+		} else {
+			out.Status = *transform(&in.Status)
+		}
+		return out
 	}
 
 	if len(useSubresource) == 1 && useSubresource[0] {
 		attempt := 0
+		cur := in.DeepCopy()
 		err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 			attempt++
 			var e2 error
-			mod := modFunc()
-			result, e2 = c.DormantDatabases(cur.Namespace).UpdateStatus(mod)
+			result, e2 = c.DormantDatabases(in.Namespace).UpdateStatus(apply(cur, false))
 			if kerr.IsNotFound(e2) {
 				return false, e2
 			} else if kerr.IsConflict(e2) {
-				cur, _ = c.DormantDatabases(cur.Namespace).Get(cur.Name, metav1.GetOptions{})
+				cur, _ = c.DormantDatabases(in.Namespace).Get(in.Name, metav1.GetOptions{})
 				return false, nil
 			}
 			return e2 == nil, nil
 		})
 
 		if err != nil {
-			err = fmt.Errorf("failed to update DormantDatabaseStatus %s/%s after %d attempts due to %v", cur.Namespace, cur.Name, attempt, err)
+			err = fmt.Errorf("failed to update status of DormantDatabase %s/%s after %d attempts due to %v", in.Namespace, in.Name, attempt, err)
 		}
 		return
 	}
 
-	mod := modFunc()
-	result, _, err = PatchDormantDatabaseObject(c, cur, mod)
+	result, _, err = PatchDormantDatabaseObject(c, in, apply(in, true))
 	return
 }
