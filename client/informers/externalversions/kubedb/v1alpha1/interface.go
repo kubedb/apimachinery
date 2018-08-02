@@ -94,7 +94,7 @@ func (v *version) Postgreses() PostgresInformer {
 
 // PostgresVersions returns a PostgresVersionInformer.
 func (v *version) PostgresVersions() PostgresVersionInformer {
-	return &postgresVersionInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	return &postgresVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // Redises returns a RedisInformer.

@@ -1633,8 +1633,7 @@ func (in *PostgresVersion) DeepCopyInto(out *PostgresVersion) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
 	in.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
-	in.Spec.DeepCopyInto(&out.Spec)
-	in.Status.DeepCopyInto(&out.Status)
+	out.Spec = in.Spec
 	return
 }
 

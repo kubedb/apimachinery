@@ -2448,19 +2448,14 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresVersion(ref common.Referen
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec"),
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresStatus"),
+							Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresVersionSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresVersionSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
