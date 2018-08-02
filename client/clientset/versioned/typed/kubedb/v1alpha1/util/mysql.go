@@ -82,43 +82,55 @@ func TryUpdateMySQL(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, transf
 	return
 }
 
-func UpdateMySQLStatus(c cs.KubedbV1alpha1Interface, cur *api.MySQL, transform func(*api.MySQLStatus) *api.MySQLStatus, useSubresource ...bool) (result *api.MySQL, err error) {
+func UpdateMySQLStatus(c cs.KubedbV1alpha1Interface, in *api.MySQL, transform func(*api.MySQLStatus) *api.MySQLStatus, useSubresource ...bool) (result *api.MySQL, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)
 	}
 
-	modFunc := func() *api.MySQL {
-		return &api.MySQL{
-			TypeMeta:   cur.TypeMeta,
-			ObjectMeta: cur.ObjectMeta,
-			Spec:       cur.Spec,
-			Status:     *transform(cur.Status.DeepCopy()),
+	apply := func(x *api.MySQL, copy bool) *api.MySQL {
+		out := &api.MySQL{
+			TypeMeta:   x.TypeMeta,
+			ObjectMeta: x.ObjectMeta,
+			Spec:       x.Spec,
 		}
+		if copy {
+			out.Status = *transform(in.Status.DeepCopy())
+		} else {
+			out.Status = *transform(&in.Status)
+		}
+		return out
 	}
 
 	if len(useSubresource) == 1 && useSubresource[0] {
 		attempt := 0
+		cur := in.DeepCopy()
 		err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 			attempt++
 			var e2 error
-			mod := modFunc()
-			result, e2 = c.MySQLs(cur.Namespace).UpdateStatus(mod)
-			if kerr.IsNotFound(e2) {
+			result, e2 = c.MySQLs(in.Namespace).UpdateStatus(apply(cur, false))
+			if kerr.IsConflict(e2) {
+				latest, e3 := c.MySQLs(in.Namespace).Get(in.Name, metav1.GetOptions{})
+				switch {
+				case e3 == nil:
+					cur = latest
+					return false, nil
+				case kutil.IsRequestRetryable(e3):
+					return false, nil
+				default:
+					return false, e3
+				}
+			} else if !kutil.IsRequestRetryable(e2) {
 				return false, e2
-			} else if kerr.IsConflict(e2) {
-				cur, _ = c.MySQLs(cur.Namespace).Get(cur.Name, metav1.GetOptions{})
-				return false, nil
 			}
 			return e2 == nil, nil
 		})
 
 		if err != nil {
-			err = fmt.Errorf("failed to update MySQLStatus %s/%s after %d attempts due to %v", cur.Namespace, cur.Name, attempt, err)
+			err = fmt.Errorf("failed to update status of MySQL %s/%s after %d attempts due to %v", in.Namespace, in.Name, attempt, err)
 		}
 		return
 	}
 
-	mod := modFunc()
-	result, _, err = PatchMySQLObject(c, cur, mod)
+	result, _, err = PatchMySQLObject(c, in, apply(in, true))
 	return
 }
