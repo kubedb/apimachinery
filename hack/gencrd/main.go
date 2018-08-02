@@ -20,15 +20,16 @@ import (
 
 func generateCRDDefinitions() {
 	filename := gort.GOPath() + "/src/github.com/kubedb/apimachinery/apis/kubedb/v1alpha1/crds.yaml"
+	os.Remove(filename)
 
-	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	err := os.MkdirAll(filepath.Join(gort.GOPath(), "/src/github.com/kubedb/apimachinery/api/crds"), 0755)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer f.Close()
 
 	crds := []*crd_api.CustomResourceDefinition{
 		v1alpha1.Postgres{}.CustomResourceDefinition(),
+		v1alpha1.PostgresVersion{}.CustomResourceDefinition(),
 		v1alpha1.Elasticsearch{}.CustomResourceDefinition(),
 		v1alpha1.MySQL{}.CustomResourceDefinition(),
 		v1alpha1.MongoDB{}.CustomResourceDefinition(),
@@ -38,7 +39,13 @@ func generateCRDDefinitions() {
 		v1alpha1.DormantDatabase{}.CustomResourceDefinition(),
 	}
 	for _, crd := range crds {
+		filename := filepath.Join(gort.GOPath(), "/src/github.com/kubedb/apimachinery/api/crds", crd.Spec.Names.Singular+".yaml")
+		f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
 		crdutils.MarshallCrd(f, crd, "yaml")
+		f.Close()
 	}
 }
 
@@ -71,6 +78,7 @@ func generateSwaggerJson() {
 		},
 		Resources: []openapi.TypeInfo{
 			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralPostgres, v1alpha1.ResourceKindPostgres, true},
+			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralPostgresVersion, v1alpha1.ResourceKindPostgresVersion, false},
 			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralElasticsearch, v1alpha1.ResourceKindElasticsearch, true},
 			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralMongoDB, v1alpha1.ResourceKindMongoDB, true},
 			{v1alpha1.SchemeGroupVersion, v1alpha1.ResourcePluralMySQL, v1alpha1.ResourceKindMySQL, true},
