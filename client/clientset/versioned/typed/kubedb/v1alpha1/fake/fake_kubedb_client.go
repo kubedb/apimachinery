@@ -64,6 +64,10 @@ func (c *FakeKubedbV1alpha1) Redises(namespace string) v1alpha1.RedisInterface {
 	return &FakeRedises{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha1) RedisVersions() v1alpha1.RedisVersionInterface {
+	return &FakeRedisVersions{c}
+}
+
 func (c *FakeKubedbV1alpha1) Snapshots(namespace string) v1alpha1.SnapshotInterface {
 	return &FakeSnapshots{c, namespace}
 }

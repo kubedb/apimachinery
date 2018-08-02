@@ -46,6 +46,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MySQLList{},
 		&Redis{},
 		&RedisList{},
+		&RedisVersion{},
+		&RedisVersionList{},
 		&Etcd{},
 		&EtcdList{},
 		&Snapshot{},

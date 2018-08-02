@@ -71,6 +71,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().PostgresVersions().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("redises"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().Redises().Informer()}, nil
+	case v1alpha1.SchemeGroupVersion.WithResource("redisversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().RedisVersions().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("snapshots"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().Snapshots().Informer()}, nil
 

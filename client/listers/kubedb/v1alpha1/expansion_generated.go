@@ -86,6 +86,10 @@ type RedisListerExpansion interface{}
 // RedisNamespaceLister.
 type RedisNamespaceListerExpansion interface{}
 
+// RedisVersionListerExpansion allows custom methods to be added to
+// RedisVersionLister.
+type RedisVersionListerExpansion interface{}
+
 // SnapshotListerExpansion allows custom methods to be added to
 // SnapshotLister.
 type SnapshotListerExpansion interface{}

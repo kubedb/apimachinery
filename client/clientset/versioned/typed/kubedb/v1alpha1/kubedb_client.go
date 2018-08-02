@@ -36,6 +36,7 @@ type KubedbV1alpha1Interface interface {
 	PostgresesGetter
 	PostgresVersionsGetter
 	RedisesGetter
+	RedisVersionsGetter
 	SnapshotsGetter
 }
 
@@ -78,6 +79,10 @@ func (c *KubedbV1alpha1Client) PostgresVersions() PostgresVersionInterface {
 
 func (c *KubedbV1alpha1Client) Redises(namespace string) RedisInterface {
 	return newRedises(c, namespace)
+}
+
+func (c *KubedbV1alpha1Client) RedisVersions() RedisVersionInterface {
+	return newRedisVersions(c)
 }
 
 func (c *KubedbV1alpha1Client) Snapshots(namespace string) SnapshotInterface {

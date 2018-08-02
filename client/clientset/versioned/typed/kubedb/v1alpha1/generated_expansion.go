@@ -36,4 +36,6 @@ type PostgresVersionExpansion interface{}
 
 type RedisExpansion interface{}
 
+type RedisVersionExpansion interface{}
+
 type SnapshotExpansion interface{}

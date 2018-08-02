@@ -42,6 +42,8 @@ type Interface interface {
 	PostgresVersions() PostgresVersionInformer
 	// Redises returns a RedisInformer.
 	Redises() RedisInformer
+	// RedisVersions returns a RedisVersionInformer.
+	RedisVersions() RedisVersionInformer
 	// Snapshots returns a SnapshotInformer.
 	Snapshots() SnapshotInformer
 }
@@ -100,6 +102,11 @@ func (v *version) PostgresVersions() PostgresVersionInformer {
 // Redises returns a RedisInformer.
 func (v *version) Redises() RedisInformer {
 	return &redisInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// RedisVersions returns a RedisVersionInformer.
+func (v *version) RedisVersions() RedisVersionInformer {
+	return &redisVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // Snapshots returns a SnapshotInformer.

@@ -83,6 +83,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisList":                    schema_apimachinery_apis_kubedb_v1alpha1_RedisList(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisSpec":                    schema_apimachinery_apis_kubedb_v1alpha1_RedisSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisStatus":                  schema_apimachinery_apis_kubedb_v1alpha1_RedisStatus(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersion":                 schema_apimachinery_apis_kubedb_v1alpha1_RedisVersion(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersionDatabase":         schema_apimachinery_apis_kubedb_v1alpha1_RedisVersionDatabase(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersionExporter":         schema_apimachinery_apis_kubedb_v1alpha1_RedisVersionExporter(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersionList":             schema_apimachinery_apis_kubedb_v1alpha1_RedisVersionList(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersionSpec":             schema_apimachinery_apis_kubedb_v1alpha1_RedisVersionSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Report":                       schema_apimachinery_apis_kubedb_v1alpha1_Report(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ReportStatus":                 schema_apimachinery_apis_kubedb_v1alpha1_ReportStatus(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ReportSummary":                schema_apimachinery_apis_kubedb_v1alpha1_ReportSummary(ref),
@@ -2906,6 +2911,164 @@ func schema_apimachinery_apis_kubedb_v1alpha1_RedisStatus(ref common.ReferenceCa
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_RedisVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RedisVersion defines a Redis database version.",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersionSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_RedisVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RedisVersionDatabase is the Redis Database image",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_RedisVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RedisVersionExporter is the image for the Redis exporter",
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_RedisVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RedisVersionList is a list of RedisVersions",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of RedisVersion CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersion", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_RedisVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RedisVersionSpec is the spec for redis version",
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersionDatabase"),
+						},
+					},
+					"exporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Exporter Image",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersionExporter"),
+						},
+					},
+				},
+				Required: []string{"db", "exporter"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersionDatabase", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisVersionExporter"},
 	}
 }
 
