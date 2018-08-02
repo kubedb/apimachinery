@@ -1,5 +1,5 @@
 hash: 12d66bd4d9de3fd8438395e9b1eca3260e5edafc09282c422b065ee5ec093e1a
-updated: 2018-08-01T16:28:05.943837757-07:00
+updated: 2018-08-02T02:06:42.295545756-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -33,7 +33,7 @@ imports:
   subpackages:
   - admission/v1beta1
 - name: github.com/appscode/kutil
-  version: c9b929cfcab96c233c1b0ab59cd4a5ab6a4ff96a
+  version: d31eda1052245a20fb5757fbf12c6c8ace8a12a7
   subpackages:
   - apiextensions/v1beta1
   - core/v1
@@ -359,7 +359,7 @@ imports:
   subpackages:
   - diffmatchpatch
 - name: github.com/sirupsen/logrus
-  version: 89742aefa4b206dcf400792f3bd35b542998eb3b
+  version: d26492970760ca5d33129d2d799e34be5c4782eb
 - name: github.com/spf13/cobra
   version: c439c4fa093711d42e1b01acb1235b52004753c1
 - name: github.com/spf13/pflag
@@ -848,7 +848,7 @@ imports:
   - api/v1
   - osm
 - name: kmodules.xyz/offshoot-api
-  version: ca509dced59191f2fe70d49a5e238ec92016a8eb
+  version: daec3814cefd06bcb6ca0611ce28df8b92337d8c
   repo: https://github.com/kmodules/offshoot-api.git
   vcs: git
   subpackages:
