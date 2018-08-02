@@ -1,7 +1,6 @@
 package util
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/appscode/kutil"
@@ -83,7 +82,11 @@ func TryUpdateEtcd(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, transfo
 	return
 }
 
-func UpdateEtcdStatus(c cs.KubedbV1alpha1Interface, in *api.Etcd, transform func(*api.EtcdStatus) *api.EtcdStatus, useSubresource ...bool) (result *api.Etcd, err error) {
+func UpdateEtcdStatus(
+	c cs.KubedbV1alpha1Interface,
+	in *api.Etcd,
+	transform func(*api.EtcdStatus) *api.EtcdStatus, useSubresource ...bool,
+) (result *api.Etcd, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)
 	}

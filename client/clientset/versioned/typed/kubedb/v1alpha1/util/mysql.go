@@ -1,7 +1,6 @@
 package util
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/appscode/kutil"
@@ -82,7 +81,11 @@ func TryUpdateMySQL(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, transf
 	return
 }
 
-func UpdateMySQLStatus(c cs.KubedbV1alpha1Interface, in *api.MySQL, transform func(*api.MySQLStatus) *api.MySQLStatus, useSubresource ...bool) (result *api.MySQL, err error) {
+func UpdateMySQLStatus(
+	c cs.KubedbV1alpha1Interface,
+	in *api.MySQL,
+	transform func(*api.MySQLStatus) *api.MySQLStatus, useSubresource ...bool,
+) (result *api.MySQL, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)
 	}

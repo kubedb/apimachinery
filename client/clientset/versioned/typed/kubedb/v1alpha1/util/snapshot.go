@@ -1,7 +1,6 @@
 package util
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/appscode/kutil"
@@ -96,7 +95,11 @@ func WaitUntilSnapshotCompletion(c cs.KubedbV1alpha1Interface, meta metav1.Objec
 	return
 }
 
-func UpdateSnapshotStatus(c cs.KubedbV1alpha1Interface, in *api.Snapshot, transform func(*api.SnapshotStatus) *api.SnapshotStatus, useSubresource ...bool) (result *api.Snapshot, err error) {
+func UpdateSnapshotStatus(
+	c cs.KubedbV1alpha1Interface,
+	in *api.Snapshot,
+	transform func(*api.SnapshotStatus) *api.SnapshotStatus, useSubresource ...bool,
+) (result *api.Snapshot, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)
 	}

@@ -1,7 +1,6 @@
 package util
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/appscode/kutil"
@@ -83,7 +82,11 @@ func TryUpdateMongoDB(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, tran
 	return
 }
 
-func UpdateMongoDBStatus(c cs.KubedbV1alpha1Interface, in *api.MongoDB, transform func(*api.MongoDBStatus) *api.MongoDBStatus, useSubresource ...bool) (result *api.MongoDB, err error) {
+func UpdateMongoDBStatus(
+	c cs.KubedbV1alpha1Interface,
+	in *api.MongoDB,
+	transform func(*api.MongoDBStatus) *api.MongoDBStatus, useSubresource ...bool,
+) (result *api.MongoDB, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)
 	}

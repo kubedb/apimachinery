@@ -1,7 +1,6 @@
 package util
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/appscode/kutil"
@@ -83,7 +82,11 @@ func TryUpdateRedis(c cs.KubedbV1alpha1Interface, meta metav1.ObjectMeta, transf
 	return
 }
 
-func UpdateRedisStatus(c cs.KubedbV1alpha1Interface, in *api.Redis, transform func(*api.RedisStatus) *api.RedisStatus, useSubresource ...bool) (result *api.Redis, err error) {
+func UpdateRedisStatus(
+	c cs.KubedbV1alpha1Interface,
+	in *api.Redis,
+	transform func(*api.RedisStatus) *api.RedisStatus, useSubresource ...bool,
+) (result *api.Redis, err error) {
 	if len(useSubresource) > 1 {
 		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)
 	}
