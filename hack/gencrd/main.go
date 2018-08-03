@@ -19,6 +19,8 @@ import (
 )
 
 func generateCRDDefinitions() {
+	v1alpha1.EnableStatusSubresource = true
+
 	filename := gort.GOPath() + "/src/github.com/kubedb/apimachinery/apis/kubedb/v1alpha1/crds.yaml"
 	os.Remove(filename)
 

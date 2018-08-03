@@ -25,6 +25,8 @@ spec:
     - pg
     singular: postgres
   scope: Namespaced
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       properties:

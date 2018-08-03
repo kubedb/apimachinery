@@ -22,6 +22,8 @@ spec:
     - drmn
     singular: dormantdatabase
   scope: Namespaced
+  subresources:
+    status: {}
   version: v1alpha1
   versions:
   - name: v1alpha1
