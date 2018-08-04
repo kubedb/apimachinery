@@ -20,14 +20,8 @@ func (p MongoDB) OffshootSelectors() map[string]string {
 	}
 }
 
-func (p MongoDB) StatefulSetLabels() map[string]string {
-	labels := p.OffshootSelectors()
-	for key, val := range p.Labels {
-		if !strings.HasPrefix(key, GenericKey+"/") && !strings.HasPrefix(key, MongoDBKey+"/") {
-			labels[key] = val
-		}
-	}
-	return labels
+func (p MongoDB) OffshootLabels() map[string]string {
+	return filterTags(p.OffshootSelectors(), p.Labels)
 }
 
 func (p MongoDB) StatefulSetAnnotations() map[string]string {
