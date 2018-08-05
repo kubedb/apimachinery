@@ -13,6 +13,10 @@ func (s Snapshot) OffshootName() string {
 	return s.Name
 }
 
+func (e Snapshot) OffshootLabels() map[string]string {
+	return filterTags(nil, e.Labels)
+}
+
 func (s Snapshot) Location() (string, error) {
 	spec := s.Spec.Backend
 	if spec.S3 != nil {
