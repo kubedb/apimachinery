@@ -43,36 +43,32 @@ func (r Redis) ServiceName() string {
 	return r.OffshootName()
 }
 
-func (r Redis) StatsServiceName() string {
+type redisStatsService struct {
+	*Redis
+}
+
+func (r redisStatsService) GetNamespace() string {
+	return r.GetNamespace()
+}
+
+func (r redisStatsService) ServiceName() string {
 	return r.OffshootName() + "-stats"
 }
 
-type RedisStatsService struct {
-	redis Redis
+func (r redisStatsService) ServiceMonitorName() string {
+	return fmt.Sprintf("kubedb-%s-%s", r.Namespace, r.Name)
 }
 
-func (r RedisStatsService) GetNamespace() string {
-	return r.redis.GetNamespace()
+func (r redisStatsService) Path() string {
+	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", r.Namespace, r.ResourcePlural(), r.Name)
 }
 
-func (r RedisStatsService) ServiceName() string {
-	return r.redis.StatsServiceName()
-}
-
-func (r RedisStatsService) ServiceMonitorName() string {
-	return fmt.Sprintf("kubedb-%s-%s", r.redis.Namespace, r.redis.Name)
-}
-
-func (r RedisStatsService) Path() string {
-	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", r.redis.Namespace, r.redis.ResourcePlural(), r.redis.Name)
-}
-
-func (r RedisStatsService) Scheme() string {
+func (r redisStatsService) Scheme() string {
 	return ""
 }
 
-func (r Redis) StatsAccessor() mona.StatsAccessor {
-	return &RedisStatsService{redis: r}
+func (r Redis) StatsService() mona.StatsAccessor {
+	return &redisStatsService{&r}
 }
 
 func (r *Redis) GetMonitoringVendor() string {

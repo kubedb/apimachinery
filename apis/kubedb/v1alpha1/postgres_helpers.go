@@ -45,36 +45,32 @@ func (p Postgres) ServiceName() string {
 	return p.OffshootName()
 }
 
-func (p Postgres) StatsServiceName() string {
+type postgresStatsService struct {
+	*Postgres
+}
+
+func (p postgresStatsService) GetNamespace() string {
+	return p.GetNamespace()
+}
+
+func (p postgresStatsService) ServiceName() string {
 	return p.OffshootName() + "-stats"
 }
 
-type PostgresStatsService struct {
-	postgres Postgres
+func (p postgresStatsService) ServiceMonitorName() string {
+	return fmt.Sprintf("kubedb-%s-%s", p.Namespace, p.Name)
 }
 
-func (p PostgresStatsService) GetNamespace() string {
-	return p.postgres.GetNamespace()
+func (p postgresStatsService) Path() string {
+	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", p.Namespace, p.ResourcePlural(), p.Name)
 }
 
-func (p PostgresStatsService) ServiceName() string {
-	return p.postgres.StatsServiceName()
-}
-
-func (p PostgresStatsService) ServiceMonitorName() string {
-	return fmt.Sprintf("kubedb-%s-%s", p.postgres.Namespace, p.postgres.Name)
-}
-
-func (p PostgresStatsService) Path() string {
-	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", p.postgres.Namespace, p.postgres.ResourcePlural(), p.postgres.Name)
-}
-
-func (p PostgresStatsService) Scheme() string {
+func (p postgresStatsService) Scheme() string {
 	return ""
 }
 
-func (p Postgres) StatsAccessor() mona.StatsAccessor {
-	return &PostgresStatsService{postgres: p}
+func (p Postgres) StatsService() mona.StatsAccessor {
+	return &postgresStatsService{&p}
 }
 
 func (p *Postgres) GetMonitoringVendor() string {

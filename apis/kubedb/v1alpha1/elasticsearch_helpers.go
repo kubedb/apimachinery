@@ -50,36 +50,32 @@ func (e *Elasticsearch) MasterServiceName() string {
 	return fmt.Sprintf("%v-master", e.ServiceName())
 }
 
-func (e Elasticsearch) StatsServiceName() string {
+type elasticsearchStatsService struct {
+	*Elasticsearch
+}
+
+func (e elasticsearchStatsService) GetNamespace() string {
+	return e.GetNamespace()
+}
+
+func (e elasticsearchStatsService) ServiceName() string {
 	return e.OffshootName() + "-stats"
 }
 
-type ElasticsearchStatsService struct {
-	mongodb Elasticsearch
+func (e elasticsearchStatsService) ServiceMonitorName() string {
+	return fmt.Sprintf("kubedb-%s-%s", e.Namespace, e.Name)
 }
 
-func (e ElasticsearchStatsService) GetNamespace() string {
-	return e.mongodb.GetNamespace()
+func (e elasticsearchStatsService) Path() string {
+	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", e.Namespace, e.ResourcePlural(), e.Name)
 }
 
-func (e ElasticsearchStatsService) ServiceName() string {
-	return e.mongodb.StatsServiceName()
-}
-
-func (e ElasticsearchStatsService) ServiceMonitorName() string {
-	return fmt.Sprintf("kubedb-%s-%s", e.mongodb.Namespace, e.mongodb.Name)
-}
-
-func (e ElasticsearchStatsService) Path() string {
-	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", e.mongodb.Namespace, e.mongodb.ResourcePlural(), e.mongodb.Name)
-}
-
-func (e ElasticsearchStatsService) Scheme() string {
+func (e elasticsearchStatsService) Scheme() string {
 	return ""
 }
 
-func (e Elasticsearch) StatsAccessor() mona.StatsAccessor {
-	return &ElasticsearchStatsService{mongodb: e}
+func (e Elasticsearch) StatsService() mona.StatsAccessor {
+	return &elasticsearchStatsService{&e}
 }
 
 func (e *Elasticsearch) GetMonitoringVendor() string {

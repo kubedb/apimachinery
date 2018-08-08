@@ -43,36 +43,32 @@ func (e Etcd) ServiceName() string {
 	return e.OffshootName()
 }
 
-func (e Etcd) StatsServiceName() string {
+type etcdStatsService struct {
+	*Etcd
+}
+
+func (e etcdStatsService) GetNamespace() string {
+	return e.GetNamespace()
+}
+
+func (e etcdStatsService) ServiceName() string {
 	return e.OffshootName() + "-stats"
 }
 
-type EtcdStatsService struct {
-	etcd Etcd
+func (e etcdStatsService) ServiceMonitorName() string {
+	return fmt.Sprintf("kubedb-%s-%s", e.Namespace, e.Name)
 }
 
-func (e EtcdStatsService) GetNamespace() string {
-	return e.etcd.GetNamespace()
-}
-
-func (e EtcdStatsService) ServiceName() string {
-	return e.etcd.StatsServiceName()
-}
-
-func (e EtcdStatsService) ServiceMonitorName() string {
-	return fmt.Sprintf("kubedb-%s-%s", e.etcd.Namespace, e.etcd.Name)
-}
-
-func (e EtcdStatsService) Path() string {
+func (e etcdStatsService) Path() string {
 	return fmt.Sprintf("/metrics")
 }
 
-func (e EtcdStatsService) Scheme() string {
+func (e etcdStatsService) Scheme() string {
 	return ""
 }
 
-func (e Etcd) StatsAccessor() mona.StatsAccessor {
-	return &EtcdStatsService{etcd: e}
+func (e Etcd) StatsService() mona.StatsAccessor {
+	return &etcdStatsService{&e}
 }
 
 func (e *Etcd) GetMonitoringVendor() string {
