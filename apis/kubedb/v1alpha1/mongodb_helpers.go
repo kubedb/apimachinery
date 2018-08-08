@@ -43,20 +43,36 @@ func (p MongoDB) ServiceName() string {
 	return p.OffshootName()
 }
 
-func (p MongoDB) ServiceMonitorName() string {
-	return fmt.Sprintf("kubedb-%s-%s", p.Namespace, p.Name)
+func (m MongoDB) StatsServiceName() string {
+	return m.OffshootName() + "-stats"
 }
 
-func (p MongoDB) Path() string {
-	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", p.Namespace, p.ResourcePlural(), p.Name)
+type MongoDBStatsService struct {
+	mongodb MongoDB
 }
 
-func (p MongoDB) Scheme() string {
+func (m MongoDBStatsService) GetNamespace() string {
+	return m.mongodb.GetNamespace()
+}
+
+func (m MongoDBStatsService) ServiceName() string {
+	return m.mongodb.StatsServiceName()
+}
+
+func (m MongoDBStatsService) ServiceMonitorName() string {
+	return fmt.Sprintf("kubedb-%s-%s", m.mongodb.Namespace, m.mongodb.Name)
+}
+
+func (m MongoDBStatsService) Path() string {
+	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", m.mongodb.Namespace, m.mongodb.ResourcePlural(), m.mongodb.Name)
+}
+
+func (m MongoDBStatsService) Scheme() string {
 	return ""
 }
 
-func (p *MongoDB) StatsAccessor() mona.StatsAccessor {
-	return p
+func (m MongoDB) StatsAccessor() mona.StatsAccessor {
+	return &MongoDBStatsService{mongodb: m}
 }
 
 func (m *MongoDB) GetMonitoringVendor() string {
