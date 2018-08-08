@@ -45,20 +45,36 @@ func (m MySQL) ServiceName() string {
 	return m.OffshootName()
 }
 
-func (m MySQL) ServiceMonitorName() string {
-	return fmt.Sprintf("kubedb-%s-%s", m.Namespace, m.Name)
+func (m MySQL) StatsServiceName() string {
+	return m.OffshootName() + "-stats"
 }
 
-func (m MySQL) Path() string {
-	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", m.Namespace, m.ResourcePlural(), m.Name)
+type MySQLStatsService struct {
+	mysql MySQL
 }
 
-func (m MySQL) Scheme() string {
+func (m MySQLStatsService) GetNamespace() string {
+	return m.mysql.GetNamespace()
+}
+
+func (m MySQLStatsService) ServiceName() string {
+	return m.mysql.StatsServiceName()
+}
+
+func (m MySQLStatsService) ServiceMonitorName() string {
+	return fmt.Sprintf("kubedb-%s-%s", m.mysql.Namespace, m.mysql.Name)
+}
+
+func (m MySQLStatsService) Path() string {
+	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", m.mysql.Namespace, m.mysql.ResourcePlural(), m.mysql.Name)
+}
+
+func (m MySQLStatsService) Scheme() string {
 	return ""
 }
 
-func (m *MySQL) StatsAccessor() mona.StatsAccessor {
-	return m
+func (m MySQL) StatsAccessor() mona.StatsAccessor {
+	return &MySQLStatsService{mysql: m}
 }
 
 func (m *MySQL) GetMonitoringVendor() string {
