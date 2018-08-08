@@ -8,65 +8,81 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
-func (p Etcd) OffshootName() string {
-	return p.Name
+func (e Etcd) OffshootName() string {
+	return e.Name
 }
 
-func (p Etcd) OffshootSelectors() map[string]string {
+func (e Etcd) OffshootSelectors() map[string]string {
 	return map[string]string{
-		LabelDatabaseName: p.Name,
+		LabelDatabaseName: e.Name,
 		LabelDatabaseKind: ResourceKindEtcd,
 	}
 }
 
-func (p Etcd) OffshootLabels() map[string]string {
-	return filterTags(p.OffshootSelectors(), p.Labels)
+func (e Etcd) OffshootLabels() map[string]string {
+	return filterTags(e.OffshootSelectors(), e.Labels)
 }
 
-func (p Etcd) ResourceShortCode() string {
+func (e Etcd) ResourceShortCode() string {
 	return ResourceCodeEtcd
 }
 
-func (p Etcd) ResourceKind() string {
+func (e Etcd) ResourceKind() string {
 	return ResourceKindEtcd
 }
 
-func (p Etcd) ResourceSingular() string {
+func (e Etcd) ResourceSingular() string {
 	return ResourceSingularEtcd
 }
 
-func (p Etcd) ResourcePlural() string {
+func (e Etcd) ResourcePlural() string {
 	return ResourcePluralEtcd
 }
 
-func (p Etcd) ServiceName() string {
-	return p.OffshootName()
+func (e Etcd) ServiceName() string {
+	return e.OffshootName()
 }
 
-func (p Etcd) ServiceMonitorName() string {
-	return fmt.Sprintf("kubedb-%s-%s", p.Namespace, p.Name)
+func (e Etcd) StatsServiceName() string {
+	return e.OffshootName() + "-stats"
 }
 
-func (p Etcd) Path() string {
+type EtcdStatsService struct {
+	etcd Etcd
+}
+
+func (e EtcdStatsService) GetNamespace() string {
+	return e.etcd.GetNamespace()
+}
+
+func (e EtcdStatsService) ServiceName() string {
+	return e.etcd.StatsServiceName()
+}
+
+func (e EtcdStatsService) ServiceMonitorName() string {
+	return fmt.Sprintf("kubedb-%s-%s", e.etcd.Namespace, e.etcd.Name)
+}
+
+func (e EtcdStatsService) Path() string {
 	return fmt.Sprintf("/metrics")
 }
 
-func (p Etcd) Scheme() string {
+func (e EtcdStatsService) Scheme() string {
 	return ""
 }
 
-func (p *Etcd) StatsAccessor() mona.StatsAccessor {
-	return p
+func (e Etcd) StatsAccessor() mona.StatsAccessor {
+	return &EtcdStatsService{etcd: e}
 }
 
-func (m *Etcd) GetMonitoringVendor() string {
-	if m.Spec.Monitor != nil {
-		return m.Spec.Monitor.Agent.Vendor()
+func (e *Etcd) GetMonitoringVendor() string {
+	if e.Spec.Monitor != nil {
+		return e.Spec.Monitor.Agent.Vendor()
 	}
 	return ""
 }
 
-func (p Etcd) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (e Etcd) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crdutils.NewCustomResourceDefinition(crdutils.Config{
 		Group:         SchemeGroupVersion.Group,
 		Plural:        ResourcePluralEtcd,

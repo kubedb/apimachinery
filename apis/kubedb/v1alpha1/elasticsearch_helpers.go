@@ -42,28 +42,44 @@ func (e Elasticsearch) ResourcePlural() string {
 	return ResourcePluralElasticsearch
 }
 
-func (r Elasticsearch) ServiceName() string {
-	return r.OffshootName()
+func (e Elasticsearch) ServiceName() string {
+	return e.OffshootName()
 }
 
-func (r *Elasticsearch) MasterServiceName() string {
-	return fmt.Sprintf("%v-master", r.ServiceName())
+func (e *Elasticsearch) MasterServiceName() string {
+	return fmt.Sprintf("%v-master", e.ServiceName())
 }
 
-func (r Elasticsearch) ServiceMonitorName() string {
-	return fmt.Sprintf("kubedb-%s-%s", r.Namespace, r.Name)
+func (e Elasticsearch) StatsServiceName() string {
+	return e.OffshootName() + "-stats"
 }
 
-func (r Elasticsearch) Path() string {
-	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", r.Namespace, r.ResourcePlural(), r.Name)
+type ElasticsearchStatsService struct {
+	mongodb Elasticsearch
 }
 
-func (r Elasticsearch) Scheme() string {
+func (e ElasticsearchStatsService) GetNamespace() string {
+	return e.mongodb.GetNamespace()
+}
+
+func (e ElasticsearchStatsService) ServiceName() string {
+	return e.mongodb.StatsServiceName()
+}
+
+func (e ElasticsearchStatsService) ServiceMonitorName() string {
+	return fmt.Sprintf("kubedb-%s-%s", e.mongodb.Namespace, e.mongodb.Name)
+}
+
+func (e ElasticsearchStatsService) Path() string {
+	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", e.mongodb.Namespace, e.mongodb.ResourcePlural(), e.mongodb.Name)
+}
+
+func (e ElasticsearchStatsService) Scheme() string {
 	return ""
 }
 
-func (r *Elasticsearch) StatsAccessor() mona.StatsAccessor {
-	return r
+func (e Elasticsearch) StatsAccessor() mona.StatsAccessor {
+	return &ElasticsearchStatsService{mongodb: e}
 }
 
 func (e *Elasticsearch) GetMonitoringVendor() string {
@@ -73,7 +89,7 @@ func (e *Elasticsearch) GetMonitoringVendor() string {
 	return ""
 }
 
-func (r Elasticsearch) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (e Elasticsearch) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crdutils.NewCustomResourceDefinition(crdutils.Config{
 		Group:         SchemeGroupVersion.Group,
 		Plural:        ResourcePluralElasticsearch,
@@ -119,7 +135,7 @@ const (
 	ESSearchGuardDisabled = ElasticsearchKey + "/searchguard-disabled"
 )
 
-func (r Elasticsearch) SearchGuardDisabled() bool {
-	v, _ := meta.GetBoolValue(r.Annotations, ESSearchGuardDisabled)
+func (e Elasticsearch) SearchGuardDisabled() bool {
+	v, _ := meta.GetBoolValue(e.Annotations, ESSearchGuardDisabled)
 	return v
 }
