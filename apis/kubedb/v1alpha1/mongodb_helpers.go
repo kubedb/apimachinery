@@ -48,7 +48,7 @@ type mongoDBStatsService struct {
 }
 
 func (m mongoDBStatsService) GetNamespace() string {
-	return m.GetNamespace()
+	return m.MongoDB.GetNamespace()
 }
 
 func (m mongoDBStatsService) ServiceName() string {

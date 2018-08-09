@@ -48,7 +48,7 @@ type etcdStatsService struct {
 }
 
 func (e etcdStatsService) GetNamespace() string {
-	return e.GetNamespace()
+	return e.Etcd.GetNamespace()
 }
 
 func (e etcdStatsService) ServiceName() string {

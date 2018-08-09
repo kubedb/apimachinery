@@ -55,7 +55,7 @@ type elasticsearchStatsService struct {
 }
 
 func (e elasticsearchStatsService) GetNamespace() string {
-	return e.GetNamespace()
+	return e.Elasticsearch.GetNamespace()
 }
 
 func (e elasticsearchStatsService) ServiceName() string {

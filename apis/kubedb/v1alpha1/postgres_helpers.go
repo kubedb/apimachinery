@@ -50,7 +50,7 @@ type postgresStatsService struct {
 }
 
 func (p postgresStatsService) GetNamespace() string {
-	return p.GetNamespace()
+	return p.Postgres.GetNamespace()
 }
 
 func (p postgresStatsService) ServiceName() string {
