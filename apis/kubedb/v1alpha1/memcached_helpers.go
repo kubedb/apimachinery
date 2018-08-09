@@ -48,7 +48,7 @@ type memcachedStatsService struct {
 }
 
 func (m memcachedStatsService) GetNamespace() string {
-	return m.GetNamespace()
+	return m.Memcached.GetNamespace()
 }
 
 func (m memcachedStatsService) ServiceName() string {

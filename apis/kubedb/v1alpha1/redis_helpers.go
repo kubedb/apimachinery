@@ -48,7 +48,7 @@ type redisStatsService struct {
 }
 
 func (r redisStatsService) GetNamespace() string {
-	return r.GetNamespace()
+	return r.Redis.GetNamespace()
 }
 
 func (r redisStatsService) ServiceName() string {

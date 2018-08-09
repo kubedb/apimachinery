@@ -50,7 +50,7 @@ type mySQLStatsService struct {
 }
 
 func (m mySQLStatsService) GetNamespace() string {
-	return m.GetNamespace()
+	return m.MySQL.GetNamespace()
 }
 
 func (m mySQLStatsService) ServiceName() string {
