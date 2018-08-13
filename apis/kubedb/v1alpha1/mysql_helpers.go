@@ -69,7 +69,7 @@ func (m mySQLStatsService) Scheme() string {
 	return ""
 }
 
-func (m MySQL) StatsAccessor() mona.StatsAccessor {
+func (m MySQL) StatsService() mona.StatsAccessor {
 	return &mySQLStatsService{&m}
 }
 
