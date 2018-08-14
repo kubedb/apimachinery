@@ -22,6 +22,10 @@ spec:
     type: date
   group: kubedb.com
   names:
+    categories:
+    - datastore
+    - kubedb
+    - appscode
     kind: MemcachedVersion
     plural: memcachedversions
     shortNames:

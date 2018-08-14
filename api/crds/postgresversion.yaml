@@ -25,6 +25,10 @@ spec:
     type: date
   group: kubedb.com
   names:
+    categories:
+    - datastore
+    - kubedb
+    - appscode
     kind: PostgresVersion
     plural: postgresversions
     shortNames:

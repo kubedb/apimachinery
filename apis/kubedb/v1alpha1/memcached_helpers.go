@@ -85,6 +85,7 @@ func (m Memcached) CustomResourceDefinition() *apiextensions.CustomResourceDefin
 		Singular:      ResourceSingularMemcached,
 		Kind:          ResourceKindMemcached,
 		ShortNames:    []string{ResourceCodeMemcached},
+		Categories:    []string{"datastore", "kubedb", "appscode"},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Versions: []apiextensions.CustomResourceDefinitionVersion{
 			{

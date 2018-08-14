@@ -85,6 +85,7 @@ func (p MongoDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinit
 		Singular:      ResourceSingularMongoDB,
 		Kind:          ResourceKindMongoDB,
 		ShortNames:    []string{ResourceCodeMongoDB},
+		Categories:    []string{"datastore", "kubedb", "appscode"},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Versions: []apiextensions.CustomResourceDefinitionVersion{
 			{

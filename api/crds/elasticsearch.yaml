@@ -19,6 +19,10 @@ spec:
     type: date
   group: kubedb.com
   names:
+    categories:
+    - datastore
+    - kubedb
+    - appscode
     kind: Elasticsearch
     plural: elasticsearches
     shortNames:
