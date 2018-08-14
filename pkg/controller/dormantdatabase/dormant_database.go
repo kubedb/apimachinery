@@ -12,7 +12,7 @@ import (
 
 func (c *Controller) create(ddb *api.DormantDatabase) error {
 	if ddb.Status.CreationTime == nil {
-		_, err := util.UpdateDormantDatabaseStatus(c.ExtClient, ddb, func(in *api.DormantDatabaseStatus) *api.DormantDatabaseStatus {
+		drmn, err := util.UpdateDormantDatabaseStatus(c.ExtClient, ddb, func(in *api.DormantDatabaseStatus) *api.DormantDatabaseStatus {
 			t := metav1.Now()
 			in.CreationTime = &t
 			return in
@@ -28,6 +28,7 @@ func (c *Controller) create(ddb *api.DormantDatabase) error {
 			}
 			return err
 		}
+		ddb.Status = drmn.Status
 	}
 
 	if ddb.Status.Phase == api.DormantDatabasePhasePaused {
@@ -72,6 +73,7 @@ func (c *Controller) create(ddb *api.DormantDatabase) error {
 		t := metav1.Now()
 		in.PausingTime = &t
 		in.Phase = api.DormantDatabasePhasePaused
+		in.ObservedGeneration = ddb.Generation
 		return in
 	}, api.EnableStatusSubresource)
 	if err != nil {

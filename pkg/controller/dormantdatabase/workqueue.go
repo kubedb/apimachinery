@@ -22,6 +22,13 @@ func (c *Controller) addEventHandler(selector labels.Selector) {
 }
 
 func dormantDatabaseEqual(old, new *api.DormantDatabase) bool {
+	if api.EnableStatusSubresource {
+		if new.Status.ObservedGeneration < new.Generation {
+			return false
+		}
+		return true
+	}
+
 	if !meta_util.Equal(old.Spec, new.Spec) {
 		diff := meta_util.Diff(old.Spec, new.Spec)
 		log.Debugf("DormantDatabase %s/%s has changed. Diff: %s\n", new.Namespace, new.Name, diff)
