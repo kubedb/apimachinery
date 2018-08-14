@@ -190,6 +190,10 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		return err
 	}
 
+	if err := osm.CheckBucketAccess(c.Client, snapshot.Spec.Backend, snapshot.Namespace); err != nil {
+		return err
+	}
+
 	job, err := c.snapshotter.GetSnapshotter(snapshot)
 	if err != nil {
 		message := fmt.Sprintf("Failed to take snapshot. Reason: %v", err)
