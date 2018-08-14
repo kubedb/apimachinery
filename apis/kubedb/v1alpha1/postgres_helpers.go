@@ -91,6 +91,7 @@ func (p Postgres) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 		Singular:      ResourceSingularPostgres,
 		Kind:          ResourceKindPostgres,
 		ShortNames:    []string{ResourceCodePostgres},
+		Categories:    []string{"datastore", "kubedb", "appscode"},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Versions: []apiextensions.CustomResourceDefinitionVersion{
 			{
