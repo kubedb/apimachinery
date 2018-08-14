@@ -2750,7 +2750,15 @@ func (in *SnapshotSpec) DeepCopyInto(out *SnapshotSpec) {
 	*out = *in
 	in.Backend.DeepCopyInto(&out.Backend)
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
-	in.Resources.DeepCopyInto(&out.Resources)
+	if in.Resources != nil {
+		in, out := &in.Resources, &out.Resources
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.ResourceRequirements)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	return
 }
 

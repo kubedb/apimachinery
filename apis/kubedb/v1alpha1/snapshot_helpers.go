@@ -91,3 +91,13 @@ func (s Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 		},
 	}, setNameSchema)
 }
+
+func (s *Snapshot) Migrate() {
+	if s == nil {
+		return
+	}
+	if s.Spec.Resources != nil {
+		s.Spec.PodTemplate.Spec.Resources = *s.Spec.Resources
+		s.Spec.Resources = nil
+	}
+}
