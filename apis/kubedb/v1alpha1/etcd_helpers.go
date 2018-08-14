@@ -120,3 +120,16 @@ func (e Etcd) CustomResourceDefinition() *apiextensions.CustomResourceDefinition
 		},
 	}, setNameSchema)
 }
+
+func (e *Etcd) Migrate() {
+	if e == nil {
+		return
+	}
+	e.Spec.Migrate()
+}
+
+func (e *EtcdSpec) Migrate() {
+	if e == nil {
+		return
+	}
+}
