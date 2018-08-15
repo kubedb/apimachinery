@@ -29,7 +29,7 @@ func dormantDatabaseEqual(old, new *api.DormantDatabase) bool {
 		}
 		if glog.V(log.LevelDebug) {
 			diff := meta_util.Diff(old, new)
-			glog.Info("meta.Generation [%d] is higher than status.observedGeneration [%d] in DormantDatabase %s/%s with Diff: %s\n",
+			glog.Infof("meta.Generation [%d] is higher than status.observedGeneration [%d] in DormantDatabase %s/%s with Diff: %s",
 				new.Generation, new.Status.ObservedGeneration, new.Namespace, new.Name, diff)
 		}
 		return false
@@ -37,7 +37,7 @@ func dormantDatabaseEqual(old, new *api.DormantDatabase) bool {
 	if !meta_util.Equal(old.Spec, new.Spec) {
 		if glog.V(log.LevelDebug) {
 			diff := meta_util.Diff(old, new)
-			glog.Info("DormantDatabase %s/%s has changed. Diff: %s\n", new.Namespace, new.Name, diff)
+			glog.Infof("DormantDatabase %s/%s has changed. Diff: %s", new.Namespace, new.Name, diff)
 		}
 		return false
 	}
@@ -45,15 +45,15 @@ func dormantDatabaseEqual(old, new *api.DormantDatabase) bool {
 }
 
 func (c *Controller) runDormantDatabase(key string) error {
-	log.Debugf("started processing, key: %v\n", key)
+	log.Debugf("started processing, key: %v", key)
 	obj, exists, err := c.DrmnInformer.GetIndexer().GetByKey(key)
 	if err != nil {
-		log.Errorf("Fetching object with key %s from store failed with %v\n", key, err)
+		log.Errorf("Fetching object with key %s from store failed with %v", key, err)
 		return err
 	}
 
 	if !exists {
-		log.Debugf("DormantDatabase %s does not exist anymore\n", key)
+		log.Debugf("DormantDatabase %s does not exist anymore", key)
 	} else {
 		// Note that you also have to check the uid if you have a local controlled resource, which
 		// is dependent on the actual instance, to detect that a DormantDatabase was recreated with the same name
