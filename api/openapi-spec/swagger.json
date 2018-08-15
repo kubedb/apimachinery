@@ -12306,9 +12306,6 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseStatus": {
       "properties": {
-        "creationTime": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -12526,9 +12523,6 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchStatus": {
       "properties": {
-        "creationTime": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -12863,9 +12857,6 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedStatus": {
       "properties": {
-        "creationTime": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -13120,9 +13111,6 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBStatus": {
       "properties": {
-        "creationTime": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -13397,9 +13385,6 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLStatus": {
       "properties": {
-        "creationTime": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -13739,9 +13724,6 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresStatus": {
       "properties": {
-        "creationTime": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -14035,9 +14017,6 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisStatus": {
       "properties": {
-        "creationTime": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
