@@ -22,28 +22,6 @@ func (c *Controller) addEventHandler(selector labels.Selector) {
 	c.ddbLister = c.KubedbInformerFactory.Kubedb().V1alpha1().DormantDatabases().Lister()
 }
 
-func dormantDatabaseEqual(old, new *api.DormantDatabase) bool {
-	if api.EnableStatusSubresource {
-		if new.Status.ObservedGeneration >= new.Generation {
-			return true
-		}
-		if glog.V(log.LevelDebug) {
-			diff := meta_util.Diff(old, new)
-			glog.Infof("meta.Generation [%d] is higher than status.observedGeneration [%d] in DormantDatabase %s/%s with Diff: %s",
-				new.Generation, new.Status.ObservedGeneration, new.Namespace, new.Name, diff)
-		}
-		return false
-	}
-	if !meta_util.Equal(old.Spec, new.Spec) {
-		if glog.V(log.LevelDebug) {
-			diff := meta_util.Diff(old, new)
-			glog.Infof("DormantDatabase %s/%s has changed. Diff: %s", new.Namespace, new.Name, diff)
-		}
-		return false
-	}
-	return true
-}
-
 func (c *Controller) runDormantDatabase(key string) error {
 	log.Debugf("started processing, key: %v", key)
 	obj, exists, err := c.DrmnInformer.GetIndexer().GetByKey(key)

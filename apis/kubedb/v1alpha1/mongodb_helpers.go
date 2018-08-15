@@ -3,9 +3,13 @@ package v1alpha1
 import (
 	"fmt"
 
+	meta_util "github.com/appscode/kutil/meta"
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	"github.com/golang/glog"
+	"github.com/appscode/go/log"
+	"reflect"
 )
 
 func (p MongoDB) OffshootName() string {
@@ -157,4 +161,30 @@ func (m *MongoDBSpec) Migrate() {
 		m.PodTemplate.Spec.ImagePullSecrets = m.ImagePullSecrets
 		m.ImagePullSecrets = nil
 	}
+}
+
+func (m *MongoDB) Equal(other *MongoDB) bool {
+	if EnableStatusSubresource {
+		// At this moment, metadata.Generation is incremented only by `spec`.
+		// issue tracked: https://github.com/kubernetes/kubernetes/issues/67428
+		// So look for changes in metadata.labels as well.
+		if m.Generation <= m.Status.ObservedGeneration && reflect.DeepEqual(other.Labels, m.Labels) {
+			return true
+		}
+		if glog.V(log.LevelDebug) {
+			diff := meta_util.Diff(other, m)
+			glog.Infof("meta.Generation [%m] is higher than status.observedGeneration [%m] in MongoDB %s/%s with Diff: %s",
+				m.Generation, m.Status.ObservedGeneration, m.Namespace, m.Name, diff)
+		}
+		return false
+	}
+
+	if !meta_util.Equal(other.Spec, m.Spec) || !reflect.DeepEqual(other.Labels, m.Labels) {
+		if glog.V(log.LevelDebug) {
+			diff := meta_util.Diff(other, m)
+			glog.Infof("MongoDB %s/%s has changed. Diff: %s", m.Namespace, m.Name, diff)
+		}
+		return false
+	}
+	return true
 }
