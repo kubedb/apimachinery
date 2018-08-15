@@ -1,6 +1,8 @@
 package v1alpha1
 
 import (
+	"reflect"
+
 	"github.com/appscode/go/log"
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
 	meta_util "github.com/appscode/kutil/meta"
@@ -80,23 +82,33 @@ func (d *DormantDatabase) Migrate() {
 }
 
 func (d *DormantDatabase) Equal(other *DormantDatabase) bool {
+	if d == nil {
+		return other == nil
+	}
+	if other == nil { // && d != nil
+		return false
+	}
+	if d == other {
+		return true
+	}
+
+	var match bool
+
 	if EnableStatusSubresource {
-		if d.Status.ObservedGeneration >= d.Generation {
-			return true
-		}
-		if glog.V(log.LevelDebug) {
-			diff := meta_util.Diff(other, d)
-			glog.InfoDepth(1, "meta.Generation [%d] is higher than status.observedGeneration [%d] in DormantDatabase %s/%s with Diff: %s",
-				d.Generation, d.Status.ObservedGeneration, d.Namespace, d.Name, diff)
-		}
-		return false
+		match = d.Status.ObservedGeneration == d.Generation
+	} else {
+		match = meta_util.Equal(d.Spec, other.Spec)
 	}
-	if !meta_util.Equal(d.Spec, other.Spec) {
-		if glog.V(log.LevelDebug) {
-			diff := meta_util.Diff(other, d)
-			glog.InfoDepth(1, "DormantDatabase %s/%s has changed. Diff: %s", d.Namespace, d.Name, diff)
-		}
-		return false
+	if match {
+		match = reflect.DeepEqual(d.Labels, other.Labels)
 	}
-	return true
+	if match {
+		match = reflect.DeepEqual(d.Annotations, other.Annotations)
+	}
+
+	if !match && bool(glog.V(log.LevelDebug)) {
+		diff := meta_util.Diff(other, d)
+		glog.V(log.LevelDebug).Infof("%s %s/%s has changed. Diff: %s", meta_util.GetKind(d), d.Namespace, d.Name, diff)
+	}
+	return match
 }

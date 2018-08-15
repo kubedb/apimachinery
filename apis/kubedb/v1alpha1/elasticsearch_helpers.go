@@ -180,27 +180,33 @@ func (e Elasticsearch) SearchGuardDisabled() bool {
 }
 
 func (e *Elasticsearch) Equal(other *Elasticsearch) bool {
-	if EnableStatusSubresource {
-		// At this moment, metadata.Generation is incremented only by `spec`.
-		// issue tracked: https://github.com/kubernetes/kubernetes/issues/67428
-		// So look for changes in metadata.labels as well.
-		if e.Generation <= e.Status.ObservedGeneration && reflect.DeepEqual(other.Labels, e.Labels) {
-			return true
-		}
-		if glog.V(log.LevelDebug) {
-			diff := meta_util.Diff(other, e)
-			glog.InfoDepth(1, "meta.Generation [%d] is higher than status.observedGeneration [%d] in Elasticsearch %s/%s with Diff: %s",
-				e.Generation, e.Status.ObservedGeneration, e.Namespace, e.Name, diff)
-		}
+	if e == nil {
+		return other == nil
+	}
+	if other == nil { // && d != nil
 		return false
+	}
+	if e == other {
+		return true
 	}
 
-	if !meta_util.Equal(other.Spec, e.Spec) || !reflect.DeepEqual(other.Labels, e.Labels) {
-		if glog.V(log.LevelDebug) {
-			diff := meta_util.Diff(other, e)
-			glog.InfoDepth(1, "Elasticsearch %s/%s has changed. Diff: %s", e.Namespace, e.Name, diff)
-		}
-		return false
+	var match bool
+
+	if EnableStatusSubresource {
+		match = e.Status.ObservedGeneration == e.Generation
+	} else {
+		match = meta_util.Equal(e.Spec, other.Spec)
 	}
-	return true
+	if match {
+		match = reflect.DeepEqual(e.Labels, other.Labels)
+	}
+	if match {
+		match = reflect.DeepEqual(e.Annotations, other.Annotations)
+	}
+
+	if !match && bool(glog.V(log.LevelDebug)) {
+		diff := meta_util.Diff(other, e)
+		glog.V(log.LevelDebug).Infof("%s %s/%s has changed. Diff: %s", meta_util.GetKind(e), e.Namespace, e.Name, diff)
+	}
+	return match
 }

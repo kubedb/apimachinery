@@ -170,27 +170,33 @@ func (p *PostgresSpec) Migrate() {
 }
 
 func (p *Postgres) Equal(other *Postgres) bool {
-	if EnableStatusSubresource {
-		// At this moment, metadata.Generation is incremented only by `spec`.
-		// issue tracked: https://github.com/kubernetes/kubernetes/issues/67428
-		// So look for changes in metadata.labels as well.
-		if p.Generation <= p.Status.ObservedGeneration && reflect.DeepEqual(other.Labels, p.Labels) {
-			return true
-		}
-		if glog.V(log.LevelDebug) {
-			diff := meta_util.Diff(other, p)
-			glog.InfoDepth(1, "meta.Generation [%d] is higher than status.observedGeneration [%d] in Postgres %s/%s with Diff: %s",
-				p.Generation, p.Status.ObservedGeneration, p.Namespace, p.Name, diff)
-		}
+	if p == nil {
+		return other == nil
+	}
+	if other == nil { // && d != nil
 		return false
+	}
+	if p == other {
+		return true
 	}
 
-	if !meta_util.Equal(other.Spec, p.Spec) || !reflect.DeepEqual(other.Labels, p.Labels) {
-		if glog.V(log.LevelDebug) {
-			diff := meta_util.Diff(other, p)
-			glog.InfoDepth(1, "Postgres %s/%s has changed. Diff: %s", p.Namespace, p.Name, diff)
-		}
-		return false
+	var match bool
+
+	if EnableStatusSubresource {
+		match = p.Status.ObservedGeneration == p.Generation
+	} else {
+		match = meta_util.Equal(p.Spec, other.Spec)
 	}
-	return true
+	if match {
+		match = reflect.DeepEqual(p.Labels, other.Labels)
+	}
+	if match {
+		match = reflect.DeepEqual(p.Annotations, other.Annotations)
+	}
+
+	if !match && bool(glog.V(log.LevelDebug)) {
+		diff := meta_util.Diff(other, p)
+		glog.V(log.LevelDebug).Infof("%s %s/%s has changed. Diff: %s", meta_util.GetKind(p), p.Namespace, p.Name, diff)
+	}
+	return match
 }

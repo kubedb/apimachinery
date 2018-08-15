@@ -12,39 +12,39 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
-func (p MongoDB) OffshootName() string {
-	return p.Name
+func (m MongoDB) OffshootName() string {
+	return m.Name
 }
 
-func (p MongoDB) OffshootSelectors() map[string]string {
+func (m MongoDB) OffshootSelectors() map[string]string {
 	return map[string]string{
-		LabelDatabaseName: p.Name,
+		LabelDatabaseName: m.Name,
 		LabelDatabaseKind: ResourceKindMongoDB,
 	}
 }
 
-func (p MongoDB) OffshootLabels() map[string]string {
-	return filterTags(p.OffshootSelectors(), p.Labels)
+func (m MongoDB) OffshootLabels() map[string]string {
+	return filterTags(m.OffshootSelectors(), m.Labels)
 }
 
-func (p MongoDB) ResourceShortCode() string {
+func (m MongoDB) ResourceShortCode() string {
 	return ResourceCodeMongoDB
 }
 
-func (p MongoDB) ResourceKind() string {
+func (m MongoDB) ResourceKind() string {
 	return ResourceKindMongoDB
 }
 
-func (p MongoDB) ResourceSingular() string {
+func (m MongoDB) ResourceSingular() string {
 	return ResourceSingularMongoDB
 }
 
-func (p MongoDB) ResourcePlural() string {
+func (m MongoDB) ResourcePlural() string {
 	return ResourcePluralMongoDB
 }
 
-func (p MongoDB) ServiceName() string {
-	return p.OffshootName()
+func (m MongoDB) ServiceName() string {
+	return m.OffshootName()
 }
 
 type mongoDBStatsService struct {
@@ -82,7 +82,7 @@ func (m *MongoDB) GetMonitoringVendor() string {
 	return ""
 }
 
-func (p MongoDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (m MongoDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crdutils.NewCustomResourceDefinition(crdutils.Config{
 		Group:         SchemeGroupVersion.Group,
 		Plural:        ResourcePluralMongoDB,
@@ -164,27 +164,33 @@ func (m *MongoDBSpec) Migrate() {
 }
 
 func (m *MongoDB) Equal(other *MongoDB) bool {
-	if EnableStatusSubresource {
-		// At this moment, metadata.Generation is incremented only by `spec`.
-		// issue tracked: https://github.com/kubernetes/kubernetes/issues/67428
-		// So look for changes in metadata.labels as well.
-		if m.Generation <= m.Status.ObservedGeneration && reflect.DeepEqual(other.Labels, m.Labels) {
-			return true
-		}
-		if glog.V(log.LevelDebug) {
-			diff := meta_util.Diff(other, m)
-			glog.InfoDepth(1, "meta.Generation [%d] is higher than status.observedGeneration [%d] in MongoDB %s/%s with Diff: %s",
-				m.Generation, m.Status.ObservedGeneration, m.Namespace, m.Name, diff)
-		}
+	if m == nil {
+		return other == nil
+	}
+	if other == nil { // && d != nil
 		return false
+	}
+	if m == other {
+		return true
 	}
 
-	if !meta_util.Equal(other.Spec, m.Spec) || !reflect.DeepEqual(other.Labels, m.Labels) {
-		if glog.V(log.LevelDebug) {
-			diff := meta_util.Diff(other, m)
-			glog.InfoDepth(1, "MongoDB %s/%s has changed. Diff: %s", m.Namespace, m.Name, diff)
-		}
-		return false
+	var match bool
+
+	if EnableStatusSubresource {
+		match = m.Status.ObservedGeneration == m.Generation
+	} else {
+		match = meta_util.Equal(m.Spec, other.Spec)
 	}
-	return true
+	if match {
+		match = reflect.DeepEqual(m.Labels, other.Labels)
+	}
+	if match {
+		match = reflect.DeepEqual(m.Annotations, other.Annotations)
+	}
+
+	if !match && bool(glog.V(log.LevelDebug)) {
+		diff := meta_util.Diff(other, m)
+		glog.V(log.LevelDebug).Infof("%s %s/%s has changed. Diff: %s", meta_util.GetKind(m), m.Namespace, m.Name, diff)
+	}
+	return match
 }

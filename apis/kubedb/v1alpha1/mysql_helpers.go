@@ -166,27 +166,33 @@ func (m *MySQLSpec) Migrate() {
 }
 
 func (m *MySQL) Equal(other *MySQL) bool {
-	if EnableStatusSubresource {
-		// At this moment, metadata.Generation is incremented only by `spec`.
-		// issue tracked: https://github.com/kubernetes/kubernetes/issues/67428
-		// So look for changes in metadata.labels as well.
-		if m.Generation <= m.Status.ObservedGeneration && reflect.DeepEqual(other.Labels, m.Labels) {
-			return true
-		}
-		if glog.V(log.LevelDebug) {
-			diff := meta_util.Diff(other, m)
-			glog.InfoDepth(1, "meta.Generation [%d] is higher than status.observedGeneration [%d] in MySQL %s/%s with Diff: %s",
-				m.Generation, m.Status.ObservedGeneration, m.Namespace, m.Name, diff)
-		}
+	if m == nil {
+		return other == nil
+	}
+	if other == nil { // && d != nil
 		return false
+	}
+	if m == other {
+		return true
 	}
 
-	if !meta_util.Equal(other.Spec, m.Spec) || !reflect.DeepEqual(other.Labels, m.Labels) {
-		if glog.V(log.LevelDebug) {
-			diff := meta_util.Diff(other, m)
-			glog.InfoDepth(1, "MySQL %s/%s has changed. Diff: %s", m.Namespace, m.Name, diff)
-		}
-		return false
+	var match bool
+
+	if EnableStatusSubresource {
+		match = m.Status.ObservedGeneration == m.Generation
+	} else {
+		match = meta_util.Equal(m.Spec, other.Spec)
 	}
-	return true
+	if match {
+		match = reflect.DeepEqual(m.Labels, other.Labels)
+	}
+	if match {
+		match = reflect.DeepEqual(m.Annotations, other.Annotations)
+	}
+
+	if !match && bool(glog.V(log.LevelDebug)) {
+		diff := meta_util.Diff(other, m)
+		glog.V(log.LevelDebug).Infof("%s %s/%s has changed. Diff: %s", meta_util.GetKind(m), m.Namespace, m.Name, diff)
+	}
+	return match
 }
