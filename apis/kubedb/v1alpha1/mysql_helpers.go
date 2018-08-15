@@ -2,8 +2,12 @@ package v1alpha1
 
 import (
 	"fmt"
+	"reflect"
 
+	"github.com/appscode/go/log"
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
+	meta_util "github.com/appscode/kutil/meta"
+	"github.com/golang/glog"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
@@ -159,4 +163,30 @@ func (m *MySQLSpec) Migrate() {
 		m.PodTemplate.Spec.ImagePullSecrets = m.ImagePullSecrets
 		m.ImagePullSecrets = nil
 	}
+}
+
+func (m *MySQL) Equal(other *MySQL) bool {
+	if EnableStatusSubresource {
+		// At this moment, metadata.Generation is incremented only by `spec`.
+		// issue tracked: https://github.com/kubernetes/kubernetes/issues/67428
+		// So look for changes in metadata.labels as well.
+		if m.Generation <= m.Status.ObservedGeneration && reflect.DeepEqual(other.Labels, m.Labels) {
+			return true
+		}
+		if glog.V(log.LevelDebug) {
+			diff := meta_util.Diff(other, m)
+			glog.InfoDepth(1, "meta.Generation [%d] is higher than status.observedGeneration [%d] in MySQL %s/%s with Diff: %s",
+				m.Generation, m.Status.ObservedGeneration, m.Namespace, m.Name, diff)
+		}
+		return false
+	}
+
+	if !meta_util.Equal(other.Spec, m.Spec) || !reflect.DeepEqual(other.Labels, m.Labels) {
+		if glog.V(log.LevelDebug) {
+			diff := meta_util.Diff(other, m)
+			glog.InfoDepth(1, "MySQL %s/%s has changed. Diff: %s", m.Namespace, m.Name, diff)
+		}
+		return false
+	}
+	return true
 }

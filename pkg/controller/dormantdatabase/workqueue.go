@@ -2,9 +2,7 @@ package dormantdatabase
 
 import (
 	"github.com/appscode/go/log"
-	meta_util "github.com/appscode/kutil/meta"
 	"github.com/appscode/kutil/tools/queue"
-	"github.com/golang/glog"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"k8s.io/apimachinery/pkg/labels"
 )
@@ -14,7 +12,7 @@ func (c *Controller) addEventHandler(selector labels.Selector) {
 	c.DrmnInformer.AddEventHandler(queue.NewFilteredHandler(queue.NewEventHandler(c.DrmnQueue.GetQueue(), func(old interface{}, new interface{}) bool {
 		oldObj := old.(*api.DormantDatabase)
 		newObj := new.(*api.DormantDatabase)
-		if !dormantDatabaseEqual(oldObj, newObj) {
+		if !newObj.Equal(oldObj) {
 			return true
 		}
 		return false

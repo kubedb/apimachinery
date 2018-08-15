@@ -2,14 +2,14 @@ package v1alpha1
 
 import (
 	"fmt"
+	"reflect"
 
-	meta_util "github.com/appscode/kutil/meta"
+	"github.com/appscode/go/log"
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
+	meta_util "github.com/appscode/kutil/meta"
+	"github.com/golang/glog"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	"github.com/golang/glog"
-	"github.com/appscode/go/log"
-	"reflect"
 )
 
 func (p MongoDB) OffshootName() string {
@@ -173,7 +173,7 @@ func (m *MongoDB) Equal(other *MongoDB) bool {
 		}
 		if glog.V(log.LevelDebug) {
 			diff := meta_util.Diff(other, m)
-			glog.Infof("meta.Generation [%m] is higher than status.observedGeneration [%m] in MongoDB %s/%s with Diff: %s",
+			glog.InfoDepth(1, "meta.Generation [%d] is higher than status.observedGeneration [%d] in MongoDB %s/%s with Diff: %s",
 				m.Generation, m.Status.ObservedGeneration, m.Namespace, m.Name, diff)
 		}
 		return false
@@ -182,7 +182,7 @@ func (m *MongoDB) Equal(other *MongoDB) bool {
 	if !meta_util.Equal(other.Spec, m.Spec) || !reflect.DeepEqual(other.Labels, m.Labels) {
 		if glog.V(log.LevelDebug) {
 			diff := meta_util.Diff(other, m)
-			glog.Infof("MongoDB %s/%s has changed. Diff: %s", m.Namespace, m.Name, diff)
+			glog.InfoDepth(1, "MongoDB %s/%s has changed. Diff: %s", m.Namespace, m.Name, diff)
 		}
 		return false
 	}

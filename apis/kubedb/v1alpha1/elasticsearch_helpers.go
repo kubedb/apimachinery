@@ -2,9 +2,13 @@ package v1alpha1
 
 import (
 	"fmt"
+	"reflect"
 
+	"github.com/appscode/go/log"
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
 	"github.com/appscode/kutil/meta"
+	meta_util "github.com/appscode/kutil/meta"
+	"github.com/golang/glog"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
@@ -173,4 +177,30 @@ const (
 func (e Elasticsearch) SearchGuardDisabled() bool {
 	v, _ := meta.GetBoolValue(e.Annotations, ESSearchGuardDisabled)
 	return v
+}
+
+func (e *Elasticsearch) Equal(other *Elasticsearch) bool {
+	if EnableStatusSubresource {
+		// At this moment, metadata.Generation is incremented only by `spec`.
+		// issue tracked: https://github.com/kubernetes/kubernetes/issues/67428
+		// So look for changes in metadata.labels as well.
+		if e.Generation <= e.Status.ObservedGeneration && reflect.DeepEqual(other.Labels, e.Labels) {
+			return true
+		}
+		if glog.V(log.LevelDebug) {
+			diff := meta_util.Diff(other, e)
+			glog.InfoDepth(1, "meta.Generation [%d] is higher than status.observedGeneration [%d] in Elasticsearch %s/%s with Diff: %s",
+				e.Generation, e.Status.ObservedGeneration, e.Namespace, e.Name, diff)
+		}
+		return false
+	}
+
+	if !meta_util.Equal(other.Spec, e.Spec) || !reflect.DeepEqual(other.Labels, e.Labels) {
+		if glog.V(log.LevelDebug) {
+			diff := meta_util.Diff(other, e)
+			glog.InfoDepth(1, "Elasticsearch %s/%s has changed. Diff: %s", e.Namespace, e.Name, diff)
+		}
+		return false
+	}
+	return true
 }

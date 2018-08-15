@@ -1,11 +1,11 @@
 package v1alpha1
 
 import (
-	meta_util "github.com/appscode/kutil/meta"
-	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
-	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-	"github.com/golang/glog"
 	"github.com/appscode/go/log"
+	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
+	meta_util "github.com/appscode/kutil/meta"
+	"github.com/golang/glog"
+	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 )
 
 func (d DormantDatabase) OffshootName() string {
@@ -86,15 +86,15 @@ func (d *DormantDatabase) Equal(other *DormantDatabase) bool {
 		}
 		if glog.V(log.LevelDebug) {
 			diff := meta_util.Diff(other, d)
-			glog.Infof("meta.Generation [%d] is higher than status.observedGeneration [%d] in DormantDatabase %s/%s with Diff: %s",
+			glog.InfoDepth(1, "meta.Generation [%d] is higher than status.observedGeneration [%d] in DormantDatabase %s/%s with Diff: %s",
 				d.Generation, d.Status.ObservedGeneration, d.Namespace, d.Name, diff)
 		}
 		return false
 	}
-	if !meta_util.Equal(d.Spec,other.Spec) {
+	if !meta_util.Equal(d.Spec, other.Spec) {
 		if glog.V(log.LevelDebug) {
 			diff := meta_util.Diff(other, d)
-			glog.Infof("DormantDatabase %s/%s has changed. Diff: %s", d.Namespace, d.Name, diff)
+			glog.InfoDepth(1, "DormantDatabase %s/%s has changed. Diff: %s", d.Namespace, d.Name, diff)
 		}
 		return false
 	}
