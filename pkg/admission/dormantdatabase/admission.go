@@ -318,9 +318,8 @@ func getDatabaseSecretName(dormantDatabase *api.DormantDatabase, dbKind string) 
 		secretVol := []*coreV1.SecretVolumeSource{
 			dormantDatabase.Spec.Origin.Spec.MongoDB.DatabaseSecret,
 		}
-		if dormantDatabase.Spec.Origin.Spec.MongoDB.ClusterMode != nil &&
-			dormantDatabase.Spec.Origin.Spec.MongoDB.ClusterMode.ReplicaSet != nil {
-			secretVol = append(secretVol, dormantDatabase.Spec.Origin.Spec.MongoDB.ClusterMode.ReplicaSet.KeyFileSecret)
+		if dormantDatabase.Spec.Origin.Spec.MongoDB.ReplicaSet != nil {
+			secretVol = append(secretVol, dormantDatabase.Spec.Origin.Spec.MongoDB.ReplicaSet.KeyFile)
 		}
 		return secretVol
 	case api.ResourceKindMySQL:

@@ -12998,16 +12998,6 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBClusterMode": {
-      "required": [
-        "replicaSet"
-      ],
-      "properties": {
-        "replicaSet": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBReplicaSet"
-        }
-      }
-    },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBList": {
       "properties": {
         "apiVersion": {
@@ -13042,7 +13032,7 @@
         "name"
       ],
       "properties": {
-        "keyFileSecret": {
+        "keyFile": {
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "name": {
@@ -13063,10 +13053,6 @@
         "backupSchedule": {
           "description": "BackupSchedule spec to specify how database backup will be taken",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
-        },
-        "clusterMode": {
-          "description": "Mode of clustering for mongodb",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBClusterMode"
         },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -13105,6 +13091,10 @@
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "replicaSet": {
+          "description": "MongoDB replica set",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBReplicaSet"
         },
         "replicas": {
           "description": "Number of instances to deploy for a MongoDB database.",
