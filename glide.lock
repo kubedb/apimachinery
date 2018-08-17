@@ -1,5 +1,5 @@
 hash: 12d66bd4d9de3fd8438395e9b1eca3260e5edafc09282c422b065ee5ec093e1a
-updated: 2018-08-16T23:14:31.209737373-07:00
+updated: 2018-08-17T15:45:35.514511332-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -850,7 +850,7 @@ imports:
   - api/v1
   - osm
 - name: kmodules.xyz/offshoot-api
-  version: 71dd2bafc0a452e3eb2d5bc60b2786d1f1843a51
+  version: 5ff9de954aeb2148edc7a831671f3f875aa56f30
   repo: https://github.com/kmodules/offshoot-api.git
   vcs: git
   subpackages:
