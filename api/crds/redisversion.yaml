@@ -26,6 +26,7 @@ spec:
     - datastore
     - kubedb
     - appscode
+    - all
     kind: RedisVersion
     plural: redisversions
     shortNames:

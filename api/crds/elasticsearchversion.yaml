@@ -29,6 +29,7 @@ spec:
     - datastore
     - kubedb
     - appscode
+    - all
     kind: ElasticsearchVersion
     plural: elasticsearchversions
     shortNames:
