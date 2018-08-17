@@ -12402,9 +12402,6 @@
       ]
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode": {
-      "required": [
-        "storage"
-      ],
       "properties": {
         "prefix": {
           "type": "string"
@@ -12503,6 +12500,10 @@
         "storage": {
           "description": "Storage to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "storageType": {
+          "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
         },
         "tolerations": {
           "description": "If specified, the pod's tolerations. Deprecated: Use podTemplate.spec.tolerations",
@@ -12692,6 +12693,10 @@
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "storageType": {
+          "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
         },
         "tls": {
           "description": "etcd cluster TLS configuration",
@@ -13042,8 +13047,7 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBSpec": {
       "required": [
-        "version",
-        "storage"
+        "version"
       ],
       "properties": {
         "affinity": {
@@ -13116,6 +13120,10 @@
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "storageType": {
+          "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
         },
         "tolerations": {
           "description": "If specified, the pod's tolerations. Deprecated: Use podTemplate.spec.tolerations",
@@ -13320,8 +13328,7 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLSpec": {
       "required": [
-        "version",
-        "storage"
+        "version"
       ],
       "properties": {
         "affinity": {
@@ -13390,6 +13397,10 @@
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "storageType": {
+          "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
         },
         "tolerations": {
           "description": "If specified, the pod's tolerations. Deprecated: Use podTemplate.spec.tolerations",
@@ -13647,8 +13658,7 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresSpec": {
       "required": [
-        "version",
-        "storage"
+        "version"
       ],
       "properties": {
         "affinity": {
@@ -13725,6 +13735,10 @@
         "storage": {
           "description": "Storage to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "storageType": {
+          "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
         },
         "streamingMode": {
           "description": "Streaming mode",
@@ -13964,8 +13978,7 @@
     },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisSpec": {
       "required": [
-        "version",
-        "storage"
+        "version"
       ],
       "properties": {
         "affinity": {
@@ -14022,6 +14035,10 @@
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "storageType": {
+          "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
         },
         "tolerations": {
           "description": "If specified, the pod's tolerations. Deprecated: Use podTemplate.spec.tolerations",

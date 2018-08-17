@@ -256,7 +256,15 @@ func (in *ElasticsearchNode) DeepCopyInto(out *ElasticsearchNode) {
 			**out = **in
 		}
 	}
-	in.Storage.DeepCopyInto(&out.Storage)
+	if in.Storage != nil {
+		in, out := &in.Storage, &out.Storage
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PersistentVolumeClaimSpec)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	in.Resources.DeepCopyInto(&out.Resources)
 	return
 }
@@ -1253,7 +1261,15 @@ func (in *MongoDBSpec) DeepCopyInto(out *MongoDBSpec) {
 			(*in).DeepCopyInto(*out)
 		}
 	}
-	in.Storage.DeepCopyInto(&out.Storage)
+	if in.Storage != nil {
+		in, out := &in.Storage, &out.Storage
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PersistentVolumeClaimSpec)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	if in.DatabaseSecret != nil {
 		in, out := &in.DatabaseSecret, &out.DatabaseSecret
 		if *in == nil {
@@ -1567,7 +1583,15 @@ func (in *MySQLSpec) DeepCopyInto(out *MySQLSpec) {
 			**out = **in
 		}
 	}
-	in.Storage.DeepCopyInto(&out.Storage)
+	if in.Storage != nil {
+		in, out := &in.Storage, &out.Storage
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PersistentVolumeClaimSpec)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	if in.DatabaseSecret != nil {
 		in, out := &in.DatabaseSecret, &out.DatabaseSecret
 		if *in == nil {
@@ -2067,7 +2091,15 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 			(*in).DeepCopyInto(*out)
 		}
 	}
-	in.Storage.DeepCopyInto(&out.Storage)
+	if in.Storage != nil {
+		in, out := &in.Storage, &out.Storage
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PersistentVolumeClaimSpec)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	if in.Init != nil {
 		in, out := &in.Init, &out.Init
 		if *in == nil {
@@ -2433,7 +2465,15 @@ func (in *RedisSpec) DeepCopyInto(out *RedisSpec) {
 			**out = **in
 		}
 	}
-	in.Storage.DeepCopyInto(&out.Storage)
+	if in.Storage != nil {
+		in, out := &in.Storage, &out.Storage
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(v1.PersistentVolumeClaimSpec)
+			(*in).DeepCopyInto(*out)
+		}
+	}
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
 		if *in == nil {

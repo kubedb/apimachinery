@@ -9721,6 +9721,9 @@ spec:
                   description: VolumeName is the binding reference to the PersistentVolume
                     backing this claim.
                   type: string
+            storageType:
+              description: StorageType can be durable (default) or ephemeral
+              type: string
             tolerations:
               description: 'If specified, the pod''s tolerations. Deprecated: Use
                 podTemplate.spec.tolerations'
@@ -9871,8 +9874,6 @@ spec:
                           description: VolumeName is the binding reference to the
                             PersistentVolume backing this claim.
                           type: string
-                  required:
-                  - storage
                 data:
                   properties:
                     prefix:
@@ -9981,8 +9982,6 @@ spec:
                           description: VolumeName is the binding reference to the
                             PersistentVolume backing this claim.
                           type: string
-                  required:
-                  - storage
                 master:
                   properties:
                     prefix:
@@ -10091,8 +10090,6 @@ spec:
                           description: VolumeName is the binding reference to the
                             PersistentVolume backing this claim.
                           type: string
-                  required:
-                  - storage
               required:
               - master
               - data
