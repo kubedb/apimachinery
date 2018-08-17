@@ -37,8 +37,11 @@ type MongoDBSpec struct {
 	// MongoDB replica set
 	ReplicaSet *MongoDBReplicaSet `json:"replicaSet,omitempty"`
 
+	// StorageType can be durable (default) or ephemeral
+	StorageType StorageType `json:"storageType,omitempty"`
+
 	// Storage spec to specify how storage shall be used.
-	Storage core.PersistentVolumeClaimSpec `json:"storage"`
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
 	// Database authentication secret
 	DatabaseSecret *core.SecretVolumeSource `json:"databaseSecret,omitempty"`

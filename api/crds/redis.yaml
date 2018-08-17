@@ -4069,6 +4069,9 @@ spec:
                   description: VolumeName is the binding reference to the PersistentVolume
                     backing this claim.
                   type: string
+            storageType:
+              description: StorageType can be durable (default) or ephemeral
+              type: string
             tolerations:
               description: 'If specified, the pod''s tolerations. Deprecated: Use
                 podTemplate.spec.tolerations'
@@ -4114,7 +4117,6 @@ spec:
               type: string
           required:
           - version
-          - storage
         status:
           properties:
             observedGeneration:

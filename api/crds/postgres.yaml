@@ -10915,6 +10915,9 @@ spec:
                   description: VolumeName is the binding reference to the PersistentVolume
                     backing this claim.
                   type: string
+            storageType:
+              description: StorageType can be durable (default) or ephemeral
+              type: string
             streamingMode:
               description: Streaming mode
               type: string
@@ -10963,7 +10966,6 @@ spec:
               type: string
           required:
           - version
-          - storage
         status:
           properties:
             observedGeneration:
