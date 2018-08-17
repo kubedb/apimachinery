@@ -29,6 +29,7 @@ spec:
     - datastore
     - kubedb
     - appscode
+    - all
     kind: MySQLVersion
     plural: mysqlversions
     shortNames:

@@ -89,7 +89,7 @@ func (r Redis) CustomResourceDefinition() *apiextensions.CustomResourceDefinitio
 		Singular:      ResourceSingularRedis,
 		Kind:          ResourceKindRedis,
 		ShortNames:    []string{ResourceCodeRedis},
-		Categories:    []string{"datastore", "kubedb", "appscode"},
+		Categories:    []string{"datastore", "kubedb", "appscode", "all"},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Versions: []apiextensions.CustomResourceDefinitionVersion{
 			{

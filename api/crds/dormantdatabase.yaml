@@ -20,6 +20,7 @@ spec:
     - datastore
     - kubedb
     - appscode
+    - all
     kind: DormantDatabase
     plural: dormantdatabases
     shortNames:

@@ -23,6 +23,7 @@ spec:
     - datastore
     - kubedb
     - appscode
+    - all
     kind: Memcached
     plural: memcacheds
     shortNames:
