@@ -13027,6 +13027,19 @@
         }
       ]
     },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBReplicaSet": {
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "keyFile": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBSpec": {
       "required": [
         "version",
@@ -13040,6 +13053,10 @@
         "backupSchedule": {
           "description": "BackupSchedule spec to specify how database backup will be taken",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
+        },
+        "configSource": {
+          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
         },
         "databaseSecret": {
           "description": "Database authentication secret",
@@ -13074,6 +13091,10 @@
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "replicaSet": {
+          "description": "MongoDB replica set",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBReplicaSet"
         },
         "replicas": {
           "description": "Number of instances to deploy for a MongoDB database.",
