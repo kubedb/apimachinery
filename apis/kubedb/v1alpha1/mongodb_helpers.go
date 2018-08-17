@@ -24,7 +24,7 @@ func (m MongoDB) OffshootSelectors() map[string]string {
 }
 
 func (m MongoDB) OffshootLabels() map[string]string {
-	return filterTags(m.OffshootSelectors(), m.Labels)
+	return meta_util.FilterKeys(GenericKey, m.OffshootSelectors(), m.Labels)
 }
 
 func (m MongoDB) ResourceShortCode() string {

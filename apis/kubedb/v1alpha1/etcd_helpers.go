@@ -24,7 +24,7 @@ func (e Etcd) OffshootSelectors() map[string]string {
 }
 
 func (e Etcd) OffshootLabels() map[string]string {
-	return filterTags(e.OffshootSelectors(), e.Labels)
+	return meta_util.FilterKeys(GenericKey, e.OffshootSelectors(), e.Labels)
 }
 
 func (e Etcd) ResourceShortCode() string {
