@@ -17,6 +17,9 @@ import (
 
 func ValidateStorage(client kubernetes.Interface, storageType api.StorageType, spec *core.PersistentVolumeClaimSpec) error {
 	if storageType == api.StorageTypeEphemeral {
+		if spec != nil {
+			return errors.New(`spec.storage can't be set for ephemeral storage type`)
+		}
 		return nil
 	}
 
