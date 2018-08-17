@@ -214,7 +214,7 @@ func sampleMongoDB() *api.MongoDB {
 		Spec: api.MongoDBSpec{
 			Version:    "3.4",
 			DoNotPause: true,
-			Storage: core.PersistentVolumeClaimSpec{
+			Storage: &core.PersistentVolumeClaimSpec{
 				StorageClassName: types.StringP("standard"),
 				Resources: core.ResourceRequirements{
 					Requests: core.ResourceList{
