@@ -25,7 +25,7 @@ func (e Elasticsearch) OffshootSelectors() map[string]string {
 }
 
 func (e Elasticsearch) OffshootLabels() map[string]string {
-	return filterTags(e.OffshootSelectors(), e.Labels)
+	return meta_util.FilterKeys(GenericKey, e.OffshootSelectors(), e.Labels)
 }
 
 var _ ResourceInfo = &Elasticsearch{}

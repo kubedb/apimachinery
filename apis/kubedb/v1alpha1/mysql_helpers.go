@@ -24,7 +24,7 @@ func (m MySQL) OffshootSelectors() map[string]string {
 }
 
 func (m MySQL) OffshootLabels() map[string]string {
-	return filterTags(m.OffshootSelectors(), m.Labels)
+	return meta_util.FilterKeys(GenericKey, m.OffshootSelectors(), m.Labels)
 }
 
 var _ ResourceInfo = &MySQL{}

@@ -24,7 +24,7 @@ func (r Redis) OffshootSelectors() map[string]string {
 }
 
 func (r Redis) OffshootLabels() map[string]string {
-	return filterTags(r.OffshootSelectors(), r.Labels)
+	return meta_util.FilterKeys(GenericKey, r.OffshootSelectors(), r.Labels)
 }
 
 func (r Redis) ResourceShortCode() string {
