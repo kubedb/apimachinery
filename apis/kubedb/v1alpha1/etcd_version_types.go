@@ -30,6 +30,8 @@ type EtcdVersionSpec struct {
 	DB EtcdVersionDatabase `json:"db"`
 	// Exporter Image
 	Exporter EtcdVersionExporter `json:"exporter"`
+	// Tools Image
+	Tools EtcdVersionTools `json:"tools"`
 }
 
 // EtcdVersionDatabase is the Etcd Database image
@@ -39,6 +41,11 @@ type EtcdVersionDatabase struct {
 
 // EtcdVersionExporter is the image for the Etcd exporter
 type EtcdVersionExporter struct {
+	Image string `json:"image"`
+}
+
+// EtcdVersionTools is the image for the Etcd exporter
+type EtcdVersionTools struct {
 	Image string `json:"image"`
 }
 

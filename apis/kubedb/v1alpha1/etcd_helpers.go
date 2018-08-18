@@ -43,7 +43,11 @@ func (e Etcd) ResourcePlural() string {
 	return ResourcePluralEtcd
 }
 
-func (e Etcd) ServiceName() string {
+func (e Etcd) ClientServiceName() string {
+	return e.OffshootName() + "-client"
+}
+
+func (e Etcd) PeerServiceName() string {
 	return e.OffshootName()
 }
 
