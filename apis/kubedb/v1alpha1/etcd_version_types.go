@@ -25,7 +25,7 @@ type EtcdVersion struct {
 // EtcdVersionSpec is the spec for postgres version
 type EtcdVersionSpec struct {
 	// Version
-	Version string `json:"version,omitempty"`
+	Version string `json:"version"`
 	// Database Image
 	DB EtcdVersionDatabase `json:"db"`
 	// Exporter Image

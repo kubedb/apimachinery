@@ -1162,7 +1162,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchVersionSpec(ref commo
 						},
 					},
 				},
-				Required: []string{"db", "exporter", "tools"},
+				Required: []string{"version", "db", "exporter", "tools"},
 			},
 		},
 		Dependencies: []string{
@@ -1555,7 +1555,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_EtcdVersionSpec(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"db", "exporter", "tools"},
+				Required: []string{"version", "db", "exporter", "tools"},
 			},
 		},
 		Dependencies: []string{
@@ -2024,7 +2024,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MemcachedVersionSpec(ref common.Re
 						},
 					},
 				},
-				Required: []string{"db", "exporter"},
+				Required: []string{"version", "db", "exporter"},
 			},
 		},
 		Dependencies: []string{
@@ -2487,7 +2487,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBVersionSpec(ref common.Refe
 						},
 					},
 				},
-				Required: []string{"db", "exporter", "tools"},
+				Required: []string{"version", "db", "exporter", "tools"},
 			},
 		},
 		Dependencies: []string{
@@ -2939,7 +2939,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQLVersionSpec(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"db", "exporter", "tools"},
+				Required: []string{"version", "db", "exporter", "tools"},
 			},
 		},
 		Dependencies: []string{
@@ -3593,7 +3593,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresVersionSpec(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"db", "exporter", "tools"},
+				Required: []string{"version", "db", "exporter", "tools"},
 			},
 		},
 		Dependencies: []string{
@@ -4082,7 +4082,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_RedisVersionSpec(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"db", "exporter"},
+				Required: []string{"version", "db", "exporter"},
 			},
 		},
 		Dependencies: []string{
