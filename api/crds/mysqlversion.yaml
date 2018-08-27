@@ -354,6 +354,7 @@ spec:
               description: Version
               type: string
           required:
+          - version
           - db
           - exporter
           - tools

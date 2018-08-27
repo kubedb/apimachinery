@@ -345,6 +345,7 @@ spec:
               description: Version
               type: string
           required:
+          - version
           - db
           - exporter
   version: v1alpha1
