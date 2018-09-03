@@ -12196,6 +12196,10 @@
     }
   },
   "definitions": {
+    "com.github.appscode.go.encoding.json.types.IntHash": {
+      "description": "IntHash represents as int64 Generation and string Hash. It is json serialized into \u003cint64\u003e$\u003chash_string\u003e.",
+      "type": "string"
+    },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec": {
       "properties": {
         "azure": {
@@ -12308,11 +12312,7 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "observedGenerationHash": {
-          "type": "string"
+          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
         },
         "pausingTime": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
@@ -12529,11 +12529,7 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "observedGenerationHash": {
-          "type": "string"
+          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
         },
         "phase": {
           "type": "string"
@@ -12871,11 +12867,7 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "observedGenerationHash": {
-          "type": "string"
+          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
         },
         "phase": {
           "type": "string"
@@ -13153,11 +13145,7 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "observedGenerationHash": {
-          "type": "string"
+          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
         },
         "phase": {
           "type": "string"
@@ -13434,11 +13422,7 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "observedGenerationHash": {
-          "type": "string"
+          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
         },
         "phase": {
           "type": "string"
@@ -13780,11 +13764,7 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "observedGenerationHash": {
-          "type": "string"
+          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
         },
         "phase": {
           "type": "string"
@@ -14080,11 +14060,7 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "observedGenerationHash": {
-          "type": "string"
+          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
         },
         "phase": {
           "type": "string"
@@ -14427,11 +14403,7 @@
         },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "observedGenerationHash": {
-          "type": "string"
+          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
         },
         "phase": {
           "type": "string"
