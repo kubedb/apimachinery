@@ -326,6 +326,9 @@ spec:
               type: string
         spec:
           properties:
+            TerminationPolicy:
+              description: TerminationPolicy controls the delete operation for database
+              type: string
             affinity:
               description: Affinity is a group of affinity scheduling rules.
               properties:

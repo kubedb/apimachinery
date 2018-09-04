@@ -12429,6 +12429,10 @@
         "version"
       ],
       "properties": {
+        "TerminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
+          "type": "string"
+        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
@@ -12660,6 +12664,10 @@
         "version"
       ],
       "properties": {
+        "TerminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
+          "type": "string"
+        },
         "backupSchedule": {
           "description": "BackupSchedule spec to specify how database backup will be taken",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
@@ -12799,6 +12807,10 @@
         "version"
       ],
       "properties": {
+        "TerminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
+          "type": "string"
+        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
@@ -13053,6 +13065,10 @@
         "version"
       ],
       "properties": {
+        "TerminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
+          "type": "string"
+        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
@@ -13334,6 +13350,10 @@
         "version"
       ],
       "properties": {
+        "TerminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
+          "type": "string"
+        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
@@ -13664,6 +13684,10 @@
         "version"
       ],
       "properties": {
+        "TerminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
+          "type": "string"
+        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
@@ -13984,6 +14008,10 @@
         "version"
       ],
       "properties": {
+        "TerminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
+          "type": "string"
+        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
