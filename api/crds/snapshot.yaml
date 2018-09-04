@@ -2572,7 +2572,7 @@ spec:
                                         description: Path to access on the HTTP server.
                                         type: string
                                       port:
-                                        anyOf:
+                                        oneOf:
                                         - type: string
                                         - type: integer
                                       scheme:
@@ -2590,7 +2590,7 @@ spec:
                                           to, defaults to the pod IP.'
                                         type: string
                                       port:
-                                        anyOf:
+                                        oneOf:
                                         - type: string
                                         - type: integer
                                     required:
@@ -2647,7 +2647,7 @@ spec:
                                         description: Path to access on the HTTP server.
                                         type: string
                                       port:
-                                        anyOf:
+                                        oneOf:
                                         - type: string
                                         - type: integer
                                       scheme:
@@ -2665,7 +2665,7 @@ spec:
                                           to, defaults to the pod IP.'
                                         type: string
                                       port:
-                                        anyOf:
+                                        oneOf:
                                         - type: string
                                         - type: integer
                                     required:
@@ -2728,7 +2728,7 @@ spec:
                                     description: Path to access on the HTTP server.
                                     type: string
                                   port:
-                                    anyOf:
+                                    oneOf:
                                     - type: string
                                     - type: integer
                                   scheme:
@@ -2764,7 +2764,7 @@ spec:
                                       defaults to the pod IP.'
                                     type: string
                                   port:
-                                    anyOf:
+                                    oneOf:
                                     - type: string
                                     - type: integer
                                 required:
@@ -2882,7 +2882,7 @@ spec:
                                     description: Path to access on the HTTP server.
                                     type: string
                                   port:
-                                    anyOf:
+                                    oneOf:
                                     - type: string
                                     - type: integer
                                   scheme:
@@ -2918,7 +2918,7 @@ spec:
                                       defaults to the pod IP.'
                                     type: string
                                   port:
-                                    anyOf:
+                                    oneOf:
                                     - type: string
                                     - type: integer
                                 required:
@@ -3348,9 +3348,10 @@ spec:
               format: date-time
               type: string
             observedGeneration:
-              description: IntHash represents as int64 Generation and string Hash.
-                It is json serialized into <int64>$<hash_string>.
-              type: string
+              oneOf:
+              - type: string
+              - format: int64
+                type: integer
             phase:
               type: string
             reason:
