@@ -135,14 +135,17 @@ func (a *DormantDatabaseValidator) setOwnerReferenceToObjects(dormantDatabase *a
 	if rerr != nil {
 		return rerr
 	}
-	if err := controller.SetOwnerReferenceToSnapshots(a.client, a.extClient, dormantDatabase.ObjectMeta, labelSelector, ref); err != nil {
+	if err := controller.SetOwnerReferenceToSnapshots(a.client, a.extClient, dormantDatabase.ObjectMeta,
+		labelSelector, ref); err != nil {
 		return nil
 	}
-	if err := controller.SetOwnerReferenceToPVCs(a.client, a.extClient, dormantDatabase.ObjectMeta, labelSelector, ref); err != nil {
+	if err := controller.SetOwnerReferenceToPVCs(a.client, a.extClient, dormantDatabase.ObjectMeta,
+		labelSelector, ref); err != nil {
 		return nil
 	}
 	secretVolList := controller.GetDatabaseSecretName(dormantDatabase, dbKind)
-	if err := controller.SetOwnerReferenceToSecrets(a.client, a.extClient, dormantDatabase.ObjectMeta, labelSelector, dbKind, ref, secretVolList...); err != nil {
+	if err := controller.SetOwnerReferenceToSecrets(a.client, a.extClient, dormantDatabase.ObjectMeta,
+		labelSelector, dbKind, ref, secretVolList...); err != nil {
 		return nil
 	}
 
@@ -166,14 +169,17 @@ func (a *DormantDatabaseValidator) removeOwnerReferenceFromObjects(dormantDataba
 	if rerr != nil {
 		return rerr
 	}
-	if err := controller.RemoveOwnerReferenceFromSnapshots(a.client, a.extClient, dormantDatabase.ObjectMeta, labelSelector, ref); err != nil {
+	if err := controller.RemoveOwnerReferenceFromSnapshots(a.client, a.extClient, dormantDatabase.ObjectMeta,
+		labelSelector, ref); err != nil {
 		return nil
 	}
-	if err := controller.RemoveOwnerReferenceFromPVCs(a.client, a.extClient, dormantDatabase.ObjectMeta, labelSelector, ref); err != nil {
+	if err := controller.RemoveOwnerReferenceFromPVCs(a.client, a.extClient, dormantDatabase.ObjectMeta,
+		labelSelector, ref); err != nil {
 		return nil
 	}
 	secretVolList := controller.GetDatabaseSecretName(dormantDatabase, dbKind)
-	if err := controller.RemoveOwnerReferenceFromSecrets(a.client, a.extClient, dormantDatabase.ObjectMeta, labelSelector, ref, secretVolList...); err != nil {
+	if err := controller.RemoveOwnerReferenceFromSecrets(a.client, a.extClient, dormantDatabase.ObjectMeta,
+		labelSelector, ref, secretVolList...); err != nil {
 		return nil
 	}
 
