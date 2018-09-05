@@ -326,9 +326,6 @@ spec:
               type: string
         spec:
           properties:
-            TerminationPolicy:
-              description: TerminationPolicy controls the delete operation for database
-              type: string
             affinity:
               description: Affinity is a group of affinity scheduling rules.
               properties:
@@ -4086,6 +4083,9 @@ spec:
                   type: string
             storageType:
               description: StorageType can be durable (default) or ephemeral
+              type: string
+            terminationPolicy:
+              description: TerminationPolicy controls the delete operation for database
               type: string
             tolerations:
               description: 'If specified, the pod''s tolerations. Deprecated: Use
