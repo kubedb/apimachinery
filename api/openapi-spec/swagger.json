@@ -12429,10 +12429,6 @@
         "version"
       ],
       "properties": {
-        "TerminationPolicy": {
-          "description": "TerminationPolicy controls the delete operation for database",
-          "type": "string"
-        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
@@ -12510,6 +12506,10 @@
         },
         "storageType": {
           "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
+        },
+        "terminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
           "type": "string"
         },
         "tolerations": {
@@ -12668,10 +12668,6 @@
         "version"
       ],
       "properties": {
-        "TerminationPolicy": {
-          "description": "TerminationPolicy controls the delete operation for database",
-          "type": "string"
-        },
         "backupSchedule": {
           "description": "BackupSchedule spec to specify how database backup will be taken",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
@@ -12711,6 +12707,10 @@
         },
         "storageType": {
           "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
+        },
+        "terminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
           "type": "string"
         },
         "tls": {
@@ -12811,10 +12811,6 @@
         "version"
       ],
       "properties": {
-        "TerminationPolicy": {
-          "description": "TerminationPolicy controls the delete operation for database",
-          "type": "string"
-        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
@@ -12865,6 +12861,10 @@
         "serviceTemplate": {
           "description": "ServiceTemplate is an optional configuration for service used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        },
+        "terminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
+          "type": "string"
         },
         "tolerations": {
           "description": "If specified, the pod's tolerations. Deprecated: Use podTemplate.spec.tolerations",
@@ -13073,10 +13073,6 @@
         "version"
       ],
       "properties": {
-        "TerminationPolicy": {
-          "description": "TerminationPolicy controls the delete operation for database",
-          "type": "string"
-        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
@@ -13150,6 +13146,10 @@
         },
         "storageType": {
           "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
+        },
+        "terminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
           "type": "string"
         },
         "tolerations": {
@@ -13362,10 +13362,6 @@
         "version"
       ],
       "properties": {
-        "TerminationPolicy": {
-          "description": "TerminationPolicy controls the delete operation for database",
-          "type": "string"
-        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
@@ -13435,6 +13431,10 @@
         },
         "storageType": {
           "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
+        },
+        "terminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
           "type": "string"
         },
         "tolerations": {
@@ -13700,10 +13700,6 @@
         "version"
       ],
       "properties": {
-        "TerminationPolicy": {
-          "description": "TerminationPolicy controls the delete operation for database",
-          "type": "string"
-        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
@@ -13785,6 +13781,10 @@
         },
         "streamingMode": {
           "description": "Streaming mode",
+          "type": "string"
+        },
+        "terminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
           "type": "string"
         },
         "tolerations": {
@@ -14028,10 +14028,6 @@
         "version"
       ],
       "properties": {
-        "TerminationPolicy": {
-          "description": "TerminationPolicy controls the delete operation for database",
-          "type": "string"
-        },
         "affinity": {
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
@@ -14089,6 +14085,10 @@
         },
         "storageType": {
           "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
+        },
+        "terminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
           "type": "string"
         },
         "tolerations": {
