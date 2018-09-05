@@ -333,6 +333,10 @@ spec:
                   type: string
               required:
               - image
+            deprecated:
+              description: Deprecated versions usable but regarded as obsolete and
+                best avoided, typically due to having been superseded.
+              type: boolean
             exporter:
               description: RedisVersionExporter is the image for the Redis exporter
               properties:

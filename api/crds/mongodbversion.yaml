@@ -336,6 +336,10 @@ spec:
                   type: string
               required:
               - image
+            deprecated:
+              description: Deprecated versions usable but regarded as obsolete and
+                best avoided, typically due to having been superseded.
+              type: boolean
             exporter:
               description: MongoDBVersionExporter is the image for the MongoDB exporter
               properties:

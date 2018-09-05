@@ -12634,6 +12634,10 @@
           "description": "Database Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchVersionDatabase"
         },
+        "deprecated": {
+          "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+          "type": "boolean"
+        },
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchVersionExporter"
@@ -12979,6 +12983,10 @@
           "description": "Database Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedVersionDatabase"
         },
+        "deprecated": {
+          "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+          "type": "boolean"
+        },
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedVersionExporter"
@@ -13262,6 +13270,10 @@
           "description": "Database Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBVersionDatabase"
         },
+        "deprecated": {
+          "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+          "type": "boolean"
+        },
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBVersionExporter"
@@ -13542,6 +13554,10 @@
         "db": {
           "description": "Database Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLVersionDatabase"
+        },
+        "deprecated": {
+          "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+          "type": "boolean"
         },
         "exporter": {
           "description": "Exporter Image",
@@ -13889,6 +13905,10 @@
           "description": "Database Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresVersionDatabase"
         },
+        "deprecated": {
+          "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+          "type": "boolean"
+        },
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresVersionExporter"
@@ -14187,6 +14207,10 @@
         "db": {
           "description": "Database Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisVersionDatabase"
+        },
+        "deprecated": {
+          "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+          "type": "boolean"
         },
         "exporter": {
           "description": "Exporter Image",
