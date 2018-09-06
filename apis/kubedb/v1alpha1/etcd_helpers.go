@@ -134,11 +134,8 @@ func (e *Etcd) Migrate() {
 }
 
 func (e *EtcdSpec) Migrate() {
-	if e == nil {
-		return
-	}
 }
 
 func (e *EtcdSpec) GetSecrets() []string {
-	return []string{}
+	return nil
 }

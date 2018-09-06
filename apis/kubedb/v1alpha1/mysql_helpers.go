@@ -163,10 +163,11 @@ func (m *MySQLSpec) Migrate() {
 }
 
 func (e *MySQLSpec) GetSecrets() []string {
-	var secrets []string
 	if e == nil {
-		return secrets
+		return nil
 	}
+
+	var secrets []string
 	if e.DatabaseSecret != nil {
 		secrets = append(secrets, e.DatabaseSecret.SecretName)
 	}

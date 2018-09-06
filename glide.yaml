@@ -48,7 +48,7 @@ import:
 - package: k8s.io/kube-openapi
   version: master
 - package: github.com/appscode/kutil
-  version: pvc-sec
+  version: release-8.0
 - package: kmodules.xyz/monitoring-agent-api
   repo: https://github.com/kmodules/monitoring-agent-api.git
   vcs: git

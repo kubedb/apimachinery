@@ -180,10 +180,11 @@ func (e *ElasticsearchSpec) Migrate() {
 }
 
 func (e *ElasticsearchSpec) GetSecrets() []string {
-	var secrets []string
 	if e == nil {
-		return secrets
+		return nil
 	}
+
+	var secrets []string
 	if e.DatabaseSecret != nil {
 		secrets = append(secrets, e.DatabaseSecret.SecretName)
 	}

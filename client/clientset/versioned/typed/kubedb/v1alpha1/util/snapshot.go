@@ -4,15 +4,12 @@ import (
 	"fmt"
 
 	"github.com/appscode/kutil"
-	core_util "github.com/appscode/kutil/core/v1"
 	"github.com/golang/glog"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	cs "github.com/kubedb/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1"
 	"github.com/pkg/errors"
-	coreV1 "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/jsonmergepatch"
 	"k8s.io/apimachinery/pkg/util/wait"
@@ -149,54 +146,4 @@ func UpdateSnapshotStatus(
 
 	result, _, err = PatchSnapshotObject(c, in, apply(in))
 	return
-}
-
-func RemoveOwnerReferenceFromSnapshots(
-	c cs.KubedbV1alpha1Interface,
-	meta metav1.ObjectMeta,
-	labelSelector labels.Selector,
-	ref *coreV1.ObjectReference,
-) error {
-	snapshotList, err := c.Snapshots(meta.Namespace).List(
-		metav1.ListOptions{
-			LabelSelector: labelSelector.String(),
-		},
-	)
-	if err != nil {
-		return err
-	}
-	for _, snapshot := range snapshotList.Items {
-		if _, _, err := PatchSnapshot(c, &snapshot, func(in *api.Snapshot) *api.Snapshot {
-			in.ObjectMeta = core_util.RemoveOwnerReference(in.ObjectMeta, ref)
-			return in
-		}); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func SetOwnerReferenceToSnapshots(
-	c cs.KubedbV1alpha1Interface,
-	meta metav1.ObjectMeta,
-	labelSelector labels.Selector,
-	ref *coreV1.ObjectReference,
-) error {
-	snapshotList, err := c.Snapshots(meta.Namespace).List(
-		metav1.ListOptions{
-			LabelSelector: labelSelector.String(),
-		},
-	)
-	if err != nil {
-		return err
-	}
-	for _, snapshot := range snapshotList.Items {
-		if _, _, err := PatchSnapshot(c, &snapshot, func(in *api.Snapshot) *api.Snapshot {
-			in.ObjectMeta = core_util.EnsureOwnerReference(in.ObjectMeta, ref)
-			return in
-		}); err != nil {
-			return err
-		}
-	}
-	return nil
 }

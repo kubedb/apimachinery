@@ -160,5 +160,5 @@ func (r *RedisSpec) Migrate() {
 }
 
 func (e *RedisSpec) GetSecrets() []string {
-	return []string{}
+	return nil
 }

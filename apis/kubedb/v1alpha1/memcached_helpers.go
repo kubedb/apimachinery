@@ -160,5 +160,5 @@ func (m *MemcachedSpec) Migrate() {
 }
 
 func (e *MemcachedSpec) GetSecrets() []string {
-	return []string{}
+	return nil
 }

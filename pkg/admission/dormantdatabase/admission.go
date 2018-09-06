@@ -4,17 +4,18 @@ import (
 	"sync"
 
 	hookapi "github.com/appscode/kubernetes-webhook-util/admission/v1beta1"
-	core_util "github.com/appscode/kutil/core/v1"
+	dynamic_util "github.com/appscode/kutil/dynamic"
 	meta_util "github.com/appscode/kutil/meta"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	cs "github.com/kubedb/apimachinery/client/clientset/versioned"
-	"github.com/kubedb/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
 	plugin "github.com/kubedb/apimachinery/pkg/admission"
 	admission "k8s.io/api/admission/v1beta1"
+	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
@@ -23,6 +24,7 @@ import (
 
 type DormantDatabaseValidator struct {
 	client      kubernetes.Interface
+	dc          dynamic.Interface
 	extClient   cs.Interface
 	lock        sync.RWMutex
 	initialized bool
@@ -47,6 +49,9 @@ func (a *DormantDatabaseValidator) Initialize(config *rest.Config, stopCh <-chan
 
 	var err error
 	if a.client, err = kubernetes.NewForConfig(config); err != nil {
+		return err
+	}
+	if a.dc, err = dynamic.NewForConfig(config); err != nil {
 		return err
 	}
 	if a.extClient, err = cs.NewForConfig(config); err != nil {
@@ -129,27 +134,37 @@ func (a *DormantDatabaseValidator) setOwnerReferenceToObjects(dormantDatabase *a
 		api.LabelDatabaseName: dormantDatabase.Name,
 		api.LabelDatabaseKind: dbKind,
 	}
-	labelSelector := labels.SelectorFromSet(labelMap)
+	selector := labels.SelectorFromSet(labelMap)
 
 	// Get object reference of dormant database
 	ref, rerr := reference.GetReference(clientsetscheme.Scheme, dormantDatabase)
 	if rerr != nil {
 		return rerr
 	}
-	if err := util.SetOwnerReferenceToSnapshots(a.extClient.KubedbV1alpha1(), dormantDatabase.ObjectMeta,
-		labelSelector, ref); err != nil {
+	if err := dynamic_util.EnsureOwnerReferenceForSelector(
+		a.dc,
+		api.SchemeGroupVersion.WithResource(api.ResourcePluralSnapshot),
+		dormantDatabase.Namespace,
+		selector,
+		ref); err != nil {
 		return nil
 	}
-	if err := core_util.SetOwnerReferenceToPVCs(a.client, dormantDatabase.ObjectMeta,
-		labelSelector, ref); err != nil {
+	if err := dynamic_util.EnsureOwnerReferenceForSelector(
+		a.dc,
+		core.SchemeGroupVersion.WithResource("persistentvolumeclaims"),
+		"", // non-namespaced
+		selector,
+		ref); err != nil {
 		return nil
 	}
-
-	// secretList := dormantDatabase.GetDatabaseSecrets
-	//for _, sec := range secretList {
-	// Add ownership to secrets
-	//}
-
+	if err := dynamic_util.EnsureOwnerReferenceForItems(
+		a.dc,
+		core.SchemeGroupVersion.WithResource("secrets"),
+		dormantDatabase.Namespace,
+		dormantDatabase.GetDatabaseSecrets(),
+		ref); err != nil {
+		return nil
+	}
 	return nil
 }
 
@@ -163,24 +178,36 @@ func (a *DormantDatabaseValidator) removeOwnerReferenceFromObjects(dormantDataba
 		api.LabelDatabaseName: dormantDatabase.Name,
 		api.LabelDatabaseKind: dbKind,
 	}
-	labelSelector := labels.SelectorFromSet(labelMap)
+	selector := labels.SelectorFromSet(labelMap)
 
 	// Get object reference of dormant database
 	ref, rerr := reference.GetReference(clientsetscheme.Scheme, dormantDatabase)
 	if rerr != nil {
 		return rerr
 	}
-	if err := util.RemoveOwnerReferenceFromSnapshots(a.extClient.KubedbV1alpha1(), dormantDatabase.ObjectMeta,
-		labelSelector, ref); err != nil {
+	if err := dynamic_util.RemoveOwnerReferenceForSelector(
+		a.dc,
+		api.SchemeGroupVersion.WithResource(api.ResourcePluralSnapshot),
+		dormantDatabase.Namespace,
+		selector,
+		ref); err != nil {
 		return nil
 	}
-	if err := core_util.RemoveOwnerReferenceFromPVCs(a.client, dormantDatabase.ObjectMeta,
-		labelSelector, ref); err != nil {
+	if err := dynamic_util.RemoveOwnerReferenceForSelector(
+		a.dc,
+		core.SchemeGroupVersion.WithResource("persistentvolumeclaims"),
+		"", // non-namespaced
+		selector,
+		ref); err != nil {
 		return nil
 	}
-
-	//secretVolList := dormantDatabase.GetDatabaseSecrets()
-	// Remove ownership from secrets
-
+	if err := dynamic_util.RemoveOwnerReferenceForItems(
+		a.dc,
+		core.SchemeGroupVersion.WithResource("secrets"),
+		dormantDatabase.Namespace,
+		dormantDatabase.GetDatabaseSecrets(),
+		ref); err != nil {
+		return nil
+	}
 	return nil
 }
