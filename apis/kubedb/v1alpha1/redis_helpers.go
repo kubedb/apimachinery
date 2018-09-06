@@ -158,3 +158,7 @@ func (r *RedisSpec) Migrate() {
 		r.ImagePullSecrets = nil
 	}
 }
+
+func (e *RedisSpec) GetSecrets() []string {
+	return []string{}
+}

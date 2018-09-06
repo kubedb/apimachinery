@@ -179,6 +179,20 @@ func (e *ElasticsearchSpec) Migrate() {
 	}
 }
 
+func (e *ElasticsearchSpec) GetSecrets() []string {
+	var secrets []string
+	if e == nil {
+		return secrets
+	}
+	if e.DatabaseSecret != nil {
+		secrets = append(secrets, e.DatabaseSecret.SecretName)
+	}
+	if e.CertificateSecret != nil {
+		secrets = append(secrets, e.CertificateSecret.SecretName)
+	}
+	return secrets
+}
+
 const (
 	ESSearchGuardDisabled = ElasticsearchKey + "/searchguard-disabled"
 )

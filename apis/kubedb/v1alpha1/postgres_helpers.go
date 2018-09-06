@@ -165,3 +165,14 @@ func (p *PostgresSpec) Migrate() {
 		p.ImagePullSecrets = nil
 	}
 }
+
+func (e *PostgresSpec) GetSecrets() []string {
+	var secrets []string
+	if e == nil {
+		return secrets
+	}
+	if e.DatabaseSecret != nil {
+		secrets = append(secrets, e.DatabaseSecret.SecretName)
+	}
+	return secrets
+}

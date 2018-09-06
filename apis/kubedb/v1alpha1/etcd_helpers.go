@@ -138,3 +138,7 @@ func (e *EtcdSpec) Migrate() {
 		return
 	}
 }
+
+func (e *EtcdSpec) GetSecrets() []string {
+	return []string{}
+}

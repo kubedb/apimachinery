@@ -4,11 +4,12 @@ import (
 	"sync"
 
 	hookapi "github.com/appscode/kubernetes-webhook-util/admission/v1beta1"
+	core_util "github.com/appscode/kutil/core/v1"
 	meta_util "github.com/appscode/kutil/meta"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	cs "github.com/kubedb/apimachinery/client/clientset/versioned"
+	"github.com/kubedb/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
 	plugin "github.com/kubedb/apimachinery/pkg/admission"
-	"github.com/kubedb/apimachinery/pkg/controller"
 	admission "k8s.io/api/admission/v1beta1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -135,19 +136,19 @@ func (a *DormantDatabaseValidator) setOwnerReferenceToObjects(dormantDatabase *a
 	if rerr != nil {
 		return rerr
 	}
-	if err := controller.SetOwnerReferenceToSnapshots(a.client, a.extClient, dormantDatabase.ObjectMeta,
+	if err := util.SetOwnerReferenceToSnapshots(a.extClient.KubedbV1alpha1(), dormantDatabase.ObjectMeta,
 		labelSelector, ref); err != nil {
 		return nil
 	}
-	if err := controller.SetOwnerReferenceToPVCs(a.client, a.extClient, dormantDatabase.ObjectMeta,
+	if err := core_util.SetOwnerReferenceToPVCs(a.client, dormantDatabase.ObjectMeta,
 		labelSelector, ref); err != nil {
 		return nil
 	}
-	secretVolList := controller.GetDatabaseSecretName(dormantDatabase, dbKind)
-	if err := controller.SetOwnerReferenceToSecrets(a.client, a.extClient, dormantDatabase.ObjectMeta,
-		labelSelector, dbKind, ref, secretVolList...); err != nil {
-		return nil
-	}
+
+	// secretList := dormantDatabase.GetDatabaseSecrets
+	//for _, sec := range secretList {
+	// Add ownership to secrets
+	//}
 
 	return nil
 }
@@ -169,19 +170,17 @@ func (a *DormantDatabaseValidator) removeOwnerReferenceFromObjects(dormantDataba
 	if rerr != nil {
 		return rerr
 	}
-	if err := controller.RemoveOwnerReferenceFromSnapshots(a.client, a.extClient, dormantDatabase.ObjectMeta,
+	if err := util.RemoveOwnerReferenceFromSnapshots(a.extClient.KubedbV1alpha1(), dormantDatabase.ObjectMeta,
 		labelSelector, ref); err != nil {
 		return nil
 	}
-	if err := controller.RemoveOwnerReferenceFromPVCs(a.client, a.extClient, dormantDatabase.ObjectMeta,
+	if err := core_util.RemoveOwnerReferenceFromPVCs(a.client, dormantDatabase.ObjectMeta,
 		labelSelector, ref); err != nil {
 		return nil
 	}
-	secretVolList := controller.GetDatabaseSecretName(dormantDatabase, dbKind)
-	if err := controller.RemoveOwnerReferenceFromSecrets(a.client, a.extClient, dormantDatabase.ObjectMeta,
-		labelSelector, ref, secretVolList...); err != nil {
-		return nil
-	}
+
+	//secretVolList := dormantDatabase.GetDatabaseSecrets()
+	// Remove ownership from secrets
 
 	return nil
 }
