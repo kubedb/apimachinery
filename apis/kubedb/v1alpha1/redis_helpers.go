@@ -123,14 +123,14 @@ func (r Redis) CustomResourceDefinition() *apiextensions.CustomResourceDefinitio
 	}, setNameSchema)
 }
 
-func (r *Redis) SetDefault() {
+func (r *Redis) SetDefaults() {
 	if r == nil {
 		return
 	}
-	r.Spec.SetDefault()
+	r.Spec.SetDefaults()
 }
 
-func (r *RedisSpec) SetDefault() {
+func (r *RedisSpec) SetDefaults() {
 	if r == nil {
 		return
 	}
