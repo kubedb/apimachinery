@@ -51,7 +51,7 @@ func (e *Elasticsearch) MasterServiceName() string {
 	return fmt.Sprintf("%v-master", e.ServiceName())
 }
 
-func (e *Elasticsearch) GetScheme() string {
+func (e *Elasticsearch) GetConnectionScheme() string {
 	scheme := "http"
 	if e.Spec.EnableSSL {
 		scheme = "https"
@@ -59,8 +59,8 @@ func (e *Elasticsearch) GetScheme() string {
 	return scheme
 }
 
-func (e *Elasticsearch) GetURL() string {
-	return fmt.Sprintf("%v://%s.%s:%d", e.GetScheme(), e.OffshootName(), e.Namespace, ElasticsearchRestPort)
+func (e *Elasticsearch) GetConnectionURL() string {
+	return fmt.Sprintf("%v://%s.%s:%d", e.GetConnectionScheme(), e.OffshootName(), e.Namespace, ElasticsearchRestPort)
 }
 
 type elasticsearchStatsService struct {
