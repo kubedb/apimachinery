@@ -1,5 +1,5 @@
 hash: 12d66bd4d9de3fd8438395e9b1eca3260e5edafc09282c422b065ee5ec093e1a
-updated: 2018-09-03T23:19:03.487855639-07:00
+updated: 2018-09-06T11:16:06.462239411-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -33,10 +33,11 @@ imports:
   subpackages:
   - admission/v1beta1
 - name: github.com/appscode/kutil
-  version: 5cf2a974fc598dbf5ed833f4bf9d766b9dc4fa02
+  version: 49a173de8c2edccbdea1185ee2621486003cd458
   subpackages:
   - apiextensions/v1beta1
   - core/v1
+  - dynamic
   - meta
   - openapi
   - tools/queue
@@ -250,7 +251,7 @@ imports:
 - name: github.com/google/btree
   version: 7d79101e329e5a3adf994758c578dab82b90c017
 - name: github.com/google/go-cmp
-  version: 2006917edc5a27cd174dbc4baba31a137d6cb9ff
+  version: 3af367b6b30c263d47e8895973edcca9a49cf029
   subpackages:
   - cmp
   - cmp/internal/diff
@@ -425,7 +426,7 @@ imports:
   subpackages:
   - rate
 - name: google.golang.org/api
-  version: 0ad5a633fea1d4b64bf5e6a01e30d1fc466038e5
+  version: 49a9310a91459e9e5d4187bfb5a591434de572f7
   subpackages:
   - gensupport
   - googleapi
@@ -672,6 +673,7 @@ imports:
   subpackages:
   - discovery
   - discovery/fake
+  - dynamic
   - informers
   - informers/admissionregistration
   - informers/admissionregistration/v1alpha1
@@ -848,7 +850,7 @@ imports:
   - api/v1
   - osm
 - name: kmodules.xyz/offshoot-api
-  version: 5ff9de954aeb2148edc7a831671f3f875aa56f30
+  version: 53af0446a528dbf697541ec39bd6408871743d06
   repo: https://github.com/kmodules/offshoot-api.git
   vcs: git
   subpackages:

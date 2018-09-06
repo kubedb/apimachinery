@@ -159,3 +159,18 @@ func (m *MongoDBSpec) Migrate() {
 		m.ImagePullSecrets = nil
 	}
 }
+
+func (e *MongoDBSpec) GetSecrets() []string {
+	if e == nil {
+		return nil
+	}
+
+	var secrets []string
+	if e.DatabaseSecret != nil {
+		secrets = append(secrets, e.DatabaseSecret.SecretName)
+	}
+	if e.ReplicaSet != nil {
+		secrets = append(secrets, e.ReplicaSet.KeyFile.SecretName)
+	}
+	return secrets
+}

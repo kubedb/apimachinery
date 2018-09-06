@@ -158,3 +158,7 @@ func (m *MemcachedSpec) Migrate() {
 		m.ImagePullSecrets = nil
 	}
 }
+
+func (e *MemcachedSpec) GetSecrets() []string {
+	return nil
+}

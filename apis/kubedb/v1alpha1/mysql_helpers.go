@@ -161,3 +161,15 @@ func (m *MySQLSpec) Migrate() {
 		m.ImagePullSecrets = nil
 	}
 }
+
+func (e *MySQLSpec) GetSecrets() []string {
+	if e == nil {
+		return nil
+	}
+
+	var secrets []string
+	if e.DatabaseSecret != nil {
+		secrets = append(secrets, e.DatabaseSecret.SecretName)
+	}
+	return secrets
+}

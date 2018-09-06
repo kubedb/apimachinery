@@ -103,3 +103,19 @@ func (d *DormantDatabase) Migrate() {
 	d.Spec.Origin.Spec.Memcached.Migrate()
 	d.Spec.Origin.Spec.Etcd.Migrate()
 }
+
+func (d *DormantDatabase) GetDatabaseSecrets() []string {
+	if d == nil {
+		return nil
+	}
+
+	var secrets []string
+	secrets = append(secrets, d.Spec.Origin.Spec.Elasticsearch.GetSecrets()...)
+	secrets = append(secrets, d.Spec.Origin.Spec.Postgres.GetSecrets()...)
+	secrets = append(secrets, d.Spec.Origin.Spec.MySQL.GetSecrets()...)
+	secrets = append(secrets, d.Spec.Origin.Spec.MongoDB.GetSecrets()...)
+	secrets = append(secrets, d.Spec.Origin.Spec.Redis.GetSecrets()...)
+	secrets = append(secrets, d.Spec.Origin.Spec.Memcached.GetSecrets()...)
+	secrets = append(secrets, d.Spec.Origin.Spec.Etcd.GetSecrets()...)
+	return secrets
+}
