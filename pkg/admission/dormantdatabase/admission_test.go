@@ -6,13 +6,14 @@ import (
 
 	"github.com/appscode/kutil/meta"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
-	ext_fake "github.com/kubedb/apimachinery/client/clientset/versioned/fake"
+	fake_ext "github.com/kubedb/apimachinery/client/clientset/versioned/fake"
 	"github.com/kubedb/apimachinery/client/clientset/versioned/scheme"
 	admission "k8s.io/api/admission/v1beta1"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	fake_dynamic "k8s.io/client-go/dynamic/fake"
 	"k8s.io/client-go/kubernetes/fake"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 )
@@ -33,7 +34,8 @@ func TestDormantDatabaseValidator_Admit(t *testing.T) {
 			validator := DormantDatabaseValidator{}
 			validator.initialized = true
 			validator.client = fake.NewSimpleClientset()
-			validator.extClient = ext_fake.NewSimpleClientset()
+			validator.dc = fake_dynamic.NewSimpleDynamicClient(clientsetscheme.Scheme)
+			validator.extClient = fake_ext.NewSimpleClientset()
 
 			objJS, err := meta.MarshalToJson(&c.object, api.SchemeGroupVersion)
 			if err != nil {
