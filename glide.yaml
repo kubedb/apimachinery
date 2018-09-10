@@ -10,8 +10,8 @@ import:
 - package: github.com/golang/glog
 - package: github.com/graymeta/stow
   repo: https://github.com/appscode/stow.git
-  version: master
   vcs: git
+  version: master
 - package: github.com/Azure/azure-sdk-for-go
   version: v14.6.0
 - package: github.com/Azure/go-autorest
@@ -34,17 +34,19 @@ import:
   vcs: git
   version: v2
 - package: k8s.io/api
-  version: kubernetes-1.11.0
+  version: kubernetes-1.11.3
 - package: k8s.io/apiserver
-  version: kubernetes-1.11.0
+  repo: https://github.com/pharmer/apiserver.git
+  vcs: git
+  version: release-1.11.3
 - package: k8s.io/apiextensions-apiserver
-  version: kubernetes-1.11.0
+  version: kubernetes-1.11.3
 - package: k8s.io/apimachinery
   repo: https://github.com/pharmer/apimachinery.git
   vcs: git
-  version: release-1.11
+  version: release-1.11.3
 - package: k8s.io/client-go
-  version: v8.0.0
+  version: kubernetes-1.11.3
 - package: k8s.io/kube-openapi
   version: master
 - package: github.com/appscode/kutil
@@ -72,6 +74,6 @@ import:
 - package: github.com/appscode/ocutil
   version: release-3.11
 - package: github.com/cpuguy83/go-md2man
-  version: v1.0.4
+  version: v1.0.8
 - package: github.com/mailru/easyjson
   version: 2f5df55504ebc322e4d52d34df6a1f5b503bf26d
