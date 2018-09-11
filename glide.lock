@@ -1,5 +1,5 @@
 hash: 572ec22a9d0440d7117b14aad56dca1df7163475e0910baaa4f666ea02a18bc3
-updated: 2018-09-11T02:36:16.094699682-07:00
+updated: 2018-09-11T09:12:00.284762099-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -386,8 +386,6 @@ imports:
   subpackages:
   - context
   - context/ctxhttp
-  - html
-  - html/atom
   - http2
   - http2/hpack
   - idna
