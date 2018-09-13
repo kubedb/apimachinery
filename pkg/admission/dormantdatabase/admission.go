@@ -146,7 +146,7 @@ func (a *DormantDatabaseValidator) setOwnerReferenceToObjects(dormantDatabase *a
 		api.SchemeGroupVersion.WithResource(api.ResourcePluralSnapshot),
 		dormantDatabase.Namespace,
 		selector,
-		ref); err != nil {
+		ref); err != nil && !kerr.IsNotFound(err) {
 		return err
 	}
 	if err := dynamic_util.EnsureOwnerReferenceForSelector(
@@ -183,7 +183,7 @@ func (a *DormantDatabaseValidator) removeOwnerReferenceFromObjects(dormantDataba
 		api.SchemeGroupVersion.WithResource(api.ResourcePluralSnapshot),
 		dormantDatabase.Namespace,
 		selector,
-		ref); err != nil {
+		ref); err != nil && !kerr.IsNotFound(err) {
 		return err
 	}
 	if err := dynamic_util.RemoveOwnerReferenceForSelector(
