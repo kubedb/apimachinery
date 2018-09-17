@@ -45,6 +45,10 @@ func (r Redis) ServiceName() string {
 	return r.OffshootName()
 }
 
+func (r Redis) ConfigMapName() string {
+	return r.OffshootName()
+}
+
 type redisStatsService struct {
 	*Redis
 }

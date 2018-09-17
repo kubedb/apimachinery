@@ -35,6 +35,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 	return map[string]common.OpenAPIDefinition{
 		"github.com/appscode/go/encoding/json/types.IntHash":                               schema_go_encoding_json_types_IntHash(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec":           schema_apimachinery_apis_kubedb_v1alpha1_BackupScheduleSpec(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ClusterSpec":                  schema_apimachinery_apis_kubedb_v1alpha1_ClusterSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabase":              schema_apimachinery_apis_kubedb_v1alpha1_DormantDatabase(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseList":          schema_apimachinery_apis_kubedb_v1alpha1_DormantDatabaseList(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabaseSpec":          schema_apimachinery_apis_kubedb_v1alpha1_DormantDatabaseSpec(ref),
@@ -496,6 +497,33 @@ func schema_apimachinery_apis_kubedb_v1alpha1_BackupScheduleSpec(ref common.Refe
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.ResourceRequirements", "kmodules.xyz/objectstore-api/api/v1.AzureSpec", "kmodules.xyz/objectstore-api/api/v1.B2Spec", "kmodules.xyz/objectstore-api/api/v1.GCSSpec", "kmodules.xyz/objectstore-api/api/v1.LocalSpec", "kmodules.xyz/objectstore-api/api/v1.S3Spec", "kmodules.xyz/objectstore-api/api/v1.SwiftSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_ClusterSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Properties: map[string]spec.Schema{
+					"master": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of master nodes, 'master >= 3' must be true",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"replicationFactor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of replica(s) or slave(s) per master node. If not specified, 0 will be set as default. But it would be better if this value is greater than 0.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"master"},
+			},
+		},
+		Dependencies: []string{},
 	}
 }
 
@@ -3950,6 +3978,19 @@ func schema_apimachinery_apis_kubedb_v1alpha1_RedisSpec(ref common.ReferenceCall
 							Format:      "int32",
 						},
 					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Default is \"Standalone\". If set to \"Cluster\", ClusterSpec is required and redis servers will start in cluster mode",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"cluster": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Redis cluster configuration for running redis servers in cluster mode. Required if Mode is set to \"Cluster\"",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ClusterSpec"),
+						},
+					},
 					"storageType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "StorageType can be durable (default) or ephemeral",
@@ -4071,7 +4112,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_RedisSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"},
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ClusterSpec", "k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"},
 	}
 }
 

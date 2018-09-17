@@ -12236,6 +12236,23 @@
         }
       }
     },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ClusterSpec": {
+      "required": [
+        "master"
+      ],
+      "properties": {
+        "master": {
+          "description": "Number of master nodes, 'master \u003e= 3' must be true",
+          "type": "integer",
+          "format": "int32"
+        },
+        "replicationFactor": {
+          "description": "Number of replica(s) or slave(s) per master node. If not specified, 0 will be set as default. But it would be better if this value is greater than 0.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase": {
       "properties": {
         "apiVersion": {
@@ -14056,6 +14073,10 @@
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
         },
+        "cluster": {
+          "description": "Redis cluster configuration for running redis servers in cluster mode. Required if Mode is set to \"Cluster\"",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ClusterSpec"
+        },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e redis.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
@@ -14070,6 +14091,10 @@
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
           }
+        },
+        "mode": {
+          "description": "Default is \"Standalone\". If set to \"Cluster\", ClusterSpec is required and redis servers will start in cluster mode",
+          "type": "string"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
