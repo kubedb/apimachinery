@@ -9098,6 +9098,11 @@ spec:
                       - volumePath
                 snapshotSource:
                   properties:
+                    args:
+                      description: Arguments to the restore job
+                      items:
+                        type: string
+                      type: array
                     name:
                       type: string
                     namespace:

@@ -14428,6 +14428,13 @@
         "name"
       ],
       "properties": {
+        "args": {
+          "description": "Arguments to the restore job",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "name": {
           "type": "string"
         },
