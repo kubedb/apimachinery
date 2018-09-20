@@ -53,19 +53,14 @@ func (p MySQLVersion) CustomResourceDefinition() *apiextensions.CustomResourceDe
 				JSONPath: ".spec.version",
 			},
 			{
-				Name:     "DbImage",
+				Name:     "Database",
 				Type:     "string",
 				JSONPath: ".spec.db.image",
 			},
 			{
-				Name:     "ExporterImage",
-				Type:     "string",
-				JSONPath: ".spec.exporter.image",
-			},
-			{
-				Name:     "ToolsImage",
-				Type:     "string",
-				JSONPath: ".spec.tools.image",
+				Name:     "Deprecated",
+				Type:     "boolean",
+				JSONPath: ".spec.deprecated",
 			},
 			{
 				Name:     "Age",
