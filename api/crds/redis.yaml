@@ -4108,6 +4108,10 @@ spec:
                               otherwise just a regular string.
                             type: string
                       type: array
+            replicas:
+              description: Number of instances to deploy for a MySQL database.
+              format: int32
+              type: integer
             resources:
               description: ResourceRequirements describes the compute resource requirements.
               properties:

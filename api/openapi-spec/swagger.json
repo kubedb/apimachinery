@@ -14108,6 +14108,11 @@
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
+        "replicas": {
+          "description": "Number of instances to deploy for a MySQL database.",
+          "type": "integer",
+          "format": "int32"
+        },
         "resources": {
           "description": "Compute Resources required by the sidecar container. Deprecated: Use podTemplate.spec.resources",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
