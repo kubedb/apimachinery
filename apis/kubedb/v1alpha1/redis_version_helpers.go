@@ -53,7 +53,7 @@ func (p RedisVersion) CustomResourceDefinition() *apiextensions.CustomResourceDe
 				JSONPath: ".spec.version",
 			},
 			{
-				Name:     "Database",
+				Name:     "DB_IMAGE",
 				Type:     "string",
 				JSONPath: ".spec.db.image",
 			},

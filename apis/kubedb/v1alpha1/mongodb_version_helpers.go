@@ -53,7 +53,7 @@ func (p MongoDBVersion) CustomResourceDefinition() *apiextensions.CustomResource
 				JSONPath: ".spec.version",
 			},
 			{
-				Name:     "Database",
+				Name:     "DB_IMAGE",
 				Type:     "string",
 				JSONPath: ".spec.db.image",
 			},
