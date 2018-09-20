@@ -53,7 +53,7 @@ func (p MemcachedVersion) CustomResourceDefinition() *apiextensions.CustomResour
 				JSONPath: ".spec.version",
 			},
 			{
-				Name:     "DbImage",
+				Name:     "Database",
 				Type:     "string",
 				JSONPath: ".spec.db.image",
 			},

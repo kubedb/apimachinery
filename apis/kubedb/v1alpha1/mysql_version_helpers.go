@@ -53,7 +53,7 @@ func (p MySQLVersion) CustomResourceDefinition() *apiextensions.CustomResourceDe
 				JSONPath: ".spec.version",
 			},
 			{
-				Name:     "DbImage",
+				Name:     "Database",
 				Type:     "string",
 				JSONPath: ".spec.db.image",
 			},

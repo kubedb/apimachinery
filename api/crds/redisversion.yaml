@@ -12,7 +12,7 @@ spec:
     name: Version
     type: string
   - JSONPath: .spec.db.image
-    name: DbImage
+    name: Database
     type: string
   - JSONPath: .spec.deprecated
     name: Deprecated

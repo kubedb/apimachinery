@@ -53,7 +53,7 @@ func (p PostgresVersion) CustomResourceDefinition() *apiextensions.CustomResourc
 				JSONPath: ".spec.version",
 			},
 			{
-				Name:     "DbImage",
+				Name:     "Database",
 				Type:     "string",
 				JSONPath: ".spec.db.image",
 			},
