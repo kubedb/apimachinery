@@ -19,8 +19,8 @@ const (
 type RedisMode string
 
 const (
-	StandAloneModeRedis RedisMode = "Standalone"
-	ClusterModeRedis    RedisMode = "Cluster"
+	RedisModeStandalone RedisMode = "Standalone"
+	RedisModeCluster    RedisMode = "Cluster"
 )
 
 // +genclient
@@ -39,15 +39,12 @@ type RedisSpec struct {
 	// Version of Redis to be deployed.
 	Version types.StrYo `json:"version"`
 
-	// Number of instances to deploy for a Redis database.
-	Replicas *int32 `json:"replicas,omitempty"`
-
 	// Default is "Standalone". If set to "Cluster", ClusterSpec is required and redis servers will
 	// start in cluster mode
 	Mode RedisMode `json:"mode,omitempty"`
 
 	// Redis cluster configuration for running redis servers in cluster mode. Required if Mode is set to "Cluster"
-	Cluster ClusterSpec `json:"cluster,omitempty"`
+	Cluster *RedisClusterSpec `json:"cluster,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -119,13 +116,12 @@ type RedisSpec struct {
 	ImagePullSecrets []core.LocalObjectReference `json:"imagePullSecrets,omitempty"`
 }
 
-type ClusterSpec struct {
-	// Number of master nodes, 'master >= 3' must be true
-	Master *int32 `json:"master"`
+type RedisClusterSpec struct {
+	// Number of master nodes. It must be >= 3. If not specified, defaults to 3.
+	Master *int32 `json:"master,omitempty"`
 
-	// Number of replica(s) or slave(s) per master node. If not specified, 0 will be set as default. But it
-	// would be better if this value is greater than 0.
-	ReplicationFactor *int32 `json:"replicationFactor,omitempty"`
+	// Number of replica(s) per master node. If not specified, defaults to 1.
+	Replicas *int32 `json:"replicas,omitempty"`
 }
 
 type RedisStatus struct {
