@@ -13,7 +13,7 @@ spec:
     type: string
   - JSONPath: .spec.deprecated
     name: Deprecated
-    type: bool
+    type: boolean
   - JSONPath: .spec.db.image
     name: DbImage
     type: string
