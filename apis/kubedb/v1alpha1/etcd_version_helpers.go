@@ -53,7 +53,7 @@ func (p EtcdVersion) CustomResourceDefinition() *apiextensions.CustomResourceDef
 				JSONPath: ".spec.version",
 			},
 			{
-				Name:     "Database",
+				Name:     "DB_IMAGE",
 				Type:     "string",
 				JSONPath: ".spec.db.image",
 			},
