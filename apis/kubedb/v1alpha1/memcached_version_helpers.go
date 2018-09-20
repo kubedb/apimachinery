@@ -53,19 +53,14 @@ func (p MemcachedVersion) CustomResourceDefinition() *apiextensions.CustomResour
 				JSONPath: ".spec.version",
 			},
 			{
-				Name:     "Deprecated",
-				Type:     "boolean",
-				JSONPath: ".spec.deprecated",
-			},
-			{
 				Name:     "DbImage",
 				Type:     "string",
 				JSONPath: ".spec.db.image",
 			},
 			{
-				Name:     "ExporterImage",
-				Type:     "string",
-				JSONPath: ".spec.exporter.image",
+				Name:     "Deprecated",
+				Type:     "boolean",
+				JSONPath: ".spec.deprecated",
 			},
 			{
 				Name:     "Age",

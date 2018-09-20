@@ -11,15 +11,12 @@ spec:
   - JSONPath: .spec.version
     name: Version
     type: string
-  - JSONPath: .spec.deprecated
-    name: Deprecated
-    type: boolean
   - JSONPath: .spec.db.image
     name: DbImage
     type: string
-  - JSONPath: .spec.exporter.image
-    name: ExporterImage
-    type: string
+  - JSONPath: .spec.deprecated
+    name: Deprecated
+    type: boolean
   - JSONPath: .metadata.creationTimestamp
     name: Age
     type: date

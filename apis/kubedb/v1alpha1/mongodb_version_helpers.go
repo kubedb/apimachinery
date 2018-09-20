@@ -53,24 +53,14 @@ func (p MongoDBVersion) CustomResourceDefinition() *apiextensions.CustomResource
 				JSONPath: ".spec.version",
 			},
 			{
-				Name:     "Deprecated",
-				Type:     "boolean",
-				JSONPath: ".spec.deprecated",
-			},
-			{
 				Name:     "DbImage",
 				Type:     "string",
 				JSONPath: ".spec.db.image",
 			},
 			{
-				Name:     "ExporterImage",
-				Type:     "string",
-				JSONPath: ".spec.exporter.image",
-			},
-			{
-				Name:     "ToolsImage",
-				Type:     "string",
-				JSONPath: ".spec.tools.image",
+				Name:     "Deprecated",
+				Type:     "boolean",
+				JSONPath: ".spec.deprecated",
 			},
 			{
 				Name:     "Age",
