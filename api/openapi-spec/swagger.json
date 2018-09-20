@@ -14018,6 +14018,20 @@
         }
       ]
     },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisClusterSpec": {
+      "properties": {
+        "master": {
+          "description": "Number of master nodes. It must be \u003e= 3. If not specified, defaults to 3.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "replicas": {
+          "description": "Number of replica(s) per master node. If not specified, defaults to 1.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisList": {
       "properties": {
         "apiVersion": {
@@ -14056,6 +14070,10 @@
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
         },
+        "cluster": {
+          "description": "Redis cluster configuration for running redis servers in cluster mode. Required if Mode is set to \"Cluster\"",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisClusterSpec"
+        },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e redis.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
@@ -14071,6 +14089,10 @@
             "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
           }
         },
+        "mode": {
+          "description": "Default is \"Standalone\". If set to \"Cluster\", ClusterSpec is required and redis servers will start in cluster mode",
+          "type": "string"
+        },
         "monitor": {
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
@@ -14085,11 +14107,6 @@
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
-        },
-        "replicas": {
-          "description": "Number of instances to deploy for a Redis database.",
-          "type": "integer",
-          "format": "int32"
         },
         "resources": {
           "description": "Compute Resources required by the sidecar container. Deprecated: Use podTemplate.spec.resources",
