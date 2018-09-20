@@ -53,6 +53,11 @@ func (p ElasticsearchVersion) CustomResourceDefinition() *apiextensions.CustomRe
 				JSONPath: ".spec.version",
 			},
 			{
+				Name:     "Deprecated",
+				Type:     "bool",
+				JSONPath: ".spec.deprecated",
+			},
+			{
 				Name:     "DbImage",
 				Type:     "string",
 				JSONPath: ".spec.db.image",

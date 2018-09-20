@@ -11,6 +11,9 @@ spec:
   - JSONPath: .spec.version
     name: Version
     type: string
+  - JSONPath: .spec.deprecated
+    name: Deprecated
+    type: bool
   - JSONPath: .spec.db.image
     name: DbImage
     type: string
