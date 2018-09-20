@@ -54,7 +54,7 @@ func (p MongoDBVersion) CustomResourceDefinition() *apiextensions.CustomResource
 			},
 			{
 				Name:     "Deprecated",
-				Type:     "bool",
+				Type:     "boolean",
 				JSONPath: ".spec.deprecated",
 			},
 			{

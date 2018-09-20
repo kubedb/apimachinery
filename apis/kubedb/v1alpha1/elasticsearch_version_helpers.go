@@ -54,7 +54,7 @@ func (p ElasticsearchVersion) CustomResourceDefinition() *apiextensions.CustomRe
 			},
 			{
 				Name:     "Deprecated",
-				Type:     "bool",
+				Type:     "boolean",
 				JSONPath: ".spec.deprecated",
 			},
 			{

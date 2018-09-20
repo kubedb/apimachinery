@@ -54,7 +54,7 @@ func (p MySQLVersion) CustomResourceDefinition() *apiextensions.CustomResourceDe
 			},
 			{
 				Name:     "Deprecated",
-				Type:     "bool",
+				Type:     "boolean",
 				JSONPath: ".spec.deprecated",
 			},
 			{

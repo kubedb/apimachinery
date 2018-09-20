@@ -54,7 +54,7 @@ func (p PostgresVersion) CustomResourceDefinition() *apiextensions.CustomResourc
 			},
 			{
 				Name:     "Deprecated",
-				Type:     "bool",
+				Type:     "boolean",
 				JSONPath: ".spec.deprecated",
 			},
 			{

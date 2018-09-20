@@ -54,7 +54,7 @@ func (p EtcdVersion) CustomResourceDefinition() *apiextensions.CustomResourceDef
 			},
 			{
 				Name:     "Deprecated",
-				Type:     "bool",
+				Type:     "boolean",
 				JSONPath: ".spec.deprecated",
 			},
 			{
