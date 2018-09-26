@@ -37,14 +37,14 @@ func (c *Controller) completeJob(job *batch.Job) error {
 func (c *Controller) handleBackupJob(job *batch.Job) error {
 	for _, o := range job.OwnerReferences {
 		if o.Kind == api.ResourceKindSnapshot {
-			snapshot, err := c.ExtClient.Snapshots(job.Namespace).Get(o.Name, metav1.GetOptions{})
+			snapshot, err := c.ExtClient.KubedbV1alpha1().Snapshots(job.Namespace).Get(o.Name, metav1.GetOptions{})
 			if err != nil {
 				return err
 			}
 
 			jobSucceeded := job.Status.Succeeded > 0
 
-			if _, err := util.UpdateSnapshotStatus(c.ExtClient, snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
+			if _, err := util.UpdateSnapshotStatus(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
 				if jobSucceeded {
 					in.Phase = api.SnapshotPhaseSucceeded
 				} else {
@@ -63,7 +63,7 @@ func (c *Controller) handleBackupJob(job *batch.Job) error {
 				return err
 			}
 
-			if _, _, err := util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+			if _, _, err := util.PatchSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.Snapshot) *api.Snapshot {
 				delete(in.Labels, api.LabelSnapshotStatus)
 				return in
 			}); err != nil {

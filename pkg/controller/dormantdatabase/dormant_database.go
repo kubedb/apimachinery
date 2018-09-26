@@ -16,7 +16,7 @@ func (c *Controller) create(ddb *api.DormantDatabase) error {
 		return nil
 	}
 
-	drmn, err := util.UpdateDormantDatabaseStatus(c.ExtClient, ddb, func(in *api.DormantDatabaseStatus) *api.DormantDatabaseStatus {
+	drmn, err := util.UpdateDormantDatabaseStatus(c.ExtClient.KubedbV1alpha1(), ddb, func(in *api.DormantDatabaseStatus) *api.DormantDatabaseStatus {
 		in.Phase = api.DormantDatabasePhasePausing
 		return in
 	}, apis.EnableStatusSubresource)
@@ -47,7 +47,7 @@ func (c *Controller) create(ddb *api.DormantDatabase) error {
 		"Successfully paused Database workload",
 	)
 
-	_, err = util.UpdateDormantDatabaseStatus(c.ExtClient, ddb, func(in *api.DormantDatabaseStatus) *api.DormantDatabaseStatus {
+	_, err = util.UpdateDormantDatabaseStatus(c.ExtClient.KubedbV1alpha1(), ddb, func(in *api.DormantDatabaseStatus) *api.DormantDatabaseStatus {
 		t := metav1.Now()
 		in.PausingTime = &t
 		in.Phase = api.DormantDatabasePhasePaused

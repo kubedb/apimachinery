@@ -17,7 +17,7 @@ import (
 
 func (c *Controller) create(snapshot *api.Snapshot) error {
 	if snapshot.Status.StartTime == nil {
-		snap, err := util.UpdateSnapshotStatus(c.ExtClient, snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
+		snap, err := util.UpdateSnapshotStatus(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
 			t := metav1.Now()
 			in.StartTime = &t
 			return in
@@ -48,7 +48,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 			err.Error(),
 		)
 
-		if _, err := util.UpdateSnapshotStatus(c.ExtClient, snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
+		if _, err := util.UpdateSnapshotStatus(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
 			t := metav1.Now()
 			in.CompletionTime = &t
 			in.Phase = api.SnapshotPhaseFailed
@@ -65,7 +65,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 			return err
 		}
 
-		if _, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+		if _, _, err = util.PatchSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.Snapshot) *api.Snapshot {
 			in.Labels[api.LabelDatabaseName] = snapshot.Spec.DatabaseName
 			return in
 		}); err != nil {
@@ -93,7 +93,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		return err
 	}
 	if running {
-		if _, err := util.UpdateSnapshotStatus(c.ExtClient, snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
+		if _, err := util.UpdateSnapshotStatus(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
 			t := metav1.Now()
 			in.CompletionTime = &t
 			in.Phase = api.SnapshotPhaseFailed
@@ -194,7 +194,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		return err
 	}
 
-	if _, err := util.UpdateSnapshotStatus(c.ExtClient, snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
+	if _, err := util.UpdateSnapshotStatus(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
 		in.Phase = api.SnapshotPhaseRunning
 		return in
 	}, apis.EnableStatusSubresource); err != nil {
@@ -207,7 +207,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		return err
 	}
 
-	if _, _, err = util.PatchSnapshot(c.ExtClient, snapshot, func(in *api.Snapshot) *api.Snapshot {
+	if _, _, err = util.PatchSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.Snapshot) *api.Snapshot {
 		in.Labels[api.LabelDatabaseName] = snapshot.Spec.DatabaseName
 		in.Labels[api.LabelSnapshotStatus] = string(api.SnapshotPhaseRunning)
 		return in
