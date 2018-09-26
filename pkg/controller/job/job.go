@@ -122,27 +122,22 @@ func (c *Controller) handleRestoreJob(job *batch.Job) error {
 
 			var phase api.DatabasePhase
 			var reason string
+			objectMeta := metav1.ObjectMeta{Name: o.Name, Namespace: job.Namespace}
+
 			if jobSucceeded {
 				phase = api.DatabasePhaseRunning
+				if err := c.snapshotter.UpsertDatabaseAnnotation(objectMeta, map[string]string{
+					api.AnnotationInitialized: "",
+				}); err != nil {
+					return err
+				}
 			} else {
 				phase = api.DatabasePhaseFailed
 				reason = "Failed to complete initialization"
 			}
-			objectMeta := metav1.ObjectMeta{Name: o.Name, Namespace: job.Namespace}
-			err := c.snapshotter.SetDatabaseStatus(objectMeta, phase, reason)
-			if err != nil {
+			if err := c.snapshotter.SetDatabaseStatus(objectMeta, phase, reason); err != nil {
 				return err
 			}
-
-			if jobSucceeded {
-				err = c.snapshotter.UpsertDatabaseAnnotation(objectMeta, map[string]string{
-					api.AnnotationInitialized: "",
-				})
-				if err != nil {
-					return err
-				}
-			}
-
 			runtimeObj, err := c.snapshotter.GetDatabase(objectMeta)
 			if err != nil {
 				log.Errorln(err)
