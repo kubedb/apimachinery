@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/appscode/go/log"
+	"github.com/kubedb/apimachinery/apis"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"github.com/kubedb/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
 	"github.com/kubedb/apimachinery/pkg/eventer"
@@ -52,7 +53,7 @@ func (c *Controller) handleBackupJob(job *batch.Job) error {
 				t := metav1.Now()
 				in.CompletionTime = &t
 				return in
-			}, api.EnableStatusSubresource); err != nil {
+			}, apis.EnableStatusSubresource); err != nil {
 				c.eventRecorder.Eventf(
 					snapshot,
 					core.EventTypeWarning,

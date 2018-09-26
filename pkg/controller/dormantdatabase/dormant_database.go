@@ -3,6 +3,7 @@ package dormantdatabase
 import (
 	"github.com/appscode/go/encoding/json/types"
 	meta_util "github.com/appscode/kutil/meta"
+	"github.com/kubedb/apimachinery/apis"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"github.com/kubedb/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
 	"github.com/kubedb/apimachinery/pkg/eventer"
@@ -18,7 +19,7 @@ func (c *Controller) create(ddb *api.DormantDatabase) error {
 	drmn, err := util.UpdateDormantDatabaseStatus(c.ExtClient, ddb, func(in *api.DormantDatabaseStatus) *api.DormantDatabaseStatus {
 		in.Phase = api.DormantDatabasePhasePausing
 		return in
-	}, api.EnableStatusSubresource)
+	}, apis.EnableStatusSubresource)
 	if err != nil {
 		c.recorder.Eventf(ddb, core.EventTypeWarning, eventer.EventReasonFailedToUpdate, err.Error())
 		return err
@@ -52,7 +53,7 @@ func (c *Controller) create(ddb *api.DormantDatabase) error {
 		in.Phase = api.DormantDatabasePhasePaused
 		in.ObservedGeneration = types.NewIntHash(ddb.Generation, meta_util.GenerationHash(ddb))
 		return in
-	}, api.EnableStatusSubresource)
+	}, apis.EnableStatusSubresource)
 	if err != nil {
 		c.recorder.Eventf(ddb, core.EventTypeWarning, eventer.EventReasonFailedToUpdate, err.Error())
 		return err
