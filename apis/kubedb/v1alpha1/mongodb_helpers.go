@@ -2,6 +2,7 @@ package v1alpha1
 
 import (
 	"fmt"
+	"github.com/kubedb/apimachinery/apis"
 
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
 	meta_util "github.com/appscode/kutil/meta"
@@ -9,6 +10,8 @@ import (
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
+
+var _ apis.ResourceInfo = &MongoDB{}
 
 func (m MongoDB) OffshootName() string {
 	return m.Name
@@ -102,7 +105,7 @@ func (m MongoDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinit
 		SpecDefinitionName:      "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDB",
 		EnableValidation:        true,
 		GetOpenAPIDefinitions:   GetOpenAPIDefinitions,
-		EnableStatusSubresource: EnableStatusSubresource,
+		EnableStatusSubresource: apis.EnableStatusSubresource,
 		AdditionalPrinterColumns: []apiextensions.CustomResourceColumnDefinition{
 			{
 				Name:     "Version",
@@ -120,7 +123,7 @@ func (m MongoDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinit
 				JSONPath: ".metadata.creationTimestamp",
 			},
 		},
-	}, setNameSchema)
+	}, apis.SetNameSchema)
 }
 
 func (m *MongoDB) SetDefaults() {

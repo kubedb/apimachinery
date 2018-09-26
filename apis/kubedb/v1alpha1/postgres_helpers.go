@@ -2,6 +2,7 @@ package v1alpha1
 
 import (
 	"fmt"
+	"github.com/kubedb/apimachinery/apis"
 
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
 	meta_util "github.com/appscode/kutil/meta"
@@ -9,6 +10,8 @@ import (
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
+
+var _ apis.ResourceInfo = &Postgres{}
 
 func (p Postgres) OffshootName() string {
 	return p.Name
@@ -24,8 +27,6 @@ func (p Postgres) OffshootSelectors() map[string]string {
 func (p Postgres) OffshootLabels() map[string]string {
 	return meta_util.FilterKeys(GenericKey, p.OffshootSelectors(), p.Labels)
 }
-
-var _ ResourceInfo = &Postgres{}
 
 func (p Postgres) ResourceShortCode() string {
 	return ResourceCodePostgres
@@ -108,7 +109,7 @@ func (p Postgres) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 		SpecDefinitionName:      "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Postgres",
 		EnableValidation:        true,
 		GetOpenAPIDefinitions:   GetOpenAPIDefinitions,
-		EnableStatusSubresource: EnableStatusSubresource,
+		EnableStatusSubresource: apis.EnableStatusSubresource,
 		AdditionalPrinterColumns: []apiextensions.CustomResourceColumnDefinition{
 			{
 				Name:     "Version",
@@ -126,7 +127,7 @@ func (p Postgres) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 				JSONPath: ".metadata.creationTimestamp",
 			},
 		},
-	}, setNameSchema)
+	}, apis.SetNameSchema)
 }
 
 func (p *Postgres) SetDefaults() {
