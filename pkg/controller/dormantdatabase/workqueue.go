@@ -4,6 +4,7 @@ import (
 	"github.com/appscode/go/log"
 	core_util "github.com/appscode/kutil/core/v1"
 	"github.com/appscode/kutil/tools/queue"
+	"github.com/kubedb/apimachinery/apis"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"github.com/kubedb/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
 	"k8s.io/apimachinery/pkg/labels"
@@ -11,7 +12,7 @@ import (
 
 func (c *Controller) addEventHandler(selector labels.Selector) {
 	c.DrmnQueue = queue.New("DormantDatabase", c.MaxNumRequeues, c.NumThreads, c.runDormantDatabase)
-	c.DrmnInformer.AddEventHandler(queue.NewFilteredHandler(queue.NewObservableHandler(c.DrmnQueue.GetQueue(), api.EnableStatusSubresource), selector))
+	c.DrmnInformer.AddEventHandler(queue.NewFilteredHandler(queue.NewObservableHandler(c.DrmnQueue.GetQueue(), apis.EnableStatusSubresource), selector))
 	c.ddbLister = c.KubedbInformerFactory.Kubedb().V1alpha1().DormantDatabases().Lister()
 }
 
