@@ -173,13 +173,13 @@ type PostgresWALSourceSpec struct {
 type StandbyMode string
 
 const (
-	HotStandby  StandbyMode = "hot"
-	WarmStandby StandbyMode = "warm"
+	HotStandby  StandbyMode = "Hot"
+	WarmStandby StandbyMode = "Warm"
 )
 
 type StreamingMode string
 
 const (
-	SynchronousStreaming  StreamingMode = "synchronous"
-	AsynchronousStreaming StreamingMode = "asynchronous"
+	SynchronousStreaming  StreamingMode = "Synchronous"
+	AsynchronousStreaming StreamingMode = "Asynchronous"
 )
