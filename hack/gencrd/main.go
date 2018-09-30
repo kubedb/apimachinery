@@ -33,21 +33,23 @@ func generateCRDDefinitions() {
 	}
 
 	crds := []*crd_api.CustomResourceDefinition{
-		kubedbv1alpha1.Postgres{}.CustomResourceDefinition(),
-		kubedbv1alpha1.Elasticsearch{}.CustomResourceDefinition(),
-		kubedbv1alpha1.MySQL{}.CustomResourceDefinition(),
-		kubedbv1alpha1.MongoDB{}.CustomResourceDefinition(),
-		kubedbv1alpha1.Redis{}.CustomResourceDefinition(),
-		kubedbv1alpha1.Memcached{}.CustomResourceDefinition(),
-		kubedbv1alpha1.Snapshot{}.CustomResourceDefinition(),
 		kubedbv1alpha1.DormantDatabase{}.CustomResourceDefinition(),
+		kubedbv1alpha1.Elasticsearch{}.CustomResourceDefinition(),
+		kubedbv1alpha1.Etcd{}.CustomResourceDefinition(),
+		kubedbv1alpha1.Memcached{}.CustomResourceDefinition(),
+		kubedbv1alpha1.MongoDB{}.CustomResourceDefinition(),
+		kubedbv1alpha1.MySQL{}.CustomResourceDefinition(),
+		kubedbv1alpha1.Postgres{}.CustomResourceDefinition(),
+		kubedbv1alpha1.Redis{}.CustomResourceDefinition(),
+		kubedbv1alpha1.Snapshot{}.CustomResourceDefinition(),
 
-		catalogv1alpha1.PostgresVersion{}.CustomResourceDefinition(),
 		catalogv1alpha1.ElasticsearchVersion{}.CustomResourceDefinition(),
-		catalogv1alpha1.MySQLVersion{}.CustomResourceDefinition(),
-		catalogv1alpha1.MongoDBVersion{}.CustomResourceDefinition(),
-		catalogv1alpha1.RedisVersion{}.CustomResourceDefinition(),
+		catalogv1alpha1.EtcdVersion{}.CustomResourceDefinition(),
 		catalogv1alpha1.MemcachedVersion{}.CustomResourceDefinition(),
+		catalogv1alpha1.MongoDBVersion{}.CustomResourceDefinition(),
+		catalogv1alpha1.MySQLVersion{}.CustomResourceDefinition(),
+		catalogv1alpha1.PostgresVersion{}.CustomResourceDefinition(),
+		catalogv1alpha1.RedisVersion{}.CustomResourceDefinition(),
 	}
 	for _, crd := range crds {
 		filename := filepath.Join(gort.GOPath(), "/src/github.com/kubedb/apimachinery/api/crds", crd.Spec.Names.Singular+".yaml")
@@ -90,21 +92,23 @@ func generateSwaggerJson() {
 			catalogv1alpha1.GetOpenAPIDefinitions,
 		},
 		Resources: []openapi.TypeInfo{
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralPostgres, kubedbv1alpha1.ResourceKindPostgres, true},
+			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralDormantDatabase, kubedbv1alpha1.ResourceKindDormantDatabase, true},
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralElasticsearch, kubedbv1alpha1.ResourceKindElasticsearch, true},
+			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralEtcd, kubedbv1alpha1.ResourceKindEtcd, true},
+			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralMemcached, kubedbv1alpha1.ResourceKindMemcached, true},
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralMongoDB, kubedbv1alpha1.ResourceKindMongoDB, true},
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralMySQL, kubedbv1alpha1.ResourceKindMySQL, true},
+			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralPostgres, kubedbv1alpha1.ResourceKindPostgres, true},
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralRedis, kubedbv1alpha1.ResourceKindRedis, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralMemcached, kubedbv1alpha1.ResourceKindMemcached, true},
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralSnapshot, kubedbv1alpha1.ResourceKindSnapshot, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralDormantDatabase, kubedbv1alpha1.ResourceKindDormantDatabase, true},
 
-			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralPostgresVersion, catalogv1alpha1.ResourceKindPostgresVersion, false},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralElasticsearchVersion, catalogv1alpha1.ResourceKindElasticsearchVersion, true},
+			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralEtcdVersion, catalogv1alpha1.ResourceKindEtcdVersion, false},
+			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralMemcachedVersion, catalogv1alpha1.ResourceKindMemcachedVersion, true},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralMongoDBVersion, catalogv1alpha1.ResourceKindMongoDBVersion, true},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralMySQLVersion, catalogv1alpha1.ResourceKindMySQLVersion, true},
+			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralPostgresVersion, catalogv1alpha1.ResourceKindPostgresVersion, false},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralRedisVersion, catalogv1alpha1.ResourceKindRedisVersion, false},
-			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralMemcachedVersion, catalogv1alpha1.ResourceKindMemcachedVersion, true},
 		},
 	})
 	if err != nil {
