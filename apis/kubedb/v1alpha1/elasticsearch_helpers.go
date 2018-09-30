@@ -182,6 +182,9 @@ func (e *ElasticsearchSpec) SetDefaults() {
 	}
 
 	// perform defaulting
+	if e.AuthPlugin == "" {
+		e.AuthPlugin = ElasticsearchAuthPluginSearchGuard
+	}
 	if e.StorageType == "" {
 		e.StorageType = StorageTypeDurable
 	}
