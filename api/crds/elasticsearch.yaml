@@ -884,6 +884,10 @@ spec:
                         required:
                         - topologyKey
                       type: array
+            authPlugin:
+              description: Authentication plugin used by Elasticsearch cluster. If
+                unset, defaults to SearchGuard.
+              type: string
             backupSchedule:
               properties:
                 azure:
