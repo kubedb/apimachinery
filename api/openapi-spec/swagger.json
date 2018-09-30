@@ -14861,6 +14861,10 @@
           "description": "If specified, the pod's scheduling constraints Deprecated: Use podTemplate.spec.affinity",
           "$ref": "#/definitions/io.k8s.api.core.v1.Affinity"
         },
+        "authPlugin": {
+          "description": "Authentication plugin used by Elasticsearch cluster. If unset, defaults to SearchGuard.",
+          "type": "string"
+        },
         "backupSchedule": {
           "description": "BackupSchedule spec to specify how database backup will be taken",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
