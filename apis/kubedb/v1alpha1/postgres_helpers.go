@@ -83,7 +83,7 @@ func (p postgresStatsService) ServiceMonitorName() string {
 }
 
 func (p postgresStatsService) Path() string {
-	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", p.Namespace, p.ResourcePlural(), p.Name)
+	return "/metrics"
 }
 
 func (p postgresStatsService) Scheme() string {

@@ -83,7 +83,7 @@ func (m mysqlStatsService) ServiceMonitorName() string {
 }
 
 func (m mysqlStatsService) Path() string {
-	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", m.Namespace, m.ResourcePlural(), m.Name)
+	return "/metrics"
 }
 
 func (m mysqlStatsService) Scheme() string {
