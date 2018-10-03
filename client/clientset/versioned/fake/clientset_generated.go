@@ -20,6 +20,8 @@ package fake
 
 import (
 	clientset "github.com/kubedb/apimachinery/client/clientset/versioned"
+	authorizationv1alpha1 "github.com/kubedb/apimachinery/client/clientset/versioned/typed/authorization/v1alpha1"
+	fakeauthorizationv1alpha1 "github.com/kubedb/apimachinery/client/clientset/versioned/typed/authorization/v1alpha1/fake"
 	catalogv1alpha1 "github.com/kubedb/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 	fakecatalogv1alpha1 "github.com/kubedb/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1/fake"
 	configv1alpha1 "github.com/kubedb/apimachinery/client/clientset/versioned/typed/config/v1alpha1"
@@ -74,6 +76,16 @@ func (c *Clientset) Discovery() discovery.DiscoveryInterface {
 }
 
 var _ clientset.Interface = &Clientset{}
+
+// AuthorizationV1alpha1 retrieves the AuthorizationV1alpha1Client
+func (c *Clientset) AuthorizationV1alpha1() authorizationv1alpha1.AuthorizationV1alpha1Interface {
+	return &fakeauthorizationv1alpha1.FakeAuthorizationV1alpha1{Fake: &c.Fake}
+}
+
+// Authorization retrieves the AuthorizationV1alpha1Client
+func (c *Clientset) Authorization() authorizationv1alpha1.AuthorizationV1alpha1Interface {
+	return &fakeauthorizationv1alpha1.FakeAuthorizationV1alpha1{Fake: &c.Fake}
+}
 
 // CatalogV1alpha1 retrieves the CatalogV1alpha1Client
 func (c *Clientset) CatalogV1alpha1() catalogv1alpha1.CatalogV1alpha1Interface {
