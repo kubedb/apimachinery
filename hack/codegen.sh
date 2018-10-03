@@ -7,7 +7,7 @@ PACKAGE_NAME=github.com/kubedb/apimachinery
 REPO_ROOT="$GOPATH/src/$PACKAGE_NAME"
 DOCKER_REPO_ROOT="/go/src/$PACKAGE_NAME"
 DOCKER_CODEGEN_PKG="/go/src/k8s.io/code-generator"
-apiGroups=(kubedb/v1alpha1 catalog/v1alpha1)
+apiGroups=(kubedb/v1alpha1 catalog/v1alpha1 authorization/v1alpha1)
 
 pushd $REPO_ROOT
 
@@ -20,7 +20,7 @@ docker run --rm -ti -u $(id -u):$(id -g) \
   appscode/gengo:release-1.11 "$DOCKER_CODEGEN_PKG"/generate-groups.sh "deepcopy,client,informer,lister" \
   github.com/kubedb/apimachinery/client \
   github.com/kubedb/apimachinery/apis \
-  "kubedb:v1alpha1 catalog:v1alpha1 config:v1alpha1" \
+  "kubedb:v1alpha1 catalog:v1alpha1 config:v1alpha1 authorization:v1alpha1" \
   --go-header-file "$DOCKER_REPO_ROOT/hack/gengo/boilerplate.go.txt"
 
 # Generate openapi
