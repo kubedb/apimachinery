@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	ResourceKindApp = "App"
+	ResourceKindApp = "AppBinding"
 	ResourceApps    = "apps"
 	ResourceApp     = "app"
 )
@@ -17,25 +17,25 @@ const (
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// App defines a generic user application.
-type App struct {
+// AppBinding defines a generic user application.
+type AppBinding struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              AppSpec `json:"spec,omitempty"`
+	Spec              AppBindingSpec `json:"spec,omitempty"`
 }
 
-// AppSpec is the spec for app
-type AppSpec struct {
+// AppBindingSpec is the spec for app
+type AppBindingSpec struct {
 	// Used to facilitate programmatic handling of application.
 	// +optional
 	Type AppType `json:"type,omitempty"`
 
 	// ClientConfig defines how to communicate with the app.
 	// Required
-	ClientConfig AppClientConfig `json:"clientConfig"`
+	ClientConfig ClientConfig `json:"clientConfig"`
 
-	// Secret is the name of the secret to create in the App's
-	// namespace that will hold the credentials associated with the App.
+	// Secret is the name of the secret to create in the AppBinding's
+	// namespace that will hold the credentials associated with the AppBinding.
 	Secret *core.LocalObjectReference `json:"secret,omitempty"`
 
 	// Parameters is a set of the parameters to be used to connect to the
@@ -58,8 +58,8 @@ const (
 	AppTypeOpaque AppType = "Opaque"
 )
 
-// AppClientConfig contains the information to make a connection with an app
-type AppClientConfig struct {
+// ClientConfig contains the information to make a connection with an app
+type ClientConfig struct {
 	// `url` gives the location of the app, in standard URL form
 	// (`[scheme://]host:port/path`). Exactly one of `url` or `service`
 	// must be specified.
@@ -103,7 +103,7 @@ type AppClientConfig struct {
 	Ports []AppPort `json:"ports,omitempty" patchStrategy:"merge" patchMergeKey:"port"`
 }
 
-// App holds a reference to Service.legacy.k8s.io
+// ServiceReference holds a reference to Service.legacy.k8s.io
 type ServiceReference struct {
 	// `name` is the name of the service.
 	// Required
@@ -118,7 +118,7 @@ type ServiceReference struct {
 // AppPort contains information on app's port.
 type AppPort struct {
 	// The name of this port within the app. All ports within
-	// an AppSpec must have unique names.
+	// an AppBindingSpec must have unique names.
 	Name string `json:"name"`
 
 	// The port that will be exposed by this app.
@@ -127,12 +127,12 @@ type AppPort struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// AppList is a list of Apps
-type AppList struct {
+// AppBindingList is a list of Apps
+type AppBindingList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	// Items is a list of App CRD objects
-	Items []App `json:"items,omitempty"`
+	// Items is a list of AppBinding CRD objects
+	Items []AppBinding `json:"items,omitempty"`
 }
 
 type AppReference struct {
@@ -155,7 +155,7 @@ type AppReference struct {
 	Parameters *runtime.RawExtension `json:"parameters,omitempty"`
 }
 
-type AppMeta interface {
+type AppBindingMeta interface {
 	Name() string
 	Type() AppType
 	DefaultParameters() runtime.Object

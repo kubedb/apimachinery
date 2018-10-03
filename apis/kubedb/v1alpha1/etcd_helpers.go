@@ -71,7 +71,7 @@ func (r etcdApp) DefaultParameters() runtime.Object {
 	return nil
 }
 
-func (r Etcd) AppMeta() appcat.AppMeta {
+func (r Etcd) AppBindingMeta() appcat.AppBindingMeta {
 	return &etcdApp{&r}
 }
 

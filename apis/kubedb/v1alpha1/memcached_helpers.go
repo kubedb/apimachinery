@@ -67,7 +67,7 @@ func (r memcachedApp) DefaultParameters() runtime.Object {
 	return nil
 }
 
-func (r Memcached) AppMeta() appcat.AppMeta {
+func (r Memcached) AppBindingMeta() appcat.AppBindingMeta {
 	return &memcachedApp{&r}
 }
 

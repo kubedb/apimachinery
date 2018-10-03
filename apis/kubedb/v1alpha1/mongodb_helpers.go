@@ -67,7 +67,7 @@ func (r mongoDBApp) DefaultParameters() runtime.Object {
 	return nil
 }
 
-func (r MongoDB) AppMeta() appcat.AppMeta {
+func (r MongoDB) AppBindingMeta() appcat.AppBindingMeta {
 	return &mongoDBApp{&r}
 }
 

@@ -67,7 +67,7 @@ func (r mysqlApp) DefaultParameters() runtime.Object {
 	return nil
 }
 
-func (r MySQL) AppMeta() appcat.AppMeta {
+func (r MySQL) AppBindingMeta() appcat.AppBindingMeta {
 	return &mysqlApp{&r}
 }
 

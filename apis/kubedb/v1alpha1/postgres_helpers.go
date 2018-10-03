@@ -67,7 +67,7 @@ func (r postgresApp) DefaultParameters() runtime.Object {
 	return nil
 }
 
-func (r Postgres) AppMeta() appcat.AppMeta {
+func (r Postgres) AppBindingMeta() appcat.AppBindingMeta {
 	return &postgresApp{&r}
 }
 

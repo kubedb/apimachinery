@@ -83,7 +83,7 @@ func (r elasticsearchApp) DefaultParameters() runtime.Object {
 	return nil
 }
 
-func (r Elasticsearch) AppMeta() appcat.AppMeta {
+func (r Elasticsearch) AppBindingMeta() appcat.AppBindingMeta {
 	return &elasticsearchApp{&r}
 }
 
