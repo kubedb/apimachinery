@@ -140,6 +140,10 @@ func (m *MongoDBSpec) SetDefaults() {
 
 	// migrate first to avoid incorrect defaulting
 	m.BackupSchedule.SetDefaults()
+	if m.DoNotPause {
+		m.TerminationPolicy = TerminationPolicyDoNotTerminate
+		m.DoNotPause = false
+	}
 	if len(m.NodeSelector) > 0 {
 		m.PodTemplate.Spec.NodeSelector = m.NodeSelector
 		m.NodeSelector = nil

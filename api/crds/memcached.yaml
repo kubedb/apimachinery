@@ -2023,9 +2023,9 @@ spec:
                   required:
                   - volumePath
             doNotPause:
-              description: If DoNotPause is true, controller will prevent to delete
-                this Postgres object. Controller will create same Postgres object
-                and ignore other process.
+              description: 'If DoNotPause is true, controller will prevent to delete
+                this Memcached object. Controller will create same Memcached object
+                and ignore other process. Deprecated: Use terminationPolicy = DoNotTerminate'
               type: boolean
             imagePullSecrets:
               description: 'ImagePullSecrets is an optional list of references to

@@ -14882,7 +14882,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "doNotPause": {
-          "description": "If DoNotPause is true, controller will prevent to delete this Elasticsearch object. Controller will create same Elasticsearch object and ignore other process.",
+          "description": "------------------------------------------------------------------------- If DoNotPause is true, controller will prevent to delete this Elasticsearch object. Controller will create same Elasticsearch object and ignore other process. Deprecated: Use terminationPolicy = DoNotTerminate",
           "type": "boolean"
         },
         "enableSSL": {
@@ -15050,10 +15050,6 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
-        "doNotPause": {
-          "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
-          "type": "boolean"
-        },
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
@@ -15212,7 +15208,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
         },
         "doNotPause": {
-          "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
+          "description": "If DoNotPause is true, controller will prevent to delete this Memcached object. Controller will create same Memcached object and ignore other process. Deprecated: Use terminationPolicy = DoNotTerminate",
           "type": "boolean"
         },
         "imagePullSecrets": {
@@ -15382,7 +15378,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "doNotPause": {
-          "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
+          "description": "If DoNotPause is true, controller will prevent to delete this MongoDB object. Controller will create same MongoDB object and ignore other process. Deprecated: Use terminationPolicy = DoNotTerminate",
           "type": "boolean"
         },
         "imagePullSecrets": {
@@ -15555,7 +15551,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "doNotPause": {
-          "description": "If DoNotPause is true, controller will prevent to delete this Mysql object. Controller will create same Mysql object and ignore other process.",
+          "description": "If DoNotPause is true, controller will prevent to delete this Mysql object. Controller will create same Mysql object and ignore other process. Deprecated: Use terminationPolicy = DoNotTerminate",
           "type": "boolean"
         },
         "imagePullSecrets": {
@@ -15781,7 +15777,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "doNotPause": {
-          "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
+          "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process. Deprecated: Use terminationPolicy = DoNotTerminate",
           "type": "boolean"
         },
         "imagePullSecrets": {
@@ -15999,7 +15995,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
         },
         "doNotPause": {
-          "description": "If DoNotPause is true, controller will prevent to delete this Postgres object. Controller will create same Postgres object and ignore other process.",
+          "description": "If DoNotPause is true, controller will prevent to delete this Redis object. Controller will create same Redis object and ignore other process. Deprecated: Use terminationPolicy = DoNotTerminate",
           "type": "boolean"
         },
         "imagePullSecrets": {
