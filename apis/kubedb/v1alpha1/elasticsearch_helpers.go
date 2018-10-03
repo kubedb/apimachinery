@@ -99,7 +99,7 @@ func (e elasticsearchStatsService) ServiceMonitorName() string {
 }
 
 func (e elasticsearchStatsService) Path() string {
-	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", e.Namespace, e.ResourcePlural(), e.Name)
+	return "/metrics"
 }
 
 func (e elasticsearchStatsService) Scheme() string {

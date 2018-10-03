@@ -88,7 +88,7 @@ func (r redisStatsService) ServiceMonitorName() string {
 }
 
 func (r redisStatsService) Path() string {
-	return fmt.Sprintf("/kubedb.com/v1alpha1/namespaces/%s/%s/%s/metrics", r.Namespace, r.ResourcePlural(), r.Name)
+	return "/metrics"
 }
 
 func (r redisStatsService) Scheme() string {
