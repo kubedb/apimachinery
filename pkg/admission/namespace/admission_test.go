@@ -30,7 +30,9 @@ var requestKind = metav1.GroupVersionKind{
 func TestNamespaceValidator_Admit(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c.testName, func(t *testing.T) {
-			validator := NamespaceValidator{}
+			validator := NamespaceValidator{
+				Resources: []string{api.ResourcePluralPostgres},
+			}
 			validator.initialized = true
 			validator.dc = fake_dynamic.NewSimpleDynamicClient(clientsetscheme.Scheme)
 
