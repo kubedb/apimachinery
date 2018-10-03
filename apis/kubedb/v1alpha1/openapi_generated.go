@@ -95,7 +95,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.etcdStatsService":             schema_apimachinery_apis_kubedb_v1alpha1_etcdStatsService(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.memcachedStatsService":        schema_apimachinery_apis_kubedb_v1alpha1_memcachedStatsService(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.mongoDBStatsService":          schema_apimachinery_apis_kubedb_v1alpha1_mongoDBStatsService(ref),
-		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.mySQLStatsService":            schema_apimachinery_apis_kubedb_v1alpha1_mySQLStatsService(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.mysqlStatsService":            schema_apimachinery_apis_kubedb_v1alpha1_mySQLStatsService(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.postgresStatsService":         schema_apimachinery_apis_kubedb_v1alpha1_postgresStatsService(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.redisStatsService":            schema_apimachinery_apis_kubedb_v1alpha1_redisStatsService(ref),
 		"k8s.io/api/apps/v1.ControllerRevision":                                            schema_k8sio_api_apps_v1_ControllerRevision(ref),

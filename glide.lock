@@ -1,5 +1,5 @@
 hash: 34aa5d9668354b698f8206eba9fecdc423d6557b83d1c3c8826b7dc04cccddd2
-updated: 2018-10-03T02:28:14.340367899-07:00
+updated: 2018-10-03T08:54:06.137057139-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -840,11 +840,10 @@ imports:
   - pkg/util
   - pkg/util/proto
 - name: kmodules.xyz/custom-resources
-  version: 729e3de8c1075db502f1edc332ebdabde7f56d09
+  version: a4f09542ede24d7371da249030832caf77beff28
   repo: https://github.com/kmodules/custom-resources.git
   vcs: git
   subpackages:
-  - apis
   - apis/appcatalog
   - apis/appcatalog/v1alpha1
   - client/clientset/versioned/scheme
