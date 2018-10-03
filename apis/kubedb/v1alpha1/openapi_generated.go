@@ -886,7 +886,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 					},
 					"doNotPause": {
 						SchemaProps: spec.SchemaProps{
-							Description: "------------------------------------------------------------------------- If DoNotPause is true, controller will prevent to delete this Elasticsearch object. Controller will create same Elasticsearch object and ignore other process. Deprecated: Use terminationPolicy = DoNotTerminate",
+							Description: "If DoNotPause is true, controller will prevent to delete this Elasticsearch object. Controller will create same Elasticsearch object and ignore other process. Deprecated: Use terminationPolicy = DoNotTerminate",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},

@@ -14882,7 +14882,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "doNotPause": {
-          "description": "------------------------------------------------------------------------- If DoNotPause is true, controller will prevent to delete this Elasticsearch object. Controller will create same Elasticsearch object and ignore other process. Deprecated: Use terminationPolicy = DoNotTerminate",
+          "description": "If DoNotPause is true, controller will prevent to delete this Elasticsearch object. Controller will create same Elasticsearch object and ignore other process. Deprecated: Use terminationPolicy = DoNotTerminate",
           "type": "boolean"
         },
         "enableSSL": {

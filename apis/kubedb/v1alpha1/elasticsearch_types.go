@@ -90,6 +90,7 @@ type ElasticsearchSpec struct {
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
 
 	// -------------------------------------------------------------------------
+
 	// If DoNotPause is true, controller will prevent to delete this Elasticsearch object.
 	// Controller will create same Elasticsearch object and ignore other process.
 	// +optional
