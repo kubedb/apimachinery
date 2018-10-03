@@ -53,6 +53,10 @@ import:
   version: master
 - package: github.com/appscode/kutil
   version: release-8.0
+- package: kmodules.xyz/custom-resources
+  repo: https://github.com/kmodules/custom-resources.git
+  vcs: git
+  version: release-8.0
 - package: kmodules.xyz/monitoring-agent-api
   repo: https://github.com/kmodules/monitoring-agent-api.git
   vcs: git
