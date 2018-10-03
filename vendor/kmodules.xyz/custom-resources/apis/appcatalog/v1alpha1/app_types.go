@@ -26,6 +26,10 @@ type App struct {
 
 // AppSpec is the spec for app
 type AppSpec struct {
+	// Used to facilitate programmatic handling of application.
+	// +optional
+	Type AppType `json:"type,omitempty"`
+
 	// ClientConfig defines how to communicate with the app.
 	// Required
 	ClientConfig AppClientConfig `json:"clientConfig"`
@@ -46,6 +50,13 @@ type AppSpec struct {
 	// +optional
 	DefaultParameters *runtime.RawExtension `json:"defaultParameters,omitempty"`
 }
+
+type AppType string
+
+const (
+	// AppTypeOpaque is the default. A generic application.
+	AppTypeOpaque AppType = "Opaque"
+)
 
 // AppClientConfig contains the information to make a connection with an app
 type AppClientConfig struct {
@@ -142,4 +153,10 @@ type AppReference struct {
 	//
 	// +optional
 	Parameters *runtime.RawExtension `json:"parameters,omitempty"`
+}
+
+type AppMeta interface {
+	Name() string
+	Type() AppType
+	DefaultParameters() runtime.Object
 }

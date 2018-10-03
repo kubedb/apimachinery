@@ -13311,6 +13311,13 @@ func schema_custom_resources_apis_appcatalog_v1alpha1_AppSpec(ref common.Referen
 			SchemaProps: spec.SchemaProps{
 				Description: "AppSpec is the spec for app",
 				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Used to facilitate programmatic handling of application.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"clientConfig": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ClientConfig defines how to communicate with the app. Required",

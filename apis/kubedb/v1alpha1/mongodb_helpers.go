@@ -6,8 +6,11 @@ import (
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
 	meta_util "github.com/appscode/kutil/meta"
 	"github.com/kubedb/apimachinery/apis"
+	"github.com/kubedb/apimachinery/apis/kubedb"
 	apps "k8s.io/api/apps/v1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
+	"k8s.io/apimachinery/pkg/runtime"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
@@ -46,6 +49,26 @@ func (m MongoDB) ResourcePlural() string {
 
 func (m MongoDB) ServiceName() string {
 	return m.OffshootName()
+}
+
+type mongoDBApp struct {
+	*MongoDB
+}
+
+func (r mongoDBApp) Name() string {
+	return fmt.Sprintf("kubedb:%s:%s:%s", ResourceSingularMongoDB, r.MongoDB.Namespace, r.MongoDB.Name)
+}
+
+func (r mongoDBApp) Type() appcat.AppType {
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularMongoDB))
+}
+
+func (r mongoDBApp) DefaultParameters() runtime.Object {
+	return nil
+}
+
+func (r MongoDB) AppMeta() appcat.AppMeta {
+	return &mongoDBApp{&r}
 }
 
 type mongoDBStatsService struct {

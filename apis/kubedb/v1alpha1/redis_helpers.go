@@ -7,8 +7,11 @@ import (
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
 	meta_util "github.com/appscode/kutil/meta"
 	"github.com/kubedb/apimachinery/apis"
+	"github.com/kubedb/apimachinery/apis/kubedb"
 	apps "k8s.io/api/apps/v1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
+	"k8s.io/apimachinery/pkg/runtime"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
@@ -51,6 +54,26 @@ func (r Redis) ServiceName() string {
 
 func (r Redis) ConfigMapName() string {
 	return r.OffshootName()
+}
+
+type redisApp struct {
+	*Redis
+}
+
+func (r redisApp) Name() string {
+	return fmt.Sprintf("kubedb:%s:%s:%s", ResourceSingularRedis, r.Redis.Namespace, r.Redis.Name)
+}
+
+func (r redisApp) Type() appcat.AppType {
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularRedis))
+}
+
+func (r redisApp) DefaultParameters() runtime.Object {
+	return nil
+}
+
+func (r Redis) AppMeta() appcat.AppMeta {
+	return &redisApp{&r}
 }
 
 type redisStatsService struct {
