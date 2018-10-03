@@ -158,5 +158,4 @@ type AppReference struct {
 type AppBindingMeta interface {
 	Name() string
 	Type() AppType
-	DefaultParameters() runtime.Object
 }
