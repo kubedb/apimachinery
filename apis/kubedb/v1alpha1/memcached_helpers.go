@@ -9,7 +9,6 @@ import (
 	"github.com/kubedb/apimachinery/apis/kubedb"
 	apps "k8s.io/api/apps/v1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-	"k8s.io/apimachinery/pkg/runtime"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
@@ -61,10 +60,6 @@ func (r memcachedApp) Name() string {
 
 func (r memcachedApp) Type() appcat.AppType {
 	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularMemcached))
-}
-
-func (r memcachedApp) DefaultParameters() runtime.Object {
-	return nil
 }
 
 func (r Memcached) AppBindingMeta() appcat.AppBindingMeta {
