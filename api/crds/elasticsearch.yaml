@@ -5618,10 +5618,10 @@ spec:
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#secret'
                   type: string
             doNotPause:
-              description: '-------------------------------------------------------------------------
-                If DoNotPause is true, controller will prevent to delete this Elasticsearch
-                object. Controller will create same Elasticsearch object and ignore
-                other process. Deprecated: Use terminationPolicy = DoNotTerminate'
+              description: 'If DoNotPause is true, controller will prevent to delete
+                this Elasticsearch object. Controller will create same Elasticsearch
+                object and ignore other process. Deprecated: Use terminationPolicy
+                = DoNotTerminate'
               type: boolean
             enableSSL:
               description: To enable ssl in transport & http layer
