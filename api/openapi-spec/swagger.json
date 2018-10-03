@@ -19192,6 +19192,10 @@
           "x-kubernetes-patch-merge-key": "name",
           "x-kubernetes-patch-strategy": "merge"
         },
+        "lifecycle": {
+          "description": "Actions that the management system should take in response to container lifecycle events. Cannot be updated.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.Lifecycle"
+        },
         "livenessProbe": {
           "description": "Periodic probe of container liveness. Container will be restarted if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes",
           "$ref": "#/definitions/io.k8s.api.core.v1.Probe"
@@ -19254,6 +19258,28 @@
         }
       }
     },
+    "xyz.kmodules.offshoot-api.api.v1.ServicePort": {
+      "description": "ServicePort contains information on service's port.",
+      "required": [
+        "port"
+      ],
+      "properties": {
+        "name": {
+          "description": "The name of this port within the service. This must be a DNS_LABEL. All ports within a ServiceSpec must have unique names. This maps to the 'Name' field in EndpointPort objects. Optional if only one ServicePort is defined on this service.",
+          "type": "string"
+        },
+        "nodePort": {
+          "description": "The port on each node on which this service is exposed when type=NodePort or LoadBalancer. Usually assigned by the system. If specified, it will be allocated to the service if unused or else creation of the service will fail. Default is to auto-allocate a port if the ServiceType of this Service requires one. More info: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport",
+          "type": "integer",
+          "format": "int32"
+        },
+        "port": {
+          "description": "The port that will be exposed by this service.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "xyz.kmodules.offshoot-api.api.v1.ServiceSpec": {
       "description": "ServiceSpec describes the attributes that a user creates on a service.",
       "properties": {
@@ -19287,6 +19313,15 @@
           "items": {
             "type": "string"
           }
+        },
+        "ports": {
+          "description": "The list of ports that are exposed by this service. More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServicePort"
+          },
+          "x-kubernetes-patch-merge-key": "port",
+          "x-kubernetes-patch-strategy": "merge"
         },
         "type": {
           "description": "type determines how the Service is exposed. Defaults to ClusterIP. Valid options are ExternalName, ClusterIP, NodePort, and LoadBalancer. \"ExternalName\" maps to the specified externalName. \"ClusterIP\" allocates a cluster-internal IP address for load-balancing to endpoints. Endpoints are determined by the selector or if that is not specified, by manual construction of an Endpoints object. If clusterIP is \"None\", no virtual IP is allocated and the endpoints are published as a set of endpoints rather than a stable IP. \"NodePort\" builds on ClusterIP and allocates a port on every node which routes to the clusterIP. \"LoadBalancer\" builds on NodePort and creates an external load-balancer (if supported in the current cloud) which routes to the clusterIP. More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types",

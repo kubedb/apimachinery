@@ -1,5 +1,5 @@
-hash: 327405916053e6d5475b65b66f891b45c670193934e2e6a8adee5933849aeab3
-updated: 2018-10-02T22:27:45.563776258-07:00
+hash: 34aa5d9668354b698f8206eba9fecdc423d6557b83d1c3c8826b7dc04cccddd2
+updated: 2018-10-03T02:28:14.340367899-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -839,6 +839,16 @@ imports:
   - pkg/handler
   - pkg/util
   - pkg/util/proto
+- name: kmodules.xyz/custom-resources
+  version: 729e3de8c1075db502f1edc332ebdabde7f56d09
+  repo: https://github.com/kmodules/custom-resources.git
+  vcs: git
+  subpackages:
+  - apis
+  - apis/appcatalog
+  - apis/appcatalog/v1alpha1
+  - client/clientset/versioned/scheme
+  - client/clientset/versioned/typed/appcatalog/v1alpha1
 - name: kmodules.xyz/monitoring-agent-api
   version: 00cac08cb50defd6df8d08483fad35df790d7675
   repo: https://github.com/kmodules/monitoring-agent-api.git
