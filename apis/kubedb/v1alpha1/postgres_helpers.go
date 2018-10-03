@@ -144,6 +144,10 @@ func (p *PostgresSpec) SetDefaults() {
 
 	// migrate first to avoid incorrect defaulting
 	p.BackupSchedule.SetDefaults()
+	if p.DoNotPause {
+		p.TerminationPolicy = TerminationPolicyDoNotTerminate
+		p.DoNotPause = false
+	}
 	if len(p.NodeSelector) > 0 {
 		p.PodTemplate.Spec.NodeSelector = p.NodeSelector
 		p.NodeSelector = nil

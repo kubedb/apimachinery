@@ -6808,9 +6808,9 @@ spec:
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#secret'
                   type: string
             doNotPause:
-              description: If DoNotPause is true, controller will prevent to delete
+              description: 'If DoNotPause is true, controller will prevent to delete
                 this Postgres object. Controller will create same Postgres object
-                and ignore other process.
+                and ignore other process. Deprecated: Use terminationPolicy = DoNotTerminate'
               type: boolean
             imagePullSecrets:
               description: 'ImagePullSecrets is an optional list of references to

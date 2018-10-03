@@ -144,6 +144,10 @@ func (r *RedisSpec) SetDefaults() {
 	}
 
 	// migrate first to avoid incorrect defaulting
+	if r.DoNotPause {
+		r.TerminationPolicy = TerminationPolicyDoNotTerminate
+		r.DoNotPause = false
+	}
 	if len(r.NodeSelector) > 0 {
 		r.PodTemplate.Spec.NodeSelector = r.NodeSelector
 		r.NodeSelector = nil

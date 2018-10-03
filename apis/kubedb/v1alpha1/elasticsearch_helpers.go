@@ -156,6 +156,10 @@ func (e *ElasticsearchSpec) SetDefaults() {
 
 	// migrate first to avoid incorrect defaulting
 	e.BackupSchedule.SetDefaults()
+	if e.DoNotPause {
+		e.TerminationPolicy = TerminationPolicyDoNotTerminate
+		e.DoNotPause = false
+	}
 	if len(e.NodeSelector) > 0 {
 		e.PodTemplate.Spec.NodeSelector = e.NodeSelector
 		e.NodeSelector = nil
