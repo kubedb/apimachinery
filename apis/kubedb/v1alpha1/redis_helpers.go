@@ -72,7 +72,7 @@ func (r redisApp) DefaultParameters() runtime.Object {
 	return nil
 }
 
-func (r Redis) AppMeta() appcat.AppMeta {
+func (r Redis) AppBindingMeta() appcat.AppBindingMeta {
 	return &redisApp{&r}
 }
 
