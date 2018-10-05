@@ -47,16 +47,18 @@ type Config struct {
 	SnapQueue    *queue.Worker
 	SnapInformer cache.SharedIndexInformer
 
-	EnableRBAC        bool
-	OperatorNamespace string
-	GoverningService  string
-	ResyncPeriod      time.Duration
-	MaxNumRequeues    int
-	NumThreads        int
-	LoggerOptions     golog.Options
-	EnableAnalytics   bool
-	AnalyticsClientID string
-	WatchNamespace    string
+	EnableRBAC              bool
+	OperatorNamespace       string
+	GoverningService        string
+	ResyncPeriod            time.Duration
+	MaxNumRequeues          int
+	NumThreads              int
+	LoggerOptions           golog.Options
+	EnableAnalytics         bool
+	AnalyticsClientID       string
+	WatchNamespace          string
+	EnableValidatingWebhook bool
+	EnableMutatingWebhook   bool
 }
 
 type Snapshotter interface {
