@@ -1,0 +1,40 @@
+apiVersion: engine.kube.ci/v1alpha1
+kind: Workflow
+metadata:
+  name: kubedb-apimachinery-pr-test
+  namespace: default
+spec:
+  triggers:
+  - apiVersion: git.kube.ci/v1alpha1
+    kind: PullRequest
+    resource: pullrequests
+    namespace: default
+    selector:
+      matchLabels:
+        repository: kubedb-apimachinery
+        state: open
+        ok-to-test:
+    onCreateOrUpdate: true
+    onDelete: false
+    envFromPath:
+      HEAD_SHA: '{$.spec.headSHA}'
+      PR_NUMBER: '{$.spec.number}'
+  serviceAccount: wf-sa
+  envFrom:
+  - secretRef:
+      name: github-credential
+  steps:
+  - name: step-clone
+    image: alpine/git
+    commands:
+    - sh
+    args:
+    - -c
+    - git clone https://github.com/kubedb/apimachinery.git .; git checkout $HEAD_SHA
+  - name: step-test
+    image: golang:1.10-alpine3.8
+    commands:
+    - sh
+    args:
+    - -c
+    - cat hack/kubeci/test.sh | sh

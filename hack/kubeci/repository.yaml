@@ -1,0 +1,10 @@
+apiVersion: git.kube.ci/v1alpha1
+kind: Repository
+metadata:
+  name: kubedb-apimachinery
+  namespace: default
+spec:
+  host: github
+  owner: tamalsaha
+  repo: apimachinery
+  cloneUrl: https://github.com/kubedb/apimachinery.git
