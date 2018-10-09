@@ -199,17 +199,17 @@ func (m *MongoDBSpec) SetDefaults() {
 	}
 }
 
-func (e *MongoDBSpec) GetSecrets() []string {
-	if e == nil {
+func (m *MongoDBSpec) GetSecrets() []string {
+	if m == nil {
 		return nil
 	}
 
 	var secrets []string
-	if e.DatabaseSecret != nil {
-		secrets = append(secrets, e.DatabaseSecret.SecretName)
+	if m.DatabaseSecret != nil {
+		secrets = append(secrets, m.DatabaseSecret.SecretName)
 	}
-	if e.ReplicaSet != nil {
-		secrets = append(secrets, e.ReplicaSet.KeyFile.SecretName)
+	if m.ReplicaSet != nil && m.ReplicaSet.KeyFile != nil {
+		secrets = append(secrets, m.ReplicaSet.KeyFile.SecretName)
 	}
 	return secrets
 }
