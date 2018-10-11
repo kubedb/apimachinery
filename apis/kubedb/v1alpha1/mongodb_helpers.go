@@ -2,6 +2,8 @@ package v1alpha1
 
 import (
 	"fmt"
+	"github.com/appscode/go/types"
+	"strconv"
 
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
 	meta_util "github.com/appscode/kutil/meta"
@@ -48,6 +50,27 @@ func (m MongoDB) ResourcePlural() string {
 
 func (m MongoDB) ServiceName() string {
 	return m.OffshootName()
+}
+
+func (m MongoDB) GoverningServiceName() string {
+	return m.OffshootName()+"-gvr"
+}
+
+// HostAddress returns serviceName for standalone mongodb.
+// and, for replica set = <replName>/<host1>,<host2>,<host3>
+// Here, host1 = <pod-name>.<governing-serviceName>
+// Governing service name is used for replica host because,
+// we used governing service name as part of host while adding members
+// to replicaset.
+func (m MongoDB) HostAddress() string {
+	host := m.ServiceName()
+	if m.Spec.ReplicaSet != nil {
+		host = m.Spec.ReplicaSet.Name + "/" + m.Name + "-0." + m.GoverningServiceName()
+		for i := 1; i < int(types.Int32(m.Spec.Replicas)); i++ {
+			host += "," + m.Name + "-" + strconv.Itoa(i) + m.GoverningServiceName()
+		}
+	}
+	return host
 }
 
 type mongoDBApp struct {
