@@ -199,7 +199,11 @@ func (p *PostgresSpec) SetDefaults() {
 		p.UpdateStrategy.Type = apps.RollingUpdateStatefulSetStrategyType
 	}
 	if p.TerminationPolicy == "" {
-		p.TerminationPolicy = TerminationPolicyPause
+		if p.StorageType == StorageTypeEphemeral {
+			p.TerminationPolicy = TerminationPolicyDelete
+		} else {
+			p.TerminationPolicy = TerminationPolicyPause
+		}
 	}
 }
 
