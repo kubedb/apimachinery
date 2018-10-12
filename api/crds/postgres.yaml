@@ -8060,7 +8060,25 @@ spec:
                           required:
                           - volumePath
                     pitr:
-                      type: string
+                      properties:
+                        targetInclusive:
+                          description: TargetInclusive specifies whether to include
+                            ongoing transaction in given target point.
+                          type: boolean
+                        targetTime:
+                          description: TargetTime specifies the time stamp up to which
+                            recovery will proceed.
+                          type: string
+                        targetTimeline:
+                          description: TargetTimeline specifies recovering into a
+                            particular timeline. The default is to recover along the
+                            same timeline that was current when the base backup was
+                            taken.
+                          type: string
+                        targetXID:
+                          description: TargetXID specifies the transaction ID up to
+                            which recovery will proceed.
+                          type: string
                     s3:
                       properties:
                         bucket:
