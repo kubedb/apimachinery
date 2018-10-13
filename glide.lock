@@ -1,5 +1,5 @@
-hash: e328a0d4f69fd85326015d27417cb48501220d00f3e5c0da03d3977bb7a68ef7
-updated: 2018-10-13T13:25:39.432027673-07:00
+hash: 74869c36aa4bcea2f0a18df33a760f17fa6a6eb0a498b47cfab997c544299443
+updated: 2018-10-13T13:39:41.607457637-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -49,7 +49,7 @@ imports:
 - name: github.com/appscode/ocutil
   version: 9e3ab89e810deaabe1fd353d01913aaf7dbe6e6d
 - name: github.com/appscode/osm
-  version: a5b59095bc83b037afae084523b1411fedffc38f
+  version: 1afd84f09007c717e2a46e9d87e30902d8331b91
   subpackages:
   - context
 - name: github.com/aws/aws-sdk-go
