@@ -219,11 +219,12 @@ spec:
                             server has more data available. The value is opaque and
                             may be used to issue another request to the endpoint that
                             served this list to retrieve the next set of available
-                            objects. Continuing a list may not be possible if the
-                            server configuration has changed or more than a few minutes
-                            have passed. The resourceVersion field returned when using
-                            this continue value will be identical to the value in
-                            the first response.
+                            objects. Continuing a consistent list may not be possible
+                            if the server configuration has changed or more than a
+                            few minutes have passed. The resourceVersion field returned
+                            when using this continue value will be identical to the
+                            value in the first response, unless you have received
+                            this token from an error message.
                           type: string
                         resourceVersion:
                           description: 'String that identifies the server''s internal
@@ -1206,10 +1207,6 @@ spec:
                                         1.5 will be serialized as "1500m"
                                         1.5Gi will be serialized as "1536Mi"
 
-                                      NOTE: We reserve the right to amend this canonical format, perhaps to
-                                        allow 1.5 to be canonical.
-                                        or after March 2015.
-
                                       Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
                                       Non-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)
@@ -1262,10 +1259,6 @@ spec:
                             Examples:
                               1.5 will be serialized as "1500m"
                               1.5Gi will be serialized as "1536Mi"
-
-                            NOTE: We reserve the right to amend this canonical format, perhaps to
-                              allow 1.5 to be canonical.
-                              or after March 2015.
 
                             Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
@@ -1731,10 +1724,6 @@ spec:
                                                   1.5 will be serialized as "1500m"
                                                   1.5Gi will be serialized as "1536Mi"
 
-                                                NOTE: We reserve the right to amend this canonical format, perhaps to
-                                                  allow 1.5 to be canonical.
-                                                  or after March 2015.
-
                                                 Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
                                                 Non-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)
@@ -1926,7 +1915,7 @@ spec:
                         fsType:
                           description: Filesystem type to mount. Must be a filesystem
                             type supported by the host operating system. Ex. "ext4",
-                            "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+                            "xfs", "ntfs". Default is "xfs".
                           type: string
                         gateway:
                           description: The host address of the ScaleIO API Gateway.
@@ -1953,7 +1942,8 @@ spec:
                           type: boolean
                         storageMode:
                           description: Indicates whether the storage for a volume
-                            should be ThickProvisioned or ThinProvisioned.
+                            should be ThickProvisioned or ThinProvisioned. Default
+                            is ThinProvisioned.
                           type: string
                         storagePool:
                           description: The ScaleIO Storage Pool associated with the
@@ -2871,10 +2861,6 @@ spec:
                                             1.5 will be serialized as "1500m"
                                             1.5Gi will be serialized as "1536Mi"
 
-                                          NOTE: We reserve the right to amend this canonical format, perhaps to
-                                            allow 1.5 to be canonical.
-                                            or after March 2015.
-
                                           Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
                                           Non-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)
@@ -3062,10 +3048,6 @@ spec:
                                                 Examples:
                                                   1.5 will be serialized as "1500m"
                                                   1.5Gi will be serialized as "1536Mi"
-
-                                                NOTE: We reserve the right to amend this canonical format, perhaps to
-                                                  allow 1.5 to be canonical.
-                                                  or after March 2015.
 
                                                 Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
@@ -3472,8 +3454,8 @@ spec:
                                         the port that can be referred to by services.
                                       type: string
                                     protocol:
-                                      description: Protocol for port. Must be UDP
-                                        or TCP. Defaults to "TCP".
+                                      description: Protocol for port. Must be UDP,
+                                        TCP, or SCTP. Defaults to "TCP".
                                       type: string
                                   required:
                                   - containerPort
@@ -3637,6 +3619,14 @@ spec:
                                       equivalent to root on the host. Defaults to
                                       false.
                                     type: boolean
+                                  procMount:
+                                    description: procMount denotes the type of proc
+                                      mount to use for the containers. The default
+                                      is DefaultProcMount which uses the container
+                                      runtime defaults for readonly paths and masked
+                                      paths. This requires the ProcMountType feature
+                                      flag to be enabled.
+                                    type: string
                                   readOnlyRootFilesystem:
                                     description: Whether this container has a read-only
                                       root filesystem. Default is false.
@@ -4720,10 +4710,6 @@ spec:
                                     1.5 will be serialized as "1500m"
                                     1.5Gi will be serialized as "1536Mi"
 
-                                  NOTE: We reserve the right to amend this canonical format, perhaps to
-                                    allow 1.5 to be canonical.
-                                    or after March 2015.
-
                                   Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
                                   Non-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)
@@ -4774,10 +4760,6 @@ spec:
                         Examples:
                           1.5 will be serialized as "1500m"
                           1.5Gi will be serialized as "1536Mi"
-
-                        NOTE: We reserve the right to amend this canonical format, perhaps to
-                          allow 1.5 to be canonical.
-                          or after March 2015.
 
                         Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
@@ -5224,10 +5206,6 @@ spec:
                                               1.5 will be serialized as "1500m"
                                               1.5Gi will be serialized as "1536Mi"
 
-                                            NOTE: We reserve the right to amend this canonical format, perhaps to
-                                              allow 1.5 to be canonical.
-                                              or after March 2015.
-
                                             Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
                                             Non-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)
@@ -5408,7 +5386,7 @@ spec:
                     fsType:
                       description: Filesystem type to mount. Must be a filesystem
                         type supported by the host operating system. Ex. "ext4", "xfs",
-                        "ntfs". Implicitly inferred to be "ext4" if unspecified.
+                        "ntfs". Default is "xfs".
                       type: string
                     gateway:
                       description: The host address of the ScaleIO API Gateway.
@@ -5434,7 +5412,7 @@ spec:
                       type: boolean
                     storageMode:
                       description: Indicates whether the storage for a volume should
-                        be ThickProvisioned or ThinProvisioned.
+                        be ThickProvisioned or ThinProvisioned. Default is ThinProvisioned.
                       type: string
                     storagePool:
                       description: The ScaleIO Storage Pool associated with the protection
@@ -5969,10 +5947,6 @@ spec:
                                             1.5 will be serialized as "1500m"
                                             1.5Gi will be serialized as "1536Mi"
 
-                                          NOTE: We reserve the right to amend this canonical format, perhaps to
-                                            allow 1.5 to be canonical.
-                                            or after March 2015.
-
                                           Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
                                           Non-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)
@@ -6025,10 +5999,6 @@ spec:
                                 Examples:
                                   1.5 will be serialized as "1500m"
                                   1.5Gi will be serialized as "1536Mi"
-
-                                NOTE: We reserve the right to amend this canonical format, perhaps to
-                                  allow 1.5 to be canonical.
-                                  or after March 2015.
 
                                 Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
@@ -6505,10 +6475,6 @@ spec:
                                                       1.5 will be serialized as "1500m"
                                                       1.5Gi will be serialized as "1536Mi"
 
-                                                    NOTE: We reserve the right to amend this canonical format, perhaps to
-                                                      allow 1.5 to be canonical.
-                                                      or after March 2015.
-
                                                     Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
                                                     Non-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)
@@ -6705,8 +6671,7 @@ spec:
                             fsType:
                               description: Filesystem type to mount. Must be a filesystem
                                 type supported by the host operating system. Ex. "ext4",
-                                "xfs", "ntfs". Implicitly inferred to be "ext4" if
-                                unspecified.
+                                "xfs", "ntfs". Default is "xfs".
                               type: string
                             gateway:
                               description: The host address of the ScaleIO API Gateway.
@@ -6733,7 +6698,8 @@ spec:
                               type: boolean
                             storageMode:
                               description: Indicates whether the storage for a volume
-                                should be ThickProvisioned or ThinProvisioned.
+                                should be ThickProvisioned or ThinProvisioned. Default
+                                is ThinProvisioned.
                               type: string
                             storagePool:
                               description: The ScaleIO Storage Pool associated with
@@ -7205,10 +7171,6 @@ spec:
                                         1.5 will be serialized as "1500m"
                                         1.5Gi will be serialized as "1536Mi"
 
-                                      NOTE: We reserve the right to amend this canonical format, perhaps to
-                                        allow 1.5 to be canonical.
-                                        or after March 2015.
-
                                       Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
                                       Non-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)
@@ -7261,10 +7223,6 @@ spec:
                             Examples:
                               1.5 will be serialized as "1500m"
                               1.5Gi will be serialized as "1536Mi"
-
-                            NOTE: We reserve the right to amend this canonical format, perhaps to
-                              allow 1.5 to be canonical.
-                              or after March 2015.
 
                             Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
@@ -7728,10 +7686,6 @@ spec:
                                                   1.5 will be serialized as "1500m"
                                                   1.5Gi will be serialized as "1536Mi"
 
-                                                NOTE: We reserve the right to amend this canonical format, perhaps to
-                                                  allow 1.5 to be canonical.
-                                                  or after March 2015.
-
                                                 Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
                                                 Non-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)
@@ -7923,7 +7877,7 @@ spec:
                         fsType:
                           description: Filesystem type to mount. Must be a filesystem
                             type supported by the host operating system. Ex. "ext4",
-                            "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+                            "xfs", "ntfs". Default is "xfs".
                           type: string
                         gateway:
                           description: The host address of the ScaleIO API Gateway.
@@ -7950,7 +7904,8 @@ spec:
                           type: boolean
                         storageMode:
                           description: Indicates whether the storage for a volume
-                            should be ThickProvisioned or ThinProvisioned.
+                            should be ThickProvisioned or ThinProvisioned. Default
+                            is ThinProvisioned.
                           type: string
                         storagePool:
                           description: The ScaleIO Storage Pool associated with the
@@ -8101,7 +8056,6 @@ spec:
             monitor:
               properties:
                 agent:
-                  description: 'Valid values: coreos-prometheus-operator'
                   type: string
                 prometheus:
                   properties:
@@ -8120,6 +8074,20 @@ spec:
                       description: Port number for the exporter side car.
                       format: int32
                       type: integer
+                resources:
+                  description: ResourceRequirements describes the compute resource
+                    requirements.
+                  properties:
+                    limits:
+                      description: 'Limits describes the maximum amount of compute
+                        resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                      type: object
+                    requests:
+                      description: 'Requests describes the minimum amount of compute
+                        resources required. If Requests is omitted for a container,
+                        it defaults to Limits if that is explicitly specified, otherwise
+                        to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                      type: object
             nodeSelector:
               description: 'NodeSelector is a selector which must be true for the
                 pod to fit on a node Deprecated: Use podTemplate.spec.nodeSelector'
@@ -8866,10 +8834,6 @@ spec:
                                         1.5 will be serialized as "1500m"
                                         1.5Gi will be serialized as "1536Mi"
 
-                                      NOTE: We reserve the right to amend this canonical format, perhaps to
-                                        allow 1.5 to be canonical.
-                                        or after March 2015.
-
                                       Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
                                       Non-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)
@@ -9054,10 +9018,6 @@ spec:
                                             Examples:
                                               1.5 will be serialized as "1500m"
                                               1.5Gi will be serialized as "1536Mi"
-
-                                            NOTE: We reserve the right to amend this canonical format, perhaps to
-                                              allow 1.5 to be canonical.
-                                              or after March 2015.
 
                                             Note that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.
 
@@ -9455,8 +9415,8 @@ spec:
                                     that can be referred to by services.
                                   type: string
                                 protocol:
-                                  description: Protocol for port. Must be UDP or TCP.
-                                    Defaults to "TCP".
+                                  description: Protocol for port. Must be UDP, TCP,
+                                    or SCTP. Defaults to "TCP".
                                   type: string
                               required:
                               - containerPort
@@ -9614,6 +9574,13 @@ spec:
                                   in privileged containers are essentially equivalent
                                   to root on the host. Defaults to false.
                                 type: boolean
+                              procMount:
+                                description: procMount denotes the type of proc mount
+                                  to use for the containers. The default is DefaultProcMount
+                                  which uses the container runtime defaults for readonly
+                                  paths and masked paths. This requires the ProcMountType
+                                  feature flag to be enabled.
+                                type: string
                               readOnlyRootFilesystem:
                                 description: Whether this container has a read-only
                                   root filesystem. Default is false.
@@ -10458,6 +10425,26 @@ spec:
                   items:
                     type: string
                   type: array
+                dataSource:
+                  description: TypedLocalObjectReference contains enough information
+                    to let you locate the typed referenced object inside the same
+                    namespace.
+                  properties:
+                    apiGroup:
+                      description: APIGroup is the group for the resource being referenced.
+                        If APIGroup is not specified, the specified Kind must be in
+                        the core API group. For any other third-party types, APIGroup
+                        is required.
+                      type: string
+                    kind:
+                      description: Kind is the type of resource being referenced
+                      type: string
+                    name:
+                      description: Name is the name of resource being referenced
+                      type: string
+                  required:
+                  - kind
+                  - name
                 resources:
                   description: ResourceRequirements describes the compute resource
                     requirements.
@@ -10612,6 +10599,26 @@ spec:
                           items:
                             type: string
                           type: array
+                        dataSource:
+                          description: TypedLocalObjectReference contains enough information
+                            to let you locate the typed referenced object inside the
+                            same namespace.
+                          properties:
+                            apiGroup:
+                              description: APIGroup is the group for the resource
+                                being referenced. If APIGroup is not specified, the
+                                specified Kind must be in the core API group. For
+                                any other third-party types, APIGroup is required.
+                              type: string
+                            kind:
+                              description: Kind is the type of resource being referenced
+                              type: string
+                            name:
+                              description: Name is the name of resource being referenced
+                              type: string
+                          required:
+                          - kind
+                          - name
                         resources:
                           description: ResourceRequirements describes the compute
                             resource requirements.
@@ -10720,6 +10727,26 @@ spec:
                           items:
                             type: string
                           type: array
+                        dataSource:
+                          description: TypedLocalObjectReference contains enough information
+                            to let you locate the typed referenced object inside the
+                            same namespace.
+                          properties:
+                            apiGroup:
+                              description: APIGroup is the group for the resource
+                                being referenced. If APIGroup is not specified, the
+                                specified Kind must be in the core API group. For
+                                any other third-party types, APIGroup is required.
+                              type: string
+                            kind:
+                              description: Kind is the type of resource being referenced
+                              type: string
+                            name:
+                              description: Name is the name of resource being referenced
+                              type: string
+                          required:
+                          - kind
+                          - name
                         resources:
                           description: ResourceRequirements describes the compute
                             resource requirements.
@@ -10828,6 +10855,26 @@ spec:
                           items:
                             type: string
                           type: array
+                        dataSource:
+                          description: TypedLocalObjectReference contains enough information
+                            to let you locate the typed referenced object inside the
+                            same namespace.
+                          properties:
+                            apiGroup:
+                              description: APIGroup is the group for the resource
+                                being referenced. If APIGroup is not specified, the
+                                specified Kind must be in the core API group. For
+                                any other third-party types, APIGroup is required.
+                              type: string
+                            kind:
+                              description: Kind is the type of resource being referenced
+                              type: string
+                            name:
+                              description: Name is the name of resource being referenced
+                              type: string
+                          required:
+                          - kind
+                          - name
                         resources:
                           description: ResourceRequirements describes the compute
                             resource requirements.
