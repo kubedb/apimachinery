@@ -51,7 +51,7 @@ func TestNamespaceValidator_Admit(t *testing.T) {
 			if c.operation == admission.Delete {
 				if _, err := validator.dc.
 					Resource(core.SchemeGroupVersion.WithResource("namespaces")).
-					Create(c.object); err != nil && !kerr.IsAlreadyExists(err) {
+					Create(c.object, metav1.CreateOptions{}); err != nil && !kerr.IsAlreadyExists(err) {
 					t.Fatalf("failed create namespace for input %s: %s", c.testName, err)
 				}
 			}
@@ -60,7 +60,7 @@ func TestNamespaceValidator_Admit(t *testing.T) {
 					if _, err := validator.dc.
 						Resource(api.SchemeGroupVersion.WithResource(api.ResourcePluralPostgres)).
 						Namespace("demo").
-						Create(u); err != nil && !kerr.IsAlreadyExists(err) {
+						Create(u, metav1.CreateOptions{}); err != nil && !kerr.IsAlreadyExists(err) {
 						t.Fatalf("failed create db for input %s: %s", c.testName, err)
 					}
 				}
