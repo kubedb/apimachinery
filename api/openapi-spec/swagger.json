@@ -19182,7 +19182,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.PrometheusSpec"
         },
         "resources": {
-          "description": "Compute Resources required by the sidecar container. Deprecated: Use podTemplate.spec.resources",
+          "description": "Compute Resources required by the exporter container.",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       }
