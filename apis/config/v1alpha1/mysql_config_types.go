@@ -12,8 +12,7 @@ const (
 // https://www.vaultproject.io/api/secret/databases/index.html
 // https://www.vaultproject.io/api/secret/databases/mysql-maria.html#configure-connection
 type MySQLConfiguration struct {
-	metav1.TypeMeta   `json:",inline,omitempty"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.TypeMeta `json:",inline,omitempty"`
 
 	// Specifies the name of the plugin to use for this connection.
 	// Default plugin:
