@@ -62,7 +62,7 @@ type RoleReference struct {
 type DatabaseAccessRequestStatus struct {
 	// Conditions applied to the request, such as approval or denial.
 	// +optional
-	Conditions []DatabaseAccessRequestCondition `json:"conditions,omitempty" protobuf:"bytes,1,rep,name=conditions"`
+	Conditions []DatabaseAccessRequestCondition `json:"conditions,omitempty"`
 
 	// Name of the secret containing database credentials
 	Secret *core.LocalObjectReference `json:"secret,omitempty"`
@@ -78,17 +78,17 @@ const (
 
 type DatabaseAccessRequestCondition struct {
 	// request approval state, currently Approved or Denied.
-	Type RequestConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=RequestConditionType"`
+	Type RequestConditionType `json:"type"`
 
 	// brief reason for the request state
 	// +optional
-	Reason string `json:"reason,omitempty" protobuf:"bytes,2,opt,name=reason"`
+	Reason string `json:"reason,omitempty"`
 
 	// human readable message with details about the request state
 	// +optional
-	Message string `json:"message,omitempty" protobuf:"bytes,3,opt,name=message"`
+	Message string `json:"message,omitempty"`
 
 	// timestamp for the last update to this condition
 	// +optional
-	LastUpdateTime metav1.Time `json:"lastUpdateTime,omitempty" protobuf:"bytes,4,opt,name=lastUpdateTime"`
+	LastUpdateTime metav1.Time `json:"lastUpdateTime,omitempty"`
 }
