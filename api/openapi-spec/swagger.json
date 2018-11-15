@@ -17816,10 +17816,6 @@
         "subjects"
       ],
       "properties": {
-        "TTL": {
-          "description": "Specifies the TTL for the leases associated with this role. Accepts time suffixed strings (\"1h\") or an integer number of seconds. Defaults to roles default TTL time",
-          "type": "string"
-        },
         "roleRef": {
           "description": "Contains vault database role info",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.RoleReference"
@@ -17829,6 +17825,10 @@
           "items": {
             "$ref": "#/definitions/io.k8s.api.rbac.v1.Subject"
           }
+        },
+        "ttl": {
+          "description": "Specifies the TTL for the leases associated with this role. Accepts time suffixed strings (\"1h\") or an integer number of seconds. Defaults to roles default TTL time",
+          "type": "string"
         }
       }
     },

@@ -34,7 +34,7 @@ type DatabaseAccessRequestSpec struct {
 	// Specifies the TTL for the leases associated with this role.
 	// Accepts time suffixed strings ("1h") or an integer number of seconds.
 	// Defaults to roles default TTL time
-	TTL string `json:"TTL,omitempty"`
+	TTL string `json:"ttl,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

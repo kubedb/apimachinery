@@ -525,7 +525,7 @@ func schema_apimachinery_apis_authorization_v1alpha1_DatabaseAccessRequestSpec(r
 							},
 						},
 					},
-					"TTL": {
+					"ttl": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the TTL for the leases associated with this role. Accepts time suffixed strings (\"1h\") or an integer number of seconds. Defaults to roles default TTL time",
 							Type:        []string{"string"},
