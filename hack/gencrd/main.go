@@ -8,6 +8,8 @@ import (
 	"github.com/go-openapi/spec"
 	"github.com/golang/glog"
 	"github.com/kubedb/apimachinery/apis"
+	authorizationinstall "github.com/kubedb/apimachinery/apis/authorization/install"
+	authorizationv1alpha1 "github.com/kubedb/apimachinery/apis/authorization/v1alpha1"
 	cataloginstall "github.com/kubedb/apimachinery/apis/catalog/install"
 	catalogv1alpha1 "github.com/kubedb/apimachinery/apis/catalog/v1alpha1"
 	kubedbinstall "github.com/kubedb/apimachinery/apis/kubedb/install"
@@ -50,6 +52,11 @@ func generateCRDDefinitions() {
 		catalogv1alpha1.MySQLVersion{}.CustomResourceDefinition(),
 		catalogv1alpha1.PostgresVersion{}.CustomResourceDefinition(),
 		catalogv1alpha1.RedisVersion{}.CustomResourceDefinition(),
+
+		authorizationv1alpha1.DatabaseAccessRequest{}.CustomResourceDefinition(),
+		authorizationv1alpha1.MySQLRole{}.CustomResourceDefinition(),
+		authorizationv1alpha1.MongoDBRole{}.CustomResourceDefinition(),
+		authorizationv1alpha1.PostgresRole{}.CustomResourceDefinition(),
 	}
 	for _, crd := range crds {
 		filename := filepath.Join(gort.GOPath(), "/src/github.com/kubedb/apimachinery/api/crds", crd.Spec.Names.Singular+".yaml")
@@ -70,6 +77,7 @@ func generateSwaggerJson() {
 
 	kubedbinstall.Install(Scheme)
 	cataloginstall.Install(Scheme)
+	authorizationinstall.Install(Scheme)
 
 	apispec, err := openapi.RenderOpenAPISpec(openapi.Config{
 		Scheme: Scheme,
@@ -90,6 +98,7 @@ func generateSwaggerJson() {
 		OpenAPIDefinitions: []common.GetOpenAPIDefinitions{
 			kubedbv1alpha1.GetOpenAPIDefinitions,
 			catalogv1alpha1.GetOpenAPIDefinitions,
+			authorizationv1alpha1.GetOpenAPIDefinitions,
 		},
 		Resources: []openapi.TypeInfo{
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralDormantDatabase, kubedbv1alpha1.ResourceKindDormantDatabase, true},
@@ -109,6 +118,11 @@ func generateSwaggerJson() {
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralMySQLVersion, catalogv1alpha1.ResourceKindMySQLVersion, true},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralPostgresVersion, catalogv1alpha1.ResourceKindPostgresVersion, false},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralRedisVersion, catalogv1alpha1.ResourceKindRedisVersion, false},
+
+			{authorizationv1alpha1.SchemeGroupVersion, authorizationv1alpha1.ResourceDatabaseAccessRequests, authorizationv1alpha1.ResourceKindDatabaseAccessRequest, true},
+			{authorizationv1alpha1.SchemeGroupVersion, authorizationv1alpha1.ResourceMySQLRoles, authorizationv1alpha1.ResourceKindMySQLRole, true},
+			{authorizationv1alpha1.SchemeGroupVersion, authorizationv1alpha1.ResourceMongoDBRoles, authorizationv1alpha1.ResourceKindMongoDBRole, true},
+			{authorizationv1alpha1.SchemeGroupVersion, authorizationv1alpha1.ResourcePostgresRoles, authorizationv1alpha1.ResourceKindPostgresRole, true},
 		},
 	})
 	if err != nil {
