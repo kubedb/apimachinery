@@ -39,6 +39,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubedb/apimachinery/apis/authorization/v1alpha1.DatabaseAccessRequestList":      schema_apimachinery_apis_authorization_v1alpha1_DatabaseAccessRequestList(ref),
 		"github.com/kubedb/apimachinery/apis/authorization/v1alpha1.DatabaseAccessRequestSpec":      schema_apimachinery_apis_authorization_v1alpha1_DatabaseAccessRequestSpec(ref),
 		"github.com/kubedb/apimachinery/apis/authorization/v1alpha1.DatabaseAccessRequestStatus":    schema_apimachinery_apis_authorization_v1alpha1_DatabaseAccessRequestStatus(ref),
+		"github.com/kubedb/apimachinery/apis/authorization/v1alpha1.Lease":                          schema_apimachinery_apis_authorization_v1alpha1_Lease(ref),
 		"github.com/kubedb/apimachinery/apis/authorization/v1alpha1.MongoDBRole":                    schema_apimachinery_apis_authorization_v1alpha1_MongoDBRole(ref),
 		"github.com/kubedb/apimachinery/apis/authorization/v1alpha1.MongoDBRoleCondition":           schema_apimachinery_apis_authorization_v1alpha1_MongoDBRoleCondition(ref),
 		"github.com/kubedb/apimachinery/apis/authorization/v1alpha1.MongoDBRoleList":                schema_apimachinery_apis_authorization_v1alpha1_MongoDBRoleList(ref),
@@ -565,11 +566,52 @@ func schema_apimachinery_apis_authorization_v1alpha1_DatabaseAccessRequestStatus
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"lease": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Contains lease info",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/authorization/v1alpha1.Lease"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/kubedb/apimachinery/apis/authorization/v1alpha1.DatabaseAccessRequestCondition", "k8s.io/api/core/v1.LocalObjectReference"},
+			"github.com/kubedb/apimachinery/apis/authorization/v1alpha1.DatabaseAccessRequestCondition", "github.com/kubedb/apimachinery/apis/authorization/v1alpha1.Lease", "k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_authorization_v1alpha1_Lease(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Lease contains lease info",
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lease id",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"duration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lease duration",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"renewable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies whether this lease is renewable",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"id", "duration", "renewable"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 

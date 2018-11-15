@@ -395,6 +395,24 @@ spec:
                 required:
                 - type
               type: array
+            lease:
+              description: Lease contains lease info
+              properties:
+                duration:
+                  description: Duration is a wrapper around time.Duration which supports
+                    correct marshaling to YAML and JSON. In particular, it marshals
+                    into strings, which can be used as map keys in json.
+                  type: string
+                id:
+                  description: lease id
+                  type: string
+                renewable:
+                  description: Specifies whether this lease is renewable
+                  type: boolean
+              required:
+              - id
+              - duration
+              - renewable
             secret:
               description: LocalObjectReference contains enough information to let
                 you locate the referenced object inside the same namespace.

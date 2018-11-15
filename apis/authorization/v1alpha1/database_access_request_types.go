@@ -66,6 +66,9 @@ type DatabaseAccessRequestStatus struct {
 
 	// Name of the secret containing database credentials
 	Secret *core.LocalObjectReference `json:"secret,omitempty"`
+
+	// Contains lease info
+	Lease *Lease `json:"lease,omitempty"`
 }
 
 type RequestConditionType string
@@ -91,4 +94,16 @@ type DatabaseAccessRequestCondition struct {
 	// timestamp for the last update to this condition
 	// +optional
 	LastUpdateTime metav1.Time `json:"lastUpdateTime,omitempty"`
+}
+
+// Lease contains lease info
+type Lease struct {
+	// lease id
+	ID string `json:"id"`
+
+	// lease duration
+	Duration metav1.Duration `json:"duration"`
+
+	// Specifies whether this lease is renewable
+	Renewable bool `json:"renewable"`
 }
