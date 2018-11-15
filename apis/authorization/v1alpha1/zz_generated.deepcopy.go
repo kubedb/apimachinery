@@ -262,7 +262,11 @@ func (in *MongoDBRoleSpec) DeepCopyInto(out *MongoDBRoleSpec) {
 		*out = new(appcatalogv1alpha1.AppReference)
 		(*in).DeepCopyInto(*out)
 	}
-	in.DatabaseRef.DeepCopyInto(&out.DatabaseRef)
+	if in.DatabaseRef != nil {
+		in, out := &in.DatabaseRef, &out.DatabaseRef
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	if in.CreationStatements != nil {
 		in, out := &in.CreationStatements, &out.CreationStatements
 		*out = make([]string, len(*in))
@@ -396,7 +400,11 @@ func (in *MySQLRoleSpec) DeepCopyInto(out *MySQLRoleSpec) {
 		*out = new(appcatalogv1alpha1.AppReference)
 		(*in).DeepCopyInto(*out)
 	}
-	in.DatabaseRef.DeepCopyInto(&out.DatabaseRef)
+	if in.DatabaseRef != nil {
+		in, out := &in.DatabaseRef, &out.DatabaseRef
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	if in.CreationStatements != nil {
 		in, out := &in.CreationStatements, &out.CreationStatements
 		*out = make([]string, len(*in))
@@ -530,7 +538,11 @@ func (in *PostgresRoleSpec) DeepCopyInto(out *PostgresRoleSpec) {
 		*out = new(appcatalogv1alpha1.AppReference)
 		(*in).DeepCopyInto(*out)
 	}
-	in.DatabaseRef.DeepCopyInto(&out.DatabaseRef)
+	if in.DatabaseRef != nil {
+		in, out := &in.DatabaseRef, &out.DatabaseRef
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	if in.CreationStatements != nil {
 		in, out := &in.CreationStatements, &out.CreationStatements
 		*out = make([]string, len(*in))

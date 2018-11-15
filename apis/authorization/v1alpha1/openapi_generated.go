@@ -757,7 +757,7 @@ func schema_apimachinery_apis_authorization_v1alpha1_MongoDBRoleSpec(ref common.
 					},
 					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"defaultTTL": {
@@ -807,7 +807,7 @@ func schema_apimachinery_apis_authorization_v1alpha1_MongoDBRoleSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
 	}
 }
 
@@ -991,7 +991,7 @@ func schema_apimachinery_apis_authorization_v1alpha1_MySQLRoleSpec(ref common.Re
 					},
 					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"defaultTTL": {
@@ -1041,7 +1041,7 @@ func schema_apimachinery_apis_authorization_v1alpha1_MySQLRoleSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
 	}
 }
 
@@ -1225,7 +1225,7 @@ func schema_apimachinery_apis_authorization_v1alpha1_PostgresRoleSpec(ref common
 					},
 					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"defaultTTL": {
@@ -1303,7 +1303,7 @@ func schema_apimachinery_apis_authorization_v1alpha1_PostgresRoleSpec(ref common
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
 	}
 }
 
