@@ -17970,7 +17970,7 @@
           }
         },
         "databaseRef": {
-          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.AppReference"
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "defaultTTL": {
           "description": "Specifies the TTL for the leases associated with this role. Accepts time suffixed strings (\"1h\") or an integer number of seconds. Defaults to system/engine default TTL time",
@@ -18104,7 +18104,7 @@
           }
         },
         "databaseRef": {
-          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.AppReference"
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "defaultTTL": {
           "description": "Specifies the TTL for the leases associated with this role. Accepts time suffixed strings (\"1h\") or an integer number of seconds. Defaults to system/engine default TTL time",
@@ -18238,7 +18238,7 @@
           }
         },
         "databaseRef": {
-          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.AppReference"
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "defaultTTL": {
           "description": "Specifies the TTL for the leases associated with this role. Accepts time suffixed strings (\"1h\") or an integer number of seconds. Defaults to system/engine default TTL time",

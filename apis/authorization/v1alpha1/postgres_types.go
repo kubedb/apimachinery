@@ -2,7 +2,7 @@ package v1alpha1
 
 import (
 	"github.com/appscode/go/encoding/json/types"
-	"k8s.io/api/core/v1"
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 )
@@ -29,7 +29,7 @@ type PostgresRole struct {
 type PostgresRoleSpec struct {
 	AuthManagerRef *appcat.AppReference `json:"authManagerRef,omitempty"`
 
-	DatabaseRef appcat.AppReference `json:"databaseRef"`
+	DatabaseRef *core.LocalObjectReference `json:"databaseRef"`
 
 	// links:
 	// 	- https://www.vaultproject.io/api/secret/databases/index.html
@@ -92,7 +92,7 @@ type PostgresRoleCondition struct {
 	Type string `json:"type,omitempty"`
 
 	// Status of the condition, one of True, False, Unknown.
-	Status v1.ConditionStatus `json:"status,omitempty"`
+	Status core.ConditionStatus `json:"status,omitempty"`
 
 	// The reason for the condition's.
 	Reason string `json:"reason,omitempty"`
