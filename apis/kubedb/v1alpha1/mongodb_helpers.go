@@ -228,6 +228,9 @@ func (m *MongoDBSpec) SetDefaults() {
 	m.setDefaultProbes()
 }
 
+// setDefaultProbes sets defaults only when probe fields are nil.
+// In operator, check if the value of probe fields is "{}".
+// For "{}", ignore readinessprobe or livenessprobe in statefulset.
 func (m *MongoDBSpec) setDefaultProbes() {
 	cmd := []string{
 		"mongo",
