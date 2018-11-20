@@ -231,6 +231,7 @@ func (m *MongoDBSpec) SetDefaults() {
 // setDefaultProbes sets defaults only when probe fields are nil.
 // In operator, check if the value of probe fields is "{}".
 // For "{}", ignore readinessprobe or livenessprobe in statefulset.
+// ref: https://github.com/helm/charts/blob/345ba987722350ffde56ec34d2928c0b383940aa/stable/mongodb/templates/deployment-standalone.yaml#L93
 func (m *MongoDBSpec) setDefaultProbes() {
 	cmd := []string{
 		"mongo",
