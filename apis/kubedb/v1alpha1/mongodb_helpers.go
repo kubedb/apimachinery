@@ -225,10 +225,10 @@ func (m *MongoDBSpec) SetDefaults() {
 			m.TerminationPolicy = TerminationPolicyPause
 		}
 	}
-	m.SetDefaultProbes()
+	m.setDefaultProbes()
 }
 
-func (m *MongoDBSpec) SetDefaultProbes() {
+func (m *MongoDBSpec) setDefaultProbes() {
 	cmd := []string{
 		"mongo",
 		"--eval",
