@@ -58,6 +58,20 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 		return nil
 	}
 
+	if _, _, err := util.PatchSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.Snapshot) *api.Snapshot {
+		in.Labels[api.LabelDatabaseName] = snapshot.Spec.DatabaseName
+		return in
+	}); err != nil {
+		log.Errorln(err)
+		c.eventRecorder.Eventf(
+			snapshot,
+			core.EventTypeWarning,
+			eventer.EventReasonFailedToUpdate,
+			err.Error(),
+		)
+		return err
+	}
+
 	// Validate DatabaseSnapshot
 	if err := c.snapshotter.ValidateSnapshot(snapshot); err != nil {
 		log.Errorln(err)
@@ -68,21 +82,21 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 			err.Error(),
 		)
 
-		if _, err := util.UpdateSnapshotStatus(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
+		if _, er := util.UpdateSnapshotStatus(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
 			t := metav1.Now()
 			in.CompletionTime = &t
 			in.Phase = api.SnapshotPhaseFailed
 			in.Reason = "Invalid Snapshot"
 			return in
-		}, apis.EnableStatusSubresource); err != nil {
-			log.Errorln(err)
+		}, apis.EnableStatusSubresource); er != nil {
+			log.Errorln(er)
 			c.eventRecorder.Eventf(
 				snapshot,
 				core.EventTypeWarning,
 				eventer.EventReasonFailedToUpdate,
-				err.Error(),
+				er.Error(),
 			)
-			return err
+			return er
 		}
 
 		if _, _, err = util.PatchSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.Snapshot) *api.Snapshot {
