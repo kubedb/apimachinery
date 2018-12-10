@@ -294,7 +294,7 @@ func (c *Controller) delete(snapshot *api.Snapshot) error {
 				err,
 			)
 		}
-		return err
+		return retryIfApplicable(err)
 	}
 
 	if runtimeObj != nil {
