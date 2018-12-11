@@ -1,5 +1,5 @@
-hash: 74869c36aa4bcea2f0a18df33a760f17fa6a6eb0a498b47cfab997c544299443
-updated: 2018-12-10T22:56:09.048733914-08:00
+hash: aea00a34ff03d46b28bd2f28f60e071a133e3066ab12b2cee8cdcde782adba69
+updated: 2018-12-11T01:04:27.503153112-08:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -496,7 +496,7 @@ imports:
   repo: https://github.com/appscode/cron.git
   vcs: git
 - name: gopkg.in/yaml.v2
-  version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
+  version: 5420a8b6744d3b0345ab293f6fcba19c978f1183
 - name: k8s.io/api
   version: fd83cbc87e7632ccd8bbab63d2b673d4e0c631cc
   subpackages:

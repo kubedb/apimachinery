@@ -2,6 +2,7 @@ package snapshot
 
 import (
 	"github.com/appscode/go/log"
+	"github.com/appscode/kutil"
 	core_util "github.com/appscode/kutil/core/v1"
 	"github.com/appscode/kutil/tools/queue"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
@@ -49,7 +50,7 @@ func (c *Controller) runSnapshot(key string) error {
 				in.ObjectMeta = core_util.AddFinalizer(in.ObjectMeta, api.GenericKey)
 				return in
 			})
-			if err := c.create(snapshot); err != nil {
+			if err := c.create(snapshot); kutil.IsRequestRetryable(err) {
 				log.Errorln(err)
 				return err
 			}
