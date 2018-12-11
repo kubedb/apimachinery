@@ -78,6 +78,15 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 			eventer.EventReasonInvalid,
 			err.Error(),
 		)
+		if _, er := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, err.Error(), apis.EnableStatusSubresource); er != nil {
+			c.eventRecorder.Eventf(
+				snapshot,
+				core.EventTypeWarning,
+				eventer.EventReasonFailedToUpdate,
+				er.Error(),
+			)
+			return retryIfApplicable(er)
+		}
 		return retryIfApplicable(err)
 	}
 
