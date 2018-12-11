@@ -17,27 +17,6 @@ import (
 )
 
 func (c *Controller) create(snapshot *api.Snapshot) error {
-	markAsFailedSnapshot := func(reason string) error {
-		snap, err := util.UpdateSnapshotStatus(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
-			t := metav1.Now()
-			in.CompletionTime = &t
-			in.Phase = api.SnapshotPhaseFailed
-			in.Reason = reason
-			return in
-		}, apis.EnableStatusSubresource)
-		if err != nil {
-			c.eventRecorder.Eventf(
-				snapshot,
-				core.EventTypeWarning,
-				eventer.EventReasonFailedToUpdate,
-				err.Error(),
-			)
-			return retryIfApplicable(err)
-		}
-		snapshot.Status = snap.Status
-		return nil
-	}
-
 	if snapshot.Status.StartTime == nil {
 		snap, err := util.UpdateSnapshotStatus(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
 			t := metav1.Now()
@@ -121,7 +100,16 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 			eventer.EventReasonFailedToGet,
 			message,
 		)
-		return markAsFailedSnapshot(message)
+		_, err := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, message, apis.EnableStatusSubresource)
+		if err != nil {
+			c.eventRecorder.Eventf(
+				snapshot,
+				core.EventTypeWarning,
+				eventer.EventReasonFailedToUpdate,
+				err.Error(),
+			)
+		}
+		return retryIfApplicable(err)
 	}
 
 	runtimeObj, err := c.snapshotter.GetDatabase(metav1.ObjectMeta{Name: snapshot.Spec.DatabaseName, Namespace: snapshot.Namespace})
@@ -162,11 +150,19 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 			eventer.EventReasonSnapshotFailed,
 			message,
 		)
-		return markAsFailedSnapshot(message)
+		if _, er := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, message, apis.EnableStatusSubresource); er != nil {
+			c.eventRecorder.Eventf(
+				snapshot,
+				core.EventTypeWarning,
+				eventer.EventReasonFailedToUpdate,
+				er.Error(),
+			)
+			return retryIfApplicable(er)
+		}
+		return retryIfApplicable(err)
 	}
 
-	_, err = c.Client.CoreV1().Secrets(secret.Namespace).Create(secret)
-	if err != nil && !kerr.IsAlreadyExists(err) {
+	if _, err = c.Client.CoreV1().Secrets(secret.Namespace).Create(secret); err != nil && !kerr.IsAlreadyExists(err) {
 		message := fmt.Sprintf("Failed to create osm secret. Reason: %v", err)
 		c.eventRecorder.Event(
 			runtimeObj,
@@ -186,7 +182,17 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 	// Do not check bucket access for local volume
 	if snapshot.Spec.Local == nil {
 		if err := osm.CheckBucketAccess(c.Client, snapshot.Spec.Backend, snapshot.Namespace); err != nil {
-			return markAsFailedSnapshot(err.Error())
+			_, er := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, err.Error(), apis.EnableStatusSubresource)
+			if er != nil {
+				c.eventRecorder.Eventf(
+					snapshot,
+					core.EventTypeWarning,
+					eventer.EventReasonFailedToUpdate,
+					er.Error(),
+				)
+				return retryIfApplicable(er)
+			}
+			return retryIfApplicable(err)
 		}
 	}
 
@@ -329,7 +335,7 @@ func (c *Controller) isSnapshotRunning(snapshot *api.Snapshot) (bool, error) {
 }
 
 func retryIfApplicable(err error) error {
-	if kutil.IsRequestRetryable(err) || kutil.AdmissionWebhookDeniedRequest(err) {
+	if err != nil && (kutil.IsRequestRetryable(err) || kutil.AdmissionWebhookDeniedRequest(err)) {
 		return err
 	}
 	return nil
