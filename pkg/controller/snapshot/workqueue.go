@@ -35,7 +35,7 @@ func (c *Controller) runSnapshot(key string) error {
 		snapshot := obj.(*api.Snapshot).DeepCopy()
 		if snapshot.DeletionTimestamp != nil {
 			if core_util.HasFinalizer(snapshot.ObjectMeta, api.GenericKey) {
-				if err := c.delete(snapshot); err != nil {
+				if err := c.delete(snapshot); kutil.IsRequestRetryable(err) {
 					log.Errorln(err)
 					return err
 				}

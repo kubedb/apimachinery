@@ -261,51 +261,43 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 }
 
 func (c *Controller) delete(snapshot *api.Snapshot) error {
-	runtimeObj, err := c.snapshotter.GetDatabase(metav1.ObjectMeta{Name: snapshot.Spec.DatabaseName, Namespace: snapshot.Namespace})
+	db, err := c.snapshotter.GetDatabase(metav1.ObjectMeta{Name: snapshot.Spec.DatabaseName, Namespace: snapshot.Namespace})
 	if err != nil {
-		if !kerr.IsNotFound(err) {
-			c.eventRecorder.Event(
-				snapshot,
-				core.EventTypeWarning,
-				eventer.EventReasonFailedToGet,
-				err.Error(),
-			)
-			return err
-		}
-	}
-
-	if runtimeObj != nil {
-		c.eventRecorder.Eventf(
-			runtimeObj,
-			core.EventTypeNormal,
-			eventer.EventReasonWipingOut,
-			"Wiping out Snapshot: %v",
-			snapshot.Name,
+		c.eventRecorder.Event(
+			snapshot,
+			core.EventTypeWarning,
+			eventer.EventReasonSnapshotError,
+			err.Error(),
 		)
-	}
-
-	if err := c.snapshotter.WipeOutSnapshot(snapshot); err != nil {
-		if runtimeObj != nil {
-			c.eventRecorder.Eventf(
-				runtimeObj,
-				core.EventTypeWarning,
-				eventer.EventReasonFailedToWipeOut,
-				"Failed to  wipeOut. Reason: %v",
-				err,
-			)
-		}
 		return err
 	}
 
-	if runtimeObj != nil {
+	c.eventRecorder.Eventf(
+		db,
+		core.EventTypeNormal,
+		eventer.EventReasonWipingOut,
+		"Wiping out Snapshot: %v",
+		snapshot.Name,
+	)
+
+	if err := c.snapshotter.WipeOutSnapshot(snapshot); err != nil {
 		c.eventRecorder.Eventf(
-			runtimeObj,
-			core.EventTypeNormal,
-			eventer.EventReasonSuccessfulWipeOut,
-			"Successfully wiped out Snapshot: %v",
-			snapshot.Name,
+			db,
+			core.EventTypeWarning,
+			eventer.EventReasonFailedToWipeOut,
+			"Failed to wipeOut. Reason: %v",
+			err,
 		)
+		return err
 	}
+
+	c.eventRecorder.Eventf(
+		db,
+		core.EventTypeNormal,
+		eventer.EventReasonSuccessfulWipeOut,
+		"Successfully wiped out Snapshot: %v",
+		snapshot.Name,
+	)
 	return nil
 }
 
