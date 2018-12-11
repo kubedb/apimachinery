@@ -262,7 +262,8 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 
 func (c *Controller) delete(snapshot *api.Snapshot) error {
 	db, err := c.snapshotter.GetDatabase(metav1.ObjectMeta{Name: snapshot.Spec.DatabaseName, Namespace: snapshot.Namespace})
-	// Skip error if not found.
+	// Database may not exists while dormantdb is deleted and wipedout.
+	// So, skip error if not found. But process the rest.
 	if err != nil && !kerr.IsNotFound(err) {
 		c.eventRecorder.Event(
 			snapshot,
