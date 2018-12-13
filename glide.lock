@@ -1,5 +1,5 @@
 hash: aea00a34ff03d46b28bd2f28f60e071a133e3066ab12b2cee8cdcde782adba69
-updated: 2018-12-11T01:04:27.503153112-08:00
+updated: 2018-12-13T15:00:39.775052513+06:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -202,15 +202,13 @@ imports:
 - name: github.com/dgrijalva/jwt-go
   version: 01aeca54ebda6e0fbfafd0a524d234159c05ec20
 - name: github.com/docker/distribution
-  version: edc3ab29cdff8694dd6feb85cfeb4b5f1b38ed9c
+  version: 40b7b5830a2337bb07627617740c0e39eb92800c
   subpackages:
-  - context
   - digestset
   - manifest
   - manifest/schema1
   - manifest/schema2
   - reference
-  - uuid
 - name: github.com/docker/docker
   version: a9fbbdc8dd8794b20af358382ab780559bca589d
   subpackages:
@@ -231,11 +229,11 @@ imports:
 - name: github.com/fatih/structs
   version: 878a968ab22548362a09bdb3322f98b00f470d46
 - name: github.com/fsnotify/fsnotify
-  version: f12c6236fe7b5cf6bcf30e5935d08cb079d78334
+  version: ccc981bf80385c528a65fbfdd49bf2d8da22aa23
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
 - name: github.com/go-ini/ini
-  version: 300e940a926eb277d3901b20bdfcc54928ad3642
+  version: f55231ca73a76c1d61eb05fe0d64a1ccebf93cba
 - name: github.com/go-openapi/jsonpointer
   version: 46af16f9f7b149af66e5d1bd010e3574dc06de98
 - name: github.com/go-openapi/jsonreference
@@ -278,19 +276,15 @@ imports:
 - name: github.com/google/gofuzz
   version: 44d81051d367757e1c7c6a5a86423ece9afcf63c
 - name: github.com/google/uuid
-  version: 8c31c18f31ede9fc8eae72290a7e7a8064e9b3e3
+  version: 9b3b1e0f5f99ae461456d768e7d301a7acdaa2d8
 - name: github.com/googleapis/gnostic
   version: 68f4ded48ba9414dab2ae69b3f0d69971da73aa5
   subpackages:
   - OpenAPIv2
   - compiler
   - extensions
-- name: github.com/gorilla/context
-  version: 51ce91d2eaddeca0ef29a71d766bb3634dadf729
-- name: github.com/gorilla/mux
-  version: e3702bed27f0d39777b0b37b664b6280e8ef8fbf
 - name: github.com/graymeta/stow
-  version: 1849a82ac7fbd3e5cb144bcc711544e90903eac4
+  version: 8020e152292b2cdbdca30274fec24e18905f254d
   repo: https://github.com/appscode/stow.git
   vcs: git
   subpackages:
@@ -314,7 +308,7 @@ imports:
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/jmespath/go-jmespath
-  version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
+  version: c2b33e8439af944379acbdd9c3a5fe0bc44bd8a5
 - name: github.com/json-iterator/go
   version: 1624edc4454b8682399def8740d46db5e4362ba4
 - name: github.com/mailru/easyjson
@@ -338,7 +332,12 @@ imports:
 - name: github.com/NYTimes/gziphandler
   version: 56545f4a5d46df9a6648819d1664c3a03a13ffdb
 - name: github.com/opencontainers/go-digest
-  version: a6d0ee40d4207ea02364bd3b9e8e77b9159ba1eb
+  version: c9281466c8b2f606084ac71339773efd177436e7
+- name: github.com/opencontainers/image-spec
+  version: 09950c5fb1bb6745e72aa26ecde0d540e35f5286
+  subpackages:
+  - specs-go
+  - specs-go/v1
 - name: github.com/openshift/api
   version: 31a7bbd2266d178da3c12bb83f5274d387f775e6
 - name: github.com/openshift/client-go
@@ -376,9 +375,10 @@ imports:
 - name: github.com/PuerkitoBio/urlesc
   version: 5bd2802263f21d8788851d5305584c82a5c75d7e
 - name: github.com/satori/go.uuid
-  version: f58768cc1a7a7e77a3bd49e98cdd21419399b6a3
+  version: b2ce2384e17bbe0c6d34077efa39dbab3e09123b
 - name: github.com/sergi/go-diff
-  version: 97b2266dfe4bd4ea1b81a463322f04f8b724801e
+  version: 24e2351369ec4949b2ed0dc5c477afdd4c4034e8
+  repo: https://github.com/sergi/go-diff
   subpackages:
   - diffmatchpatch
 - name: github.com/sirupsen/logrus
@@ -392,11 +392,12 @@ imports:
   subpackages:
   - codec
 - name: github.com/yudai/gojsondiff
-  version: 7b1b7adf999dab73a6eb02669c3d82dbb27a3dd6
+  version: 0525c875b75ca60b9e67ddc44496aa16f21066b0
   subpackages:
   - formatter
 - name: github.com/yudai/golcs
   version: d1c525dea8ce39ea9a783d33cf08932305373f2c
+  repo: https://github.com/yudai/golcs
 - name: golang.org/x/crypto
   version: de0752318171da717af4ce24d0a2e8626afaeb11
   subpackages:
@@ -451,7 +452,7 @@ imports:
   - googleapi/internal/uritemplates
   - storage/v1
 - name: google.golang.org/appengine
-  version: 12d5545dc1cfa6047a286d5e853841b6471f4c19
+  version: a37df1387b4521194676d88c79230c613610d5f4
   subpackages:
   - internal
   - internal/app_identity
