@@ -1,5 +1,5 @@
 hash: 10a79801e39b9c8fe35f57ff17f952d70a7185d73a875bc64882dd840550cdd3
-updated: 2018-12-14T12:17:10.387456252-08:00
+updated: 2018-12-16T18:09:56.5643861-08:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -266,7 +266,7 @@ imports:
 - name: github.com/google/btree
   version: 7d79101e329e5a3adf994758c578dab82b90c017
 - name: github.com/google/go-cmp
-  version: 2248b49eaa8e1c8c0963ee77b40841adbc19d4ca
+  version: 3af367b6b30c263d47e8895973edcca9a49cf029
   subpackages:
   - cmp
   - cmp/internal/diff
