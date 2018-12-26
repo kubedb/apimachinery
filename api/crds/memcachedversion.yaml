@@ -26,7 +26,6 @@ spec:
     - datastore
     - kubedb
     - appscode
-    - all
     kind: MemcachedVersion
     plural: memcachedversions
     shortNames:
