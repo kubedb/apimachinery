@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"fmt"
+	"path/filepath"
 
 	core_util "github.com/appscode/kutil/core/v1"
 	"github.com/graymeta/stow"
@@ -35,8 +35,9 @@ func (c *Controller) DeleteSnapshotData(snapshot *api.Snapshot) error {
 		return err
 	}
 
-	prefixLocation, _ := snapshot.Location()                       // error checked by .Container()
-	prefix := fmt.Sprintf("%s/%s/", prefixLocation, snapshot.Name) // A separator after prefix to prevent multiple snapshot's prefix matching. ref: https://github.com/kubedb/project/issues/377
+	prefixLocation, _ := snapshot.Location() // error checked by .Container()
+	prefix := filepath.Join(prefixLocation, snapshot.Name)
+	prefix += "/" // A separator after prefix to prevent multiple snapshot's prefix matching. ref: https://github.com/kubedb/project/issues/377
 	cursor := stow.CursorStart
 	for {
 		items, next, err := container.Items(prefix, cursor, 50)
