@@ -234,7 +234,7 @@ func (s *snapshotInvoker) createSnapshot(snapshotName string) (*api.Snapshot, er
 			DatabaseName:       s.dbMetaObject.GetName(),
 			Backend:            s.scheduleSpec.Backend,
 			PodTemplate:        s.scheduleSpec.PodTemplate,
-			JobVolumeClaimSpec: s.scheduleSpec.JobVolumeClaimSpec,
+			PodVolumeClaimSpec: s.scheduleSpec.PodVolumeClaimSpec,
 		},
 	}
 

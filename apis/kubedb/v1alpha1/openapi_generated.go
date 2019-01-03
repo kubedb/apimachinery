@@ -483,9 +483,9 @@ func schema_apimachinery_apis_kubedb_v1alpha1_BackupScheduleSpec(ref common.Refe
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
 						},
 					},
-					"jobVolumeClaimSpec": {
+					"podVolumeClaimSpec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "JobVolumeClaimSpec is used to specify temporary storage for backup/restore Job",
+							Description: "PodVolumeClaimSpec is used to specify temporary storage for backup/restore Job",
 							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 						},
 					},
@@ -3531,9 +3531,9 @@ func schema_apimachinery_apis_kubedb_v1alpha1_SnapshotSpec(ref common.ReferenceC
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
 						},
 					},
-					"jobVolumeClaimSpec": {
+					"podVolumeClaimSpec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "JobVolumeClaimSpec is used to specify temporary storage for backup/restore Job",
+							Description: "PodVolumeClaimSpec is used to specify temporary storage for backup/restore Job",
 							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 						},
 					},

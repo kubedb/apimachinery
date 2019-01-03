@@ -32,8 +32,8 @@ func (in *BackupScheduleSpec) DeepCopyInto(out *BackupScheduleSpec) {
 	*out = *in
 	in.Backend.DeepCopyInto(&out.Backend)
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
-	if in.JobVolumeClaimSpec != nil {
-		in, out := &in.JobVolumeClaimSpec, &out.JobVolumeClaimSpec
+	if in.PodVolumeClaimSpec != nil {
+		in, out := &in.PodVolumeClaimSpec, &out.PodVolumeClaimSpec
 		*out = new(v1.PersistentVolumeClaimSpec)
 		(*in).DeepCopyInto(*out)
 	}
@@ -1735,8 +1735,8 @@ func (in *SnapshotSpec) DeepCopyInto(out *SnapshotSpec) {
 	*out = *in
 	in.Backend.DeepCopyInto(&out.Backend)
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
-	if in.JobVolumeClaimSpec != nil {
-		in, out := &in.JobVolumeClaimSpec, &out.JobVolumeClaimSpec
+	if in.PodVolumeClaimSpec != nil {
+		in, out := &in.PodVolumeClaimSpec, &out.PodVolumeClaimSpec
 		*out = new(v1.PersistentVolumeClaimSpec)
 		(*in).DeepCopyInto(*out)
 	}
