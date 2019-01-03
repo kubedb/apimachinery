@@ -32,6 +32,11 @@ func (in *BackupScheduleSpec) DeepCopyInto(out *BackupScheduleSpec) {
 	*out = *in
 	in.Backend.DeepCopyInto(&out.Backend)
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
+	if in.JobVolumeClaimSpec != nil {
+		in, out := &in.JobVolumeClaimSpec, &out.JobVolumeClaimSpec
+		*out = new(v1.PersistentVolumeClaimSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Resources != nil {
 		in, out := &in.Resources, &out.Resources
 		*out = new(v1.ResourceRequirements)
@@ -1730,6 +1735,11 @@ func (in *SnapshotSpec) DeepCopyInto(out *SnapshotSpec) {
 	*out = *in
 	in.Backend.DeepCopyInto(&out.Backend)
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
+	if in.JobVolumeClaimSpec != nil {
+		in, out := &in.JobVolumeClaimSpec, &out.JobVolumeClaimSpec
+		*out = new(v1.PersistentVolumeClaimSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Resources != nil {
 		in, out := &in.Resources, &out.Resources
 		*out = new(v1.ResourceRequirements)
