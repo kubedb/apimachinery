@@ -19133,6 +19133,10 @@
         "gcs": {
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.GCSSpec"
         },
+        "jobVolumeClaimSpec": {
+          "description": "JobVolumeClaimSpec is used to specify temporary storage for backup/restore Job",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
         "local": {
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.LocalSpec"
         },
@@ -20805,6 +20809,10 @@
         },
         "gcs": {
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.GCSSpec"
+        },
+        "jobVolumeClaimSpec": {
+          "description": "JobVolumeClaimSpec is used to specify temporary storage for backup/restore Job",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
         },
         "local": {
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.LocalSpec"
