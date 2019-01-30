@@ -19619,6 +19619,26 @@
         }
       }
     },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.LeaderElectionConfig": {
+      "description": "LeaderElectionConfig contains essential attributes of leader election. ref: https://github.com/kubernetes/client-go/blob/6134db91200ea474868bc6775e62cc294a74c6c6/tools/leaderelection/leaderelection.go#L105-L114",
+      "properties": {
+        "leaseDuration": {
+          "description": "LeaseDuration is the duration in second that non-leader candidates will wait to force acquire leadership. This is measured against time of last observed ack. Default 15",
+          "type": "integer",
+          "format": "int32"
+        },
+        "renewDeadline": {
+          "description": "RenewDeadline is the duration in second that the acting master will retry refreshing leadership before giving up. Normally, LeaseDuration * 2 / 3. Default 10",
+          "type": "integer",
+          "format": "int32"
+        },
+        "retryPeriod": {
+          "description": "RetryPeriod is the duration in second the LeaderElector clients should wait between tries of actions. Normally, LeaseDuration * 3. Default 2",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemberSecret": {
       "properties": {
         "peerSecret": {
@@ -20285,6 +20305,10 @@
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+        },
+        "leaderElection": {
+          "description": "Leader Election configs",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.LeaderElectionConfig"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
