@@ -9348,7 +9348,7 @@ spec:
                 retryPeriod:
                   description: RetryPeriod is the duration in second the LeaderElector
                     clients should wait between tries of actions. Normally, LeaseDuration
-                    * 3. Default 2
+                    / 3. Default 2
                   format: int32
                   type: integer
             monitor:

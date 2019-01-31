@@ -1337,7 +1337,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_LeaderElectionConfig(ref common.Re
 					},
 					"retryPeriod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RetryPeriod is the duration in second the LeaderElector clients should wait between tries of actions. Normally, LeaseDuration * 3. Default 2",
+							Description: "RetryPeriod is the duration in second the LeaderElector clients should wait between tries of actions. Normally, LeaseDuration / 3. Default 2",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

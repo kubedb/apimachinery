@@ -55,7 +55,7 @@ type LeaderElectionConfig struct {
 	// Default 10
 	RenewDeadline int32 `json:"renewDeadline,omitempty"`
 	// RetryPeriod is the duration in second the LeaderElector clients should wait
-	// between tries of actions. Normally, LeaseDuration * 3.
+	// between tries of actions. Normally, LeaseDuration / 3.
 	// Default 2
 	RetryPeriod int32 `json:"retryPeriod,omitempty"`
 }

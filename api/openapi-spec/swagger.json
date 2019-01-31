@@ -19633,7 +19633,7 @@
           "format": "int32"
         },
         "retryPeriod": {
-          "description": "RetryPeriod is the duration in second the LeaderElector clients should wait between tries of actions. Normally, LeaseDuration * 3. Default 2",
+          "description": "RetryPeriod is the duration in second the LeaderElector clients should wait between tries of actions. Normally, LeaseDuration / 3. Default 2",
           "type": "integer",
           "format": "int32"
         }
