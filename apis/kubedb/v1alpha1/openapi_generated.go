@@ -2472,7 +2472,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresSpec(ref common.ReferenceC
 					},
 					"leaderElection": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Leader Election configs",
+							Description: "Leader election configuration",
 							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.LeaderElectionConfig"),
 						},
 					},

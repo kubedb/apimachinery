@@ -20312,7 +20312,7 @@
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
         "leaderElection": {
-          "description": "Leader Election configs",
+          "description": "Leader election configuration",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.LeaderElectionConfig"
         },
         "monitor": {
