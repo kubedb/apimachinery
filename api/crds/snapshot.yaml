@@ -3780,6 +3780,10 @@ spec:
                   type: string
             storageSecretName:
               type: string
+            storageType:
+              description: StorageType can be durable or ephemeral. If not given,
+                database storage type will be used.
+              type: string
             swift:
               properties:
                 container:
