@@ -1343,6 +1343,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_LeaderElectionConfig(ref common.Re
 						},
 					},
 				},
+				Required: []string{"leaseDurationSeconds", "renewDeadlineSeconds", "retryPeriodSeconds"},
 			},
 		},
 		Dependencies: []string{},

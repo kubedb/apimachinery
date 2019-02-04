@@ -9351,6 +9351,10 @@ spec:
                     / 3. Default 2
                   format: int32
                   type: integer
+              required:
+              - leaseDurationSeconds
+              - renewDeadlineSeconds
+              - retryPeriodSeconds
             monitor:
               properties:
                 agent:
