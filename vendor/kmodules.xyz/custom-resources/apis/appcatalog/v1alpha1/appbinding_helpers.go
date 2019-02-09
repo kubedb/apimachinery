@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 
 	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
@@ -42,23 +43,20 @@ func (a AppBinding) CustomResourceDefinition() *apiextensions.CustomResourceDefi
 	})
 }
 
-func (a AppBinding) URL() (*url.URL, error) {
+func (a AppBinding) URL() (string, error) {
 	c := a.Spec.ClientConfig
 	if c.URL != nil {
-		u, err := url.Parse(*c.URL)
-		if err == nil && u.User != nil {
-			return nil, errors.New("username/password must not be included in url")
-		}
-		return u, err
+		return *c.URL, nil
 	} else if c.Service != nil {
-		return &url.URL{
+		u := url.URL{
 			Scheme:   c.Service.Scheme,
 			Host:     fmt.Sprintf("%s.%s.svc:%d", c.Service.Name, a.Namespace, c.Service.Port),
 			Path:     c.Service.Path,
 			RawQuery: c.Service.Query,
-		}, nil
+		}
+		return u.String(), nil
 	}
-	return nil, errors.New("connection url is missing")
+	return "", errors.New("connection url is missing")
 }
 
 const (
@@ -67,14 +65,58 @@ const (
 )
 
 func (a AppBinding) URLTemplate() (string, error) {
-	u, err := a.URL()
+	rawurl, err := a.URL()
 	if err != nil {
 		return "", err
 	}
-	rawurl := u.String()
+	auth := fmt.Sprintf("{{%s}}:{{%s}}@", KeyUsername, KeyPassword)
+
 	i := strings.Index(rawurl, "://")
 	if i < 0 {
-		return "", errors.New("url is missing scheme")
+		return auth + rawurl, nil
 	}
-	return fmt.Sprintf(rawurl[:i+3] + fmt.Sprintf("{{%s}}:{{%s}}@", KeyUsername, KeyPassword) + rawurl[i+3:]), nil
+	return fmt.Sprintf(rawurl[:i+3] + auth + rawurl[i+3:]), nil
+}
+
+func (a AppBinding) Host() (string, error) {
+	c := a.Spec.ClientConfig
+	if c.Service != nil { // preferred source for MYSQL app binding
+		return fmt.Sprintf("%s.%s.svc:%d", c.Service.Name, a.Namespace, c.Service.Port), nil
+	} else if c.URL != nil {
+		u, err := url.Parse(*c.URL)
+		if err != nil {
+			return "", err
+		}
+		return u.Host, nil
+	}
+	return "", errors.New("connection url is missing")
+}
+
+func (a AppBinding) Hostname() (string, error) {
+	c := a.Spec.ClientConfig
+	if c.Service != nil { // preferred source for MYSQL app binding
+		return fmt.Sprintf("%s.%s.svc", c.Service.Name, a.Namespace), nil
+	} else if c.URL != nil {
+		u, err := url.Parse(*c.URL)
+		if err != nil {
+			return "", err
+		}
+		return u.Hostname(), nil
+	}
+	return "", errors.New("connection url is missing")
+}
+
+func (a AppBinding) Port() (int32, error) {
+	c := a.Spec.ClientConfig
+	if c.Service != nil { // preferred source for MYSQL app binding
+		return c.Service.Port, nil
+	} else if c.URL != nil {
+		u, err := url.Parse(*c.URL)
+		if err != nil {
+			return 0, err
+		}
+		port, err := strconv.ParseInt(u.Port(), 10, 32)
+		return int32(port), err
+	}
+	return 0, errors.New("connection url is missing")
 }
