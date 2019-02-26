@@ -325,7 +325,7 @@ func (c *Controller) isSnapshotRunning(snapshot *api.Snapshot) (bool, error) {
 		api.LabelSnapshotStatus: string(api.SnapshotPhaseRunning),
 	}
 
-	snapshotList, err := c.snLister.List(labels.SelectorFromSet(labelMap))
+	snapshotList, err := c.snLister.Snapshots(snapshot.Namespace).List(labels.SelectorFromSet(labelMap))
 	if err != nil {
 		return false, err
 	}
