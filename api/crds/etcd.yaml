@@ -278,8 +278,9 @@ spec:
                 There cannot be more than one managing controller.
               items:
                 description: OwnerReference contains enough information to let you
-                  identify an owning object. Currently, an owning object must be in
-                  the same namespace, so there is no namespace field.
+                  identify an owning object. An owning object must be in the same
+                  namespace as the dependent, or be cluster-scoped, so there is no
+                  namespace field.
                 properties:
                   apiVersion:
                     description: API version of the referent.
@@ -3168,8 +3169,7 @@ spec:
                                 type: boolean
                               volumeDevices:
                                 description: volumeDevices is the list of block devices
-                                  to be used by the container. This is an alpha feature
-                                  and may change in the future.
+                                  to be used by the container. This is a beta feature.
                                 items:
                                   description: volumeDevice describes a mapping of
                                     a raw block device within a container.
@@ -3866,8 +3866,7 @@ spec:
                     volumeMode:
                       description: volumeMode defines what type of volume is required
                         by the claim. Value of Filesystem is implied when not included
-                        in claim spec. This is an alpha feature and may change in
-                        the future.
+                        in claim spec. This is a beta feature.
                       type: string
                     volumeName:
                       description: VolumeName is the binding reference to the PersistentVolume
@@ -8230,8 +8229,7 @@ spec:
                             type: boolean
                           volumeDevices:
                             description: volumeDevices is the list of block devices
-                              to be used by the container. This is an alpha feature
-                              and may change in the future.
+                              to be used by the container. This is a beta feature.
                             items:
                               description: volumeDevice describes a mapping of a raw
                                 block device within a container.
@@ -9043,8 +9041,7 @@ spec:
                 volumeMode:
                   description: volumeMode defines what type of volume is required
                     by the claim. Value of Filesystem is implied when not included
-                    in claim spec. This is an alpha feature and may change in the
-                    future.
+                    in claim spec. This is a beta feature.
                   type: string
                 volumeName:
                   description: VolumeName is the binding reference to the PersistentVolume
