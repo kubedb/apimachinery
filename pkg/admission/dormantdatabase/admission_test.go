@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/appscode/kutil/meta"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	fake_ext "github.com/kubedb/apimachinery/client/clientset/versioned/fake"
 	"github.com/kubedb/apimachinery/client/clientset/versioned/scheme"
@@ -16,6 +15,7 @@ import (
 	fake_dynamic "k8s.io/client-go/dynamic/fake"
 	"k8s.io/client-go/kubernetes/fake"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
+	"kmodules.xyz/client-go/meta"
 )
 
 func init() {
