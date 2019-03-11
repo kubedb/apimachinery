@@ -1,5 +1,36 @@
 # Change Log
 
+## [Unreleased](https://github.com/kubedb/apimachinery/tree/HEAD)
+
+[Full Changelog](https://github.com/kubedb/apimachinery/compare/0.10.0...HEAD)
+
+**Merged pull requests:**
+
+- Update Kubernetes client libraries to 1.13.0 release [\#387](https://github.com/kubedb/apimachinery/pull/387) ([tamalsaha](https://github.com/tamalsaha))
+- Fix: Search for running snapshots only on snapshot namespace [\#386](https://github.com/kubedb/apimachinery/pull/386) ([the-redback](https://github.com/the-redback))
+
+## [0.10.0](https://github.com/kubedb/apimachinery/tree/0.10.0) (2019-02-18)
+[Full Changelog](https://github.com/kubedb/apimachinery/compare/0.9.0...0.10.0)
+
+**Fixed bugs:**
+
+- Prevent prefix matching of multiple snapshots [\#375](https://github.com/kubedb/apimachinery/pull/375) ([the-redback](https://github.com/the-redback))
+
+**Merged pull requests:**
+
+- Add ReplicaServiceTemplate to Postgres crd [\#385](https://github.com/kubedb/apimachinery/pull/385) ([tamalsaha](https://github.com/tamalsaha))
+- Helper method for Snapshot ServiceAccount Name [\#384](https://github.com/kubedb/apimachinery/pull/384) ([the-redback](https://github.com/the-redback))
+- Revendor dependencies [\#383](https://github.com/kubedb/apimachinery/pull/383) ([tamalsaha](https://github.com/tamalsaha))
+- Remove Snapshot creation at the beginning of ScheduleBackup [\#382](https://github.com/kubedb/apimachinery/pull/382) ([the-redback](https://github.com/the-redback))
+- Fix: check topology storage in snapshot storage webhook [\#381](https://github.com/kubedb/apimachinery/pull/381) ([the-redback](https://github.com/the-redback))
+- LeaderElection Configs added in postgres spec [\#380](https://github.com/kubedb/apimachinery/pull/380) ([the-redback](https://github.com/the-redback))
+- Introduce Ephemeral storageType for snapshot [\#379](https://github.com/kubedb/apimachinery/pull/379) ([the-redback](https://github.com/the-redback))
+- Add helper method for getting StatefulSet name for i'th sharding and some constant for redis [\#378](https://github.com/kubedb/apimachinery/pull/378) ([shudipta](https://github.com/shudipta))
+- Allow specifying PVC spec for snapshot job [\#377](https://github.com/kubedb/apimachinery/pull/377) ([tamalsaha](https://github.com/tamalsaha))
+- Update copyright year to 2019 [\#376](https://github.com/kubedb/apimachinery/pull/376) ([tamalsaha](https://github.com/tamalsaha))
+- Remove database versions from "all" category [\#374](https://github.com/kubedb/apimachinery/pull/374) ([sh0rez](https://github.com/sh0rez))
+- Update dependencies for AppBinding [\#373](https://github.com/kubedb/apimachinery/pull/373) ([tamalsaha](https://github.com/tamalsaha))
+
 ## [0.9.0](https://github.com/kubedb/apimachinery/tree/0.9.0) (2018-12-17)
 [Full Changelog](https://github.com/kubedb/apimachinery/compare/0.9.0-rc.2...0.9.0)
 
@@ -260,12 +291,55 @@
 - use prometheus related name for exporter port [\#175](https://github.com/kubedb/apimachinery/pull/175) ([aerokite](https://github.com/aerokite))
 
 ## [0.8.0-beta.0](https://github.com/kubedb/apimachinery/tree/0.8.0-beta.0) (2018-01-06)
+**Implemented enhancements:**
+
+- Allow users to run operator  & exporter using a reduced permission service account [\#90](https://github.com/kubedb/apimachinery/issues/90)
+- Integrate prometheus monitoring [\#76](https://github.com/kubedb/apimachinery/issues/76)
+- Remove EventRecorder wrapper [\#31](https://github.com/kubedb/apimachinery/issues/31)
+
 **Fixed bugs:**
 
+- Unusual behavior of Backup Scheduler [\#84](https://github.com/kubedb/apimachinery/issues/84)
+- Check recovery success in DeletedDatabaseController [\#83](https://github.com/kubedb/apimachinery/issues/83)
+- Wiping out did not delete db auth secret [\#74](https://github.com/kubedb/apimachinery/issues/74)
+- Operator rattles google cloud project [\#54](https://github.com/kubedb/apimachinery/issues/54)
 - Auto detect AWS bucket region [\#172](https://github.com/kubedb/apimachinery/pull/172) ([tamalsaha](https://github.com/tamalsaha))
 - Modify CronController [\#19](https://github.com/kubedb/apimachinery/pull/19) ([aerokite](https://github.com/aerokite))
 - Fix some bugs [\#18](https://github.com/kubedb/apimachinery/pull/18) ([aerokite](https://github.com/aerokite))
 - Remove test flag checking [\#7](https://github.com/kubedb/apimachinery/pull/7) ([sadlil](https://github.com/sadlil))
+
+**Closed issues:**
+
+- Integrate Searchlight Alerts [\#91](https://github.com/kubedb/apimachinery/issues/91)
+- Support passing parameters for exporters per TPR basis [\#89](https://github.com/kubedb/apimachinery/issues/89)
+- Explore service broker integration [\#88](https://github.com/kubedb/apimachinery/issues/88)
+- Support user provided annotations [\#82](https://github.com/kubedb/apimachinery/issues/82)
+- Brainstorm better names for deleted DBs. [\#81](https://github.com/kubedb/apimachinery/issues/81)
+- Backup does not work on updated TPR [\#79](https://github.com/kubedb/apimachinery/issues/79)
+- Use non-admin auth secret for backup [\#72](https://github.com/kubedb/apimachinery/issues/72)
+- Use non-admin auth secret for monitoring [\#71](https://github.com/kubedb/apimachinery/issues/71)
+- DeletedDB could be an implementation detail  [\#64](https://github.com/kubedb/apimachinery/issues/64)
+- Decide size of backup job's PVC [\#63](https://github.com/kubedb/apimachinery/issues/63)
+- Remove backup - prefix from backup jobs [\#62](https://github.com/kubedb/apimachinery/issues/62)
+- Undo deletion of DDB if not wiped out [\#61](https://github.com/kubedb/apimachinery/issues/61)
+- Scheduled backup does not start [\#60](https://github.com/kubedb/apimachinery/issues/60)
+- Schedule backup will take the first backup immediately [\#59](https://github.com/kubedb/apimachinery/issues/59)
+- Snapshot status does not change to Successful [\#58](https://github.com/kubedb/apimachinery/issues/58)
+- Reduce operator delay to 10sec [\#57](https://github.com/kubedb/apimachinery/issues/57)
+- Event reason should be correct English [\#56](https://github.com/kubedb/apimachinery/issues/56)
+- StatefulSet naming format [\#55](https://github.com/kubedb/apimachinery/issues/55)
+- Add examples that shows how to use storage and backup schedule [\#46](https://github.com/kubedb/apimachinery/issues/46)
+- Show DatabaseSecret in specification section. [\#45](https://github.com/kubedb/apimachinery/issues/45)
+- Deleting postgres db does not work [\#44](https://github.com/kubedb/apimachinery/issues/44)
+- Remove volume- prefix from pvc [\#43](https://github.com/kubedb/apimachinery/issues/43)
+- Delete DDB option in UI [\#42](https://github.com/kubedb/apimachinery/issues/42)
+- Check docker image version from docker hub [\#41](https://github.com/kubedb/apimachinery/issues/41)
+- Create governing service [\#39](https://github.com/kubedb/apimachinery/issues/39)
+- Lint issue [\#27](https://github.com/kubedb/apimachinery/issues/27)
+- Recover database from DeletedDatabase [\#17](https://github.com/kubedb/apimachinery/issues/17)
+- Support database initialization [\#16](https://github.com/kubedb/apimachinery/issues/16)
+- Support DB destroy [\#2](https://github.com/kubedb/apimachinery/issues/2)
+- Support DatabaseSnapshot [\#1](https://github.com/kubedb/apimachinery/issues/1)
 
 **Merged pull requests:**
 
