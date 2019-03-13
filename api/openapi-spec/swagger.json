@@ -18619,6 +18619,17 @@
         }
       }
     },
+    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionInitContainer": {
+      "description": "ElasticsearchVersionInitContainer is the Elasticsearch Container initializer",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionList": {
       "description": "ElasticsearchVersionList is a list of ElasticsearchVersions",
       "properties": {
@@ -18649,13 +18660,30 @@
         }
       ]
     },
+    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionPodSecurityPolicy": {
+      "description": "ElasticsearchVersionPodSecurityPolicy is the Elasticsearch pod security policies",
+      "required": [
+        "databasePolicyName",
+        "snapshotterPolicyName"
+      ],
+      "properties": {
+        "databasePolicyName": {
+          "type": "string"
+        },
+        "snapshotterPolicyName": {
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionSpec": {
       "description": "ElasticsearchVersionSpec is the spec for elasticsearch version",
       "required": [
         "version",
         "db",
         "exporter",
-        "tools"
+        "tools",
+        "initContainer",
+        "podSecurityPolicies"
       ],
       "properties": {
         "db": {
@@ -18669,6 +18697,14 @@
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionExporter"
+        },
+        "initContainer": {
+          "description": "Init container Image",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionInitContainer"
+        },
+        "podSecurityPolicies": {
+          "description": "PSP names",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionPodSecurityPolicy"
         },
         "tools": {
           "description": "Tools Image",
@@ -18889,12 +18925,24 @@
         }
       ]
     },
+    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionPodSecurityPolicy": {
+      "description": "MemcachedVersionPodSecurityPolicy is the Memcached pod security policies",
+      "required": [
+        "databasePolicyName"
+      ],
+      "properties": {
+        "databasePolicyName": {
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionSpec": {
       "description": "MemcachedVersionSpec is the spec for memcached version",
       "required": [
         "version",
         "db",
-        "exporter"
+        "exporter",
+        "podSecurityPolicies"
       ],
       "properties": {
         "db": {
@@ -18908,6 +18956,10 @@
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionExporter"
+        },
+        "podSecurityPolicies": {
+          "description": "PSP names",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionPodSecurityPolicy"
         },
         "version": {
           "description": "Version",
@@ -18963,6 +19015,17 @@
         }
       }
     },
+    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionInitContainer": {
+      "description": "MongoDBVersionInitContainer is the Elasticsearch Container initializer",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionList": {
       "description": "MongoDBVersionList is a list of MongoDBVersions",
       "properties": {
@@ -18993,13 +19056,30 @@
         }
       ]
     },
+    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionPodSecurityPolicy": {
+      "description": "MongoDBVersionPodSecurityPolicy is the MongoDB pod security policies",
+      "required": [
+        "databasePolicyName",
+        "snapshotterPolicyName"
+      ],
+      "properties": {
+        "databasePolicyName": {
+          "type": "string"
+        },
+        "snapshotterPolicyName": {
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionSpec": {
       "description": "MongoDBVersionSpec is the spec for mongodb version",
       "required": [
         "version",
         "db",
         "exporter",
-        "tools"
+        "tools",
+        "initContainer",
+        "podSecurityPolicies"
       ],
       "properties": {
         "db": {
@@ -19013,6 +19093,14 @@
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionExporter"
+        },
+        "initContainer": {
+          "description": "Init container Image",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionInitContainer"
+        },
+        "podSecurityPolicies": {
+          "description": "PSP names",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionPodSecurityPolicy"
         },
         "tools": {
           "description": "Tools Image",
@@ -19083,6 +19171,17 @@
         }
       }
     },
+    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionInitContainer": {
+      "description": "MySQLVersionInitContainer is the Elasticsearch Container initializer",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionList": {
       "description": "MySQLVersionList is a list of MySQLVersions",
       "properties": {
@@ -19113,13 +19212,30 @@
         }
       ]
     },
+    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionPodSecurityPolicy": {
+      "description": "MySQLVersionPodSecurityPolicy is the MySQL pod security policies",
+      "required": [
+        "databasePolicyName",
+        "snapshotterPolicyName"
+      ],
+      "properties": {
+        "databasePolicyName": {
+          "type": "string"
+        },
+        "snapshotterPolicyName": {
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionSpec": {
       "description": "MySQLVersionSpec is the spec for postgres version",
       "required": [
         "version",
         "db",
         "exporter",
-        "tools"
+        "tools",
+        "initContainer",
+        "podSecurityPolicies"
       ],
       "properties": {
         "db": {
@@ -19133,6 +19249,14 @@
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionExporter"
+        },
+        "initContainer": {
+          "description": "Init container Image",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionInitContainer"
+        },
+        "podSecurityPolicies": {
+          "description": "PSP names",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionPodSecurityPolicy"
         },
         "tools": {
           "description": "Tools Image",
@@ -19233,13 +19357,29 @@
         }
       ]
     },
+    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionPodSecurityPolicy": {
+      "description": "PostgresVersionPodSecurityPolicy is the Postgres pod security policies",
+      "required": [
+        "databasePolicyName",
+        "snapshotterPolicyName"
+      ],
+      "properties": {
+        "databasePolicyName": {
+          "type": "string"
+        },
+        "snapshotterPolicyName": {
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionSpec": {
       "description": "PostgresVersionSpec is the spec for postgres version",
       "required": [
         "version",
         "db",
         "exporter",
-        "tools"
+        "tools",
+        "podSecurityPolicies"
       ],
       "properties": {
         "db": {
@@ -19253,6 +19393,10 @@
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionExporter"
+        },
+        "podSecurityPolicies": {
+          "description": "PSP names",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionPodSecurityPolicy"
         },
         "tools": {
           "description": "Tools Image",
@@ -19353,12 +19497,24 @@
         }
       ]
     },
+    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionPodSecurityPolicy": {
+      "description": "RedisVersionPodSecurityPolicy is the Redis pod security policies",
+      "required": [
+        "databasePolicyName"
+      ],
+      "properties": {
+        "databasePolicyName": {
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionSpec": {
       "description": "RedisVersionSpec is the spec for redis version",
       "required": [
         "version",
         "db",
-        "exporter"
+        "exporter",
+        "podSecurityPolicies"
       ],
       "properties": {
         "db": {
@@ -19372,6 +19528,10 @@
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionExporter"
+        },
+        "podSecurityPolicies": {
+          "description": "PSP names",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionPodSecurityPolicy"
         },
         "version": {
           "description": "Version",
