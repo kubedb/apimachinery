@@ -345,6 +345,25 @@ spec:
                   type: string
               required:
               - image
+            initContainer:
+              description: MySQLVersionInitContainer is the Elasticsearch Container
+                initializer
+              properties:
+                image:
+                  type: string
+              required:
+              - image
+            podSecurityPolicies:
+              description: MySQLVersionPodSecurityPolicy is the MySQL pod security
+                policies
+              properties:
+                databasePolicyName:
+                  type: string
+                snapshotterPolicyName:
+                  type: string
+              required:
+              - databasePolicyName
+              - snapshotterPolicyName
             tools:
               description: MySQLVersionTools is the image for the postgres tools
               properties:
@@ -360,6 +379,8 @@ spec:
           - db
           - exporter
           - tools
+          - initContainer
+          - podSecurityPolicies
   version: v1alpha1
   versions:
   - name: v1alpha1

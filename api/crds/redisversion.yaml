@@ -345,6 +345,14 @@ spec:
                   type: string
               required:
               - image
+            podSecurityPolicies:
+              description: RedisVersionPodSecurityPolicy is the Redis pod security
+                policies
+              properties:
+                databasePolicyName:
+                  type: string
+              required:
+              - databasePolicyName
             version:
               description: Version
               type: string
@@ -352,6 +360,7 @@ spec:
           - version
           - db
           - exporter
+          - podSecurityPolicies
   version: v1alpha1
   versions:
   - name: v1alpha1

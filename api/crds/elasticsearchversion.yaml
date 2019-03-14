@@ -347,6 +347,25 @@ spec:
                   type: string
               required:
               - image
+            initContainer:
+              description: ElasticsearchVersionInitContainer is the Elasticsearch
+                Container initializer
+              properties:
+                image:
+                  type: string
+              required:
+              - image
+            podSecurityPolicies:
+              description: ElasticsearchVersionPodSecurityPolicy is the Elasticsearch
+                pod security policies
+              properties:
+                databasePolicyName:
+                  type: string
+                snapshotterPolicyName:
+                  type: string
+              required:
+              - databasePolicyName
+              - snapshotterPolicyName
             tools:
               description: ElasticsearchVersionTools is the image for the elasticsearch
                 tools
@@ -363,6 +382,8 @@ spec:
           - db
           - exporter
           - tools
+          - initContainer
+          - podSecurityPolicies
   version: v1alpha1
   versions:
   - name: v1alpha1

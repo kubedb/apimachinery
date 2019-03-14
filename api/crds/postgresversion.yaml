@@ -345,6 +345,17 @@ spec:
                   type: string
               required:
               - image
+            podSecurityPolicies:
+              description: PostgresVersionPodSecurityPolicy is the Postgres pod security
+                policies
+              properties:
+                databasePolicyName:
+                  type: string
+                snapshotterPolicyName:
+                  type: string
+              required:
+              - databasePolicyName
+              - snapshotterPolicyName
             tools:
               description: PostgresVersionTools is the image for the postgres tools
               properties:
@@ -360,6 +371,7 @@ spec:
           - db
           - exporter
           - tools
+          - podSecurityPolicies
   version: v1alpha1
   versions:
   - name: v1alpha1
