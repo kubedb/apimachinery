@@ -1,5 +1,5 @@
 hash: f8d8b24ab5bf5f4df6aa9a52c18be0e25f75a4589e2f0c7865ab8eb634b9f1b0
-updated: 2019-03-12T23:08:00.673103064-07:00
+updated: 2019-03-18T15:08:04.368850872-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -324,7 +324,7 @@ imports:
 - name: github.com/opencontainers/go-digest
   version: a6d0ee40d4207ea02364bd3b9e8e77b9159ba1eb
 - name: github.com/orcaman/concurrent-map
-  version: 7ed82d9cb71768a4e3656ee8837c7af568c75459
+  version: 2693aad1ed7517c2bb5b3a42cb8fde88b941d89d
 - name: github.com/pborman/uuid
   version: ca53cad383cad2479bbba7f7a1a05797ec1386e4
 - name: github.com/peterbourgon/diskv
@@ -878,7 +878,7 @@ imports:
 - name: k8s.io/utils
   version: 66066c83e385e385ccc3c964b44fd7dcd413d0ed
 - name: kmodules.xyz/client-go
-  version: 4ce549910ced217769d198b777f79de119b10896
+  version: fd7cc05edf46bb8d630fa6a84b875162f321e778
   subpackages:
   - apiextensions/v1beta1
   - core/v1
