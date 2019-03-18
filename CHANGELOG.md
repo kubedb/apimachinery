@@ -1,11 +1,15 @@
 # Change Log
 
-## [Unreleased](https://github.com/kubedb/apimachinery/tree/HEAD)
-
-[Full Changelog](https://github.com/kubedb/apimachinery/compare/0.10.0...HEAD)
+## [0.11.0](https://github.com/kubedb/apimachinery/tree/0.11.0) (2019-03-18)
+[Full Changelog](https://github.com/kubedb/apimachinery/compare/0.10.0...0.11.0)
 
 **Merged pull requests:**
 
+- Add PSP names support in \*\*\*Version crds [\#392](https://github.com/kubedb/apimachinery/pull/392) ([tamalsaha](https://github.com/tamalsaha))
+- Add app.kubernetes.io labels to offshoot objects [\#391](https://github.com/kubedb/apimachinery/pull/391) ([tamalsaha](https://github.com/tamalsaha))
+- Version CRD update for init container [\#390](https://github.com/kubedb/apimachinery/pull/390) ([iamrz1](https://github.com/iamrz1))
+- StorageType added in BackupSchedule [\#389](https://github.com/kubedb/apimachinery/pull/389) ([the-redback](https://github.com/the-redback))
+- Add role label for stats service [\#388](https://github.com/kubedb/apimachinery/pull/388) ([tamalsaha](https://github.com/tamalsaha))
 - Update Kubernetes client libraries to 1.13.0 release [\#387](https://github.com/kubedb/apimachinery/pull/387) ([tamalsaha](https://github.com/tamalsaha))
 - Fix: Search for running snapshots only on snapshot namespace [\#386](https://github.com/kubedb/apimachinery/pull/386) ([the-redback](https://github.com/the-redback))
 
