@@ -20180,6 +20180,38 @@
         }
       ]
     },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBConfigNode": {
+      "required": [
+        "replicas"
+      ],
+      "properties": {
+        "configSource": {
+          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "prefix": {
+          "description": "Prefix is the name prefix of this node.",
+          "type": "string"
+        },
+        "replicas": {
+          "description": "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "resources": {
+          "description": "Compute Resources required by the sidecar container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "storage": {
+          "description": "Storage to specify how storage shall be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBList": {
       "properties": {
         "apiVersion": {
@@ -20209,16 +20241,109 @@
         }
       ]
     },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBMongosNode": {
+      "required": [
+        "replicas"
+      ],
+      "properties": {
+        "configSource": {
+          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "prefix": {
+          "description": "Prefix is the name prefix of this node.",
+          "type": "string"
+        },
+        "replicas": {
+          "description": "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "resources": {
+          "description": "Compute Resources required by the sidecar container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "strategy": {
+          "description": "The deployment strategy to use to replace existing pods with new ones.",
+          "$ref": "#/definitions/io.k8s.api.apps.v1.DeploymentStrategy"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBReplicaSet": {
       "required": [
         "name"
       ],
       "properties": {
         "keyFile": {
+          "description": "Deprecated: Use spec.certificateSecret",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "name": {
+          "description": "Name of replicaset",
           "type": "string"
+        }
+      }
+    },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardNode": {
+      "required": [
+        "shards",
+        "replicas"
+      ],
+      "properties": {
+        "configSource": {
+          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "prefix": {
+          "description": "Prefix is the name prefix of this node.",
+          "type": "string"
+        },
+        "replicas": {
+          "description": "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "resources": {
+          "description": "Compute Resources required by the sidecar container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "shards": {
+          "description": "Shards represents number of shards for shard type of node More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
+          "type": "integer",
+          "format": "int32"
+        },
+        "storage": {
+          "description": "Storage to specify how storage shall be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        }
+      }
+    },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardingTopology": {
+      "required": [
+        "shard",
+        "configServer",
+        "mongos"
+      ],
+      "properties": {
+        "configServer": {
+          "description": "Config Server (metadata) component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-config-servers/",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBConfigNode"
+        },
+        "mongos": {
+          "description": "Mongos (router) component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-query-router/",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBMongosNode"
+        },
+        "shard": {
+          "description": "Shard component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardNode"
         }
       }
     },
@@ -20230,6 +20355,10 @@
         "backupSchedule": {
           "description": "BackupSchedule spec to specify how database backup will be taken",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
+        },
+        "certificateSecret": {
+          "description": "Secret for KeyFile or SSL certificates. Contains `tls.pem` or keyfile `key.txt` depending on enableSSL. Currently SSL support is not enabled.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -20275,6 +20404,10 @@
         "terminationPolicy": {
           "description": "TerminationPolicy controls the delete operation for database",
           "type": "string"
+        },
+        "topology": {
+          "description": "MongoDB sharding topology.",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardingTopology"
         },
         "updateStrategy": {
           "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
