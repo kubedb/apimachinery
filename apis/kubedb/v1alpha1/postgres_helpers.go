@@ -179,6 +179,8 @@ func (p *PostgresSpec) SetDefaults() {
 	}
 
 	// perform defaulting
+	p.BackupSchedule.SetDefaults()
+
 	if p.StorageType == "" {
 		p.StorageType = StorageTypeDurable
 	}

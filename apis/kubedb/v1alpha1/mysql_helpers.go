@@ -174,6 +174,8 @@ func (m *MySQLSpec) SetDefaults() {
 	}
 
 	// perform defaulting
+	m.BackupSchedule.SetDefaults()
+
 	if m.StorageType == "" {
 		m.StorageType = StorageTypeDurable
 	}

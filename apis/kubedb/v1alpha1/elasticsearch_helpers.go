@@ -190,6 +190,8 @@ func (e *ElasticsearchSpec) SetDefaults() {
 	}
 
 	// perform defaulting
+	e.BackupSchedule.SetDefaults()
+
 	if e.AuthPlugin == "" {
 		e.AuthPlugin = ElasticsearchAuthPluginSearchGuard
 	}

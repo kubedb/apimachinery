@@ -198,6 +198,8 @@ func (m *MongoDBSpec) SetDefaults() {
 	}
 
 	// perform defaulting
+	m.BackupSchedule.SetDefaults()
+
 	if m.StorageType == "" {
 		m.StorageType = StorageTypeDurable
 	}
