@@ -27,7 +27,7 @@ func ValidateStorage(client kubernetes.Interface, storageType api.StorageType, s
 	}
 
 	if spec == nil {
-		return errors.New(fmt.Sprintf(`%v is missing for durable storage type`, storagePath))
+		return fmt.Errorf(`%v is missing for durable storage type`, storagePath)
 	}
 
 	if spec.StorageClassName != nil {
