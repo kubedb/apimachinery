@@ -54,7 +54,8 @@ func (m MongoDB) MongosNodeName() string {
 	return m.Spec.Topology.Mongos.Prefix + mongosName
 }
 
-func (m MongoDB) RepSetName(nodeNum int32) string {
+// RepSetName returns Replicaset name only for spec.replicaset
+func (m MongoDB) RepSetName() string {
 	if m.Spec.ReplicaSet == nil {
 		return ""
 	}
