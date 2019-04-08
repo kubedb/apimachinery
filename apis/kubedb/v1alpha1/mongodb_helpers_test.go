@@ -10,7 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func TestMongoDB_ShardDSN(t *testing.T) {
+func TestMongoDB_HostAddress(t *testing.T) {
 	mongodb := &MongoDB{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "demo-name",
@@ -21,11 +21,11 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 		},
 		Spec: MongoDBSpec{
 			Version: jsonTypes.StrYo("3.6-v2"),
-			Topology: &MongoDBShardingTopology{
+			ShardTopology: &MongoDBShardingTopology{
 				Shard: MongoDBShardNode{
-					Shards: types.Int32P(3),
+					Shards: 3,
 					MongoDBNode: MongoDBNode{
-						Replicas: types.Int32P(3),
+						Replicas: 3,
 					},
 					Storage: &core.PersistentVolumeClaimSpec{
 						Resources: core.ResourceRequirements{
@@ -38,7 +38,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 				},
 				ConfigServer: MongoDBConfigNode{
 					MongoDBNode: MongoDBNode{
-						Replicas: types.Int32P(3),
+						Replicas: 3,
 					},
 					Storage: &core.PersistentVolumeClaimSpec{
 						Resources: core.ResourceRequirements{
@@ -51,7 +51,69 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 				},
 				Mongos: MongoDBMongosNode{
 					MongoDBNode: MongoDBNode{
-						Replicas: types.Int32P(2),
+						Replicas: 2,
+					},
+				},
+			},
+		},
+	}
+
+	shardDSN := mongodb.HostAddress()
+	t.Log(shardDSN)
+
+	mongodb.Spec.ShardTopology = nil
+	mongodb.Spec.Replicas = types.Int32P(3)
+	mongodb.Spec.ReplicaSet = &MongoDBReplicaSet{
+		Name: "mgo-rs",
+	}
+
+	repsetDSN := mongodb.HostAddress()
+	t.Log(repsetDSN)
+
+}
+
+func TestMongoDB_ShardDSN(t *testing.T) {
+	mongodb := &MongoDB{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "demo-name",
+			Namespace: "demo",
+			Labels: map[string]string{
+				"app": "kubedb",
+			},
+		},
+		Spec: MongoDBSpec{
+			Version: jsonTypes.StrYo("3.6-v2"),
+			ShardTopology: &MongoDBShardingTopology{
+				Shard: MongoDBShardNode{
+					Shards: 3,
+					MongoDBNode: MongoDBNode{
+						Replicas: 3,
+					},
+					Storage: &core.PersistentVolumeClaimSpec{
+						Resources: core.ResourceRequirements{
+							Requests: core.ResourceList{
+								core.ResourceStorage: resource.MustParse("1Gi"),
+							},
+						},
+						StorageClassName: types.StringP("standard"),
+					},
+				},
+				ConfigServer: MongoDBConfigNode{
+					MongoDBNode: MongoDBNode{
+						Replicas: 3,
+					},
+					Storage: &core.PersistentVolumeClaimSpec{
+						Resources: core.ResourceRequirements{
+							Requests: core.ResourceList{
+								core.ResourceStorage: resource.MustParse("1Gi"),
+							},
+						},
+						StorageClassName: types.StringP("standard"),
+					},
+				},
+				Mongos: MongoDBMongosNode{
+					MongoDBNode: MongoDBNode{
+						Replicas: 2,
 					},
 				},
 			},
@@ -75,11 +137,11 @@ func TestMongoDB_ConfigSvrDSN(t *testing.T) {
 		},
 		Spec: MongoDBSpec{
 			Version: jsonTypes.StrYo("3.6-v2"),
-			Topology: &MongoDBShardingTopology{
+			ShardTopology: &MongoDBShardingTopology{
 				Shard: MongoDBShardNode{
-					Shards: types.Int32P(3),
+					Shards: 3,
 					MongoDBNode: MongoDBNode{
-						Replicas: types.Int32P(3),
+						Replicas: 3,
 					},
 					Storage: &core.PersistentVolumeClaimSpec{
 						Resources: core.ResourceRequirements{
@@ -92,7 +154,7 @@ func TestMongoDB_ConfigSvrDSN(t *testing.T) {
 				},
 				ConfigServer: MongoDBConfigNode{
 					MongoDBNode: MongoDBNode{
-						Replicas: types.Int32P(3),
+						Replicas: 3,
 					},
 					Storage: &core.PersistentVolumeClaimSpec{
 						Resources: core.ResourceRequirements{
@@ -105,7 +167,7 @@ func TestMongoDB_ConfigSvrDSN(t *testing.T) {
 				},
 				Mongos: MongoDBMongosNode{
 					MongoDBNode: MongoDBNode{
-						Replicas: types.Int32P(2),
+						Replicas: 2,
 					},
 				},
 			},

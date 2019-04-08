@@ -1885,7 +1885,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBSpec(ref common.ReferenceCa
 							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBReplicaSet"),
 						},
 					},
-					"topology": {
+					"shardTopology": {
 						SchemaProps: spec.SchemaProps{
 							Description: "MongoDB sharding topology.",
 							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MongoDBShardingTopology"),

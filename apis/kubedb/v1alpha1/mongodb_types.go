@@ -39,7 +39,7 @@ type MongoDBSpec struct {
 	ReplicaSet *MongoDBReplicaSet `json:"replicaSet,omitempty"`
 
 	// MongoDB sharding topology.
-	Topology *MongoDBShardingTopology `json:"topology,omitempty"`
+	ShardTopology *MongoDBShardingTopology `json:"shardTopology,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -113,7 +113,7 @@ type MongoDBShardingTopology struct {
 type MongoDBShardNode struct {
 	// Shards represents number of shards for shard type of node
 	// More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/
-	Shards *int32 `json:"shards"`
+	Shards int32 `json:"shards"`
 
 	// MongoDB sharding node configs
 	MongoDBNode `json:",inline"`
@@ -142,7 +142,7 @@ type MongoDBMongosNode struct {
 type MongoDBNode struct {
 	// Replicas represents number of replicas of this specific node.
 	// If current node has replicaset enabled, then replicas is the amount of replicaset nodes.
-	Replicas *int32 `json:"replicas"`
+	Replicas int32 `json:"replicas"`
 
 	// Prefix is the name prefix of this node.
 	Prefix string `json:"prefix,omitempty"`
