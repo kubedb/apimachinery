@@ -37,6 +37,9 @@ const (
 	MongoDBConfigdbPort = 27017
 	MongoDBMongosPort   = 27017
 
+	MySQLNodePort = 3306
+	MySQLGroupComPort = 33060
+
 	RedisShardKey   = RedisKey + "/shard"
 	RedisNodePort   = 6379
 	RedisGossipPort = 16379

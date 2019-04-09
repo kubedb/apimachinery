@@ -5071,6 +5071,18 @@ spec:
                   description: 'Name of the secret in the pod''s namespace to use.
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#secret'
                   type: string
+            group:
+              properties:
+                baseServerID:
+                  description: |-
+                    On a replication master and each replication slave, the --server-id option must be specified to establish a unique replication ID in the range from 1 to 2^32 − 1. “Unique”, means that each ID must be different from every other ID in use by any other replication master or slave. ref: https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_server_id
+
+                    So, BaseServerID is needed to calculate a unique server_id for each member.
+                  format: int32
+                  type: integer
+                groupName:
+                  description: 'An uuid for MySQL Group ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-options.html#sysvar_group_replication_group_name'
+                  type: string
             init:
               properties:
                 postgresWAL:
@@ -9939,7 +9951,9 @@ spec:
                             type: string
                       type: array
             replicas:
-              description: Number of instances to deploy for a MySQL database.
+              description: 'Number of instances to deploy for a MySQL database. In
+                case of MySQL group replication, max replicas is 9. The preferred
+                # of replicas is 3. (see ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-frequently-asked-questions.html)'
               format: int32
               type: integer
             serviceTemplate:
