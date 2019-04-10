@@ -39,6 +39,7 @@ const (
 
 	MySQLNodePort = 3306
 	MySQLGroupComPort = 33060
+	MySQLMaxGroupMembers = 9
 
 	RedisShardKey   = RedisKey + "/shard"
 	RedisNodePort   = 6379
