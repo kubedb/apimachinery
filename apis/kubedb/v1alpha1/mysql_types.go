@@ -95,7 +95,7 @@ type MySQLGroup struct {
 	// ref: https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_server_id
 	//
 	// So, BaseServerID is needed to calculate a unique server_id for each member.
-	BaseServerID *int `json:"baseServerID,omitempty"`
+	BaseServerID *uint `json:"baseServerID,omitempty"`
 }
 
 type MySQLStatus struct {

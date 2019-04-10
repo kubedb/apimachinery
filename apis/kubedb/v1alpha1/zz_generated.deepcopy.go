@@ -978,7 +978,7 @@ func (in *MySQLGroup) DeepCopyInto(out *MySQLGroup) {
 	*out = *in
 	if in.BaseServerID != nil {
 		in, out := &in.BaseServerID, &out.BaseServerID
-		*out = new(int)
+		*out = new(uint)
 		**out = **in
 	}
 	return
