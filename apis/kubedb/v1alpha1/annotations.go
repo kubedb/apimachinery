@@ -40,6 +40,8 @@ const (
 	MySQLNodePort = 3306
 	MySQLGroupComPort = 33060
 	MySQLMaxGroupMembers = 9
+	// The recommended MySQL server version for group replication (GR)
+	MySQLGRRecommendedVersion = "5.7.25"
 
 	RedisShardKey   = RedisKey + "/shard"
 	RedisNodePort   = 6379
