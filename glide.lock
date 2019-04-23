@@ -1,5 +1,5 @@
-hash: f8d8b24ab5bf5f4df6aa9a52c18be0e25f75a4589e2f0c7865ab8eb634b9f1b0
-updated: 2019-03-18T15:08:04.368850872-07:00
+hash: d1dd95a6ce7557f5336b8c7c8b599be5a650cdaf76561cb0b6179cc0e2d2f1db
+updated: 2019-04-23T02:30:35.706196579-07:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -12,7 +12,7 @@ imports:
   subpackages:
   - registry
 - name: github.com/appscode/go
-  version: 52eaa8008e2e5fe8df77ac6fb2fd45e3ea2ae47c
+  version: 50c98d5fbcddac827713a481a7e34a26df5e4b57
   subpackages:
   - arrays
   - context
@@ -318,7 +318,7 @@ imports:
 - name: github.com/modern-go/reflect2
   version: 94122c33edd36123c84d5368cfb2b69df93a0ec8
 - name: github.com/ncw/swift
-  version: a12c20e04ddb87207d41409a7afda9848aba8df2
+  version: 753d2090bb62619675997bd87a8e3af423a00f2d
 - name: github.com/NYTimes/gziphandler
   version: 56545f4a5d46df9a6648819d1664c3a03a13ffdb
 - name: github.com/opencontainers/go-digest
@@ -487,7 +487,7 @@ imports:
 - name: gopkg.in/yaml.v2
   version: 5420a8b6744d3b0345ab293f6fcba19c978f1183
 - name: k8s.io/api
-  version: 89a74a8d264df0e993299876a8cde88379b940ee
+  version: 5cb15d34447165a97c76ed5a60e4e99c8a01ecfe
   subpackages:
   - admission/v1beta1
   - admissionregistration/v1alpha1
@@ -523,14 +523,14 @@ imports:
   - storage/v1alpha1
   - storage/v1beta1
 - name: k8s.io/apiextensions-apiserver
-  version: 20c909e7c8c3fec1a0e345b1d4e57f1c1623c368
+  version: 475668423e9f8feb5e3cc53f37bfeb1ce37f2ce5
   subpackages:
   - pkg/apis/apiextensions
   - pkg/apis/apiextensions/v1beta1
   - pkg/client/clientset/clientset/scheme
   - pkg/client/clientset/clientset/typed/apiextensions/v1beta1
 - name: k8s.io/apimachinery
-  version: 32ccef23274063254360a5c9c0ec4126487e1754
+  version: a3cbe62563e67ed2cb39fe907396990fac4280a5
   repo: https://github.com/kmodules/apimachinery.git
   vcs: git
   subpackages:
@@ -589,7 +589,7 @@ imports:
   - third_party/forked/golang/json
   - third_party/forked/golang/reflect
 - name: k8s.io/apiserver
-  version: bfcb67b4ff4bddd882eabc0d6ce472e190585af4
+  version: 1ff2969323856c87e7b9a2168fe3e448864b3861
   repo: https://github.com/kmodules/apiserver.git
   vcs: git
   subpackages:
@@ -690,7 +690,7 @@ imports:
   - plugin/pkg/authenticator/token/webhook
   - plugin/pkg/authorizer/webhook
 - name: k8s.io/client-go
-  version: e64494209f554a6723674bd494d69445fb76a1d4
+  version: 7621a5ebb88b1e49ce7e7837ae8e99ca030a3c13
   subpackages:
   - discovery
   - discovery/fake
@@ -878,7 +878,7 @@ imports:
 - name: k8s.io/utils
   version: 66066c83e385e385ccc3c964b44fd7dcd413d0ed
 - name: kmodules.xyz/client-go
-  version: fd7cc05edf46bb8d630fa6a84b875162f321e778
+  version: 5dcc4cecf4c96d58e0624cd41311f3a4663db7d7
   subpackages:
   - apiextensions/v1beta1
   - core/v1
@@ -899,12 +899,12 @@ imports:
   subpackages:
   - api/v1
 - name: kmodules.xyz/objectstore-api
-  version: 433d1fad089cb639415b182f6067cc5ffd43a2b3
+  version: 2558fb903e3d0756f974ed4e5769ffcf27ffea30
   subpackages:
   - api/v1
   - osm
 - name: kmodules.xyz/offshoot-api
-  version: 317e1ed3d6c458ec431ae651b7d61deb831f40ed
+  version: 1ff51f6839beb5d1bd6a58c60f17206c7d0233de
   subpackages:
   - api/v1
 - name: kmodules.xyz/webhook-runtime
