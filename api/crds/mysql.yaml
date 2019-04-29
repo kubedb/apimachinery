@@ -10187,7 +10187,7 @@ spec:
                         or "Multi-Primary" mode
                       type: string
                     name:
-                      description: 'An uuid for MySQL Group ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-options.html#sysvar_group_replication_group_name'
+                      description: 'Group name is a version 4 UUID ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-options.html#sysvar_group_replication_group_name'
                       type: string
                 mode:
                   description: If set to - "GroupReplication", GroupSpec is required
