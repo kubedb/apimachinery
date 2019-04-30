@@ -19564,6 +19564,9 @@
           "description": "PodVolumeClaimSpec is used to specify temporary storage for backup/restore Job. If not given, database's PvcSpec will be used. If storageType is durable, then a PVC will be created using this PVCSpec. If storageType is ephemeral, then an empty directory will be created of size PvcSpec.Resources.Requests[core.ResourceStorage].",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
         },
+        "rest": {
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.RestServerSpec"
+        },
         "s3": {
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.S3Spec"
         },
@@ -20202,10 +20205,6 @@
           "type": "integer",
           "format": "int32"
         },
-        "resources": {
-          "description": "Compute Resources required by the sidecar container.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
         "storage": {
           "description": "Storage to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
@@ -20263,10 +20262,6 @@
           "type": "integer",
           "format": "int32"
         },
-        "resources": {
-          "description": "Compute Resources required by the sidecar container.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
         "strategy": {
           "description": "The deployment strategy to use to replace existing pods with new ones.",
           "$ref": "#/definitions/io.k8s.api.apps.v1.DeploymentStrategy"
@@ -20310,10 +20305,6 @@
           "description": "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
           "type": "integer",
           "format": "int32"
-        },
-        "resources": {
-          "description": "Compute Resources required by the sidecar container.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "shards": {
           "description": "Shards represents number of shards for shard type of node More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
@@ -20790,6 +20781,9 @@
         "pitr": {
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RecoveryTarget"
         },
+        "rest": {
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.RestServerSpec"
+        },
         "s3": {
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.S3Spec"
         },
@@ -21184,6 +21178,9 @@
         "podVolumeClaimSpec": {
           "description": "PodVolumeClaimSpec is used to specify temporary storage for backup/restore Job. If not given, database's PvcSpec will be used. If storageType is durable, then a PVC will be created using this PVCSpec. If storageType is ephemeral, then an empty directory will be created of size PvcSpec.Resources.Requests[core.ResourceStorage].",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "rest": {
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.RestServerSpec"
         },
         "s3": {
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.S3Spec"
@@ -23951,6 +23948,10 @@
         "container": {
           "type": "string"
         },
+        "maxConnections": {
+          "type": "integer",
+          "format": "int32"
+        },
         "prefix": {
           "type": "string"
         }
@@ -23960,6 +23961,10 @@
       "properties": {
         "bucket": {
           "type": "string"
+        },
+        "maxConnections": {
+          "type": "integer",
+          "format": "int32"
         },
         "prefix": {
           "type": "string"
@@ -23980,6 +23985,9 @@
         "local": {
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.LocalSpec"
         },
+        "rest": {
+          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.RestServerSpec"
+        },
         "s3": {
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.S3Spec"
         },
@@ -23995,6 +24003,10 @@
       "properties": {
         "bucket": {
           "type": "string"
+        },
+        "maxConnections": {
+          "type": "integer",
+          "format": "int32"
         },
         "prefix": {
           "type": "string"
@@ -24119,6 +24131,13 @@
         }
       }
     },
+    "xyz.kmodules.objectstore-api.api.v1.RestServerSpec": {
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
     "xyz.kmodules.objectstore-api.api.v1.S3Spec": {
       "properties": {
         "bucket": {
@@ -24229,6 +24248,10 @@
         "securityContext": {
           "description": "SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PodSecurityContext"
+        },
+        "serviceAccountName": {
+          "description": "ServiceAccountName is the name of the ServiceAccount to use to run this pod. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
+          "type": "string"
         },
         "tolerations": {
           "description": "If specified, the pod's tolerations.",
