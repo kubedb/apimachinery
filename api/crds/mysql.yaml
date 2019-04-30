@@ -334,12 +334,18 @@ spec:
                   properties:
                     container:
                       type: string
+                    maxConnections:
+                      format: int32
+                      type: integer
                     prefix:
                       type: string
                 b2:
                   properties:
                     bucket:
                       type: string
+                    maxConnections:
+                      format: int32
+                      type: integer
                     prefix:
                       type: string
                 cronExpression:
@@ -348,6 +354,9 @@ spec:
                   properties:
                     bucket:
                       type: string
+                    maxConnections:
+                      format: int32
+                      type: integer
                     prefix:
                       type: string
                 local:
@@ -3729,6 +3738,10 @@ spec:
                                 - name
                                 - value
                               type: array
+                        serviceAccountName:
+                          description: 'ServiceAccountName is the name of the ServiceAccount
+                            to use to run this pod. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/'
+                          type: string
                         tolerations:
                           description: If specified, the pod's tolerations.
                           items:
@@ -3871,6 +3884,10 @@ spec:
                     volumeName:
                       description: VolumeName is the binding reference to the PersistentVolume
                         backing this claim.
+                      type: string
+                rest:
+                  properties:
+                    url:
                       type: string
                 s3:
                   properties:
@@ -5079,12 +5096,18 @@ spec:
                       properties:
                         container:
                           type: string
+                        maxConnections:
+                          format: int32
+                          type: integer
                         prefix:
                           type: string
                     b2:
                       properties:
                         bucket:
                           type: string
+                        maxConnections:
+                          format: int32
+                          type: integer
                         prefix:
                           type: string
                     backupName:
@@ -5093,6 +5116,9 @@ spec:
                       properties:
                         bucket:
                           type: string
+                        maxConnections:
+                          format: int32
+                          type: integer
                         prefix:
                           type: string
                     local:
@@ -6311,6 +6337,10 @@ spec:
                         targetXID:
                           description: TargetXID specifies the transaction ID up to
                             which recovery will proceed.
+                          type: string
+                    rest:
+                      properties:
+                        url:
                           type: string
                     s3:
                       properties:
@@ -9897,6 +9927,10 @@ spec:
                             - name
                             - value
                           type: array
+                    serviceAccountName:
+                      description: 'ServiceAccountName is the name of the ServiceAccount
+                        to use to run this pod. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/'
+                      type: string
                     tolerations:
                       description: If specified, the pod's tolerations.
                       items:

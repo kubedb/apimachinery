@@ -334,12 +334,18 @@ spec:
                   properties:
                     container:
                       type: string
+                    maxConnections:
+                      format: int32
+                      type: integer
                     prefix:
                       type: string
                 b2:
                   properties:
                     bucket:
                       type: string
+                    maxConnections:
+                      format: int32
+                      type: integer
                     prefix:
                       type: string
                 cronExpression:
@@ -348,6 +354,9 @@ spec:
                   properties:
                     bucket:
                       type: string
+                    maxConnections:
+                      format: int32
+                      type: integer
                     prefix:
                       type: string
                 local:
@@ -3729,6 +3738,10 @@ spec:
                                 - name
                                 - value
                               type: array
+                        serviceAccountName:
+                          description: 'ServiceAccountName is the name of the ServiceAccount
+                            to use to run this pod. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/'
+                          type: string
                         tolerations:
                           description: If specified, the pod's tolerations.
                           items:
@@ -3871,6 +3884,10 @@ spec:
                     volumeName:
                       description: VolumeName is the binding reference to the PersistentVolume
                         backing this claim.
+                      type: string
+                rest:
+                  properties:
+                    url:
                       type: string
                 s3:
                   properties:
@@ -5132,12 +5149,18 @@ spec:
                       properties:
                         container:
                           type: string
+                        maxConnections:
+                          format: int32
+                          type: integer
                         prefix:
                           type: string
                     b2:
                       properties:
                         bucket:
                           type: string
+                        maxConnections:
+                          format: int32
+                          type: integer
                         prefix:
                           type: string
                     backupName:
@@ -5146,6 +5169,9 @@ spec:
                       properties:
                         bucket:
                           type: string
+                        maxConnections:
+                          format: int32
+                          type: integer
                         prefix:
                           type: string
                     local:
@@ -6364,6 +6390,10 @@ spec:
                         targetXID:
                           description: TargetXID specifies the transaction ID up to
                             which recovery will proceed.
+                          type: string
+                    rest:
+                      properties:
+                        url:
                           type: string
                     s3:
                       properties:
@@ -9950,6 +9980,10 @@ spec:
                             - name
                             - value
                           type: array
+                    serviceAccountName:
+                      description: 'ServiceAccountName is the name of the ServiceAccount
+                        to use to run this pod. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/'
+                      type: string
                     tolerations:
                       description: If specified, the pod's tolerations.
                       items:
@@ -13684,6 +13718,11 @@ spec:
                                     - name
                                     - value
                                   type: array
+                            serviceAccountName:
+                              description: 'ServiceAccountName is the name of the
+                                ServiceAccount to use to run this pod. More info:
+                                https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/'
+                              type: string
                             tolerations:
                               description: If specified, the pod's tolerations.
                               items:
@@ -13736,21 +13775,6 @@ spec:
                         replicas is the amount of replicaset nodes.
                       format: int32
                       type: integer
-                    resources:
-                      description: ResourceRequirements describes the compute resource
-                        requirements.
-                      properties:
-                        limits:
-                          description: 'Limits describes the maximum amount of compute
-                            resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
-                        requests:
-                          description: 'Requests describes the minimum amount of compute
-                            resources required. If Requests is omitted for a container,
-                            it defaults to Limits if that is explicitly specified,
-                            otherwise to an implementation-defined value. More info:
-                            https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
                     storage:
                       description: PersistentVolumeClaimSpec describes the common
                         attributes of storage devices and allows a Source for provider-specific
@@ -17357,6 +17381,11 @@ spec:
                                     - name
                                     - value
                                   type: array
+                            serviceAccountName:
+                              description: 'ServiceAccountName is the name of the
+                                ServiceAccount to use to run this pod. More info:
+                                https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/'
+                              type: string
                             tolerations:
                               description: If specified, the pod's tolerations.
                               items:
@@ -17409,21 +17438,6 @@ spec:
                         replicas is the amount of replicaset nodes.
                       format: int32
                       type: integer
-                    resources:
-                      description: ResourceRequirements describes the compute resource
-                        requirements.
-                      properties:
-                        limits:
-                          description: 'Limits describes the maximum amount of compute
-                            resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
-                        requests:
-                          description: 'Requests describes the minimum amount of compute
-                            resources required. If Requests is omitted for a container,
-                            it defaults to Limits if that is explicitly specified,
-                            otherwise to an implementation-defined value. More info:
-                            https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
                     strategy:
                       description: DeploymentStrategy describes how to replace existing
                         pods with new ones.
@@ -20947,6 +20961,11 @@ spec:
                                     - name
                                     - value
                                   type: array
+                            serviceAccountName:
+                              description: 'ServiceAccountName is the name of the
+                                ServiceAccount to use to run this pod. More info:
+                                https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/'
+                              type: string
                             tolerations:
                               description: If specified, the pod's tolerations.
                               items:
@@ -20999,21 +21018,6 @@ spec:
                         replicas is the amount of replicaset nodes.
                       format: int32
                       type: integer
-                    resources:
-                      description: ResourceRequirements describes the compute resource
-                        requirements.
-                      properties:
-                        limits:
-                          description: 'Limits describes the maximum amount of compute
-                            resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
-                        requests:
-                          description: 'Requests describes the minimum amount of compute
-                            resources required. If Requests is omitted for a container,
-                            it defaults to Limits if that is explicitly specified,
-                            otherwise to an implementation-defined value. More info:
-                            https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
                     shards:
                       description: 'Shards represents number of shards for shard type
                         of node More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/'
