@@ -9973,7 +9973,9 @@ spec:
                             type: string
                       type: array
             replicas:
-              description: Number of instances to deploy for a MySQL database.
+              description: 'Number of instances to deploy for a MySQL database. In
+                case of MySQL group replication, max allowed value is 9 (default 3).
+                (see ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-frequently-asked-questions.html)'
               format: int32
               type: integer
             serviceTemplate:
@@ -10203,6 +10205,28 @@ spec:
             terminationPolicy:
               description: TerminationPolicy controls the delete operation for database
               type: string
+            topology:
+              properties:
+                group:
+                  properties:
+                    baseServerID:
+                      description: |-
+                        On a replication master and each replication slave, the --server-id option must be specified to establish a unique replication ID in the range from 1 to 2^32 − 1. “Unique”, means that each ID must be different from every other ID in use by any other replication master or slave. ref: https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_server_id
+
+                        So, BaseServerID is needed to calculate a unique server_id for each member.
+                      format: int32
+                      type: integer
+                    mode:
+                      description: Group Replication can be deployed in either "Single-Primary"
+                        or "Multi-Primary" mode
+                      type: string
+                    name:
+                      description: 'Group name is a version 4 UUID ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-options.html#sysvar_group_replication_group_name'
+                      type: string
+                mode:
+                  description: If set to - "GroupReplication", GroupSpec is required
+                    and MySQL servers will start  a replication group
+                  type: string
             updateStrategy:
               description: StatefulSetUpdateStrategy indicates the strategy that the
                 StatefulSet controller will use to perform updates. It includes any

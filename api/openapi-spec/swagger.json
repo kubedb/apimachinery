@@ -20453,6 +20453,35 @@
         }
       ]
     },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLClusterTopology": {
+      "properties": {
+        "group": {
+          "description": "Group replication info for MySQL",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLGroupSpec"
+        },
+        "mode": {
+          "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLGroupSpec": {
+      "properties": {
+        "baseServerID": {
+          "description": "On a replication master and each replication slave, the --server-id option must be specified to establish a unique replication ID in the range from 1 to 2^32 − 1. “Unique”, means that each ID must be different from every other ID in use by any other replication master or slave. ref: https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_server_id\n\nSo, BaseServerID is needed to calculate a unique server_id for each member.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "mode": {
+          "description": "Group Replication can be deployed in either \"Single-Primary\" or \"Multi-Primary\" mode",
+          "type": "string"
+        },
+        "name": {
+          "description": "Group name is a version 4 UUID ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-options.html#sysvar_group_replication_group_name",
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLList": {
       "properties": {
         "apiVersion": {
@@ -20512,7 +20541,7 @@
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "replicas": {
-          "description": "Number of instances to deploy for a MySQL database.",
+          "description": "Number of instances to deploy for a MySQL database. In case of MySQL group replication, max allowed value is 9 (default 3). (see ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-frequently-asked-questions.html)",
           "type": "integer",
           "format": "int32"
         },
@@ -20531,6 +20560,10 @@
         "terminationPolicy": {
           "description": "TerminationPolicy controls the delete operation for database",
           "type": "string"
+        },
+        "topology": {
+          "description": "MySQL cluster topology",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLClusterTopology"
         },
         "updateStrategy": {
           "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
