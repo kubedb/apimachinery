@@ -1,5 +1,18 @@
 # Change Log
 
+## [0.12.0](https://github.com/kubedb/apimachinery/tree/0.12.0) (2019-05-06)
+[Full Changelog](https://github.com/kubedb/apimachinery/compare/0.11.0...0.12.0)
+
+**Merged pull requests:**
+
+- Remove Resources field from MongoDB ShardTopology [\#402](https://github.com/kubedb/apimachinery/pull/402) ([the-redback](https://github.com/the-redback))
+- Fix ConfigServer DSN address [\#401](https://github.com/kubedb/apimachinery/pull/401) ([the-redback](https://github.com/the-redback))
+- Revendor dependencies [\#399](https://github.com/kubedb/apimachinery/pull/399) ([tamalsaha](https://github.com/tamalsaha))
+- Mysql Group Replication [\#397](https://github.com/kubedb/apimachinery/pull/397) ([shudipta](https://github.com/shudipta))
+- Remove deprecated Specs [\#396](https://github.com/kubedb/apimachinery/pull/396) ([the-redback](https://github.com/the-redback))
+- Modify validator names [\#395](https://github.com/kubedb/apimachinery/pull/395) ([iamrz1](https://github.com/iamrz1))
+- MongoDB CRD specs and helper method for sharding [\#393](https://github.com/kubedb/apimachinery/pull/393) ([the-redback](https://github.com/the-redback))
+
 ## [0.11.0](https://github.com/kubedb/apimachinery/tree/0.11.0) (2019-03-18)
 [Full Changelog](https://github.com/kubedb/apimachinery/compare/0.10.0...0.11.0)
 
