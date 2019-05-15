@@ -1293,11 +1293,17 @@ func schema_apimachinery_apis_kubedb_v1alpha1_InitSpec(ref common.ReferenceCallb
 							Ref: ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresWALSourceSpec"),
 						},
 					},
+					"stashSource": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of stash restoreSession in same namespace of kubedb. ref: https://github.com/stashed/stash/blob/09af5d319bb5be889186965afb04045781d6f926/apis/stash/v1beta1/restore_session_types.go#L22",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresWALSourceSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ScriptSourceSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotSourceSpec"},
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresWALSourceSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ScriptSourceSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.SnapshotSourceSpec", "k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 

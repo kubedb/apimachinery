@@ -19991,6 +19991,10 @@
         },
         "snapshotSource": {
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotSourceSpec"
+        },
+        "stashSource": {
+          "description": "Name of stash restoreSession in same namespace of kubedb. ref: https://github.com/stashed/stash/blob/09af5d319bb5be889186965afb04045781d6f926/apis/stash/v1beta1/restore_session_types.go#L22",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         }
       }
     },

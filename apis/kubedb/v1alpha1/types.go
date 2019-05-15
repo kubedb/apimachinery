@@ -10,6 +10,9 @@ type InitSpec struct {
 	ScriptSource   *ScriptSourceSpec      `json:"scriptSource,omitempty"`
 	SnapshotSource *SnapshotSourceSpec    `json:"snapshotSource,omitempty"`
 	PostgresWAL    *PostgresWALSourceSpec `json:"postgresWAL,omitempty"`
+	// Name of stash restoreSession in same namespace of kubedb.
+	// ref: https://github.com/stashed/stash/blob/09af5d319bb5be889186965afb04045781d6f926/apis/stash/v1beta1/restore_session_types.go#L22
+	StashSource *core.LocalObjectReference `json:"stashSource,omitempty"`
 }
 
 type ScriptSourceSpec struct {
