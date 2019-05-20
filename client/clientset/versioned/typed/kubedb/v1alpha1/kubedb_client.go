@@ -33,6 +33,7 @@ type KubedbV1alpha1Interface interface {
 	MemcachedsGetter
 	MongoDBsGetter
 	MySQLsGetter
+	PerconasGetter
 	PostgresesGetter
 	RedisesGetter
 	SnapshotsGetter
@@ -65,6 +66,10 @@ func (c *KubedbV1alpha1Client) MongoDBs(namespace string) MongoDBInterface {
 
 func (c *KubedbV1alpha1Client) MySQLs(namespace string) MySQLInterface {
 	return newMySQLs(c, namespace)
+}
+
+func (c *KubedbV1alpha1Client) Perconas(namespace string) PerconaInterface {
+	return newPerconas(c, namespace)
 }
 
 func (c *KubedbV1alpha1Client) Postgreses(namespace string) PostgresInterface {

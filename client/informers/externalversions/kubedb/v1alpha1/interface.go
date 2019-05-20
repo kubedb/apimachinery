@@ -36,6 +36,8 @@ type Interface interface {
 	MongoDBs() MongoDBInformer
 	// MySQLs returns a MySQLInformer.
 	MySQLs() MySQLInformer
+	// Perconas returns a PerconaInformer.
+	Perconas() PerconaInformer
 	// Postgreses returns a PostgresInformer.
 	Postgreses() PostgresInformer
 	// Redises returns a RedisInformer.
@@ -83,6 +85,11 @@ func (v *version) MongoDBs() MongoDBInformer {
 // MySQLs returns a MySQLInformer.
 func (v *version) MySQLs() MySQLInformer {
 	return &mySQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Perconas returns a PerconaInformer.
+func (v *version) Perconas() PerconaInformer {
+	return &perconaInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Postgreses returns a PostgresInformer.
