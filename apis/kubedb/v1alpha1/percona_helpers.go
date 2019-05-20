@@ -61,11 +61,6 @@ func (p Percona) GoverningServiceName() string {
 	return p.OffshootName() + "-gvr"
 }
 
-// Snapshot service account name.
-func (p Percona) SnapshotSAName() string {
-	return fmt.Sprintf("%v-snapshot", p.OffshootName())
-}
-
 type perconaApp struct {
 	*Percona
 }
@@ -181,9 +176,6 @@ func (p *PerconaSpec) SetDefaults() {
 	if p.Replicas == nil {
 		p.Replicas = types.Int32P(1)
 	}
-
-	// perform defaulting
-	p.BackupSchedule.SetDefaults()
 
 	if p.StorageType == "" {
 		p.StorageType = StorageTypeDurable

@@ -1289,11 +1289,6 @@ func (in *PerconaSpec) DeepCopyInto(out *PerconaSpec) {
 		*out = new(InitSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.BackupSchedule != nil {
-		in, out := &in.BackupSchedule, &out.BackupSchedule
-		*out = new(BackupScheduleSpec)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
 		*out = new(apiv1.AgentSpec)

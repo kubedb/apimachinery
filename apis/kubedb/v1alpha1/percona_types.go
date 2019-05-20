@@ -48,10 +48,6 @@ type PerconaSpec struct {
 	// +optional
 	Init *InitSpec `json:"init,omitempty"`
 
-	// BackupSchedule spec to specify how database backup will be taken
-	// +optional
-	BackupSchedule *BackupScheduleSpec `json:"backupSchedule,omitempty"`
-
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
