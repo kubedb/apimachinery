@@ -173,7 +173,7 @@ func (m *MySQL) SetDefaults() {
 	}
 	m.Spec.SetDefaults()
 
-	if m.Spec.PodTemplate.Spec.ServiceAccountName == ""{
+	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
 }

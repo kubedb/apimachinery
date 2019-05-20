@@ -175,7 +175,7 @@ func (r *Redis) SetDefaults() {
 	}
 	r.Spec.SetDefaults()
 
-	if r.Spec.PodTemplate.Spec.ServiceAccountName == ""{
+	if r.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		r.Spec.PodTemplate.Spec.ServiceAccountName = r.OffshootName()
 	}
 }

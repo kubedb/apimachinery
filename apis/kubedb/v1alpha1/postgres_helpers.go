@@ -172,7 +172,7 @@ func (p *Postgres) SetDefaults() {
 	}
 	p.Spec.SetDefaults()
 
-	if p.Spec.PodTemplate.Spec.ServiceAccountName == ""{
+	if p.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		p.Spec.PodTemplate.Spec.ServiceAccountName = p.OffshootName()
 	}
 }

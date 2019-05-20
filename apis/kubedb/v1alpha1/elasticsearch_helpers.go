@@ -183,7 +183,7 @@ func (e *Elasticsearch) SetDefaults() {
 	}
 	e.Spec.SetDefaults()
 
-	if e.Spec.PodTemplate.Spec.ServiceAccountName == ""{
+	if e.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		e.Spec.PodTemplate.Spec.ServiceAccountName = e.OffshootName()
 	}
 }
