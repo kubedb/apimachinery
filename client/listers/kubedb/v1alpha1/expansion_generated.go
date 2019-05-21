@@ -74,6 +74,14 @@ type MySQLListerExpansion interface{}
 // MySQLNamespaceLister.
 type MySQLNamespaceListerExpansion interface{}
 
+// PerconaListerExpansion allows custom methods to be added to
+// PerconaLister.
+type PerconaListerExpansion interface{}
+
+// PerconaNamespaceListerExpansion allows custom methods to be added to
+// PerconaNamespaceLister.
+type PerconaNamespaceListerExpansion interface{}
+
 // PostgresListerExpansion allows custom methods to be added to
 // PostgresLister.
 type PostgresListerExpansion interface{}
