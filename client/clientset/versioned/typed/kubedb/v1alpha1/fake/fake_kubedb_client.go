@@ -40,6 +40,10 @@ func (c *FakeKubedbV1alpha1) Etcds(namespace string) v1alpha1.EtcdInterface {
 	return &FakeEtcds{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha1) MariaDBs(namespace string) v1alpha1.MariaDBInterface {
+	return &FakeMariaDBs{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha1) Memcacheds(namespace string) v1alpha1.MemcachedInterface {
 	return &FakeMemcacheds{c, namespace}
 }
