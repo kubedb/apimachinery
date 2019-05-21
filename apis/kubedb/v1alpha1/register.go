@@ -49,6 +49,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MySQLList{},
 		&Percona{},
 		&PerconaList{},
+		&MariaDB{},
+		&MariaDBList{},
 		&Redis{},
 		&RedisList{},
 		&Etcd{},

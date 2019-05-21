@@ -87,6 +87,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().Elasticsearches().Informer()}, nil
 	case kubedbv1alpha1.SchemeGroupVersion.WithResource("etcds"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().Etcds().Informer()}, nil
+	case kubedbv1alpha1.SchemeGroupVersion.WithResource("mariadbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().MariaDBs().Informer()}, nil
 	case kubedbv1alpha1.SchemeGroupVersion.WithResource("memcacheds"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().Memcacheds().Informer()}, nil
 	case kubedbv1alpha1.SchemeGroupVersion.WithResource("mongodbs"):

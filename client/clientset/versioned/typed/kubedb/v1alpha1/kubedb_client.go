@@ -30,6 +30,7 @@ type KubedbV1alpha1Interface interface {
 	DormantDatabasesGetter
 	ElasticsearchesGetter
 	EtcdsGetter
+	MariaDBsGetter
 	MemcachedsGetter
 	MongoDBsGetter
 	MySQLsGetter
@@ -54,6 +55,10 @@ func (c *KubedbV1alpha1Client) Elasticsearches(namespace string) ElasticsearchIn
 
 func (c *KubedbV1alpha1Client) Etcds(namespace string) EtcdInterface {
 	return newEtcds(c, namespace)
+}
+
+func (c *KubedbV1alpha1Client) MariaDBs(namespace string) MariaDBInterface {
+	return newMariaDBs(c, namespace)
 }
 
 func (c *KubedbV1alpha1Client) Memcacheds(namespace string) MemcachedInterface {
