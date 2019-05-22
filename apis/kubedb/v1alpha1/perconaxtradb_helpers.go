@@ -7,6 +7,7 @@ import (
 	apps "k8s.io/api/apps/v1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
+	v1 "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
@@ -59,6 +60,60 @@ func (p PerconaXtraDB) ServiceName() string {
 
 func (p PerconaXtraDB) GoverningServiceName() string {
 	return p.OffshootName() + "-gvr"
+}
+
+func (p PerconaXtraDB) PeerName(idx int) string {
+	return fmt.Sprintf("%s-%d.%s.%s", p.OffshootName(), idx, p.GoverningServiceName(), p.Namespace)
+}
+
+func (p PerconaXtraDB) ClusterName() string {
+	return p.Spec.PXC.ClusterName
+}
+
+func (p PerconaXtraDB) ClusterLabels() map[string]string {
+	return v1.UpsertMap(p.OffshootLabels(), map[string]string{
+		PerconaXtraDBClusterLabelKey: p.ClusterName(),
+	})
+}
+
+func (p PerconaXtraDB) ClusterSelectors() map[string]string {
+	return v1.UpsertMap(p.OffshootSelectors(), map[string]string{
+		PerconaXtraDBClusterLabelKey: p.ClusterName(),
+	})
+}
+
+func (p PerconaXtraDB) XtraDBLabels() map[string]string {
+	if p.Spec.PXC != nil {
+		return p.ClusterLabels()
+	}
+	return p.OffshootLabels()
+}
+
+func (p PerconaXtraDB) XtraDBSelectors() map[string]string {
+	if p.Spec.PXC != nil {
+		return p.ClusterSelectors()
+	}
+	return p.OffshootSelectors()
+}
+
+func (p PerconaXtraDB) ProxysqlName() string {
+	return fmt.Sprintf("%s-proxysql", p.OffshootName())
+}
+
+func (p PerconaXtraDB) ProxysqlServiceName() string {
+	return p.ProxysqlName()
+}
+
+func (p PerconaXtraDB) ProxysqlLabels() map[string]string {
+	return v1.UpsertMap(p.OffshootLabels(), map[string]string{
+		PerconaXtraDBProxysqlLabelKey: p.ProxysqlName(),
+	})
+}
+
+func (p PerconaXtraDB) ProxysqlSelectors() map[string]string {
+	return v1.UpsertMap(p.OffshootSelectors(), map[string]string{
+		PerconaXtraDBProxysqlLabelKey: p.ProxysqlName(),
+	})
 }
 
 type perconaXtraDBApp struct {
@@ -175,6 +230,16 @@ func (p *PerconaXtraDBSpec) SetDefaults() {
 
 	if p.Replicas == nil {
 		p.Replicas = types.Int32P(1)
+	}
+
+	if p.PXC != nil {
+		if *p.Replicas < 3 {
+			p.Replicas = types.Int32P(PerconaXtraDBDefaultClusterSize)
+		}
+
+		if p.PXC.Proxysql.Replicas == nil {
+			p.PXC.Proxysql.Replicas = types.Int32P(1)
+		}
 	}
 
 	if p.StorageType == "" {
