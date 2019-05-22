@@ -35,6 +35,9 @@ type PerconaSpec struct {
 	// Number of instances to deploy for Percona
 	Replicas *int32 `json:"replicas,omitempty"`
 
+	// PXC is the cluster specification for Percona XtraDB Cluster
+	PXC *PXCSpec `json:"pxc,omitempty"`
+
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
 
@@ -72,6 +75,11 @@ type PerconaSpec struct {
 	// TerminationPolicy controls the delete operation for database
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
+}
+
+type PXCSpec struct {
+	// Name of the cluster and should be identical on all nodes.
+	ClusterName string `json:"clusterName,omitempty"`
 }
 
 type PerconaStatus struct {

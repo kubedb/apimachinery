@@ -80,6 +80,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQLStatus":                  schema_apimachinery_apis_kubedb_v1alpha1_MySQLStatus(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Origin":                       schema_apimachinery_apis_kubedb_v1alpha1_Origin(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.OriginSpec":                   schema_apimachinery_apis_kubedb_v1alpha1_OriginSpec(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PXCSpec":                      schema_apimachinery_apis_kubedb_v1alpha1_PXCSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Percona":                      schema_apimachinery_apis_kubedb_v1alpha1_Percona(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PerconaList":                  schema_apimachinery_apis_kubedb_v1alpha1_PerconaList(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PerconaSpec":                  schema_apimachinery_apis_kubedb_v1alpha1_PerconaSpec(ref),
@@ -2629,6 +2630,25 @@ func schema_apimachinery_apis_kubedb_v1alpha1_OriginSpec(ref common.ReferenceCal
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha1_PXCSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the cluster and should be identical on all nodes.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha1_Percona(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -2739,6 +2759,12 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PerconaSpec(ref common.ReferenceCa
 							Format:      "int32",
 						},
 					},
+					"pxc": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PXC is the cluster specification for Percona XtraDB Cluster",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PXCSpec"),
+						},
+					},
 					"storageType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "StorageType can be durable (default) or ephemeral",
@@ -2806,7 +2832,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PerconaSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"},
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PXCSpec", "k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"},
 	}
 }
 

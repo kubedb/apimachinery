@@ -49,6 +49,8 @@ const (
 	// for BaseServerID calculated as max MySQL server_id value - max Replication Group size.
 	MySQLMaxBaseServerID = uint(4294967295 - 9)
 
+	PerconaMaxClusterNameLength = 32
+
 	RedisShardKey   = RedisKey + "/shard"
 	RedisNodePort   = 6379
 	RedisGossipPort = 16379
