@@ -1302,6 +1302,16 @@ func (in *OriginSpec) DeepCopyInto(out *OriginSpec) {
 		*out = new(MySQLSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Percona != nil {
+		in, out := &in.Percona, &out.Percona
+		*out = new(PerconaSpec)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.MariaDB != nil {
+		in, out := &in.MariaDB, &out.MariaDB
+		*out = new(MariaDBSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.MongoDB != nil {
 		in, out := &in.MongoDB, &out.MongoDB
 		*out = new(MongoDBSpec)

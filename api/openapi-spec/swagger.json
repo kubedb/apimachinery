@@ -20020,6 +20020,63 @@
         }
       }
     },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBSpec": {
+      "type": "object",
+      "required": [
+        "version"
+      ],
+      "properties": {
+        "configSource": {
+          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        },
+        "databaseSecret": {
+          "description": "Database authentication secret",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        },
+        "init": {
+          "description": "Init is used to initialize database",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+        },
+        "monitor": {
+          "description": "Monitor is used monitor database instance",
+          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "replicas": {
+          "description": "Number of instances to deploy for a MariaDB database.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "serviceTemplate": {
+          "description": "ServiceTemplate is an optional configuration for service used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        },
+        "storage": {
+          "description": "Storage spec to specify how storage shall be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "storageType": {
+          "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
+        },
+        "terminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
+          "type": "string"
+        },
+        "updateStrategy": {
+          "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
+          "$ref": "#/definitions/io.k8s.api.apps.v1.StatefulSetUpdateStrategy"
+        },
+        "version": {
+          "description": "Version of MariaDB to be deployed.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemberSecret": {
       "type": "object",
       "properties": {
@@ -20625,6 +20682,10 @@
           "description": "Etcd Spec",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdSpec"
         },
+        "mariadb": {
+          "description": "MariaDB Spec",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBSpec"
+        },
         "memcached": {
           "description": "Memcached Spec",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedSpec"
@@ -20637,6 +20698,10 @@
           "description": "MySQL Spec",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLSpec"
         },
+        "percona": {
+          "description": "Percona Spec",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaSpec"
+        },
         "postgres": {
           "description": "Postgres Spec",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresSpec"
@@ -20644,6 +20709,76 @@
         "redis": {
           "description": "Redis Spec",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisSpec"
+        }
+      }
+    },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PXCSpec": {
+      "type": "object",
+      "properties": {
+        "clusterName": {
+          "description": "Name of the cluster and should be identical on all nodes.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaSpec": {
+      "type": "object",
+      "required": [
+        "version"
+      ],
+      "properties": {
+        "configSource": {
+          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        },
+        "databaseSecret": {
+          "description": "Database authentication secret",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        },
+        "init": {
+          "description": "Init is used to initialize database",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+        },
+        "monitor": {
+          "description": "Monitor is used monitor database instance",
+          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "pxc": {
+          "description": "PXC is the cluster specification for Percona XtraDB Cluster",
+          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PXCSpec"
+        },
+        "replicas": {
+          "description": "Number of instances to deploy for Percona",
+          "type": "integer",
+          "format": "int32"
+        },
+        "serviceTemplate": {
+          "description": "ServiceTemplate is an optional configuration for service used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        },
+        "storage": {
+          "description": "Storage spec to specify how storage shall be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "storageType": {
+          "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
+        },
+        "terminationPolicy": {
+          "description": "TerminationPolicy controls the delete operation for database",
+          "type": "string"
+        },
+        "updateStrategy": {
+          "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
+          "$ref": "#/definitions/io.k8s.api.apps.v1.StatefulSetUpdateStrategy"
+        },
+        "version": {
+          "description": "Version of Percona to be deployed.",
+          "type": "string"
         }
       }
     },
