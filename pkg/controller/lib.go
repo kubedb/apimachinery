@@ -17,6 +17,8 @@ import (
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
+	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/tools/reference"
 	core_util "kmodules.xyz/client-go/core/v1"
 	"kmodules.xyz/objectstore-api/osm"
 )
@@ -209,10 +211,9 @@ func (c *Controller) CreateStatefulSetPodDisruptionBudget(sts *appsv1.StatefulSe
 	maxUnavailable := int32(math.Ceil((float64(*sts.Spec.Replicas) - 1.0) / 2.0))
 	pdb := policyv1beta1.PodDisruptionBudget{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            sts.Name,
-			Namespace:       sts.Namespace,
-			Labels:          sts.Labels,
-			OwnerReferences: sts.OwnerReferences,
+			Name:      sts.Name,
+			Namespace: sts.Namespace,
+			Labels:    sts.Labels,
 		},
 
 		Spec: policyv1beta1.PodDisruptionBudgetSpec{
@@ -222,6 +223,14 @@ func (c *Controller) CreateStatefulSetPodDisruptionBudget(sts *appsv1.StatefulSe
 			MaxUnavailable: &intstr.IntOrString{IntVal: maxUnavailable},
 		},
 	}
+
+	ref, rerr := reference.GetReference(clientsetscheme.Scheme, sts)
+	if rerr != nil {
+		return rerr
+	}
+	core_util.EnsureOwnerReference(&pdb.ObjectMeta, ref)
+
+	//Create PDB
 	_, err = c.Client.PolicyV1beta1().PodDisruptionBudgets(sts.Namespace).Create(&pdb)
 	return err
 }
@@ -235,10 +244,9 @@ func (c *Controller) CreateDeploymentPodDisruptionBudget(deployment *appsv1.Depl
 	maxUnavailable := int32(math.Ceil((deploymentReplicas - 1.0) / 2.0))
 	pdb := policyv1beta1.PodDisruptionBudget{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            deployment.Name,
-			Namespace:       deployment.Namespace,
-			Labels:          deployment.Labels,
-			OwnerReferences: deployment.OwnerReferences,
+			Name:      deployment.Name,
+			Namespace: deployment.Namespace,
+			Labels:    deployment.Labels,
 		},
 
 		Spec: policyv1beta1.PodDisruptionBudgetSpec{
@@ -248,6 +256,13 @@ func (c *Controller) CreateDeploymentPodDisruptionBudget(deployment *appsv1.Depl
 			MaxUnavailable: &intstr.IntOrString{IntVal: maxUnavailable},
 		},
 	}
+
+	ref, rerr := reference.GetReference(clientsetscheme.Scheme, deployment)
+	if rerr != nil {
+		return rerr
+	}
+	core_util.EnsureOwnerReference(&pdb.ObjectMeta, ref)
+
 	//Create PDB
 	_, err = c.Client.PolicyV1beta1().PodDisruptionBudgets(deployment.Namespace).Create(&pdb)
 	return err
