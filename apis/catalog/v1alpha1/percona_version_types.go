@@ -30,8 +30,6 @@ type PerconaVersionSpec struct {
 	DB PerconaVersionDatabase `json:"db"`
 	// Exporter Image
 	Exporter PerconaVersionExporter `json:"exporter"`
-	// Tools Image
-	Tools PerconaVersionTools `json:"tools"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
@@ -52,11 +50,6 @@ type PerconaVersionExporter struct {
 	Image string `json:"image"`
 }
 
-// PerconaVersionTools is the image for the percona tools
-type PerconaVersionTools struct {
-	Image string `json:"image"`
-}
-
 // PerconaVersionInitContainer is the Percona Container initializer
 type PerconaVersionInitContainer struct {
 	Image string `json:"image"`
@@ -65,7 +58,6 @@ type PerconaVersionInitContainer struct {
 // PerconaVersionPodSecurityPolicy is the Percona pod security policies
 type PerconaVersionPodSecurityPolicy struct {
 	DatabasePolicyName    string `json:"databasePolicyName"`
-	SnapshotterPolicyName string `json:"snapshotterPolicyName"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

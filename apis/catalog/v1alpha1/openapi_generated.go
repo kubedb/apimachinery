@@ -78,7 +78,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionList":                    schema_apimachinery_apis_catalog_v1alpha1_PerconaVersionList(ref),
 		"github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionPodSecurityPolicy":       schema_apimachinery_apis_catalog_v1alpha1_PerconaVersionPodSecurityPolicy(ref),
 		"github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionSpec":                    schema_apimachinery_apis_catalog_v1alpha1_PerconaVersionSpec(ref),
-		"github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionTools":                   schema_apimachinery_apis_catalog_v1alpha1_PerconaVersionTools(ref),
 		"github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PostgresVersion":                       schema_apimachinery_apis_catalog_v1alpha1_PostgresVersion(ref),
 		"github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PostgresVersionDatabase":               schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionDatabase(ref),
 		"github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PostgresVersionExporter":               schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionExporter(ref),
@@ -1728,14 +1727,8 @@ func schema_apimachinery_apis_catalog_v1alpha1_PerconaVersionPodSecurityPolicy(r
 							Format: "",
 						},
 					},
-					"snapshotterPolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
 				},
-				Required: []string{"databasePolicyName", "snapshotterPolicyName"},
+				Required: []string{"databasePolicyName"},
 			},
 		},
 	}
@@ -1767,12 +1760,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_PerconaVersionSpec(ref common.Ref
 							Ref:         ref("github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionExporter"),
 						},
 					},
-					"tools": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Tools Image",
-							Ref:         ref("github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionTools"),
-						},
-					},
 					"deprecated": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -1793,31 +1780,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_PerconaVersionSpec(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "tools", "initContainer", "podSecurityPolicies"},
+				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionDatabase", "github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionExporter", "github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionInitContainer", "github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionPodSecurityPolicy", "github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionTools"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PerconaVersionTools(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PerconaVersionTools is the image for the percona tools",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
+			"github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionDatabase", "github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionExporter", "github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionInitContainer", "github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersionPodSecurityPolicy"},
 	}
 }
 
