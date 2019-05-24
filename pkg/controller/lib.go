@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"math"
 	"path/filepath"
 
 	"github.com/appscode/go/log"
@@ -9,10 +10,15 @@ import (
 	_ "github.com/graymeta/stow/google"
 	_ "github.com/graymeta/stow/s3"
 	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
+	appsv1 "k8s.io/api/apps/v1"
 	batch "k8s.io/api/batch/v1"
 	core "k8s.io/api/core/v1"
+	policyv1beta1 "k8s.io/api/policy/v1beta1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
+	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/tools/reference"
 	core_util "kmodules.xyz/client-go/core/v1"
 	"kmodules.xyz/objectstore-api/osm"
 )
@@ -194,4 +200,68 @@ func (c *Controller) GetVolumeForSnapshot(st api.StorageType, pvcSpec *core.Pers
 	}
 
 	return volume, nil
+}
+
+func (c *Controller) CreateStatefulSetPodDisruptionBudget(sts *appsv1.StatefulSet) error {
+	_, err := c.Client.PolicyV1beta1().PodDisruptionBudgets(sts.Namespace).Get(sts.Name, metav1.GetOptions{})
+	if err == nil || !kerr.IsNotFound(err) {
+		return err
+	}
+
+	maxUnavailable := int32(math.Floor((float64(*sts.Spec.Replicas) - 1.0) / 2.0))
+	pdb := policyv1beta1.PodDisruptionBudget{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      sts.Name,
+			Namespace: sts.Namespace,
+			Labels:    sts.Labels,
+		},
+
+		Spec: policyv1beta1.PodDisruptionBudgetSpec{
+			Selector: &metav1.LabelSelector{
+				MatchLabels: sts.Spec.Template.Labels,
+			},
+			MaxUnavailable: &intstr.IntOrString{IntVal: maxUnavailable},
+		},
+	}
+
+	ref, rerr := reference.GetReference(clientsetscheme.Scheme, sts)
+	if rerr != nil {
+		return rerr
+	}
+	core_util.EnsureOwnerReference(&pdb.ObjectMeta, ref)
+
+	//Create PDB
+	_, err = c.Client.PolicyV1beta1().PodDisruptionBudgets(sts.Namespace).Create(&pdb)
+	return err
+}
+
+func (c *Controller) CreateDeploymentPodDisruptionBudget(deployment *appsv1.Deployment) error {
+	_, err := c.Client.PolicyV1beta1().PodDisruptionBudgets(deployment.Namespace).Get(deployment.Name, metav1.GetOptions{})
+	if err == nil || !kerr.IsNotFound(err) {
+		return err
+	}
+	pdb := policyv1beta1.PodDisruptionBudget{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      deployment.Name,
+			Namespace: deployment.Namespace,
+			Labels:    deployment.Labels,
+		},
+
+		Spec: policyv1beta1.PodDisruptionBudgetSpec{
+			Selector: &metav1.LabelSelector{
+				MatchLabels: deployment.Spec.Template.Labels,
+			},
+			MinAvailable: &intstr.IntOrString{IntVal: 1},
+		},
+	}
+
+	ref, rerr := reference.GetReference(clientsetscheme.Scheme, deployment)
+	if rerr != nil {
+		return rerr
+	}
+	core_util.EnsureOwnerReference(&pdb.ObjectMeta, ref)
+
+	//Create PDB
+	_, err = c.Client.PolicyV1beta1().PodDisruptionBudgets(deployment.Namespace).Create(&pdb)
+	return err
 }
