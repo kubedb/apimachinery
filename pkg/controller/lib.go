@@ -204,10 +204,7 @@ func (c *Controller) GetVolumeForSnapshot(st api.StorageType, pvcSpec *core.Pers
 
 func (c *Controller) CreateStatefulSetPodDisruptionBudget(sts *appsv1.StatefulSet) error {
 	_, err := c.Client.PolicyV1beta1().PodDisruptionBudgets(sts.Namespace).Get(sts.Name, metav1.GetOptions{})
-	if err == nil {
-		return nil
-	}
-	if !kerr.IsNotFound(err) {
+	if err == nil || !kerr.IsNotFound(err) {
 		return err
 	}
 
@@ -240,10 +237,7 @@ func (c *Controller) CreateStatefulSetPodDisruptionBudget(sts *appsv1.StatefulSe
 
 func (c *Controller) CreateDeploymentPodDisruptionBudget(deployment *appsv1.Deployment) error {
 	_, err := c.Client.PolicyV1beta1().PodDisruptionBudgets(deployment.Namespace).Get(deployment.Name, metav1.GetOptions{})
-	if err == nil {
-		return nil
-	}
-	if !kerr.IsNotFound(err) {
+	if err == nil || !kerr.IsNotFound(err) {
 		return err
 	}
 	deploymentReplicas := float64(*(deployment.Spec.Replicas))
