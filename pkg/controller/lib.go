@@ -241,7 +241,7 @@ func (c *Controller) CreateDeploymentPodDisruptionBudget(deployment *appsv1.Depl
 		return err
 	}
 	deploymentReplicas := float64(*(deployment.Spec.Replicas))
-	maxUnavailable := int32(math.Ceil((deploymentReplicas - 1.0) / 2.0))
+	maxUnavailable := int32(math.Floor((deploymentReplicas - 1.0) / 2.0))
 	pdb := policyv1beta1.PodDisruptionBudget{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      deployment.Name,
