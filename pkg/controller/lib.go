@@ -240,8 +240,6 @@ func (c *Controller) CreateDeploymentPodDisruptionBudget(deployment *appsv1.Depl
 	if err == nil || !kerr.IsNotFound(err) {
 		return err
 	}
-	deploymentReplicas := float64(*(deployment.Spec.Replicas))
-	maxUnavailable := int32(math.Floor((deploymentReplicas - 1.0) / 2.0))
 	pdb := policyv1beta1.PodDisruptionBudget{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      deployment.Name,
@@ -253,7 +251,7 @@ func (c *Controller) CreateDeploymentPodDisruptionBudget(deployment *appsv1.Depl
 			Selector: &metav1.LabelSelector{
 				MatchLabels: deployment.Spec.Template.Labels,
 			},
-			MaxUnavailable: &intstr.IntOrString{IntVal: maxUnavailable},
+			MinAvailable: &intstr.IntOrString{IntVal: 1},
 		},
 	}
 
