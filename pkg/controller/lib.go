@@ -208,7 +208,7 @@ func (c *Controller) CreateStatefulSetPodDisruptionBudget(sts *appsv1.StatefulSe
 		return err
 	}
 
-	maxUnavailable := int32(math.Ceil((float64(*sts.Spec.Replicas) - 1.0) / 2.0))
+	maxUnavailable := int32(math.Floor((float64(*sts.Spec.Replicas) - 1.0) / 2.0))
 	pdb := policyv1beta1.PodDisruptionBudget{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      sts.Name,
