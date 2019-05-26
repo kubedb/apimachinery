@@ -23,8 +23,13 @@ _testmain.go
 *.test
 *.prof
 
-dist/
-.idea/
-.vscode/
-coverage.txt
-apiserver.local.config/
+**/.env
+**/junit.xml
+/.idea
+/.vscode
+/apiserver.local.config
+/coverage.txt
+/dist
+
+/bin
+/.go

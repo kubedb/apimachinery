@@ -1,6 +1,10 @@
 package main
 
 import (
+	"io/ioutil"
+	"os"
+	"path/filepath"
+
 	"github.com/appscode/go/log"
 	gort "github.com/appscode/go/runtime"
 	"github.com/go-openapi/spec"
@@ -12,15 +16,12 @@ import (
 	catalogv1alpha1 "github.com/kubedb/apimachinery/apis/catalog/v1alpha1"
 	kubedbinstall "github.com/kubedb/apimachinery/apis/kubedb/install"
 	kubedbv1alpha1 "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
-	"io/ioutil"
 	crd_api "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/kube-openapi/pkg/common"
 	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
 	"kmodules.xyz/client-go/openapi"
-	"os"
-	"path/filepath"
 )
 
 func generateCRDDefinitions() {

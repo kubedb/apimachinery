@@ -4,28 +4,35 @@ go 1.12
 
 require (
 	github.com/appscode/docker-registry-client v0.0.0-20180426150142-1bb02bb202b0
-	github.com/appscode/go v0.0.0-20190424183524-60025f1135c9
+	github.com/appscode/go v0.0.0-20190523031839-1468ee3a76e8
 	github.com/appscode/osm v0.0.0-20190225021050-90ec9897e91b // indirect
+	github.com/aws/aws-sdk-go v1.14.33 // indirect
 	github.com/docker/libtrust v0.0.0-20160708172513-aabc10ec26b7 // indirect
+	github.com/emicklei/go-restful v2.9.5+incompatible // indirect
 	github.com/evanphx/json-patch v4.2.0+incompatible
 	github.com/go-openapi/spec v0.19.0
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
+	github.com/gorilla/mux v1.7.2 // indirect
 	github.com/graymeta/stow v0.0.0-00010101000000-000000000000
 	github.com/json-iterator/go v1.1.6
+	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/orcaman/concurrent-map v0.0.0-20190314100340-2693aad1ed75
 	github.com/pkg/errors v0.8.1
-	github.com/prometheus/common v0.4.0 // indirect
+	github.com/prometheus/client_golang v0.9.3 // indirect
+	github.com/prometheus/common v0.4.1 // indirect
+	github.com/sirupsen/logrus v1.4.2 // indirect
+	github.com/spf13/cobra v0.0.4 // indirect
 	google.golang.org/genproto v0.0.0-20190508193815-b515fa19cec8 // indirect
-	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5
 	k8s.io/api v0.0.0-20190503110853-61630f889b3c
 	k8s.io/apiextensions-apiserver v0.0.0-20190508184259-7784d62bc471
 	k8s.io/apimachinery v0.0.0-20190508063446-a3da69d3723c
 	k8s.io/apiserver v0.0.0-20190508183956-3a0abf14e58a // indirect
 	k8s.io/client-go v11.0.0+incompatible
+	k8s.io/klog v0.3.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20190502190224-411b2483e503
 	kmodules.xyz/client-go v0.0.0-20190524133821-9c8a87771aea
-	kmodules.xyz/custom-resources v0.0.0-20190225012057-ed1c15a0bbda
+	kmodules.xyz/custom-resources v0.0.0-20190508103408-464e8324c3ec
 	kmodules.xyz/monitoring-agent-api v0.0.0-20190508125842-489150794b9b
 	kmodules.xyz/objectstore-api v0.0.0-20190506085934-94c81c8acca9
 	kmodules.xyz/offshoot-api v0.0.0-20190508142450-1c69d50f3c1c
