@@ -3,7 +3,7 @@ cloud.google.com/go/compute/metadata
 # github.com/Azure/azure-sdk-for-go v21.3.0+incompatible
 github.com/Azure/azure-sdk-for-go/storage
 github.com/Azure/azure-sdk-for-go/version
-# github.com/Azure/go-autorest v11.1.0+incompatible
+# github.com/Azure/go-autorest v11.1.2+incompatible
 github.com/Azure/go-autorest/autorest
 github.com/Azure/go-autorest/autorest/azure
 github.com/Azure/go-autorest/autorest/adal
@@ -184,7 +184,7 @@ github.com/modern-go/concurrent
 github.com/modern-go/reflect2
 # github.com/munnerz/goautoneg v0.0.0-20190414153302-2ae31c8b6b30
 github.com/munnerz/goautoneg
-# github.com/ncw/swift v1.0.41
+# github.com/ncw/swift v1.0.47
 github.com/ncw/swift
 # github.com/opencontainers/go-digest v1.0.0-rc1
 github.com/opencontainers/go-digest
@@ -241,9 +241,9 @@ go.opencensus.io/trace/internal
 go.opencensus.io/trace/tracestate
 go.opencensus.io/resource
 go.opencensus.io
-# golang.org/x/crypto v0.0.0-20190506204251-e1dfcc566284
+# golang.org/x/crypto v0.0.0-20190513172903-22d7a77e9e5f
 golang.org/x/crypto/ssh/terminal
-# golang.org/x/net v0.0.0-20190503192946-f4e77d36d62c
+# golang.org/x/net v0.0.0-20190522155817-f3200d17e092
 golang.org/x/net/http2
 golang.org/x/net/context
 golang.org/x/net/http/httpguts
@@ -259,7 +259,7 @@ golang.org/x/oauth2/google
 golang.org/x/oauth2/internal
 golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
-# golang.org/x/sys v0.0.0-20190508100423-12bbe5a7a520
+# golang.org/x/sys v0.0.0-20190523142557-0e01d883c5c5
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 # golang.org/x/text v0.3.2
@@ -732,13 +732,13 @@ k8s.io/kube-openapi/pkg/util/proto
 k8s.io/kube-openapi/pkg/util
 k8s.io/kube-openapi/pkg/handler
 k8s.io/kube-openapi/pkg/schemaconv
-# k8s.io/kubernetes v1.14.1
+# k8s.io/kubernetes v1.14.2
 k8s.io/kubernetes/pkg/util/hash
 # k8s.io/utils v0.0.0-20190506122338-8fab8cb257d5 => k8s.io/utils v0.0.0-20190221042446-c2654d5206da
 k8s.io/utils/integer
 k8s.io/utils/buffer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20190524133821-9c8a87771aea
+# kmodules.xyz/client-go v0.0.0-20190527113919-eb165836b702
 kmodules.xyz/client-go/apiextensions/v1beta1
 kmodules.xyz/client-go/core/v1
 kmodules.xyz/client-go/meta
@@ -758,7 +758,7 @@ kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/objectstore-api v0.0.0-20190506085934-94c81c8acca9
 kmodules.xyz/objectstore-api/api/v1
 kmodules.xyz/objectstore-api/osm
-# kmodules.xyz/offshoot-api v0.0.0-20190508142450-1c69d50f3c1c
+# kmodules.xyz/offshoot-api v0.0.0-20190527060812-295f97bb8061
 kmodules.xyz/offshoot-api/api/v1
 # kmodules.xyz/webhook-runtime v0.0.0-20190508093950-b721b4eba5e5
 kmodules.xyz/webhook-runtime/admission/v1beta1
@@ -770,7 +770,7 @@ sigs.k8s.io/structured-merge-diff/value
 sigs.k8s.io/structured-merge-diff/schema
 # sigs.k8s.io/yaml v1.1.0
 sigs.k8s.io/yaml
-# stash.appscode.dev/stash v0.0.0-20190509074139-0fbb9c75f7d1
+# stash.appscode.dev/stash v0.0.0-20190525101310-604af0d5fc92
 stash.appscode.dev/stash/apis/stash/v1beta1
 stash.appscode.dev/stash/client/clientset/versioned
 stash.appscode.dev/stash/client/informers/externalversions
