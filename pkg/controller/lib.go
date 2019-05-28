@@ -263,15 +263,15 @@ func (c *Controller) CreateDeploymentPodDisruptionBudget(deployment *appsv1.Depl
 	return err
 }
 
-func SupportsStashOperator(apiExtClient crd_cs.ApiextensionsV1beta1Interface) bool {
+func FoundStashCRDs(apiExtClient crd_cs.ApiextensionsV1beta1Interface) bool {
 	_, err := apiExtClient.CustomResourceDefinitions().Get(v1beta1.ResourcePluralRestoreSession+"."+v1beta1.SchemeGroupVersion.Group, metav1.GetOptions{})
 	return err == nil
 }
 
-// WaitForStashOperator waits for restoresession crd to come up.
+// BlockOnStashOperator waits for restoresession crd to come up.
 // It either waits until restoresession crd exists or throws error otherwise
-func (c *Controller) WaitForStashOperator() error {
+func (c *Controller) BlockOnStashOperator() error {
 	return wait.PollImmediateInfinite(time.Second*10, func() (bool, error) {
-		return SupportsStashOperator(c.ApiExtKubeClient), nil
+		return FoundStashCRDs(c.ApiExtKubeClient), nil
 	})
 }
