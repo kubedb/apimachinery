@@ -263,33 +263,6 @@ func (c *Controller) CreateDeploymentPodDisruptionBudget(deployment *appsv1.Depl
 	return err
 }
 
-func (c *Controller) CreateElasticsearchPodDisruptionBudget(sts *appsv1.StatefulSet, maxUnavailable *intstr.IntOrString) error {
-	ref, err := reference.GetReference(clientsetscheme.Scheme, sts)
-	if err != nil {
-		return err
-	}
-
-	m := metav1.ObjectMeta{
-		Name:      sts.Name,
-		Namespace: sts.Namespace,
-	}
-	_, _, err = policy_util.CreateOrPatchPodDisruptionBudget(c.Client, m,
-		func(in *policyv1beta1.PodDisruptionBudget) *policyv1beta1.PodDisruptionBudget {
-			in.Labels = sts.Labels
-			core_util.EnsureOwnerReference(&in.ObjectMeta, ref)
-
-			in.Spec.Selector = &metav1.LabelSelector{
-				MatchLabels: sts.Spec.Template.Labels,
-			}
-
-			in.Spec.MaxUnavailable =  maxUnavailable
-
-			in.Spec.MinAvailable = nil
-			return in
-		})
-	return err
-}
-
 func FoundStashCRDs(apiExtClient crd_cs.ApiextensionsV1beta1Interface) bool {
 	_, err := apiExtClient.CustomResourceDefinitions().Get(v1beta1.ResourcePluralRestoreSession+"."+v1beta1.SchemeGroupVersion.Group, metav1.GetOptions{})
 	return err == nil

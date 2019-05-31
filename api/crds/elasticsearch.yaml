@@ -8149,6 +8149,10 @@ spec:
                       type: string
                   type: object
               type: object
+            maxUnavailable:
+              oneOf:
+              - type: string
+              - type: integer
             monitor:
               properties:
                 agent:
