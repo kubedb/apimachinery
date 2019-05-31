@@ -10955,6 +10955,10 @@ spec:
               properties:
                 client:
                   properties:
+                    maxUnavailable:
+                      oneOf:
+                      - type: string
+                      - type: integer
                     prefix:
                       type: string
                     replicas:
@@ -11089,6 +11093,10 @@ spec:
                   type: object
                 data:
                   properties:
+                    maxUnavailable:
+                      oneOf:
+                      - type: string
+                      - type: integer
                     prefix:
                       type: string
                     replicas:
@@ -11223,6 +11231,10 @@ spec:
                   type: object
                 master:
                   properties:
+                    maxUnavailable:
+                      oneOf:
+                      - type: string
+                      - type: integer
                     prefix:
                       type: string
                     replicas:
