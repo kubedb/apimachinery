@@ -959,6 +959,12 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"),
 						},
 					},
+					"maxUnavailable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "An eviction is allowed if at most \"maxUnavailable\" pods selected by \"selector\" are unavailable after the eviction, i.e. even in absence of the evicted pod. For example, one can prevent all voluntary evictions by specifying 0. This is a mutually exclusive setting with \"minAvailable\".",
+							Ref:         ref("k8s.io/apimachinery/pkg/util/intstr.IntOrString"),
+						},
+					},
 					"updateStrategy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
@@ -977,7 +983,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"},
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.InitSpec", "k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"},
 	}
 }
 
