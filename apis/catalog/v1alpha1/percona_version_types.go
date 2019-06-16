@@ -28,6 +28,8 @@ type PerconaVersionSpec struct {
 	Version string `json:"version"`
 	// Database Image
 	DB PerconaVersionDatabase `json:"db"`
+	// Proxysql Image
+	Proxysql PerconaVersionProxysql `json:"proxysql"`
 	// Exporter Image
 	Exporter PerconaVersionExporter `json:"exporter"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
@@ -45,6 +47,11 @@ type PerconaVersionDatabase struct {
 	Image string `json:"image"`
 }
 
+// PerconaVersionProxysql is the proxysql image
+type PerconaVersionProxysql struct {
+	Image string `json:"image"`
+}
+
 // PerconaVersionExporter is the image for the Percona exporter
 type PerconaVersionExporter struct {
 	Image string `json:"image"`
@@ -57,7 +64,7 @@ type PerconaVersionInitContainer struct {
 
 // PerconaVersionPodSecurityPolicy is the Percona pod security policies
 type PerconaVersionPodSecurityPolicy struct {
-	DatabasePolicyName    string `json:"databasePolicyName"`
+	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

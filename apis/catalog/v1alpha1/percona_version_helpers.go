@@ -59,6 +59,11 @@ func (p PerconaVersion) CustomResourceDefinition() *apiextensions.CustomResource
 				JSONPath: ".spec.db.image",
 			},
 			{
+				Name:     "PROXYSQL_IMAGE",
+				Type:     "string",
+				JSONPath: ".spec.proxysql.image",
+			},
+			{
 				Name:     "Deprecated",
 				Type:     "boolean",
 				JSONPath: ".spec.deprecated",
