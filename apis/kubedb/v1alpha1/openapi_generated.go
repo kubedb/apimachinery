@@ -94,6 +94,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresSummary":              schema_apimachinery_apis_kubedb_v1alpha1_PostgresSummary(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresTableInfo":            schema_apimachinery_apis_kubedb_v1alpha1_PostgresTableInfo(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.PostgresWALSourceSpec":        schema_apimachinery_apis_kubedb_v1alpha1_PostgresWALSourceSpec(ref),
+		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ProxysqlSpec":                 schema_apimachinery_apis_kubedb_v1alpha1_ProxysqlSpec(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RecoveryTarget":               schema_apimachinery_apis_kubedb_v1alpha1_RecoveryTarget(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.Redis":                        schema_apimachinery_apis_kubedb_v1alpha1_Redis(ref),
 		"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RedisClusterSpec":             schema_apimachinery_apis_kubedb_v1alpha1_RedisClusterSpec(ref),
@@ -2643,9 +2644,17 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PXCSpec(ref common.ReferenceCallba
 							Format:      "",
 						},
 					},
+					"proxysql": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Proxysql configuration",
+							Ref:         ref("github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ProxysqlSpec"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.ProxysqlSpec"},
 	}
 }
 
@@ -3289,6 +3298,33 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresWALSourceSpec(ref common.R
 		},
 		Dependencies: []string{
 			"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.RecoveryTarget", "kmodules.xyz/objectstore-api/api/v1.AzureSpec", "kmodules.xyz/objectstore-api/api/v1.B2Spec", "kmodules.xyz/objectstore-api/api/v1.GCSSpec", "kmodules.xyz/objectstore-api/api/v1.LocalSpec", "kmodules.xyz/objectstore-api/api/v1.RestServerSpec", "kmodules.xyz/objectstore-api/api/v1.S3Spec", "kmodules.xyz/objectstore-api/api/v1.SwiftSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_ProxysqlSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of Proxysql nodes. Currently we support only replicas = 1.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose proxysql",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
 	}
 }
 

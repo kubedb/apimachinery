@@ -80,6 +80,19 @@ type PerconaSpec struct {
 type PXCSpec struct {
 	// Name of the cluster and should be identical on all nodes.
 	ClusterName string `json:"clusterName,omitempty"`
+
+	// Proxysql configuration
+	Proxysql ProxysqlSpec `json:"proxysql,omitempty"`
+}
+
+type ProxysqlSpec struct {
+	// Number of Proxysql nodes. Currently we support only replicas = 1.
+	// TODO: If replicas > 1, proxysql will be clustered
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// PodTemplate is an optional configuration for pods used to expose proxysql
+	// +optional
+	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 }
 
 type PerconaStatus struct {
