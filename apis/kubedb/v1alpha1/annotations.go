@@ -56,6 +56,7 @@ const (
 	PerconaDataMountPath         = "/var/lib/mysql"
 	PerconaInitDBMountPath       = "/docker-entrypoint-initdb.d"
 	PerconaCustomConfigMountPath = "/etc/mysql/conf.d"
+	PerconaClusterLabelKey       = PerconaKey + "/cluster"
 	PerconaProxysqlLabelKey      = PerconaKey + "/proxysql"
 
 	ProxysqlUser          = "proxysqluser"

@@ -66,6 +66,36 @@ func (p Percona) PeerName(idx int) string {
 	return fmt.Sprintf("%s-%d.%s.%s", p.OffshootName(), idx, p.GoverningServiceName(), p.Namespace)
 }
 
+func (p Percona) ClusterName() string {
+	return p.Spec.PXC.ClusterName
+}
+
+func (p Percona) ClusterLabels() map[string]string {
+	return v1.UpsertMap(p.OffshootLabels(), map[string]string{
+		PerconaClusterLabelKey: p.ClusterName(),
+	})
+}
+
+func (p Percona) ClusterSelectors() map[string]string {
+	return v1.UpsertMap(p.OffshootSelectors(), map[string]string{
+		PerconaClusterLabelKey: p.ClusterName(),
+	})
+}
+
+func (p Percona) XtraDBLabels() map[string]string {
+	if p.Spec.PXC != nil {
+		return p.ClusterLabels()
+	}
+	return p.OffshootLabels()
+}
+
+func (p Percona) XtraDBSelectors() map[string]string {
+	if p.Spec.PXC != nil {
+		return p.ClusterSelectors()
+	}
+	return p.OffshootSelectors()
+}
+
 func (p Percona) ProxysqlName() string {
 	return fmt.Sprintf("%s-proxysql", p.OffshootName())
 }
