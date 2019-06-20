@@ -202,6 +202,16 @@ func (p *PerconaSpec) SetDefaults() {
 		p.Replicas = types.Int32P(1)
 	}
 
+	if p.PXC != nil {
+		if *p.Replicas < 3 {
+			p.Replicas = types.Int32P(PerconaDefaultClusterSize)
+		}
+
+		if p.PXC.Proxysql.Replicas == nil {
+			p.PXC.Proxysql.Replicas = types.Int32P(1)
+		}
+	}
+
 	if p.StorageType == "" {
 		p.StorageType = StorageTypeDurable
 	}

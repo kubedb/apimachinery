@@ -51,6 +51,8 @@ const (
 	MySQLMaxBaseServerID = uint(4294967295 - 9)
 
 	PerconaMaxClusterNameLength  = 32
+	PerconaStandaloneReplicas    = 1
+	PerconaDefaultClusterSize    = 3
 	PerconaDataMountPath         = "/var/lib/mysql"
 	PerconaInitDBMountPath       = "/docker-entrypoint-initdb.d"
 	PerconaCustomConfigMountPath = "/etc/mysql/conf.d"
