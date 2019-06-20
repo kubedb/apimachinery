@@ -9,6 +9,7 @@ import (
 	apps "k8s.io/api/apps/v1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
+	v1 "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
@@ -59,6 +60,30 @@ func (p Percona) ServiceName() string {
 
 func (p Percona) GoverningServiceName() string {
 	return p.OffshootName() + "-gvr"
+}
+
+func (p Percona) PeerName(idx int) string {
+	return fmt.Sprintf("%s-%d.%s.%s", p.OffshootName(), idx, p.GoverningServiceName(), p.Namespace)
+}
+
+func (p Percona) ProxysqlName() string {
+	return fmt.Sprintf("%s-proxysql", p.OffshootName())
+}
+
+func (p Percona) ProxysqlServiceName() string {
+	return p.ProxysqlName()
+}
+
+func (p Percona) ProxysqlLabels() map[string]string {
+	return v1.UpsertMap(p.OffshootLabels(), map[string]string{
+		PerconaProxysqlLabelKey: p.ProxysqlName(),
+	})
+}
+
+func (p Percona) ProxysqlSelectors() map[string]string {
+	return v1.UpsertMap(p.OffshootSelectors(), map[string]string{
+		PerconaProxysqlLabelKey: p.ProxysqlName(),
+	})
 }
 
 type perconaApp struct {
