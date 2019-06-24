@@ -50,14 +50,15 @@ const (
 	// for BaseServerID calculated as max MySQL server_id value - max Replication Group size.
 	MySQLMaxBaseServerID = uint(4294967295 - 9)
 
-	PerconaMaxClusterNameLength  = 32
-	PerconaStandaloneReplicas    = 1
-	PerconaDefaultClusterSize    = 3
-	PerconaDataMountPath         = "/var/lib/mysql"
-	PerconaInitDBMountPath       = "/docker-entrypoint-initdb.d"
-	PerconaCustomConfigMountPath = "/etc/mysql/conf.d"
-	PerconaClusterLabelKey       = PerconaKey + "/cluster"
-	PerconaProxysqlLabelKey      = PerconaKey + "/proxysql"
+	PerconaXtraDBClusterRecommendedVersion = "5.7"
+	PerconaMaxClusterNameLength            = 32
+	PerconaStandaloneReplicas              = 1
+	PerconaDefaultClusterSize              = 3
+	PerconaDataMountPath                   = "/var/lib/mysql"
+	PerconaInitDBMountPath                 = "/docker-entrypoint-initdb.d"
+	PerconaCustomConfigMountPath           = "/etc/mysql/conf.d"
+	PerconaClusterLabelKey                 = PerconaKey + "/cluster"
+	PerconaProxysqlLabelKey                = PerconaKey + "/proxysql"
 
 	ProxysqlUser          = "proxysqluser"
 	ProxysqlPassword      = "proxysqlpass"
