@@ -4,9 +4,9 @@ go 1.12
 
 require (
 	github.com/appscode/docker-registry-client v0.0.0-20180426150142-1bb02bb202b0
-	github.com/appscode/go v0.0.0-20190523031839-1468ee3a76e8
+	github.com/appscode/go v0.0.0-20190621064509-6b292c9166e3
 	github.com/docker/libtrust v0.0.0-20160708172513-aabc10ec26b7 // indirect
-	github.com/evanphx/json-patch v4.2.0+incompatible
+	github.com/evanphx/json-patch v4.5.0+incompatible
 	github.com/go-openapi/spec v0.19.0
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/gorilla/mux v1.7.2 // indirect
@@ -15,9 +15,7 @@ require (
 	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/orcaman/concurrent-map v0.0.0-20190314100340-2693aad1ed75
 	github.com/pkg/errors v0.8.1
-	github.com/prometheus/common v0.4.1 // indirect
-	google.golang.org/genproto v0.0.0-20190508193815-b515fa19cec8 // indirect
-	gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5
+	github.com/robfig/cron/v3 v3.0.0
 	k8s.io/api v0.0.0-20190503110853-61630f889b3c
 	k8s.io/apiextensions-apiserver v0.0.0-20190508184259-7784d62bc471
 	k8s.io/apimachinery v0.0.0-20190508063446-a3da69d3723c
@@ -32,12 +30,11 @@ require (
 	kmodules.xyz/objectstore-api v0.0.0-20190506085934-94c81c8acca9
 	kmodules.xyz/offshoot-api v0.0.0-20190527060812-295f97bb8061
 	kmodules.xyz/webhook-runtime v0.0.0-20190508093950-b721b4eba5e5
-	stash.appscode.dev/stash v0.0.0-20190525101310-604af0d5fc92
+	stash.appscode.dev/stash v0.0.0-20190711191909-920dfaea20e8
 )
 
 replace (
 	github.com/graymeta/stow => github.com/appscode/stow v0.0.0-20190506085026-ca5baa008ea3
-	gopkg.in/robfig/cron.v2 => github.com/appscode/cron v0.0.0-20170717094345-ca60c6d796d4
 	k8s.io/api => k8s.io/api v0.0.0-20190313235455-40a48860b5ab
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.0.0-20190315093550-53c4693659ed
 	k8s.io/apimachinery => github.com/kmodules/apimachinery v0.0.0-20190508045248-a52a97a7a2bf
