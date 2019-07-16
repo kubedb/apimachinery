@@ -20421,8 +20421,12 @@
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
         },
         "certificateSecret": {
-          "description": "Secret for KeyFile or SSL certificates. Contains `tls.pem` or keyfile `key.txt` depending on enableSSL. Currently SSL support is not enabled.",
+          "description": "Secret for KeyFile or SSL certificates. Contains `tls.pem` or keyfile `key.txt` depending on enableSSL.",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        },
+        "clusterAuthMode": {
+          "description": "ClusterAuthMode for replicaset or sharding. (default will be x509 if sslmode is not `disabled`.) See available ClusterAuthMode: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-clusterauthmode",
+          "type": "string"
         },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -20460,6 +20464,10 @@
         "shardTopology": {
           "description": "MongoDB sharding topology.",
           "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardingTopology"
+        },
+        "sslMode": {
+          "description": "SSLMode for both standalone and clusters. (default, disabled.) See more options: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-sslmode",
+          "type": "string"
         },
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",

@@ -4223,6 +4223,11 @@ spec:
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#secret'
                   type: string
               type: object
+            clusterAuthMode:
+              description: 'ClusterAuthMode for replicaset or sharding. (default will
+                be x509 if sslmode is not `disabled`.) See available ClusterAuthMode:
+                https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-clusterauthmode'
+              type: string
             configSource:
               description: Represents the source of a volume to mount. Only one of
                 its members may be specified.
@@ -22437,6 +22442,10 @@ spec:
               - configServer
               - mongos
               type: object
+            sslMode:
+              description: 'SSLMode for both standalone and clusters. (default, disabled.)
+                See more options: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-sslmode'
+              type: string
             storage:
               description: PersistentVolumeClaimSpec describes the common attributes
                 of storage devices and allows a Source for provider-specific attributes
