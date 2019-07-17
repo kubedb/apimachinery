@@ -34,6 +34,7 @@ require (
 )
 
 replace (
+	github.com/go-xorm/core v0.6.3 => xorm.io/core v0.6.3
 	github.com/graymeta/stow => github.com/appscode/stow v0.0.0-20190506085026-ca5baa008ea3
 	k8s.io/api => k8s.io/api v0.0.0-20190313235455-40a48860b5ab
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.0.0-20190315093550-53c4693659ed
