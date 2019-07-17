@@ -10,32 +10,30 @@ require (
 	github.com/go-openapi/spec v0.19.0
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/gorilla/mux v1.7.2 // indirect
-	github.com/graymeta/stow v0.0.0-00010101000000-000000000000
 	github.com/json-iterator/go v1.1.6
 	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/orcaman/concurrent-map v0.0.0-20190314100340-2693aad1ed75
 	github.com/pkg/errors v0.8.1
 	github.com/robfig/cron/v3 v3.0.0
+	gomodules.xyz/stow v0.2.0
 	k8s.io/api v0.0.0-20190503110853-61630f889b3c
-	k8s.io/apiextensions-apiserver v0.0.0-20190508184259-7784d62bc471
+	k8s.io/apiextensions-apiserver v0.0.0-20190516231611-bf6753f2aa24
 	k8s.io/apimachinery v0.0.0-20190508063446-a3da69d3723c
-	k8s.io/apiserver v0.0.0-20190508183956-3a0abf14e58a // indirect
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/klog v0.3.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20190502190224-411b2483e503
 	k8s.io/kubernetes v1.14.2 // indirect
-	kmodules.xyz/client-go v0.0.0-20190527113919-eb165836b702
+	kmodules.xyz/client-go v0.0.0-20190715080709-7162a6c90b04
 	kmodules.xyz/custom-resources v0.0.0-20190508103408-464e8324c3ec
-	kmodules.xyz/monitoring-agent-api v0.0.0-20190508125842-489150794b9b
-	kmodules.xyz/objectstore-api v0.0.0-20190506085934-94c81c8acca9
-	kmodules.xyz/offshoot-api v0.0.0-20190527060812-295f97bb8061
-	kmodules.xyz/webhook-runtime v0.0.0-20190508093950-b721b4eba5e5
-	stash.appscode.dev/stash v0.0.0-20190711191909-920dfaea20e8
+	kmodules.xyz/monitoring-agent-api v0.0.0-20190513065523-186af167f817
+	kmodules.xyz/objectstore-api v0.0.0-20190715131036-28ef070833ef
+	kmodules.xyz/offshoot-api v0.0.0-20190715115723-36c8fce142c1
+	kmodules.xyz/webhook-runtime v0.0.0-20190715115250-a84fbf77dd30
+	stash.appscode.dev/stash v0.0.0-20190717091949-1c51a7c58f08
 )
 
 replace (
-	github.com/go-xorm/core v0.6.3 => xorm.io/core v0.6.3
-	github.com/graymeta/stow => github.com/appscode/stow v0.0.0-20190506085026-ca5baa008ea3
+	github.com/Azure/go-autorest => github.com/Azure/go-autorest/autorest v0.5.0
 	k8s.io/api => k8s.io/api v0.0.0-20190313235455-40a48860b5ab
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.0.0-20190315093550-53c4693659ed
 	k8s.io/apimachinery => github.com/kmodules/apimachinery v0.0.0-20190508045248-a52a97a7a2bf
