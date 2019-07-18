@@ -1,10 +1,10 @@
 package v1alpha1
 
 import (
-	"github.com/kubedb/apimachinery/apis"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kubedb.dev/apimachinery/apis"
 )
 
 var _ apis.ResourceInfo = &DormantDatabase{}
@@ -79,7 +79,7 @@ func (d DormantDatabase) CustomResourceDefinition() *apiextensions.CustomResourc
 		Labels: crdutils.Labels{
 			LabelsMap: map[string]string{"app": "kubedb"},
 		},
-		SpecDefinitionName:      "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.DormantDatabase",
+		SpecDefinitionName:      "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.DormantDatabase",
 		EnableValidation:        false,
 		GetOpenAPIDefinitions:   GetOpenAPIDefinitions,
 		EnableStatusSubresource: apis.EnableStatusSubresource,

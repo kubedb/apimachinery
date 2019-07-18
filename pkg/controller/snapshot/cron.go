@@ -7,10 +7,6 @@ import (
 	"time"
 
 	"github.com/appscode/go/log"
-	apiCatalog "github.com/kubedb/apimachinery/apis/catalog/v1alpha1"
-	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
-	cs "github.com/kubedb/apimachinery/client/clientset/versioned"
-	"github.com/kubedb/apimachinery/pkg/eventer"
 	cmap "github.com/orcaman/concurrent-map"
 	cron "github.com/robfig/cron/v3"
 	core "k8s.io/api/core/v1"
@@ -24,6 +20,10 @@ import (
 	"k8s.io/client-go/tools/record"
 	discovery_util "kmodules.xyz/client-go/discovery"
 	meta_util "kmodules.xyz/client-go/meta"
+	apiCatalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+	cs "kubedb.dev/apimachinery/client/clientset/versioned"
+	"kubedb.dev/apimachinery/pkg/eventer"
 )
 
 type CronControllerInterface interface {

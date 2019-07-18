@@ -19,8 +19,8 @@ limitations under the License.
 package authorization
 
 import (
-	v1alpha1 "github.com/kubedb/apimachinery/client/informers/externalversions/authorization/v1alpha1"
-	internalinterfaces "github.com/kubedb/apimachinery/client/informers/externalversions/internalinterfaces"
+	v1alpha1 "kubedb.dev/apimachinery/client/informers/externalversions/authorization/v1alpha1"
+	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
 )
 
 // Interface provides access to each of this group's versions.

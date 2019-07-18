@@ -1,10 +1,10 @@
 package v1alpha1
 
 import (
-	"github.com/kubedb/apimachinery/apis/authorization"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"kubedb.dev/apimachinery/apis/authorization"
 )
 
 var SchemeGroupVersion = schema.GroupVersion{Group: authorization.GroupName, Version: "v1alpha1"}

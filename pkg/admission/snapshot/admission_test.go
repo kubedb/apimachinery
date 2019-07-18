@@ -5,9 +5,6 @@ import (
 	"testing"
 
 	"github.com/appscode/go/types"
-	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
-	extFake "github.com/kubedb/apimachinery/client/clientset/versioned/fake"
-	"github.com/kubedb/apimachinery/client/clientset/versioned/scheme"
 	admission "k8s.io/api/admission/v1beta1"
 	authenticationV1 "k8s.io/api/authentication/v1"
 	core "k8s.io/api/core/v1"
@@ -19,6 +16,9 @@ import (
 	clientSetScheme "k8s.io/client-go/kubernetes/scheme"
 	"kmodules.xyz/client-go/meta"
 	store "kmodules.xyz/objectstore-api/api/v1"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+	extFake "kubedb.dev/apimachinery/client/clientset/versioned/fake"
+	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 )
 
 func init() {

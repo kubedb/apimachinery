@@ -9,28 +9,28 @@ import (
 	gort "github.com/appscode/go/runtime"
 	"github.com/go-openapi/spec"
 	"github.com/golang/glog"
-	"github.com/kubedb/apimachinery/apis"
-	authorizationinstall "github.com/kubedb/apimachinery/apis/authorization/install"
-	authorizationv1alpha1 "github.com/kubedb/apimachinery/apis/authorization/v1alpha1"
-	cataloginstall "github.com/kubedb/apimachinery/apis/catalog/install"
-	catalogv1alpha1 "github.com/kubedb/apimachinery/apis/catalog/v1alpha1"
-	kubedbinstall "github.com/kubedb/apimachinery/apis/kubedb/install"
-	kubedbv1alpha1 "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	crd_api "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/kube-openapi/pkg/common"
 	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
 	"kmodules.xyz/client-go/openapi"
+	"kubedb.dev/apimachinery/apis"
+	authorizationinstall "kubedb.dev/apimachinery/apis/authorization/install"
+	authorizationv1alpha1 "kubedb.dev/apimachinery/apis/authorization/v1alpha1"
+	cataloginstall "kubedb.dev/apimachinery/apis/catalog/install"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	kubedbinstall "kubedb.dev/apimachinery/apis/kubedb/install"
+	kubedbv1alpha1 "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 )
 
 func generateCRDDefinitions() {
 	apis.EnableStatusSubresource = true
 
-	filename := gort.GOPath() + "/src/github.com/kubedb/apimachinery/apis/kubedb/v1alpha1/crds.yaml"
+	filename := gort.GOPath() + "/src/kubedb.dev/apimachinery/apis/kubedb/v1alpha1/crds.yaml"
 	os.Remove(filename)
 
-	err := os.MkdirAll(filepath.Join(gort.GOPath(), "/src/github.com/kubedb/apimachinery/api/crds"), 0755)
+	err := os.MkdirAll(filepath.Join(gort.GOPath(), "/src/kubedb.dev/apimachinery/api/crds"), 0755)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -60,7 +60,7 @@ func generateCRDDefinitions() {
 		authorizationv1alpha1.PostgresRole{}.CustomResourceDefinition(),
 	}
 	for _, crd := range crds {
-		filename := filepath.Join(gort.GOPath(), "/src/github.com/kubedb/apimachinery/api/crds", crd.Spec.Names.Singular+".yaml")
+		filename := filepath.Join(gort.GOPath(), "/src/kubedb.dev/apimachinery/api/crds", crd.Spec.Names.Singular+".yaml")
 		f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 		if err != nil {
 			log.Fatal(err)
@@ -130,7 +130,7 @@ func generateSwaggerJson() {
 		glog.Fatal(err)
 	}
 
-	filename := gort.GOPath() + "/src/github.com/kubedb/apimachinery/api/openapi-spec/swagger.json"
+	filename := gort.GOPath() + "/src/kubedb.dev/apimachinery/api/openapi-spec/swagger.json"
 	err = os.MkdirAll(filepath.Dir(filename), 0755)
 	if err != nil {
 		glog.Fatal(err)

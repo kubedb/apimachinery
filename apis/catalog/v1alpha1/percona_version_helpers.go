@@ -1,9 +1,9 @@
 package v1alpha1
 
 import (
-	"github.com/kubedb/apimachinery/apis"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
+	"kubedb.dev/apimachinery/apis"
 )
 
 var _ apis.ResourceInfo = &PerconaVersion{}
@@ -43,7 +43,7 @@ func (p PerconaVersion) CustomResourceDefinition() *apiextensions.CustomResource
 		Labels: crdutils.Labels{
 			LabelsMap: map[string]string{"app": "kubedb"},
 		},
-		SpecDefinitionName:      "github.com/kubedb/apimachinery/apis/catalog/v1alpha1.PerconaVersion",
+		SpecDefinitionName:      "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaVersion",
 		EnableValidation:        true,
 		GetOpenAPIDefinitions:   GetOpenAPIDefinitions,
 		EnableStatusSubresource: false,

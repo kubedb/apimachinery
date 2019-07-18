@@ -23,15 +23,15 @@ import (
 	sync "sync"
 	time "time"
 
-	versioned "github.com/kubedb/apimachinery/client/clientset/versioned"
-	authorization "github.com/kubedb/apimachinery/client/informers/externalversions/authorization"
-	catalog "github.com/kubedb/apimachinery/client/informers/externalversions/catalog"
-	internalinterfaces "github.com/kubedb/apimachinery/client/informers/externalversions/internalinterfaces"
-	kubedb "github.com/kubedb/apimachinery/client/informers/externalversions/kubedb"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
+	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
+	authorization "kubedb.dev/apimachinery/client/informers/externalversions/authorization"
+	catalog "kubedb.dev/apimachinery/client/informers/externalversions/catalog"
+	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
+	kubedb "kubedb.dev/apimachinery/client/informers/externalversions/kubedb"
 )
 
 // SharedInformerOption defines the functional option type for SharedInformerFactory.
