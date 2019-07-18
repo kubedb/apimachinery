@@ -3,9 +3,6 @@ package dormantdatabase
 import (
 	"sync"
 
-	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
-	cs "github.com/kubedb/apimachinery/client/clientset/versioned"
-	plugin "github.com/kubedb/apimachinery/pkg/admission"
 	admission "k8s.io/api/admission/v1beta1"
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
@@ -20,6 +17,9 @@ import (
 	dynamic_util "kmodules.xyz/client-go/dynamic"
 	meta_util "kmodules.xyz/client-go/meta"
 	hookapi "kmodules.xyz/webhook-runtime/admission/v1beta1"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+	cs "kubedb.dev/apimachinery/client/clientset/versioned"
+	plugin "kubedb.dev/apimachinery/pkg/admission"
 )
 
 type DormantDatabaseValidator struct {

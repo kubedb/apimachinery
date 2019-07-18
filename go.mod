@@ -1,4 +1,4 @@
-module github.com/kubedb/apimachinery
+module kubedb.dev/apimachinery
 
 go 1.12
 
@@ -26,7 +26,7 @@ require (
 	kmodules.xyz/client-go v0.0.0-20190715080709-7162a6c90b04
 	kmodules.xyz/custom-resources v0.0.0-20190508103408-464e8324c3ec
 	kmodules.xyz/monitoring-agent-api v0.0.0-20190513065523-186af167f817
-	kmodules.xyz/objectstore-api v0.0.0-20190715131036-28ef070833ef
+	kmodules.xyz/objectstore-api v0.0.0-20190718002052-da668b440b0b
 	kmodules.xyz/offshoot-api v0.0.0-20190715115723-36c8fce142c1
 	kmodules.xyz/webhook-runtime v0.0.0-20190715115250-a84fbf77dd30
 	stash.appscode.dev/stash v0.0.0-20190717091949-1c51a7c58f08

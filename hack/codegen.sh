@@ -3,7 +3,7 @@
 set -x
 
 GOPATH=$(go env GOPATH)
-PACKAGE_NAME=github.com/kubedb/apimachinery
+PACKAGE_NAME=kubedb.dev/apimachinery
 REPO_ROOT="$GOPATH/src/$PACKAGE_NAME"
 DOCKER_REPO_ROOT="/go/src/$PACKAGE_NAME"
 DOCKER_CODEGEN_PKG="/go/src/k8s.io/code-generator"
@@ -19,8 +19,8 @@ docker run --rm -ti -u $(id -u):$(id -g) \
   -v "$REPO_ROOT":"$DOCKER_REPO_ROOT" \
   -w "$DOCKER_REPO_ROOT" \
   appscode/gengo:release-1.14 "$DOCKER_CODEGEN_PKG"/generate-groups.sh "deepcopy,client,informer,lister" \
-  github.com/kubedb/apimachinery/client \
-  github.com/kubedb/apimachinery/apis \
+  kubedb.dev/apimachinery/client \
+  kubedb.dev/apimachinery/apis \
   "kubedb:v1alpha1 catalog:v1alpha1 config:v1alpha1 authorization:v1alpha1" \
   --go-header-file "$DOCKER_REPO_ROOT/hack/gengo/boilerplate.go.txt"
 

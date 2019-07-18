@@ -1,9 +1,9 @@
 package v1alpha1
 
 import (
-	"github.com/kubedb/apimachinery/apis"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
+	"kubedb.dev/apimachinery/apis"
 )
 
 var _ apis.ResourceInfo = &ElasticsearchVersion{}
@@ -43,7 +43,7 @@ func (p ElasticsearchVersion) CustomResourceDefinition() *apiextensions.CustomRe
 		Labels: crdutils.Labels{
 			LabelsMap: map[string]string{"app": "kubedb"},
 		},
-		SpecDefinitionName:      "github.com/kubedb/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersion",
+		SpecDefinitionName:      "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersion",
 		EnableValidation:        true,
 		GetOpenAPIDefinitions:   GetOpenAPIDefinitions,
 		EnableStatusSubresource: false,

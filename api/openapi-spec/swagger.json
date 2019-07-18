@@ -128,7 +128,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestList"
             }
           }
         },
@@ -222,7 +222,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleList"
             }
           }
         },
@@ -316,7 +316,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleList"
             }
           }
         },
@@ -461,7 +461,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestList"
             }
           }
         },
@@ -495,7 +495,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
             }
           },
           {
@@ -517,19 +517,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
             }
           }
         },
@@ -663,7 +663,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
             }
           }
         },
@@ -697,7 +697,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
             }
           },
           {
@@ -719,13 +719,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
             }
           }
         },
@@ -865,7 +865,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
             }
           }
         },
@@ -977,7 +977,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleList"
             }
           }
         },
@@ -1011,7 +1011,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
             }
           },
           {
@@ -1033,19 +1033,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
             }
           }
         },
@@ -1179,7 +1179,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
             }
           }
         },
@@ -1213,7 +1213,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
             }
           },
           {
@@ -1235,13 +1235,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
             }
           }
         },
@@ -1381,7 +1381,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
             }
           }
         },
@@ -1493,7 +1493,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleList"
             }
           }
         },
@@ -1527,7 +1527,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
             }
           },
           {
@@ -1549,19 +1549,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
             }
           }
         },
@@ -1695,7 +1695,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
             }
           }
         },
@@ -1729,7 +1729,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
             }
           },
           {
@@ -1751,13 +1751,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
             }
           }
         },
@@ -1897,7 +1897,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
             }
           }
         },
@@ -2009,7 +2009,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleList"
             }
           }
         },
@@ -2043,7 +2043,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
             }
           },
           {
@@ -2065,19 +2065,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
             }
           }
         },
@@ -2211,7 +2211,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
             }
           }
         },
@@ -2245,7 +2245,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
             }
           },
           {
@@ -2267,13 +2267,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
             }
           }
         },
@@ -2413,7 +2413,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
             }
           }
         },
@@ -2474,7 +2474,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleList"
             }
           }
         },
@@ -3852,7 +3852,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionList"
             }
           }
         },
@@ -3997,7 +3997,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionList"
             }
           }
         },
@@ -4031,7 +4031,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
             }
           },
           {
@@ -4053,19 +4053,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
             }
           }
         },
@@ -4191,7 +4191,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
             }
           }
         },
@@ -4225,7 +4225,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
             }
           },
           {
@@ -4247,13 +4247,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
             }
           }
         },
@@ -4393,7 +4393,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
             }
           }
         },
@@ -4446,7 +4446,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionList"
             }
           }
         },
@@ -4540,7 +4540,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionList"
             }
           }
         },
@@ -4634,7 +4634,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionList"
             }
           }
         },
@@ -4779,7 +4779,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionList"
             }
           }
         },
@@ -4813,7 +4813,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
             }
           },
           {
@@ -4835,19 +4835,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
             }
           }
         },
@@ -4981,7 +4981,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
             }
           }
         },
@@ -5015,7 +5015,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
             }
           },
           {
@@ -5037,13 +5037,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
             }
           }
         },
@@ -5183,7 +5183,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
             }
           }
         },
@@ -5295,7 +5295,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionList"
             }
           }
         },
@@ -5329,7 +5329,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
             }
           },
           {
@@ -5351,19 +5351,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
             }
           }
         },
@@ -5497,7 +5497,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
             }
           }
         },
@@ -5531,7 +5531,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
             }
           },
           {
@@ -5553,13 +5553,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
             }
           }
         },
@@ -5699,7 +5699,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
             }
           }
         },
@@ -5811,7 +5811,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionList"
             }
           }
         },
@@ -5845,7 +5845,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
             }
           },
           {
@@ -5867,19 +5867,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
             }
           }
         },
@@ -6013,7 +6013,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
             }
           }
         },
@@ -6047,7 +6047,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
             }
           },
           {
@@ -6069,13 +6069,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
             }
           }
         },
@@ -6215,7 +6215,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
             }
           }
         },
@@ -6327,7 +6327,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionList"
             }
           }
         },
@@ -6361,7 +6361,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
             }
           },
           {
@@ -6383,19 +6383,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
             }
           }
         },
@@ -6529,7 +6529,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
             }
           }
         },
@@ -6563,7 +6563,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
             }
           },
           {
@@ -6585,13 +6585,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
             }
           }
         },
@@ -6731,7 +6731,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
             }
           }
         },
@@ -6843,7 +6843,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionList"
             }
           }
         },
@@ -6877,7 +6877,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
             }
           },
           {
@@ -6899,19 +6899,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
             }
           }
         },
@@ -7037,7 +7037,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
             }
           }
         },
@@ -7071,7 +7071,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
             }
           },
           {
@@ -7093,13 +7093,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
             }
           }
         },
@@ -7239,7 +7239,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
             }
           }
         },
@@ -7343,7 +7343,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionList"
             }
           }
         },
@@ -7377,7 +7377,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
             }
           },
           {
@@ -7399,19 +7399,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
             }
           }
         },
@@ -7537,7 +7537,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
             }
           }
         },
@@ -7571,7 +7571,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
             }
           },
           {
@@ -7593,13 +7593,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
             }
           }
         },
@@ -7739,7 +7739,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
             }
           }
         },
@@ -9664,7 +9664,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseList"
             }
           }
         },
@@ -9758,7 +9758,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchList"
             }
           }
         },
@@ -9852,7 +9852,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdList"
             }
           }
         },
@@ -9946,7 +9946,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedList"
             }
           }
         },
@@ -10040,7 +10040,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBList"
             }
           }
         },
@@ -10134,7 +10134,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLList"
             }
           }
         },
@@ -10279,7 +10279,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseList"
             }
           }
         },
@@ -10313,7 +10313,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
             }
           },
           {
@@ -10335,19 +10335,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
             }
           }
         },
@@ -10481,7 +10481,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
             }
           }
         },
@@ -10515,7 +10515,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
             }
           },
           {
@@ -10537,13 +10537,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
             }
           }
         },
@@ -10683,7 +10683,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
             }
           }
         },
@@ -10795,7 +10795,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchList"
             }
           }
         },
@@ -10829,7 +10829,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
             }
           },
           {
@@ -10851,19 +10851,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
             }
           }
         },
@@ -10997,7 +10997,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
             }
           }
         },
@@ -11031,7 +11031,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
             }
           },
           {
@@ -11053,13 +11053,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
             }
           }
         },
@@ -11199,7 +11199,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
             }
           }
         },
@@ -11311,7 +11311,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdList"
             }
           }
         },
@@ -11345,7 +11345,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
             }
           },
           {
@@ -11367,19 +11367,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
             }
           }
         },
@@ -11513,7 +11513,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
             }
           }
         },
@@ -11547,7 +11547,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
             }
           },
           {
@@ -11569,13 +11569,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
             }
           }
         },
@@ -11715,7 +11715,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
             }
           }
         },
@@ -11827,7 +11827,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedList"
             }
           }
         },
@@ -11861,7 +11861,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
             }
           },
           {
@@ -11883,19 +11883,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
             }
           }
         },
@@ -12029,7 +12029,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
             }
           }
         },
@@ -12063,7 +12063,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
             }
           },
           {
@@ -12085,13 +12085,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
             }
           }
         },
@@ -12231,7 +12231,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
             }
           }
         },
@@ -12343,7 +12343,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBList"
             }
           }
         },
@@ -12377,7 +12377,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
             }
           },
           {
@@ -12399,19 +12399,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
             }
           }
         },
@@ -12545,7 +12545,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
             }
           }
         },
@@ -12579,7 +12579,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
             }
           },
           {
@@ -12601,13 +12601,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
             }
           }
         },
@@ -12747,7 +12747,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
             }
           }
         },
@@ -12859,7 +12859,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLList"
             }
           }
         },
@@ -12893,7 +12893,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
             }
           },
           {
@@ -12915,19 +12915,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
             }
           }
         },
@@ -13061,7 +13061,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
             }
           }
         },
@@ -13095,7 +13095,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
             }
           },
           {
@@ -13117,13 +13117,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
             }
           }
         },
@@ -13263,7 +13263,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
             }
           }
         },
@@ -13375,7 +13375,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresList"
             }
           }
         },
@@ -13409,7 +13409,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
             }
           },
           {
@@ -13431,19 +13431,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
             }
           }
         },
@@ -13577,7 +13577,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
             }
           }
         },
@@ -13611,7 +13611,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
             }
           },
           {
@@ -13633,13 +13633,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
             }
           }
         },
@@ -13779,7 +13779,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
             }
           }
         },
@@ -13891,7 +13891,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisList"
             }
           }
         },
@@ -13925,7 +13925,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
             }
           },
           {
@@ -13947,19 +13947,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
             }
           }
         },
@@ -14093,7 +14093,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
             }
           }
         },
@@ -14127,7 +14127,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
             }
           },
           {
@@ -14149,13 +14149,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
             }
           }
         },
@@ -14295,7 +14295,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
             }
           }
         },
@@ -14407,7 +14407,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotList"
             }
           }
         },
@@ -14441,7 +14441,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
             }
           },
           {
@@ -14463,19 +14463,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
             }
           }
         },
@@ -14609,7 +14609,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
             }
           }
         },
@@ -14643,7 +14643,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
             }
           },
           {
@@ -14665,13 +14665,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
             }
           }
         },
@@ -14811,7 +14811,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
             }
           }
         },
@@ -14872,7 +14872,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresList"
             }
           }
         },
@@ -14966,7 +14966,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisList"
             }
           }
         },
@@ -15060,7 +15060,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotList"
             }
           }
         },
@@ -17890,7 +17890,7 @@
       "description": "IntHash represents as int64 Generation and string Hash. It is json serialized into \u003cint64\u003e$\u003chash_string\u003e.",
       "type": "string"
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest": {
       "description": "DatabaseAccessRequest",
       "type": "object",
       "properties": {
@@ -17906,10 +17906,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -17920,7 +17920,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestCondition": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestCondition": {
       "type": "object",
       "required": [
         "type"
@@ -17944,7 +17944,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestList": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -17955,7 +17955,7 @@
           "description": "Items is a list of DatabaseAccessRequest objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequest"
           }
         },
         "kind": {
@@ -17974,7 +17974,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestSpec": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestSpec": {
       "description": "DatabaseAccessRequestSpec contains information to request for database credential",
       "type": "object",
       "required": [
@@ -17984,7 +17984,7 @@
       "properties": {
         "roleRef": {
           "description": "Contains vault database role info",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.RoleReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.RoleReference"
         },
         "subjects": {
           "type": "array",
@@ -17998,19 +17998,19 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestStatus": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestStatus": {
       "type": "object",
       "properties": {
         "conditions": {
           "description": "Conditions applied to the request, such as approval or denial.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestCondition"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.DatabaseAccessRequestCondition"
           }
         },
         "lease": {
           "description": "Contains lease info",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.Lease"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.Lease"
         },
         "secret": {
           "description": "Name of the secret containing database credentials",
@@ -18018,7 +18018,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.Lease": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.Lease": {
       "description": "Lease contains lease info",
       "type": "object",
       "required": [
@@ -18041,7 +18041,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole": {
       "description": "MongoDBRole",
       "type": "object",
       "properties": {
@@ -18057,10 +18057,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -18071,7 +18071,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleCondition": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleCondition": {
       "description": "MongoDBRoleCondition describes the state of a MongoDBRole at a certain point.",
       "type": "object",
       "properties": {
@@ -18093,7 +18093,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleList": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -18104,7 +18104,7 @@
           "description": "Items is a list of MongoDBRole objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRole"
           }
         },
         "kind": {
@@ -18123,7 +18123,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleSpec": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleSpec": {
       "description": "MongoDBRoleSpec contains connection information, Mongodb role info etc",
       "type": "object",
       "required": [
@@ -18161,14 +18161,14 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleStatus": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleStatus": {
       "type": "object",
       "properties": {
         "conditions": {
           "description": "Represents the latest available observations of a MongoDBRole current state.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleCondition"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MongoDBRoleCondition"
           }
         },
         "observedGeneration": {
@@ -18180,7 +18180,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole": {
       "description": "MySQLRole",
       "type": "object",
       "properties": {
@@ -18196,10 +18196,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -18210,7 +18210,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleCondition": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleCondition": {
       "description": "MySQLRoleCondition describes the state of a MySQLRole at a certain point.",
       "type": "object",
       "properties": {
@@ -18232,7 +18232,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleList": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -18243,7 +18243,7 @@
           "description": "Items is a list of MySQLRole objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRole"
           }
         },
         "kind": {
@@ -18262,7 +18262,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleSpec": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleSpec": {
       "description": "MySQLRoleSpec contains connection information, mysql role info etc",
       "type": "object",
       "required": [
@@ -18300,14 +18300,14 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleStatus": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleStatus": {
       "type": "object",
       "properties": {
         "conditions": {
           "description": "Represents the latest available observations of a MySQLRole current state.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleCondition"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.MySQLRoleCondition"
           }
         },
         "observedGeneration": {
@@ -18319,7 +18319,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole": {
       "description": "PostgresRole",
       "type": "object",
       "properties": {
@@ -18335,10 +18335,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -18349,7 +18349,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleCondition": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleCondition": {
       "description": "PostgresRoleCondition describes the state of a PostgresRole at a certain point.",
       "type": "object",
       "properties": {
@@ -18371,7 +18371,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleList": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -18382,7 +18382,7 @@
           "description": "Items is a list of PostgresRole objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRole"
           }
         },
         "kind": {
@@ -18401,7 +18401,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleSpec": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleSpec": {
       "description": "PostgresRoleSpec contains connection information, postgres role info etc",
       "type": "object",
       "required": [
@@ -18453,14 +18453,14 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleStatus": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleStatus": {
       "type": "object",
       "properties": {
         "conditions": {
           "description": "Represents the latest available observations of a PostgresRoleBinding current state.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleCondition"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.authorization.v1alpha1.PostgresRoleCondition"
           }
         },
         "observedGeneration": {
@@ -18473,7 +18473,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.authorization.v1alpha1.RoleReference": {
+    "dev.kubedb.apimachinery.apis.authorization.v1alpha1.RoleReference": {
       "type": "object",
       "required": [
         "kind",
@@ -18495,7 +18495,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion": {
       "description": "ElasticsearchVersion defines a Elasticsearch database version.",
       "type": "object",
       "properties": {
@@ -18511,7 +18511,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionSpec"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -18522,7 +18522,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionDatabase": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionDatabase": {
       "description": "ElasticsearchVersionDatabase is the Elasticsearch Database image",
       "type": "object",
       "required": [
@@ -18534,7 +18534,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionExporter": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionExporter": {
       "description": "ElasticsearchVersionExporter is the image for the Elasticsearch exporter",
       "type": "object",
       "required": [
@@ -18546,7 +18546,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionInitContainer": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionInitContainer": {
       "description": "ElasticsearchVersionInitContainer is the Elasticsearch Container initializer",
       "type": "object",
       "required": [
@@ -18558,7 +18558,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionList": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionList": {
       "description": "ElasticsearchVersionList is a list of ElasticsearchVersions",
       "type": "object",
       "properties": {
@@ -18570,7 +18570,7 @@
           "description": "Items is a list of ElasticsearchVersion CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion"
           }
         },
         "kind": {
@@ -18589,7 +18589,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionPodSecurityPolicy": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionPodSecurityPolicy": {
       "description": "ElasticsearchVersionPodSecurityPolicy is the Elasticsearch pod security policies",
       "type": "object",
       "required": [
@@ -18605,7 +18605,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionSpec": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionSpec": {
       "description": "ElasticsearchVersionSpec is the spec for elasticsearch version",
       "type": "object",
       "required": [
@@ -18619,7 +18619,7 @@
       "properties": {
         "db": {
           "description": "Database Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionDatabase"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionDatabase"
         },
         "deprecated": {
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -18627,19 +18627,19 @@
         },
         "exporter": {
           "description": "Exporter Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionExporter"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionExporter"
         },
         "initContainer": {
           "description": "Init container Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionInitContainer"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionInitContainer"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionPodSecurityPolicy"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionPodSecurityPolicy"
         },
         "tools": {
           "description": "Tools Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionTools"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionTools"
         },
         "version": {
           "description": "Version",
@@ -18647,7 +18647,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionTools": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionTools": {
       "description": "ElasticsearchVersionTools is the image for the elasticsearch tools",
       "type": "object",
       "required": [
@@ -18659,7 +18659,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion": {
       "description": "EtcdVersion defines a Etcd database version.",
       "type": "object",
       "properties": {
@@ -18675,7 +18675,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionSpec"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -18686,7 +18686,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionDatabase": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionDatabase": {
       "description": "EtcdVersionDatabase is the Etcd Database image",
       "type": "object",
       "required": [
@@ -18698,7 +18698,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionExporter": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionExporter": {
       "description": "EtcdVersionExporter is the image for the Etcd exporter",
       "type": "object",
       "required": [
@@ -18710,7 +18710,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionList": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionList": {
       "description": "EtcdVersionList is a list of EtcdVersions",
       "type": "object",
       "properties": {
@@ -18722,7 +18722,7 @@
           "description": "Items is a list of EtcdVersion CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersion"
           }
         },
         "kind": {
@@ -18741,7 +18741,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionSpec": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionSpec": {
       "description": "EtcdVersionSpec is the spec for postgres version",
       "type": "object",
       "required": [
@@ -18753,7 +18753,7 @@
       "properties": {
         "db": {
           "description": "Database Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionDatabase"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionDatabase"
         },
         "deprecated": {
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -18761,11 +18761,11 @@
         },
         "exporter": {
           "description": "Exporter Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionExporter"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionExporter"
         },
         "tools": {
           "description": "Tools Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionTools"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionTools"
         },
         "version": {
           "description": "Version",
@@ -18773,7 +18773,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionTools": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionTools": {
       "description": "EtcdVersionTools is the image for the Etcd exporter",
       "type": "object",
       "required": [
@@ -18785,7 +18785,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion": {
       "description": "MemcachedVersion defines a Memcached database version.",
       "type": "object",
       "properties": {
@@ -18801,7 +18801,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionSpec"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -18812,7 +18812,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionDatabase": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionDatabase": {
       "description": "MemcachedVersionDatabase is the Memcached Database image",
       "type": "object",
       "required": [
@@ -18824,7 +18824,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionExporter": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionExporter": {
       "description": "MemcachedVersionExporter is the image for the Memcached exporter",
       "type": "object",
       "required": [
@@ -18836,7 +18836,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionList": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionList": {
       "description": "MemcachedVersionList is a list of MemcachedVersions",
       "type": "object",
       "properties": {
@@ -18848,7 +18848,7 @@
           "description": "Items is a list of MemcachedVersion CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion"
           }
         },
         "kind": {
@@ -18867,7 +18867,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionPodSecurityPolicy": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionPodSecurityPolicy": {
       "description": "MemcachedVersionPodSecurityPolicy is the Memcached pod security policies",
       "type": "object",
       "required": [
@@ -18879,7 +18879,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionSpec": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionSpec": {
       "description": "MemcachedVersionSpec is the spec for memcached version",
       "type": "object",
       "required": [
@@ -18891,7 +18891,7 @@
       "properties": {
         "db": {
           "description": "Database Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionDatabase"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionDatabase"
         },
         "deprecated": {
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -18899,11 +18899,11 @@
         },
         "exporter": {
           "description": "Exporter Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionExporter"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionExporter"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionPodSecurityPolicy"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionPodSecurityPolicy"
         },
         "version": {
           "description": "Version",
@@ -18911,7 +18911,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion": {
       "description": "MongoDBVersion defines a MongoDB database version.",
       "type": "object",
       "properties": {
@@ -18927,7 +18927,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionSpec"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -18938,7 +18938,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionDatabase": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionDatabase": {
       "description": "MongoDBVersionDatabase is the MongoDB Database image",
       "type": "object",
       "required": [
@@ -18950,7 +18950,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionExporter": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionExporter": {
       "description": "MongoDBVersionExporter is the image for the MongoDB exporter",
       "type": "object",
       "required": [
@@ -18962,7 +18962,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionInitContainer": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionInitContainer": {
       "description": "MongoDBVersionInitContainer is the Elasticsearch Container initializer",
       "type": "object",
       "required": [
@@ -18974,7 +18974,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionList": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionList": {
       "description": "MongoDBVersionList is a list of MongoDBVersions",
       "type": "object",
       "properties": {
@@ -18986,7 +18986,7 @@
           "description": "Items is a list of MongoDBVersion CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion"
           }
         },
         "kind": {
@@ -19005,7 +19005,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionPodSecurityPolicy": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionPodSecurityPolicy": {
       "description": "MongoDBVersionPodSecurityPolicy is the MongoDB pod security policies",
       "type": "object",
       "required": [
@@ -19021,7 +19021,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionSpec": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionSpec": {
       "description": "MongoDBVersionSpec is the spec for mongodb version",
       "type": "object",
       "required": [
@@ -19035,7 +19035,7 @@
       "properties": {
         "db": {
           "description": "Database Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionDatabase"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionDatabase"
         },
         "deprecated": {
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -19043,19 +19043,19 @@
         },
         "exporter": {
           "description": "Exporter Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionExporter"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionExporter"
         },
         "initContainer": {
           "description": "Init container Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionInitContainer"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionInitContainer"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionPodSecurityPolicy"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionPodSecurityPolicy"
         },
         "tools": {
           "description": "Tools Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionTools"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionTools"
         },
         "version": {
           "description": "Version",
@@ -19063,7 +19063,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionTools": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionTools": {
       "description": "MongoDBVersionTools is the image for the mongodb tools",
       "type": "object",
       "required": [
@@ -19075,7 +19075,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion": {
       "description": "MySQLVersion defines a MySQL database version.",
       "type": "object",
       "properties": {
@@ -19091,7 +19091,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionSpec"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -19102,7 +19102,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionDatabase": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionDatabase": {
       "description": "MySQLVersionDatabase is the MySQL Database image",
       "type": "object",
       "required": [
@@ -19114,7 +19114,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionExporter": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionExporter": {
       "description": "MySQLVersionExporter is the image for the MySQL exporter",
       "type": "object",
       "required": [
@@ -19126,7 +19126,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionInitContainer": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionInitContainer": {
       "description": "MySQLVersionInitContainer is the Elasticsearch Container initializer",
       "type": "object",
       "required": [
@@ -19138,7 +19138,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionList": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionList": {
       "description": "MySQLVersionList is a list of MySQLVersions",
       "type": "object",
       "properties": {
@@ -19150,7 +19150,7 @@
           "description": "Items is a list of MySQLVersion CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion"
           }
         },
         "kind": {
@@ -19169,7 +19169,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionPodSecurityPolicy": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionPodSecurityPolicy": {
       "description": "MySQLVersionPodSecurityPolicy is the MySQL pod security policies",
       "type": "object",
       "required": [
@@ -19185,7 +19185,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionSpec": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionSpec": {
       "description": "MySQLVersionSpec is the spec for postgres version",
       "type": "object",
       "required": [
@@ -19199,7 +19199,7 @@
       "properties": {
         "db": {
           "description": "Database Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionDatabase"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionDatabase"
         },
         "deprecated": {
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -19207,19 +19207,19 @@
         },
         "exporter": {
           "description": "Exporter Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionExporter"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionExporter"
         },
         "initContainer": {
           "description": "Init container Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionInitContainer"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionInitContainer"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionPodSecurityPolicy"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionPodSecurityPolicy"
         },
         "tools": {
           "description": "Tools Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionTools"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionTools"
         },
         "version": {
           "description": "Version",
@@ -19227,7 +19227,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionTools": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionTools": {
       "description": "MySQLVersionTools is the image for the postgres tools",
       "type": "object",
       "required": [
@@ -19239,7 +19239,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion": {
       "description": "PostgresVersion defines a Postgres database version.",
       "type": "object",
       "properties": {
@@ -19255,7 +19255,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionSpec"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -19266,7 +19266,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionDatabase": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionDatabase": {
       "description": "PostgresVersionDatabase is the Postgres Database image",
       "type": "object",
       "required": [
@@ -19278,7 +19278,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionExporter": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionExporter": {
       "description": "PostgresVersionExporter is the image for the Postgres exporter",
       "type": "object",
       "required": [
@@ -19290,7 +19290,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionList": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionList": {
       "description": "PostgresVersionList is a list of PostgresVersions",
       "type": "object",
       "properties": {
@@ -19302,7 +19302,7 @@
           "description": "Items is a list of PostgresVersion CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion"
           }
         },
         "kind": {
@@ -19321,7 +19321,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionPodSecurityPolicy": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionPodSecurityPolicy": {
       "description": "PostgresVersionPodSecurityPolicy is the Postgres pod security policies",
       "type": "object",
       "required": [
@@ -19337,7 +19337,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionSpec": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionSpec": {
       "description": "PostgresVersionSpec is the spec for postgres version",
       "type": "object",
       "required": [
@@ -19350,7 +19350,7 @@
       "properties": {
         "db": {
           "description": "Database Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionDatabase"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionDatabase"
         },
         "deprecated": {
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -19358,15 +19358,15 @@
         },
         "exporter": {
           "description": "Exporter Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionExporter"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionExporter"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionPodSecurityPolicy"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionPodSecurityPolicy"
         },
         "tools": {
           "description": "Tools Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTools"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTools"
         },
         "version": {
           "description": "Version",
@@ -19374,7 +19374,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTools": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTools": {
       "description": "PostgresVersionTools is the image for the postgres tools",
       "type": "object",
       "required": [
@@ -19386,7 +19386,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion": {
       "description": "RedisVersion defines a Redis database version.",
       "type": "object",
       "properties": {
@@ -19402,7 +19402,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionSpec"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -19413,7 +19413,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionDatabase": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionDatabase": {
       "description": "RedisVersionDatabase is the Redis Database image",
       "type": "object",
       "required": [
@@ -19425,7 +19425,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionExporter": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionExporter": {
       "description": "RedisVersionExporter is the image for the Redis exporter",
       "type": "object",
       "required": [
@@ -19437,7 +19437,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionList": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionList": {
       "description": "RedisVersionList is a list of RedisVersions",
       "type": "object",
       "properties": {
@@ -19449,7 +19449,7 @@
           "description": "Items is a list of RedisVersion CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersion"
           }
         },
         "kind": {
@@ -19468,7 +19468,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionPodSecurityPolicy": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionPodSecurityPolicy": {
       "description": "RedisVersionPodSecurityPolicy is the Redis pod security policies",
       "type": "object",
       "required": [
@@ -19480,7 +19480,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionSpec": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionSpec": {
       "description": "RedisVersionSpec is the spec for redis version",
       "type": "object",
       "required": [
@@ -19492,7 +19492,7 @@
       "properties": {
         "db": {
           "description": "Database Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionDatabase"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionDatabase"
         },
         "deprecated": {
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -19500,11 +19500,11 @@
         },
         "exporter": {
           "description": "Exporter Image",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionExporter"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionExporter"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionPodSecurityPolicy"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionPodSecurityPolicy"
         },
         "version": {
           "description": "Version",
@@ -19512,7 +19512,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec": {
       "type": "object",
       "properties": {
         "azure": {
@@ -19556,7 +19556,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -19571,10 +19571,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -19585,7 +19585,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -19596,7 +19596,7 @@
           "description": "Items is a list of DormantDatabase CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabase"
           }
         },
         "kind": {
@@ -19615,7 +19615,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseSpec": {
       "type": "object",
       "required": [
         "origin"
@@ -19623,7 +19623,7 @@
       "properties": {
         "origin": {
           "description": "Origin to store original database information",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Origin"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Origin"
         },
         "wipeOut": {
           "description": "If true, invoke wipe out operation",
@@ -19631,7 +19631,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.DormantDatabaseStatus": {
       "type": "object",
       "properties": {
         "observedGeneration": {
@@ -19652,7 +19652,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch": {
       "description": "Elasticsearch defines a Elasticsearch database.",
       "type": "object",
       "properties": {
@@ -19668,10 +19668,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -19682,7 +19682,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchClusterTopology": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchClusterTopology": {
       "type": "object",
       "required": [
         "master",
@@ -19691,17 +19691,17 @@
       ],
       "properties": {
         "client": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode"
         },
         "data": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode"
         },
         "master": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode"
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -19712,7 +19712,7 @@
           "description": "Items is a list of Elasticsearch CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
           }
         },
         "kind": {
@@ -19731,7 +19731,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode": {
       "type": "object",
       "properties": {
         "maxUnavailable": {
@@ -19756,7 +19756,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchSpec": {
       "type": "object",
       "required": [
         "version"
@@ -19768,7 +19768,7 @@
         },
         "backupSchedule": {
           "description": "BackupSchedule spec to specify how database backup will be taken",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
         },
         "certificateSecret": {
           "description": "Secret with SSL certificates",
@@ -19788,7 +19788,7 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
         "maxUnavailable": {
           "description": "An eviction is allowed if at most \"maxUnavailable\" pods selected by \"selector\" are unavailable after the eviction, i.e. even in absence of the evicted pod. For example, one can prevent all voluntary evictions by specifying 0. This is a mutually exclusive setting with \"minAvailable\".",
@@ -19825,7 +19825,7 @@
         },
         "topology": {
           "description": "Elasticsearch topology for node specification",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchClusterTopology"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchClusterTopology"
         },
         "updateStrategy": {
           "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
@@ -19837,7 +19837,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchStatus": {
       "type": "object",
       "properties": {
         "observedGeneration": {
@@ -19852,7 +19852,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd": {
       "description": "Etcd defines a Etcd database.",
       "type": "object",
       "properties": {
@@ -19868,10 +19868,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -19882,7 +19882,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -19893,7 +19893,7 @@
           "description": "Items is a list of Etcd TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
           }
         },
         "kind": {
@@ -19912,7 +19912,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdSpec": {
       "type": "object",
       "required": [
         "version"
@@ -19920,7 +19920,7 @@
       "properties": {
         "backupSchedule": {
           "description": "BackupSchedule spec to specify how database backup will be taken",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
         },
         "databaseSecret": {
           "description": "Database authentication secret",
@@ -19928,7 +19928,7 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -19961,7 +19961,7 @@
         },
         "tls": {
           "description": "etcd cluster TLS configuration",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.TLSPolicy"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.TLSPolicy"
         },
         "updateStrategy": {
           "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
@@ -19973,7 +19973,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdStatus": {
       "type": "object",
       "properties": {
         "observedGeneration": {
@@ -19988,18 +19988,18 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec": {
       "type": "object",
       "properties": {
         "postgresWAL": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresWALSourceSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresWALSourceSpec"
         },
         "scriptSource": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ScriptSourceSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ScriptSourceSpec"
         },
         "snapshotSource": {
           "description": "Deprecated",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotSourceSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotSourceSpec"
         },
         "stashRestoreSession": {
           "description": "Name of stash restoreSession in same namespace of kubedb object. ref: https://github.com/stashed/stash/blob/09af5d319bb5be889186965afb04045781d6f926/apis/stash/v1beta1/restore_session_types.go#L22",
@@ -20007,7 +20007,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.LeaderElectionConfig": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.LeaderElectionConfig": {
       "description": "LeaderElectionConfig contains essential attributes of leader election. ref: https://github.com/kubernetes/client-go/blob/6134db91200ea474868bc6775e62cc294a74c6c6/tools/leaderelection/leaderelection.go#L105-L114",
       "type": "object",
       "required": [
@@ -20033,7 +20033,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBSpec": {
       "type": "object",
       "required": [
         "version"
@@ -20049,7 +20049,7 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -20090,7 +20090,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemberSecret": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemberSecret": {
       "type": "object",
       "properties": {
         "peerSecret": {
@@ -20103,7 +20103,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached": {
       "description": "Memcached defines a Memcached database.",
       "type": "object",
       "properties": {
@@ -20119,10 +20119,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -20133,7 +20133,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -20144,7 +20144,7 @@
           "description": "Items is a list of Memcached TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
           }
         },
         "kind": {
@@ -20163,7 +20163,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedSpec": {
       "type": "object",
       "required": [
         "version"
@@ -20204,7 +20204,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedStatus": {
       "type": "object",
       "properties": {
         "observedGeneration": {
@@ -20219,7 +20219,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB": {
       "description": "MongoDB defines a MongoDB database.",
       "type": "object",
       "properties": {
@@ -20235,10 +20235,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -20249,7 +20249,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBConfigNode": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBConfigNode": {
       "type": "object",
       "required": [
         "replicas"
@@ -20278,7 +20278,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -20289,7 +20289,7 @@
           "description": "Items is a list of MongoDB TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
           }
         },
         "kind": {
@@ -20308,7 +20308,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBMongosNode": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBMongosNode": {
       "type": "object",
       "required": [
         "replicas"
@@ -20337,7 +20337,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBReplicaSet": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBReplicaSet": {
       "type": "object",
       "required": [
         "name"
@@ -20353,7 +20353,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardNode": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardNode": {
       "type": "object",
       "required": [
         "shards",
@@ -20388,7 +20388,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardingTopology": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardingTopology": {
       "type": "object",
       "required": [
         "shard",
@@ -20398,19 +20398,19 @@
       "properties": {
         "configServer": {
           "description": "Config Server (metadata) component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-config-servers/",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBConfigNode"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBConfigNode"
         },
         "mongos": {
           "description": "Mongos (router) component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-query-router/",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBMongosNode"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBMongosNode"
         },
         "shard": {
           "description": "Shard component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardNode"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardNode"
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBSpec": {
       "type": "object",
       "required": [
         "version"
@@ -20418,7 +20418,7 @@
       "properties": {
         "backupSchedule": {
           "description": "BackupSchedule spec to specify how database backup will be taken",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
         },
         "certificateSecret": {
           "description": "Secret for KeyFile or SSL certificates. Contains `tls.pem` or keyfile `key.txt` depending on enableSSL.",
@@ -20438,7 +20438,7 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -20450,7 +20450,7 @@
         },
         "replicaSet": {
           "description": "MongoDB replica set",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBReplicaSet"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBReplicaSet"
         },
         "replicas": {
           "description": "Number of instances to deploy for a MongoDB database.",
@@ -20463,7 +20463,7 @@
         },
         "shardTopology": {
           "description": "MongoDB sharding topology.",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardingTopology"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardingTopology"
         },
         "sslMode": {
           "description": "SSLMode for both standalone and clusters. (default, disabled.) See more options: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-sslmode",
@@ -20491,7 +20491,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBStatus": {
       "type": "object",
       "properties": {
         "observedGeneration": {
@@ -20506,7 +20506,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL": {
       "description": "Mysql defines a Mysql database.",
       "type": "object",
       "properties": {
@@ -20522,10 +20522,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -20536,12 +20536,12 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLClusterTopology": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLClusterTopology": {
       "type": "object",
       "properties": {
         "group": {
           "description": "Group replication info for MySQL",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLGroupSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLGroupSpec"
         },
         "mode": {
           "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
@@ -20549,7 +20549,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLGroupSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLGroupSpec": {
       "type": "object",
       "properties": {
         "baseServerID": {
@@ -20567,7 +20567,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -20578,7 +20578,7 @@
           "description": "Items is a list of MySQL TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
           }
         },
         "kind": {
@@ -20597,7 +20597,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLSpec": {
       "type": "object",
       "required": [
         "version"
@@ -20605,7 +20605,7 @@
       "properties": {
         "backupSchedule": {
           "description": "BackupSchedule spec to specify how database backup will be taken",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
         },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -20617,7 +20617,7 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -20650,7 +20650,7 @@
         },
         "topology": {
           "description": "MySQL cluster topology",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLClusterTopology"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLClusterTopology"
         },
         "updateStrategy": {
           "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
@@ -20662,7 +20662,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLStatus": {
       "type": "object",
       "properties": {
         "observedGeneration": {
@@ -20677,7 +20677,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Origin": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Origin": {
       "type": "object",
       "required": [
         "spec"
@@ -20688,52 +20688,52 @@
         },
         "spec": {
           "description": "Origin Spec to store original database Spec",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.OriginSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.OriginSpec"
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.OriginSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.OriginSpec": {
       "type": "object",
       "properties": {
         "elasticsearch": {
           "description": "Elasticsearch Spec",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchSpec"
         },
         "etcd": {
           "description": "Etcd Spec",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdSpec"
         },
         "mariadb": {
           "description": "MariaDB Spec",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBSpec"
         },
         "memcached": {
           "description": "Memcached Spec",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedSpec"
         },
         "mongodb": {
           "description": "MongoDB Spec",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBSpec"
         },
         "mysql": {
           "description": "MySQL Spec",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLSpec"
         },
         "percona": {
           "description": "Percona Spec",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaSpec"
         },
         "postgres": {
           "description": "Postgres Spec",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresSpec"
         },
         "redis": {
           "description": "Redis Spec",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisSpec"
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaSpec": {
       "type": "object",
       "required": [
         "version"
@@ -20749,7 +20749,7 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -20790,7 +20790,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres": {
       "description": "Postgres defines a Postgres database.",
       "type": "object",
       "properties": {
@@ -20806,10 +20806,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -20820,7 +20820,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresArchiverSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresArchiverSpec": {
       "type": "object",
       "properties": {
         "storage": {
@@ -20828,7 +20828,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -20839,7 +20839,7 @@
           "description": "Items is a list of Postgres CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
           }
         },
         "kind": {
@@ -20858,7 +20858,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresSpec": {
       "type": "object",
       "required": [
         "version"
@@ -20866,11 +20866,11 @@
       "properties": {
         "archiver": {
           "description": "Archive for wal files",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresArchiverSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresArchiverSpec"
         },
         "backupSchedule": {
           "description": "BackupSchedule spec to specify how database backup will be taken",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.BackupScheduleSpec"
         },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -20882,11 +20882,11 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
         "leaderElection": {
           "description": "Leader election configuration",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.LeaderElectionConfig"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.LeaderElectionConfig"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -20939,7 +20939,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresStatus": {
       "type": "object",
       "properties": {
         "observedGeneration": {
@@ -20954,7 +20954,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresWALSourceSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresWALSourceSpec": {
       "type": "object",
       "properties": {
         "azure": {
@@ -20973,7 +20973,7 @@
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.LocalSpec"
         },
         "pitr": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RecoveryTarget"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RecoveryTarget"
         },
         "rest": {
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.RestServerSpec"
@@ -20989,7 +20989,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RecoveryTarget": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RecoveryTarget": {
       "type": "object",
       "properties": {
         "targetInclusive": {
@@ -21010,7 +21010,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis": {
       "description": "Redis defines a Redis database.",
       "type": "object",
       "properties": {
@@ -21026,10 +21026,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -21040,7 +21040,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisClusterSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisClusterSpec": {
       "type": "object",
       "properties": {
         "master": {
@@ -21055,7 +21055,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -21066,7 +21066,7 @@
           "description": "Items is a list of Redis TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
           }
         },
         "kind": {
@@ -21085,7 +21085,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisSpec": {
       "type": "object",
       "required": [
         "version"
@@ -21093,7 +21093,7 @@
       "properties": {
         "cluster": {
           "description": "Redis cluster configuration for running redis servers in cluster mode. Required if Mode is set to \"Cluster\"",
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisClusterSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisClusterSpec"
         },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e redis.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -21142,7 +21142,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisStatus": {
       "type": "object",
       "properties": {
         "observedGeneration": {
@@ -21157,7 +21157,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.ScriptSourceSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ScriptSourceSpec": {
       "type": "object",
       "properties": {
         "awsElasticBlockStore": {
@@ -21277,7 +21277,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -21292,10 +21292,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotSpec"
         },
         "status": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -21306,7 +21306,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -21317,7 +21317,7 @@
           "description": "Items is a list of Snapshot CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Snapshot"
           }
         },
         "kind": {
@@ -21336,7 +21336,7 @@
         }
       ]
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotSourceSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotSourceSpec": {
       "type": "object",
       "required": [
         "namespace",
@@ -21358,7 +21358,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotSpec": {
       "type": "object",
       "required": [
         "databaseName"
@@ -21406,7 +21406,7 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.SnapshotStatus": {
       "type": "object",
       "properties": {
         "completionTime": {
@@ -21427,11 +21427,11 @@
         }
       }
     },
-    "com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.TLSPolicy": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.TLSPolicy": {
       "type": "object",
       "properties": {
         "member": {
-          "$ref": "#/definitions/com.github.kubedb.apimachinery.apis.kubedb.v1alpha1.MemberSecret"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemberSecret"
         },
         "operatorSecret": {
           "type": "string"

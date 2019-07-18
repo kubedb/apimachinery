@@ -6,14 +6,14 @@ import (
 
 	jsonpatch "github.com/evanphx/json-patch"
 	"github.com/golang/glog"
-	api "github.com/kubedb/apimachinery/apis/authorization/v1alpha1"
-	cs "github.com/kubedb/apimachinery/client/clientset/versioned/typed/authorization/v1alpha1"
 	"github.com/pkg/errors"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
 	kutil "kmodules.xyz/client-go"
+	api "kubedb.dev/apimachinery/apis/authorization/v1alpha1"
+	cs "kubedb.dev/apimachinery/client/clientset/versioned/typed/authorization/v1alpha1"
 )
 
 func CreateOrPatchMongoDBRole(c cs.AuthorizationV1alpha1Interface, meta metav1.ObjectMeta, transform func(alert *api.MongoDBRole) *api.MongoDBRole) (*api.MongoDBRole, kutil.VerbType, error) {

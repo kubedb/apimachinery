@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/appscode/go/log"
-	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"gomodules.xyz/stow"
 	_ "gomodules.xyz/stow/azure"
 	_ "gomodules.xyz/stow/google"
@@ -25,6 +24,7 @@ import (
 	core_util "kmodules.xyz/client-go/core/v1"
 	policy_util "kmodules.xyz/client-go/policy/v1beta1"
 	"kmodules.xyz/objectstore-api/osm"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 	"stash.appscode.dev/stash/apis/stash/v1beta1"
 )
 

@@ -4,8 +4,6 @@ import (
 	"fmt"
 
 	"github.com/appscode/go/types"
-	"github.com/kubedb/apimachinery/apis"
-	"github.com/kubedb/apimachinery/apis/kubedb"
 	apps "k8s.io/api/apps/v1"
 	core "k8s.io/api/core/v1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
@@ -13,6 +11,8 @@ import (
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	"kubedb.dev/apimachinery/apis"
+	"kubedb.dev/apimachinery/apis/kubedb"
 )
 
 var _ apis.ResourceInfo = &MySQL{}
@@ -143,7 +143,7 @@ func (m MySQL) CustomResourceDefinition() *apiextensions.CustomResourceDefinitio
 		Labels: crdutils.Labels{
 			LabelsMap: map[string]string{"app": "kubedb"},
 		},
-		SpecDefinitionName:      "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1.MySQL",
+		SpecDefinitionName:      "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQL",
 		EnableValidation:        true,
 		GetOpenAPIDefinitions:   GetOpenAPIDefinitions,
 		EnableStatusSubresource: apis.EnableStatusSubresource,

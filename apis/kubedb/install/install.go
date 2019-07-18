@@ -17,9 +17,9 @@ limitations under the License.
 package install
 
 import (
-	"github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	"kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 )
 
 // Install registers the API group and adds types to a scheme

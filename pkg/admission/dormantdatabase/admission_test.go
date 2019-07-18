@@ -4,9 +4,6 @@ import (
 	"net/http"
 	"testing"
 
-	api "github.com/kubedb/apimachinery/apis/kubedb/v1alpha1"
-	fake_ext "github.com/kubedb/apimachinery/client/clientset/versioned/fake"
-	"github.com/kubedb/apimachinery/client/clientset/versioned/scheme"
 	admission "k8s.io/api/admission/v1beta1"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
@@ -16,6 +13,9 @@ import (
 	"k8s.io/client-go/kubernetes/fake"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	"kmodules.xyz/client-go/meta"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+	fake_ext "kubedb.dev/apimachinery/client/clientset/versioned/fake"
+	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 )
 
 func init() {
