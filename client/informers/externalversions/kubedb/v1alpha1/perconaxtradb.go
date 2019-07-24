@@ -31,59 +31,59 @@ import (
 	v1alpha1 "kubedb.dev/apimachinery/client/listers/kubedb/v1alpha1"
 )
 
-// PerconaInformer provides access to a shared informer and lister for
-// Perconas.
-type PerconaInformer interface {
+// PerconaXtraDBInformer provides access to a shared informer and lister for
+// PerconaXtraDBs.
+type PerconaXtraDBInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.PerconaLister
+	Lister() v1alpha1.PerconaXtraDBLister
 }
 
-type perconaInformer struct {
+type perconaXtraDBInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewPerconaInformer constructs a new informer for Percona type.
+// NewPerconaXtraDBInformer constructs a new informer for PerconaXtraDB type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewPerconaInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredPerconaInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewPerconaXtraDBInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredPerconaXtraDBInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredPerconaInformer constructs a new informer for Percona type.
+// NewFilteredPerconaXtraDBInformer constructs a new informer for PerconaXtraDB type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredPerconaInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredPerconaXtraDBInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha1().Perconas(namespace).List(options)
+				return client.KubedbV1alpha1().PerconaXtraDBs(namespace).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha1().Perconas(namespace).Watch(options)
+				return client.KubedbV1alpha1().PerconaXtraDBs(namespace).Watch(options)
 			},
 		},
-		&kubedbv1alpha1.Percona{},
+		&kubedbv1alpha1.PerconaXtraDB{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *perconaInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredPerconaInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *perconaXtraDBInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredPerconaXtraDBInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *perconaInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedbv1alpha1.Percona{}, f.defaultInformer)
+func (f *perconaXtraDBInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&kubedbv1alpha1.PerconaXtraDB{}, f.defaultInformer)
 }
 
-func (f *perconaInformer) Lister() v1alpha1.PerconaLister {
-	return v1alpha1.NewPerconaLister(f.Informer().GetIndexer())
+func (f *perconaXtraDBInformer) Lister() v1alpha1.PerconaXtraDBLister {
+	return v1alpha1.NewPerconaXtraDBLister(f.Informer().GetIndexer())
 }

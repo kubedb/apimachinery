@@ -14,22 +14,22 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 )
 
-var _ apis.ResourceInfo = &Percona{}
+var _ apis.ResourceInfo = &PerconaXtraDB{}
 
-func (p Percona) OffshootName() string {
+func (p PerconaXtraDB) OffshootName() string {
 	return p.Name
 }
 
-func (p Percona) OffshootSelectors() map[string]string {
+func (p PerconaXtraDB) OffshootSelectors() map[string]string {
 	return map[string]string{
 		LabelDatabaseName: p.Name,
-		LabelDatabaseKind: ResourceKindPercona,
+		LabelDatabaseKind: ResourceKindPerconaXtraDB,
 	}
 }
 
-func (p Percona) OffshootLabels() map[string]string {
+func (p PerconaXtraDB) OffshootLabels() map[string]string {
 	out := p.OffshootSelectors()
-	out[meta_util.NameLabelKey] = ResourceSingularPercona
+	out[meta_util.NameLabelKey] = ResourceSingularPerconaXtraDB
 	out[meta_util.VersionLabelKey] = string(p.Spec.Version)
 	out[meta_util.InstanceLabelKey] = p.Name
 	out[meta_util.ComponentLabelKey] = "database"
@@ -37,94 +37,94 @@ func (p Percona) OffshootLabels() map[string]string {
 	return meta_util.FilterKeys(GenericKey, out, p.Labels)
 }
 
-func (p Percona) ResourceShortCode() string {
-	return ResourceCodePercona
+func (p PerconaXtraDB) ResourceShortCode() string {
+	return ResourceCodePerconaXtraDB
 }
 
-func (p Percona) ResourceKind() string {
-	return ResourceKindPercona
+func (p PerconaXtraDB) ResourceKind() string {
+	return ResourceKindPerconaXtraDB
 }
 
-func (p Percona) ResourceSingular() string {
-	return ResourceSingularPercona
+func (p PerconaXtraDB) ResourceSingular() string {
+	return ResourceSingularPerconaXtraDB
 }
 
-func (p Percona) ResourcePlural() string {
-	return ResourcePluralPercona
+func (p PerconaXtraDB) ResourcePlural() string {
+	return ResourcePluralPerconaXtraDB
 }
 
-func (p Percona) ServiceName() string {
+func (p PerconaXtraDB) ServiceName() string {
 	return p.OffshootName()
 }
 
-func (p Percona) GoverningServiceName() string {
+func (p PerconaXtraDB) GoverningServiceName() string {
 	return p.OffshootName() + "-gvr"
 }
 
-type perconaApp struct {
-	*Percona
+type perconaXtraDBApp struct {
+	*PerconaXtraDB
 }
 
-func (p perconaApp) Name() string {
-	return p.Percona.Name
+func (p perconaXtraDBApp) Name() string {
+	return p.PerconaXtraDB.Name
 }
 
-func (p perconaApp) Type() appcat.AppType {
-	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularPercona))
+func (p perconaXtraDBApp) Type() appcat.AppType {
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularPerconaXtraDB))
 }
 
-func (p Percona) AppBindingMeta() appcat.AppBindingMeta {
-	return &perconaApp{&p}
+func (p PerconaXtraDB) AppBindingMeta() appcat.AppBindingMeta {
+	return &perconaXtraDBApp{&p}
 }
 
-type perconaStatsService struct {
-	*Percona
+type perconaXtraDBStatsService struct {
+	*PerconaXtraDB
 }
 
-func (p perconaStatsService) GetNamespace() string {
-	return p.Percona.GetNamespace()
+func (p perconaXtraDBStatsService) GetNamespace() string {
+	return p.PerconaXtraDB.GetNamespace()
 }
 
-func (p perconaStatsService) ServiceName() string {
+func (p perconaXtraDBStatsService) ServiceName() string {
 	return p.OffshootName() + "-stats"
 }
 
-func (p perconaStatsService) ServiceMonitorName() string {
+func (p perconaXtraDBStatsService) ServiceMonitorName() string {
 	return fmt.Sprintf("kubedb-%s-%s", p.Namespace, p.Name)
 }
 
-func (p perconaStatsService) Path() string {
+func (p perconaXtraDBStatsService) Path() string {
 	return "/metrics"
 }
 
-func (p perconaStatsService) Scheme() string {
+func (p perconaXtraDBStatsService) Scheme() string {
 	return ""
 }
 
-func (p Percona) StatsService() mona.StatsAccessor {
-	return &perconaStatsService{&p}
+func (p PerconaXtraDB) StatsService() mona.StatsAccessor {
+	return &perconaXtraDBStatsService{&p}
 }
 
-func (p Percona) StatsServiceLabels() map[string]string {
+func (p PerconaXtraDB) StatsServiceLabels() map[string]string {
 	lbl := meta_util.FilterKeys(GenericKey, p.OffshootSelectors(), p.Labels)
 	lbl[LabelRole] = "stats"
 	return lbl
 }
 
-func (p *Percona) GetMonitoringVendor() string {
+func (p *PerconaXtraDB) GetMonitoringVendor() string {
 	if p.Spec.Monitor != nil {
 		return p.Spec.Monitor.Agent.Vendor()
 	}
 	return ""
 }
 
-func (p Percona) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (p PerconaXtraDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crdutils.NewCustomResourceDefinition(crdutils.Config{
 		Group:         SchemeGroupVersion.Group,
-		Plural:        ResourcePluralPercona,
-		Singular:      ResourceSingularPercona,
-		Kind:          ResourceKindPercona,
-		ShortNames:    []string{ResourceCodePercona},
+		Plural:        ResourcePluralPerconaXtraDB,
+		Singular:      ResourceSingularPerconaXtraDB,
+		Kind:          ResourceKindPerconaXtraDB,
+		ShortNames:    []string{ResourceCodePerconaXtraDB},
 		Categories:    []string{"datastore", "kubedb", "appscode", "all"},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Versions: []apiextensions.CustomResourceDefinitionVersion{
@@ -137,7 +137,7 @@ func (p Percona) CustomResourceDefinition() *apiextensions.CustomResourceDefinit
 		Labels: crdutils.Labels{
 			LabelsMap: map[string]string{"app": "kubedb"},
 		},
-		SpecDefinitionName:      "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Percona",
+		SpecDefinitionName:      "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PerconaXtraDB",
 		EnableValidation:        true,
 		GetOpenAPIDefinitions:   GetOpenAPIDefinitions,
 		EnableStatusSubresource: apis.EnableStatusSubresource,
@@ -161,14 +161,14 @@ func (p Percona) CustomResourceDefinition() *apiextensions.CustomResourceDefinit
 	}, apis.SetNameSchema)
 }
 
-func (p *Percona) SetDefaults() {
+func (p *PerconaXtraDB) SetDefaults() {
 	if p == nil {
 		return
 	}
 	p.Spec.SetDefaults()
 }
 
-func (p *PerconaSpec) SetDefaults() {
+func (p *PerconaXtraDBSpec) SetDefaults() {
 	if p == nil {
 		return
 	}
@@ -192,7 +192,7 @@ func (p *PerconaSpec) SetDefaults() {
 	}
 }
 
-func (p *PerconaSpec) GetSecrets() []string {
+func (p *PerconaXtraDBSpec) GetSecrets() []string {
 	if p == nil {
 		return nil
 	}

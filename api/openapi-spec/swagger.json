@@ -20719,9 +20719,9 @@
           "description": "MySQL Spec",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLSpec"
         },
-        "percona": {
-          "description": "Percona Spec",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaSpec"
+        "perconaxtradb": {
+          "description": "PerconaXtraDB Spec",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDBSpec"
         },
         "postgres": {
           "description": "Postgres Spec",
@@ -20733,7 +20733,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDBSpec": {
       "type": "object",
       "required": [
         "version"
@@ -20760,7 +20760,7 @@
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "replicas": {
-          "description": "Number of instances to deploy for Percona",
+          "description": "Number of instances to deploy for PerconaXtraDB",
           "type": "integer",
           "format": "int32"
         },
@@ -20785,7 +20785,7 @@
           "$ref": "#/definitions/io.k8s.api.apps.v1.StatefulSetUpdateStrategy"
         },
         "version": {
-          "description": "Version of Percona to be deployed.",
+          "description": "Version of PerconaXtraDB to be deployed.",
           "type": "string"
         }
       }

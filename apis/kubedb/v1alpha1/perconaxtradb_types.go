@@ -10,36 +10,36 @@ import (
 )
 
 const (
-	ResourceCodePercona     = "pc"
-	ResourceKindPercona     = "Percona"
-	ResourceSingularPercona = "percona"
-	ResourcePluralPercona   = "perconas"
+	ResourceCodePerconaXtraDB     = "px"
+	ResourceKindPerconaXtraDB     = "PerconaXtraDB"
+	ResourceSingularPerconaXtraDB = "perconaxtradb"
+	ResourcePluralPerconaXtraDB   = "perconaxtradbs"
 )
 
-// Percona defines a percona variation of Mysql database.
+// PerconaXtraDB defines a percona variation of Mysql database.
 
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=perconas,singular=percona,shortName=pc,categories={datastore,kubedb,appscode,all}
+// +kubebuilder:resource:path=perconaxtradbs,singular=perconaxtradb,shortName=px,categories={datastore,kubedb,appscode,all}
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-type Percona struct {
+type PerconaXtraDB struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              PerconaSpec   `json:"spec,omitempty"`
-	Status            PerconaStatus `json:"status,omitempty"`
+	Spec              PerconaXtraDBSpec   `json:"spec,omitempty"`
+	Status            PerconaXtraDBStatus `json:"status,omitempty"`
 }
 
-type PerconaSpec struct {
-	// Version of Percona to be deployed.
+type PerconaXtraDBSpec struct {
+	// Version of PerconaXtraDB to be deployed.
 	Version types.StrYo `json:"version"`
 
-	// Number of instances to deploy for Percona
+	// Number of instances to deploy for PerconaXtraDB
 	Replicas *int32 `json:"replicas,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
@@ -81,7 +81,7 @@ type PerconaSpec struct {
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
 }
 
-type PerconaStatus struct {
+type PerconaXtraDBStatus struct {
 	Phase  DatabasePhase `json:"phase,omitempty"`
 	Reason string        `json:"reason,omitempty"`
 	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
@@ -92,9 +92,9 @@ type PerconaStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type PerconaList struct {
+type PerconaXtraDBList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	// Items is a list of Percona TPR objects
-	Items []Percona `json:"items,omitempty"`
+	// Items is a list of PerconaXtraDB TPR objects
+	Items []PerconaXtraDB `json:"items,omitempty"`
 }
