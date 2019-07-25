@@ -31,58 +31,58 @@ import (
 	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 )
 
-// PerconaVersionInformer provides access to a shared informer and lister for
-// PerconaVersions.
-type PerconaVersionInformer interface {
+// PerconaXtraDBVersionInformer provides access to a shared informer and lister for
+// PerconaXtraDBVersions.
+type PerconaXtraDBVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.PerconaVersionLister
+	Lister() v1alpha1.PerconaXtraDBVersionLister
 }
 
-type perconaVersionInformer struct {
+type perconaXtraDBVersionInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 }
 
-// NewPerconaVersionInformer constructs a new informer for PerconaVersion type.
+// NewPerconaXtraDBVersionInformer constructs a new informer for PerconaXtraDBVersion type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewPerconaVersionInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredPerconaVersionInformer(client, resyncPeriod, indexers, nil)
+func NewPerconaXtraDBVersionInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredPerconaXtraDBVersionInformer(client, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredPerconaVersionInformer constructs a new informer for PerconaVersion type.
+// NewFilteredPerconaXtraDBVersionInformer constructs a new informer for PerconaXtraDBVersion type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredPerconaVersionInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredPerconaXtraDBVersionInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().PerconaVersions().List(options)
+				return client.CatalogV1alpha1().PerconaXtraDBVersions().List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().PerconaVersions().Watch(options)
+				return client.CatalogV1alpha1().PerconaXtraDBVersions().Watch(options)
 			},
 		},
-		&catalogv1alpha1.PerconaVersion{},
+		&catalogv1alpha1.PerconaXtraDBVersion{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *perconaVersionInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredPerconaVersionInformer(client, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *perconaXtraDBVersionInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredPerconaXtraDBVersionInformer(client, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *perconaVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.PerconaVersion{}, f.defaultInformer)
+func (f *perconaXtraDBVersionInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&catalogv1alpha1.PerconaXtraDBVersion{}, f.defaultInformer)
 }
 
-func (f *perconaVersionInformer) Lister() v1alpha1.PerconaVersionLister {
-	return v1alpha1.NewPerconaVersionLister(f.Informer().GetIndexer())
+func (f *perconaXtraDBVersionInformer) Lister() v1alpha1.PerconaXtraDBVersionLister {
+	return v1alpha1.NewPerconaXtraDBVersionLister(f.Informer().GetIndexer())
 }

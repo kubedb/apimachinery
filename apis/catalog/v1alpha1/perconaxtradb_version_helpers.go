@@ -6,31 +6,31 @@ import (
 	"kubedb.dev/apimachinery/apis"
 )
 
-var _ apis.ResourceInfo = &PerconaVersion{}
+var _ apis.ResourceInfo = &PerconaXtraDBVersion{}
 
-func (p PerconaVersion) ResourceShortCode() string {
-	return ResourceCodePerconaVersion
+func (p PerconaXtraDBVersion) ResourceShortCode() string {
+	return ResourceCodePerconaXtraDBVersion
 }
 
-func (p PerconaVersion) ResourceKind() string {
-	return ResourceKindPerconaVersion
+func (p PerconaXtraDBVersion) ResourceKind() string {
+	return ResourceKindPerconaXtraDBVersion
 }
 
-func (p PerconaVersion) ResourceSingular() string {
-	return ResourceSingularPerconaVersion
+func (p PerconaXtraDBVersion) ResourceSingular() string {
+	return ResourceSingularPerconaXtraDBVersion
 }
 
-func (p PerconaVersion) ResourcePlural() string {
-	return ResourcePluralPerconaVersion
+func (p PerconaXtraDBVersion) ResourcePlural() string {
+	return ResourcePluralPerconaXtraDBVersion
 }
 
-func (p PerconaVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (p PerconaXtraDBVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crdutils.NewCustomResourceDefinition(crdutils.Config{
 		Group:         SchemeGroupVersion.Group,
-		Plural:        ResourcePluralPerconaVersion,
-		Singular:      ResourceSingularPerconaVersion,
-		Kind:          ResourceKindPerconaVersion,
-		ShortNames:    []string{ResourceCodePerconaVersion},
+		Plural:        ResourcePluralPerconaXtraDBVersion,
+		Singular:      ResourceSingularPerconaXtraDBVersion,
+		Kind:          ResourceKindPerconaXtraDBVersion,
+		ShortNames:    []string{ResourceCodePerconaXtraDBVersion},
 		Categories:    []string{"datastore", "kubedb", "appscode"},
 		ResourceScope: string(apiextensions.ClusterScoped),
 		Versions: []apiextensions.CustomResourceDefinitionVersion{
@@ -43,7 +43,7 @@ func (p PerconaVersion) CustomResourceDefinition() *apiextensions.CustomResource
 		Labels: crdutils.Labels{
 			LabelsMap: map[string]string{"app": "kubedb"},
 		},
-		SpecDefinitionName:      "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaVersion",
+		SpecDefinitionName:      "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersion",
 		EnableValidation:        true,
 		GetOpenAPIDefinitions:   GetOpenAPIDefinitions,
 		EnableStatusSubresource: false,
