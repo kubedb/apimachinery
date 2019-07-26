@@ -9,13 +9,20 @@ const (
 	ResourcePluralPerconaVersion   = "perconaversions"
 )
 
+// PerconaVersion defines a Percona database (percona variation for MySQL database) version.
+
 // +genclient
 // +genclient:nonNamespaced
 // +genclient:skipVerbs=updateStatus
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// PerconaVersion defines a Percona database (percona variation for MySQL database) version.
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=perconaversions,singular=perconaversion,scope=Cluster,shortName=pcversion,categories={datastore,kubedb,appscode}
+// +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
+// +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
+// +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type PerconaVersion struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

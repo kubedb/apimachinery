@@ -16,7 +16,9 @@ const (
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// DatabaseAccessRequest
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=databaseaccessrequests,singular=databaseaccessrequest,categories={datastore,kubedb,appscode,all}
+// +kubebuilder:subresource:status
 type DatabaseAccessRequest struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
