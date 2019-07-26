@@ -17,7 +17,9 @@ const (
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// PostgresRole
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=postgresroles,singular=postgresrole,categories={datastore,kubedb,appscode,all}
+// +kubebuilder:subresource:status
 type PostgresRole struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

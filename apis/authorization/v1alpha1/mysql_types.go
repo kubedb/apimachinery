@@ -17,7 +17,9 @@ const (
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// MySQLRole
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=mysqlroles,singular=mysqlrole,categories={datastore,kubedb,appscode,all}
+// +kubebuilder:subresource:status
 type MySQLRole struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
