@@ -417,9 +417,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RedisList":                      schema_apimachinery_apis_kubedb_v1alpha1_RedisList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RedisSpec":                      schema_apimachinery_apis_kubedb_v1alpha1_RedisSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RedisStatus":                    schema_apimachinery_apis_kubedb_v1alpha1_RedisStatus(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Report":                         schema_apimachinery_apis_kubedb_v1alpha1_Report(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ReportStatus":                   schema_apimachinery_apis_kubedb_v1alpha1_ReportStatus(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ReportSummary":                  schema_apimachinery_apis_kubedb_v1alpha1_ReportSummary(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ScriptSourceSpec":               schema_apimachinery_apis_kubedb_v1alpha1_ScriptSourceSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Snapshot":                       schema_apimachinery_apis_kubedb_v1alpha1_Snapshot(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.SnapshotList":                   schema_apimachinery_apis_kubedb_v1alpha1_SnapshotList(ref),
@@ -19249,113 +19246,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_RedisStatus(ref common.ReferenceCa
 		},
 		Dependencies: []string{
 			"github.com/appscode/go/encoding/json/types.IntHash"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha1_Report(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"summary": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ReportSummary"),
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ReportStatus"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ReportStatus", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ReportSummary"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha1_ReportStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"startTime": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"completionTime": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha1_ReportSummary(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"postgres": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PostgresSummary"),
-									},
-								},
-							},
-						},
-					},
-					"elastic": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSummary"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSummary", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PostgresSummary"},
 	}
 }
 
