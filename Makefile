@@ -174,7 +174,7 @@ patch-crd-%:
 
 .PHONY: label-crds
 label-crds:
-	for f in api/crds/*.yaml; do \
+	@for f in api/crds/*.yaml; do \
 		echo "applying app=kubedb label to $$f"; \
 		kubectl label --overwrite -f $$f --local=true -o yaml app=kubedb > bin/crd.yaml; \
 		mv bin/crd.yaml $$f; \
