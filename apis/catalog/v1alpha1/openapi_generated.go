@@ -16822,8 +16822,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersion(ref common.R
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBVersion defines a PerconaXtraDB (percona variation for MySQL database) version.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{

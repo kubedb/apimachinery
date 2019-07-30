@@ -12,7 +12,7 @@ const (
 	PostgresKey         = ResourceSingularPostgres + "." + GenericKey
 	ElasticsearchKey    = ResourceSingularElasticsearch + "." + GenericKey
 	MySQLKey            = ResourceSingularMySQL + "." + GenericKey
-	PerconaXtraDBKey          = ResourceSingularPerconaXtraDB + "." + GenericKey
+	PerconaXtraDBKey    = ResourceSingularPerconaXtraDB + "." + GenericKey
 	MongoDBKey          = ResourceSingularMongoDB + "." + GenericKey
 	RedisKey            = ResourceSingularRedis + "." + GenericKey
 	MemcachedKey        = ResourceSingularMemcached + "." + GenericKey
@@ -51,14 +51,14 @@ const (
 	MySQLMaxBaseServerID = uint(4294967295 - 9)
 
 	PerconaXtraDBClusterRecommendedVersion = "5.7"
-	PerconaXtraDBMaxClusterNameLength            = 32
-	PerconaXtraDBStandaloneReplicas              = 1
-	PerconaXtraDBDefaultClusterSize              = 3
-	PerconaXtraDBDataMountPath                   = "/var/lib/mysql"
-	PerconaXtraDBInitDBMountPath                 = "/docker-entrypoint-initdb.d"
-	PerconaXtraDBCustomConfigMountPath           = "/etc/mysql/conf.d"
-	PerconaXtraDBClusterLabelKey                 = PerconaXtraDBKey + "/cluster"
-	PerconaXtraDBProxysqlLabelKey                = PerconaXtraDBKey + "/proxysql"
+	PerconaXtraDBMaxClusterNameLength      = 32
+	PerconaXtraDBStandaloneReplicas        = 1
+	PerconaXtraDBDefaultClusterSize        = 3
+	PerconaXtraDBDataMountPath             = "/var/lib/mysql"
+	PerconaXtraDBInitDBMountPath           = "/docker-entrypoint-initdb.d"
+	PerconaXtraDBCustomConfigMountPath     = "/etc/mysql/conf.d"
+	PerconaXtraDBClusterLabelKey           = PerconaXtraDBKey + "/cluster"
+	PerconaXtraDBProxysqlLabelKey          = PerconaXtraDBKey + "/proxysql"
 
 	ProxysqlUser          = "proxysqluser"
 	ProxysqlPassword      = "proxysqlpass"

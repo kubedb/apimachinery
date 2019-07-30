@@ -17941,8 +17941,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PerconaXtraDB(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDB defines a percona variation of Mysql database.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
