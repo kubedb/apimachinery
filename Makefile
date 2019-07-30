@@ -161,7 +161,7 @@ crds_to_patch := kubedb.com_elasticsearches.yaml \
 					kubedb.com_memcacheds.yaml \
 					kubedb.com_mongodbs.yaml \
 					kubedb.com_mysqls.yaml \
-					kubedb.com_perconas.yaml \
+					kubedb.com_perconaxtradbs.yaml \
 					kubedb.com_postgreses.yaml \
 					kubedb.com_redises.yaml
 
