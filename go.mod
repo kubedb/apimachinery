@@ -4,9 +4,8 @@ go 1.12
 
 require (
 	github.com/appscode/docker-registry-client v0.0.0-20180426150142-1bb02bb202b0
-	github.com/appscode/go v0.0.0-20190621064509-6b292c9166e3
+	github.com/appscode/go v0.0.0-20190722173419-e454bf744023
 	github.com/docker/libtrust v0.0.0-20160708172513-aabc10ec26b7 // indirect
-	github.com/evanphx/json-patch v4.5.0+incompatible
 	github.com/go-openapi/spec v0.19.0
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/gorilla/mux v1.7.2 // indirect
@@ -20,20 +19,22 @@ require (
 	k8s.io/apiextensions-apiserver v0.0.0-20190516231611-bf6753f2aa24
 	k8s.io/apimachinery v0.0.0-20190508063446-a3da69d3723c
 	k8s.io/client-go v11.0.0+incompatible
-	k8s.io/klog v0.3.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20190502190224-411b2483e503
-	k8s.io/kubernetes v1.14.2 // indirect
-	kmodules.xyz/client-go v0.0.0-20190715080709-7162a6c90b04
-	kmodules.xyz/custom-resources v0.0.0-20190508103408-464e8324c3ec
-	kmodules.xyz/monitoring-agent-api v0.0.0-20190513065523-186af167f817
-	kmodules.xyz/objectstore-api v0.0.0-20190718002052-da668b440b0b
-	kmodules.xyz/offshoot-api v0.0.0-20190715115723-36c8fce142c1
-	kmodules.xyz/webhook-runtime v0.0.0-20190715115250-a84fbf77dd30
-	stash.appscode.dev/stash v0.0.0-20190717091949-1c51a7c58f08
+	kmodules.xyz/client-go v0.0.0-20190802200916-043217632b6a
+	kmodules.xyz/custom-resources v0.0.0-20190802202832-aaad432d3364
+	kmodules.xyz/monitoring-agent-api v0.0.0-20190802203207-a87aa5b2e057
+	kmodules.xyz/objectstore-api v0.0.0-20190802205146-9816ffafe0d7
+	kmodules.xyz/offshoot-api v0.0.0-20190802203449-05938be4a23b
+	kmodules.xyz/webhook-runtime v0.0.0-20190802202019-9e77ee949266
+	stash.appscode.dev/stash v0.9.0-rc.0
 )
 
 replace (
-	github.com/Azure/go-autorest => github.com/Azure/go-autorest/autorest v0.5.0
+	contrib.go.opencensus.io/exporter/ocagent => contrib.go.opencensus.io/exporter/ocagent v0.3.0
+	github.com/Azure/go-autorest => github.com/Azure/go-autorest v12.3.0+incompatible
+	github.com/census-instrumentation/opencensus-proto => github.com/census-instrumentation/opencensus-proto v0.1.0
+	github.com/golang/protobuf => github.com/golang/protobuf v1.2.0
+	go.opencensus.io => go.opencensus.io v0.21.0
 	k8s.io/api => k8s.io/api v0.0.0-20190313235455-40a48860b5ab
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.0.0-20190315093550-53c4693659ed
 	k8s.io/apimachinery => github.com/kmodules/apimachinery v0.0.0-20190508045248-a52a97a7a2bf
