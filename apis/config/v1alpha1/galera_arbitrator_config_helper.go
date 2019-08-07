@@ -7,6 +7,11 @@ import (
 const (
 	// GarbdListenPort is the port at which Galera Arbitrator (garbd) listen
 	GarbdListenPort = 4444
+
+	// GarbdXtrabackupSSTMethod is the name of the method or script that is
+	// used during a State Snapshot Transfer.
+	GarbdXtrabackupSSTMethod = "xtrabackup-v2"
+
 	// GarbdXtrabackupSSTRequestSuffix denotes the suffix of sst request string for xtrabackup
 	GarbdXtrabackupSSTRequestSuffix = "/xtrabackup_sst//1"
 	// GarbdLogFile is the name log file at which `garbd` puts logs
