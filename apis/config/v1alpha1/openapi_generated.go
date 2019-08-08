@@ -345,7 +345,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
-		"kubedb.dev/apimachinery/apis/config/v1alpha1.GarbdConfiguration":             schema_apimachinery_apis_config_v1alpha1_GarbdConfiguration(ref),
+		"kubedb.dev/apimachinery/apis/config/v1alpha1.GaleraArbitratorConfiguration":  schema_apimachinery_apis_config_v1alpha1_GaleraArbitratorConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/config/v1alpha1.MongoDBConfiguration":           schema_apimachinery_apis_config_v1alpha1_MongoDBConfiguration(ref),
 	}
 }
@@ -15631,11 +15631,11 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_config_v1alpha1_GarbdConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_config_v1alpha1_GaleraArbitratorConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "GarbdConfiguration defines Galera ARBitrator Daemon (garbd) configuration. Ref: https://galeracluster.com/library/documentation/arbitrator.html\n\t\thttps://galeracluster.com/library/documentation/backup-cluster.html",
+				Description: "GaleraArbitratorConfiguration defines Galera ARBitrator Daemon (garbd) configuration. Ref: https://galeracluster.com/library/documentation/arbitrator.html\n\t\thttps://galeracluster.com/library/documentation/backup-cluster.html",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
