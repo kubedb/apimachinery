@@ -1,5 +1,44 @@
 # Change Log
 
+## [v0.13.0-rc.0](https://github.com/kubedb/apimachinery/tree/v0.13.0-rc.0) (2019-08-22)
+[Full Changelog](https://github.com/kubedb/apimachinery/compare/0.12.0...v0.13.0-rc.0)
+
+**Merged pull requests:**
+
+- Update galera arbitrator helper methods and constants [\#438](https://github.com/kubedb/apimachinery/pull/438) ([shudipta](https://github.com/shudipta))
+- Use github.com/Azure/go-autorest/autorest@v0.7.0 [\#437](https://github.com/kubedb/apimachinery/pull/437) ([tamalsaha](https://github.com/tamalsaha))
+- Add logic to get the PerconaXtraDB object name [\#436](https://github.com/kubedb/apimachinery/pull/436) ([shudipta](https://github.com/shudipta))
+- Use github.com/golang/protobuf@v1.2.0 [\#435](https://github.com/kubedb/apimachinery/pull/435) ([tamalsaha](https://github.com/tamalsaha))
+- Bring back MongoDBConfiguration [\#434](https://github.com/kubedb/apimachinery/pull/434) ([tamalsaha](https://github.com/tamalsaha))
+- Delete authorization and config api types [\#433](https://github.com/kubedb/apimachinery/pull/433) ([tamalsaha](https://github.com/tamalsaha))
+- Rename from Percona to PerconaXtraDB [\#432](https://github.com/kubedb/apimachinery/pull/432) ([shudipta](https://github.com/shudipta))
+- Apply label to CRD yamls [\#430](https://github.com/kubedb/apimachinery/pull/430) ([tamalsaha](https://github.com/tamalsaha))
+- Add naming patterns for CRDs [\#429](https://github.com/kubedb/apimachinery/pull/429) ([tamalsaha](https://github.com/tamalsaha))
+- Delete Report types [\#428](https://github.com/kubedb/apimachinery/pull/428) ([tamalsaha](https://github.com/tamalsaha))
+- Use kubebuilder to generate crd yamls [\#427](https://github.com/kubedb/apimachinery/pull/427) ([tamalsaha](https://github.com/tamalsaha))
+- Fix defaulting ClusterAuthMode [\#426](https://github.com/kubedb/apimachinery/pull/426) ([the-redback](https://github.com/the-redback))
+- Update tls file paths in default probes [\#425](https://github.com/kubedb/apimachinery/pull/425) ([the-redback](https://github.com/the-redback))
+- Fix travis build [\#423](https://github.com/kubedb/apimachinery/pull/423) ([tamalsaha](https://github.com/tamalsaha))
+- Change package path to kubedb.dev/apimachinery [\#422](https://github.com/kubedb/apimachinery/pull/422) ([tamalsaha](https://github.com/tamalsaha))
+-  Mongodb config parameter for stash-mongodb integration [\#421](https://github.com/kubedb/apimachinery/pull/421) ([the-redback](https://github.com/the-redback))
+- Add galera arbitrator config [\#420](https://github.com/kubedb/apimachinery/pull/420) ([shudipta](https://github.com/shudipta))
+- Add license header to make files [\#419](https://github.com/kubedb/apimachinery/pull/419) ([tamalsaha](https://github.com/tamalsaha))
+- Use robfig/cron@v3 [\#418](https://github.com/kubedb/apimachinery/pull/418) ([tamalsaha](https://github.com/tamalsaha))
+- Add Maxunavaiable for Elasticsearch PDB support [\#414](https://github.com/kubedb/apimachinery/pull/414) ([iamrz1](https://github.com/iamrz1))
+- Use stopch to cancel BlockOnStashOperator [\#413](https://github.com/kubedb/apimachinery/pull/413) ([tamalsaha](https://github.com/tamalsaha))
+- Add Makefile [\#412](https://github.com/kubedb/apimachinery/pull/412) ([tamalsaha](https://github.com/tamalsaha))
+- Using PDB createOrPatch [\#411](https://github.com/kubedb/apimachinery/pull/411) ([iamrz1](https://github.com/iamrz1))
+- PDB creator for StatefulSets and Deployments [\#410](https://github.com/kubedb/apimachinery/pull/410) ([iamrz1](https://github.com/iamrz1))
+- Add util functions for Percona [\#409](https://github.com/kubedb/apimachinery/pull/409) ([shudipta](https://github.com/shudipta))
+-  Update dormant for percona and mariadb [\#408](https://github.com/kubedb/apimachinery/pull/408) ([shudipta](https://github.com/shudipta))
+- Add percona version api, client [\#407](https://github.com/kubedb/apimachinery/pull/407) ([shudipta](https://github.com/shudipta))
+- Add MariaDB api, client [\#406](https://github.com/kubedb/apimachinery/pull/406) ([shudipta](https://github.com/shudipta))
+- Add Percona api, client [\#405](https://github.com/kubedb/apimachinery/pull/405) ([shudipta](https://github.com/shudipta))
+- Add Service Account name to Database CRDs [\#404](https://github.com/kubedb/apimachinery/pull/404) ([iamrz1](https://github.com/iamrz1))
+- Update to k8s 1.14.0 client libraries using go.mod [\#403](https://github.com/kubedb/apimachinery/pull/403) ([tamalsaha](https://github.com/tamalsaha))
+- API for SSL support in mongodb [\#400](https://github.com/kubedb/apimachinery/pull/400) ([the-redback](https://github.com/the-redback))
+- Integrate stash/restic with kubedb [\#398](https://github.com/kubedb/apimachinery/pull/398) ([the-redback](https://github.com/the-redback))
+
 ## [0.12.0](https://github.com/kubedb/apimachinery/tree/0.12.0) (2019-05-06)
 [Full Changelog](https://github.com/kubedb/apimachinery/compare/0.11.0...0.12.0)
 
@@ -308,55 +347,12 @@
 - use prometheus related name for exporter port [\#175](https://github.com/kubedb/apimachinery/pull/175) ([aerokite](https://github.com/aerokite))
 
 ## [0.8.0-beta.0](https://github.com/kubedb/apimachinery/tree/0.8.0-beta.0) (2018-01-06)
-**Implemented enhancements:**
-
-- Allow users to run operator  & exporter using a reduced permission service account [\#90](https://github.com/kubedb/apimachinery/issues/90)
-- Integrate prometheus monitoring [\#76](https://github.com/kubedb/apimachinery/issues/76)
-- Remove EventRecorder wrapper [\#31](https://github.com/kubedb/apimachinery/issues/31)
-
 **Fixed bugs:**
 
-- Unusual behavior of Backup Scheduler [\#84](https://github.com/kubedb/apimachinery/issues/84)
-- Check recovery success in DeletedDatabaseController [\#83](https://github.com/kubedb/apimachinery/issues/83)
-- Wiping out did not delete db auth secret [\#74](https://github.com/kubedb/apimachinery/issues/74)
-- Operator rattles google cloud project [\#54](https://github.com/kubedb/apimachinery/issues/54)
 - Auto detect AWS bucket region [\#172](https://github.com/kubedb/apimachinery/pull/172) ([tamalsaha](https://github.com/tamalsaha))
 - Modify CronController [\#19](https://github.com/kubedb/apimachinery/pull/19) ([aerokite](https://github.com/aerokite))
 - Fix some bugs [\#18](https://github.com/kubedb/apimachinery/pull/18) ([aerokite](https://github.com/aerokite))
 - Remove test flag checking [\#7](https://github.com/kubedb/apimachinery/pull/7) ([sadlil](https://github.com/sadlil))
-
-**Closed issues:**
-
-- Integrate Searchlight Alerts [\#91](https://github.com/kubedb/apimachinery/issues/91)
-- Support passing parameters for exporters per TPR basis [\#89](https://github.com/kubedb/apimachinery/issues/89)
-- Explore service broker integration [\#88](https://github.com/kubedb/apimachinery/issues/88)
-- Support user provided annotations [\#82](https://github.com/kubedb/apimachinery/issues/82)
-- Brainstorm better names for deleted DBs. [\#81](https://github.com/kubedb/apimachinery/issues/81)
-- Backup does not work on updated TPR [\#79](https://github.com/kubedb/apimachinery/issues/79)
-- Use non-admin auth secret for backup [\#72](https://github.com/kubedb/apimachinery/issues/72)
-- Use non-admin auth secret for monitoring [\#71](https://github.com/kubedb/apimachinery/issues/71)
-- DeletedDB could be an implementation detail  [\#64](https://github.com/kubedb/apimachinery/issues/64)
-- Decide size of backup job's PVC [\#63](https://github.com/kubedb/apimachinery/issues/63)
-- Remove backup - prefix from backup jobs [\#62](https://github.com/kubedb/apimachinery/issues/62)
-- Undo deletion of DDB if not wiped out [\#61](https://github.com/kubedb/apimachinery/issues/61)
-- Scheduled backup does not start [\#60](https://github.com/kubedb/apimachinery/issues/60)
-- Schedule backup will take the first backup immediately [\#59](https://github.com/kubedb/apimachinery/issues/59)
-- Snapshot status does not change to Successful [\#58](https://github.com/kubedb/apimachinery/issues/58)
-- Reduce operator delay to 10sec [\#57](https://github.com/kubedb/apimachinery/issues/57)
-- Event reason should be correct English [\#56](https://github.com/kubedb/apimachinery/issues/56)
-- StatefulSet naming format [\#55](https://github.com/kubedb/apimachinery/issues/55)
-- Add examples that shows how to use storage and backup schedule [\#46](https://github.com/kubedb/apimachinery/issues/46)
-- Show DatabaseSecret in specification section. [\#45](https://github.com/kubedb/apimachinery/issues/45)
-- Deleting postgres db does not work [\#44](https://github.com/kubedb/apimachinery/issues/44)
-- Remove volume- prefix from pvc [\#43](https://github.com/kubedb/apimachinery/issues/43)
-- Delete DDB option in UI [\#42](https://github.com/kubedb/apimachinery/issues/42)
-- Check docker image version from docker hub [\#41](https://github.com/kubedb/apimachinery/issues/41)
-- Create governing service [\#39](https://github.com/kubedb/apimachinery/issues/39)
-- Lint issue [\#27](https://github.com/kubedb/apimachinery/issues/27)
-- Recover database from DeletedDatabase [\#17](https://github.com/kubedb/apimachinery/issues/17)
-- Support database initialization [\#16](https://github.com/kubedb/apimachinery/issues/16)
-- Support DB destroy [\#2](https://github.com/kubedb/apimachinery/issues/2)
-- Support DatabaseSnapshot [\#1](https://github.com/kubedb/apimachinery/issues/1)
 
 **Merged pull requests:**
 
