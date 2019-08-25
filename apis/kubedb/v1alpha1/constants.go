@@ -21,6 +21,7 @@ const (
 	RedisKey            = ResourceSingularRedis + "." + GenericKey
 	MemcachedKey        = ResourceSingularMemcached + "." + GenericKey
 	EtcdKey             = ResourceSingularEtcd + "." + GenericKey
+	ProxySQLKey         = ResourceSingularProxySQL + "." + GenericKey
 	SnapshotKey         = ResourceSingularSnapshot + "." + GenericKey
 	LabelSnapshotStatus = SnapshotKey + "/status"
 
@@ -65,6 +66,9 @@ const (
 	PerconaXtraDBInitDBMountPath              = "/docker-entrypoint-initdb.d"
 	PerconaXtraDBCustomConfigMountPath        = "/etc/percona-server.conf.d/"
 	PerconaXtraDBClusterCustomConfigMountPath = "/etc/mysql/percona-xtradb-cluster.conf.d/"
+
+	LabelProxySQLName        = ProxySQLKey + "/name"
+	LabelProxySQLLoadBalance = ProxySQLKey + "/load-balance"
 
 	ProxysqlUser          = "proxysqluser"
 	ProxysqlPassword      = "proxysqlpass"
