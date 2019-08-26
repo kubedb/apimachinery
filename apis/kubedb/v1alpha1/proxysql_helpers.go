@@ -192,3 +192,15 @@ func (p *ProxySQLSpec) SetDefaults() {
 		}
 	}
 }
+
+func (p *ProxySQLSpec) GetSecrets() []string {
+	if p == nil {
+		return nil
+	}
+
+	var secrets []string
+	if p.ProxySQLSecret != nil {
+		secrets = append(secrets, p.ProxySQLSecret.SecretName)
+	}
+	return secrets
+}
