@@ -9,6 +9,7 @@ import (
 	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
 )
@@ -71,6 +72,47 @@ func (p proxysqlApp) Type() appcat.AppType {
 
 func (p ProxySQL) AppBindingMeta() appcat.AppBindingMeta {
 	return &proxysqlApp{&p}
+}
+
+type proxysqlStatsService struct {
+	*ProxySQL
+}
+
+func (p proxysqlStatsService) GetNamespace() string {
+	return p.ProxySQL.GetNamespace()
+}
+
+func (p proxysqlStatsService) ServiceName() string {
+	return p.OffshootName() + "-stats"
+}
+
+func (p proxysqlStatsService) ServiceMonitorName() string {
+	return fmt.Sprintf("kubedb-%s-%s", p.Namespace, p.Name)
+}
+
+func (p proxysqlStatsService) Path() string {
+	return "/metrics"
+}
+
+func (p proxysqlStatsService) Scheme() string {
+	return ""
+}
+
+func (p ProxySQL) StatsService() mona.StatsAccessor {
+	return &proxysqlStatsService{&p}
+}
+
+func (p ProxySQL) StatsServiceLabels() map[string]string {
+	lbl := meta_util.FilterKeys(GenericKey, p.OffshootSelectors(), p.Labels)
+	lbl[LabelRole] = "stats"
+	return lbl
+}
+
+func (p *ProxySQL) GetMonitoringVendor() string {
+	if p.Spec.Monitor != nil {
+		return p.Spec.Monitor.Agent.Vendor()
+	}
+	return ""
 }
 
 func (p ProxySQL) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
