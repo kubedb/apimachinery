@@ -70,8 +70,8 @@ const (
 	LabelProxySQLName        = ProxySQLKey + "/name"
 	LabelProxySQLLoadBalance = ProxySQLKey + "/load-balance"
 
-	ProxysqlUser          = "proxysqluser"
-	ProxysqlPassword      = "proxysqlpass"
+	ProxysqlUserKey       = "proxysqluser"
+	ProxysqlPasswordKey   = "proxysqlpass"
 	ProxysqlMySQLNodePort = 6033
 	ProxysqlAdminPort     = 6032
 	ProxysqlAdminPortName = "proxyadm"
