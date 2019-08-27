@@ -93,6 +93,11 @@ type ProxySQLSpec struct {
 }
 
 type ProxySQLBackendSpec struct {
+	// Ref lets one to locate the typed referenced object
+	// (in our case, it is the backend database object)
+	// inside the same namespace.
+	Ref *core.TypedLocalObjectReference `json:"dataSource,omitempty" protobuf:"bytes,7,opt,name=dataSource"`
+
 	// Number of backend servers.
 	Replicas *int32 `json:"replicas,omitempty"`
 
