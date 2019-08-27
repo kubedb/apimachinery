@@ -70,12 +70,13 @@ const (
 	LabelProxySQLName        = ProxySQLKey + "/name"
 	LabelProxySQLLoadBalance = ProxySQLKey + "/load-balance"
 
-	ProxysqlUserKey       = "proxysqluser"
-	ProxysqlPasswordKey   = "proxysqlpass"
-	ProxysqlMySQLNodePort = 6033
-	ProxysqlAdminPort     = 6032
-	ProxysqlAdminPortName = "proxyadm"
-	ProxysqlDataMountPath = "/var/lib/proxysql"
+	ProxySQLUserKey               = "proxysqluser"
+	ProxySQLPasswordKey           = "proxysqlpass"
+	ProxySQLMySQLNodePort         = 6033
+	ProxySQLAdminPort             = 6032
+	ProxySQLAdminPortName         = "proxyadm"
+	ProxySQLDataMountPath         = "/var/lib/proxysql"
+	ProxySQLCustomConfigMountPath = "/etc/custom-proxysql.cnf"
 
 	RedisShardKey   = RedisKey + "/shard"
 	RedisNodePort   = 6379
