@@ -62,8 +62,16 @@ func (p PerconaXtraDB) GoverningServiceName() string {
 	return p.OffshootName() + "-gvr"
 }
 
+func (p PerconaXtraDB) Replicas() int32 {
+	return types.Int32(p.Spec.Replicas)
+}
+
 func (p PerconaXtraDB) PeerName(idx int) string {
 	return fmt.Sprintf("%s-%d.%s.%s", p.OffshootName(), idx, p.GoverningServiceName(), p.Namespace)
+}
+
+func (p PerconaXtraDB) GetDatabaseSecretName() string {
+	return p.Spec.DatabaseSecret.SecretName
 }
 
 func (p PerconaXtraDB) ClusterName() string {
