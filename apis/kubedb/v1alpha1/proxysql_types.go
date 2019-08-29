@@ -52,7 +52,7 @@ type ProxySQLSpec struct {
 
 	// Mode specifies the type of MySQL/Percona-XtraDB/MariaDB cluster for which proxysql
 	// will be configured. It must be either "Galera" or "GroupReplication"
-	Mode *LoadBalanceMode `json:"configureFor,omitempty"`
+	Mode *LoadBalanceMode `json:"mode,omitempty"`
 
 	// Backend specifies the information about backend MySQL/Percona-XtraDB/MariaDB servers
 	Backend *ProxySQLBackendSpec `json:"backend,omitempty"`
@@ -96,7 +96,7 @@ type ProxySQLBackendSpec struct {
 	// Ref lets one to locate the typed referenced object
 	// (in our case, it is the backend database object)
 	// inside the same namespace.
-	Ref *core.TypedLocalObjectReference `json:"dataSource,omitempty" protobuf:"bytes,7,opt,name=dataSource"`
+	Ref *core.TypedLocalObjectReference `json:"ref,omitempty" protobuf:"bytes,7,opt,name=ref"`
 
 	// Number of backend servers.
 	Replicas *int32 `json:"replicas,omitempty"`

@@ -425,7 +425,7 @@ spec:
                   description: Reference to backend MySQL/Percona-XtraDB/MariaDB object
                     where the target database is located
                   type: string
-                dataSource:
+                ref:
                   description: Ref lets one to locate the typed referenced object
                     (in our case, it is the backend database object) inside the same
                     namespace.
@@ -1606,7 +1606,7 @@ spec:
                   - volumePath
                   type: object
               type: object
-            configureFor:
+            mode:
               description: Mode specifies the type of MySQL/Percona-XtraDB/MariaDB
                 cluster for which proxysql will be configured. It must be either "Galera"
                 or "GroupReplication"
