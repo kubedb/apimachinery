@@ -57,6 +57,10 @@ func (p PerconaXtraDB) ServiceName() string {
 	return p.OffshootName()
 }
 
+func (p PerconaXtraDB) IsCluster() bool {
+	return types.Int32(p.Spec.Replicas) > 1
+}
+
 func (p PerconaXtraDB) GoverningServiceName() string {
 	//return p.OffshootName() + "-gvr"
 	return "kubedb"
