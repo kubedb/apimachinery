@@ -166,7 +166,7 @@ func (p *ProxySQL) SetDefaults() {
 }
 
 func (p *ProxySQLSpec) SetDefaults() {
-	if p == nil {
+	if p == nil || p.Mode == nil || p.Backend == nil {
 		return
 	}
 
@@ -174,22 +174,11 @@ func (p *ProxySQLSpec) SetDefaults() {
 		p.Replicas = types.Int32P(1)
 	}
 
-	if p.Mode == nil || p.Backend == nil {
-		return
-	}
-
 	if p.StorageType == "" {
 		p.StorageType = StorageTypeDurable
 	}
 	if p.UpdateStrategy.Type == "" {
 		p.UpdateStrategy.Type = apps.RollingUpdateStatefulSetStrategyType
-	}
-	if p.TerminationPolicy == "" {
-		if p.StorageType == StorageTypeEphemeral {
-			p.TerminationPolicy = TerminationPolicyDelete
-		} else {
-			p.TerminationPolicy = TerminationPolicyPause
-		}
 	}
 }
 

@@ -421,14 +421,10 @@ spec:
               description: Backend specifies the information about backend MySQL/Percona-XtraDB/MariaDB
                 servers
               properties:
-                appBindingName:
-                  description: Reference to backend MySQL/Percona-XtraDB/MariaDB object
-                    where the target database is located
-                  type: string
                 ref:
                   description: Ref lets one to locate the typed referenced object
-                    (in our case, it is the backend database object) inside the same
-                    namespace.
+                    (in our case, it is the MySQL/Percona-XtraDB/MariaDB object) inside
+                    the same namespace.
                   properties:
                     apiGroup:
                       description: APIGroup is the group for the resource being referenced.
@@ -4513,9 +4509,6 @@ spec:
               type: object
             storageType:
               description: StorageType can be durable (default) or ephemeral
-              type: string
-            terminationPolicy:
-              description: TerminationPolicy controls the delete operation for database
               type: string
             updateStrategy:
               description: updateStrategy indicates the StatefulSetUpdateStrategy
