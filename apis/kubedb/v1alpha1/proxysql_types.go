@@ -19,8 +19,8 @@ const (
 type LoadBalanceMode string
 
 const (
-	ConfigurationTypeGalera           LoadBalanceMode = "Galera"
-	ConfigurationTypeGroupReplication LoadBalanceMode = "GroupReplication"
+	LoadBalanceModeGalera           LoadBalanceMode = "Galera"
+	LoadBalanceModeGroupReplication LoadBalanceMode = "GroupReplication"
 )
 
 // ProxySQL defines a percona variation of Mysql database.
