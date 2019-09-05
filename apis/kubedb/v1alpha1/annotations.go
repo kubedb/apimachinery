@@ -39,7 +39,7 @@ const (
 	MongoDBMongosPort   = 27017
 
 	MySQLUserKey         = "username"
-	KeyMySQLPasswordKey  = "password"
+	MySQLPasswordKey     = "password"
 	MySQLNodePort        = 3306
 	MySQLGroupComPort    = 33060
 	MySQLMaxGroupMembers = 9
