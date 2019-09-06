@@ -62,8 +62,7 @@ func (p PerconaXtraDB) IsCluster() bool {
 }
 
 func (p PerconaXtraDB) GoverningServiceName() string {
-	//return p.OffshootName() + "-gvr"
-	return "kubedb"
+	return p.OffshootName() + "-gvr"
 }
 
 func (p PerconaXtraDB) Replicas() int32 {
