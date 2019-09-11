@@ -420,8 +420,9 @@ spec:
         spec:
           properties:
             authPlugin:
-              description: Authentication plugin used by Elasticsearch cluster. If
-                unset, defaults to SearchGuard.
+              description: 'Authentication plugin used by Elasticsearch cluster. If
+                unset, defaults to SearchGuard. Deprecated: Use elasticsearchVersion.Spec.AuthPlugin
+                instead'
               type: string
             backupSchedule:
               description: BackupSchedule spec to specify how database backup will

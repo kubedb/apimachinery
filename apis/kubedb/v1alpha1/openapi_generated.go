@@ -16164,7 +16164,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 					},
 					"authPlugin": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Authentication plugin used by Elasticsearch cluster. If unset, defaults to SearchGuard.",
+							Description: "Authentication plugin used by Elasticsearch cluster. If unset, defaults to SearchGuard. Deprecated: Use elasticsearchVersion.Spec.AuthPlugin instead",
 							Type:        []string{"string"},
 							Format:      "",
 						},

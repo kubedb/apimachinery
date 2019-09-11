@@ -2,7 +2,6 @@ package v1alpha1
 
 import (
 	"fmt"
-
 	apps "k8s.io/api/apps/v1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
@@ -196,9 +195,6 @@ func (e *ElasticsearchSpec) SetDefaults() {
 	// perform defaulting
 	e.BackupSchedule.SetDefaults()
 
-	if e.AuthPlugin == "" {
-		e.AuthPlugin = ElasticsearchAuthPluginSearchGuard
-	}
 	if e.StorageType == "" {
 		e.StorageType = StorageTypeDurable
 	}

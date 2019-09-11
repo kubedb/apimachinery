@@ -419,6 +419,9 @@ spec:
         spec:
           description: ElasticsearchVersionSpec is the spec for elasticsearch version
           properties:
+            authPlugin:
+              description: Authentication plugin used by Elasticsearch cluster.
+              type: string
             db:
               description: Database Image
               properties:

@@ -15871,6 +15871,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref comm
 							Format:      "",
 						},
 					},
+					"authPlugin": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Authentication plugin used by Elasticsearch cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"db": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Database Image",

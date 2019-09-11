@@ -33,6 +33,8 @@ type ElasticsearchVersion struct {
 type ElasticsearchVersionSpec struct {
 	// Version
 	Version string `json:"version"`
+	// Authentication plugin used by Elasticsearch cluster.
+	AuthPlugin ElasticsearchAuthPlugin `json:"authPlugin,omitempty"`
 	// Database Image
 	DB ElasticsearchVersionDatabase `json:"db"`
 	// Exporter Image
@@ -83,3 +85,11 @@ type ElasticsearchVersionList struct {
 	// Items is a list of ElasticsearchVersion CRD objects
 	Items []ElasticsearchVersion `json:"items,omitempty"`
 }
+
+type ElasticsearchAuthPlugin string
+
+const (
+	ElasticsearchAuthPluginSearchGuard ElasticsearchAuthPlugin = "SearchGuard" // Default
+	ElasticsearchAuthPluginNone        ElasticsearchAuthPlugin = "None"
+	ElasticsearchAuthPluginXpack       ElasticsearchAuthPlugin = "X-Pack"
+)
