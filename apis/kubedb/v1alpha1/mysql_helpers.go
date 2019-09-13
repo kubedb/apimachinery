@@ -67,6 +67,14 @@ func (m MySQL) SnapshotSAName() string {
 	return fmt.Sprintf("%v-snapshot", m.OffshootName())
 }
 
+func (m MySQL) PeerName(idx int) string {
+	return fmt.Sprintf("%s-%d.%s.%s", m.OffshootName(), idx, m.GoverningServiceName(), m.Namespace)
+}
+
+func (m MySQL) GetDatabaseSecretName() string {
+	return m.Spec.DatabaseSecret.SecretName
+}
+
 type mysqlApp struct {
 	*MySQL
 }
