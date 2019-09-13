@@ -455,14 +455,6 @@ spec:
               required:
               - databasePolicyName
               type: object
-            proxysql:
-              description: Proxysql Image
-              properties:
-                image:
-                  type: string
-              required:
-              - image
-              type: object
             version:
               description: Version
               type: string
@@ -471,7 +463,6 @@ spec:
           - exporter
           - initContainer
           - podSecurityPolicies
-          - proxysql
           - version
           type: object
       type: object
