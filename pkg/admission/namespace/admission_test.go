@@ -152,7 +152,7 @@ var cases = []struct {
 		admission.Delete,
 		sampleNamespace(),
 		[]*unstructured.Unstructured{deleteTerminationPolicy(sampleDatabase())},
-		false,
+		true,
 	},
 }
 
