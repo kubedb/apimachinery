@@ -193,11 +193,7 @@ func (m *MySQLSpec) SetDefaults() {
 		m.UpdateStrategy.Type = apps.RollingUpdateStatefulSetStrategyType
 	}
 	if m.TerminationPolicy == "" {
-		if m.StorageType == StorageTypeEphemeral {
-			m.TerminationPolicy = TerminationPolicyDelete
-		} else {
-			m.TerminationPolicy = TerminationPolicyPause
-		}
+		m.TerminationPolicy = TerminationPolicyDelete
 	}
 
 	if m.Topology != nil && m.Topology.Mode != nil && *m.Topology.Mode == MySQLClusterModeGroup {
