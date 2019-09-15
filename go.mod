@@ -3,27 +3,12 @@ module kubedb.dev/apimachinery
 go 1.12
 
 require (
-	github.com/Azure/azure-pipeline-go v0.1.9 // indirect
-	github.com/Azure/azure-storage-blob-go v0.6.0 // indirect
-	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/appscode/docker-registry-client v0.0.0-20180426150142-1bb02bb202b0
 	github.com/appscode/go v0.0.0-20190808133642-1d4ef1f1c1e0
-	github.com/dnaeon/go-vcr v1.0.1 // indirect
-	github.com/docker/distribution v2.7.1+incompatible // indirect
-	github.com/go-ini/ini v1.25.4 // indirect
 	github.com/go-openapi/spec v0.19.0
-	github.com/go-openapi/swag v0.19.0 // indirect
-	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
-	github.com/golang/snappy v0.0.1 // indirect
-	github.com/google/martian v2.1.1-0.20190517191504-25dcb96d9e51+incompatible // indirect
 	github.com/gorilla/mux v1.7.3 // indirect
-	github.com/imdario/mergo v0.3.7 // indirect
-	github.com/jackc/pgx v3.3.0+incompatible // indirect
 	github.com/json-iterator/go v1.1.6
-	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
-	github.com/lib/pq v1.1.0 // indirect
-	github.com/mailru/easyjson v0.0.0-20190403194419-1ea4449da983 // indirect
 	github.com/orcaman/concurrent-map v0.0.0-20190314100340-2693aad1ed75
 	github.com/pkg/errors v0.8.1
 	github.com/robfig/cron/v3 v3.0.0
@@ -31,9 +16,7 @@ require (
 	k8s.io/api v0.0.0-20190503110853-61630f889b3c
 	k8s.io/apiextensions-apiserver v0.0.0-20190516231611-bf6753f2aa24
 	k8s.io/apimachinery v0.0.0-20190508063446-a3da69d3723c
-	k8s.io/cli-runtime v0.0.0-20190516231937-17bc0b7fcef5 // indirect
 	k8s.io/client-go v11.0.0+incompatible
-	k8s.io/component-base v0.0.0-20190424053038-9fe063da3132 // indirect
 	k8s.io/kube-openapi v0.0.0-20190502190224-411b2483e503
 	kmodules.xyz/client-go v0.0.0-20190808141354-bbb9e14f60ab
 	kmodules.xyz/custom-resources v0.0.0-20190808144301-114abf10dfe2
