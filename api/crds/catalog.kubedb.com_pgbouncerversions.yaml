@@ -419,21 +419,12 @@ spec:
               required:
               - image
               type: object
-            podSecurityPolicies:
-              description: PSP names
-              properties:
-                databasePolicyName:
-                  type: string
-              required:
-              - databasePolicyName
-              type: object
             version:
               description: Version
               type: string
           required:
           - db
           - exporter
-          - podSecurityPolicies
           - version
           type: object
       type: object

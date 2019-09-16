@@ -27,29 +27,22 @@ type PgBouncerVersionSpec struct {
 	// Version
 	Version string `json:"version"`
 	// Database Image
-	DB PgBouncerVersionDatabase `json:"db"`
+	Server PgBouncerServerVersion `json:"db"`
 	// Exporter Image
 	Exporter PgBouncerVersionExporter `json:"exporter"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
-	// PSP names
-	PodSecurityPolicies PgBouncerVersionPodSecurityPolicy `json:"podSecurityPolicies"`
 }
 
-// PgBouncerVersionDatabase is the PgBouncer Database image
-type PgBouncerVersionDatabase struct {
+// PgBouncerServerVersion is the PgBouncer Database image
+type PgBouncerServerVersion struct {
 	Image string `json:"image"`
 }
 
 // PostgresVersionExporter is the image for the Postgres exporter
 type PgBouncerVersionExporter struct {
 	Image string `json:"image"`
-}
-
-// PgBouncerVersionPodSecurityPolicy is the PgBouncer pod security policies
-type PgBouncerVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
