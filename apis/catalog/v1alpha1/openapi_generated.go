@@ -17188,7 +17188,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionSpec(ref common.R
 							Format:      "",
 						},
 					},
-					"db": {
+					"server": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Database Image",
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerServerVersion"),
@@ -17208,7 +17208,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionSpec(ref common.R
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter"},
+				Required: []string{"version", "server", "exporter"},
 			},
 		},
 		Dependencies: []string{

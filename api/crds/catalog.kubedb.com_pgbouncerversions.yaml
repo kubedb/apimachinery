@@ -399,14 +399,6 @@ spec:
         spec:
           description: PgBouncerVersionSpec is the spec for pgbouncer version
           properties:
-            db:
-              description: Database Image
-              properties:
-                image:
-                  type: string
-              required:
-              - image
-              type: object
             deprecated:
               description: Deprecated versions usable but regarded as obsolete and
                 best avoided, typically due to having been superseded.
@@ -419,12 +411,20 @@ spec:
               required:
               - image
               type: object
+            server:
+              description: Database Image
+              properties:
+                image:
+                  type: string
+              required:
+              - image
+              type: object
             version:
               description: Version
               type: string
           required:
-          - db
           - exporter
+          - server
           - version
           type: object
       type: object

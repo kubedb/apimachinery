@@ -27,7 +27,7 @@ type PgBouncerVersionSpec struct {
 	// Version
 	Version string `json:"version"`
 	// Database Image
-	Server PgBouncerServerVersion `json:"db"`
+	Server PgBouncerServerVersion `json:"server"`
 	// Exporter Image
 	Exporter PgBouncerVersionExporter `json:"exporter"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
