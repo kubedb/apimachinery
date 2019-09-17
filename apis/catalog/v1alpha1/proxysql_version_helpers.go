@@ -54,11 +54,6 @@ func (p ProxySQLVersion) CustomResourceDefinition() *apiextensions.CustomResourc
 				JSONPath: ".spec.version",
 			},
 			{
-				Name:     "DB_IMAGE",
-				Type:     "string",
-				JSONPath: ".spec.db.image",
-			},
-			{
 				Name:     "PROXYSQL_IMAGE",
 				Type:     "string",
 				JSONPath: ".spec.proxysql.image",
