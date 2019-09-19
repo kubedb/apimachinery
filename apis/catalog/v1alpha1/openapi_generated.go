@@ -15777,8 +15777,14 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionInitContainer
 							Format: "",
 						},
 					},
+					"yqImage": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 				},
-				Required: []string{"image"},
+				Required: []string{"image", "yqImage"},
 			},
 		},
 	}

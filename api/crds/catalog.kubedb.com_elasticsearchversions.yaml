@@ -447,8 +447,11 @@ spec:
               properties:
                 image:
                   type: string
+                yqImage:
+                  type: string
               required:
               - image
+              - yqImage
               type: object
             podSecurityPolicies:
               description: PSP names

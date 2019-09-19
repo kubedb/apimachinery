@@ -68,6 +68,7 @@ type ElasticsearchVersionTools struct {
 // ElasticsearchVersionInitContainer is the Elasticsearch Container initializer
 type ElasticsearchVersionInitContainer struct {
 	Image string `json:"image"`
+	YQImage string `json:"yqImage"`
 }
 
 // ElasticsearchVersionPodSecurityPolicy is the Elasticsearch pod security policies
