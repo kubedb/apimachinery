@@ -54,7 +54,7 @@ type PgBouncerSpec struct {
 	ConnectionPool *ConnectionPoolConfig `json:"connectionPool, omitempty"`
 	// UserList keeps a list of pgbouncer user's secrets
 	// +optional
-	UserList UserList `json:"userList, omitempty"`
+	UserList *UserList `json:"userList, omitempty"`
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`

@@ -15883,6 +15883,13 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 							Format:      "int32",
 						},
 					},
+					"statsPeriod": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"adminUsers": {
 						SchemaProps: spec.SchemaProps{
 							Description: "AdminUsers specifies an array of users who can act as PgBouncer administrators",

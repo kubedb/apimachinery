@@ -100,6 +100,11 @@ func (in *ConnectionPoolConfig) DeepCopyInto(out *ConnectionPoolConfig) {
 		*out = new(int)
 		**out = **in
 	}
+	if in.StatsPeriod != nil {
+		in, out := &in.StatsPeriod, &out.StatsPeriod
+		*out = new(int)
+		**out = **in
+	}
 	if in.AdminUsers != nil {
 		in, out := &in.AdminUsers, &out.AdminUsers
 		*out = make([]string, len(*in))
@@ -1649,7 +1654,11 @@ func (in *PgBouncerSpec) DeepCopyInto(out *PgBouncerSpec) {
 		*out = new(ConnectionPoolConfig)
 		(*in).DeepCopyInto(*out)
 	}
-	out.UserList = in.UserList
+	if in.UserList != nil {
+		in, out := &in.UserList, &out.UserList
+		*out = new(UserList)
+		**out = **in
+	}
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
 		*out = new(apiv1.AgentSpec)

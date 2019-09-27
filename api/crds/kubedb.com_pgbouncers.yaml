@@ -483,6 +483,10 @@ spec:
                     if a client has not been serviced, pgbouncer enables use of additional
                     connections from reserve pool. 0 disables. Default: 5.0'
                   type: integer
+                statsPeriod:
+                  description: 'MaxUserConnections is the maximum number of users
+                    allowed per-database. Default: unlimited.'
+                  type: integer
               type: object
             databases:
               description: Databases to proxy by connection pooling
