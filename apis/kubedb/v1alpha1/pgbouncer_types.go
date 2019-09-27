@@ -50,7 +50,8 @@ type PgBouncerSpec struct {
 	// +optional
 	Databases []Databases `json:"databases, omitempty"`
 	// ConnectionPoolConfig defines Connection pool configuration
-	ConnectionPool *ConnectionPoolConfig `json:"connectionPool"`
+	// +optional
+	ConnectionPool *ConnectionPoolConfig `json:"connectionPool, omitempty"`
 	// UserList keeps a list of pgbouncer user's secrets
 	// +optional
 	UserList UserList `json:"userList, omitempty"`
@@ -108,6 +109,9 @@ type ConnectionPoolConfig struct {
 	//MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.
 	// +optional
 	MaxUserConnections *int `json:"maxUserConnections,omitempty"`
+	//MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.
+	// +optional
+	StatsPeriod *int `json:"statsPeriod,omitempty"`
 	//AdminUsers specifies an array of users who can act as PgBouncer administrators
 	// +optional
 	AdminUsers []string `json:"adminUsers,omitempty"`
@@ -117,6 +121,10 @@ type ConnectionPoolConfig struct {
 	//AuthUser looks up any user not specified in auth_file from pg_shadow. Default: not set.
 	// +optional
 	AuthUser string `json:"authUser,omitempty"`
+	//IgnoreStartupParameters specifies comma-seperated statup parameters that
+	//pgbouncer knows are handled by admin and it can ignore them
+	// +optional
+	IgnoreStartupParameters string `json:"ignoreStartupParameters,omitempty"`
 }
 
 type UserList struct {

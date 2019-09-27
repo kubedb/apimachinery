@@ -440,6 +440,11 @@ spec:
                   description: 'DefaultPoolSize specifies how many server connections
                     to allow per user/database pair. Default: 20.'
                   type: integer
+                ignoreStartupParameters:
+                  description: IgnoreStartupParameters specifies comma-seperated statup
+                    parameters that pgbouncer knows are handled by admin and it can
+                    ignore them
+                  type: string
                 listenAddress:
                   description: 'ListenAddress is the address from which PgBouncer
                     listens to clients. Default: all addresses (*).'
@@ -3257,7 +3262,6 @@ spec:
               description: Version of PgBouncer to be deployed.
               type: string
           required:
-          - connectionPool
           - version
           type: object
         status:

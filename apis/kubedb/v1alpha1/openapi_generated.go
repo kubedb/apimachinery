@@ -15911,6 +15911,13 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 							Format:      "",
 						},
 					},
+					"ignoreStartupParameters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IgnoreStartupParameters specifies comma-seperated statup parameters that pgbouncer knows are handled by admin and it can ignore them",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
@@ -18447,7 +18454,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSpec(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"version", "connectionPool"},
+				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
