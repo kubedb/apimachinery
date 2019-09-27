@@ -55,7 +55,7 @@ type ElasticsearchSpec struct {
 
 	// enable security of authPlugin (ie, xpack or searchguard). It enabled authentication security of user.
 	// If unset, default is true
-	EnableSecurity *bool `json:"EnableSecurity,omitempty"`
+	EnableSecurity *bool `json:"enableSecurity,omitempty"`
 
 	// Authentication plugin used by Elasticsearch cluster. If unset, defaults to SearchGuard.
 	// Deprecated: Use elasticsearchVersion.Spec.AuthPlugin instead

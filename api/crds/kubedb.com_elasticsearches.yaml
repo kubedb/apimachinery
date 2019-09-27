@@ -419,10 +419,6 @@ spec:
           type: object
         spec:
           properties:
-            EnableSecurity:
-              description: enable security of authPlugin (ie, xpack or searchguard).
-                It enabled authentication security of user. If unset, default is true
-              type: boolean
             authPlugin:
               description: 'Authentication plugin used by Elasticsearch cluster. If
                 unset, defaults to SearchGuard. Deprecated: Use elasticsearchVersion.Spec.AuthPlugin
@@ -5488,6 +5484,10 @@ spec:
               type: object
             enableSSL:
               description: To enable ssl in transport & http layer
+              type: boolean
+            enableSecurity:
+              description: enable security of authPlugin (ie, xpack or searchguard).
+                It enabled authentication security of user. If unset, default is true
               type: boolean
             init:
               description: Init is used to initialize database

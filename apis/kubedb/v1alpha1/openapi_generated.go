@@ -16162,7 +16162,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
 						},
 					},
-					"EnableSecurity": {
+					"enableSecurity": {
 						SchemaProps: spec.SchemaProps{
 							Description: "enable security of authPlugin (ie, xpack or searchguard). It enabled authentication security of user. If unset, default is true",
 							Type:        []string{"boolean"},
