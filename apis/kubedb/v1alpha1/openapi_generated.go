@@ -16162,6 +16162,13 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
 						},
 					},
+					"EnableSecurity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "enable security of authPlugin (ie, xpack or searchguard). It enabled authentication security of user. If unset, default is true",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"authPlugin": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Authentication plugin used by Elasticsearch cluster. If unset, defaults to SearchGuard. Deprecated: Use elasticsearchVersion.Spec.AuthPlugin instead",
@@ -16244,7 +16251,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version"},
+				Required: []string{"version", "EnableSecurity"},
 			},
 		},
 		Dependencies: []string{

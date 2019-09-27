@@ -476,6 +476,7 @@ spec:
               description: Version
               type: string
           required:
+          - authPlugin
           - db
           - exporter
           - initContainer

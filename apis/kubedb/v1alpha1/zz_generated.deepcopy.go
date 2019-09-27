@@ -293,6 +293,11 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 		*out = new(v1.SecretVolumeSource)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.EnableSecurity != nil {
+		in, out := &in.EnableSecurity, &out.EnableSecurity
+		*out = new(bool)
+		**out = **in
+	}
 	if in.DatabaseSecret != nil {
 		in, out := &in.DatabaseSecret, &out.DatabaseSecret
 		*out = new(v1.SecretVolumeSource)

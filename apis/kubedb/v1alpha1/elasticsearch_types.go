@@ -53,6 +53,10 @@ type ElasticsearchSpec struct {
 	// Secret with SSL certificates
 	CertificateSecret *core.SecretVolumeSource `json:"certificateSecret,omitempty"`
 
+	// enable security of authPlugin (ie, xpack or searchguard). It enabled authentication security of user.
+	// If unset, default is true
+	EnableSecurity *bool `json:"EnableSecurity"`
+
 	// Authentication plugin used by Elasticsearch cluster. If unset, defaults to SearchGuard.
 	// Deprecated: Use elasticsearchVersion.Spec.AuthPlugin instead
 	AuthPlugin v1alpha1.ElasticsearchAuthPlugin `json:"authPlugin,omitempty"`

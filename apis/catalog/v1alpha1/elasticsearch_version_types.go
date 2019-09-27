@@ -34,7 +34,7 @@ type ElasticsearchVersionSpec struct {
 	// Version
 	Version string `json:"version"`
 	// Authentication plugin used by Elasticsearch cluster.
-	AuthPlugin ElasticsearchAuthPlugin `json:"authPlugin,omitempty"`
+	AuthPlugin ElasticsearchAuthPlugin `json:"authPlugin"`
 	// Database Image
 	DB ElasticsearchVersionDatabase `json:"db"`
 	// Exporter Image
@@ -67,7 +67,7 @@ type ElasticsearchVersionTools struct {
 
 // ElasticsearchVersionInitContainer is the Elasticsearch Container initializer
 type ElasticsearchVersionInitContainer struct {
-	Image string `json:"image"`
+	Image   string `json:"image"`
 	YQImage string `json:"yqImage"`
 }
 
