@@ -11370,7 +11370,6 @@ spec:
               description: Version of Elasticsearch to be deployed.
               type: string
           required:
-          - EnableSecurity
           - version
           type: object
         status:

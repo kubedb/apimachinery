@@ -16251,7 +16251,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "EnableSecurity"},
+				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
