@@ -423,29 +423,60 @@ spec:
               description: ConnectionPoolConfig defines Connection pool configuration
               properties:
                 adminUsers:
+                  description: AdminUsers specifies an array of users who can act
+                    as PgBouncer administrators
                   items:
                     type: string
                   type: array
+                authType:
+                  description: 'AuthType specifies how to authenticate users. Default:
+                    md5 (md5+plain text)'
+                  type: string
+                authUser:
+                  description: 'AuthUser looks up any user not specified in auth_file
+                    from pg_shadow. Default: not set.'
+                  type: string
                 defaultPoolSize:
+                  description: 'DefaultPoolSize specifies how many server connections
+                    to allow per user/database pair. Default: 20.'
                   type: integer
                 listenAddress:
+                  description: 'ListenAddress is the address from which PgBouncer
+                    listens to clients. Default: all addresses (*).'
                   type: string
                 listenPort:
+                  description: 'ListenPort is the port number on which PgBouncer listens
+                    to clients. Default: 5432.'
                   format: int32
                   type: integer
                 maxClientConn:
+                  description: 'MaxClientConn is the maximum number of allowed client
+                    connections. Default: 100.'
                   type: integer
                 maxDbConnections:
+                  description: 'MaxDbConnections is the maximum number of connections
+                    allowed per-database. Default: unlimited.'
                   type: integer
                 maxUserConnections:
+                  description: 'MaxUserConnections is the maximum number of users
+                    allowed per-database. Default: unlimited.'
                   type: integer
                 minPoolSize:
+                  description: 'MinPoolSize is used to add more server connections
+                    to pool if below this number. Default: 0 (disabled).'
                   type: integer
                 poolMode:
+                  description: 'PoolMode is the pooling mechanism type. Default: session.'
                   type: string
                 reservePoolSize:
+                  description: 'reserve_pool_size ReservePoolSize specifies how many
+                    additional connections to allow to a pool. 0 disables. Default:
+                    0 (disabled)'
                   type: integer
                 reservePoolTimeout:
+                  description: 'ReservePoolTimeout is the number of seconds in which
+                    if a client has not been serviced, pgbouncer enables use of additional
+                    connections from reserve pool. 0 disables. Default: 5.0'
                   type: integer
               type: object
             databases:
@@ -453,7 +484,7 @@ spec:
               items:
                 properties:
                   alias:
-                    description: alias to uniquely identify a target database running
+                    description: Alias to uniquely identify a target database running
                       inside a specific Postgres instance
                     type: string
                   appBindingName:
@@ -462,7 +493,7 @@ spec:
                     type: string
                   appBindingNamespace:
                     description: Namespace of PgBouncer object if left empty, pgBouncer
-                      namespace is assigned use "default" for dafault namespace
+                      namespace is assigned. Use "default" for default namespace.
                     type: string
                   databaseName:
                     description: Name of the target database inside a Postgres instance
@@ -3211,8 +3242,13 @@ spec:
               description: UserList keeps a list of pgbouncer user's secrets
               properties:
                 secretName:
+                  description: SecretName points to a secret that holds a file containing
+                    list of users
                   type: string
                 secretNamespace:
+                  description: SecretNamespace specifies the namespace of specified
+                    secret. By default, uses the same namespace as pgbouncer if left
+                    empty, not default namespace.
                   type: string
               required:
               - secretName
@@ -3232,8 +3268,10 @@ spec:
                 is updated on mutation by the API Server.
               type: string
             phase:
+              description: Phase specifies the current state of PgBouncer server
               type: string
             reason:
+              description: Reason is used to explain phases of interest of the server.
               type: string
           type: object
       type: object

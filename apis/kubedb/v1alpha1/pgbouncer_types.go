@@ -38,6 +38,7 @@ type PgBouncerSpec struct {
 	// Version of PgBouncer to be deployed.
 	Version types.StrYo `json:"version"`
 	// Number of instances to deploy for a PgBouncer instance.
+	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 	// ServiceTemplate is an optional configuration for service used to expose database
 	// +optional
@@ -59,15 +60,14 @@ type PgBouncerSpec struct {
 }
 
 type Databases struct {
-	//alias to uniquely identify a target database running inside a specific Postgres instance
+	//Alias to uniquely identify a target database running inside a specific Postgres instance
 	Alias string `json:"alias"`
 	//Name of the target database inside a Postgres instance
 	DbName string `json:"databaseName"`
 	//Reference to Postgres instance where the target database is located
 	AppBindingName string `json:"appBindingName"`
 	//Namespace of PgBouncer object
-	//if left empty, pgBouncer namespace is assigned
-	// use "default" for dafault namespace
+	//if left empty, pgBouncer namespace is assigned. Use "default" for default namespace.
 	// +optional
 	AppBindingNamespace string `json:"appBindingNamespace,omitempty"`
 	//To bind a single user to a specific connection
@@ -76,22 +76,56 @@ type Databases struct {
 }
 
 type ConnectionPoolConfig struct {
-	ListenPort         *int32   `json:"listenPort,omitempty"`
-	ListenAddress      string   `json:"listenAddress,omitempty"`
-	PoolMode           string   `json:"poolMode,omitempty"`
-	MaxClientConn      *int     `json:"maxClientConn,omitempty"`
-	DefaultPoolSize    *int     `json:"defaultPoolSize,omitempty"`
-	MinPoolSize        *int     `json:"minPoolSize,omitempty"`
-	ReservePoolSize    *int     `json:"reservePoolSize,omitempty"`
-	ReservePoolTimeout *int     `json:"reservePoolTimeout,omitempty"`
-	MaxDbConnections   *int     `json:"maxDbConnections,omitempty"`
-	MaxUserConnections *int     `json:"maxUserConnections,omitempty"`
-	AdminUsers         []string `json:"adminUsers,omitempty"`
+	//ListenPort is the port number on which PgBouncer listens to clients. Default: 5432.
+	// +optional
+	ListenPort *int32 `json:"listenPort,omitempty"`
+	//ListenAddress is the address from which PgBouncer listens to clients. Default: all addresses (*).
+	// +optional
+	ListenAddress string `json:"listenAddress,omitempty"`
+	//PoolMode is the pooling mechanism type. Default: session.
+	// +optional
+	PoolMode string `json:"poolMode,omitempty"`
+	//MaxClientConn is the maximum number of allowed client connections. Default: 100.
+	// +optional
+	MaxClientConn *int `json:"maxClientConn,omitempty"`
+	//DefaultPoolSize specifies how many server connections to allow per user/database pair. Default: 20.
+	// +optional
+	DefaultPoolSize *int `json:"defaultPoolSize,omitempty"`
+	//MinPoolSize is used to add more server connections to pool if below this number. Default: 0 (disabled).
+	// +optional
+	MinPoolSize *int `json:"minPoolSize,omitempty"`
+	//reserve_pool_size
+	//ReservePoolSize specifies how many additional connections to allow to a pool. 0 disables. Default: 0 (disabled)
+	// +optional
+	ReservePoolSize *int `json:"reservePoolSize,omitempty"`
+	//ReservePoolTimeout is the number of seconds in which if a client has not been serviced,
+	//pgbouncer enables use of additional connections from reserve pool. 0 disables. Default: 5.0
+	// +optional
+	ReservePoolTimeout *int `json:"reservePoolTimeout,omitempty"`
+	//MaxDbConnections is the maximum number of connections allowed per-database. Default: unlimited.
+	// +optional
+	MaxDbConnections *int `json:"maxDbConnections,omitempty"`
+	//MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.
+	// +optional
+	MaxUserConnections *int `json:"maxUserConnections,omitempty"`
+	//AdminUsers specifies an array of users who can act as PgBouncer administrators
+	// +optional
+	AdminUsers []string `json:"adminUsers,omitempty"`
+	//AuthType specifies how to authenticate users. Default: md5 (md5+plain text)
+	// +optional
+	AuthType string `json:"authType,omitempty"`
+	//AuthUser looks up any user not specified in auth_file from pg_shadow. Default: not set.
+	// +optional
+	AuthUser string `json:"authUser,omitempty"`
 }
 
 type UserList struct {
-	SecretName      string `json:"secretName"`                //points to a secret that holds a file containing list of users
-	SecretNamespace string `json:"secretNamespace,omitempty"` //Namespace of specified secret, same namespace a pgbouncer if left empty, doesn't use default namespace.
+	//SecretName points to a secret that holds a file containing list of users
+	SecretName string `json:"secretName"`
+	//SecretNamespace specifies the namespace of specified secret.
+	//By default, uses the same namespace as pgbouncer if left empty, not default namespace.
+	// +optional
+	SecretNamespace string `json:"secretNamespace,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -102,24 +136,11 @@ type PgBouncerList struct {
 	Items []PgBouncer `json:"items,omitempty"`
 }
 
-// Following structures are used for audit summary report
-type PgBouncerTableInfo struct {
-	TotalRow int64 `json:"totalRow"`
-	MaxID    int64 `json:"maxId"`
-	NextID   int64 `json:"nextId"`
-}
-
-type PgBouncerSchemaInfo struct {
-	Table map[string]*PgBouncerTableInfo `json:"table"`
-}
-
-type PgBouncerSummary struct {
-	Schema map[string]*PgBouncerSchemaInfo `json:"schema"`
-}
-
 type PgBouncerStatus struct {
-	Phase  DatabasePhase `json:"phase,omitempty"`
-	Reason string        `json:"reason,omitempty"`
+	//Phase specifies the current state of PgBouncer server
+	Phase DatabasePhase `json:"phase,omitempty"`
+	//Reason is used to explain phases of interest of the server.
+	Reason string `json:"reason,omitempty"`
 	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
 	// resource's generation, which is updated on mutation by the API Server.
 	// +optional

@@ -398,11 +398,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PerconaXtraDBStatus":            schema_apimachinery_apis_kubedb_v1alpha1_PerconaXtraDBStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PgBouncer":                      schema_apimachinery_apis_kubedb_v1alpha1_PgBouncer(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PgBouncerList":                  schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerList(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PgBouncerSchemaInfo":            schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSchemaInfo(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PgBouncerSpec":                  schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PgBouncerStatus":                schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerStatus(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PgBouncerSummary":               schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSummary(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PgBouncerTableInfo":             schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerTableInfo(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Postgres":                       schema_apimachinery_apis_kubedb_v1alpha1_Postgres(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PostgresArchiverSpec":           schema_apimachinery_apis_kubedb_v1alpha1_PostgresArchiverSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PostgresList":                   schema_apimachinery_apis_kubedb_v1alpha1_PostgresList(ref),
@@ -15818,67 +15815,78 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 				Properties: map[string]spec.Schema{
 					"listenPort": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "ListenPort is the port number on which PgBouncer listens to clients. Default: 5432.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"listenAddress": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "ListenAddress is the address from which PgBouncer listens to clients. Default: all addresses (*).",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"poolMode": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "PoolMode is the pooling mechanism type. Default: session.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"maxClientConn": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "MaxClientConn is the maximum number of allowed client connections. Default: 100.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"defaultPoolSize": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "DefaultPoolSize specifies how many server connections to allow per user/database pair. Default: 20.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"minPoolSize": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "MinPoolSize is used to add more server connections to pool if below this number. Default: 0 (disabled).",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"reservePoolSize": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "reserve_pool_size ReservePoolSize specifies how many additional connections to allow to a pool. 0 disables. Default: 0 (disabled)",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"reservePoolTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "ReservePoolTimeout is the number of seconds in which if a client has not been serviced, pgbouncer enables use of additional connections from reserve pool. 0 disables. Default: 5.0",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"maxDbConnections": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "MaxDbConnections is the maximum number of connections allowed per-database. Default: unlimited.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"maxUserConnections": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"adminUsers": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "AdminUsers specifies an array of users who can act as PgBouncer administrators",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -15887,6 +15895,20 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 									},
 								},
 							},
+						},
+					},
+					"authType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AuthType specifies how to authenticate users. Default: md5 (md5+plain text)",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"authUser": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AuthUser looks up any user not specified in auth_file from pg_shadow. Default: not set.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -15903,7 +15925,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_Databases(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"alias": {
 						SchemaProps: spec.SchemaProps{
-							Description: "alias to uniquely identify a target database running inside a specific Postgres instance",
+							Description: "Alias to uniquely identify a target database running inside a specific Postgres instance",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -15924,7 +15946,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_Databases(ref common.ReferenceCall
 					},
 					"appBindingNamespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace of PgBouncer object if left empty, pgBouncer namespace is assigned use \"default\" for dafault namespace",
+							Description: "Namespace of PgBouncer object if left empty, pgBouncer namespace is assigned. Use \"default\" for default namespace.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -18361,34 +18383,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerList(ref common.Reference
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSchemaInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"table": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PgBouncerTableInfo"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"table"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PgBouncerTableInfo"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18469,14 +18463,16 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerStatus(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"phase": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Phase specifies the current state of PgBouncer server",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"reason": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Reason is used to explain phases of interest of the server.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"observedGeneration": {
@@ -18490,66 +18486,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerStatus(ref common.Referen
 		},
 		Dependencies: []string{
 			"github.com/appscode/go/encoding/json/types.IntHash"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSummary(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"schema": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PgBouncerSchemaInfo"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"schema"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PgBouncerSchemaInfo"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerTableInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Following structures are used for audit summary report",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"totalRow": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"maxId": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"nextId": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-				},
-				Required: []string{"totalRow", "maxId", "nextId"},
-			},
-		},
 	}
 }
 
@@ -19728,13 +19664,14 @@ func schema_apimachinery_apis_kubedb_v1alpha1_UserList(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"secretName": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "SecretName points to a secret that holds a file containing list of users",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"secretNamespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "points to a secret that holds a file containing list of users",
+							Description: "SecretNamespace specifies the namespace of specified secret. By default, uses the same namespace as pgbouncer if left empty, not default namespace.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
