@@ -111,7 +111,8 @@ type ConnectionPoolConfig struct {
 	//MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.
 	// +optional
 	MaxUserConnections *int `json:"maxUserConnections,omitempty"`
-	//MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.
+	//StatsPeriod sets how often the averages shown in various SHOW commands are updated
+	//and how often aggregated statistics are written to the log
 	// +optional
 	StatsPeriod *int `json:"statsPeriod,omitempty"`
 	//AdminUsers specifies an array of users who can act as PgBouncer administrators
@@ -123,7 +124,7 @@ type ConnectionPoolConfig struct {
 	//AuthUser looks up any user not specified in auth_file from pg_shadow. Default: not set.
 	// +optional
 	AuthUser string `json:"authUser,omitempty"`
-	//IgnoreStartupParameters specifies comma-seperated statup parameters that
+	//IgnoreStartupParameters specifies comma-separated startup parameters that
 	//pgbouncer knows are handled by admin and it can ignore them
 	// +optional
 	IgnoreStartupParameters string `json:"ignoreStartupParameters,omitempty"`

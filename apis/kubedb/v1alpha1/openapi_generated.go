@@ -15885,7 +15885,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 					},
 					"statsPeriod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.",
+							Description: "StatsPeriod sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -15920,7 +15920,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 					},
 					"ignoreStartupParameters": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IgnoreStartupParameters specifies comma-seperated statup parameters that pgbouncer knows are handled by admin and it can ignore them",
+							Description: "IgnoreStartupParameters specifies comma-separated startup parameters that pgbouncer knows are handled by admin and it can ignore them",
 							Type:        []string{"string"},
 							Format:      "",
 						},
