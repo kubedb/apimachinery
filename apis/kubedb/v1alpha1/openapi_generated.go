@@ -15857,7 +15857,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 					},
 					"reservePoolSize": {
 						SchemaProps: spec.SchemaProps{
-							Description: "reserve_pool_size ReservePoolSize specifies how many additional connections to allow to a pool. 0 disables. Default: 0 (disabled)",
+							Description: "ReservePoolSize specifies how many additional connections to allow to a pool. 0 disables. Default: 0 (disabled)",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -15946,28 +15946,35 @@ func schema_apimachinery_apis_kubedb_v1alpha1_Databases(ref common.ReferenceCall
 					},
 					"databaseName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the target database inside a Postgres instance",
+							Description: "DbName is the name of the target database inside a Postgres instance",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"appBindingName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Reference to Postgres instance where the target database is located",
+							Description: "AppBindingName references the Postgres instance where the target database is located",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"appBindingNamespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace of PgBouncer object if left empty, pgBouncer namespace is assigned. Use \"default\" for default namespace.",
+							Description: "AppBindingNamespace is the namespace of AppBindingName if left empty, pgBouncer namespace is assigned. Use \"default\" for default namespace.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"username": {
 						SchemaProps: spec.SchemaProps{
-							Description: "To bind a single user to a specific connection",
+							Description: "UserName is used to bind a single user to a specific database connection",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"password": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Password is to authenticate the user specified in Username field",
 							Type:        []string{"string"},
 							Format:      "",
 						},

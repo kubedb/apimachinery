@@ -63,17 +63,20 @@ type PgBouncerSpec struct {
 type Databases struct {
 	//Alias to uniquely identify a target database running inside a specific Postgres instance
 	Alias string `json:"alias"`
-	//Name of the target database inside a Postgres instance
+	//DbName is the name of the target database inside a Postgres instance
 	DbName string `json:"databaseName"`
-	//Reference to Postgres instance where the target database is located
+	//AppBindingName references the Postgres instance where the target database is located
 	AppBindingName string `json:"appBindingName"`
-	//Namespace of PgBouncer object
+	//AppBindingNamespace is the namespace of AppBindingName
 	//if left empty, pgBouncer namespace is assigned. Use "default" for default namespace.
 	// +optional
 	AppBindingNamespace string `json:"appBindingNamespace,omitempty"`
-	//To bind a single user to a specific connection
+	//UserName is used to bind a single user to a specific database connection
 	// +optional
 	UserName string `json:"username,omitempty"`
+	//Password is to authenticate the user specified in Username field
+	// +optional
+	Password string `json:"password,omitempty"`
 }
 
 type ConnectionPoolConfig struct {
@@ -95,7 +98,6 @@ type ConnectionPoolConfig struct {
 	//MinPoolSize is used to add more server connections to pool if below this number. Default: 0 (disabled).
 	// +optional
 	MinPoolSize *int `json:"minPoolSize,omitempty"`
-	//reserve_pool_size
 	//ReservePoolSize specifies how many additional connections to allow to a pool. 0 disables. Default: 0 (disabled)
 	// +optional
 	ReservePoolSize *int `json:"reservePoolSize,omitempty"`

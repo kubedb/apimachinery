@@ -474,9 +474,8 @@ spec:
                   description: 'PoolMode is the pooling mechanism type. Default: session.'
                   type: string
                 reservePoolSize:
-                  description: 'reserve_pool_size ReservePoolSize specifies how many
-                    additional connections to allow to a pool. 0 disables. Default:
-                    0 (disabled)'
+                  description: 'ReservePoolSize specifies how many additional connections
+                    to allow to a pool. 0 disables. Default: 0 (disabled)'
                   type: integer
                 reservePoolTimeout:
                   description: 'ReservePoolTimeout is the number of seconds in which
@@ -497,18 +496,25 @@ spec:
                       inside a specific Postgres instance
                     type: string
                   appBindingName:
-                    description: Reference to Postgres instance where the target database
-                      is located
+                    description: AppBindingName references the Postgres instance where
+                      the target database is located
                     type: string
                   appBindingNamespace:
-                    description: Namespace of PgBouncer object if left empty, pgBouncer
-                      namespace is assigned. Use "default" for default namespace.
+                    description: AppBindingNamespace is the namespace of AppBindingName
+                      if left empty, pgBouncer namespace is assigned. Use "default"
+                      for default namespace.
                     type: string
                   databaseName:
-                    description: Name of the target database inside a Postgres instance
+                    description: DbName is the name of the target database inside
+                      a Postgres instance
+                    type: string
+                  password:
+                    description: Password is to authenticate the user specified in
+                      Username field
                     type: string
                   username:
-                    description: To bind a single user to a specific connection
+                    description: UserName is used to bind a single user to a specific
+                      database connection
                     type: string
                 required:
                 - alias
