@@ -5482,12 +5482,13 @@ spec:
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#secret'
                   type: string
               type: object
+            disableSecurity:
+              description: disable security of authPlugin (ie, xpack or searchguard).
+                It disables authentication security of user. If unset, default is
+                false
+              type: boolean
             enableSSL:
               description: To enable ssl in transport & http layer
-              type: boolean
-            enableSecurity:
-              description: enable security of authPlugin (ie, xpack or searchguard).
-                It enabled authentication security of user. If unset, default is true
               type: boolean
             init:
               description: Init is used to initialize database
