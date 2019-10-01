@@ -90,7 +90,7 @@ type ElasticsearchVersionList struct {
 type ElasticsearchAuthPlugin string
 
 const (
-	ElasticsearchAuthPluginSearchGuard ElasticsearchAuthPlugin = "SearchGuard" // Default
+	ElasticsearchAuthPluginSearchGuard ElasticsearchAuthPlugin = "SearchGuard"
 	ElasticsearchAuthPluginNone        ElasticsearchAuthPlugin = "None" // deprecated
 	ElasticsearchAuthPluginXpack       ElasticsearchAuthPlugin = "X-Pack"
 )
