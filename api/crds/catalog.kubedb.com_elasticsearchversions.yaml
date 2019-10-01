@@ -419,6 +419,9 @@ spec:
         spec:
           description: ElasticsearchVersionSpec is the spec for elasticsearch version
           properties:
+            authPlugin:
+              description: Authentication plugin used by Elasticsearch cluster.
+              type: string
             db:
               description: Database Image
               properties:
@@ -444,8 +447,11 @@ spec:
               properties:
                 image:
                   type: string
+                yqImage:
+                  type: string
               required:
               - image
+              - yqImage
               type: object
             podSecurityPolicies:
               description: PSP names
@@ -470,6 +476,7 @@ spec:
               description: Version
               type: string
           required:
+          - authPlugin
           - db
           - exporter
           - initContainer

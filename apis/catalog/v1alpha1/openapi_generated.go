@@ -15776,8 +15776,14 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionInitContainer
 							Format: "",
 						},
 					},
+					"yqImage": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 				},
-				Required: []string{"image"},
+				Required: []string{"image", "yqImage"},
 			},
 		},
 	}
@@ -15870,6 +15876,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref comm
 							Format:      "",
 						},
 					},
+					"authPlugin": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Authentication plugin used by Elasticsearch cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"db": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Database Image",
@@ -15908,7 +15921,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref comm
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "tools", "initContainer", "podSecurityPolicies"},
+				Required: []string{"version", "authPlugin", "db", "exporter", "tools", "initContainer", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{

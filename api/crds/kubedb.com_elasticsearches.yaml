@@ -420,8 +420,9 @@ spec:
         spec:
           properties:
             authPlugin:
-              description: Authentication plugin used by Elasticsearch cluster. If
-                unset, defaults to SearchGuard.
+              description: 'Authentication plugin used by Elasticsearch cluster. If
+                unset, defaults to SearchGuard. Deprecated: Use elasticsearchVersion.Spec.AuthPlugin
+                instead'
               type: string
             backupSchedule:
               description: BackupSchedule spec to specify how database backup will
@@ -5481,6 +5482,11 @@ spec:
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#secret'
                   type: string
               type: object
+            disableSecurity:
+              description: disable security of authPlugin (ie, xpack or searchguard).
+                It disables authentication security of user. If unset, default is
+                false
+              type: boolean
             enableSSL:
               description: To enable ssl in transport & http layer
               type: boolean
