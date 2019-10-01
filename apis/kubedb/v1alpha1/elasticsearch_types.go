@@ -150,12 +150,3 @@ type ElasticsearchList struct {
 	// Items is a list of Elasticsearch CRD objects
 	Items []Elasticsearch `json:"items,omitempty"`
 }
-
-// +k8s:deepcopy-gen=false
-// +k8s:gen-deepcopy=false
-// Following structure is used for audit summary report
-type ElasticsearchSummary struct {
-	IdCount map[string]int64 `json:"idCount"`
-	Mapping interface{}      `json:"mapping"`
-	Setting interface{}      `json:"setting"`
-}
