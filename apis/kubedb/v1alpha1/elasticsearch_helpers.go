@@ -9,6 +9,7 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	"kubedb.dev/apimachinery/apis"
+	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 )
 
@@ -195,6 +196,9 @@ func (e *ElasticsearchSpec) SetDefaults() {
 	// perform defaulting
 	e.BackupSchedule.SetDefaults()
 
+	if !e.DisableSecurity && e.AuthPlugin == v1alpha1.ElasticsearchAuthPluginNone {
+		e.DisableSecurity = true
+	}
 	e.AuthPlugin = ""
 	if e.StorageType == "" {
 		e.StorageType = StorageTypeDurable
