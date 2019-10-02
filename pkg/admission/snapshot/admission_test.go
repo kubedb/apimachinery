@@ -13,7 +13,7 @@ import (
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes/fake"
-	clientSetScheme "k8s.io/client-go/kubernetes/scheme"
+	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	"kmodules.xyz/client-go/meta"
 	store "kmodules.xyz/objectstore-api/api/v1"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
@@ -22,7 +22,9 @@ import (
 )
 
 func init() {
-	scheme.AddToScheme(clientSetScheme.Scheme)
+	if err := scheme.AddToScheme(clientsetscheme.Scheme); err != nil {
+		panic(err)
+	}
 }
 
 var requestKind = metaV1.GroupVersionKind{
