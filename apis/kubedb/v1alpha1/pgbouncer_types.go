@@ -2,7 +2,9 @@ package v1alpha1
 
 import (
 	"github.com/appscode/go/encoding/json/types"
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 	v1 "kmodules.xyz/offshoot-api/api/v1"
@@ -52,9 +54,9 @@ type PgBouncerSpec struct {
 	// ConnectionPoolConfig defines Connection pool configuration
 	// +optional
 	ConnectionPool *ConnectionPoolConfig `json:"connectionPool, omitempty"`
-	// UserList keeps a list of pgbouncer user's secrets
+	// UserListSecretRef is a secret with a list of PgBouncer user and passwords
 	// +optional
-	UserList *UserList `json:"userList, omitempty"`
+	UserListSecretRef *core.LocalObjectReference `json:"userListSecretRef, omitempty"`
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
@@ -63,14 +65,10 @@ type PgBouncerSpec struct {
 type Databases struct {
 	//Alias to uniquely identify a target database running inside a specific Postgres instance
 	Alias string `json:"alias"`
-	//DbName is the name of the target database inside a Postgres instance
-	DbName string `json:"databaseName"`
-	//AppBindingName references the Postgres instance where the target database is located
-	AppBindingName string `json:"appBindingName"`
-	//AppBindingNamespace is the namespace of AppBindingName
-	//if left empty, pgBouncer namespace is assigned. Use "default" for default namespace.
-	// +optional
-	AppBindingNamespace string `json:"appBindingNamespace,omitempty"`
+	// DatabaseRef specifies the database appbinding reference in any namespace
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+	// DatabaseName is the name of the target database inside a Postgres instance
+	DatabaseName string `json:"databaseName"`
 	//UserName is used to bind a single user to a specific database connection
 	// +optional
 	UserName string `json:"username,omitempty"`
@@ -80,18 +78,15 @@ type Databases struct {
 }
 
 type ConnectionPoolConfig struct {
-	//ListenPort is the port number on which PgBouncer listens to clients. Default: 5432.
+	//Port is the port number on which PgBouncer listens to clients. Default: 5432.
 	// +optional
-	ListenPort *int32 `json:"listenPort,omitempty"`
-	//ListenAddress is the address from which PgBouncer listens to clients. Default: all addresses (*).
-	// +optional
-	ListenAddress string `json:"listenAddress,omitempty"`
+	Port *int32 `json:"port,omitempty"`
 	//PoolMode is the pooling mechanism type. Default: session.
 	// +optional
 	PoolMode string `json:"poolMode,omitempty"`
-	//MaxClientConn is the maximum number of allowed client connections. Default: 100.
+	//MaxClientConnections is the maximum number of allowed client connections. Default: 100.
 	// +optional
-	MaxClientConn *int `json:"maxClientConn,omitempty"`
+	MaxClientConnections *int `json:"maxClientConnections,omitempty"`
 	//DefaultPoolSize specifies how many server connections to allow per user/database pair. Default: 20.
 	// +optional
 	DefaultPoolSize *int `json:"defaultPoolSize,omitempty"`
@@ -101,20 +96,20 @@ type ConnectionPoolConfig struct {
 	//ReservePoolSize specifies how many additional connections to allow to a pool. 0 disables. Default: 0 (disabled)
 	// +optional
 	ReservePoolSize *int `json:"reservePoolSize,omitempty"`
-	//ReservePoolTimeout is the number of seconds in which if a client has not been serviced,
+	//ReservePoolTimeoutSeconds is the number of seconds in which if a client has not been serviced,
 	//pgbouncer enables use of additional connections from reserve pool. 0 disables. Default: 5.0
 	// +optional
-	ReservePoolTimeout *int `json:"reservePoolTimeout,omitempty"`
-	//MaxDbConnections is the maximum number of connections allowed per-database. Default: unlimited.
+	ReservePoolTimeoutSeconds *int `json:"reservePoolTimeoutSeconds,omitempty"`
+	//MaxDBConnections is the maximum number of connections allowed per-database. Default: unlimited.
 	// +optional
-	MaxDbConnections *int `json:"maxDbConnections,omitempty"`
+	MaxDBConnections *int `json:"maxDBConnections,omitempty"`
 	//MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.
 	// +optional
 	MaxUserConnections *int `json:"maxUserConnections,omitempty"`
-	//StatsPeriod sets how often the averages shown in various SHOW commands are updated
+	//StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated
 	//and how often aggregated statistics are written to the log
 	// +optional
-	StatsPeriod *int `json:"statsPeriod,omitempty"`
+	StatsPeriodSeconds *int `json:"statsPeriodSeconds,omitempty"`
 	//AdminUsers specifies an array of users who can act as PgBouncer administrators
 	// +optional
 	AdminUsers []string `json:"adminUsers,omitempty"`

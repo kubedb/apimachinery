@@ -15809,18 +15809,11 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"listenPort": {
+					"port": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ListenPort is the port number on which PgBouncer listens to clients. Default: 5432.",
+							Description: "Port is the port number on which PgBouncer listens to clients. Default: 5432.",
 							Type:        []string{"integer"},
 							Format:      "int32",
-						},
-					},
-					"listenAddress": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ListenAddress is the address from which PgBouncer listens to clients. Default: all addresses (*).",
-							Type:        []string{"string"},
-							Format:      "",
 						},
 					},
 					"poolMode": {
@@ -15830,9 +15823,9 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 							Format:      "",
 						},
 					},
-					"maxClientConn": {
+					"maxClientConnections": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxClientConn is the maximum number of allowed client connections. Default: 100.",
+							Description: "MaxClientConnections is the maximum number of allowed client connections. Default: 100.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -15858,16 +15851,16 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 							Format:      "int32",
 						},
 					},
-					"reservePoolTimeout": {
+					"reservePoolTimeoutSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ReservePoolTimeout is the number of seconds in which if a client has not been serviced, pgbouncer enables use of additional connections from reserve pool. 0 disables. Default: 5.0",
+							Description: "ReservePoolTimeoutSeconds is the number of seconds in which if a client has not been serviced, pgbouncer enables use of additional connections from reserve pool. 0 disables. Default: 5.0",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
-					"maxDbConnections": {
+					"maxDBConnections": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxDbConnections is the maximum number of connections allowed per-database. Default: unlimited.",
+							Description: "MaxDBConnections is the maximum number of connections allowed per-database. Default: unlimited.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -15879,9 +15872,9 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 							Format:      "int32",
 						},
 					},
-					"statsPeriod": {
+					"statsPeriodSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StatsPeriod sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log",
+							Description: "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -15940,23 +15933,15 @@ func schema_apimachinery_apis_kubedb_v1alpha1_Databases(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseRef specifies the database appbinding reference in any namespace",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+						},
+					},
 					"databaseName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DbName is the name of the target database inside a Postgres instance",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"appBindingName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "AppBindingName references the Postgres instance where the target database is located",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"appBindingNamespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "AppBindingNamespace is the namespace of AppBindingName if left empty, pgBouncer namespace is assigned. Use \"default\" for default namespace.",
+							Description: "DatabaseName is the name of the target database inside a Postgres instance",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -15976,9 +15961,11 @@ func schema_apimachinery_apis_kubedb_v1alpha1_Databases(ref common.ReferenceCall
 						},
 					},
 				},
-				Required: []string{"alias", "databaseName", "appBindingName"},
+				Required: []string{"alias", "databaseRef", "databaseName"},
 			},
 		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
 	}
 }
 
@@ -18418,10 +18405,10 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSpec(ref common.Reference
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ConnectionPoolConfig"),
 						},
 					},
-					"userList": {
+					"userListSecretRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserList keeps a list of pgbouncer user's secrets",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.UserList"),
+							Description: "UserListSecretRef is a secret with a list of PgBouncer user and passwords",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"monitor": {
@@ -18435,7 +18422,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ConnectionPoolConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Databases", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.UserList"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ConnectionPoolConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Databases"},
 	}
 }
 
