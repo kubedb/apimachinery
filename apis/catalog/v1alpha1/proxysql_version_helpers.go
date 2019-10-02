@@ -31,7 +31,7 @@ func (p ProxySQLVersion) CustomResourceDefinition() *apiextensions.CustomResourc
 		Singular:      ResourceSingularProxySQLVersion,
 		Kind:          ResourceKindProxySQLVersion,
 		ShortNames:    []string{ResourceCodeProxySQLVersion},
-		Categories:    []string{"load-balancer", "kubedb", "appscode"},
+		Categories:    []string{"datastore", "kubedb", "appscode"},
 		ResourceScope: string(apiextensions.ClusterScoped),
 		Versions: []apiextensions.CustomResourceDefinitionVersion{
 			{
