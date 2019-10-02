@@ -93,7 +93,7 @@ func (p pgbouncerStatsService) ServiceMonitorName() string {
 }
 
 func (p pgbouncerStatsService) Path() string {
-	return "/metrics"
+	return DefaultStatsPath
 }
 
 func (p pgbouncerStatsService) Scheme() string {
@@ -106,7 +106,7 @@ func (p PgBouncer) StatsService() mona.StatsAccessor {
 
 func (p PgBouncer) StatsServiceLabels() map[string]string {
 	lbl := meta_util.FilterKeys(GenericKey, p.OffshootSelectors(), p.Labels)
-	lbl[LabelRole] = "stats"
+	lbl[LabelRole] = RoleStats
 	return lbl
 }
 

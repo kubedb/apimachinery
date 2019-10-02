@@ -50,13 +50,13 @@ type PgBouncerSpec struct {
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 	// Databases to proxy by connection pooling
 	// +optional
-	Databases []Databases `json:"databases, omitempty"`
+	Databases []Databases `json:"databases,omitempty"`
 	// ConnectionPoolConfig defines Connection pool configuration
 	// +optional
-	ConnectionPool *ConnectionPoolConfig `json:"connectionPool, omitempty"`
+	ConnectionPool *ConnectionPoolConfig `json:"connectionPool,omitempty"`
 	// UserListSecretRef is a secret with a list of PgBouncer user and passwords
 	// +optional
-	UserListSecretRef *core.LocalObjectReference `json:"userListSecretRef, omitempty"`
+	UserListSecretRef *core.LocalObjectReference `json:"userListSecretRef,omitempty"`
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
