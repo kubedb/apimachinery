@@ -30,7 +30,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=proxysqls,singular=proxysql,shortName=psql,categories={datastore,kubedb,appscode,all}
+// +kubebuilder:resource:path=proxysqls,singular=proxysql,categories={datastore,kubedb,appscode,all}
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
@@ -56,12 +56,6 @@ type ProxySQLSpec struct {
 
 	// Backend specifies the information about backend MySQL/Percona-XtraDB/MariaDB servers
 	Backend *ProxySQLBackendSpec `json:"backend,omitempty"`
-
-	// StorageType can be durable (default) or ephemeral
-	StorageType StorageType `json:"storageType,omitempty"`
-
-	// Storage spec to specify how storage shall be used.
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
 	// ProxySQL secret containing username and password for root user and proxysql user
 	ProxySQLSecret *core.SecretVolumeSource `json:"proxysqlSecret,omitempty"`

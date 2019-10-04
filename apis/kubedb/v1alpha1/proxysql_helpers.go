@@ -39,7 +39,7 @@ func (p ProxySQL) OffshootLabels() map[string]string {
 }
 
 func (p ProxySQL) ResourceShortCode() string {
-	return ResourceCodeProxySQL
+	return ""
 }
 
 func (p ProxySQL) ResourceKind() string {
@@ -121,8 +121,7 @@ func (p ProxySQL) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 		Plural:        ResourcePluralProxySQL,
 		Singular:      ResourceSingularProxySQL,
 		Kind:          ResourceKindProxySQL,
-		ShortNames:    []string{ResourceCodeProxySQL},
-		Categories:    []string{"load-balancer", "kubedb", "appscode", "all"},
+		Categories:    []string{"datastore", "kubedb", "appscode", "all"},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Versions: []apiextensions.CustomResourceDefinitionVersion{
 			{
@@ -174,9 +173,6 @@ func (p *ProxySQLSpec) SetDefaults() {
 		p.Replicas = types.Int32P(1)
 	}
 
-	if p.StorageType == "" {
-		p.StorageType = StorageTypeDurable
-	}
 	if p.UpdateStrategy.Type == "" {
 		p.UpdateStrategy.Type = apps.RollingUpdateStatefulSetStrategyType
 	}

@@ -2004,11 +2004,6 @@ func (in *ProxySQLSpec) DeepCopyInto(out *ProxySQLSpec) {
 		*out = new(ProxySQLBackendSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Storage != nil {
-		in, out := &in.Storage, &out.Storage
-		*out = new(v1.PersistentVolumeClaimSpec)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.ProxySQLSecret != nil {
 		in, out := &in.ProxySQLSecret, &out.ProxySQLSecret
 		*out = new(v1.SecretVolumeSource)
