@@ -215,26 +215,23 @@ func (p *PerconaXtraDBSpec) setDefaultProbes() {
 		return
 	}
 
-	pingCmd := []string{
-		"bash",
-		"-c",
-		`export MYSQL_PWD="${MYSQL_ROOT_PASSWORD}"
+	var readynessProbeCmd []string
+	if types.Int32(p.Replicas) > 1 {
+		readynessProbeCmd = []string{
+			"/cluster-check.sh",
+		}
+	} else {
+		readynessProbeCmd = []string{
+			"bash",
+			"-c",
+			`export MYSQL_PWD="${MYSQL_ROOT_PASSWORD}"
 ping_resp=$(mysqladmin -uroot ping)
 if [[ "$ping_resp" != "mysqld is alive" ]]; then
     echo "[ERROR] server is not ready. PING_RESPONSE: $ping_resp"
     exit 1
 fi
 `,
-	}
-	clusterCheckCmd := []string{
-		"/cluster-check.sh",
-	}
-
-	var readynessProbeCmd []string
-	if types.Int32(p.Replicas) > 1 {
-		readynessProbeCmd = clusterCheckCmd
-	} else {
-		readynessProbeCmd = pingCmd
+		}
 	}
 
 	readinessProbe := &core.Probe{
@@ -248,19 +245,6 @@ fi
 	}
 	if p.PodTemplate.Spec.ReadinessProbe == nil {
 		p.PodTemplate.Spec.ReadinessProbe = readinessProbe
-	}
-
-	livenessnessProbe := &core.Probe{
-		Handler: core.Handler{
-			Exec: &core.ExecAction{
-				Command: pingCmd,
-			},
-		},
-		InitialDelaySeconds: 80,
-		PeriodSeconds:       10,
-	}
-	if p.PodTemplate.Spec.LivenessProbe == nil {
-		p.PodTemplate.Spec.LivenessProbe = livenessnessProbe
 	}
 }
 
