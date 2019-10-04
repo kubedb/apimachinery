@@ -18,7 +18,9 @@ import (
 )
 
 func init() {
-	scheme.AddToScheme(clientsetscheme.Scheme)
+	if err := scheme.AddToScheme(clientsetscheme.Scheme); err != nil {
+		panic(err)
+	}
 }
 
 var requestKind = metav1.GroupVersionKind{
