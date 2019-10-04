@@ -1,6 +1,8 @@
 package v1alpha1
 
 import (
+	"fmt"
+
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
 	"kubedb.dev/apimachinery/apis"
@@ -70,4 +72,16 @@ func (p PgBouncerVersion) CustomResourceDefinition() *apiextensions.CustomResour
 			},
 		},
 	})
+}
+
+func (p PgBouncerVersion) ValidateSpecs() error {
+	if p.Spec.Version == "" ||
+		p.Spec.Exporter.Image == "" ||
+		p.Spec.Server.Image == "" {
+		return fmt.Errorf(`atleast one of the following specs is not set for pgbouncerversion "%v":
+spec.version,
+spec.server.image,
+spec.exporter.image.`, p.Name)
+	}
+	return nil
 }
