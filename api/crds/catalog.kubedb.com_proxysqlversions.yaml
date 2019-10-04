@@ -27,8 +27,6 @@ spec:
     - appscode
     kind: ProxySQLVersion
     plural: proxysqlversions
-    shortNames:
-    - psqlversion
     singular: proxysqlversion
   scope: Cluster
   subresources: {}

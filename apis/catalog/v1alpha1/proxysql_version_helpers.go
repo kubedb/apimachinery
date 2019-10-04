@@ -9,7 +9,7 @@ import (
 var _ apis.ResourceInfo = &ProxySQLVersion{}
 
 func (p ProxySQLVersion) ResourceShortCode() string {
-	return ResourceCodeProxySQLVersion
+	return ""
 }
 
 func (p ProxySQLVersion) ResourceKind() string {
@@ -30,7 +30,6 @@ func (p ProxySQLVersion) CustomResourceDefinition() *apiextensions.CustomResourc
 		Plural:        ResourcePluralProxySQLVersion,
 		Singular:      ResourceSingularProxySQLVersion,
 		Kind:          ResourceKindProxySQLVersion,
-		ShortNames:    []string{ResourceCodeProxySQLVersion},
 		Categories:    []string{"datastore", "kubedb", "appscode"},
 		ResourceScope: string(apiextensions.ClusterScoped),
 		Versions: []apiextensions.CustomResourceDefinitionVersion{
