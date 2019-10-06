@@ -33,7 +33,7 @@ func (p ProxySQL) OffshootLabels() map[string]string {
 	out[meta_util.NameLabelKey] = ResourceSingularProxySQL
 	out[meta_util.VersionLabelKey] = string(p.Spec.Version)
 	out[meta_util.InstanceLabelKey] = p.Name
-	out[meta_util.ComponentLabelKey] = "proxysql"
+	out[meta_util.ComponentLabelKey] = ComponentDatabase
 	out[meta_util.ManagedByLabelKey] = GenericKey
 	return meta_util.FilterKeys(GenericKey, out, p.Labels)
 }
@@ -91,7 +91,7 @@ func (p proxysqlStatsService) ServiceMonitorName() string {
 }
 
 func (p proxysqlStatsService) Path() string {
-	return "/metrics"
+	return DefaultStatsPath
 }
 
 func (p proxysqlStatsService) Scheme() string {
@@ -104,7 +104,7 @@ func (p ProxySQL) StatsService() mona.StatsAccessor {
 
 func (p ProxySQL) StatsServiceLabels() map[string]string {
 	lbl := meta_util.FilterKeys(GenericKey, p.OffshootSelectors(), p.Labels)
-	lbl[LabelRole] = "stats"
+	lbl[LabelRole] = RoleStats
 	return lbl
 }
 
