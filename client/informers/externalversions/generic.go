@@ -94,6 +94,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().PgBouncers().Informer()}, nil
 	case kubedbv1alpha1.SchemeGroupVersion.WithResource("postgreses"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().Postgreses().Informer()}, nil
+	case kubedbv1alpha1.SchemeGroupVersion.WithResource("proxysqls"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().ProxySQLs().Informer()}, nil
 	case kubedbv1alpha1.SchemeGroupVersion.WithResource("redises"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha1().Redises().Informer()}, nil
 	case kubedbv1alpha1.SchemeGroupVersion.WithResource("snapshots"):
