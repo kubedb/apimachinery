@@ -5,63 +5,18 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/appscode/go/log"
 	gort "github.com/appscode/go/runtime"
 	"github.com/go-openapi/spec"
 	"github.com/golang/glog"
-	crd_api "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/kube-openapi/pkg/common"
-	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
 	"kmodules.xyz/client-go/openapi"
-	"kubedb.dev/apimachinery/apis"
 	cataloginstall "kubedb.dev/apimachinery/apis/catalog/install"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	kubedbinstall "kubedb.dev/apimachinery/apis/kubedb/install"
 	kubedbv1alpha1 "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 )
-
-func generateCRDDefinitions() {
-	apis.EnableStatusSubresource = true
-
-	filename := gort.GOPath() + "/src/kubedb.dev/apimachinery/apis/kubedb/v1alpha1/crds.yaml"
-	os.Remove(filename)
-
-	err := os.MkdirAll(filepath.Join(gort.GOPath(), "/src/kubedb.dev/apimachinery/api/crds"), 0755)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	crds := []*crd_api.CustomResourceDefinition{
-		kubedbv1alpha1.DormantDatabase{}.CustomResourceDefinition(),
-		kubedbv1alpha1.Elasticsearch{}.CustomResourceDefinition(),
-		kubedbv1alpha1.Etcd{}.CustomResourceDefinition(),
-		kubedbv1alpha1.Memcached{}.CustomResourceDefinition(),
-		kubedbv1alpha1.MongoDB{}.CustomResourceDefinition(),
-		kubedbv1alpha1.MySQL{}.CustomResourceDefinition(),
-		kubedbv1alpha1.Postgres{}.CustomResourceDefinition(),
-		kubedbv1alpha1.Redis{}.CustomResourceDefinition(),
-		kubedbv1alpha1.Snapshot{}.CustomResourceDefinition(),
-
-		catalogv1alpha1.ElasticsearchVersion{}.CustomResourceDefinition(),
-		catalogv1alpha1.EtcdVersion{}.CustomResourceDefinition(),
-		catalogv1alpha1.MemcachedVersion{}.CustomResourceDefinition(),
-		catalogv1alpha1.MongoDBVersion{}.CustomResourceDefinition(),
-		catalogv1alpha1.MySQLVersion{}.CustomResourceDefinition(),
-		catalogv1alpha1.PostgresVersion{}.CustomResourceDefinition(),
-		catalogv1alpha1.RedisVersion{}.CustomResourceDefinition(),
-	}
-	for _, crd := range crds {
-		filename := filepath.Join(gort.GOPath(), "/src/kubedb.dev/apimachinery/api/crds", crd.Spec.Names.Singular+".yaml")
-		f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-		if err != nil {
-			log.Fatal(err)
-		}
-		crdutils.MarshallCrd(f, crd, "yaml")
-		f.Close()
-	}
-}
 
 func generateSwaggerJson() {
 	var (
@@ -92,6 +47,7 @@ func generateSwaggerJson() {
 			kubedbv1alpha1.GetOpenAPIDefinitions,
 			catalogv1alpha1.GetOpenAPIDefinitions,
 		},
+		//nolint:govet
 		Resources: []openapi.TypeInfo{
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralDormantDatabase, kubedbv1alpha1.ResourceKindDormantDatabase, true},
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralElasticsearch, kubedbv1alpha1.ResourceKindElasticsearch, true},
@@ -134,6 +90,5 @@ func generateSwaggerJson() {
 }
 
 func main() {
-	// generateCRDDefinitions()
 	generateSwaggerJson()
 }
