@@ -334,6 +334,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.ServiceReference":     schema_custom_resources_apis_appcatalog_v1alpha1_ServiceReference(ref),
 		"kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec":                          schema_kmodulesxyz_monitoring_agent_api_api_v1_AgentSpec(ref),
 		"kmodules.xyz/monitoring-agent-api/api/v1.PrometheusSpec":                     schema_kmodulesxyz_monitoring_agent_api_api_v1_PrometheusSpec(ref),
+		"kmodules.xyz/objectstore-api/api/v1.AzureSpec":                               schema_kmodulesxyz_objectstore_api_api_v1_AzureSpec(ref),
+		"kmodules.xyz/objectstore-api/api/v1.B2Spec":                                  schema_kmodulesxyz_objectstore_api_api_v1_B2Spec(ref),
+		"kmodules.xyz/objectstore-api/api/v1.Backend":                                 schema_kmodulesxyz_objectstore_api_api_v1_Backend(ref),
+		"kmodules.xyz/objectstore-api/api/v1.GCSSpec":                                 schema_kmodulesxyz_objectstore_api_api_v1_GCSSpec(ref),
+		"kmodules.xyz/objectstore-api/api/v1.LocalSpec":                               schema_kmodulesxyz_objectstore_api_api_v1_LocalSpec(ref),
+		"kmodules.xyz/objectstore-api/api/v1.RestServerSpec":                          schema_kmodulesxyz_objectstore_api_api_v1_RestServerSpec(ref),
+		"kmodules.xyz/objectstore-api/api/v1.S3Spec":                                  schema_kmodulesxyz_objectstore_api_api_v1_S3Spec(ref),
+		"kmodules.xyz/objectstore-api/api/v1.SwiftSpec":                               schema_kmodulesxyz_objectstore_api_api_v1_SwiftSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings":                   schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.IONiceSettings":                             schema_kmodulesxyz_offshoot_api_api_v1_IONiceSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.NiceSettings":                               schema_kmodulesxyz_offshoot_api_api_v1_NiceSettings(ref),
@@ -405,6 +413,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PostgresSpec":                   schema_apimachinery_apis_kubedb_v1alpha1_PostgresSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PostgresStatus":                 schema_apimachinery_apis_kubedb_v1alpha1_PostgresStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PostgresWALSourceSpec":          schema_apimachinery_apis_kubedb_v1alpha1_PostgresWALSourceSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQL":                       schema_apimachinery_apis_kubedb_v1alpha1_ProxySQL(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQLBackendSpec":            schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLBackendSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQLList":                   schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQLSpec":                   schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQLStatus":                 schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RecoveryTarget":                 schema_apimachinery_apis_kubedb_v1alpha1_RecoveryTarget(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Redis":                          schema_apimachinery_apis_kubedb_v1alpha1_Redis(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RedisClusterSpec":               schema_apimachinery_apis_kubedb_v1alpha1_RedisClusterSpec(ref),
@@ -437,6 +450,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.pgbouncerStatsService":          schema_apimachinery_apis_kubedb_v1alpha1_pgbouncerStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.postgresApp":                    schema_apimachinery_apis_kubedb_v1alpha1_postgresApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.postgresStatsService":           schema_apimachinery_apis_kubedb_v1alpha1_postgresStatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.proxysqlApp":                    schema_apimachinery_apis_kubedb_v1alpha1_proxysqlApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.proxysqlStatsService":           schema_apimachinery_apis_kubedb_v1alpha1_proxysqlStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.redisApp":                       schema_apimachinery_apis_kubedb_v1alpha1_redisApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.redisStatsService":              schema_apimachinery_apis_kubedb_v1alpha1_redisStatsService(ref),
 	}
@@ -15046,6 +15061,417 @@ func schema_kmodulesxyz_monitoring_agent_api_api_v1_PrometheusSpec(ref common.Re
 	}
 }
 
+func schema_kmodulesxyz_objectstore_api_api_v1_AzureSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"container": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"prefix": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"maxConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_objectstore_api_api_v1_B2Spec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"bucket": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"prefix": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"maxConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_objectstore_api_api_v1_Backend(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"storageSecretName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"local": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/objectstore-api/api/v1.LocalSpec"),
+						},
+					},
+					"s3": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/objectstore-api/api/v1.S3Spec"),
+						},
+					},
+					"gcs": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/objectstore-api/api/v1.GCSSpec"),
+						},
+					},
+					"azure": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/objectstore-api/api/v1.AzureSpec"),
+						},
+					},
+					"swift": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/objectstore-api/api/v1.SwiftSpec"),
+						},
+					},
+					"b2": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/objectstore-api/api/v1.B2Spec"),
+						},
+					},
+					"rest": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/objectstore-api/api/v1.RestServerSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/objectstore-api/api/v1.AzureSpec", "kmodules.xyz/objectstore-api/api/v1.B2Spec", "kmodules.xyz/objectstore-api/api/v1.GCSSpec", "kmodules.xyz/objectstore-api/api/v1.LocalSpec", "kmodules.xyz/objectstore-api/api/v1.RestServerSpec", "kmodules.xyz/objectstore-api/api/v1.S3Spec", "kmodules.xyz/objectstore-api/api/v1.SwiftSpec"},
+	}
+}
+
+func schema_kmodulesxyz_objectstore_api_api_v1_GCSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"bucket": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"prefix": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"maxConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_objectstore_api_api_v1_LocalSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"hostPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath",
+							Ref:         ref("k8s.io/api/core/v1.HostPathVolumeSource"),
+						},
+					},
+					"emptyDir": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EmptyDir represents a temporary directory that shares a pod's lifetime. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir",
+							Ref:         ref("k8s.io/api/core/v1.EmptyDirVolumeSource"),
+						},
+					},
+					"gcePersistentDisk": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GCEPersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
+							Ref:         ref("k8s.io/api/core/v1.GCEPersistentDiskVolumeSource"),
+						},
+					},
+					"awsElasticBlockStore": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AWSElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
+							Ref:         ref("k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource"),
+						},
+					},
+					"gitRepo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
+							Ref:         ref("k8s.io/api/core/v1.GitRepoVolumeSource"),
+						},
+					},
+					"secret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Secret represents a secret that should populate this volume. More info: https://kubernetes.io/docs/concepts/storage/volumes#secret",
+							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
+						},
+					},
+					"nfs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NFS represents an NFS mount on the host that shares a pod's lifetime More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs",
+							Ref:         ref("k8s.io/api/core/v1.NFSVolumeSource"),
+						},
+					},
+					"iscsi": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ISCSI represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://releases.k8s.io/HEAD/examples/volumes/iscsi/README.md",
+							Ref:         ref("k8s.io/api/core/v1.ISCSIVolumeSource"),
+						},
+					},
+					"glusterfs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. More info: https://releases.k8s.io/HEAD/examples/volumes/glusterfs/README.md",
+							Ref:         ref("k8s.io/api/core/v1.GlusterfsVolumeSource"),
+						},
+					},
+					"persistentVolumeClaim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PersistentVolumeClaimVolumeSource represents a reference to a PersistentVolumeClaim in the same namespace. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimVolumeSource"),
+						},
+					},
+					"rbd": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RBD represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://releases.k8s.io/HEAD/examples/volumes/rbd/README.md",
+							Ref:         ref("k8s.io/api/core/v1.RBDVolumeSource"),
+						},
+					},
+					"flexVolume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FlexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.",
+							Ref:         ref("k8s.io/api/core/v1.FlexVolumeSource"),
+						},
+					},
+					"cinder": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Cinder represents a cinder volume attached and mounted on kubelets host machine More info: https://releases.k8s.io/HEAD/examples/mysql-cinder-pd/README.md",
+							Ref:         ref("k8s.io/api/core/v1.CinderVolumeSource"),
+						},
+					},
+					"cephfs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CephFS represents a Ceph FS mount on the host that shares a pod's lifetime",
+							Ref:         ref("k8s.io/api/core/v1.CephFSVolumeSource"),
+						},
+					},
+					"flocker": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running",
+							Ref:         ref("k8s.io/api/core/v1.FlockerVolumeSource"),
+						},
+					},
+					"downwardAPI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DownwardAPI represents downward API about the pod that should populate this volume",
+							Ref:         ref("k8s.io/api/core/v1.DownwardAPIVolumeSource"),
+						},
+					},
+					"fc": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FC represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.",
+							Ref:         ref("k8s.io/api/core/v1.FCVolumeSource"),
+						},
+					},
+					"azureFile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AzureFile represents an Azure File Service mount on the host and bind mount to the pod.",
+							Ref:         ref("k8s.io/api/core/v1.AzureFileVolumeSource"),
+						},
+					},
+					"configMap": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigMap represents a configMap that should populate this volume",
+							Ref:         ref("k8s.io/api/core/v1.ConfigMapVolumeSource"),
+						},
+					},
+					"vsphereVolume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
+							Ref:         ref("k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource"),
+						},
+					},
+					"quobyte": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Quobyte represents a Quobyte mount on the host that shares a pod's lifetime",
+							Ref:         ref("k8s.io/api/core/v1.QuobyteVolumeSource"),
+						},
+					},
+					"azureDisk": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.",
+							Ref:         ref("k8s.io/api/core/v1.AzureDiskVolumeSource"),
+						},
+					},
+					"photonPersistentDisk": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PhotonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine",
+							Ref:         ref("k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource"),
+						},
+					},
+					"projected": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items for all in one resources secrets, configmaps, and downward API",
+							Ref:         ref("k8s.io/api/core/v1.ProjectedVolumeSource"),
+						},
+					},
+					"portworxVolume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PortworxVolume represents a portworx volume attached and mounted on kubelets host machine",
+							Ref:         ref("k8s.io/api/core/v1.PortworxVolumeSource"),
+						},
+					},
+					"scaleIO": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ScaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.",
+							Ref:         ref("k8s.io/api/core/v1.ScaleIOVolumeSource"),
+						},
+					},
+					"storageos": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.",
+							Ref:         ref("k8s.io/api/core/v1.StorageOSVolumeSource"),
+						},
+					},
+					"csi": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CSI (Container Storage Interface) represents storage that is handled by an external CSI driver (Alpha feature).",
+							Ref:         ref("k8s.io/api/core/v1.CSIVolumeSource"),
+						},
+					},
+					"mountPath": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"subPath": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFileVolumeSource", "k8s.io/api/core/v1.CSIVolumeSource", "k8s.io/api/core/v1.CephFSVolumeSource", "k8s.io/api/core/v1.CinderVolumeSource", "k8s.io/api/core/v1.ConfigMapVolumeSource", "k8s.io/api/core/v1.DownwardAPIVolumeSource", "k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GitRepoVolumeSource", "k8s.io/api/core/v1.GlusterfsVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.PersistentVolumeClaimVolumeSource", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.ProjectedVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDVolumeSource", "k8s.io/api/core/v1.ScaleIOVolumeSource", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.StorageOSVolumeSource", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource"},
+	}
+}
+
+func schema_kmodulesxyz_objectstore_api_api_v1_RestServerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"url": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_objectstore_api_api_v1_S3Spec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"endpoint": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"bucket": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"prefix": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_objectstore_api_api_v1_SwiftSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"container": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"prefix": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -15688,11 +16114,17 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref common.ReferenceCall
 							Format:      "int32",
 						},
 					},
+					"sessionAffinityConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "sessionAffinityConfig contains the configurations of session affinity.",
+							Ref:         ref("k8s.io/api/core/v1.SessionAffinityConfig"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.ServicePort"},
+			"k8s.io/api/core/v1.SessionAffinityConfig", "kmodules.xyz/offshoot-api/api/v1.ServicePort"},
 	}
 }
 
@@ -18795,6 +19227,232 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresWALSourceSpec(ref common.R
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha1_ProxySQL(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQLSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQLStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQLSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQLStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLBackendSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ref": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ref lets one to locate the typed referenced object (in our case, it is the MySQL/Percona-XtraDB/MariaDB object) inside the same namespace.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of backend servers.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of ProxySQL TPR objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQL"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQL"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version of ProxySQL to be deployed.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of instances to deploy for ProxySQL. Currently we support only replicas = 1.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Mode specifies the type of MySQL/Percona-XtraDB/MariaDB cluster for which proxysql will be configured. It must be either \"Galera\" or \"GroupReplication\"",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"backend": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Backend specifies the information about backend MySQL/Percona-XtraDB/MariaDB servers",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQLBackendSpec"),
+						},
+					},
+					"proxysqlSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ProxySQL secret containing username and password for root user and proxysql user",
+							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
+						},
+					},
+					"monitor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Monitor is used monitor proxysql instance",
+							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
+						},
+					},
+					"configSource": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSource is an optional field to provide custom configuration file for proxysql (i.e custom-proxysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+							Ref:         ref("k8s.io/api/core/v1.VolumeSource"),
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose proxysql",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+					"serviceTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceTemplate is an optional configuration for service used to expose proxysql",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"),
+						},
+					},
+					"updateStrategy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
+							Ref:         ref("k8s.io/api/apps/v1.StatefulSetUpdateStrategy"),
+						},
+					},
+				},
+				Required: []string{"version"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQLBackendSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"reason": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Ref:         ref("github.com/appscode/go/encoding/json/types.IntHash"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/appscode/go/encoding/json/types.IntHash"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha1_RecoveryTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19923,6 +20581,46 @@ func schema_apimachinery_apis_kubedb_v1alpha1_postgresStatsService(ref common.Re
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Postgres"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_proxysqlApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ProxySQL": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQL"),
+						},
+					},
+				},
+				Required: []string{"ProxySQL"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQL"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_proxysqlStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ProxySQL": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQL"),
+						},
+					},
+				},
+				Required: []string{"ProxySQL"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQL"},
 	}
 }
 
