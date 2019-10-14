@@ -297,7 +297,15 @@ $(BUILD_DIRS):
 dev: gen fmt push
 
 .PHONY: verify
-verify: verify-gen
+verify: verify-modules verify-gen
+
+.PHONY: verify-modules
+verify-modules:
+	GO111MODULE=on go mod tidy
+	GO111MODULE=on go mod vendor
+	@if !(git diff --quiet HEAD); then \
+		echo "go module files are out of date"; exit 1; \
+	fi
 
 .PHONY: verify-gen
 verify-gen: gen
