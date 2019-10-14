@@ -22,7 +22,7 @@ require (
 	kmodules.xyz/client-go v0.0.0-20191014080252-6458e3cb3ca6
 	kmodules.xyz/custom-resources v0.0.0-20190927035424-65fe358bb045
 	kmodules.xyz/monitoring-agent-api v0.0.0-20190808150221-601a4005b7f7
-	kmodules.xyz/objectstore-api v0.0.0-20191009175911-27237947aacf
+	kmodules.xyz/objectstore-api v0.0.0-20191014164602-39104ec912b7
 	kmodules.xyz/offshoot-api v0.0.0-20190901210649-de049192326c
 	kmodules.xyz/webhook-runtime v0.0.0-20190808145328-4186c470d56b
 	stash.appscode.dev/stash v0.9.0-rc.1.0.20191007102408-f5a271be821a

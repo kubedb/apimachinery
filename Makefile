@@ -287,7 +287,7 @@ lint: $(BUILD_DIRS)
 	    --env GO111MODULE=on                                    \
 	    --env GOFLAGS="-mod=vendor"                             \
 	    $(BUILD_IMAGE)                                          \
-	    golangci-lint run --enable $(ADDTL_LINTERS) --skip-dirs-use-default --deadline=10m
+	    golangci-lint run --enable $(ADDTL_LINTERS) --skip-dirs-use-default --deadline=10m --skip-dirs=client,vendor --skip-files="generated.*\.go$\"
 
 $(BUILD_DIRS):
 	@mkdir -p $@
@@ -313,7 +313,7 @@ verify-gen: gen
 	fi
 
 .PHONY: ci
-ci: verify lint test build #cover
+ci: verify-gen lint test build #cover
 
 .PHONY: clean
 clean:
