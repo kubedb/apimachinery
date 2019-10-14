@@ -7,6 +7,7 @@ require (
 	github.com/appscode/go v0.0.0-20191006073906-e3d193d493fc
 	github.com/go-openapi/spec v0.19.0
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
+	github.com/golang/protobuf v1.3.1 // indirect
 	github.com/gorilla/mux v1.7.3 // indirect
 	github.com/json-iterator/go v1.1.6
 	github.com/orcaman/concurrent-map v0.0.0-20190314100340-2693aad1ed75

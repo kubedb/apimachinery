@@ -106,7 +106,7 @@ DOCKER_REPO_ROOT := /go/src/$(GO_PKG)/$(REPO)
 # Generate a typed clientset
 .PHONY: clientset
 clientset:
-	@docker run --rm -ti                                 \
+	@docker run --rm	                                 \
 		-u $$(id -u):$$(id -g)                           \
 		-v /tmp:/.cache                                  \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
@@ -125,7 +125,7 @@ clientset:
 .PHONY: openapi
 openapi: $(addprefix openapi-, $(subst :,_, $(API_GROUPS)))
 	@echo "Generating api/openapi-spec/swagger.json"
-	@docker run --rm -ti                                 \
+	@docker run --rm	                                 \
 		-u $$(id -u):$$(id -g)                           \
 		-v /tmp:/.cache                                  \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
@@ -138,7 +138,7 @@ openapi: $(addprefix openapi-, $(subst :,_, $(API_GROUPS)))
 openapi-%:
 	@echo "Generating openapi schema for $(subst _,/,$*)"
 	@mkdir -p api/api-rules
-	@docker run --rm -ti                                 \
+	@docker run --rm	                                 \
 		-u $$(id -u):$$(id -g)                           \
 		-v /tmp:/.cache                                  \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
@@ -157,7 +157,7 @@ openapi-%:
 .PHONY: gen-crds
 gen-crds:
 	@echo "Generating CRD manifests"
-	@docker run --rm -ti                    \
+	@docker run --rm	                    \
 		-u $$(id -u):$$(id -g)              \
 		-v /tmp:/.cache                     \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)      \
@@ -186,6 +186,7 @@ crds_to_patch := kubedb.com_elasticsearches.yaml \
 patch-crds: $(addprefix patch-crd-, $(crds_to_patch))
 patch-crd-%:
 	@echo "patching $*"
+	@mkdir -p bin
 	@kubectl patch -f api/crds/$* -p "$$(cat hack/crd-patch.json)" --type=json --local=true -o yaml > bin/$*
 	@mv bin/$* api/crds/$*
 
@@ -295,8 +296,17 @@ $(BUILD_DIRS):
 .PHONY: dev
 dev: gen fmt push
 
+.PHONY: verify
+verify: verify-gen
+
+.PHONY: verify-gen
+verify-gen: gen
+	@if !(git diff --quiet HEAD); then \
+		echo "generated files are out of date, run make gen"; exit 1; \
+	fi
+
 .PHONY: ci
-ci: lint test build #cover
+ci: verify lint test build #cover
 
 .PHONY: clean
 clean:
