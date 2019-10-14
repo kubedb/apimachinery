@@ -184,9 +184,8 @@ crds_to_patch := kubedb.com_elasticsearches.yaml \
 
 .PHONY: patch-crds
 patch-crds: $(addprefix patch-crd-, $(crds_to_patch))
-patch-crd-%:
+patch-crd-%: $(BUILD_DIRS)
 	@echo "patching $*"
-	@mkdir -p bin
 	@kubectl patch -f api/crds/$* -p "$$(cat hack/crd-patch.json)" --type=json --local=true -o yaml > bin/$*
 	@mv bin/$* api/crds/$*
 
