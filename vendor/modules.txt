@@ -27,8 +27,8 @@ github.com/appscode/docker-registry-client/registry
 # github.com/appscode/go v0.0.0-20191006073906-e3d193d493fc
 github.com/appscode/go/encoding/json/types
 github.com/appscode/go/types
-github.com/appscode/go/log
 github.com/appscode/go/runtime
+github.com/appscode/go/log
 github.com/appscode/go/log/golog
 github.com/appscode/go/ioutil
 github.com/appscode/go/arrays
@@ -753,7 +753,7 @@ k8s.io/kubernetes/pkg/util/hash
 k8s.io/utils/integer
 k8s.io/utils/buffer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20191006173540-91f8ee6b6b4b
+# kmodules.xyz/client-go v0.0.0-20191014080252-6458e3cb3ca6
 kmodules.xyz/client-go/apiextensions/v1beta1
 kmodules.xyz/client-go/core/v1
 kmodules.xyz/client-go/meta
@@ -776,7 +776,7 @@ kmodules.xyz/custom-resources/client/informers/externalversions/appcatalog/v1alp
 kmodules.xyz/custom-resources/client/listers/appcatalog/v1alpha1
 # kmodules.xyz/monitoring-agent-api v0.0.0-20190808150221-601a4005b7f7
 kmodules.xyz/monitoring-agent-api/api/v1
-# kmodules.xyz/objectstore-api v0.0.0-20191006080053-fc8b57fadcf0
+# kmodules.xyz/objectstore-api v0.0.0-20191009175911-27237947aacf
 kmodules.xyz/objectstore-api/api/v1
 kmodules.xyz/objectstore-api/osm
 # kmodules.xyz/offshoot-api v0.0.0-20190901210649-de049192326c
