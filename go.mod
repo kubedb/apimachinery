@@ -7,7 +7,6 @@ require (
 	github.com/appscode/go v0.0.0-20191006073906-e3d193d493fc
 	github.com/go-openapi/spec v0.19.0
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
-	github.com/golang/protobuf v1.3.1 // indirect
 	github.com/gorilla/mux v1.7.3 // indirect
 	github.com/json-iterator/go v1.1.6
 	github.com/orcaman/concurrent-map v0.0.0-20190314100340-2693aad1ed75
@@ -18,11 +17,12 @@ require (
 	k8s.io/apiextensions-apiserver v0.0.0-20190516231611-bf6753f2aa24
 	k8s.io/apimachinery v0.0.0-20190508063446-a3da69d3723c
 	k8s.io/client-go v11.0.0+incompatible
+	k8s.io/klog v0.3.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20190502190224-411b2483e503
-	kmodules.xyz/client-go v0.0.0-20191006173540-91f8ee6b6b4b
+	kmodules.xyz/client-go v0.0.0-20191014080252-6458e3cb3ca6
 	kmodules.xyz/custom-resources v0.0.0-20190927035424-65fe358bb045
 	kmodules.xyz/monitoring-agent-api v0.0.0-20190808150221-601a4005b7f7
-	kmodules.xyz/objectstore-api v0.0.0-20191006080053-fc8b57fadcf0
+	kmodules.xyz/objectstore-api v0.0.0-20191009175911-27237947aacf
 	kmodules.xyz/offshoot-api v0.0.0-20190901210649-de049192326c
 	kmodules.xyz/webhook-runtime v0.0.0-20190808145328-4186c470d56b
 	stash.appscode.dev/stash v0.9.0-rc.1.0.20191007102408-f5a271be821a
