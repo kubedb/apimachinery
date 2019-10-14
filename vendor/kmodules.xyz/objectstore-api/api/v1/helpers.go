@@ -1,11 +1,8 @@
 package v1
 
 import (
-	"io/ioutil"
-	"log"
 	"net/url"
 
-	"github.com/appscode/go/os"
 	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
 )
