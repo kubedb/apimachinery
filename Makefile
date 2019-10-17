@@ -307,7 +307,7 @@ verify-modules:
 	fi
 
 .PHONY: verify-gen
-verify-gen: gen
+verify-gen: gen fmt
 	@if !(git diff --quiet HEAD); then \
 		echo "generated files are out of date, run make gen"; exit 1; \
 	fi
