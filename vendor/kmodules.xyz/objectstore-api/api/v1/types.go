@@ -85,6 +85,7 @@ type S3Spec struct {
 	Endpoint string `json:"endpoint,omitempty"`
 	Bucket   string `json:"bucket,omitempty"`
 	Prefix   string `json:"prefix,omitempty"`
+	Region   string `json:"region,omitempty"`
 }
 
 type GCSSpec struct {

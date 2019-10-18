@@ -24,7 +24,7 @@ github.com/PuerkitoBio/purell
 github.com/PuerkitoBio/urlesc
 # github.com/appscode/docker-registry-client v0.0.0-20180426150142-1bb02bb202b0
 github.com/appscode/docker-registry-client/registry
-# github.com/appscode/go v0.0.0-20191006073906-e3d193d493fc
+# github.com/appscode/go v0.0.0-20191016085057-e186b6c94a3b
 github.com/appscode/go/encoding/json/types
 github.com/appscode/go/types
 github.com/appscode/go/runtime
@@ -752,7 +752,7 @@ k8s.io/kubernetes/pkg/util/hash
 k8s.io/utils/integer
 k8s.io/utils/buffer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20191014080252-6458e3cb3ca6
+# kmodules.xyz/client-go v0.0.0-20191016085444-3044854ca625
 kmodules.xyz/client-go/apiextensions/v1beta1
 kmodules.xyz/client-go/core/v1
 kmodules.xyz/client-go/meta
@@ -775,7 +775,7 @@ kmodules.xyz/custom-resources/client/informers/externalversions/appcatalog/v1alp
 kmodules.xyz/custom-resources/client/listers/appcatalog/v1alpha1
 # kmodules.xyz/monitoring-agent-api v0.0.0-20190808150221-601a4005b7f7
 kmodules.xyz/monitoring-agent-api/api/v1
-# kmodules.xyz/objectstore-api v0.0.0-20191014164602-39104ec912b7
+# kmodules.xyz/objectstore-api v0.0.0-20191014210450-ac380fa650a3
 kmodules.xyz/objectstore-api/api/v1
 kmodules.xyz/objectstore-api/osm
 # kmodules.xyz/offshoot-api v0.0.0-20190901210649-de049192326c
@@ -790,13 +790,12 @@ sigs.k8s.io/structured-merge-diff/value
 sigs.k8s.io/structured-merge-diff/schema
 # sigs.k8s.io/yaml v1.1.0
 sigs.k8s.io/yaml
-# stash.appscode.dev/stash v0.9.0-rc.1.0.20191007102408-f5a271be821a
+# stash.appscode.dev/stash v0.9.0-rc.1.0.20191018180359-9ef3cfeba2a2
 stash.appscode.dev/stash/apis/stash/v1beta1
 stash.appscode.dev/stash/client/clientset/versioned
 stash.appscode.dev/stash/client/informers/externalversions
 stash.appscode.dev/stash/client/informers/externalversions/stash/v1beta1
 stash.appscode.dev/stash/client/listers/stash/v1beta1
-stash.appscode.dev/stash/apis
 stash.appscode.dev/stash/apis/stash
 stash.appscode.dev/stash/apis/stash/v1alpha1
 stash.appscode.dev/stash/client/clientset/versioned/typed/repositories/v1alpha1
@@ -804,6 +803,7 @@ stash.appscode.dev/stash/client/clientset/versioned/typed/stash/v1alpha1
 stash.appscode.dev/stash/client/clientset/versioned/typed/stash/v1beta1
 stash.appscode.dev/stash/client/informers/externalversions/internalinterfaces
 stash.appscode.dev/stash/client/informers/externalversions/stash
+stash.appscode.dev/stash/apis
 stash.appscode.dev/stash/apis/repositories/v1alpha1
 stash.appscode.dev/stash/client/clientset/versioned/scheme
 stash.appscode.dev/stash/client/informers/externalversions/stash/v1alpha1
