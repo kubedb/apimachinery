@@ -4209,6 +4209,8 @@ spec:
                       type: string
                     prefix:
                       type: string
+                    region:
+                      type: string
                   type: object
                 storageSecretName:
                   type: string
@@ -6789,6 +6791,8 @@ spec:
                         endpoint:
                           type: string
                         prefix:
+                          type: string
+                        region:
                           type: string
                       type: object
                     storageSecretName:
