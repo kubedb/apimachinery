@@ -306,13 +306,13 @@ verify: verify-modules verify-gen
 verify-modules:
 	GO111MODULE=on go mod tidy
 	GO111MODULE=on go mod vendor
-	@if !(git diff --quiet HEAD); then \
+	@if !(git diff --exit-code HEAD); then \
 		echo "go module files are out of date"; exit 1; \
 	fi
 
 .PHONY: verify-gen
 verify-gen: gen fmt
-	@if !(git diff --quiet HEAD); then \
+	@if !(git diff --exit-code HEAD); then \
 		echo "generated files are out of date, run make gen"; exit 1; \
 	fi
 
