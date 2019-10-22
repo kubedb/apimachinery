@@ -5,6 +5,11 @@ import (
 	"os"
 	"path/filepath"
 
+	cataloginstall "kubedb.dev/apimachinery/apis/catalog/install"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	kubedbinstall "kubedb.dev/apimachinery/apis/kubedb/install"
+	kubedbv1alpha1 "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+
 	gort "github.com/appscode/go/runtime"
 	"github.com/go-openapi/spec"
 	"github.com/golang/glog"
@@ -12,10 +17,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/kube-openapi/pkg/common"
 	"kmodules.xyz/client-go/openapi"
-	cataloginstall "kubedb.dev/apimachinery/apis/catalog/install"
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	kubedbinstall "kubedb.dev/apimachinery/apis/kubedb/install"
-	kubedbv1alpha1 "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 )
 
 func generateSwaggerJson() {
