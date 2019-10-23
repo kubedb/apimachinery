@@ -252,7 +252,10 @@ $(OUTBIN): $(BUILD_DIRS)
 	    "
 	@echo
 
-test: $(BUILD_DIRS)
+.PHONY: test
+test: unit-tests
+
+unit-tests: $(BUILD_DIRS)
 	@docker run                                                 \
 	    -i                                                      \
 	    --rm                                                    \
@@ -317,7 +320,7 @@ verify-gen: gen fmt
 	fi
 
 .PHONY: ci
-ci: verify-gen lint build test #cover
+ci: verify lint build unit-tests #cover
 
 .PHONY: clean
 clean:
