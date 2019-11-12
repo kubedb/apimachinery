@@ -39,38 +39,38 @@ const (
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type ProxySQLVersion struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              ProxySQLVersionSpec `json:"spec,omitempty"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Spec              ProxySQLVersionSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 }
 
 // ProxySQLVersionSpec is the spec for ProxySQL version
 type ProxySQLVersionSpec struct {
 	// Version
-	Version string `json:"version"`
+	Version string `json:"version" protobuf:"bytes,1,opt,name=version"`
 	// Proxysql Image
-	Proxysql ProxySQLVersionProxysql `json:"proxysql"`
+	Proxysql ProxySQLVersionProxysql `json:"proxysql" protobuf:"bytes,2,opt,name=proxysql"`
 	// Exporter Image
-	Exporter ProxySQLVersionExporter `json:"exporter"`
+	Exporter ProxySQLVersionExporter `json:"exporter" protobuf:"bytes,3,opt,name=exporter"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
-	Deprecated bool `json:"deprecated,omitempty"`
+	Deprecated bool `json:"deprecated,omitempty" protobuf:"varint,4,opt,name=deprecated"`
 	// PSP names
-	PodSecurityPolicies ProxySQLVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	PodSecurityPolicies ProxySQLVersionPodSecurityPolicy `json:"podSecurityPolicies" protobuf:"bytes,5,opt,name=podSecurityPolicies"`
 }
 
 // ProxySQLVersionProxysql is the proxysql image
 type ProxySQLVersionProxysql struct {
-	Image string `json:"image"`
+	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
 }
 
 // ProxySQLVersionExporter is the image for the ProxySQL exporter
 type ProxySQLVersionExporter struct {
-	Image string `json:"image"`
+	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
 }
 
 // ProxySQLVersionPodSecurityPolicy is the ProxySQL pod security policies
 type ProxySQLVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
+	DatabasePolicyName string `json:"databasePolicyName" protobuf:"bytes,1,opt,name=databasePolicyName"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -78,7 +78,7 @@ type ProxySQLVersionPodSecurityPolicy struct {
 // ProxySQLVersionList is a list of ProxySQLVersions
 type ProxySQLVersionList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	// Items is a list of ProxySQLVersion CRD objects
-	Items []ProxySQLVersion `json:"items,omitempty"`
+	Items []ProxySQLVersion `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
 }

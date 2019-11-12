@@ -439,6 +439,7 @@ spec:
                 defaultPoolSize:
                   description: 'DefaultPoolSize specifies how many server connections
                     to allow per user/database pair. Default: 20.'
+                  format: int64
                   type: integer
                 ignoreStartupParameters:
                   description: IgnoreStartupParameters specifies comma-separated startup
@@ -448,18 +449,22 @@ spec:
                 maxClientConnections:
                   description: 'MaxClientConnections is the maximum number of allowed
                     client connections. Default: 100.'
+                  format: int64
                   type: integer
                 maxDBConnections:
                   description: 'MaxDBConnections is the maximum number of connections
                     allowed per-database. Default: unlimited.'
+                  format: int64
                   type: integer
                 maxUserConnections:
                   description: 'MaxUserConnections is the maximum number of users
                     allowed per-database. Default: unlimited.'
+                  format: int64
                   type: integer
                 minPoolSize:
                   description: 'MinPoolSize is used to add more server connections
                     to pool if below this number. Default: 0 (disabled).'
+                  format: int64
                   type: integer
                 poolMode:
                   description: 'PoolMode is the pooling mechanism type. Default: session.'
@@ -472,17 +477,20 @@ spec:
                 reservePoolSize:
                   description: 'ReservePoolSize specifies how many additional connections
                     to allow to a pool. 0 disables. Default: 0 (disabled)'
+                  format: int64
                   type: integer
                 reservePoolTimeoutSeconds:
                   description: 'ReservePoolTimeoutSeconds is the number of seconds
                     in which if a client has not been serviced, pgbouncer enables
                     use of additional connections from reserve pool. 0 disables. Default:
                     5.0'
+                  format: int64
                   type: integer
                 statsPeriodSeconds:
                   description: StatsPeriodSeconds sets how often the averages shown
                     in various SHOW commands are updated and how often aggregated
                     statistics are written to the log
+                  format: int64
                   type: integer
               type: object
             databases:
@@ -3301,7 +3309,8 @@ spec:
               description: observedGeneration is the most recent generation observed
                 for this resource. It corresponds to the resource's generation, which
                 is updated on mutation by the API Server.
-              type: string
+              format: int64
+              type: integer
             phase:
               description: Phase specifies the current state of PgBouncer server
               type: string

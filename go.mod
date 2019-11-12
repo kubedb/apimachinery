@@ -4,8 +4,9 @@ go 1.12
 
 require (
 	github.com/appscode/docker-registry-client v0.0.0-20180426150142-1bb02bb202b0
-	github.com/appscode/go v0.0.0-20191016085057-e186b6c94a3b
+	github.com/appscode/go v0.0.0-20191025021232-311ac347b3ef
 	github.com/go-openapi/spec v0.19.0
+	github.com/gogo/protobuf v1.2.1
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/gorilla/mux v1.7.3 // indirect
 	github.com/json-iterator/go v1.1.6
@@ -18,12 +19,12 @@ require (
 	k8s.io/apimachinery v0.0.0-20190508063446-a3da69d3723c
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/kube-openapi v0.0.0-20190502190224-411b2483e503
-	kmodules.xyz/client-go v0.0.0-20191023042933-b12d1ccfaf57
-	kmodules.xyz/custom-resources v0.0.0-20190927035424-65fe358bb045
-	kmodules.xyz/monitoring-agent-api v0.0.0-20190808150221-601a4005b7f7
-	kmodules.xyz/objectstore-api v0.0.0-20191014210450-ac380fa650a3
-	kmodules.xyz/offshoot-api v0.0.0-20190901210649-de049192326c
-	kmodules.xyz/webhook-runtime v0.0.0-20190808145328-4186c470d56b
+	kmodules.xyz/client-go v0.0.0-20191107203555-78563b72c377
+	kmodules.xyz/custom-resources v0.0.0-20191111200327-6984cba51875
+	kmodules.xyz/monitoring-agent-api v0.0.0-20191111195047-343273387550
+	kmodules.xyz/objectstore-api v0.0.0-20191111201754-2aba8370dfda
+	kmodules.xyz/offshoot-api v0.0.0-20191111195805-1105abf4a162
+	kmodules.xyz/webhook-runtime v0.0.0-20191106182834-bf518fbc7b19
 	stash.appscode.dev/stash v0.9.0-rc.2
 )
 

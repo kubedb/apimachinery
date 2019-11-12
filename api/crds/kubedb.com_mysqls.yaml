@@ -409,6 +409,7 @@ spec:
                     container:
                       type: string
                     maxConnections:
+                      format: int64
                       type: integer
                     prefix:
                       type: string
@@ -418,6 +419,7 @@ spec:
                     bucket:
                       type: string
                     maxConnections:
+                      format: int64
                       type: integer
                     prefix:
                       type: string
@@ -429,6 +431,7 @@ spec:
                     bucket:
                       type: string
                     maxConnections:
+                      format: int64
                       type: integer
                     prefix:
                       type: string
@@ -5419,6 +5422,7 @@ spec:
                         container:
                           type: string
                         maxConnections:
+                          format: int64
                           type: integer
                         prefix:
                           type: string
@@ -5428,6 +5432,7 @@ spec:
                         bucket:
                           type: string
                         maxConnections:
+                          format: int64
                           type: integer
                         prefix:
                           type: string
@@ -5439,6 +5444,7 @@ spec:
                         bucket:
                           type: string
                         maxConnections:
+                          format: int64
                           type: integer
                         prefix:
                           type: string
@@ -10819,6 +10825,7 @@ spec:
                         use by any other replication master or slave. ref: https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_server_id
                         \n So, BaseServerID is needed to calculate a unique server_id
                         for each member."
+                      format: int64
                       type: integer
                     mode:
                       description: 'TODO: "Multi-Primary" needs to be implemented
@@ -10866,7 +10873,8 @@ spec:
               description: observedGeneration is the most recent generation observed
                 for this resource. It corresponds to the resource's generation, which
                 is updated on mutation by the API Server.
-              type: string
+              format: int64
+              type: integer
             phase:
               type: string
             reason:
