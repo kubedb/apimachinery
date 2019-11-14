@@ -18,11 +18,20 @@ package v1alpha1
 import (
 	"fmt"
 
+	"kubedb.dev/apimachinery/api/crds"
 	"kubedb.dev/apimachinery/apis"
 
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	"sigs.k8s.io/yaml"
 )
+
+func (_ MemcachedVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	data := crds.MustAsset("catalog.kubedb.com_memcachedversions.yaml")
+	var out apiextensions.CustomResourceDefinition
+	utilruntime.Must(yaml.Unmarshal(data, &out))
+	return &out
+}
 
 var _ apis.ResourceInfo = &MemcachedVersion{}
 
@@ -40,54 +49,6 @@ func (m MemcachedVersion) ResourceSingular() string {
 
 func (m MemcachedVersion) ResourcePlural() string {
 	return ResourcePluralMemcachedVersion
-}
-
-func (m MemcachedVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crdutils.NewCustomResourceDefinition(crdutils.Config{
-		Group:         SchemeGroupVersion.Group,
-		Plural:        ResourcePluralMemcachedVersion,
-		Singular:      ResourceSingularMemcachedVersion,
-		Kind:          ResourceKindMemcachedVersion,
-		ShortNames:    []string{ResourceCodeMemcachedVersion},
-		Categories:    []string{"datastore", "kubedb", "appscode"},
-		ResourceScope: string(apiextensions.ClusterScoped),
-		Versions: []apiextensions.CustomResourceDefinitionVersion{
-			{
-				Name:    SchemeGroupVersion.Version,
-				Served:  true,
-				Storage: true,
-			},
-		},
-		Labels: crdutils.Labels{
-			LabelsMap: map[string]string{"app": "kubedb"},
-		},
-		SpecDefinitionName:      "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersion",
-		EnableValidation:        true,
-		GetOpenAPIDefinitions:   GetOpenAPIDefinitions,
-		EnableStatusSubresource: false,
-		AdditionalPrinterColumns: []apiextensions.CustomResourceColumnDefinition{
-			{
-				Name:     "Version",
-				Type:     "string",
-				JSONPath: ".spec.version",
-			},
-			{
-				Name:     "DB_IMAGE",
-				Type:     "string",
-				JSONPath: ".spec.db.image",
-			},
-			{
-				Name:     "Deprecated",
-				Type:     "boolean",
-				JSONPath: ".spec.deprecated",
-			},
-			{
-				Name:     "Age",
-				Type:     "date",
-				JSONPath: ".metadata.creationTimestamp",
-			},
-		},
-	})
 }
 
 func (m MemcachedVersion) ValidateSpecs() error {

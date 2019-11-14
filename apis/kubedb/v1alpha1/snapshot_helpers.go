@@ -19,12 +19,21 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"kubedb.dev/apimachinery/api/crds"
 	"kubedb.dev/apimachinery/apis"
 
 	"github.com/pkg/errors"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	"sigs.k8s.io/yaml"
 )
+
+func (_ Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	data := crds.MustAsset("kubedb.com_snapshots.yaml")
+	var out apiextensions.CustomResourceDefinition
+	utilruntime.Must(yaml.Unmarshal(data, &out))
+	return &out
+}
 
 var _ apis.ResourceInfo = &Snapshot{}
 
@@ -66,49 +75,6 @@ func (s Snapshot) ResourcePlural() string {
 
 func (s Snapshot) OSMSecretName() string {
 	return fmt.Sprintf("osm-%v", s.Name)
-}
-
-func (s Snapshot) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crdutils.NewCustomResourceDefinition(crdutils.Config{
-		Group:         SchemeGroupVersion.Group,
-		Plural:        ResourcePluralSnapshot,
-		Singular:      ResourceSingularSnapshot,
-		Kind:          ResourceKindSnapshot,
-		ShortNames:    []string{ResourceCodeSnapshot},
-		Categories:    []string{"datastore", "kubedb", "appscode", "all"},
-		ResourceScope: string(apiextensions.NamespaceScoped),
-		Versions: []apiextensions.CustomResourceDefinitionVersion{
-			{
-				Name:    SchemeGroupVersion.Version,
-				Served:  true,
-				Storage: true,
-			},
-		},
-		Labels: crdutils.Labels{
-			LabelsMap: map[string]string{"app": "kubedb"},
-		},
-		SpecDefinitionName:      "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Snapshot",
-		EnableValidation:        true,
-		GetOpenAPIDefinitions:   GetOpenAPIDefinitions,
-		EnableStatusSubresource: true,
-		AdditionalPrinterColumns: []apiextensions.CustomResourceColumnDefinition{
-			{
-				Name:     "DatabaseName",
-				Type:     "string",
-				JSONPath: ".spec.databaseName",
-			},
-			{
-				Name:     "Status",
-				Type:     "string",
-				JSONPath: ".status.phase",
-			},
-			{
-				Name:     "Age",
-				Type:     "date",
-				JSONPath: ".metadata.creationTimestamp",
-			},
-		},
-	}, apis.SetNameSchema)
 }
 
 func (s *Snapshot) SetDefaults() {

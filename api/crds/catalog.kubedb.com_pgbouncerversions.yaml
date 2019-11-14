@@ -6,16 +6,35 @@ metadata:
     app: kubedb
   name: pgbouncerversions.catalog.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.version
+    name: Version
+    type: string
+  - JSONPath: .spec.server.image
+    name: SERVER_IMAGE
+    type: string
+  - JSONPath: .spec.deprecated
+    name: Deprecated
+    type: boolean
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: catalog.kubedb.com
   names:
+    categories:
+    - datastore
+    - kubedb
+    - appscode
     kind: PgBouncerVersion
     listKind: PgBouncerVersionList
     plural: pgbouncerversions
+    shortNames:
+    - pbversion
     singular: pgbouncerversion
-  scope: ""
+  scope: Cluster
+  subresources: {}
   validation:
     openAPIV3Schema:
-      description: PgBouncerVersion defines a PgBouncer database version.
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation

@@ -753,7 +753,6 @@ k8s.io/utils/integer
 k8s.io/utils/buffer
 k8s.io/utils/trace
 # kmodules.xyz/client-go v0.0.0-20191107203555-78563b72c377
-kmodules.xyz/client-go/apiextensions/v1beta1
 kmodules.xyz/client-go/core/v1
 kmodules.xyz/client-go/meta
 kmodules.xyz/client-go
@@ -761,6 +760,7 @@ kmodules.xyz/client-go/openapi
 kmodules.xyz/client-go/dynamic
 kmodules.xyz/client-go/policy/v1beta1
 kmodules.xyz/client-go/tools/queue
+kmodules.xyz/client-go/apiextensions/v1beta1
 kmodules.xyz/client-go/discovery
 # kmodules.xyz/constants v0.0.0-20191024095500-cd4313df4aa6
 kmodules.xyz/constants/aws

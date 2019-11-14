@@ -25,6 +25,7 @@ require (
 	kmodules.xyz/objectstore-api v0.0.0-20191111201754-2aba8370dfda
 	kmodules.xyz/offshoot-api v0.0.0-20191111195805-1105abf4a162
 	kmodules.xyz/webhook-runtime v0.0.0-20191106182834-bf518fbc7b19
+	sigs.k8s.io/yaml v1.1.0
 	stash.appscode.dev/stash v0.9.0-rc.2
 )
 
