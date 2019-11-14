@@ -20,10 +20,8 @@ import (
 	"kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
 	"kubedb.dev/apimachinery/pkg/eventer"
 
-	"github.com/appscode/go/encoding/json/types"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	meta_util "kmodules.xyz/client-go/meta"
 )
 
 func (c *Controller) create(ddb *api.DormantDatabase) error {
@@ -66,7 +64,7 @@ func (c *Controller) create(ddb *api.DormantDatabase) error {
 		t := metav1.Now()
 		in.PausingTime = &t
 		in.Phase = api.DormantDatabasePhasePaused
-		in.ObservedGeneration = types.NewIntHash(ddb.Generation, meta_util.GenerationHash(ddb))
+		in.ObservedGeneration = ddb.Generation
 		return in
 	})
 	if err != nil {

@@ -428,6 +428,7 @@ spec:
                     container:
                       type: string
                     maxConnections:
+                      format: int64
                       type: integer
                     prefix:
                       type: string
@@ -437,6 +438,7 @@ spec:
                     bucket:
                       type: string
                     maxConnections:
+                      format: int64
                       type: integer
                     prefix:
                       type: string
@@ -448,6 +450,7 @@ spec:
                     bucket:
                       type: string
                     maxConnections:
+                      format: int64
                       type: integer
                     prefix:
                       type: string
@@ -5496,6 +5499,7 @@ spec:
                         container:
                           type: string
                         maxConnections:
+                          format: int64
                           type: integer
                         prefix:
                           type: string
@@ -5505,6 +5509,7 @@ spec:
                         bucket:
                           type: string
                         maxConnections:
+                          format: int64
                           type: integer
                         prefix:
                           type: string
@@ -5516,6 +5521,7 @@ spec:
                         bucket:
                           type: string
                         maxConnections:
+                          format: int64
                           type: integer
                         prefix:
                           type: string
@@ -22669,7 +22675,8 @@ spec:
               description: observedGeneration is the most recent generation observed
                 for this resource. It corresponds to the resource's generation, which
                 is updated on mutation by the API Server.
-              type: string
+              format: int64
+              type: integer
             phase:
               type: string
             reason:

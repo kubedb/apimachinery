@@ -19218,10 +19218,6 @@
     }
   },
   "definitions": {
-    "com.github.appscode.go.encoding.json.types.IntHash": {
-      "description": "IntHash represents as int64 Generation and string Hash. It is json serialized into \u003cint64\u003e$\u003chash_string\u003e.",
-      "type": "string"
-    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion": {
       "type": "object",
       "properties": {
@@ -20573,7 +20569,7 @@
         "defaultPoolSize": {
           "description": "DefaultPoolSize specifies how many server connections to allow per user/database pair. Default: 20.",
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "ignoreStartupParameters": {
           "description": "IgnoreStartupParameters specifies comma-separated startup parameters that pgbouncer knows are handled by admin and it can ignore them",
@@ -20582,22 +20578,22 @@
         "maxClientConnections": {
           "description": "MaxClientConnections is the maximum number of allowed client connections. Default: 100.",
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "maxDBConnections": {
           "description": "MaxDBConnections is the maximum number of connections allowed per-database. Default: unlimited.",
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "maxUserConnections": {
           "description": "MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.",
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "minPoolSize": {
           "description": "MinPoolSize is used to add more server connections to pool if below this number. Default: 0 (disabled).",
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "poolMode": {
           "description": "PoolMode is the pooling mechanism type. Default: session.",
@@ -20611,17 +20607,17 @@
         "reservePoolSize": {
           "description": "ReservePoolSize specifies how many additional connections to allow to a pool. 0 disables. Default: 0 (disabled)",
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "reservePoolTimeoutSeconds": {
           "description": "ReservePoolTimeoutSeconds is the number of seconds in which if a client has not been serviced, pgbouncer enables use of additional connections from reserve pool. 0 disables. Default: 5.0",
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "statsPeriodSeconds": {
           "description": "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log",
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         }
       }
     },
@@ -20735,7 +20731,8 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "pausingTime": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
@@ -20944,7 +20941,8 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "phase": {
           "type": "string"
@@ -21079,7 +21077,8 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "phase": {
           "type": "string"
@@ -21255,7 +21254,8 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "phase": {
           "type": "string"
@@ -21383,7 +21383,8 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "phase": {
           "type": "string"
@@ -21669,7 +21670,8 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "phase": {
           "type": "string"
@@ -21728,7 +21730,7 @@
         "baseServerID": {
           "description": "On a replication master and each replication slave, the --server-id option must be specified to establish a unique replication ID in the range from 1 to 2^32 − 1. “Unique”, means that each ID must be different from every other ID in use by any other replication master or slave. ref: https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_server_id\n\nSo, BaseServerID is needed to calculate a unique server_id for each member.",
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "mode": {
           "description": "Group Replication can be deployed in either \"Single-Primary\" or \"Multi-Primary\" mode",
@@ -21840,7 +21842,8 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "phase": {
           "type": "string"
@@ -22027,7 +22030,8 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "phase": {
           "type": "string"
@@ -22145,7 +22149,8 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "phase": {
           "description": "Phase specifies the current state of PgBouncer server",
@@ -22310,7 +22315,8 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "phase": {
           "type": "string"
@@ -22482,7 +22488,8 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "phase": {
           "type": "string"
@@ -22649,7 +22656,8 @@
       "properties": {
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "phase": {
           "type": "string"
@@ -22916,7 +22924,8 @@
         },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "$ref": "#/definitions/com.github.appscode.go.encoding.json.types.IntHash"
+          "type": "integer",
+          "format": "int64"
         },
         "phase": {
           "type": "string"
@@ -25832,7 +25841,7 @@
         },
         "maxConnections": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "prefix": {
           "type": "string"
@@ -25847,7 +25856,7 @@
         },
         "maxConnections": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "prefix": {
           "type": "string"
@@ -25891,7 +25900,7 @@
         },
         "maxConnections": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "prefix": {
           "type": "string"

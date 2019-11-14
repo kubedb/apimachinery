@@ -24,7 +24,7 @@ github.com/PuerkitoBio/purell
 github.com/PuerkitoBio/urlesc
 # github.com/appscode/docker-registry-client v0.0.0-20180426150142-1bb02bb202b0
 github.com/appscode/docker-registry-client/registry
-# github.com/appscode/go v0.0.0-20191016085057-e186b6c94a3b
+# github.com/appscode/go v0.0.0-20191025021232-311ac347b3ef
 github.com/appscode/go/encoding/json/types
 github.com/appscode/go/types
 github.com/appscode/go/runtime
@@ -422,6 +422,7 @@ k8s.io/apimachinery/pkg/fields
 k8s.io/apimachinery/pkg/selection
 k8s.io/apimachinery/pkg/util/strategicpatch
 k8s.io/apimachinery/pkg/runtime/serializer/versioning
+k8s.io/apimachinery/pkg/util/validation
 k8s.io/apimachinery/pkg/version
 k8s.io/apimachinery/pkg/runtime/serializer/streaming
 k8s.io/apimachinery/pkg/util/net
@@ -429,7 +430,6 @@ k8s.io/apimachinery/pkg/util/clock
 k8s.io/apimachinery/pkg/runtime/serializer/json
 k8s.io/apimachinery/pkg/runtime/serializer/protobuf
 k8s.io/apimachinery/pkg/runtime/serializer/recognizer
-k8s.io/apimachinery/pkg/util/validation
 k8s.io/apimachinery/pkg/util/validation/field
 k8s.io/apimachinery/pkg/util/cache
 k8s.io/apimachinery/pkg/util/diff
@@ -752,7 +752,7 @@ k8s.io/kubernetes/pkg/util/hash
 k8s.io/utils/integer
 k8s.io/utils/buffer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20191023042933-b12d1ccfaf57
+# kmodules.xyz/client-go v0.0.0-20191107203555-78563b72c377
 kmodules.xyz/client-go/apiextensions/v1beta1
 kmodules.xyz/client-go/core/v1
 kmodules.xyz/client-go/meta
@@ -762,7 +762,12 @@ kmodules.xyz/client-go/dynamic
 kmodules.xyz/client-go/policy/v1beta1
 kmodules.xyz/client-go/tools/queue
 kmodules.xyz/client-go/discovery
-# kmodules.xyz/custom-resources v0.0.0-20190927035424-65fe358bb045
+# kmodules.xyz/constants v0.0.0-20191024095500-cd4313df4aa6
+kmodules.xyz/constants/aws
+kmodules.xyz/constants/azure
+kmodules.xyz/constants/google
+kmodules.xyz/constants/openstack
+# kmodules.xyz/custom-resources v0.0.0-20191111200327-6984cba51875
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned
 kmodules.xyz/custom-resources/client/informers/externalversions
@@ -773,14 +778,14 @@ kmodules.xyz/custom-resources/client/informers/externalversions/internalinterfac
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/client/informers/externalversions/appcatalog/v1alpha1
 kmodules.xyz/custom-resources/client/listers/appcatalog/v1alpha1
-# kmodules.xyz/monitoring-agent-api v0.0.0-20190808150221-601a4005b7f7
+# kmodules.xyz/monitoring-agent-api v0.0.0-20191111195047-343273387550
 kmodules.xyz/monitoring-agent-api/api/v1
-# kmodules.xyz/objectstore-api v0.0.0-20191014210450-ac380fa650a3
+# kmodules.xyz/objectstore-api v0.0.0-20191111201754-2aba8370dfda
 kmodules.xyz/objectstore-api/api/v1
 kmodules.xyz/objectstore-api/osm
-# kmodules.xyz/offshoot-api v0.0.0-20190901210649-de049192326c
+# kmodules.xyz/offshoot-api v0.0.0-20191111195805-1105abf4a162
 kmodules.xyz/offshoot-api/api/v1
-# kmodules.xyz/webhook-runtime v0.0.0-20190808145328-4186c470d56b
+# kmodules.xyz/webhook-runtime v0.0.0-20191106182834-bf518fbc7b19
 kmodules.xyz/webhook-runtime/admission/v1beta1
 # sigs.k8s.io/structured-merge-diff v0.0.0-20190302045857-e85c7b244fd2 => sigs.k8s.io/structured-merge-diff v0.0.0-20190302045857-e85c7b244fd2
 sigs.k8s.io/structured-merge-diff/fieldpath
