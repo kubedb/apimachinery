@@ -222,7 +222,7 @@ gen-crd-protos-%:
 manifests: gen-crds patch-crds label-crds
 
 .PHONY: gen
-gen: clientset openapi manifests gen-crd-protos
+gen: clientset gen-crd-protos openapi manifests
 
 fmt: $(BUILD_DIRS)
 	@docker run                                                 \
