@@ -2401,6 +2401,9 @@ spec:
                                               server.
                                             type: string
                                           port:
+                                            anyOf:
+                                            - type: integer
+                                            - type: string
                                             description: Name or number of the port
                                               to access on the container. Number must
                                               be in the range 1 to 65535. Name must
@@ -2424,6 +2427,9 @@ spec:
                                               to, defaults to the pod IP.'
                                             type: string
                                           port:
+                                            anyOf:
+                                            - type: integer
+                                            - type: string
                                             description: Number or name of the port
                                               to access on the container. Number must
                                               be in the range 1 to 65535. Name must
@@ -2502,6 +2508,9 @@ spec:
                                               server.
                                             type: string
                                           port:
+                                            anyOf:
+                                            - type: integer
+                                            - type: string
                                             description: Name or number of the port
                                               to access on the container. Number must
                                               be in the range 1 to 65535. Name must
@@ -2525,6 +2534,9 @@ spec:
                                               to, defaults to the pod IP.'
                                             type: string
                                           port:
+                                            anyOf:
+                                            - type: integer
+                                            - type: string
                                             description: Number or name of the port
                                               to access on the container. Number must
                                               be in the range 1 to 65535. Name must
@@ -2597,6 +2609,9 @@ spec:
                                         description: Path to access on the HTTP server.
                                         type: string
                                       port:
+                                        anyOf:
+                                        - type: integer
+                                        - type: string
                                         description: Name or number of the port to
                                           access on the container. Number must be
                                           in the range 1 to 65535. Name must be an
@@ -2638,6 +2653,9 @@ spec:
                                           to, defaults to the pod IP.'
                                         type: string
                                       port:
+                                        anyOf:
+                                        - type: integer
+                                        - type: string
                                         description: Number or name of the port to
                                           access on the container. Number must be
                                           in the range 1 to 65535. Name must be an
@@ -2766,6 +2784,9 @@ spec:
                                         description: Path to access on the HTTP server.
                                         type: string
                                       port:
+                                        anyOf:
+                                        - type: integer
+                                        - type: string
                                         description: Name or number of the port to
                                           access on the container. Number must be
                                           in the range 1 to 65535. Name must be an
@@ -2807,6 +2828,9 @@ spec:
                                           to, defaults to the pod IP.'
                                         type: string
                                       port:
+                                        anyOf:
+                                        - type: integer
+                                        - type: string
                                         description: Number or name of the port to
                                           access on the container. Number must be
                                           in the range 1 to 65535. Name must be an
@@ -3137,6 +3161,9 @@ spec:
                                       description: Path to access on the HTTP server.
                                       type: string
                                     port:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
                                       description: Name or number of the port to access
                                         on the container. Number must be in the range
                                         1 to 65535. Name must be an IANA_SVC_NAME.
@@ -3158,6 +3185,9 @@ spec:
                                         to, defaults to the pod IP.'
                                       type: string
                                     port:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
                                       description: Number or name of the port to access
                                         on the container. Number must be in the range
                                         1 to 65535. Name must be an IANA_SVC_NAME.
@@ -3230,6 +3260,9 @@ spec:
                                       description: Path to access on the HTTP server.
                                       type: string
                                     port:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
                                       description: Name or number of the port to access
                                         on the container. Number must be in the range
                                         1 to 65535. Name must be an IANA_SVC_NAME.
@@ -3251,6 +3284,9 @@ spec:
                                         to, defaults to the pod IP.'
                                       type: string
                                     port:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
                                       description: Number or name of the port to access
                                         on the container. Number must be in the range
                                         1 to 65535. Name must be an IANA_SVC_NAME.
@@ -3321,6 +3357,9 @@ spec:
                                   description: Path to access on the HTTP server.
                                   type: string
                                 port:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
                                   description: Name or number of the port to access
                                     on the container. Number must be in the range
                                     1 to 65535. Name must be an IANA_SVC_NAME.
@@ -3359,6 +3398,9 @@ spec:
                                     defaults to the pod IP.'
                                   type: string
                                 port:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
                                   description: Number or name of the port to access
                                     on the container. Number must be in the range
                                     1 to 65535. Name must be an IANA_SVC_NAME.
@@ -3461,6 +3503,9 @@ spec:
                                   description: Path to access on the HTTP server.
                                   type: string
                                 port:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
                                   description: Name or number of the port to access
                                     on the container. Number must be in the range
                                     1 to 65535. Name must be an IANA_SVC_NAME.
@@ -3499,6 +3544,9 @@ spec:
                                     defaults to the pod IP.'
                                   type: string
                                 port:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
                                   description: Number or name of the port to access
                                     on the container. Number must be in the range
                                     1 to 65535. Name must be an IANA_SVC_NAME.
@@ -7628,6 +7676,9 @@ spec:
                   type: object
               type: object
             maxUnavailable:
+              anyOf:
+              - type: integer
+              - type: string
               description: An eviction is allowed if at most "maxUnavailable" pods
                 selected by "selector" are unavailable after the eviction, i.e. even
                 in absence of the evicted pod. For example, one can prevent all voluntary
@@ -8961,6 +9012,9 @@ spec:
                                         description: Path to access on the HTTP server.
                                         type: string
                                       port:
+                                        anyOf:
+                                        - type: integer
+                                        - type: string
                                         description: Name or number of the port to
                                           access on the container. Number must be
                                           in the range 1 to 65535. Name must be an
@@ -8983,6 +9037,9 @@ spec:
                                           to, defaults to the pod IP.'
                                         type: string
                                       port:
+                                        anyOf:
+                                        - type: integer
+                                        - type: string
                                         description: Number or name of the port to
                                           access on the container. Number must be
                                           in the range 1 to 65535. Name must be an
@@ -9058,6 +9115,9 @@ spec:
                                         description: Path to access on the HTTP server.
                                         type: string
                                       port:
+                                        anyOf:
+                                        - type: integer
+                                        - type: string
                                         description: Name or number of the port to
                                           access on the container. Number must be
                                           in the range 1 to 65535. Name must be an
@@ -9080,6 +9140,9 @@ spec:
                                           to, defaults to the pod IP.'
                                         type: string
                                       port:
+                                        anyOf:
+                                        - type: integer
+                                        - type: string
                                         description: Number or name of the port to
                                           access on the container. Number must be
                                           in the range 1 to 65535. Name must be an
@@ -9150,6 +9213,9 @@ spec:
                                     description: Path to access on the HTTP server.
                                     type: string
                                   port:
+                                    anyOf:
+                                    - type: integer
+                                    - type: string
                                     description: Name or number of the port to access
                                       on the container. Number must be in the range
                                       1 to 65535. Name must be an IANA_SVC_NAME.
@@ -9189,6 +9255,9 @@ spec:
                                       defaults to the pod IP.'
                                     type: string
                                   port:
+                                    anyOf:
+                                    - type: integer
+                                    - type: string
                                     description: Number or name of the port to access
                                       on the container. Number must be in the range
                                       1 to 65535. Name must be an IANA_SVC_NAME.
@@ -9313,6 +9382,9 @@ spec:
                                     description: Path to access on the HTTP server.
                                     type: string
                                   port:
+                                    anyOf:
+                                    - type: integer
+                                    - type: string
                                     description: Name or number of the port to access
                                       on the container. Number must be in the range
                                       1 to 65535. Name must be an IANA_SVC_NAME.
@@ -9352,6 +9424,9 @@ spec:
                                       defaults to the pod IP.'
                                     type: string
                                   port:
+                                    anyOf:
+                                    - type: integer
+                                    - type: string
                                     description: Number or name of the port to access
                                       on the container. Number must be in the range
                                       1 to 65535. Name must be an IANA_SVC_NAME.
@@ -9666,6 +9741,9 @@ spec:
                                   description: Path to access on the HTTP server.
                                   type: string
                                 port:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
                                   description: Name or number of the port to access
                                     on the container. Number must be in the range
                                     1 to 65535. Name must be an IANA_SVC_NAME.
@@ -9687,6 +9765,9 @@ spec:
                                     defaults to the pod IP.'
                                   type: string
                                 port:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
                                   description: Number or name of the port to access
                                     on the container. Number must be in the range
                                     1 to 65535. Name must be an IANA_SVC_NAME.
@@ -9757,6 +9838,9 @@ spec:
                                   description: Path to access on the HTTP server.
                                   type: string
                                 port:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
                                   description: Name or number of the port to access
                                     on the container. Number must be in the range
                                     1 to 65535. Name must be an IANA_SVC_NAME.
@@ -9778,6 +9862,9 @@ spec:
                                     defaults to the pod IP.'
                                   type: string
                                 port:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
                                   description: Number or name of the port to access
                                     on the container. Number must be in the range
                                     1 to 65535. Name must be an IANA_SVC_NAME.
@@ -9847,6 +9934,9 @@ spec:
                               description: Path to access on the HTTP server.
                               type: string
                             port:
+                              anyOf:
+                              - type: integer
+                              - type: string
                               description: Name or number of the port to access on
                                 the container. Number must be in the range 1 to 65535.
                                 Name must be an IANA_SVC_NAME.
@@ -9885,6 +9975,9 @@ spec:
                                 to the pod IP.'
                               type: string
                             port:
+                              anyOf:
+                              - type: integer
+                              - type: string
                               description: Number or name of the port to access on
                                 the container. Number must be in the range 1 to 65535.
                                 Name must be an IANA_SVC_NAME.
@@ -9984,6 +10077,9 @@ spec:
                               description: Path to access on the HTTP server.
                               type: string
                             port:
+                              anyOf:
+                              - type: integer
+                              - type: string
                               description: Name or number of the port to access on
                                 the container. Number must be in the range 1 to 65535.
                                 Name must be an IANA_SVC_NAME.
@@ -10022,6 +10118,9 @@ spec:
                                 to the pod IP.'
                               type: string
                             port:
+                              anyOf:
+                              - type: integer
+                              - type: string
                               description: Number or name of the port to access on
                                 the container. Number must be in the range 1 to 65535.
                                 Name must be an IANA_SVC_NAME.
@@ -10476,6 +10575,9 @@ spec:
                 client:
                   properties:
                     maxUnavailable:
+                      anyOf:
+                      - type: integer
+                      - type: string
                       description: An eviction is allowed if at most "maxUnavailable"
                         pods selected by "selector" are unavailable after the eviction,
                         i.e. even in absence of the evicted pod. For example, one
@@ -10629,6 +10731,9 @@ spec:
                 data:
                   properties:
                     maxUnavailable:
+                      anyOf:
+                      - type: integer
+                      - type: string
                       description: An eviction is allowed if at most "maxUnavailable"
                         pods selected by "selector" are unavailable after the eviction,
                         i.e. even in absence of the evicted pod. For example, one
@@ -10782,6 +10887,9 @@ spec:
                 master:
                   properties:
                     maxUnavailable:
+                      anyOf:
+                      - type: integer
+                      - type: string
                       description: An eviction is allowed if at most "maxUnavailable"
                         pods selected by "selector" are unavailable after the eviction,
                         i.e. even in absence of the evicted pod. For example, one

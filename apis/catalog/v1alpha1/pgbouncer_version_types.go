@@ -24,13 +24,20 @@ const (
 	ResourcePluralPgBouncerVersion   = "pgbouncerversions"
 )
 
+// PgBouncerVersion defines a PgBouncer database version.
+
 // +genclient
 // +genclient:nonNamespaced
 // +genclient:skipVerbs=updateStatus
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// PgBouncerVersion defines a PgBouncer database version.
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=pgbouncerversions,singular=pgbouncerversion,scope=Cluster,shortName=pbversion,categories={datastore,kubedb,appscode}
+// +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
+// +kubebuilder:printcolumn:name="SERVER_IMAGE",type="string",JSONPath=".spec.server.image"
+// +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type PgBouncerVersion struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`

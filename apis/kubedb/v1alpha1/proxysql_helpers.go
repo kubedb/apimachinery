@@ -18,17 +18,26 @@ package v1alpha1
 import (
 	"fmt"
 
+	"kubedb.dev/apimachinery/api/crds"
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
 
 	"github.com/appscode/go/types"
 	apps "k8s.io/api/apps/v1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	"sigs.k8s.io/yaml"
 )
+
+func (_ ProxySQL) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	data := crds.MustAsset("kubedb.com_proxysqls.yaml")
+	var out apiextensions.CustomResourceDefinition
+	utilruntime.Must(yaml.Unmarshal(data, &out))
+	return &out
+}
 
 var _ apis.ResourceInfo = &ProxySQL{}
 
@@ -129,48 +138,6 @@ func (p *ProxySQL) GetMonitoringVendor() string {
 		return p.Spec.Monitor.Agent.Vendor()
 	}
 	return ""
-}
-
-func (p ProxySQL) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crdutils.NewCustomResourceDefinition(crdutils.Config{
-		Group:         SchemeGroupVersion.Group,
-		Plural:        ResourcePluralProxySQL,
-		Singular:      ResourceSingularProxySQL,
-		Kind:          ResourceKindProxySQL,
-		Categories:    []string{"datastore", "kubedb", "appscode", "all"},
-		ResourceScope: string(apiextensions.NamespaceScoped),
-		Versions: []apiextensions.CustomResourceDefinitionVersion{
-			{
-				Name:    SchemeGroupVersion.Version,
-				Served:  true,
-				Storage: true,
-			},
-		},
-		Labels: crdutils.Labels{
-			LabelsMap: map[string]string{"app": "kubedb"},
-		},
-		SpecDefinitionName:      "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQL",
-		EnableValidation:        true,
-		GetOpenAPIDefinitions:   GetOpenAPIDefinitions,
-		EnableStatusSubresource: true,
-		AdditionalPrinterColumns: []apiextensions.CustomResourceColumnDefinition{
-			{
-				Name:     "Version",
-				Type:     "string",
-				JSONPath: ".spec.version",
-			},
-			{
-				Name:     "Status",
-				Type:     "string",
-				JSONPath: ".status.phase",
-			},
-			{
-				Name:     "Age",
-				Type:     "date",
-				JSONPath: ".metadata.creationTimestamp",
-			},
-		},
-	}, apis.SetNameSchema)
 }
 
 func (p *ProxySQL) SetDefaults() {

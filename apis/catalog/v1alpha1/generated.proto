@@ -424,7 +424,12 @@ message PgBouncerServerVersion {
   optional string image = 1;
 }
 
-// PgBouncerVersion defines a PgBouncer database version.
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=pgbouncerversions,singular=pgbouncerversion,scope=Cluster,shortName=pbversion,categories={datastore,kubedb,appscode}
+// +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
+// +kubebuilder:printcolumn:name="SERVER_IMAGE",type="string",JSONPath=".spec.server.image"
+// +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 message PgBouncerVersion {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
@@ -527,7 +532,7 @@ message PostgresVersionTools {
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=proxysqlversions,singular=proxysqlversion,scope=Cluster,categories={datastore,kubedb,appscode}
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
-// +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
+// +kubebuilder:printcolumn:name="ProxySQL_IMAGE",type="string",JSONPath=".spec.db.image"
 // +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 message ProxySQLVersion {

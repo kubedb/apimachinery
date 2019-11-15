@@ -17521,8 +17521,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersion(ref common.Refer
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerVersion defines a PgBouncer database version.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
