@@ -25,18 +25,13 @@ import (
 	"github.com/appscode/go/types"
 	apps "k8s.io/api/apps/v1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	"sigs.k8s.io/yaml"
 )
 
 func (_ MariaDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	data := crds.MustAsset("kubedb.com_mariadbs.yaml")
-	var out apiextensions.CustomResourceDefinition
-	utilruntime.Must(yaml.Unmarshal(data, &out))
-	return &out
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMariaDB))
 }
 
 var _ apis.ResourceInfo = &MariaDB{}
