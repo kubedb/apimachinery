@@ -23,18 +23,13 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	"sigs.k8s.io/yaml"
 )
 
 func (_ PgBouncer) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	data := crds.MustAsset("kubedb.com_pgbouncers.yaml")
-	var out apiextensions.CustomResourceDefinition
-	utilruntime.Must(yaml.Unmarshal(data, &out))
-	return &out
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralPgBouncer))
 }
 
 var _ apis.ResourceInfo = &PgBouncer{}

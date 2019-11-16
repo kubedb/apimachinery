@@ -20,15 +20,10 @@ import (
 	"kubedb.dev/apimachinery/apis"
 
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	"sigs.k8s.io/yaml"
 )
 
 func (_ ProxySQLVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	data := crds.MustAsset("catalog.kubedb.com_proxysqlversions.yaml")
-	var out apiextensions.CustomResourceDefinition
-	utilruntime.Must(yaml.Unmarshal(data, &out))
-	return &out
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralProxySQLVersion))
 }
 
 var _ apis.ResourceInfo = &ProxySQLVersion{}
