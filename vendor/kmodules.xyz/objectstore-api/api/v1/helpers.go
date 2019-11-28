@@ -1,11 +1,24 @@
+/*
+Copyright The Kmodules Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package v1
 
 import (
-	"io/ioutil"
-	"log"
 	"net/url"
 
-	"github.com/appscode/go/os"
 	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
 )
@@ -32,6 +45,8 @@ func (backend Backend) Container() (string, error) {
 		return backend.Azure.Container, nil
 	} else if backend.Swift != nil {
 		return backend.Swift.Container, nil
+	} else if backend.B2 != nil {
+		return backend.B2.Bucket, nil
 	} else if backend.Rest != nil {
 		u, err := url.Parse(backend.Rest.URL)
 		if err != nil {
@@ -54,6 +69,8 @@ func (backend Backend) Location() (string, error) {
 		return "local:" + backend.Local.MountPath, nil
 	} else if backend.Swift != nil {
 		return "swift:" + backend.Swift.Container, nil
+	} else if backend.B2 != nil {
+		return "b2:" + backend.B2.Bucket, nil
 	}
 	return "", errors.New("no storage provider is configured")
 }
@@ -82,6 +99,8 @@ func (backend Backend) Prefix() (string, error) {
 		return backend.GCS.Prefix, nil
 	} else if backend.Azure != nil {
 		return backend.Azure.Prefix, nil
+	} else if backend.B2 != nil {
+		return backend.B2.Prefix, nil
 	} else if backend.Swift != nil {
 		return backend.Swift.Prefix, nil
 	} else if backend.Rest != nil {
@@ -116,7 +135,7 @@ func (backend Backend) Provider() (string, error) {
 
 // MaxConnections returns maximum parallel connection to use to connect with the backend
 // returns 0 if not specified
-func (backend Backend) MaxConnections() int {
+func (backend Backend) MaxConnections() int64 {
 	if backend.GCS != nil {
 		return backend.GCS.MaxConnections
 	} else if backend.Azure != nil {
@@ -135,73 +154,4 @@ func (backend Backend) Endpoint() (string, bool) {
 		return backend.Rest.URL, true
 	}
 	return "", false
-}
-
-const (
-	GCPSACredentialJson = "sa.json"
-)
-
-func GoogleServiceAccountFromEnv() string {
-	if data := os.Getenv(GOOGLE_SERVICE_ACCOUNT_JSON_KEY); len(data) > 0 {
-		return data
-	}
-	if data, err := ioutil.ReadFile(os.Getenv(GOOGLE_APPLICATION_CREDENTIALS)); err == nil {
-		return string(data)
-	}
-	log.Println("GOOGLE_SERVICE_ACCOUNT_JSON_KEY and GOOGLE_APPLICATION_CREDENTIALS are empty")
-	return ""
-}
-
-func GoogleCredentialsFromEnv() map[string][]byte {
-	sa := GoogleServiceAccountFromEnv()
-	if len(sa) == 0 {
-		return map[string][]byte{}
-	}
-	return map[string][]byte{
-		GCPSACredentialJson: []byte(sa),
-	}
-}
-
-const (
-	AzureClientSecret   = "client-secret"
-	AzureSubscriptionID = "subscription-id"
-	AzureTenantID       = "tenant-id"
-	AzureClientID       = "client-id"
-)
-
-func AzureCredentialsFromEnv() map[string][]byte {
-	subscriptionID := os.Getenv("AZURE_SUBSCRIPTION_ID")
-	tenantID := os.Getenv("AZURE_TENANT_ID")
-	clientID := os.Getenv("AZURE_CLIENT_ID")
-	clientSecret := os.Getenv("AZURE_CLIENT_SECRET")
-	if len(subscriptionID) == 0 || len(tenantID) == 0 || len(clientID) == 0 || len(clientSecret) == 0 {
-		log.Println("Azure credentials for empty")
-		return map[string][]byte{}
-	}
-
-	return map[string][]byte{
-		AzureSubscriptionID: []byte(subscriptionID),
-		AzureTenantID:       []byte(tenantID),
-		AzureClientID:       []byte(clientID),
-		AzureClientSecret:   []byte(clientSecret),
-	}
-}
-
-const (
-	AWSCredentialAccessKeyKey = "access_key"
-	AWSCredentialSecretKeyKey = "secret_key"
-)
-
-func AWSCredentialsFromEnv() map[string][]byte {
-	awsAccessKeyId := os.Getenv("AWS_ACCESS_KEY_ID")
-	awsSecretAccessKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
-	if len(awsAccessKeyId) == 0 || len(awsSecretAccessKey) == 0 {
-		log.Println("AWS credentials for empty")
-		return map[string][]byte{}
-	}
-
-	return map[string][]byte{
-		AWSCredentialAccessKeyKey: []byte(awsAccessKeyId),
-		AWSCredentialSecretKeyKey: []byte(awsSecretAccessKey),
-	}
 }

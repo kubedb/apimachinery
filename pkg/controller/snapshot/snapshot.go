@@ -1,7 +1,26 @@
+/*
+Copyright The KubeDB Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 package snapshot
 
 import (
 	"fmt"
+
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+	"kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
+	"kubedb.dev/apimachinery/pkg/eventer"
 
 	"github.com/appscode/go/log"
 	core "k8s.io/api/core/v1"
@@ -10,10 +29,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	kutil "kmodules.xyz/client-go"
 	"kmodules.xyz/objectstore-api/osm"
-	"kubedb.dev/apimachinery/apis"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
-	"kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/util"
-	"kubedb.dev/apimachinery/pkg/eventer"
 )
 
 func (c *Controller) create(snapshot *api.Snapshot) error {
@@ -22,7 +37,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 			t := metav1.Now()
 			in.StartTime = &t
 			return in
-		}, apis.EnableStatusSubresource)
+		})
 		if err != nil {
 			c.eventRecorder.Eventf(
 				snapshot,
@@ -75,7 +90,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 			return err
 		}
 
-		if _, e2 := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, err.Error(), apis.EnableStatusSubresource); e2 != nil {
+		if _, e2 := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, err.Error()); e2 != nil {
 			return e2 // retry if retryable error
 		}
 		c.eventRecorder.Event(
@@ -100,7 +115,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 	}
 	if running {
 		msg := "One Snapshot is already Running"
-		if _, e2 := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, msg, apis.EnableStatusSubresource); e2 != nil {
+		if _, e2 := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, msg); e2 != nil {
 			return e2 // retry if retryable error
 		}
 		c.eventRecorder.Event(
@@ -126,7 +141,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 	secret, err := osm.NewOSMSecret(c.Client, snapshot.OSMSecretName(), snapshot.Namespace, snapshot.Spec.Backend)
 	if err != nil {
 		msg := fmt.Sprintf("Failed to generate osm secret. Reason: %v", err)
-		if _, e2 := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, msg, apis.EnableStatusSubresource); e2 != nil {
+		if _, e2 := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, msg); e2 != nil {
 			return e2 // retry if retryable error
 		}
 		c.eventRecorder.Event(
@@ -164,7 +179,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 	// Do not check bucket access for local volume
 	if snapshot.Spec.Local == nil {
 		if err := osm.CheckBucketAccess(c.Client, snapshot.Spec.Backend, snapshot.Namespace); err != nil {
-			if _, e2 := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, err.Error(), apis.EnableStatusSubresource); e2 != nil {
+			if _, e2 := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, err.Error()); e2 != nil {
 				return e2 // retry if retryable error
 			}
 			c.eventRecorder.Eventf(
@@ -195,7 +210,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 
 		// If error is not retryable then mark the snapshot as failed and don't retry
 		if !kutil.IsRequestRetryable(err) {
-			if _, e2 := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, err.Error(), apis.EnableStatusSubresource); e2 != nil {
+			if _, e2 := util.MarkAsFailedSnapshot(c.ExtClient.KubedbV1alpha1(), snapshot, err.Error()); e2 != nil {
 				return e2 // retry if retryable error
 			}
 			return nil // don't retry
@@ -207,7 +222,7 @@ func (c *Controller) create(snapshot *api.Snapshot) error {
 	if _, err := util.UpdateSnapshotStatus(c.ExtClient.KubedbV1alpha1(), snapshot, func(in *api.SnapshotStatus) *api.SnapshotStatus {
 		in.Phase = api.SnapshotPhaseRunning
 		return in
-	}, apis.EnableStatusSubresource); err != nil {
+	}); err != nil {
 		c.eventRecorder.Eventf(
 			snapshot,
 			core.EventTypeWarning,

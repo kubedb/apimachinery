@@ -1,9 +1,23 @@
+/*
+Copyright The KubeDB Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 package v1alpha1
 
 import (
 	"testing"
 
-	jsonTypes "github.com/appscode/go/encoding/json/types"
 	"github.com/appscode/go/types"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -20,7 +34,7 @@ func TestMongoDB_HostAddress(t *testing.T) {
 			},
 		},
 		Spec: MongoDBSpec{
-			Version: jsonTypes.StrYo("3.6-v2"),
+			Version: "3.6-v2",
 			ShardTopology: &MongoDBShardingTopology{
 				Shard: MongoDBShardNode{
 					Shards: 3,
@@ -82,7 +96,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 			},
 		},
 		Spec: MongoDBSpec{
-			Version: jsonTypes.StrYo("3.6-v2"),
+			Version: "3.6-v2",
 			ShardTopology: &MongoDBShardingTopology{
 				Shard: MongoDBShardNode{
 					Shards: 3,
@@ -136,7 +150,7 @@ func TestMongoDB_ConfigSvrDSN(t *testing.T) {
 			},
 		},
 		Spec: MongoDBSpec{
-			Version: jsonTypes.StrYo("3.6-v2"),
+			Version: "3.6-v2",
 			ShardTopology: &MongoDBShardingTopology{
 				Shard: MongoDBShardNode{
 					Shards: 3,

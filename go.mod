@@ -4,27 +4,29 @@ go 1.12
 
 require (
 	github.com/appscode/docker-registry-client v0.0.0-20180426150142-1bb02bb202b0
-	github.com/appscode/go v0.0.0-20191006073906-e3d193d493fc
+	github.com/appscode/go v0.0.0-20191025021232-311ac347b3ef
 	github.com/go-openapi/spec v0.19.0
+	github.com/gogo/protobuf v1.2.1
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/gorilla/mux v1.7.3 // indirect
 	github.com/json-iterator/go v1.1.6
 	github.com/orcaman/concurrent-map v0.0.0-20190314100340-2693aad1ed75
 	github.com/pkg/errors v0.8.1
 	github.com/robfig/cron/v3 v3.0.0
-	gomodules.xyz/stow v0.2.0
+	gomodules.xyz/stow v0.2.2
 	k8s.io/api v0.0.0-20190503110853-61630f889b3c
 	k8s.io/apiextensions-apiserver v0.0.0-20190516231611-bf6753f2aa24
 	k8s.io/apimachinery v0.0.0-20190508063446-a3da69d3723c
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/kube-openapi v0.0.0-20190502190224-411b2483e503
-	kmodules.xyz/client-go v0.0.0-20191006173540-91f8ee6b6b4b
-	kmodules.xyz/custom-resources v0.0.0-20190927035424-65fe358bb045
-	kmodules.xyz/monitoring-agent-api v0.0.0-20190808150221-601a4005b7f7
-	kmodules.xyz/objectstore-api v0.0.0-20191006080053-fc8b57fadcf0
-	kmodules.xyz/offshoot-api v0.0.0-20190901210649-de049192326c
-	kmodules.xyz/webhook-runtime v0.0.0-20190808145328-4186c470d56b
-	stash.appscode.dev/stash v0.9.0-rc.1.0.20191007102408-f5a271be821a
+	kmodules.xyz/client-go v0.0.0-20191107203555-78563b72c377
+	kmodules.xyz/custom-resources v0.0.0-20191111200327-6984cba51875
+	kmodules.xyz/monitoring-agent-api v0.0.0-20191111195047-343273387550
+	kmodules.xyz/objectstore-api v0.0.0-20191111201754-2aba8370dfda
+	kmodules.xyz/offshoot-api v0.0.0-20191111195805-1105abf4a162
+	kmodules.xyz/webhook-runtime v0.0.0-20191106182834-bf518fbc7b19
+	sigs.k8s.io/yaml v1.1.0
+	stash.appscode.dev/stash v0.9.0-rc.2
 )
 
 replace (
@@ -40,6 +42,6 @@ replace (
 	k8s.io/kube-aggregator => k8s.io/kube-aggregator v0.0.0-20190314000639-da8327669ac5
 	k8s.io/kube-openapi => k8s.io/kube-openapi v0.0.0-20190228160746-b3a7cee44a30
 	k8s.io/metrics => k8s.io/metrics v0.0.0-20190314001731-1bd6a4002213
-	k8s.io/utils => k8s.io/utils v0.0.0-20190221042446-c2654d5206da
+	k8s.io/utils => k8s.io/utils v0.0.0-20190514214443-0a167cbac756
 	sigs.k8s.io/structured-merge-diff => sigs.k8s.io/structured-merge-diff v0.0.0-20190302045857-e85c7b244fd2
 )

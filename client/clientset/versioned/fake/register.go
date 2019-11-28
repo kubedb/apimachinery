@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The KubeDB Authors.
+Copyright The KubeDB Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,14 +19,15 @@ limitations under the License.
 package fake
 
 import (
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	configv1alpha1 "kubedb.dev/apimachinery/apis/config/v1alpha1"
+	kubedbv1alpha1 "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	serializer "k8s.io/apimachinery/pkg/runtime/serializer"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	configv1alpha1 "kubedb.dev/apimachinery/apis/config/v1alpha1"
-	kubedbv1alpha1 "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 )
 
 var scheme = runtime.NewScheme()

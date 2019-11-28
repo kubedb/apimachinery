@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The KubeDB Authors.
+Copyright The KubeDB Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,9 +17,10 @@ limitations under the License.
 package install
 
 import (
+	"kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	"kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 )
 
 // Install registers the API group and adds types to a scheme
