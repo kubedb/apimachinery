@@ -172,7 +172,7 @@ func (in *DormantDatabase) DeepCopyObject() runtime.Object {
 func (in *DormantDatabaseList) DeepCopyInto(out *DormantDatabaseList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]DormantDatabase, len(*in))
@@ -293,7 +293,7 @@ func (in *ElasticsearchClusterTopology) DeepCopy() *ElasticsearchClusterTopology
 func (in *ElasticsearchList) DeepCopyInto(out *ElasticsearchList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]Elasticsearch, len(*in))
@@ -471,7 +471,7 @@ func (in *Etcd) DeepCopyObject() runtime.Object {
 func (in *EtcdList) DeepCopyInto(out *EtcdList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]Etcd, len(*in))
@@ -654,7 +654,7 @@ func (in *MariaDB) DeepCopyObject() runtime.Object {
 func (in *MariaDBList) DeepCopyInto(out *MariaDBList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]MariaDB, len(*in))
@@ -796,7 +796,7 @@ func (in *Memcached) DeepCopyObject() runtime.Object {
 func (in *MemcachedList) DeepCopyInto(out *MemcachedList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]Memcached, len(*in))
@@ -929,7 +929,7 @@ func (in *MongoDBConfigNode) DeepCopy() *MongoDBConfigNode {
 func (in *MongoDBList) DeepCopyInto(out *MongoDBList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]MongoDB, len(*in))
@@ -1233,7 +1233,7 @@ func (in *MySQLGroupSpec) DeepCopy() *MySQLGroupSpec {
 func (in *MySQLList) DeepCopyInto(out *MySQLList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]MySQL, len(*in))
@@ -1448,7 +1448,7 @@ func (in *PerconaXtraDB) DeepCopyObject() runtime.Object {
 func (in *PerconaXtraDBList) DeepCopyInto(out *PerconaXtraDBList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]PerconaXtraDB, len(*in))
@@ -1574,7 +1574,7 @@ func (in *PgBouncer) DeepCopyObject() runtime.Object {
 func (in *PgBouncerList) DeepCopyInto(out *PgBouncerList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]PgBouncer, len(*in))
@@ -1717,7 +1717,7 @@ func (in *PostgresArchiverSpec) DeepCopy() *PostgresArchiverSpec {
 func (in *PostgresList) DeepCopyInto(out *PostgresList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]Postgres, len(*in))
@@ -1917,7 +1917,7 @@ func (in *ProxySQLBackendSpec) DeepCopy() *ProxySQLBackendSpec {
 func (in *ProxySQLList) DeepCopyInto(out *ProxySQLList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]ProxySQL, len(*in))
@@ -2090,7 +2090,7 @@ func (in *RedisClusterSpec) DeepCopy() *RedisClusterSpec {
 func (in *RedisList) DeepCopyInto(out *RedisList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]Redis, len(*in))
@@ -2228,7 +2228,7 @@ func (in *Snapshot) DeepCopyObject() runtime.Object {
 func (in *SnapshotList) DeepCopyInto(out *SnapshotList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]Snapshot, len(*in))
