@@ -29,6 +29,7 @@ spec:
     shortNames:
     - es
     singular: elasticsearch
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

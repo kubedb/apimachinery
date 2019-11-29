@@ -29,6 +29,7 @@ spec:
     shortNames:
     - pg
     singular: postgres
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

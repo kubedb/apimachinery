@@ -29,6 +29,7 @@ spec:
     shortNames:
     - pb
     singular: pgbouncer
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

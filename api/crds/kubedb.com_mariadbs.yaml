@@ -29,6 +29,7 @@ spec:
     shortNames:
     - md
     singular: mariadb
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

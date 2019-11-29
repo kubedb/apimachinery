@@ -27,6 +27,7 @@ spec:
     listKind: ProxySQLList
     plural: proxysqls
     singular: proxysql
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

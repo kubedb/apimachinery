@@ -29,6 +29,7 @@ spec:
     shortNames:
     - mc
     singular: memcached
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

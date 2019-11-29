@@ -31,6 +31,7 @@ spec:
     shortNames:
     - etcversion
     singular: etcdversion
+  preserveUnknownFields: false
   scope: Cluster
   subresources: {}
   validation:

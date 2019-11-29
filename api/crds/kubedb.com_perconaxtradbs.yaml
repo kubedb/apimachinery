@@ -29,6 +29,7 @@ spec:
     shortNames:
     - px
     singular: perconaxtradb
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

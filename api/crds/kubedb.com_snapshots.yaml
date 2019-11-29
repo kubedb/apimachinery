@@ -29,6 +29,7 @@ spec:
     shortNames:
     - snap
     singular: snapshot
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

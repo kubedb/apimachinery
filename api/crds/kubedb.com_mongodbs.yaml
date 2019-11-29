@@ -29,6 +29,7 @@ spec:
     shortNames:
     - mg
     singular: mongodb
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

@@ -12,7 +12,8 @@ spec:
     listKind: MySQLList
     plural: mysqls
     singular: mysql
-  scope: ""
+  preserveUnknownFields: false
+  scope: Namespaced
   validation:
     openAPIV3Schema:
       description: Mysql defines a Mysql database.

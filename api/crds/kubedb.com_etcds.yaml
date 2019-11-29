@@ -29,6 +29,7 @@ spec:
     shortNames:
     - etc
     singular: etcd
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

@@ -31,6 +31,7 @@ spec:
     shortNames:
     - mcversion
     singular: memcachedversion
+  preserveUnknownFields: false
   scope: Cluster
   subresources: {}
   validation:

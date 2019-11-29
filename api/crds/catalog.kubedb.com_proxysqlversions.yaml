@@ -29,6 +29,7 @@ spec:
     listKind: ProxySQLVersionList
     plural: proxysqlversions
     singular: proxysqlversion
+  preserveUnknownFields: false
   scope: Cluster
   subresources: {}
   validation:
