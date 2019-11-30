@@ -29,6 +29,7 @@ spec:
     listKind: BackupSessionList
     plural: backupsessions
     singular: backupsession
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

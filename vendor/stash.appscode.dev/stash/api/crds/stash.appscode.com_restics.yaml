@@ -35,6 +35,7 @@ spec:
     shortNames:
     - rst
     singular: restic
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

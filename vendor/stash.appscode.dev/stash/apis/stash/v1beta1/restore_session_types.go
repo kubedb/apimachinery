@@ -74,7 +74,7 @@ type RestoreSessionSpec struct {
 	// before uploading to backend or inserting into target. It is only usable for job model.
 	// Don't specify it in sidecar model.
 	// +optional
-	InterimVolumeTemplate *core.PersistentVolumeClaim `json:"interimVolumeTemplate,omitempty" protobuf:"bytes,8,opt,name=interimVolumeTemplate"`
+	InterimVolumeTemplate *ofst.PersistentVolumeClaim `json:"interimVolumeTemplate,omitempty" protobuf:"bytes,8,opt,name=interimVolumeTemplate"`
 }
 
 type Rule struct {

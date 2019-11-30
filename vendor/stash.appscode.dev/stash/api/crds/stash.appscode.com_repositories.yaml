@@ -34,6 +34,7 @@ spec:
     shortNames:
     - repo
     singular: repository
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}
