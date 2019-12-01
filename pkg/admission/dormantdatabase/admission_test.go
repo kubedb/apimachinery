@@ -34,6 +34,7 @@ import (
 	"k8s.io/client-go/kubernetes/fake"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	"kmodules.xyz/client-go/meta"
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
 func init() {
@@ -199,7 +200,7 @@ func sampleDormantDatabase() api.DormantDatabase {
 		},
 		Spec: api.DormantDatabaseSpec{
 			Origin: api.Origin{
-				ObjectMeta: metav1.ObjectMeta{
+				PartialObjectMeta: ofst.PartialObjectMeta{
 					Name: "foo",
 					Labels: map[string]string{
 						api.LabelDatabaseKind: api.ResourceKindMongoDB,

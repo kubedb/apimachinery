@@ -19649,7 +19649,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_Origin(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Ref: ref("kmodules.xyz/offshoot-api/api/v1.PartialObjectMeta"),
 						},
 					},
 					"spec": {
@@ -19663,7 +19663,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_Origin(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.OriginSpec"},
+			"kmodules.xyz/offshoot-api/api/v1.PartialObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.OriginSpec"},
 	}
 }
 

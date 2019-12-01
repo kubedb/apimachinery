@@ -28,7 +28,7 @@ require (
 	kmodules.xyz/offshoot-api v0.0.0-20191130175124-5676c4869928
 	kmodules.xyz/webhook-runtime v0.0.0-20191127075323-d4bfdee6974d
 	sigs.k8s.io/yaml v1.1.0
-	stash.appscode.dev/stash v0.9.0-rc.2.0.20191130180407-cedc2e77089a
+	stash.appscode.dev/stash v0.9.0-rc.2.0.20191202032228-c0c467f86415
 )
 
 replace (
@@ -45,7 +45,7 @@ replace (
 	github.com/Azure/go-autorest/autorest/validation => github.com/Azure/go-autorest/autorest/validation v0.1.0
 	github.com/Azure/go-autorest/logger => github.com/Azure/go-autorest/logger v0.1.0
 	github.com/Azure/go-autorest/tracing => github.com/Azure/go-autorest/tracing v0.5.0
-	github.com/kubernetes-csi/external-snapshotter => github.com/kmodules/external-snapshotter v1.2.1-0.20191128100451-0265c5fa679a
+	github.com/kubernetes-csi/external-snapshotter => github.com/kmodules/external-snapshotter v1.2.3-0.20191202024954-d6511cc16c01
 	github.com/prometheus/client_golang => github.com/prometheus/client_golang v0.9.2
 	google.golang.org/api => google.golang.org/api v0.6.1-0.20190607001116-5213b8090861
 	k8s.io/api => k8s.io/api v0.0.0-20191114100352-16d7abae0d2a

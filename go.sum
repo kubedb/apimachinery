@@ -296,7 +296,7 @@ github.com/kmodules/apimachinery v0.0.0-20191119091232-0553326db082 h1:Fut+qzge/
 github.com/kmodules/apimachinery v0.0.0-20191119091232-0553326db082/go.mod h1:llRdnznGEAqC3DcNm6yEj472xaFVfLM7hnYofMb12tQ=
 github.com/kmodules/apiserver v0.0.0-20191119111000-36ac3646ae82 h1:7YgT9xEZLII4FfFA8qDafK06xl06qMs3vNaUTY2lCCU=
 github.com/kmodules/apiserver v0.0.0-20191119111000-36ac3646ae82/go.mod h1:Idob8Va6/sMX5SmwPLsU0pdvFlkwxuJ5x+fXMG8NbKE=
-github.com/kmodules/external-snapshotter v1.2.1-0.20191128100451-0265c5fa679a/go.mod h1:AOawSVYDFABiUvZfz80qIDQB5G9YFGRQQPaMvb8pKvI=
+github.com/kmodules/external-snapshotter v1.2.3-0.20191202024954-d6511cc16c01/go.mod h1:ipXT6TBpO94ILK98SDWN6bmcjttJ/WVCxuz6Ku8HGR4=
 github.com/kmodules/kubernetes v1.17.0-alpha.0.0.20191127022853-9d027e3886fd h1:6YA0k2t8FcyWw8kqHpv5clX73LjBfsi5I2oELS0r43s=
 github.com/kmodules/kubernetes v1.17.0-alpha.0.0.20191127022853-9d027e3886fd/go.mod h1:SJfd/nrBVxpEiliWZ8PhAdyREKhxmcuOV8m2hn2WsqY=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1 h1:mweAR1A6xJ3oS2pRaGiHgQ4OO8tzTaLawm8vnODuwDk=
@@ -691,8 +691,6 @@ kmodules.xyz/constants v0.0.0-20191024095500-cd4313df4aa6 h1:hFv3DzanQJ/bjgahqos
 kmodules.xyz/constants v0.0.0-20191024095500-cd4313df4aa6/go.mod h1:DbiFk1bJ1KEO94t1SlAn7tzc+Zz95rSXgyUKa2nzPmY=
 kmodules.xyz/crd-schema-fuzz v0.0.0-20191129174258-81f984340891 h1:2W/fqLbAurvupIZL3TEFrlb7DnOIhlOXpNgzgcFFSmA=
 kmodules.xyz/crd-schema-fuzz v0.0.0-20191129174258-81f984340891/go.mod h1:9NXNZ4xhqof0WngtIuo4vl+WoCQpLJEJcyuEo3mPpiM=
-kmodules.xyz/custom-resources v0.0.0-20191127144633-7603d3fffa93 h1:6WsyePf/MLSkTx8dCVCA6V6QEGpcieBwym33FSkUnXE=
-kmodules.xyz/custom-resources v0.0.0-20191127144633-7603d3fffa93/go.mod h1:GyebL2tuSWRBJ7E6yHuECW7k62gLTHbphNqBBPBsUww=
 kmodules.xyz/custom-resources v0.0.0-20191130062942-f41b54f62419 h1:o6KD8XMxdyRR3rqScTsWvcufFDT7vQBnYXpHUp6UtRg=
 kmodules.xyz/custom-resources v0.0.0-20191130062942-f41b54f62419/go.mod h1:EksiAQK3p3bVU5cNBjLT0z5V7er1tvWLBWILTuf6G/0=
 kmodules.xyz/monitoring-agent-api v0.0.0-20191127151826-1eac40b764dc h1:WJzkcSsSl+LUoxjjHqLKzRRn1SYxVqOOaepVfR4F2wQ=
@@ -717,6 +715,6 @@ sigs.k8s.io/structured-merge-diff v0.0.0-20190817042607-6149e4549fca h1:6dsH6AYQ
 sigs.k8s.io/structured-merge-diff v0.0.0-20190817042607-6149e4549fca/go.mod h1:IIgPezJWb76P0hotTxzDbWsMYB8APh18qZnxkomBpxA=
 sigs.k8s.io/yaml v1.1.0 h1:4A07+ZFc2wgJwo8YNlQpr1rVlgUDlxXHhPJciaPY5gs=
 sigs.k8s.io/yaml v1.1.0/go.mod h1:UJmg0vDUVViEyp3mgSv9WPwZCDxu4rQW1olrI1uml+o=
-stash.appscode.dev/stash v0.9.0-rc.2.0.20191130180407-cedc2e77089a h1:CVI326KuOAVf/tWREs3zFzT+JI63LnHixjqZAtXD5m0=
-stash.appscode.dev/stash v0.9.0-rc.2.0.20191130180407-cedc2e77089a/go.mod h1:d6Sq22KEh1Hbn8xGybdqsWTH5k9ldGblsmDas5+hwEM=
+stash.appscode.dev/stash v0.9.0-rc.2.0.20191202032228-c0c467f86415 h1:VzXbYARxAqdx06ANIdIh/+AqgMHdeT8koS+mHZIWKWg=
+stash.appscode.dev/stash v0.9.0-rc.2.0.20191202032228-c0c467f86415/go.mod h1:qd8SlBvOa/Y5DSejmSIsKiNJFwFkg8wK0Sr0AuGrlhI=
 vbom.ml/util v0.0.0-20160121211510-db5cfe13f5cc/go.mod h1:so/NYdZXCz+E3ZpW0uAoCj6uzU2+8OWDFv/HxUSs7kI=
