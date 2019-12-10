@@ -49,6 +49,9 @@ spec:
                       additionalProperties:
                         type: string
                       type: object
+                    creationTimestamp:
+                      format: date-time
+                      type: string
                     generateName:
                       type: string
                     labels:
