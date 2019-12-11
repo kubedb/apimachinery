@@ -19,6 +19,8 @@ package v1alpha1
 import (
 	"testing"
 
+	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+
 	"github.com/appscode/go/types"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -138,7 +140,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 	shardDSN := mongodb.ShardDSN(0)
 	t.Log(shardDSN)
 
-	mongodb.Spec.SetDefaults()
+	mongodb.Spec.SetDefaults(&v1alpha1.MongoDBVersion{})
 }
 
 func TestMongoDB_ConfigSvrDSN(t *testing.T) {
@@ -212,5 +214,5 @@ func TestMongoDB_SetDefaults(t *testing.T) {
 		},
 	}
 
-	mongodb.Spec.SetDefaults()
+	mongodb.Spec.SetDefaults(&v1alpha1.MongoDBVersion{})
 }

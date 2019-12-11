@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	"fmt"
 	"strconv"
-	"strings"
 
 	"kubedb.dev/apimachinery/api/crds"
 	"kubedb.dev/apimachinery/apis"
@@ -27,6 +26,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 
 	"github.com/appscode/go/types"
+	"gomodules.xyz/version"
 	apps "k8s.io/api/apps/v1"
 	core "k8s.io/api/core/v1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
@@ -395,9 +395,16 @@ func (m *MongoDBSpec) setDefaultProbes(podTemplate *ofst.PodTemplateSpec, mgVers
 	var sslArgs string
 	if m.SSLMode == SSLModeRequireSSL {
 		sslArgs = fmt.Sprintf("--tls --tlsCAFile=/data/configdb/%v --tlsCertificateKeyFile=/data/configdb/%v", MongoTLSCertFileName, MongoClientPemFileName)
-		if strings.HasPrefix(mgVersion.Spec.Version, "3.4") ||
-			strings.HasPrefix(mgVersion.Spec.Version, "3.6") ||
-			strings.HasPrefix(mgVersion.Spec.Version, "4.0") {
+
+		breakingVer, err := version.NewVersion("4.1")
+		if err != nil {
+			return
+		}
+		currentVer, err := version.NewVersion(mgVersion.Spec.Version)
+		if err != nil {
+			return
+		}
+		if currentVer.LessThan(breakingVer) {
 			sslArgs = fmt.Sprintf("--ssl --sslCAFile=/data/configdb/%v --sslPEMKeyFile=/data/configdb/%v", MongoTLSCertFileName, MongoClientPemFileName)
 		}
 	}
