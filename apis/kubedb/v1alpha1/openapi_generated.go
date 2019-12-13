@@ -369,6 +369,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec":             schema_apimachinery_apis_kubedb_v1alpha1_BackupScheduleSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.CertificateSpec":                schema_apimachinery_apis_kubedb_v1alpha1_CertificateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ConnectionPoolConfig":           schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Databases":                      schema_apimachinery_apis_kubedb_v1alpha1_Databases(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.DormantDatabase":                schema_apimachinery_apis_kubedb_v1alpha1_DormantDatabase(ref),
@@ -445,8 +446,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.SnapshotSourceSpec":             schema_apimachinery_apis_kubedb_v1alpha1_SnapshotSourceSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.SnapshotSpec":                   schema_apimachinery_apis_kubedb_v1alpha1_SnapshotSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.SnapshotStatus":                 schema_apimachinery_apis_kubedb_v1alpha1_SnapshotStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig":                      schema_apimachinery_apis_kubedb_v1alpha1_TLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSPolicy":                      schema_apimachinery_apis_kubedb_v1alpha1_TLSPolicy(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.UserList":                       schema_apimachinery_apis_kubedb_v1alpha1_UserList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.elasticsearchApp":               schema_apimachinery_apis_kubedb_v1alpha1_elasticsearchApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.elasticsearchStatsService":      schema_apimachinery_apis_kubedb_v1alpha1_elasticsearchStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.etcdApp":                        schema_apimachinery_apis_kubedb_v1alpha1_etcdApp(ref),
@@ -17570,6 +17571,88 @@ func schema_apimachinery_apis_kubedb_v1alpha1_BackupScheduleSpec(ref common.Refe
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha1_CertificateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"organization": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Organization is the organization to be used on the Certificate",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"duration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate default Duration",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"renewBefore": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate renew before expiration duration",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"dnsNames": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DNSNames is a list of subject alt names to be used on the Certificate.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"ipAddresses": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IPAddresses is a list of IP addresses to be used on the Certificate",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"uriSANs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "URISANs is a list of URI Subject Alternative Names to be set on this Certificate.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -17613,14 +17696,14 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 					},
 					"reservePoolSize": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ReservePoolSize specifies how many additional connections to allow to a pool. 0 disables. Default: 0 (disabled)",
+							Description: "ReservePoolSize specifies how many additional connections to allow to a pool. 0 disables. Default: 0 (disabled).",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"reservePoolTimeoutSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ReservePoolTimeoutSeconds is the number of seconds in which if a client has not been serviced, pgbouncer enables use of additional connections from reserve pool. 0 disables. Default: 5.0",
+							Description: "ReservePoolTimeoutSeconds is the number of seconds in which if a client has not been serviced, pgbouncer enables use of additional connections from reserve pool. 0 disables. Default: 5.0.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -17641,14 +17724,14 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 					},
 					"statsPeriodSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log",
+							Description: "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"adminUsers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AdminUsers specifies an array of users who can act as PgBouncer administrators",
+							Description: "AdminUsers specifies an array of users who can act as PgBouncer administrators.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -17662,7 +17745,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 					},
 					"authType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AuthType specifies how to authenticate users. Default: md5 (md5+plain text)",
+							Description: "AuthType specifies how to authenticate users. Default: md5 (md5+plain text).",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -17676,7 +17759,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.Re
 					},
 					"ignoreStartupParameters": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IgnoreStartupParameters specifies comma-separated startup parameters that pgbouncer knows are handled by admin and it can ignore them",
+							Description: "IgnoreStartupParameters specifies comma-separated startup parameters that pgbouncer knows are handled by admin and it can ignore them.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -17695,36 +17778,28 @@ func schema_apimachinery_apis_kubedb_v1alpha1_Databases(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"alias": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Alias to uniquely identify a target database running inside a specific Postgres instance",
+							Description: "Alias to uniquely identify a target database running inside a specific Postgres instance.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseRef specifies the database appbinding reference in any namespace",
+							Description: "DatabaseRef specifies the database appbinding reference in any namespace.",
 							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
 						},
 					},
 					"databaseName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseName is the name of the target database inside a Postgres instance",
+							Description: "DatabaseName is the name of the target database inside a Postgres instance.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"username": {
+					"databaseSecretRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserName is used to bind a single user to a specific database connection",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"password": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Password is to authenticate the user specified in Username field",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "DatabaseSecretRef points to a secret that contains the credentials (username and password) of an existing user of this database. It is used to bind a single user to this specific database connection.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 				},
@@ -17732,7 +17807,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_Databases(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
 	}
 }
 
@@ -20146,7 +20221,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerList(ref common.Reference
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of PgBouncer CRD objects",
+							Description: "Items is a list of PgBouncer CRD objects.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20187,19 +20262,19 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSpec(ref common.Reference
 					},
 					"serviceTemplate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServiceTemplate is an optional configuration for service used to expose database",
+							Description: "ServiceTemplate is an optional configuration for service used to expose database.",
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"),
 						},
 					},
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PodTemplate is an optional configuration for pods",
+							Description: "PodTemplate is an optional configuration for pods.",
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
 						},
 					},
 					"databases": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Databases to proxy by connection pooling",
+							Description: "Databases to proxy by connection pooling.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20212,27 +20287,26 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSpec(ref common.Reference
 					},
 					"connectionPool": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConnectionPoolConfig defines Connection pool configuration",
+							Description: "ConnectionPoolConfig defines Connection pool configuration.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ConnectionPoolConfig"),
 						},
 					},
 					"userListSecretRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserListSecretRef is a secret with a list of PgBouncer user and passwords",
+							Description: "UserListSecretRef is a secret with a list of PgBouncer user and passwords.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"monitor": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Monitor is used monitor database instance",
+							Description: "Monitor is used monitor database instance.",
 							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
 						},
 					},
-					"paused": {
+					"tls": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the db is paused.",
-							Type:        []string{"boolean"},
-							Format:      "",
+							Description: "TLS contains tls configurations for client and server.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"),
 						},
 					},
 				},
@@ -20240,7 +20314,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ConnectionPoolConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Databases"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ConnectionPoolConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Databases", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"},
 	}
 }
 
@@ -20252,7 +20326,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerStatus(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"phase": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Phase specifies the current state of PgBouncer server",
+							Description: "Phase specifies the current state of PgBouncer server.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -21577,6 +21651,33 @@ func schema_apimachinery_apis_kubedb_v1alpha1_SnapshotStatus(ref common.Referenc
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha1_TLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IssuerRef is a reference to a Certificate Issuer.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"certificate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate provides server certificate options used by PgBouncer pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.12.0/pkg/apis/certmanager/v1alpha2/types_certificate.go#L71-L146",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.CertificateSpec"),
+						},
+					},
+				},
+				Required: []string{"issuerRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.CertificateSpec"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha1_TLSPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21599,33 +21700,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_TLSPolicy(ref common.ReferenceCall
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MemberSecret"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha1_UserList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"secretName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecretName points to a secret that holds a file containing list of users",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"secretNamespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecretNamespace specifies the namespace of specified secret. By default, uses the same namespace as pgbouncer if left empty, not default namespace.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"secretName"},
-			},
-		},
 	}
 }
 
