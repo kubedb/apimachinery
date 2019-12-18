@@ -65,6 +65,10 @@ type MongoDBSpec struct {
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty" protobuf:"bytes,5,opt,name=storageType,casttype=StorageType"`
 
+	// StorageEngine can be wiredTiger (default) or inMemory
+	// See available StorageEngine: https://docs.mongodb.com/manual/core/storage-engines/
+	StorageEngine StorageEngine `json:"storageEngine,omitempty" protobuf:"bytes,19,opt,name=storageEngine,casttype=StorageEngine"`
+
 	// Storage spec to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,6,opt,name=storage"`
 
@@ -115,6 +119,18 @@ type MongoDBSpec struct {
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,18,opt,name=terminationPolicy,casttype=TerminationPolicy"`
 }
+
+// StorageEngine represents storage engine of mongodb clusters.
+// ref: https://docs.mongodb.com/manual/core/storage-engines/
+type StorageEngine string
+
+const (
+	// StorageEngineWiredTiger represents `wiredTiger` storage engine of mongodb.
+	StorageEngineWiredTiger StorageEngine = "wiredTiger"
+
+	// StorageEngineInMemory represents `inMemory` storage engine of mongodb.
+	StorageEngineInMemory StorageEngine = "inMemory"
+)
 
 // ClusterAuthMode represents the clusterAuthMode of mongodb clusters ( replicaset or sharding)
 // ref: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-clusterauthmode

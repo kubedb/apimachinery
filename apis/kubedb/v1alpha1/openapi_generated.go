@@ -17986,6 +17986,13 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBSpec(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
+					"storageEngine": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageEngine can be wiredTiger (default) or inMemory See available StorageEngine: https://docs.mongodb.com/manual/core/storage-engines/",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"storage": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Storage spec to specify how storage shall be used.",

@@ -95,12 +95,16 @@ package v1alpha1
 
 import (
 	fmt "fmt"
-	io "io"
-	math "math"
-	reflect "reflect"
-	strings "strings"
 
 	proto "github.com/gogo/protobuf/proto"
+
+	math "math"
+
+	strings "strings"
+
+	reflect "reflect"
+
+	io "io"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.

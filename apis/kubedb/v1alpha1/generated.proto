@@ -685,6 +685,10 @@ message MongoDBSpec {
   // StorageType can be durable (default) or ephemeral
   optional string storageType = 5;
 
+  // StorageEngine can be wiredTiger (default) or inMemory
+  // See available StorageEngine: https://docs.mongodb.com/manual/core/storage-engines/
+  optional string storageEngine = 19;
+
   // Storage spec to specify how storage shall be used.
   optional k8s.io.api.core.v1.PersistentVolumeClaimSpec storage = 6;
 
