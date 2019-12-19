@@ -75,7 +75,6 @@ type Config struct {
 	RSQueue    *queue.Worker
 	RSInformer cache.SharedIndexInformer
 
-	EnableRBAC              bool
 	OperatorNamespace       string
 	GoverningService        string
 	ResyncPeriod            time.Duration
