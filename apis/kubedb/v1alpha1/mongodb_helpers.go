@@ -22,9 +22,11 @@ import (
 
 	"kubedb.dev/apimachinery/api/crds"
 	"kubedb.dev/apimachinery/apis"
+	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 
 	"github.com/appscode/go/types"
+	"gomodules.xyz/version"
 	apps "k8s.io/api/apps/v1"
 	core "k8s.io/api/core/v1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
@@ -295,11 +297,11 @@ func (m *MongoDB) GetMonitoringVendor() string {
 	return ""
 }
 
-func (m *MongoDB) SetDefaults() {
+func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion) {
 	if m == nil {
 		return
 	}
-	m.Spec.SetDefaults()
+	m.Spec.SetDefaults(mgVersion)
 	if m.Spec.ShardTopology != nil {
 		if m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName == "" {
 			m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
@@ -320,7 +322,7 @@ func (m *MongoDB) SetDefaults() {
 	}
 }
 
-func (m *MongoDBSpec) SetDefaults() {
+func (m *MongoDBSpec) SetDefaults(mgVersion *v1alpha1.MongoDBVersion) {
 	if m == nil {
 		return
 	}
@@ -364,9 +366,9 @@ func (m *MongoDBSpec) SetDefaults() {
 		}
 
 		// set default probes
-		m.setDefaultProbes(&m.ShardTopology.Shard.PodTemplate)
-		m.setDefaultProbes(&m.ShardTopology.ConfigServer.PodTemplate)
-		m.setDefaultProbes(&m.ShardTopology.Mongos.PodTemplate)
+		m.setDefaultProbes(&m.ShardTopology.Shard.PodTemplate, mgVersion)
+		m.setDefaultProbes(&m.ShardTopology.ConfigServer.PodTemplate, mgVersion)
+		m.setDefaultProbes(&m.ShardTopology.Mongos.PodTemplate, mgVersion)
 	} else {
 		if m.Replicas == nil {
 			m.Replicas = types.Int32P(1)
@@ -376,7 +378,7 @@ func (m *MongoDBSpec) SetDefaults() {
 			m.PodTemplate = new(ofst.PodTemplateSpec)
 		}
 		// set default probes
-		m.setDefaultProbes(m.PodTemplate)
+		m.setDefaultProbes(m.PodTemplate, mgVersion)
 	}
 
 }
@@ -385,14 +387,32 @@ func (m *MongoDBSpec) SetDefaults() {
 // In operator, check if the value of probe fields is "{}".
 // For "{}", ignore readinessprobe or livenessprobe in statefulset.
 // ref: https://github.com/helm/charts/blob/345ba987722350ffde56ec34d2928c0b383940aa/stable/mongodb/templates/deployment-standalone.yaml#L93
-func (m *MongoDBSpec) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
+func (m *MongoDBSpec) setDefaultProbes(podTemplate *ofst.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion) {
 	if podTemplate == nil {
 		return
 	}
 
 	var sslArgs string
 	if m.SSLMode == SSLModeRequireSSL {
-		sslArgs = fmt.Sprintf("--ssl --sslCAFile=/data/configdb/%v --sslPEMKeyFile=/data/configdb/%v", MongoTLSCertFileName, MongoClientPemFileName)
+		sslArgs = fmt.Sprintf("--tls --tlsCAFile=/data/configdb/%v --tlsCertificateKeyFile=/data/configdb/%v", MongoTLSCertFileName, MongoClientPemFileName)
+
+		breakingVer, err := version.NewVersion("4.1")
+		if err != nil {
+			return
+		}
+		exceptionVer, err := version.NewVersion("4.1.4")
+		if err != nil {
+			return
+		}
+		currentVer, err := version.NewVersion(mgVersion.Spec.Version)
+		if err != nil {
+			return
+		}
+		if currentVer.Equal(exceptionVer) {
+			sslArgs = fmt.Sprintf("--tls --tlsCAFile=/data/configdb/%v --tlsPEMKeyFile=/data/configdb/%v", MongoTLSCertFileName, MongoClientPemFileName)
+		} else if currentVer.LessThan(breakingVer) {
+			sslArgs = fmt.Sprintf("--ssl --sslCAFile=/data/configdb/%v --sslPEMKeyFile=/data/configdb/%v", MongoTLSCertFileName, MongoClientPemFileName)
+		}
 	}
 
 	cmd := []string{

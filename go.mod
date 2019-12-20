@@ -16,6 +16,7 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/robfig/cron/v3 v3.0.0
 	gomodules.xyz/stow v0.2.3
+	gomodules.xyz/version v0.1.0
 	k8s.io/api v0.0.0-20191122220107-b5267f2975e0
 	k8s.io/apiextensions-apiserver v0.0.0-20191114105449-027877536833
 	k8s.io/apimachinery v0.16.5-beta.1
