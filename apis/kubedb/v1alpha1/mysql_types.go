@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package v1alpha1
 
 import (
@@ -135,7 +136,7 @@ type MySQLGroupSpec struct {
 	// ref: https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_server_id
 	//
 	// So, BaseServerID is needed to calculate a unique server_id for each member.
-	BaseServerID *uint64 `json:"baseServerID,omitempty" protobuf:"varint,3,opt,name=baseServerID"`
+	BaseServerID *int64 `json:"baseServerID,omitempty" protobuf:"varint,3,opt,name=baseServerID"`
 }
 
 type MySQLStatus struct {

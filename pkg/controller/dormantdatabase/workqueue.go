@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package dormantdatabase
 
 import (
@@ -27,7 +28,7 @@ import (
 
 func (c *Controller) addEventHandler(selector labels.Selector) {
 	c.DrmnQueue = queue.New("DormantDatabase", c.MaxNumRequeues, c.NumThreads, c.runDormantDatabase)
-	c.DrmnInformer.AddEventHandler(queue.NewFilteredHandler(queue.NewObservableHandler(c.DrmnQueue.GetQueue(), true), selector))
+	c.DrmnInformer.AddEventHandler(queue.NewFilteredHandler(queue.NewReconcilableHandler(c.DrmnQueue.GetQueue()), selector))
 	c.ddbLister = c.KubedbInformerFactory.Kubedb().V1alpha1().DormantDatabases().Lister()
 }
 
