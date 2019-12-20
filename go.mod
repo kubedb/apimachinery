@@ -6,6 +6,7 @@ require (
 	github.com/appscode/docker-registry-client v0.0.0-20180426150142-1bb02bb202b0
 	github.com/appscode/go v0.0.0-20191119085241-0887d8ec2ecc
 	github.com/docker/libtrust v0.0.0-20160708172513-aabc10ec26b7 // indirect
+	github.com/evanphx/json-patch v4.5.0+incompatible
 	github.com/go-openapi/spec v0.19.3
 	github.com/gogo/protobuf v1.2.2-0.20190730201129-28a6bbf47e48
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
@@ -17,10 +18,10 @@ require (
 	gomodules.xyz/stow v0.2.3
 	k8s.io/api v0.0.0-20191122220107-b5267f2975e0
 	k8s.io/apiextensions-apiserver v0.0.0-20191114105449-027877536833
-	k8s.io/apimachinery v0.0.0-20191121175448-79c2a76c473a
+	k8s.io/apimachinery v0.16.5-beta.1
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/kube-openapi v0.0.0-20191107075043-30be4d16710a
-	kmodules.xyz/client-go v0.0.0-20191209235324-1caca3dd2b13
+	kmodules.xyz/client-go v0.0.0-20191219184245-880ab4b0e5db
 	kmodules.xyz/crd-schema-fuzz v0.0.0-20191129174258-81f984340891
 	kmodules.xyz/custom-resources v0.0.0-20191130062942-f41b54f62419
 	kmodules.xyz/monitoring-agent-api v0.0.0-20191209232713-25b3711f847f
@@ -28,7 +29,7 @@ require (
 	kmodules.xyz/offshoot-api v0.0.0-20191204032627-ee9a85c51ab3
 	kmodules.xyz/webhook-runtime v0.0.0-20191127075323-d4bfdee6974d
 	sigs.k8s.io/yaml v1.1.0
-	stash.appscode.dev/stash v0.9.0-rc.2.0.20191210204018-85bf6c0b3b60
+	stash.appscode.dev/stash v0.9.0-rc.2.0.20191220142029-ca6885400de1
 )
 
 replace (

@@ -428,7 +428,7 @@ k8s.io/apiextensions-apiserver/pkg/apiserver/schema
 k8s.io/apiextensions-apiserver/pkg/apiserver/schema/pruning
 k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/scheme
 k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1beta1
-# k8s.io/apimachinery v0.0.0-20191121175448-79c2a76c473a => github.com/kmodules/apimachinery v0.0.0-20191119091232-0553326db082
+# k8s.io/apimachinery v0.16.5-beta.1 => github.com/kmodules/apimachinery v0.0.0-20191119091232-0553326db082
 k8s.io/apimachinery/pkg/api/apitesting
 k8s.io/apimachinery/pkg/api/apitesting/fuzzer
 k8s.io/apimachinery/pkg/api/apitesting/roundtrip
@@ -811,7 +811,7 @@ k8s.io/utils/integer
 k8s.io/utils/path
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20191209235324-1caca3dd2b13
+# kmodules.xyz/client-go v0.0.0-20191219184245-880ab4b0e5db
 kmodules.xyz/client-go
 kmodules.xyz/client-go/apiextensions/v1beta1
 kmodules.xyz/client-go/core/v1
@@ -847,7 +847,7 @@ kmodules.xyz/objectstore-api/api/v1
 kmodules.xyz/objectstore-api/osm
 # kmodules.xyz/offshoot-api v0.0.0-20191204032627-ee9a85c51ab3
 kmodules.xyz/offshoot-api/api/v1
-# kmodules.xyz/prober v0.0.0-20191210001102-8d572794d62c
+# kmodules.xyz/prober v0.0.0-20191216013129-7c91e2b0edb2
 kmodules.xyz/prober/api/v1
 # kmodules.xyz/webhook-runtime v0.0.0-20191127075323-d4bfdee6974d
 kmodules.xyz/webhook-runtime/admission/v1beta1
@@ -859,7 +859,7 @@ sigs.k8s.io/structured-merge-diff/typed
 sigs.k8s.io/structured-merge-diff/value
 # sigs.k8s.io/yaml v1.1.0 => sigs.k8s.io/yaml v1.1.0
 sigs.k8s.io/yaml
-# stash.appscode.dev/stash v0.9.0-rc.2.0.20191210204018-85bf6c0b3b60
+# stash.appscode.dev/stash v0.9.0-rc.2.0.20191220142029-ca6885400de1
 stash.appscode.dev/stash/api/crds
 stash.appscode.dev/stash/apis
 stash.appscode.dev/stash/apis/repositories
