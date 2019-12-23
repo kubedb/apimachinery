@@ -727,8 +727,8 @@ kmodules.xyz/crd-schema-fuzz v0.0.0-20191129174258-81f984340891 h1:2W/fqLbAurvup
 kmodules.xyz/crd-schema-fuzz v0.0.0-20191129174258-81f984340891/go.mod h1:9NXNZ4xhqof0WngtIuo4vl+WoCQpLJEJcyuEo3mPpiM=
 kmodules.xyz/custom-resources v0.0.0-20191130062942-f41b54f62419 h1:o6KD8XMxdyRR3rqScTsWvcufFDT7vQBnYXpHUp6UtRg=
 kmodules.xyz/custom-resources v0.0.0-20191130062942-f41b54f62419/go.mod h1:EksiAQK3p3bVU5cNBjLT0z5V7er1tvWLBWILTuf6G/0=
-kmodules.xyz/monitoring-agent-api v0.0.0-20191209232713-25b3711f847f h1:6Nx6TOdEorxFB2THg2TuWJLpp13/ue2BIa0p72L57ok=
-kmodules.xyz/monitoring-agent-api v0.0.0-20191209232713-25b3711f847f/go.mod h1:q5Adit2fxEoY1jSkYiK1t856Ombl8cunYJBmgL43wwc=
+kmodules.xyz/monitoring-agent-api v0.0.0-20191223205013-784042d6a958 h1:Ctoy2Rx2O3lCfxGBo4cPshopqo/2gJ+oXx/M45GxOEs=
+kmodules.xyz/monitoring-agent-api v0.0.0-20191223205013-784042d6a958/go.mod h1:q5Adit2fxEoY1jSkYiK1t856Ombl8cunYJBmgL43wwc=
 kmodules.xyz/objectstore-api v0.0.0-20191127144749-5881939b57f0 h1:ilgkGU/bteKRvH99piXxU8b2c1E9lwxb0sDpLLhy4iY=
 kmodules.xyz/objectstore-api v0.0.0-20191127144749-5881939b57f0/go.mod h1:AE1rz+T/3dlUwH5pLgCNghWeeFfeVBnBXKJVpsLHlmc=
 kmodules.xyz/offshoot-api v0.0.0-20191204032627-ee9a85c51ab3 h1:DW3lX0hZzx14WTNCU+RTWU2eKZ4xbKpUvYVy6S5OtBc=

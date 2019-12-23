@@ -75,6 +75,10 @@ type PgBouncerSpec struct {
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty" protobuf:"bytes,8,opt,name=monitor"`
+
+	// Indicates that the db is paused.
+	// +optional
+	Paused bool `json:"paused,omitempty" protobuf:"varint,9,opt,name=paused"`
 }
 
 type Databases struct {

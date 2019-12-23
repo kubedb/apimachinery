@@ -143,6 +143,7 @@ message Databases {
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// Deprecated
 message DormantDatabase {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
@@ -303,6 +304,10 @@ message ElasticsearchSpec {
   // TerminationPolicy controls the delete operation for database
   // +optional
   optional string terminationPolicy = 19;
+
+  // Indicates that the db is paused.
+  // +optional
+  optional bool paused = 20;
 }
 
 message ElasticsearchStatus {
@@ -384,6 +389,10 @@ message EtcdSpec {
   // TerminationPolicy controls the delete operation for database
   // +optional
   optional string terminationPolicy = 13;
+
+  // Indicates that the db is paused.
+  // +optional
+  optional bool paused = 14;
 }
 
 message EtcdStatus {
@@ -494,6 +503,10 @@ message MariaDBSpec {
   // TerminationPolicy controls the delete operation for database
   // +optional
   optional string terminationPolicy = 12;
+
+  // Indicates that the db is paused.
+  // +optional
+  optional bool paused = 13;
 }
 
 message MariaDBStatus {
@@ -568,6 +581,10 @@ message MemcachedSpec {
   // TerminationPolicy controls the delete operation for database
   // +optional
   optional string terminationPolicy = 11;
+
+  // Indicates that the db is paused.
+  // +optional
+  optional bool paused = 12;
 }
 
 message MemcachedStatus {
@@ -735,6 +752,10 @@ message MongoDBSpec {
   // TerminationPolicy controls the delete operation for database
   // +optional
   optional string terminationPolicy = 18;
+
+  // Indicates that the db is paused.
+  // +optional
+  optional bool paused = 19;
 }
 
 message MongoDBStatus {
@@ -845,6 +866,10 @@ message MySQLSpec {
   // TerminationPolicy controls the delete operation for database
   // +optional
   optional string terminationPolicy = 14;
+
+  // Indicates that the db is paused.
+  // +optional
+  optional bool paused = 15;
 }
 
 message MySQLStatus {
@@ -970,6 +995,10 @@ message PerconaXtraDBSpec {
   // TerminationPolicy controls the delete operation for database
   // +optional
   optional string terminationPolicy = 12;
+
+  // Indicates that the db is paused.
+  // +optional
+  optional bool paused = 13;
 }
 
 message PerconaXtraDBStatus {
@@ -1036,6 +1065,10 @@ message PgBouncerSpec {
   // Monitor is used monitor database instance
   // +optional
   optional kmodules.xyz.monitoring_agent_api.api.v1.AgentSpec monitor = 8;
+
+  // Indicates that the db is paused.
+  // +optional
+  optional bool paused = 9;
 }
 
 message PgBouncerStatus {
@@ -1141,6 +1174,10 @@ message PostgresSpec {
   // TerminationPolicy controls the delete operation for database
   // +optional
   optional string terminationPolicy = 18;
+
+  // Indicates that the db is paused.
+  // +optional
+  optional bool paused = 19;
 }
 
 message PostgresStatus {
@@ -1231,6 +1268,10 @@ message ProxySQLSpec {
   // employed to update Pods in the StatefulSet when a revision is made to
   // Template.
   optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 10;
+
+  // Indicates that the db is paused.
+  // +optional
+  optional bool paused = 11;
 }
 
 message ProxySQLStatus {
@@ -1332,6 +1373,10 @@ message RedisSpec {
   // TerminationPolicy controls the delete operation for database
   // +optional
   optional string terminationPolicy = 12;
+
+  // Indicates that the db is paused.
+  // +optional
+  optional bool paused = 13;
 }
 
 message RedisStatus {
@@ -1357,6 +1402,7 @@ message ScriptSourceSpec {
 // +kubebuilder:printcolumn:name="DatabaseName",type="string",JSONPath=".spec.databaseName"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// Deprecated
 message Snapshot {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
