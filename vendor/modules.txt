@@ -840,7 +840,7 @@ kmodules.xyz/custom-resources/client/informers/externalversions/appcatalog
 kmodules.xyz/custom-resources/client/informers/externalversions/appcatalog/v1alpha1
 kmodules.xyz/custom-resources/client/informers/externalversions/internalinterfaces
 kmodules.xyz/custom-resources/client/listers/appcatalog/v1alpha1
-# kmodules.xyz/monitoring-agent-api v0.0.0-20191209232713-25b3711f847f
+# kmodules.xyz/monitoring-agent-api v0.0.0-20191223205013-784042d6a958
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/objectstore-api v0.0.0-20191127144749-5881939b57f0
 kmodules.xyz/objectstore-api/api/v1
