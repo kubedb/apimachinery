@@ -93,7 +93,7 @@ const (
 	ProxySQLAdminPort             = 6032
 	ProxySQLAdminPortName         = "proxyadm"
 	ProxySQLDataMountPath         = "/var/lib/proxysql"
-	ProxySQLCustomConfigMountPath = "/etc/custom-proxysql.cnf"
+	ProxySQLCustomConfigMountPath = "/etc/custom-config"
 
 	RedisShardKey   = RedisKey + "/shard"
 	RedisNodePort   = 6379
