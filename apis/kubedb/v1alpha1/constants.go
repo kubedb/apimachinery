@@ -82,7 +82,7 @@ const (
 	PerconaXtraDBDataLostFoundPath            = PerconaXtraDBDataMountPath + "lost+found"
 	PerconaXtraDBInitDBMountPath              = "/docker-entrypoint-initdb.d"
 	PerconaXtraDBCustomConfigMountPath        = "/etc/percona-server.conf.d/"
-	PerconaXtraDBClusterCustomConfigMountPath = "/etc/mysql/percona-xtradb-cluster.conf.d/"
+	PerconaXtraDBClusterCustomConfigMountPath = "/etc/percona-xtradb-cluster.conf.d/"
 
 	LabelProxySQLName        = ProxySQLKey + "/name"
 	LabelProxySQLLoadBalance = ProxySQLKey + "/load-balance"
