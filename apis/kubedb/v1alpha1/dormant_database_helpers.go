@@ -13,11 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package v1alpha1
 
 import (
 	"kubedb.dev/apimachinery/api/crds"
 	"kubedb.dev/apimachinery/apis"
+	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -89,7 +91,7 @@ func (d *DormantDatabase) SetDefaults() {
 	d.Spec.Origin.Spec.MySQL.SetDefaults()
 	d.Spec.Origin.Spec.PerconaXtraDB.SetDefaults()
 	d.Spec.Origin.Spec.MariaDB.SetDefaults()
-	d.Spec.Origin.Spec.MongoDB.SetDefaults()
+	d.Spec.Origin.Spec.MongoDB.SetDefaults(&v1alpha1.MongoDBVersion{})
 	d.Spec.Origin.Spec.Redis.SetDefaults()
 	d.Spec.Origin.Spec.Memcached.SetDefaults()
 	d.Spec.Origin.Spec.Etcd.SetDefaults()

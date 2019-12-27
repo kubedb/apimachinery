@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package v1alpha1
 
 import (
@@ -79,6 +80,10 @@ type MemcachedSpec struct {
 	// TerminationPolicy controls the delete operation for database
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,11,opt,name=terminationPolicy,casttype=TerminationPolicy"`
+
+	// Indicates that the db is paused.
+	// +optional
+	Paused bool `json:"paused,omitempty" protobuf:"varint,12,opt,name=paused"`
 }
 
 type MemcachedStatus struct {

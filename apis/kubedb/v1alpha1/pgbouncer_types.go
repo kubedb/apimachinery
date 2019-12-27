@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package v1alpha1
 
 import (
@@ -74,6 +75,10 @@ type PgBouncerSpec struct {
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty" protobuf:"bytes,8,opt,name=monitor"`
+
+	// Indicates that the db is paused.
+	// +optional
+	Paused bool `json:"paused,omitempty" protobuf:"varint,9,opt,name=paused"`
 }
 
 type Databases struct {

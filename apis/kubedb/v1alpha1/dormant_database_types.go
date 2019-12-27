@@ -13,10 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
 const (
@@ -35,6 +37,7 @@ const (
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// Deprecated
 type DormantDatabase struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -51,7 +54,7 @@ type DormantDatabaseSpec struct {
 }
 
 type Origin struct {
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	ofst.PartialObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	// Origin Spec to store original database Spec
 	Spec OriginSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
 }

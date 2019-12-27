@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package v1alpha1
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -36,6 +37,7 @@ const (
 // +kubebuilder:resource:path=elasticsearchversions,singular=elasticsearchversion,scope=Cluster,shortName=esversion,categories={datastore,kubedb,appscode}
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
+// +kubebuilder:printcolumn:name="AUTH_PLUGIN",type="string",JSONPath=".spec.authPlugin"
 // +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type ElasticsearchVersion struct {

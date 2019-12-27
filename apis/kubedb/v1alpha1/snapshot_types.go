@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package v1alpha1
 
 import (
@@ -39,6 +40,7 @@ const (
 // +kubebuilder:printcolumn:name="DatabaseName",type="string",JSONPath=".spec.databaseName"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// Deprecated
 type Snapshot struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`

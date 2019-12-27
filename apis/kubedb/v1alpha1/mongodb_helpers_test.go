@@ -13,10 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package v1alpha1
 
 import (
 	"testing"
+
+	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
 	"github.com/appscode/go/types"
 	core "k8s.io/api/core/v1"
@@ -137,7 +140,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 	shardDSN := mongodb.ShardDSN(0)
 	t.Log(shardDSN)
 
-	mongodb.Spec.SetDefaults()
+	mongodb.Spec.SetDefaults(&v1alpha1.MongoDBVersion{})
 }
 
 func TestMongoDB_ConfigSvrDSN(t *testing.T) {
@@ -211,5 +214,5 @@ func TestMongoDB_SetDefaults(t *testing.T) {
 		},
 	}
 
-	mongodb.Spec.SetDefaults()
+	mongodb.Spec.SetDefaults(&v1alpha1.MongoDBVersion{})
 }
