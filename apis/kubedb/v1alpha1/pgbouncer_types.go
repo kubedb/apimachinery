@@ -22,7 +22,6 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
-	v1 "kmodules.xyz/offshoot-api/api/v1"
 )
 
 const (
@@ -59,7 +58,7 @@ type PgBouncerSpec struct {
 	Replicas *int32 `json:"replicas,omitempty" protobuf:"varint,2,opt,name=replicas"`
 	// ServiceTemplate is an optional configuration for service used to expose database.
 	// +optional
-	ServiceTemplate v1.ServiceTemplateSpec `json:"serviceTemplate,omitempty" protobuf:"bytes,3,opt,name=serviceTemplate"`
+	ServiceTemplate ofst.ServiceTemplateSpec `json:"serviceTemplate,omitempty" protobuf:"bytes,3,opt,name=serviceTemplate"`
 	// PodTemplate is an optional configuration for pods.
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty" protobuf:"bytes,4,opt,name=podTemplate"`
@@ -75,7 +74,6 @@ type PgBouncerSpec struct {
 	// Monitor is used monitor database instance.
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty" protobuf:"bytes,8,opt,name=monitor"`
-
 	// TLS contains tls configurations for client and server.
 	// +optional
 	TLS *TLSConfig `json:"tls,omitempty" protobuf:"bytes,9,opt,name=tls"`
@@ -141,44 +139,6 @@ type ConnectionPoolConfig struct {
 	// pgbouncer knows are handled by admin and it can ignore them.
 	// +optional
 	IgnoreStartupParameters string `json:"ignoreStartupParameters,omitempty" protobuf:"bytes,14,opt,name=ignoreStartupParameters"`
-}
-
-type TLSConfig struct {
-	// IssuerRef is a reference to a Certificate Issuer.
-	IssuerRef *core.TypedLocalObjectReference `json:"issuerRef" protobuf:"bytes,1,opt,name=issuerRef"`
-
-	// Certificate provides server certificate options used by PgBouncer pods.
-	// These options are passed to a cert-manager Certificate object.
-	// xref: https://github.com/jetstack/cert-manager/blob/v0.12.0/pkg/apis/certmanager/v1alpha2/types_certificate.go#L71-L146
-	// +optional
-	Certificate *CertificateSpec `json:"certificate,omitempty" protobuf:"bytes,2,opt,name=certificate"`
-}
-
-type CertificateSpec struct {
-	// Organization is the organization to be used on the Certificate
-	// +optional
-	Organization []string `json:"organization,omitempty" protobuf:"bytes,1,rep,name=organization"`
-
-	// Certificate default Duration
-	// +optional
-	Duration *metav1.Duration `json:"duration,omitempty" protobuf:"bytes,2,opt,name=duration"`
-
-	// Certificate renew before expiration duration
-	// +optional
-	RenewBefore *metav1.Duration `json:"renewBefore,omitempty" protobuf:"bytes,3,opt,name=renewBefore"`
-
-	// DNSNames is a list of subject alt names to be used on the Certificate.
-	// +optional
-	DNSNames []string `json:"dnsNames,omitempty" protobuf:"bytes,4,rep,name=dnsNames"`
-
-	// IPAddresses is a list of IP addresses to be used on the Certificate
-	// +optional
-	IPAddresses []string `json:"ipAddresses,omitempty" protobuf:"bytes,5,rep,name=ipAddresses"`
-
-	// URISANs is a list of URI Subject Alternative Names to be set on this
-	// Certificate.
-	// +optional
-	URISANs []string `json:"uriSANs,omitempty" protobuf:"bytes,6,rep,name=uriSANs"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
