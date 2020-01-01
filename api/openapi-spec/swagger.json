@@ -22194,18 +22194,59 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.CertificateSpec": {
+      "type": "object",
+      "properties": {
+        "dnsNames": {
+          "description": "DNSNames is a list of subject alt names to be used on the Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "duration": {
+          "description": "Certificate default Duration",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "ipAddresses": {
+          "description": "IPAddresses is a list of IP addresses to be used on the Certificate",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "organization": {
+          "description": "Organization is the organization to be used on the Certificate",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "renewBefore": {
+          "description": "Certificate renew before expiration duration",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "uriSANs": {
+          "description": "URISANs is a list of URI Subject Alternative Names to be set on this Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ConnectionPoolConfig": {
       "type": "object",
       "properties": {
         "adminUsers": {
-          "description": "AdminUsers specifies an array of users who can act as PgBouncer administrators",
+          "description": "AdminUsers specifies an array of users who can act as PgBouncer administrators.",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "authType": {
-          "description": "AuthType specifies how to authenticate users. Default: md5 (md5+plain text)",
+          "description": "AuthType specifies how to authenticate users. Default: md5 (md5+plain text).",
           "type": "string"
         },
         "authUser": {
@@ -22218,7 +22259,7 @@
           "format": "int64"
         },
         "ignoreStartupParameters": {
-          "description": "IgnoreStartupParameters specifies comma-separated startup parameters that pgbouncer knows are handled by admin and it can ignore them",
+          "description": "IgnoreStartupParameters specifies comma-separated startup parameters that pgbouncer knows are handled by admin and it can ignore them.",
           "type": "string"
         },
         "maxClientConnections": {
@@ -22251,17 +22292,17 @@
           "format": "int32"
         },
         "reservePoolSize": {
-          "description": "ReservePoolSize specifies how many additional connections to allow to a pool. 0 disables. Default: 0 (disabled)",
+          "description": "ReservePoolSize specifies how many additional connections to allow to a pool. 0 disables. Default: 0 (disabled).",
           "type": "integer",
           "format": "int64"
         },
         "reservePoolTimeoutSeconds": {
-          "description": "ReservePoolTimeoutSeconds is the number of seconds in which if a client has not been serviced, pgbouncer enables use of additional connections from reserve pool. 0 disables. Default: 5.0",
+          "description": "ReservePoolTimeoutSeconds is the number of seconds in which if a client has not been serviced, pgbouncer enables use of additional connections from reserve pool. 0 disables. Default: 5.0.",
           "type": "integer",
           "format": "int64"
         },
         "statsPeriodSeconds": {
-          "description": "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log",
+          "description": "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log.",
           "type": "integer",
           "format": "int64"
         }
@@ -22276,24 +22317,20 @@
       ],
       "properties": {
         "alias": {
-          "description": "Alias to uniquely identify a target database running inside a specific Postgres instance",
+          "description": "Alias to uniquely identify a target database running inside a specific Postgres instance.",
           "type": "string"
         },
         "databaseName": {
-          "description": "DatabaseName is the name of the target database inside a Postgres instance",
+          "description": "DatabaseName is the name of the target database inside a Postgres instance.",
           "type": "string"
         },
         "databaseRef": {
-          "description": "DatabaseRef specifies the database appbinding reference in any namespace",
+          "description": "DatabaseRef specifies the database appbinding reference in any namespace.",
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.AppReference"
         },
-        "password": {
-          "description": "Password is to authenticate the user specified in Username field",
-          "type": "string"
-        },
-        "username": {
-          "description": "UserName is used to bind a single user to a specific database connection",
-          "type": "string"
+        "databaseSecretRef": {
+          "description": "DatabaseSecretRef points to a secret that contains the credentials (username and password) of an existing user of this database. It is used to bind a single user to this specific database connection.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         }
       }
     },
@@ -23753,7 +23790,7 @@
           "type": "string"
         },
         "items": {
-          "description": "Items is a list of PgBouncer CRD objects",
+          "description": "Items is a list of PgBouncer CRD objects.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncer"
@@ -23782,26 +23819,22 @@
       ],
       "properties": {
         "connectionPool": {
-          "description": "ConnectionPoolConfig defines Connection pool configuration",
+          "description": "ConnectionPoolConfig defines Connection pool configuration.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ConnectionPoolConfig"
         },
         "databases": {
-          "description": "Databases to proxy by connection pooling",
+          "description": "Databases to proxy by connection pooling.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Databases"
           }
         },
         "monitor": {
-          "description": "Monitor is used monitor database instance",
+          "description": "Monitor is used monitor database instance.",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
-        "paused": {
-          "description": "Indicates that the db is paused.",
-          "type": "boolean"
-        },
         "podTemplate": {
-          "description": "PodTemplate is an optional configuration for pods",
+          "description": "PodTemplate is an optional configuration for pods.",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "replicas": {
@@ -23810,11 +23843,15 @@
           "format": "int32"
         },
         "serviceTemplate": {
-          "description": "ServiceTemplate is an optional configuration for service used to expose database",
+          "description": "ServiceTemplate is an optional configuration for service used to expose database.",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
         },
+        "tls": {
+          "description": "TLS contains tls configurations for client and server.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.TLSConfig"
+        },
         "userListSecretRef": {
-          "description": "UserListSecretRef is a secret with a list of PgBouncer user and passwords",
+          "description": "UserListSecretRef is a secret with a list of PgBouncer user and passwords.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "version": {
@@ -23832,7 +23869,7 @@
           "format": "int64"
         },
         "phase": {
-          "description": "Phase specifies the current state of PgBouncer server",
+          "description": "Phase specifies the current state of PgBouncer server.",
           "type": "string"
         },
         "reason": {
@@ -24627,6 +24664,22 @@
         },
         "startTime": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.TLSConfig": {
+      "type": "object",
+      "required": [
+        "issuerRef"
+      ],
+      "properties": {
+        "certificate": {
+          "description": "Certificate provides server certificate options used by PgBouncer pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.12.0/pkg/apis/certmanager/v1alpha2/types_certificate.go#L71-L146",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.CertificateSpec"
+        },
+        "issuerRef": {
+          "description": "IssuerRef is a reference to a Certificate Issuer.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         }
       }
     },
@@ -27003,6 +27056,10 @@
           "version": "v1alpha1"
         }
       ]
+    },
+    "io.k8s.apimachinery.pkg.apis.meta.v1.Duration": {
+      "description": "Duration is a wrapper around time.Duration which supports correct marshaling to YAML and JSON. In particular, it marshals into strings, which can be used as map keys in json.",
+      "type": "string"
     },
     "io.k8s.apimachinery.pkg.apis.meta.v1.FieldsV1": {
       "description": "FieldsV1 stores a set of fields in a data structure like a Trie, in JSON format.\n\nEach key is either a '.' representing the field itself, and will always map to an empty set, or a string representing a sub-field or item. The string will follow one of these four formats: 'f:\u003cname\u003e', where \u003cname\u003e is the name of a field in a struct, or key in a map 'v:\u003cvalue\u003e', where \u003cvalue\u003e is the exact json formatted value of a list item 'i:\u003cindex\u003e', where \u003cindex\u003e is position of a item in a list 'k:\u003ckeys\u003e', where \u003ckeys\u003e is a map of  a list item's key fields to their unique values If a key maps to an empty Fields value, the field that key represents is part of the set.\n\nThe exact format is defined in sigs.k8s.io/structured-merge-diff",

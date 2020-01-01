@@ -112,10 +112,11 @@ spec:
                     - name
                     - namespace
                     type: object
-                  password:
-                    type: string
-                  username:
-                    type: string
+                  databaseSecretRef:
+                    properties:
+                      name:
+                        type: string
+                    type: object
                 required:
                 - alias
                 - databaseName
@@ -389,8 +390,6 @@ spec:
                       type: object
                   type: object
               type: object
-            paused:
-              type: boolean
             podTemplate:
               properties:
                 controller:
@@ -1642,6 +1641,46 @@ spec:
                     type:
                       type: string
                   type: object
+              type: object
+            tls:
+              properties:
+                certificate:
+                  properties:
+                    dnsNames:
+                      items:
+                        type: string
+                      type: array
+                    duration:
+                      type: string
+                    ipAddresses:
+                      items:
+                        type: string
+                      type: array
+                    organization:
+                      items:
+                        type: string
+                      type: array
+                    renewBefore:
+                      type: string
+                    uriSANs:
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                issuerRef:
+                  properties:
+                    apiGroup:
+                      type: string
+                    kind:
+                      type: string
+                    name:
+                      type: string
+                  required:
+                  - kind
+                  - name
+                  type: object
+              required:
+              - issuerRef
               type: object
             userListSecretRef:
               properties:
