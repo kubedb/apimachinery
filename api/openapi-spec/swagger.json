@@ -23386,7 +23386,6 @@
       }
     },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL": {
-      "description": "Mysql defines a Mysql database.",
       "type": "object",
       "properties": {
         "apiVersion": {
