@@ -794,7 +794,12 @@ message MongoDBStatus {
   optional int64 observedGeneration = 3;
 }
 
-// Mysql defines a Mysql database.
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=mysqls,singular=mysql,shortName=my,categories={datastore,kubedb,appscode,all}
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 message MySQL {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
