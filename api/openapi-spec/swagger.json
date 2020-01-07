@@ -22569,6 +22569,10 @@
           "description": "To enable ssl in transport \u0026 http layer",
           "type": "boolean"
         },
+        "halted": {
+          "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+          "type": "boolean"
+        },
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
@@ -22582,7 +22586,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the db is paused.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -22713,6 +22717,10 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
+        "halted": {
+          "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+          "type": "boolean"
+        },
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
@@ -22722,7 +22730,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the db is paused.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -22898,6 +22906,10 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
+        "halted": {
+          "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+          "type": "boolean"
+        },
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
@@ -22907,7 +22919,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the db is paused.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -23043,12 +23055,16 @@
           "description": "ConfigSource is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
         },
+        "halted": {
+          "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+          "type": "boolean"
+        },
         "monitor": {
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the db is paused.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -23310,6 +23326,10 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
+        "halted": {
+          "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+          "type": "boolean"
+        },
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
@@ -23319,7 +23339,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the db is paused.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -23493,6 +23513,10 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
+        "halted": {
+          "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+          "type": "boolean"
+        },
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
@@ -23502,7 +23526,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the db is paused.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -23689,6 +23713,10 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
+        "halted": {
+          "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+          "type": "boolean"
+        },
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
@@ -23698,7 +23726,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the db is paused.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -23831,6 +23859,10 @@
         "monitor": {
           "description": "Monitor is used monitor database instance.",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
+        },
+        "paused": {
+          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
+          "type": "boolean"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods.",
@@ -23966,6 +23998,10 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
+        "halted": {
+          "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+          "type": "boolean"
+        },
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
@@ -23979,7 +24015,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the db is paused.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -24176,7 +24212,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the db is paused.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -24331,6 +24367,10 @@
           "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e redis.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
         },
+        "halted": {
+          "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+          "type": "boolean"
+        },
         "mode": {
           "description": "Default is \"Standalone\". If set to \"Cluster\", ClusterSpec is required and redis servers will start in cluster mode",
           "type": "string"
@@ -24340,7 +24380,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the db is paused.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
           "type": "boolean"
         },
         "podTemplate": {
