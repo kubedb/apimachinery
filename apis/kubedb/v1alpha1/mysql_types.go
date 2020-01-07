@@ -113,7 +113,7 @@ type MySQLSpec struct {
 	// Template.
 	UpdateStrategy apps.StatefulSetUpdateStrategy `json:"updateStrategy,omitempty" protobuf:"bytes,13,opt,name=updateStrategy"`
 
-	// Indicates that the database is paused and controller will not sync any changes made this spec.
+	// Indicates that the database is paused and controller will not sync any changes made to this spec.
 	// +optional
 	Paused bool `json:"paused,omitempty" protobuf:"varint,14,opt,name=paused"`
 

@@ -112,7 +112,7 @@ type MongoDBSpec struct {
 	// Template.
 	UpdateStrategy apps.StatefulSetUpdateStrategy `json:"updateStrategy,omitempty" protobuf:"bytes,17,opt,name=updateStrategy"`
 
-	// Indicates that the database is paused and controller will not sync any changes made this spec.
+	// Indicates that the database is paused and controller will not sync any changes made to this spec.
 	// +optional
 	Paused bool `json:"paused,omitempty" protobuf:"varint,18,opt,name=paused"`
 

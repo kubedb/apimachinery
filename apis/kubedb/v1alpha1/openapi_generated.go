@@ -18252,7 +18252,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made this spec.",
+							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -18483,7 +18483,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_EtcdSpec(ref common.ReferenceCallb
 					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made this spec.",
+							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -18779,7 +18779,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MariaDBSpec(ref common.ReferenceCa
 					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made this spec.",
+							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -19005,7 +19005,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MemcachedSpec(ref common.Reference
 					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made this spec.",
+							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -19518,7 +19518,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBSpec(ref common.ReferenceCa
 					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made this spec.",
+							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -19815,7 +19815,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQLSpec(ref common.ReferenceCall
 					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made this spec.",
+							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -20134,7 +20134,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PerconaXtraDBSpec(ref common.Refer
 					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made this spec.",
+							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -20353,7 +20353,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSpec(ref common.Reference
 					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made this spec.",
+							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -20623,7 +20623,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresSpec(ref common.ReferenceC
 					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made this spec.",
+							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -20935,7 +20935,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLSpec(ref common.ReferenceC
 					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made this spec.",
+							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -21213,7 +21213,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_RedisSpec(ref common.ReferenceCall
 					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made this spec.",
+							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},

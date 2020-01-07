@@ -77,7 +77,7 @@ type MemcachedSpec struct {
 	// +optional
 	UpdateStrategy apps.DeploymentStrategy `json:"strategy,omitempty" protobuf:"bytes,4,opt,name=strategy"`
 
-	// Indicates that the database is paused and controller will not sync any changes made this spec.
+	// Indicates that the database is paused and controller will not sync any changes made to this spec.
 	// +optional
 	Paused bool `json:"paused,omitempty" protobuf:"varint,11,opt,name=paused"`
 

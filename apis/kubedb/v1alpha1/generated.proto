@@ -326,7 +326,7 @@ message ElasticsearchSpec {
   // Template.
   optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 18;
 
-  // Indicates that the database is paused and controller will not sync any changes made this spec.
+  // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
   optional bool paused = 19;
 
@@ -415,7 +415,7 @@ message EtcdSpec {
   // Template.
   optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 12;
 
-  // Indicates that the database is paused and controller will not sync any changes made this spec.
+  // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
   optional bool paused = 13;
 
@@ -533,7 +533,7 @@ message MariaDBSpec {
   // Template.
   optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 11;
 
-  // Indicates that the database is paused and controller will not sync any changes made this spec.
+  // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
   optional bool paused = 12;
 
@@ -615,7 +615,7 @@ message MemcachedSpec {
   // +optional
   optional k8s.io.api.apps.v1.DeploymentStrategy strategy = 4;
 
-  // Indicates that the database is paused and controller will not sync any changes made this spec.
+  // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
   optional bool paused = 11;
 
@@ -790,7 +790,7 @@ message MongoDBSpec {
   // Template.
   optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 17;
 
-  // Indicates that the database is paused and controller will not sync any changes made this spec.
+  // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
   optional bool paused = 18;
 
@@ -913,7 +913,7 @@ message MySQLSpec {
   // Template.
   optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 13;
 
-  // Indicates that the database is paused and controller will not sync any changes made this spec.
+  // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
   optional bool paused = 14;
 
@@ -1046,7 +1046,7 @@ message PerconaXtraDBSpec {
   // Template.
   optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 11;
 
-  // Indicates that the database is paused and controller will not sync any changes made this spec.
+  // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
   optional bool paused = 12;
 
@@ -1128,7 +1128,7 @@ message PgBouncerSpec {
   // +optional
   optional TLSConfig tls = 9;
 
-  // Indicates that the database is paused and controller will not sync any changes made this spec.
+  // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
   optional bool paused = 10;
 }
@@ -1233,7 +1233,7 @@ message PostgresSpec {
   // Template.
   optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 17;
 
-  // Indicates that the database is paused and controller will not sync any changes made this spec.
+  // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
   optional bool paused = 18;
 
@@ -1335,7 +1335,7 @@ message ProxySQLSpec {
   // Template.
   optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 10;
 
-  // Indicates that the database is paused and controller will not sync any changes made this spec.
+  // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
   optional bool paused = 11;
 }
@@ -1436,7 +1436,7 @@ message RedisSpec {
   // Template.
   optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 11;
 
-  // Indicates that the database is paused and controller will not sync any changes made this spec.
+  // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
   optional bool paused = 12;
 
