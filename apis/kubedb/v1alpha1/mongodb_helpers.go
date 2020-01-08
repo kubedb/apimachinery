@@ -46,10 +46,11 @@ func (_ MongoDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinit
 var _ apis.ResourceInfo = &MongoDB{}
 
 const (
-	MongoTLSKeyFileName    = "ca.key"
-	MongoTLSCertFileName   = "ca.cert"
-	MongoServerPemFileName = "mongo.pem"
-	MongoClientPemFileName = "client.pem"
+	MongoTLSKeyFileName  = "ca.key"
+	MongoTLSCertFileName = "ca.crt"
+	MongoPemFileName     = "mongo.pem"
+	MongoClientFileName  = "client.pem"
+	MongoCertDirectory   = "/var/run/mongodb/tls"
 
 	MongoDBShardLabelKey  = "mongodb.kubedb.com/node.shard"
 	MongoDBConfigLabelKey = "mongodb.kubedb.com/node.config"
@@ -408,10 +409,10 @@ func (m *MongoDB) setDefaultProbes(podTemplate *ofst.PodTemplateSpec, mgVersion 
 	if podTemplate == nil {
 		return
 	}
-
 	var sslArgs string
 	if m.Spec.SSLMode == SSLModeRequireSSL {
-		sslArgs = fmt.Sprintf("--tls --tlsCAFile=/data/configdb/%v --tlsCertificateKeyFile=/data/configdb/%v", MongoTLSCertFileName, MongoClientPemFileName)
+		sslArgs = fmt.Sprintf("--tls --tlsCAFile=%v/%v --tlsCertificateKeyFile=%v/%v",
+			MongoCertDirectory, MongoTLSCertFileName, MongoCertDirectory, MongoClientFileName)
 
 		breakingVer, err := version.NewVersion("4.1")
 		if err != nil {
@@ -426,16 +427,16 @@ func (m *MongoDB) setDefaultProbes(podTemplate *ofst.PodTemplateSpec, mgVersion 
 			return
 		}
 		if currentVer.Equal(exceptionVer) {
-			sslArgs = fmt.Sprintf("--tls --tlsCAFile=/data/configdb/%v --tlsPEMKeyFile=/data/configdb/%v", MongoTLSCertFileName, MongoClientPemFileName)
+			sslArgs = fmt.Sprintf("--tls --tlsCAFile=%v/%v --tlsPEMKeyFile=%v/%v", MongoCertDirectory, MongoTLSCertFileName, MongoCertDirectory, MongoClientFileName)
 		} else if currentVer.LessThan(breakingVer) {
-			sslArgs = fmt.Sprintf("--ssl --sslCAFile=/data/configdb/%v --sslPEMKeyFile=/data/configdb/%v", MongoTLSCertFileName, MongoClientPemFileName)
+			sslArgs = fmt.Sprintf("--ssl --sslCAFile=%v/%v --sslPEMKeyFile=%v/%v", MongoCertDirectory, MongoTLSCertFileName, MongoCertDirectory, MongoClientFileName)
 		}
 	}
 
 	cmd := []string{
 		"bash",
 		"-c",
-		fmt.Sprintf(`if [[ $(mongo admin --host=localhost %v --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin --quiet --eval "db.adminCommand('ping').ok" ) -eq "1" ]]; then 
+		fmt.Sprintf(`set -x; if [[ $(mongo admin --host=localhost %v --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin --quiet --eval "db.adminCommand('ping').ok" ) -eq "1" ]]; then 
           exit 0
         fi
         exit 1`, sslArgs),
