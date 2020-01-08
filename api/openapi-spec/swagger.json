@@ -22586,7 +22586,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -22730,7 +22730,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -22919,7 +22919,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -23064,7 +23064,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -23339,7 +23339,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -23526,7 +23526,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -23726,7 +23726,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -23861,7 +23861,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -24015,7 +24015,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -24212,7 +24212,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
           "type": "boolean"
         },
         "podTemplate": {
@@ -24380,7 +24380,7 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made this spec.",
+          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
           "type": "boolean"
         },
         "podTemplate": {
