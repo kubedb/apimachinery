@@ -841,7 +841,7 @@ k8s.io/utils/integer
 k8s.io/utils/path
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20200105092743-4b797c0c0802
+# kmodules.xyz/client-go v0.0.0-20200108114229-70ba8841e60f
 kmodules.xyz/client-go
 kmodules.xyz/client-go/apiextensions/v1beta1
 kmodules.xyz/client-go/core/v1
@@ -889,7 +889,7 @@ sigs.k8s.io/structured-merge-diff/typed
 sigs.k8s.io/structured-merge-diff/value
 # sigs.k8s.io/yaml v1.1.0 => sigs.k8s.io/yaml v1.1.0
 sigs.k8s.io/yaml
-# stash.appscode.dev/stash v0.9.0-rc.2.0.20200104002701-d6e0fe4b9305
+# stash.appscode.dev/stash v0.9.0-rc.3
 stash.appscode.dev/stash/api/crds
 stash.appscode.dev/stash/apis/repositories
 stash.appscode.dev/stash/apis/repositories/v1alpha1
