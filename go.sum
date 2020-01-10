@@ -791,9 +791,10 @@ k8s.io/utils v0.0.0-20190801114015-581e00157fb1 h1:+ySTxfHnfzZb9ys375PXNlLhkJPLK
 k8s.io/utils v0.0.0-20190801114015-581e00157fb1/go.mod h1:sZAwmy6armz5eXlNoLmJcl4F1QuKu7sr+mFQ0byX7Ew=
 kmodules.xyz/client-go v0.0.0-20191127054604-26981530831d/go.mod h1:OFxuKCiVR+MYlR2a08FkfaF+IbXkLe0xBetu2LTUuGI=
 kmodules.xyz/client-go v0.0.0-20191211192817-f1dcd02124ba/go.mod h1:OFxuKCiVR+MYlR2a08FkfaF+IbXkLe0xBetu2LTUuGI=
-kmodules.xyz/client-go v0.0.0-20200101081724-6b136a38d486/go.mod h1:OFxuKCiVR+MYlR2a08FkfaF+IbXkLe0xBetu2LTUuGI=
 kmodules.xyz/client-go v0.0.0-20200105092743-4b797c0c0802 h1:INQ3RPEcdLX4m7Ql+eTyDjtRYrQlK/D9hrcDuAijw6c=
 kmodules.xyz/client-go v0.0.0-20200105092743-4b797c0c0802/go.mod h1:OFxuKCiVR+MYlR2a08FkfaF+IbXkLe0xBetu2LTUuGI=
+kmodules.xyz/client-go v0.0.0-20200108114229-70ba8841e60f h1:5ESkNkJbL/oqn82REmxuQUm4WKVFZeuU3P4mEvI24JM=
+kmodules.xyz/client-go v0.0.0-20200108114229-70ba8841e60f/go.mod h1:OFxuKCiVR+MYlR2a08FkfaF+IbXkLe0xBetu2LTUuGI=
 kmodules.xyz/constants v0.0.0-20191024095500-cd4313df4aa6 h1:hFv3DzanQJ/bjgahqosmthGLkVgMB2KuQIsltOA02t0=
 kmodules.xyz/constants v0.0.0-20191024095500-cd4313df4aa6/go.mod h1:DbiFk1bJ1KEO94t1SlAn7tzc+Zz95rSXgyUKa2nzPmY=
 kmodules.xyz/crd-schema-fuzz v0.0.0-20191129174258-81f984340891 h1:2W/fqLbAurvupIZL3TEFrlb7DnOIhlOXpNgzgcFFSmA=
@@ -827,6 +828,6 @@ sigs.k8s.io/testing_frameworks v0.1.1/go.mod h1:VVBKrHmJ6Ekkfz284YKhQePcdycOzNH9
 sigs.k8s.io/yaml v1.1.0 h1:4A07+ZFc2wgJwo8YNlQpr1rVlgUDlxXHhPJciaPY5gs=
 sigs.k8s.io/yaml v1.1.0/go.mod h1:UJmg0vDUVViEyp3mgSv9WPwZCDxu4rQW1olrI1uml+o=
 software.sslmate.com/src/go-pkcs12 v0.0.0-20180114231543-2291e8f0f237/go.mod h1:/xvNRWUqm0+/ZMiF4EX00vrSCMsE4/NHb+Pt3freEeQ=
-stash.appscode.dev/stash v0.9.0-rc.2.0.20200104002701-d6e0fe4b9305 h1:JZD1gyMfIXRzda6Ft3phbVrRexlMZ7gQkXDsrR8AXls=
-stash.appscode.dev/stash v0.9.0-rc.2.0.20200104002701-d6e0fe4b9305/go.mod h1:D4GgyrrJt0ZcN9/OImA0f/E6xIaO3cpM5ig2zAbK7rc=
+stash.appscode.dev/stash v0.9.0-rc.3 h1:31g/AeYfZwayvynNh72kqRCUzson9kj3YRnrI2V9rPs=
+stash.appscode.dev/stash v0.9.0-rc.3/go.mod h1:2oNiS7Vg3PKZxT6u2Q1+etbTEPNFOpR0/hx1kxnGVOU=
 vbom.ml/util v0.0.0-20160121211510-db5cfe13f5cc/go.mod h1:so/NYdZXCz+E3ZpW0uAoCj6uzU2+8OWDFv/HxUSs7kI=

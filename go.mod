@@ -23,7 +23,7 @@ require (
 	k8s.io/apimachinery v0.16.5-beta.1
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/kube-openapi v0.0.0-20191107075043-30be4d16710a
-	kmodules.xyz/client-go v0.0.0-20200105092743-4b797c0c0802
+	kmodules.xyz/client-go v0.0.0-20200108114229-70ba8841e60f
 	kmodules.xyz/crd-schema-fuzz v0.0.0-20191129174258-81f984340891
 	kmodules.xyz/custom-resources v0.0.0-20191130062942-f41b54f62419
 	kmodules.xyz/monitoring-agent-api v0.0.0-20191224204126-ee69caffab6c
@@ -31,7 +31,7 @@ require (
 	kmodules.xyz/offshoot-api v0.0.0-20200103145223-2c4f520520d2
 	kmodules.xyz/webhook-runtime v0.0.0-20191127075323-d4bfdee6974d
 	sigs.k8s.io/yaml v1.1.0
-	stash.appscode.dev/stash v0.9.0-rc.2.0.20200104002701-d6e0fe4b9305
+	stash.appscode.dev/stash v0.9.0-rc.3
 )
 
 replace (
