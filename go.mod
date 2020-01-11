@@ -15,8 +15,8 @@ require (
 	github.com/json-iterator/go v1.1.8
 	github.com/orcaman/concurrent-map v0.0.0-20190826125027-8c72a8bb44f6
 	github.com/pkg/errors v0.8.1
-	github.com/robfig/cron/v3 v3.0.0
-	gomodules.xyz/stow v0.2.3
+	github.com/robfig/cron/v3 v3.0.1
+	gomodules.xyz/stow v0.2.4
 	gomodules.xyz/version v0.1.0
 	k8s.io/api v0.0.0-20191122220107-b5267f2975e0
 	k8s.io/apiextensions-apiserver v0.0.0-20191114105449-027877536833
