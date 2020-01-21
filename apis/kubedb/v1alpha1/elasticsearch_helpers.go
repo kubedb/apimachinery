@@ -82,6 +82,11 @@ func (e *Elasticsearch) MasterServiceName() string {
 	return fmt.Sprintf("%v-master", e.ServiceName())
 }
 
+// Governing Service Name
+func (e Elasticsearch) GvrSvcName() string {
+	return e.OffshootName() + "-gvr"
+}
+
 func (e *Elasticsearch) GetConnectionScheme() string {
 	scheme := "http"
 	if e.Spec.EnableSSL {
