@@ -39,7 +39,7 @@ func TestMongoDB_HostAddress(t *testing.T) {
 		Spec: MongoDBSpec{
 			Version: "3.6-v2",
 			ShardTopology: &MongoDBShardingTopology{
-				Shard: MongoDBShardNode{
+				Shard: MongoDBCommonShardNode{
 					Shards: 3,
 					MongoDBNode: MongoDBNode{
 						Replicas: 3,
@@ -101,7 +101,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 		Spec: MongoDBSpec{
 			Version: "3.6-v2",
 			ShardTopology: &MongoDBShardingTopology{
-				Shard: MongoDBShardNode{
+				Shard: MongoDBCommonShardNode{
 					Shards: 3,
 					MongoDBNode: MongoDBNode{
 						Replicas: 3,
@@ -155,7 +155,7 @@ func TestMongoDB_ConfigSvrDSN(t *testing.T) {
 		Spec: MongoDBSpec{
 			Version: "3.6-v2",
 			ShardTopology: &MongoDBShardingTopology{
-				Shard: MongoDBShardNode{
+				Shard: MongoDBCommonShardNode{
 					Shards: 3,
 					MongoDBNode: MongoDBNode{
 						Replicas: 3,

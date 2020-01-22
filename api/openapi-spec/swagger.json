@@ -20981,6 +20981,41 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBCommonShardNode": {
+      "type": "object",
+      "required": [
+        "shards",
+        "replicas"
+      ],
+      "properties": {
+        "configSource": {
+          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "prefix": {
+          "description": "Prefix is the name prefix of this node.",
+          "type": "string"
+        },
+        "replicas": {
+          "description": "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "shards": {
+          "description": "Shards represents number of shards for shard type of node More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
+          "type": "integer",
+          "format": "int32"
+        },
+        "storage": {
+          "description": "Storage to specify how storage shall be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBConfigNode": {
       "type": "object",
       "required": [
@@ -21088,7 +21123,6 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardNode": {
       "type": "object",
       "required": [
-        "shards",
         "replicas"
       ],
       "properties": {
@@ -21109,11 +21143,6 @@
           "type": "integer",
           "format": "int32"
         },
-        "shards": {
-          "description": "Shards represents number of shards for shard type of node More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
-          "type": "integer",
-          "format": "int32"
-        },
         "storage": {
           "description": "Storage to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
@@ -21123,11 +21152,14 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardingTopology": {
       "type": "object",
       "required": [
-        "shard",
         "configServer",
         "mongos"
       ],
       "properties": {
+        "commonShards": {
+          "description": "Common Shard config for each shard component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBCommonShardNode"
+        },
         "configServer": {
           "description": "Config Server (metadata) component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-config-servers/",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBConfigNode"
@@ -21137,8 +21169,15 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBMongosNode"
         },
         "shard": {
-          "description": "Shard component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardNode"
+          "description": "Shard component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/ Deprecated: use commonShards",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBCommonShardNode"
+        },
+        "shards": {
+          "description": "Configuration of each shard. This this field is initialized, commonShards won't be used. User need to provide configuration for each shard. More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardNode"
+          }
         }
       }
     },

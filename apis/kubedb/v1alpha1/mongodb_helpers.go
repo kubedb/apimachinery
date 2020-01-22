@@ -332,6 +332,14 @@ func (m *MongoDBSpec) SetDefaults(mgVersion *v1alpha1.MongoDBVersion) {
 		m.TerminationPolicy = TerminationPolicyDelete
 	}
 
+	if m.ShardTopology != nil &&
+		m.ShardTopology.Shard != nil &&
+		m.ShardTopology.CommonShards == nil &&
+		len(m.ShardTopology.Shards) == 0 {
+		m.ShardTopology.CommonShards = m.ShardTopology.Shard
+		m.ShardTopology.Shard = nil
+	}
+
 	if m.SSLMode == "" {
 		m.SSLMode = SSLModeDisabled
 	}

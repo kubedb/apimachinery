@@ -574,6 +574,18 @@ message MongoDB {
   optional MongoDBStatus status = 3;
 }
 
+message MongoDBCommonShardNode {
+  // Shards represents number of shards for shard type of node
+  // More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/
+  optional int32 shards = 1;
+
+  // MongoDB sharding node configs
+  optional MongoDBNode mongoDBNode = 2;
+
+  // Storage to specify how storage shall be used.
+  optional k8s.io.api.core.v1.PersistentVolumeClaimSpec storage = 3;
+}
+
 message MongoDBConfigNode {
   // MongoDB config server node configs
   optional MongoDBNode mongoDBNode = 1;
@@ -624,10 +636,6 @@ message MongoDBReplicaSet {
 }
 
 message MongoDBShardNode {
-  // Shards represents number of shards for shard type of node
-  // More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/
-  optional int32 shards = 1;
-
   // MongoDB sharding node configs
   optional MongoDBNode mongoDBNode = 2;
 
@@ -638,15 +646,25 @@ message MongoDBShardNode {
 message MongoDBShardingTopology {
   // Shard component of mongodb.
   // More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/
-  optional MongoDBShardNode shard = 1;
+  // Deprecated: use commonShards
+  optional MongoDBCommonShardNode shard = 1;
+
+  // Common Shard config for each shard component of mongodb.
+  // More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/
+  optional MongoDBCommonShardNode commonShards = 2;
+
+  // Configuration of each shard. This this field is initialized, commonShards won't be used.
+  // User need to provide configuration for each shard.
+  // More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/
+  repeated MongoDBShardNode shards = 3;
 
   // Config Server (metadata) component of mongodb.
   // More info: https://docs.mongodb.com/manual/core/sharded-cluster-config-servers/
-  optional MongoDBConfigNode configServer = 2;
+  optional MongoDBConfigNode configServer = 4;
 
   // Mongos (router) component of mongodb.
   // More info: https://docs.mongodb.com/manual/core/sharded-cluster-query-router/
-  optional MongoDBMongosNode mongos = 3;
+  optional MongoDBMongosNode mongos = 5;
 }
 
 message MongoDBSpec {

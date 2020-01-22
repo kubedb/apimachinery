@@ -174,22 +174,40 @@ type MongoDBReplicaSet struct {
 type MongoDBShardingTopology struct {
 	// Shard component of mongodb.
 	// More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/
-	Shard MongoDBShardNode `json:"shard" protobuf:"bytes,1,opt,name=shard"`
+	// Deprecated: use commonShards
+	Shard *MongoDBCommonShardNode `json:"shard,omitempty" protobuf:"bytes,1,opt,name=shard"`
+
+	// Common Shard config for each shard component of mongodb.
+	// More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/
+	CommonShards *MongoDBCommonShardNode `json:"commonShards,omitempty" protobuf:"bytes,2,opt,name=commonShards"`
+
+	// Configuration of each shard. This this field is initialized, commonShards won't be used.
+	// User need to provide configuration for each shard.
+	// More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/
+	Shards []MongoDBShardNode `json:"shards,omitempty" protobuf:"bytes,3,opt,name=shards"`
 
 	// Config Server (metadata) component of mongodb.
 	// More info: https://docs.mongodb.com/manual/core/sharded-cluster-config-servers/
-	ConfigServer MongoDBConfigNode `json:"configServer" protobuf:"bytes,2,opt,name=configServer"`
+	ConfigServer MongoDBConfigNode `json:"configServer" protobuf:"bytes,4,opt,name=configServer"`
 
 	// Mongos (router) component of mongodb.
 	// More info: https://docs.mongodb.com/manual/core/sharded-cluster-query-router/
-	Mongos MongoDBMongosNode `json:"mongos" protobuf:"bytes,3,opt,name=mongos"`
+	Mongos MongoDBMongosNode `json:"mongos" protobuf:"bytes,5,opt,name=mongos"`
 }
 
-type MongoDBShardNode struct {
+type MongoDBCommonShardNode struct {
 	// Shards represents number of shards for shard type of node
 	// More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/
 	Shards int32 `json:"shards" protobuf:"varint,1,opt,name=shards"`
 
+	// MongoDB sharding node configs
+	MongoDBNode `json:",inline" protobuf:"bytes,2,opt,name=mongoDBNode"`
+
+	// Storage to specify how storage shall be used.
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,3,opt,name=storage"`
+}
+
+type MongoDBShardNode struct {
 	// MongoDB sharding node configs
 	MongoDBNode `json:",inline" protobuf:"bytes,2,opt,name=mongoDBNode"`
 

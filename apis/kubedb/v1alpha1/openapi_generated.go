@@ -393,6 +393,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MemcachedSpec":                  schema_apimachinery_apis_kubedb_v1alpha1_MemcachedSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MemcachedStatus":                schema_apimachinery_apis_kubedb_v1alpha1_MemcachedStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDB":                        schema_apimachinery_apis_kubedb_v1alpha1_MongoDB(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBCommonShardNode":         schema_apimachinery_apis_kubedb_v1alpha1_MongoDBCommonShardNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBConfigNode":              schema_apimachinery_apis_kubedb_v1alpha1_MongoDBConfigNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBList":                    schema_apimachinery_apis_kubedb_v1alpha1_MongoDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBMongosNode":              schema_apimachinery_apis_kubedb_v1alpha1_MongoDBMongosNode(ref),
@@ -18836,6 +18837,60 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDB(ref common.ReferenceCallba
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBCommonShardNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"shards": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Shards represents number of shards for shard type of node More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"prefix": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Prefix is the name prefix of this node.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"configSource": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+							Ref:         ref("k8s.io/api/core/v1.VolumeSource"),
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+				},
+				Required: []string{"shards", "replicas"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBConfigNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19051,13 +19106,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBShardNode(ref common.Refere
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"shards": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Shards represents number of shards for shard type of node More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
@@ -19091,7 +19139,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBShardNode(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"shards", "replicas"},
+				Required: []string{"replicas"},
 			},
 		},
 		Dependencies: []string{
@@ -19107,8 +19155,27 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBShardingTopology(ref common
 				Properties: map[string]spec.Schema{
 					"shard": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Shard component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBShardNode"),
+							Description: "Shard component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/ Deprecated: use commonShards",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBCommonShardNode"),
+						},
+					},
+					"commonShards": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Common Shard config for each shard component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBCommonShardNode"),
+						},
+					},
+					"shards": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configuration of each shard. This this field is initialized, commonShards won't be used. User need to provide configuration for each shard. More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBShardNode"),
+									},
+								},
+							},
 						},
 					},
 					"configServer": {
@@ -19124,11 +19191,11 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBShardingTopology(ref common
 						},
 					},
 				},
-				Required: []string{"shard", "configServer", "mongos"},
+				Required: []string{"configServer", "mongos"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBConfigNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBMongosNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBShardNode"},
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBCommonShardNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBConfigNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBMongosNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBShardNode"},
 	}
 }
 
