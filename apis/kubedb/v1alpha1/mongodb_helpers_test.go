@@ -75,6 +75,8 @@ func TestMongoDB_HostAddress(t *testing.T) {
 		},
 	}
 
+	mongodb.SetDefaults(&v1alpha1.MongoDBVersion{})
+
 	shardDSN := mongodb.HostAddress()
 	t.Log(shardDSN)
 

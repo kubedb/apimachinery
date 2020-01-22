@@ -30,6 +30,7 @@ import (
 	apps "k8s.io/api/apps/v1"
 	core "k8s.io/api/core/v1"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
@@ -364,6 +365,11 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion) {
 		m.setDefaultProbes(&m.Spec.ShardTopology.Shard.PodTemplate, mgVersion)
 		m.setDefaultProbes(&m.Spec.ShardTopology.ConfigServer.PodTemplate, mgVersion)
 		m.setDefaultProbes(&m.Spec.ShardTopology.Mongos.PodTemplate, mgVersion)
+
+		// set default affinity (PodAntiAffinity)
+		m.setDefaultAffinity(&m.Spec.ShardTopology.Shard.PodTemplate, MongoDBShardLabelKey, m.ShardNodeTemplate())
+		m.setDefaultAffinity(&m.Spec.ShardTopology.ConfigServer.PodTemplate, MongoDBConfigLabelKey, m.ConfigSvrNodeName())
+		m.setDefaultAffinity(&m.Spec.ShardTopology.Mongos.PodTemplate, MongoDBMongosLabelKey, m.MongosNodeName())
 	} else {
 		if m.Spec.Replicas == nil {
 			m.Spec.Replicas = types.Int32P(1)
@@ -378,6 +384,8 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion) {
 
 		// set default probes
 		m.setDefaultProbes(m.Spec.PodTemplate, mgVersion)
+		// set default affinity (PodAntiAffinity)
+		m.setDefaultAffinity(m.Spec.PodTemplate, LabelDatabaseName, m.OffshootName())
 	}
 }
 
@@ -448,6 +456,36 @@ func (m *MongoDB) setDefaultProbes(podTemplate *ofst.PodTemplateSpec, mgVersion 
 			TimeoutSeconds:   1,
 		}
 	}
+}
+
+// setDefaultAffinity
+func (m *MongoDB) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, key, value string) *ofst.PodTemplateSpec {
+	if podTemplate == nil || podTemplate.Spec.Affinity != nil {
+		return podTemplate
+	}
+
+	podTemplate.Spec.Affinity = &core.Affinity{
+		PodAntiAffinity: &core.PodAntiAffinity{
+			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
+				{
+					Weight: 100,
+					PodAffinityTerm: core.PodAffinityTerm{
+						LabelSelector: &metav1.LabelSelector{
+							MatchExpressions: []metav1.LabelSelectorRequirement{
+								{
+									Key:      key,
+									Operator: metav1.LabelSelectorOpIn,
+									Values:   []string{value},
+								},
+							},
+						},
+						TopologyKey: "failure-domain.beta.kubernetes.io/zone",
+					},
+				},
+			},
+		},
+	}
+	return podTemplate
 }
 
 // setSecurityContext will set default PodSecurityContext.
