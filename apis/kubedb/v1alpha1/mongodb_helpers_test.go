@@ -41,16 +41,18 @@ func TestMongoDB_HostAddress(t *testing.T) {
 			ShardTopology: &MongoDBShardingTopology{
 				CommonShards: &MongoDBCommonShardNode{
 					Shards: 3,
-					MongoDBNode: MongoDBNode{
-						Replicas: 3,
-					},
-					Storage: &core.PersistentVolumeClaimSpec{
-						Resources: core.ResourceRequirements{
-							Requests: core.ResourceList{
-								core.ResourceStorage: resource.MustParse("1Gi"),
-							},
+					MongoDBShardNode: MongoDBShardNode{
+						MongoDBNode: MongoDBNode{
+							Replicas: 3,
 						},
-						StorageClassName: types.StringP("standard"),
+						Storage: &core.PersistentVolumeClaimSpec{
+							Resources: core.ResourceRequirements{
+								Requests: core.ResourceList{
+									core.ResourceStorage: resource.MustParse("1Gi"),
+								},
+							},
+							StorageClassName: types.StringP("standard"),
+						},
 					},
 				},
 				ConfigServer: MongoDBConfigNode{
@@ -103,16 +105,18 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 			ShardTopology: &MongoDBShardingTopology{
 				CommonShards: &MongoDBCommonShardNode{
 					Shards: 3,
-					MongoDBNode: MongoDBNode{
-						Replicas: 3,
-					},
-					Storage: &core.PersistentVolumeClaimSpec{
-						Resources: core.ResourceRequirements{
-							Requests: core.ResourceList{
-								core.ResourceStorage: resource.MustParse("1Gi"),
-							},
+					MongoDBShardNode: MongoDBShardNode{
+						MongoDBNode: MongoDBNode{
+							Replicas: 3,
 						},
-						StorageClassName: types.StringP("standard"),
+						Storage: &core.PersistentVolumeClaimSpec{
+							Resources: core.ResourceRequirements{
+								Requests: core.ResourceList{
+									core.ResourceStorage: resource.MustParse("1Gi"),
+								},
+							},
+							StorageClassName: types.StringP("standard"),
+						},
 					},
 				},
 				ConfigServer: MongoDBConfigNode{
@@ -157,16 +161,18 @@ func TestMongoDB_ConfigSvrDSN(t *testing.T) {
 			ShardTopology: &MongoDBShardingTopology{
 				CommonShards: &MongoDBCommonShardNode{
 					Shards: 3,
-					MongoDBNode: MongoDBNode{
-						Replicas: 3,
-					},
-					Storage: &core.PersistentVolumeClaimSpec{
-						Resources: core.ResourceRequirements{
-							Requests: core.ResourceList{
-								core.ResourceStorage: resource.MustParse("1Gi"),
-							},
+					MongoDBShardNode: MongoDBShardNode{
+						MongoDBNode: MongoDBNode{
+							Replicas: 3,
 						},
-						StorageClassName: types.StringP("standard"),
+						Storage: &core.PersistentVolumeClaimSpec{
+							Resources: core.ResourceRequirements{
+								Requests: core.ResourceList{
+									core.ResourceStorage: resource.MustParse("1Gi"),
+								},
+							},
+							StorageClassName: types.StringP("standard"),
+						},
 					},
 				},
 				ConfigServer: MongoDBConfigNode{
