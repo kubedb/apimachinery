@@ -200,11 +200,7 @@ type MongoDBCommonShardNode struct {
 	// More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/
 	Shards int32 `json:"shards" protobuf:"varint,1,opt,name=shards"`
 
-	// MongoDB sharding node configs
-	MongoDBNode `json:",inline" protobuf:"bytes,2,opt,name=mongoDBNode"`
-
-	// Storage to specify how storage shall be used.
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,3,opt,name=storage"`
+	MongoDBShardNode `json:",inline" protobuf:"bytes,2,opt,name=mongoDBShardNode"`
 }
 
 type MongoDBShardNode struct {
