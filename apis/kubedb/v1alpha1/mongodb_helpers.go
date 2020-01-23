@@ -63,7 +63,7 @@ func (m MongoDB) ShardNodeName(nodeNum int32) string {
 		return ""
 	}
 	shardName := fmt.Sprintf("%v-shard%v", m.OffshootName(), nodeNum)
-	return m.Spec.ShardTopology.Shard.Prefix + shardName
+	return m.Spec.ShardTopology.CommonShards.Prefix + shardName
 }
 
 func (m MongoDB) ConfigSvrNodeName() string {
@@ -92,8 +92,8 @@ func (m MongoDB) RepSetName() string {
 
 func (m MongoDB) ShardRepSetName(nodeNum int32) string {
 	repSetName := fmt.Sprintf("shard%v", nodeNum)
-	if m.Spec.ShardTopology != nil && m.Spec.ShardTopology.Shard.Prefix != "" {
-		repSetName = fmt.Sprintf("%v%v", m.Spec.ShardTopology.Shard.Prefix, nodeNum)
+	if m.Spec.ShardTopology != nil && m.Spec.ShardTopology.CommonShards.Prefix != "" {
+		repSetName = fmt.Sprintf("%v%v", m.Spec.ShardTopology.CommonShards.Prefix, nodeNum)
 	}
 	return repSetName
 }
@@ -207,7 +207,7 @@ func (m MongoDB) ShardDSN(nodeNum int32) string {
 		return ""
 	}
 	host := fmt.Sprintf("%v/", m.ShardRepSetName(nodeNum))
-	for i := 0; i < int(m.Spec.ShardTopology.Shard.Replicas); i++ {
+	for i := 0; i < int(m.Spec.ShardTopology.CommonShards.Replicas); i++ {
 		//host += "," + m.ShardNodeName(nodeNum) + "-" + strconv.Itoa(i) + "." + m.GvrSvcName(m.ShardNodeName(nodeNum)) + "." + m.Namespace + ".svc"
 
 		if i != 0 {
@@ -304,8 +304,8 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion) {
 		if m.Spec.ShardTopology.Mongos.PodTemplate.Spec.ServiceAccountName == "" {
 			m.Spec.ShardTopology.Mongos.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 		}
-		if m.Spec.ShardTopology.Shard.PodTemplate.Spec.ServiceAccountName == "" {
-			m.Spec.ShardTopology.Shard.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
+		if m.Spec.ShardTopology.CommonShards.PodTemplate.Spec.ServiceAccountName == "" {
+			m.Spec.ShardTopology.CommonShards.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 		}
 	} else {
 		if m.Spec.PodTemplate == nil {
@@ -366,7 +366,7 @@ func (m *MongoDBSpec) SetDefaults(mgVersion *v1alpha1.MongoDBVersion) {
 		}
 
 		// set default probes
-		m.setDefaultProbes(&m.ShardTopology.Shard.PodTemplate, mgVersion)
+		m.setDefaultProbes(&m.ShardTopology.CommonShards.PodTemplate, mgVersion)
 		m.setDefaultProbes(&m.ShardTopology.ConfigServer.PodTemplate, mgVersion)
 		m.setDefaultProbes(&m.ShardTopology.Mongos.PodTemplate, mgVersion)
 	} else {

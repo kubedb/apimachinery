@@ -184,7 +184,7 @@ type MongoDBShardingTopology struct {
 	// Configuration of each shard. This this field is initialized, commonShards won't be used.
 	// User need to provide configuration for each shard.
 	// More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/
-	Shards []MongoDBShardNode `json:"shards,omitempty" protobuf:"bytes,3,opt,name=shards"`
+	Shards []MongoDBShardNode `json:"shards,omitempty" protobuf:"bytes,3,rep,name=shards"`
 
 	// Config Server (metadata) component of mongodb.
 	// More info: https://docs.mongodb.com/manual/core/sharded-cluster-config-servers/
