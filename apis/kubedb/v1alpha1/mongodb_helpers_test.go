@@ -140,7 +140,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 	shardDSN := mongodb.ShardDSN(0)
 	t.Log(shardDSN)
 
-	mongodb.Spec.SetDefaults(&v1alpha1.MongoDBVersion{})
+	mongodb.SetDefaults(&v1alpha1.MongoDBVersion{})
 }
 
 func TestMongoDB_ConfigSvrDSN(t *testing.T) {
@@ -214,5 +214,5 @@ func TestMongoDB_SetDefaults(t *testing.T) {
 		},
 	}
 
-	mongodb.Spec.SetDefaults(&v1alpha1.MongoDBVersion{})
+	mongodb.SetDefaults(&v1alpha1.MongoDBVersion{})
 }
