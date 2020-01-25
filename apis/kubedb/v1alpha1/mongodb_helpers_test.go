@@ -25,7 +25,21 @@ import (
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	core_util "kmodules.xyz/client-go/core/v1"
 )
+
+var testTopology = &core_util.Topology{
+	Regions: map[string][]string{
+		"us-east-1": {"us-east-1a", "us-east-1b", "us-east-1c"},
+	},
+	TotalNodes: 100,
+	InstanceTypes: map[string]int{
+		"n1-standard-4": 100,
+	},
+	LabelZone:         core.LabelZoneFailureDomain,
+	LabelRegion:       core.LabelZoneRegion,
+	LabelInstanceType: core.LabelInstanceType,
+}
 
 func TestMongoDB_HostAddress(t *testing.T) {
 	mongodb := &MongoDB{
@@ -75,7 +89,7 @@ func TestMongoDB_HostAddress(t *testing.T) {
 		},
 	}
 
-	mongodb.SetDefaults(&v1alpha1.MongoDBVersion{})
+	mongodb.SetDefaults(&v1alpha1.MongoDBVersion{}, testTopology)
 
 	shardDSN := mongodb.HostAddress()
 	t.Log(shardDSN)
@@ -142,7 +156,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 	shardDSN := mongodb.ShardDSN(0)
 	t.Log(shardDSN)
 
-	mongodb.SetDefaults(&v1alpha1.MongoDBVersion{})
+	mongodb.SetDefaults(&v1alpha1.MongoDBVersion{}, testTopology)
 }
 
 func TestMongoDB_ConfigSvrDSN(t *testing.T) {
@@ -216,5 +230,5 @@ func TestMongoDB_SetDefaults(t *testing.T) {
 		},
 	}
 
-	mongodb.SetDefaults(&v1alpha1.MongoDBVersion{})
+	mongodb.SetDefaults(&v1alpha1.MongoDBVersion{}, testTopology)
 }

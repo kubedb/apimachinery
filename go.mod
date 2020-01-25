@@ -22,10 +22,10 @@ require (
 	k8s.io/apimachinery v0.16.5-beta.1
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/kube-openapi v0.0.0-20191107075043-30be4d16710a
-	kmodules.xyz/client-go v0.0.0-20200125095840-f95182274a65
+	kmodules.xyz/client-go v0.0.0-20200125212626-a094b2ba24c6
 	kmodules.xyz/crd-schema-fuzz v0.0.0-20191129174258-81f984340891
 	kmodules.xyz/custom-resources v0.0.0-20191130062942-f41b54f62419
-	kmodules.xyz/monitoring-agent-api v0.0.0-20200125130554-3ed41c0ceff4
+	kmodules.xyz/monitoring-agent-api v0.0.0-20200125202117-d3b3e33ce41f
 	kmodules.xyz/objectstore-api v0.0.0-20191127144749-5881939b57f0
 	kmodules.xyz/offshoot-api v0.0.0-20200103145223-2c4f520520d2
 	kmodules.xyz/webhook-runtime v0.0.0-20191127075323-d4bfdee6974d

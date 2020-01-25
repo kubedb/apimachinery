@@ -784,7 +784,7 @@ k8s.io/utils/integer
 k8s.io/utils/path
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20200125095840-f95182274a65
+# kmodules.xyz/client-go v0.0.0-20200125212626-a094b2ba24c6
 kmodules.xyz/client-go
 kmodules.xyz/client-go/core/v1
 kmodules.xyz/client-go/discovery
@@ -806,7 +806,7 @@ kmodules.xyz/custom-resources/client/informers/externalversions/appcatalog
 kmodules.xyz/custom-resources/client/informers/externalversions/appcatalog/v1alpha1
 kmodules.xyz/custom-resources/client/informers/externalversions/internalinterfaces
 kmodules.xyz/custom-resources/client/listers/appcatalog/v1alpha1
-# kmodules.xyz/monitoring-agent-api v0.0.0-20200125130554-3ed41c0ceff4
+# kmodules.xyz/monitoring-agent-api v0.0.0-20200125202117-d3b3e33ce41f
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/objectstore-api v0.0.0-20191127144749-5881939b57f0
 kmodules.xyz/objectstore-api/api/v1
