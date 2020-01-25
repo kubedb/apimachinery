@@ -150,6 +150,8 @@ func (m *Memcached) SetDefaults() {
 	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
+
+	m.Spec.Monitor.SetDefaults()
 }
 
 func (e *MemcachedSpec) GetSecrets() []string {

@@ -175,6 +175,7 @@ func (p *PerconaXtraDB) SetDefaults() {
 		p.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
 	p.Spec.setDefaultProbes()
+	p.Spec.Monitor.SetDefaults()
 }
 
 // setDefaultProbes sets defaults only when probe fields are nil.

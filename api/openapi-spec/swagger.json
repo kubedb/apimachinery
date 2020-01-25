@@ -25259,24 +25259,47 @@
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.PrometheusExporterSpec"
         },
         "interval": {
-          "description": "Interval at which metrics should be scraped Deprecated: will be removed in a future release",
+          "description": "Interval at which metrics should be scraped Deprecated: use prometheus.serviceMonitor.interval",
           "type": "string"
         },
         "labels": {
-          "description": "Labels are key value pairs that is used to select Prometheus instance via ServiceMonitor labels. Deprecated: will be removed in a future release",
+          "description": "Labels are key value pairs that is used to select Prometheus instance via ServiceMonitor labels. Deprecated: use prometheus.serviceMonitor.labels",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "namespace": {
-          "description": "Namespace of Prometheus. Service monitors will be created in this namespace. Deprecated: will be removed in a future release",
+          "description": "Namespace of Prometheus. Service monitors will be created in this namespace. Deprecated: use prometheus.serviceMonitor.namespace",
           "type": "string"
         },
         "port": {
           "description": "Port number for the exporter side car. Deprecated: use exporter.port",
           "type": "integer",
           "format": "int32"
+        },
+        "serviceMonitor": {
+          "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.ServiceMonitorSpec"
+        }
+      }
+    },
+    "xyz.kmodules.monitoring-agent-api.api.v1.ServiceMonitorSpec": {
+      "type": "object",
+      "properties": {
+        "interval": {
+          "description": "Interval at which metrics should be scraped",
+          "type": "string"
+        },
+        "labels": {
+          "description": "Labels are key value pairs that is used to select Prometheus instance via ServiceMonitor labels.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "namespace": {
+          "description": "Namespace of Prometheus. Service monitors will be created in this namespace.",
+          "type": "string"
         }
       }
     },

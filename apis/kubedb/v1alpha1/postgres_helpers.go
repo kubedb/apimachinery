@@ -175,6 +175,8 @@ func (p *Postgres) SetDefaults() {
 	if p.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		p.Spec.PodTemplate.Spec.ServiceAccountName = p.OffshootName()
 	}
+
+	p.Spec.Monitor.SetDefaults()
 }
 
 func (e *PostgresSpec) GetSecrets() []string {

@@ -158,6 +158,8 @@ func (m *MariaDB) SetDefaults() {
 	if m.Spec.TerminationPolicy == "" {
 		m.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
+
+	m.Spec.Monitor.SetDefaults()
 }
 
 func (m *MariaDBSpec) GetSecrets() []string {

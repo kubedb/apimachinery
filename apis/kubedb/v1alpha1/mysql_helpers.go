@@ -176,6 +176,8 @@ func (m *MySQL) SetDefaults() {
 	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
+
+	m.Spec.Monitor.SetDefaults()
 }
 
 // setDefaultProbes sets defaults only when probe fields are nil.

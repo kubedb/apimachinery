@@ -152,6 +152,8 @@ func (e *Etcd) SetDefaults() {
 	if e.Spec.TerminationPolicy == "" {
 		e.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
+
+	e.Spec.Monitor.SetDefaults()
 }
 
 func (e *EtcdSpec) GetSecrets() []string {
