@@ -26,9 +26,6 @@ import (
 // Funcs returns the fuzzer functions for this api group.
 var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 	return []interface{}{
-		func(s *v1alpha1.DormantDatabase, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
 		func(s *v1alpha1.Elasticsearch, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
@@ -60,9 +57,6 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.Redis, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.Snapshot, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 	}

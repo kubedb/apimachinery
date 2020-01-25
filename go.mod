@@ -13,9 +13,8 @@ require (
 	github.com/google/gofuzz v1.0.0
 	github.com/jetstack/cert-manager v0.12.0
 	github.com/json-iterator/go v1.1.8
-	github.com/orcaman/concurrent-map v0.0.0-20190826125027-8c72a8bb44f6
 	github.com/pkg/errors v0.8.1
-	github.com/robfig/cron/v3 v3.0.1
+	github.com/robfig/cron/v3 v3.0.1 // indirect
 	gomodules.xyz/stow v0.2.4
 	gomodules.xyz/version v0.1.0
 	k8s.io/api v0.0.0-20191122220107-b5267f2975e0

@@ -66,7 +66,6 @@ func generateSwaggerJson() {
 		},
 		//nolint:govet
 		Resources: []openapi.TypeInfo{
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralDormantDatabase, kubedbv1alpha1.ResourceKindDormantDatabase, true},
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralElasticsearch, kubedbv1alpha1.ResourceKindElasticsearch, true},
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralEtcd, kubedbv1alpha1.ResourceKindEtcd, true},
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralMariaDB, kubedbv1alpha1.ResourceKindMariaDB, true},
@@ -78,7 +77,6 @@ func generateSwaggerJson() {
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralPostgres, kubedbv1alpha1.ResourceKindPostgres, true},
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralProxySQL, kubedbv1alpha1.ResourceKindProxySQL, true},
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralRedis, kubedbv1alpha1.ResourceKindRedis, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralSnapshot, kubedbv1alpha1.ResourceKindSnapshot, true},
 
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralElasticsearchVersion, catalogv1alpha1.ResourceKindElasticsearchVersion, true},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralEtcdVersion, catalogv1alpha1.ResourceKindEtcdVersion, false},

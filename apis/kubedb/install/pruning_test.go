@@ -28,7 +28,6 @@ import (
 
 func TestPruneTypes(t *testing.T) {
 	Install(clientsetscheme.Scheme)
-	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.DormantDatabase{}.CustomResourceDefinition(), fuzzer.Funcs)
 	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.Elasticsearch{}.CustomResourceDefinition(), fuzzer.Funcs)
 	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.Etcd{}.CustomResourceDefinition(), fuzzer.Funcs)
 	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.MariaDB{}.CustomResourceDefinition(), fuzzer.Funcs)
@@ -40,5 +39,4 @@ func TestPruneTypes(t *testing.T) {
 	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.Postgres{}.CustomResourceDefinition(), fuzzer.Funcs)
 	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.ProxySQL{}.CustomResourceDefinition(), fuzzer.Funcs)
 	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.Redis{}.CustomResourceDefinition(), fuzzer.Funcs)
-	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.Snapshot{}.CustomResourceDefinition(), fuzzer.Funcs)
 }
