@@ -160,6 +160,8 @@ func (m *MySQL) SetDefaults() {
 	}
 	if m.Spec.TerminationPolicy == "" {
 		m.Spec.TerminationPolicy = TerminationPolicyDelete
+	} else if m.Spec.TerminationPolicy == TerminationPolicyPause {
+		m.Spec.TerminationPolicy = TerminationPolicyHalt
 	}
 
 	if m.Spec.Topology != nil && m.Spec.Topology.Mode != nil && *m.Spec.Topology.Mode == MySQLClusterModeGroup {

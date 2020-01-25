@@ -157,6 +157,8 @@ func (m *MariaDB) SetDefaults() {
 	}
 	if m.Spec.TerminationPolicy == "" {
 		m.Spec.TerminationPolicy = TerminationPolicyDelete
+	} else if m.Spec.TerminationPolicy == TerminationPolicyPause {
+		m.Spec.TerminationPolicy = TerminationPolicyHalt
 	}
 
 	m.Spec.Monitor.SetDefaults()

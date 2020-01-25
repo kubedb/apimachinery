@@ -326,6 +326,8 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 	}
 	if m.Spec.TerminationPolicy == "" {
 		m.Spec.TerminationPolicy = TerminationPolicyDelete
+	} else if m.Spec.TerminationPolicy == TerminationPolicyPause {
+		m.Spec.TerminationPolicy = TerminationPolicyHalt
 	}
 
 	if m.Spec.SSLMode == "" {

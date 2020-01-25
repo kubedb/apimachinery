@@ -151,6 +151,8 @@ func (e *Etcd) SetDefaults() {
 	}
 	if e.Spec.TerminationPolicy == "" {
 		e.Spec.TerminationPolicy = TerminationPolicyDelete
+	} else if e.Spec.TerminationPolicy == TerminationPolicyPause {
+		e.Spec.TerminationPolicy = TerminationPolicyHalt
 	}
 
 	e.Spec.Monitor.SetDefaults()
