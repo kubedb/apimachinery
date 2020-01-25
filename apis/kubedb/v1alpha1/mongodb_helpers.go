@@ -459,9 +459,9 @@ func (m *MongoDB) setDefaultProbes(podTemplate *ofst.PodTemplateSpec, mgVersion 
 }
 
 // setDefaultAffinity
-func (m *MongoDB) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, key, value string) *ofst.PodTemplateSpec {
+func (m *MongoDB) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, key, value string) {
 	if podTemplate == nil || podTemplate.Spec.Affinity != nil {
-		return podTemplate
+		return
 	}
 
 	podTemplate.Spec.Affinity = &core.Affinity{
@@ -470,6 +470,7 @@ func (m *MongoDB) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, key, val
 				{
 					Weight: 100,
 					PodAffinityTerm: core.PodAffinityTerm{
+						Namespaces: []string{m.Namespace},
 						LabelSelector: &metav1.LabelSelector{
 							MatchExpressions: []metav1.LabelSelectorRequirement{
 								{
@@ -485,7 +486,6 @@ func (m *MongoDB) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, key, val
 			},
 		},
 	}
-	return podTemplate
 }
 
 // setSecurityContext will set default PodSecurityContext.
