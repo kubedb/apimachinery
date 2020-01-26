@@ -309,6 +309,11 @@ message MySQLVersionInitContainer {
   optional string image = 1;
 }
 
+// MySQLVersionLabeler is the image for the MySQL labeler
+message MySQLVersionLabeler {
+  optional string image = 1;
+}
+
 // MySQLVersionList is a list of MySQLVersions
 message MySQLVersionList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
@@ -336,15 +341,18 @@ message MySQLVersionSpec {
   // Tools Image
   optional MySQLVersionTools tools = 4;
 
+  // Labeler Image
+  optional MySQLVersionLabeler labeler = 5;
+
   // Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
   // +optional
-  optional bool deprecated = 5;
+  optional bool deprecated = 6;
 
   // Init container Image
-  optional MySQLVersionInitContainer initContainer = 6;
+  optional MySQLVersionInitContainer initContainer = 7;
 
   // PSP names
-  optional MySQLVersionPodSecurityPolicy podSecurityPolicies = 7;
+  optional MySQLVersionPodSecurityPolicy podSecurityPolicies = 8;
 }
 
 // MySQLVersionTools is the image for the postgres tools

@@ -19515,6 +19515,18 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionLabeler": {
+      "description": "MySQLVersionLabeler is the image for the MySQL labeler",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionList": {
       "description": "MySQLVersionList is a list of MySQLVersions",
       "type": "object",
@@ -19566,6 +19578,7 @@
         "db",
         "exporter",
         "tools",
+        "labeler",
         "initContainer",
         "podSecurityPolicies"
       ],
@@ -19585,6 +19598,10 @@
         "initContainer": {
           "description": "Init container Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionInitContainer"
+        },
+        "labeler": {
+          "description": "Labeler Image",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionLabeler"
         },
         "podSecurityPolicies": {
           "description": "PSP names",

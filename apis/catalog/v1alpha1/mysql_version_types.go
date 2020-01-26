@@ -55,13 +55,15 @@ type MySQLVersionSpec struct {
 	Exporter MySQLVersionExporter `json:"exporter" protobuf:"bytes,3,opt,name=exporter"`
 	// Tools Image
 	Tools MySQLVersionTools `json:"tools" protobuf:"bytes,4,opt,name=tools"`
+	// Labeler Image
+	Labeler MySQLVersionLabeler `json:"labeler" protobuf:"bytes,5,opt,name=labeler"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
-	Deprecated bool `json:"deprecated,omitempty" protobuf:"varint,5,opt,name=deprecated"`
+	Deprecated bool `json:"deprecated,omitempty" protobuf:"varint,6,opt,name=deprecated"`
 	// Init container Image
-	InitContainer MySQLVersionInitContainer `json:"initContainer" protobuf:"bytes,6,opt,name=initContainer"`
+	InitContainer MySQLVersionInitContainer `json:"initContainer" protobuf:"bytes,7,opt,name=initContainer"`
 	// PSP names
-	PodSecurityPolicies MySQLVersionPodSecurityPolicy `json:"podSecurityPolicies" protobuf:"bytes,7,opt,name=podSecurityPolicies"`
+	PodSecurityPolicies MySQLVersionPodSecurityPolicy `json:"podSecurityPolicies" protobuf:"bytes,8,opt,name=podSecurityPolicies"`
 }
 
 // MySQLVersionDatabase is the MySQL Database image
@@ -71,6 +73,11 @@ type MySQLVersionDatabase struct {
 
 // MySQLVersionExporter is the image for the MySQL exporter
 type MySQLVersionExporter struct {
+	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
+}
+
+// MySQLVersionLabeler is the image for the MySQL labeler
+type MySQLVersionLabeler struct {
 	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
 }
 
