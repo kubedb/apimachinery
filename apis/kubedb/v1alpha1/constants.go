@@ -101,4 +101,7 @@ const (
 	PgBouncerExporterClientCertSuffix = "-exporter-cert"
 	PgBouncerServingServerSuffix      = "-serving-server-cert"
 	PgBouncerUpstreamServerCA         = "upstream-server-ca.crt"
+
+	LocalHost   = "localhost"
+	LocalHostIP = "127.0.0.1"
 )
