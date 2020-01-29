@@ -19558,6 +19558,18 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionReplicationModeDetector": {
+      "description": "MySQLVersionReplicationModeDetector is the image for the MySQL replication mode detector",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionSpec": {
       "description": "MySQLVersionSpec is the spec for postgres version",
       "type": "object",
@@ -19566,6 +19578,7 @@
         "db",
         "exporter",
         "tools",
+        "replicationModeDetector",
         "initContainer",
         "podSecurityPolicies"
       ],
@@ -19589,6 +19602,10 @@
         "podSecurityPolicies": {
           "description": "PSP names",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionPodSecurityPolicy"
+        },
+        "replicationModeDetector": {
+          "description": "ReplicationModeDetector Image",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionReplicationModeDetector"
         },
         "tools": {
           "description": "Tools Image",
