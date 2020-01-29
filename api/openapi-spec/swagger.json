@@ -19515,18 +19515,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionLabeler": {
-      "description": "MySQLVersionLabeler is the image for the MySQL labeler",
-      "type": "object",
-      "required": [
-        "image"
-      ],
-      "properties": {
-        "image": {
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionList": {
       "description": "MySQLVersionList is a list of MySQLVersions",
       "type": "object",
@@ -19570,6 +19558,18 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionReplicationModeDetector": {
+      "description": "MySQLVersionReplicationModeDetector is the image for the MySQL replication mode detector",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionSpec": {
       "description": "MySQLVersionSpec is the spec for postgres version",
       "type": "object",
@@ -19578,7 +19578,7 @@
         "db",
         "exporter",
         "tools",
-        "labeler",
+        "replicationModeDetector",
         "initContainer",
         "podSecurityPolicies"
       ],
@@ -19599,13 +19599,13 @@
           "description": "Init container Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionInitContainer"
         },
-        "labeler": {
-          "description": "Labeler Image",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionLabeler"
-        },
         "podSecurityPolicies": {
           "description": "PSP names",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionPodSecurityPolicy"
+        },
+        "replicationModeDetector": {
+          "description": "ReplicationModeDetector Image",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionReplicationModeDetector"
         },
         "tools": {
           "description": "Tools Image",

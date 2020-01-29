@@ -309,11 +309,6 @@ message MySQLVersionInitContainer {
   optional string image = 1;
 }
 
-// MySQLVersionLabeler is the image for the MySQL labeler
-message MySQLVersionLabeler {
-  optional string image = 1;
-}
-
 // MySQLVersionList is a list of MySQLVersions
 message MySQLVersionList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
@@ -325,6 +320,11 @@ message MySQLVersionList {
 // MySQLVersionPodSecurityPolicy is the MySQL pod security policies
 message MySQLVersionPodSecurityPolicy {
   optional string databasePolicyName = 1;
+}
+
+// MySQLVersionReplicationModeDetector is the image for the MySQL replication mode detector
+message MySQLVersionReplicationModeDetector {
+  optional string image = 1;
 }
 
 // MySQLVersionSpec is the spec for postgres version
@@ -341,8 +341,8 @@ message MySQLVersionSpec {
   // Tools Image
   optional MySQLVersionTools tools = 4;
 
-  // Labeler Image
-  optional MySQLVersionLabeler labeler = 5;
+  // ReplicationModeDetector Image
+  optional MySQLVersionReplicationModeDetector replicationModeDetector = 5;
 
   // Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
   // +optional

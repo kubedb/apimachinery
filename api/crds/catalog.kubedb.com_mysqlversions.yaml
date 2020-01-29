@@ -80,14 +80,6 @@ spec:
               required:
               - image
               type: object
-            labeler:
-              description: Labeler Image
-              properties:
-                image:
-                  type: string
-              required:
-              - image
-              type: object
             podSecurityPolicies:
               description: PSP names
               properties:
@@ -95,6 +87,14 @@ spec:
                   type: string
               required:
               - databasePolicyName
+              type: object
+            replicationModeDetector:
+              description: ReplicationModeDetector Image
+              properties:
+                image:
+                  type: string
+              required:
+              - image
               type: object
             tools:
               description: Tools Image
@@ -111,8 +111,8 @@ spec:
           - db
           - exporter
           - initContainer
-          - labeler
           - podSecurityPolicies
+          - replicationModeDetector
           - tools
           - version
           type: object
