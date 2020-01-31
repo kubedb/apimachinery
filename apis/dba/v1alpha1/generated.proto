@@ -21,6 +21,7 @@ syntax = 'proto2';
 
 package kubedb.dev.apimachinery.apis.dba.v1alpha1;
 
+import "k8s.io/api/core/v1/generated.proto";
 import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
 import "k8s.io/apimachinery/pkg/runtime/generated.proto";
 import "k8s.io/apimachinery/pkg/runtime/schema/generated.proto";
@@ -168,6 +169,10 @@ message MemcachedModificationRequestStatus {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=mongodbmodificationrequests,singular=mongodbmodificationrequest,shortName=mgmodreq,categories={datastore,kubedb,appscode}
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 message MongoDBModificationRequest {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
@@ -201,15 +206,32 @@ message MongoDBModificationRequestList {
   repeated MongoDBModificationRequest items = 2;
 }
 
-// MongoDBModificationRequestSpec is the spec for elasticsearch version
+// MongoDBModificationRequestSpec is the spec for mongodb modification request
 message MongoDBModificationRequestSpec {
+  // Specifies the Elasticsearch reference
+  optional k8s.io.api.core.v1.LocalObjectReference databaseRef = 1;
+
+  // Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.
+  optional string type = 2;
+
+  // Specifies the field information that needed to be updated
+  optional UpdateSpec update = 3;
 }
 
-// MongoDBModificationRequestStatus is the status for elasticsearch version
+// MongoDBModificationRequestStatus is the status for mongodb modification request
 message MongoDBModificationRequestStatus {
+  optional string phase = 1;
+
+  optional string reason = 2;
+
   // Conditions applied to the request, such as approval or denial.
   // +optional
-  repeated MongoDBModificationRequestCondition conditions = 1;
+  repeated MongoDBModificationRequestCondition conditions = 3;
+
+  // observedGeneration is the most recent generation observed for this resource. It corresponds to the
+  // resource's generation, which is updated on mutation by the API Server.
+  // +optional
+  optional int64 observedGeneration = 4;
 }
 
 // +kubebuilder:object:root=true
@@ -486,5 +508,10 @@ message RedisModificationRequestStatus {
   // Conditions applied to the request, such as approval or denial.
   // +optional
   repeated RedisModificationRequestCondition conditions = 1;
+}
+
+message UpdateSpec {
+  // Specifies the ElasticsearchVersion object name
+  optional string targetVersion = 1;
 }
 

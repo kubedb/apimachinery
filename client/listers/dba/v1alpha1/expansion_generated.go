@@ -34,6 +34,10 @@ type MemcachedModificationRequestListerExpansion interface{}
 // MongoDBModificationRequestLister.
 type MongoDBModificationRequestListerExpansion interface{}
 
+// MongoDBModificationRequestNamespaceListerExpansion allows custom methods to be added to
+// MongoDBModificationRequestNamespaceLister.
+type MongoDBModificationRequestNamespaceListerExpansion interface{}
+
 // MySQLModificationRequestListerExpansion allows custom methods to be added to
 // MySQLModificationRequestLister.
 type MySQLModificationRequestListerExpansion interface{}

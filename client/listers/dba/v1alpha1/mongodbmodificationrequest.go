@@ -30,8 +30,8 @@ import (
 type MongoDBModificationRequestLister interface {
 	// List lists all MongoDBModificationRequests in the indexer.
 	List(selector labels.Selector) (ret []*v1alpha1.MongoDBModificationRequest, err error)
-	// Get retrieves the MongoDBModificationRequest from the index for a given name.
-	Get(name string) (*v1alpha1.MongoDBModificationRequest, error)
+	// MongoDBModificationRequests returns an object that can list and get MongoDBModificationRequests.
+	MongoDBModificationRequests(namespace string) MongoDBModificationRequestNamespaceLister
 	MongoDBModificationRequestListerExpansion
 }
 
@@ -53,9 +53,38 @@ func (s *mongoDBModificationRequestLister) List(selector labels.Selector) (ret [
 	return ret, err
 }
 
-// Get retrieves the MongoDBModificationRequest from the index for a given name.
-func (s *mongoDBModificationRequestLister) Get(name string) (*v1alpha1.MongoDBModificationRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
+// MongoDBModificationRequests returns an object that can list and get MongoDBModificationRequests.
+func (s *mongoDBModificationRequestLister) MongoDBModificationRequests(namespace string) MongoDBModificationRequestNamespaceLister {
+	return mongoDBModificationRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+}
+
+// MongoDBModificationRequestNamespaceLister helps list and get MongoDBModificationRequests.
+type MongoDBModificationRequestNamespaceLister interface {
+	// List lists all MongoDBModificationRequests in the indexer for a given namespace.
+	List(selector labels.Selector) (ret []*v1alpha1.MongoDBModificationRequest, err error)
+	// Get retrieves the MongoDBModificationRequest from the indexer for a given namespace and name.
+	Get(name string) (*v1alpha1.MongoDBModificationRequest, error)
+	MongoDBModificationRequestNamespaceListerExpansion
+}
+
+// mongoDBModificationRequestNamespaceLister implements the MongoDBModificationRequestNamespaceLister
+// interface.
+type mongoDBModificationRequestNamespaceLister struct {
+	indexer   cache.Indexer
+	namespace string
+}
+
+// List lists all MongoDBModificationRequests in the indexer for a given namespace.
+func (s mongoDBModificationRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MongoDBModificationRequest, err error) {
+	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
+		ret = append(ret, m.(*v1alpha1.MongoDBModificationRequest))
+	})
+	return ret, err
+}
+
+// Get retrieves the MongoDBModificationRequest from the indexer for a given namespace and name.
+func (s mongoDBModificationRequestNamespaceLister) Get(name string) (*v1alpha1.MongoDBModificationRequest, error) {
+	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
 	}

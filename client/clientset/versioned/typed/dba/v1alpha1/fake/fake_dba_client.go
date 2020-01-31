@@ -41,8 +41,8 @@ func (c *FakeDbaV1alpha1) MemcachedModificationRequests() v1alpha1.MemcachedModi
 	return &FakeMemcachedModificationRequests{c}
 }
 
-func (c *FakeDbaV1alpha1) MongoDBModificationRequests() v1alpha1.MongoDBModificationRequestInterface {
-	return &FakeMongoDBModificationRequests{c}
+func (c *FakeDbaV1alpha1) MongoDBModificationRequests(namespace string) v1alpha1.MongoDBModificationRequestInterface {
+	return &FakeMongoDBModificationRequests{c, namespace}
 }
 
 func (c *FakeDbaV1alpha1) MySQLModificationRequests() v1alpha1.MySQLModificationRequestInterface {

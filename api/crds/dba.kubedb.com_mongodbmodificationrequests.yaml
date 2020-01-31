@@ -6,6 +6,16 @@ metadata:
     app.kubernetes.io/name: kubedb
   name: mongodbmodificationrequests.dba.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.type
+    name: Type
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: dba.kubedb.com
   names:
     categories:
@@ -20,6 +30,8 @@ spec:
     singular: mongodbmodificationrequest
   preserveUnknownFields: false
   scope: Namespaced
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       properties:
@@ -36,12 +48,35 @@ spec:
         metadata:
           type: object
         spec:
-          description: MongoDBModificationRequestSpec is the spec for elasticsearch
-            version
+          description: MongoDBModificationRequestSpec is the spec for mongodb modification
+            request
+          properties:
+            databaseRef:
+              description: Specifies the Elasticsearch reference
+              properties:
+                name:
+                  description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    TODO: Add other useful fields. apiVersion, kind, uid?'
+                  type: string
+              type: object
+            type:
+              description: Specifies the modification request type; ScaleUp, ScaleDown,
+                Upgrade etc.
+              type: string
+            update:
+              description: Specifies the field information that needed to be updated
+              properties:
+                targetVersion:
+                  description: Specifies the ElasticsearchVersion object name
+                  type: string
+              type: object
+          required:
+          - databaseRef
+          - type
           type: object
         status:
-          description: MongoDBModificationRequestStatus is the status for elasticsearch
-            version
+          description: MongoDBModificationRequestStatus is the status for mongodb
+            modification request
           properties:
             conditions:
               description: Conditions applied to the request, such as approval or
@@ -69,6 +104,16 @@ spec:
                 - type
                 type: object
               type: array
+            observedGeneration:
+              description: observedGeneration is the most recent generation observed
+                for this resource. It corresponds to the resource's generation, which
+                is updated on mutation by the API Server.
+              format: int64
+              type: integer
+            phase:
+              type: string
+            reason:
+              type: string
           type: object
       type: object
   version: v1alpha1

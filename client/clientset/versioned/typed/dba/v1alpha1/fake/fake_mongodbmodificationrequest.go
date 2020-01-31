@@ -32,6 +32,7 @@ import (
 // FakeMongoDBModificationRequests implements MongoDBModificationRequestInterface
 type FakeMongoDBModificationRequests struct {
 	Fake *FakeDbaV1alpha1
+	ns   string
 }
 
 var mongodbmodificationrequestsResource = schema.GroupVersionResource{Group: "dba.kubedb.com", Version: "v1alpha1", Resource: "mongodbmodificationrequests"}
@@ -41,7 +42,8 @@ var mongodbmodificationrequestsKind = schema.GroupVersionKind{Group: "dba.kubedb
 // Get takes name of the mongoDBModificationRequest, and returns the corresponding mongoDBModificationRequest object, and an error if there is any.
 func (c *FakeMongoDBModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.MongoDBModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(mongodbmodificationrequestsResource, name), &v1alpha1.MongoDBModificationRequest{})
+		Invokes(testing.NewGetAction(mongodbmodificationrequestsResource, c.ns, name), &v1alpha1.MongoDBModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -51,7 +53,8 @@ func (c *FakeMongoDBModificationRequests) Get(name string, options v1.GetOptions
 // List takes label and field selectors, and returns the list of MongoDBModificationRequests that match those selectors.
 func (c *FakeMongoDBModificationRequests) List(opts v1.ListOptions) (result *v1alpha1.MongoDBModificationRequestList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(mongodbmodificationrequestsResource, mongodbmodificationrequestsKind, opts), &v1alpha1.MongoDBModificationRequestList{})
+		Invokes(testing.NewListAction(mongodbmodificationrequestsResource, mongodbmodificationrequestsKind, c.ns, opts), &v1alpha1.MongoDBModificationRequestList{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -72,13 +75,15 @@ func (c *FakeMongoDBModificationRequests) List(opts v1.ListOptions) (result *v1a
 // Watch returns a watch.Interface that watches the requested mongoDBModificationRequests.
 func (c *FakeMongoDBModificationRequests) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(mongodbmodificationrequestsResource, opts))
+		InvokesWatch(testing.NewWatchAction(mongodbmodificationrequestsResource, c.ns, opts))
+
 }
 
 // Create takes the representation of a mongoDBModificationRequest and creates it.  Returns the server's representation of the mongoDBModificationRequest, and an error, if there is any.
 func (c *FakeMongoDBModificationRequests) Create(mongoDBModificationRequest *v1alpha1.MongoDBModificationRequest) (result *v1alpha1.MongoDBModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(mongodbmodificationrequestsResource, mongoDBModificationRequest), &v1alpha1.MongoDBModificationRequest{})
+		Invokes(testing.NewCreateAction(mongodbmodificationrequestsResource, c.ns, mongoDBModificationRequest), &v1alpha1.MongoDBModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -88,7 +93,20 @@ func (c *FakeMongoDBModificationRequests) Create(mongoDBModificationRequest *v1a
 // Update takes the representation of a mongoDBModificationRequest and updates it. Returns the server's representation of the mongoDBModificationRequest, and an error, if there is any.
 func (c *FakeMongoDBModificationRequests) Update(mongoDBModificationRequest *v1alpha1.MongoDBModificationRequest) (result *v1alpha1.MongoDBModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(mongodbmodificationrequestsResource, mongoDBModificationRequest), &v1alpha1.MongoDBModificationRequest{})
+		Invokes(testing.NewUpdateAction(mongodbmodificationrequestsResource, c.ns, mongoDBModificationRequest), &v1alpha1.MongoDBModificationRequest{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.MongoDBModificationRequest), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeMongoDBModificationRequests) UpdateStatus(mongoDBModificationRequest *v1alpha1.MongoDBModificationRequest) (*v1alpha1.MongoDBModificationRequest, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(mongodbmodificationrequestsResource, "status", c.ns, mongoDBModificationRequest), &v1alpha1.MongoDBModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -98,13 +116,14 @@ func (c *FakeMongoDBModificationRequests) Update(mongoDBModificationRequest *v1a
 // Delete takes name of the mongoDBModificationRequest and deletes it. Returns an error if one occurs.
 func (c *FakeMongoDBModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(mongodbmodificationrequestsResource, name), &v1alpha1.MongoDBModificationRequest{})
+		Invokes(testing.NewDeleteAction(mongodbmodificationrequestsResource, c.ns, name), &v1alpha1.MongoDBModificationRequest{})
+
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeMongoDBModificationRequests) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(mongodbmodificationrequestsResource, listOptions)
+	action := testing.NewDeleteCollectionAction(mongodbmodificationrequestsResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.MongoDBModificationRequestList{})
 	return err
@@ -113,7 +132,8 @@ func (c *FakeMongoDBModificationRequests) DeleteCollection(options *v1.DeleteOpt
 // Patch applies the patch and returns the patched mongoDBModificationRequest.
 func (c *FakeMongoDBModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.MongoDBModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(mongodbmodificationrequestsResource, name, pt, data, subresources...), &v1alpha1.MongoDBModificationRequest{})
+		Invokes(testing.NewPatchSubresourceAction(mongodbmodificationrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.MongoDBModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
