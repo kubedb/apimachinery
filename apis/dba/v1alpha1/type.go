@@ -23,17 +23,25 @@ type RequestConditionType string
 const (
 	AccessApproved         RequestConditionType = "Approved"
 	AccessDenied           RequestConditionType = "Denied"
-	Processing             RequestConditionType = "Processing"
 	DisableSharding        RequestConditionType = "DisableSharding"
 	EnableSharding         RequestConditionType = "EnableSharding"
-	PauseDatabase          RequestConditionType = "PauseDatabase"
-	ResumeDatabase         RequestConditionType = "ResumeDatabase"
-	Successful             RequestConditionType = "Successful"
-	Updating               RequestConditionType = "Updating"
 	Failed                 RequestConditionType = "Failed"
-	UpgradeDatabaseVersion RequestConditionType = "UpgradeDatabaseVersion"
+	MigratingData          RequestConditionType = "MigratingData"
+	NodeCreated            RequestConditionType = "NodeCreated"
+	NodeDeleted            RequestConditionType = "NodeDeleted"
+	NodeRestarted          RequestConditionType = "NodeRestarted"
+	PauseDatabase          RequestConditionType = "PauseDatabase"
+	Processing             RequestConditionType = "Processing"
+	ResumeDatabase         RequestConditionType = "ResumeDatabase"
+	ScalingDown            RequestConditionType = "ScalingDown"
+	ScalingUp              RequestConditionType = "ScalingUp"
 	StartingBalancer       RequestConditionType = "StartingBalancer"
 	StoppingBalancer       RequestConditionType = "StoppingBalancer"
+	Successful             RequestConditionType = "Successful"
+	Updating               RequestConditionType = "Updating"
+	UpgradeDatabaseVersion RequestConditionType = "UpgradeDatabaseVersion"
+	VotingExclusionAdded   RequestConditionType = "VotingExclusionAdded"
+	VotingExclusionDeleted RequestConditionType = "VotingExclusionDeleted"
 )
 
 type ModificationRequestPhase string
@@ -68,3 +76,8 @@ const (
 	// used for Restart operation
 	ModificationRequestTypeRestart ModificationRequestType = "Restart"
 )
+
+type UpdateSpec struct {
+	// Specifies the ElasticsearchVersion object name
+	TargetVersion string `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+}

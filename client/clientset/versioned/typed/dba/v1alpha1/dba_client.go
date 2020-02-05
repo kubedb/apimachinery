@@ -44,8 +44,8 @@ type DbaV1alpha1Client struct {
 	restClient rest.Interface
 }
 
-func (c *DbaV1alpha1Client) ElasticsearchModificationRequests() ElasticsearchModificationRequestInterface {
-	return newElasticsearchModificationRequests(c)
+func (c *DbaV1alpha1Client) ElasticsearchModificationRequests(namespace string) ElasticsearchModificationRequestInterface {
+	return newElasticsearchModificationRequests(c, namespace)
 }
 
 func (c *DbaV1alpha1Client) EtcdModificationRequests() EtcdModificationRequestInterface {

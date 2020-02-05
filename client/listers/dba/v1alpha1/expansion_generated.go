@@ -22,6 +22,10 @@ package v1alpha1
 // ElasticsearchModificationRequestLister.
 type ElasticsearchModificationRequestListerExpansion interface{}
 
+// ElasticsearchModificationRequestNamespaceListerExpansion allows custom methods to be added to
+// ElasticsearchModificationRequestNamespaceLister.
+type ElasticsearchModificationRequestNamespaceListerExpansion interface{}
+
 // EtcdModificationRequestListerExpansion allows custom methods to be added to
 // EtcdModificationRequestLister.
 type EtcdModificationRequestListerExpansion interface{}

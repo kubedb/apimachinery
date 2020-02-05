@@ -59,7 +59,7 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 
 // ElasticsearchModificationRequests returns a ElasticsearchModificationRequestInformer.
 func (v *version) ElasticsearchModificationRequests() ElasticsearchModificationRequestInformer {
-	return &elasticsearchModificationRequestInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	return &elasticsearchModificationRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // EtcdModificationRequests returns a EtcdModificationRequestInformer.

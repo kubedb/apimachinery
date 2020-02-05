@@ -58,11 +58,6 @@ type MongoDBModificationRequestSpec struct {
 	Update *UpdateSpec `json:"update,omitempty" protobuf:"bytes,3,opt,name=update"`
 }
 
-type UpdateSpec struct {
-	// Specifies the ElasticsearchVersion object name
-	TargetVersion string `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-}
-
 // MongoDBModificationRequestStatus is the status for mongodb modification request
 type MongoDBModificationRequestStatus struct {
 	Phase ModificationRequestPhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=ModificationRequestPhase"`

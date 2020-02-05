@@ -29,8 +29,8 @@ type FakeDbaV1alpha1 struct {
 	*testing.Fake
 }
 
-func (c *FakeDbaV1alpha1) ElasticsearchModificationRequests() v1alpha1.ElasticsearchModificationRequestInterface {
-	return &FakeElasticsearchModificationRequests{c}
+func (c *FakeDbaV1alpha1) ElasticsearchModificationRequests(namespace string) v1alpha1.ElasticsearchModificationRequestInterface {
+	return &FakeElasticsearchModificationRequests{c, namespace}
 }
 
 func (c *FakeDbaV1alpha1) EtcdModificationRequests() v1alpha1.EtcdModificationRequestInterface {
