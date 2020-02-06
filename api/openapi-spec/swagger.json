@@ -21093,7 +21093,7 @@
       ],
       "properties": {
         "keyFile": {
-          "description": "Deprecated: Use spec.certificateSecret",
+          "description": "Secret for KeyFile. Contains keyfile `key.txt` if spec.sslMode == \"disabled\".",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "name": {
@@ -21149,6 +21149,10 @@
           "description": "Config Server (metadata) component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-config-servers/",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBConfigNode"
         },
+        "keyFile": {
+          "description": "Secret for KeyFile. Contains keyfile `key.txt` if spec.sslMode == \"disabled\".",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        },
         "mongos": {
           "description": "Mongos (router) component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-query-router/",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBMongosNode"
@@ -21165,10 +21169,6 @@
         "version"
       ],
       "properties": {
-        "certificateSecret": {
-          "description": "Secret for KeyFile or SSL certificates. Contains `tls.pem` or keyfile `key.txt` depending on enableSSL.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
-        },
         "clusterAuthMode": {
           "description": "ClusterAuthMode for replicaset or sharding. (default will be x509 if sslmode is not `disabled`.) See available ClusterAuthMode: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-clusterauthmode",
           "type": "string"

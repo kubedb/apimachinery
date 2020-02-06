@@ -53,9 +53,10 @@ const (
 	ElasticsearchNodePort     = 9300
 	ElasticsearchNodePortName = "transport"
 
-	MongoDBShardPort    = 27017
-	MongoDBConfigdbPort = 27017
-	MongoDBMongosPort   = 27017
+	MongoDBShardPort         = 27017
+	MongoDBConfigdbPort      = 27017
+	MongoDBMongosPort        = 27017
+	MongoKeyFileSecretSuffix = "-key"
 
 	MySQLUserKey         = "username"
 	MySQLPasswordKey     = "password"
