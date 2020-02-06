@@ -95,6 +95,17 @@ func (c *FakeRedisModificationRequests) Update(redisModificationRequest *v1alpha
 	return obj.(*v1alpha1.RedisModificationRequest), err
 }
 
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeRedisModificationRequests) UpdateStatus(redisModificationRequest *v1alpha1.RedisModificationRequest) (*v1alpha1.RedisModificationRequest, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewRootUpdateSubresourceAction(redismodificationrequestsResource, "status", redisModificationRequest), &v1alpha1.RedisModificationRequest{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.RedisModificationRequest), err
+}
+
 // Delete takes name of the redisModificationRequest and deletes it. Returns an error if one occurs.
 func (c *FakeRedisModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.

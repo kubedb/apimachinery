@@ -40,6 +40,7 @@ type RedisModificationRequestsGetter interface {
 type RedisModificationRequestInterface interface {
 	Create(*v1alpha1.RedisModificationRequest) (*v1alpha1.RedisModificationRequest, error)
 	Update(*v1alpha1.RedisModificationRequest) (*v1alpha1.RedisModificationRequest, error)
+	UpdateStatus(*v1alpha1.RedisModificationRequest) (*v1alpha1.RedisModificationRequest, error)
 	Delete(name string, options *v1.DeleteOptions) error
 	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
 	Get(name string, options v1.GetOptions) (*v1alpha1.RedisModificationRequest, error)
@@ -120,6 +121,21 @@ func (c *redisModificationRequests) Update(redisModificationRequest *v1alpha1.Re
 	err = c.client.Put().
 		Resource("redismodificationrequests").
 		Name(redisModificationRequest.Name).
+		Body(redisModificationRequest).
+		Do().
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+
+func (c *redisModificationRequests) UpdateStatus(redisModificationRequest *v1alpha1.RedisModificationRequest) (result *v1alpha1.RedisModificationRequest, err error) {
+	result = &v1alpha1.RedisModificationRequest{}
+	err = c.client.Put().
+		Resource("redismodificationrequests").
+		Name(redisModificationRequest.Name).
+		SubResource("status").
 		Body(redisModificationRequest).
 		Do().
 		Into(result)

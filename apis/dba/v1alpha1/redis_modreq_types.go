@@ -16,7 +16,10 @@ limitations under the License.
 
 package v1alpha1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	v1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 const (
 	ResourceCodeRedisModificationRequest     = "rdmodreq"
@@ -29,12 +32,14 @@ const (
 
 // +genclient
 // +genclient:nonNamespaced
-// +genclient:skipVerbs=updateStatus
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=redismodificationrequests,singular=redismodificationrequest,shortName=rdmodreq,categories={datastore,kubedb,appscode}
+// +kubebuilder:resource:path=redismodificationrequests,singular=redismodificationrequest,shortName=rdmodreq,scope=Cluster,categories={datastore,kubedb,appscode}
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type RedisModificationRequest struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -42,15 +47,23 @@ type RedisModificationRequest struct {
 	Status            RedisModificationRequestStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
-// RedisModificationRequestSpec is the spec for elasticsearch version
+// RedisModificationRequestSpec is the spec for redis version
 type RedisModificationRequestSpec struct {
+	Version string              `json:"version,omitempty" protobuf:"bytes,1,opt,name=version"`
+	Redis   *v1.ObjectReference `json:"mongodb,omitempty" protobuf:"bytes,2,opt,name=redis"`
 }
 
-// RedisModificationRequestStatus is the status for elasticsearch version
+// RedisModificationRequestStatus is the status for redis version
 type RedisModificationRequestStatus struct {
+	Phase  ModificationRequestPhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=ModificationRequestPhase"`
+	Reason string                   `json:"reason,omitempty" protobuf:"bytes,2,opt,name=reason"`
 	// Conditions applied to the request, such as approval or denial.
 	// +optional
-	Conditions []RedisModificationRequestCondition `json:"conditions,omitempty" protobuf:"bytes,1,rep,name=conditions"`
+	Conditions []RedisModificationRequestCondition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
+	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
+	// resource's generation, which is updated on mutation by the API Server.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,4,opt,name=observedGeneration"`
 }
 
 type RedisModificationRequestCondition struct {

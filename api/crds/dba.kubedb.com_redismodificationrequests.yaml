@@ -6,6 +6,13 @@ metadata:
     app.kubernetes.io/name: kubedb
   name: redismodificationrequests.dba.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: dba.kubedb.com
   names:
     categories:
@@ -19,7 +26,9 @@ spec:
     - rdmodreq
     singular: redismodificationrequest
   preserveUnknownFields: false
-  scope: Namespaced
+  scope: Cluster
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       properties:
@@ -36,12 +45,50 @@ spec:
         metadata:
           type: object
         spec:
-          description: RedisModificationRequestSpec is the spec for elasticsearch
-            version
+          description: RedisModificationRequestSpec is the spec for redis version
+          properties:
+            mongodb:
+              description: ObjectReference contains enough information to let you
+                inspect or modify the referred object.
+              properties:
+                apiVersion:
+                  description: API version of the referent.
+                  type: string
+                fieldPath:
+                  description: 'If referring to a piece of an object instead of an
+                    entire object, this string should contain a valid JSON/Go field
+                    access statement, such as desiredState.manifest.containers[2].
+                    For example, if the object reference is to a container within
+                    a pod, this would take on a value like: "spec.containers{name}"
+                    (where "name" refers to the name of the container that triggered
+                    the event) or if no container name is specified "spec.containers[2]"
+                    (container with index 2 in this pod). This syntax is chosen only
+                    to have some well-defined way of referencing a part of an object.
+                    TODO: this design is not final and this field is subject to change
+                    in the future.'
+                  type: string
+                kind:
+                  description: 'Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+                  type: string
+                name:
+                  description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                  type: string
+                namespace:
+                  description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                  type: string
+                resourceVersion:
+                  description: 'Specific resourceVersion to which this reference is
+                    made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency'
+                  type: string
+                uid:
+                  description: 'UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids'
+                  type: string
+              type: object
+            version:
+              type: string
           type: object
         status:
-          description: RedisModificationRequestStatus is the status for elasticsearch
-            version
+          description: RedisModificationRequestStatus is the status for redis version
           properties:
             conditions:
               description: Conditions applied to the request, such as approval or
@@ -69,6 +116,16 @@ spec:
                 - type
                 type: object
               type: array
+            observedGeneration:
+              description: observedGeneration is the most recent generation observed
+                for this resource. It corresponds to the resource's generation, which
+                is updated on mutation by the API Server.
+              format: int64
+              type: integer
+            phase:
+              type: string
+            reason:
+              type: string
           type: object
       type: object
   version: v1alpha1
