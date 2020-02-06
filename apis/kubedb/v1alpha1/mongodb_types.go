@@ -117,7 +117,7 @@ type MongoDBSpec struct {
 	// +optional
 	TLS *TLSConfig `json:"tls,omitempty" protobuf:"bytes,18,opt,name=tls"`
 
-	// Secret for KeyFile. Contains keyfile `key.txt` if spec.sslMode == "disabled".
+	// Secret for KeyFile. Contains keyfile `key.txt` if spec.clusterAuthMode == keyFile || sendKeyFile
 	KeyFile *core.SecretVolumeSource `json:"keyFile,omitempty" protobuf:"bytes,19,opt,name=keyFile"`
 
 	// TerminationPolicy controls the delete operation for database

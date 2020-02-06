@@ -21092,10 +21092,6 @@
         "name"
       ],
       "properties": {
-        "keyFile": {
-          "description": "Secret for KeyFile. Contains keyfile `key.txt` if spec.sslMode == \"disabled\".",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
-        },
         "name": {
           "description": "Name of replicaset",
           "type": "string"
@@ -21149,10 +21145,6 @@
           "description": "Config Server (metadata) component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-config-servers/",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBConfigNode"
         },
-        "keyFile": {
-          "description": "Secret for KeyFile. Contains keyfile `key.txt` if spec.sslMode == \"disabled\".",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
-        },
         "mongos": {
           "description": "Mongos (router) component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-query-router/",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBMongosNode"
@@ -21188,6 +21180,10 @@
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+        },
+        "keyFile": {
+          "description": "Secret for KeyFile. Contains keyfile `key.txt` if spec.clusterAuthMode == keyFile || sendKeyFile",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",

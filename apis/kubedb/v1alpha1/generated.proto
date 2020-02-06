@@ -713,7 +713,7 @@ message MongoDBSpec {
   // +optional
   optional TLSConfig tls = 18;
 
-  // Secret for KeyFile. Contains keyfile `key.txt` if spec.sslMode == "disabled".
+  // Secret for KeyFile. Contains keyfile `key.txt` if spec.clusterAuthMode == keyFile || sendKeyFile
   optional k8s.io.api.core.v1.SecretVolumeSource keyFile = 19;
 
   // TerminationPolicy controls the delete operation for database

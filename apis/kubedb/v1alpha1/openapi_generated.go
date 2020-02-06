@@ -19294,7 +19294,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBSpec(ref common.ReferenceCa
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Secret for KeyFile. Contains keyfile `key.txt` if spec.sslMode == \"disabled\".",
+							Description: "Secret for KeyFile. Contains keyfile `key.txt` if spec.clusterAuthMode == keyFile || sendKeyFile",
 							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
 						},
 					},

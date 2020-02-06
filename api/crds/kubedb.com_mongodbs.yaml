@@ -3785,8 +3785,8 @@ spec:
                   type: object
               type: object
             keyFile:
-              description: Secret for KeyFile. Contains keyfile `key.txt` if spec.sslMode
-                == "disabled".
+              description: Secret for KeyFile. Contains keyfile `key.txt` if spec.clusterAuthMode
+                == keyFile || sendKeyFile
               properties:
                 defaultMode:
                   description: 'Optional: mode bits to use on created files by default.
