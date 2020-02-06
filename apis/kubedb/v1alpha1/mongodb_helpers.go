@@ -544,5 +544,6 @@ func (m *MongoDB) KeyFileRequired() bool {
 		return false
 	}
 	return m.Spec.ClusterAuthMode == ClusterAuthModeKeyFile ||
-		m.Spec.ClusterAuthMode == ClusterAuthModeSendKeyFile
+		m.Spec.ClusterAuthMode == ClusterAuthModeSendKeyFile ||
+		m.Spec.ClusterAuthMode == ClusterAuthModeSendX509
 }
