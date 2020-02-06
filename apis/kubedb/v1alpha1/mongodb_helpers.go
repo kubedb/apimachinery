@@ -343,14 +343,6 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		}
 	}
 
-	// required to upgrade operator from 0.11.0 to 0.12.0
-	if m.Spec.ReplicaSet != nil && m.Spec.ReplicaSet.KeyFile != nil {
-		if m.Spec.CertificateSecret == nil {
-			m.Spec.CertificateSecret = m.Spec.ReplicaSet.KeyFile
-		}
-		m.Spec.ReplicaSet.KeyFile = nil
-	}
-
 	if m.Spec.ShardTopology != nil {
 		if m.Spec.ShardTopology.Mongos.Strategy.Type == "" {
 			m.Spec.ShardTopology.Mongos.Strategy.Type = apps.RollingUpdateDeploymentStrategyType
@@ -541,11 +533,16 @@ func (m *MongoDBSpec) GetSecrets() []string {
 	if m.DatabaseSecret != nil {
 		secrets = append(secrets, m.DatabaseSecret.SecretName)
 	}
-	if m.CertificateSecret != nil {
-		secrets = append(secrets, m.CertificateSecret.SecretName)
-	}
-	if m.ReplicaSet != nil && m.ReplicaSet.KeyFile != nil {
-		secrets = append(secrets, m.ReplicaSet.KeyFile.SecretName)
+	if m.KeyFile != nil {
+		secrets = append(secrets, m.KeyFile.SecretName)
 	}
 	return secrets
+}
+
+func (m *MongoDB) KeyFileRequired() bool {
+	if m == nil {
+		return false
+	}
+	return m.Spec.ClusterAuthMode == ClusterAuthModeKeyFile ||
+		m.Spec.ClusterAuthMode == ClusterAuthModeSendKeyFile
 }
