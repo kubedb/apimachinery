@@ -46,11 +46,11 @@ func (_ MongoDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinit
 var _ apis.ResourceInfo = &MongoDB{}
 
 const (
-	MongoTLSKeyFileName  = "ca.key"
-	MongoTLSCertFileName = "ca.crt"
-	MongoPemFileName     = "mongo.pem"
-	MongoClientFileName  = "client.pem"
-	MongoCertDirectory   = "/var/run/mongodb/tls"
+	TLSCAKeyFileName    = "ca.key"
+	TLSCACertFileName   = "ca.crt"
+	MongoPemFileName    = "mongo.pem"
+	MongoClientFileName = "client.pem"
+	MongoCertDirectory  = "/var/run/mongodb/tls"
 
 	MongoDBShardLabelKey  = "mongodb.kubedb.com/node.shard"
 	MongoDBConfigLabelKey = "mongodb.kubedb.com/node.config"
@@ -404,7 +404,7 @@ func (m *MongoDB) setDefaultProbes(podTemplate *ofst.PodTemplateSpec, mgVersion 
 	var sslArgs string
 	if m.Spec.SSLMode == SSLModeRequireSSL {
 		sslArgs = fmt.Sprintf("--tls --tlsCAFile=%v/%v --tlsCertificateKeyFile=%v/%v",
-			MongoCertDirectory, MongoTLSCertFileName, MongoCertDirectory, MongoClientFileName)
+			MongoCertDirectory, TLSCACertFileName, MongoCertDirectory, MongoClientFileName)
 
 		breakingVer, err := version.NewVersion("4.1")
 		if err != nil {
@@ -419,9 +419,9 @@ func (m *MongoDB) setDefaultProbes(podTemplate *ofst.PodTemplateSpec, mgVersion 
 			return
 		}
 		if currentVer.Equal(exceptionVer) {
-			sslArgs = fmt.Sprintf("--tls --tlsCAFile=%v/%v --tlsPEMKeyFile=%v/%v", MongoCertDirectory, MongoTLSCertFileName, MongoCertDirectory, MongoClientFileName)
+			sslArgs = fmt.Sprintf("--tls --tlsCAFile=%v/%v --tlsPEMKeyFile=%v/%v", MongoCertDirectory, TLSCACertFileName, MongoCertDirectory, MongoClientFileName)
 		} else if currentVer.LessThan(breakingVer) {
-			sslArgs = fmt.Sprintf("--ssl --sslCAFile=%v/%v --sslPEMKeyFile=%v/%v", MongoCertDirectory, MongoTLSCertFileName, MongoCertDirectory, MongoClientFileName)
+			sslArgs = fmt.Sprintf("--ssl --sslCAFile=%v/%v --sslPEMKeyFile=%v/%v", MongoCertDirectory, TLSCACertFileName, MongoCertDirectory, MongoClientFileName)
 		}
 	}
 
