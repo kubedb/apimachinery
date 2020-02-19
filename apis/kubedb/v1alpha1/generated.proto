@@ -835,13 +835,17 @@ message MySQLSpec {
   // +optional
   optional bool halted = 15;
 
+  // Indicates that the database server need to be encrypted connections(ssl) as mandatory or not
+  // +optional
+  optional bool requireSSL = 16;
+
   // TLS contains tls configurations for client and server.
   // +optional
-  optional TLSConfig tls = 16;
+  optional TLSConfig tls = 17;
 
   // TerminationPolicy controls the delete operation for database
   // +optional
-  optional string terminationPolicy = 17;
+  optional string terminationPolicy = 18;
 }
 
 message MySQLStatus {
