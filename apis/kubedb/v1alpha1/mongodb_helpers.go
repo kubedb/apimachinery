@@ -315,9 +315,6 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 	if m == nil {
 		return
 	}
-	if m == nil {
-		return
-	}
 
 	if m.Spec.StorageType == "" {
 		m.Spec.StorageType = StorageTypeDurable
