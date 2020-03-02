@@ -16,32 +16,35 @@ limitations under the License.
 
 package v1alpha1
 
-// +kubebuilder:validation:Enum=Approved;Denied
 type RequestConditionType string
 
 // These are the possible conditions for a certificate request.
 const (
-	AccessApproved         RequestConditionType = "Approved"
-	AccessDenied           RequestConditionType = "Denied"
-	DisableSharding        RequestConditionType = "DisableSharding"
-	EnableSharding         RequestConditionType = "EnableSharding"
-	Failed                 RequestConditionType = "Failed"
-	MigratingData          RequestConditionType = "MigratingData"
-	NodeCreated            RequestConditionType = "NodeCreated"
-	NodeDeleted            RequestConditionType = "NodeDeleted"
-	NodeRestarted          RequestConditionType = "NodeRestarted"
-	PauseDatabase          RequestConditionType = "PauseDatabase"
-	Processing             RequestConditionType = "Processing"
-	ResumeDatabase         RequestConditionType = "ResumeDatabase"
-	ScalingDown            RequestConditionType = "ScalingDown"
-	ScalingUp              RequestConditionType = "ScalingUp"
-	StartingBalancer       RequestConditionType = "StartingBalancer"
-	StoppingBalancer       RequestConditionType = "StoppingBalancer"
-	Successful             RequestConditionType = "Successful"
-	Updating               RequestConditionType = "Updating"
-	UpgradeDatabaseVersion RequestConditionType = "UpgradeDatabaseVersion"
-	VotingExclusionAdded   RequestConditionType = "VotingExclusionAdded"
-	VotingExclusionDeleted RequestConditionType = "VotingExclusionDeleted"
+	AccessApproved            RequestConditionType = "Approved"
+	AccessDenied              RequestConditionType = "Denied"
+	DisableSharding           RequestConditionType = "DisableSharding"
+	EnableSharding            RequestConditionType = "EnableSharding"
+	Failed                    RequestConditionType = "Failed"
+	HorizontalScalingDatabase RequestConditionType = "HorizontalScaling"
+	MigratingData             RequestConditionType = "MigratingData"
+	NodeCreated               RequestConditionType = "NodeCreated"
+	NodeDeleted               RequestConditionType = "NodeDeleted"
+	NodeRestarted             RequestConditionType = "NodeRestarted"
+	PauseDatabase             RequestConditionType = "PauseDatabase"
+	Processing                RequestConditionType = "Processing"
+	ResumeDatabase            RequestConditionType = "ResumeDatabase"
+	ScalingDatabase           RequestConditionType = "Scaling"
+	ScalingDown               RequestConditionType = "ScalingDown"
+	ScalingUp                 RequestConditionType = "ScalingUp"
+	StartingBalancer          RequestConditionType = "StartingBalancer"
+	StoppingBalancer          RequestConditionType = "StoppingBalancer"
+	Successful                RequestConditionType = "Successful"
+	Updating                  RequestConditionType = "Updating"
+	UpgradedDatabaseVersion   RequestConditionType = "UpgradedDatabaseVersion"
+	UpgradingDatabaseVersion  RequestConditionType = "UpgradingDatabaseVersion"
+	VerticalScalingDatabase   RequestConditionType = "VerticalScaling"
+	VotingExclusionAdded      RequestConditionType = "VotingExclusionAdded"
+	VotingExclusionDeleted    RequestConditionType = "VotingExclusionDeleted"
 )
 
 type ModificationRequestPhase string

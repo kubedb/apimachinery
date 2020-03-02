@@ -129,6 +129,11 @@ message EtcdModificationRequestStatus {
   repeated EtcdModificationRequestCondition conditions = 1;
 }
 
+message HorizontalScale {
+  // Number of nodes/members of the group
+  optional int32 member = 1;
+}
+
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=memcachedmodificationrequests,singular=memcachedmodificationrequest,shortName=mcmodreq,categories={datastore,kubedb,appscode}
 message MemcachedModificationRequest {
@@ -225,29 +230,16 @@ message MongoDBModificationRequestStatus {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=mysqlmodificationrequests,singular=mysqlmodificationrequest,shortName=mymodreq,categories={datastore,kubedb,appscode}
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 message MySQLModificationRequest {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
   optional MySQLModificationRequestSpec spec = 2;
 
   optional MySQLModificationRequestStatus status = 3;
-}
-
-message MySQLModificationRequestCondition {
-  // request approval state, currently Approved or Denied.
-  optional string type = 1;
-
-  // brief reason for the request state
-  // +optional
-  optional string reason = 2;
-
-  // human readable message with details about the request state
-  // +optional
-  optional string message = 3;
-
-  // timestamp for the last update to this condition
-  // +optional
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 4;
 }
 
 // MySQLModificationRequestList is a list of MySQLModificationRequests
@@ -258,15 +250,53 @@ message MySQLModificationRequestList {
   repeated MySQLModificationRequest items = 2;
 }
 
-// MySQLModificationRequestSpec is the spec for elasticsearch version
+// MySQLModificationRequestSpec is the spec for MySQLModificationRequest version
 message MySQLModificationRequestSpec {
+  // Specifies the database reference
+  optional k8s.io.api.core.v1.LocalObjectReference databaseRef = 1;
+
+  // Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.
+  optional string type = 2;
+
+  // Specifies the field information that needed to be updated
+  optional MySQLUpdateSpec update = 3;
+
+  // Specifies the scaling info of database
+  optional MySQLScaleSpec scale = 4;
 }
 
-// MySQLModificationRequestStatus is the status for elasticsearch version
+// MySQLModificationRequestStatus is the status for MySQLModificationRequest object
 message MySQLModificationRequestStatus {
+  optional string phase = 1;
+
+  // observedGeneration is the most recent generation observed for this resource. It corresponds to the
+  // resource's generation, which is updated on mutation by the API Server.
+  // +optional
+  optional int64 observedGeneration = 2;
+
   // Conditions applied to the request, such as approval or denial.
   // +optional
-  repeated MySQLModificationRequestCondition conditions = 1;
+  repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
+}
+
+// MySQLScaleSpec contains the scaling information of the MySQL
+message MySQLScaleSpec {
+  // Horizontal specifies the horizontal scaling.
+  optional HorizontalScale horizontal = 1;
+
+  // Vertical specifies the vertical scaling.
+  optional VerticalScale vertical = 2;
+
+  // specifies the weight of the current member/Node
+  optional int32 memberWeight = 3;
+}
+
+message MySQLUpdateSpec {
+  // Specifies the MySQLVersion object name
+  optional string targetVersion = 1;
+
+  // Specifies the current ordinal of the StatefulSet
+  optional int32 CurrentStatefulSetOrdinal = 2;
 }
 
 // +kubebuilder:object:root=true
@@ -516,5 +546,10 @@ message ScaleSpec {
 message UpdateSpec {
   // Specifies the ElasticsearchVersion object name
   optional string targetVersion = 1;
+}
+
+message VerticalScale {
+  // Containers represents the containers specification for scaling the requested resources.
+  repeated k8s.io.api.core.v1.Container containers = 1;
 }
 

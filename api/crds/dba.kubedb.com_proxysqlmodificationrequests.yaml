@@ -59,9 +59,6 @@ spec:
                     type: string
                   type:
                     description: request approval state, currently Approved or Denied.
-                    enum:
-                    - Approved
-                    - Denied
                     type: string
                 required:
                 - type

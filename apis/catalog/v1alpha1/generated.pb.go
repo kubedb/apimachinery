@@ -41,10 +41,38 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
+func (m *Blacklist) Reset()      { *m = Blacklist{} }
+func (*Blacklist) ProtoMessage() {}
+func (*Blacklist) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d642f2ffe8fdeecc, []int{0}
+}
+func (m *Blacklist) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Blacklist) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	b = b[:cap(b)]
+	n, err := m.MarshalToSizedBuffer(b)
+	if err != nil {
+		return nil, err
+	}
+	return b[:n], nil
+}
+func (m *Blacklist) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Blacklist.Merge(m, src)
+}
+func (m *Blacklist) XXX_Size() int {
+	return m.Size()
+}
+func (m *Blacklist) XXX_DiscardUnknown() {
+	xxx_messageInfo_Blacklist.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Blacklist proto.InternalMessageInfo
+
 func (m *ElasticsearchVersion) Reset()      { *m = ElasticsearchVersion{} }
 func (*ElasticsearchVersion) ProtoMessage() {}
 func (*ElasticsearchVersion) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{0}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{1}
 }
 func (m *ElasticsearchVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -72,7 +100,7 @@ var xxx_messageInfo_ElasticsearchVersion proto.InternalMessageInfo
 func (m *ElasticsearchVersionDatabase) Reset()      { *m = ElasticsearchVersionDatabase{} }
 func (*ElasticsearchVersionDatabase) ProtoMessage() {}
 func (*ElasticsearchVersionDatabase) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{1}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{2}
 }
 func (m *ElasticsearchVersionDatabase) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -100,7 +128,7 @@ var xxx_messageInfo_ElasticsearchVersionDatabase proto.InternalMessageInfo
 func (m *ElasticsearchVersionExporter) Reset()      { *m = ElasticsearchVersionExporter{} }
 func (*ElasticsearchVersionExporter) ProtoMessage() {}
 func (*ElasticsearchVersionExporter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{2}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{3}
 }
 func (m *ElasticsearchVersionExporter) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -128,7 +156,7 @@ var xxx_messageInfo_ElasticsearchVersionExporter proto.InternalMessageInfo
 func (m *ElasticsearchVersionInitContainer) Reset()      { *m = ElasticsearchVersionInitContainer{} }
 func (*ElasticsearchVersionInitContainer) ProtoMessage() {}
 func (*ElasticsearchVersionInitContainer) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{3}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{4}
 }
 func (m *ElasticsearchVersionInitContainer) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -156,7 +184,7 @@ var xxx_messageInfo_ElasticsearchVersionInitContainer proto.InternalMessageInfo
 func (m *ElasticsearchVersionList) Reset()      { *m = ElasticsearchVersionList{} }
 func (*ElasticsearchVersionList) ProtoMessage() {}
 func (*ElasticsearchVersionList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{4}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{5}
 }
 func (m *ElasticsearchVersionList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -184,7 +212,7 @@ var xxx_messageInfo_ElasticsearchVersionList proto.InternalMessageInfo
 func (m *ElasticsearchVersionPodSecurityPolicy) Reset()      { *m = ElasticsearchVersionPodSecurityPolicy{} }
 func (*ElasticsearchVersionPodSecurityPolicy) ProtoMessage() {}
 func (*ElasticsearchVersionPodSecurityPolicy) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{5}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{6}
 }
 func (m *ElasticsearchVersionPodSecurityPolicy) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -212,7 +240,7 @@ var xxx_messageInfo_ElasticsearchVersionPodSecurityPolicy proto.InternalMessageI
 func (m *ElasticsearchVersionSpec) Reset()      { *m = ElasticsearchVersionSpec{} }
 func (*ElasticsearchVersionSpec) ProtoMessage() {}
 func (*ElasticsearchVersionSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{6}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{7}
 }
 func (m *ElasticsearchVersionSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -240,7 +268,7 @@ var xxx_messageInfo_ElasticsearchVersionSpec proto.InternalMessageInfo
 func (m *ElasticsearchVersionTools) Reset()      { *m = ElasticsearchVersionTools{} }
 func (*ElasticsearchVersionTools) ProtoMessage() {}
 func (*ElasticsearchVersionTools) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{7}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{8}
 }
 func (m *ElasticsearchVersionTools) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -268,7 +296,7 @@ var xxx_messageInfo_ElasticsearchVersionTools proto.InternalMessageInfo
 func (m *EtcdVersion) Reset()      { *m = EtcdVersion{} }
 func (*EtcdVersion) ProtoMessage() {}
 func (*EtcdVersion) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{8}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{9}
 }
 func (m *EtcdVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -296,7 +324,7 @@ var xxx_messageInfo_EtcdVersion proto.InternalMessageInfo
 func (m *EtcdVersionDatabase) Reset()      { *m = EtcdVersionDatabase{} }
 func (*EtcdVersionDatabase) ProtoMessage() {}
 func (*EtcdVersionDatabase) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{9}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{10}
 }
 func (m *EtcdVersionDatabase) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -324,7 +352,7 @@ var xxx_messageInfo_EtcdVersionDatabase proto.InternalMessageInfo
 func (m *EtcdVersionExporter) Reset()      { *m = EtcdVersionExporter{} }
 func (*EtcdVersionExporter) ProtoMessage() {}
 func (*EtcdVersionExporter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{10}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{11}
 }
 func (m *EtcdVersionExporter) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -352,7 +380,7 @@ var xxx_messageInfo_EtcdVersionExporter proto.InternalMessageInfo
 func (m *EtcdVersionList) Reset()      { *m = EtcdVersionList{} }
 func (*EtcdVersionList) ProtoMessage() {}
 func (*EtcdVersionList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{11}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{12}
 }
 func (m *EtcdVersionList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -380,7 +408,7 @@ var xxx_messageInfo_EtcdVersionList proto.InternalMessageInfo
 func (m *EtcdVersionSpec) Reset()      { *m = EtcdVersionSpec{} }
 func (*EtcdVersionSpec) ProtoMessage() {}
 func (*EtcdVersionSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{12}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{13}
 }
 func (m *EtcdVersionSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -408,7 +436,7 @@ var xxx_messageInfo_EtcdVersionSpec proto.InternalMessageInfo
 func (m *EtcdVersionTools) Reset()      { *m = EtcdVersionTools{} }
 func (*EtcdVersionTools) ProtoMessage() {}
 func (*EtcdVersionTools) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{13}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{14}
 }
 func (m *EtcdVersionTools) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -436,7 +464,7 @@ var xxx_messageInfo_EtcdVersionTools proto.InternalMessageInfo
 func (m *MemcachedVersion) Reset()      { *m = MemcachedVersion{} }
 func (*MemcachedVersion) ProtoMessage() {}
 func (*MemcachedVersion) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{14}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{15}
 }
 func (m *MemcachedVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -464,7 +492,7 @@ var xxx_messageInfo_MemcachedVersion proto.InternalMessageInfo
 func (m *MemcachedVersionDatabase) Reset()      { *m = MemcachedVersionDatabase{} }
 func (*MemcachedVersionDatabase) ProtoMessage() {}
 func (*MemcachedVersionDatabase) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{15}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{16}
 }
 func (m *MemcachedVersionDatabase) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -492,7 +520,7 @@ var xxx_messageInfo_MemcachedVersionDatabase proto.InternalMessageInfo
 func (m *MemcachedVersionExporter) Reset()      { *m = MemcachedVersionExporter{} }
 func (*MemcachedVersionExporter) ProtoMessage() {}
 func (*MemcachedVersionExporter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{16}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{17}
 }
 func (m *MemcachedVersionExporter) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -520,7 +548,7 @@ var xxx_messageInfo_MemcachedVersionExporter proto.InternalMessageInfo
 func (m *MemcachedVersionList) Reset()      { *m = MemcachedVersionList{} }
 func (*MemcachedVersionList) ProtoMessage() {}
 func (*MemcachedVersionList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{17}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{18}
 }
 func (m *MemcachedVersionList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -548,7 +576,7 @@ var xxx_messageInfo_MemcachedVersionList proto.InternalMessageInfo
 func (m *MemcachedVersionPodSecurityPolicy) Reset()      { *m = MemcachedVersionPodSecurityPolicy{} }
 func (*MemcachedVersionPodSecurityPolicy) ProtoMessage() {}
 func (*MemcachedVersionPodSecurityPolicy) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{18}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{19}
 }
 func (m *MemcachedVersionPodSecurityPolicy) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -576,7 +604,7 @@ var xxx_messageInfo_MemcachedVersionPodSecurityPolicy proto.InternalMessageInfo
 func (m *MemcachedVersionSpec) Reset()      { *m = MemcachedVersionSpec{} }
 func (*MemcachedVersionSpec) ProtoMessage() {}
 func (*MemcachedVersionSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{19}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{20}
 }
 func (m *MemcachedVersionSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -604,7 +632,7 @@ var xxx_messageInfo_MemcachedVersionSpec proto.InternalMessageInfo
 func (m *MongoDBVersion) Reset()      { *m = MongoDBVersion{} }
 func (*MongoDBVersion) ProtoMessage() {}
 func (*MongoDBVersion) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{20}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{21}
 }
 func (m *MongoDBVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -632,7 +660,7 @@ var xxx_messageInfo_MongoDBVersion proto.InternalMessageInfo
 func (m *MongoDBVersionDatabase) Reset()      { *m = MongoDBVersionDatabase{} }
 func (*MongoDBVersionDatabase) ProtoMessage() {}
 func (*MongoDBVersionDatabase) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{21}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{22}
 }
 func (m *MongoDBVersionDatabase) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -660,7 +688,7 @@ var xxx_messageInfo_MongoDBVersionDatabase proto.InternalMessageInfo
 func (m *MongoDBVersionExporter) Reset()      { *m = MongoDBVersionExporter{} }
 func (*MongoDBVersionExporter) ProtoMessage() {}
 func (*MongoDBVersionExporter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{22}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{23}
 }
 func (m *MongoDBVersionExporter) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -688,7 +716,7 @@ var xxx_messageInfo_MongoDBVersionExporter proto.InternalMessageInfo
 func (m *MongoDBVersionInitContainer) Reset()      { *m = MongoDBVersionInitContainer{} }
 func (*MongoDBVersionInitContainer) ProtoMessage() {}
 func (*MongoDBVersionInitContainer) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{23}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{24}
 }
 func (m *MongoDBVersionInitContainer) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -716,7 +744,7 @@ var xxx_messageInfo_MongoDBVersionInitContainer proto.InternalMessageInfo
 func (m *MongoDBVersionList) Reset()      { *m = MongoDBVersionList{} }
 func (*MongoDBVersionList) ProtoMessage() {}
 func (*MongoDBVersionList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{24}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{25}
 }
 func (m *MongoDBVersionList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -744,7 +772,7 @@ var xxx_messageInfo_MongoDBVersionList proto.InternalMessageInfo
 func (m *MongoDBVersionPodSecurityPolicy) Reset()      { *m = MongoDBVersionPodSecurityPolicy{} }
 func (*MongoDBVersionPodSecurityPolicy) ProtoMessage() {}
 func (*MongoDBVersionPodSecurityPolicy) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{25}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{26}
 }
 func (m *MongoDBVersionPodSecurityPolicy) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -772,7 +800,7 @@ var xxx_messageInfo_MongoDBVersionPodSecurityPolicy proto.InternalMessageInfo
 func (m *MongoDBVersionSpec) Reset()      { *m = MongoDBVersionSpec{} }
 func (*MongoDBVersionSpec) ProtoMessage() {}
 func (*MongoDBVersionSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{26}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{27}
 }
 func (m *MongoDBVersionSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -800,7 +828,7 @@ var xxx_messageInfo_MongoDBVersionSpec proto.InternalMessageInfo
 func (m *MongoDBVersionTools) Reset()      { *m = MongoDBVersionTools{} }
 func (*MongoDBVersionTools) ProtoMessage() {}
 func (*MongoDBVersionTools) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{27}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{28}
 }
 func (m *MongoDBVersionTools) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -825,10 +853,40 @@ func (m *MongoDBVersionTools) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MongoDBVersionTools proto.InternalMessageInfo
 
+func (m *MySQLModificationRequestUpgradeConstraints) Reset() {
+	*m = MySQLModificationRequestUpgradeConstraints{}
+}
+func (*MySQLModificationRequestUpgradeConstraints) ProtoMessage() {}
+func (*MySQLModificationRequestUpgradeConstraints) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d642f2ffe8fdeecc, []int{29}
+}
+func (m *MySQLModificationRequestUpgradeConstraints) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MySQLModificationRequestUpgradeConstraints) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	b = b[:cap(b)]
+	n, err := m.MarshalToSizedBuffer(b)
+	if err != nil {
+		return nil, err
+	}
+	return b[:n], nil
+}
+func (m *MySQLModificationRequestUpgradeConstraints) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MySQLModificationRequestUpgradeConstraints.Merge(m, src)
+}
+func (m *MySQLModificationRequestUpgradeConstraints) XXX_Size() int {
+	return m.Size()
+}
+func (m *MySQLModificationRequestUpgradeConstraints) XXX_DiscardUnknown() {
+	xxx_messageInfo_MySQLModificationRequestUpgradeConstraints.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MySQLModificationRequestUpgradeConstraints proto.InternalMessageInfo
+
 func (m *MySQLVersion) Reset()      { *m = MySQLVersion{} }
 func (*MySQLVersion) ProtoMessage() {}
 func (*MySQLVersion) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{28}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{30}
 }
 func (m *MySQLVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -856,7 +914,7 @@ var xxx_messageInfo_MySQLVersion proto.InternalMessageInfo
 func (m *MySQLVersionDatabase) Reset()      { *m = MySQLVersionDatabase{} }
 func (*MySQLVersionDatabase) ProtoMessage() {}
 func (*MySQLVersionDatabase) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{29}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{31}
 }
 func (m *MySQLVersionDatabase) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -884,7 +942,7 @@ var xxx_messageInfo_MySQLVersionDatabase proto.InternalMessageInfo
 func (m *MySQLVersionExporter) Reset()      { *m = MySQLVersionExporter{} }
 func (*MySQLVersionExporter) ProtoMessage() {}
 func (*MySQLVersionExporter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{30}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{32}
 }
 func (m *MySQLVersionExporter) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -912,7 +970,7 @@ var xxx_messageInfo_MySQLVersionExporter proto.InternalMessageInfo
 func (m *MySQLVersionInitContainer) Reset()      { *m = MySQLVersionInitContainer{} }
 func (*MySQLVersionInitContainer) ProtoMessage() {}
 func (*MySQLVersionInitContainer) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{31}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{33}
 }
 func (m *MySQLVersionInitContainer) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -940,7 +998,7 @@ var xxx_messageInfo_MySQLVersionInitContainer proto.InternalMessageInfo
 func (m *MySQLVersionList) Reset()      { *m = MySQLVersionList{} }
 func (*MySQLVersionList) ProtoMessage() {}
 func (*MySQLVersionList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{32}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{34}
 }
 func (m *MySQLVersionList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -968,7 +1026,7 @@ var xxx_messageInfo_MySQLVersionList proto.InternalMessageInfo
 func (m *MySQLVersionPodSecurityPolicy) Reset()      { *m = MySQLVersionPodSecurityPolicy{} }
 func (*MySQLVersionPodSecurityPolicy) ProtoMessage() {}
 func (*MySQLVersionPodSecurityPolicy) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{33}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{35}
 }
 func (m *MySQLVersionPodSecurityPolicy) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -996,7 +1054,7 @@ var xxx_messageInfo_MySQLVersionPodSecurityPolicy proto.InternalMessageInfo
 func (m *MySQLVersionReplicationModeDetector) Reset()      { *m = MySQLVersionReplicationModeDetector{} }
 func (*MySQLVersionReplicationModeDetector) ProtoMessage() {}
 func (*MySQLVersionReplicationModeDetector) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{34}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{36}
 }
 func (m *MySQLVersionReplicationModeDetector) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1024,7 +1082,7 @@ var xxx_messageInfo_MySQLVersionReplicationModeDetector proto.InternalMessageInf
 func (m *MySQLVersionSpec) Reset()      { *m = MySQLVersionSpec{} }
 func (*MySQLVersionSpec) ProtoMessage() {}
 func (*MySQLVersionSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{35}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{37}
 }
 func (m *MySQLVersionSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1052,7 +1110,7 @@ var xxx_messageInfo_MySQLVersionSpec proto.InternalMessageInfo
 func (m *MySQLVersionTools) Reset()      { *m = MySQLVersionTools{} }
 func (*MySQLVersionTools) ProtoMessage() {}
 func (*MySQLVersionTools) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{36}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{38}
 }
 func (m *MySQLVersionTools) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1080,7 +1138,7 @@ var xxx_messageInfo_MySQLVersionTools proto.InternalMessageInfo
 func (m *PerconaXtraDBVersion) Reset()      { *m = PerconaXtraDBVersion{} }
 func (*PerconaXtraDBVersion) ProtoMessage() {}
 func (*PerconaXtraDBVersion) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{37}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{39}
 }
 func (m *PerconaXtraDBVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1108,7 +1166,7 @@ var xxx_messageInfo_PerconaXtraDBVersion proto.InternalMessageInfo
 func (m *PerconaXtraDBVersionDatabase) Reset()      { *m = PerconaXtraDBVersionDatabase{} }
 func (*PerconaXtraDBVersionDatabase) ProtoMessage() {}
 func (*PerconaXtraDBVersionDatabase) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{38}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{40}
 }
 func (m *PerconaXtraDBVersionDatabase) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1136,7 +1194,7 @@ var xxx_messageInfo_PerconaXtraDBVersionDatabase proto.InternalMessageInfo
 func (m *PerconaXtraDBVersionExporter) Reset()      { *m = PerconaXtraDBVersionExporter{} }
 func (*PerconaXtraDBVersionExporter) ProtoMessage() {}
 func (*PerconaXtraDBVersionExporter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{39}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{41}
 }
 func (m *PerconaXtraDBVersionExporter) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1164,7 +1222,7 @@ var xxx_messageInfo_PerconaXtraDBVersionExporter proto.InternalMessageInfo
 func (m *PerconaXtraDBVersionInitContainer) Reset()      { *m = PerconaXtraDBVersionInitContainer{} }
 func (*PerconaXtraDBVersionInitContainer) ProtoMessage() {}
 func (*PerconaXtraDBVersionInitContainer) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{40}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{42}
 }
 func (m *PerconaXtraDBVersionInitContainer) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1192,7 +1250,7 @@ var xxx_messageInfo_PerconaXtraDBVersionInitContainer proto.InternalMessageInfo
 func (m *PerconaXtraDBVersionList) Reset()      { *m = PerconaXtraDBVersionList{} }
 func (*PerconaXtraDBVersionList) ProtoMessage() {}
 func (*PerconaXtraDBVersionList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{41}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{43}
 }
 func (m *PerconaXtraDBVersionList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1220,7 +1278,7 @@ var xxx_messageInfo_PerconaXtraDBVersionList proto.InternalMessageInfo
 func (m *PerconaXtraDBVersionPodSecurityPolicy) Reset()      { *m = PerconaXtraDBVersionPodSecurityPolicy{} }
 func (*PerconaXtraDBVersionPodSecurityPolicy) ProtoMessage() {}
 func (*PerconaXtraDBVersionPodSecurityPolicy) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{42}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{44}
 }
 func (m *PerconaXtraDBVersionPodSecurityPolicy) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1248,7 +1306,7 @@ var xxx_messageInfo_PerconaXtraDBVersionPodSecurityPolicy proto.InternalMessageI
 func (m *PerconaXtraDBVersionSpec) Reset()      { *m = PerconaXtraDBVersionSpec{} }
 func (*PerconaXtraDBVersionSpec) ProtoMessage() {}
 func (*PerconaXtraDBVersionSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{43}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{45}
 }
 func (m *PerconaXtraDBVersionSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1276,7 +1334,7 @@ var xxx_messageInfo_PerconaXtraDBVersionSpec proto.InternalMessageInfo
 func (m *PgBouncerServerVersion) Reset()      { *m = PgBouncerServerVersion{} }
 func (*PgBouncerServerVersion) ProtoMessage() {}
 func (*PgBouncerServerVersion) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{44}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{46}
 }
 func (m *PgBouncerServerVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1304,7 +1362,7 @@ var xxx_messageInfo_PgBouncerServerVersion proto.InternalMessageInfo
 func (m *PgBouncerVersion) Reset()      { *m = PgBouncerVersion{} }
 func (*PgBouncerVersion) ProtoMessage() {}
 func (*PgBouncerVersion) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{45}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{47}
 }
 func (m *PgBouncerVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1332,7 +1390,7 @@ var xxx_messageInfo_PgBouncerVersion proto.InternalMessageInfo
 func (m *PgBouncerVersionExporter) Reset()      { *m = PgBouncerVersionExporter{} }
 func (*PgBouncerVersionExporter) ProtoMessage() {}
 func (*PgBouncerVersionExporter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{46}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{48}
 }
 func (m *PgBouncerVersionExporter) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1360,7 +1418,7 @@ var xxx_messageInfo_PgBouncerVersionExporter proto.InternalMessageInfo
 func (m *PgBouncerVersionList) Reset()      { *m = PgBouncerVersionList{} }
 func (*PgBouncerVersionList) ProtoMessage() {}
 func (*PgBouncerVersionList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{47}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{49}
 }
 func (m *PgBouncerVersionList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1388,7 +1446,7 @@ var xxx_messageInfo_PgBouncerVersionList proto.InternalMessageInfo
 func (m *PgBouncerVersionSpec) Reset()      { *m = PgBouncerVersionSpec{} }
 func (*PgBouncerVersionSpec) ProtoMessage() {}
 func (*PgBouncerVersionSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{48}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{50}
 }
 func (m *PgBouncerVersionSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1416,7 +1474,7 @@ var xxx_messageInfo_PgBouncerVersionSpec proto.InternalMessageInfo
 func (m *PostgresVersion) Reset()      { *m = PostgresVersion{} }
 func (*PostgresVersion) ProtoMessage() {}
 func (*PostgresVersion) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{49}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{51}
 }
 func (m *PostgresVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1444,7 +1502,7 @@ var xxx_messageInfo_PostgresVersion proto.InternalMessageInfo
 func (m *PostgresVersionDatabase) Reset()      { *m = PostgresVersionDatabase{} }
 func (*PostgresVersionDatabase) ProtoMessage() {}
 func (*PostgresVersionDatabase) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{50}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{52}
 }
 func (m *PostgresVersionDatabase) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1472,7 +1530,7 @@ var xxx_messageInfo_PostgresVersionDatabase proto.InternalMessageInfo
 func (m *PostgresVersionExporter) Reset()      { *m = PostgresVersionExporter{} }
 func (*PostgresVersionExporter) ProtoMessage() {}
 func (*PostgresVersionExporter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{51}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{53}
 }
 func (m *PostgresVersionExporter) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1500,7 +1558,7 @@ var xxx_messageInfo_PostgresVersionExporter proto.InternalMessageInfo
 func (m *PostgresVersionList) Reset()      { *m = PostgresVersionList{} }
 func (*PostgresVersionList) ProtoMessage() {}
 func (*PostgresVersionList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{52}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{54}
 }
 func (m *PostgresVersionList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1528,7 +1586,7 @@ var xxx_messageInfo_PostgresVersionList proto.InternalMessageInfo
 func (m *PostgresVersionPodSecurityPolicy) Reset()      { *m = PostgresVersionPodSecurityPolicy{} }
 func (*PostgresVersionPodSecurityPolicy) ProtoMessage() {}
 func (*PostgresVersionPodSecurityPolicy) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{53}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{55}
 }
 func (m *PostgresVersionPodSecurityPolicy) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1556,7 +1614,7 @@ var xxx_messageInfo_PostgresVersionPodSecurityPolicy proto.InternalMessageInfo
 func (m *PostgresVersionSpec) Reset()      { *m = PostgresVersionSpec{} }
 func (*PostgresVersionSpec) ProtoMessage() {}
 func (*PostgresVersionSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{54}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{56}
 }
 func (m *PostgresVersionSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1584,7 +1642,7 @@ var xxx_messageInfo_PostgresVersionSpec proto.InternalMessageInfo
 func (m *PostgresVersionTools) Reset()      { *m = PostgresVersionTools{} }
 func (*PostgresVersionTools) ProtoMessage() {}
 func (*PostgresVersionTools) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{55}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{57}
 }
 func (m *PostgresVersionTools) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1612,7 +1670,7 @@ var xxx_messageInfo_PostgresVersionTools proto.InternalMessageInfo
 func (m *ProxySQLVersion) Reset()      { *m = ProxySQLVersion{} }
 func (*ProxySQLVersion) ProtoMessage() {}
 func (*ProxySQLVersion) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{56}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{58}
 }
 func (m *ProxySQLVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1640,7 +1698,7 @@ var xxx_messageInfo_ProxySQLVersion proto.InternalMessageInfo
 func (m *ProxySQLVersionExporter) Reset()      { *m = ProxySQLVersionExporter{} }
 func (*ProxySQLVersionExporter) ProtoMessage() {}
 func (*ProxySQLVersionExporter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{57}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{59}
 }
 func (m *ProxySQLVersionExporter) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1668,7 +1726,7 @@ var xxx_messageInfo_ProxySQLVersionExporter proto.InternalMessageInfo
 func (m *ProxySQLVersionList) Reset()      { *m = ProxySQLVersionList{} }
 func (*ProxySQLVersionList) ProtoMessage() {}
 func (*ProxySQLVersionList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{58}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{60}
 }
 func (m *ProxySQLVersionList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1696,7 +1754,7 @@ var xxx_messageInfo_ProxySQLVersionList proto.InternalMessageInfo
 func (m *ProxySQLVersionPodSecurityPolicy) Reset()      { *m = ProxySQLVersionPodSecurityPolicy{} }
 func (*ProxySQLVersionPodSecurityPolicy) ProtoMessage() {}
 func (*ProxySQLVersionPodSecurityPolicy) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{59}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{61}
 }
 func (m *ProxySQLVersionPodSecurityPolicy) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1724,7 +1782,7 @@ var xxx_messageInfo_ProxySQLVersionPodSecurityPolicy proto.InternalMessageInfo
 func (m *ProxySQLVersionProxysql) Reset()      { *m = ProxySQLVersionProxysql{} }
 func (*ProxySQLVersionProxysql) ProtoMessage() {}
 func (*ProxySQLVersionProxysql) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{60}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{62}
 }
 func (m *ProxySQLVersionProxysql) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1752,7 +1810,7 @@ var xxx_messageInfo_ProxySQLVersionProxysql proto.InternalMessageInfo
 func (m *ProxySQLVersionSpec) Reset()      { *m = ProxySQLVersionSpec{} }
 func (*ProxySQLVersionSpec) ProtoMessage() {}
 func (*ProxySQLVersionSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{61}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{63}
 }
 func (m *ProxySQLVersionSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1780,7 +1838,7 @@ var xxx_messageInfo_ProxySQLVersionSpec proto.InternalMessageInfo
 func (m *RedisVersion) Reset()      { *m = RedisVersion{} }
 func (*RedisVersion) ProtoMessage() {}
 func (*RedisVersion) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{62}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{64}
 }
 func (m *RedisVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1808,7 +1866,7 @@ var xxx_messageInfo_RedisVersion proto.InternalMessageInfo
 func (m *RedisVersionDatabase) Reset()      { *m = RedisVersionDatabase{} }
 func (*RedisVersionDatabase) ProtoMessage() {}
 func (*RedisVersionDatabase) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{63}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{65}
 }
 func (m *RedisVersionDatabase) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1836,7 +1894,7 @@ var xxx_messageInfo_RedisVersionDatabase proto.InternalMessageInfo
 func (m *RedisVersionExporter) Reset()      { *m = RedisVersionExporter{} }
 func (*RedisVersionExporter) ProtoMessage() {}
 func (*RedisVersionExporter) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{64}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{66}
 }
 func (m *RedisVersionExporter) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1864,7 +1922,7 @@ var xxx_messageInfo_RedisVersionExporter proto.InternalMessageInfo
 func (m *RedisVersionList) Reset()      { *m = RedisVersionList{} }
 func (*RedisVersionList) ProtoMessage() {}
 func (*RedisVersionList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{65}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{67}
 }
 func (m *RedisVersionList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1892,7 +1950,7 @@ var xxx_messageInfo_RedisVersionList proto.InternalMessageInfo
 func (m *RedisVersionPodSecurityPolicy) Reset()      { *m = RedisVersionPodSecurityPolicy{} }
 func (*RedisVersionPodSecurityPolicy) ProtoMessage() {}
 func (*RedisVersionPodSecurityPolicy) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{66}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{68}
 }
 func (m *RedisVersionPodSecurityPolicy) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1920,7 +1978,7 @@ var xxx_messageInfo_RedisVersionPodSecurityPolicy proto.InternalMessageInfo
 func (m *RedisVersionSpec) Reset()      { *m = RedisVersionSpec{} }
 func (*RedisVersionSpec) ProtoMessage() {}
 func (*RedisVersionSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d642f2ffe8fdeecc, []int{67}
+	return fileDescriptor_d642f2ffe8fdeecc, []int{69}
 }
 func (m *RedisVersionSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1945,7 +2003,36 @@ func (m *RedisVersionSpec) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_RedisVersionSpec proto.InternalMessageInfo
 
+func (m *Whitelist) Reset()      { *m = Whitelist{} }
+func (*Whitelist) ProtoMessage() {}
+func (*Whitelist) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d642f2ffe8fdeecc, []int{70}
+}
+func (m *Whitelist) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Whitelist) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	b = b[:cap(b)]
+	n, err := m.MarshalToSizedBuffer(b)
+	if err != nil {
+		return nil, err
+	}
+	return b[:n], nil
+}
+func (m *Whitelist) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Whitelist.Merge(m, src)
+}
+func (m *Whitelist) XXX_Size() int {
+	return m.Size()
+}
+func (m *Whitelist) XXX_DiscardUnknown() {
+	xxx_messageInfo_Whitelist.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Whitelist proto.InternalMessageInfo
+
 func init() {
+	proto.RegisterType((*Blacklist)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.Blacklist")
 	proto.RegisterType((*ElasticsearchVersion)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion")
 	proto.RegisterType((*ElasticsearchVersionDatabase)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionDatabase")
 	proto.RegisterType((*ElasticsearchVersionExporter)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionExporter")
@@ -1974,6 +2061,7 @@ func init() {
 	proto.RegisterType((*MongoDBVersionPodSecurityPolicy)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.MongoDBVersionPodSecurityPolicy")
 	proto.RegisterType((*MongoDBVersionSpec)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.MongoDBVersionSpec")
 	proto.RegisterType((*MongoDBVersionTools)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.MongoDBVersionTools")
+	proto.RegisterType((*MySQLModificationRequestUpgradeConstraints)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.MySQLModificationRequestUpgradeConstraints")
 	proto.RegisterType((*MySQLVersion)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.MySQLVersion")
 	proto.RegisterType((*MySQLVersionDatabase)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.MySQLVersionDatabase")
 	proto.RegisterType((*MySQLVersionExporter)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.MySQLVersionExporter")
@@ -2014,6 +2102,7 @@ func init() {
 	proto.RegisterType((*RedisVersionList)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.RedisVersionList")
 	proto.RegisterType((*RedisVersionPodSecurityPolicy)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.RedisVersionPodSecurityPolicy")
 	proto.RegisterType((*RedisVersionSpec)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.RedisVersionSpec")
+	proto.RegisterType((*Whitelist)(nil), "kubedb.dev.apimachinery.apis.catalog.v1alpha1.Whitelist")
 }
 
 func init() {
@@ -2021,117 +2110,170 @@ func init() {
 }
 
 var fileDescriptor_d642f2ffe8fdeecc = []byte{
-	// 1757 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x9a, 0x49, 0x6f, 0xdb, 0xc6,
-	0x17, 0xc0, 0x4d, 0xdb, 0xb2, 0x9d, 0x97, 0xcd, 0x7f, 0xda, 0xff, 0x58, 0x71, 0x5a, 0xd9, 0x51,
-	0x50, 0x20, 0x3d, 0x84, 0x6a, 0x82, 0xa2, 0x0d, 0x12, 0x38, 0x0b, 0x6d, 0x37, 0x9b, 0x9d, 0x28,
-	0x74, 0x50, 0xb4, 0x45, 0xd1, 0x84, 0x22, 0xa7, 0x14, 0x6b, 0x49, 0x54, 0x48, 0xca, 0x88, 0x6f,
-	0x6d, 0x81, 0xa2, 0xa7, 0x02, 0x05, 0x7a, 0x0c, 0x9a, 0x1e, 0x7a, 0xe9, 0xa5, 0xdf, 0x23, 0xc7,
-	0x2c, 0x40, 0x9b, 0x34, 0x80, 0xd1, 0xc8, 0x1f, 0xa1, 0xb7, 0x9e, 0x0a, 0x2e, 0x92, 0x38, 0x24,
-	0x47, 0xe1, 0x70, 0x28, 0x21, 0xb9, 0x99, 0xa3, 0xb7, 0xf1, 0xbd, 0x99, 0xdf, 0x1b, 0xce, 0x18,
-	0x96, 0x36, 0x5b, 0x15, 0xa4, 0x56, 0x04, 0x15, 0x6d, 0x95, 0xe4, 0xa6, 0x5e, 0x97, 0x95, 0xaa,
-	0xde, 0x40, 0xe6, 0xb6, 0xf3, 0x60, 0x95, 0x14, 0xd9, 0x96, 0x6b, 0x86, 0x56, 0xda, 0x3a, 0x29,
-	0xd7, 0x9a, 0x55, 0xf9, 0x64, 0x49, 0x43, 0x0d, 0x64, 0xca, 0x36, 0x52, 0x85, 0xa6, 0x69, 0xd8,
-	0x06, 0x7f, 0xa2, 0xa7, 0x2e, 0x04, 0xd5, 0x9d, 0x07, 0x4b, 0xf0, 0xd5, 0x85, 0x8e, 0xfa, 0xfc,
-	0x09, 0x4d, 0xb7, 0xab, 0xad, 0x8a, 0xa0, 0x18, 0xf5, 0x92, 0x66, 0x68, 0x46, 0xc9, 0xb5, 0x52,
-	0x69, 0x7d, 0xe9, 0x3e, 0xb9, 0x0f, 0xee, 0x5f, 0x9e, 0xf5, 0xf9, 0xf7, 0x37, 0x4f, 0x5b, 0x82,
-	0x6e, 0xe0, 0x81, 0x35, 0x37, 0x35, 0x2f, 0xb8, 0x3a, 0xb2, 0xe5, 0xd2, 0x56, 0x24, 0xa6, 0xf9,
-	0x12, 0x49, 0xcb, 0x6c, 0x35, 0x6c, 0xbd, 0x8e, 0x22, 0x0a, 0x1f, 0xbc, 0x4a, 0xc1, 0x52, 0xaa,
-	0xa8, 0x2e, 0x87, 0xf5, 0x8a, 0xbb, 0x1c, 0xcc, 0xae, 0xd6, 0x64, 0xcb, 0xd6, 0x15, 0x0b, 0xc9,
-	0xa6, 0x52, 0xfd, 0x18, 0x99, 0x96, 0x6e, 0x34, 0xf8, 0x3b, 0x30, 0xe5, 0x04, 0xa7, 0xca, 0xb6,
-	0x9c, 0xe7, 0x16, 0xb9, 0xe3, 0x7b, 0x4f, 0xbd, 0x27, 0x78, 0x3e, 0xf0, 0x24, 0x35, 0x37, 0x35,
-	0x2f, 0x51, 0x8e, 0xb4, 0xb0, 0x75, 0x52, 0xb8, 0x51, 0xf9, 0x0a, 0x29, 0xf6, 0x3a, 0xb2, 0x65,
-	0x91, 0x7f, 0xb8, 0xb3, 0x30, 0xd2, 0xde, 0x59, 0x80, 0xde, 0x98, 0xd4, 0xb5, 0xca, 0xeb, 0x30,
-	0x6e, 0x35, 0x91, 0x92, 0x1f, 0x75, 0xad, 0x5f, 0x12, 0xa8, 0xca, 0x20, 0xc4, 0x05, 0xbd, 0xd1,
-	0x44, 0x8a, 0xb8, 0xcf, 0x77, 0x3a, 0xee, 0x3c, 0x49, 0xae, 0x8b, 0xe2, 0x32, 0xbc, 0x15, 0x27,
-	0xbf, 0x22, 0xdb, 0x72, 0x45, 0xb6, 0x10, 0x7f, 0x0c, 0x72, 0x7a, 0x5d, 0xd6, 0x90, 0xfb, 0xa6,
-	0x7b, 0xc4, 0xfd, 0xbe, 0x89, 0xdc, 0x15, 0x67, 0x50, 0xf2, 0x7e, 0x23, 0x19, 0x59, 0xbd, 0xd7,
-	0x34, 0x4c, 0x1b, 0x99, 0xc9, 0x8c, 0x58, 0x70, 0x34, 0xce, 0xc8, 0x95, 0x86, 0x6e, 0x2f, 0x1b,
-	0x0d, 0x5b, 0x76, 0x5e, 0x39, 0x91, 0x25, 0xfe, 0x5d, 0x98, 0xdc, 0xbe, 0xeb, 0x8e, 0xb8, 0x19,
-	0xdc, 0x23, 0x1e, 0xf4, 0xc5, 0x26, 0x3f, 0xbd, 0xe9, 0x09, 0x76, 0x7e, 0x2f, 0xb6, 0x39, 0xc8,
-	0xc7, 0x79, 0x5d, 0xd3, 0x2d, 0x9b, 0xff, 0x3c, 0x52, 0x68, 0x21, 0x59, 0xa1, 0x1d, 0x6d, 0xb7,
-	0xcc, 0xd3, 0xbe, 0xe3, 0xa9, 0xce, 0x48, 0xa0, 0xc8, 0x55, 0xc8, 0xe9, 0x36, 0xaa, 0x5b, 0xf9,
-	0xd1, 0xc5, 0xb1, 0xe3, 0x7b, 0x4f, 0x2d, 0x67, 0x50, 0xe5, 0x40, 0x3e, 0x1c, 0xcb, 0x92, 0xe7,
-	0xa0, 0x68, 0xc1, 0x3b, 0x71, 0xd2, 0x65, 0x43, 0xdd, 0x40, 0x4a, 0xcb, 0xd4, 0xed, 0xed, 0xb2,
-	0x51, 0xd3, 0x95, 0x6d, 0xfe, 0x2a, 0xf0, 0xaa, 0x5f, 0x78, 0x6f, 0xe4, 0xba, 0x5c, 0xef, 0xa4,
-	0x7a, 0xde, 0x37, 0xcd, 0xaf, 0x44, 0x24, 0xa4, 0x18, 0xad, 0xe2, 0xe3, 0x89, 0xf8, 0xcc, 0x3a,
-	0x73, 0xcf, 0xa9, 0xd0, 0x96, 0xf7, 0xe8, 0x5b, 0xef, 0x56, 0xc8, 0x97, 0x92, 0x3a, 0xbf, 0xf3,
-	0xeb, 0x00, 0x72, 0xcb, 0xae, 0x96, 0x6b, 0x2d, 0x4d, 0x6f, 0xf8, 0xf5, 0x3c, 0xd1, 0x59, 0x3d,
-	0x17, 0xbb, 0xbf, 0xfc, 0xbb, 0xb3, 0x30, 0x87, 0xb9, 0xeb, 0xfd, 0x24, 0x05, 0x0c, 0xf0, 0x1a,
-	0x8c, 0xaa, 0x95, 0xfc, 0x98, 0x5b, 0xcd, 0x6b, 0x19, 0xa4, 0xbc, 0x93, 0x0d, 0x11, 0xfc, 0x98,
-	0x46, 0x57, 0x44, 0x69, 0x54, 0xad, 0xf0, 0xdb, 0x30, 0x85, 0xfc, 0xf9, 0x9f, 0x1f, 0xcf, 0xcc,
-	0x5d, 0x67, 0x49, 0xf5, 0x66, 0x56, 0x67, 0x44, 0xea, 0xba, 0xe3, 0xeb, 0x90, 0xb3, 0x0d, 0xa3,
-	0x66, 0xe5, 0x73, 0xae, 0xdf, 0xcb, 0x19, 0xf8, 0xbd, 0xe5, 0xd8, 0xeb, 0x4d, 0x2f, 0xf7, 0x51,
-	0xf2, 0xbc, 0xf0, 0xa7, 0x00, 0x54, 0xd4, 0x34, 0x91, 0xe2, 0xc0, 0x33, 0x3f, 0xb1, 0xc8, 0x1d,
-	0x9f, 0xea, 0xf1, 0x6d, 0xa5, 0xfb, 0x8b, 0x14, 0x90, 0xe2, 0x7f, 0xe0, 0x60, 0xbf, 0x1e, 0x5c,
-	0xd9, 0xf9, 0x49, 0x37, 0xd6, 0x72, 0x06, 0xb1, 0x62, 0xc4, 0x10, 0xff, 0xef, 0x47, 0xb2, 0x1f,
-	0x1b, 0x96, 0x70, 0xef, 0xfc, 0xaf, 0x1c, 0xcc, 0x34, 0x43, 0xeb, 0x41, 0x47, 0x56, 0x7e, 0xca,
-	0x8d, 0xea, 0x56, 0x06, 0x51, 0x45, 0x56, 0x9b, 0x78, 0xc4, 0x8f, 0x6c, 0xa6, 0x1c, 0x75, 0x2c,
-	0xc5, 0x45, 0x53, 0xbc, 0x00, 0x87, 0x89, 0xc5, 0x49, 0x06, 0xd9, 0xc7, 0x1c, 0xec, 0x5d, 0xb5,
-	0x15, 0x75, 0x78, 0xbd, 0xec, 0x0e, 0xd6, 0xcb, 0xce, 0xd1, 0x66, 0xb2, 0x17, 0x2b, 0xb1, 0x85,
-	0x9d, 0x81, 0x99, 0x80, 0x18, 0x5d, 0xe7, 0xc2, 0x75, 0xe9, 0x1a, 0xd6, 0x23, 0x0e, 0x0e, 0x06,
-	0x94, 0x87, 0xd0, 0x32, 0x6e, 0xe3, 0x2d, 0xe3, 0x4c, 0xfa, 0x64, 0x12, 0x3a, 0xc5, 0x6f, 0x63,
-	0xd8, 0x2b, 0xd1, 0xb2, 0xfa, 0x0b, 0x17, 0xae, 0x5e, 0xa5, 0xc5, 0xf4, 0xc1, 0x11, 0x99, 0xda,
-	0x0c, 0x30, 0x75, 0x8c, 0xd5, 0x4b, 0x22, 0x94, 0xaa, 0x1d, 0x94, 0x7a, 0x08, 0x3f, 0x9f, 0xde,
-	0x5d, 0x72, 0x82, 0xe6, 0x92, 0x10, 0xb4, 0xf8, 0x21, 0x4c, 0x87, 0xad, 0x27, 0x9b, 0xb6, 0x2f,
-	0x38, 0x98, 0x5e, 0x47, 0x75, 0x45, 0x56, 0xaa, 0x68, 0x88, 0x1c, 0x40, 0x18, 0x07, 0x68, 0x77,
-	0x3b, 0xe1, 0x80, 0x89, 0x30, 0x38, 0x0f, 0xf9, 0xb0, 0x2c, 0x1d, 0x11, 0x62, 0x0c, 0xd0, 0x61,
-	0xe1, 0x2f, 0x0e, 0x66, 0xc3, 0x16, 0x86, 0xc0, 0x06, 0x15, 0x67, 0xc3, 0x79, 0xc6, 0x04, 0x13,
-	0x00, 0x61, 0xc0, 0xd1, 0xb0, 0xe4, 0x60, 0xb7, 0x91, 0xff, 0x8c, 0x45, 0xb3, 0x49, 0x8b, 0x25,
-	0x25, 0x80, 0xa5, 0x4b, 0x8c, 0x79, 0x21, 0xb2, 0xa9, 0x15, 0x61, 0x13, 0xab, 0xab, 0x44, 0x80,
-	0xc2, 0xd1, 0x31, 0x9e, 0x68, 0xf3, 0xf5, 0x0b, 0x61, 0xb3, 0x93, 0x4b, 0xb5, 0x05, 0x7b, 0xe5,
-	0x7c, 0x48, 0xb1, 0xd1, 0xf9, 0x93, 0x83, 0x03, 0xeb, 0x46, 0x43, 0x33, 0x56, 0xc4, 0xe1, 0x11,
-	0x4a, 0xc1, 0x08, 0x75, 0x91, 0x36, 0x0d, 0x58, 0xb8, 0x44, 0x3e, 0x2d, 0xc1, 0x21, 0x5c, 0x92,
-	0x8e, 0x4e, 0x11, 0x75, 0x3a, 0x36, 0x89, 0x70, 0x04, 0x57, 0xa7, 0xff, 0xba, 0x2e, 0xfe, 0xc1,
-	0x01, 0x8f, 0x1b, 0x19, 0x02, 0xdd, 0x2a, 0x38, 0xdd, 0x96, 0x98, 0x8a, 0x43, 0x60, 0x5b, 0x1d,
-	0x16, 0x70, 0xb9, 0xc1, 0x92, 0x6d, 0x27, 0x17, 0xce, 0x23, 0x2d, 0xd7, 0xe4, 0x00, 0xd7, 0x56,
-	0x99, 0x32, 0x42, 0xa4, 0x9a, 0x15, 0xa1, 0x1a, 0x9b, 0xa3, 0x44, 0x4c, 0xd3, 0xf0, 0x4d, 0x97,
-	0xc8, 0xe4, 0x31, 0xe3, 0x7d, 0x17, 0xff, 0x7d, 0xe4, 0xcb, 0x75, 0xc2, 0x8d, 0xf2, 0x2a, 0x53,
-	0x94, 0x69, 0xbe, 0x59, 0x7f, 0x26, 0x60, 0xdc, 0xfb, 0x92, 0xbe, 0xce, 0x14, 0x4f, 0x16, 0x10,
-	0x3f, 0x03, 0x33, 0x31, 0xa5, 0x48, 0x06, 0x99, 0xa7, 0x1c, 0xec, 0x5b, 0xdf, 0xde, 0xb8, 0xb9,
-	0x36, 0x3c, 0xfc, 0xcb, 0x18, 0xfe, 0xa9, 0xf7, 0x4f, 0x81, 0x60, 0x89, 0xf0, 0x3f, 0x0b, 0xb3,
-	0x41, 0x39, 0x3a, 0xf4, 0x87, 0x94, 0xe9, 0xc0, 0x7f, 0x01, 0x0e, 0x07, 0x95, 0x53, 0x60, 0xff,
-	0x89, 0xf3, 0xd9, 0x10, 0x30, 0x31, 0x04, 0xe8, 0xdf, 0xc1, 0xa1, 0x7f, 0x96, 0xa1, 0x24, 0x04,
-	0xe4, 0x6f, 0xc2, 0xdb, 0x41, 0xa9, 0xc1, 0x02, 0xff, 0x2a, 0x1c, 0x0b, 0x3a, 0x93, 0x50, 0xb3,
-	0xa6, 0x2b, 0xb2, 0xad, 0x1b, 0x8d, 0x75, 0x43, 0x45, 0x2b, 0xc8, 0x46, 0x8a, 0x6d, 0x24, 0xac,
-	0xc6, 0xb7, 0x93, 0x78, 0x35, 0x68, 0x5b, 0xc7, 0xed, 0x40, 0xeb, 0x58, 0x66, 0xc8, 0x2b, 0xb1,
-	0x71, 0xdc, 0x8d, 0x34, 0x0e, 0x16, 0x37, 0x89, 0xda, 0x06, 0xc2, 0xdb, 0xc6, 0x05, 0x06, 0x7f,
-	0xfd, 0x9a, 0xc6, 0xef, 0x1c, 0xcc, 0x99, 0xf1, 0xb5, 0xf3, 0x77, 0xd0, 0x12, 0x83, 0x67, 0xc2,
-	0xac, 0x10, 0x17, 0xfc, 0x58, 0xe6, 0x08, 0x02, 0x12, 0x29, 0xa6, 0x54, 0xc7, 0xb3, 0xdf, 0x11,
-	0x8e, 0x67, 0x2f, 0x33, 0xbc, 0x59, 0x9a, 0x16, 0x77, 0xbf, 0xef, 0xb1, 0xec, 0x1a, 0x43, 0x34,
-	0x59, 0x34, 0xb8, 0xd3, 0xf0, 0xbf, 0xc8, 0xa4, 0x49, 0xb6, 0x7c, 0x77, 0x39, 0x98, 0x2d, 0x23,
-	0x53, 0x31, 0x1a, 0xf2, 0x27, 0xb6, 0x29, 0x0f, 0xf3, 0x2b, 0x87, 0xed, 0x6e, 0x31, 0x2e, 0xe8,
-	0x7e, 0x77, 0x8b, 0x71, 0xf2, 0xd4, 0x77, 0x8b, 0x71, 0x46, 0xe8, 0xda, 0xdf, 0x65, 0x38, 0x1a,
-	0x67, 0x24, 0x45, 0x1b, 0x6c, 0x73, 0x90, 0x8f, 0x33, 0xf5, 0xfa, 0x5f, 0x18, 0xc6, 0x45, 0x4d,
-	0xbe, 0x30, 0x8c, 0x93, 0x1e, 0x6c, 0x7b, 0xfc, 0x29, 0x17, 0x9f, 0x59, 0xda, 0xd6, 0xa6, 0x05,
-	0x5a, 0xdb, 0xb5, 0x0c, 0x72, 0x94, 0xe8, 0x86, 0x6f, 0x2c, 0x33, 0x77, 0x03, 0x3b, 0xf5, 0x89,
-	0x5e, 0xb9, 0xa5, 0x3b, 0xef, 0x79, 0xe5, 0x42, 0x62, 0xbc, 0x72, 0x9b, 0x48, 0x75, 0xe5, 0x96,
-	0x68, 0xbe, 0xa6, 0x60, 0xfc, 0x12, 0x1c, 0x2a, 0x6b, 0xa2, 0xd1, 0x6a, 0x28, 0xc8, 0xdc, 0x40,
-	0xe6, 0x16, 0x32, 0x3b, 0xa8, 0x4e, 0x7c, 0xd8, 0xde, 0xd5, 0x7f, 0x53, 0x0e, 0xdb, 0xc3, 0x01,
-	0xf7, 0x3b, 0x6c, 0x0f, 0xcb, 0xd2, 0x9f, 0x95, 0x87, 0x2d, 0xbc, 0xfe, 0x67, 0xe5, 0xe1, 0x88,
-	0x09, 0x14, 0x7d, 0x31, 0x1a, 0x7d, 0x39, 0x5a, 0x98, 0xd5, 0x61, 0xc2, 0x72, 0x67, 0x5d, 0xca,
-	0x63, 0x9e, 0xf8, 0xb9, 0x2b, 0x1e, 0xf0, 0x1d, 0x4e, 0x78, 0xc3, 0x92, 0xef, 0x24, 0x83, 0x43,
-	0x6c, 0xd2, 0x7c, 0xc8, 0x1a, 0x67, 0xc5, 0xe7, 0x1c, 0x1c, 0x2c, 0x1b, 0x96, 0xad, 0x99, 0xc8,
-	0x1a, 0xde, 0xc2, 0x52, 0xb1, 0x85, 0x45, 0x7b, 0x32, 0x15, 0x8a, 0x97, 0xb8, 0xae, 0xce, 0xc1,
-	0x5c, 0x48, 0x94, 0x6e, 0xcf, 0x14, 0xd5, 0xa7, 0x5b, 0x96, 0xcf, 0x38, 0x98, 0x09, 0x19, 0x18,
-	0xc2, 0xaa, 0x54, 0xf0, 0x55, 0x79, 0x8e, 0x2d, 0xb9, 0x84, 0x45, 0xd9, 0x80, 0xc5, 0x90, 0xe0,
-	0x60, 0x77, 0x35, 0xcf, 0xc7, 0x23, 0xa9, 0xa4, 0x65, 0x40, 0x25, 0xb0, 0xa1, 0xf9, 0x88, 0x2d,
-	0x29, 0xc4, 0xbd, 0x8c, 0x1d, 0x59, 0xf8, 0x8c, 0x9e, 0x12, 0xad, 0xfb, 0x2a, 0xfe, 0xc5, 0xbe,
-	0xcc, 0xe6, 0x32, 0xeb, 0x93, 0xde, 0x07, 0x7d, 0x37, 0x28, 0x37, 0xd8, 0x82, 0xcd, 0x62, 0x6f,
-	0x72, 0x16, 0x66, 0xe3, 0x52, 0x90, 0x6c, 0x8d, 0xbb, 0xfc, 0x34, 0x8d, 0x7b, 0xc3, 0x3d, 0x64,
-	0x65, 0xe4, 0x27, 0x1e, 0x6f, 0x5f, 0x7e, 0xe2, 0xa2, 0x29, 0xf8, 0x87, 0x1b, 0x78, 0x03, 0xf8,
-	0x87, 0x07, 0xdc, 0x87, 0x7f, 0xb8, 0xe0, 0x60, 0xf9, 0x17, 0x2d, 0x85, 0xfb, 0x68, 0xdd, 0xad,
-	0x25, 0x2b, 0xc5, 0x37, 0xe3, 0x91, 0x52, 0xd0, 0xf2, 0xd3, 0x86, 0xa9, 0xa6, 0xef, 0x33, 0x2d,
-	0x45, 0xe3, 0xdf, 0xa0, 0x57, 0xcd, 0xce, 0x88, 0xd4, 0xf5, 0x94, 0x05, 0x51, 0xe3, 0xa7, 0x70,
-	0xe6, 0x1f, 0x86, 0x0f, 0xfa, 0xfe, 0x3b, 0xc0, 0x0d, 0xc6, 0x5c, 0x65, 0xc0, 0xb9, 0xa7, 0x1c,
-	0xec, 0x93, 0x90, 0xaa, 0x5b, 0x6f, 0xca, 0x65, 0x50, 0x30, 0xd8, 0x7e, 0x97, 0x41, 0x41, 0x39,
-	0xea, 0xcb, 0xa0, 0xa0, 0x32, 0x1d, 0xde, 0x9e, 0x70, 0x30, 0x1d, 0xd4, 0x7e, 0xfd, 0xaf, 0x72,
-	0x82, 0xd1, 0x92, 0xaf, 0x72, 0x82, 0x52, 0x83, 0xa5, 0xda, 0xee, 0x18, 0x9e, 0xc1, 0x61, 0x5e,
-	0xbf, 0xc4, 0x4d, 0x9a, 0x01, 0x5c, 0xbf, 0xc4, 0x4d, 0xaf, 0xcc, 0xd1, 0x73, 0xbf, 0x2f, 0x7a,
-	0xd6, 0x18, 0x42, 0xce, 0x80, 0x3b, 0xa2, 0xf0, 0xf0, 0x65, 0x61, 0xe4, 0xd1, 0xcb, 0xc2, 0xc8,
-	0xb3, 0x97, 0x85, 0x91, 0xaf, 0xdb, 0x05, 0xee, 0x61, 0xbb, 0xc0, 0x3d, 0x6a, 0x17, 0xb8, 0x67,
-	0xed, 0x02, 0xf7, 0x77, 0xbb, 0xc0, 0xfd, 0xb8, 0x5b, 0x18, 0xf9, 0x6c, 0xaa, 0xe3, 0xff, 0xbf,
-	0x00, 0x00, 0x00, 0xff, 0xff, 0xfb, 0x81, 0x50, 0x0a, 0x6e, 0x35, 0x00, 0x00,
+	// 1939 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x5b, 0xdb, 0x6f, 0xd4, 0xc6,
+	0x1a, 0x8f, 0x93, 0x6c, 0xd8, 0x7c, 0xdc, 0x82, 0x93, 0x43, 0x96, 0x70, 0xce, 0x26, 0x2c, 0x3a,
+	0x12, 0xe7, 0x48, 0xec, 0x1e, 0xd0, 0x51, 0x8b, 0x40, 0x81, 0xe0, 0x24, 0xe5, 0x96, 0xc0, 0xe2,
+	0xd0, 0x0b, 0x55, 0x55, 0xf0, 0xda, 0x83, 0xd7, 0xcd, 0xae, 0xbd, 0xb1, 0x67, 0x53, 0xf2, 0x80,
+	0xd4, 0x56, 0xaa, 0xfa, 0x54, 0xa9, 0x52, 0x1f, 0x51, 0xe9, 0x43, 0x55, 0xa9, 0xaa, 0xd4, 0xff,
+	0x83, 0x47, 0x2e, 0x52, 0x0b, 0x45, 0x8a, 0xca, 0xe6, 0x4f, 0xe8, 0x5b, 0x9f, 0x2a, 0x7b, 0xed,
+	0x5d, 0x8f, 0x2f, 0x8b, 0xc7, 0xf6, 0xae, 0xe0, 0x2d, 0x1e, 0x7f, 0x97, 0x9f, 0xbf, 0x6f, 0xe6,
+	0xf7, 0xcd, 0xcc, 0x97, 0x85, 0xf9, 0xf5, 0x66, 0x05, 0x49, 0x95, 0xa2, 0x84, 0x36, 0x4b, 0x42,
+	0x43, 0xa9, 0x0b, 0x62, 0x55, 0x51, 0x91, 0xbe, 0x65, 0x3e, 0x18, 0x25, 0x51, 0xc0, 0x42, 0x4d,
+	0x93, 0x4b, 0x9b, 0x27, 0x84, 0x5a, 0xa3, 0x2a, 0x9c, 0x28, 0xc9, 0x48, 0x45, 0xba, 0x80, 0x91,
+	0x54, 0x6c, 0xe8, 0x1a, 0xd6, 0xd8, 0xe3, 0x5d, 0xf5, 0xa2, 0x5b, 0xdd, 0x7c, 0x30, 0x8a, 0xb6,
+	0x7a, 0xd1, 0x51, 0x9f, 0x39, 0x2e, 0x2b, 0xb8, 0xda, 0xac, 0x14, 0x45, 0xad, 0x5e, 0x92, 0x35,
+	0x59, 0x2b, 0x59, 0x56, 0x2a, 0xcd, 0x3b, 0xd6, 0x93, 0xf5, 0x60, 0xfd, 0xd5, 0xb6, 0x3e, 0xf3,
+	0xff, 0xf5, 0x53, 0x46, 0x51, 0xd1, 0x48, 0x60, 0x8d, 0x75, 0xb9, 0x0d, 0xae, 0x8e, 0xb0, 0x50,
+	0xda, 0xf4, 0x61, 0x9a, 0x29, 0x85, 0x69, 0xe9, 0x4d, 0x15, 0x2b, 0x75, 0xe4, 0x53, 0x78, 0xeb,
+	0x55, 0x0a, 0x86, 0x58, 0x45, 0x75, 0xc1, 0xab, 0x57, 0xb8, 0x07, 0xe3, 0x5c, 0x4d, 0x10, 0xd7,
+	0x6b, 0x8a, 0x81, 0xd9, 0x22, 0x80, 0x81, 0x05, 0x55, 0x3a, 0x5f, 0xd3, 0x54, 0x94, 0x63, 0xe6,
+	0x46, 0x8e, 0x8d, 0x73, 0xfb, 0x5a, 0xdb, 0xb3, 0xb0, 0xd6, 0x19, 0xe5, 0x5d, 0x12, 0xec, 0x02,
+	0x4c, 0xc8, 0xba, 0xd6, 0x6c, 0xf0, 0xa8, 0x51, 0x53, 0x44, 0x01, 0x2b, 0x9a, 0x9a, 0x1b, 0xb6,
+	0xb4, 0xa6, 0x5a, 0xdb, 0xb3, 0x13, 0x17, 0x3c, 0xef, 0x78, 0x9f, 0x74, 0x61, 0x87, 0x81, 0xa9,
+	0xe5, 0x9a, 0x60, 0x60, 0x45, 0x34, 0x90, 0xa0, 0x8b, 0xd5, 0xf7, 0x90, 0x6e, 0x28, 0x9a, 0xca,
+	0xde, 0x86, 0xac, 0x19, 0x1b, 0x49, 0xc0, 0x42, 0x8e, 0x99, 0x63, 0x8e, 0xed, 0x3e, 0xf9, 0xbf,
+	0x62, 0xfb, 0x13, 0xc9, 0x1c, 0x35, 0xd6, 0xe5, 0x76, 0x9e, 0x4c, 0xe9, 0xe2, 0xe6, 0x89, 0xe2,
+	0xb5, 0xca, 0x27, 0x48, 0xc4, 0xab, 0x08, 0x0b, 0x1c, 0xfb, 0x70, 0x7b, 0x76, 0xc8, 0x84, 0xdf,
+	0x1d, 0xe3, 0x3b, 0x56, 0x59, 0x05, 0x46, 0x8d, 0x06, 0x12, 0x73, 0xc3, 0x96, 0xf5, 0x0b, 0x45,
+	0xaa, 0x59, 0x50, 0x0c, 0x02, 0xbd, 0xd6, 0x40, 0x22, 0xb7, 0xc7, 0x76, 0x3a, 0x6a, 0x3e, 0xf1,
+	0x96, 0x8b, 0xc2, 0x22, 0xfc, 0x33, 0x48, 0x7e, 0x49, 0xc0, 0x42, 0x45, 0x30, 0x10, 0x7b, 0x14,
+	0x32, 0x4a, 0x5d, 0x90, 0x91, 0xf5, 0xa5, 0xe3, 0xdc, 0x5e, 0xdb, 0x44, 0xe6, 0x92, 0x39, 0xc8,
+	0xb7, 0xdf, 0x85, 0x19, 0x59, 0xbe, 0xdb, 0xd0, 0x74, 0x8c, 0xf4, 0x68, 0x46, 0x0c, 0x38, 0x12,
+	0x64, 0xe4, 0x92, 0xaa, 0xe0, 0x45, 0x4d, 0xc5, 0x82, 0xf9, 0xc9, 0x91, 0x2c, 0xb1, 0xff, 0x81,
+	0x5d, 0x5b, 0x1b, 0xd6, 0x88, 0x15, 0xc1, 0x71, 0x6e, 0xbf, 0x2d, 0xb6, 0xeb, 0xe6, 0xf5, 0xb6,
+	0xa0, 0xf3, 0xbe, 0xd0, 0x62, 0x20, 0x17, 0xe4, 0x75, 0xc5, 0x9c, 0x73, 0x1f, 0xf9, 0x12, 0x5d,
+	0x8c, 0x96, 0x68, 0x53, 0xdb, 0x4a, 0xf3, 0x84, 0xed, 0x38, 0xeb, 0x8c, 0xb8, 0x92, 0x5c, 0x85,
+	0x8c, 0x82, 0x51, 0xdd, 0xb0, 0xa6, 0xe5, 0xee, 0x93, 0x8b, 0x29, 0x64, 0xd9, 0x15, 0x0f, 0xd3,
+	0x32, 0xdf, 0x76, 0x50, 0x30, 0xe0, 0xdf, 0x41, 0xd2, 0x65, 0x4d, 0x5a, 0x43, 0x62, 0x53, 0x57,
+	0xf0, 0x56, 0x59, 0xab, 0x29, 0xe2, 0x16, 0x7b, 0x19, 0x58, 0xc9, 0x4e, 0x7c, 0x7b, 0xe4, 0xaa,
+	0x50, 0x77, 0x42, 0x3d, 0x63, 0x9b, 0x66, 0x97, 0x7c, 0x12, 0x7c, 0x80, 0x56, 0xe1, 0xf1, 0x58,
+	0x70, 0x64, 0xcd, 0xb9, 0x67, 0x66, 0x68, 0xb3, 0xfd, 0x68, 0x5b, 0xef, 0x64, 0xc8, 0x96, 0xe2,
+	0x9d, 0xf7, 0xec, 0x2a, 0x80, 0xd0, 0xc4, 0xd5, 0x72, 0xad, 0x29, 0x2b, 0xaa, 0x9d, 0xcf, 0xe3,
+	0xce, 0xea, 0x39, 0xdf, 0x79, 0xf3, 0xd7, 0xf6, 0xec, 0x34, 0xe1, 0xae, 0xfb, 0x8a, 0x77, 0x19,
+	0x60, 0x65, 0x18, 0x96, 0x2a, 0xb9, 0x11, 0x2b, 0x9b, 0x57, 0x52, 0x08, 0xb9, 0x13, 0x0d, 0x0e,
+	0x6c, 0x4c, 0xc3, 0x4b, 0x1c, 0x3f, 0x2c, 0x55, 0xd8, 0x2d, 0xc8, 0x22, 0x7b, 0xfe, 0xe7, 0x46,
+	0x53, 0x73, 0xe7, 0x2c, 0xa9, 0xee, 0xcc, 0x72, 0x46, 0xf8, 0x8e, 0x3b, 0xb6, 0x0e, 0x19, 0xac,
+	0x69, 0x35, 0x23, 0x97, 0xb1, 0xfc, 0x5e, 0x4c, 0xc1, 0xef, 0x0d, 0xd3, 0x5e, 0x77, 0x7a, 0x59,
+	0x8f, 0x7c, 0xdb, 0x0b, 0x7b, 0x12, 0x40, 0x42, 0x0d, 0x1d, 0x89, 0x26, 0x77, 0xe7, 0xc6, 0xe6,
+	0x98, 0x63, 0xd9, 0x2e, 0xbf, 0x2d, 0x75, 0xde, 0xf0, 0x2e, 0x29, 0xf6, 0x6b, 0x06, 0xf6, 0x2a,
+	0xee, 0x95, 0x9d, 0xdb, 0x65, 0x61, 0x2d, 0xa7, 0x80, 0x95, 0x60, 0x0c, 0xee, 0x1f, 0x36, 0x92,
+	0xbd, 0xc4, 0x30, 0x4f, 0x7a, 0x67, 0x7f, 0x60, 0x60, 0xb2, 0xe1, 0x59, 0x0f, 0x0a, 0x32, 0x72,
+	0x59, 0x0b, 0xd5, 0x8d, 0x14, 0x50, 0xf9, 0x56, 0x1b, 0x77, 0xd8, 0x46, 0x36, 0x59, 0xf6, 0x3b,
+	0xe6, 0x83, 0xd0, 0x14, 0x16, 0xe0, 0x50, 0x68, 0x72, 0xa2, 0x91, 0xec, 0x63, 0x06, 0x76, 0x2f,
+	0x63, 0x51, 0x1a, 0x5c, 0x2d, 0xbb, 0x4d, 0xd4, 0xb2, 0xb3, 0xb4, 0x91, 0xec, 0x62, 0x0d, 0x2d,
+	0x61, 0xa7, 0x61, 0xd2, 0x25, 0x46, 0x57, 0xb9, 0x48, 0x5d, 0xba, 0x82, 0xf5, 0x88, 0x81, 0xfd,
+	0x2e, 0xe5, 0x01, 0x94, 0x8c, 0x5b, 0x64, 0xc9, 0x38, 0x1d, 0x3f, 0x98, 0x21, 0x95, 0xe2, 0xa7,
+	0x11, 0xe2, 0x93, 0x68, 0xb9, 0xfa, 0x63, 0x8b, 0x5c, 0xdb, 0x99, 0xe6, 0xe2, 0x83, 0x0b, 0xe5,
+	0xd4, 0x86, 0x8b, 0x53, 0x47, 0x92, 0x7a, 0x89, 0x44, 0xa5, 0x92, 0x43, 0xa5, 0x6d, 0x0a, 0x3f,
+	0x17, 0xdf, 0x5d, 0x74, 0x06, 0xcd, 0x44, 0x61, 0xd0, 0xc2, 0xdb, 0x30, 0xe1, 0xb5, 0x1e, 0x6d,
+	0xda, 0xbe, 0x60, 0x60, 0x62, 0x15, 0xd5, 0x45, 0x41, 0xac, 0xa2, 0x01, 0xf2, 0x00, 0x22, 0x78,
+	0x80, 0x76, 0xb7, 0xe3, 0x05, 0x1c, 0x4a, 0x06, 0xe7, 0x20, 0xe7, 0x95, 0xa5, 0x63, 0x84, 0x00,
+	0x03, 0x74, 0xb4, 0xf0, 0x3b, 0x03, 0x53, 0x5e, 0x0b, 0x03, 0xe0, 0x06, 0x89, 0xe4, 0x86, 0x73,
+	0x09, 0x03, 0x1c, 0x42, 0x10, 0x1a, 0x1c, 0xf1, 0x4a, 0xf6, 0x77, 0x1b, 0xf9, 0xe7, 0x88, 0x3f,
+	0x9a, 0xb4, 0xb4, 0x24, 0xba, 0x68, 0xe9, 0x42, 0xc2, 0xb8, 0x84, 0x72, 0x53, 0xd3, 0xc7, 0x4d,
+	0x49, 0x5d, 0x45, 0x22, 0x28, 0x92, 0x3a, 0x46, 0x23, 0x6d, 0xbe, 0xbe, 0x0f, 0xd9, 0xec, 0x64,
+	0x62, 0x6d, 0xc1, 0x5e, 0x39, 0x1f, 0x62, 0x6c, 0x74, 0x7e, 0x63, 0x60, 0xdf, 0xaa, 0xa6, 0xca,
+	0xda, 0x12, 0x37, 0x38, 0x86, 0x12, 0x09, 0x86, 0x3a, 0x4f, 0x1b, 0x06, 0x02, 0x6e, 0x28, 0x3f,
+	0xcd, 0xc3, 0x41, 0x52, 0x92, 0x8e, 0x9d, 0x7c, 0xea, 0x74, 0xdc, 0xc4, 0xc1, 0x61, 0x52, 0x9d,
+	0xfe, 0x74, 0x5d, 0xf8, 0x95, 0x01, 0x96, 0x34, 0x32, 0x00, 0x76, 0xab, 0x90, 0xec, 0x36, 0x9f,
+	0x28, 0x39, 0x21, 0xdc, 0x56, 0x87, 0x59, 0x52, 0xae, 0xbf, 0xcc, 0xb6, 0x9d, 0xf1, 0xc6, 0x91,
+	0x96, 0xd7, 0x04, 0x17, 0xaf, 0x2d, 0x27, 0x8a, 0x48, 0x28, 0xab, 0x19, 0x3e, 0x56, 0x4b, 0xe6,
+	0x28, 0x12, 0xa7, 0xc9, 0xe4, 0xa6, 0x8b, 0x4b, 0xe4, 0x31, 0xe5, 0x7d, 0x17, 0xfb, 0x95, 0xef,
+	0xe4, 0x3a, 0x66, 0xa1, 0xbc, 0x9c, 0x08, 0x65, 0x9c, 0x33, 0xeb, 0x77, 0x21, 0x34, 0xde, 0x3e,
+	0x49, 0x5f, 0x4d, 0x84, 0x27, 0x0d, 0x12, 0x3f, 0x0d, 0x93, 0x01, 0xa9, 0x88, 0x46, 0x32, 0x5f,
+	0x0c, 0xc3, 0x7f, 0x57, 0xb7, 0xd6, 0xae, 0xaf, 0xac, 0x6a, 0x92, 0x72, 0xc7, 0xb9, 0xa4, 0x45,
+	0x1b, 0x4d, 0x64, 0xe0, 0x77, 0x1b, 0xb2, 0x2e, 0x48, 0x68, 0x51, 0x53, 0x0d, 0xac, 0x0b, 0x8a,
+	0x8a, 0x0d, 0x56, 0x81, 0xf1, 0x4f, 0xab, 0x0a, 0x46, 0x35, 0xc5, 0xc0, 0x36, 0xfb, 0x9c, 0xa2,
+	0xfc, 0xfe, 0xf7, 0x1d, 0x7d, 0xee, 0x80, 0x8d, 0x68, 0xbc, 0x33, 0xc4, 0x77, 0xad, 0x9b, 0xae,
+	0x2a, 0xce, 0xad, 0xb4, 0xbd, 0xf6, 0x68, 0x5d, 0x75, 0x6e, 0xb5, 0xbb, 0xae, 0x3a, 0x43, 0x7c,
+	0xd7, 0x7a, 0xe1, 0x29, 0x03, 0x7b, 0xac, 0x20, 0x0c, 0xae, 0x06, 0x0a, 0x44, 0x0d, 0xa4, 0xde,
+	0x44, 0xba, 0xc0, 0x86, 0x56, 0xc0, 0x33, 0x30, 0xe5, 0x96, 0xa3, 0xab, 0x7f, 0x1e, 0x65, 0xba,
+	0xea, 0xb7, 0x00, 0x87, 0xdc, 0xca, 0x31, 0x6a, 0xdf, 0x13, 0xf3, 0xec, 0xe4, 0x32, 0x31, 0x80,
+	0xca, 0x77, 0x9b, 0xac, 0x7c, 0x67, 0x12, 0xa4, 0x24, 0xa4, 0xee, 0xad, 0xc3, 0xbf, 0xdc, 0x52,
+	0xfd, 0xad, 0x7a, 0x97, 0xe1, 0xa8, 0xdb, 0x99, 0xab, 0xe1, 0xb2, 0xaa, 0x49, 0x68, 0x09, 0x61,
+	0x24, 0x62, 0x2d, 0x62, 0x36, 0x7e, 0xce, 0x92, 0xd9, 0xa0, 0xad, 0x9f, 0xb7, 0x5c, 0xf5, 0x73,
+	0x31, 0x41, 0x5c, 0x43, 0xab, 0xe7, 0x86, 0xaf, 0x7a, 0x26, 0x71, 0x13, 0xa9, 0x76, 0x22, 0xb2,
+	0x76, 0x2e, 0x24, 0xf0, 0xd7, 0xab, 0x72, 0xfe, 0xc2, 0xc0, 0xb4, 0x1e, 0x9c, 0x3b, 0xfb, 0x18,
+	0xc1, 0x27, 0xf0, 0x1c, 0x32, 0x2b, 0xb8, 0x59, 0x1b, 0xcb, 0x74, 0x88, 0x00, 0x1f, 0x86, 0x29,
+	0xd6, 0x1d, 0xf5, 0x97, 0x21, 0x77, 0xd4, 0x17, 0x13, 0x7c, 0x59, 0x9c, 0x3a, 0x7f, 0xbf, 0xe7,
+	0xdd, 0xf4, 0x4a, 0x02, 0x34, 0x29, 0x54, 0x79, 0xf6, 0x47, 0x06, 0xd8, 0xa6, 0xaf, 0x22, 0xe7,
+	0xc6, 0x2d, 0x70, 0x37, 0xe3, 0x80, 0x8b, 0x54, 0xf2, 0xbb, 0xc4, 0xe3, 0x7f, 0xc7, 0x07, 0x00,
+	0x2a, 0x9c, 0x82, 0x03, 0xbe, 0xc9, 0x1d, 0x8d, 0x66, 0x76, 0x18, 0x98, 0x2a, 0x23, 0x5d, 0xd4,
+	0x54, 0xe1, 0x03, 0xac, 0x0b, 0x83, 0x3c, 0x92, 0x26, 0x6b, 0x04, 0x07, 0x81, 0xee, 0xd5, 0x08,
+	0x0e, 0x92, 0xa7, 0x6e, 0x04, 0x07, 0x19, 0xa1, 0x2b, 0xd3, 0x17, 0xe1, 0x48, 0x90, 0x91, 0x18,
+	0xe5, 0xba, 0xc5, 0x40, 0x2e, 0xc8, 0xd4, 0xeb, 0xdf, 0xdd, 0x0d, 0x42, 0x1d, 0xde, 0xdd, 0x0d,
+	0x92, 0xee, 0x6f, 0x19, 0xff, 0x36, 0x13, 0x1c, 0x59, 0xda, 0x12, 0x2c, 0xbb, 0x4a, 0xf0, 0x95,
+	0x14, 0x62, 0x14, 0xa9, 0x1d, 0x3b, 0x92, 0x9a, 0xbb, 0xbe, 0x5d, 0xd1, 0xf9, 0xfb, 0xa3, 0xf1,
+	0x2e, 0xe7, 0x5e, 0xb9, 0x90, 0x12, 0xf6, 0x47, 0xc7, 0x62, 0xf5, 0x47, 0x23, 0xcd, 0xd7, 0x18,
+	0x27, 0xce, 0x79, 0x38, 0x58, 0x96, 0x39, 0xad, 0xa9, 0x8a, 0x48, 0x5f, 0x43, 0xfa, 0x26, 0xd2,
+	0x1d, 0xaa, 0x8e, 0xdc, 0x19, 0xe9, 0xe8, 0xbf, 0x29, 0x9d, 0x11, 0x2f, 0xe0, 0x5e, 0x9d, 0x11,
+	0xaf, 0x2c, 0x7d, 0x63, 0xc3, 0x6b, 0xe1, 0xf5, 0x6f, 0x6c, 0x78, 0x11, 0x87, 0xb0, 0xe8, 0x8b,
+	0x61, 0xff, 0xc7, 0xd1, 0x92, 0x59, 0x1d, 0xc6, 0x0c, 0x6b, 0xd6, 0xc5, 0xbc, 0x93, 0x0b, 0x9e,
+	0xbb, 0xdc, 0x3e, 0xdb, 0xe1, 0x58, 0x7b, 0x98, 0xb7, 0x9d, 0xa4, 0xd0, 0x71, 0x08, 0x9b, 0x0f,
+	0x69, 0xd3, 0x59, 0xe1, 0x39, 0x03, 0xfb, 0xcb, 0x9a, 0x81, 0x65, 0x1d, 0x19, 0x83, 0x5b, 0x58,
+	0x12, 0xb1, 0xb0, 0x68, 0xaf, 0x11, 0x3d, 0x78, 0x43, 0xd7, 0xd5, 0x59, 0x98, 0xf6, 0x88, 0xd2,
+	0xed, 0x99, 0xfc, 0xfa, 0x74, 0xcb, 0xf2, 0x19, 0x03, 0x93, 0x1e, 0x03, 0x03, 0x58, 0x95, 0x22,
+	0xb9, 0x2a, 0xcf, 0x26, 0x0b, 0x6e, 0xc8, 0xa2, 0x54, 0x61, 0xce, 0x23, 0xd8, 0xdf, 0x5d, 0xcd,
+	0xf3, 0x51, 0x5f, 0x28, 0x69, 0x39, 0xa0, 0xe2, 0xda, 0xd0, 0xbc, 0x93, 0x2c, 0x28, 0xa1, 0x7b,
+	0x19, 0xec, 0x5b, 0xf8, 0x09, 0x3d, 0x45, 0x5a, 0xf7, 0x55, 0xf2, 0x66, 0x61, 0x31, 0x99, 0xcb,
+	0xb4, 0xaf, 0xe5, 0x1f, 0xf4, 0xdc, 0xa0, 0x5c, 0x4b, 0x06, 0x36, 0x8d, 0xbd, 0xc9, 0x19, 0x98,
+	0x0a, 0x0a, 0x41, 0xb4, 0x35, 0x6e, 0xf1, 0xa7, 0xae, 0xdd, 0x1d, 0xec, 0x65, 0x70, 0x42, 0xfe,
+	0x24, 0xf1, 0xf6, 0xe4, 0x4f, 0x52, 0x34, 0x06, 0xff, 0x91, 0x06, 0xde, 0x00, 0xfe, 0x23, 0x01,
+	0xf7, 0xe0, 0x3f, 0x52, 0xb0, 0xbf, 0xfc, 0xe7, 0x4f, 0x85, 0xf5, 0x68, 0x6c, 0xd4, 0xa2, 0xa5,
+	0xe2, 0xf3, 0x51, 0x5f, 0x2a, 0x68, 0xf9, 0x13, 0x43, 0xb6, 0x61, 0xfb, 0x8c, 0xcb, 0xa2, 0xc1,
+	0x5f, 0xd0, 0xcd, 0xa6, 0x33, 0xc2, 0x77, 0x3c, 0xa5, 0xc1, 0xa8, 0xc1, 0x53, 0x38, 0xf5, 0x83,
+	0xe1, 0x83, 0x9e, 0xff, 0xbb, 0x71, 0x2d, 0x61, 0xac, 0x52, 0xe0, 0xb9, 0xa7, 0x0c, 0xec, 0xe1,
+	0x91, 0xa4, 0x18, 0x6f, 0x4a, 0xd3, 0xca, 0x0d, 0xb6, 0x57, 0xd3, 0xca, 0x2d, 0x47, 0xdd, 0xb4,
+	0x72, 0x2b, 0xd3, 0xd1, 0xdb, 0x13, 0x06, 0x26, 0xdc, 0xda, 0xaf, 0x7f, 0xcb, 0xc9, 0x8d, 0x36,
+	0xbc, 0xe5, 0xe4, 0x96, 0xea, 0x2f, 0xab, 0xed, 0x8c, 0x90, 0x11, 0x1c, 0x64, 0x9b, 0x28, 0x68,
+	0xd2, 0xf4, 0xa1, 0x4d, 0x14, 0x34, 0xbd, 0x52, 0xa7, 0x9e, 0xfb, 0x3d, 0xa9, 0x67, 0x25, 0x01,
+	0xe4, 0x34, 0x78, 0xe7, 0x1e, 0x74, 0xfb, 0xf5, 0x83, 0xff, 0xb5, 0x18, 0x57, 0x7c, 0xf8, 0x32,
+	0x3f, 0xf4, 0xe8, 0x65, 0x7e, 0xe8, 0xd9, 0xcb, 0xfc, 0xd0, 0x67, 0xad, 0x3c, 0xf3, 0xb0, 0x95,
+	0x67, 0x1e, 0xb5, 0xf2, 0xcc, 0xb3, 0x56, 0x9e, 0xf9, 0xa3, 0x95, 0x67, 0xbe, 0xd9, 0xc9, 0x0f,
+	0x7d, 0x98, 0x75, 0x3e, 0xff, 0xef, 0x00, 0x00, 0x00, 0xff, 0xff, 0x47, 0x1b, 0xf4, 0x9c, 0x19,
+	0x38, 0x00, 0x00,
+}
+
+func (m *Blacklist) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Blacklist) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *Blacklist) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.GroupReplication) > 0 {
+		for iNdEx := len(m.GroupReplication) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.GroupReplication[iNdEx])
+			copy(dAtA[i:], m.GroupReplication[iNdEx])
+			i = encodeVarintGenerated(dAtA, i, uint64(len(m.GroupReplication[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if len(m.StandAlone) > 0 {
+		for iNdEx := len(m.StandAlone) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.StandAlone[iNdEx])
+			copy(dAtA[i:], m.StandAlone[iNdEx])
+			i = encodeVarintGenerated(dAtA, i, uint64(len(m.StandAlone[iNdEx])))
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
 }
 
 func (m *ElasticsearchVersion) Marshal() (dAtA []byte, err error) {
@@ -3256,6 +3398,49 @@ func (m *MongoDBVersionTools) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *MySQLModificationRequestUpgradeConstraints) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MySQLModificationRequestUpgradeConstraints) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MySQLModificationRequestUpgradeConstraints) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Blacklist.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintGenerated(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	{
+		size, err := m.Whitelist.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintGenerated(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
 func (m *MySQLVersion) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -3506,6 +3691,16 @@ func (m *MySQLVersionSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	{
+		size, err := m.UpgradeConstraints.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintGenerated(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x4a
 	{
 		size, err := m.PodSecurityPolicies.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
@@ -4848,6 +5043,47 @@ func (m *RedisVersionSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *Whitelist) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Whitelist) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *Whitelist) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.GroupReplication) > 0 {
+		for iNdEx := len(m.GroupReplication) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.GroupReplication[iNdEx])
+			copy(dAtA[i:], m.GroupReplication[iNdEx])
+			i = encodeVarintGenerated(dAtA, i, uint64(len(m.GroupReplication[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if len(m.StandAlone) > 0 {
+		for iNdEx := len(m.StandAlone) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.StandAlone[iNdEx])
+			copy(dAtA[i:], m.StandAlone[iNdEx])
+			i = encodeVarintGenerated(dAtA, i, uint64(len(m.StandAlone[iNdEx])))
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	offset -= sovGenerated(v)
 	base := offset
@@ -4859,6 +5095,27 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *Blacklist) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.StandAlone) > 0 {
+		for _, s := range m.StandAlone {
+			l = len(s)
+			n += 1 + l + sovGenerated(uint64(l))
+		}
+	}
+	if len(m.GroupReplication) > 0 {
+		for _, s := range m.GroupReplication {
+			l = len(s)
+			n += 1 + l + sovGenerated(uint64(l))
+		}
+	}
+	return n
+}
+
 func (m *ElasticsearchVersion) Size() (n int) {
 	if m == nil {
 		return 0
@@ -5239,6 +5496,19 @@ func (m *MongoDBVersionTools) Size() (n int) {
 	return n
 }
 
+func (m *MySQLModificationRequestUpgradeConstraints) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.Whitelist.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	l = m.Blacklist.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	return n
+}
+
 func (m *MySQLVersion) Size() (n int) {
 	if m == nil {
 		return 0
@@ -5344,6 +5614,8 @@ func (m *MySQLVersionSpec) Size() (n int) {
 	l = m.InitContainer.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	l = m.PodSecurityPolicies.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	l = m.UpgradeConstraints.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	return n
 }
@@ -5777,11 +6049,43 @@ func (m *RedisVersionSpec) Size() (n int) {
 	return n
 }
 
+func (m *Whitelist) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.StandAlone) > 0 {
+		for _, s := range m.StandAlone {
+			l = len(s)
+			n += 1 + l + sovGenerated(uint64(l))
+		}
+	}
+	if len(m.GroupReplication) > 0 {
+		for _, s := range m.GroupReplication {
+			l = len(s)
+			n += 1 + l + sovGenerated(uint64(l))
+		}
+	}
+	return n
+}
+
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (this *Blacklist) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Blacklist{`,
+		`StandAlone:` + fmt.Sprintf("%v", this.StandAlone) + `,`,
+		`GroupReplication:` + fmt.Sprintf("%v", this.GroupReplication) + `,`,
+		`}`,
+	}, "")
+	return s
 }
 func (this *ElasticsearchVersion) String() string {
 	if this == nil {
@@ -6113,6 +6417,17 @@ func (this *MongoDBVersionTools) String() string {
 	}, "")
 	return s
 }
+func (this *MySQLModificationRequestUpgradeConstraints) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&MySQLModificationRequestUpgradeConstraints{`,
+		`Whitelist:` + strings.Replace(strings.Replace(this.Whitelist.String(), "Whitelist", "Whitelist", 1), `&`, ``, 1) + `,`,
+		`Blacklist:` + strings.Replace(strings.Replace(this.Blacklist.String(), "Blacklist", "Blacklist", 1), `&`, ``, 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
 func (this *MySQLVersion) String() string {
 	if this == nil {
 		return "nil"
@@ -6203,6 +6518,7 @@ func (this *MySQLVersionSpec) String() string {
 		`Deprecated:` + fmt.Sprintf("%v", this.Deprecated) + `,`,
 		`InitContainer:` + strings.Replace(strings.Replace(this.InitContainer.String(), "MySQLVersionInitContainer", "MySQLVersionInitContainer", 1), `&`, ``, 1) + `,`,
 		`PodSecurityPolicies:` + strings.Replace(strings.Replace(this.PodSecurityPolicies.String(), "MySQLVersionPodSecurityPolicy", "MySQLVersionPodSecurityPolicy", 1), `&`, ``, 1) + `,`,
+		`UpgradeConstraints:` + strings.Replace(strings.Replace(this.UpgradeConstraints.String(), "MySQLModificationRequestUpgradeConstraints", "MySQLModificationRequestUpgradeConstraints", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -6583,6 +6899,17 @@ func (this *RedisVersionSpec) String() string {
 	}, "")
 	return s
 }
+func (this *Whitelist) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Whitelist{`,
+		`StandAlone:` + fmt.Sprintf("%v", this.StandAlone) + `,`,
+		`GroupReplication:` + fmt.Sprintf("%v", this.GroupReplication) + `,`,
+		`}`,
+	}, "")
+	return s
+}
 func valueToStringGenerated(v interface{}) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -6590,6 +6917,123 @@ func valueToStringGenerated(v interface{}) string {
 	}
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
+}
+func (m *Blacklist) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGenerated
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Blacklist: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Blacklist: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field StandAlone", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.StandAlone = append(m.StandAlone, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GroupReplication", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.GroupReplication = append(m.GroupReplication, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGenerated(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *ElasticsearchVersion) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -9919,6 +10363,125 @@ func (m *MongoDBVersionTools) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *MySQLModificationRequestUpgradeConstraints) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGenerated
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MySQLModificationRequestUpgradeConstraints: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MySQLModificationRequestUpgradeConstraints: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Whitelist", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Whitelist.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Blacklist", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Blacklist.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGenerated(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *MySQLVersion) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -10859,6 +11422,39 @@ func (m *MySQLVersionSpec) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if err := m.PodSecurityPolicies.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UpgradeConstraints", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.UpgradeConstraints.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -14554,6 +15150,123 @@ func (m *RedisVersionSpec) Unmarshal(dAtA []byte) error {
 			if err := m.PodSecurityPolicies.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGenerated(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Whitelist) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGenerated
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Whitelist: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Whitelist: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field StandAlone", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.StandAlone = append(m.StandAlone, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GroupReplication", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.GroupReplication = append(m.GroupReplication, string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
