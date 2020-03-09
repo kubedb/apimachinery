@@ -21389,6 +21389,10 @@
           "type": "integer",
           "format": "int32"
         },
+        "requireSSL": {
+          "description": "Indicates that the database server need to be encrypted connections(ssl)",
+          "type": "boolean"
+        },
         "serviceTemplate": {
           "description": "ServiceTemplate is an optional configuration for service used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
