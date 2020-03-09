@@ -210,6 +210,7 @@ func (r *Redis) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map
 	podTemplate.Spec.Affinity = &corev1.Affinity{
 		PodAntiAffinity: &corev1.PodAntiAffinity{
 			PreferredDuringSchedulingIgnoredDuringExecution: []corev1.WeightedPodAffinityTerm{
+				// Prefer to not schedule multiple pods on the same node
 				{
 					Weight: 100,
 					PodAffinityTerm: corev1.PodAffinityTerm{
