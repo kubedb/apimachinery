@@ -189,7 +189,9 @@ func (r *Redis) SetDefaults(topology *core_util.Topology) {
 	}
 
 	labels := r.OffshootSelectors()
-	labels[RedisShardKey] = r.ShardNodeTemplate()
+	if r.Spec.Mode == RedisModeCluster {
+		labels[RedisShardKey] = r.ShardNodeTemplate()
+	}
 	r.setDefaultAffinity(&r.Spec.PodTemplate, labels, topology)
 
 	r.Spec.Monitor.SetDefaults()
@@ -240,7 +242,7 @@ func (r *Redis) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map
 
 func (r Redis) ShardNodeTemplate() string {
 	if r.Spec.Mode == RedisModeStandalone {
-		return ""
+		panic("shard template is not applicable to a standalone redis server")
 	}
-	return fmt.Sprintf("%s${%s}", r.BaseNameForShard(), RedisShardAffinityTemplateVar)
+	return fmt.Sprintf("${%s}", RedisShardAffinityTemplateVar)
 }
