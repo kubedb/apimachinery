@@ -109,21 +109,21 @@ type MySQLSpec struct {
 	// Template.
 	UpdateStrategy apps.StatefulSetUpdateStrategy `json:"updateStrategy,omitempty" protobuf:"bytes,13,opt,name=updateStrategy"`
 
-	// Indicates that the database is paused and controller will not sync any changes made to this spec.
+	// Indicates that the database server need to be encrypted connections(ssl)
 	// +optional
-	Paused bool `json:"paused,omitempty" protobuf:"varint,14,opt,name=paused"`
-
-	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
-	// +optional
-	Halted bool `json:"halted,omitempty" protobuf:"varint,15,opt,name=halted"`
-
-	// Indicates that the database server need to be encrypted connections(ssl) as mandatory or not
-	// +optional
-	RequireSSL bool `json:"requireSSL,omitempty" protobuf:"varint,16,opt,name=requireSSL"`
+	RequireSSL bool `json:"requireSSL,omitempty" protobuf:"varint,14,opt,name=requireSSL"`
 
 	// TLS contains tls configurations for client and server.
 	// +optional
-	TLS *TLSConfig `json:"tls,omitempty" protobuf:"bytes,17,opt,name=tls"`
+	TLS *TLSConfig `json:"tls,omitempty" protobuf:"bytes,15,opt,name=tls"`
+
+	// Indicates that the database is paused and controller will not sync any changes made to this spec.
+	// +optional
+	Paused bool `json:"paused,omitempty" protobuf:"varint,16,opt,name=paused"`
+
+	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
+	// +optional
+	Halted bool `json:"halted,omitempty" protobuf:"varint,17,opt,name=halted"`
 
 	// TerminationPolicy controls the delete operation for database
 	// +optional

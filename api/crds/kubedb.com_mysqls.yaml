@@ -6938,7 +6938,7 @@ spec:
               type: integer
             requireSSL:
               description: Indicates that the database server need to be encrypted
-                connections(ssl) as mandatory or not
+                connections(ssl)
               type: boolean
             serviceTemplate:
               description: ServiceTemplate is an optional configuration for service
