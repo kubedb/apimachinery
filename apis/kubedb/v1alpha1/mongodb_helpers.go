@@ -56,7 +56,7 @@ const (
 	MongoDBConfigLabelKey = "mongodb.kubedb.com/node.config"
 	MongoDBMongosLabelKey = "mongodb.kubedb.com/node.mongos"
 
-	ShardAffinityTemplateVar = "SHARD_INDEX"
+	MongoDBShardAffinityTemplateVar = "SHARD_INDEX"
 )
 
 func (m MongoDB) OffshootName() string {
@@ -74,7 +74,7 @@ func (m MongoDB) ShardNodeTemplate() string {
 	if m.Spec.ShardTopology == nil {
 		return ""
 	}
-	return fmt.Sprintf("%s${%s}", m.ShardCommonNodeName(), ShardAffinityTemplateVar)
+	return fmt.Sprintf("%s${%s}", m.ShardCommonNodeName(), MongoDBShardAffinityTemplateVar)
 }
 
 func (m MongoDB) ShardCommonNodeName() string {
