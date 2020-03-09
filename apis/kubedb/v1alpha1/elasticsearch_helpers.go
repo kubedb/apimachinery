@@ -244,7 +244,7 @@ func (e *Elasticsearch) GetMatchExpressions() []metav1.LabelSelectorRequirement 
 	return []metav1.LabelSelectorRequirement{
 		{
 			Key:      fmt.Sprintf("${%s}", NodeAffinityTemplateVar),
-			Operator: "Exists",
+			Operator: metav1.LabelSelectorOpExists,
 		},
 	}
 }
