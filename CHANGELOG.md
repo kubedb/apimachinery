@@ -1,5 +1,101 @@
 # Change Log
 
+## [Unreleased](https://github.com/kubedb/apimachinery/tree/HEAD)
+
+[Full Changelog](https://github.com/kubedb/apimachinery/compare/v0.13.0-rc.4...HEAD)
+
+**Merged pull requests:**
+
+- Add default affinity rules for Redis [\#508](https://github.com/kubedb/apimachinery/pull/508) ([faem](https://github.com/faem))
+- Set default affinity if not provided for Elasticsearch [\#507](https://github.com/kubedb/apimachinery/pull/507) ([kamolhasan](https://github.com/kamolhasan))
+- Add requireSSL field to MySQL crd [\#506](https://github.com/kubedb/apimachinery/pull/506) ([suaas21](https://github.com/suaas21))
+
+## [v0.13.0-rc.4](https://github.com/kubedb/apimachinery/tree/v0.13.0-rc.4) (2020-02-16)
+[Full Changelog](https://github.com/kubedb/apimachinery/compare/v0.13.0-rc.3...v0.13.0-rc.4)
+
+**Merged pull requests:**
+
+- Use stash.appscode.dev/apimachinery@v0.9.0-rc.6 [\#504](https://github.com/kubedb/apimachinery/pull/504) ([tamalsaha](https://github.com/tamalsaha))
+- Generate keyFile for sendX509 auth mode in Mongo [\#502](https://github.com/kubedb/apimachinery/pull/502) ([tamalsaha](https://github.com/tamalsaha))
+- Redesign keyFile secrets for replicaset and sharing MongoDBs [\#500](https://github.com/kubedb/apimachinery/pull/500) ([tamalsaha](https://github.com/tamalsaha))
+- Ensure that statefulset PDP allows at least 1 unavailable pod [\#498](https://github.com/kubedb/apimachinery/pull/498) ([andersosthus](https://github.com/andersosthus))
+- Add labeler field into mysqlversions CRD [\#497](https://github.com/kubedb/apimachinery/pull/497) ([suaas21](https://github.com/suaas21))
+- TLS config for mongoDB, Issuer ref for mysql,percona,postgres,proxysql [\#496](https://github.com/kubedb/apimachinery/pull/496) ([tamalsaha](https://github.com/tamalsaha))
+- Add secret informer and lister to controller [\#495](https://github.com/kubedb/apimachinery/pull/495) ([tamalsaha](https://github.com/tamalsaha))
+- validate prometheus agent spec [\#493](https://github.com/kubedb/apimachinery/pull/493) ([tamalsaha](https://github.com/tamalsaha))
+- Change termination policy to Halt from Pause [\#492](https://github.com/kubedb/apimachinery/pull/492) ([tamalsaha](https://github.com/tamalsaha))
+- Update for percona-xtradb standalone restore [\#491](https://github.com/kubedb/apimachinery/pull/491) ([shudipta](https://github.com/shudipta))
+- Affinity defaulting for mongodb [\#490](https://github.com/kubedb/apimachinery/pull/490) ([the-redback](https://github.com/the-redback))
+-  Cleanup DB helper defaulting functions [\#489](https://github.com/kubedb/apimachinery/pull/489) ([the-redback](https://github.com/the-redback))
+- Add method for ES governing service name [\#487](https://github.com/kubedb/apimachinery/pull/487) ([kamolhasan](https://github.com/kamolhasan))
+- Delete dormant and snapshot CRD [\#486](https://github.com/kubedb/apimachinery/pull/486) ([the-redback](https://github.com/the-redback))
+
+## [v0.13.0-rc.3](https://github.com/kubedb/apimachinery/tree/v0.13.0-rc.3) (2020-01-11)
+[Full Changelog](https://github.com/kubedb/apimachinery/compare/v0.13.0-rc.2...v0.13.0-rc.3)
+
+**Fixed bugs:**
+
+- Fix the const value for the max possible base-server id for MySQL Group Replication [\#483](https://github.com/kubedb/apimachinery/pull/483) ([shudipta](https://github.com/shudipta))
+
+**Merged pull requests:**
+
+- Update cron and stow libraries [\#485](https://github.com/kubedb/apimachinery/pull/485) ([tamalsaha](https://github.com/tamalsaha))
+- Vendor stash@v0.9.0-rc.3 [\#484](https://github.com/kubedb/apimachinery/pull/484) ([tamalsaha](https://github.com/tamalsaha))
+- Add spec.halted as a replacement for DormantDatabase crd [\#482](https://github.com/kubedb/apimachinery/pull/482) ([tamalsaha](https://github.com/tamalsaha))
+- Bring back support for k8s 1.11 [\#481](https://github.com/kubedb/apimachinery/pull/481) ([tamalsaha](https://github.com/tamalsaha))
+- Enable Status subresource for MySQL crd. [\#480](https://github.com/kubedb/apimachinery/pull/480) ([tamalsaha](https://github.com/tamalsaha))
+- Deprecate Pause termination policy [\#479](https://github.com/kubedb/apimachinery/pull/479) ([tamalsaha](https://github.com/tamalsaha))
+- Update mount path for custom config for ProxySQL & PerconaXtraDB [\#478](https://github.com/kubedb/apimachinery/pull/478) ([shudipta](https://github.com/shudipta))
+- API Review [\#476](https://github.com/kubedb/apimachinery/pull/476) ([tamalsaha](https://github.com/tamalsaha))
+- Fix MySQL base server id data type [\#475](https://github.com/kubedb/apimachinery/pull/475) ([tamalsaha](https://github.com/tamalsaha))
+- Always create RBAC roles [\#474](https://github.com/kubedb/apimachinery/pull/474) ([tamalsaha](https://github.com/tamalsaha))
+- Use 2-way merge patch in Patch helpers [\#472](https://github.com/kubedb/apimachinery/pull/472) ([tamalsaha](https://github.com/tamalsaha))
+- Fixed mongodb ssl args [\#471](https://github.com/kubedb/apimachinery/pull/471) ([the-redback](https://github.com/the-redback))
+- Introduce KubeDB DBA resources [\#470](https://github.com/kubedb/apimachinery/pull/470) ([tamalsaha](https://github.com/tamalsaha))
+- Show AUTH\_PLUGIN for ESVersion [\#469](https://github.com/kubedb/apimachinery/pull/469) ([tamalsaha](https://github.com/tamalsaha))
+- Update client-go to kubernetes-1.16.3 [\#468](https://github.com/kubedb/apimachinery/pull/468) ([tamalsaha](https://github.com/tamalsaha))
+- Cert-Manager for PgBouncer [\#467](https://github.com/kubedb/apimachinery/pull/467) ([iamrz1](https://github.com/iamrz1))
+- Add helper library for CRDs [\#466](https://github.com/kubedb/apimachinery/pull/466) ([tamalsaha](https://github.com/tamalsaha))
+- Use kubebuilder generated CRD yamls [\#465](https://github.com/kubedb/apimachinery/pull/465) ([tamalsaha](https://github.com/tamalsaha))
+- Use controller-tools@v0.2.2 to generate structural schema [\#464](https://github.com/kubedb/apimachinery/pull/464) ([tamalsaha](https://github.com/tamalsaha))
+- Generate protobuf files for api types [\#463](https://github.com/kubedb/apimachinery/pull/463) ([tamalsaha](https://github.com/tamalsaha))
+- Add license header to files [\#462](https://github.com/kubedb/apimachinery/pull/462) ([tamalsaha](https://github.com/tamalsaha))
+- Verify Go modules in ci [\#461](https://github.com/kubedb/apimachinery/pull/461) ([tamalsaha](https://github.com/tamalsaha))
+
+## [v0.13.0-rc.2](https://github.com/kubedb/apimachinery/tree/v0.13.0-rc.2) (2019-10-23)
+[Full Changelog](https://github.com/kubedb/apimachinery/compare/v0.13.0-rc.1...v0.13.0-rc.2)
+
+**Merged pull requests:**
+
+- Use stash@v0.9.0-rc.2 [\#460](https://github.com/kubedb/apimachinery/pull/460) ([tamalsaha](https://github.com/tamalsaha))
+- Show diff when files `make verify` fails [\#459](https://github.com/kubedb/apimachinery/pull/459) ([tamalsaha](https://github.com/tamalsaha))
+- Split imports into 3 blocks [\#458](https://github.com/kubedb/apimachinery/pull/458) ([tamalsaha](https://github.com/tamalsaha))
+- Remove EnableStatusSubresource [\#457](https://github.com/kubedb/apimachinery/pull/457) ([tamalsaha](https://github.com/tamalsaha))
+- Fix linter issues [\#456](https://github.com/kubedb/apimachinery/pull/456) ([tamalsaha](https://github.com/tamalsaha))
+- Verify generated files are up to date [\#454](https://github.com/kubedb/apimachinery/pull/454) ([tahsinrahman](https://github.com/tahsinrahman))
+- Use utilruntime.Must to check for errors [\#453](https://github.com/kubedb/apimachinery/pull/453) ([tamalsaha](https://github.com/tamalsaha))
+
+## [v0.13.0-rc.1](https://github.com/kubedb/apimachinery/tree/v0.13.0-rc.1) (2019-10-07)
+[Full Changelog](https://github.com/kubedb/apimachinery/compare/v0.13.0-rc.0...v0.13.0-rc.1)
+
+**Merged pull requests:**
+
+- Prepare v0.13.0-rc.1 release [\#452](https://github.com/kubedb/apimachinery/pull/452) ([tamalsaha](https://github.com/tamalsaha))
+- Generate swagger.json [\#451](https://github.com/kubedb/apimachinery/pull/451) ([tamalsaha](https://github.com/tamalsaha))
+- Added helper functions to dbVersions to check for valid specs [\#450](https://github.com/kubedb/apimachinery/pull/450) ([the-redback](https://github.com/the-redback))
+- Fix linter errors [\#449](https://github.com/kubedb/apimachinery/pull/449) ([tamalsaha](https://github.com/tamalsaha))
+- Add Readiness probe for PerconaXtraDB [\#448](https://github.com/kubedb/apimachinery/pull/448) ([shudipta](https://github.com/shudipta))
+- Added authPlugin field in Version Catalog spec [\#447](https://github.com/kubedb/apimachinery/pull/447) ([the-redback](https://github.com/the-redback))
+- Remove additional print column PROXYSQL\_IMAGE from PerconaXtraDBVersion [\#446](https://github.com/kubedb/apimachinery/pull/446) ([shudipta](https://github.com/shudipta))
+- Remove ProxySQL image field from PerconaXtraDBVersion type [\#445](https://github.com/kubedb/apimachinery/pull/445) ([shudipta](https://github.com/shudipta))
+- Change default termination policy as Delete. [\#444](https://github.com/kubedb/apimachinery/pull/444) ([tamalsaha](https://github.com/tamalsaha))
+- Change to configure proxysql for group replication [\#443](https://github.com/kubedb/apimachinery/pull/443) ([shudipta](https://github.com/shudipta))
+- Add ProxySQLVersion types [\#442](https://github.com/kubedb/apimachinery/pull/442) ([shudipta](https://github.com/shudipta))
+- Add helper methods to configure proxysql for group replication [\#441](https://github.com/kubedb/apimachinery/pull/441) ([shudipta](https://github.com/shudipta))
+- Use authentication for readiness and liveness probes [\#440](https://github.com/kubedb/apimachinery/pull/440) ([the-redback](https://github.com/the-redback))
+- Add ProxySQL to Load Balance MySQL Query Requests [\#439](https://github.com/kubedb/apimachinery/pull/439) ([shudipta](https://github.com/shudipta))
+- Add PgBouncer types and clientset [\#424](https://github.com/kubedb/apimachinery/pull/424) ([iamrz1](https://github.com/iamrz1))
+
 ## [v0.13.0-rc.0](https://github.com/kubedb/apimachinery/tree/v0.13.0-rc.0) (2019-08-22)
 [Full Changelog](https://github.com/kubedb/apimachinery/compare/0.12.0...v0.13.0-rc.0)
 
