@@ -4561,6 +4561,11 @@ spec:
               type: object
             terminationPolicy:
               description: TerminationPolicy controls the delete operation for database
+              enum:
+              - Halt
+              - Delete
+              - WipeOut
+              - DoNotTerminate
               type: string
             version:
               description: Version of Memcached to be deployed.
@@ -4577,6 +4582,13 @@ spec:
               format: int64
               type: integer
             phase:
+              enum:
+              - Running
+              - Creating
+              - Initializing
+              - Paused
+              - Halted
+              - Failed
               type: string
             reason:
               type: string
