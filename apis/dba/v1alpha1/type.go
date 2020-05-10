@@ -16,6 +16,7 @@ limitations under the License.
 
 package v1alpha1
 
+// +kubebuilder:validation:Enum=Approved;Denied
 type RequestConditionType string
 
 // These are the possible conditions for a certificate request.

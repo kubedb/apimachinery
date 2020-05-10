@@ -3564,6 +3564,13 @@ spec:
               type: integer
             phase:
               description: Phase specifies the current state of PgBouncer server.
+              enum:
+              - Running
+              - Creating
+              - Initializing
+              - Paused
+              - Halted
+              - Failed
               type: string
             reason:
               description: Reason is used to explain phases of interest of the server.
