@@ -28,6 +28,7 @@ import (
 	strings "strings"
 
 	proto "github.com/gogo/protobuf/proto"
+	v12 "kmodules.xyz/client-go/api/v1"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -493,38 +494,10 @@ func (m *MongoDBModificationRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MongoDBModificationRequest proto.InternalMessageInfo
 
-func (m *MongoDBModificationRequestCondition) Reset()      { *m = MongoDBModificationRequestCondition{} }
-func (*MongoDBModificationRequestCondition) ProtoMessage() {}
-func (*MongoDBModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{16}
-}
-func (m *MongoDBModificationRequestCondition) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MongoDBModificationRequestCondition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	b = b[:cap(b)]
-	n, err := m.MarshalToSizedBuffer(b)
-	if err != nil {
-		return nil, err
-	}
-	return b[:n], nil
-}
-func (m *MongoDBModificationRequestCondition) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MongoDBModificationRequestCondition.Merge(m, src)
-}
-func (m *MongoDBModificationRequestCondition) XXX_Size() int {
-	return m.Size()
-}
-func (m *MongoDBModificationRequestCondition) XXX_DiscardUnknown() {
-	xxx_messageInfo_MongoDBModificationRequestCondition.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MongoDBModificationRequestCondition proto.InternalMessageInfo
-
 func (m *MongoDBModificationRequestList) Reset()      { *m = MongoDBModificationRequestList{} }
 func (*MongoDBModificationRequestList) ProtoMessage() {}
 func (*MongoDBModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{17}
+	return fileDescriptor_b5a799bc54483634, []int{16}
 }
 func (m *MongoDBModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -552,7 +525,7 @@ var xxx_messageInfo_MongoDBModificationRequestList proto.InternalMessageInfo
 func (m *MongoDBModificationRequestSpec) Reset()      { *m = MongoDBModificationRequestSpec{} }
 func (*MongoDBModificationRequestSpec) ProtoMessage() {}
 func (*MongoDBModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{18}
+	return fileDescriptor_b5a799bc54483634, []int{17}
 }
 func (m *MongoDBModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -580,7 +553,7 @@ var xxx_messageInfo_MongoDBModificationRequestSpec proto.InternalMessageInfo
 func (m *MongoDBModificationRequestStatus) Reset()      { *m = MongoDBModificationRequestStatus{} }
 func (*MongoDBModificationRequestStatus) ProtoMessage() {}
 func (*MongoDBModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{19}
+	return fileDescriptor_b5a799bc54483634, []int{18}
 }
 func (m *MongoDBModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -608,7 +581,7 @@ var xxx_messageInfo_MongoDBModificationRequestStatus proto.InternalMessageInfo
 func (m *MySQLModificationRequest) Reset()      { *m = MySQLModificationRequest{} }
 func (*MySQLModificationRequest) ProtoMessage() {}
 func (*MySQLModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{20}
+	return fileDescriptor_b5a799bc54483634, []int{19}
 }
 func (m *MySQLModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -636,7 +609,7 @@ var xxx_messageInfo_MySQLModificationRequest proto.InternalMessageInfo
 func (m *MySQLModificationRequestCondition) Reset()      { *m = MySQLModificationRequestCondition{} }
 func (*MySQLModificationRequestCondition) ProtoMessage() {}
 func (*MySQLModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{21}
+	return fileDescriptor_b5a799bc54483634, []int{20}
 }
 func (m *MySQLModificationRequestCondition) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -664,7 +637,7 @@ var xxx_messageInfo_MySQLModificationRequestCondition proto.InternalMessageInfo
 func (m *MySQLModificationRequestList) Reset()      { *m = MySQLModificationRequestList{} }
 func (*MySQLModificationRequestList) ProtoMessage() {}
 func (*MySQLModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{22}
+	return fileDescriptor_b5a799bc54483634, []int{21}
 }
 func (m *MySQLModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -692,7 +665,7 @@ var xxx_messageInfo_MySQLModificationRequestList proto.InternalMessageInfo
 func (m *MySQLModificationRequestSpec) Reset()      { *m = MySQLModificationRequestSpec{} }
 func (*MySQLModificationRequestSpec) ProtoMessage() {}
 func (*MySQLModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{23}
+	return fileDescriptor_b5a799bc54483634, []int{22}
 }
 func (m *MySQLModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -720,7 +693,7 @@ var xxx_messageInfo_MySQLModificationRequestSpec proto.InternalMessageInfo
 func (m *MySQLModificationRequestStatus) Reset()      { *m = MySQLModificationRequestStatus{} }
 func (*MySQLModificationRequestStatus) ProtoMessage() {}
 func (*MySQLModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{24}
+	return fileDescriptor_b5a799bc54483634, []int{23}
 }
 func (m *MySQLModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -748,7 +721,7 @@ var xxx_messageInfo_MySQLModificationRequestStatus proto.InternalMessageInfo
 func (m *PerconaXtraDBModificationRequest) Reset()      { *m = PerconaXtraDBModificationRequest{} }
 func (*PerconaXtraDBModificationRequest) ProtoMessage() {}
 func (*PerconaXtraDBModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{25}
+	return fileDescriptor_b5a799bc54483634, []int{24}
 }
 func (m *PerconaXtraDBModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -778,7 +751,7 @@ func (m *PerconaXtraDBModificationRequestCondition) Reset() {
 }
 func (*PerconaXtraDBModificationRequestCondition) ProtoMessage() {}
 func (*PerconaXtraDBModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{26}
+	return fileDescriptor_b5a799bc54483634, []int{25}
 }
 func (m *PerconaXtraDBModificationRequestCondition) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -806,7 +779,7 @@ var xxx_messageInfo_PerconaXtraDBModificationRequestCondition proto.InternalMess
 func (m *PerconaXtraDBModificationRequestList) Reset()      { *m = PerconaXtraDBModificationRequestList{} }
 func (*PerconaXtraDBModificationRequestList) ProtoMessage() {}
 func (*PerconaXtraDBModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{27}
+	return fileDescriptor_b5a799bc54483634, []int{26}
 }
 func (m *PerconaXtraDBModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -834,7 +807,7 @@ var xxx_messageInfo_PerconaXtraDBModificationRequestList proto.InternalMessageIn
 func (m *PerconaXtraDBModificationRequestSpec) Reset()      { *m = PerconaXtraDBModificationRequestSpec{} }
 func (*PerconaXtraDBModificationRequestSpec) ProtoMessage() {}
 func (*PerconaXtraDBModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{28}
+	return fileDescriptor_b5a799bc54483634, []int{27}
 }
 func (m *PerconaXtraDBModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -864,7 +837,7 @@ func (m *PerconaXtraDBModificationRequestStatus) Reset() {
 }
 func (*PerconaXtraDBModificationRequestStatus) ProtoMessage() {}
 func (*PerconaXtraDBModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{29}
+	return fileDescriptor_b5a799bc54483634, []int{28}
 }
 func (m *PerconaXtraDBModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -892,7 +865,7 @@ var xxx_messageInfo_PerconaXtraDBModificationRequestStatus proto.InternalMessage
 func (m *PgBouncerModificationRequest) Reset()      { *m = PgBouncerModificationRequest{} }
 func (*PgBouncerModificationRequest) ProtoMessage() {}
 func (*PgBouncerModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{30}
+	return fileDescriptor_b5a799bc54483634, []int{29}
 }
 func (m *PgBouncerModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -920,7 +893,7 @@ var xxx_messageInfo_PgBouncerModificationRequest proto.InternalMessageInfo
 func (m *PgBouncerModificationRequestCondition) Reset()      { *m = PgBouncerModificationRequestCondition{} }
 func (*PgBouncerModificationRequestCondition) ProtoMessage() {}
 func (*PgBouncerModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{31}
+	return fileDescriptor_b5a799bc54483634, []int{30}
 }
 func (m *PgBouncerModificationRequestCondition) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -948,7 +921,7 @@ var xxx_messageInfo_PgBouncerModificationRequestCondition proto.InternalMessageI
 func (m *PgBouncerModificationRequestList) Reset()      { *m = PgBouncerModificationRequestList{} }
 func (*PgBouncerModificationRequestList) ProtoMessage() {}
 func (*PgBouncerModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{32}
+	return fileDescriptor_b5a799bc54483634, []int{31}
 }
 func (m *PgBouncerModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -976,7 +949,7 @@ var xxx_messageInfo_PgBouncerModificationRequestList proto.InternalMessageInfo
 func (m *PgBouncerModificationRequestSpec) Reset()      { *m = PgBouncerModificationRequestSpec{} }
 func (*PgBouncerModificationRequestSpec) ProtoMessage() {}
 func (*PgBouncerModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{33}
+	return fileDescriptor_b5a799bc54483634, []int{32}
 }
 func (m *PgBouncerModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1004,7 +977,7 @@ var xxx_messageInfo_PgBouncerModificationRequestSpec proto.InternalMessageInfo
 func (m *PgBouncerModificationRequestStatus) Reset()      { *m = PgBouncerModificationRequestStatus{} }
 func (*PgBouncerModificationRequestStatus) ProtoMessage() {}
 func (*PgBouncerModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{34}
+	return fileDescriptor_b5a799bc54483634, []int{33}
 }
 func (m *PgBouncerModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1032,7 +1005,7 @@ var xxx_messageInfo_PgBouncerModificationRequestStatus proto.InternalMessageInfo
 func (m *PostgresModificationRequest) Reset()      { *m = PostgresModificationRequest{} }
 func (*PostgresModificationRequest) ProtoMessage() {}
 func (*PostgresModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{35}
+	return fileDescriptor_b5a799bc54483634, []int{34}
 }
 func (m *PostgresModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1060,7 +1033,7 @@ var xxx_messageInfo_PostgresModificationRequest proto.InternalMessageInfo
 func (m *PostgresModificationRequestCondition) Reset()      { *m = PostgresModificationRequestCondition{} }
 func (*PostgresModificationRequestCondition) ProtoMessage() {}
 func (*PostgresModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{36}
+	return fileDescriptor_b5a799bc54483634, []int{35}
 }
 func (m *PostgresModificationRequestCondition) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1088,7 +1061,7 @@ var xxx_messageInfo_PostgresModificationRequestCondition proto.InternalMessageIn
 func (m *PostgresModificationRequestList) Reset()      { *m = PostgresModificationRequestList{} }
 func (*PostgresModificationRequestList) ProtoMessage() {}
 func (*PostgresModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{37}
+	return fileDescriptor_b5a799bc54483634, []int{36}
 }
 func (m *PostgresModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1116,7 +1089,7 @@ var xxx_messageInfo_PostgresModificationRequestList proto.InternalMessageInfo
 func (m *PostgresModificationRequestSpec) Reset()      { *m = PostgresModificationRequestSpec{} }
 func (*PostgresModificationRequestSpec) ProtoMessage() {}
 func (*PostgresModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{38}
+	return fileDescriptor_b5a799bc54483634, []int{37}
 }
 func (m *PostgresModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1144,7 +1117,7 @@ var xxx_messageInfo_PostgresModificationRequestSpec proto.InternalMessageInfo
 func (m *PostgresModificationRequestStatus) Reset()      { *m = PostgresModificationRequestStatus{} }
 func (*PostgresModificationRequestStatus) ProtoMessage() {}
 func (*PostgresModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{39}
+	return fileDescriptor_b5a799bc54483634, []int{38}
 }
 func (m *PostgresModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1172,7 +1145,7 @@ var xxx_messageInfo_PostgresModificationRequestStatus proto.InternalMessageInfo
 func (m *ProxySQLModificationRequest) Reset()      { *m = ProxySQLModificationRequest{} }
 func (*ProxySQLModificationRequest) ProtoMessage() {}
 func (*ProxySQLModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{40}
+	return fileDescriptor_b5a799bc54483634, []int{39}
 }
 func (m *ProxySQLModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1200,7 +1173,7 @@ var xxx_messageInfo_ProxySQLModificationRequest proto.InternalMessageInfo
 func (m *ProxySQLModificationRequestCondition) Reset()      { *m = ProxySQLModificationRequestCondition{} }
 func (*ProxySQLModificationRequestCondition) ProtoMessage() {}
 func (*ProxySQLModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{41}
+	return fileDescriptor_b5a799bc54483634, []int{40}
 }
 func (m *ProxySQLModificationRequestCondition) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1228,7 +1201,7 @@ var xxx_messageInfo_ProxySQLModificationRequestCondition proto.InternalMessageIn
 func (m *ProxySQLModificationRequestList) Reset()      { *m = ProxySQLModificationRequestList{} }
 func (*ProxySQLModificationRequestList) ProtoMessage() {}
 func (*ProxySQLModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{42}
+	return fileDescriptor_b5a799bc54483634, []int{41}
 }
 func (m *ProxySQLModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1256,7 +1229,7 @@ var xxx_messageInfo_ProxySQLModificationRequestList proto.InternalMessageInfo
 func (m *ProxySQLModificationRequestSpec) Reset()      { *m = ProxySQLModificationRequestSpec{} }
 func (*ProxySQLModificationRequestSpec) ProtoMessage() {}
 func (*ProxySQLModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{43}
+	return fileDescriptor_b5a799bc54483634, []int{42}
 }
 func (m *ProxySQLModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1284,7 +1257,7 @@ var xxx_messageInfo_ProxySQLModificationRequestSpec proto.InternalMessageInfo
 func (m *ProxySQLModificationRequestStatus) Reset()      { *m = ProxySQLModificationRequestStatus{} }
 func (*ProxySQLModificationRequestStatus) ProtoMessage() {}
 func (*ProxySQLModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{44}
+	return fileDescriptor_b5a799bc54483634, []int{43}
 }
 func (m *ProxySQLModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1312,7 +1285,7 @@ var xxx_messageInfo_ProxySQLModificationRequestStatus proto.InternalMessageInfo
 func (m *RedisModificationRequest) Reset()      { *m = RedisModificationRequest{} }
 func (*RedisModificationRequest) ProtoMessage() {}
 func (*RedisModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{45}
+	return fileDescriptor_b5a799bc54483634, []int{44}
 }
 func (m *RedisModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1340,7 +1313,7 @@ var xxx_messageInfo_RedisModificationRequest proto.InternalMessageInfo
 func (m *RedisModificationRequestCondition) Reset()      { *m = RedisModificationRequestCondition{} }
 func (*RedisModificationRequestCondition) ProtoMessage() {}
 func (*RedisModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{46}
+	return fileDescriptor_b5a799bc54483634, []int{45}
 }
 func (m *RedisModificationRequestCondition) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1368,7 +1341,7 @@ var xxx_messageInfo_RedisModificationRequestCondition proto.InternalMessageInfo
 func (m *RedisModificationRequestList) Reset()      { *m = RedisModificationRequestList{} }
 func (*RedisModificationRequestList) ProtoMessage() {}
 func (*RedisModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{47}
+	return fileDescriptor_b5a799bc54483634, []int{46}
 }
 func (m *RedisModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1396,7 +1369,7 @@ var xxx_messageInfo_RedisModificationRequestList proto.InternalMessageInfo
 func (m *RedisModificationRequestSpec) Reset()      { *m = RedisModificationRequestSpec{} }
 func (*RedisModificationRequestSpec) ProtoMessage() {}
 func (*RedisModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{48}
+	return fileDescriptor_b5a799bc54483634, []int{47}
 }
 func (m *RedisModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1424,7 +1397,7 @@ var xxx_messageInfo_RedisModificationRequestSpec proto.InternalMessageInfo
 func (m *RedisModificationRequestStatus) Reset()      { *m = RedisModificationRequestStatus{} }
 func (*RedisModificationRequestStatus) ProtoMessage() {}
 func (*RedisModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{49}
+	return fileDescriptor_b5a799bc54483634, []int{48}
 }
 func (m *RedisModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1449,6 +1422,34 @@ func (m *RedisModificationRequestStatus) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_RedisModificationRequestStatus proto.InternalMessageInfo
 
+func (m *UpdateSpec) Reset()      { *m = UpdateSpec{} }
+func (*UpdateSpec) ProtoMessage() {}
+func (*UpdateSpec) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b5a799bc54483634, []int{49}
+}
+func (m *UpdateSpec) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UpdateSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	b = b[:cap(b)]
+	n, err := m.MarshalToSizedBuffer(b)
+	if err != nil {
+		return nil, err
+	}
+	return b[:n], nil
+}
+func (m *UpdateSpec) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateSpec.Merge(m, src)
+}
+func (m *UpdateSpec) XXX_Size() int {
+	return m.Size()
+}
+func (m *UpdateSpec) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateSpec.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateSpec proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*ElasticsearchModificationRequest)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequest")
 	proto.RegisterType((*ElasticsearchModificationRequestCondition)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequestCondition")
@@ -1466,7 +1467,6 @@ func init() {
 	proto.RegisterType((*MemcachedModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MemcachedModificationRequestSpec")
 	proto.RegisterType((*MemcachedModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MemcachedModificationRequestStatus")
 	proto.RegisterType((*MongoDBModificationRequest)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequest")
-	proto.RegisterType((*MongoDBModificationRequestCondition)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestCondition")
 	proto.RegisterType((*MongoDBModificationRequestList)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestList")
 	proto.RegisterType((*MongoDBModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestSpec")
 	proto.RegisterType((*MongoDBModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestStatus")
@@ -1500,6 +1500,7 @@ func init() {
 	proto.RegisterType((*RedisModificationRequestList)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.RedisModificationRequestList")
 	proto.RegisterType((*RedisModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.RedisModificationRequestSpec")
 	proto.RegisterType((*RedisModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.RedisModificationRequestStatus")
+	proto.RegisterType((*UpdateSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.UpdateSpec")
 }
 
 func init() {
@@ -1507,85 +1508,99 @@ func init() {
 }
 
 var fileDescriptor_b5a799bc54483634 = []byte{
-	// 1237 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x98, 0xc1, 0x6f, 0x1b, 0x45,
-	0x14, 0xc6, 0x33, 0xdb, 0xb4, 0x4d, 0xa6, 0x10, 0xd0, 0x0a, 0x81, 0x95, 0xb6, 0x1b, 0x67, 0x09,
-	0x51, 0x83, 0xc4, 0x9a, 0x54, 0x08, 0x95, 0xeb, 0x96, 0x14, 0x42, 0x6c, 0x92, 0x6e, 0x83, 0x84,
-	0x10, 0x07, 0xc6, 0xbb, 0xd3, 0xf5, 0xc6, 0x59, 0xef, 0x66, 0x67, 0x1c, 0xe1, 0x13, 0x15, 0x70,
-	0xe0, 0xc8, 0x1d, 0x04, 0x95, 0x40, 0x42, 0x88, 0x23, 0xff, 0x44, 0x8e, 0xbd, 0x51, 0x71, 0x88,
-	0x1a, 0x17, 0xf5, 0x80, 0x10, 0x87, 0x1e, 0x38, 0x70, 0x42, 0x3b, 0xb6, 0x93, 0xac, 0xeb, 0x99,
-	0x59, 0xe3, 0x8d, 0x9d, 0x4a, 0xbe, 0x75, 0xc6, 0x7e, 0xf3, 0xbe, 0xf7, 0xfa, 0xe5, 0x27, 0xeb,
-	0x83, 0x6f, 0x55, 0xeb, 0x65, 0xec, 0x94, 0x0d, 0x07, 0xef, 0x16, 0x50, 0xe8, 0xf9, 0xc8, 0xae,
-	0x78, 0x35, 0x1c, 0x35, 0xe2, 0x03, 0x29, 0x38, 0x65, 0x54, 0xd8, 0x5d, 0x46, 0xdb, 0x61, 0x05,
-	0x2d, 0x17, 0x5c, 0x5c, 0xc3, 0x11, 0xa2, 0xd8, 0x31, 0xc2, 0x28, 0xa0, 0x81, 0xba, 0x74, 0x54,
-	0x6a, 0x1c, 0x2f, 0x8d, 0x0f, 0xc4, 0x70, 0xca, 0xc8, 0xe8, 0x94, 0xce, 0xbe, 0xe6, 0x7a, 0xb4,
-	0x52, 0x2f, 0x1b, 0x76, 0xe0, 0x17, 0xdc, 0xc0, 0x0d, 0x0a, 0xec, 0x85, 0x72, 0xfd, 0x36, 0x3b,
-	0xb1, 0x03, 0xfb, 0x57, 0xeb, 0xe5, 0xd9, 0x37, 0xaa, 0xd7, 0x88, 0xe1, 0x05, 0x49, 0x41, 0x61,
-	0xd5, 0x6d, 0x89, 0xf2, 0x31, 0x8d, 0x55, 0x75, 0xeb, 0x99, 0x2d, 0xf0, 0xaa, 0xa2, 0x7a, 0x8d,
-	0x7a, 0x3e, 0x7e, 0xa2, 0xe0, 0x4d, 0x59, 0x01, 0xb1, 0x2b, 0xd8, 0x47, 0xdd, 0x75, 0xfa, 0x63,
-	0x05, 0xe6, 0x57, 0xb6, 0x11, 0xa1, 0x9e, 0x4d, 0x30, 0x8a, 0xec, 0x4a, 0x29, 0x70, 0xbc, 0xdb,
-	0x9e, 0x8d, 0xa8, 0x17, 0xd4, 0x2c, 0xbc, 0x53, 0xc7, 0x84, 0xaa, 0x9f, 0xc0, 0xa9, 0x58, 0xa8,
-	0x83, 0x28, 0xca, 0x81, 0x3c, 0xb8, 0x72, 0xe1, 0xea, 0xeb, 0x46, 0xab, 0x5f, 0x72, 0x59, 0x61,
-	0xd5, 0x6d, 0x2d, 0x2c, 0xfe, 0xb6, 0xb1, 0xbb, 0x6c, 0xac, 0x97, 0xb7, 0xb0, 0x4d, 0x4b, 0x98,
-	0x22, 0x53, 0xdd, 0xdb, 0x9f, 0x9b, 0x68, 0xee, 0xcf, 0xc1, 0xa3, 0x3b, 0xeb, 0xf0, 0x55, 0x75,
-	0x07, 0x4e, 0x92, 0x10, 0xdb, 0x39, 0x85, 0xbd, 0xbe, 0x6e, 0xa4, 0xfe, 0xef, 0x30, 0x64, 0xe2,
-	0x6f, 0x85, 0xd8, 0x36, 0x9f, 0x69, 0x37, 0x9f, 0x8c, 0x4f, 0x16, 0x6b, 0xa5, 0x36, 0xe0, 0x39,
-	0x42, 0x11, 0xad, 0x93, 0xdc, 0x19, 0xd6, 0xf4, 0x66, 0x96, 0x4d, 0xd9, 0xc3, 0xe6, 0x4c, 0xbb,
-	0xed, 0xb9, 0xd6, 0xd9, 0x6a, 0x37, 0xd4, 0x7f, 0x54, 0xe0, 0x92, 0xec, 0x89, 0xeb, 0x41, 0xcd,
-	0xf1, 0xe2, 0xb3, 0x7a, 0x0d, 0x4e, 0xd2, 0x46, 0x88, 0xd9, 0xe6, 0xa7, 0xcd, 0x85, 0xce, 0x28,
-	0x9b, 0x8d, 0x10, 0xff, 0xbb, 0x3f, 0xf7, 0x42, 0xf7, 0xf7, 0xe3, 0x7b, 0x8b, 0x55, 0xa8, 0x8b,
-	0xf0, 0x5c, 0x84, 0x11, 0x09, 0x6a, 0x6c, 0xaf, 0xd3, 0x47, 0x7a, 0x2c, 0x76, 0x6b, 0xb5, 0x3f,
-	0x55, 0x97, 0xe0, 0x79, 0x1f, 0x13, 0x82, 0x5c, 0xcc, 0x76, 0x31, 0x6d, 0x3e, 0xd7, 0xfe, 0xe2,
-	0xf9, 0x52, 0xeb, 0xda, 0xea, 0x7c, 0xae, 0x6e, 0xc1, 0x99, 0x58, 0xf8, 0x07, 0xa1, 0x83, 0x28,
-	0xde, 0xf4, 0x7c, 0x9c, 0x9b, 0x64, 0xdb, 0x7b, 0x35, 0x9d, 0x21, 0xe2, 0x0a, 0xf3, 0xc5, 0xf6,
-	0xeb, 0x33, 0xc5, 0xc4, 0x4b, 0x56, 0xd7, 0xcb, 0xfa, 0x3f, 0x00, 0x2e, 0xc8, 0xd6, 0x54, 0xf4,
-	0x08, 0x55, 0x3f, 0x7e, 0xc2, 0x9f, 0x46, 0x3a, 0x39, 0x71, 0x35, 0x73, 0xe7, 0xf3, 0x6d, 0x49,
-	0x53, 0x9d, 0x9b, 0x63, 0xde, 0x0c, 0xe1, 0x59, 0x8f, 0x62, 0x9f, 0xe4, 0x94, 0xfc, 0x99, 0x2b,
-	0x17, 0xae, 0xae, 0x65, 0xe8, 0x13, 0xf3, 0xd9, 0x76, 0xdf, 0xb3, 0xab, 0x71, 0x07, 0xab, 0xd5,
-	0x48, 0x5f, 0x94, 0xcf, 0x1d, 0x1b, 0x59, 0xff, 0x15, 0xc0, 0xc5, 0x74, 0x56, 0x54, 0xbf, 0x02,
-	0x10, 0xda, 0x1d, 0x8b, 0x90, 0x1c, 0x60, 0xa3, 0x6c, 0x66, 0x38, 0xca, 0xa1, 0xff, 0x8e, 0xfe,
-	0xd2, 0x0f, 0xaf, 0x88, 0x75, 0xac, 0xb7, 0xfe, 0x9b, 0x02, 0x5f, 0x5a, 0xa1, 0xb6, 0x33, 0x1a,
-	0xd2, 0x54, 0x12, 0xa4, 0xb9, 0xd1, 0xcf, 0x06, 0x7a, 0x6b, 0xe6, 0x02, 0x26, 0xec, 0x02, 0xcc,
-	0xbb, 0x19, 0xf4, 0x12, 0x73, 0xe5, 0x9b, 0x18, 0xe6, 0xbd, 0x2b, 0xc7, 0x38, 0xd1, 0xff, 0x00,
-	0xf0, 0x22, 0x67, 0x3b, 0x43, 0xa0, 0x88, 0x9b, 0xa4, 0x88, 0x39, 0xb8, 0x19, 0x38, 0xf0, 0xb8,
-	0xcc, 0x9d, 0x92, 0x31, 0xe3, 0x2e, 0x80, 0x97, 0x85, 0xee, 0x52, 0x3f, 0xeb, 0x41, 0x8a, 0xb5,
-	0xc1, 0xe5, 0xa6, 0x07, 0xc4, 0x23, 0x05, 0x5e, 0x2a, 0x61, 0xdf, 0x46, 0x76, 0x05, 0x8f, 0x88,
-	0x12, 0x7e, 0x82, 0x12, 0xfd, 0x4c, 0x2f, 0x12, 0xce, 0x45, 0x45, 0xbd, 0x0b, 0x15, 0xa5, 0xac,
-	0x1a, 0x8a, 0x79, 0x71, 0x57, 0x81, 0xaf, 0x88, 0xca, 0xc7, 0xd0, 0xd0, 0xff, 0x06, 0x30, 0x2f,
-	0x5a, 0xd1, 0x10, 0xc8, 0xb1, 0x9d, 0x24, 0xc7, 0x3b, 0x19, 0x79, 0x83, 0x83, 0x0f, 0x5d, 0x3c,
-	0x2f, 0x63, 0xc8, 0x2f, 0x00, 0xea, 0x72, 0xdb, 0xa9, 0x5f, 0xf6, 0xfa, 0xcd, 0xb1, 0x91, 0x91,
-	0xfc, 0xf4, 0x38, 0x79, 0xa0, 0xc0, 0xd9, 0x52, 0x50, 0x73, 0x83, 0xb7, 0xcd, 0xd1, 0xc0, 0xa4,
-	0x9a, 0x80, 0xc9, 0x6a, 0x3f, 0x0b, 0xe0, 0xca, 0xe6, 0xa2, 0x84, 0x74, 0xa1, 0x64, 0x2d, 0x9b,
-	0x76, 0x62, 0x90, 0x7c, 0xa7, 0xc0, 0x97, 0xf9, 0xc5, 0x63, 0x8c, 0xe8, 0x7f, 0x02, 0xa8, 0xf1,
-	0x17, 0x34, 0x04, 0x88, 0x6c, 0x25, 0x21, 0xb2, 0x92, 0x89, 0x2b, 0x38, 0x08, 0xc9, 0x8b, 0x66,
-	0x65, 0x00, 0xf9, 0x29, 0xa6, 0xaa, 0xc4, 0x6c, 0xea, 0xe7, 0xbd, 0xf0, 0xf1, 0x7e, 0x26, 0xc2,
-	0xd3, 0xc3, 0xe3, 0x77, 0x05, 0xe6, 0x4a, 0x8d, 0x5b, 0x37, 0x8b, 0xa3, 0x41, 0x87, 0x97, 0x40,
-	0x47, 0x5f, 0xe8, 0xe7, 0x88, 0xe6, 0x82, 0x63, 0xa7, 0x0b, 0x1c, 0xab, 0x59, 0x34, 0x13, 0x63,
-	0xe3, 0x5b, 0x05, 0xce, 0xf3, 0x4a, 0xc7, 0xd0, 0xd0, 0x1f, 0x01, 0x78, 0x89, 0xb7, 0x9e, 0x21,
-	0x20, 0xa3, 0x92, 0x44, 0xc6, 0xf5, 0x0c, 0xfc, 0xc0, 0x01, 0x86, 0xc6, 0x9f, 0x93, 0xe1, 0xe2,
-	0x87, 0x98, 0x9e, 0x42, 0x8b, 0xa9, 0x77, 0x7a, 0xc1, 0xa2, 0x98, 0x81, 0xe4, 0xf4, 0xa8, 0x78,
-	0xac, 0xc0, 0xfc, 0x06, 0x8e, 0xec, 0xa0, 0x86, 0x3e, 0xa4, 0x11, 0x1a, 0xd5, 0xaf, 0x8d, 0xff,
-	0x1f, 0xa5, 0xca, 0xc4, 0x9f, 0x48, 0x94, 0x2a, 0x6d, 0x2a, 0x8f, 0x52, 0x65, 0x4f, 0x8c, 0x51,
-	0xc2, 0xa2, 0x54, 0xd9, 0x9a, 0x4e, 0x77, 0x94, 0x2a, 0x53, 0xcf, 0x8f, 0x52, 0xd3, 0xd8, 0x9a,
-	0x45, 0xa9, 0xe9, 0xac, 0x38, 0x78, 0x94, 0x9a, 0xda, 0xaf, 0xa9, 0x92, 0x92, 0x0d, 0xd7, 0x0c,
-	0xea, 0x35, 0x1b, 0x47, 0x4f, 0x5b, 0x52, 0x22, 0x12, 0x7e, 0x22, 0x49, 0x89, 0xb0, 0xa1, 0x3c,
-	0x29, 0x11, 0x95, 0x8f, 0x11, 0xc3, 0x92, 0x12, 0xd1, 0x8a, 0x4e, 0x77, 0x52, 0x22, 0x52, 0xce,
-	0x4f, 0x4a, 0x64, 0x16, 0x66, 0x49, 0x89, 0xdc, 0x76, 0x83, 0x27, 0x25, 0xa9, 0xbc, 0x29, 0xc5,
-	0xc9, 0x43, 0x05, 0x5e, 0xdc, 0x08, 0x08, 0x75, 0x23, 0x4c, 0x46, 0x43, 0x93, 0xed, 0x04, 0x4d,
-	0xde, 0xeb, 0x67, 0x03, 0x7c, 0xdd, 0x5c, 0x98, 0xd0, 0x2e, 0x98, 0x14, 0x33, 0xea, 0x27, 0x66,
-	0xc9, 0xf7, 0x0a, 0x5c, 0x10, 0x54, 0x8f, 0x51, 0xa2, 0xff, 0x05, 0xe0, 0x9c, 0x60, 0x43, 0x43,
-	0x20, 0x49, 0x35, 0x49, 0x92, 0x1b, 0xd9, 0x18, 0x83, 0x03, 0x92, 0x79, 0xe1, 0xb4, 0x8c, 0x23,
-	0x3f, 0x03, 0x38, 0x2f, 0x75, 0x9c, 0xfa, 0x45, 0x2f, 0x8c, 0xac, 0x67, 0xa3, 0xbd, 0x4f, 0x8a,
-	0x44, 0xc1, 0xa7, 0xa3, 0x4b, 0x4d, 0x06, 0xa0, 0x08, 0x5f, 0xf7, 0xc9, 0x50, 0x44, 0xd0, 0x2f,
-	0x05, 0x45, 0xf8, 0xd5, 0x63, 0x8a, 0xb4, 0x28, 0xc2, 0xdf, 0xd0, 0x29, 0xa7, 0x08, 0x5f, 0xb8,
-	0x80, 0x22, 0x62, 0xf7, 0xb6, 0x28, 0x22, 0x73, 0x5c, 0x06, 0x14, 0x49, 0x61, 0xcb, 0x54, 0xc1,
-	0xab, 0x85, 0x1d, 0x8f, 0x3c, 0x6d, 0xc1, 0x2b, 0x4f, 0xf4, 0x89, 0x04, 0xaf, 0xdc, 0x66, 0xf2,
-	0xe0, 0x95, 0x57, 0x3a, 0x26, 0x07, 0x0b, 0x5e, 0x79, 0xeb, 0x39, 0xdd, 0xc1, 0x2b, 0x4f, 0x35,
-	0x3f, 0x78, 0x15, 0xd9, 0x95, 0x05, 0xaf, 0x62, 0x8b, 0x0d, 0x1e, 0xbc, 0x4a, 0x7d, 0x28, 0x43,
-	0x85, 0x69, 0xec, 0x1d, 0x68, 0x13, 0xf7, 0x0e, 0xb4, 0x89, 0xfb, 0x07, 0xda, 0xc4, 0x9d, 0xa6,
-	0x06, 0xf6, 0x9a, 0x1a, 0xb8, 0xd7, 0xd4, 0xc0, 0xfd, 0xa6, 0x06, 0x1e, 0x34, 0x35, 0xf0, 0xf5,
-	0x43, 0x6d, 0xe2, 0xa3, 0xa9, 0x4e, 0xc7, 0xff, 0x02, 0x00, 0x00, 0xff, 0xff, 0xda, 0x05, 0x62,
-	0xb6, 0x28, 0x2c, 0x00, 0x00,
+	// 1458 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x99, 0xcd, 0x6f, 0xdb, 0x64,
+	0x1c, 0xc7, 0x6b, 0xb7, 0xeb, 0xb6, 0xa7, 0x6c, 0x20, 0xf3, 0xb2, 0xa8, 0xdb, 0xd2, 0xcc, 0x1a,
+	0xa3, 0x45, 0x9a, 0x43, 0x27, 0x40, 0x43, 0x3b, 0x20, 0x79, 0x6f, 0x74, 0x6b, 0xd4, 0xce, 0x2b,
+	0x08, 0xd0, 0xa4, 0xf1, 0xc4, 0x7e, 0xea, 0x78, 0x49, 0x6c, 0xd7, 0xcf, 0x93, 0x68, 0xe1, 0xc2,
+	0x24, 0x38, 0x70, 0x41, 0xe2, 0x8a, 0x40, 0x62, 0x12, 0x5c, 0x10, 0x47, 0xfe, 0x89, 0x1e, 0x77,
+	0x63, 0xe2, 0x50, 0xad, 0x19, 0xda, 0x01, 0x21, 0x0e, 0x3b, 0x70, 0xd8, 0x09, 0xf9, 0xb1, 0xd3,
+	0xc4, 0x49, 0x9e, 0xc7, 0x0e, 0x71, 0x9b, 0x4e, 0xca, 0xad, 0x8f, 0xe3, 0xdf, 0x6b, 0xbe, 0xf9,
+	0xd8, 0xfa, 0x16, 0xbc, 0x57, 0xae, 0x15, 0x91, 0x51, 0x54, 0x0c, 0x54, 0xcf, 0x43, 0xd7, 0xaa,
+	0x42, 0xbd, 0x64, 0xd9, 0xc8, 0x6b, 0xf8, 0x07, 0x9c, 0x37, 0x8a, 0x30, 0x5f, 0x5f, 0x84, 0x15,
+	0xb7, 0x04, 0x17, 0xf3, 0x26, 0xb2, 0x91, 0x07, 0x09, 0x32, 0x14, 0xd7, 0x73, 0x88, 0x23, 0x2d,
+	0xb4, 0x43, 0x95, 0xce, 0x50, 0xff, 0x80, 0x15, 0xa3, 0x08, 0x95, 0x56, 0xe8, 0xec, 0x59, 0xd3,
+	0x22, 0xa5, 0x5a, 0x51, 0xd1, 0x9d, 0x6a, 0xde, 0x74, 0x4c, 0x27, 0x4f, 0x33, 0x14, 0x6b, 0xeb,
+	0xf4, 0x44, 0x0f, 0xf4, 0xaf, 0x20, 0xf3, 0xac, 0x5c, 0x3e, 0x8f, 0x15, 0xcb, 0xf1, 0x7b, 0xc8,
+	0xeb, 0x8e, 0x87, 0xf2, 0xf5, 0x9e, 0xea, 0xb3, 0x6f, 0xb7, 0xef, 0x69, 0x37, 0xed, 0x96, 0xcd,
+	0xa0, 0xf1, 0x2a, 0x22, 0xb0, 0x5f, 0x54, 0x9e, 0x15, 0xe5, 0xd5, 0x6c, 0x62, 0x55, 0x51, 0x4f,
+	0xc0, 0xbb, 0x71, 0x01, 0x58, 0x2f, 0xa1, 0x2a, 0xec, 0x89, 0x3b, 0x5b, 0xae, 0x3a, 0x46, 0xad,
+	0x82, 0xb0, 0x72, 0xb7, 0xf1, 0x79, 0x5e, 0xaf, 0x58, 0xc8, 0x26, 0x67, 0xcd, 0x60, 0xa4, 0xde,
+	0xbe, 0xe4, 0xa7, 0x22, 0xc8, 0x5d, 0xae, 0x40, 0x4c, 0x2c, 0x1d, 0x23, 0xe8, 0xe9, 0xa5, 0x82,
+	0x63, 0x58, 0xeb, 0x96, 0x0e, 0x89, 0xe5, 0xd8, 0x1a, 0xda, 0xa8, 0x21, 0x4c, 0xa4, 0xcf, 0xc0,
+	0x21, 0x7f, 0x2e, 0x03, 0x12, 0x98, 0x11, 0x72, 0xc2, 0xfc, 0xcc, 0xb9, 0xb7, 0x94, 0xa0, 0xbd,
+	0xe8, 0xfe, 0xdd, 0xb2, 0x19, 0x7c, 0x07, 0xfe, 0xdd, 0x4a, 0x7d, 0x51, 0x59, 0x29, 0xde, 0x41,
+	0x3a, 0x29, 0x20, 0x02, 0x55, 0x69, 0x73, 0x6b, 0x6e, 0xa2, 0xb9, 0x35, 0x07, 0xda, 0xd7, 0xb4,
+	0x9d, 0xac, 0xd2, 0x06, 0x98, 0xc2, 0x2e, 0xd2, 0x33, 0x22, 0xcd, 0xbe, 0xa2, 0x24, 0xfe, 0x86,
+	0x95, 0xb8, 0xe6, 0x6f, 0xba, 0x48, 0x57, 0x5f, 0x08, 0x8b, 0x4f, 0xf9, 0x27, 0x8d, 0x96, 0x92,
+	0x1a, 0x60, 0x1a, 0x13, 0x48, 0x6a, 0x38, 0x33, 0x49, 0x8b, 0xde, 0x48, 0xb3, 0x28, 0x4d, 0xac,
+	0x1e, 0x0d, 0xcb, 0x4e, 0x07, 0x67, 0x2d, 0x2c, 0x28, 0xff, 0x2c, 0x82, 0x85, 0xb8, 0x14, 0x17,
+	0x1d, 0xdb, 0xb0, 0xfc, 0xb3, 0x74, 0x1e, 0x4c, 0x91, 0x86, 0x8b, 0xe8, 0xe6, 0x0f, 0xab, 0xa7,
+	0x5b, 0xa3, 0xac, 0x35, 0x5c, 0xf4, 0x6c, 0x6b, 0xee, 0x95, 0xee, 0xfb, 0xfd, 0xeb, 0x1a, 0x8d,
+	0x90, 0xce, 0x80, 0x69, 0x0f, 0x41, 0xec, 0xd8, 0x74, 0xaf, 0x87, 0xdb, 0xfd, 0x68, 0xf4, 0xaa,
+	0x16, 0x7e, 0x2a, 0x2d, 0x80, 0x83, 0x55, 0x84, 0x31, 0x34, 0x11, 0xdd, 0xc5, 0x61, 0xf5, 0xc5,
+	0xf0, 0xc6, 0x83, 0x85, 0xe0, 0xb2, 0xd6, 0xfa, 0x5c, 0xba, 0x03, 0x8e, 0xfa, 0x8d, 0x7f, 0xe8,
+	0x1a, 0x90, 0xa0, 0x35, 0xab, 0x8a, 0x32, 0x53, 0x74, 0x7b, 0x6f, 0x26, 0x13, 0x84, 0x1f, 0xa1,
+	0xbe, 0x16, 0x66, 0x3f, 0xba, 0x1c, 0xc9, 0xa4, 0x75, 0x65, 0x96, 0xff, 0x15, 0xc0, 0xe9, 0xb8,
+	0x35, 0x2d, 0x5b, 0x98, 0x48, 0xb7, 0x7a, 0xf4, 0xa9, 0x24, 0x6b, 0xc7, 0x8f, 0xa6, 0xea, 0x7c,
+	0x29, 0x6c, 0xe9, 0x50, 0xeb, 0x4a, 0x87, 0x36, 0x5d, 0x70, 0xc0, 0x22, 0xa8, 0x8a, 0x33, 0x62,
+	0x6e, 0x72, 0x7e, 0xe6, 0xdc, 0xf5, 0x14, 0x75, 0xa2, 0x1e, 0x09, 0xeb, 0x1e, 0x58, 0xf2, 0x2b,
+	0x68, 0x41, 0x21, 0xf9, 0x4c, 0xfc, 0xdc, 0xbe, 0x90, 0xe5, 0xdf, 0x04, 0x70, 0x26, 0x99, 0x14,
+	0xa5, 0xaf, 0x05, 0x00, 0xf4, 0x96, 0x44, 0x70, 0x46, 0xa0, 0xa3, 0xac, 0xa5, 0x38, 0xca, 0x8e,
+	0xfe, 0xda, 0xbf, 0xf4, 0x9d, 0x4b, 0x58, 0xeb, 0xa8, 0x2d, 0xff, 0x2e, 0x82, 0x63, 0x97, 0x89,
+	0x6e, 0x8c, 0x86, 0x34, 0xa5, 0x08, 0x69, 0xae, 0x0c, 0xb2, 0x81, 0xfe, 0x3d, 0x33, 0x01, 0xe3,
+	0x76, 0x01, 0xe6, 0x83, 0x14, 0x6a, 0xf1, 0xb9, 0xf2, 0xbd, 0x0f, 0xf3, 0xfe, 0x91, 0x63, 0x9c,
+	0xc8, 0x7f, 0x0a, 0xe0, 0x38, 0x63, 0x3b, 0x7b, 0x40, 0x11, 0x33, 0x4a, 0x11, 0x75, 0x78, 0x31,
+	0x30, 0xe0, 0x71, 0x92, 0x39, 0x25, 0x65, 0xc6, 0x7d, 0x01, 0x9c, 0xe4, 0xaa, 0x4b, 0xfa, 0xa2,
+	0x0f, 0x29, 0xae, 0x0f, 0xdf, 0x6e, 0x72, 0x40, 0x3c, 0x11, 0xc1, 0x89, 0x02, 0xaa, 0xea, 0x50,
+	0x2f, 0xa1, 0x11, 0x51, 0xa2, 0x1a, 0xa1, 0xc4, 0x20, 0xd3, 0xf3, 0x1a, 0x67, 0xa2, 0xa2, 0xd6,
+	0x85, 0x8a, 0x42, 0x5a, 0x05, 0xf9, 0xbc, 0xb8, 0x2f, 0x82, 0xd7, 0x79, 0xe1, 0x63, 0x68, 0xc8,
+	0xff, 0x08, 0x20, 0xc7, 0x5b, 0xd1, 0x1e, 0x90, 0xa3, 0x12, 0x25, 0xc7, 0xd5, 0x94, 0xb4, 0xc1,
+	0xc0, 0x87, 0xcc, 0x9f, 0x97, 0x32, 0xe4, 0x57, 0x01, 0xc8, 0xf1, 0xb2, 0x93, 0xbe, 0xea, 0xf7,
+	0xce, 0xb1, 0x9a, 0x52, 0xfb, 0xc9, 0x71, 0xf2, 0x48, 0x04, 0xb3, 0x05, 0xc7, 0x36, 0x9d, 0x4b,
+	0xea, 0x68, 0x60, 0x52, 0x8e, 0xc0, 0x64, 0x69, 0x90, 0x05, 0x30, 0xdb, 0x66, 0xa2, 0x04, 0x77,
+	0xa1, 0xe4, 0x7a, 0x3a, 0xe5, 0xf8, 0x20, 0xf9, 0x4b, 0x00, 0x59, 0x76, 0xf0, 0x1e, 0xfc, 0x46,
+	0xee, 0x44, 0x7f, 0x23, 0x97, 0x53, 0x19, 0x9a, 0xf1, 0x0b, 0xf9, 0x4e, 0xe4, 0x0d, 0xeb, 0x7f,
+	0x15, 0xd2, 0x6d, 0x30, 0xe3, 0xb7, 0x55, 0x84, 0x18, 0x69, 0x68, 0x3d, 0x9c, 0x77, 0xbe, 0x63,
+	0x5e, 0x45, 0x77, 0x3c, 0x44, 0xa7, 0x73, 0x74, 0x58, 0x09, 0x54, 0xa3, 0xa1, 0x75, 0xe4, 0x21,
+	0x5b, 0x47, 0xea, 0xcb, 0x61, 0xdd, 0x99, 0x4b, 0xed, 0x24, 0x5a, 0x67, 0x46, 0xe9, 0x42, 0xc8,
+	0xe3, 0x80, 0xa9, 0x6f, 0x74, 0xf1, 0xf8, 0x58, 0x9f, 0xbe, 0x3a, 0x90, 0xfc, 0x09, 0x98, 0xae,
+	0x51, 0xc2, 0x85, 0x12, 0x79, 0x67, 0x80, 0x6d, 0x05, 0x68, 0xa4, 0xea, 0x03, 0xbe, 0x10, 0x82,
+	0xb3, 0x16, 0x26, 0x94, 0xbf, 0x11, 0x41, 0x2e, 0x4e, 0x45, 0xd2, 0xfb, 0xe0, 0x80, 0x5b, 0x82,
+	0xb8, 0xf5, 0x34, 0x59, 0x68, 0x6d, 0x79, 0xd5, 0xbf, 0xf8, 0x6c, 0x6b, 0x2e, 0xd3, 0x27, 0x94,
+	0x7e, 0xa6, 0x05, 0x71, 0xd2, 0x35, 0x20, 0x39, 0x45, 0x8c, 0xbc, 0x3a, 0x32, 0xae, 0x06, 0x7e,
+	0x86, 0x15, 0x3e, 0x5f, 0x26, 0xd5, 0xd9, 0x30, 0x9b, 0xb4, 0xd2, 0x73, 0x87, 0xd6, 0x27, 0x4a,
+	0xba, 0x15, 0x61, 0xd4, 0x24, 0x95, 0xcf, 0xbc, 0xd2, 0x69, 0xa2, 0x28, 0x81, 0x89, 0x72, 0xdb,
+	0x0c, 0xbe, 0xb9, 0xfa, 0xa2, 0x92, 0x9c, 0x3d, 0x7f, 0x88, 0x20, 0x53, 0x68, 0xdc, 0xbc, 0xb1,
+	0x3c, 0x1a, 0xf2, 0x58, 0x11, 0xf2, 0x0c, 0xf4, 0xe4, 0x60, 0x34, 0xcd, 0xe4, 0xce, 0x46, 0x17,
+	0x77, 0x96, 0xd2, 0x28, 0xc6, 0xa7, 0xce, 0x0f, 0x22, 0x38, 0xc5, 0x0a, 0x1d, 0xbf, 0xba, 0xc8,
+	0x4f, 0x04, 0x70, 0x82, 0xb5, 0x9e, 0x3d, 0x40, 0x72, 0x29, 0x8a, 0xe4, 0x8b, 0x29, 0xe8, 0x81,
+	0x01, 0xe4, 0x2c, 0x7b, 0x4e, 0xfa, 0xba, 0xf2, 0x93, 0xff, 0x74, 0xe2, 0x4a, 0x4c, 0xba, 0xd7,
+	0xef, 0x55, 0x65, 0x39, 0x85, 0x96, 0x93, 0xa3, 0xe2, 0xa9, 0x08, 0x72, 0xab, 0xc8, 0xd3, 0x1d,
+	0x1b, 0x7e, 0x4c, 0x3c, 0x38, 0xaa, 0x97, 0x95, 0xff, 0xef, 0xc4, 0xc6, 0x35, 0xbf, 0x2b, 0x4e,
+	0x6c, 0x6c, 0xd1, 0x78, 0x27, 0x36, 0x2e, 0xc5, 0x18, 0x25, 0xd4, 0x89, 0x8d, 0x5b, 0xd3, 0xfe,
+	0x76, 0x62, 0xe3, 0xba, 0x67, 0x3b, 0xb1, 0x49, 0x64, 0x4d, 0x9d, 0xd8, 0x64, 0x52, 0x1c, 0xde,
+	0x89, 0x4d, 0xac, 0xd7, 0x44, 0x46, 0xcb, 0xaa, 0xa9, 0x3a, 0x35, 0x5b, 0x47, 0xde, 0xf3, 0x66,
+	0xb4, 0xf0, 0x1a, 0xdf, 0x15, 0xa3, 0x85, 0x5b, 0x30, 0xde, 0x68, 0xe1, 0x85, 0x8f, 0x11, 0x43,
+	0x8d, 0x16, 0xde, 0x8a, 0xf6, 0xb7, 0xd1, 0xc2, 0xeb, 0x9c, 0x6d, 0xb4, 0xc4, 0x49, 0x98, 0x1a,
+	0x2d, 0xf1, 0xb2, 0x1b, 0xde, 0x68, 0x49, 0xa4, 0xcd, 0x58, 0x9c, 0x3c, 0x16, 0xc1, 0xf1, 0x55,
+	0x07, 0x13, 0xd3, 0x43, 0x78, 0x34, 0x34, 0xa9, 0x44, 0x68, 0x72, 0x6d, 0x90, 0x0d, 0xb0, 0xfb,
+	0x66, 0xc2, 0x84, 0x74, 0xc1, 0x64, 0x39, 0xa5, 0x7a, 0x7c, 0x96, 0xfc, 0x28, 0x82, 0xd3, 0x9c,
+	0xe8, 0x31, 0x4a, 0xe4, 0xbf, 0x05, 0x30, 0xc7, 0xd9, 0xd0, 0x1e, 0x90, 0xa4, 0x1c, 0x25, 0xc9,
+	0x95, 0x74, 0x84, 0xc1, 0x00, 0xc9, 0x29, 0xee, 0xb4, 0x94, 0x23, 0xbf, 0x08, 0xe0, 0x54, 0xac,
+	0xe2, 0xa4, 0x2f, 0xfb, 0x61, 0x64, 0x25, 0x9d, 0xde, 0x07, 0xa4, 0x88, 0xe7, 0xdc, 0x1d, 0x9d,
+	0x6b, 0x32, 0x04, 0x45, 0xd8, 0x7d, 0xef, 0x0e, 0x45, 0x38, 0xf5, 0x12, 0x50, 0x84, 0x1d, 0x3d,
+	0xa6, 0x48, 0x40, 0x11, 0xf6, 0x86, 0xf6, 0x39, 0x45, 0xd8, 0x8d, 0x73, 0x28, 0xc2, 0x57, 0x6f,
+	0x40, 0x91, 0x38, 0xc5, 0xa5, 0x40, 0x91, 0x04, 0xb2, 0x4c, 0x64, 0xbc, 0x6a, 0xc8, 0xb0, 0xf0,
+	0xf3, 0x66, 0xbc, 0xb2, 0x9a, 0xde, 0x15, 0xe3, 0x95, 0x59, 0x2c, 0xde, 0x78, 0x65, 0x85, 0x8e,
+	0xc9, 0x41, 0x8d, 0x57, 0xd6, 0x7a, 0xf6, 0xb7, 0xf1, 0xca, 0xea, 0x9a, 0x6d, 0xbc, 0xf2, 0xe4,
+	0x4a, 0x8d, 0x57, 0xbe, 0xc4, 0x86, 0x37, 0x5e, 0x63, 0x75, 0x18, 0x8b, 0x8a, 0x25, 0x00, 0xda,
+	0xff, 0xd5, 0x92, 0x2e, 0x80, 0x23, 0x04, 0x7a, 0x26, 0x22, 0x1f, 0x21, 0x0f, 0x5b, 0x8e, 0x1d,
+	0xca, 0xf7, 0xd5, 0x30, 0xc9, 0x91, 0xb5, 0xce, 0x0f, 0xb5, 0xe8, 0xbd, 0xaa, 0xb2, 0xb9, 0x9d,
+	0x9d, 0x78, 0xb0, 0x9d, 0x9d, 0x78, 0xb8, 0x9d, 0x9d, 0xb8, 0xd7, 0xcc, 0x0a, 0x9b, 0xcd, 0xac,
+	0xf0, 0xa0, 0x99, 0x15, 0x1e, 0x36, 0xb3, 0xc2, 0xa3, 0x66, 0x56, 0xf8, 0xf6, 0x71, 0x76, 0xe2,
+	0xd3, 0x43, 0xad, 0xe6, 0xff, 0x0b, 0x00, 0x00, 0xff, 0xff, 0xa7, 0xa3, 0xc4, 0x28, 0x05, 0x2d,
+	0x00, 0x00,
 }
 
 func (m *ElasticsearchModificationRequest) Marshal() (dAtA []byte, err error) {
@@ -2265,54 +2280,6 @@ func (m *MongoDBModificationRequest) MarshalToSizedBuffer(dAtA []byte) (int, err
 	return len(dAtA) - i, nil
 }
 
-func (m *MongoDBModificationRequestCondition) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MongoDBModificationRequestCondition) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MongoDBModificationRequestCondition) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.LastUpdateTime.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintGenerated(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x22
-	i -= len(m.Message)
-	copy(dAtA[i:], m.Message)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Message)))
-	i--
-	dAtA[i] = 0x1a
-	i -= len(m.Reason)
-	copy(dAtA[i:], m.Reason)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Reason)))
-	i--
-	dAtA[i] = 0x12
-	i -= len(m.Type)
-	copy(dAtA[i:], m.Type)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
 func (m *MongoDBModificationRequestList) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -2380,6 +2347,33 @@ func (m *MongoDBModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte) (int,
 	_ = i
 	var l int
 	_ = l
+	if m.Update != nil {
+		{
+			size, err := m.Update.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintGenerated(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x1a
+	}
+	i -= len(m.Type)
+	copy(dAtA[i:], m.Type)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
+	i--
+	dAtA[i] = 0x12
+	{
+		size, err := m.DatabaseRef.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintGenerated(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -2414,9 +2408,17 @@ func (m *MongoDBModificationRequestStatus) MarshalToSizedBuffer(dAtA []byte) (in
 				i = encodeVarintGenerated(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0xa
+			dAtA[i] = 0x1a
 		}
 	}
+	i = encodeVarintGenerated(dAtA, i, uint64(m.ObservedGeneration))
+	i--
+	dAtA[i] = 0x10
+	i -= len(m.Phase)
+	copy(dAtA[i:], m.Phase)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Phase)))
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -3668,6 +3670,34 @@ func (m *RedisModificationRequestStatus) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
+func (m *UpdateSpec) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UpdateSpec) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UpdateSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	i -= len(m.TargetVersion)
+	copy(dAtA[i:], m.TargetVersion)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.TargetVersion)))
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	offset -= sovGenerated(v)
 	base := offset
@@ -3913,23 +3943,6 @@ func (m *MongoDBModificationRequest) Size() (n int) {
 	return n
 }
 
-func (m *MongoDBModificationRequestCondition) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Type)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Reason)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Message)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = m.LastUpdateTime.Size()
-	n += 1 + l + sovGenerated(uint64(l))
-	return n
-}
-
 func (m *MongoDBModificationRequestList) Size() (n int) {
 	if m == nil {
 		return 0
@@ -3953,6 +3966,14 @@ func (m *MongoDBModificationRequestSpec) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = m.DatabaseRef.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	l = len(m.Type)
+	n += 1 + l + sovGenerated(uint64(l))
+	if m.Update != nil {
+		l = m.Update.Size()
+		n += 1 + l + sovGenerated(uint64(l))
+	}
 	return n
 }
 
@@ -3962,6 +3983,9 @@ func (m *MongoDBModificationRequestStatus) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = len(m.Phase)
+	n += 1 + l + sovGenerated(uint64(l))
+	n += 1 + sovGenerated(uint64(m.ObservedGeneration))
 	if len(m.Conditions) > 0 {
 		for _, e := range m.Conditions {
 			l = e.Size()
@@ -4409,6 +4433,17 @@ func (m *RedisModificationRequestStatus) Size() (n int) {
 	return n
 }
 
+func (m *UpdateSpec) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.TargetVersion)
+	n += 1 + l + sovGenerated(uint64(l))
+	return n
+}
+
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
@@ -4622,19 +4657,6 @@ func (this *MongoDBModificationRequest) String() string {
 	}, "")
 	return s
 }
-func (this *MongoDBModificationRequestCondition) String() string {
-	if this == nil {
-		return "nil"
-	}
-	s := strings.Join([]string{`&MongoDBModificationRequestCondition{`,
-		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
-		`Reason:` + fmt.Sprintf("%v", this.Reason) + `,`,
-		`Message:` + fmt.Sprintf("%v", this.Message) + `,`,
-		`LastUpdateTime:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.LastUpdateTime), "Time", "v1.Time", 1), `&`, ``, 1) + `,`,
-		`}`,
-	}, "")
-	return s
-}
 func (this *MongoDBModificationRequestList) String() string {
 	if this == nil {
 		return "nil"
@@ -4656,6 +4678,9 @@ func (this *MongoDBModificationRequestSpec) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&MongoDBModificationRequestSpec{`,
+		`DatabaseRef:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.DatabaseRef), "LocalObjectReference", "v11.LocalObjectReference", 1), `&`, ``, 1) + `,`,
+		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
+		`Update:` + strings.Replace(this.Update.String(), "UpdateSpec", "UpdateSpec", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -4664,12 +4689,14 @@ func (this *MongoDBModificationRequestStatus) String() string {
 	if this == nil {
 		return "nil"
 	}
-	repeatedStringForConditions := "[]MongoDBModificationRequestCondition{"
+	repeatedStringForConditions := "[]Condition{"
 	for _, f := range this.Conditions {
-		repeatedStringForConditions += strings.Replace(strings.Replace(f.String(), "MongoDBModificationRequestCondition", "MongoDBModificationRequestCondition", 1), `&`, ``, 1) + ","
+		repeatedStringForConditions += fmt.Sprintf("%v", f) + ","
 	}
 	repeatedStringForConditions += "}"
 	s := strings.Join([]string{`&MongoDBModificationRequestStatus{`,
+		`Phase:` + fmt.Sprintf("%v", this.Phase) + `,`,
+		`ObservedGeneration:` + fmt.Sprintf("%v", this.ObservedGeneration) + `,`,
 		`Conditions:` + repeatedStringForConditions + `,`,
 		`}`,
 	}, "")
@@ -5061,6 +5088,16 @@ func (this *RedisModificationRequestStatus) String() string {
 	repeatedStringForConditions += "}"
 	s := strings.Join([]string{`&RedisModificationRequestStatus{`,
 		`Conditions:` + repeatedStringForConditions + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *UpdateSpec) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&UpdateSpec{`,
+		`TargetVersion:` + fmt.Sprintf("%v", this.TargetVersion) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -7007,188 +7044,6 @@ func (m *MongoDBModificationRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MongoDBModificationRequestCondition) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MongoDBModificationRequestCondition: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MongoDBModificationRequestCondition: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Type = RequestConditionType(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Reason", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Reason = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Message", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Message = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LastUpdateTime", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.LastUpdateTime.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *MongoDBModificationRequestList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -7338,6 +7193,107 @@ func (m *MongoDBModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: MongoDBModificationRequestSpec: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DatabaseRef", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.DatabaseRef.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Type = ModificationRequestType(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Update", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Update == nil {
+				m.Update = &UpdateSpec{}
+			}
+			if err := m.Update.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -7393,6 +7349,57 @@ func (m *MongoDBModificationRequestStatus) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Phase", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Phase = ModificationRequestPhase(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ObservedGeneration", wireType)
+			}
+			m.ObservedGeneration = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ObservedGeneration |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Conditions", wireType)
 			}
 			var msglen int
@@ -7420,7 +7427,7 @@ func (m *MongoDBModificationRequestStatus) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Conditions = append(m.Conditions, MongoDBModificationRequestCondition{})
+			m.Conditions = append(m.Conditions, v12.Condition{})
 			if err := m.Conditions[len(m.Conditions)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -10988,6 +10995,91 @@ func (m *RedisModificationRequestStatus) Unmarshal(dAtA []byte) error {
 			if err := m.Conditions[len(m.Conditions)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGenerated(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UpdateSpec) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGenerated
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UpdateSpec: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UpdateSpec: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TargetVersion", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TargetVersion = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

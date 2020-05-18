@@ -74,7 +74,7 @@ func (v *version) MemcachedModificationRequests() MemcachedModificationRequestIn
 
 // MongoDBModificationRequests returns a MongoDBModificationRequestInformer.
 func (v *version) MongoDBModificationRequests() MongoDBModificationRequestInformer {
-	return &mongoDBModificationRequestInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	return &mongoDBModificationRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MySQLModificationRequests returns a MySQLModificationRequestInformer.

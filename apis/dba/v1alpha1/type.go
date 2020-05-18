@@ -21,6 +21,50 @@ type RequestConditionType string
 
 // These are the possible conditions for a certificate request.
 const (
-	AccessApproved RequestConditionType = "Approved"
-	AccessDenied   RequestConditionType = "Denied"
+	AccessApproved         RequestConditionType = "Approved"
+	AccessDenied           RequestConditionType = "Denied"
+	Processing             RequestConditionType = "Processing"
+	DisableSharding        RequestConditionType = "DisableSharding"
+	EnableSharding         RequestConditionType = "EnableSharding"
+	PauseDatabase          RequestConditionType = "PauseDatabase"
+	ResumeDatabase         RequestConditionType = "ResumeDatabase"
+	Successful             RequestConditionType = "Successful"
+	Updating               RequestConditionType = "Updating"
+	Failed                 RequestConditionType = "Failed"
+	UpgradeDatabaseVersion RequestConditionType = "UpgradeDatabaseVersion"
+	StartingBalancer       RequestConditionType = "StartingBalancer"
+	StoppingBalancer       RequestConditionType = "StoppingBalancer"
+)
+
+type ModificationRequestPhase string
+
+const (
+	// used for modification requests that are currently processing
+	ModificationRequestPhaseProcessing ModificationRequestPhase = "Processing"
+	// used for modification requests that are executed successfully
+	ModificationRequestPhaseSuccessful ModificationRequestPhase = "Successful"
+	// used for modification requests that are waiting for approval
+	ModificationRequestPhaseWaitingForApproval ModificationRequestPhase = "WaitingForApproval"
+	// used for modification requests that are failed
+	ModificationRequestPhaseFailed ModificationRequestPhase = "Failed"
+	// used for modification requests that are approved
+	ModificationRequestApproved ModificationRequestPhase = "Approved"
+	// used for modification requests that are denied
+	ModificationRequestDenied ModificationRequestPhase = "Denied"
+)
+
+// +kubebuilder:validation:Enum=Upgrade;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart
+type ModificationRequestType string
+
+const (
+	// used for Upgrade operation
+	ModificationRequestTypeUpgrade ModificationRequestType = "Upgrade"
+	// used for HorizontalScaling operation
+	ModificationRequestTypeHorizontalScaling ModificationRequestType = "HorizontalScaling"
+	// used for VerticalScaling operation
+	ModificationRequestTypeVerticalScaling ModificationRequestType = "VerticalScaling"
+	// used for VolumeExpansion operation
+	ModificationRequestTypeVolumeExpansion ModificationRequestType = "VolumeExpansion"
+	// used for Restart operation
+	ModificationRequestTypeRestart ModificationRequestType = "Restart"
 )

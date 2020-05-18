@@ -33,13 +33,14 @@ import (
 // MongoDBModificationRequestsGetter has a method to return a MongoDBModificationRequestInterface.
 // A group's client should implement this interface.
 type MongoDBModificationRequestsGetter interface {
-	MongoDBModificationRequests() MongoDBModificationRequestInterface
+	MongoDBModificationRequests(namespace string) MongoDBModificationRequestInterface
 }
 
 // MongoDBModificationRequestInterface has methods to work with MongoDBModificationRequest resources.
 type MongoDBModificationRequestInterface interface {
 	Create(*v1alpha1.MongoDBModificationRequest) (*v1alpha1.MongoDBModificationRequest, error)
 	Update(*v1alpha1.MongoDBModificationRequest) (*v1alpha1.MongoDBModificationRequest, error)
+	UpdateStatus(*v1alpha1.MongoDBModificationRequest) (*v1alpha1.MongoDBModificationRequest, error)
 	Delete(name string, options *v1.DeleteOptions) error
 	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
 	Get(name string, options v1.GetOptions) (*v1alpha1.MongoDBModificationRequest, error)
@@ -52,12 +53,14 @@ type MongoDBModificationRequestInterface interface {
 // mongoDBModificationRequests implements MongoDBModificationRequestInterface
 type mongoDBModificationRequests struct {
 	client rest.Interface
+	ns     string
 }
 
 // newMongoDBModificationRequests returns a MongoDBModificationRequests
-func newMongoDBModificationRequests(c *DbaV1alpha1Client) *mongoDBModificationRequests {
+func newMongoDBModificationRequests(c *DbaV1alpha1Client, namespace string) *mongoDBModificationRequests {
 	return &mongoDBModificationRequests{
 		client: c.RESTClient(),
+		ns:     namespace,
 	}
 }
 
@@ -65,6 +68,7 @@ func newMongoDBModificationRequests(c *DbaV1alpha1Client) *mongoDBModificationRe
 func (c *mongoDBModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.MongoDBModificationRequest, err error) {
 	result = &v1alpha1.MongoDBModificationRequest{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("mongodbmodificationrequests").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -81,6 +85,7 @@ func (c *mongoDBModificationRequests) List(opts v1.ListOptions) (result *v1alpha
 	}
 	result = &v1alpha1.MongoDBModificationRequestList{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("mongodbmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -97,6 +102,7 @@ func (c *mongoDBModificationRequests) Watch(opts v1.ListOptions) (watch.Interfac
 	}
 	opts.Watch = true
 	return c.client.Get().
+		Namespace(c.ns).
 		Resource("mongodbmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -107,6 +113,7 @@ func (c *mongoDBModificationRequests) Watch(opts v1.ListOptions) (watch.Interfac
 func (c *mongoDBModificationRequests) Create(mongoDBModificationRequest *v1alpha1.MongoDBModificationRequest) (result *v1alpha1.MongoDBModificationRequest, err error) {
 	result = &v1alpha1.MongoDBModificationRequest{}
 	err = c.client.Post().
+		Namespace(c.ns).
 		Resource("mongodbmodificationrequests").
 		Body(mongoDBModificationRequest).
 		Do().
@@ -118,8 +125,25 @@ func (c *mongoDBModificationRequests) Create(mongoDBModificationRequest *v1alpha
 func (c *mongoDBModificationRequests) Update(mongoDBModificationRequest *v1alpha1.MongoDBModificationRequest) (result *v1alpha1.MongoDBModificationRequest, err error) {
 	result = &v1alpha1.MongoDBModificationRequest{}
 	err = c.client.Put().
+		Namespace(c.ns).
 		Resource("mongodbmodificationrequests").
 		Name(mongoDBModificationRequest.Name).
+		Body(mongoDBModificationRequest).
+		Do().
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+
+func (c *mongoDBModificationRequests) UpdateStatus(mongoDBModificationRequest *v1alpha1.MongoDBModificationRequest) (result *v1alpha1.MongoDBModificationRequest, err error) {
+	result = &v1alpha1.MongoDBModificationRequest{}
+	err = c.client.Put().
+		Namespace(c.ns).
+		Resource("mongodbmodificationrequests").
+		Name(mongoDBModificationRequest.Name).
+		SubResource("status").
 		Body(mongoDBModificationRequest).
 		Do().
 		Into(result)
@@ -129,6 +153,7 @@ func (c *mongoDBModificationRequests) Update(mongoDBModificationRequest *v1alpha
 // Delete takes name of the mongoDBModificationRequest and deletes it. Returns an error if one occurs.
 func (c *mongoDBModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("mongodbmodificationrequests").
 		Name(name).
 		Body(options).
@@ -143,6 +168,7 @@ func (c *mongoDBModificationRequests) DeleteCollection(options *v1.DeleteOptions
 		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("mongodbmodificationrequests").
 		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -155,6 +181,7 @@ func (c *mongoDBModificationRequests) DeleteCollection(options *v1.DeleteOptions
 func (c *mongoDBModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.MongoDBModificationRequest, err error) {
 	result = &v1alpha1.MongoDBModificationRequest{}
 	err = c.client.Patch(pt).
+		Namespace(c.ns).
 		Resource("mongodbmodificationrequests").
 		SubResource(subresources...).
 		Name(name).

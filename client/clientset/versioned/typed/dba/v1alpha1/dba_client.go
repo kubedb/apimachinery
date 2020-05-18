@@ -56,8 +56,8 @@ func (c *DbaV1alpha1Client) MemcachedModificationRequests() MemcachedModificatio
 	return newMemcachedModificationRequests(c)
 }
 
-func (c *DbaV1alpha1Client) MongoDBModificationRequests() MongoDBModificationRequestInterface {
-	return newMongoDBModificationRequests(c)
+func (c *DbaV1alpha1Client) MongoDBModificationRequests(namespace string) MongoDBModificationRequestInterface {
+	return newMongoDBModificationRequests(c, namespace)
 }
 
 func (c *DbaV1alpha1Client) MySQLModificationRequests() MySQLModificationRequestInterface {

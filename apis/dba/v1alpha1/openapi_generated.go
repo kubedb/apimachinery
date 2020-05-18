@@ -330,6 +330,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"k8s.io/apimachinery/pkg/runtime.Unknown":                                             schema_k8sio_apimachinery_pkg_runtime_Unknown(ref),
 		"k8s.io/apimachinery/pkg/util/intstr.IntOrString":                                     schema_apimachinery_pkg_util_intstr_IntOrString(ref),
 		"k8s.io/apimachinery/pkg/version.Info":                                                schema_k8sio_apimachinery_pkg_version_Info(ref),
+		"kmodules.xyz/client-go/api/v1.Condition":                                             schema_kmodulesxyz_client_go_api_v1_Condition(ref),
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeyTransform":              schema_custom_resources_apis_appcatalog_v1alpha1_AddKeyTransform(ref),
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeysFromTransform":         schema_custom_resources_apis_appcatalog_v1alpha1_AddKeysFromTransform(ref),
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppBinding":                   schema_custom_resources_apis_appcatalog_v1alpha1_AppBinding(ref),
@@ -383,7 +384,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MemcachedModificationRequestSpec":          schema_apimachinery_apis_dba_v1alpha1_MemcachedModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MemcachedModificationRequestStatus":        schema_apimachinery_apis_dba_v1alpha1_MemcachedModificationRequestStatus(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequest":                schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequest(ref),
-		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequestCondition":       schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestCondition(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequestList":            schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestList(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequestSpec":            schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequestStatus":          schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestStatus(ref),
@@ -417,6 +417,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestList":              schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestList(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestSpec":              schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestStatus":            schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestStatus(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.UpdateSpec":                                schema_apimachinery_apis_dba_v1alpha1_UpdateSpec(ref),
 	}
 }
 
@@ -15547,6 +15548,62 @@ func schema_k8sio_apimachinery_pkg_version_Info(ref common.ReferenceCallback) co
 	}
 }
 
+func schema_kmodulesxyz_client_go_api_v1_Condition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Status of the condition, one of True, False, Unknown.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If set, this represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.condition[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"reason": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The reason for the condition's last transition in CamelCase. The specific API may choose whether or not this field is considered a guaranteed API. This field may not be empty.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A human readable message indicating details about the transition. This field may be empty.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type", "status", "lastTransitionTime", "reason", "message"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
 func schema_custom_resources_apis_appcatalog_v1alpha1_AddKeyTransform(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18022,48 +18079,6 @@ func schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequest(ref common
 	}
 }
 
-func schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"type": {
-						SchemaProps: spec.SchemaProps{
-							Description: "request approval state, currently Approved or Denied.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"reason": {
-						SchemaProps: spec.SchemaProps{
-							Description: "brief reason for the request state",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"message": {
-						SchemaProps: spec.SchemaProps{
-							Description: "human readable message with details about the request state",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"lastUpdateTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "timestamp for the last update to this condition",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-				},
-				Required: []string{"type"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
-	}
-}
-
 func schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18115,10 +18130,34 @@ func schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestSpec(ref co
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MongoDBModificationRequestSpec is the spec for elasticsearch version",
+				Description: "MongoDBModificationRequestSpec is the spec for mongodb modification request",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the Elasticsearch reference",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"update": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the field information that needed to be updated",
+							Ref:         ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.UpdateSpec"),
+						},
+					},
+				},
+				Required: []string{"databaseRef", "type"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/dba/v1alpha1.UpdateSpec"},
 	}
 }
 
@@ -18126,9 +18165,22 @@ func schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestStatus(ref 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MongoDBModificationRequestStatus is the status for elasticsearch version",
+				Description: "MongoDBModificationRequestStatus is the status for mongodb modification request",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 					"conditions": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Conditions applied to the request, such as approval or denial.",
@@ -18136,7 +18188,7 @@ func schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestStatus(ref 
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequestCondition"),
+										Ref: ref("kmodules.xyz/client-go/api/v1.Condition"),
 									},
 								},
 							},
@@ -18146,7 +18198,7 @@ func schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestStatus(ref 
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequestCondition"},
+			"kmodules.xyz/client-go/api/v1.Condition"},
 	}
 }
 
@@ -19173,5 +19225,24 @@ func schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestStatus(ref co
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestCondition"},
+	}
+}
+
+func schema_apimachinery_apis_dba_v1alpha1_UpdateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the ElasticsearchVersion object name",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
