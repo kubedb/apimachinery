@@ -28565,30 +28565,6 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestCondition": {
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "lastUpdateTime": {
-          "description": "timestamp for the last update to this condition",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "message": {
-          "description": "human readable message with details about the request state",
-          "type": "string"
-        },
-        "reason": {
-          "description": "brief reason for the request state",
-          "type": "string"
-        },
-        "type": {
-          "description": "request approval state, currently Approved or Denied.",
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestList": {
       "description": "MongoDBModificationRequestList is a list of MongoDBModificationRequests",
       "type": "object",
@@ -28621,19 +28597,45 @@
       ]
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestSpec": {
-      "description": "MongoDBModificationRequestSpec is the spec for elasticsearch version",
-      "type": "object"
+      "description": "MongoDBModificationRequestSpec is the spec for mongodb modification request",
+      "type": "object",
+      "required": [
+        "databaseRef",
+        "type"
+      ],
+      "properties": {
+        "databaseRef": {
+          "description": "Specifies the Elasticsearch reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "type": {
+          "description": "Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.",
+          "type": "string"
+        },
+        "update": {
+          "description": "Specifies the field information that needed to be updated",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpdateSpec"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestStatus": {
-      "description": "MongoDBModificationRequestStatus is the status for elasticsearch version",
+      "description": "MongoDBModificationRequestStatus is the status for mongodb modification request",
       "type": "object",
       "properties": {
         "conditions": {
           "description": "Conditions applied to the request, such as approval or denial.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestCondition"
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "observedGeneration": {
+          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "phase": {
+          "type": "string"
         }
       }
     },
@@ -29139,6 +29141,15 @@
           "items": {
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.RedisModificationRequestCondition"
           }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.UpdateSpec": {
+      "type": "object",
+      "properties": {
+        "targetVersion": {
+          "description": "Specifies the ElasticsearchVersion object name",
+          "type": "string"
         }
       }
     },
@@ -34192,6 +34203,43 @@
       "description": "IntOrString is a type that can hold an int32 or a string.  When used in JSON or YAML marshalling and unmarshalling, it produces or consumes the inner type.  This allows you to have, for example, a JSON field that can accept a name or number.",
       "type": "string",
       "format": "int-or-string"
+    },
+    "xyz.kmodules.client-go.api.v1.Condition": {
+      "type": "object",
+      "required": [
+        "type",
+        "status",
+        "lastTransitionTime",
+        "reason",
+        "message"
+      ],
+      "properties": {
+        "lastTransitionTime": {
+          "description": "Last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "message": {
+          "description": "A human readable message indicating details about the transition. This field may be empty.",
+          "type": "string"
+        },
+        "observedGeneration": {
+          "description": "If set, this represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.condition[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "reason": {
+          "description": "The reason for the condition's last transition in CamelCase. The specific API may choose whether or not this field is considered a guaranteed API. This field may not be empty.",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status of the condition, one of True, False, Unknown.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important.",
+          "type": "string"
+        }
+      }
     },
     "xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.AppReference": {
       "type": "object",
