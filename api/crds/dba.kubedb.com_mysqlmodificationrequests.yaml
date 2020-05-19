@@ -6,6 +6,16 @@ metadata:
     app.kubernetes.io/name: kubedb
   name: mysqlmodificationrequests.dba.kubedb.com
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.type
+    name: Type
+    type: string
+  - JSONPath: .status.phase
+    name: Status
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: dba.kubedb.com
   names:
     categories:
@@ -20,6 +30,8 @@ spec:
     singular: mysqlmodificationrequest
   preserveUnknownFields: false
   scope: Namespaced
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       properties:
@@ -36,39 +48,156 @@ spec:
         metadata:
           type: object
         spec:
-          description: MySQLModificationRequestSpec is the spec for elasticsearch
+          description: MySQLModificationRequestSpec is the spec for MySQLModificationRequest
             version
+          properties:
+            databaseRef:
+              description: Specifies the database reference
+              properties:
+                name:
+                  description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    TODO: Add other useful fields. apiVersion, kind, uid?'
+                  type: string
+              type: object
+            scale:
+              description: Specifies the scaling info of database
+              properties:
+                horizontal:
+                  description: Horizontal specifies the horizontal scaling.
+                  properties:
+                    member:
+                      description: Number of nodes/members of the group
+                      format: int32
+                      type: integer
+                  type: object
+                memberWeight:
+                  description: specifies the weight of the current member/Node
+                  format: int32
+                  type: integer
+                vertical:
+                  description: Vertical specifies the vertical scaling.
+                  properties:
+                    containers:
+                      description: Containers represents the containers specification
+                        for scaling the requested resources.
+                      items:
+                        description: Resources requested by a single application container
+                        properties:
+                          name:
+                            description: Name of the container specified as a DNS_LABEL.
+                              Each container in a pod must have a unique name (DNS_LABEL).
+                              Cannot be updated.
+                            type: string
+                          resources:
+                            description: 'Compute Resources required by this container.
+                              Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                            properties:
+                              limits:
+                                additionalProperties:
+                                  type: string
+                                description: 'Limits describes the maximum amount
+                                  of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                                type: object
+                              requests:
+                                additionalProperties:
+                                  type: string
+                                description: 'Requests describes the minimum amount
+                                  of compute resources required. If Requests is omitted
+                                  for a container, it defaults to Limits if that is
+                                  explicitly specified, otherwise to an implementation-defined
+                                  value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                                type: object
+                            type: object
+                        required:
+                        - name
+                        type: object
+                      type: array
+                  type: object
+              type: object
+            type:
+              description: Specifies the modification request type; ScaleUp, ScaleDown,
+                Upgrade etc.
+              enum:
+              - Upgrade
+              - HorizontalScaling
+              - VerticalScaling
+              - VolumeExpansion
+              - Restart
+              type: string
+            update:
+              description: Specifies the field information that needed to be updated
+              properties:
+                CurrentStatefulSetOrdinal:
+                  description: Specifies the current ordinal of the StatefulSet
+                  format: int32
+                  type: integer
+                targetVersion:
+                  description: Specifies the MySQLVersion object name
+                  type: string
+              type: object
+          required:
+          - databaseRef
+          - type
           type: object
         status:
-          description: MySQLModificationRequestStatus is the status for elasticsearch
-            version
+          description: MySQLModificationRequestStatus is the status for MySQLModificationRequest
+            object
           properties:
             conditions:
               description: Conditions applied to the request, such as approval or
                 denial.
               items:
                 properties:
-                  lastUpdateTime:
-                    description: timestamp for the last update to this condition
+                  lastTransitionTime:
+                    description: Last time the condition transitioned from one status
+                      to another. This should be when the underlying condition changed.  If
+                      that is not known, then using the time when the API field changed
+                      is acceptable.
                     format: date-time
                     type: string
                   message:
-                    description: human readable message with details about the request
-                      state
+                    description: A human readable message indicating details about
+                      the transition. This field may be empty.
                     type: string
+                  observedGeneration:
+                    description: If set, this represents the .metadata.generation
+                      that the condition was set based upon. For instance, if .metadata.generation
+                      is currently 12, but the .status.condition[x].observedGeneration
+                      is 9, the condition is out of date with respect to the current
+                      state of the instance.
+                    format: int64
+                    type: integer
                   reason:
-                    description: brief reason for the request state
+                    description: The reason for the condition's last transition in
+                      CamelCase. The specific API may choose whether or not this field
+                      is considered a guaranteed API. This field may not be empty.
+                    type: string
+                  status:
+                    description: Status of the condition, one of True, False, Unknown.
                     type: string
                   type:
-                    description: request approval state, currently Approved or Denied.
-                    enum:
-                    - Approved
-                    - Denied
+                    description: Type of condition in CamelCase or in foo.example.com/CamelCase.
+                      Many .condition.type values are consistent across resources
+                      like Available, but because arbitrary conditions can be useful
+                      (see .node.status.conditions), the ability to deconflict is
+                      important.
                     type: string
                 required:
+                - lastTransitionTime
+                - message
+                - reason
+                - status
                 - type
                 type: object
               type: array
+            observedGeneration:
+              description: observedGeneration is the most recent generation observed
+                for this resource. It corresponds to the resource's generation, which
+                is updated on mutation by the API Server.
+              format: int64
+              type: integer
+            phase:
+              type: string
           type: object
       type: object
   version: v1alpha1

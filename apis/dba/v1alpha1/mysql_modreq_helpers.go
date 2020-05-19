@@ -21,6 +21,7 @@ import (
 	"kubedb.dev/apimachinery/apis"
 
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
+	meta_util "kmodules.xyz/client-go/meta"
 )
 
 func (_ MySQLModificationRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -47,4 +48,24 @@ func (m MySQLModificationRequest) ResourcePlural() string {
 
 func (m MySQLModificationRequest) ValidateSpecs() error {
 	return nil
+}
+
+func (m MySQLModificationRequest) GetKey() string {
+	return m.Namespace + "/" + m.Name
+}
+
+func (m MySQLModificationRequest) OffshootName() string {
+	return m.Name
+}
+
+func (m MySQLModificationRequest) OffshootSelectors() map[string]string {
+	return map[string]string{
+		LabelModificationRequestKind: ResourceSingularMySQLModificationRequest,
+		LabelModificationRequestName: m.Name,
+	}
+}
+
+func (m MySQLModificationRequest) OffshootLabels() map[string]string {
+	out := m.OffshootSelectors()
+	return meta_util.FilterKeys(GenericKey, out, m.Labels)
 }

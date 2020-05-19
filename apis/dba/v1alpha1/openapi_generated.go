@@ -368,6 +368,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                        schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ContainerResources":                        schema_apimachinery_apis_dba_v1alpha1_ContainerResources(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequest":          schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequest(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestList":      schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestList(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestSpec":      schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestSpec(ref),
@@ -377,6 +378,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.EtcdModificationRequestList":               schema_apimachinery_apis_dba_v1alpha1_EtcdModificationRequestList(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.EtcdModificationRequestSpec":               schema_apimachinery_apis_dba_v1alpha1_EtcdModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.EtcdModificationRequestStatus":             schema_apimachinery_apis_dba_v1alpha1_EtcdModificationRequestStatus(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.HorizontalScale":                           schema_apimachinery_apis_dba_v1alpha1_HorizontalScale(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MemcachedModificationRequest":              schema_apimachinery_apis_dba_v1alpha1_MemcachedModificationRequest(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MemcachedModificationRequestCondition":     schema_apimachinery_apis_dba_v1alpha1_MemcachedModificationRequestCondition(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MemcachedModificationRequestList":          schema_apimachinery_apis_dba_v1alpha1_MemcachedModificationRequestList(ref),
@@ -387,10 +389,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequestSpec":            schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequestStatus":          schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestStatus(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLModificationRequest":                  schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequest(ref),
-		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLModificationRequestCondition":         schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequestCondition(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLModificationRequestList":              schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequestList(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLModificationRequestSpec":              schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLModificationRequestStatus":            schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequestStatus(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLScaleSpec":                            schema_apimachinery_apis_dba_v1alpha1_MySQLScaleSpec(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLUpdateSpec":                           schema_apimachinery_apis_dba_v1alpha1_MySQLUpdateSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.PerconaXtraDBModificationRequest":          schema_apimachinery_apis_dba_v1alpha1_PerconaXtraDBModificationRequest(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.PerconaXtraDBModificationRequestCondition": schema_apimachinery_apis_dba_v1alpha1_PerconaXtraDBModificationRequestCondition(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.PerconaXtraDBModificationRequestList":      schema_apimachinery_apis_dba_v1alpha1_PerconaXtraDBModificationRequestList(ref),
@@ -417,6 +420,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestStatus":            schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestStatus(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ScaleSpec":                                 schema_apimachinery_apis_dba_v1alpha1_ScaleSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.UpdateSpec":                                schema_apimachinery_apis_dba_v1alpha1_UpdateSpec(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.VerticalScale":                             schema_apimachinery_apis_dba_v1alpha1_VerticalScale(ref),
 	}
 }
 
@@ -17522,6 +17526,35 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 	}
 }
 
+func schema_apimachinery_apis_dba_v1alpha1_ContainerResources(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Resources requested by a single application container",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements"},
+	}
+}
+
 func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -17863,6 +17896,25 @@ func schema_apimachinery_apis_dba_v1alpha1_EtcdModificationRequestStatus(ref com
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/dba/v1alpha1.EtcdModificationRequestCondition"},
+	}
+}
+
+func schema_apimachinery_apis_dba_v1alpha1_HorizontalScale(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"member": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of nodes/members of the group",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -18246,48 +18298,6 @@ func schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequest(ref common.R
 	}
 }
 
-func schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequestCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"type": {
-						SchemaProps: spec.SchemaProps{
-							Description: "request approval state, currently Approved or Denied.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"reason": {
-						SchemaProps: spec.SchemaProps{
-							Description: "brief reason for the request state",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"message": {
-						SchemaProps: spec.SchemaProps{
-							Description: "human readable message with details about the request state",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"lastUpdateTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "timestamp for the last update to this condition",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-				},
-				Required: []string{"type"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
-	}
-}
-
 func schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequestList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18339,10 +18349,40 @@ func schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequestSpec(ref comm
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MySQLModificationRequestSpec is the spec for elasticsearch version",
+				Description: "MySQLModificationRequestSpec is the spec for MySQLModificationRequest version",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the database reference",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"update": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the field information that needed to be updated",
+							Ref:         ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLUpdateSpec"),
+						},
+					},
+					"scale": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the scaling info of database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLScaleSpec"),
+						},
+					},
+				},
+				Required: []string{"databaseRef", "type"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLScaleSpec", "kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLUpdateSpec"},
 	}
 }
 
@@ -18350,9 +18390,22 @@ func schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequestStatus(ref co
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MySQLModificationRequestStatus is the status for elasticsearch version",
+				Description: "MySQLModificationRequestStatus is the status for MySQLModificationRequest object",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 					"conditions": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Conditions applied to the request, such as approval or denial.",
@@ -18360,7 +18413,7 @@ func schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequestStatus(ref co
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLModificationRequestCondition"),
+										Ref: ref("kmodules.xyz/client-go/api/v1.Condition"),
 									},
 								},
 							},
@@ -18370,7 +18423,67 @@ func schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequestStatus(ref co
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLModificationRequestCondition"},
+			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_dba_v1alpha1_MySQLScaleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLScaleSpec contains the scaling information of the MySQL",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"horizontal": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Horizontal specifies the horizontal scaling.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.HorizontalScale"),
+						},
+					},
+					"vertical": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Vertical specifies the vertical scaling.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.VerticalScale"),
+						},
+					},
+					"memberWeight": {
+						SchemaProps: spec.SchemaProps{
+							Description: "specifies the weight of the current member/Node",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/dba/v1alpha1.HorizontalScale", "kubedb.dev/apimachinery/apis/dba/v1alpha1.VerticalScale"},
+	}
+}
+
+func schema_apimachinery_apis_dba_v1alpha1_MySQLUpdateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the MySQLVersion object name",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"CurrentStatefulSetOrdinal": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current ordinal of the StatefulSet",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -19274,5 +19387,32 @@ func schema_apimachinery_apis_dba_v1alpha1_UpdateSpec(ref common.ReferenceCallba
 				},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_dba_v1alpha1_VerticalScale(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"containers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Containers represents the containers specification for scaling the requested resources.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.ContainerResources"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/dba/v1alpha1.ContainerResources"},
 	}
 }

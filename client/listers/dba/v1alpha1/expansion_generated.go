@@ -46,6 +46,10 @@ type MongoDBModificationRequestNamespaceListerExpansion interface{}
 // MySQLModificationRequestLister.
 type MySQLModificationRequestListerExpansion interface{}
 
+// MySQLModificationRequestNamespaceListerExpansion allows custom methods to be added to
+// MySQLModificationRequestNamespaceLister.
+type MySQLModificationRequestNamespaceListerExpansion interface{}
+
 // PerconaXtraDBModificationRequestListerExpansion allows custom methods to be added to
 // PerconaXtraDBModificationRequestLister.
 type PerconaXtraDBModificationRequestListerExpansion interface{}

@@ -16,32 +16,39 @@ limitations under the License.
 
 package v1alpha1
 
-// +kubebuilder:validation:Enum=Approved;Denied
+import (
+	core "k8s.io/api/core/v1"
+)
+
 type RequestConditionType string
 
 // These are the possible conditions for a certificate request.
 const (
-	AccessApproved         RequestConditionType = "Approved"
-	AccessDenied           RequestConditionType = "Denied"
-	DisableSharding        RequestConditionType = "DisableSharding"
-	EnableSharding         RequestConditionType = "EnableSharding"
-	Failed                 RequestConditionType = "Failed"
-	MigratingData          RequestConditionType = "MigratingData"
-	NodeCreated            RequestConditionType = "NodeCreated"
-	NodeDeleted            RequestConditionType = "NodeDeleted"
-	NodeRestarted          RequestConditionType = "NodeRestarted"
-	PauseDatabase          RequestConditionType = "PauseDatabase"
-	Processing             RequestConditionType = "Processing"
-	ResumeDatabase         RequestConditionType = "ResumeDatabase"
-	ScalingDown            RequestConditionType = "ScalingDown"
-	ScalingUp              RequestConditionType = "ScalingUp"
-	StartingBalancer       RequestConditionType = "StartingBalancer"
-	StoppingBalancer       RequestConditionType = "StoppingBalancer"
-	Successful             RequestConditionType = "Successful"
-	Updating               RequestConditionType = "Updating"
-	UpgradeDatabaseVersion RequestConditionType = "UpgradeDatabaseVersion"
-	VotingExclusionAdded   RequestConditionType = "VotingExclusionAdded"
-	VotingExclusionDeleted RequestConditionType = "VotingExclusionDeleted"
+	AccessApproved            RequestConditionType = "Approved"
+	AccessDenied              RequestConditionType = "Denied"
+	DisableSharding           RequestConditionType = "DisableSharding"
+	EnableSharding            RequestConditionType = "EnableSharding"
+	Failed                    RequestConditionType = "Failed"
+	HorizontalScalingDatabase RequestConditionType = "HorizontalScaling"
+	MigratingData             RequestConditionType = "MigratingData"
+	NodeCreated               RequestConditionType = "NodeCreated"
+	NodeDeleted               RequestConditionType = "NodeDeleted"
+	NodeRestarted             RequestConditionType = "NodeRestarted"
+	PauseDatabase             RequestConditionType = "PauseDatabase"
+	Processing                RequestConditionType = "Processing"
+	ResumeDatabase            RequestConditionType = "ResumeDatabase"
+	ScalingDatabase           RequestConditionType = "Scaling"
+	ScalingDown               RequestConditionType = "ScalingDown"
+	ScalingUp                 RequestConditionType = "ScalingUp"
+	StartingBalancer          RequestConditionType = "StartingBalancer"
+	StoppingBalancer          RequestConditionType = "StoppingBalancer"
+	Successful                RequestConditionType = "Successful"
+	Updating                  RequestConditionType = "Updating"
+	UpgradedDatabaseVersion   RequestConditionType = "UpgradedDatabaseVersion"
+	UpgradingDatabaseVersion  RequestConditionType = "UpgradingDatabaseVersion"
+	VerticalScalingDatabase   RequestConditionType = "VerticalScaling"
+	VotingExclusionAdded      RequestConditionType = "VotingExclusionAdded"
+	VotingExclusionDeleted    RequestConditionType = "VotingExclusionDeleted"
 )
 
 type ModificationRequestPhase string
@@ -80,4 +87,17 @@ const (
 type UpdateSpec struct {
 	// Specifies the ElasticsearchVersion object name
 	TargetVersion string `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+}
+
+// Resources requested by a single application container
+type ContainerResources struct {
+	// Name of the container specified as a DNS_LABEL.
+	// Each container in a pod must have a unique name (DNS_LABEL).
+	// Cannot be updated.
+	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
+	// Compute Resources required by this container.
+	// Cannot be updated.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+	// +optional
+	Resources core.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,2,opt,name=resources"`
 }

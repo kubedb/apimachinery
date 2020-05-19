@@ -26946,6 +26946,25 @@
     }
   },
   "definitions": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.Blacklist": {
+      "type": "object",
+      "properties": {
+        "groupReplication": {
+          "description": "List of all rejected version for groupReplication modification request",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standalone": {
+          "description": "List of all rejected version for standalone modification request",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion": {
       "type": "object",
       "properties": {
@@ -27523,6 +27542,19 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLUpgradeConstraints": {
+      "type": "object",
+      "properties": {
+        "blacklist": {
+          "description": "List of all rejected version for modification request",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Blacklist"
+        },
+        "whitelist": {
+          "description": "List of all accepted version for modification request",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Whitelist"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersion": {
       "type": "object",
       "properties": {
@@ -27650,7 +27682,8 @@
         "tools",
         "replicationModeDetector",
         "initContainer",
-        "podSecurityPolicies"
+        "podSecurityPolicies",
+        "upgradeConstraints"
       ],
       "properties": {
         "db": {
@@ -27680,6 +27713,10 @@
         "tools": {
           "description": "Tools Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionTools"
+        },
+        "upgradeConstraints": {
+          "description": "upgrade constraints",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLUpgradeConstraints"
         },
         "version": {
           "description": "Version",
@@ -28233,6 +28270,42 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.Whitelist": {
+      "type": "object",
+      "properties": {
+        "groupReplication": {
+          "description": "List of all accepted version for groupReplication modification request. empty indicates all accepted",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standalone": {
+          "description": "List of all accepted version for standalone modification request. empty indicates all accepted",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.ContainerResources": {
+      "description": "Resources requested by a single application container",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.",
+          "type": "string"
+        },
+        "resources": {
+          "description": "Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequest": {
       "type": "object",
       "properties": {
@@ -28439,6 +28512,16 @@
           "items": {
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.EtcdModificationRequestCondition"
           }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.HorizontalScale": {
+      "type": "object",
+      "properties": {
+        "member": {
+          "description": "Number of nodes/members of the group",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -28675,30 +28758,6 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLModificationRequestCondition": {
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "lastUpdateTime": {
-          "description": "timestamp for the last update to this condition",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "message": {
-          "description": "human readable message with details about the request state",
-          "type": "string"
-        },
-        "reason": {
-          "description": "brief reason for the request state",
-          "type": "string"
-        },
-        "type": {
-          "description": "request approval state, currently Approved or Denied.",
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLModificationRequestList": {
       "description": "MySQLModificationRequestList is a list of MySQLModificationRequests",
       "type": "object",
@@ -28731,19 +28790,82 @@
       ]
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLModificationRequestSpec": {
-      "description": "MySQLModificationRequestSpec is the spec for elasticsearch version",
-      "type": "object"
+      "description": "MySQLModificationRequestSpec is the spec for MySQLModificationRequest version",
+      "type": "object",
+      "required": [
+        "databaseRef",
+        "type"
+      ],
+      "properties": {
+        "databaseRef": {
+          "description": "Specifies the database reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "scale": {
+          "description": "Specifies the scaling info of database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLScaleSpec"
+        },
+        "type": {
+          "description": "Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.",
+          "type": "string"
+        },
+        "update": {
+          "description": "Specifies the field information that needed to be updated",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLUpdateSpec"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLModificationRequestStatus": {
-      "description": "MySQLModificationRequestStatus is the status for elasticsearch version",
+      "description": "MySQLModificationRequestStatus is the status for MySQLModificationRequest object",
       "type": "object",
       "properties": {
         "conditions": {
           "description": "Conditions applied to the request, such as approval or denial.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLModificationRequestCondition"
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "observedGeneration": {
+          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "phase": {
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLScaleSpec": {
+      "description": "MySQLScaleSpec contains the scaling information of the MySQL",
+      "type": "object",
+      "properties": {
+        "horizontal": {
+          "description": "Horizontal specifies the horizontal scaling.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.HorizontalScale"
+        },
+        "memberWeight": {
+          "description": "specifies the weight of the current member/Node",
+          "type": "integer",
+          "format": "int32"
+        },
+        "vertical": {
+          "description": "Vertical specifies the vertical scaling.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.VerticalScale"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLUpdateSpec": {
+      "type": "object",
+      "properties": {
+        "CurrentStatefulSetOrdinal": {
+          "description": "Specifies the current ordinal of the StatefulSet",
+          "type": "integer",
+          "format": "int32"
+        },
+        "targetVersion": {
+          "description": "Specifies the MySQLVersion object name",
+          "type": "string"
         }
       }
     },
@@ -29180,6 +29302,18 @@
         "targetVersion": {
           "description": "Specifies the ElasticsearchVersion object name",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.VerticalScale": {
+      "type": "object",
+      "properties": {
+        "containers": {
+          "description": "Containers represents the containers specification for scaling the requested resources.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ContainerResources"
+          }
         }
       }
     },

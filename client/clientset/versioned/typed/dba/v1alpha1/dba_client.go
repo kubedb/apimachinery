@@ -60,8 +60,8 @@ func (c *DbaV1alpha1Client) MongoDBModificationRequests(namespace string) MongoD
 	return newMongoDBModificationRequests(c, namespace)
 }
 
-func (c *DbaV1alpha1Client) MySQLModificationRequests() MySQLModificationRequestInterface {
-	return newMySQLModificationRequests(c)
+func (c *DbaV1alpha1Client) MySQLModificationRequests(namespace string) MySQLModificationRequestInterface {
+	return newMySQLModificationRequests(c, namespace)
 }
 
 func (c *DbaV1alpha1Client) PerconaXtraDBModificationRequests() PerconaXtraDBModificationRequestInterface {
