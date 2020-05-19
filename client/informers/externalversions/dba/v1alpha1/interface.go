@@ -64,12 +64,12 @@ func (v *version) ElasticsearchModificationRequests() ElasticsearchModificationR
 
 // EtcdModificationRequests returns a EtcdModificationRequestInformer.
 func (v *version) EtcdModificationRequests() EtcdModificationRequestInformer {
-	return &etcdModificationRequestInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	return &etcdModificationRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MemcachedModificationRequests returns a MemcachedModificationRequestInformer.
 func (v *version) MemcachedModificationRequests() MemcachedModificationRequestInformer {
-	return &memcachedModificationRequestInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	return &memcachedModificationRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MongoDBModificationRequests returns a MongoDBModificationRequestInformer.
@@ -84,22 +84,22 @@ func (v *version) MySQLModificationRequests() MySQLModificationRequestInformer {
 
 // PerconaXtraDBModificationRequests returns a PerconaXtraDBModificationRequestInformer.
 func (v *version) PerconaXtraDBModificationRequests() PerconaXtraDBModificationRequestInformer {
-	return &perconaXtraDBModificationRequestInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	return &perconaXtraDBModificationRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PgBouncerModificationRequests returns a PgBouncerModificationRequestInformer.
 func (v *version) PgBouncerModificationRequests() PgBouncerModificationRequestInformer {
-	return &pgBouncerModificationRequestInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	return &pgBouncerModificationRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PostgresModificationRequests returns a PostgresModificationRequestInformer.
 func (v *version) PostgresModificationRequests() PostgresModificationRequestInformer {
-	return &postgresModificationRequestInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	return &postgresModificationRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ProxySQLModificationRequests returns a ProxySQLModificationRequestInformer.
 func (v *version) ProxySQLModificationRequests() ProxySQLModificationRequestInformer {
-	return &proxySQLModificationRequestInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	return &proxySQLModificationRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // RedisModificationRequests returns a RedisModificationRequestInformer.

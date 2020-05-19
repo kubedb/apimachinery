@@ -16,7 +16,11 @@ limitations under the License.
 
 package v1alpha1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	v1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
+)
 
 const (
 	ResourceKindProxySQLModificationRequest     = "ProxySQLModificationRequest"
@@ -27,13 +31,15 @@ const (
 // ProxySQLModificationRequest defines a ProxySQL load-balancer version.
 
 // +genclient
-// +genclient:nonNamespaced
-// +genclient:skipVerbs=updateStatus
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=proxysqlmodificationrequests,singular=proxysqlmodificationrequest,categories={datastore,kubedb,appscode}
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type ProxySQLModificationRequest struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -41,32 +47,26 @@ type ProxySQLModificationRequest struct {
 	Status            ProxySQLModificationRequestStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
-// ProxySQLModificationRequestSpec is the spec for elasticsearch version
+// ProxySQLModificationRequestSpec is the spec for ProxySQLModificationRequest
 type ProxySQLModificationRequestSpec struct {
+	// Specifies the Elasticsearch reference
+	DatabaseRef v1.LocalObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
+	// Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
+	Type ModificationRequestType `json:"type" protobuf:"bytes,2,opt,name=type,casttype=ModificationRequestType"`
+	// Specifies the field information that needed to be upgraded
+	Upgrade *UpgradeSpec `json:"upgrade,omitempty" protobuf:"bytes,3,opt,name=upgrade"`
 }
 
-// ProxySQLModificationRequestStatus is the status for elasticsearch version
+// ProxySQLModificationRequestStatus is the status for ProxySQLModificationRequest
 type ProxySQLModificationRequestStatus struct {
+	Phase ModificationRequestPhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=ModificationRequestPhase"`
+	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
+	// resource's generation, which is updated on mutation by the API Server.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,2,opt,name=observedGeneration"`
 	// Conditions applied to the request, such as approval or denial.
 	// +optional
-	Conditions []ProxySQLModificationRequestCondition `json:"conditions,omitempty" protobuf:"bytes,1,rep,name=conditions"`
-}
-
-type ProxySQLModificationRequestCondition struct {
-	// request approval state, currently Approved or Denied.
-	Type RequestConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=RequestConditionType"`
-
-	// brief reason for the request state
-	// +optional
-	Reason string `json:"reason,omitempty" protobuf:"bytes,2,opt,name=reason"`
-
-	// human readable message with details about the request state
-	// +optional
-	Message string `json:"message,omitempty" protobuf:"bytes,3,opt,name=message"`
-
-	// timestamp for the last update to this condition
-	// +optional
-	LastUpdateTime metav1.Time `json:"lastUpdateTime,omitempty" protobuf:"bytes,4,opt,name=lastUpdateTime"`
+	Conditions []kmapi.Condition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

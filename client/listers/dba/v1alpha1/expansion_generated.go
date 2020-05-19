@@ -30,9 +30,17 @@ type ElasticsearchModificationRequestNamespaceListerExpansion interface{}
 // EtcdModificationRequestLister.
 type EtcdModificationRequestListerExpansion interface{}
 
+// EtcdModificationRequestNamespaceListerExpansion allows custom methods to be added to
+// EtcdModificationRequestNamespaceLister.
+type EtcdModificationRequestNamespaceListerExpansion interface{}
+
 // MemcachedModificationRequestListerExpansion allows custom methods to be added to
 // MemcachedModificationRequestLister.
 type MemcachedModificationRequestListerExpansion interface{}
+
+// MemcachedModificationRequestNamespaceListerExpansion allows custom methods to be added to
+// MemcachedModificationRequestNamespaceLister.
+type MemcachedModificationRequestNamespaceListerExpansion interface{}
 
 // MongoDBModificationRequestListerExpansion allows custom methods to be added to
 // MongoDBModificationRequestLister.
@@ -54,17 +62,33 @@ type MySQLModificationRequestNamespaceListerExpansion interface{}
 // PerconaXtraDBModificationRequestLister.
 type PerconaXtraDBModificationRequestListerExpansion interface{}
 
+// PerconaXtraDBModificationRequestNamespaceListerExpansion allows custom methods to be added to
+// PerconaXtraDBModificationRequestNamespaceLister.
+type PerconaXtraDBModificationRequestNamespaceListerExpansion interface{}
+
 // PgBouncerModificationRequestListerExpansion allows custom methods to be added to
 // PgBouncerModificationRequestLister.
 type PgBouncerModificationRequestListerExpansion interface{}
+
+// PgBouncerModificationRequestNamespaceListerExpansion allows custom methods to be added to
+// PgBouncerModificationRequestNamespaceLister.
+type PgBouncerModificationRequestNamespaceListerExpansion interface{}
 
 // PostgresModificationRequestListerExpansion allows custom methods to be added to
 // PostgresModificationRequestLister.
 type PostgresModificationRequestListerExpansion interface{}
 
+// PostgresModificationRequestNamespaceListerExpansion allows custom methods to be added to
+// PostgresModificationRequestNamespaceLister.
+type PostgresModificationRequestNamespaceListerExpansion interface{}
+
 // ProxySQLModificationRequestListerExpansion allows custom methods to be added to
 // ProxySQLModificationRequestLister.
 type ProxySQLModificationRequestListerExpansion interface{}
+
+// ProxySQLModificationRequestNamespaceListerExpansion allows custom methods to be added to
+// ProxySQLModificationRequestNamespaceLister.
+type ProxySQLModificationRequestNamespaceListerExpansion interface{}
 
 // RedisModificationRequestListerExpansion allows custom methods to be added to
 // RedisModificationRequestLister.

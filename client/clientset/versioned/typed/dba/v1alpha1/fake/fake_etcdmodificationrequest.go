@@ -32,6 +32,7 @@ import (
 // FakeEtcdModificationRequests implements EtcdModificationRequestInterface
 type FakeEtcdModificationRequests struct {
 	Fake *FakeDbaV1alpha1
+	ns   string
 }
 
 var etcdmodificationrequestsResource = schema.GroupVersionResource{Group: "dba.kubedb.com", Version: "v1alpha1", Resource: "etcdmodificationrequests"}
@@ -41,7 +42,8 @@ var etcdmodificationrequestsKind = schema.GroupVersionKind{Group: "dba.kubedb.co
 // Get takes name of the etcdModificationRequest, and returns the corresponding etcdModificationRequest object, and an error if there is any.
 func (c *FakeEtcdModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.EtcdModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(etcdmodificationrequestsResource, name), &v1alpha1.EtcdModificationRequest{})
+		Invokes(testing.NewGetAction(etcdmodificationrequestsResource, c.ns, name), &v1alpha1.EtcdModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -51,7 +53,8 @@ func (c *FakeEtcdModificationRequests) Get(name string, options v1.GetOptions) (
 // List takes label and field selectors, and returns the list of EtcdModificationRequests that match those selectors.
 func (c *FakeEtcdModificationRequests) List(opts v1.ListOptions) (result *v1alpha1.EtcdModificationRequestList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(etcdmodificationrequestsResource, etcdmodificationrequestsKind, opts), &v1alpha1.EtcdModificationRequestList{})
+		Invokes(testing.NewListAction(etcdmodificationrequestsResource, etcdmodificationrequestsKind, c.ns, opts), &v1alpha1.EtcdModificationRequestList{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -72,13 +75,15 @@ func (c *FakeEtcdModificationRequests) List(opts v1.ListOptions) (result *v1alph
 // Watch returns a watch.Interface that watches the requested etcdModificationRequests.
 func (c *FakeEtcdModificationRequests) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(etcdmodificationrequestsResource, opts))
+		InvokesWatch(testing.NewWatchAction(etcdmodificationrequestsResource, c.ns, opts))
+
 }
 
 // Create takes the representation of a etcdModificationRequest and creates it.  Returns the server's representation of the etcdModificationRequest, and an error, if there is any.
 func (c *FakeEtcdModificationRequests) Create(etcdModificationRequest *v1alpha1.EtcdModificationRequest) (result *v1alpha1.EtcdModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(etcdmodificationrequestsResource, etcdModificationRequest), &v1alpha1.EtcdModificationRequest{})
+		Invokes(testing.NewCreateAction(etcdmodificationrequestsResource, c.ns, etcdModificationRequest), &v1alpha1.EtcdModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -88,7 +93,20 @@ func (c *FakeEtcdModificationRequests) Create(etcdModificationRequest *v1alpha1.
 // Update takes the representation of a etcdModificationRequest and updates it. Returns the server's representation of the etcdModificationRequest, and an error, if there is any.
 func (c *FakeEtcdModificationRequests) Update(etcdModificationRequest *v1alpha1.EtcdModificationRequest) (result *v1alpha1.EtcdModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(etcdmodificationrequestsResource, etcdModificationRequest), &v1alpha1.EtcdModificationRequest{})
+		Invokes(testing.NewUpdateAction(etcdmodificationrequestsResource, c.ns, etcdModificationRequest), &v1alpha1.EtcdModificationRequest{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.EtcdModificationRequest), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeEtcdModificationRequests) UpdateStatus(etcdModificationRequest *v1alpha1.EtcdModificationRequest) (*v1alpha1.EtcdModificationRequest, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(etcdmodificationrequestsResource, "status", c.ns, etcdModificationRequest), &v1alpha1.EtcdModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -98,13 +116,14 @@ func (c *FakeEtcdModificationRequests) Update(etcdModificationRequest *v1alpha1.
 // Delete takes name of the etcdModificationRequest and deletes it. Returns an error if one occurs.
 func (c *FakeEtcdModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(etcdmodificationrequestsResource, name), &v1alpha1.EtcdModificationRequest{})
+		Invokes(testing.NewDeleteAction(etcdmodificationrequestsResource, c.ns, name), &v1alpha1.EtcdModificationRequest{})
+
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeEtcdModificationRequests) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(etcdmodificationrequestsResource, listOptions)
+	action := testing.NewDeleteCollectionAction(etcdmodificationrequestsResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.EtcdModificationRequestList{})
 	return err
@@ -113,7 +132,8 @@ func (c *FakeEtcdModificationRequests) DeleteCollection(options *v1.DeleteOption
 // Patch applies the patch and returns the patched etcdModificationRequest.
 func (c *FakeEtcdModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.EtcdModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(etcdmodificationrequestsResource, name, pt, data, subresources...), &v1alpha1.EtcdModificationRequest{})
+		Invokes(testing.NewPatchSubresourceAction(etcdmodificationrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.EtcdModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}

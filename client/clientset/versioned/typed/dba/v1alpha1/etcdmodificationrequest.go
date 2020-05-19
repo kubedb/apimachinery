@@ -33,13 +33,14 @@ import (
 // EtcdModificationRequestsGetter has a method to return a EtcdModificationRequestInterface.
 // A group's client should implement this interface.
 type EtcdModificationRequestsGetter interface {
-	EtcdModificationRequests() EtcdModificationRequestInterface
+	EtcdModificationRequests(namespace string) EtcdModificationRequestInterface
 }
 
 // EtcdModificationRequestInterface has methods to work with EtcdModificationRequest resources.
 type EtcdModificationRequestInterface interface {
 	Create(*v1alpha1.EtcdModificationRequest) (*v1alpha1.EtcdModificationRequest, error)
 	Update(*v1alpha1.EtcdModificationRequest) (*v1alpha1.EtcdModificationRequest, error)
+	UpdateStatus(*v1alpha1.EtcdModificationRequest) (*v1alpha1.EtcdModificationRequest, error)
 	Delete(name string, options *v1.DeleteOptions) error
 	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
 	Get(name string, options v1.GetOptions) (*v1alpha1.EtcdModificationRequest, error)
@@ -52,12 +53,14 @@ type EtcdModificationRequestInterface interface {
 // etcdModificationRequests implements EtcdModificationRequestInterface
 type etcdModificationRequests struct {
 	client rest.Interface
+	ns     string
 }
 
 // newEtcdModificationRequests returns a EtcdModificationRequests
-func newEtcdModificationRequests(c *DbaV1alpha1Client) *etcdModificationRequests {
+func newEtcdModificationRequests(c *DbaV1alpha1Client, namespace string) *etcdModificationRequests {
 	return &etcdModificationRequests{
 		client: c.RESTClient(),
+		ns:     namespace,
 	}
 }
 
@@ -65,6 +68,7 @@ func newEtcdModificationRequests(c *DbaV1alpha1Client) *etcdModificationRequests
 func (c *etcdModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.EtcdModificationRequest, err error) {
 	result = &v1alpha1.EtcdModificationRequest{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("etcdmodificationrequests").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -81,6 +85,7 @@ func (c *etcdModificationRequests) List(opts v1.ListOptions) (result *v1alpha1.E
 	}
 	result = &v1alpha1.EtcdModificationRequestList{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("etcdmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -97,6 +102,7 @@ func (c *etcdModificationRequests) Watch(opts v1.ListOptions) (watch.Interface, 
 	}
 	opts.Watch = true
 	return c.client.Get().
+		Namespace(c.ns).
 		Resource("etcdmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -107,6 +113,7 @@ func (c *etcdModificationRequests) Watch(opts v1.ListOptions) (watch.Interface, 
 func (c *etcdModificationRequests) Create(etcdModificationRequest *v1alpha1.EtcdModificationRequest) (result *v1alpha1.EtcdModificationRequest, err error) {
 	result = &v1alpha1.EtcdModificationRequest{}
 	err = c.client.Post().
+		Namespace(c.ns).
 		Resource("etcdmodificationrequests").
 		Body(etcdModificationRequest).
 		Do().
@@ -118,8 +125,25 @@ func (c *etcdModificationRequests) Create(etcdModificationRequest *v1alpha1.Etcd
 func (c *etcdModificationRequests) Update(etcdModificationRequest *v1alpha1.EtcdModificationRequest) (result *v1alpha1.EtcdModificationRequest, err error) {
 	result = &v1alpha1.EtcdModificationRequest{}
 	err = c.client.Put().
+		Namespace(c.ns).
 		Resource("etcdmodificationrequests").
 		Name(etcdModificationRequest.Name).
+		Body(etcdModificationRequest).
+		Do().
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+
+func (c *etcdModificationRequests) UpdateStatus(etcdModificationRequest *v1alpha1.EtcdModificationRequest) (result *v1alpha1.EtcdModificationRequest, err error) {
+	result = &v1alpha1.EtcdModificationRequest{}
+	err = c.client.Put().
+		Namespace(c.ns).
+		Resource("etcdmodificationrequests").
+		Name(etcdModificationRequest.Name).
+		SubResource("status").
 		Body(etcdModificationRequest).
 		Do().
 		Into(result)
@@ -129,6 +153,7 @@ func (c *etcdModificationRequests) Update(etcdModificationRequest *v1alpha1.Etcd
 // Delete takes name of the etcdModificationRequest and deletes it. Returns an error if one occurs.
 func (c *etcdModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("etcdmodificationrequests").
 		Name(name).
 		Body(options).
@@ -143,6 +168,7 @@ func (c *etcdModificationRequests) DeleteCollection(options *v1.DeleteOptions, l
 		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("etcdmodificationrequests").
 		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -155,6 +181,7 @@ func (c *etcdModificationRequests) DeleteCollection(options *v1.DeleteOptions, l
 func (c *etcdModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.EtcdModificationRequest, err error) {
 	result = &v1alpha1.EtcdModificationRequest{}
 	err = c.client.Patch(pt).
+		Namespace(c.ns).
 		Resource("etcdmodificationrequests").
 		SubResource(subresources...).
 		Name(name).

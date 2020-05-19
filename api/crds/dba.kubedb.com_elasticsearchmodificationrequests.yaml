@@ -49,7 +49,6 @@ spec:
           type: object
         spec:
           description: ElasticsearchModificationRequestSpec is the spec for ElasticsearchModificationRequest
-            object
           properties:
             databaseRef:
               description: Specifies the Elasticsearch reference
@@ -59,8 +58,8 @@ spec:
                     TODO: Add other useful fields. apiVersion, kind, uid?'
                   type: string
               type: object
-            scale:
-              description: Specifies the scaling info of Elasticsearch Object
+            horizontalScaling:
+              description: HorizontalScaling specifies the horizontal scaling.
               properties:
                 client:
                   description: Number of client nodes
@@ -76,20 +75,21 @@ spec:
                   type: integer
               type: object
             type:
-              description: Specifies the modification request type; ScaleUp, ScaleDown,
-                Upgrade etc.
+              description: 'Specifies the modification request type: Upgrade, HorizontalScaling,
+                VerticalScaling etc.'
               enum:
               - Upgrade
               - HorizontalScaling
               - VerticalScaling
               - VolumeExpansion
               - Restart
+              - RotateCertificates
               type: string
-            update:
-              description: Specifies the field information that needed to be updated
+            upgrade:
+              description: Specifies the field information that needed to be upgraded
               properties:
                 targetVersion:
-                  description: Specifies the ElasticsearchVersion object name
+                  description: Specifies the MySQLVersion object name
                   type: string
               type: object
           required:
@@ -97,8 +97,7 @@ spec:
           - type
           type: object
         status:
-          description: ElasticsearchModificationRequestStatus is the status for elasticsearch
-            version
+          description: ElasticsearchModificationRequestStatus is the status for ElasticsearchModificationRequest
           properties:
             conditions:
               description: Conditions applied to the request, such as approval or

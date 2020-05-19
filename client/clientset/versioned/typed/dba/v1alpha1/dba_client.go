@@ -48,12 +48,12 @@ func (c *DbaV1alpha1Client) ElasticsearchModificationRequests(namespace string) 
 	return newElasticsearchModificationRequests(c, namespace)
 }
 
-func (c *DbaV1alpha1Client) EtcdModificationRequests() EtcdModificationRequestInterface {
-	return newEtcdModificationRequests(c)
+func (c *DbaV1alpha1Client) EtcdModificationRequests(namespace string) EtcdModificationRequestInterface {
+	return newEtcdModificationRequests(c, namespace)
 }
 
-func (c *DbaV1alpha1Client) MemcachedModificationRequests() MemcachedModificationRequestInterface {
-	return newMemcachedModificationRequests(c)
+func (c *DbaV1alpha1Client) MemcachedModificationRequests(namespace string) MemcachedModificationRequestInterface {
+	return newMemcachedModificationRequests(c, namespace)
 }
 
 func (c *DbaV1alpha1Client) MongoDBModificationRequests(namespace string) MongoDBModificationRequestInterface {
@@ -64,20 +64,20 @@ func (c *DbaV1alpha1Client) MySQLModificationRequests(namespace string) MySQLMod
 	return newMySQLModificationRequests(c, namespace)
 }
 
-func (c *DbaV1alpha1Client) PerconaXtraDBModificationRequests() PerconaXtraDBModificationRequestInterface {
-	return newPerconaXtraDBModificationRequests(c)
+func (c *DbaV1alpha1Client) PerconaXtraDBModificationRequests(namespace string) PerconaXtraDBModificationRequestInterface {
+	return newPerconaXtraDBModificationRequests(c, namespace)
 }
 
-func (c *DbaV1alpha1Client) PgBouncerModificationRequests() PgBouncerModificationRequestInterface {
-	return newPgBouncerModificationRequests(c)
+func (c *DbaV1alpha1Client) PgBouncerModificationRequests(namespace string) PgBouncerModificationRequestInterface {
+	return newPgBouncerModificationRequests(c, namespace)
 }
 
-func (c *DbaV1alpha1Client) PostgresModificationRequests() PostgresModificationRequestInterface {
-	return newPostgresModificationRequests(c)
+func (c *DbaV1alpha1Client) PostgresModificationRequests(namespace string) PostgresModificationRequestInterface {
+	return newPostgresModificationRequests(c, namespace)
 }
 
-func (c *DbaV1alpha1Client) ProxySQLModificationRequests() ProxySQLModificationRequestInterface {
-	return newProxySQLModificationRequests(c)
+func (c *DbaV1alpha1Client) ProxySQLModificationRequests(namespace string) ProxySQLModificationRequestInterface {
+	return newProxySQLModificationRequests(c, namespace)
 }
 
 func (c *DbaV1alpha1Client) RedisModificationRequests(namespace string) RedisModificationRequestInterface {

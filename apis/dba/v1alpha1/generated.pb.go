@@ -70,10 +70,38 @@ func (m *ContainerResources) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_ContainerResources proto.InternalMessageInfo
 
+func (m *ElasticsearchHorizontalScaleSpec) Reset()      { *m = ElasticsearchHorizontalScaleSpec{} }
+func (*ElasticsearchHorizontalScaleSpec) ProtoMessage() {}
+func (*ElasticsearchHorizontalScaleSpec) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b5a799bc54483634, []int{1}
+}
+func (m *ElasticsearchHorizontalScaleSpec) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ElasticsearchHorizontalScaleSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	b = b[:cap(b)]
+	n, err := m.MarshalToSizedBuffer(b)
+	if err != nil {
+		return nil, err
+	}
+	return b[:n], nil
+}
+func (m *ElasticsearchHorizontalScaleSpec) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ElasticsearchHorizontalScaleSpec.Merge(m, src)
+}
+func (m *ElasticsearchHorizontalScaleSpec) XXX_Size() int {
+	return m.Size()
+}
+func (m *ElasticsearchHorizontalScaleSpec) XXX_DiscardUnknown() {
+	xxx_messageInfo_ElasticsearchHorizontalScaleSpec.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ElasticsearchHorizontalScaleSpec proto.InternalMessageInfo
+
 func (m *ElasticsearchModificationRequest) Reset()      { *m = ElasticsearchModificationRequest{} }
 func (*ElasticsearchModificationRequest) ProtoMessage() {}
 func (*ElasticsearchModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{1}
+	return fileDescriptor_b5a799bc54483634, []int{2}
 }
 func (m *ElasticsearchModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -101,7 +129,7 @@ var xxx_messageInfo_ElasticsearchModificationRequest proto.InternalMessageInfo
 func (m *ElasticsearchModificationRequestList) Reset()      { *m = ElasticsearchModificationRequestList{} }
 func (*ElasticsearchModificationRequestList) ProtoMessage() {}
 func (*ElasticsearchModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{2}
+	return fileDescriptor_b5a799bc54483634, []int{3}
 }
 func (m *ElasticsearchModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -129,7 +157,7 @@ var xxx_messageInfo_ElasticsearchModificationRequestList proto.InternalMessageIn
 func (m *ElasticsearchModificationRequestSpec) Reset()      { *m = ElasticsearchModificationRequestSpec{} }
 func (*ElasticsearchModificationRequestSpec) ProtoMessage() {}
 func (*ElasticsearchModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{3}
+	return fileDescriptor_b5a799bc54483634, []int{4}
 }
 func (m *ElasticsearchModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -159,7 +187,7 @@ func (m *ElasticsearchModificationRequestStatus) Reset() {
 }
 func (*ElasticsearchModificationRequestStatus) ProtoMessage() {}
 func (*ElasticsearchModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{4}
+	return fileDescriptor_b5a799bc54483634, []int{5}
 }
 func (m *ElasticsearchModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -187,7 +215,7 @@ var xxx_messageInfo_ElasticsearchModificationRequestStatus proto.InternalMessage
 func (m *EtcdModificationRequest) Reset()      { *m = EtcdModificationRequest{} }
 func (*EtcdModificationRequest) ProtoMessage() {}
 func (*EtcdModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{5}
+	return fileDescriptor_b5a799bc54483634, []int{6}
 }
 func (m *EtcdModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -211,34 +239,6 @@ func (m *EtcdModificationRequest) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_EtcdModificationRequest proto.InternalMessageInfo
-
-func (m *EtcdModificationRequestCondition) Reset()      { *m = EtcdModificationRequestCondition{} }
-func (*EtcdModificationRequestCondition) ProtoMessage() {}
-func (*EtcdModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{6}
-}
-func (m *EtcdModificationRequestCondition) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *EtcdModificationRequestCondition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	b = b[:cap(b)]
-	n, err := m.MarshalToSizedBuffer(b)
-	if err != nil {
-		return nil, err
-	}
-	return b[:n], nil
-}
-func (m *EtcdModificationRequestCondition) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EtcdModificationRequestCondition.Merge(m, src)
-}
-func (m *EtcdModificationRequestCondition) XXX_Size() int {
-	return m.Size()
-}
-func (m *EtcdModificationRequestCondition) XXX_DiscardUnknown() {
-	xxx_messageInfo_EtcdModificationRequestCondition.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_EtcdModificationRequestCondition proto.InternalMessageInfo
 
 func (m *EtcdModificationRequestList) Reset()      { *m = EtcdModificationRequestList{} }
 func (*EtcdModificationRequestList) ProtoMessage() {}
@@ -324,38 +324,10 @@ func (m *EtcdModificationRequestStatus) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_EtcdModificationRequestStatus proto.InternalMessageInfo
 
-func (m *HorizontalScale) Reset()      { *m = HorizontalScale{} }
-func (*HorizontalScale) ProtoMessage() {}
-func (*HorizontalScale) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{10}
-}
-func (m *HorizontalScale) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *HorizontalScale) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	b = b[:cap(b)]
-	n, err := m.MarshalToSizedBuffer(b)
-	if err != nil {
-		return nil, err
-	}
-	return b[:n], nil
-}
-func (m *HorizontalScale) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_HorizontalScale.Merge(m, src)
-}
-func (m *HorizontalScale) XXX_Size() int {
-	return m.Size()
-}
-func (m *HorizontalScale) XXX_DiscardUnknown() {
-	xxx_messageInfo_HorizontalScale.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_HorizontalScale proto.InternalMessageInfo
-
 func (m *MemcachedModificationRequest) Reset()      { *m = MemcachedModificationRequest{} }
 func (*MemcachedModificationRequest) ProtoMessage() {}
 func (*MemcachedModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{11}
+	return fileDescriptor_b5a799bc54483634, []int{10}
 }
 func (m *MemcachedModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -380,38 +352,10 @@ func (m *MemcachedModificationRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MemcachedModificationRequest proto.InternalMessageInfo
 
-func (m *MemcachedModificationRequestCondition) Reset()      { *m = MemcachedModificationRequestCondition{} }
-func (*MemcachedModificationRequestCondition) ProtoMessage() {}
-func (*MemcachedModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{12}
-}
-func (m *MemcachedModificationRequestCondition) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MemcachedModificationRequestCondition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	b = b[:cap(b)]
-	n, err := m.MarshalToSizedBuffer(b)
-	if err != nil {
-		return nil, err
-	}
-	return b[:n], nil
-}
-func (m *MemcachedModificationRequestCondition) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MemcachedModificationRequestCondition.Merge(m, src)
-}
-func (m *MemcachedModificationRequestCondition) XXX_Size() int {
-	return m.Size()
-}
-func (m *MemcachedModificationRequestCondition) XXX_DiscardUnknown() {
-	xxx_messageInfo_MemcachedModificationRequestCondition.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MemcachedModificationRequestCondition proto.InternalMessageInfo
-
 func (m *MemcachedModificationRequestList) Reset()      { *m = MemcachedModificationRequestList{} }
 func (*MemcachedModificationRequestList) ProtoMessage() {}
 func (*MemcachedModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{13}
+	return fileDescriptor_b5a799bc54483634, []int{11}
 }
 func (m *MemcachedModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -439,7 +383,7 @@ var xxx_messageInfo_MemcachedModificationRequestList proto.InternalMessageInfo
 func (m *MemcachedModificationRequestSpec) Reset()      { *m = MemcachedModificationRequestSpec{} }
 func (*MemcachedModificationRequestSpec) ProtoMessage() {}
 func (*MemcachedModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{14}
+	return fileDescriptor_b5a799bc54483634, []int{12}
 }
 func (m *MemcachedModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -467,7 +411,7 @@ var xxx_messageInfo_MemcachedModificationRequestSpec proto.InternalMessageInfo
 func (m *MemcachedModificationRequestStatus) Reset()      { *m = MemcachedModificationRequestStatus{} }
 func (*MemcachedModificationRequestStatus) ProtoMessage() {}
 func (*MemcachedModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{15}
+	return fileDescriptor_b5a799bc54483634, []int{13}
 }
 func (m *MemcachedModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -495,7 +439,7 @@ var xxx_messageInfo_MemcachedModificationRequestStatus proto.InternalMessageInfo
 func (m *MongoDBModificationRequest) Reset()      { *m = MongoDBModificationRequest{} }
 func (*MongoDBModificationRequest) ProtoMessage() {}
 func (*MongoDBModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{16}
+	return fileDescriptor_b5a799bc54483634, []int{14}
 }
 func (m *MongoDBModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -523,7 +467,7 @@ var xxx_messageInfo_MongoDBModificationRequest proto.InternalMessageInfo
 func (m *MongoDBModificationRequestList) Reset()      { *m = MongoDBModificationRequestList{} }
 func (*MongoDBModificationRequestList) ProtoMessage() {}
 func (*MongoDBModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{17}
+	return fileDescriptor_b5a799bc54483634, []int{15}
 }
 func (m *MongoDBModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -551,7 +495,7 @@ var xxx_messageInfo_MongoDBModificationRequestList proto.InternalMessageInfo
 func (m *MongoDBModificationRequestSpec) Reset()      { *m = MongoDBModificationRequestSpec{} }
 func (*MongoDBModificationRequestSpec) ProtoMessage() {}
 func (*MongoDBModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{18}
+	return fileDescriptor_b5a799bc54483634, []int{16}
 }
 func (m *MongoDBModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -579,7 +523,7 @@ var xxx_messageInfo_MongoDBModificationRequestSpec proto.InternalMessageInfo
 func (m *MongoDBModificationRequestStatus) Reset()      { *m = MongoDBModificationRequestStatus{} }
 func (*MongoDBModificationRequestStatus) ProtoMessage() {}
 func (*MongoDBModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{19}
+	return fileDescriptor_b5a799bc54483634, []int{17}
 }
 func (m *MongoDBModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -604,10 +548,38 @@ func (m *MongoDBModificationRequestStatus) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MongoDBModificationRequestStatus proto.InternalMessageInfo
 
+func (m *MySQLHorizontalScalingSpec) Reset()      { *m = MySQLHorizontalScalingSpec{} }
+func (*MySQLHorizontalScalingSpec) ProtoMessage() {}
+func (*MySQLHorizontalScalingSpec) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b5a799bc54483634, []int{18}
+}
+func (m *MySQLHorizontalScalingSpec) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MySQLHorizontalScalingSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	b = b[:cap(b)]
+	n, err := m.MarshalToSizedBuffer(b)
+	if err != nil {
+		return nil, err
+	}
+	return b[:n], nil
+}
+func (m *MySQLHorizontalScalingSpec) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MySQLHorizontalScalingSpec.Merge(m, src)
+}
+func (m *MySQLHorizontalScalingSpec) XXX_Size() int {
+	return m.Size()
+}
+func (m *MySQLHorizontalScalingSpec) XXX_DiscardUnknown() {
+	xxx_messageInfo_MySQLHorizontalScalingSpec.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MySQLHorizontalScalingSpec proto.InternalMessageInfo
+
 func (m *MySQLModificationRequest) Reset()      { *m = MySQLModificationRequest{} }
 func (*MySQLModificationRequest) ProtoMessage() {}
 func (*MySQLModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{20}
+	return fileDescriptor_b5a799bc54483634, []int{19}
 }
 func (m *MySQLModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -635,7 +607,7 @@ var xxx_messageInfo_MySQLModificationRequest proto.InternalMessageInfo
 func (m *MySQLModificationRequestList) Reset()      { *m = MySQLModificationRequestList{} }
 func (*MySQLModificationRequestList) ProtoMessage() {}
 func (*MySQLModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{21}
+	return fileDescriptor_b5a799bc54483634, []int{20}
 }
 func (m *MySQLModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -663,7 +635,7 @@ var xxx_messageInfo_MySQLModificationRequestList proto.InternalMessageInfo
 func (m *MySQLModificationRequestSpec) Reset()      { *m = MySQLModificationRequestSpec{} }
 func (*MySQLModificationRequestSpec) ProtoMessage() {}
 func (*MySQLModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{22}
+	return fileDescriptor_b5a799bc54483634, []int{21}
 }
 func (m *MySQLModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -691,7 +663,7 @@ var xxx_messageInfo_MySQLModificationRequestSpec proto.InternalMessageInfo
 func (m *MySQLModificationRequestStatus) Reset()      { *m = MySQLModificationRequestStatus{} }
 func (*MySQLModificationRequestStatus) ProtoMessage() {}
 func (*MySQLModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{23}
+	return fileDescriptor_b5a799bc54483634, []int{22}
 }
 func (m *MySQLModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -716,15 +688,15 @@ func (m *MySQLModificationRequestStatus) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MySQLModificationRequestStatus proto.InternalMessageInfo
 
-func (m *MySQLScaleSpec) Reset()      { *m = MySQLScaleSpec{} }
-func (*MySQLScaleSpec) ProtoMessage() {}
-func (*MySQLScaleSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{24}
+func (m *MySQLVerticalScalingSpec) Reset()      { *m = MySQLVerticalScalingSpec{} }
+func (*MySQLVerticalScalingSpec) ProtoMessage() {}
+func (*MySQLVerticalScalingSpec) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b5a799bc54483634, []int{23}
 }
-func (m *MySQLScaleSpec) XXX_Unmarshal(b []byte) error {
+func (m *MySQLVerticalScalingSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MySQLScaleSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MySQLVerticalScalingSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
 	if err != nil {
@@ -732,50 +704,22 @@ func (m *MySQLScaleSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, erro
 	}
 	return b[:n], nil
 }
-func (m *MySQLScaleSpec) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MySQLScaleSpec.Merge(m, src)
+func (m *MySQLVerticalScalingSpec) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MySQLVerticalScalingSpec.Merge(m, src)
 }
-func (m *MySQLScaleSpec) XXX_Size() int {
+func (m *MySQLVerticalScalingSpec) XXX_Size() int {
 	return m.Size()
 }
-func (m *MySQLScaleSpec) XXX_DiscardUnknown() {
-	xxx_messageInfo_MySQLScaleSpec.DiscardUnknown(m)
+func (m *MySQLVerticalScalingSpec) XXX_DiscardUnknown() {
+	xxx_messageInfo_MySQLVerticalScalingSpec.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MySQLScaleSpec proto.InternalMessageInfo
-
-func (m *MySQLUpdateSpec) Reset()      { *m = MySQLUpdateSpec{} }
-func (*MySQLUpdateSpec) ProtoMessage() {}
-func (*MySQLUpdateSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{25}
-}
-func (m *MySQLUpdateSpec) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MySQLUpdateSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	b = b[:cap(b)]
-	n, err := m.MarshalToSizedBuffer(b)
-	if err != nil {
-		return nil, err
-	}
-	return b[:n], nil
-}
-func (m *MySQLUpdateSpec) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MySQLUpdateSpec.Merge(m, src)
-}
-func (m *MySQLUpdateSpec) XXX_Size() int {
-	return m.Size()
-}
-func (m *MySQLUpdateSpec) XXX_DiscardUnknown() {
-	xxx_messageInfo_MySQLUpdateSpec.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MySQLUpdateSpec proto.InternalMessageInfo
+var xxx_messageInfo_MySQLVerticalScalingSpec proto.InternalMessageInfo
 
 func (m *PerconaXtraDBModificationRequest) Reset()      { *m = PerconaXtraDBModificationRequest{} }
 func (*PerconaXtraDBModificationRequest) ProtoMessage() {}
 func (*PerconaXtraDBModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{26}
+	return fileDescriptor_b5a799bc54483634, []int{24}
 }
 func (m *PerconaXtraDBModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -800,40 +744,10 @@ func (m *PerconaXtraDBModificationRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_PerconaXtraDBModificationRequest proto.InternalMessageInfo
 
-func (m *PerconaXtraDBModificationRequestCondition) Reset() {
-	*m = PerconaXtraDBModificationRequestCondition{}
-}
-func (*PerconaXtraDBModificationRequestCondition) ProtoMessage() {}
-func (*PerconaXtraDBModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{27}
-}
-func (m *PerconaXtraDBModificationRequestCondition) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *PerconaXtraDBModificationRequestCondition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	b = b[:cap(b)]
-	n, err := m.MarshalToSizedBuffer(b)
-	if err != nil {
-		return nil, err
-	}
-	return b[:n], nil
-}
-func (m *PerconaXtraDBModificationRequestCondition) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PerconaXtraDBModificationRequestCondition.Merge(m, src)
-}
-func (m *PerconaXtraDBModificationRequestCondition) XXX_Size() int {
-	return m.Size()
-}
-func (m *PerconaXtraDBModificationRequestCondition) XXX_DiscardUnknown() {
-	xxx_messageInfo_PerconaXtraDBModificationRequestCondition.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_PerconaXtraDBModificationRequestCondition proto.InternalMessageInfo
-
 func (m *PerconaXtraDBModificationRequestList) Reset()      { *m = PerconaXtraDBModificationRequestList{} }
 func (*PerconaXtraDBModificationRequestList) ProtoMessage() {}
 func (*PerconaXtraDBModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{28}
+	return fileDescriptor_b5a799bc54483634, []int{25}
 }
 func (m *PerconaXtraDBModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -861,7 +775,7 @@ var xxx_messageInfo_PerconaXtraDBModificationRequestList proto.InternalMessageIn
 func (m *PerconaXtraDBModificationRequestSpec) Reset()      { *m = PerconaXtraDBModificationRequestSpec{} }
 func (*PerconaXtraDBModificationRequestSpec) ProtoMessage() {}
 func (*PerconaXtraDBModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{29}
+	return fileDescriptor_b5a799bc54483634, []int{26}
 }
 func (m *PerconaXtraDBModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -891,7 +805,7 @@ func (m *PerconaXtraDBModificationRequestStatus) Reset() {
 }
 func (*PerconaXtraDBModificationRequestStatus) ProtoMessage() {}
 func (*PerconaXtraDBModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{30}
+	return fileDescriptor_b5a799bc54483634, []int{27}
 }
 func (m *PerconaXtraDBModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -919,7 +833,7 @@ var xxx_messageInfo_PerconaXtraDBModificationRequestStatus proto.InternalMessage
 func (m *PgBouncerModificationRequest) Reset()      { *m = PgBouncerModificationRequest{} }
 func (*PgBouncerModificationRequest) ProtoMessage() {}
 func (*PgBouncerModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{31}
+	return fileDescriptor_b5a799bc54483634, []int{28}
 }
 func (m *PgBouncerModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -944,38 +858,10 @@ func (m *PgBouncerModificationRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_PgBouncerModificationRequest proto.InternalMessageInfo
 
-func (m *PgBouncerModificationRequestCondition) Reset()      { *m = PgBouncerModificationRequestCondition{} }
-func (*PgBouncerModificationRequestCondition) ProtoMessage() {}
-func (*PgBouncerModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{32}
-}
-func (m *PgBouncerModificationRequestCondition) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *PgBouncerModificationRequestCondition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	b = b[:cap(b)]
-	n, err := m.MarshalToSizedBuffer(b)
-	if err != nil {
-		return nil, err
-	}
-	return b[:n], nil
-}
-func (m *PgBouncerModificationRequestCondition) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PgBouncerModificationRequestCondition.Merge(m, src)
-}
-func (m *PgBouncerModificationRequestCondition) XXX_Size() int {
-	return m.Size()
-}
-func (m *PgBouncerModificationRequestCondition) XXX_DiscardUnknown() {
-	xxx_messageInfo_PgBouncerModificationRequestCondition.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_PgBouncerModificationRequestCondition proto.InternalMessageInfo
-
 func (m *PgBouncerModificationRequestList) Reset()      { *m = PgBouncerModificationRequestList{} }
 func (*PgBouncerModificationRequestList) ProtoMessage() {}
 func (*PgBouncerModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{33}
+	return fileDescriptor_b5a799bc54483634, []int{29}
 }
 func (m *PgBouncerModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1003,7 +889,7 @@ var xxx_messageInfo_PgBouncerModificationRequestList proto.InternalMessageInfo
 func (m *PgBouncerModificationRequestSpec) Reset()      { *m = PgBouncerModificationRequestSpec{} }
 func (*PgBouncerModificationRequestSpec) ProtoMessage() {}
 func (*PgBouncerModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{34}
+	return fileDescriptor_b5a799bc54483634, []int{30}
 }
 func (m *PgBouncerModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1031,7 +917,7 @@ var xxx_messageInfo_PgBouncerModificationRequestSpec proto.InternalMessageInfo
 func (m *PgBouncerModificationRequestStatus) Reset()      { *m = PgBouncerModificationRequestStatus{} }
 func (*PgBouncerModificationRequestStatus) ProtoMessage() {}
 func (*PgBouncerModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{35}
+	return fileDescriptor_b5a799bc54483634, []int{31}
 }
 func (m *PgBouncerModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1059,7 +945,7 @@ var xxx_messageInfo_PgBouncerModificationRequestStatus proto.InternalMessageInfo
 func (m *PostgresModificationRequest) Reset()      { *m = PostgresModificationRequest{} }
 func (*PostgresModificationRequest) ProtoMessage() {}
 func (*PostgresModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{36}
+	return fileDescriptor_b5a799bc54483634, []int{32}
 }
 func (m *PostgresModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1084,38 +970,10 @@ func (m *PostgresModificationRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_PostgresModificationRequest proto.InternalMessageInfo
 
-func (m *PostgresModificationRequestCondition) Reset()      { *m = PostgresModificationRequestCondition{} }
-func (*PostgresModificationRequestCondition) ProtoMessage() {}
-func (*PostgresModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{37}
-}
-func (m *PostgresModificationRequestCondition) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *PostgresModificationRequestCondition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	b = b[:cap(b)]
-	n, err := m.MarshalToSizedBuffer(b)
-	if err != nil {
-		return nil, err
-	}
-	return b[:n], nil
-}
-func (m *PostgresModificationRequestCondition) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PostgresModificationRequestCondition.Merge(m, src)
-}
-func (m *PostgresModificationRequestCondition) XXX_Size() int {
-	return m.Size()
-}
-func (m *PostgresModificationRequestCondition) XXX_DiscardUnknown() {
-	xxx_messageInfo_PostgresModificationRequestCondition.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_PostgresModificationRequestCondition proto.InternalMessageInfo
-
 func (m *PostgresModificationRequestList) Reset()      { *m = PostgresModificationRequestList{} }
 func (*PostgresModificationRequestList) ProtoMessage() {}
 func (*PostgresModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{38}
+	return fileDescriptor_b5a799bc54483634, []int{33}
 }
 func (m *PostgresModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1143,7 +1001,7 @@ var xxx_messageInfo_PostgresModificationRequestList proto.InternalMessageInfo
 func (m *PostgresModificationRequestSpec) Reset()      { *m = PostgresModificationRequestSpec{} }
 func (*PostgresModificationRequestSpec) ProtoMessage() {}
 func (*PostgresModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{39}
+	return fileDescriptor_b5a799bc54483634, []int{34}
 }
 func (m *PostgresModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1171,7 +1029,7 @@ var xxx_messageInfo_PostgresModificationRequestSpec proto.InternalMessageInfo
 func (m *PostgresModificationRequestStatus) Reset()      { *m = PostgresModificationRequestStatus{} }
 func (*PostgresModificationRequestStatus) ProtoMessage() {}
 func (*PostgresModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{40}
+	return fileDescriptor_b5a799bc54483634, []int{35}
 }
 func (m *PostgresModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1199,7 +1057,7 @@ var xxx_messageInfo_PostgresModificationRequestStatus proto.InternalMessageInfo
 func (m *ProxySQLModificationRequest) Reset()      { *m = ProxySQLModificationRequest{} }
 func (*ProxySQLModificationRequest) ProtoMessage() {}
 func (*ProxySQLModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{41}
+	return fileDescriptor_b5a799bc54483634, []int{36}
 }
 func (m *ProxySQLModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1224,38 +1082,10 @@ func (m *ProxySQLModificationRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_ProxySQLModificationRequest proto.InternalMessageInfo
 
-func (m *ProxySQLModificationRequestCondition) Reset()      { *m = ProxySQLModificationRequestCondition{} }
-func (*ProxySQLModificationRequestCondition) ProtoMessage() {}
-func (*ProxySQLModificationRequestCondition) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{42}
-}
-func (m *ProxySQLModificationRequestCondition) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *ProxySQLModificationRequestCondition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	b = b[:cap(b)]
-	n, err := m.MarshalToSizedBuffer(b)
-	if err != nil {
-		return nil, err
-	}
-	return b[:n], nil
-}
-func (m *ProxySQLModificationRequestCondition) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ProxySQLModificationRequestCondition.Merge(m, src)
-}
-func (m *ProxySQLModificationRequestCondition) XXX_Size() int {
-	return m.Size()
-}
-func (m *ProxySQLModificationRequestCondition) XXX_DiscardUnknown() {
-	xxx_messageInfo_ProxySQLModificationRequestCondition.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ProxySQLModificationRequestCondition proto.InternalMessageInfo
-
 func (m *ProxySQLModificationRequestList) Reset()      { *m = ProxySQLModificationRequestList{} }
 func (*ProxySQLModificationRequestList) ProtoMessage() {}
 func (*ProxySQLModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{43}
+	return fileDescriptor_b5a799bc54483634, []int{37}
 }
 func (m *ProxySQLModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1283,7 +1113,7 @@ var xxx_messageInfo_ProxySQLModificationRequestList proto.InternalMessageInfo
 func (m *ProxySQLModificationRequestSpec) Reset()      { *m = ProxySQLModificationRequestSpec{} }
 func (*ProxySQLModificationRequestSpec) ProtoMessage() {}
 func (*ProxySQLModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{44}
+	return fileDescriptor_b5a799bc54483634, []int{38}
 }
 func (m *ProxySQLModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1311,7 +1141,7 @@ var xxx_messageInfo_ProxySQLModificationRequestSpec proto.InternalMessageInfo
 func (m *ProxySQLModificationRequestStatus) Reset()      { *m = ProxySQLModificationRequestStatus{} }
 func (*ProxySQLModificationRequestStatus) ProtoMessage() {}
 func (*ProxySQLModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{45}
+	return fileDescriptor_b5a799bc54483634, []int{39}
 }
 func (m *ProxySQLModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1339,7 +1169,7 @@ var xxx_messageInfo_ProxySQLModificationRequestStatus proto.InternalMessageInfo
 func (m *RedisModificationRequest) Reset()      { *m = RedisModificationRequest{} }
 func (*RedisModificationRequest) ProtoMessage() {}
 func (*RedisModificationRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{46}
+	return fileDescriptor_b5a799bc54483634, []int{40}
 }
 func (m *RedisModificationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1367,7 +1197,7 @@ var xxx_messageInfo_RedisModificationRequest proto.InternalMessageInfo
 func (m *RedisModificationRequestList) Reset()      { *m = RedisModificationRequestList{} }
 func (*RedisModificationRequestList) ProtoMessage() {}
 func (*RedisModificationRequestList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{47}
+	return fileDescriptor_b5a799bc54483634, []int{41}
 }
 func (m *RedisModificationRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1395,7 +1225,7 @@ var xxx_messageInfo_RedisModificationRequestList proto.InternalMessageInfo
 func (m *RedisModificationRequestSpec) Reset()      { *m = RedisModificationRequestSpec{} }
 func (*RedisModificationRequestSpec) ProtoMessage() {}
 func (*RedisModificationRequestSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{48}
+	return fileDescriptor_b5a799bc54483634, []int{42}
 }
 func (m *RedisModificationRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1423,7 +1253,7 @@ var xxx_messageInfo_RedisModificationRequestSpec proto.InternalMessageInfo
 func (m *RedisModificationRequestStatus) Reset()      { *m = RedisModificationRequestStatus{} }
 func (*RedisModificationRequestStatus) ProtoMessage() {}
 func (*RedisModificationRequestStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{49}
+	return fileDescriptor_b5a799bc54483634, []int{43}
 }
 func (m *RedisModificationRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1448,15 +1278,15 @@ func (m *RedisModificationRequestStatus) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_RedisModificationRequestStatus proto.InternalMessageInfo
 
-func (m *ScaleSpec) Reset()      { *m = ScaleSpec{} }
-func (*ScaleSpec) ProtoMessage() {}
-func (*ScaleSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{50}
+func (m *UpgradeSpec) Reset()      { *m = UpgradeSpec{} }
+func (*UpgradeSpec) ProtoMessage() {}
+func (*UpgradeSpec) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b5a799bc54483634, []int{44}
 }
-func (m *ScaleSpec) XXX_Unmarshal(b []byte) error {
+func (m *UpgradeSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ScaleSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *UpgradeSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
 	if err != nil {
@@ -1464,88 +1294,30 @@ func (m *ScaleSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-func (m *ScaleSpec) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ScaleSpec.Merge(m, src)
+func (m *UpgradeSpec) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpgradeSpec.Merge(m, src)
 }
-func (m *ScaleSpec) XXX_Size() int {
+func (m *UpgradeSpec) XXX_Size() int {
 	return m.Size()
 }
-func (m *ScaleSpec) XXX_DiscardUnknown() {
-	xxx_messageInfo_ScaleSpec.DiscardUnknown(m)
+func (m *UpgradeSpec) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpgradeSpec.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ScaleSpec proto.InternalMessageInfo
-
-func (m *UpdateSpec) Reset()      { *m = UpdateSpec{} }
-func (*UpdateSpec) ProtoMessage() {}
-func (*UpdateSpec) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{51}
-}
-func (m *UpdateSpec) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *UpdateSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	b = b[:cap(b)]
-	n, err := m.MarshalToSizedBuffer(b)
-	if err != nil {
-		return nil, err
-	}
-	return b[:n], nil
-}
-func (m *UpdateSpec) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_UpdateSpec.Merge(m, src)
-}
-func (m *UpdateSpec) XXX_Size() int {
-	return m.Size()
-}
-func (m *UpdateSpec) XXX_DiscardUnknown() {
-	xxx_messageInfo_UpdateSpec.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_UpdateSpec proto.InternalMessageInfo
-
-func (m *VerticalScale) Reset()      { *m = VerticalScale{} }
-func (*VerticalScale) ProtoMessage() {}
-func (*VerticalScale) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b5a799bc54483634, []int{52}
-}
-func (m *VerticalScale) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *VerticalScale) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	b = b[:cap(b)]
-	n, err := m.MarshalToSizedBuffer(b)
-	if err != nil {
-		return nil, err
-	}
-	return b[:n], nil
-}
-func (m *VerticalScale) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_VerticalScale.Merge(m, src)
-}
-func (m *VerticalScale) XXX_Size() int {
-	return m.Size()
-}
-func (m *VerticalScale) XXX_DiscardUnknown() {
-	xxx_messageInfo_VerticalScale.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_VerticalScale proto.InternalMessageInfo
+var xxx_messageInfo_UpgradeSpec proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*ContainerResources)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ContainerResources")
+	proto.RegisterType((*ElasticsearchHorizontalScaleSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ElasticsearchHorizontalScaleSpec")
 	proto.RegisterType((*ElasticsearchModificationRequest)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequest")
 	proto.RegisterType((*ElasticsearchModificationRequestList)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequestList")
 	proto.RegisterType((*ElasticsearchModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequestSpec")
 	proto.RegisterType((*ElasticsearchModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequestStatus")
 	proto.RegisterType((*EtcdModificationRequest)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.EtcdModificationRequest")
-	proto.RegisterType((*EtcdModificationRequestCondition)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.EtcdModificationRequestCondition")
 	proto.RegisterType((*EtcdModificationRequestList)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.EtcdModificationRequestList")
 	proto.RegisterType((*EtcdModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.EtcdModificationRequestSpec")
 	proto.RegisterType((*EtcdModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.EtcdModificationRequestStatus")
-	proto.RegisterType((*HorizontalScale)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.HorizontalScale")
 	proto.RegisterType((*MemcachedModificationRequest)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MemcachedModificationRequest")
-	proto.RegisterType((*MemcachedModificationRequestCondition)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MemcachedModificationRequestCondition")
 	proto.RegisterType((*MemcachedModificationRequestList)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MemcachedModificationRequestList")
 	proto.RegisterType((*MemcachedModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MemcachedModificationRequestSpec")
 	proto.RegisterType((*MemcachedModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MemcachedModificationRequestStatus")
@@ -1553,29 +1325,25 @@ func init() {
 	proto.RegisterType((*MongoDBModificationRequestList)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestList")
 	proto.RegisterType((*MongoDBModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestSpec")
 	proto.RegisterType((*MongoDBModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestStatus")
+	proto.RegisterType((*MySQLHorizontalScalingSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MySQLHorizontalScalingSpec")
 	proto.RegisterType((*MySQLModificationRequest)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MySQLModificationRequest")
 	proto.RegisterType((*MySQLModificationRequestList)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MySQLModificationRequestList")
 	proto.RegisterType((*MySQLModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MySQLModificationRequestSpec")
 	proto.RegisterType((*MySQLModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MySQLModificationRequestStatus")
-	proto.RegisterType((*MySQLScaleSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MySQLScaleSpec")
-	proto.RegisterType((*MySQLUpdateSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MySQLUpdateSpec")
+	proto.RegisterType((*MySQLVerticalScalingSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.MySQLVerticalScalingSpec")
 	proto.RegisterType((*PerconaXtraDBModificationRequest)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PerconaXtraDBModificationRequest")
-	proto.RegisterType((*PerconaXtraDBModificationRequestCondition)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PerconaXtraDBModificationRequestCondition")
 	proto.RegisterType((*PerconaXtraDBModificationRequestList)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PerconaXtraDBModificationRequestList")
 	proto.RegisterType((*PerconaXtraDBModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PerconaXtraDBModificationRequestSpec")
 	proto.RegisterType((*PerconaXtraDBModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PerconaXtraDBModificationRequestStatus")
 	proto.RegisterType((*PgBouncerModificationRequest)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PgBouncerModificationRequest")
-	proto.RegisterType((*PgBouncerModificationRequestCondition)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PgBouncerModificationRequestCondition")
 	proto.RegisterType((*PgBouncerModificationRequestList)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PgBouncerModificationRequestList")
 	proto.RegisterType((*PgBouncerModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PgBouncerModificationRequestSpec")
 	proto.RegisterType((*PgBouncerModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PgBouncerModificationRequestStatus")
 	proto.RegisterType((*PostgresModificationRequest)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PostgresModificationRequest")
-	proto.RegisterType((*PostgresModificationRequestCondition)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PostgresModificationRequestCondition")
 	proto.RegisterType((*PostgresModificationRequestList)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PostgresModificationRequestList")
 	proto.RegisterType((*PostgresModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PostgresModificationRequestSpec")
 	proto.RegisterType((*PostgresModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.PostgresModificationRequestStatus")
 	proto.RegisterType((*ProxySQLModificationRequest)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ProxySQLModificationRequest")
-	proto.RegisterType((*ProxySQLModificationRequestCondition)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ProxySQLModificationRequestCondition")
 	proto.RegisterType((*ProxySQLModificationRequestList)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ProxySQLModificationRequestList")
 	proto.RegisterType((*ProxySQLModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ProxySQLModificationRequestSpec")
 	proto.RegisterType((*ProxySQLModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ProxySQLModificationRequestStatus")
@@ -1583,9 +1351,7 @@ func init() {
 	proto.RegisterType((*RedisModificationRequestList)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.RedisModificationRequestList")
 	proto.RegisterType((*RedisModificationRequestSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.RedisModificationRequestSpec")
 	proto.RegisterType((*RedisModificationRequestStatus)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.RedisModificationRequestStatus")
-	proto.RegisterType((*ScaleSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.ScaleSpec")
-	proto.RegisterType((*UpdateSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.UpdateSpec")
-	proto.RegisterType((*VerticalScale)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.VerticalScale")
+	proto.RegisterType((*UpgradeSpec)(nil), "kubedb.dev.apimachinery.apis.dba.v1alpha1.UpgradeSpec")
 }
 
 func init() {
@@ -1593,119 +1359,107 @@ func init() {
 }
 
 var fileDescriptor_b5a799bc54483634 = []byte{
-	// 1788 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x9a, 0xcd, 0x6f, 0xdc, 0x44,
-	0x1f, 0xc7, 0x63, 0xe7, 0xa5, 0xd9, 0xc9, 0x4b, 0x9f, 0x67, 0x9e, 0x3e, 0x4f, 0xf3, 0xa4, 0xe9,
-	0x26, 0xb5, 0xfa, 0xe4, 0x49, 0x90, 0xea, 0x25, 0x55, 0x8b, 0x52, 0x0a, 0x42, 0x72, 0xfa, 0x96,
-	0x36, 0x4b, 0xd2, 0x49, 0x5a, 0x68, 0x55, 0x51, 0x66, 0xbd, 0x93, 0x5d, 0x27, 0x6b, 0x7b, 0x63,
-	0xcf, 0x46, 0x4d, 0x2f, 0x20, 0xe0, 0x80, 0x54, 0x90, 0x40, 0x1c, 0x10, 0x70, 0xa0, 0x07, 0x2e,
-	0x88, 0x23, 0xff, 0x44, 0x8f, 0xbd, 0x51, 0x71, 0x88, 0xda, 0x14, 0xf5, 0x80, 0x10, 0x07, 0x0e,
-	0x15, 0xea, 0x09, 0xcd, 0xd8, 0x9b, 0x5d, 0x6f, 0x76, 0xec, 0x5d, 0xea, 0xbc, 0x54, 0xc9, 0x2d,
-	0x9e, 0xf1, 0xef, 0x65, 0x7e, 0xf3, 0x9d, 0x8f, 0xe3, 0x9f, 0x17, 0x9c, 0x5a, 0x2c, 0x65, 0x48,
-	0x36, 0xa3, 0x66, 0xc9, 0x72, 0x0a, 0x17, 0x0d, 0x13, 0xeb, 0x79, 0xc3, 0x22, 0xce, 0x0a, 0xbb,
-	0x70, 0x53, 0xd9, 0x0c, 0x4e, 0x2d, 0x8f, 0xe1, 0x42, 0x31, 0x8f, 0xc7, 0x52, 0x39, 0x62, 0x11,
-	0x07, 0x53, 0x92, 0x55, 0x8b, 0x8e, 0x4d, 0x6d, 0x38, 0x5a, 0x31, 0x55, 0xab, 0x4d, 0xd9, 0x85,
-	0xab, 0x66, 0x33, 0x58, 0x2d, 0x9b, 0xf6, 0x1f, 0xcb, 0x19, 0x34, 0x5f, 0xca, 0xa8, 0xba, 0x6d,
-	0xa6, 0x72, 0x76, 0xce, 0x4e, 0x71, 0x0f, 0x99, 0xd2, 0x3c, 0xbf, 0xe2, 0x17, 0xfc, 0x2f, 0xcf,
-	0x73, 0xbf, 0xb2, 0x38, 0xee, 0xaa, 0x86, 0xcd, 0x72, 0x48, 0xe9, 0xb6, 0x43, 0x52, 0xcb, 0x1b,
-	0xa2, 0xf7, 0x9f, 0xa8, 0xdc, 0x53, 0x49, 0xba, 0xb8, 0x98, 0xf3, 0x12, 0x37, 0x09, 0xc5, 0xf5,
-	0xac, 0x52, 0x22, 0x2b, 0xa7, 0x64, 0x51, 0xc3, 0x24, 0x1b, 0x0c, 0x5e, 0x89, 0x32, 0x70, 0xf5,
-	0x3c, 0x31, 0xf1, 0x06, 0xbb, 0x63, 0x8b, 0xa6, 0x9d, 0x2d, 0x15, 0x88, 0xab, 0xde, 0x5a, 0xb9,
-	0x9d, 0xd2, 0x0b, 0x06, 0xb1, 0xe8, 0xb1, 0x9c, 0xb7, 0xa4, 0x8d, 0x79, 0x29, 0x9f, 0x4b, 0x00,
-	0x4e, 0xd8, 0x16, 0xc5, 0x2c, 0x00, 0x22, 0xae, 0x5d, 0x72, 0x74, 0xe2, 0xc2, 0x21, 0xd0, 0x66,
-	0x61, 0x93, 0xf4, 0x49, 0x43, 0xd2, 0x48, 0x42, 0xeb, 0xbe, 0xb7, 0x3a, 0xd8, 0xb2, 0xb6, 0x3a,
-	0xd8, 0xf6, 0x26, 0x36, 0x09, 0xe2, 0x33, 0xf0, 0x1a, 0x48, 0x38, 0xe5, 0xdb, 0xfb, 0xe4, 0x21,
-	0x69, 0xa4, 0xeb, 0xf8, 0x88, 0xea, 0xe5, 0xcc, 0xf6, 0x41, 0x65, 0xe5, 0x53, 0x97, 0xc7, 0xd4,
-	0xb2, 0x4f, 0x44, 0x96, 0x4a, 0x86, 0x43, 0x4c, 0x62, 0x51, 0x57, 0xfb, 0xa7, 0xef, 0x30, 0xb1,
-	0x1e, 0x11, 0x55, 0xbc, 0x29, 0x7f, 0xc8, 0x60, 0xe8, 0x6c, 0x01, 0xbb, 0xd4, 0xd0, 0x5d, 0x82,
-	0x1d, 0x3d, 0x9f, 0xb6, 0xb3, 0xc6, 0xbc, 0xa1, 0x63, 0x6a, 0xd8, 0x16, 0xf3, 0x43, 0x5c, 0x0a,
-	0xdf, 0x05, 0x9d, 0xac, 0xd6, 0x59, 0x4c, 0x31, 0xcf, 0xb2, 0xeb, 0xf8, 0xcb, 0x55, 0xe1, 0x2b,
-	0x9a, 0x28, 0x2e, 0xe6, 0x3c, 0x5d, 0xb0, 0xbb, 0x59, 0x42, 0xd3, 0x99, 0x05, 0xa2, 0xd3, 0x34,
-	0xa1, 0x58, 0x83, 0x7e, 0x1a, 0xa0, 0x32, 0x86, 0xd6, 0xbd, 0xc2, 0x25, 0xd0, 0xe6, 0x16, 0x89,
-	0xee, 0x2f, 0x6e, 0x5a, 0x6d, 0x58, 0x75, 0x6a, 0x54, 0xf2, 0xb3, 0x45, 0xa2, 0x57, 0x8a, 0xca,
-	0xae, 0x10, 0x0f, 0x05, 0x57, 0x40, 0x87, 0x4b, 0x31, 0x2d, 0xb9, 0x7d, 0xad, 0x3c, 0xe8, 0xe5,
-	0x38, 0x83, 0x72, 0xc7, 0x5a, 0xaf, 0x1f, 0xb6, 0xc3, 0xbb, 0x46, 0x7e, 0x40, 0xe5, 0xa9, 0x04,
-	0x8e, 0x46, 0xb9, 0x98, 0x32, 0x5c, 0x0a, 0x6f, 0x6c, 0x28, 0xbc, 0xda, 0x58, 0xe1, 0x99, 0x35,
-	0x2f, 0xfb, 0x3f, 0xfc, 0x14, 0x3a, 0xcb, 0x23, 0x55, 0x45, 0x2f, 0x82, 0x76, 0x83, 0x12, 0x93,
-	0x49, 0xaa, 0x75, 0xa4, 0xeb, 0xf8, 0xa5, 0x18, 0x0b, 0xa0, 0xf5, 0xf8, 0x71, 0xdb, 0x27, 0x59,
-	0x04, 0xe4, 0x05, 0x52, 0x9e, 0xca, 0xd1, 0x0b, 0x67, 0x5b, 0x04, 0x6f, 0x82, 0x2e, 0x96, 0x62,
-	0x06, 0xbb, 0x04, 0x91, 0x79, 0x7f, 0xed, 0x75, 0x35, 0x3f, 0x65, 0xeb, 0xb8, 0xe0, 0x69, 0x0a,
-	0x91, 0x79, 0xe2, 0x10, 0x4b, 0x27, 0xda, 0xbf, 0xfc, 0xe8, 0x5d, 0x67, 0x2a, 0x4e, 0x50, 0xb5,
-	0x47, 0x78, 0x1a, 0xb4, 0xd1, 0x95, 0x22, 0xe1, 0x82, 0x4b, 0x68, 0xff, 0x2f, 0xeb, 0x63, 0x6e,
-	0xa5, 0x48, 0x9e, 0xad, 0x0e, 0x1e, 0xac, 0x93, 0x17, 0x9b, 0x42, 0xdc, 0x08, 0x5e, 0x03, 0x1d,
-	0xa5, 0x62, 0x16, 0x53, 0xe2, 0x4b, 0xe7, 0x64, 0x13, 0x95, 0xbb, 0xc2, 0x0d, 0xb9, 0x2a, 0x01,
-	0x93, 0x86, 0x77, 0x8d, 0x7c, 0x87, 0xf0, 0x0a, 0x68, 0x77, 0x75, 0x5c, 0x20, 0x7d, 0x6d, 0xdc,
-	0xf3, 0x89, 0x26, 0x3c, 0xcf, 0x32, 0x3b, 0xee, 0x38, 0xc1, 0x0a, 0xcf, 0x2f, 0x91, 0xe7, 0x4d,
-	0xf9, 0x42, 0x06, 0xc3, 0x8d, 0x89, 0x16, 0xbe, 0x01, 0xda, 0x8b, 0x79, 0xec, 0x96, 0x79, 0x34,
-	0x5a, 0xde, 0xc8, 0x19, 0x36, 0xf8, 0x6c, 0x75, 0xb0, 0xaf, 0x8e, 0x29, 0x9f, 0x43, 0x9e, 0x1d,
-	0xbc, 0x08, 0xa0, 0x9d, 0x71, 0x89, 0xb3, 0x4c, 0xb2, 0xe7, 0x3d, 0x02, 0x1a, 0xb6, 0xc5, 0x0b,
-	0xdd, 0xaa, 0xf5, 0xfb, 0xde, 0xe0, 0xf4, 0x86, 0x3b, 0x50, 0x1d, 0x2b, 0x78, 0x03, 0x00, 0xdd,
-	0xb6, 0xb2, 0x06, 0xbb, 0x60, 0x07, 0xb5, 0xd5, 0x93, 0x41, 0x15, 0x76, 0x55, 0x0f, 0xbb, 0x37,
-	0x73, 0x9e, 0x2c, 0x96, 0xc7, 0xd4, 0x89, 0xb2, 0x41, 0x85, 0x39, 0xeb, 0x43, 0x2e, 0xaa, 0xf2,
-	0xa7, 0xfc, 0x24, 0x83, 0x83, 0x67, 0xa9, 0x9e, 0xdd, 0x1e, 0xe6, 0xe5, 0x03, 0xcc, 0x3b, 0xd7,
-	0xcc, 0xe9, 0xab, 0x9f, 0xb3, 0x10, 0x75, 0xc5, 0x1a, 0xd4, 0x5d, 0x88, 0x21, 0x56, 0x38, 0xe1,
-	0xbe, 0x61, 0x8f, 0x95, 0xfa, 0x96, 0xeb, 0x7b, 0x01, 0xc7, 0xfd, 0x33, 0xe8, 0x09, 0xed, 0x68,
-	0xcd, 0x19, 0x3c, 0x50, 0x7b, 0x7f, 0xd5, 0x01, 0x1c, 0x06, 0x1d, 0x0e, 0xc1, 0xae, 0x2f, 0xab,
-	0x44, 0x25, 0x0d, 0xc4, 0x47, 0x91, 0x3f, 0x0b, 0x47, 0xc1, 0x3e, 0x93, 0xb8, 0x2e, 0xce, 0x79,
-	0x27, 0x35, 0xa1, 0xed, 0xf7, 0x6f, 0xdc, 0x97, 0xf6, 0x86, 0x51, 0x79, 0x1e, 0x2e, 0x80, 0x5e,
-	0x76, 0x3e, 0xbc, 0xe3, 0x38, 0x67, 0x98, 0xe5, 0x13, 0xf8, 0x52, 0x63, 0xbb, 0xce, 0x2c, 0xb4,
-	0xff, 0xf8, 0xde, 0x7b, 0xa7, 0x02, 0x9e, 0x50, 0x8d, 0x67, 0xe5, 0x17, 0x09, 0x1c, 0x12, 0x54,
-	0x67, 0x0b, 0xb0, 0x9f, 0x0b, 0x62, 0x5f, 0x7b, 0x7e, 0x31, 0x08, 0x68, 0x7f, 0x58, 0xb8, 0x4a,
-	0xa6, 0x4d, 0xe5, 0xae, 0x04, 0x0e, 0x87, 0xaa, 0x0b, 0xbe, 0x17, 0x38, 0xfd, 0x52, 0xf3, 0x4f,
-	0xa9, 0x08, 0x05, 0x46, 0x02, 0xe2, 0x24, 0xd8, 0x7f, 0xc1, 0x76, 0x8c, 0xdb, 0xec, 0x9f, 0xb6,
-	0x02, 0x07, 0x2a, 0x54, 0x40, 0x87, 0x49, 0xcc, 0x0c, 0x71, 0xf8, 0xce, 0xb4, 0x7b, 0x10, 0x4f,
-	0xf3, 0x11, 0xe4, 0xcf, 0x28, 0x4f, 0x64, 0x30, 0x90, 0x26, 0xa6, 0x8e, 0xf5, 0x3c, 0xd9, 0x26,
-	0xb8, 0x98, 0x01, 0xb8, 0x34, 0x53, 0xb4, 0xb0, 0xc4, 0x85, 0x84, 0x29, 0xd5, 0x10, 0x26, 0x1d,
-	0x57, 0xc0, 0x70, 0xcc, 0xdc, 0x95, 0xc1, 0xff, 0xc2, 0xcc, 0xf7, 0x58, 0xa3, 0xfc, 0x2e, 0x81,
-	0xa1, 0xb0, 0x12, 0x6d, 0x01, 0x70, 0x0a, 0x41, 0xe0, 0x9c, 0x8f, 0x49, 0x1b, 0x02, 0xea, 0x28,
-	0xe1, 0xeb, 0xe5, 0xe8, 0xf9, 0x41, 0x02, 0x4a, 0xb4, 0xec, 0xe0, 0x47, 0x52, 0x1d, 0x00, 0xcd,
-	0xc4, 0x94, 0x7e, 0xe3, 0x14, 0x7a, 0x28, 0x83, 0xfe, 0xb4, 0x6d, 0xe5, 0xec, 0x33, 0xda, 0xf6,
-	0xc0, 0x64, 0x31, 0x00, 0x93, 0xc9, 0x66, 0x0a, 0x20, 0x4c, 0x5b, 0x88, 0x12, 0xb7, 0x06, 0x25,
-	0x97, 0xe2, 0x09, 0x17, 0x0e, 0x92, 0x5f, 0x25, 0x90, 0x14, 0x1b, 0x6f, 0xc1, 0x19, 0x59, 0x08,
-	0x9e, 0x91, 0xb3, 0xb1, 0x2c, 0x5a, 0x70, 0x42, 0xbe, 0x92, 0xc3, 0x16, 0xbb, 0xab, 0xdf, 0xbf,
-	0x94, 0x4f, 0x65, 0x30, 0x14, 0xa5, 0xa2, 0xdd, 0xf4, 0x8a, 0xf4, 0xb3, 0x0c, 0xfa, 0xd2, 0x2b,
-	0xb3, 0x97, 0xa7, 0xb6, 0x87, 0x3c, 0x46, 0x80, 0x3c, 0x4d, 0x3d, 0x39, 0x04, 0x49, 0x0b, 0xb9,
-	0xb3, 0x54, 0xc3, 0x9d, 0xc9, 0x38, 0x82, 0x85, 0x53, 0xe7, 0x89, 0x04, 0x06, 0x44, 0xa6, 0x5b,
-	0xc0, 0x9c, 0x7c, 0x90, 0x39, 0x13, 0x31, 0x2c, 0x58, 0x40, 0x9c, 0x3f, 0x65, 0xf1, 0x42, 0x5f,
-	0x00, 0xde, 0xbc, 0x53, 0xc3, 0x9b, 0x57, 0x9b, 0xad, 0x54, 0x44, 0xd3, 0xe7, 0x7a, 0xb0, 0xe9,
-	0x73, 0xaa, 0x59, 0xf7, 0x61, 0x9d, 0x9f, 0x3b, 0x0c, 0xf6, 0xa1, 0xf2, 0xdc, 0x4d, 0x38, 0xfb,
-	0x5a, 0x06, 0xbd, 0xc1, 0x92, 0xc1, 0x05, 0x00, 0xf2, 0xeb, 0xef, 0x78, 0xbe, 0xf2, 0x9a, 0xd9,
-	0xe0, 0x9a, 0x17, 0x44, 0xad, 0x97, 0x85, 0xaf, 0x0c, 0xa2, 0x2a, 0xef, 0x30, 0x03, 0x3a, 0x97,
-	0x89, 0x43, 0x0d, 0x1d, 0x17, 0x7c, 0xa4, 0x8d, 0x37, 0x11, 0xe9, 0xaa, 0x6f, 0xea, 0xc5, 0xe9,
-	0x66, 0xa7, 0xba, 0x3c, 0x84, 0xd6, 0xfd, 0xc2, 0x71, 0xd0, 0xed, 0xbd, 0x86, 0xbe, 0x45, 0x8c,
-	0x5c, 0x9e, 0x72, 0xc9, 0xb6, 0x6b, 0x07, 0xfc, 0xc2, 0x74, 0xa7, 0xab, 0xe6, 0x50, 0xe0, 0x4e,
-	0xe5, 0x13, 0x09, 0xec, 0xaf, 0x91, 0x2b, 0x3c, 0x0d, 0x7a, 0x28, 0x76, 0x72, 0x84, 0x5e, 0x25,
-	0x8e, 0xcb, 0x76, 0xd5, 0xd3, 0xc8, 0xbf, 0x7d, 0x77, 0x3d, 0x73, 0xd5, 0x93, 0x28, 0x78, 0x2f,
-	0x7c, 0x0d, 0xfc, 0x77, 0xa2, 0xe4, 0x38, 0xc4, 0xe2, 0x4a, 0x23, 0xf3, 0xa5, 0xc2, 0x2c, 0xa1,
-	0xd3, 0x4e, 0xd6, 0xb0, 0xfc, 0xf5, 0xb7, 0x23, 0xf1, 0x0d, 0xfc, 0xd3, 0xc4, 0x0c, 0x71, 0x74,
-	0xdb, 0xc2, 0x6f, 0x53, 0x07, 0x6f, 0xd7, 0x3f, 0xbf, 0x7f, 0xff, 0xd3, 0x44, 0x54, 0xf2, 0x9b,
-	0xf2, 0x69, 0x22, 0x32, 0x68, 0xf8, 0x23, 0xe9, 0x3b, 0x19, 0x8c, 0x46, 0xb9, 0xd8, 0x7b, 0xab,
-	0xe6, 0x5f, 0x70, 0xa2, 0xca, 0xb4, 0xb3, 0xbf, 0xe0, 0x44, 0x65, 0x2f, 0x78, 0x92, 0x0f, 0x47,
-	0xaf, 0x9b, 0xbf, 0x61, 0xff, 0x28, 0x81, 0xe1, 0xc6, 0xa4, 0x08, 0x3f, 0xae, 0xf7, 0x96, 0x3d,
-	0x17, 0xe3, 0x52, 0x1a, 0x7f, 0x3c, 0x3c, 0x91, 0xc1, 0xc0, 0x4c, 0x4e, 0xb3, 0x4b, 0x96, 0x4e,
-	0x9c, 0x17, 0xad, 0x71, 0x17, 0x96, 0xf8, 0xa6, 0x34, 0xee, 0x42, 0x03, 0x46, 0x37, 0xee, 0xc2,
-	0xcc, 0xf7, 0x10, 0xc3, 0x1b, 0x77, 0x61, 0x25, 0xda, 0xd9, 0x8d, 0xbb, 0xb0, 0xcc, 0xc5, 0x8d,
-	0xbb, 0x28, 0x09, 0xf3, 0xc6, 0x5d, 0xb4, 0xec, 0x9e, 0xbf, 0x71, 0xd7, 0x90, 0x36, 0x23, 0x71,
-	0xf2, 0x58, 0x06, 0x87, 0x66, 0x6c, 0x97, 0xe6, 0x1c, 0xe2, 0x6e, 0x0f, 0x4d, 0x0a, 0x01, 0x9a,
-	0x5c, 0x6c, 0xa6, 0x02, 0xe2, 0xbc, 0x85, 0x30, 0xa1, 0x35, 0x30, 0x99, 0x8a, 0x29, 0x5e, 0x38,
-	0x4b, 0xbe, 0x95, 0xc1, 0xd1, 0x10, 0xeb, 0x3d, 0x94, 0x28, 0xbf, 0x49, 0x60, 0x30, 0xa4, 0x42,
-	0x5b, 0x40, 0x92, 0xc5, 0x20, 0x49, 0xce, 0xc5, 0x23, 0x0c, 0x01, 0x48, 0x8e, 0x84, 0xae, 0x96,
-	0x73, 0xe4, 0x7b, 0x09, 0x1c, 0x89, 0x54, 0x1c, 0xfc, 0xb0, 0x1e, 0x46, 0xa6, 0xe3, 0xc9, 0xbd,
-	0x49, 0x8a, 0x38, 0xf6, 0xad, 0xed, 0xeb, 0xc2, 0x3d, 0x07, 0x45, 0xc4, 0x79, 0x6f, 0x0e, 0x45,
-	0x42, 0xe2, 0x35, 0x40, 0x11, 0xb1, 0xf5, 0x1e, 0x45, 0x3c, 0x8a, 0x88, 0x2b, 0xb4, 0xc3, 0x29,
-	0x22, 0x4e, 0x3c, 0x84, 0x22, 0xe1, 0xea, 0xf5, 0x28, 0x12, 0xa5, 0xb8, 0x18, 0x28, 0xd2, 0x80,
-	0x2c, 0x1b, 0x6a, 0xe4, 0x23, 0x92, 0x35, 0xdc, 0x17, 0xad, 0x91, 0x2f, 0x4a, 0x7a, 0x53, 0x1a,
-	0xf9, 0xc2, 0x60, 0xd1, 0x8d, 0x7c, 0x91, 0xe9, 0xce, 0x6e, 0xe4, 0x8b, 0xb2, 0x16, 0x1c, 0x8a,
-	0x2f, 0x65, 0xf1, 0x42, 0x77, 0xf7, 0x87, 0xc3, 0x3b, 0x32, 0x48, 0x86, 0xab, 0x67, 0x37, 0xf5,
-	0xd9, 0x97, 0x40, 0xa2, 0xd2, 0x61, 0x57, 0x40, 0x87, 0x89, 0x5d, 0x5a, 0xf3, 0x93, 0x29, 0x3e,
-	0x82, 0xfc, 0x19, 0x38, 0x00, 0xda, 0xf8, 0xe1, 0xe0, 0x5d, 0x61, 0xad, 0x93, 0x6d, 0x29, 0x93,
-	0x00, 0xe2, 0xa3, 0xcc, 0x83, 0x97, 0x8c, 0xdf, 0xcd, 0xe6, 0x1e, 0x26, 0xf8, 0x08, 0xf2, 0x67,
-	0x94, 0x49, 0x00, 0x62, 0xea, 0x5b, 0x2b, 0x1f, 0x48, 0xa0, 0x27, 0xd0, 0x6c, 0x87, 0x4b, 0xbc,
-	0x5a, 0xde, 0x2f, 0xf7, 0xcb, 0x08, 0x7f, 0xbd, 0x09, 0xf1, 0x6c, 0xfc, 0xd9, 0x7f, 0xa0, 0x84,
-	0xbe, 0x63, 0x54, 0x15, 0x44, 0x53, 0xef, 0x3d, 0x4a, 0xb6, 0xdc, 0x7f, 0x94, 0x6c, 0x79, 0xf0,
-	0x28, 0xd9, 0xf2, 0xfe, 0x5a, 0x52, 0xba, 0xb7, 0x96, 0x94, 0xee, 0xaf, 0x25, 0xa5, 0x07, 0x6b,
-	0x49, 0xe9, 0xe1, 0x5a, 0x52, 0xfa, 0xec, 0x71, 0xb2, 0xe5, 0x7a, 0x67, 0x39, 0xc4, 0x5f, 0x01,
-	0x00, 0x00, 0xff, 0xff, 0xe2, 0x1c, 0xc4, 0xca, 0xe5, 0x31, 0x00, 0x00,
+	// 1592 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x99, 0xcd, 0x6f, 0x13, 0xc7,
+	0x1b, 0xc7, 0xb3, 0x1b, 0x27, 0x24, 0x13, 0xf8, 0xf1, 0x63, 0x29, 0xc5, 0x0a, 0xd4, 0x4e, 0xad,
+	0x8a, 0x86, 0x03, 0xeb, 0x06, 0x55, 0x88, 0x0a, 0x55, 0x95, 0x36, 0x84, 0xd7, 0xb8, 0x09, 0x13,
+	0x4a, 0x5f, 0x44, 0x45, 0xc7, 0xbb, 0x93, 0xf5, 0x62, 0xef, 0x4b, 0x76, 0xc7, 0x16, 0xe1, 0x54,
+	0xf5, 0x54, 0x81, 0x68, 0xa9, 0xb8, 0xb5, 0x6a, 0x7b, 0xe8, 0xff, 0xd0, 0xbf, 0x81, 0x23, 0xb7,
+	0x22, 0x0e, 0x16, 0x98, 0x8a, 0x43, 0x55, 0xf5, 0x50, 0xa9, 0x3d, 0x70, 0xaa, 0x66, 0x76, 0x1d,
+	0x7b, 0x6d, 0xcf, 0x6e, 0x0c, 0x4e, 0x1c, 0x64, 0xdf, 0xb2, 0x33, 0xfb, 0x3c, 0xcf, 0xf7, 0x79,
+	0xe6, 0x99, 0xcf, 0x3a, 0x33, 0xe0, 0xbd, 0x62, 0x39, 0x8f, 0xb5, 0xbc, 0xac, 0xe1, 0x4a, 0x16,
+	0x39, 0x86, 0x89, 0xd4, 0x82, 0x61, 0x61, 0x77, 0x9d, 0x3e, 0x78, 0x59, 0x2d, 0x8f, 0xb2, 0x95,
+	0x39, 0x54, 0x72, 0x0a, 0x68, 0x2e, 0xab, 0x63, 0x0b, 0xbb, 0x88, 0x60, 0x4d, 0x76, 0x5c, 0x9b,
+	0xd8, 0xd2, 0xd1, 0x86, 0xa9, 0xdc, 0x6c, 0x4a, 0x1f, 0x3c, 0x59, 0xcb, 0x23, 0xb9, 0x6e, 0x3a,
+	0x7d, 0x4c, 0x37, 0x48, 0xa1, 0x9c, 0x97, 0x55, 0xdb, 0xcc, 0xea, 0xb6, 0x6e, 0x67, 0x99, 0x87,
+	0x7c, 0x79, 0x95, 0x3d, 0xb1, 0x07, 0xf6, 0x97, 0xef, 0x79, 0x3a, 0x53, 0x3c, 0xe9, 0xc9, 0x86,
+	0x4d, 0x35, 0x64, 0x55, 0xdb, 0xc5, 0xd9, 0x4a, 0x5b, 0xf4, 0xe9, 0x77, 0x1b, 0xef, 0x34, 0x44,
+	0x3b, 0x45, 0xdd, 0x17, 0x6e, 0x62, 0x82, 0x3a, 0x59, 0x65, 0x79, 0x56, 0x6e, 0xd9, 0x22, 0x86,
+	0x89, 0xdb, 0x0c, 0x4e, 0xc4, 0x19, 0x78, 0x6a, 0x01, 0x9b, 0xa8, 0xcd, 0xee, 0x58, 0xd1, 0xb4,
+	0xb5, 0x72, 0x09, 0x7b, 0xf2, 0x8d, 0xf5, 0x9b, 0x59, 0xb5, 0x64, 0x60, 0x8b, 0x1c, 0xd3, 0xfd,
+	0x94, 0xda, 0x75, 0x65, 0xbe, 0x13, 0x80, 0x34, 0x6f, 0x5b, 0x04, 0xd1, 0x00, 0x10, 0x7b, 0x76,
+	0xd9, 0x55, 0xb1, 0x27, 0xcd, 0x80, 0x84, 0x85, 0x4c, 0x9c, 0x14, 0x66, 0x84, 0xd9, 0x49, 0x65,
+	0xf7, 0xfd, 0x6a, 0x7a, 0xa4, 0x56, 0x4d, 0x27, 0x3e, 0x44, 0x26, 0x86, 0x6c, 0x46, 0xfa, 0x14,
+	0x4c, 0xba, 0xf5, 0xd7, 0x93, 0xe2, 0x8c, 0x30, 0x3b, 0x75, 0x7c, 0x56, 0xf6, 0x35, 0xd3, 0x75,
+	0x90, 0x69, 0xf9, 0xe4, 0xca, 0x9c, 0x5c, 0xf7, 0x09, 0xf1, 0x5a, 0xd9, 0x70, 0xb1, 0x89, 0x2d,
+	0xe2, 0x29, 0xfb, 0x02, 0x87, 0x93, 0x1b, 0x11, 0x61, 0xc3, 0x5b, 0xe6, 0x6b, 0x01, 0xcc, 0x2c,
+	0x94, 0x90, 0x47, 0x0c, 0xd5, 0xc3, 0xc8, 0x55, 0x0b, 0xe7, 0x6c, 0xd7, 0xb8, 0x49, 0x45, 0x96,
+	0x56, 0x54, 0x54, 0xc2, 0x2b, 0x0e, 0x56, 0xa5, 0x0c, 0x18, 0x37, 0x91, 0x47, 0xb0, 0xcb, 0x34,
+	0x8e, 0x29, 0xa0, 0x56, 0x4d, 0x8f, 0xe7, 0xd8, 0x08, 0x0c, 0x66, 0xa4, 0xc3, 0x20, 0xa1, 0x21,
+	0x82, 0x98, 0xbc, 0x31, 0x65, 0x82, 0x66, 0x70, 0x1a, 0x11, 0x04, 0xd9, 0x28, 0xf5, 0xe0, 0x97,
+	0x27, 0x39, 0xda, 0xf0, 0x30, 0xcf, 0x46, 0x60, 0x30, 0x93, 0xf9, 0x5b, 0x6c, 0x91, 0x92, 0xb3,
+	0x35, 0x63, 0xd5, 0x50, 0x11, 0x31, 0x6c, 0x8b, 0xa6, 0x84, 0x3d, 0x22, 0x7d, 0x01, 0x26, 0xe8,
+	0xb2, 0xb3, 0x50, 0x02, 0xab, 0xc4, 0x3b, 0x4d, 0x95, 0x68, 0xb4, 0xa7, 0x53, 0xd4, 0xfd, 0x16,
+	0xa5, 0x6f, 0xd3, 0xda, 0x2c, 0xe5, 0xaf, 0x63, 0x95, 0xe4, 0x30, 0x41, 0x8a, 0x14, 0x54, 0x04,
+	0x34, 0xc6, 0xe0, 0x86, 0x57, 0x69, 0x0d, 0x24, 0x3c, 0x07, 0xab, 0x41, 0x9d, 0x97, 0xe4, 0x4d,
+	0x6f, 0x00, 0x39, 0x4e, 0x3c, 0xad, 0x65, 0x63, 0x7d, 0xe9, 0x13, 0x64, 0xa1, 0xa4, 0x75, 0x30,
+	0xee, 0x11, 0x44, 0xca, 0x1e, 0xab, 0xce, 0xd4, 0xf1, 0x4b, 0xbd, 0x0c, 0xca, 0x1c, 0x2b, 0xff,
+	0x0b, 0xc2, 0x8e, 0xfb, 0xcf, 0x30, 0x08, 0x98, 0xf9, 0x57, 0x00, 0x6f, 0xc5, 0xb9, 0x58, 0x34,
+	0x3c, 0x22, 0x5d, 0x6d, 0x2b, 0xbc, 0xbc, 0xb9, 0xc2, 0x53, 0x6b, 0x56, 0xf6, 0xff, 0x07, 0x12,
+	0x26, 0xea, 0x23, 0x4d, 0x45, 0x77, 0xc0, 0x98, 0x41, 0xb0, 0x49, 0xbb, 0x7b, 0x74, 0x76, 0xea,
+	0xf8, 0xc5, 0x1e, 0x16, 0x40, 0xd9, 0x13, 0xc4, 0x1d, 0x3b, 0x4f, 0x23, 0x40, 0x3f, 0x50, 0xe6,
+	0xd7, 0xd1, 0xf8, 0xc4, 0x59, 0xf3, 0x5f, 0x03, 0x53, 0x54, 0x62, 0x1e, 0x79, 0x18, 0xe2, 0xd5,
+	0x20, 0xf7, 0x8e, 0xdb, 0x6f, 0xd1, 0x56, 0x51, 0xc9, 0xef, 0x29, 0x88, 0x57, 0xb1, 0x8b, 0x2d,
+	0x15, 0x2b, 0xfb, 0x83, 0xe8, 0x53, 0xa7, 0x1b, 0x4e, 0x60, 0xb3, 0x47, 0xe9, 0x14, 0x48, 0x90,
+	0x75, 0x07, 0xb3, 0x86, 0x9b, 0x54, 0xde, 0xae, 0xf7, 0xc7, 0xe5, 0x75, 0x07, 0x3f, 0xaf, 0xa6,
+	0x0f, 0x76, 0xd0, 0x45, 0xa7, 0x20, 0x33, 0x92, 0x3e, 0x07, 0xbb, 0xca, 0x8e, 0xee, 0x22, 0x0d,
+	0x07, 0xbd, 0x73, 0xa2, 0x8b, 0xd2, 0x7d, 0xe4, 0x5b, 0xb2, 0xbe, 0x9c, 0xaa, 0x55, 0xd3, 0xbb,
+	0x82, 0x01, 0x58, 0xf7, 0x29, 0xdd, 0x15, 0xc0, 0xbe, 0x42, 0x88, 0x08, 0x86, 0xa5, 0x27, 0x13,
+	0x2c, 0xd2, 0x0b, 0x2f, 0x52, 0x07, 0xc4, 0x28, 0x07, 0x6a, 0xd5, 0xf4, 0xbe, 0x73, 0xad, 0x91,
+	0x60, 0x7b, 0xf0, 0xcc, 0x3d, 0x11, 0x1c, 0xd9, 0x5c, 0xd3, 0x4b, 0x1f, 0x80, 0x31, 0xa7, 0x80,
+	0xbc, 0x3a, 0x5a, 0x8f, 0xd6, 0x1b, 0x61, 0x99, 0x0e, 0x3e, 0xaf, 0xa6, 0x93, 0x1d, 0x4c, 0xd9,
+	0x1c, 0xf4, 0xed, 0xa4, 0x0b, 0x40, 0xb2, 0xf3, 0x1e, 0x76, 0x2b, 0x58, 0x3b, 0xeb, 0xc3, 0xdc,
+	0xb0, 0x2d, 0xb6, 0x50, 0xa3, 0xca, 0x74, 0xe0, 0x4d, 0x5a, 0x6a, 0x7b, 0x03, 0x76, 0xb0, 0x92,
+	0xae, 0x02, 0xa0, 0xda, 0x96, 0x66, 0xd0, 0x07, 0xba, 0xd1, 0x47, 0xfd, 0x36, 0x6a, 0xfa, 0x82,
+	0xc8, 0x3e, 0x08, 0xaf, 0xe9, 0x7e, 0x5b, 0x55, 0xe6, 0xe4, 0xf9, 0xba, 0x41, 0x83, 0x59, 0x1b,
+	0x43, 0x1e, 0x6c, 0xf2, 0x97, 0xf9, 0x4d, 0x04, 0x07, 0x17, 0x88, 0xaa, 0xf5, 0x87, 0x99, 0x85,
+	0x10, 0x33, 0xcf, 0x74, 0xd3, 0x18, 0x9d, 0x35, 0x73, 0x51, 0xe9, 0xb4, 0xa0, 0xf2, 0x5c, 0x0f,
+	0x62, 0x45, 0x13, 0xf2, 0x77, 0x01, 0x1c, 0xe2, 0x58, 0x6e, 0x03, 0x18, 0xf5, 0x30, 0x18, 0x95,
+	0x97, 0x4f, 0x97, 0xc3, 0xc3, 0xef, 0x45, 0x6e, 0x9a, 0x03, 0x8f, 0xc1, 0xcc, 0x2d, 0x11, 0xbc,
+	0x11, 0xd9, 0x3d, 0x83, 0x84, 0x9a, 0x67, 0x22, 0x38, 0x9c, 0xc3, 0xa6, 0x8a, 0xd4, 0x02, 0xee,
+	0x13, 0x6f, 0xcc, 0x10, 0x6f, 0xba, 0xf9, 0x10, 0x45, 0x09, 0xe7, 0x42, 0xa7, 0xdc, 0x02, 0x9d,
+	0x5c, 0xaf, 0x02, 0x46, 0x93, 0xe7, 0x2f, 0x01, 0xcc, 0x44, 0x99, 0x6f, 0x03, 0x7e, 0x4a, 0x61,
+	0xfc, 0x9c, 0xed, 0x51, 0xe2, 0x1c, 0x06, 0xfd, 0x2c, 0x46, 0x27, 0x3c, 0x04, 0xd1, 0xb7, 0x22,
+	0xc8, 0xc4, 0x77, 0xd4, 0x20, 0xd1, 0xe8, 0xb1, 0x08, 0xa6, 0x73, 0xb6, 0xa5, 0xdb, 0xa7, 0x95,
+	0xfe, 0xb0, 0xa8, 0x18, 0x62, 0xd1, 0xf9, 0x6e, 0x76, 0x08, 0x57, 0x36, 0x97, 0x44, 0x5e, 0x0b,
+	0x89, 0x2e, 0xf6, 0x26, 0x5c, 0x34, 0x87, 0xfe, 0x10, 0x40, 0x8a, 0x6f, 0xbc, 0x0d, 0x14, 0xba,
+	0x1e, 0xa6, 0xd0, 0x42, 0x4f, 0x92, 0xe6, 0x30, 0xe8, 0x47, 0x31, 0x2a, 0xd9, 0x21, 0x81, 0xee,
+	0x50, 0x46, 0xc7, 0x74, 0xd2, 0x20, 0xf1, 0xe7, 0x26, 0x98, 0xce, 0xad, 0xaf, 0x5c, 0x5a, 0x6c,
+	0xfb, 0xdf, 0x75, 0xe3, 0xe4, 0x0c, 0x9b, 0xf9, 0x96, 0x93, 0x33, 0x36, 0x02, 0x83, 0x19, 0xe9,
+	0x24, 0xd8, 0xed, 0xff, 0xf5, 0x31, 0x36, 0xf4, 0x02, 0x09, 0x4e, 0xd0, 0x5e, 0x0b, 0xe2, 0xee,
+	0xce, 0x35, 0xcd, 0xc1, 0xd0, 0x9b, 0x99, 0x47, 0x22, 0x48, 0xb2, 0xe0, 0xfd, 0x21, 0x9f, 0x11,
+	0x22, 0x5f, 0x57, 0xbf, 0x0d, 0x38, 0xa2, 0xb9, 0xdc, 0x5b, 0x6b, 0xe1, 0xde, 0xf9, 0x5e, 0x04,
+	0x8b, 0xa6, 0xde, 0x33, 0x01, 0x1c, 0xe6, 0x99, 0x6e, 0x03, 0xf3, 0x0a, 0x61, 0xe6, 0xcd, 0xf7,
+	0x20, 0x61, 0x0e, 0xf1, 0xfe, 0x49, 0xf0, 0x13, 0xdd, 0x1e, 0xde, 0x9d, 0x01, 0x12, 0x2d, 0x3a,
+	0x5e, 0x2d, 0x97, 0x56, 0x30, 0x59, 0x72, 0x35, 0xc3, 0x42, 0xa5, 0x60, 0x1f, 0xbc, 0x4e, 0x77,
+	0xfa, 0x4a, 0xdb, 0x2c, 0xec, 0x60, 0xb1, 0xc1, 0xcd, 0xd1, 0x97, 0xe4, 0x66, 0x62, 0x0b, 0x4e,
+	0xd2, 0x6e, 0x75, 0x3c, 0x49, 0x1b, 0x63, 0x91, 0x16, 0xba, 0x5d, 0xdc, 0x8e, 0xb0, 0xd9, 0xfc,
+	0x19, 0x9a, 0xf4, 0x95, 0x00, 0xf6, 0x56, 0xb0, 0x4b, 0x0c, 0xb5, 0x21, 0x65, 0x9c, 0x49, 0xe9,
+	0xba, 0xcf, 0xae, 0x84, 0xdd, 0x30, 0x21, 0xfb, 0x6b, 0xd5, 0xf4, 0xde, 0x96, 0x09, 0xd8, 0x1a,
+	0x30, 0x73, 0x9b, 0x7e, 0x69, 0x23, 0xf7, 0xe6, 0x20, 0x7d, 0x47, 0xee, 0x08, 0x01, 0xcb, 0x3b,
+	0x14, 0x54, 0x5a, 0x63, 0xa1, 0xfd, 0x8b, 0x23, 0x2f, 0x29, 0xb0, 0xd0, 0xef, 0x77, 0xb1, 0x52,
+	0xed, 0xb7, 0x4e, 0x21, 0x3d, 0x81, 0x63, 0xd8, 0x14, 0x84, 0xdd, 0xc6, 0x2c, 0x63, 0x57, 0xb5,
+	0x2d, 0xf4, 0x09, 0x71, 0x51, 0xbf, 0x7e, 0x5d, 0xbf, 0xf8, 0x6d, 0x4c, 0x9c, 0xf8, 0x2d, 0xb9,
+	0x8d, 0x89, 0x0d, 0x1a, 0x7f, 0x1b, 0x13, 0xe7, 0x62, 0x67, 0xdf, 0xc6, 0xc4, 0xa9, 0xe7, 0x7c,
+	0x83, 0x7e, 0x11, 0xe3, 0x13, 0x1f, 0xfe, 0xf6, 0xbe, 0x27, 0x82, 0x23, 0x9b, 0xeb, 0xb0, 0x41,
+	0x3b, 0x8f, 0x5c, 0xd6, 0x15, 0xbb, 0x6c, 0xa9, 0xd8, 0x7d, 0xd5, 0xce, 0x23, 0xa3, 0x84, 0x6f,
+	0xc9, 0x79, 0x64, 0x64, 0xc0, 0xf8, 0xf3, 0xc8, 0x28, 0xf3, 0x9d, 0x7d, 0x1e, 0x19, 0xa5, 0x3c,
+	0xe2, 0x3c, 0x32, 0x6e, 0x81, 0x86, 0xe7, 0x91, 0xf1, 0x1d, 0x35, 0x48, 0x34, 0x7a, 0x2a, 0x82,
+	0x43, 0xcb, 0xb6, 0x47, 0x74, 0x17, 0x7b, 0xfd, 0x81, 0x51, 0x29, 0x04, 0xa3, 0x0b, 0xdd, 0x6c,
+	0x11, 0xbe, 0x6e, 0x2e, 0x8b, 0x48, 0x0b, 0x8b, 0x16, 0x7b, 0x14, 0x2f, 0x1a, 0x45, 0x7f, 0x0a,
+	0x20, 0x1d, 0x61, 0xbd, 0x0d, 0x24, 0x2a, 0x86, 0x49, 0x74, 0xa6, 0x37, 0x69, 0x73, 0x40, 0xf4,
+	0x93, 0x18, 0x99, 0xee, 0x90, 0x43, 0xdf, 0x88, 0xe0, 0xcd, 0xd8, 0x6e, 0x1a, 0x38, 0x0c, 0xb9,
+	0xf6, 0x8d, 0xfe, 0x9d, 0x0e, 0xbe, 0x04, 0x86, 0xf8, 0xba, 0xb7, 0x06, 0x43, 0x11, 0xf1, 0x36,
+	0x81, 0x21, 0xbe, 0xf5, 0x0e, 0xc7, 0x10, 0x5f, 0x78, 0x14, 0x86, 0xa2, 0x17, 0x67, 0x88, 0xa1,
+	0xd8, 0x6e, 0x1a, 0x24, 0x0c, 0x3d, 0x12, 0x41, 0x12, 0x62, 0xcd, 0xf0, 0x5e, 0xb5, 0x1b, 0x0a,
+	0x9e, 0xe8, 0x2d, 0xb9, 0xa1, 0xe0, 0x06, 0x8b, 0xbf, 0xa1, 0xe0, 0x99, 0xee, 0xec, 0x1b, 0x0a,
+	0x9e, 0x6a, 0x0e, 0x77, 0x7e, 0x10, 0xf9, 0x89, 0x0e, 0xa1, 0x73, 0x5b, 0x04, 0xa9, 0xe8, 0x0e,
+	0x1a, 0x24, 0xe2, 0x5c, 0x00, 0x53, 0x4d, 0x25, 0x93, 0x4e, 0x81, 0x3d, 0x04, 0xb9, 0x3a, 0x26,
+	0x57, 0xb0, 0xeb, 0x51, 0xcd, 0x7e, 0x05, 0x0e, 0x04, 0x5e, 0xf6, 0x5c, 0x6e, 0x9e, 0x84, 0xe1,
+	0x77, 0x15, 0xf9, 0xfe, 0x93, 0xd4, 0xc8, 0x83, 0x27, 0xa9, 0x91, 0x87, 0x4f, 0x52, 0x23, 0x5f,
+	0xd6, 0x52, 0xc2, 0xfd, 0x5a, 0x4a, 0x78, 0x50, 0x4b, 0x09, 0x0f, 0x6b, 0x29, 0xe1, 0x71, 0x2d,
+	0x25, 0xdc, 0x7d, 0x9a, 0x1a, 0xf9, 0x6c, 0xa2, 0xbe, 0x56, 0xff, 0x05, 0x00, 0x00, 0xff, 0xff,
+	0xc6, 0x5c, 0x79, 0x3e, 0x68, 0x33, 0x00, 0x00,
 }
 
 func (m *ContainerResources) Marshal() (dAtA []byte, err error) {
@@ -1743,6 +1497,44 @@ func (m *ContainerResources) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Name)))
 	i--
 	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *ElasticsearchHorizontalScaleSpec) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ElasticsearchHorizontalScaleSpec) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ElasticsearchHorizontalScaleSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Client != nil {
+		i = encodeVarintGenerated(dAtA, i, uint64(*m.Client))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.Data != nil {
+		i = encodeVarintGenerated(dAtA, i, uint64(*m.Data))
+		i--
+		dAtA[i] = 0x10
+	}
+	if m.Master != nil {
+		i = encodeVarintGenerated(dAtA, i, uint64(*m.Master))
+		i--
+		dAtA[i] = 0x8
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -1866,9 +1658,9 @@ func (m *ElasticsearchModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte)
 	_ = i
 	var l int
 	_ = l
-	if m.Scale != nil {
+	if m.HorizontalScaling != nil {
 		{
-			size, err := m.Scale.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.HorizontalScaling.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -1878,9 +1670,9 @@ func (m *ElasticsearchModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte)
 		i--
 		dAtA[i] = 0x22
 	}
-	if m.Update != nil {
+	if m.Upgrade != nil {
 		{
-			size, err := m.Update.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Upgrade.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -2006,54 +1798,6 @@ func (m *EtcdModificationRequest) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *EtcdModificationRequestCondition) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *EtcdModificationRequestCondition) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *EtcdModificationRequestCondition) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.LastUpdateTime.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintGenerated(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x22
-	i -= len(m.Message)
-	copy(dAtA[i:], m.Message)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Message)))
-	i--
-	dAtA[i] = 0x1a
-	i -= len(m.Reason)
-	copy(dAtA[i:], m.Reason)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Reason)))
-	i--
-	dAtA[i] = 0x12
-	i -= len(m.Type)
-	copy(dAtA[i:], m.Type)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
 func (m *EtcdModificationRequestList) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -2121,6 +1865,33 @@ func (m *EtcdModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte) (int, er
 	_ = i
 	var l int
 	_ = l
+	if m.Upgrade != nil {
+		{
+			size, err := m.Upgrade.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintGenerated(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x1a
+	}
+	i -= len(m.Type)
+	copy(dAtA[i:], m.Type)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
+	i--
+	dAtA[i] = 0x12
+	{
+		size, err := m.DatabaseRef.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintGenerated(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -2155,37 +1926,17 @@ func (m *EtcdModificationRequestStatus) MarshalToSizedBuffer(dAtA []byte) (int, 
 				i = encodeVarintGenerated(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0xa
+			dAtA[i] = 0x1a
 		}
 	}
-	return len(dAtA) - i, nil
-}
-
-func (m *HorizontalScale) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *HorizontalScale) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *HorizontalScale) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Member != nil {
-		i = encodeVarintGenerated(dAtA, i, uint64(*m.Member))
-		i--
-		dAtA[i] = 0x8
-	}
+	i = encodeVarintGenerated(dAtA, i, uint64(m.ObservedGeneration))
+	i--
+	dAtA[i] = 0x10
+	i -= len(m.Phase)
+	copy(dAtA[i:], m.Phase)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Phase)))
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -2237,54 +1988,6 @@ func (m *MemcachedModificationRequest) MarshalToSizedBuffer(dAtA []byte) (int, e
 		i -= size
 		i = encodeVarintGenerated(dAtA, i, uint64(size))
 	}
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
-func (m *MemcachedModificationRequestCondition) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MemcachedModificationRequestCondition) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MemcachedModificationRequestCondition) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.LastUpdateTime.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintGenerated(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x22
-	i -= len(m.Message)
-	copy(dAtA[i:], m.Message)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Message)))
-	i--
-	dAtA[i] = 0x1a
-	i -= len(m.Reason)
-	copy(dAtA[i:], m.Reason)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Reason)))
-	i--
-	dAtA[i] = 0x12
-	i -= len(m.Type)
-	copy(dAtA[i:], m.Type)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
 	i--
 	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
@@ -2357,6 +2060,33 @@ func (m *MemcachedModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte) (in
 	_ = i
 	var l int
 	_ = l
+	if m.Upgrade != nil {
+		{
+			size, err := m.Upgrade.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintGenerated(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x1a
+	}
+	i -= len(m.Type)
+	copy(dAtA[i:], m.Type)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
+	i--
+	dAtA[i] = 0x12
+	{
+		size, err := m.DatabaseRef.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintGenerated(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -2391,9 +2121,17 @@ func (m *MemcachedModificationRequestStatus) MarshalToSizedBuffer(dAtA []byte) (
 				i = encodeVarintGenerated(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0xa
+			dAtA[i] = 0x1a
 		}
 	}
+	i = encodeVarintGenerated(dAtA, i, uint64(m.ObservedGeneration))
+	i--
+	dAtA[i] = 0x10
+	i -= len(m.Phase)
+	copy(dAtA[i:], m.Phase)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Phase)))
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -2517,9 +2255,9 @@ func (m *MongoDBModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte) (int,
 	_ = i
 	var l int
 	_ = l
-	if m.Update != nil {
+	if m.Upgrade != nil {
 		{
-			size, err := m.Update.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Upgrade.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -2589,6 +2327,37 @@ func (m *MongoDBModificationRequestStatus) MarshalToSizedBuffer(dAtA []byte) (in
 	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Phase)))
 	i--
 	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *MySQLHorizontalScalingSpec) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MySQLHorizontalScalingSpec) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MySQLHorizontalScalingSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	i = encodeVarintGenerated(dAtA, i, uint64(m.MemberWeight))
+	i--
+	dAtA[i] = 0x10
+	if m.Member != nil {
+		i = encodeVarintGenerated(dAtA, i, uint64(*m.Member))
+		i--
+		dAtA[i] = 0x8
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -2712,9 +2481,33 @@ func (m *MySQLModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte) (int, e
 	_ = i
 	var l int
 	_ = l
-	if m.Scale != nil {
+	if m.VerticalScaling != nil {
 		{
-			size, err := m.Scale.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.VerticalScaling.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintGenerated(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x32
+	}
+	if m.HorizontalScaling != nil {
+		{
+			size, err := m.HorizontalScaling.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintGenerated(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x2a
+	}
+	if m.Upgrade != nil {
+		{
+			size, err := m.Upgrade.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -2724,23 +2517,16 @@ func (m *MySQLModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte) (int, e
 		i--
 		dAtA[i] = 0x22
 	}
-	if m.Update != nil {
-		{
-			size, err := m.Update.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintGenerated(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0x1a
-	}
 	i -= len(m.Type)
 	copy(dAtA[i:], m.Type)
 	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
 	i--
-	dAtA[i] = 0x12
+	dAtA[i] = 0x1a
+	if m.StatefulSetOrdinal != nil {
+		i = encodeVarintGenerated(dAtA, i, uint64(*m.StatefulSetOrdinal))
+		i--
+		dAtA[i] = 0x10
+	}
 	{
 		size, err := m.DatabaseRef.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
@@ -2799,7 +2585,7 @@ func (m *MySQLModificationRequestStatus) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
-func (m *MySQLScaleSpec) Marshal() (dAtA []byte, err error) {
+func (m *MySQLVerticalScalingSpec) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2809,76 +2595,30 @@ func (m *MySQLScaleSpec) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MySQLScaleSpec) MarshalTo(dAtA []byte) (int, error) {
+func (m *MySQLVerticalScalingSpec) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MySQLScaleSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MySQLVerticalScalingSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	i = encodeVarintGenerated(dAtA, i, uint64(m.MemberWeight))
-	i--
-	dAtA[i] = 0x18
-	if m.Vertical != nil {
-		{
-			size, err := m.Vertical.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
+	if len(m.Containers) > 0 {
+		for iNdEx := len(m.Containers) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Containers[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenerated(dAtA, i, uint64(size))
 			}
-			i -= size
-			i = encodeVarintGenerated(dAtA, i, uint64(size))
+			i--
+			dAtA[i] = 0xa
 		}
-		i--
-		dAtA[i] = 0x12
 	}
-	if m.Horizontal != nil {
-		{
-			size, err := m.Horizontal.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintGenerated(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MySQLUpdateSpec) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MySQLUpdateSpec) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MySQLUpdateSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.CurrentStatefulSetOrdinal != nil {
-		i = encodeVarintGenerated(dAtA, i, uint64(*m.CurrentStatefulSetOrdinal))
-		i--
-		dAtA[i] = 0x10
-	}
-	i -= len(m.TargetVersion)
-	copy(dAtA[i:], m.TargetVersion)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.TargetVersion)))
-	i--
-	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -2930,54 +2670,6 @@ func (m *PerconaXtraDBModificationRequest) MarshalToSizedBuffer(dAtA []byte) (in
 		i -= size
 		i = encodeVarintGenerated(dAtA, i, uint64(size))
 	}
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
-func (m *PerconaXtraDBModificationRequestCondition) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *PerconaXtraDBModificationRequestCondition) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *PerconaXtraDBModificationRequestCondition) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.LastUpdateTime.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintGenerated(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x22
-	i -= len(m.Message)
-	copy(dAtA[i:], m.Message)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Message)))
-	i--
-	dAtA[i] = 0x1a
-	i -= len(m.Reason)
-	copy(dAtA[i:], m.Reason)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Reason)))
-	i--
-	dAtA[i] = 0x12
-	i -= len(m.Type)
-	copy(dAtA[i:], m.Type)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
 	i--
 	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
@@ -3050,6 +2742,33 @@ func (m *PerconaXtraDBModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte)
 	_ = i
 	var l int
 	_ = l
+	if m.Upgrade != nil {
+		{
+			size, err := m.Upgrade.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintGenerated(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x1a
+	}
+	i -= len(m.Type)
+	copy(dAtA[i:], m.Type)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
+	i--
+	dAtA[i] = 0x12
+	{
+		size, err := m.DatabaseRef.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintGenerated(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -3084,9 +2803,17 @@ func (m *PerconaXtraDBModificationRequestStatus) MarshalToSizedBuffer(dAtA []byt
 				i = encodeVarintGenerated(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0xa
+			dAtA[i] = 0x1a
 		}
 	}
+	i = encodeVarintGenerated(dAtA, i, uint64(m.ObservedGeneration))
+	i--
+	dAtA[i] = 0x10
+	i -= len(m.Phase)
+	copy(dAtA[i:], m.Phase)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Phase)))
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -3138,54 +2865,6 @@ func (m *PgBouncerModificationRequest) MarshalToSizedBuffer(dAtA []byte) (int, e
 		i -= size
 		i = encodeVarintGenerated(dAtA, i, uint64(size))
 	}
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
-func (m *PgBouncerModificationRequestCondition) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *PgBouncerModificationRequestCondition) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *PgBouncerModificationRequestCondition) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.LastUpdateTime.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintGenerated(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x22
-	i -= len(m.Message)
-	copy(dAtA[i:], m.Message)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Message)))
-	i--
-	dAtA[i] = 0x1a
-	i -= len(m.Reason)
-	copy(dAtA[i:], m.Reason)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Reason)))
-	i--
-	dAtA[i] = 0x12
-	i -= len(m.Type)
-	copy(dAtA[i:], m.Type)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
 	i--
 	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
@@ -3258,6 +2937,33 @@ func (m *PgBouncerModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte) (in
 	_ = i
 	var l int
 	_ = l
+	if m.Upgrade != nil {
+		{
+			size, err := m.Upgrade.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintGenerated(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x1a
+	}
+	i -= len(m.Type)
+	copy(dAtA[i:], m.Type)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
+	i--
+	dAtA[i] = 0x12
+	{
+		size, err := m.DatabaseRef.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintGenerated(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -3292,9 +2998,17 @@ func (m *PgBouncerModificationRequestStatus) MarshalToSizedBuffer(dAtA []byte) (
 				i = encodeVarintGenerated(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0xa
+			dAtA[i] = 0x1a
 		}
 	}
+	i = encodeVarintGenerated(dAtA, i, uint64(m.ObservedGeneration))
+	i--
+	dAtA[i] = 0x10
+	i -= len(m.Phase)
+	copy(dAtA[i:], m.Phase)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Phase)))
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -3346,54 +3060,6 @@ func (m *PostgresModificationRequest) MarshalToSizedBuffer(dAtA []byte) (int, er
 		i -= size
 		i = encodeVarintGenerated(dAtA, i, uint64(size))
 	}
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
-func (m *PostgresModificationRequestCondition) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *PostgresModificationRequestCondition) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *PostgresModificationRequestCondition) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.LastUpdateTime.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintGenerated(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x22
-	i -= len(m.Message)
-	copy(dAtA[i:], m.Message)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Message)))
-	i--
-	dAtA[i] = 0x1a
-	i -= len(m.Reason)
-	copy(dAtA[i:], m.Reason)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Reason)))
-	i--
-	dAtA[i] = 0x12
-	i -= len(m.Type)
-	copy(dAtA[i:], m.Type)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
 	i--
 	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
@@ -3466,6 +3132,33 @@ func (m *PostgresModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte) (int
 	_ = i
 	var l int
 	_ = l
+	if m.Upgrade != nil {
+		{
+			size, err := m.Upgrade.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintGenerated(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x1a
+	}
+	i -= len(m.Type)
+	copy(dAtA[i:], m.Type)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
+	i--
+	dAtA[i] = 0x12
+	{
+		size, err := m.DatabaseRef.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintGenerated(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -3500,9 +3193,17 @@ func (m *PostgresModificationRequestStatus) MarshalToSizedBuffer(dAtA []byte) (i
 				i = encodeVarintGenerated(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0xa
+			dAtA[i] = 0x1a
 		}
 	}
+	i = encodeVarintGenerated(dAtA, i, uint64(m.ObservedGeneration))
+	i--
+	dAtA[i] = 0x10
+	i -= len(m.Phase)
+	copy(dAtA[i:], m.Phase)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Phase)))
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -3554,54 +3255,6 @@ func (m *ProxySQLModificationRequest) MarshalToSizedBuffer(dAtA []byte) (int, er
 		i -= size
 		i = encodeVarintGenerated(dAtA, i, uint64(size))
 	}
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
-func (m *ProxySQLModificationRequestCondition) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ProxySQLModificationRequestCondition) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *ProxySQLModificationRequestCondition) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.LastUpdateTime.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintGenerated(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x22
-	i -= len(m.Message)
-	copy(dAtA[i:], m.Message)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Message)))
-	i--
-	dAtA[i] = 0x1a
-	i -= len(m.Reason)
-	copy(dAtA[i:], m.Reason)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Reason)))
-	i--
-	dAtA[i] = 0x12
-	i -= len(m.Type)
-	copy(dAtA[i:], m.Type)
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
 	i--
 	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
@@ -3674,6 +3327,33 @@ func (m *ProxySQLModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte) (int
 	_ = i
 	var l int
 	_ = l
+	if m.Upgrade != nil {
+		{
+			size, err := m.Upgrade.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintGenerated(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x1a
+	}
+	i -= len(m.Type)
+	copy(dAtA[i:], m.Type)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Type)))
+	i--
+	dAtA[i] = 0x12
+	{
+		size, err := m.DatabaseRef.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintGenerated(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -3708,9 +3388,17 @@ func (m *ProxySQLModificationRequestStatus) MarshalToSizedBuffer(dAtA []byte) (i
 				i = encodeVarintGenerated(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0xa
+			dAtA[i] = 0x1a
 		}
 	}
+	i = encodeVarintGenerated(dAtA, i, uint64(m.ObservedGeneration))
+	i--
+	dAtA[i] = 0x10
+	i -= len(m.Phase)
+	copy(dAtA[i:], m.Phase)
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Phase)))
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -3834,9 +3522,9 @@ func (m *RedisModificationRequestSpec) MarshalToSizedBuffer(dAtA []byte) (int, e
 	_ = i
 	var l int
 	_ = l
-	if m.Update != nil {
+	if m.Upgrade != nil {
 		{
-			size, err := m.Update.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Upgrade.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -3909,7 +3597,7 @@ func (m *RedisModificationRequestStatus) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
-func (m *ScaleSpec) Marshal() (dAtA []byte, err error) {
+func (m *UpgradeSpec) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3919,50 +3607,12 @@ func (m *ScaleSpec) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ScaleSpec) MarshalTo(dAtA []byte) (int, error) {
+func (m *UpgradeSpec) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ScaleSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Client != nil {
-		i = encodeVarintGenerated(dAtA, i, uint64(*m.Client))
-		i--
-		dAtA[i] = 0x18
-	}
-	if m.Data != nil {
-		i = encodeVarintGenerated(dAtA, i, uint64(*m.Data))
-		i--
-		dAtA[i] = 0x10
-	}
-	if m.Master != nil {
-		i = encodeVarintGenerated(dAtA, i, uint64(*m.Master))
-		i--
-		dAtA[i] = 0x8
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *UpdateSpec) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *UpdateSpec) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *UpdateSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *UpgradeSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3972,43 +3622,6 @@ func (m *UpdateSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i = encodeVarintGenerated(dAtA, i, uint64(len(m.TargetVersion)))
 	i--
 	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
-func (m *VerticalScale) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *VerticalScale) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *VerticalScale) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Containers) > 0 {
-		for iNdEx := len(m.Containers) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.Containers[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintGenerated(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0xa
-		}
-	}
 	return len(dAtA) - i, nil
 }
 
@@ -4033,6 +3646,24 @@ func (m *ContainerResources) Size() (n int) {
 	n += 1 + l + sovGenerated(uint64(l))
 	l = m.Resources.Size()
 	n += 1 + l + sovGenerated(uint64(l))
+	return n
+}
+
+func (m *ElasticsearchHorizontalScaleSpec) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Master != nil {
+		n += 1 + sovGenerated(uint64(*m.Master))
+	}
+	if m.Data != nil {
+		n += 1 + sovGenerated(uint64(*m.Data))
+	}
+	if m.Client != nil {
+		n += 1 + sovGenerated(uint64(*m.Client))
+	}
 	return n
 }
 
@@ -4078,12 +3709,12 @@ func (m *ElasticsearchModificationRequestSpec) Size() (n int) {
 	n += 1 + l + sovGenerated(uint64(l))
 	l = len(m.Type)
 	n += 1 + l + sovGenerated(uint64(l))
-	if m.Update != nil {
-		l = m.Update.Size()
+	if m.Upgrade != nil {
+		l = m.Upgrade.Size()
 		n += 1 + l + sovGenerated(uint64(l))
 	}
-	if m.Scale != nil {
-		l = m.Scale.Size()
+	if m.HorizontalScaling != nil {
+		l = m.HorizontalScaling.Size()
 		n += 1 + l + sovGenerated(uint64(l))
 	}
 	return n
@@ -4122,23 +3753,6 @@ func (m *EtcdModificationRequest) Size() (n int) {
 	return n
 }
 
-func (m *EtcdModificationRequestCondition) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Type)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Reason)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Message)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = m.LastUpdateTime.Size()
-	n += 1 + l + sovGenerated(uint64(l))
-	return n
-}
-
 func (m *EtcdModificationRequestList) Size() (n int) {
 	if m == nil {
 		return 0
@@ -4162,6 +3776,14 @@ func (m *EtcdModificationRequestSpec) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = m.DatabaseRef.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	l = len(m.Type)
+	n += 1 + l + sovGenerated(uint64(l))
+	if m.Upgrade != nil {
+		l = m.Upgrade.Size()
+		n += 1 + l + sovGenerated(uint64(l))
+	}
 	return n
 }
 
@@ -4171,23 +3793,14 @@ func (m *EtcdModificationRequestStatus) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = len(m.Phase)
+	n += 1 + l + sovGenerated(uint64(l))
+	n += 1 + sovGenerated(uint64(m.ObservedGeneration))
 	if len(m.Conditions) > 0 {
 		for _, e := range m.Conditions {
 			l = e.Size()
 			n += 1 + l + sovGenerated(uint64(l))
 		}
-	}
-	return n
-}
-
-func (m *HorizontalScale) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.Member != nil {
-		n += 1 + sovGenerated(uint64(*m.Member))
 	}
 	return n
 }
@@ -4203,23 +3816,6 @@ func (m *MemcachedModificationRequest) Size() (n int) {
 	l = m.Spec.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	l = m.Status.Size()
-	n += 1 + l + sovGenerated(uint64(l))
-	return n
-}
-
-func (m *MemcachedModificationRequestCondition) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Type)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Reason)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Message)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = m.LastUpdateTime.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	return n
 }
@@ -4247,6 +3843,14 @@ func (m *MemcachedModificationRequestSpec) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = m.DatabaseRef.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	l = len(m.Type)
+	n += 1 + l + sovGenerated(uint64(l))
+	if m.Upgrade != nil {
+		l = m.Upgrade.Size()
+		n += 1 + l + sovGenerated(uint64(l))
+	}
 	return n
 }
 
@@ -4256,6 +3860,9 @@ func (m *MemcachedModificationRequestStatus) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = len(m.Phase)
+	n += 1 + l + sovGenerated(uint64(l))
+	n += 1 + sovGenerated(uint64(m.ObservedGeneration))
 	if len(m.Conditions) > 0 {
 		for _, e := range m.Conditions {
 			l = e.Size()
@@ -4307,8 +3914,8 @@ func (m *MongoDBModificationRequestSpec) Size() (n int) {
 	n += 1 + l + sovGenerated(uint64(l))
 	l = len(m.Type)
 	n += 1 + l + sovGenerated(uint64(l))
-	if m.Update != nil {
-		l = m.Update.Size()
+	if m.Upgrade != nil {
+		l = m.Upgrade.Size()
 		n += 1 + l + sovGenerated(uint64(l))
 	}
 	return n
@@ -4329,6 +3936,19 @@ func (m *MongoDBModificationRequestStatus) Size() (n int) {
 			n += 1 + l + sovGenerated(uint64(l))
 		}
 	}
+	return n
+}
+
+func (m *MySQLHorizontalScalingSpec) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Member != nil {
+		n += 1 + sovGenerated(uint64(*m.Member))
+	}
+	n += 1 + sovGenerated(uint64(m.MemberWeight))
 	return n
 }
 
@@ -4372,14 +3992,21 @@ func (m *MySQLModificationRequestSpec) Size() (n int) {
 	_ = l
 	l = m.DatabaseRef.Size()
 	n += 1 + l + sovGenerated(uint64(l))
+	if m.StatefulSetOrdinal != nil {
+		n += 1 + sovGenerated(uint64(*m.StatefulSetOrdinal))
+	}
 	l = len(m.Type)
 	n += 1 + l + sovGenerated(uint64(l))
-	if m.Update != nil {
-		l = m.Update.Size()
+	if m.Upgrade != nil {
+		l = m.Upgrade.Size()
 		n += 1 + l + sovGenerated(uint64(l))
 	}
-	if m.Scale != nil {
-		l = m.Scale.Size()
+	if m.HorizontalScaling != nil {
+		l = m.HorizontalScaling.Size()
+		n += 1 + l + sovGenerated(uint64(l))
+	}
+	if m.VerticalScaling != nil {
+		l = m.VerticalScaling.Size()
 		n += 1 + l + sovGenerated(uint64(l))
 	}
 	return n
@@ -4403,34 +4030,17 @@ func (m *MySQLModificationRequestStatus) Size() (n int) {
 	return n
 }
 
-func (m *MySQLScaleSpec) Size() (n int) {
+func (m *MySQLVerticalScalingSpec) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.Horizontal != nil {
-		l = m.Horizontal.Size()
-		n += 1 + l + sovGenerated(uint64(l))
-	}
-	if m.Vertical != nil {
-		l = m.Vertical.Size()
-		n += 1 + l + sovGenerated(uint64(l))
-	}
-	n += 1 + sovGenerated(uint64(m.MemberWeight))
-	return n
-}
-
-func (m *MySQLUpdateSpec) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.TargetVersion)
-	n += 1 + l + sovGenerated(uint64(l))
-	if m.CurrentStatefulSetOrdinal != nil {
-		n += 1 + sovGenerated(uint64(*m.CurrentStatefulSetOrdinal))
+	if len(m.Containers) > 0 {
+		for _, e := range m.Containers {
+			l = e.Size()
+			n += 1 + l + sovGenerated(uint64(l))
+		}
 	}
 	return n
 }
@@ -4446,23 +4056,6 @@ func (m *PerconaXtraDBModificationRequest) Size() (n int) {
 	l = m.Spec.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	l = m.Status.Size()
-	n += 1 + l + sovGenerated(uint64(l))
-	return n
-}
-
-func (m *PerconaXtraDBModificationRequestCondition) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Type)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Reason)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Message)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = m.LastUpdateTime.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	return n
 }
@@ -4490,6 +4083,14 @@ func (m *PerconaXtraDBModificationRequestSpec) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = m.DatabaseRef.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	l = len(m.Type)
+	n += 1 + l + sovGenerated(uint64(l))
+	if m.Upgrade != nil {
+		l = m.Upgrade.Size()
+		n += 1 + l + sovGenerated(uint64(l))
+	}
 	return n
 }
 
@@ -4499,6 +4100,9 @@ func (m *PerconaXtraDBModificationRequestStatus) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = len(m.Phase)
+	n += 1 + l + sovGenerated(uint64(l))
+	n += 1 + sovGenerated(uint64(m.ObservedGeneration))
 	if len(m.Conditions) > 0 {
 		for _, e := range m.Conditions {
 			l = e.Size()
@@ -4519,23 +4123,6 @@ func (m *PgBouncerModificationRequest) Size() (n int) {
 	l = m.Spec.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	l = m.Status.Size()
-	n += 1 + l + sovGenerated(uint64(l))
-	return n
-}
-
-func (m *PgBouncerModificationRequestCondition) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Type)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Reason)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Message)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = m.LastUpdateTime.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	return n
 }
@@ -4563,6 +4150,14 @@ func (m *PgBouncerModificationRequestSpec) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = m.DatabaseRef.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	l = len(m.Type)
+	n += 1 + l + sovGenerated(uint64(l))
+	if m.Upgrade != nil {
+		l = m.Upgrade.Size()
+		n += 1 + l + sovGenerated(uint64(l))
+	}
 	return n
 }
 
@@ -4572,6 +4167,9 @@ func (m *PgBouncerModificationRequestStatus) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = len(m.Phase)
+	n += 1 + l + sovGenerated(uint64(l))
+	n += 1 + sovGenerated(uint64(m.ObservedGeneration))
 	if len(m.Conditions) > 0 {
 		for _, e := range m.Conditions {
 			l = e.Size()
@@ -4592,23 +4190,6 @@ func (m *PostgresModificationRequest) Size() (n int) {
 	l = m.Spec.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	l = m.Status.Size()
-	n += 1 + l + sovGenerated(uint64(l))
-	return n
-}
-
-func (m *PostgresModificationRequestCondition) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Type)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Reason)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Message)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = m.LastUpdateTime.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	return n
 }
@@ -4636,6 +4217,14 @@ func (m *PostgresModificationRequestSpec) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = m.DatabaseRef.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	l = len(m.Type)
+	n += 1 + l + sovGenerated(uint64(l))
+	if m.Upgrade != nil {
+		l = m.Upgrade.Size()
+		n += 1 + l + sovGenerated(uint64(l))
+	}
 	return n
 }
 
@@ -4645,6 +4234,9 @@ func (m *PostgresModificationRequestStatus) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = len(m.Phase)
+	n += 1 + l + sovGenerated(uint64(l))
+	n += 1 + sovGenerated(uint64(m.ObservedGeneration))
 	if len(m.Conditions) > 0 {
 		for _, e := range m.Conditions {
 			l = e.Size()
@@ -4665,23 +4257,6 @@ func (m *ProxySQLModificationRequest) Size() (n int) {
 	l = m.Spec.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	l = m.Status.Size()
-	n += 1 + l + sovGenerated(uint64(l))
-	return n
-}
-
-func (m *ProxySQLModificationRequestCondition) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Type)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Reason)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.Message)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = m.LastUpdateTime.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	return n
 }
@@ -4709,6 +4284,14 @@ func (m *ProxySQLModificationRequestSpec) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = m.DatabaseRef.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	l = len(m.Type)
+	n += 1 + l + sovGenerated(uint64(l))
+	if m.Upgrade != nil {
+		l = m.Upgrade.Size()
+		n += 1 + l + sovGenerated(uint64(l))
+	}
 	return n
 }
 
@@ -4718,6 +4301,9 @@ func (m *ProxySQLModificationRequestStatus) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = len(m.Phase)
+	n += 1 + l + sovGenerated(uint64(l))
+	n += 1 + sovGenerated(uint64(m.ObservedGeneration))
 	if len(m.Conditions) > 0 {
 		for _, e := range m.Conditions {
 			l = e.Size()
@@ -4769,8 +4355,8 @@ func (m *RedisModificationRequestSpec) Size() (n int) {
 	n += 1 + l + sovGenerated(uint64(l))
 	l = len(m.Type)
 	n += 1 + l + sovGenerated(uint64(l))
-	if m.Update != nil {
-		l = m.Update.Size()
+	if m.Upgrade != nil {
+		l = m.Upgrade.Size()
 		n += 1 + l + sovGenerated(uint64(l))
 	}
 	return n
@@ -4794,25 +4380,7 @@ func (m *RedisModificationRequestStatus) Size() (n int) {
 	return n
 }
 
-func (m *ScaleSpec) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.Master != nil {
-		n += 1 + sovGenerated(uint64(*m.Master))
-	}
-	if m.Data != nil {
-		n += 1 + sovGenerated(uint64(*m.Data))
-	}
-	if m.Client != nil {
-		n += 1 + sovGenerated(uint64(*m.Client))
-	}
-	return n
-}
-
-func (m *UpdateSpec) Size() (n int) {
+func (m *UpgradeSpec) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4820,21 +4388,6 @@ func (m *UpdateSpec) Size() (n int) {
 	_ = l
 	l = len(m.TargetVersion)
 	n += 1 + l + sovGenerated(uint64(l))
-	return n
-}
-
-func (m *VerticalScale) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if len(m.Containers) > 0 {
-		for _, e := range m.Containers {
-			l = e.Size()
-			n += 1 + l + sovGenerated(uint64(l))
-		}
-	}
 	return n
 }
 
@@ -4851,6 +4404,18 @@ func (this *ContainerResources) String() string {
 	s := strings.Join([]string{`&ContainerResources{`,
 		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
 		`Resources:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.Resources), "ResourceRequirements", "v1.ResourceRequirements", 1), `&`, ``, 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ElasticsearchHorizontalScaleSpec) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ElasticsearchHorizontalScaleSpec{`,
+		`Master:` + valueToStringGenerated(this.Master) + `,`,
+		`Data:` + valueToStringGenerated(this.Data) + `,`,
+		`Client:` + valueToStringGenerated(this.Client) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -4890,8 +4455,8 @@ func (this *ElasticsearchModificationRequestSpec) String() string {
 	s := strings.Join([]string{`&ElasticsearchModificationRequestSpec{`,
 		`DatabaseRef:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.DatabaseRef), "LocalObjectReference", "v1.LocalObjectReference", 1), `&`, ``, 1) + `,`,
 		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
-		`Update:` + strings.Replace(this.Update.String(), "UpdateSpec", "UpdateSpec", 1) + `,`,
-		`Scale:` + strings.Replace(this.Scale.String(), "ScaleSpec", "ScaleSpec", 1) + `,`,
+		`Upgrade:` + strings.Replace(this.Upgrade.String(), "UpgradeSpec", "UpgradeSpec", 1) + `,`,
+		`HorizontalScaling:` + strings.Replace(this.HorizontalScaling.String(), "ElasticsearchHorizontalScaleSpec", "ElasticsearchHorizontalScaleSpec", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -4925,19 +4490,6 @@ func (this *EtcdModificationRequest) String() string {
 	}, "")
 	return s
 }
-func (this *EtcdModificationRequestCondition) String() string {
-	if this == nil {
-		return "nil"
-	}
-	s := strings.Join([]string{`&EtcdModificationRequestCondition{`,
-		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
-		`Reason:` + fmt.Sprintf("%v", this.Reason) + `,`,
-		`Message:` + fmt.Sprintf("%v", this.Message) + `,`,
-		`LastUpdateTime:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.LastUpdateTime), "Time", "v11.Time", 1), `&`, ``, 1) + `,`,
-		`}`,
-	}, "")
-	return s
-}
 func (this *EtcdModificationRequestList) String() string {
 	if this == nil {
 		return "nil"
@@ -4959,6 +4511,9 @@ func (this *EtcdModificationRequestSpec) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&EtcdModificationRequestSpec{`,
+		`DatabaseRef:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.DatabaseRef), "LocalObjectReference", "v1.LocalObjectReference", 1), `&`, ``, 1) + `,`,
+		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
+		`Upgrade:` + strings.Replace(this.Upgrade.String(), "UpgradeSpec", "UpgradeSpec", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -4967,23 +4522,15 @@ func (this *EtcdModificationRequestStatus) String() string {
 	if this == nil {
 		return "nil"
 	}
-	repeatedStringForConditions := "[]EtcdModificationRequestCondition{"
+	repeatedStringForConditions := "[]Condition{"
 	for _, f := range this.Conditions {
-		repeatedStringForConditions += strings.Replace(strings.Replace(f.String(), "EtcdModificationRequestCondition", "EtcdModificationRequestCondition", 1), `&`, ``, 1) + ","
+		repeatedStringForConditions += fmt.Sprintf("%v", f) + ","
 	}
 	repeatedStringForConditions += "}"
 	s := strings.Join([]string{`&EtcdModificationRequestStatus{`,
+		`Phase:` + fmt.Sprintf("%v", this.Phase) + `,`,
+		`ObservedGeneration:` + fmt.Sprintf("%v", this.ObservedGeneration) + `,`,
 		`Conditions:` + repeatedStringForConditions + `,`,
-		`}`,
-	}, "")
-	return s
-}
-func (this *HorizontalScale) String() string {
-	if this == nil {
-		return "nil"
-	}
-	s := strings.Join([]string{`&HorizontalScale{`,
-		`Member:` + valueToStringGenerated(this.Member) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -4996,19 +4543,6 @@ func (this *MemcachedModificationRequest) String() string {
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v11.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "MemcachedModificationRequestSpec", "MemcachedModificationRequestSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "MemcachedModificationRequestStatus", "MemcachedModificationRequestStatus", 1), `&`, ``, 1) + `,`,
-		`}`,
-	}, "")
-	return s
-}
-func (this *MemcachedModificationRequestCondition) String() string {
-	if this == nil {
-		return "nil"
-	}
-	s := strings.Join([]string{`&MemcachedModificationRequestCondition{`,
-		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
-		`Reason:` + fmt.Sprintf("%v", this.Reason) + `,`,
-		`Message:` + fmt.Sprintf("%v", this.Message) + `,`,
-		`LastUpdateTime:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.LastUpdateTime), "Time", "v11.Time", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5034,6 +4568,9 @@ func (this *MemcachedModificationRequestSpec) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&MemcachedModificationRequestSpec{`,
+		`DatabaseRef:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.DatabaseRef), "LocalObjectReference", "v1.LocalObjectReference", 1), `&`, ``, 1) + `,`,
+		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
+		`Upgrade:` + strings.Replace(this.Upgrade.String(), "UpgradeSpec", "UpgradeSpec", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5042,12 +4579,14 @@ func (this *MemcachedModificationRequestStatus) String() string {
 	if this == nil {
 		return "nil"
 	}
-	repeatedStringForConditions := "[]MemcachedModificationRequestCondition{"
+	repeatedStringForConditions := "[]Condition{"
 	for _, f := range this.Conditions {
-		repeatedStringForConditions += strings.Replace(strings.Replace(f.String(), "MemcachedModificationRequestCondition", "MemcachedModificationRequestCondition", 1), `&`, ``, 1) + ","
+		repeatedStringForConditions += fmt.Sprintf("%v", f) + ","
 	}
 	repeatedStringForConditions += "}"
 	s := strings.Join([]string{`&MemcachedModificationRequestStatus{`,
+		`Phase:` + fmt.Sprintf("%v", this.Phase) + `,`,
+		`ObservedGeneration:` + fmt.Sprintf("%v", this.ObservedGeneration) + `,`,
 		`Conditions:` + repeatedStringForConditions + `,`,
 		`}`,
 	}, "")
@@ -5088,7 +4627,7 @@ func (this *MongoDBModificationRequestSpec) String() string {
 	s := strings.Join([]string{`&MongoDBModificationRequestSpec{`,
 		`DatabaseRef:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.DatabaseRef), "LocalObjectReference", "v1.LocalObjectReference", 1), `&`, ``, 1) + `,`,
 		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
-		`Update:` + strings.Replace(this.Update.String(), "UpdateSpec", "UpdateSpec", 1) + `,`,
+		`Upgrade:` + strings.Replace(this.Upgrade.String(), "UpgradeSpec", "UpgradeSpec", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5106,6 +4645,17 @@ func (this *MongoDBModificationRequestStatus) String() string {
 		`Phase:` + fmt.Sprintf("%v", this.Phase) + `,`,
 		`ObservedGeneration:` + fmt.Sprintf("%v", this.ObservedGeneration) + `,`,
 		`Conditions:` + repeatedStringForConditions + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *MySQLHorizontalScalingSpec) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&MySQLHorizontalScalingSpec{`,
+		`Member:` + valueToStringGenerated(this.Member) + `,`,
+		`MemberWeight:` + fmt.Sprintf("%v", this.MemberWeight) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5144,9 +4694,11 @@ func (this *MySQLModificationRequestSpec) String() string {
 	}
 	s := strings.Join([]string{`&MySQLModificationRequestSpec{`,
 		`DatabaseRef:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.DatabaseRef), "LocalObjectReference", "v1.LocalObjectReference", 1), `&`, ``, 1) + `,`,
+		`StatefulSetOrdinal:` + valueToStringGenerated(this.StatefulSetOrdinal) + `,`,
 		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
-		`Update:` + strings.Replace(this.Update.String(), "MySQLUpdateSpec", "MySQLUpdateSpec", 1) + `,`,
-		`Scale:` + strings.Replace(this.Scale.String(), "MySQLScaleSpec", "MySQLScaleSpec", 1) + `,`,
+		`Upgrade:` + strings.Replace(this.Upgrade.String(), "UpgradeSpec", "UpgradeSpec", 1) + `,`,
+		`HorizontalScaling:` + strings.Replace(this.HorizontalScaling.String(), "MySQLHorizontalScalingSpec", "MySQLHorizontalScalingSpec", 1) + `,`,
+		`VerticalScaling:` + strings.Replace(this.VerticalScaling.String(), "MySQLVerticalScalingSpec", "MySQLVerticalScalingSpec", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5168,25 +4720,17 @@ func (this *MySQLModificationRequestStatus) String() string {
 	}, "")
 	return s
 }
-func (this *MySQLScaleSpec) String() string {
+func (this *MySQLVerticalScalingSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&MySQLScaleSpec{`,
-		`Horizontal:` + strings.Replace(this.Horizontal.String(), "HorizontalScale", "HorizontalScale", 1) + `,`,
-		`Vertical:` + strings.Replace(this.Vertical.String(), "VerticalScale", "VerticalScale", 1) + `,`,
-		`MemberWeight:` + fmt.Sprintf("%v", this.MemberWeight) + `,`,
-		`}`,
-	}, "")
-	return s
-}
-func (this *MySQLUpdateSpec) String() string {
-	if this == nil {
-		return "nil"
+	repeatedStringForContainers := "[]ContainerResources{"
+	for _, f := range this.Containers {
+		repeatedStringForContainers += strings.Replace(strings.Replace(f.String(), "ContainerResources", "ContainerResources", 1), `&`, ``, 1) + ","
 	}
-	s := strings.Join([]string{`&MySQLUpdateSpec{`,
-		`TargetVersion:` + fmt.Sprintf("%v", this.TargetVersion) + `,`,
-		`CurrentStatefulSetOrdinal:` + valueToStringGenerated(this.CurrentStatefulSetOrdinal) + `,`,
+	repeatedStringForContainers += "}"
+	s := strings.Join([]string{`&MySQLVerticalScalingSpec{`,
+		`Containers:` + repeatedStringForContainers + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5199,19 +4743,6 @@ func (this *PerconaXtraDBModificationRequest) String() string {
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v11.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "PerconaXtraDBModificationRequestSpec", "PerconaXtraDBModificationRequestSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "PerconaXtraDBModificationRequestStatus", "PerconaXtraDBModificationRequestStatus", 1), `&`, ``, 1) + `,`,
-		`}`,
-	}, "")
-	return s
-}
-func (this *PerconaXtraDBModificationRequestCondition) String() string {
-	if this == nil {
-		return "nil"
-	}
-	s := strings.Join([]string{`&PerconaXtraDBModificationRequestCondition{`,
-		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
-		`Reason:` + fmt.Sprintf("%v", this.Reason) + `,`,
-		`Message:` + fmt.Sprintf("%v", this.Message) + `,`,
-		`LastUpdateTime:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.LastUpdateTime), "Time", "v11.Time", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5237,6 +4768,9 @@ func (this *PerconaXtraDBModificationRequestSpec) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&PerconaXtraDBModificationRequestSpec{`,
+		`DatabaseRef:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.DatabaseRef), "LocalObjectReference", "v1.LocalObjectReference", 1), `&`, ``, 1) + `,`,
+		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
+		`Upgrade:` + strings.Replace(this.Upgrade.String(), "UpgradeSpec", "UpgradeSpec", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5245,12 +4779,14 @@ func (this *PerconaXtraDBModificationRequestStatus) String() string {
 	if this == nil {
 		return "nil"
 	}
-	repeatedStringForConditions := "[]PerconaXtraDBModificationRequestCondition{"
+	repeatedStringForConditions := "[]Condition{"
 	for _, f := range this.Conditions {
-		repeatedStringForConditions += strings.Replace(strings.Replace(f.String(), "PerconaXtraDBModificationRequestCondition", "PerconaXtraDBModificationRequestCondition", 1), `&`, ``, 1) + ","
+		repeatedStringForConditions += fmt.Sprintf("%v", f) + ","
 	}
 	repeatedStringForConditions += "}"
 	s := strings.Join([]string{`&PerconaXtraDBModificationRequestStatus{`,
+		`Phase:` + fmt.Sprintf("%v", this.Phase) + `,`,
+		`ObservedGeneration:` + fmt.Sprintf("%v", this.ObservedGeneration) + `,`,
 		`Conditions:` + repeatedStringForConditions + `,`,
 		`}`,
 	}, "")
@@ -5264,19 +4800,6 @@ func (this *PgBouncerModificationRequest) String() string {
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v11.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "PgBouncerModificationRequestSpec", "PgBouncerModificationRequestSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "PgBouncerModificationRequestStatus", "PgBouncerModificationRequestStatus", 1), `&`, ``, 1) + `,`,
-		`}`,
-	}, "")
-	return s
-}
-func (this *PgBouncerModificationRequestCondition) String() string {
-	if this == nil {
-		return "nil"
-	}
-	s := strings.Join([]string{`&PgBouncerModificationRequestCondition{`,
-		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
-		`Reason:` + fmt.Sprintf("%v", this.Reason) + `,`,
-		`Message:` + fmt.Sprintf("%v", this.Message) + `,`,
-		`LastUpdateTime:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.LastUpdateTime), "Time", "v11.Time", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5302,6 +4825,9 @@ func (this *PgBouncerModificationRequestSpec) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&PgBouncerModificationRequestSpec{`,
+		`DatabaseRef:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.DatabaseRef), "LocalObjectReference", "v1.LocalObjectReference", 1), `&`, ``, 1) + `,`,
+		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
+		`Upgrade:` + strings.Replace(this.Upgrade.String(), "UpgradeSpec", "UpgradeSpec", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5310,12 +4836,14 @@ func (this *PgBouncerModificationRequestStatus) String() string {
 	if this == nil {
 		return "nil"
 	}
-	repeatedStringForConditions := "[]PgBouncerModificationRequestCondition{"
+	repeatedStringForConditions := "[]Condition{"
 	for _, f := range this.Conditions {
-		repeatedStringForConditions += strings.Replace(strings.Replace(f.String(), "PgBouncerModificationRequestCondition", "PgBouncerModificationRequestCondition", 1), `&`, ``, 1) + ","
+		repeatedStringForConditions += fmt.Sprintf("%v", f) + ","
 	}
 	repeatedStringForConditions += "}"
 	s := strings.Join([]string{`&PgBouncerModificationRequestStatus{`,
+		`Phase:` + fmt.Sprintf("%v", this.Phase) + `,`,
+		`ObservedGeneration:` + fmt.Sprintf("%v", this.ObservedGeneration) + `,`,
 		`Conditions:` + repeatedStringForConditions + `,`,
 		`}`,
 	}, "")
@@ -5329,19 +4857,6 @@ func (this *PostgresModificationRequest) String() string {
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v11.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "PostgresModificationRequestSpec", "PostgresModificationRequestSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "PostgresModificationRequestStatus", "PostgresModificationRequestStatus", 1), `&`, ``, 1) + `,`,
-		`}`,
-	}, "")
-	return s
-}
-func (this *PostgresModificationRequestCondition) String() string {
-	if this == nil {
-		return "nil"
-	}
-	s := strings.Join([]string{`&PostgresModificationRequestCondition{`,
-		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
-		`Reason:` + fmt.Sprintf("%v", this.Reason) + `,`,
-		`Message:` + fmt.Sprintf("%v", this.Message) + `,`,
-		`LastUpdateTime:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.LastUpdateTime), "Time", "v11.Time", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5367,6 +4882,9 @@ func (this *PostgresModificationRequestSpec) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&PostgresModificationRequestSpec{`,
+		`DatabaseRef:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.DatabaseRef), "LocalObjectReference", "v1.LocalObjectReference", 1), `&`, ``, 1) + `,`,
+		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
+		`Upgrade:` + strings.Replace(this.Upgrade.String(), "UpgradeSpec", "UpgradeSpec", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5375,12 +4893,14 @@ func (this *PostgresModificationRequestStatus) String() string {
 	if this == nil {
 		return "nil"
 	}
-	repeatedStringForConditions := "[]PostgresModificationRequestCondition{"
+	repeatedStringForConditions := "[]Condition{"
 	for _, f := range this.Conditions {
-		repeatedStringForConditions += strings.Replace(strings.Replace(f.String(), "PostgresModificationRequestCondition", "PostgresModificationRequestCondition", 1), `&`, ``, 1) + ","
+		repeatedStringForConditions += fmt.Sprintf("%v", f) + ","
 	}
 	repeatedStringForConditions += "}"
 	s := strings.Join([]string{`&PostgresModificationRequestStatus{`,
+		`Phase:` + fmt.Sprintf("%v", this.Phase) + `,`,
+		`ObservedGeneration:` + fmt.Sprintf("%v", this.ObservedGeneration) + `,`,
 		`Conditions:` + repeatedStringForConditions + `,`,
 		`}`,
 	}, "")
@@ -5394,19 +4914,6 @@ func (this *ProxySQLModificationRequest) String() string {
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v11.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "ProxySQLModificationRequestSpec", "ProxySQLModificationRequestSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "ProxySQLModificationRequestStatus", "ProxySQLModificationRequestStatus", 1), `&`, ``, 1) + `,`,
-		`}`,
-	}, "")
-	return s
-}
-func (this *ProxySQLModificationRequestCondition) String() string {
-	if this == nil {
-		return "nil"
-	}
-	s := strings.Join([]string{`&ProxySQLModificationRequestCondition{`,
-		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
-		`Reason:` + fmt.Sprintf("%v", this.Reason) + `,`,
-		`Message:` + fmt.Sprintf("%v", this.Message) + `,`,
-		`LastUpdateTime:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.LastUpdateTime), "Time", "v11.Time", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5432,6 +4939,9 @@ func (this *ProxySQLModificationRequestSpec) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&ProxySQLModificationRequestSpec{`,
+		`DatabaseRef:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.DatabaseRef), "LocalObjectReference", "v1.LocalObjectReference", 1), `&`, ``, 1) + `,`,
+		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
+		`Upgrade:` + strings.Replace(this.Upgrade.String(), "UpgradeSpec", "UpgradeSpec", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5440,12 +4950,14 @@ func (this *ProxySQLModificationRequestStatus) String() string {
 	if this == nil {
 		return "nil"
 	}
-	repeatedStringForConditions := "[]ProxySQLModificationRequestCondition{"
+	repeatedStringForConditions := "[]Condition{"
 	for _, f := range this.Conditions {
-		repeatedStringForConditions += strings.Replace(strings.Replace(f.String(), "ProxySQLModificationRequestCondition", "ProxySQLModificationRequestCondition", 1), `&`, ``, 1) + ","
+		repeatedStringForConditions += fmt.Sprintf("%v", f) + ","
 	}
 	repeatedStringForConditions += "}"
 	s := strings.Join([]string{`&ProxySQLModificationRequestStatus{`,
+		`Phase:` + fmt.Sprintf("%v", this.Phase) + `,`,
+		`ObservedGeneration:` + fmt.Sprintf("%v", this.ObservedGeneration) + `,`,
 		`Conditions:` + repeatedStringForConditions + `,`,
 		`}`,
 	}, "")
@@ -5486,7 +4998,7 @@ func (this *RedisModificationRequestSpec) String() string {
 	s := strings.Join([]string{`&RedisModificationRequestSpec{`,
 		`DatabaseRef:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.DatabaseRef), "LocalObjectReference", "v1.LocalObjectReference", 1), `&`, ``, 1) + `,`,
 		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
-		`Update:` + strings.Replace(this.Update.String(), "UpdateSpec", "UpdateSpec", 1) + `,`,
+		`Upgrade:` + strings.Replace(this.Upgrade.String(), "UpgradeSpec", "UpgradeSpec", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5508,39 +5020,12 @@ func (this *RedisModificationRequestStatus) String() string {
 	}, "")
 	return s
 }
-func (this *ScaleSpec) String() string {
+func (this *UpgradeSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&ScaleSpec{`,
-		`Master:` + valueToStringGenerated(this.Master) + `,`,
-		`Data:` + valueToStringGenerated(this.Data) + `,`,
-		`Client:` + valueToStringGenerated(this.Client) + `,`,
-		`}`,
-	}, "")
-	return s
-}
-func (this *UpdateSpec) String() string {
-	if this == nil {
-		return "nil"
-	}
-	s := strings.Join([]string{`&UpdateSpec{`,
+	s := strings.Join([]string{`&UpgradeSpec{`,
 		`TargetVersion:` + fmt.Sprintf("%v", this.TargetVersion) + `,`,
-		`}`,
-	}, "")
-	return s
-}
-func (this *VerticalScale) String() string {
-	if this == nil {
-		return "nil"
-	}
-	repeatedStringForContainers := "[]ContainerResources{"
-	for _, f := range this.Containers {
-		repeatedStringForContainers += strings.Replace(strings.Replace(f.String(), "ContainerResources", "ContainerResources", 1), `&`, ``, 1) + ","
-	}
-	repeatedStringForContainers += "}"
-	s := strings.Join([]string{`&VerticalScale{`,
-		`Containers:` + repeatedStringForContainers + `,`,
 		`}`,
 	}, "")
 	return s
@@ -5647,6 +5132,119 @@ func (m *ContainerResources) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGenerated(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ElasticsearchHorizontalScaleSpec) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGenerated
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ElasticsearchHorizontalScaleSpec: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ElasticsearchHorizontalScaleSpec: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Master", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Master = &v
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Data = &v
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Client", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Client = &v
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -6039,7 +5637,7 @@ func (m *ElasticsearchModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Update", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Upgrade", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -6066,16 +5664,16 @@ func (m *ElasticsearchModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Update == nil {
-				m.Update = &UpdateSpec{}
+			if m.Upgrade == nil {
+				m.Upgrade = &UpgradeSpec{}
 			}
-			if err := m.Update.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Upgrade.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Scale", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field HorizontalScaling", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -6102,10 +5700,10 @@ func (m *ElasticsearchModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Scale == nil {
-				m.Scale = &ScaleSpec{}
+			if m.HorizontalScaling == nil {
+				m.HorizontalScaling = &ElasticsearchHorizontalScaleSpec{}
 			}
-			if err := m.Scale.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.HorizontalScaling.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -6423,188 +6021,6 @@ func (m *EtcdModificationRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *EtcdModificationRequestCondition) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: EtcdModificationRequestCondition: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: EtcdModificationRequestCondition: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Type = RequestConditionType(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Reason", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Reason = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Message", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Message = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LastUpdateTime", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.LastUpdateTime.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *EtcdModificationRequestList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -6754,6 +6170,107 @@ func (m *EtcdModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: EtcdModificationRequestSpec: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DatabaseRef", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.DatabaseRef.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Type = ModificationRequestType(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Upgrade", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Upgrade == nil {
+				m.Upgrade = &UpgradeSpec{}
+			}
+			if err := m.Upgrade.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -6809,6 +6326,57 @@ func (m *EtcdModificationRequestStatus) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Phase", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Phase = ModificationRequestPhase(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ObservedGeneration", wireType)
+			}
+			m.ObservedGeneration = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ObservedGeneration |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Conditions", wireType)
 			}
 			var msglen int
@@ -6836,84 +6404,11 @@ func (m *EtcdModificationRequestStatus) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Conditions = append(m.Conditions, EtcdModificationRequestCondition{})
+			m.Conditions = append(m.Conditions, v12.Condition{})
 			if err := m.Conditions[len(m.Conditions)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *HorizontalScale) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: HorizontalScale: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: HorizontalScale: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Member", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= int32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Member = &v
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -7090,188 +6585,6 @@ func (m *MemcachedModificationRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MemcachedModificationRequestCondition) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MemcachedModificationRequestCondition: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MemcachedModificationRequestCondition: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Type = RequestConditionType(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Reason", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Reason = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Message", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Message = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LastUpdateTime", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.LastUpdateTime.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *MemcachedModificationRequestList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -7421,6 +6734,107 @@ func (m *MemcachedModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: MemcachedModificationRequestSpec: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DatabaseRef", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.DatabaseRef.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Type = ModificationRequestType(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Upgrade", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Upgrade == nil {
+				m.Upgrade = &UpgradeSpec{}
+			}
+			if err := m.Upgrade.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -7476,6 +6890,57 @@ func (m *MemcachedModificationRequestStatus) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Phase", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Phase = ModificationRequestPhase(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ObservedGeneration", wireType)
+			}
+			m.ObservedGeneration = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ObservedGeneration |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Conditions", wireType)
 			}
 			var msglen int
@@ -7503,7 +6968,7 @@ func (m *MemcachedModificationRequestStatus) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Conditions = append(m.Conditions, MemcachedModificationRequestCondition{})
+			m.Conditions = append(m.Conditions, v12.Condition{})
 			if err := m.Conditions[len(m.Conditions)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -7900,7 +7365,7 @@ func (m *MongoDBModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Update", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Upgrade", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -7927,10 +7392,10 @@ func (m *MongoDBModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Update == nil {
-				m.Update = &UpdateSpec{}
+			if m.Upgrade == nil {
+				m.Upgrade = &UpgradeSpec{}
 			}
-			if err := m.Update.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Upgrade.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -8072,6 +7537,98 @@ func (m *MongoDBModificationRequestStatus) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGenerated(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MySQLHorizontalScalingSpec) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGenerated
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MySQLHorizontalScalingSpec: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MySQLHorizontalScalingSpec: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Member", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Member = &v
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MemberWeight", wireType)
+			}
+			m.MemberWeight = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.MemberWeight |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -8431,6 +7988,26 @@ func (m *MySQLModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			}
 			iNdEx = postIndex
 		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field StatefulSetOrdinal", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.StatefulSetOrdinal = &v
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
 			}
@@ -8462,9 +8039,9 @@ func (m *MySQLModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			}
 			m.Type = ModificationRequestType(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Update", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Upgrade", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -8491,16 +8068,16 @@ func (m *MySQLModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Update == nil {
-				m.Update = &MySQLUpdateSpec{}
+			if m.Upgrade == nil {
+				m.Upgrade = &UpgradeSpec{}
 			}
-			if err := m.Update.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Upgrade.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 4:
+		case 5:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Scale", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field HorizontalScaling", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -8527,10 +8104,46 @@ func (m *MySQLModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Scale == nil {
-				m.Scale = &MySQLScaleSpec{}
+			if m.HorizontalScaling == nil {
+				m.HorizontalScaling = &MySQLHorizontalScalingSpec{}
 			}
-			if err := m.Scale.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.HorizontalScaling.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VerticalScaling", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.VerticalScaling == nil {
+				m.VerticalScaling = &MySQLVerticalScalingSpec{}
+			}
+			if err := m.VerticalScaling.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -8696,7 +8309,7 @@ func (m *MySQLModificationRequestStatus) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MySQLScaleSpec) Unmarshal(dAtA []byte) error {
+func (m *MySQLVerticalScalingSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -8719,15 +8332,15 @@ func (m *MySQLScaleSpec) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MySQLScaleSpec: wiretype end group for non-group")
+			return fmt.Errorf("proto: MySQLVerticalScalingSpec: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MySQLScaleSpec: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MySQLVerticalScalingSpec: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Horizontal", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Containers", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -8754,173 +8367,11 @@ func (m *MySQLScaleSpec) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Horizontal == nil {
-				m.Horizontal = &HorizontalScale{}
-			}
-			if err := m.Horizontal.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Containers = append(m.Containers, ContainerResources{})
+			if err := m.Containers[len(m.Containers)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Vertical", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Vertical == nil {
-				m.Vertical = &VerticalScale{}
-			}
-			if err := m.Vertical.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MemberWeight", wireType)
-			}
-			m.MemberWeight = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.MemberWeight |= int32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MySQLUpdateSpec) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MySQLUpdateSpec: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MySQLUpdateSpec: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TargetVersion", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.TargetVersion = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CurrentStatefulSetOrdinal", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= int32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.CurrentStatefulSetOrdinal = &v
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -9097,188 +8548,6 @@ func (m *PerconaXtraDBModificationRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *PerconaXtraDBModificationRequestCondition) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: PerconaXtraDBModificationRequestCondition: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: PerconaXtraDBModificationRequestCondition: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Type = RequestConditionType(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Reason", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Reason = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Message", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Message = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LastUpdateTime", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.LastUpdateTime.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *PerconaXtraDBModificationRequestList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -9428,6 +8697,107 @@ func (m *PerconaXtraDBModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: PerconaXtraDBModificationRequestSpec: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DatabaseRef", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.DatabaseRef.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Type = ModificationRequestType(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Upgrade", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Upgrade == nil {
+				m.Upgrade = &UpgradeSpec{}
+			}
+			if err := m.Upgrade.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -9483,6 +8853,57 @@ func (m *PerconaXtraDBModificationRequestStatus) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Phase", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Phase = ModificationRequestPhase(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ObservedGeneration", wireType)
+			}
+			m.ObservedGeneration = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ObservedGeneration |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Conditions", wireType)
 			}
 			var msglen int
@@ -9510,7 +8931,7 @@ func (m *PerconaXtraDBModificationRequestStatus) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Conditions = append(m.Conditions, PerconaXtraDBModificationRequestCondition{})
+			m.Conditions = append(m.Conditions, v12.Condition{})
 			if err := m.Conditions[len(m.Conditions)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -9691,188 +9112,6 @@ func (m *PgBouncerModificationRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *PgBouncerModificationRequestCondition) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: PgBouncerModificationRequestCondition: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: PgBouncerModificationRequestCondition: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Type = RequestConditionType(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Reason", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Reason = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Message", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Message = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LastUpdateTime", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.LastUpdateTime.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *PgBouncerModificationRequestList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -10022,6 +9261,107 @@ func (m *PgBouncerModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: PgBouncerModificationRequestSpec: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DatabaseRef", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.DatabaseRef.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Type = ModificationRequestType(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Upgrade", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Upgrade == nil {
+				m.Upgrade = &UpgradeSpec{}
+			}
+			if err := m.Upgrade.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -10077,6 +9417,57 @@ func (m *PgBouncerModificationRequestStatus) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Phase", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Phase = ModificationRequestPhase(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ObservedGeneration", wireType)
+			}
+			m.ObservedGeneration = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ObservedGeneration |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Conditions", wireType)
 			}
 			var msglen int
@@ -10104,7 +9495,7 @@ func (m *PgBouncerModificationRequestStatus) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Conditions = append(m.Conditions, PgBouncerModificationRequestCondition{})
+			m.Conditions = append(m.Conditions, v12.Condition{})
 			if err := m.Conditions[len(m.Conditions)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -10285,188 +9676,6 @@ func (m *PostgresModificationRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *PostgresModificationRequestCondition) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: PostgresModificationRequestCondition: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: PostgresModificationRequestCondition: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Type = RequestConditionType(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Reason", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Reason = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Message", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Message = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LastUpdateTime", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.LastUpdateTime.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *PostgresModificationRequestList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -10616,6 +9825,107 @@ func (m *PostgresModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: PostgresModificationRequestSpec: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DatabaseRef", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.DatabaseRef.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Type = ModificationRequestType(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Upgrade", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Upgrade == nil {
+				m.Upgrade = &UpgradeSpec{}
+			}
+			if err := m.Upgrade.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -10671,6 +9981,57 @@ func (m *PostgresModificationRequestStatus) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Phase", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Phase = ModificationRequestPhase(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ObservedGeneration", wireType)
+			}
+			m.ObservedGeneration = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ObservedGeneration |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Conditions", wireType)
 			}
 			var msglen int
@@ -10698,7 +10059,7 @@ func (m *PostgresModificationRequestStatus) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Conditions = append(m.Conditions, PostgresModificationRequestCondition{})
+			m.Conditions = append(m.Conditions, v12.Condition{})
 			if err := m.Conditions[len(m.Conditions)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -10879,188 +10240,6 @@ func (m *ProxySQLModificationRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ProxySQLModificationRequestCondition) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ProxySQLModificationRequestCondition: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ProxySQLModificationRequestCondition: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Type = RequestConditionType(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Reason", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Reason = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Message", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Message = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LastUpdateTime", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.LastUpdateTime.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *ProxySQLModificationRequestList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -11210,6 +10389,107 @@ func (m *ProxySQLModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: ProxySQLModificationRequestSpec: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DatabaseRef", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.DatabaseRef.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Type = ModificationRequestType(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Upgrade", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Upgrade == nil {
+				m.Upgrade = &UpgradeSpec{}
+			}
+			if err := m.Upgrade.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -11265,6 +10545,57 @@ func (m *ProxySQLModificationRequestStatus) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Phase", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Phase = ModificationRequestPhase(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ObservedGeneration", wireType)
+			}
+			m.ObservedGeneration = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ObservedGeneration |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Conditions", wireType)
 			}
 			var msglen int
@@ -11292,7 +10623,7 @@ func (m *ProxySQLModificationRequestStatus) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Conditions = append(m.Conditions, ProxySQLModificationRequestCondition{})
+			m.Conditions = append(m.Conditions, v12.Condition{})
 			if err := m.Conditions[len(m.Conditions)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -11689,7 +11020,7 @@ func (m *RedisModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Update", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Upgrade", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -11716,10 +11047,10 @@ func (m *RedisModificationRequestSpec) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Update == nil {
-				m.Update = &UpdateSpec{}
+			if m.Upgrade == nil {
+				m.Upgrade = &UpgradeSpec{}
 			}
-			if err := m.Update.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Upgrade.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -11885,7 +11216,7 @@ func (m *RedisModificationRequestStatus) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ScaleSpec) Unmarshal(dAtA []byte) error {
+func (m *UpgradeSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -11908,123 +11239,10 @@ func (m *ScaleSpec) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ScaleSpec: wiretype end group for non-group")
+			return fmt.Errorf("proto: UpgradeSpec: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ScaleSpec: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Master", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= int32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Master = &v
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= int32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Data = &v
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Client", wireType)
-			}
-			var v int32
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= int32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Client = &v
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *UpdateSpec) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: UpdateSpec: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: UpdateSpec: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: UpgradeSpec: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -12058,93 +11276,6 @@ func (m *UpdateSpec) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.TargetVersion = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *VerticalScale) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: VerticalScale: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: VerticalScale: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Containers", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Containers = append(m.Containers, ContainerResources{})
-			if err := m.Containers[len(m.Containers)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

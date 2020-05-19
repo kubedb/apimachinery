@@ -28306,6 +28306,27 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.ElasticsearchHorizontalScaleSpec": {
+      "description": "ElasticsearchScaleSpec contains the scaling information of the Elasticsearch",
+      "type": "object",
+      "properties": {
+        "client": {
+          "description": "Number of client nodes",
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "description": "Number of data nodes",
+          "type": "integer",
+          "format": "int32"
+        },
+        "master": {
+          "description": "Number of master nodes",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequest": {
       "type": "object",
       "properties": {
@@ -28367,7 +28388,7 @@
       ]
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequestSpec": {
-      "description": "ElasticsearchModificationRequestSpec is the spec for ElasticsearchModificationRequest object",
+      "description": "ElasticsearchModificationRequestSpec is the spec for ElasticsearchModificationRequest",
       "type": "object",
       "required": [
         "databaseRef",
@@ -28378,22 +28399,22 @@
           "description": "Specifies the Elasticsearch reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
-        "scale": {
-          "description": "Specifies the scaling info of Elasticsearch Object",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ScaleSpec"
+        "horizontalScaling": {
+          "description": "HorizontalScaling specifies the horizontal scaling.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ElasticsearchHorizontalScaleSpec"
         },
         "type": {
-          "description": "Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.",
+          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
-        "update": {
-          "description": "Specifies the field information that needed to be updated",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpdateSpec"
+        "upgrade": {
+          "description": "Specifies the field information that needed to be upgraded",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpgradeSpec"
         }
       }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequestStatus": {
-      "description": "ElasticsearchModificationRequestStatus is the status for elasticsearch version",
+      "description": "ElasticsearchModificationRequestStatus is the status for ElasticsearchModificationRequest",
       "type": "object",
       "properties": {
         "conditions": {
@@ -28443,30 +28464,6 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.EtcdModificationRequestCondition": {
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "lastUpdateTime": {
-          "description": "timestamp for the last update to this condition",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "message": {
-          "description": "human readable message with details about the request state",
-          "type": "string"
-        },
-        "reason": {
-          "description": "brief reason for the request state",
-          "type": "string"
-        },
-        "type": {
-          "description": "request approval state, currently Approved or Denied.",
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.EtcdModificationRequestList": {
       "description": "EtcdModificationRequestList is a list of EtcdModificationRequests",
       "type": "object",
@@ -28499,29 +28496,45 @@
       ]
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.EtcdModificationRequestSpec": {
-      "description": "EtcdModificationRequestSpec is the spec for elasticsearch version",
-      "type": "object"
+      "description": "EtcdModificationRequestSpec is the spec for EtcdModificationRequest",
+      "type": "object",
+      "required": [
+        "databaseRef",
+        "type"
+      ],
+      "properties": {
+        "databaseRef": {
+          "description": "Specifies the etcd reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "type": {
+          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "type": "string"
+        },
+        "upgrade": {
+          "description": "Specifies the field information that needed to be upgraded",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpgradeSpec"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.EtcdModificationRequestStatus": {
-      "description": "EtcdModificationRequestStatus is the status for elasticsearch version",
+      "description": "EtcdModificationRequestStatus is the status for EtcdModificationRequest",
       "type": "object",
       "properties": {
         "conditions": {
           "description": "Conditions applied to the request, such as approval or denial.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.EtcdModificationRequestCondition"
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.HorizontalScale": {
-      "type": "object",
-      "properties": {
-        "member": {
-          "description": "Number of nodes/members of the group",
+        },
+        "observedGeneration": {
+          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
+        },
+        "phase": {
+          "type": "string"
         }
       }
     },
@@ -28553,30 +28566,6 @@
           "version": "v1alpha1"
         }
       ]
-    },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MemcachedModificationRequestCondition": {
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "lastUpdateTime": {
-          "description": "timestamp for the last update to this condition",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "message": {
-          "description": "human readable message with details about the request state",
-          "type": "string"
-        },
-        "reason": {
-          "description": "brief reason for the request state",
-          "type": "string"
-        },
-        "type": {
-          "description": "request approval state, currently Approved or Denied.",
-          "type": "string"
-        }
-      }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MemcachedModificationRequestList": {
       "description": "MemcachedModificationRequestList is a list of MemcachedModificationRequests",
@@ -28610,19 +28599,45 @@
       ]
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MemcachedModificationRequestSpec": {
-      "description": "MemcachedModificationRequestSpec is the spec for elasticsearch version",
-      "type": "object"
+      "description": "MemcachedModificationRequestSpec is the spec for MemcachedModificationRequest",
+      "type": "object",
+      "required": [
+        "databaseRef",
+        "type"
+      ],
+      "properties": {
+        "databaseRef": {
+          "description": "Specifies the Memcached reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "type": {
+          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "type": "string"
+        },
+        "upgrade": {
+          "description": "Specifies the field information that needed to be upgraded",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpgradeSpec"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MemcachedModificationRequestStatus": {
-      "description": "MemcachedModificationRequestStatus is the status for elasticsearch version",
+      "description": "MemcachedModificationRequestStatus is the status for MemcachedModificationRequest",
       "type": "object",
       "properties": {
         "conditions": {
           "description": "Conditions applied to the request, such as approval or denial.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MemcachedModificationRequestCondition"
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "observedGeneration": {
+          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "phase": {
+          "type": "string"
         }
       }
     },
@@ -28687,7 +28702,7 @@
       ]
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestSpec": {
-      "description": "MongoDBModificationRequestSpec is the spec for mongodb modification request",
+      "description": "MongoDBModificationRequestSpec is the spec for MongoDBModificationRequest",
       "type": "object",
       "required": [
         "databaseRef",
@@ -28699,17 +28714,17 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "type": {
-          "description": "Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.",
+          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
-        "update": {
-          "description": "Specifies the field information that needed to be updated",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpdateSpec"
+        "upgrade": {
+          "description": "Specifies the field information that needed to be upgraded",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpgradeSpec"
         }
       }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequestStatus": {
-      "description": "MongoDBModificationRequestStatus is the status for mongodb modification request",
+      "description": "MongoDBModificationRequestStatus is the status for MongoDBModificationRequest",
       "type": "object",
       "properties": {
         "conditions": {
@@ -28726,6 +28741,21 @@
         },
         "phase": {
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLHorizontalScalingSpec": {
+      "type": "object",
+      "properties": {
+        "member": {
+          "description": "Number of nodes/members of the group",
+          "type": "integer",
+          "format": "int32"
+        },
+        "memberWeight": {
+          "description": "specifies the weight of the current member/Node",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -28790,7 +28820,7 @@
       ]
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLModificationRequestSpec": {
-      "description": "MySQLModificationRequestSpec is the spec for MySQLModificationRequest version",
+      "description": "MySQLModificationRequestSpec is the spec for MySQLModificationRequest",
       "type": "object",
       "required": [
         "databaseRef",
@@ -28801,22 +28831,31 @@
           "description": "Specifies the database reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
-        "scale": {
-          "description": "Specifies the scaling info of database",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLScaleSpec"
+        "horizontalScaling": {
+          "description": "HorizontalScaling specifies the horizontal scaling.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLHorizontalScalingSpec"
+        },
+        "statefulSetOrdinal": {
+          "description": "Specifies the current ordinal of the StatefulSet",
+          "type": "integer",
+          "format": "int32"
         },
         "type": {
           "description": "Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.",
           "type": "string"
         },
-        "update": {
-          "description": "Specifies the field information that needed to be updated",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLUpdateSpec"
+        "upgrade": {
+          "description": "Specifies the field information that needed to be upgraded",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpgradeSpec"
+        },
+        "verticalScaling": {
+          "description": "VerticalScaling specifies the vertical scaling.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLVerticalScalingSpec"
         }
       }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLModificationRequestStatus": {
-      "description": "MySQLModificationRequestStatus is the status for MySQLModificationRequest object",
+      "description": "MySQLModificationRequestStatus is the status for MySQLModificationRequest",
       "type": "object",
       "properties": {
         "conditions": {
@@ -28836,36 +28875,15 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLScaleSpec": {
-      "description": "MySQLScaleSpec contains the scaling information of the MySQL",
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLVerticalScalingSpec": {
       "type": "object",
       "properties": {
-        "horizontal": {
-          "description": "Horizontal specifies the horizontal scaling.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.HorizontalScale"
-        },
-        "memberWeight": {
-          "description": "specifies the weight of the current member/Node",
-          "type": "integer",
-          "format": "int32"
-        },
-        "vertical": {
-          "description": "Vertical specifies the vertical scaling.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.VerticalScale"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MySQLUpdateSpec": {
-      "type": "object",
-      "properties": {
-        "CurrentStatefulSetOrdinal": {
-          "description": "Specifies the current ordinal of the StatefulSet",
-          "type": "integer",
-          "format": "int32"
-        },
-        "targetVersion": {
-          "description": "Specifies the MySQLVersion object name",
-          "type": "string"
+        "containers": {
+          "description": "Containers represents the containers specification for scaling the requested resources.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ContainerResources"
+          }
         }
       }
     },
@@ -28897,30 +28915,6 @@
           "version": "v1alpha1"
         }
       ]
-    },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.PerconaXtraDBModificationRequestCondition": {
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "lastUpdateTime": {
-          "description": "timestamp for the last update to this condition",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "message": {
-          "description": "human readable message with details about the request state",
-          "type": "string"
-        },
-        "reason": {
-          "description": "brief reason for the request state",
-          "type": "string"
-        },
-        "type": {
-          "description": "request approval state, currently Approved or Denied.",
-          "type": "string"
-        }
-      }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.PerconaXtraDBModificationRequestList": {
       "description": "PerconaXtraDBModificationRequestList is a list of PerconaXtraDBModificationRequests",
@@ -28954,19 +28948,45 @@
       ]
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.PerconaXtraDBModificationRequestSpec": {
-      "description": "PerconaXtraDBModificationRequestSpec is the spec for elasticsearch version",
-      "type": "object"
+      "description": "PerconaXtraDBModificationRequestSpec is the spec for PerconaXtraDBModificationRequest",
+      "type": "object",
+      "required": [
+        "databaseRef",
+        "type"
+      ],
+      "properties": {
+        "databaseRef": {
+          "description": "Specifies the Elasticsearch reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "type": {
+          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "type": "string"
+        },
+        "upgrade": {
+          "description": "Specifies the field information that needed to be upgraded",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpgradeSpec"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.PerconaXtraDBModificationRequestStatus": {
-      "description": "PerconaXtraDBModificationRequestStatus is the status for elasticsearch version",
+      "description": "PerconaXtraDBModificationRequestStatus is the status for PerconaXtraDBModificationRequest",
       "type": "object",
       "properties": {
         "conditions": {
           "description": "Conditions applied to the request, such as approval or denial.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.PerconaXtraDBModificationRequestCondition"
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "observedGeneration": {
+          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "phase": {
+          "type": "string"
         }
       }
     },
@@ -28998,30 +29018,6 @@
           "version": "v1alpha1"
         }
       ]
-    },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.PostgresModificationRequestCondition": {
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "lastUpdateTime": {
-          "description": "timestamp for the last update to this condition",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "message": {
-          "description": "human readable message with details about the request state",
-          "type": "string"
-        },
-        "reason": {
-          "description": "brief reason for the request state",
-          "type": "string"
-        },
-        "type": {
-          "description": "request approval state, currently Approved or Denied.",
-          "type": "string"
-        }
-      }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.PostgresModificationRequestList": {
       "description": "PostgresModificationRequestList is a list of PostgresModificationRequests",
@@ -29055,19 +29051,45 @@
       ]
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.PostgresModificationRequestSpec": {
-      "description": "PostgresModificationRequestSpec is the spec for elasticsearch version",
-      "type": "object"
+      "description": "PostgresModificationRequestSpec is the spec for PostgresModificationRequest",
+      "type": "object",
+      "required": [
+        "databaseRef",
+        "type"
+      ],
+      "properties": {
+        "databaseRef": {
+          "description": "Specifies the Elasticsearch reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "type": {
+          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "type": "string"
+        },
+        "upgrade": {
+          "description": "Specifies the field information that needed to be upgraded",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpgradeSpec"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.PostgresModificationRequestStatus": {
-      "description": "PostgresModificationRequestStatus is the status for elasticsearch version",
+      "description": "PostgresModificationRequestStatus is the status for PostgresModificationRequest",
       "type": "object",
       "properties": {
         "conditions": {
           "description": "Conditions applied to the request, such as approval or denial.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.PostgresModificationRequestCondition"
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "observedGeneration": {
+          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "phase": {
+          "type": "string"
         }
       }
     },
@@ -29099,30 +29121,6 @@
           "version": "v1alpha1"
         }
       ]
-    },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.ProxySQLModificationRequestCondition": {
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "lastUpdateTime": {
-          "description": "timestamp for the last update to this condition",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "message": {
-          "description": "human readable message with details about the request state",
-          "type": "string"
-        },
-        "reason": {
-          "description": "brief reason for the request state",
-          "type": "string"
-        },
-        "type": {
-          "description": "request approval state, currently Approved or Denied.",
-          "type": "string"
-        }
-      }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.ProxySQLModificationRequestList": {
       "description": "ProxySQLModificationRequestList is a list of ProxySQLModificationRequests",
@@ -29156,19 +29154,45 @@
       ]
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.ProxySQLModificationRequestSpec": {
-      "description": "ProxySQLModificationRequestSpec is the spec for elasticsearch version",
-      "type": "object"
+      "description": "ProxySQLModificationRequestSpec is the spec for ProxySQLModificationRequest",
+      "type": "object",
+      "required": [
+        "databaseRef",
+        "type"
+      ],
+      "properties": {
+        "databaseRef": {
+          "description": "Specifies the Elasticsearch reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "type": {
+          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "type": "string"
+        },
+        "upgrade": {
+          "description": "Specifies the field information that needed to be upgraded",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpgradeSpec"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.ProxySQLModificationRequestStatus": {
-      "description": "ProxySQLModificationRequestStatus is the status for elasticsearch version",
+      "description": "ProxySQLModificationRequestStatus is the status for ProxySQLModificationRequest",
       "type": "object",
       "properties": {
         "conditions": {
           "description": "Conditions applied to the request, such as approval or denial.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ProxySQLModificationRequestCondition"
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "observedGeneration": {
+          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "phase": {
+          "type": "string"
         }
       }
     },
@@ -29233,7 +29257,7 @@
       ]
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.RedisModificationRequestSpec": {
-      "description": "RedisModificationRequestSpec is the spec for redis version",
+      "description": "RedisModificationRequestSpec is the spec for RedisModificationRequest",
       "type": "object",
       "required": [
         "databaseRef",
@@ -29245,17 +29269,17 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "type": {
-          "description": "Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.",
+          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
-        "update": {
-          "description": "Specifies the field information that needed to be updated",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpdateSpec"
+        "upgrade": {
+          "description": "Specifies the field information that needed to be upgraded",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpgradeSpec"
         }
       }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.RedisModificationRequestStatus": {
-      "description": "RedisModificationRequestStatus is the status for redis version",
+      "description": "RedisModificationRequestStatus is the status for RedisModificationRequest",
       "type": "object",
       "properties": {
         "conditions": {
@@ -29275,45 +29299,12 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.ScaleSpec": {
-      "description": "ScaleSpec contains the scaling information of the Elasticsearch",
-      "type": "object",
-      "properties": {
-        "client": {
-          "description": "Number of client nodes",
-          "type": "integer",
-          "format": "int32"
-        },
-        "data": {
-          "description": "Number of data nodes",
-          "type": "integer",
-          "format": "int32"
-        },
-        "master": {
-          "description": "Number of master nodes",
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.UpdateSpec": {
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.UpgradeSpec": {
       "type": "object",
       "properties": {
         "targetVersion": {
-          "description": "Specifies the ElasticsearchVersion object name",
+          "description": "Specifies the MySQLVersion object name",
           "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.VerticalScale": {
-      "type": "object",
-      "properties": {
-        "containers": {
-          "description": "Containers represents the containers specification for scaling the requested resources.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ContainerResources"
-          }
         }
       }
     },

@@ -42,32 +42,33 @@ type MemcachedModificationRequestInformer interface {
 type memcachedModificationRequestInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
+	namespace        string
 }
 
 // NewMemcachedModificationRequestInformer constructs a new informer for MemcachedModificationRequest type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewMemcachedModificationRequestInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredMemcachedModificationRequestInformer(client, resyncPeriod, indexers, nil)
+func NewMemcachedModificationRequestInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredMemcachedModificationRequestInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
 // NewFilteredMemcachedModificationRequestInformer constructs a new informer for MemcachedModificationRequest type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredMemcachedModificationRequestInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredMemcachedModificationRequestInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.DbaV1alpha1().MemcachedModificationRequests().List(options)
+				return client.DbaV1alpha1().MemcachedModificationRequests(namespace).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.DbaV1alpha1().MemcachedModificationRequests().Watch(options)
+				return client.DbaV1alpha1().MemcachedModificationRequests(namespace).Watch(options)
 			},
 		},
 		&dbav1alpha1.MemcachedModificationRequest{},
@@ -77,7 +78,7 @@ func NewFilteredMemcachedModificationRequestInformer(client versioned.Interface,
 }
 
 func (f *memcachedModificationRequestInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredMemcachedModificationRequestInformer(client, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+	return NewFilteredMemcachedModificationRequestInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
 func (f *memcachedModificationRequestInformer) Informer() cache.SharedIndexInformer {

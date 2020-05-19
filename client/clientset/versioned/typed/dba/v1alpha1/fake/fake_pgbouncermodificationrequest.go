@@ -32,6 +32,7 @@ import (
 // FakePgBouncerModificationRequests implements PgBouncerModificationRequestInterface
 type FakePgBouncerModificationRequests struct {
 	Fake *FakeDbaV1alpha1
+	ns   string
 }
 
 var pgbouncermodificationrequestsResource = schema.GroupVersionResource{Group: "dba.kubedb.com", Version: "v1alpha1", Resource: "pgbouncermodificationrequests"}
@@ -41,7 +42,8 @@ var pgbouncermodificationrequestsKind = schema.GroupVersionKind{Group: "dba.kube
 // Get takes name of the pgBouncerModificationRequest, and returns the corresponding pgBouncerModificationRequest object, and an error if there is any.
 func (c *FakePgBouncerModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.PgBouncerModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(pgbouncermodificationrequestsResource, name), &v1alpha1.PgBouncerModificationRequest{})
+		Invokes(testing.NewGetAction(pgbouncermodificationrequestsResource, c.ns, name), &v1alpha1.PgBouncerModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -51,7 +53,8 @@ func (c *FakePgBouncerModificationRequests) Get(name string, options v1.GetOptio
 // List takes label and field selectors, and returns the list of PgBouncerModificationRequests that match those selectors.
 func (c *FakePgBouncerModificationRequests) List(opts v1.ListOptions) (result *v1alpha1.PgBouncerModificationRequestList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(pgbouncermodificationrequestsResource, pgbouncermodificationrequestsKind, opts), &v1alpha1.PgBouncerModificationRequestList{})
+		Invokes(testing.NewListAction(pgbouncermodificationrequestsResource, pgbouncermodificationrequestsKind, c.ns, opts), &v1alpha1.PgBouncerModificationRequestList{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -72,13 +75,15 @@ func (c *FakePgBouncerModificationRequests) List(opts v1.ListOptions) (result *v
 // Watch returns a watch.Interface that watches the requested pgBouncerModificationRequests.
 func (c *FakePgBouncerModificationRequests) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(pgbouncermodificationrequestsResource, opts))
+		InvokesWatch(testing.NewWatchAction(pgbouncermodificationrequestsResource, c.ns, opts))
+
 }
 
 // Create takes the representation of a pgBouncerModificationRequest and creates it.  Returns the server's representation of the pgBouncerModificationRequest, and an error, if there is any.
 func (c *FakePgBouncerModificationRequests) Create(pgBouncerModificationRequest *v1alpha1.PgBouncerModificationRequest) (result *v1alpha1.PgBouncerModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(pgbouncermodificationrequestsResource, pgBouncerModificationRequest), &v1alpha1.PgBouncerModificationRequest{})
+		Invokes(testing.NewCreateAction(pgbouncermodificationrequestsResource, c.ns, pgBouncerModificationRequest), &v1alpha1.PgBouncerModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -88,7 +93,20 @@ func (c *FakePgBouncerModificationRequests) Create(pgBouncerModificationRequest 
 // Update takes the representation of a pgBouncerModificationRequest and updates it. Returns the server's representation of the pgBouncerModificationRequest, and an error, if there is any.
 func (c *FakePgBouncerModificationRequests) Update(pgBouncerModificationRequest *v1alpha1.PgBouncerModificationRequest) (result *v1alpha1.PgBouncerModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(pgbouncermodificationrequestsResource, pgBouncerModificationRequest), &v1alpha1.PgBouncerModificationRequest{})
+		Invokes(testing.NewUpdateAction(pgbouncermodificationrequestsResource, c.ns, pgBouncerModificationRequest), &v1alpha1.PgBouncerModificationRequest{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.PgBouncerModificationRequest), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakePgBouncerModificationRequests) UpdateStatus(pgBouncerModificationRequest *v1alpha1.PgBouncerModificationRequest) (*v1alpha1.PgBouncerModificationRequest, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(pgbouncermodificationrequestsResource, "status", c.ns, pgBouncerModificationRequest), &v1alpha1.PgBouncerModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -98,13 +116,14 @@ func (c *FakePgBouncerModificationRequests) Update(pgBouncerModificationRequest 
 // Delete takes name of the pgBouncerModificationRequest and deletes it. Returns an error if one occurs.
 func (c *FakePgBouncerModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(pgbouncermodificationrequestsResource, name), &v1alpha1.PgBouncerModificationRequest{})
+		Invokes(testing.NewDeleteAction(pgbouncermodificationrequestsResource, c.ns, name), &v1alpha1.PgBouncerModificationRequest{})
+
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakePgBouncerModificationRequests) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(pgbouncermodificationrequestsResource, listOptions)
+	action := testing.NewDeleteCollectionAction(pgbouncermodificationrequestsResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.PgBouncerModificationRequestList{})
 	return err
@@ -113,7 +132,8 @@ func (c *FakePgBouncerModificationRequests) DeleteCollection(options *v1.DeleteO
 // Patch applies the patch and returns the patched pgBouncerModificationRequest.
 func (c *FakePgBouncerModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.PgBouncerModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(pgbouncermodificationrequestsResource, name, pt, data, subresources...), &v1alpha1.PgBouncerModificationRequest{})
+		Invokes(testing.NewPatchSubresourceAction(pgbouncermodificationrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.PgBouncerModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}

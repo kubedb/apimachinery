@@ -33,13 +33,14 @@ import (
 // PostgresModificationRequestsGetter has a method to return a PostgresModificationRequestInterface.
 // A group's client should implement this interface.
 type PostgresModificationRequestsGetter interface {
-	PostgresModificationRequests() PostgresModificationRequestInterface
+	PostgresModificationRequests(namespace string) PostgresModificationRequestInterface
 }
 
 // PostgresModificationRequestInterface has methods to work with PostgresModificationRequest resources.
 type PostgresModificationRequestInterface interface {
 	Create(*v1alpha1.PostgresModificationRequest) (*v1alpha1.PostgresModificationRequest, error)
 	Update(*v1alpha1.PostgresModificationRequest) (*v1alpha1.PostgresModificationRequest, error)
+	UpdateStatus(*v1alpha1.PostgresModificationRequest) (*v1alpha1.PostgresModificationRequest, error)
 	Delete(name string, options *v1.DeleteOptions) error
 	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
 	Get(name string, options v1.GetOptions) (*v1alpha1.PostgresModificationRequest, error)
@@ -52,12 +53,14 @@ type PostgresModificationRequestInterface interface {
 // postgresModificationRequests implements PostgresModificationRequestInterface
 type postgresModificationRequests struct {
 	client rest.Interface
+	ns     string
 }
 
 // newPostgresModificationRequests returns a PostgresModificationRequests
-func newPostgresModificationRequests(c *DbaV1alpha1Client) *postgresModificationRequests {
+func newPostgresModificationRequests(c *DbaV1alpha1Client, namespace string) *postgresModificationRequests {
 	return &postgresModificationRequests{
 		client: c.RESTClient(),
+		ns:     namespace,
 	}
 }
 
@@ -65,6 +68,7 @@ func newPostgresModificationRequests(c *DbaV1alpha1Client) *postgresModification
 func (c *postgresModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.PostgresModificationRequest, err error) {
 	result = &v1alpha1.PostgresModificationRequest{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("postgresmodificationrequests").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -81,6 +85,7 @@ func (c *postgresModificationRequests) List(opts v1.ListOptions) (result *v1alph
 	}
 	result = &v1alpha1.PostgresModificationRequestList{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("postgresmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -97,6 +102,7 @@ func (c *postgresModificationRequests) Watch(opts v1.ListOptions) (watch.Interfa
 	}
 	opts.Watch = true
 	return c.client.Get().
+		Namespace(c.ns).
 		Resource("postgresmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -107,6 +113,7 @@ func (c *postgresModificationRequests) Watch(opts v1.ListOptions) (watch.Interfa
 func (c *postgresModificationRequests) Create(postgresModificationRequest *v1alpha1.PostgresModificationRequest) (result *v1alpha1.PostgresModificationRequest, err error) {
 	result = &v1alpha1.PostgresModificationRequest{}
 	err = c.client.Post().
+		Namespace(c.ns).
 		Resource("postgresmodificationrequests").
 		Body(postgresModificationRequest).
 		Do().
@@ -118,8 +125,25 @@ func (c *postgresModificationRequests) Create(postgresModificationRequest *v1alp
 func (c *postgresModificationRequests) Update(postgresModificationRequest *v1alpha1.PostgresModificationRequest) (result *v1alpha1.PostgresModificationRequest, err error) {
 	result = &v1alpha1.PostgresModificationRequest{}
 	err = c.client.Put().
+		Namespace(c.ns).
 		Resource("postgresmodificationrequests").
 		Name(postgresModificationRequest.Name).
+		Body(postgresModificationRequest).
+		Do().
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+
+func (c *postgresModificationRequests) UpdateStatus(postgresModificationRequest *v1alpha1.PostgresModificationRequest) (result *v1alpha1.PostgresModificationRequest, err error) {
+	result = &v1alpha1.PostgresModificationRequest{}
+	err = c.client.Put().
+		Namespace(c.ns).
+		Resource("postgresmodificationrequests").
+		Name(postgresModificationRequest.Name).
+		SubResource("status").
 		Body(postgresModificationRequest).
 		Do().
 		Into(result)
@@ -129,6 +153,7 @@ func (c *postgresModificationRequests) Update(postgresModificationRequest *v1alp
 // Delete takes name of the postgresModificationRequest and deletes it. Returns an error if one occurs.
 func (c *postgresModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("postgresmodificationrequests").
 		Name(name).
 		Body(options).
@@ -143,6 +168,7 @@ func (c *postgresModificationRequests) DeleteCollection(options *v1.DeleteOption
 		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("postgresmodificationrequests").
 		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -155,6 +181,7 @@ func (c *postgresModificationRequests) DeleteCollection(options *v1.DeleteOption
 func (c *postgresModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.PostgresModificationRequest, err error) {
 	result = &v1alpha1.PostgresModificationRequest{}
 	err = c.client.Patch(pt).
+		Namespace(c.ns).
 		Resource("postgresmodificationrequests").
 		SubResource(subresources...).
 		Name(name).

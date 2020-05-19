@@ -48,20 +48,20 @@ type ElasticsearchModificationRequest struct {
 	Status            ElasticsearchModificationRequestStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
-// ElasticsearchModificationRequestSpec is the spec for ElasticsearchModificationRequest object
+// ElasticsearchModificationRequestSpec is the spec for ElasticsearchModificationRequest
 type ElasticsearchModificationRequestSpec struct {
 	// Specifies the Elasticsearch reference
 	DatabaseRef v1.LocalObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
-	// Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.
-	Type ModificationRequestType `json:"type" protobuf:"bytes,2,opt,name=type"`
-	// Specifies the field information that needed to be updated
-	Update *UpdateSpec `json:"update,omitempty" protobuf:"bytes,3,opt,name=update"`
-	//Specifies the scaling info of Elasticsearch Object
-	Scale *ScaleSpec `json:"scale,omitempty" protobuf:"bytes,4,opt,name=scale"`
+	// Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
+	Type ModificationRequestType `json:"type" protobuf:"bytes,2,opt,name=type,casttype=ModificationRequestType"`
+	// Specifies the field information that needed to be upgraded
+	Upgrade *UpgradeSpec `json:"upgrade,omitempty" protobuf:"bytes,3,opt,name=upgrade"`
+	// HorizontalScaling specifies the horizontal scaling.
+	HorizontalScaling *ElasticsearchHorizontalScaleSpec `json:"horizontalScaling,omitempty" protobuf:"bytes,4,opt,name=horizontalScaling"`
 }
 
-// ScaleSpec contains the scaling information of the Elasticsearch
-type ScaleSpec struct {
+// ElasticsearchScaleSpec contains the scaling information of the Elasticsearch
+type ElasticsearchHorizontalScaleSpec struct {
 	// Number of master nodes
 	Master *int32 `json:"master,omitempty" protobuf:"bytes,1,opt,name=master"`
 	// Number of data nodes
@@ -70,7 +70,7 @@ type ScaleSpec struct {
 	Client *int32 `json:"client,omitempty" protobuf:"bytes,3,opt,name=client"`
 }
 
-// ElasticsearchModificationRequestStatus is the status for elasticsearch version
+// ElasticsearchModificationRequestStatus is the status for ElasticsearchModificationRequest
 type ElasticsearchModificationRequestStatus struct {
 	// Specifies the current phase of the modification request
 	// +optional
