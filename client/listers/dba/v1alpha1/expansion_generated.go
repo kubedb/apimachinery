@@ -65,3 +65,7 @@ type ProxySQLModificationRequestListerExpansion interface{}
 // RedisModificationRequestListerExpansion allows custom methods to be added to
 // RedisModificationRequestLister.
 type RedisModificationRequestListerExpansion interface{}
+
+// RedisModificationRequestNamespaceListerExpansion allows custom methods to be added to
+// RedisModificationRequestNamespaceLister.
+type RedisModificationRequestNamespaceListerExpansion interface{}

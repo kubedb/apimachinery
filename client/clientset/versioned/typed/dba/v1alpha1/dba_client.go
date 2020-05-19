@@ -80,8 +80,8 @@ func (c *DbaV1alpha1Client) ProxySQLModificationRequests() ProxySQLModificationR
 	return newProxySQLModificationRequests(c)
 }
 
-func (c *DbaV1alpha1Client) RedisModificationRequests() RedisModificationRequestInterface {
-	return newRedisModificationRequests(c)
+func (c *DbaV1alpha1Client) RedisModificationRequests(namespace string) RedisModificationRequestInterface {
+	return newRedisModificationRequests(c, namespace)
 }
 
 // NewForConfig creates a new DbaV1alpha1Client for the given config.

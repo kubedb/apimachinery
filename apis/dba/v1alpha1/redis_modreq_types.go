@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 const (
@@ -31,13 +32,13 @@ const (
 // RedisModificationRequest defines a Redis database version.
 
 // +genclient
-// +genclient:nonNamespaced
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=redismodificationrequests,singular=redismodificationrequest,shortName=rdmodreq,scope=Cluster,categories={datastore,kubedb,appscode}
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type RedisModificationRequest struct {
@@ -49,38 +50,24 @@ type RedisModificationRequest struct {
 
 // RedisModificationRequestSpec is the spec for redis version
 type RedisModificationRequestSpec struct {
-	Version string              `json:"version,omitempty" protobuf:"bytes,1,opt,name=version"`
-	Redis   *v1.ObjectReference `json:"mongodb,omitempty" protobuf:"bytes,2,opt,name=redis"`
+	// Specifies the Elasticsearch reference
+	DatabaseRef v1.LocalObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
+	// Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.
+	Type ModificationRequestType `json:"type" protobuf:"bytes,2,opt,name=type"`
+	// Specifies the field information that needed to be updated
+	Update *UpdateSpec `json:"update,omitempty" protobuf:"bytes,3,opt,name=update"`
 }
 
 // RedisModificationRequestStatus is the status for redis version
 type RedisModificationRequestStatus struct {
-	Phase  ModificationRequestPhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=ModificationRequestPhase"`
-	Reason string                   `json:"reason,omitempty" protobuf:"bytes,2,opt,name=reason"`
-	// Conditions applied to the request, such as approval or denial.
-	// +optional
-	Conditions []RedisModificationRequestCondition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
+	Phase ModificationRequestPhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=ModificationRequestPhase"`
 	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
 	// resource's generation, which is updated on mutation by the API Server.
 	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,4,opt,name=observedGeneration"`
-}
-
-type RedisModificationRequestCondition struct {
-	// request approval state, currently Approved or Denied.
-	Type RequestConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=RequestConditionType"`
-
-	// brief reason for the request state
+	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,2,opt,name=observedGeneration"`
+	// Conditions applied to the request, such as approval or denial.
 	// +optional
-	Reason string `json:"reason,omitempty" protobuf:"bytes,2,opt,name=reason"`
-
-	// human readable message with details about the request state
-	// +optional
-	Message string `json:"message,omitempty" protobuf:"bytes,3,opt,name=message"`
-
-	// timestamp for the last update to this condition
-	// +optional
-	LastUpdateTime metav1.Time `json:"lastUpdateTime,omitempty" protobuf:"bytes,4,opt,name=lastUpdateTime"`
+	Conditions []kmapi.Condition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

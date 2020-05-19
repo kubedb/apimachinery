@@ -412,7 +412,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ProxySQLModificationRequestSpec":           schema_apimachinery_apis_dba_v1alpha1_ProxySQLModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ProxySQLModificationRequestStatus":         schema_apimachinery_apis_dba_v1alpha1_ProxySQLModificationRequestStatus(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequest":                  schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequest(ref),
-		"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestCondition":         schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestCondition(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestList":              schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestList(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestSpec":              schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestStatus":            schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestStatus(ref),
@@ -19102,48 +19101,6 @@ func schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequest(ref common.R
 	}
 }
 
-func schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"type": {
-						SchemaProps: spec.SchemaProps{
-							Description: "request approval state, currently Approved or Denied.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"reason": {
-						SchemaProps: spec.SchemaProps{
-							Description: "brief reason for the request state",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"message": {
-						SchemaProps: spec.SchemaProps{
-							Description: "human readable message with details about the request state",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"lastUpdateTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "timestamp for the last update to this condition",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-				},
-				Required: []string{"type"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
-	}
-}
-
 func schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19198,22 +19155,31 @@ func schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestSpec(ref comm
 				Description: "RedisModificationRequestSpec is the spec for redis version",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"version": {
+					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Specifies the Elasticsearch reference",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"mongodb": {
+					"type": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.ObjectReference"),
+							Description: "Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"update": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the field information that needed to be updated",
+							Ref:         ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.UpdateSpec"),
 						},
 					},
 				},
+				Required: []string{"databaseRef", "type"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/dba/v1alpha1.UpdateSpec"},
 	}
 }
 
@@ -19230,10 +19196,11 @@ func schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestStatus(ref co
 							Format: "",
 						},
 					},
-					"reason": {
+					"observedGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Type:        []string{"integer"},
+							Format:      "int64",
 						},
 					},
 					"conditions": {
@@ -19243,24 +19210,17 @@ func schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestStatus(ref co
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestCondition"),
+										Ref: ref("kmodules.xyz/client-go/api/v1.Condition"),
 									},
 								},
 							},
-						},
-					},
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-							Type:        []string{"integer"},
-							Format:      "int64",
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestCondition"},
+			"kmodules.xyz/client-go/api/v1.Condition"},
 	}
 }
 

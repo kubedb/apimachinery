@@ -33,10 +33,10 @@ import (
 )
 
 func CreateOrPatchRedisModificationRequest(c cs.DbaV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.RedisModificationRequest) *api.RedisModificationRequest) (*api.RedisModificationRequest, kutil.VerbType, error) {
-	cur, err := c.RedisModificationRequests().Get(meta.Name, metav1.GetOptions{})
+	cur, err := c.RedisModificationRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
 		glog.V(3).Infof("Creating RedisModificationRequest %s/%s.", meta.Namespace, meta.Name)
-		out, err := c.RedisModificationRequests().Create(transform(&api.RedisModificationRequest{
+		out, err := c.RedisModificationRequests(meta.Namespace).Create(transform(&api.RedisModificationRequest{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "RedisModificationRequest",
 				APIVersion: api.SchemeGroupVersion.String(),
@@ -73,7 +73,7 @@ func PatchRedisModificationRequestObject(c cs.DbaV1alpha1Interface, cur, mod *ap
 		return cur, kutil.VerbUnchanged, nil
 	}
 	glog.V(3).Infof("Patching RedisModificationRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
-	out, err := c.RedisModificationRequests().Patch(cur.Name, types.MergePatchType, patch)
+	out, err := c.RedisModificationRequests(cur.Namespace).Patch(cur.Name, types.MergePatchType, patch)
 	return out, kutil.VerbPatched, err
 }
 
@@ -81,12 +81,11 @@ func TryUpdateRedisModificationRequest(c cs.DbaV1alpha1Interface, meta metav1.Ob
 	attempt := 0
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
-		cur, e2 := c.RedisModificationRequests().Get(meta.Name, metav1.GetOptions{})
+		cur, e2 := c.RedisModificationRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
 			return false, e2
 		} else if e2 == nil {
-
-			result, e2 = c.RedisModificationRequests().Update(transform(cur.DeepCopy()))
+			result, e2 = c.RedisModificationRequests(cur.Namespace).Update(transform(cur.DeepCopy()))
 			return e2 == nil, nil
 		}
 		glog.Errorf("Attempt %d failed to update RedisModificationRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
@@ -101,7 +100,7 @@ func TryUpdateRedisModificationRequest(c cs.DbaV1alpha1Interface, meta metav1.Ob
 
 func UpdateRedisModificationRequestStatus(
 	c cs.DbaV1alpha1Interface,
-	in *api.RedisModificationRequest,
+	meta metav1.ObjectMeta,
 	transform func(*api.RedisModificationRequestStatus) *api.RedisModificationRequestStatus,
 ) (result *api.RedisModificationRequest, err error) {
 	apply := func(x *api.RedisModificationRequest) *api.RedisModificationRequest {
@@ -109,18 +108,21 @@ func UpdateRedisModificationRequestStatus(
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,
-			Status:     *transform(in.Status.DeepCopy()),
+			Status:     *transform(x.Status.DeepCopy()),
 		}
 	}
 
 	attempt := 0
-	cur := in.DeepCopy()
+	cur, err := c.RedisModificationRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+	if err != nil {
+		return nil, err
+	}
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
 		var e2 error
-		result, e2 = c.RedisModificationRequests().UpdateStatus(apply(cur))
+		result, e2 = c.RedisModificationRequests(meta.Namespace).UpdateStatus(apply(cur))
 		if kerr.IsConflict(e2) {
-			latest, e3 := c.RedisModificationRequests().Get(in.Name, metav1.GetOptions{})
+			latest, e3 := c.RedisModificationRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
 			switch {
 			case e3 == nil:
 				cur = latest
@@ -137,7 +139,7 @@ func UpdateRedisModificationRequestStatus(
 	})
 
 	if err != nil {
-		err = fmt.Errorf("failed to update status of RedisModificationRequest %s/%s after %d attempts due to %v", in.Namespace, in.Name, attempt, err)
+		err = fmt.Errorf("failed to update status of RedisModificationRequest %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
 	return
 }

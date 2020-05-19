@@ -20,7 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	dba "kubedb.dev/apimachinery/apis/dba/v1alpha1"
+	api "kubedb.dev/apimachinery/apis/dba/v1alpha1"
 	cs "kubedb.dev/apimachinery/client/clientset/versioned/typed/dba/v1alpha1"
 
 	jsonpatch "github.com/evanphx/json-patch"
@@ -32,14 +32,14 @@ import (
 	kutil "kmodules.xyz/client-go"
 )
 
-func CreateOrPatchElasticsearchModificationRequest(c cs.DbaV1alpha1Interface, meta metav1.ObjectMeta, transform func(*dba.ElasticsearchModificationRequest) *dba.ElasticsearchModificationRequest) (*dba.ElasticsearchModificationRequest, kutil.VerbType, error) {
+func CreateOrPatchElasticsearchModificationRequest(c cs.DbaV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.ElasticsearchModificationRequest) *api.ElasticsearchModificationRequest) (*api.ElasticsearchModificationRequest, kutil.VerbType, error) {
 	cur, err := c.ElasticsearchModificationRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
 		glog.V(3).Infof("Creating ElasticsearchModificationRequest %s/%s.", meta.Namespace, meta.Name)
-		out, err := c.ElasticsearchModificationRequests(meta.Namespace).Create(transform(&dba.ElasticsearchModificationRequest{
+		out, err := c.ElasticsearchModificationRequests(meta.Namespace).Create(transform(&api.ElasticsearchModificationRequest{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "ElasticsearchModificationRequest",
-				APIVersion: dba.SchemeGroupVersion.String(),
+				APIVersion: api.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: meta,
 		}))
@@ -50,11 +50,11 @@ func CreateOrPatchElasticsearchModificationRequest(c cs.DbaV1alpha1Interface, me
 	return PatchElasticsearchModificationRequest(c, cur, transform)
 }
 
-func PatchElasticsearchModificationRequest(c cs.DbaV1alpha1Interface, cur *dba.ElasticsearchModificationRequest, transform func(*dba.ElasticsearchModificationRequest) *dba.ElasticsearchModificationRequest) (*dba.ElasticsearchModificationRequest, kutil.VerbType, error) {
+func PatchElasticsearchModificationRequest(c cs.DbaV1alpha1Interface, cur *api.ElasticsearchModificationRequest, transform func(*api.ElasticsearchModificationRequest) *api.ElasticsearchModificationRequest) (*api.ElasticsearchModificationRequest, kutil.VerbType, error) {
 	return PatchElasticsearchModificationRequestObject(c, cur, transform(cur.DeepCopy()))
 }
 
-func PatchElasticsearchModificationRequestObject(c cs.DbaV1alpha1Interface, cur, mod *dba.ElasticsearchModificationRequest) (*dba.ElasticsearchModificationRequest, kutil.VerbType, error) {
+func PatchElasticsearchModificationRequestObject(c cs.DbaV1alpha1Interface, cur, mod *api.ElasticsearchModificationRequest) (*api.ElasticsearchModificationRequest, kutil.VerbType, error) {
 	curJson, err := json.Marshal(cur)
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
@@ -77,7 +77,7 @@ func PatchElasticsearchModificationRequestObject(c cs.DbaV1alpha1Interface, cur,
 	return out, kutil.VerbPatched, err
 }
 
-func TryUpdateElasticsearchModificationRequest(c cs.DbaV1alpha1Interface, meta metav1.ObjectMeta, transform func(*dba.ElasticsearchModificationRequest) *dba.ElasticsearchModificationRequest) (result *dba.ElasticsearchModificationRequest, err error) {
+func TryUpdateElasticsearchModificationRequest(c cs.DbaV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.ElasticsearchModificationRequest) *api.ElasticsearchModificationRequest) (result *api.ElasticsearchModificationRequest, err error) {
 	attempt := 0
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
@@ -101,10 +101,10 @@ func TryUpdateElasticsearchModificationRequest(c cs.DbaV1alpha1Interface, meta m
 func UpdateElasticsearchModificationRequestStatus(
 	c cs.DbaV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*dba.ElasticsearchModificationRequestStatus) *dba.ElasticsearchModificationRequestStatus,
-) (result *dba.ElasticsearchModificationRequest, err error) {
-	apply := func(x *dba.ElasticsearchModificationRequest) *dba.ElasticsearchModificationRequest {
-		return &dba.ElasticsearchModificationRequest{
+	transform func(*api.ElasticsearchModificationRequestStatus) *api.ElasticsearchModificationRequestStatus,
+) (result *api.ElasticsearchModificationRequest, err error) {
+	apply := func(x *api.ElasticsearchModificationRequest) *api.ElasticsearchModificationRequest {
+		return &api.ElasticsearchModificationRequest{
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,

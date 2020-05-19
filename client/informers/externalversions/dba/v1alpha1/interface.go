@@ -104,5 +104,5 @@ func (v *version) ProxySQLModificationRequests() ProxySQLModificationRequestInfo
 
 // RedisModificationRequests returns a RedisModificationRequestInformer.
 func (v *version) RedisModificationRequests() RedisModificationRequestInformer {
-	return &redisModificationRequestInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	return &redisModificationRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

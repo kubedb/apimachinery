@@ -65,8 +65,8 @@ func (c *FakeDbaV1alpha1) ProxySQLModificationRequests() v1alpha1.ProxySQLModifi
 	return &FakeProxySQLModificationRequests{c}
 }
 
-func (c *FakeDbaV1alpha1) RedisModificationRequests() v1alpha1.RedisModificationRequestInterface {
-	return &FakeRedisModificationRequests{c}
+func (c *FakeDbaV1alpha1) RedisModificationRequests(namespace string) v1alpha1.RedisModificationRequestInterface {
+	return &FakeRedisModificationRequests{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

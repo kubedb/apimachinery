@@ -32,6 +32,7 @@ import (
 // FakeRedisModificationRequests implements RedisModificationRequestInterface
 type FakeRedisModificationRequests struct {
 	Fake *FakeDbaV1alpha1
+	ns   string
 }
 
 var redismodificationrequestsResource = schema.GroupVersionResource{Group: "dba.kubedb.com", Version: "v1alpha1", Resource: "redismodificationrequests"}
@@ -41,7 +42,8 @@ var redismodificationrequestsKind = schema.GroupVersionKind{Group: "dba.kubedb.c
 // Get takes name of the redisModificationRequest, and returns the corresponding redisModificationRequest object, and an error if there is any.
 func (c *FakeRedisModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.RedisModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(redismodificationrequestsResource, name), &v1alpha1.RedisModificationRequest{})
+		Invokes(testing.NewGetAction(redismodificationrequestsResource, c.ns, name), &v1alpha1.RedisModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -51,7 +53,8 @@ func (c *FakeRedisModificationRequests) Get(name string, options v1.GetOptions) 
 // List takes label and field selectors, and returns the list of RedisModificationRequests that match those selectors.
 func (c *FakeRedisModificationRequests) List(opts v1.ListOptions) (result *v1alpha1.RedisModificationRequestList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(redismodificationrequestsResource, redismodificationrequestsKind, opts), &v1alpha1.RedisModificationRequestList{})
+		Invokes(testing.NewListAction(redismodificationrequestsResource, redismodificationrequestsKind, c.ns, opts), &v1alpha1.RedisModificationRequestList{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -72,13 +75,15 @@ func (c *FakeRedisModificationRequests) List(opts v1.ListOptions) (result *v1alp
 // Watch returns a watch.Interface that watches the requested redisModificationRequests.
 func (c *FakeRedisModificationRequests) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(redismodificationrequestsResource, opts))
+		InvokesWatch(testing.NewWatchAction(redismodificationrequestsResource, c.ns, opts))
+
 }
 
 // Create takes the representation of a redisModificationRequest and creates it.  Returns the server's representation of the redisModificationRequest, and an error, if there is any.
 func (c *FakeRedisModificationRequests) Create(redisModificationRequest *v1alpha1.RedisModificationRequest) (result *v1alpha1.RedisModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(redismodificationrequestsResource, redisModificationRequest), &v1alpha1.RedisModificationRequest{})
+		Invokes(testing.NewCreateAction(redismodificationrequestsResource, c.ns, redisModificationRequest), &v1alpha1.RedisModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -88,7 +93,8 @@ func (c *FakeRedisModificationRequests) Create(redisModificationRequest *v1alpha
 // Update takes the representation of a redisModificationRequest and updates it. Returns the server's representation of the redisModificationRequest, and an error, if there is any.
 func (c *FakeRedisModificationRequests) Update(redisModificationRequest *v1alpha1.RedisModificationRequest) (result *v1alpha1.RedisModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(redismodificationrequestsResource, redisModificationRequest), &v1alpha1.RedisModificationRequest{})
+		Invokes(testing.NewUpdateAction(redismodificationrequestsResource, c.ns, redisModificationRequest), &v1alpha1.RedisModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -99,7 +105,8 @@ func (c *FakeRedisModificationRequests) Update(redisModificationRequest *v1alpha
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 func (c *FakeRedisModificationRequests) UpdateStatus(redisModificationRequest *v1alpha1.RedisModificationRequest) (*v1alpha1.RedisModificationRequest, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateSubresourceAction(redismodificationrequestsResource, "status", redisModificationRequest), &v1alpha1.RedisModificationRequest{})
+		Invokes(testing.NewUpdateSubresourceAction(redismodificationrequestsResource, "status", c.ns, redisModificationRequest), &v1alpha1.RedisModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -109,13 +116,14 @@ func (c *FakeRedisModificationRequests) UpdateStatus(redisModificationRequest *v
 // Delete takes name of the redisModificationRequest and deletes it. Returns an error if one occurs.
 func (c *FakeRedisModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(redismodificationrequestsResource, name), &v1alpha1.RedisModificationRequest{})
+		Invokes(testing.NewDeleteAction(redismodificationrequestsResource, c.ns, name), &v1alpha1.RedisModificationRequest{})
+
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeRedisModificationRequests) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(redismodificationrequestsResource, listOptions)
+	action := testing.NewDeleteCollectionAction(redismodificationrequestsResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.RedisModificationRequestList{})
 	return err
@@ -124,7 +132,8 @@ func (c *FakeRedisModificationRequests) DeleteCollection(options *v1.DeleteOptio
 // Patch applies the patch and returns the patched redisModificationRequest.
 func (c *FakeRedisModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.RedisModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(redismodificationrequestsResource, name, pt, data, subresources...), &v1alpha1.RedisModificationRequest{})
+		Invokes(testing.NewPatchSubresourceAction(redismodificationrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.RedisModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
