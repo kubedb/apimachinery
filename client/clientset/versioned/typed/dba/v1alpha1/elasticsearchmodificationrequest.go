@@ -33,13 +33,14 @@ import (
 // ElasticsearchModificationRequestsGetter has a method to return a ElasticsearchModificationRequestInterface.
 // A group's client should implement this interface.
 type ElasticsearchModificationRequestsGetter interface {
-	ElasticsearchModificationRequests() ElasticsearchModificationRequestInterface
+	ElasticsearchModificationRequests(namespace string) ElasticsearchModificationRequestInterface
 }
 
 // ElasticsearchModificationRequestInterface has methods to work with ElasticsearchModificationRequest resources.
 type ElasticsearchModificationRequestInterface interface {
 	Create(*v1alpha1.ElasticsearchModificationRequest) (*v1alpha1.ElasticsearchModificationRequest, error)
 	Update(*v1alpha1.ElasticsearchModificationRequest) (*v1alpha1.ElasticsearchModificationRequest, error)
+	UpdateStatus(*v1alpha1.ElasticsearchModificationRequest) (*v1alpha1.ElasticsearchModificationRequest, error)
 	Delete(name string, options *v1.DeleteOptions) error
 	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
 	Get(name string, options v1.GetOptions) (*v1alpha1.ElasticsearchModificationRequest, error)
@@ -52,12 +53,14 @@ type ElasticsearchModificationRequestInterface interface {
 // elasticsearchModificationRequests implements ElasticsearchModificationRequestInterface
 type elasticsearchModificationRequests struct {
 	client rest.Interface
+	ns     string
 }
 
 // newElasticsearchModificationRequests returns a ElasticsearchModificationRequests
-func newElasticsearchModificationRequests(c *DbaV1alpha1Client) *elasticsearchModificationRequests {
+func newElasticsearchModificationRequests(c *DbaV1alpha1Client, namespace string) *elasticsearchModificationRequests {
 	return &elasticsearchModificationRequests{
 		client: c.RESTClient(),
+		ns:     namespace,
 	}
 }
 
@@ -65,6 +68,7 @@ func newElasticsearchModificationRequests(c *DbaV1alpha1Client) *elasticsearchMo
 func (c *elasticsearchModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.ElasticsearchModificationRequest, err error) {
 	result = &v1alpha1.ElasticsearchModificationRequest{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("elasticsearchmodificationrequests").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -81,6 +85,7 @@ func (c *elasticsearchModificationRequests) List(opts v1.ListOptions) (result *v
 	}
 	result = &v1alpha1.ElasticsearchModificationRequestList{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("elasticsearchmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -97,6 +102,7 @@ func (c *elasticsearchModificationRequests) Watch(opts v1.ListOptions) (watch.In
 	}
 	opts.Watch = true
 	return c.client.Get().
+		Namespace(c.ns).
 		Resource("elasticsearchmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -107,6 +113,7 @@ func (c *elasticsearchModificationRequests) Watch(opts v1.ListOptions) (watch.In
 func (c *elasticsearchModificationRequests) Create(elasticsearchModificationRequest *v1alpha1.ElasticsearchModificationRequest) (result *v1alpha1.ElasticsearchModificationRequest, err error) {
 	result = &v1alpha1.ElasticsearchModificationRequest{}
 	err = c.client.Post().
+		Namespace(c.ns).
 		Resource("elasticsearchmodificationrequests").
 		Body(elasticsearchModificationRequest).
 		Do().
@@ -118,8 +125,25 @@ func (c *elasticsearchModificationRequests) Create(elasticsearchModificationRequ
 func (c *elasticsearchModificationRequests) Update(elasticsearchModificationRequest *v1alpha1.ElasticsearchModificationRequest) (result *v1alpha1.ElasticsearchModificationRequest, err error) {
 	result = &v1alpha1.ElasticsearchModificationRequest{}
 	err = c.client.Put().
+		Namespace(c.ns).
 		Resource("elasticsearchmodificationrequests").
 		Name(elasticsearchModificationRequest.Name).
+		Body(elasticsearchModificationRequest).
+		Do().
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+
+func (c *elasticsearchModificationRequests) UpdateStatus(elasticsearchModificationRequest *v1alpha1.ElasticsearchModificationRequest) (result *v1alpha1.ElasticsearchModificationRequest, err error) {
+	result = &v1alpha1.ElasticsearchModificationRequest{}
+	err = c.client.Put().
+		Namespace(c.ns).
+		Resource("elasticsearchmodificationrequests").
+		Name(elasticsearchModificationRequest.Name).
+		SubResource("status").
 		Body(elasticsearchModificationRequest).
 		Do().
 		Into(result)
@@ -129,6 +153,7 @@ func (c *elasticsearchModificationRequests) Update(elasticsearchModificationRequ
 // Delete takes name of the elasticsearchModificationRequest and deletes it. Returns an error if one occurs.
 func (c *elasticsearchModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("elasticsearchmodificationrequests").
 		Name(name).
 		Body(options).
@@ -143,6 +168,7 @@ func (c *elasticsearchModificationRequests) DeleteCollection(options *v1.DeleteO
 		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("elasticsearchmodificationrequests").
 		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -155,6 +181,7 @@ func (c *elasticsearchModificationRequests) DeleteCollection(options *v1.DeleteO
 func (c *elasticsearchModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.ElasticsearchModificationRequest, err error) {
 	result = &v1alpha1.ElasticsearchModificationRequest{}
 	err = c.client.Patch(pt).
+		Namespace(c.ns).
 		Resource("elasticsearchmodificationrequests").
 		SubResource(subresources...).
 		Name(name).

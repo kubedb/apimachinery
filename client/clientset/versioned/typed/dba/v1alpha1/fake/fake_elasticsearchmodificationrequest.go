@@ -32,6 +32,7 @@ import (
 // FakeElasticsearchModificationRequests implements ElasticsearchModificationRequestInterface
 type FakeElasticsearchModificationRequests struct {
 	Fake *FakeDbaV1alpha1
+	ns   string
 }
 
 var elasticsearchmodificationrequestsResource = schema.GroupVersionResource{Group: "dba.kubedb.com", Version: "v1alpha1", Resource: "elasticsearchmodificationrequests"}
@@ -41,7 +42,8 @@ var elasticsearchmodificationrequestsKind = schema.GroupVersionKind{Group: "dba.
 // Get takes name of the elasticsearchModificationRequest, and returns the corresponding elasticsearchModificationRequest object, and an error if there is any.
 func (c *FakeElasticsearchModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.ElasticsearchModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(elasticsearchmodificationrequestsResource, name), &v1alpha1.ElasticsearchModificationRequest{})
+		Invokes(testing.NewGetAction(elasticsearchmodificationrequestsResource, c.ns, name), &v1alpha1.ElasticsearchModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -51,7 +53,8 @@ func (c *FakeElasticsearchModificationRequests) Get(name string, options v1.GetO
 // List takes label and field selectors, and returns the list of ElasticsearchModificationRequests that match those selectors.
 func (c *FakeElasticsearchModificationRequests) List(opts v1.ListOptions) (result *v1alpha1.ElasticsearchModificationRequestList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(elasticsearchmodificationrequestsResource, elasticsearchmodificationrequestsKind, opts), &v1alpha1.ElasticsearchModificationRequestList{})
+		Invokes(testing.NewListAction(elasticsearchmodificationrequestsResource, elasticsearchmodificationrequestsKind, c.ns, opts), &v1alpha1.ElasticsearchModificationRequestList{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -72,13 +75,15 @@ func (c *FakeElasticsearchModificationRequests) List(opts v1.ListOptions) (resul
 // Watch returns a watch.Interface that watches the requested elasticsearchModificationRequests.
 func (c *FakeElasticsearchModificationRequests) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(elasticsearchmodificationrequestsResource, opts))
+		InvokesWatch(testing.NewWatchAction(elasticsearchmodificationrequestsResource, c.ns, opts))
+
 }
 
 // Create takes the representation of a elasticsearchModificationRequest and creates it.  Returns the server's representation of the elasticsearchModificationRequest, and an error, if there is any.
 func (c *FakeElasticsearchModificationRequests) Create(elasticsearchModificationRequest *v1alpha1.ElasticsearchModificationRequest) (result *v1alpha1.ElasticsearchModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(elasticsearchmodificationrequestsResource, elasticsearchModificationRequest), &v1alpha1.ElasticsearchModificationRequest{})
+		Invokes(testing.NewCreateAction(elasticsearchmodificationrequestsResource, c.ns, elasticsearchModificationRequest), &v1alpha1.ElasticsearchModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -88,7 +93,20 @@ func (c *FakeElasticsearchModificationRequests) Create(elasticsearchModification
 // Update takes the representation of a elasticsearchModificationRequest and updates it. Returns the server's representation of the elasticsearchModificationRequest, and an error, if there is any.
 func (c *FakeElasticsearchModificationRequests) Update(elasticsearchModificationRequest *v1alpha1.ElasticsearchModificationRequest) (result *v1alpha1.ElasticsearchModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(elasticsearchmodificationrequestsResource, elasticsearchModificationRequest), &v1alpha1.ElasticsearchModificationRequest{})
+		Invokes(testing.NewUpdateAction(elasticsearchmodificationrequestsResource, c.ns, elasticsearchModificationRequest), &v1alpha1.ElasticsearchModificationRequest{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.ElasticsearchModificationRequest), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeElasticsearchModificationRequests) UpdateStatus(elasticsearchModificationRequest *v1alpha1.ElasticsearchModificationRequest) (*v1alpha1.ElasticsearchModificationRequest, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(elasticsearchmodificationrequestsResource, "status", c.ns, elasticsearchModificationRequest), &v1alpha1.ElasticsearchModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -98,13 +116,14 @@ func (c *FakeElasticsearchModificationRequests) Update(elasticsearchModification
 // Delete takes name of the elasticsearchModificationRequest and deletes it. Returns an error if one occurs.
 func (c *FakeElasticsearchModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(elasticsearchmodificationrequestsResource, name), &v1alpha1.ElasticsearchModificationRequest{})
+		Invokes(testing.NewDeleteAction(elasticsearchmodificationrequestsResource, c.ns, name), &v1alpha1.ElasticsearchModificationRequest{})
+
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeElasticsearchModificationRequests) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(elasticsearchmodificationrequestsResource, listOptions)
+	action := testing.NewDeleteCollectionAction(elasticsearchmodificationrequestsResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.ElasticsearchModificationRequestList{})
 	return err
@@ -113,7 +132,8 @@ func (c *FakeElasticsearchModificationRequests) DeleteCollection(options *v1.Del
 // Patch applies the patch and returns the patched elasticsearchModificationRequest.
 func (c *FakeElasticsearchModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.ElasticsearchModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(elasticsearchmodificationrequestsResource, name, pt, data, subresources...), &v1alpha1.ElasticsearchModificationRequest{})
+		Invokes(testing.NewPatchSubresourceAction(elasticsearchmodificationrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.ElasticsearchModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}

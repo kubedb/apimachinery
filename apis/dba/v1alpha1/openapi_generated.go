@@ -369,7 +369,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequest":          schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequest(ref),
-		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestCondition": schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestCondition(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestList":      schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestList(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestSpec":      schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestStatus":    schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestStatus(ref),
@@ -417,6 +416,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestList":              schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestList(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestSpec":              schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestStatus":            schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestStatus(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ScaleSpec":                                 schema_apimachinery_apis_dba_v1alpha1_ScaleSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.UpdateSpec":                                schema_apimachinery_apis_dba_v1alpha1_UpdateSpec(ref),
 	}
 }
@@ -17566,48 +17566,6 @@ func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequest(ref 
 	}
 }
 
-func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"type": {
-						SchemaProps: spec.SchemaProps{
-							Description: "request approval state, currently Approved or Denied.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"reason": {
-						SchemaProps: spec.SchemaProps{
-							Description: "brief reason for the request state",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"message": {
-						SchemaProps: spec.SchemaProps{
-							Description: "human readable message with details about the request state",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"lastUpdateTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "timestamp for the last update to this condition",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-				},
-				Required: []string{"type"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
-	}
-}
-
 func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -17659,10 +17617,40 @@ func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestSpec(
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchModificationRequestSpec is the spec for elasticsearch version",
+				Description: "ElasticsearchModificationRequestSpec is the spec for ElasticsearchModificationRequest object",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the Elasticsearch reference",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"update": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the field information that needed to be updated",
+							Ref:         ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.UpdateSpec"),
+						},
+					},
+					"scale": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the scaling info of Elasticsearch Object",
+							Ref:         ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.ScaleSpec"),
+						},
+					},
+				},
+				Required: []string{"databaseRef", "type"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/dba/v1alpha1.ScaleSpec", "kubedb.dev/apimachinery/apis/dba/v1alpha1.UpdateSpec"},
 	}
 }
 
@@ -17673,6 +17661,20 @@ func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestStatu
 				Description: "ElasticsearchModificationRequestStatus is the status for elasticsearch version",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the modification request",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 					"conditions": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Conditions applied to the request, such as approval or denial.",
@@ -17680,7 +17682,7 @@ func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestStatu
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestCondition"),
+										Ref: ref("kmodules.xyz/client-go/api/v1.Condition"),
 									},
 								},
 							},
@@ -17690,7 +17692,7 @@ func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestStatu
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestCondition"},
+			"kmodules.xyz/client-go/api/v1.Condition"},
 	}
 }
 
@@ -19225,6 +19227,40 @@ func schema_apimachinery_apis_dba_v1alpha1_RedisModificationRequestStatus(ref co
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/dba/v1alpha1.RedisModificationRequestCondition"},
+	}
+}
+
+func schema_apimachinery_apis_dba_v1alpha1_ScaleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ScaleSpec contains the scaling information of the Elasticsearch",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"master": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of master nodes",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"data": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of data nodes",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"client": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of client nodes",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

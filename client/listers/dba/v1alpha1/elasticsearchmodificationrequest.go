@@ -30,8 +30,8 @@ import (
 type ElasticsearchModificationRequestLister interface {
 	// List lists all ElasticsearchModificationRequests in the indexer.
 	List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchModificationRequest, err error)
-	// Get retrieves the ElasticsearchModificationRequest from the index for a given name.
-	Get(name string) (*v1alpha1.ElasticsearchModificationRequest, error)
+	// ElasticsearchModificationRequests returns an object that can list and get ElasticsearchModificationRequests.
+	ElasticsearchModificationRequests(namespace string) ElasticsearchModificationRequestNamespaceLister
 	ElasticsearchModificationRequestListerExpansion
 }
 
@@ -53,9 +53,38 @@ func (s *elasticsearchModificationRequestLister) List(selector labels.Selector) 
 	return ret, err
 }
 
-// Get retrieves the ElasticsearchModificationRequest from the index for a given name.
-func (s *elasticsearchModificationRequestLister) Get(name string) (*v1alpha1.ElasticsearchModificationRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
+// ElasticsearchModificationRequests returns an object that can list and get ElasticsearchModificationRequests.
+func (s *elasticsearchModificationRequestLister) ElasticsearchModificationRequests(namespace string) ElasticsearchModificationRequestNamespaceLister {
+	return elasticsearchModificationRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+}
+
+// ElasticsearchModificationRequestNamespaceLister helps list and get ElasticsearchModificationRequests.
+type ElasticsearchModificationRequestNamespaceLister interface {
+	// List lists all ElasticsearchModificationRequests in the indexer for a given namespace.
+	List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchModificationRequest, err error)
+	// Get retrieves the ElasticsearchModificationRequest from the indexer for a given namespace and name.
+	Get(name string) (*v1alpha1.ElasticsearchModificationRequest, error)
+	ElasticsearchModificationRequestNamespaceListerExpansion
+}
+
+// elasticsearchModificationRequestNamespaceLister implements the ElasticsearchModificationRequestNamespaceLister
+// interface.
+type elasticsearchModificationRequestNamespaceLister struct {
+	indexer   cache.Indexer
+	namespace string
+}
+
+// List lists all ElasticsearchModificationRequests in the indexer for a given namespace.
+func (s elasticsearchModificationRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchModificationRequest, err error) {
+	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
+		ret = append(ret, m.(*v1alpha1.ElasticsearchModificationRequest))
+	})
+	return ret, err
+}
+
+// Get retrieves the ElasticsearchModificationRequest from the indexer for a given namespace and name.
+func (s elasticsearchModificationRequestNamespaceLister) Get(name string) (*v1alpha1.ElasticsearchModificationRequest, error) {
+	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
 	}
