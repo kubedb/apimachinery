@@ -368,6 +368,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                     schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                     schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                             schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ConfigNode":                             schema_apimachinery_apis_dba_v1alpha1_ConfigNode(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ContainerResources":                     schema_apimachinery_apis_dba_v1alpha1_ContainerResources(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchHorizontalScaleSpec":       schema_apimachinery_apis_dba_v1alpha1_ElasticsearchHorizontalScaleSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequest":       schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequest(ref),
@@ -382,10 +383,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MemcachedModificationRequestList":       schema_apimachinery_apis_dba_v1alpha1_MemcachedModificationRequestList(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MemcachedModificationRequestSpec":       schema_apimachinery_apis_dba_v1alpha1_MemcachedModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MemcachedModificationRequestStatus":     schema_apimachinery_apis_dba_v1alpha1_MemcachedModificationRequestStatus(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBHorizontalScalingSpec":           schema_apimachinery_apis_dba_v1alpha1_MongoDBHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequest":             schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequest(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequestList":         schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestList(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequestSpec":         schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBModificationRequestStatus":       schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestStatus(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBShardNode":                       schema_apimachinery_apis_dba_v1alpha1_MongoDBShardNode(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBVerticalScalingSpec":             schema_apimachinery_apis_dba_v1alpha1_MongoDBVerticalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MongosNode":                             schema_apimachinery_apis_dba_v1alpha1_MongosNode(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLHorizontalScalingSpec":             schema_apimachinery_apis_dba_v1alpha1_MySQLHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLModificationRequest":               schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequest(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.MySQLModificationRequestList":           schema_apimachinery_apis_dba_v1alpha1_MySQLModificationRequestList(ref),
@@ -17518,6 +17523,25 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 	}
 }
 
+func schema_apimachinery_apis_dba_v1alpha1_ConfigNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConfigNode is the spec for mongodb ConfigServer",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_dba_v1alpha1_ContainerResources(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18086,6 +18110,42 @@ func schema_apimachinery_apis_dba_v1alpha1_MemcachedModificationRequestStatus(re
 	}
 }
 
+func schema_apimachinery_apis_dba_v1alpha1_MongoDBHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HorizontalScaling is the spec for mongodb horizontal scaling",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"shard": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBShardNode"),
+						},
+					},
+					"configServer": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.ConfigNode"),
+						},
+					},
+					"mongos": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.MongosNode"),
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/dba/v1alpha1.ConfigNode", "kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBShardNode", "kubedb.dev/apimachinery/apis/dba/v1alpha1.MongosNode"},
+	}
+}
+
 func schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18185,7 +18245,7 @@ func schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestSpec(ref co
 				Properties: map[string]spec.Schema{
 					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the Elasticsearch reference",
+							Description: "Specifies the MongoDB reference",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
@@ -18198,8 +18258,20 @@ func schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestSpec(ref co
 					},
 					"upgrade": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the field information that needed to be upgraded",
+							Description: "Specifies information necessary for upgrading mongodb",
 							Ref:         ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.UpgradeSpec"),
+						},
+					},
+					"horizontalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for horizontal scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBHorizontalScalingSpec"),
+						},
+					},
+					"verticalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for vertical scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBVerticalScalingSpec"),
 						},
 					},
 				},
@@ -18207,7 +18279,7 @@ func schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestSpec(ref co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/dba/v1alpha1.UpgradeSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/dba/v1alpha1.MongoDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/dba/v1alpha1.UpgradeSpec"},
 	}
 }
 
@@ -18249,6 +18321,113 @@ func schema_apimachinery_apis_dba_v1alpha1_MongoDBModificationRequestStatus(ref 
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_dba_v1alpha1_MongoDBShardNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MongoDBShardNode is the spec for mongodb Shard",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"shards": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_dba_v1alpha1_MongoDBVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MongoDBVerticalScalingSpec is the spec for mongodb vertical scaling",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"containers": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.ContainerResources"),
+									},
+								},
+							},
+						},
+					},
+					"mongos": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.ContainerResources"),
+									},
+								},
+							},
+						},
+					},
+					"configServer": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.ContainerResources"),
+									},
+								},
+							},
+						},
+					},
+					"shard": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.ContainerResources"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/dba/v1alpha1.ContainerResources"},
+	}
+}
+
+func schema_apimachinery_apis_dba_v1alpha1_MongosNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MongosNode is the spec for mongodb Mongos",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

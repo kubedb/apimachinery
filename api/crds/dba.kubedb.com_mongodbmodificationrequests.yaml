@@ -51,12 +51,43 @@ spec:
           description: MongoDBModificationRequestSpec is the spec for MongoDBModificationRequest
           properties:
             databaseRef:
-              description: Specifies the Elasticsearch reference
+              description: Specifies the MongoDB reference
               properties:
                 name:
                   description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
                     TODO: Add other useful fields. apiVersion, kind, uid?'
                   type: string
+              type: object
+            horizontalScaling:
+              description: Specifies information necessary for horizontal scaling
+              properties:
+                configServer:
+                  description: ConfigNode is the spec for mongodb ConfigServer
+                  properties:
+                    replicas:
+                      format: int32
+                      type: integer
+                  type: object
+                mongos:
+                  description: MongosNode is the spec for mongodb Mongos
+                  properties:
+                    replicas:
+                      format: int32
+                      type: integer
+                  type: object
+                replicas:
+                  format: int32
+                  type: integer
+                shard:
+                  description: MongoDBShardNode is the spec for mongodb Shard
+                  properties:
+                    replicas:
+                      format: int32
+                      type: integer
+                    shards:
+                      format: int32
+                      type: integer
+                  type: object
               type: object
             type:
               description: 'Specifies the modification request type: Upgrade, HorizontalScaling,
@@ -70,11 +101,147 @@ spec:
               - RotateCertificates
               type: string
             upgrade:
-              description: Specifies the field information that needed to be upgraded
+              description: Specifies information necessary for upgrading mongodb
               properties:
                 targetVersion:
                   description: Specifies the target version name from catalog
                   type: string
+              type: object
+            verticalScaling:
+              description: Specifies information necessary for vertical scaling
+              properties:
+                configServer:
+                  items:
+                    description: Resources requested by a single application container
+                    properties:
+                      name:
+                        description: Name of the container specified as a DNS_LABEL.
+                          Each container in a pod must have a unique name (DNS_LABEL).
+                          Cannot be updated.
+                        type: string
+                      resources:
+                        description: 'Compute Resources required by this container.
+                          Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                        properties:
+                          limits:
+                            additionalProperties:
+                              type: string
+                            description: 'Limits describes the maximum amount of compute
+                              resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                            type: object
+                          requests:
+                            additionalProperties:
+                              type: string
+                            description: 'Requests describes the minimum amount of
+                              compute resources required. If Requests is omitted for
+                              a container, it defaults to Limits if that is explicitly
+                              specified, otherwise to an implementation-defined value.
+                              More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                            type: object
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  type: array
+                containers:
+                  items:
+                    description: Resources requested by a single application container
+                    properties:
+                      name:
+                        description: Name of the container specified as a DNS_LABEL.
+                          Each container in a pod must have a unique name (DNS_LABEL).
+                          Cannot be updated.
+                        type: string
+                      resources:
+                        description: 'Compute Resources required by this container.
+                          Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                        properties:
+                          limits:
+                            additionalProperties:
+                              type: string
+                            description: 'Limits describes the maximum amount of compute
+                              resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                            type: object
+                          requests:
+                            additionalProperties:
+                              type: string
+                            description: 'Requests describes the minimum amount of
+                              compute resources required. If Requests is omitted for
+                              a container, it defaults to Limits if that is explicitly
+                              specified, otherwise to an implementation-defined value.
+                              More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                            type: object
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  type: array
+                mongos:
+                  items:
+                    description: Resources requested by a single application container
+                    properties:
+                      name:
+                        description: Name of the container specified as a DNS_LABEL.
+                          Each container in a pod must have a unique name (DNS_LABEL).
+                          Cannot be updated.
+                        type: string
+                      resources:
+                        description: 'Compute Resources required by this container.
+                          Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                        properties:
+                          limits:
+                            additionalProperties:
+                              type: string
+                            description: 'Limits describes the maximum amount of compute
+                              resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                            type: object
+                          requests:
+                            additionalProperties:
+                              type: string
+                            description: 'Requests describes the minimum amount of
+                              compute resources required. If Requests is omitted for
+                              a container, it defaults to Limits if that is explicitly
+                              specified, otherwise to an implementation-defined value.
+                              More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                            type: object
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  type: array
+                shard:
+                  items:
+                    description: Resources requested by a single application container
+                    properties:
+                      name:
+                        description: Name of the container specified as a DNS_LABEL.
+                          Each container in a pod must have a unique name (DNS_LABEL).
+                          Cannot be updated.
+                        type: string
+                      resources:
+                        description: 'Compute Resources required by this container.
+                          Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                        properties:
+                          limits:
+                            additionalProperties:
+                              type: string
+                            description: 'Limits describes the maximum amount of compute
+                              resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                            type: object
+                          requests:
+                            additionalProperties:
+                              type: string
+                            description: 'Requests describes the minimum amount of
+                              compute resources required. If Requests is omitted for
+                              a container, it defaults to Limits if that is explicitly
+                              specified, otherwise to an implementation-defined value.
+                              More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                            type: object
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  type: array
               type: object
           required:
           - databaseRef

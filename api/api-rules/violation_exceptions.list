@@ -195,6 +195,10 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MemcachedModificationRequestStatus,Conditions
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MongoDBModificationRequestList,Items
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MongoDBModificationRequestStatus,Conditions
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MongoDBVerticalScalingSpec,ConfigServer
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MongoDBVerticalScalingSpec,Containers
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MongoDBVerticalScalingSpec,Mongos
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MongoDBVerticalScalingSpec,Shard
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MySQLModificationRequestList,Items
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MySQLModificationRequestStatus,Conditions
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MySQLVerticalScalingSpec,Containers

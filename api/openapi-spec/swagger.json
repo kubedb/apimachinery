@@ -28289,6 +28289,16 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.ConfigNode": {
+      "description": "ConfigNode is the spec for mongodb ConfigServer",
+      "type": "object",
+      "properties": {
+        "replicas": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.ContainerResources": {
       "description": "Resources requested by a single application container",
       "type": "object",
@@ -28641,6 +28651,25 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBHorizontalScalingSpec": {
+      "description": "HorizontalScaling is the spec for mongodb horizontal scaling",
+      "type": "object",
+      "properties": {
+        "configServer": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ConfigNode"
+        },
+        "mongos": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MongosNode"
+        },
+        "replicas": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "shard": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBShardNode"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBModificationRequest": {
       "type": "object",
       "properties": {
@@ -28710,16 +28739,24 @@
       ],
       "properties": {
         "databaseRef": {
-          "description": "Specifies the Elasticsearch reference",
+          "description": "Specifies the MongoDB reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "horizontalScaling": {
+          "description": "Specifies information necessary for horizontal scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBHorizontalScalingSpec"
         },
         "type": {
           "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
-          "description": "Specifies the field information that needed to be upgraded",
+          "description": "Specifies information necessary for upgrading mongodb",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpgradeSpec"
+        },
+        "verticalScaling": {
+          "description": "Specifies information necessary for vertical scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBVerticalScalingSpec"
         }
       }
     },
@@ -28741,6 +28778,60 @@
         },
         "phase": {
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBShardNode": {
+      "description": "MongoDBShardNode is the spec for mongodb Shard",
+      "type": "object",
+      "properties": {
+        "replicas": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "shards": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MongoDBVerticalScalingSpec": {
+      "description": "MongoDBVerticalScalingSpec is the spec for mongodb vertical scaling",
+      "type": "object",
+      "properties": {
+        "configServer": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ContainerResources"
+          }
+        },
+        "containers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ContainerResources"
+          }
+        },
+        "mongos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ContainerResources"
+          }
+        },
+        "shard": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ContainerResources"
+          }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.MongosNode": {
+      "description": "MongosNode is the spec for mongodb Mongos",
+      "type": "object",
+      "properties": {
+        "replicas": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
