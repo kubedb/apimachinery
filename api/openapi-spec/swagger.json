@@ -28262,30 +28262,6 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequestCondition": {
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "lastUpdateTime": {
-          "description": "timestamp for the last update to this condition",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "message": {
-          "description": "human readable message with details about the request state",
-          "type": "string"
-        },
-        "reason": {
-          "description": "brief reason for the request state",
-          "type": "string"
-        },
-        "type": {
-          "description": "request approval state, currently Approved or Denied.",
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequestList": {
       "description": "ElasticsearchModificationRequestList is a list of ElasticsearchModificationRequests",
       "type": "object",
@@ -28351,7 +28327,7 @@
           "description": "Conditions applied to the request, such as approval or denial.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ElasticsearchModificationRequestCondition"
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
         "observedGeneration": {

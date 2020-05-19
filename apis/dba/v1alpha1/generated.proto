@@ -44,23 +44,6 @@ message ElasticsearchModificationRequest {
   optional ElasticsearchModificationRequestStatus status = 3;
 }
 
-message ElasticsearchModificationRequestCondition {
-  // request approval state, currently Approved or Denied.
-  optional string type = 1;
-
-  // brief reason for the request state
-  // +optional
-  optional string reason = 2;
-
-  // human readable message with details about the request state
-  // +optional
-  optional string message = 3;
-
-  // timestamp for the last update to this condition
-  // +optional
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 4;
-}
-
 // ElasticsearchModificationRequestList is a list of ElasticsearchModificationRequests
 message ElasticsearchModificationRequestList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
@@ -97,7 +80,7 @@ message ElasticsearchModificationRequestStatus {
 
   // Conditions applied to the request, such as approval or denial.
   // +optional
-  repeated ElasticsearchModificationRequestCondition conditions = 3;
+  repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
 }
 
 // +kubebuilder:object:root=true

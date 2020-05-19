@@ -369,7 +369,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequest":          schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequest(ref),
-		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestCondition": schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestCondition(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestList":      schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestList(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestSpec":      schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestStatus":    schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestStatus(ref),
@@ -17567,48 +17566,6 @@ func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequest(ref 
 	}
 }
 
-func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"type": {
-						SchemaProps: spec.SchemaProps{
-							Description: "request approval state, currently Approved or Denied.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"reason": {
-						SchemaProps: spec.SchemaProps{
-							Description: "brief reason for the request state",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"message": {
-						SchemaProps: spec.SchemaProps{
-							Description: "human readable message with details about the request state",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"lastUpdateTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "timestamp for the last update to this condition",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-				},
-				Required: []string{"type"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
-	}
-}
-
 func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -17725,7 +17682,7 @@ func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestStatu
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestCondition"),
+										Ref: ref("kmodules.xyz/client-go/api/v1.Condition"),
 									},
 								},
 							},
@@ -17735,7 +17692,7 @@ func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestStatu
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestCondition"},
+			"kmodules.xyz/client-go/api/v1.Condition"},
 	}
 }
 
