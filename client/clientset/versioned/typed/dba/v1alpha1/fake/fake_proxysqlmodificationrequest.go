@@ -32,6 +32,7 @@ import (
 // FakeProxySQLModificationRequests implements ProxySQLModificationRequestInterface
 type FakeProxySQLModificationRequests struct {
 	Fake *FakeDbaV1alpha1
+	ns   string
 }
 
 var proxysqlmodificationrequestsResource = schema.GroupVersionResource{Group: "dba.kubedb.com", Version: "v1alpha1", Resource: "proxysqlmodificationrequests"}
@@ -41,7 +42,8 @@ var proxysqlmodificationrequestsKind = schema.GroupVersionKind{Group: "dba.kubed
 // Get takes name of the proxySQLModificationRequest, and returns the corresponding proxySQLModificationRequest object, and an error if there is any.
 func (c *FakeProxySQLModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.ProxySQLModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(proxysqlmodificationrequestsResource, name), &v1alpha1.ProxySQLModificationRequest{})
+		Invokes(testing.NewGetAction(proxysqlmodificationrequestsResource, c.ns, name), &v1alpha1.ProxySQLModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -51,7 +53,8 @@ func (c *FakeProxySQLModificationRequests) Get(name string, options v1.GetOption
 // List takes label and field selectors, and returns the list of ProxySQLModificationRequests that match those selectors.
 func (c *FakeProxySQLModificationRequests) List(opts v1.ListOptions) (result *v1alpha1.ProxySQLModificationRequestList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(proxysqlmodificationrequestsResource, proxysqlmodificationrequestsKind, opts), &v1alpha1.ProxySQLModificationRequestList{})
+		Invokes(testing.NewListAction(proxysqlmodificationrequestsResource, proxysqlmodificationrequestsKind, c.ns, opts), &v1alpha1.ProxySQLModificationRequestList{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -72,13 +75,15 @@ func (c *FakeProxySQLModificationRequests) List(opts v1.ListOptions) (result *v1
 // Watch returns a watch.Interface that watches the requested proxySQLModificationRequests.
 func (c *FakeProxySQLModificationRequests) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(proxysqlmodificationrequestsResource, opts))
+		InvokesWatch(testing.NewWatchAction(proxysqlmodificationrequestsResource, c.ns, opts))
+
 }
 
 // Create takes the representation of a proxySQLModificationRequest and creates it.  Returns the server's representation of the proxySQLModificationRequest, and an error, if there is any.
 func (c *FakeProxySQLModificationRequests) Create(proxySQLModificationRequest *v1alpha1.ProxySQLModificationRequest) (result *v1alpha1.ProxySQLModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(proxysqlmodificationrequestsResource, proxySQLModificationRequest), &v1alpha1.ProxySQLModificationRequest{})
+		Invokes(testing.NewCreateAction(proxysqlmodificationrequestsResource, c.ns, proxySQLModificationRequest), &v1alpha1.ProxySQLModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -88,7 +93,20 @@ func (c *FakeProxySQLModificationRequests) Create(proxySQLModificationRequest *v
 // Update takes the representation of a proxySQLModificationRequest and updates it. Returns the server's representation of the proxySQLModificationRequest, and an error, if there is any.
 func (c *FakeProxySQLModificationRequests) Update(proxySQLModificationRequest *v1alpha1.ProxySQLModificationRequest) (result *v1alpha1.ProxySQLModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(proxysqlmodificationrequestsResource, proxySQLModificationRequest), &v1alpha1.ProxySQLModificationRequest{})
+		Invokes(testing.NewUpdateAction(proxysqlmodificationrequestsResource, c.ns, proxySQLModificationRequest), &v1alpha1.ProxySQLModificationRequest{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.ProxySQLModificationRequest), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeProxySQLModificationRequests) UpdateStatus(proxySQLModificationRequest *v1alpha1.ProxySQLModificationRequest) (*v1alpha1.ProxySQLModificationRequest, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(proxysqlmodificationrequestsResource, "status", c.ns, proxySQLModificationRequest), &v1alpha1.ProxySQLModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -98,13 +116,14 @@ func (c *FakeProxySQLModificationRequests) Update(proxySQLModificationRequest *v
 // Delete takes name of the proxySQLModificationRequest and deletes it. Returns an error if one occurs.
 func (c *FakeProxySQLModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(proxysqlmodificationrequestsResource, name), &v1alpha1.ProxySQLModificationRequest{})
+		Invokes(testing.NewDeleteAction(proxysqlmodificationrequestsResource, c.ns, name), &v1alpha1.ProxySQLModificationRequest{})
+
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeProxySQLModificationRequests) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(proxysqlmodificationrequestsResource, listOptions)
+	action := testing.NewDeleteCollectionAction(proxysqlmodificationrequestsResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.ProxySQLModificationRequestList{})
 	return err
@@ -113,7 +132,8 @@ func (c *FakeProxySQLModificationRequests) DeleteCollection(options *v1.DeleteOp
 // Patch applies the patch and returns the patched proxySQLModificationRequest.
 func (c *FakeProxySQLModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.ProxySQLModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(proxysqlmodificationrequestsResource, name, pt, data, subresources...), &v1alpha1.ProxySQLModificationRequest{})
+		Invokes(testing.NewPatchSubresourceAction(proxysqlmodificationrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.ProxySQLModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}

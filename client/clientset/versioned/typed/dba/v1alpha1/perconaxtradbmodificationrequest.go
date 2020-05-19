@@ -33,13 +33,14 @@ import (
 // PerconaXtraDBModificationRequestsGetter has a method to return a PerconaXtraDBModificationRequestInterface.
 // A group's client should implement this interface.
 type PerconaXtraDBModificationRequestsGetter interface {
-	PerconaXtraDBModificationRequests() PerconaXtraDBModificationRequestInterface
+	PerconaXtraDBModificationRequests(namespace string) PerconaXtraDBModificationRequestInterface
 }
 
 // PerconaXtraDBModificationRequestInterface has methods to work with PerconaXtraDBModificationRequest resources.
 type PerconaXtraDBModificationRequestInterface interface {
 	Create(*v1alpha1.PerconaXtraDBModificationRequest) (*v1alpha1.PerconaXtraDBModificationRequest, error)
 	Update(*v1alpha1.PerconaXtraDBModificationRequest) (*v1alpha1.PerconaXtraDBModificationRequest, error)
+	UpdateStatus(*v1alpha1.PerconaXtraDBModificationRequest) (*v1alpha1.PerconaXtraDBModificationRequest, error)
 	Delete(name string, options *v1.DeleteOptions) error
 	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
 	Get(name string, options v1.GetOptions) (*v1alpha1.PerconaXtraDBModificationRequest, error)
@@ -52,12 +53,14 @@ type PerconaXtraDBModificationRequestInterface interface {
 // perconaXtraDBModificationRequests implements PerconaXtraDBModificationRequestInterface
 type perconaXtraDBModificationRequests struct {
 	client rest.Interface
+	ns     string
 }
 
 // newPerconaXtraDBModificationRequests returns a PerconaXtraDBModificationRequests
-func newPerconaXtraDBModificationRequests(c *DbaV1alpha1Client) *perconaXtraDBModificationRequests {
+func newPerconaXtraDBModificationRequests(c *DbaV1alpha1Client, namespace string) *perconaXtraDBModificationRequests {
 	return &perconaXtraDBModificationRequests{
 		client: c.RESTClient(),
+		ns:     namespace,
 	}
 }
 
@@ -65,6 +68,7 @@ func newPerconaXtraDBModificationRequests(c *DbaV1alpha1Client) *perconaXtraDBMo
 func (c *perconaXtraDBModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.PerconaXtraDBModificationRequest, err error) {
 	result = &v1alpha1.PerconaXtraDBModificationRequest{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("perconaxtradbmodificationrequests").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -81,6 +85,7 @@ func (c *perconaXtraDBModificationRequests) List(opts v1.ListOptions) (result *v
 	}
 	result = &v1alpha1.PerconaXtraDBModificationRequestList{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("perconaxtradbmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -97,6 +102,7 @@ func (c *perconaXtraDBModificationRequests) Watch(opts v1.ListOptions) (watch.In
 	}
 	opts.Watch = true
 	return c.client.Get().
+		Namespace(c.ns).
 		Resource("perconaxtradbmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -107,6 +113,7 @@ func (c *perconaXtraDBModificationRequests) Watch(opts v1.ListOptions) (watch.In
 func (c *perconaXtraDBModificationRequests) Create(perconaXtraDBModificationRequest *v1alpha1.PerconaXtraDBModificationRequest) (result *v1alpha1.PerconaXtraDBModificationRequest, err error) {
 	result = &v1alpha1.PerconaXtraDBModificationRequest{}
 	err = c.client.Post().
+		Namespace(c.ns).
 		Resource("perconaxtradbmodificationrequests").
 		Body(perconaXtraDBModificationRequest).
 		Do().
@@ -118,8 +125,25 @@ func (c *perconaXtraDBModificationRequests) Create(perconaXtraDBModificationRequ
 func (c *perconaXtraDBModificationRequests) Update(perconaXtraDBModificationRequest *v1alpha1.PerconaXtraDBModificationRequest) (result *v1alpha1.PerconaXtraDBModificationRequest, err error) {
 	result = &v1alpha1.PerconaXtraDBModificationRequest{}
 	err = c.client.Put().
+		Namespace(c.ns).
 		Resource("perconaxtradbmodificationrequests").
 		Name(perconaXtraDBModificationRequest.Name).
+		Body(perconaXtraDBModificationRequest).
+		Do().
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+
+func (c *perconaXtraDBModificationRequests) UpdateStatus(perconaXtraDBModificationRequest *v1alpha1.PerconaXtraDBModificationRequest) (result *v1alpha1.PerconaXtraDBModificationRequest, err error) {
+	result = &v1alpha1.PerconaXtraDBModificationRequest{}
+	err = c.client.Put().
+		Namespace(c.ns).
+		Resource("perconaxtradbmodificationrequests").
+		Name(perconaXtraDBModificationRequest.Name).
+		SubResource("status").
 		Body(perconaXtraDBModificationRequest).
 		Do().
 		Into(result)
@@ -129,6 +153,7 @@ func (c *perconaXtraDBModificationRequests) Update(perconaXtraDBModificationRequ
 // Delete takes name of the perconaXtraDBModificationRequest and deletes it. Returns an error if one occurs.
 func (c *perconaXtraDBModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("perconaxtradbmodificationrequests").
 		Name(name).
 		Body(options).
@@ -143,6 +168,7 @@ func (c *perconaXtraDBModificationRequests) DeleteCollection(options *v1.DeleteO
 		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("perconaxtradbmodificationrequests").
 		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -155,6 +181,7 @@ func (c *perconaXtraDBModificationRequests) DeleteCollection(options *v1.DeleteO
 func (c *perconaXtraDBModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.PerconaXtraDBModificationRequest, err error) {
 	result = &v1alpha1.PerconaXtraDBModificationRequest{}
 	err = c.client.Patch(pt).
+		Namespace(c.ns).
 		Resource("perconaxtradbmodificationrequests").
 		SubResource(subresources...).
 		Name(name).

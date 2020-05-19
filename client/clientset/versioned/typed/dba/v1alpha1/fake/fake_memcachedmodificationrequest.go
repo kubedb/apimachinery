@@ -32,6 +32,7 @@ import (
 // FakeMemcachedModificationRequests implements MemcachedModificationRequestInterface
 type FakeMemcachedModificationRequests struct {
 	Fake *FakeDbaV1alpha1
+	ns   string
 }
 
 var memcachedmodificationrequestsResource = schema.GroupVersionResource{Group: "dba.kubedb.com", Version: "v1alpha1", Resource: "memcachedmodificationrequests"}
@@ -41,7 +42,8 @@ var memcachedmodificationrequestsKind = schema.GroupVersionKind{Group: "dba.kube
 // Get takes name of the memcachedModificationRequest, and returns the corresponding memcachedModificationRequest object, and an error if there is any.
 func (c *FakeMemcachedModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.MemcachedModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(memcachedmodificationrequestsResource, name), &v1alpha1.MemcachedModificationRequest{})
+		Invokes(testing.NewGetAction(memcachedmodificationrequestsResource, c.ns, name), &v1alpha1.MemcachedModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -51,7 +53,8 @@ func (c *FakeMemcachedModificationRequests) Get(name string, options v1.GetOptio
 // List takes label and field selectors, and returns the list of MemcachedModificationRequests that match those selectors.
 func (c *FakeMemcachedModificationRequests) List(opts v1.ListOptions) (result *v1alpha1.MemcachedModificationRequestList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(memcachedmodificationrequestsResource, memcachedmodificationrequestsKind, opts), &v1alpha1.MemcachedModificationRequestList{})
+		Invokes(testing.NewListAction(memcachedmodificationrequestsResource, memcachedmodificationrequestsKind, c.ns, opts), &v1alpha1.MemcachedModificationRequestList{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -72,13 +75,15 @@ func (c *FakeMemcachedModificationRequests) List(opts v1.ListOptions) (result *v
 // Watch returns a watch.Interface that watches the requested memcachedModificationRequests.
 func (c *FakeMemcachedModificationRequests) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(memcachedmodificationrequestsResource, opts))
+		InvokesWatch(testing.NewWatchAction(memcachedmodificationrequestsResource, c.ns, opts))
+
 }
 
 // Create takes the representation of a memcachedModificationRequest and creates it.  Returns the server's representation of the memcachedModificationRequest, and an error, if there is any.
 func (c *FakeMemcachedModificationRequests) Create(memcachedModificationRequest *v1alpha1.MemcachedModificationRequest) (result *v1alpha1.MemcachedModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(memcachedmodificationrequestsResource, memcachedModificationRequest), &v1alpha1.MemcachedModificationRequest{})
+		Invokes(testing.NewCreateAction(memcachedmodificationrequestsResource, c.ns, memcachedModificationRequest), &v1alpha1.MemcachedModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -88,7 +93,20 @@ func (c *FakeMemcachedModificationRequests) Create(memcachedModificationRequest 
 // Update takes the representation of a memcachedModificationRequest and updates it. Returns the server's representation of the memcachedModificationRequest, and an error, if there is any.
 func (c *FakeMemcachedModificationRequests) Update(memcachedModificationRequest *v1alpha1.MemcachedModificationRequest) (result *v1alpha1.MemcachedModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(memcachedmodificationrequestsResource, memcachedModificationRequest), &v1alpha1.MemcachedModificationRequest{})
+		Invokes(testing.NewUpdateAction(memcachedmodificationrequestsResource, c.ns, memcachedModificationRequest), &v1alpha1.MemcachedModificationRequest{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.MemcachedModificationRequest), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeMemcachedModificationRequests) UpdateStatus(memcachedModificationRequest *v1alpha1.MemcachedModificationRequest) (*v1alpha1.MemcachedModificationRequest, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(memcachedmodificationrequestsResource, "status", c.ns, memcachedModificationRequest), &v1alpha1.MemcachedModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -98,13 +116,14 @@ func (c *FakeMemcachedModificationRequests) Update(memcachedModificationRequest 
 // Delete takes name of the memcachedModificationRequest and deletes it. Returns an error if one occurs.
 func (c *FakeMemcachedModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(memcachedmodificationrequestsResource, name), &v1alpha1.MemcachedModificationRequest{})
+		Invokes(testing.NewDeleteAction(memcachedmodificationrequestsResource, c.ns, name), &v1alpha1.MemcachedModificationRequest{})
+
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeMemcachedModificationRequests) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(memcachedmodificationrequestsResource, listOptions)
+	action := testing.NewDeleteCollectionAction(memcachedmodificationrequestsResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.MemcachedModificationRequestList{})
 	return err
@@ -113,7 +132,8 @@ func (c *FakeMemcachedModificationRequests) DeleteCollection(options *v1.DeleteO
 // Patch applies the patch and returns the patched memcachedModificationRequest.
 func (c *FakeMemcachedModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.MemcachedModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(memcachedmodificationrequestsResource, name, pt, data, subresources...), &v1alpha1.MemcachedModificationRequest{})
+		Invokes(testing.NewPatchSubresourceAction(memcachedmodificationrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.MemcachedModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}

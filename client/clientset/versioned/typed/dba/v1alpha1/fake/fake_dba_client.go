@@ -33,12 +33,12 @@ func (c *FakeDbaV1alpha1) ElasticsearchModificationRequests(namespace string) v1
 	return &FakeElasticsearchModificationRequests{c, namespace}
 }
 
-func (c *FakeDbaV1alpha1) EtcdModificationRequests() v1alpha1.EtcdModificationRequestInterface {
-	return &FakeEtcdModificationRequests{c}
+func (c *FakeDbaV1alpha1) EtcdModificationRequests(namespace string) v1alpha1.EtcdModificationRequestInterface {
+	return &FakeEtcdModificationRequests{c, namespace}
 }
 
-func (c *FakeDbaV1alpha1) MemcachedModificationRequests() v1alpha1.MemcachedModificationRequestInterface {
-	return &FakeMemcachedModificationRequests{c}
+func (c *FakeDbaV1alpha1) MemcachedModificationRequests(namespace string) v1alpha1.MemcachedModificationRequestInterface {
+	return &FakeMemcachedModificationRequests{c, namespace}
 }
 
 func (c *FakeDbaV1alpha1) MongoDBModificationRequests(namespace string) v1alpha1.MongoDBModificationRequestInterface {
@@ -49,20 +49,20 @@ func (c *FakeDbaV1alpha1) MySQLModificationRequests(namespace string) v1alpha1.M
 	return &FakeMySQLModificationRequests{c, namespace}
 }
 
-func (c *FakeDbaV1alpha1) PerconaXtraDBModificationRequests() v1alpha1.PerconaXtraDBModificationRequestInterface {
-	return &FakePerconaXtraDBModificationRequests{c}
+func (c *FakeDbaV1alpha1) PerconaXtraDBModificationRequests(namespace string) v1alpha1.PerconaXtraDBModificationRequestInterface {
+	return &FakePerconaXtraDBModificationRequests{c, namespace}
 }
 
-func (c *FakeDbaV1alpha1) PgBouncerModificationRequests() v1alpha1.PgBouncerModificationRequestInterface {
-	return &FakePgBouncerModificationRequests{c}
+func (c *FakeDbaV1alpha1) PgBouncerModificationRequests(namespace string) v1alpha1.PgBouncerModificationRequestInterface {
+	return &FakePgBouncerModificationRequests{c, namespace}
 }
 
-func (c *FakeDbaV1alpha1) PostgresModificationRequests() v1alpha1.PostgresModificationRequestInterface {
-	return &FakePostgresModificationRequests{c}
+func (c *FakeDbaV1alpha1) PostgresModificationRequests(namespace string) v1alpha1.PostgresModificationRequestInterface {
+	return &FakePostgresModificationRequests{c, namespace}
 }
 
-func (c *FakeDbaV1alpha1) ProxySQLModificationRequests() v1alpha1.ProxySQLModificationRequestInterface {
-	return &FakeProxySQLModificationRequests{c}
+func (c *FakeDbaV1alpha1) ProxySQLModificationRequests(namespace string) v1alpha1.ProxySQLModificationRequestInterface {
+	return &FakeProxySQLModificationRequests{c, namespace}
 }
 
 func (c *FakeDbaV1alpha1) RedisModificationRequests(namespace string) v1alpha1.RedisModificationRequestInterface {

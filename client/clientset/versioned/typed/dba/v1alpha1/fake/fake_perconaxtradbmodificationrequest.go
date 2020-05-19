@@ -32,6 +32,7 @@ import (
 // FakePerconaXtraDBModificationRequests implements PerconaXtraDBModificationRequestInterface
 type FakePerconaXtraDBModificationRequests struct {
 	Fake *FakeDbaV1alpha1
+	ns   string
 }
 
 var perconaxtradbmodificationrequestsResource = schema.GroupVersionResource{Group: "dba.kubedb.com", Version: "v1alpha1", Resource: "perconaxtradbmodificationrequests"}
@@ -41,7 +42,8 @@ var perconaxtradbmodificationrequestsKind = schema.GroupVersionKind{Group: "dba.
 // Get takes name of the perconaXtraDBModificationRequest, and returns the corresponding perconaXtraDBModificationRequest object, and an error if there is any.
 func (c *FakePerconaXtraDBModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.PerconaXtraDBModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(perconaxtradbmodificationrequestsResource, name), &v1alpha1.PerconaXtraDBModificationRequest{})
+		Invokes(testing.NewGetAction(perconaxtradbmodificationrequestsResource, c.ns, name), &v1alpha1.PerconaXtraDBModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -51,7 +53,8 @@ func (c *FakePerconaXtraDBModificationRequests) Get(name string, options v1.GetO
 // List takes label and field selectors, and returns the list of PerconaXtraDBModificationRequests that match those selectors.
 func (c *FakePerconaXtraDBModificationRequests) List(opts v1.ListOptions) (result *v1alpha1.PerconaXtraDBModificationRequestList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(perconaxtradbmodificationrequestsResource, perconaxtradbmodificationrequestsKind, opts), &v1alpha1.PerconaXtraDBModificationRequestList{})
+		Invokes(testing.NewListAction(perconaxtradbmodificationrequestsResource, perconaxtradbmodificationrequestsKind, c.ns, opts), &v1alpha1.PerconaXtraDBModificationRequestList{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -72,13 +75,15 @@ func (c *FakePerconaXtraDBModificationRequests) List(opts v1.ListOptions) (resul
 // Watch returns a watch.Interface that watches the requested perconaXtraDBModificationRequests.
 func (c *FakePerconaXtraDBModificationRequests) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(perconaxtradbmodificationrequestsResource, opts))
+		InvokesWatch(testing.NewWatchAction(perconaxtradbmodificationrequestsResource, c.ns, opts))
+
 }
 
 // Create takes the representation of a perconaXtraDBModificationRequest and creates it.  Returns the server's representation of the perconaXtraDBModificationRequest, and an error, if there is any.
 func (c *FakePerconaXtraDBModificationRequests) Create(perconaXtraDBModificationRequest *v1alpha1.PerconaXtraDBModificationRequest) (result *v1alpha1.PerconaXtraDBModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(perconaxtradbmodificationrequestsResource, perconaXtraDBModificationRequest), &v1alpha1.PerconaXtraDBModificationRequest{})
+		Invokes(testing.NewCreateAction(perconaxtradbmodificationrequestsResource, c.ns, perconaXtraDBModificationRequest), &v1alpha1.PerconaXtraDBModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -88,7 +93,20 @@ func (c *FakePerconaXtraDBModificationRequests) Create(perconaXtraDBModification
 // Update takes the representation of a perconaXtraDBModificationRequest and updates it. Returns the server's representation of the perconaXtraDBModificationRequest, and an error, if there is any.
 func (c *FakePerconaXtraDBModificationRequests) Update(perconaXtraDBModificationRequest *v1alpha1.PerconaXtraDBModificationRequest) (result *v1alpha1.PerconaXtraDBModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(perconaxtradbmodificationrequestsResource, perconaXtraDBModificationRequest), &v1alpha1.PerconaXtraDBModificationRequest{})
+		Invokes(testing.NewUpdateAction(perconaxtradbmodificationrequestsResource, c.ns, perconaXtraDBModificationRequest), &v1alpha1.PerconaXtraDBModificationRequest{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.PerconaXtraDBModificationRequest), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakePerconaXtraDBModificationRequests) UpdateStatus(perconaXtraDBModificationRequest *v1alpha1.PerconaXtraDBModificationRequest) (*v1alpha1.PerconaXtraDBModificationRequest, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(perconaxtradbmodificationrequestsResource, "status", c.ns, perconaXtraDBModificationRequest), &v1alpha1.PerconaXtraDBModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -98,13 +116,14 @@ func (c *FakePerconaXtraDBModificationRequests) Update(perconaXtraDBModification
 // Delete takes name of the perconaXtraDBModificationRequest and deletes it. Returns an error if one occurs.
 func (c *FakePerconaXtraDBModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(perconaxtradbmodificationrequestsResource, name), &v1alpha1.PerconaXtraDBModificationRequest{})
+		Invokes(testing.NewDeleteAction(perconaxtradbmodificationrequestsResource, c.ns, name), &v1alpha1.PerconaXtraDBModificationRequest{})
+
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakePerconaXtraDBModificationRequests) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(perconaxtradbmodificationrequestsResource, listOptions)
+	action := testing.NewDeleteCollectionAction(perconaxtradbmodificationrequestsResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.PerconaXtraDBModificationRequestList{})
 	return err
@@ -113,7 +132,8 @@ func (c *FakePerconaXtraDBModificationRequests) DeleteCollection(options *v1.Del
 // Patch applies the patch and returns the patched perconaXtraDBModificationRequest.
 func (c *FakePerconaXtraDBModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.PerconaXtraDBModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(perconaxtradbmodificationrequestsResource, name, pt, data, subresources...), &v1alpha1.PerconaXtraDBModificationRequest{})
+		Invokes(testing.NewPatchSubresourceAction(perconaxtradbmodificationrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.PerconaXtraDBModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}

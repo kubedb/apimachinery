@@ -33,13 +33,14 @@ import (
 // ProxySQLModificationRequestsGetter has a method to return a ProxySQLModificationRequestInterface.
 // A group's client should implement this interface.
 type ProxySQLModificationRequestsGetter interface {
-	ProxySQLModificationRequests() ProxySQLModificationRequestInterface
+	ProxySQLModificationRequests(namespace string) ProxySQLModificationRequestInterface
 }
 
 // ProxySQLModificationRequestInterface has methods to work with ProxySQLModificationRequest resources.
 type ProxySQLModificationRequestInterface interface {
 	Create(*v1alpha1.ProxySQLModificationRequest) (*v1alpha1.ProxySQLModificationRequest, error)
 	Update(*v1alpha1.ProxySQLModificationRequest) (*v1alpha1.ProxySQLModificationRequest, error)
+	UpdateStatus(*v1alpha1.ProxySQLModificationRequest) (*v1alpha1.ProxySQLModificationRequest, error)
 	Delete(name string, options *v1.DeleteOptions) error
 	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
 	Get(name string, options v1.GetOptions) (*v1alpha1.ProxySQLModificationRequest, error)
@@ -52,12 +53,14 @@ type ProxySQLModificationRequestInterface interface {
 // proxySQLModificationRequests implements ProxySQLModificationRequestInterface
 type proxySQLModificationRequests struct {
 	client rest.Interface
+	ns     string
 }
 
 // newProxySQLModificationRequests returns a ProxySQLModificationRequests
-func newProxySQLModificationRequests(c *DbaV1alpha1Client) *proxySQLModificationRequests {
+func newProxySQLModificationRequests(c *DbaV1alpha1Client, namespace string) *proxySQLModificationRequests {
 	return &proxySQLModificationRequests{
 		client: c.RESTClient(),
+		ns:     namespace,
 	}
 }
 
@@ -65,6 +68,7 @@ func newProxySQLModificationRequests(c *DbaV1alpha1Client) *proxySQLModification
 func (c *proxySQLModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.ProxySQLModificationRequest, err error) {
 	result = &v1alpha1.ProxySQLModificationRequest{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("proxysqlmodificationrequests").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -81,6 +85,7 @@ func (c *proxySQLModificationRequests) List(opts v1.ListOptions) (result *v1alph
 	}
 	result = &v1alpha1.ProxySQLModificationRequestList{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("proxysqlmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -97,6 +102,7 @@ func (c *proxySQLModificationRequests) Watch(opts v1.ListOptions) (watch.Interfa
 	}
 	opts.Watch = true
 	return c.client.Get().
+		Namespace(c.ns).
 		Resource("proxysqlmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -107,6 +113,7 @@ func (c *proxySQLModificationRequests) Watch(opts v1.ListOptions) (watch.Interfa
 func (c *proxySQLModificationRequests) Create(proxySQLModificationRequest *v1alpha1.ProxySQLModificationRequest) (result *v1alpha1.ProxySQLModificationRequest, err error) {
 	result = &v1alpha1.ProxySQLModificationRequest{}
 	err = c.client.Post().
+		Namespace(c.ns).
 		Resource("proxysqlmodificationrequests").
 		Body(proxySQLModificationRequest).
 		Do().
@@ -118,8 +125,25 @@ func (c *proxySQLModificationRequests) Create(proxySQLModificationRequest *v1alp
 func (c *proxySQLModificationRequests) Update(proxySQLModificationRequest *v1alpha1.ProxySQLModificationRequest) (result *v1alpha1.ProxySQLModificationRequest, err error) {
 	result = &v1alpha1.ProxySQLModificationRequest{}
 	err = c.client.Put().
+		Namespace(c.ns).
 		Resource("proxysqlmodificationrequests").
 		Name(proxySQLModificationRequest.Name).
+		Body(proxySQLModificationRequest).
+		Do().
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+
+func (c *proxySQLModificationRequests) UpdateStatus(proxySQLModificationRequest *v1alpha1.ProxySQLModificationRequest) (result *v1alpha1.ProxySQLModificationRequest, err error) {
+	result = &v1alpha1.ProxySQLModificationRequest{}
+	err = c.client.Put().
+		Namespace(c.ns).
+		Resource("proxysqlmodificationrequests").
+		Name(proxySQLModificationRequest.Name).
+		SubResource("status").
 		Body(proxySQLModificationRequest).
 		Do().
 		Into(result)
@@ -129,6 +153,7 @@ func (c *proxySQLModificationRequests) Update(proxySQLModificationRequest *v1alp
 // Delete takes name of the proxySQLModificationRequest and deletes it. Returns an error if one occurs.
 func (c *proxySQLModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("proxysqlmodificationrequests").
 		Name(name).
 		Body(options).
@@ -143,6 +168,7 @@ func (c *proxySQLModificationRequests) DeleteCollection(options *v1.DeleteOption
 		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("proxysqlmodificationrequests").
 		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -155,6 +181,7 @@ func (c *proxySQLModificationRequests) DeleteCollection(options *v1.DeleteOption
 func (c *proxySQLModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.ProxySQLModificationRequest, err error) {
 	result = &v1alpha1.ProxySQLModificationRequest{}
 	err = c.client.Patch(pt).
+		Namespace(c.ns).
 		Resource("proxysqlmodificationrequests").
 		SubResource(subresources...).
 		Name(name).

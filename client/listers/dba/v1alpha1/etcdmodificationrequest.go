@@ -30,8 +30,8 @@ import (
 type EtcdModificationRequestLister interface {
 	// List lists all EtcdModificationRequests in the indexer.
 	List(selector labels.Selector) (ret []*v1alpha1.EtcdModificationRequest, err error)
-	// Get retrieves the EtcdModificationRequest from the index for a given name.
-	Get(name string) (*v1alpha1.EtcdModificationRequest, error)
+	// EtcdModificationRequests returns an object that can list and get EtcdModificationRequests.
+	EtcdModificationRequests(namespace string) EtcdModificationRequestNamespaceLister
 	EtcdModificationRequestListerExpansion
 }
 
@@ -53,9 +53,38 @@ func (s *etcdModificationRequestLister) List(selector labels.Selector) (ret []*v
 	return ret, err
 }
 
-// Get retrieves the EtcdModificationRequest from the index for a given name.
-func (s *etcdModificationRequestLister) Get(name string) (*v1alpha1.EtcdModificationRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
+// EtcdModificationRequests returns an object that can list and get EtcdModificationRequests.
+func (s *etcdModificationRequestLister) EtcdModificationRequests(namespace string) EtcdModificationRequestNamespaceLister {
+	return etcdModificationRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+}
+
+// EtcdModificationRequestNamespaceLister helps list and get EtcdModificationRequests.
+type EtcdModificationRequestNamespaceLister interface {
+	// List lists all EtcdModificationRequests in the indexer for a given namespace.
+	List(selector labels.Selector) (ret []*v1alpha1.EtcdModificationRequest, err error)
+	// Get retrieves the EtcdModificationRequest from the indexer for a given namespace and name.
+	Get(name string) (*v1alpha1.EtcdModificationRequest, error)
+	EtcdModificationRequestNamespaceListerExpansion
+}
+
+// etcdModificationRequestNamespaceLister implements the EtcdModificationRequestNamespaceLister
+// interface.
+type etcdModificationRequestNamespaceLister struct {
+	indexer   cache.Indexer
+	namespace string
+}
+
+// List lists all EtcdModificationRequests in the indexer for a given namespace.
+func (s etcdModificationRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.EtcdModificationRequest, err error) {
+	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
+		ret = append(ret, m.(*v1alpha1.EtcdModificationRequest))
+	})
+	return ret, err
+}
+
+// Get retrieves the EtcdModificationRequest from the indexer for a given namespace and name.
+func (s etcdModificationRequestNamespaceLister) Get(name string) (*v1alpha1.EtcdModificationRequest, error) {
+	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
 	}

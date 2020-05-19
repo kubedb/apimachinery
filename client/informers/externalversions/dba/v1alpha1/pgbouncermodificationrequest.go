@@ -42,32 +42,33 @@ type PgBouncerModificationRequestInformer interface {
 type pgBouncerModificationRequestInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
+	namespace        string
 }
 
 // NewPgBouncerModificationRequestInformer constructs a new informer for PgBouncerModificationRequest type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewPgBouncerModificationRequestInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredPgBouncerModificationRequestInformer(client, resyncPeriod, indexers, nil)
+func NewPgBouncerModificationRequestInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredPgBouncerModificationRequestInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
 // NewFilteredPgBouncerModificationRequestInformer constructs a new informer for PgBouncerModificationRequest type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredPgBouncerModificationRequestInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredPgBouncerModificationRequestInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.DbaV1alpha1().PgBouncerModificationRequests().List(options)
+				return client.DbaV1alpha1().PgBouncerModificationRequests(namespace).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.DbaV1alpha1().PgBouncerModificationRequests().Watch(options)
+				return client.DbaV1alpha1().PgBouncerModificationRequests(namespace).Watch(options)
 			},
 		},
 		&dbav1alpha1.PgBouncerModificationRequest{},
@@ -77,7 +78,7 @@ func NewFilteredPgBouncerModificationRequestInformer(client versioned.Interface,
 }
 
 func (f *pgBouncerModificationRequestInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredPgBouncerModificationRequestInformer(client, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+	return NewFilteredPgBouncerModificationRequestInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
 func (f *pgBouncerModificationRequestInformer) Informer() cache.SharedIndexInformer {

@@ -197,6 +197,7 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MongoDBModificationRequestStatus,Conditions
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MySQLModificationRequestList,Items
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MySQLModificationRequestStatus,Conditions
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,MySQLVerticalScalingSpec,Containers
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,PerconaXtraDBModificationRequestList,Items
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,PerconaXtraDBModificationRequestStatus,Conditions
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,PgBouncerModificationRequestList,Items
@@ -207,7 +208,6 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,ProxySQLModificationRequestStatus,Conditions
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,RedisModificationRequestList,Items
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,RedisModificationRequestStatus,Conditions
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/dba/v1alpha1,VerticalScale,Containers
 API rule violation: names_match,k8s.io/api/core/v1,AzureDiskVolumeSource,DataDiskURI
 API rule violation: names_match,k8s.io/api/core/v1,ContainerStatus,LastTerminationState
 API rule violation: names_match,k8s.io/api/core/v1,DaemonEndpoint,Port
@@ -254,4 +254,3 @@ API rule violation: names_match,k8s.io/apimachinery/pkg/util/intstr,IntOrString,
 API rule violation: names_match,k8s.io/apimachinery/pkg/util/intstr,IntOrString,StrVal
 API rule violation: names_match,k8s.io/apimachinery/pkg/util/intstr,IntOrString,Type
 API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,ContainerRuntimeSettings,IONice
-API rule violation: names_match,kubedb.dev/apimachinery/apis/dba/v1alpha1,MySQLUpdateSpec,CurrentStatefulSetOrdinal

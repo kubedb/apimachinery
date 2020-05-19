@@ -33,13 +33,14 @@ import (
 // PgBouncerModificationRequestsGetter has a method to return a PgBouncerModificationRequestInterface.
 // A group's client should implement this interface.
 type PgBouncerModificationRequestsGetter interface {
-	PgBouncerModificationRequests() PgBouncerModificationRequestInterface
+	PgBouncerModificationRequests(namespace string) PgBouncerModificationRequestInterface
 }
 
 // PgBouncerModificationRequestInterface has methods to work with PgBouncerModificationRequest resources.
 type PgBouncerModificationRequestInterface interface {
 	Create(*v1alpha1.PgBouncerModificationRequest) (*v1alpha1.PgBouncerModificationRequest, error)
 	Update(*v1alpha1.PgBouncerModificationRequest) (*v1alpha1.PgBouncerModificationRequest, error)
+	UpdateStatus(*v1alpha1.PgBouncerModificationRequest) (*v1alpha1.PgBouncerModificationRequest, error)
 	Delete(name string, options *v1.DeleteOptions) error
 	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
 	Get(name string, options v1.GetOptions) (*v1alpha1.PgBouncerModificationRequest, error)
@@ -52,12 +53,14 @@ type PgBouncerModificationRequestInterface interface {
 // pgBouncerModificationRequests implements PgBouncerModificationRequestInterface
 type pgBouncerModificationRequests struct {
 	client rest.Interface
+	ns     string
 }
 
 // newPgBouncerModificationRequests returns a PgBouncerModificationRequests
-func newPgBouncerModificationRequests(c *DbaV1alpha1Client) *pgBouncerModificationRequests {
+func newPgBouncerModificationRequests(c *DbaV1alpha1Client, namespace string) *pgBouncerModificationRequests {
 	return &pgBouncerModificationRequests{
 		client: c.RESTClient(),
+		ns:     namespace,
 	}
 }
 
@@ -65,6 +68,7 @@ func newPgBouncerModificationRequests(c *DbaV1alpha1Client) *pgBouncerModificati
 func (c *pgBouncerModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.PgBouncerModificationRequest, err error) {
 	result = &v1alpha1.PgBouncerModificationRequest{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("pgbouncermodificationrequests").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -81,6 +85,7 @@ func (c *pgBouncerModificationRequests) List(opts v1.ListOptions) (result *v1alp
 	}
 	result = &v1alpha1.PgBouncerModificationRequestList{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("pgbouncermodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -97,6 +102,7 @@ func (c *pgBouncerModificationRequests) Watch(opts v1.ListOptions) (watch.Interf
 	}
 	opts.Watch = true
 	return c.client.Get().
+		Namespace(c.ns).
 		Resource("pgbouncermodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -107,6 +113,7 @@ func (c *pgBouncerModificationRequests) Watch(opts v1.ListOptions) (watch.Interf
 func (c *pgBouncerModificationRequests) Create(pgBouncerModificationRequest *v1alpha1.PgBouncerModificationRequest) (result *v1alpha1.PgBouncerModificationRequest, err error) {
 	result = &v1alpha1.PgBouncerModificationRequest{}
 	err = c.client.Post().
+		Namespace(c.ns).
 		Resource("pgbouncermodificationrequests").
 		Body(pgBouncerModificationRequest).
 		Do().
@@ -118,8 +125,25 @@ func (c *pgBouncerModificationRequests) Create(pgBouncerModificationRequest *v1a
 func (c *pgBouncerModificationRequests) Update(pgBouncerModificationRequest *v1alpha1.PgBouncerModificationRequest) (result *v1alpha1.PgBouncerModificationRequest, err error) {
 	result = &v1alpha1.PgBouncerModificationRequest{}
 	err = c.client.Put().
+		Namespace(c.ns).
 		Resource("pgbouncermodificationrequests").
 		Name(pgBouncerModificationRequest.Name).
+		Body(pgBouncerModificationRequest).
+		Do().
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+
+func (c *pgBouncerModificationRequests) UpdateStatus(pgBouncerModificationRequest *v1alpha1.PgBouncerModificationRequest) (result *v1alpha1.PgBouncerModificationRequest, err error) {
+	result = &v1alpha1.PgBouncerModificationRequest{}
+	err = c.client.Put().
+		Namespace(c.ns).
+		Resource("pgbouncermodificationrequests").
+		Name(pgBouncerModificationRequest.Name).
+		SubResource("status").
 		Body(pgBouncerModificationRequest).
 		Do().
 		Into(result)
@@ -129,6 +153,7 @@ func (c *pgBouncerModificationRequests) Update(pgBouncerModificationRequest *v1a
 // Delete takes name of the pgBouncerModificationRequest and deletes it. Returns an error if one occurs.
 func (c *pgBouncerModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("pgbouncermodificationrequests").
 		Name(name).
 		Body(options).
@@ -143,6 +168,7 @@ func (c *pgBouncerModificationRequests) DeleteCollection(options *v1.DeleteOptio
 		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("pgbouncermodificationrequests").
 		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -155,6 +181,7 @@ func (c *pgBouncerModificationRequests) DeleteCollection(options *v1.DeleteOptio
 func (c *pgBouncerModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.PgBouncerModificationRequest, err error) {
 	result = &v1alpha1.PgBouncerModificationRequest{}
 	err = c.client.Patch(pt).
+		Namespace(c.ns).
 		Resource("pgbouncermodificationrequests").
 		SubResource(subresources...).
 		Name(name).

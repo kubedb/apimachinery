@@ -33,13 +33,14 @@ import (
 // MemcachedModificationRequestsGetter has a method to return a MemcachedModificationRequestInterface.
 // A group's client should implement this interface.
 type MemcachedModificationRequestsGetter interface {
-	MemcachedModificationRequests() MemcachedModificationRequestInterface
+	MemcachedModificationRequests(namespace string) MemcachedModificationRequestInterface
 }
 
 // MemcachedModificationRequestInterface has methods to work with MemcachedModificationRequest resources.
 type MemcachedModificationRequestInterface interface {
 	Create(*v1alpha1.MemcachedModificationRequest) (*v1alpha1.MemcachedModificationRequest, error)
 	Update(*v1alpha1.MemcachedModificationRequest) (*v1alpha1.MemcachedModificationRequest, error)
+	UpdateStatus(*v1alpha1.MemcachedModificationRequest) (*v1alpha1.MemcachedModificationRequest, error)
 	Delete(name string, options *v1.DeleteOptions) error
 	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
 	Get(name string, options v1.GetOptions) (*v1alpha1.MemcachedModificationRequest, error)
@@ -52,12 +53,14 @@ type MemcachedModificationRequestInterface interface {
 // memcachedModificationRequests implements MemcachedModificationRequestInterface
 type memcachedModificationRequests struct {
 	client rest.Interface
+	ns     string
 }
 
 // newMemcachedModificationRequests returns a MemcachedModificationRequests
-func newMemcachedModificationRequests(c *DbaV1alpha1Client) *memcachedModificationRequests {
+func newMemcachedModificationRequests(c *DbaV1alpha1Client, namespace string) *memcachedModificationRequests {
 	return &memcachedModificationRequests{
 		client: c.RESTClient(),
+		ns:     namespace,
 	}
 }
 
@@ -65,6 +68,7 @@ func newMemcachedModificationRequests(c *DbaV1alpha1Client) *memcachedModificati
 func (c *memcachedModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.MemcachedModificationRequest, err error) {
 	result = &v1alpha1.MemcachedModificationRequest{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("memcachedmodificationrequests").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -81,6 +85,7 @@ func (c *memcachedModificationRequests) List(opts v1.ListOptions) (result *v1alp
 	}
 	result = &v1alpha1.MemcachedModificationRequestList{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("memcachedmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -97,6 +102,7 @@ func (c *memcachedModificationRequests) Watch(opts v1.ListOptions) (watch.Interf
 	}
 	opts.Watch = true
 	return c.client.Get().
+		Namespace(c.ns).
 		Resource("memcachedmodificationrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -107,6 +113,7 @@ func (c *memcachedModificationRequests) Watch(opts v1.ListOptions) (watch.Interf
 func (c *memcachedModificationRequests) Create(memcachedModificationRequest *v1alpha1.MemcachedModificationRequest) (result *v1alpha1.MemcachedModificationRequest, err error) {
 	result = &v1alpha1.MemcachedModificationRequest{}
 	err = c.client.Post().
+		Namespace(c.ns).
 		Resource("memcachedmodificationrequests").
 		Body(memcachedModificationRequest).
 		Do().
@@ -118,8 +125,25 @@ func (c *memcachedModificationRequests) Create(memcachedModificationRequest *v1a
 func (c *memcachedModificationRequests) Update(memcachedModificationRequest *v1alpha1.MemcachedModificationRequest) (result *v1alpha1.MemcachedModificationRequest, err error) {
 	result = &v1alpha1.MemcachedModificationRequest{}
 	err = c.client.Put().
+		Namespace(c.ns).
 		Resource("memcachedmodificationrequests").
 		Name(memcachedModificationRequest.Name).
+		Body(memcachedModificationRequest).
+		Do().
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+
+func (c *memcachedModificationRequests) UpdateStatus(memcachedModificationRequest *v1alpha1.MemcachedModificationRequest) (result *v1alpha1.MemcachedModificationRequest, err error) {
+	result = &v1alpha1.MemcachedModificationRequest{}
+	err = c.client.Put().
+		Namespace(c.ns).
+		Resource("memcachedmodificationrequests").
+		Name(memcachedModificationRequest.Name).
+		SubResource("status").
 		Body(memcachedModificationRequest).
 		Do().
 		Into(result)
@@ -129,6 +153,7 @@ func (c *memcachedModificationRequests) Update(memcachedModificationRequest *v1a
 // Delete takes name of the memcachedModificationRequest and deletes it. Returns an error if one occurs.
 func (c *memcachedModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("memcachedmodificationrequests").
 		Name(name).
 		Body(options).
@@ -143,6 +168,7 @@ func (c *memcachedModificationRequests) DeleteCollection(options *v1.DeleteOptio
 		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("memcachedmodificationrequests").
 		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -155,6 +181,7 @@ func (c *memcachedModificationRequests) DeleteCollection(options *v1.DeleteOptio
 func (c *memcachedModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.MemcachedModificationRequest, err error) {
 	result = &v1alpha1.MemcachedModificationRequest{}
 	err = c.client.Patch(pt).
+		Namespace(c.ns).
 		Resource("memcachedmodificationrequests").
 		SubResource(subresources...).
 		Name(name).

@@ -20,42 +20,40 @@ import (
 	core "k8s.io/api/core/v1"
 )
 
-type RequestConditionType string
-
-// These are the possible conditions for a certificate request.
+// List of possible condition types for a modification request
 const (
-	AccessApproved            RequestConditionType = "Approved"
-	AccessDenied              RequestConditionType = "Denied"
-	DisableSharding           RequestConditionType = "DisableSharding"
-	EnableSharding            RequestConditionType = "EnableSharding"
-	Failed                    RequestConditionType = "Failed"
-	HorizontalScalingDatabase RequestConditionType = "HorizontalScaling"
-	MigratingData             RequestConditionType = "MigratingData"
-	NodeCreated               RequestConditionType = "NodeCreated"
-	NodeDeleted               RequestConditionType = "NodeDeleted"
-	NodeRestarted             RequestConditionType = "NodeRestarted"
-	PauseDatabase             RequestConditionType = "PauseDatabase"
-	Processing                RequestConditionType = "Processing"
-	ResumeDatabase            RequestConditionType = "ResumeDatabase"
-	ScalingDatabase           RequestConditionType = "Scaling"
-	ScalingDown               RequestConditionType = "ScalingDown"
-	ScalingUp                 RequestConditionType = "ScalingUp"
-	StartingBalancer          RequestConditionType = "StartingBalancer"
-	StoppingBalancer          RequestConditionType = "StoppingBalancer"
-	Successful                RequestConditionType = "Successful"
-	Updating                  RequestConditionType = "Updating"
-	UpgradedDatabaseVersion   RequestConditionType = "UpgradedDatabaseVersion"
-	UpgradingDatabaseVersion  RequestConditionType = "UpgradingDatabaseVersion"
-	VerticalScalingDatabase   RequestConditionType = "VerticalScaling"
-	VotingExclusionAdded      RequestConditionType = "VotingExclusionAdded"
-	VotingExclusionDeleted    RequestConditionType = "VotingExclusionDeleted"
+	AccessApproved            = "Approved"
+	AccessDenied              = "Denied"
+	DisableSharding           = "DisableSharding"
+	EnableSharding            = "EnableSharding"
+	Failure                   = "Failure"
+	HorizontalScalingDatabase = "HorizontalScaling"
+	MigratingData             = "MigratingData"
+	NodeCreated               = "NodeCreated"
+	NodeDeleted               = "NodeDeleted"
+	NodeRestarted             = "NodeRestarted"
+	PauseDatabase             = "PauseDatabase"
+	Progressing               = "Progressing"
+	ResumeDatabase            = "ResumeDatabase"
+	ScalingDatabase           = "Scaling"
+	ScalingDown               = "ScalingDown"
+	ScalingUp                 = "ScalingUp"
+	StartingBalancer          = "StartingBalancer"
+	StoppingBalancer          = "StoppingBalancer"
+	Successful                = "Successful"
+	Updating                  = "Updating"
+	UpgradedVersion           = "UpgradedVersion"
+	UpgradingVersion          = "UpgradingVersion"
+	VerticalScalingDatabase   = "VerticalScaling"
+	VotingExclusionAdded      = "VotingExclusionAdded"
+	VotingExclusionDeleted    = "VotingExclusionDeleted"
 )
 
 type ModificationRequestPhase string
 
 const (
-	// used for modification requests that are currently processing
-	ModificationRequestPhaseProcessing ModificationRequestPhase = "Processing"
+	// used for modification requests that are currently Progressing
+	ModificationRequestPhaseProgressing ModificationRequestPhase = "Progressing"
 	// used for modification requests that are executed successfully
 	ModificationRequestPhaseSuccessful ModificationRequestPhase = "Successful"
 	// used for modification requests that are waiting for approval
@@ -68,7 +66,7 @@ const (
 	ModificationRequestDenied ModificationRequestPhase = "Denied"
 )
 
-// +kubebuilder:validation:Enum=Upgrade;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart
+// +kubebuilder:validation:Enum=Upgrade;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;RotateCertificates
 type ModificationRequestType string
 
 const (
@@ -82,10 +80,12 @@ const (
 	ModificationRequestTypeVolumeExpansion ModificationRequestType = "VolumeExpansion"
 	// used for Restart operation
 	ModificationRequestTypeRestart ModificationRequestType = "Restart"
+	// used for RotateCertificates operation
+	ModificationRequestTypeRotateCertificates ModificationRequestType = "RotateCertificates"
 )
 
-type UpdateSpec struct {
-	// Specifies the ElasticsearchVersion object name
+type UpgradeSpec struct {
+	// Specifies the MySQLVersion object name
 	TargetVersion string `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
 }
 

@@ -48,17 +48,17 @@ type MongoDBModificationRequest struct {
 	Status            MongoDBModificationRequestStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
-// MongoDBModificationRequestSpec is the spec for mongodb modification request
+// MongoDBModificationRequestSpec is the spec for MongoDBModificationRequest
 type MongoDBModificationRequestSpec struct {
 	// Specifies the Elasticsearch reference
 	DatabaseRef v1.LocalObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
-	// Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.
-	Type ModificationRequestType `json:"type" protobuf:"bytes,2,opt,name=type"`
-	// Specifies the field information that needed to be updated
-	Update *UpdateSpec `json:"update,omitempty" protobuf:"bytes,3,opt,name=update"`
+	// Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
+	Type ModificationRequestType `json:"type" protobuf:"bytes,2,opt,name=type,casttype=ModificationRequestType"`
+	// Specifies the field information that needed to be upgraded
+	Upgrade *UpgradeSpec `json:"upgrade,omitempty" protobuf:"bytes,3,opt,name=upgrade"`
 }
 
-// MongoDBModificationRequestStatus is the status for mongodb modification request
+// MongoDBModificationRequestStatus is the status for MongoDBModificationRequest
 type MongoDBModificationRequestStatus struct {
 	Phase ModificationRequestPhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=ModificationRequestPhase"`
 	// observedGeneration is the most recent generation observed for this resource. It corresponds to the

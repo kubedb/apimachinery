@@ -30,8 +30,8 @@ import (
 type PostgresModificationRequestLister interface {
 	// List lists all PostgresModificationRequests in the indexer.
 	List(selector labels.Selector) (ret []*v1alpha1.PostgresModificationRequest, err error)
-	// Get retrieves the PostgresModificationRequest from the index for a given name.
-	Get(name string) (*v1alpha1.PostgresModificationRequest, error)
+	// PostgresModificationRequests returns an object that can list and get PostgresModificationRequests.
+	PostgresModificationRequests(namespace string) PostgresModificationRequestNamespaceLister
 	PostgresModificationRequestListerExpansion
 }
 
@@ -53,9 +53,38 @@ func (s *postgresModificationRequestLister) List(selector labels.Selector) (ret 
 	return ret, err
 }
 
-// Get retrieves the PostgresModificationRequest from the index for a given name.
-func (s *postgresModificationRequestLister) Get(name string) (*v1alpha1.PostgresModificationRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
+// PostgresModificationRequests returns an object that can list and get PostgresModificationRequests.
+func (s *postgresModificationRequestLister) PostgresModificationRequests(namespace string) PostgresModificationRequestNamespaceLister {
+	return postgresModificationRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+}
+
+// PostgresModificationRequestNamespaceLister helps list and get PostgresModificationRequests.
+type PostgresModificationRequestNamespaceLister interface {
+	// List lists all PostgresModificationRequests in the indexer for a given namespace.
+	List(selector labels.Selector) (ret []*v1alpha1.PostgresModificationRequest, err error)
+	// Get retrieves the PostgresModificationRequest from the indexer for a given namespace and name.
+	Get(name string) (*v1alpha1.PostgresModificationRequest, error)
+	PostgresModificationRequestNamespaceListerExpansion
+}
+
+// postgresModificationRequestNamespaceLister implements the PostgresModificationRequestNamespaceLister
+// interface.
+type postgresModificationRequestNamespaceLister struct {
+	indexer   cache.Indexer
+	namespace string
+}
+
+// List lists all PostgresModificationRequests in the indexer for a given namespace.
+func (s postgresModificationRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PostgresModificationRequest, err error) {
+	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
+		ret = append(ret, m.(*v1alpha1.PostgresModificationRequest))
+	})
+	return ret, err
+}
+
+// Get retrieves the PostgresModificationRequest from the indexer for a given namespace and name.
+func (s postgresModificationRequestNamespaceLister) Get(name string) (*v1alpha1.PostgresModificationRequest, error) {
+	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
 	}

@@ -30,8 +30,8 @@ import (
 type ProxySQLModificationRequestLister interface {
 	// List lists all ProxySQLModificationRequests in the indexer.
 	List(selector labels.Selector) (ret []*v1alpha1.ProxySQLModificationRequest, err error)
-	// Get retrieves the ProxySQLModificationRequest from the index for a given name.
-	Get(name string) (*v1alpha1.ProxySQLModificationRequest, error)
+	// ProxySQLModificationRequests returns an object that can list and get ProxySQLModificationRequests.
+	ProxySQLModificationRequests(namespace string) ProxySQLModificationRequestNamespaceLister
 	ProxySQLModificationRequestListerExpansion
 }
 
@@ -53,9 +53,38 @@ func (s *proxySQLModificationRequestLister) List(selector labels.Selector) (ret 
 	return ret, err
 }
 
-// Get retrieves the ProxySQLModificationRequest from the index for a given name.
-func (s *proxySQLModificationRequestLister) Get(name string) (*v1alpha1.ProxySQLModificationRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
+// ProxySQLModificationRequests returns an object that can list and get ProxySQLModificationRequests.
+func (s *proxySQLModificationRequestLister) ProxySQLModificationRequests(namespace string) ProxySQLModificationRequestNamespaceLister {
+	return proxySQLModificationRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+}
+
+// ProxySQLModificationRequestNamespaceLister helps list and get ProxySQLModificationRequests.
+type ProxySQLModificationRequestNamespaceLister interface {
+	// List lists all ProxySQLModificationRequests in the indexer for a given namespace.
+	List(selector labels.Selector) (ret []*v1alpha1.ProxySQLModificationRequest, err error)
+	// Get retrieves the ProxySQLModificationRequest from the indexer for a given namespace and name.
+	Get(name string) (*v1alpha1.ProxySQLModificationRequest, error)
+	ProxySQLModificationRequestNamespaceListerExpansion
+}
+
+// proxySQLModificationRequestNamespaceLister implements the ProxySQLModificationRequestNamespaceLister
+// interface.
+type proxySQLModificationRequestNamespaceLister struct {
+	indexer   cache.Indexer
+	namespace string
+}
+
+// List lists all ProxySQLModificationRequests in the indexer for a given namespace.
+func (s proxySQLModificationRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ProxySQLModificationRequest, err error) {
+	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
+		ret = append(ret, m.(*v1alpha1.ProxySQLModificationRequest))
+	})
+	return ret, err
+}
+
+// Get retrieves the ProxySQLModificationRequest from the indexer for a given namespace and name.
+func (s proxySQLModificationRequestNamespaceLister) Get(name string) (*v1alpha1.ProxySQLModificationRequest, error) {
+	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
 	}

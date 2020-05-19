@@ -30,8 +30,8 @@ import (
 type MemcachedModificationRequestLister interface {
 	// List lists all MemcachedModificationRequests in the indexer.
 	List(selector labels.Selector) (ret []*v1alpha1.MemcachedModificationRequest, err error)
-	// Get retrieves the MemcachedModificationRequest from the index for a given name.
-	Get(name string) (*v1alpha1.MemcachedModificationRequest, error)
+	// MemcachedModificationRequests returns an object that can list and get MemcachedModificationRequests.
+	MemcachedModificationRequests(namespace string) MemcachedModificationRequestNamespaceLister
 	MemcachedModificationRequestListerExpansion
 }
 
@@ -53,9 +53,38 @@ func (s *memcachedModificationRequestLister) List(selector labels.Selector) (ret
 	return ret, err
 }
 
-// Get retrieves the MemcachedModificationRequest from the index for a given name.
-func (s *memcachedModificationRequestLister) Get(name string) (*v1alpha1.MemcachedModificationRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
+// MemcachedModificationRequests returns an object that can list and get MemcachedModificationRequests.
+func (s *memcachedModificationRequestLister) MemcachedModificationRequests(namespace string) MemcachedModificationRequestNamespaceLister {
+	return memcachedModificationRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+}
+
+// MemcachedModificationRequestNamespaceLister helps list and get MemcachedModificationRequests.
+type MemcachedModificationRequestNamespaceLister interface {
+	// List lists all MemcachedModificationRequests in the indexer for a given namespace.
+	List(selector labels.Selector) (ret []*v1alpha1.MemcachedModificationRequest, err error)
+	// Get retrieves the MemcachedModificationRequest from the indexer for a given namespace and name.
+	Get(name string) (*v1alpha1.MemcachedModificationRequest, error)
+	MemcachedModificationRequestNamespaceListerExpansion
+}
+
+// memcachedModificationRequestNamespaceLister implements the MemcachedModificationRequestNamespaceLister
+// interface.
+type memcachedModificationRequestNamespaceLister struct {
+	indexer   cache.Indexer
+	namespace string
+}
+
+// List lists all MemcachedModificationRequests in the indexer for a given namespace.
+func (s memcachedModificationRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MemcachedModificationRequest, err error) {
+	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
+		ret = append(ret, m.(*v1alpha1.MemcachedModificationRequest))
+	})
+	return ret, err
+}
+
+// Get retrieves the MemcachedModificationRequest from the indexer for a given namespace and name.
+func (s memcachedModificationRequestNamespaceLister) Get(name string) (*v1alpha1.MemcachedModificationRequest, error) {
+	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
 	}

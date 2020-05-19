@@ -44,6 +44,18 @@ message ContainerResources {
   optional k8s.io.api.core.v1.ResourceRequirements resources = 2;
 }
 
+// ElasticsearchScaleSpec contains the scaling information of the Elasticsearch
+message ElasticsearchHorizontalScaleSpec {
+  // Number of master nodes
+  optional int32 master = 1;
+
+  // Number of data nodes
+  optional int32 data = 2;
+
+  // Number of client nodes
+  optional int32 client = 3;
+}
+
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=elasticsearchmodificationrequests,singular=elasticsearchmodificationrequest,shortName=esmodreq,categories={datastore,kubedb,appscode}
 // +kubebuilder:subresource:status
@@ -66,22 +78,22 @@ message ElasticsearchModificationRequestList {
   repeated ElasticsearchModificationRequest items = 2;
 }
 
-// ElasticsearchModificationRequestSpec is the spec for ElasticsearchModificationRequest object
+// ElasticsearchModificationRequestSpec is the spec for ElasticsearchModificationRequest
 message ElasticsearchModificationRequestSpec {
   // Specifies the Elasticsearch reference
   optional k8s.io.api.core.v1.LocalObjectReference databaseRef = 1;
 
-  // Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.
+  // Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
   optional string type = 2;
 
-  // Specifies the field information that needed to be updated
-  optional UpdateSpec update = 3;
+  // Specifies the field information that needed to be upgraded
+  optional UpgradeSpec upgrade = 3;
 
-  // Specifies the scaling info of Elasticsearch Object
-  optional ScaleSpec scale = 4;
+  // HorizontalScaling specifies the horizontal scaling.
+  optional ElasticsearchHorizontalScaleSpec horizontalScaling = 4;
 }
 
-// ElasticsearchModificationRequestStatus is the status for elasticsearch version
+// ElasticsearchModificationRequestStatus is the status for ElasticsearchModificationRequest
 message ElasticsearchModificationRequestStatus {
   // Specifies the current phase of the modification request
   // +optional
@@ -99,29 +111,16 @@ message ElasticsearchModificationRequestStatus {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=etcdmodificationrequests,singular=etcdmodificationrequest,shortName=etcdmodreq,categories={datastore,kubedb,appscode}
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 message EtcdModificationRequest {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
   optional EtcdModificationRequestSpec spec = 2;
 
   optional EtcdModificationRequestStatus status = 3;
-}
-
-message EtcdModificationRequestCondition {
-  // request approval state, currently Approved or Denied.
-  optional string type = 1;
-
-  // brief reason for the request state
-  // +optional
-  optional string reason = 2;
-
-  // human readable message with details about the request state
-  // +optional
-  optional string message = 3;
-
-  // timestamp for the last update to this condition
-  // +optional
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 4;
 }
 
 // EtcdModificationRequestList is a list of EtcdModificationRequests
@@ -132,47 +131,44 @@ message EtcdModificationRequestList {
   repeated EtcdModificationRequest items = 2;
 }
 
-// EtcdModificationRequestSpec is the spec for elasticsearch version
+// EtcdModificationRequestSpec is the spec for EtcdModificationRequest
 message EtcdModificationRequestSpec {
+  // Specifies the etcd reference
+  optional k8s.io.api.core.v1.LocalObjectReference databaseRef = 1;
+
+  // Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
+  optional string type = 2;
+
+  // Specifies the field information that needed to be upgraded
+  optional UpgradeSpec upgrade = 3;
 }
 
-// EtcdModificationRequestStatus is the status for elasticsearch version
+// EtcdModificationRequestStatus is the status for EtcdModificationRequest
 message EtcdModificationRequestStatus {
+  optional string phase = 1;
+
+  // observedGeneration is the most recent generation observed for this resource. It corresponds to the
+  // resource's generation, which is updated on mutation by the API Server.
+  // +optional
+  optional int64 observedGeneration = 2;
+
   // Conditions applied to the request, such as approval or denial.
   // +optional
-  repeated EtcdModificationRequestCondition conditions = 1;
-}
-
-message HorizontalScale {
-  // Number of nodes/members of the group
-  optional int32 member = 1;
+  repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=memcachedmodificationrequests,singular=memcachedmodificationrequest,shortName=mcmodreq,categories={datastore,kubedb,appscode}
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 message MemcachedModificationRequest {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
   optional MemcachedModificationRequestSpec spec = 2;
 
   optional MemcachedModificationRequestStatus status = 3;
-}
-
-message MemcachedModificationRequestCondition {
-  // request approval state, currently Approved or Denied.
-  optional string type = 1;
-
-  // brief reason for the request state
-  // +optional
-  optional string reason = 2;
-
-  // human readable message with details about the request state
-  // +optional
-  optional string message = 3;
-
-  // timestamp for the last update to this condition
-  // +optional
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 4;
 }
 
 // MemcachedModificationRequestList is a list of MemcachedModificationRequests
@@ -183,15 +179,30 @@ message MemcachedModificationRequestList {
   repeated MemcachedModificationRequest items = 2;
 }
 
-// MemcachedModificationRequestSpec is the spec for elasticsearch version
+// MemcachedModificationRequestSpec is the spec for MemcachedModificationRequest
 message MemcachedModificationRequestSpec {
+  // Specifies the Memcached reference
+  optional k8s.io.api.core.v1.LocalObjectReference databaseRef = 1;
+
+  // Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
+  optional string type = 2;
+
+  // Specifies the field information that needed to be upgraded
+  optional UpgradeSpec upgrade = 3;
 }
 
-// MemcachedModificationRequestStatus is the status for elasticsearch version
+// MemcachedModificationRequestStatus is the status for MemcachedModificationRequest
 message MemcachedModificationRequestStatus {
+  optional string phase = 1;
+
+  // observedGeneration is the most recent generation observed for this resource. It corresponds to the
+  // resource's generation, which is updated on mutation by the API Server.
+  // +optional
+  optional int64 observedGeneration = 2;
+
   // Conditions applied to the request, such as approval or denial.
   // +optional
-  repeated MemcachedModificationRequestCondition conditions = 1;
+  repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
 }
 
 // +kubebuilder:object:root=true
@@ -216,19 +227,19 @@ message MongoDBModificationRequestList {
   repeated MongoDBModificationRequest items = 2;
 }
 
-// MongoDBModificationRequestSpec is the spec for mongodb modification request
+// MongoDBModificationRequestSpec is the spec for MongoDBModificationRequest
 message MongoDBModificationRequestSpec {
   // Specifies the Elasticsearch reference
   optional k8s.io.api.core.v1.LocalObjectReference databaseRef = 1;
 
-  // Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.
+  // Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
   optional string type = 2;
 
-  // Specifies the field information that needed to be updated
-  optional UpdateSpec update = 3;
+  // Specifies the field information that needed to be upgraded
+  optional UpgradeSpec upgrade = 3;
 }
 
-// MongoDBModificationRequestStatus is the status for mongodb modification request
+// MongoDBModificationRequestStatus is the status for MongoDBModificationRequest
 message MongoDBModificationRequestStatus {
   optional string phase = 1;
 
@@ -240,6 +251,14 @@ message MongoDBModificationRequestStatus {
   // Conditions applied to the request, such as approval or denial.
   // +optional
   repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
+}
+
+message MySQLHorizontalScalingSpec {
+  // Number of nodes/members of the group
+  optional int32 member = 1;
+
+  // specifies the weight of the current member/Node
+  optional int32 memberWeight = 2;
 }
 
 // +kubebuilder:object:root=true
@@ -264,22 +283,28 @@ message MySQLModificationRequestList {
   repeated MySQLModificationRequest items = 2;
 }
 
-// MySQLModificationRequestSpec is the spec for MySQLModificationRequest version
+// MySQLModificationRequestSpec is the spec for MySQLModificationRequest
 message MySQLModificationRequestSpec {
   // Specifies the database reference
   optional k8s.io.api.core.v1.LocalObjectReference databaseRef = 1;
 
+  // Specifies the current ordinal of the StatefulSet
+  optional int32 statefulSetOrdinal = 2;
+
   // Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.
-  optional string type = 2;
+  optional string type = 3;
 
-  // Specifies the field information that needed to be updated
-  optional MySQLUpdateSpec update = 3;
+  // Specifies the field information that needed to be upgraded
+  optional UpgradeSpec upgrade = 4;
 
-  // Specifies the scaling info of database
-  optional MySQLScaleSpec scale = 4;
+  // HorizontalScaling specifies the horizontal scaling.
+  optional MySQLHorizontalScalingSpec horizontalScaling = 5;
+
+  // VerticalScaling specifies the vertical scaling.
+  optional MySQLVerticalScalingSpec verticalScaling = 6;
 }
 
-// MySQLModificationRequestStatus is the status for MySQLModificationRequest object
+// MySQLModificationRequestStatus is the status for MySQLModificationRequest
 message MySQLModificationRequestStatus {
   optional string phase = 1;
 
@@ -293,51 +318,23 @@ message MySQLModificationRequestStatus {
   repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
 }
 
-// MySQLScaleSpec contains the scaling information of the MySQL
-message MySQLScaleSpec {
-  // Horizontal specifies the horizontal scaling.
-  optional HorizontalScale horizontal = 1;
-
-  // Vertical specifies the vertical scaling.
-  optional VerticalScale vertical = 2;
-
-  // specifies the weight of the current member/Node
-  optional int32 memberWeight = 3;
-}
-
-message MySQLUpdateSpec {
-  // Specifies the MySQLVersion object name
-  optional string targetVersion = 1;
-
-  // Specifies the current ordinal of the StatefulSet
-  optional int32 CurrentStatefulSetOrdinal = 2;
+message MySQLVerticalScalingSpec {
+  // Containers represents the containers specification for scaling the requested resources.
+  repeated ContainerResources containers = 1;
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=perconaxtradbmodificationrequests,singular=perconaxtradbmodificationrequest,shortName=pxcmodreq,categories={datastore,kubedb,appscode}
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 message PerconaXtraDBModificationRequest {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
   optional PerconaXtraDBModificationRequestSpec spec = 2;
 
   optional PerconaXtraDBModificationRequestStatus status = 3;
-}
-
-message PerconaXtraDBModificationRequestCondition {
-  // request approval state, currently Approved or Denied.
-  optional string type = 1;
-
-  // brief reason for the request state
-  // +optional
-  optional string reason = 2;
-
-  // human readable message with details about the request state
-  // +optional
-  optional string message = 3;
-
-  // timestamp for the last update to this condition
-  // +optional
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 4;
 }
 
 // PerconaXtraDBModificationRequestList is a list of PerconaXtraDBModificationRequests
@@ -348,42 +345,44 @@ message PerconaXtraDBModificationRequestList {
   repeated PerconaXtraDBModificationRequest items = 2;
 }
 
-// PerconaXtraDBModificationRequestSpec is the spec for elasticsearch version
+// PerconaXtraDBModificationRequestSpec is the spec for PerconaXtraDBModificationRequest
 message PerconaXtraDBModificationRequestSpec {
+  // Specifies the Elasticsearch reference
+  optional k8s.io.api.core.v1.LocalObjectReference databaseRef = 1;
+
+  // Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
+  optional string type = 2;
+
+  // Specifies the field information that needed to be upgraded
+  optional UpgradeSpec upgrade = 3;
 }
 
-// PerconaXtraDBModificationRequestStatus is the status for elasticsearch version
+// PerconaXtraDBModificationRequestStatus is the status for PerconaXtraDBModificationRequest
 message PerconaXtraDBModificationRequestStatus {
+  optional string phase = 1;
+
+  // observedGeneration is the most recent generation observed for this resource. It corresponds to the
+  // resource's generation, which is updated on mutation by the API Server.
+  // +optional
+  optional int64 observedGeneration = 2;
+
   // Conditions applied to the request, such as approval or denial.
   // +optional
-  repeated PerconaXtraDBModificationRequestCondition conditions = 1;
+  repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=pgbouncermodificationrequests,singular=pgbouncermodificationrequest,shortName=pbmodreq,categories={datastore,kubedb,appscode}
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 message PgBouncerModificationRequest {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
   optional PgBouncerModificationRequestSpec spec = 2;
 
   optional PgBouncerModificationRequestStatus status = 3;
-}
-
-message PgBouncerModificationRequestCondition {
-  // request approval state, currently Approved or Denied.
-  optional string type = 1;
-
-  // brief reason for the request state
-  // +optional
-  optional string reason = 2;
-
-  // human readable message with details about the request state
-  // +optional
-  optional string message = 3;
-
-  // timestamp for the last update to this condition
-  // +optional
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 4;
 }
 
 // PgBouncerModificationRequestList is a list of PgBouncerModificationRequests
@@ -394,42 +393,44 @@ message PgBouncerModificationRequestList {
   repeated PgBouncerModificationRequest items = 2;
 }
 
-// PgBouncerModificationRequestSpec is the spec for elasticsearch version
+// PgBouncerModificationRequestSpec is the spec for PgBouncerModificationRequest
 message PgBouncerModificationRequestSpec {
+  // Specifies the Elasticsearch reference
+  optional k8s.io.api.core.v1.LocalObjectReference databaseRef = 1;
+
+  // Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
+  optional string type = 2;
+
+  // Specifies the field information that needed to be upgraded
+  optional UpgradeSpec upgrade = 3;
 }
 
-// PgBouncerModificationRequestStatus is the status for elasticsearch version
+// PgBouncerModificationRequestStatus is the status for PgBouncerModificationRequest
 message PgBouncerModificationRequestStatus {
+  optional string phase = 1;
+
+  // observedGeneration is the most recent generation observed for this resource. It corresponds to the
+  // resource's generation, which is updated on mutation by the API Server.
+  // +optional
+  optional int64 observedGeneration = 2;
+
   // Conditions applied to the request, such as approval or denial.
   // +optional
-  repeated PgBouncerModificationRequestCondition conditions = 1;
+  repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=postgresmodificationrequests,singular=postgresmodificationrequest,shortName=pgmodreq,categories={datastore,kubedb,appscode}
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 message PostgresModificationRequest {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
   optional PostgresModificationRequestSpec spec = 2;
 
   optional PostgresModificationRequestStatus status = 3;
-}
-
-message PostgresModificationRequestCondition {
-  // request approval state, currently Approved or Denied.
-  optional string type = 1;
-
-  // brief reason for the request state
-  // +optional
-  optional string reason = 2;
-
-  // human readable message with details about the request state
-  // +optional
-  optional string message = 3;
-
-  // timestamp for the last update to this condition
-  // +optional
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 4;
 }
 
 // PostgresModificationRequestList is a list of PostgresModificationRequests
@@ -440,42 +441,44 @@ message PostgresModificationRequestList {
   repeated PostgresModificationRequest items = 2;
 }
 
-// PostgresModificationRequestSpec is the spec for elasticsearch version
+// PostgresModificationRequestSpec is the spec for PostgresModificationRequest
 message PostgresModificationRequestSpec {
+  // Specifies the Elasticsearch reference
+  optional k8s.io.api.core.v1.LocalObjectReference databaseRef = 1;
+
+  // Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
+  optional string type = 2;
+
+  // Specifies the field information that needed to be upgraded
+  optional UpgradeSpec upgrade = 3;
 }
 
-// PostgresModificationRequestStatus is the status for elasticsearch version
+// PostgresModificationRequestStatus is the status for PostgresModificationRequest
 message PostgresModificationRequestStatus {
+  optional string phase = 1;
+
+  // observedGeneration is the most recent generation observed for this resource. It corresponds to the
+  // resource's generation, which is updated on mutation by the API Server.
+  // +optional
+  optional int64 observedGeneration = 2;
+
   // Conditions applied to the request, such as approval or denial.
   // +optional
-  repeated PostgresModificationRequestCondition conditions = 1;
+  repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=proxysqlmodificationrequests,singular=proxysqlmodificationrequest,categories={datastore,kubedb,appscode}
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 message ProxySQLModificationRequest {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
   optional ProxySQLModificationRequestSpec spec = 2;
 
   optional ProxySQLModificationRequestStatus status = 3;
-}
-
-message ProxySQLModificationRequestCondition {
-  // request approval state, currently Approved or Denied.
-  optional string type = 1;
-
-  // brief reason for the request state
-  // +optional
-  optional string reason = 2;
-
-  // human readable message with details about the request state
-  // +optional
-  optional string message = 3;
-
-  // timestamp for the last update to this condition
-  // +optional
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 4;
 }
 
 // ProxySQLModificationRequestList is a list of ProxySQLModificationRequests
@@ -486,15 +489,30 @@ message ProxySQLModificationRequestList {
   repeated ProxySQLModificationRequest items = 2;
 }
 
-// ProxySQLModificationRequestSpec is the spec for elasticsearch version
+// ProxySQLModificationRequestSpec is the spec for ProxySQLModificationRequest
 message ProxySQLModificationRequestSpec {
+  // Specifies the Elasticsearch reference
+  optional k8s.io.api.core.v1.LocalObjectReference databaseRef = 1;
+
+  // Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
+  optional string type = 2;
+
+  // Specifies the field information that needed to be upgraded
+  optional UpgradeSpec upgrade = 3;
 }
 
-// ProxySQLModificationRequestStatus is the status for elasticsearch version
+// ProxySQLModificationRequestStatus is the status for ProxySQLModificationRequest
 message ProxySQLModificationRequestStatus {
+  optional string phase = 1;
+
+  // observedGeneration is the most recent generation observed for this resource. It corresponds to the
+  // resource's generation, which is updated on mutation by the API Server.
+  // +optional
+  optional int64 observedGeneration = 2;
+
   // Conditions applied to the request, such as approval or denial.
   // +optional
-  repeated ProxySQLModificationRequestCondition conditions = 1;
+  repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
 }
 
 // +kubebuilder:object:root=true
@@ -519,19 +537,19 @@ message RedisModificationRequestList {
   repeated RedisModificationRequest items = 2;
 }
 
-// RedisModificationRequestSpec is the spec for redis version
+// RedisModificationRequestSpec is the spec for RedisModificationRequest
 message RedisModificationRequestSpec {
   // Specifies the Elasticsearch reference
   optional k8s.io.api.core.v1.LocalObjectReference databaseRef = 1;
 
-  // Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.
+  // Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
   optional string type = 2;
 
-  // Specifies the field information that needed to be updated
-  optional UpdateSpec update = 3;
+  // Specifies the field information that needed to be upgraded
+  optional UpgradeSpec upgrade = 3;
 }
 
-// RedisModificationRequestStatus is the status for redis version
+// RedisModificationRequestStatus is the status for RedisModificationRequest
 message RedisModificationRequestStatus {
   optional string phase = 1;
 
@@ -545,25 +563,8 @@ message RedisModificationRequestStatus {
   repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
 }
 
-// ScaleSpec contains the scaling information of the Elasticsearch
-message ScaleSpec {
-  // Number of master nodes
-  optional int32 master = 1;
-
-  // Number of data nodes
-  optional int32 data = 2;
-
-  // Number of client nodes
-  optional int32 client = 3;
-}
-
-message UpdateSpec {
-  // Specifies the ElasticsearchVersion object name
+message UpgradeSpec {
+  // Specifies the MySQLVersion object name
   optional string targetVersion = 1;
-}
-
-message VerticalScale {
-  // Containers represents the containers specification for scaling the requested resources.
-  repeated ContainerResources containers = 1;
 }
 

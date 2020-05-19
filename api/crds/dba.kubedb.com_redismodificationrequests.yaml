@@ -48,7 +48,7 @@ spec:
         metadata:
           type: object
         spec:
-          description: RedisModificationRequestSpec is the spec for redis version
+          description: RedisModificationRequestSpec is the spec for RedisModificationRequest
           properties:
             databaseRef:
               description: Specifies the Elasticsearch reference
@@ -59,20 +59,21 @@ spec:
                   type: string
               type: object
             type:
-              description: Specifies the modification request type; ScaleUp, ScaleDown,
-                Upgrade etc.
+              description: 'Specifies the modification request type: Upgrade, HorizontalScaling,
+                VerticalScaling etc.'
               enum:
               - Upgrade
               - HorizontalScaling
               - VerticalScaling
               - VolumeExpansion
               - Restart
+              - RotateCertificates
               type: string
-            update:
-              description: Specifies the field information that needed to be updated
+            upgrade:
+              description: Specifies the field information that needed to be upgraded
               properties:
                 targetVersion:
-                  description: Specifies the ElasticsearchVersion object name
+                  description: Specifies the MySQLVersion object name
                   type: string
               type: object
           required:
@@ -80,7 +81,7 @@ spec:
           - type
           type: object
         status:
-          description: RedisModificationRequestStatus is the status for redis version
+          description: RedisModificationRequestStatus is the status for RedisModificationRequest
           properties:
             conditions:
               description: Conditions applied to the request, such as approval or

@@ -32,6 +32,7 @@ import (
 // FakePostgresModificationRequests implements PostgresModificationRequestInterface
 type FakePostgresModificationRequests struct {
 	Fake *FakeDbaV1alpha1
+	ns   string
 }
 
 var postgresmodificationrequestsResource = schema.GroupVersionResource{Group: "dba.kubedb.com", Version: "v1alpha1", Resource: "postgresmodificationrequests"}
@@ -41,7 +42,8 @@ var postgresmodificationrequestsKind = schema.GroupVersionKind{Group: "dba.kubed
 // Get takes name of the postgresModificationRequest, and returns the corresponding postgresModificationRequest object, and an error if there is any.
 func (c *FakePostgresModificationRequests) Get(name string, options v1.GetOptions) (result *v1alpha1.PostgresModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(postgresmodificationrequestsResource, name), &v1alpha1.PostgresModificationRequest{})
+		Invokes(testing.NewGetAction(postgresmodificationrequestsResource, c.ns, name), &v1alpha1.PostgresModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -51,7 +53,8 @@ func (c *FakePostgresModificationRequests) Get(name string, options v1.GetOption
 // List takes label and field selectors, and returns the list of PostgresModificationRequests that match those selectors.
 func (c *FakePostgresModificationRequests) List(opts v1.ListOptions) (result *v1alpha1.PostgresModificationRequestList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(postgresmodificationrequestsResource, postgresmodificationrequestsKind, opts), &v1alpha1.PostgresModificationRequestList{})
+		Invokes(testing.NewListAction(postgresmodificationrequestsResource, postgresmodificationrequestsKind, c.ns, opts), &v1alpha1.PostgresModificationRequestList{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -72,13 +75,15 @@ func (c *FakePostgresModificationRequests) List(opts v1.ListOptions) (result *v1
 // Watch returns a watch.Interface that watches the requested postgresModificationRequests.
 func (c *FakePostgresModificationRequests) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(postgresmodificationrequestsResource, opts))
+		InvokesWatch(testing.NewWatchAction(postgresmodificationrequestsResource, c.ns, opts))
+
 }
 
 // Create takes the representation of a postgresModificationRequest and creates it.  Returns the server's representation of the postgresModificationRequest, and an error, if there is any.
 func (c *FakePostgresModificationRequests) Create(postgresModificationRequest *v1alpha1.PostgresModificationRequest) (result *v1alpha1.PostgresModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(postgresmodificationrequestsResource, postgresModificationRequest), &v1alpha1.PostgresModificationRequest{})
+		Invokes(testing.NewCreateAction(postgresmodificationrequestsResource, c.ns, postgresModificationRequest), &v1alpha1.PostgresModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -88,7 +93,20 @@ func (c *FakePostgresModificationRequests) Create(postgresModificationRequest *v
 // Update takes the representation of a postgresModificationRequest and updates it. Returns the server's representation of the postgresModificationRequest, and an error, if there is any.
 func (c *FakePostgresModificationRequests) Update(postgresModificationRequest *v1alpha1.PostgresModificationRequest) (result *v1alpha1.PostgresModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(postgresmodificationrequestsResource, postgresModificationRequest), &v1alpha1.PostgresModificationRequest{})
+		Invokes(testing.NewUpdateAction(postgresmodificationrequestsResource, c.ns, postgresModificationRequest), &v1alpha1.PostgresModificationRequest{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.PostgresModificationRequest), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakePostgresModificationRequests) UpdateStatus(postgresModificationRequest *v1alpha1.PostgresModificationRequest) (*v1alpha1.PostgresModificationRequest, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(postgresmodificationrequestsResource, "status", c.ns, postgresModificationRequest), &v1alpha1.PostgresModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -98,13 +116,14 @@ func (c *FakePostgresModificationRequests) Update(postgresModificationRequest *v
 // Delete takes name of the postgresModificationRequest and deletes it. Returns an error if one occurs.
 func (c *FakePostgresModificationRequests) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(postgresmodificationrequestsResource, name), &v1alpha1.PostgresModificationRequest{})
+		Invokes(testing.NewDeleteAction(postgresmodificationrequestsResource, c.ns, name), &v1alpha1.PostgresModificationRequest{})
+
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakePostgresModificationRequests) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(postgresmodificationrequestsResource, listOptions)
+	action := testing.NewDeleteCollectionAction(postgresmodificationrequestsResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.PostgresModificationRequestList{})
 	return err
@@ -113,7 +132,8 @@ func (c *FakePostgresModificationRequests) DeleteCollection(options *v1.DeleteOp
 // Patch applies the patch and returns the patched postgresModificationRequest.
 func (c *FakePostgresModificationRequests) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.PostgresModificationRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(postgresmodificationrequestsResource, name, pt, data, subresources...), &v1alpha1.PostgresModificationRequest{})
+		Invokes(testing.NewPatchSubresourceAction(postgresmodificationrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.PostgresModificationRequest{})
+
 	if obj == nil {
 		return nil, err
 	}

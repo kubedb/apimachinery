@@ -30,8 +30,8 @@ import (
 type PgBouncerModificationRequestLister interface {
 	// List lists all PgBouncerModificationRequests in the indexer.
 	List(selector labels.Selector) (ret []*v1alpha1.PgBouncerModificationRequest, err error)
-	// Get retrieves the PgBouncerModificationRequest from the index for a given name.
-	Get(name string) (*v1alpha1.PgBouncerModificationRequest, error)
+	// PgBouncerModificationRequests returns an object that can list and get PgBouncerModificationRequests.
+	PgBouncerModificationRequests(namespace string) PgBouncerModificationRequestNamespaceLister
 	PgBouncerModificationRequestListerExpansion
 }
 
@@ -53,9 +53,38 @@ func (s *pgBouncerModificationRequestLister) List(selector labels.Selector) (ret
 	return ret, err
 }
 
-// Get retrieves the PgBouncerModificationRequest from the index for a given name.
-func (s *pgBouncerModificationRequestLister) Get(name string) (*v1alpha1.PgBouncerModificationRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
+// PgBouncerModificationRequests returns an object that can list and get PgBouncerModificationRequests.
+func (s *pgBouncerModificationRequestLister) PgBouncerModificationRequests(namespace string) PgBouncerModificationRequestNamespaceLister {
+	return pgBouncerModificationRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+}
+
+// PgBouncerModificationRequestNamespaceLister helps list and get PgBouncerModificationRequests.
+type PgBouncerModificationRequestNamespaceLister interface {
+	// List lists all PgBouncerModificationRequests in the indexer for a given namespace.
+	List(selector labels.Selector) (ret []*v1alpha1.PgBouncerModificationRequest, err error)
+	// Get retrieves the PgBouncerModificationRequest from the indexer for a given namespace and name.
+	Get(name string) (*v1alpha1.PgBouncerModificationRequest, error)
+	PgBouncerModificationRequestNamespaceListerExpansion
+}
+
+// pgBouncerModificationRequestNamespaceLister implements the PgBouncerModificationRequestNamespaceLister
+// interface.
+type pgBouncerModificationRequestNamespaceLister struct {
+	indexer   cache.Indexer
+	namespace string
+}
+
+// List lists all PgBouncerModificationRequests in the indexer for a given namespace.
+func (s pgBouncerModificationRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PgBouncerModificationRequest, err error) {
+	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
+		ret = append(ret, m.(*v1alpha1.PgBouncerModificationRequest))
+	})
+	return ret, err
+}
+
+// Get retrieves the PgBouncerModificationRequest from the indexer for a given namespace and name.
+func (s pgBouncerModificationRequestNamespaceLister) Get(name string) (*v1alpha1.PgBouncerModificationRequest, error) {
+	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
 	}
