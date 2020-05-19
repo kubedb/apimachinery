@@ -23,10 +23,10 @@ import (
 
 	cataloginstall "kubedb.dev/apimachinery/apis/catalog/install"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	dbainstall "kubedb.dev/apimachinery/apis/dba/install"
-	dbav1alpha1 "kubedb.dev/apimachinery/apis/dba/v1alpha1"
 	kubedbinstall "kubedb.dev/apimachinery/apis/kubedb/install"
 	kubedbv1alpha1 "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+	opsinstall "kubedb.dev/apimachinery/apis/ops/install"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	gort "github.com/appscode/go/runtime"
 	"github.com/go-openapi/spec"
@@ -45,7 +45,7 @@ func generateSwaggerJson() {
 
 	kubedbinstall.Install(Scheme)
 	cataloginstall.Install(Scheme)
-	dbainstall.Install(Scheme)
+	opsinstall.Install(Scheme)
 
 	apispec, err := openapi.RenderOpenAPISpec(openapi.Config{
 		Scheme: Scheme,
@@ -66,7 +66,7 @@ func generateSwaggerJson() {
 		OpenAPIDefinitions: []common.GetOpenAPIDefinitions{
 			kubedbv1alpha1.GetOpenAPIDefinitions,
 			catalogv1alpha1.GetOpenAPIDefinitions,
-			dbav1alpha1.GetOpenAPIDefinitions,
+			opsv1alpha1.GetOpenAPIDefinitions,
 		},
 		//nolint:govet
 		Resources: []openapi.TypeInfo{
@@ -82,15 +82,15 @@ func generateSwaggerJson() {
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralProxySQL, kubedbv1alpha1.ResourceKindProxySQL, true},
 			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralRedis, kubedbv1alpha1.ResourceKindRedis, true},
 
-			{dbav1alpha1.SchemeGroupVersion, dbav1alpha1.ResourcePluralElasticsearchModificationRequest, dbav1alpha1.ResourceKindElasticsearchModificationRequest, true},
-			{dbav1alpha1.SchemeGroupVersion, dbav1alpha1.ResourcePluralEtcdModificationRequest, dbav1alpha1.ResourceKindEtcdModificationRequest, true},
-			{dbav1alpha1.SchemeGroupVersion, dbav1alpha1.ResourcePluralMemcachedModificationRequest, dbav1alpha1.ResourceKindMemcachedModificationRequest, true},
-			{dbav1alpha1.SchemeGroupVersion, dbav1alpha1.ResourcePluralMongoDBModificationRequest, dbav1alpha1.ResourceKindMongoDBModificationRequest, true},
-			{dbav1alpha1.SchemeGroupVersion, dbav1alpha1.ResourcePluralMySQLModificationRequest, dbav1alpha1.ResourceKindMySQLModificationRequest, true},
-			{dbav1alpha1.SchemeGroupVersion, dbav1alpha1.ResourcePluralPerconaXtraDBModificationRequest, dbav1alpha1.ResourceKindPerconaXtraDBModificationRequest, true},
-			{dbav1alpha1.SchemeGroupVersion, dbav1alpha1.ResourcePluralPostgresModificationRequest, dbav1alpha1.ResourceKindPostgresModificationRequest, true},
-			{dbav1alpha1.SchemeGroupVersion, dbav1alpha1.ResourcePluralProxySQLModificationRequest, dbav1alpha1.ResourceKindProxySQLModificationRequest, true},
-			{dbav1alpha1.SchemeGroupVersion, dbav1alpha1.ResourcePluralRedisModificationRequest, dbav1alpha1.ResourceKindRedisModificationRequest, true},
+			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralElasticsearchOpsRequest, opsv1alpha1.ResourceKindElasticsearchOpsRequest, true},
+			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralEtcdOpsRequest, opsv1alpha1.ResourceKindEtcdOpsRequest, true},
+			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralMemcachedOpsRequest, opsv1alpha1.ResourceKindMemcachedOpsRequest, true},
+			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralMongoDBOpsRequest, opsv1alpha1.ResourceKindMongoDBOpsRequest, true},
+			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralMySQLOpsRequest, opsv1alpha1.ResourceKindMySQLOpsRequest, true},
+			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralPerconaXtraDBOpsRequest, opsv1alpha1.ResourceKindPerconaXtraDBOpsRequest, true},
+			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralPostgresOpsRequest, opsv1alpha1.ResourceKindPostgresOpsRequest, true},
+			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralProxySQLOpsRequest, opsv1alpha1.ResourceKindProxySQLOpsRequest, true},
+			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralRedisOpsRequest, opsv1alpha1.ResourceKindRedisOpsRequest, true},
 
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralElasticsearchVersion, catalogv1alpha1.ResourceKindElasticsearchVersion, false},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralEtcdVersion, catalogv1alpha1.ResourceKindEtcdVersion, false},

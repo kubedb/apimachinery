@@ -23,7 +23,7 @@ BIN      := apimachinery
 CRD_OPTIONS          ?= "crd:trivialVersions=true,preserveUnknownFields=false"
 # https://github.com/appscodelabs/gengo-builder
 CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.16
-API_GROUPS           ?= kubedb:v1alpha1 catalog:v1alpha1 config:v1alpha1 dba:v1alpha1
+API_GROUPS           ?= kubedb:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1
 
 # This version-strategy uses git tags to set the version string
 git_branch       := $(shell git rev-parse --abbrev-ref HEAD)
