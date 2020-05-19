@@ -42,32 +42,33 @@ type RedisModificationRequestInformer interface {
 type redisModificationRequestInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
+	namespace        string
 }
 
 // NewRedisModificationRequestInformer constructs a new informer for RedisModificationRequest type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewRedisModificationRequestInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredRedisModificationRequestInformer(client, resyncPeriod, indexers, nil)
+func NewRedisModificationRequestInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredRedisModificationRequestInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
 // NewFilteredRedisModificationRequestInformer constructs a new informer for RedisModificationRequest type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredRedisModificationRequestInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredRedisModificationRequestInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.DbaV1alpha1().RedisModificationRequests().List(options)
+				return client.DbaV1alpha1().RedisModificationRequests(namespace).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.DbaV1alpha1().RedisModificationRequests().Watch(options)
+				return client.DbaV1alpha1().RedisModificationRequests(namespace).Watch(options)
 			},
 		},
 		&dbav1alpha1.RedisModificationRequest{},
@@ -77,7 +78,7 @@ func NewFilteredRedisModificationRequestInformer(client versioned.Interface, res
 }
 
 func (f *redisModificationRequestInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredRedisModificationRequestInformer(client, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+	return NewFilteredRedisModificationRequestInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
 func (f *redisModificationRequestInformer) Informer() cache.SharedIndexInformer {

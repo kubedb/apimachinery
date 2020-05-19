@@ -30,8 +30,8 @@ import (
 type RedisModificationRequestLister interface {
 	// List lists all RedisModificationRequests in the indexer.
 	List(selector labels.Selector) (ret []*v1alpha1.RedisModificationRequest, err error)
-	// Get retrieves the RedisModificationRequest from the index for a given name.
-	Get(name string) (*v1alpha1.RedisModificationRequest, error)
+	// RedisModificationRequests returns an object that can list and get RedisModificationRequests.
+	RedisModificationRequests(namespace string) RedisModificationRequestNamespaceLister
 	RedisModificationRequestListerExpansion
 }
 
@@ -53,9 +53,38 @@ func (s *redisModificationRequestLister) List(selector labels.Selector) (ret []*
 	return ret, err
 }
 
-// Get retrieves the RedisModificationRequest from the index for a given name.
-func (s *redisModificationRequestLister) Get(name string) (*v1alpha1.RedisModificationRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
+// RedisModificationRequests returns an object that can list and get RedisModificationRequests.
+func (s *redisModificationRequestLister) RedisModificationRequests(namespace string) RedisModificationRequestNamespaceLister {
+	return redisModificationRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+}
+
+// RedisModificationRequestNamespaceLister helps list and get RedisModificationRequests.
+type RedisModificationRequestNamespaceLister interface {
+	// List lists all RedisModificationRequests in the indexer for a given namespace.
+	List(selector labels.Selector) (ret []*v1alpha1.RedisModificationRequest, err error)
+	// Get retrieves the RedisModificationRequest from the indexer for a given namespace and name.
+	Get(name string) (*v1alpha1.RedisModificationRequest, error)
+	RedisModificationRequestNamespaceListerExpansion
+}
+
+// redisModificationRequestNamespaceLister implements the RedisModificationRequestNamespaceLister
+// interface.
+type redisModificationRequestNamespaceLister struct {
+	indexer   cache.Indexer
+	namespace string
+}
+
+// List lists all RedisModificationRequests in the indexer for a given namespace.
+func (s redisModificationRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.RedisModificationRequest, err error) {
+	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
+		ret = append(ret, m.(*v1alpha1.RedisModificationRequest))
+	})
+	return ret, err
+}
+
+// Get retrieves the RedisModificationRequest from the indexer for a given namespace and name.
+func (s redisModificationRequestNamespaceLister) Get(name string) (*v1alpha1.RedisModificationRequest, error) {
+	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
 	}

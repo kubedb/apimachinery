@@ -29079,30 +29079,6 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.dba.v1alpha1.RedisModificationRequestCondition": {
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "lastUpdateTime": {
-          "description": "timestamp for the last update to this condition",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "message": {
-          "description": "human readable message with details about the request state",
-          "type": "string"
-        },
-        "reason": {
-          "description": "brief reason for the request state",
-          "type": "string"
-        },
-        "type": {
-          "description": "request approval state, currently Approved or Denied.",
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.RedisModificationRequestList": {
       "description": "RedisModificationRequestList is a list of RedisModificationRequests",
       "type": "object",
@@ -29135,19 +29111,45 @@
       ]
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.RedisModificationRequestSpec": {
-      "description": "RedisModificationRequestSpec is the spec for elasticsearch version",
-      "type": "object"
+      "description": "RedisModificationRequestSpec is the spec for redis version",
+      "type": "object",
+      "required": [
+        "databaseRef",
+        "type"
+      ],
+      "properties": {
+        "databaseRef": {
+          "description": "Specifies the Elasticsearch reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "type": {
+          "description": "Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.",
+          "type": "string"
+        },
+        "update": {
+          "description": "Specifies the field information that needed to be updated",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.UpdateSpec"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.dba.v1alpha1.RedisModificationRequestStatus": {
-      "description": "RedisModificationRequestStatus is the status for elasticsearch version",
+      "description": "RedisModificationRequestStatus is the status for redis version",
       "type": "object",
       "properties": {
         "conditions": {
           "description": "Conditions applied to the request, such as approval or denial.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.RedisModificationRequestCondition"
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "observedGeneration": {
+          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "phase": {
+          "type": "string"
         }
       }
     },
