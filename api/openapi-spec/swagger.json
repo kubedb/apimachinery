@@ -26950,14 +26950,14 @@
       "type": "object",
       "properties": {
         "groupReplication": {
-          "description": "list of all rejected version for groupReplication modification request",
+          "description": "List of all rejected version for groupReplication modification request",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "standAlone": {
-          "description": "list of all rejected version for standAlone modification request",
+        "standalone": {
+          "description": "List of all rejected version for standalone modification request",
           "type": "array",
           "items": {
             "type": "string"
@@ -27542,15 +27542,15 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLModificationRequestUpgradeConstraints": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLUpgradeConstraints": {
       "type": "object",
       "properties": {
         "blacklist": {
-          "description": "list of all rejected version for modification request",
+          "description": "List of all rejected version for modification request",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Blacklist"
         },
         "whitelist": {
-          "description": "list of all accepted version for modification request",
+          "description": "List of all accepted version for modification request",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Whitelist"
         }
       }
@@ -27716,7 +27716,7 @@
         },
         "upgradeConstraints": {
           "description": "upgrade constraints",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLModificationRequestUpgradeConstraints"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLUpgradeConstraints"
         },
         "version": {
           "description": "Version",
@@ -28274,18 +28274,35 @@
       "type": "object",
       "properties": {
         "groupReplication": {
-          "description": "list of all accepted version for groupReplication modification request. empty indicates all accepted",
+          "description": "List of all accepted version for groupReplication modification request. empty indicates all accepted",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "standAlone": {
-          "description": "list of all accepted version for standAlone modification request. empty indicates all accepted",
+        "standalone": {
+          "description": "List of all accepted version for standalone modification request. empty indicates all accepted",
           "type": "array",
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.dba.v1alpha1.ContainerResources": {
+      "description": "Resources requested by a single application container",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.",
+          "type": "string"
+        },
+        "resources": {
+          "description": "Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       }
     },
@@ -29295,7 +29312,7 @@
           "description": "Containers represents the containers specification for scaling the requested resources.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/io.k8s.api.core.v1.Container"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.dba.v1alpha1.ContainerResources"
           }
         }
       }

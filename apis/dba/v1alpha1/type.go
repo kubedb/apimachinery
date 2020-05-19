@@ -16,6 +16,10 @@ limitations under the License.
 
 package v1alpha1
 
+import (
+	core "k8s.io/api/core/v1"
+)
+
 type RequestConditionType string
 
 // These are the possible conditions for a certificate request.
@@ -83,4 +87,17 @@ const (
 type UpdateSpec struct {
 	// Specifies the ElasticsearchVersion object name
 	TargetVersion string `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+}
+
+// Resources requested by a single application container
+type ContainerResources struct {
+	// Name of the container specified as a DNS_LABEL.
+	// Each container in a pod must have a unique name (DNS_LABEL).
+	// Cannot be updated.
+	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
+	// Compute Resources required by this container.
+	// Cannot be updated.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+	// +optional
+	Resources core.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,2,opt,name=resources"`
 }

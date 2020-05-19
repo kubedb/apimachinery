@@ -108,32 +108,32 @@ spec:
               description: upgrade constraints
               properties:
                 blacklist:
-                  description: list of all rejected version for modification request
+                  description: List of all rejected version for modification request
                   properties:
                     groupReplication:
-                      description: list of all rejected version for groupReplication
+                      description: List of all rejected version for groupReplication
                         modification request
                       items:
                         type: string
                       type: array
-                    standAlone:
-                      description: list of all rejected version for standAlone modification
+                    standalone:
+                      description: List of all rejected version for standalone modification
                         request
                       items:
                         type: string
                       type: array
                   type: object
                 whitelist:
-                  description: list of all accepted version for modification request
+                  description: List of all accepted version for modification request
                   properties:
                     groupReplication:
-                      description: list of all accepted version for groupReplication
+                      description: List of all accepted version for groupReplication
                         modification request. empty indicates all accepted
                       items:
                         type: string
                       type: array
-                    standAlone:
-                      description: list of all accepted version for standAlone modification
+                    standalone:
+                      description: List of all accepted version for standalone modification
                         request. empty indicates all accepted
                       items:
                         type: string

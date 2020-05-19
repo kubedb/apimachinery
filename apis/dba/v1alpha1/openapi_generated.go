@@ -368,6 +368,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                        schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
+		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ContainerResources":                        schema_apimachinery_apis_dba_v1alpha1_ContainerResources(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequest":          schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequest(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestList":      schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestList(ref),
 		"kubedb.dev/apimachinery/apis/dba/v1alpha1.ElasticsearchModificationRequestSpec":      schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequestSpec(ref),
@@ -17525,6 +17526,35 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 	}
 }
 
+func schema_apimachinery_apis_dba_v1alpha1_ContainerResources(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Resources requested by a single application container",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements"},
+	}
+}
+
 func schema_apimachinery_apis_dba_v1alpha1_ElasticsearchModificationRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19373,7 +19403,7 @@ func schema_apimachinery_apis_dba_v1alpha1_VerticalScale(ref common.ReferenceCal
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/api/core/v1.Container"),
+										Ref: ref("kubedb.dev/apimachinery/apis/dba/v1alpha1.ContainerResources"),
 									},
 								},
 							},
@@ -19383,6 +19413,6 @@ func schema_apimachinery_apis_dba_v1alpha1_VerticalScale(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Container"},
+			"kubedb.dev/apimachinery/apis/dba/v1alpha1.ContainerResources"},
 	}
 }

@@ -29,10 +29,10 @@ import "k8s.io/apimachinery/pkg/runtime/schema/generated.proto";
 option go_package = "v1alpha1";
 
 message Blacklist {
-  // list of all rejected version for standAlone modification request
-  repeated string standAlone = 1;
+  // List of all rejected version for standalone modification request
+  repeated string standalone = 1;
 
-  // list of all rejected version for groupReplication modification request
+  // List of all rejected version for groupReplication modification request
   repeated string groupReplication = 2;
 }
 
@@ -290,11 +290,11 @@ message MongoDBVersionTools {
   optional string image = 1;
 }
 
-message MySQLModificationRequestUpgradeConstraints {
-  // list of all accepted version for modification request
+message MySQLUpgradeConstraints {
+  // List of all accepted version for modification request
   optional Whitelist whitelist = 1;
 
-  // list of all rejected version for modification request
+  // List of all rejected version for modification request
   optional Blacklist blacklist = 2;
 }
 
@@ -371,7 +371,7 @@ message MySQLVersionSpec {
   optional MySQLVersionPodSecurityPolicy podSecurityPolicies = 8;
 
   // upgrade constraints
-  optional MySQLModificationRequestUpgradeConstraints upgradeConstraints = 9;
+  optional MySQLUpgradeConstraints upgradeConstraints = 9;
 }
 
 // MySQLVersionTools is the image for the postgres tools
@@ -659,10 +659,10 @@ message RedisVersionSpec {
 }
 
 message Whitelist {
-  // list of all accepted version for standAlone modification request. empty indicates all accepted
-  repeated string standAlone = 1;
+  // List of all accepted version for standalone modification request. empty indicates all accepted
+  repeated string standalone = 1;
 
-  // list of all accepted version for groupReplication modification request. empty indicates all accepted
+  // List of all accepted version for groupReplication modification request. empty indicates all accepted
   repeated string groupReplication = 2;
 }
 

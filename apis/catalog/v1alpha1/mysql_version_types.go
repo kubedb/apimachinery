@@ -65,7 +65,7 @@ type MySQLVersionSpec struct {
 	// PSP names
 	PodSecurityPolicies MySQLVersionPodSecurityPolicy `json:"podSecurityPolicies" protobuf:"bytes,8,opt,name=podSecurityPolicies"`
 	//upgrade constraints
-	UpgradeConstraints MySQLModificationRequestUpgradeConstraints `json:"upgradeConstraints" protobuf:"bytes,9,opt,name=upgradeConstraints"`
+	UpgradeConstraints MySQLUpgradeConstraints `json:"upgradeConstraints" protobuf:"bytes,9,opt,name=upgradeConstraints"`
 }
 
 // MySQLVersionDatabase is the MySQL Database image
@@ -98,23 +98,24 @@ type MySQLVersionPodSecurityPolicy struct {
 	DatabasePolicyName string `json:"databasePolicyName" protobuf:"bytes,1,opt,name=databasePolicyName"`
 }
 
-type MySQLModificationRequestUpgradeConstraints struct {
-	// list of all accepted version for modification request
+type MySQLUpgradeConstraints struct {
+	// List of all accepted version for modification request
 	Whitelist Whitelist `json:"whitelist,omitempty" protobuf:"bytes,1,opt,name=whitelist"`
-	// list of all rejected version for modification request
+	// List of all rejected version for modification request
 	Blacklist Blacklist `json:"blacklist,omitempty" protobuf:"bytes,2,opt,name=blacklist"`
 }
 
 type Whitelist struct {
-	// list of all accepted version for standAlone modification request. empty indicates all accepted
-	StandAlone []string `json:"standAlone,omitempty" protobuf:"bytes,1,opt,name=standAlone"`
-	// list of all accepted version for groupReplication modification request. empty indicates all accepted
+	// List of all accepted version for standalone modification request. empty indicates all accepted
+	Standalone []string `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
+	// List of all accepted version for groupReplication modification request. empty indicates all accepted
 	GroupReplication []string `json:"groupReplication,omitempty" protobuf:"bytes,2,opt,name=groupReplication"`
 }
+
 type Blacklist struct {
-	// list of all rejected version for standAlone modification request
-	StandAlone []string `json:"standAlone,omitempty" protobuf:"bytes,1,opt,name=standAlone"`
-	// list of all rejected version for groupReplication modification request
+	// List of all rejected version for standalone modification request
+	Standalone []string `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
+	// List of all rejected version for groupReplication modification request
 	GroupReplication []string `json:"groupReplication,omitempty" protobuf:"bytes,2,opt,name=groupReplication"`
 }
 

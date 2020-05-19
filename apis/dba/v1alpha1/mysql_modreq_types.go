@@ -17,7 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1 "k8s.io/api/core/v1"
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
@@ -51,7 +51,7 @@ type MySQLModificationRequest struct {
 // MySQLModificationRequestSpec is the spec for MySQLModificationRequest version
 type MySQLModificationRequestSpec struct {
 	// Specifies the database reference
-	DatabaseRef v1.LocalObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
+	DatabaseRef core.LocalObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
 	// Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.
 	Type ModificationRequestType `json:"type" protobuf:"bytes,2,opt,name=type"`
 	// Specifies the field information that needed to be updated
@@ -84,7 +84,7 @@ type HorizontalScale struct {
 
 type VerticalScale struct {
 	// Containers represents the containers specification for scaling the requested resources.
-	Containers []v1.Container `json:"containers,omitempty" protobuf:"bytes,1,opt,name=containers"`
+	Containers []ContainerResources `json:"containers,omitempty" protobuf:"bytes,1,opt,name=containers"`
 }
 
 // MySQLModificationRequestStatus is the status for MySQLModificationRequest object
