@@ -50,12 +50,52 @@ type MongoDBModificationRequest struct {
 
 // MongoDBModificationRequestSpec is the spec for MongoDBModificationRequest
 type MongoDBModificationRequestSpec struct {
-	// Specifies the Elasticsearch reference
+	// Specifies the MongoDB reference
 	DatabaseRef v1.LocalObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
 	// Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.
 	Type ModificationRequestType `json:"type" protobuf:"bytes,2,opt,name=type,casttype=ModificationRequestType"`
 	// Specifies the field information that needed to be upgraded
 	Upgrade *UpgradeSpec `json:"upgrade,omitempty" protobuf:"bytes,3,opt,name=upgrade"`
+	// Specifies the field information that needed to be scaled
+	Scale *ScalingSpec `json:"scale,omitempty" protobuf:"bytes,4,opt,name=scale"`
+}
+
+// MongoDBShardNode is the spec for mongodb Shard
+type MongoDBShardNode struct {
+	Shards   int32 `json:"shards,omitempty" protobuf:"bytes,1,opt,name=shards"`
+	Replicas int32 `json:"replicas,omitempty" protobuf:"bytes,2,opt,name=replicas"`
+}
+
+// ConfigNode is the spec for mongodb ConfigServer
+type ConfigNode struct {
+	Replicas int32 `json:"replicas,omitempty" protobuf:"bytes,1,opt,name=replicas"`
+}
+
+// MongosNode is the spec for mongodb Mongos
+type MongosNode struct {
+	Replicas int32 `json:"replicas,omitempty" protobuf:"bytes,1,opt,name=replicas"`
+}
+
+// HorizontalScaling is the spec for mongodb horizontal scaling
+type HorizontalScaling struct {
+	Shard        *MongoDBShardNode `json:"shard,omitempty" protobuf:"bytes,1,opt,name=shard"`
+	ConfigServer *ConfigNode       `json:"configServer,omitempty" protobuf:"bytes,2,opt,name=configServer"`
+	Mongos       *MongosNode       `json:"mongos,omitempty" protobuf:"bytes,3,opt,name=mongos"`
+	Replicas     *int32            `json:"replicas,omitempty" protobuf:"bytes,4,opt,name=replicas"`
+}
+
+// VerticalScaling is the spec for mongodb vertical scaling
+type VerticalScaling struct {
+	Containers   []ContainerResources `json:"containers,omitempty" protobuf:"bytes,1,rep,name=containers"`
+	Mongos       []ContainerResources `json:"mongos,omitempty" protobuf:"bytes,2,rep,name=mongos"`
+	ConfigServer []ContainerResources `json:"configServer,omitempty" protobuf:"bytes,3,rep,name=configServer"`
+	Shard        []ContainerResources `json:"shard,omitempty" protobuf:"bytes,4,rep,name=shard"`
+}
+
+// ScalingSpec is the spec for mongodb scaling
+type ScalingSpec struct {
+	Horizontal *HorizontalScaling `json:"horizontal,omitempty" protobuf:"bytes,1,opt,name=horizontal"`
+	Vertical   *VerticalScaling   `json:"vertical,omitempty" protobuf:"bytes,2,opt,name=vertical"`
 }
 
 // MongoDBModificationRequestStatus is the status for MongoDBModificationRequest
