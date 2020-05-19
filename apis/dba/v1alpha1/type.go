@@ -85,7 +85,7 @@ const (
 )
 
 type UpgradeSpec struct {
-	// Specifies the MySQLVersion object name
+	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
 }
 

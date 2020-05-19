@@ -71,7 +71,7 @@ spec:
               description: Specifies the field information that needed to be upgraded
               properties:
                 targetVersion:
-                  description: Specifies the MySQLVersion object name
+                  description: Specifies the target version name from catalog
                   type: string
               type: object
           required:

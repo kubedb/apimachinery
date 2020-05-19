@@ -29303,7 +29303,7 @@
       "type": "object",
       "properties": {
         "targetVersion": {
-          "description": "Specifies the MySQLVersion object name",
+          "description": "Specifies the target version name from catalog",
           "type": "string"
         }
       }

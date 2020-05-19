@@ -564,7 +564,7 @@ message RedisModificationRequestStatus {
 }
 
 message UpgradeSpec {
-  // Specifies the MySQLVersion object name
+  // Specifies the target version name from catalog
   optional string targetVersion = 1;
 }
 

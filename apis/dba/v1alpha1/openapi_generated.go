@@ -19328,7 +19328,7 @@ func schema_apimachinery_apis_dba_v1alpha1_UpgradeSpec(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"targetVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the MySQLVersion object name",
+							Description: "Specifies the target version name from catalog",
 							Type:        []string{"string"},
 							Format:      "",
 						},
