@@ -26950,14 +26950,14 @@
       "type": "object",
       "properties": {
         "groupReplication": {
-          "description": "List of all rejected version for groupReplication modification request",
+          "description": "List of all rejected version for groupReplication ops request",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "standalone": {
-          "description": "List of all rejected version for standalone modification request",
+          "description": "List of all rejected version for standalone ops request",
           "type": "array",
           "items": {
             "type": "string"
@@ -27546,11 +27546,11 @@
       "type": "object",
       "properties": {
         "blacklist": {
-          "description": "List of all rejected version for modification request",
+          "description": "List of all rejected version for ops request",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Blacklist"
         },
         "whitelist": {
-          "description": "List of all accepted version for modification request",
+          "description": "List of all accepted version for ops request",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Whitelist"
         }
       }
@@ -28274,14 +28274,14 @@
       "type": "object",
       "properties": {
         "groupReplication": {
-          "description": "List of all accepted version for groupReplication modification request. empty indicates all accepted",
+          "description": "List of all accepted version for groupReplication ops request. empty indicates all accepted",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "standalone": {
-          "description": "List of all accepted version for standalone modification request. empty indicates all accepted",
+          "description": "List of all accepted version for standalone ops request. empty indicates all accepted",
           "type": "array",
           "items": {
             "type": "string"
@@ -30647,7 +30647,7 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchHorizontalScalingSpec"
         },
         "type": {
-          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
@@ -30673,7 +30673,7 @@
           "format": "int64"
         },
         "phase": {
-          "description": "Specifies the current phase of the modification request",
+          "description": "Specifies the current phase of the ops request",
           "type": "string"
         }
       }
@@ -30751,7 +30751,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "type": {
-          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
@@ -30854,7 +30854,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "type": {
-          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
@@ -30980,7 +30980,7 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBHorizontalScalingSpec"
         },
         "type": {
-          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
@@ -31165,7 +31165,7 @@
           "format": "int32"
         },
         "type": {
-          "description": "Specifies the modification request type; ScaleUp, ScaleDown, Upgrade etc.",
+          "description": "Specifies the ops request type; ScaleUp, ScaleDown, Upgrade etc.",
           "type": "string"
         },
         "upgrade": {
@@ -31284,7 +31284,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "type": {
-          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
@@ -31387,7 +31387,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "type": {
-          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
@@ -31490,7 +31490,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "type": {
-          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
@@ -31593,7 +31593,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "type": {
-          "description": "Specifies the modification request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+          "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
