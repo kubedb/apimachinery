@@ -17,6 +17,7 @@ limitations under the License.
 package util
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -32,29 +33,32 @@ import (
 	kutil "kmodules.xyz/client-go"
 )
 
-func CreateOrPatchEtcdOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.EtcdOpsRequest) *api.EtcdOpsRequest) (*api.EtcdOpsRequest, kutil.VerbType, error) {
-	cur, err := c.EtcdOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+func CreateOrPatchEtcdOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.EtcdOpsRequest) *api.EtcdOpsRequest, opts metav1.PatchOptions) (*api.EtcdOpsRequest, kutil.VerbType, error) {
+	cur, err := c.EtcdOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
 		glog.V(3).Infof("Creating EtcdOpsRequest %s/%s.", meta.Namespace, meta.Name)
-		out, err := c.EtcdOpsRequests(meta.Namespace).Create(transform(&api.EtcdOpsRequest{
+		out, err := c.EtcdOpsRequests(meta.Namespace).Create(ctx, transform(&api.EtcdOpsRequest{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "EtcdOpsRequest",
 				APIVersion: api.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: meta,
-		}))
+		}), metav1.CreateOptions{
+			DryRun:       opts.DryRun,
+			FieldManager: opts.FieldManager,
+		})
 		return out, kutil.VerbCreated, err
 	} else if err != nil {
 		return nil, kutil.VerbUnchanged, err
 	}
-	return PatchEtcdOpsRequest(c, cur, transform)
+	return PatchEtcdOpsRequest(ctx, c, cur, transform, opts)
 }
 
-func PatchEtcdOpsRequest(c cs.OpsV1alpha1Interface, cur *api.EtcdOpsRequest, transform func(*api.EtcdOpsRequest) *api.EtcdOpsRequest) (*api.EtcdOpsRequest, kutil.VerbType, error) {
-	return PatchEtcdOpsRequestObject(c, cur, transform(cur.DeepCopy()))
+func PatchEtcdOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, cur *api.EtcdOpsRequest, transform func(*api.EtcdOpsRequest) *api.EtcdOpsRequest, opts metav1.PatchOptions) (*api.EtcdOpsRequest, kutil.VerbType, error) {
+	return PatchEtcdOpsRequestObject(ctx, c, cur, transform(cur.DeepCopy()), opts)
 }
 
-func PatchEtcdOpsRequestObject(c cs.OpsV1alpha1Interface, cur, mod *api.EtcdOpsRequest) (*api.EtcdOpsRequest, kutil.VerbType, error) {
+func PatchEtcdOpsRequestObject(ctx context.Context, c cs.OpsV1alpha1Interface, cur, mod *api.EtcdOpsRequest, opts metav1.PatchOptions) (*api.EtcdOpsRequest, kutil.VerbType, error) {
 	curJson, err := json.Marshal(cur)
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
@@ -73,19 +77,19 @@ func PatchEtcdOpsRequestObject(c cs.OpsV1alpha1Interface, cur, mod *api.EtcdOpsR
 		return cur, kutil.VerbUnchanged, nil
 	}
 	glog.V(3).Infof("Patching EtcdOpsRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
-	out, err := c.EtcdOpsRequests(cur.Namespace).Patch(cur.Name, types.MergePatchType, patch)
+	out, err := c.EtcdOpsRequests(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
 
-func TryUpdateEtcdOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.EtcdOpsRequest) *api.EtcdOpsRequest) (result *api.EtcdOpsRequest, err error) {
+func TryUpdateEtcdOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.EtcdOpsRequest) *api.EtcdOpsRequest, opts metav1.UpdateOptions) (result *api.EtcdOpsRequest, err error) {
 	attempt := 0
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
-		cur, e2 := c.EtcdOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+		cur, e2 := c.EtcdOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
 			return false, e2
 		} else if e2 == nil {
-			result, e2 = c.EtcdOpsRequests(cur.Namespace).Update(transform(cur.DeepCopy()))
+			result, e2 = c.EtcdOpsRequests(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
 		glog.Errorf("Attempt %d failed to update EtcdOpsRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
@@ -99,9 +103,11 @@ func TryUpdateEtcdOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, 
 }
 
 func UpdateEtcdOpsRequestStatus(
+	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
 	transform func(*api.EtcdOpsRequestStatus) *api.EtcdOpsRequestStatus,
+	opts metav1.UpdateOptions,
 ) (result *api.EtcdOpsRequest, err error) {
 	apply := func(x *api.EtcdOpsRequest) *api.EtcdOpsRequest {
 		return &api.EtcdOpsRequest{
@@ -113,16 +119,16 @@ func UpdateEtcdOpsRequestStatus(
 	}
 
 	attempt := 0
-	cur, err := c.EtcdOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+	cur, err := c.EtcdOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
 		var e2 error
-		result, e2 = c.EtcdOpsRequests(meta.Namespace).UpdateStatus(apply(cur))
+		result, e2 = c.EtcdOpsRequests(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
 		if kerr.IsConflict(e2) {
-			latest, e3 := c.EtcdOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+			latest, e3 := c.EtcdOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 			switch {
 			case e3 == nil:
 				cur = latest

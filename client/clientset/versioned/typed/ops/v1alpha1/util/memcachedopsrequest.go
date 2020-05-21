@@ -17,6 +17,7 @@ limitations under the License.
 package util
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -32,29 +33,32 @@ import (
 	kutil "kmodules.xyz/client-go"
 )
 
-func CreateOrPatchMemcachedOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.MemcachedOpsRequest) *api.MemcachedOpsRequest) (*api.MemcachedOpsRequest, kutil.VerbType, error) {
-	cur, err := c.MemcachedOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+func CreateOrPatchMemcachedOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.MemcachedOpsRequest) *api.MemcachedOpsRequest, opts metav1.PatchOptions) (*api.MemcachedOpsRequest, kutil.VerbType, error) {
+	cur, err := c.MemcachedOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
 		glog.V(3).Infof("Creating MemcachedOpsRequest %s/%s.", meta.Namespace, meta.Name)
-		out, err := c.MemcachedOpsRequests(meta.Namespace).Create(transform(&api.MemcachedOpsRequest{
+		out, err := c.MemcachedOpsRequests(meta.Namespace).Create(ctx, transform(&api.MemcachedOpsRequest{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "MemcachedOpsRequest",
 				APIVersion: api.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: meta,
-		}))
+		}), metav1.CreateOptions{
+			DryRun:       opts.DryRun,
+			FieldManager: opts.FieldManager,
+		})
 		return out, kutil.VerbCreated, err
 	} else if err != nil {
 		return nil, kutil.VerbUnchanged, err
 	}
-	return PatchMemcachedOpsRequest(c, cur, transform)
+	return PatchMemcachedOpsRequest(ctx, c, cur, transform, opts)
 }
 
-func PatchMemcachedOpsRequest(c cs.OpsV1alpha1Interface, cur *api.MemcachedOpsRequest, transform func(*api.MemcachedOpsRequest) *api.MemcachedOpsRequest) (*api.MemcachedOpsRequest, kutil.VerbType, error) {
-	return PatchMemcachedOpsRequestObject(c, cur, transform(cur.DeepCopy()))
+func PatchMemcachedOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, cur *api.MemcachedOpsRequest, transform func(*api.MemcachedOpsRequest) *api.MemcachedOpsRequest, opts metav1.PatchOptions) (*api.MemcachedOpsRequest, kutil.VerbType, error) {
+	return PatchMemcachedOpsRequestObject(ctx, c, cur, transform(cur.DeepCopy()), opts)
 }
 
-func PatchMemcachedOpsRequestObject(c cs.OpsV1alpha1Interface, cur, mod *api.MemcachedOpsRequest) (*api.MemcachedOpsRequest, kutil.VerbType, error) {
+func PatchMemcachedOpsRequestObject(ctx context.Context, c cs.OpsV1alpha1Interface, cur, mod *api.MemcachedOpsRequest, opts metav1.PatchOptions) (*api.MemcachedOpsRequest, kutil.VerbType, error) {
 	curJson, err := json.Marshal(cur)
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
@@ -73,19 +77,19 @@ func PatchMemcachedOpsRequestObject(c cs.OpsV1alpha1Interface, cur, mod *api.Mem
 		return cur, kutil.VerbUnchanged, nil
 	}
 	glog.V(3).Infof("Patching MemcachedOpsRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
-	out, err := c.MemcachedOpsRequests(cur.Namespace).Patch(cur.Name, types.MergePatchType, patch)
+	out, err := c.MemcachedOpsRequests(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
 
-func TryUpdateMemcachedOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.MemcachedOpsRequest) *api.MemcachedOpsRequest) (result *api.MemcachedOpsRequest, err error) {
+func TryUpdateMemcachedOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.MemcachedOpsRequest) *api.MemcachedOpsRequest, opts metav1.UpdateOptions) (result *api.MemcachedOpsRequest, err error) {
 	attempt := 0
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
-		cur, e2 := c.MemcachedOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+		cur, e2 := c.MemcachedOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
 			return false, e2
 		} else if e2 == nil {
-			result, e2 = c.MemcachedOpsRequests(cur.Namespace).Update(transform(cur.DeepCopy()))
+			result, e2 = c.MemcachedOpsRequests(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
 		glog.Errorf("Attempt %d failed to update MemcachedOpsRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
@@ -99,9 +103,11 @@ func TryUpdateMemcachedOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectM
 }
 
 func UpdateMemcachedOpsRequestStatus(
+	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
 	transform func(*api.MemcachedOpsRequestStatus) *api.MemcachedOpsRequestStatus,
+	opts metav1.UpdateOptions,
 ) (result *api.MemcachedOpsRequest, err error) {
 	apply := func(x *api.MemcachedOpsRequest) *api.MemcachedOpsRequest {
 		return &api.MemcachedOpsRequest{
@@ -113,16 +119,16 @@ func UpdateMemcachedOpsRequestStatus(
 	}
 
 	attempt := 0
-	cur, err := c.MemcachedOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+	cur, err := c.MemcachedOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
 		var e2 error
-		result, e2 = c.MemcachedOpsRequests(meta.Namespace).UpdateStatus(apply(cur))
+		result, e2 = c.MemcachedOpsRequests(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
 		if kerr.IsConflict(e2) {
-			latest, e3 := c.MemcachedOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+			latest, e3 := c.MemcachedOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 			switch {
 			case e3 == nil:
 				cur = latest

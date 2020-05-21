@@ -17,6 +17,7 @@ limitations under the License.
 package util
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -32,29 +33,32 @@ import (
 	kutil "kmodules.xyz/client-go"
 )
 
-func CreateOrPatchMongoDBOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.MongoDBOpsRequest) *api.MongoDBOpsRequest) (*api.MongoDBOpsRequest, kutil.VerbType, error) {
-	cur, err := c.MongoDBOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+func CreateOrPatchMongoDBOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.MongoDBOpsRequest) *api.MongoDBOpsRequest, opts metav1.PatchOptions) (*api.MongoDBOpsRequest, kutil.VerbType, error) {
+	cur, err := c.MongoDBOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
 		glog.V(3).Infof("Creating MongoDBOpsRequest %s/%s.", meta.Namespace, meta.Name)
-		out, err := c.MongoDBOpsRequests(meta.Namespace).Create(transform(&api.MongoDBOpsRequest{
+		out, err := c.MongoDBOpsRequests(meta.Namespace).Create(ctx, transform(&api.MongoDBOpsRequest{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "MongoDBOpsRequest",
 				APIVersion: api.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: meta,
-		}))
+		}), metav1.CreateOptions{
+			DryRun:       opts.DryRun,
+			FieldManager: opts.FieldManager,
+		})
 		return out, kutil.VerbCreated, err
 	} else if err != nil {
 		return nil, kutil.VerbUnchanged, err
 	}
-	return PatchMongoDBOpsRequest(c, cur, transform)
+	return PatchMongoDBOpsRequest(ctx, c, cur, transform, opts)
 }
 
-func PatchMongoDBOpsRequest(c cs.OpsV1alpha1Interface, cur *api.MongoDBOpsRequest, transform func(*api.MongoDBOpsRequest) *api.MongoDBOpsRequest) (*api.MongoDBOpsRequest, kutil.VerbType, error) {
-	return PatchMongoDBOpsRequestObject(c, cur, transform(cur.DeepCopy()))
+func PatchMongoDBOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, cur *api.MongoDBOpsRequest, transform func(*api.MongoDBOpsRequest) *api.MongoDBOpsRequest, opts metav1.PatchOptions) (*api.MongoDBOpsRequest, kutil.VerbType, error) {
+	return PatchMongoDBOpsRequestObject(ctx, c, cur, transform(cur.DeepCopy()), opts)
 }
 
-func PatchMongoDBOpsRequestObject(c cs.OpsV1alpha1Interface, cur, mod *api.MongoDBOpsRequest) (*api.MongoDBOpsRequest, kutil.VerbType, error) {
+func PatchMongoDBOpsRequestObject(ctx context.Context, c cs.OpsV1alpha1Interface, cur, mod *api.MongoDBOpsRequest, opts metav1.PatchOptions) (*api.MongoDBOpsRequest, kutil.VerbType, error) {
 	curJson, err := json.Marshal(cur)
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
@@ -73,20 +77,19 @@ func PatchMongoDBOpsRequestObject(c cs.OpsV1alpha1Interface, cur, mod *api.Mongo
 		return cur, kutil.VerbUnchanged, nil
 	}
 	glog.V(3).Infof("Patching MongoDBOpsRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
-	out, err := c.MongoDBOpsRequests(cur.Namespace).Patch(cur.Name, types.MergePatchType, patch)
+	out, err := c.MongoDBOpsRequests(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
 
-func TryUpdateMongoDBOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.MongoDBOpsRequest) *api.MongoDBOpsRequest) (result *api.MongoDBOpsRequest, err error) {
+func TryUpdateMongoDBOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.MongoDBOpsRequest) *api.MongoDBOpsRequest, opts metav1.UpdateOptions) (result *api.MongoDBOpsRequest, err error) {
 	attempt := 0
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
-		cur, e2 := c.MongoDBOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+		cur, e2 := c.MongoDBOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
 			return false, e2
 		} else if e2 == nil {
-
-			result, e2 = c.MongoDBOpsRequests(meta.Namespace).Update(transform(cur.DeepCopy()))
+			result, e2 = c.MongoDBOpsRequests(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
 		glog.Errorf("Attempt %d failed to update MongoDBOpsRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
@@ -100,9 +103,11 @@ func TryUpdateMongoDBOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMet
 }
 
 func UpdateMongoDBOpsRequestStatus(
+	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
 	transform func(*api.MongoDBOpsRequestStatus) *api.MongoDBOpsRequestStatus,
+	opts metav1.UpdateOptions,
 ) (result *api.MongoDBOpsRequest, err error) {
 	apply := func(x *api.MongoDBOpsRequest) *api.MongoDBOpsRequest {
 		return &api.MongoDBOpsRequest{
@@ -114,16 +119,16 @@ func UpdateMongoDBOpsRequestStatus(
 	}
 
 	attempt := 0
-	cur, err := c.MongoDBOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+	cur, err := c.MongoDBOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
 		var e2 error
-		result, e2 = c.MongoDBOpsRequests(meta.Namespace).UpdateStatus(apply(cur))
+		result, e2 = c.MongoDBOpsRequests(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
 		if kerr.IsConflict(e2) {
-			latest, e3 := c.MongoDBOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+			latest, e3 := c.MongoDBOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 			switch {
 			case e3 == nil:
 				cur = latest

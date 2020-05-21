@@ -17,6 +17,7 @@ limitations under the License.
 package util
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -32,29 +33,32 @@ import (
 	kutil "kmodules.xyz/client-go"
 )
 
-func CreateOrPatchElasticsearchOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.ElasticsearchOpsRequest) *api.ElasticsearchOpsRequest) (*api.ElasticsearchOpsRequest, kutil.VerbType, error) {
-	cur, err := c.ElasticsearchOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+func CreateOrPatchElasticsearchOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.ElasticsearchOpsRequest) *api.ElasticsearchOpsRequest, opts metav1.PatchOptions) (*api.ElasticsearchOpsRequest, kutil.VerbType, error) {
+	cur, err := c.ElasticsearchOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
 		glog.V(3).Infof("Creating ElasticsearchOpsRequest %s/%s.", meta.Namespace, meta.Name)
-		out, err := c.ElasticsearchOpsRequests(meta.Namespace).Create(transform(&api.ElasticsearchOpsRequest{
+		out, err := c.ElasticsearchOpsRequests(meta.Namespace).Create(ctx, transform(&api.ElasticsearchOpsRequest{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "ElasticsearchOpsRequest",
 				APIVersion: api.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: meta,
-		}))
+		}), metav1.CreateOptions{
+			DryRun:       opts.DryRun,
+			FieldManager: opts.FieldManager,
+		})
 		return out, kutil.VerbCreated, err
 	} else if err != nil {
 		return nil, kutil.VerbUnchanged, err
 	}
-	return PatchElasticsearchOpsRequest(c, cur, transform)
+	return PatchElasticsearchOpsRequest(ctx, c, cur, transform, opts)
 }
 
-func PatchElasticsearchOpsRequest(c cs.OpsV1alpha1Interface, cur *api.ElasticsearchOpsRequest, transform func(*api.ElasticsearchOpsRequest) *api.ElasticsearchOpsRequest) (*api.ElasticsearchOpsRequest, kutil.VerbType, error) {
-	return PatchElasticsearchOpsRequestObject(c, cur, transform(cur.DeepCopy()))
+func PatchElasticsearchOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, cur *api.ElasticsearchOpsRequest, transform func(*api.ElasticsearchOpsRequest) *api.ElasticsearchOpsRequest, opts metav1.PatchOptions) (*api.ElasticsearchOpsRequest, kutil.VerbType, error) {
+	return PatchElasticsearchOpsRequestObject(ctx, c, cur, transform(cur.DeepCopy()), opts)
 }
 
-func PatchElasticsearchOpsRequestObject(c cs.OpsV1alpha1Interface, cur, mod *api.ElasticsearchOpsRequest) (*api.ElasticsearchOpsRequest, kutil.VerbType, error) {
+func PatchElasticsearchOpsRequestObject(ctx context.Context, c cs.OpsV1alpha1Interface, cur, mod *api.ElasticsearchOpsRequest, opts metav1.PatchOptions) (*api.ElasticsearchOpsRequest, kutil.VerbType, error) {
 	curJson, err := json.Marshal(cur)
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
@@ -73,19 +77,19 @@ func PatchElasticsearchOpsRequestObject(c cs.OpsV1alpha1Interface, cur, mod *api
 		return cur, kutil.VerbUnchanged, nil
 	}
 	glog.V(3).Infof("Patching ElasticsearchOpsRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
-	out, err := c.ElasticsearchOpsRequests(cur.Namespace).Patch(cur.Name, types.MergePatchType, patch)
+	out, err := c.ElasticsearchOpsRequests(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
 
-func TryUpdateElasticsearchOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.ElasticsearchOpsRequest) *api.ElasticsearchOpsRequest) (result *api.ElasticsearchOpsRequest, err error) {
+func TryUpdateElasticsearchOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.ElasticsearchOpsRequest) *api.ElasticsearchOpsRequest, opts metav1.UpdateOptions) (result *api.ElasticsearchOpsRequest, err error) {
 	attempt := 0
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
-		cur, e2 := c.ElasticsearchOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+		cur, e2 := c.ElasticsearchOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
 			return false, e2
 		} else if e2 == nil {
-			result, e2 = c.ElasticsearchOpsRequests(cur.Namespace).Update(transform(cur.DeepCopy()))
+			result, e2 = c.ElasticsearchOpsRequests(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
 		glog.Errorf("Attempt %d failed to update ElasticsearchOpsRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
@@ -99,9 +103,11 @@ func TryUpdateElasticsearchOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.Obj
 }
 
 func UpdateElasticsearchOpsRequestStatus(
+	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
 	transform func(*api.ElasticsearchOpsRequestStatus) *api.ElasticsearchOpsRequestStatus,
+	opts metav1.UpdateOptions,
 ) (result *api.ElasticsearchOpsRequest, err error) {
 	apply := func(x *api.ElasticsearchOpsRequest) *api.ElasticsearchOpsRequest {
 		return &api.ElasticsearchOpsRequest{
@@ -113,16 +119,16 @@ func UpdateElasticsearchOpsRequestStatus(
 	}
 
 	attempt := 0
-	cur, err := c.ElasticsearchOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+	cur, err := c.ElasticsearchOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
 		var e2 error
-		result, e2 = c.ElasticsearchOpsRequests(meta.Namespace).UpdateStatus(apply(cur))
+		result, e2 = c.ElasticsearchOpsRequests(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
 		if kerr.IsConflict(e2) {
-			latest, e3 := c.ElasticsearchOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+			latest, e3 := c.ElasticsearchOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 			switch {
 			case e3 == nil:
 				cur = latest
