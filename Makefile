@@ -22,7 +22,7 @@ BIN      := apimachinery
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS          ?= "crd:trivialVersions=true,preserveUnknownFields=false"
 # https://github.com/appscodelabs/gengo-builder
-CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.16
+CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.18
 API_GROUPS           ?= kubedb:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1
 
 # This version-strategy uses git tags to set the version string
@@ -61,7 +61,7 @@ ARCH := $(if $(GOARCH),$(GOARCH),$(shell go env GOARCH))
 BASEIMAGE_PROD   ?= gcr.io/distroless/static
 BASEIMAGE_DBG    ?= debian:stretch
 
-GO_VERSION       ?= 1.14.3
+GO_VERSION       ?= 1.14
 BUILD_IMAGE      ?= appscode/golang-dev:$(GO_VERSION)
 
 OUTBIN = bin/$(OS)_$(ARCH)/$(BIN)
