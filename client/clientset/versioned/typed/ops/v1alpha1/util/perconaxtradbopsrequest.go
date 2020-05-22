@@ -17,6 +17,7 @@ limitations under the License.
 package util
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -32,29 +33,32 @@ import (
 	kutil "kmodules.xyz/client-go"
 )
 
-func CreateOrPatchPerconaXtraDBOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.PerconaXtraDBOpsRequest) *api.PerconaXtraDBOpsRequest) (*api.PerconaXtraDBOpsRequest, kutil.VerbType, error) {
-	cur, err := c.PerconaXtraDBOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+func CreateOrPatchPerconaXtraDBOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.PerconaXtraDBOpsRequest) *api.PerconaXtraDBOpsRequest, opts metav1.PatchOptions) (*api.PerconaXtraDBOpsRequest, kutil.VerbType, error) {
+	cur, err := c.PerconaXtraDBOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
 		glog.V(3).Infof("Creating PerconaXtraDBOpsRequest %s/%s.", meta.Namespace, meta.Name)
-		out, err := c.PerconaXtraDBOpsRequests(meta.Namespace).Create(transform(&api.PerconaXtraDBOpsRequest{
+		out, err := c.PerconaXtraDBOpsRequests(meta.Namespace).Create(ctx, transform(&api.PerconaXtraDBOpsRequest{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "PerconaXtraDBOpsRequest",
 				APIVersion: api.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: meta,
-		}))
+		}), metav1.CreateOptions{
+			DryRun:       opts.DryRun,
+			FieldManager: opts.FieldManager,
+		})
 		return out, kutil.VerbCreated, err
 	} else if err != nil {
 		return nil, kutil.VerbUnchanged, err
 	}
-	return PatchPerconaXtraDBOpsRequest(c, cur, transform)
+	return PatchPerconaXtraDBOpsRequest(ctx, c, cur, transform, opts)
 }
 
-func PatchPerconaXtraDBOpsRequest(c cs.OpsV1alpha1Interface, cur *api.PerconaXtraDBOpsRequest, transform func(*api.PerconaXtraDBOpsRequest) *api.PerconaXtraDBOpsRequest) (*api.PerconaXtraDBOpsRequest, kutil.VerbType, error) {
-	return PatchPerconaXtraDBOpsRequestObject(c, cur, transform(cur.DeepCopy()))
+func PatchPerconaXtraDBOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, cur *api.PerconaXtraDBOpsRequest, transform func(*api.PerconaXtraDBOpsRequest) *api.PerconaXtraDBOpsRequest, opts metav1.PatchOptions) (*api.PerconaXtraDBOpsRequest, kutil.VerbType, error) {
+	return PatchPerconaXtraDBOpsRequestObject(ctx, c, cur, transform(cur.DeepCopy()), opts)
 }
 
-func PatchPerconaXtraDBOpsRequestObject(c cs.OpsV1alpha1Interface, cur, mod *api.PerconaXtraDBOpsRequest) (*api.PerconaXtraDBOpsRequest, kutil.VerbType, error) {
+func PatchPerconaXtraDBOpsRequestObject(ctx context.Context, c cs.OpsV1alpha1Interface, cur, mod *api.PerconaXtraDBOpsRequest, opts metav1.PatchOptions) (*api.PerconaXtraDBOpsRequest, kutil.VerbType, error) {
 	curJson, err := json.Marshal(cur)
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
@@ -73,19 +77,19 @@ func PatchPerconaXtraDBOpsRequestObject(c cs.OpsV1alpha1Interface, cur, mod *api
 		return cur, kutil.VerbUnchanged, nil
 	}
 	glog.V(3).Infof("Patching PerconaXtraDBOpsRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
-	out, err := c.PerconaXtraDBOpsRequests(cur.Namespace).Patch(cur.Name, types.MergePatchType, patch)
+	out, err := c.PerconaXtraDBOpsRequests(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
 
-func TryUpdatePerconaXtraDBOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.PerconaXtraDBOpsRequest) *api.PerconaXtraDBOpsRequest) (result *api.PerconaXtraDBOpsRequest, err error) {
+func TryUpdatePerconaXtraDBOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.PerconaXtraDBOpsRequest) *api.PerconaXtraDBOpsRequest, opts metav1.UpdateOptions) (result *api.PerconaXtraDBOpsRequest, err error) {
 	attempt := 0
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
-		cur, e2 := c.PerconaXtraDBOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+		cur, e2 := c.PerconaXtraDBOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
 			return false, e2
 		} else if e2 == nil {
-			result, e2 = c.PerconaXtraDBOpsRequests(cur.Namespace).Update(transform(cur.DeepCopy()))
+			result, e2 = c.PerconaXtraDBOpsRequests(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
 		glog.Errorf("Attempt %d failed to update PerconaXtraDBOpsRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
@@ -99,9 +103,11 @@ func TryUpdatePerconaXtraDBOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.Obj
 }
 
 func UpdatePerconaXtraDBOpsRequestStatus(
+	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
 	transform func(*api.PerconaXtraDBOpsRequestStatus) *api.PerconaXtraDBOpsRequestStatus,
+	opts metav1.UpdateOptions,
 ) (result *api.PerconaXtraDBOpsRequest, err error) {
 	apply := func(x *api.PerconaXtraDBOpsRequest) *api.PerconaXtraDBOpsRequest {
 		return &api.PerconaXtraDBOpsRequest{
@@ -113,16 +119,16 @@ func UpdatePerconaXtraDBOpsRequestStatus(
 	}
 
 	attempt := 0
-	cur, err := c.PerconaXtraDBOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+	cur, err := c.PerconaXtraDBOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
 		var e2 error
-		result, e2 = c.PerconaXtraDBOpsRequests(meta.Namespace).UpdateStatus(apply(cur))
+		result, e2 = c.PerconaXtraDBOpsRequests(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
 		if kerr.IsConflict(e2) {
-			latest, e3 := c.PerconaXtraDBOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+			latest, e3 := c.PerconaXtraDBOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 			switch {
 			case e3 == nil:
 				cur = latest

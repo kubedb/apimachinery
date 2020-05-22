@@ -17,6 +17,7 @@ limitations under the License.
 package util
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -32,29 +33,32 @@ import (
 	kutil "kmodules.xyz/client-go"
 )
 
-func CreateOrPatchProxySQLOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.ProxySQLOpsRequest) *api.ProxySQLOpsRequest) (*api.ProxySQLOpsRequest, kutil.VerbType, error) {
-	cur, err := c.ProxySQLOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+func CreateOrPatchProxySQLOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.ProxySQLOpsRequest) *api.ProxySQLOpsRequest, opts metav1.PatchOptions) (*api.ProxySQLOpsRequest, kutil.VerbType, error) {
+	cur, err := c.ProxySQLOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
 		glog.V(3).Infof("Creating ProxySQLOpsRequest %s/%s.", meta.Namespace, meta.Name)
-		out, err := c.ProxySQLOpsRequests(meta.Namespace).Create(transform(&api.ProxySQLOpsRequest{
+		out, err := c.ProxySQLOpsRequests(meta.Namespace).Create(ctx, transform(&api.ProxySQLOpsRequest{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "ProxySQLOpsRequest",
 				APIVersion: api.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: meta,
-		}))
+		}), metav1.CreateOptions{
+			DryRun:       opts.DryRun,
+			FieldManager: opts.FieldManager,
+		})
 		return out, kutil.VerbCreated, err
 	} else if err != nil {
 		return nil, kutil.VerbUnchanged, err
 	}
-	return PatchProxySQLOpsRequest(c, cur, transform)
+	return PatchProxySQLOpsRequest(ctx, c, cur, transform, opts)
 }
 
-func PatchProxySQLOpsRequest(c cs.OpsV1alpha1Interface, cur *api.ProxySQLOpsRequest, transform func(*api.ProxySQLOpsRequest) *api.ProxySQLOpsRequest) (*api.ProxySQLOpsRequest, kutil.VerbType, error) {
-	return PatchProxySQLOpsRequestObject(c, cur, transform(cur.DeepCopy()))
+func PatchProxySQLOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, cur *api.ProxySQLOpsRequest, transform func(*api.ProxySQLOpsRequest) *api.ProxySQLOpsRequest, opts metav1.PatchOptions) (*api.ProxySQLOpsRequest, kutil.VerbType, error) {
+	return PatchProxySQLOpsRequestObject(ctx, c, cur, transform(cur.DeepCopy()), opts)
 }
 
-func PatchProxySQLOpsRequestObject(c cs.OpsV1alpha1Interface, cur, mod *api.ProxySQLOpsRequest) (*api.ProxySQLOpsRequest, kutil.VerbType, error) {
+func PatchProxySQLOpsRequestObject(ctx context.Context, c cs.OpsV1alpha1Interface, cur, mod *api.ProxySQLOpsRequest, opts metav1.PatchOptions) (*api.ProxySQLOpsRequest, kutil.VerbType, error) {
 	curJson, err := json.Marshal(cur)
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
@@ -73,19 +77,19 @@ func PatchProxySQLOpsRequestObject(c cs.OpsV1alpha1Interface, cur, mod *api.Prox
 		return cur, kutil.VerbUnchanged, nil
 	}
 	glog.V(3).Infof("Patching ProxySQLOpsRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
-	out, err := c.ProxySQLOpsRequests(cur.Namespace).Patch(cur.Name, types.MergePatchType, patch)
+	out, err := c.ProxySQLOpsRequests(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
 
-func TryUpdateProxySQLOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.ProxySQLOpsRequest) *api.ProxySQLOpsRequest) (result *api.ProxySQLOpsRequest, err error) {
+func TryUpdateProxySQLOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.ProxySQLOpsRequest) *api.ProxySQLOpsRequest, opts metav1.UpdateOptions) (result *api.ProxySQLOpsRequest, err error) {
 	attempt := 0
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
-		cur, e2 := c.ProxySQLOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+		cur, e2 := c.ProxySQLOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
 			return false, e2
 		} else if e2 == nil {
-			result, e2 = c.ProxySQLOpsRequests(cur.Namespace).Update(transform(cur.DeepCopy()))
+			result, e2 = c.ProxySQLOpsRequests(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
 		glog.Errorf("Attempt %d failed to update ProxySQLOpsRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
@@ -99,9 +103,11 @@ func TryUpdateProxySQLOpsRequest(c cs.OpsV1alpha1Interface, meta metav1.ObjectMe
 }
 
 func UpdateProxySQLOpsRequestStatus(
+	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
 	transform func(*api.ProxySQLOpsRequestStatus) *api.ProxySQLOpsRequestStatus,
+	opts metav1.UpdateOptions,
 ) (result *api.ProxySQLOpsRequest, err error) {
 	apply := func(x *api.ProxySQLOpsRequest) *api.ProxySQLOpsRequest {
 		return &api.ProxySQLOpsRequest{
@@ -113,16 +119,16 @@ func UpdateProxySQLOpsRequestStatus(
 	}
 
 	attempt := 0
-	cur, err := c.ProxySQLOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+	cur, err := c.ProxySQLOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
 		var e2 error
-		result, e2 = c.ProxySQLOpsRequests(meta.Namespace).UpdateStatus(apply(cur))
+		result, e2 = c.ProxySQLOpsRequests(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
 		if kerr.IsConflict(e2) {
-			latest, e3 := c.ProxySQLOpsRequests(meta.Namespace).Get(meta.Name, metav1.GetOptions{})
+			latest, e3 := c.ProxySQLOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 			switch {
 			case e3 == nil:
 				cur = latest
