@@ -31033,28 +31033,19 @@
       "type": "object",
       "properties": {
         "configServer": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
-          }
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
-        "containers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
-          }
+        "exporter": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "mongos": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
-          }
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "shard": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
-          }
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "standalone": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       }
     },

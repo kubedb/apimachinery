@@ -18356,59 +18356,36 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBVerticalScalingSpec(ref common
 				Description: "MongoDBVerticalScalingSpec is the spec for mongodb vertical scaling",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"containers": {
+					"standalone": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources"),
-									},
-								},
-							},
+							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
 					},
 					"mongos": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources"),
-									},
-								},
-							},
+							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
 					},
 					"configServer": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources"),
-									},
-								},
-							},
+							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
 					},
 					"shard": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources"),
-									},
-								},
-							},
+							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"exporter": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources"},
+			"k8s.io/api/core/v1.ResourceRequirements"},
 	}
 }
 
