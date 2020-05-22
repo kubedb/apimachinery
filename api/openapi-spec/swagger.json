@@ -30532,23 +30532,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources": {
-      "description": "Resources requested by a single application container",
-      "type": "object",
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "description": "Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.",
-          "type": "string"
-        },
-        "resources": {
-          "description": "Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchHorizontalScalingSpec": {
       "description": "ElasticsearchHorizontalScalingSpec contains the horizontal scaling information of an Elasticsearch cluster",
       "type": "object",
@@ -31193,12 +31176,11 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVerticalScalingSpec": {
       "type": "object",
       "properties": {
-        "containers": {
-          "description": "Containers represents the containers specification for scaling the requested resources.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
-          }
+        "exporter": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "mysql": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       }
     },
