@@ -369,7 +369,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                 schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                         schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ConfigNode":                         schema_apimachinery_apis_ops_v1alpha1_ConfigNode(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources":                 schema_apimachinery_apis_ops_v1alpha1_ContainerResources(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec": schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchOpsRequest":            schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchOpsRequestList":        schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestList(ref),
@@ -17542,35 +17541,6 @@ func schema_apimachinery_apis_ops_v1alpha1_ConfigNode(ref common.ReferenceCallba
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_ContainerResources(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Resources requested by a single application container",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"resources": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/",
-							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
-						},
-					},
-				},
-				Required: []string{"name"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceRequirements"},
-	}
-}
-
 func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18625,24 +18595,21 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLVerticalScalingSpec(ref common.R
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"containers": {
+					"mysql": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Containers represents the containers specification for scaling the requested resources.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources"),
-									},
-								},
-							},
+							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"exporter": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources"},
+			"k8s.io/api/core/v1.ResourceRequirements"},
 	}
 }
 
