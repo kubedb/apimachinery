@@ -28,13 +28,62 @@ import (
 
 func TestPruneTypes(t *testing.T) {
 	Install(clientsetscheme.Scheme)
-	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.ElasticsearchOpsRequest{}.CustomResourceDefinition(), fuzzer.Funcs)
-	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.EtcdOpsRequest{}.CustomResourceDefinition(), fuzzer.Funcs)
-	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.MemcachedOpsRequest{}.CustomResourceDefinition(), fuzzer.Funcs)
-	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.MongoDBOpsRequest{}.CustomResourceDefinition(), fuzzer.Funcs)
-	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.MySQLOpsRequest{}.CustomResourceDefinition(), fuzzer.Funcs)
-	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.PerconaXtraDBOpsRequest{}.CustomResourceDefinition(), fuzzer.Funcs)
-	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.PostgresOpsRequest{}.CustomResourceDefinition(), fuzzer.Funcs)
-	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.ProxySQLOpsRequest{}.CustomResourceDefinition(), fuzzer.Funcs)
-	crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, v1alpha1.RedisOpsRequest{}.CustomResourceDefinition(), fuzzer.Funcs)
+
+	// CRD v1
+	if crd := (v1alpha1.ElasticsearchOpsRequest{}).CustomResourceDefinition(); crd.V1 != nil {
+		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.EtcdOpsRequest{}).CustomResourceDefinition(); crd.V1 != nil {
+		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.MemcachedOpsRequest{}).CustomResourceDefinition(); crd.V1 != nil {
+		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.MongoDBOpsRequest{}).CustomResourceDefinition(); crd.V1 != nil {
+		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.MySQLOpsRequest{}).CustomResourceDefinition(); crd.V1 != nil {
+		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.PerconaXtraDBOpsRequest{}).CustomResourceDefinition(); crd.V1 != nil {
+		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.PostgresOpsRequest{}).CustomResourceDefinition(); crd.V1 != nil {
+		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.ProxySQLOpsRequest{}).CustomResourceDefinition(); crd.V1 != nil {
+		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.RedisOpsRequest{}).CustomResourceDefinition(); crd.V1 != nil {
+		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+	}
+
+	// CRD v1beta1
+	if crd := (v1alpha1.ElasticsearchOpsRequest{}).CustomResourceDefinition(); crd.V1beta1 != nil {
+		crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, crd.V1beta1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.EtcdOpsRequest{}).CustomResourceDefinition(); crd.V1beta1 != nil {
+		crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, crd.V1beta1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.MemcachedOpsRequest{}).CustomResourceDefinition(); crd.V1beta1 != nil {
+		crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, crd.V1beta1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.MongoDBOpsRequest{}).CustomResourceDefinition(); crd.V1beta1 != nil {
+		crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, crd.V1beta1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.MySQLOpsRequest{}).CustomResourceDefinition(); crd.V1beta1 != nil {
+		crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, crd.V1beta1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.PerconaXtraDBOpsRequest{}).CustomResourceDefinition(); crd.V1beta1 != nil {
+		crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, crd.V1beta1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.PostgresOpsRequest{}).CustomResourceDefinition(); crd.V1beta1 != nil {
+		crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, crd.V1beta1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.ProxySQLOpsRequest{}).CustomResourceDefinition(); crd.V1beta1 != nil {
+		crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, crd.V1beta1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.RedisOpsRequest{}).CustomResourceDefinition(); crd.V1beta1 != nil {
+		crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, crd.V1beta1, fuzzer.Funcs)
+	}
 }
