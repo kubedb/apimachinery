@@ -26950,14 +26950,14 @@
       "type": "object",
       "properties": {
         "groupReplication": {
-          "description": "List of all rejected version for groupReplication ops request",
+          "description": "List of all rejected versions for upgrade request of a GroupReplication cluster",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "standalone": {
-          "description": "List of all rejected version for standalone ops request",
+          "description": "List of all rejected versions for upgrade request of a Standalone server",
           "type": "array",
           "items": {
             "type": "string"
@@ -27546,11 +27546,11 @@
       "type": "object",
       "properties": {
         "blacklist": {
-          "description": "List of all rejected version for ops request",
+          "description": "List of all rejected versions for uprade request",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Blacklist"
         },
         "whitelist": {
-          "description": "List of all accepted version for ops request",
+          "description": "List of all accepted versions for uprade request",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Whitelist"
         }
       }
@@ -27606,7 +27606,7 @@
       }
     },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionInitContainer": {
-      "description": "MySQLVersionInitContainer is the Elasticsearch Container initializer",
+      "description": "MySQLVersionInitContainer is the MySQL Container initializer",
       "type": "object",
       "required": [
         "image"
@@ -27673,7 +27673,7 @@
       }
     },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionSpec": {
-      "description": "MySQLVersionSpec is the spec for postgres version",
+      "description": "MySQLVersionSpec is the spec for MySQL version",
       "type": "object",
       "required": [
         "version",
@@ -27725,7 +27725,7 @@
       }
     },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionTools": {
-      "description": "MySQLVersionTools is the image for the postgres tools",
+      "description": "MySQLVersionTools is the image for the MySQL tools",
       "type": "object",
       "required": [
         "image"
@@ -28274,14 +28274,14 @@
       "type": "object",
       "properties": {
         "groupReplication": {
-          "description": "List of all accepted version for groupReplication ops request. empty indicates all accepted",
+          "description": "List of all accepted versions for upgrade request of a GroupReplication cluster. empty indicates all accepted",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "standalone": {
-          "description": "List of all accepted version for standalone ops request. empty indicates all accepted",
+          "description": "List of all accepted versions for upgrade request of a Standalone server. empty indicates all accepted",
           "type": "array",
           "items": {
             "type": "string"

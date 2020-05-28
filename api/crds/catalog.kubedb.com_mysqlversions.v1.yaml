@@ -50,7 +50,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: MySQLVersionSpec is the spec for postgres version
+            description: MySQLVersionSpec is the spec for MySQL version
             properties:
               db:
                 description: Database Image
@@ -108,33 +108,33 @@ spec:
                 description: upgrade constraints
                 properties:
                   blacklist:
-                    description: List of all rejected version for ops request
+                    description: List of all rejected versions for uprade request
                     properties:
                       groupReplication:
-                        description: List of all rejected version for groupReplication
-                          ops request
+                        description: List of all rejected versions for upgrade request
+                          of a GroupReplication cluster
                         items:
                           type: string
                         type: array
                       standalone:
-                        description: List of all rejected version for standalone ops
-                          request
+                        description: List of all rejected versions for upgrade request
+                          of a Standalone server
                         items:
                           type: string
                         type: array
                     type: object
                   whitelist:
-                    description: List of all accepted version for ops request
+                    description: List of all accepted versions for uprade request
                     properties:
                       groupReplication:
-                        description: List of all accepted version for groupReplication
-                          ops request. empty indicates all accepted
+                        description: List of all accepted versions for upgrade request
+                          of a GroupReplication cluster. empty indicates all accepted
                         items:
                           type: string
                         type: array
                       standalone:
-                        description: List of all accepted version for standalone ops
-                          request. empty indicates all accepted
+                        description: List of all accepted versions for upgrade request
+                          of a Standalone server. empty indicates all accepted
                         items:
                           type: string
                         type: array
