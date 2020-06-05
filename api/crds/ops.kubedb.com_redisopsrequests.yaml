@@ -29,7 +29,7 @@ spec:
     - rdops
     singular: redisopsrequest
   preserveUnknownFields: false
-  scope: Cluster
+  scope: Namespaced
   subresources:
     status: {}
   validation:

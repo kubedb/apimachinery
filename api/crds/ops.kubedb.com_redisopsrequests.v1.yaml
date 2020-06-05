@@ -18,7 +18,7 @@ spec:
     shortNames:
     - rdops
     singular: redisopsrequest
-  scope: Cluster
+  scope: Namespaced
   versions:
   - additionalPrinterColumns:
     - jsonPath: .spec.type
