@@ -1,6 +1,7 @@
 version = 1
 
 [merge]
+method = "squash" # default: "merge"
 delete_branch_on_merge = true # default: false
 optimistic_updates = true # default: true
 prioritize_ready_to_merge = true # default: false
