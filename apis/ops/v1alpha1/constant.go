@@ -33,6 +33,7 @@ const (
 	ReasonResumedDatabase                   = "ResumedDatabase"
 	ReasonOpsRequestUpgradingVersion        = "OpsRequestUpgradingVersion"
 	ReasonOpsRequestUpgradedVersion         = "OpsRequestUpgradedVersion"
+	ReasonOpsRequestUpgradedVersionFailed   = "OpsRequestUpgradedVersionFailed"
 	ReasonOpsRequestScalingDatabase         = "OpsRequestScalingDatabase"
 	ReasonOpsRequestHorizontalScaling       = "OpsRequestHorizontalScaling"
 	ReasonOpsRequestHorizontalScalingFailed = "OpsRequestHorizontalScalingFailed"
