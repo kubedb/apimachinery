@@ -21,4 +21,23 @@ const (
 
 	LabelOpsRequestKind = GenericKey + "/kind"
 	LabelOpsRequestName = GenericKey + "/name"
+
+	// ======================= Condition Reasons ========================
+	ReasonOpsRequestReconcileFailed         = "OpsRequestReconcileFailed"
+	ReasonOpsRequestObserveGenerationFailed = "OpsRequestObserveGenerationFailed"
+	ReasonOpsRequestDenied                  = "OpsRequestOpsRequestDenied"
+	ReasonOpsRequestProgressing             = "OpsRequestOpsRequestProgressing"
+	ReasonPausingDatabase                   = "PausingDatabase"
+	ReasonPausedDatabase                    = "PausedDatabase"
+	ReasonResumingDatabase                  = "ResumingDatabase"
+	ReasonResumedDatabase                   = "ResumedDatabase"
+	ReasonOpsRequestUpgradingVersion        = "OpsRequestUpgradingVersion"
+	ReasonOpsRequestUpgradedVersion         = "OpsRequestUpgradedVersion"
+	ReasonOpsRequestUpgradedVersionFailed   = "OpsRequestUpgradedVersionFailed"
+	ReasonOpsRequestScalingDatabase         = "OpsRequestScalingDatabase"
+	ReasonOpsRequestHorizontalScaling       = "OpsRequestHorizontalScaling"
+	ReasonOpsRequestHorizontalScalingFailed = "OpsRequestHorizontalScalingFailed"
+	ReasonOpsRequestVerticalScaling         = "OpsRequestVerticalScaling"
+	ReasonOpsRequestVerticalScalingFailed   = "OpsRequestVerticalScalingFailed"
+	ReasonOpsRequestSuccessful              = "OpsRequestSuccessful"
 )
