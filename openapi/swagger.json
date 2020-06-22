@@ -31651,7 +31651,7 @@
       ],
       "properties": {
         "databaseRef": {
-          "description": "Specifies the Elasticsearch reference",
+          "description": "Specifies the Redis reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "type": {
@@ -31661,6 +31661,10 @@
         "upgrade": {
           "description": "Specifies the field information that needed to be upgraded",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.UpgradeSpec"
+        },
+        "verticalScaling": {
+          "description": "Specifies information necessary for vertical scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisVerticalScalingSpec"
         }
       }
     },
@@ -31682,6 +31686,18 @@
         },
         "phase": {
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisVerticalScalingSpec": {
+      "description": "RedisVerticalScalingSpec is the spec for Redis vertical scaling",
+      "type": "object",
+      "properties": {
+        "exporter": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "redis": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       }
     },
