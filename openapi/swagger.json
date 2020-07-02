@@ -29352,6 +29352,10 @@
           "description": "Storage spec to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
         },
+        "storageEngine": {
+          "description": "StorageEngine can be wiredTiger (default) or inMemory See available StorageEngine: https://docs.mongodb.com/manual/core/storage-engines/",
+          "type": "string"
+        },
         "storageType": {
           "description": "StorageType can be durable (default) or ephemeral",
           "type": "string"
