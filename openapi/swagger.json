@@ -26946,7 +26946,26 @@
     }
   },
   "definitions": {
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.Blacklist": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.Allowlist": {
+      "type": "object",
+      "properties": {
+        "groupReplication": {
+          "description": "List of all accepted versions for upgrade request of a GroupReplication cluster. empty indicates all accepted",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standalone": {
+          "description": "List of all accepted versions for upgrade request of a Standalone server. empty indicates all accepted",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.Denylist": {
       "type": "object",
       "properties": {
         "groupReplication": {
@@ -27545,13 +27564,13 @@
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLUpgradeConstraints": {
       "type": "object",
       "properties": {
-        "blacklist": {
-          "description": "List of all rejected versions for uprade request",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Blacklist"
-        },
-        "whitelist": {
+        "allowlist": {
           "description": "List of all accepted versions for uprade request",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Whitelist"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Allowlist"
+        },
+        "denylist": {
+          "description": "List of all rejected versions for uprade request",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Denylist"
         }
       }
     },
@@ -28267,25 +28286,6 @@
         "version": {
           "description": "Version",
           "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.Whitelist": {
-      "type": "object",
-      "properties": {
-        "groupReplication": {
-          "description": "List of all accepted versions for upgrade request of a GroupReplication cluster. empty indicates all accepted",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "standalone": {
-          "description": "List of all accepted versions for upgrade request of a Standalone server. empty indicates all accepted",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         }
       }
     },
