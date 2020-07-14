@@ -106,6 +106,14 @@ const (
 	RedisNodePort   = 6379
 	RedisGossipPort = 16379
 
+	RedisKeyFileSecretSuffix        = "key"
+	RedisExternalClientSecretSuffix = "client-cert"
+	RedisExporterClientSecretSuffix = "exporter-cert"
+	RedisServerSecretSuffix         = "server-cert"
+	RedisPEMSecretSuffix            = "pem"
+	RedisClientCertOrganization     = DatabaseNamePrefix + ":client"
+	RedisCertificateCN              = "root"
+
 	PgBouncerServingClientSuffix      = "serving-client-cert"
 	PgBouncerExporterClientCertSuffix = "exporter-cert"
 	PgBouncerServingServerSuffix      = "serving-server-cert"
