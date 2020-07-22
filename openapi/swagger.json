@@ -27101,7 +27101,6 @@
         "authPlugin",
         "db",
         "exporter",
-        "tools",
         "initContainer",
         "podSecurityPolicies"
       ],
