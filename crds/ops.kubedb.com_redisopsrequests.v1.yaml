@@ -57,6 +57,18 @@ spec:
                       TODO: Add other useful fields. apiVersion, kind, uid?'
                     type: string
                 type: object
+              horizontalScaling:
+                description: Specifies information necessary for horizontal scaling.
+                properties:
+                  master:
+                    description: Number of Masters in the cluster
+                    format: int32
+                    type: integer
+                  replicas:
+                    description: specifies the number of replica for the master
+                    format: int32
+                    type: integer
+                type: object
               type:
                 description: 'Specifies the ops request type: Upgrade, HorizontalScaling,
                   VerticalScaling etc.'

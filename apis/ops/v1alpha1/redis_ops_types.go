@@ -56,8 +56,17 @@ type RedisOpsRequestSpec struct {
 	Type OpsRequestType `json:"type" protobuf:"bytes,2,opt,name=type,casttype=OpsRequestType"`
 	// Specifies the field information that needed to be upgraded
 	Upgrade *UpgradeSpec `json:"upgrade,omitempty" protobuf:"bytes,3,opt,name=upgrade"`
+	// Specifies information necessary for horizontal scaling.
+	HorizontalScaling *RedisHorizontalScalingSpec `json:"horizontalScaling,omitempty" protobuf:"bytes,4,opt,name=horizontalScaling"`
 	// Specifies information necessary for vertical scaling
-	VerticalScaling *RedisVerticalScalingSpec `json:"verticalScaling,omitempty" protobuf:"bytes,4,opt,name=verticalScaling"`
+	VerticalScaling *RedisVerticalScalingSpec `json:"verticalScaling,omitempty" protobuf:"bytes,5,opt,name=verticalScaling"`
+}
+
+type RedisHorizontalScalingSpec struct {
+	// Number of Masters in the cluster
+	Master *int32 `json:"master,omitempty" protobuf:"varint,1,opt,name=master"`
+	// specifies the number of replica for the master
+	Replicas *int32 `json:"replicas,omitempty" protobuf:"varint,2,opt,name=replicas"`
 }
 
 // RedisVerticalScalingSpec is the spec for Redis vertical scaling

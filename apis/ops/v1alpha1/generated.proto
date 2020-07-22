@@ -562,6 +562,14 @@ message ProxySQLOpsRequestStatus {
   repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
 }
 
+message RedisHorizontalScalingSpec {
+  // Number of Masters in the cluster
+  optional int32 master = 1;
+
+  // specifies the number of replica for the master
+  optional int32 replicas = 2;
+}
+
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=redisopsrequests,singular=redisopsrequest,shortName=rdops,categories={datastore,kubedb,appscode}
 // +kubebuilder:subresource:status
@@ -595,8 +603,11 @@ message RedisOpsRequestSpec {
   // Specifies the field information that needed to be upgraded
   optional UpgradeSpec upgrade = 3;
 
+  // Specifies information necessary for horizontal scaling.
+  optional RedisHorizontalScalingSpec horizontalScaling = 4;
+
   // Specifies information necessary for vertical scaling
-  optional RedisVerticalScalingSpec verticalScaling = 4;
+  optional RedisVerticalScalingSpec verticalScaling = 5;
 }
 
 // RedisOpsRequestStatus is the status for RedisOpsRequest
