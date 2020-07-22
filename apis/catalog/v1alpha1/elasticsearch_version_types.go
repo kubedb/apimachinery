@@ -57,6 +57,7 @@ type ElasticsearchVersionSpec struct {
 	// Exporter Image
 	Exporter ElasticsearchVersionExporter `json:"exporter" protobuf:"bytes,4,opt,name=exporter"`
 	// Tools Image
+	// +optional
 	Tools ElasticsearchVersionTools `json:"tools,omitempty" protobuf:"bytes,5,opt,name=tools"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
