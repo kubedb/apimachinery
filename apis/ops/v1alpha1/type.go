@@ -36,6 +36,7 @@ const (
 	ScalingUp                 = "ScalingUp"
 	Successful                = "Successful"
 	Updating                  = "Updating"
+	Upgrading                 = "Upgrading"
 	UpgradeVersion            = "UpgradeVersion"
 	VerticalScalingDatabase   = "VerticalScaling"
 	VotingExclusionAdded      = "VotingExclusionAdded"
