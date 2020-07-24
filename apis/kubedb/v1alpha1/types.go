@@ -102,7 +102,7 @@ type TLSConfig struct {
 
 	// Certificate provides server certificate options used by PgBouncer pods.
 	// These options are passed to a cert-manager Certificate object.
-	// xref: https://github.com/jetstack/cert-manager/blob/v0.12.0/pkg/apis/certmanager/v1alpha2/types_certificate.go#L71-L146
+	// xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162
 	// +optional
 	Certificate *CertificateSpec `json:"certificate,omitempty" protobuf:"bytes,2,opt,name=certificate"`
 }
