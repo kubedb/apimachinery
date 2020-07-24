@@ -63,6 +63,11 @@ func (in *CertificateSpec) DeepCopyInto(out *CertificateSpec) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	if in.EmailSANs != nil {
+		in, out := &in.EmailSANs, &out.EmailSANs
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

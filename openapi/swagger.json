@@ -28302,6 +28302,13 @@
           "description": "Certificate default Duration",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
+        "emailSANs": {
+          "description": "EmailSANs is a list of email subjectAltNames to be set on the Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "ipAddresses": {
           "description": "IPAddresses is a list of IP addresses to be used on the Certificate",
           "type": "array",
