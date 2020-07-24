@@ -132,4 +132,8 @@ type CertificateSpec struct {
 	// Certificate.
 	// +optional
 	URISANs []string `json:"uriSANs,omitempty" protobuf:"bytes,6,rep,name=uriSANs"`
+
+	// EmailSANs is a list of email subjectAltNames to be set on the Certificate.
+	// +optional
+	EmailSANs []string `json:"emailSANs,omitempty" protobuf:"bytes,7,rep,name=emailSANs"`
 }

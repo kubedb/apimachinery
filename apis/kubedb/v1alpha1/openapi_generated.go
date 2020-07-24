@@ -17687,6 +17687,20 @@ func schema_apimachinery_apis_kubedb_v1alpha1_CertificateSpec(ref common.Referen
 							},
 						},
 					},
+					"emailSANs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EmailSANs is a list of email subjectAltNames to be set on the Certificate.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},

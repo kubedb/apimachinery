@@ -60,6 +60,10 @@ message CertificateSpec {
   // Certificate.
   // +optional
   repeated string uriSANs = 6;
+
+  // EmailSANs is a list of email subjectAltNames to be set on the Certificate.
+  // +optional
+  repeated string emailSANs = 7;
 }
 
 message ConnectionPoolConfig {
