@@ -31039,6 +31039,10 @@
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBVerticalScalingSpec"
+        },
+        "volumeExpansion": {
+          "description": "Specifies information necessary for volume expansion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBVolumeExpansionSpec"
         }
       }
     },
@@ -31095,6 +31099,21 @@
         },
         "standalone": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBVolumeExpansionSpec": {
+      "description": "MongoDBVolumeExpansionSpec is the spec for mongodb volume expansion",
+      "type": "object",
+      "properties": {
+        "configServer": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "shard": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "standalone": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }
     },

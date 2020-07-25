@@ -22,6 +22,7 @@ syntax = 'proto2';
 package kubedb.dev.apimachinery.apis.ops.v1alpha1;
 
 import "k8s.io/api/core/v1/generated.proto";
+import "k8s.io/apimachinery/pkg/api/resource/generated.proto";
 import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
 import "k8s.io/apimachinery/pkg/runtime/generated.proto";
 import "k8s.io/apimachinery/pkg/runtime/schema/generated.proto";
@@ -245,6 +246,9 @@ message MongoDBOpsRequestSpec {
 
   // Specifies information necessary for vertical scaling
   optional MongoDBVerticalScalingSpec verticalScaling = 5;
+
+  // Specifies information necessary for volume expansion
+  optional MongoDBVolumeExpansionSpec volumeExpansion = 6;
 }
 
 // MongoDBOpsRequestStatus is the status for MongoDBOpsRequest
@@ -279,6 +283,15 @@ message MongoDBVerticalScalingSpec {
   optional k8s.io.api.core.v1.ResourceRequirements shard = 4;
 
   optional k8s.io.api.core.v1.ResourceRequirements exporter = 5;
+}
+
+// MongoDBVolumeExpansionSpec is the spec for mongodb volume expansion
+message MongoDBVolumeExpansionSpec {
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity standalone = 1;
+
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity configServer = 2;
+
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity shard = 3;
 }
 
 // MongosNode is the spec for mongodb Mongos
