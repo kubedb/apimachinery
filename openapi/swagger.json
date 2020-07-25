@@ -28316,16 +28316,13 @@
             "type": "string"
           }
         },
-        "organization": {
-          "description": "Organization is the organization to be used on the Certificate",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
         "renewBefore": {
           "description": "Certificate renew before expiration duration",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "subject": {
+          "description": "Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.X509Subject"
         },
         "uriSANs": {
           "description": "URISANs is a list of URI Subject Alternative Names to be set on this Certificate.",
@@ -30529,6 +30526,65 @@
         },
         "operatorSecret": {
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.X509Subject": {
+      "description": "X509Subject Full X509 name specification",
+      "type": "object",
+      "properties": {
+        "countries": {
+          "description": "Countries to be used on the Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "localities": {
+          "description": "Cities to be used on the Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "organizationalUnits": {
+          "description": "Organizational Units to be used on the Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "organizations": {
+          "description": "Organizations to be used on the Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "postalCodes": {
+          "description": "Postal codes to be used on the Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provinces": {
+          "description": "State/Provinces to be used on the Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "serialNumber": {
+          "description": "Serial number to be used on the Certificate.",
+          "type": "string"
+        },
+        "streetAddresses": {
+          "description": "Street addresses to be used on the Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
