@@ -1998,6 +1998,11 @@ func (in *RedisSpec) DeepCopyInto(out *RedisSpec) {
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	in.ServiceTemplate.DeepCopyInto(&out.ServiceTemplate)
 	in.UpdateStrategy.DeepCopyInto(&out.UpdateStrategy)
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(TLSConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

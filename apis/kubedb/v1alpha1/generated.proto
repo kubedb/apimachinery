@@ -1347,6 +1347,10 @@ message RedisSpec {
   // Template.
   optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 11;
 
+  // TLS contains tls configurations for client and server.
+  // +optional
+  optional TLSConfig tls = 15;
+
   // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
   optional bool paused = 12;
