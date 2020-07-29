@@ -28288,6 +28288,31 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.CertificateSecretRef": {
+      "type": "object",
+      "properties": {
+        "admin": {
+          "description": "Specifies the admin certificate secret reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        },
+        "http": {
+          "description": "Specifies the http(rest) layer certificate secret reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        },
+        "metricsExporter": {
+          "description": "Specifies the metrics exporter certificate secret reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        },
+        "stash": {
+          "description": "Specifies the stash(backup recovery) certificate secret reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        },
+        "transport": {
+          "description": "Specifies the transport layer certificate secret reference",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.CertificateSpec": {
       "type": "object",
       "properties": {
@@ -28330,6 +28355,23 @@
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ClientCertificateSpec": {
+      "type": "object",
+      "properties": {
+        "duration": {
+          "description": "Certificate default Duration",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "renewBefore": {
+          "description": "Certificate renew before expiration duration",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "subject": {
+          "description": "Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.X509Subject"
         }
       }
     },
@@ -28546,8 +28588,12 @@
           "type": "string"
         },
         "certificateSecret": {
-          "description": "Secret with SSL certificates",
+          "description": "Secret with SSL certificates Deprecated: Use spec.CertificateSecrets instead",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        },
+        "certificateSecrets": {
+          "description": "Secrets with SSL certificate",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.CertificateSecretRef"
         },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -28572,6 +28618,13 @@
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+        },
+        "internalUsers": {
+          "description": "InternalUsers contains internal user configurations",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchUser"
+          }
         },
         "maxUnavailable": {
           "description": "An eviction is allowed if at most \"maxUnavailable\" pods selected by \"selector\" are unavailable after the eviction, i.e. even in absence of the evicted pod. For example, one can prevent all voluntary evictions by specifying 0. This is a mutually exclusive setting with \"minAvailable\".",
@@ -28610,12 +28663,16 @@
           "description": "TerminationPolicy controls the delete operation for database",
           "type": "string"
         },
+        "tls": {
+          "description": "TLS contains tls configurations",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchTLSConfig"
+        },
         "topology": {
           "description": "Elasticsearch topology for node specification",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchClusterTopology"
         },
         "updateStrategy": {
-          "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
+          "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template. Deprecated: UpdateStrategy is default to \"OnDelete\"",
           "$ref": "#/definitions/io.k8s.api.apps.v1.StatefulSetUpdateStrategy"
         },
         "version": {
@@ -28637,6 +28694,72 @@
         },
         "reason": {
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchTLSConfig": {
+      "type": "object",
+      "required": [
+        "issuerRef"
+      ],
+      "properties": {
+        "admin": {
+          "description": "Specifies the admin certificate properties. These options are passed to a cert-manager Certificate object.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ClientCertificateSpec"
+        },
+        "http": {
+          "description": "Specifies the http(rest) layer certificate properties. These options are passed to a cert-manager Certificate object.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ServerCertificateSpec"
+        },
+        "issuerRef": {
+          "description": "IssuerRef is a reference to a Certificate Issuer.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+        },
+        "metricsExporter": {
+          "description": "Specifies the metrics exporter certificate properties. These options are passed to a cert-manager Certificate object.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ClientCertificateSpec"
+        },
+        "stash": {
+          "description": "Specifies the stash(backup recovery) certificate properties. These options are passed to a cert-manager Certificate object.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ClientCertificateSpec"
+        },
+        "transport": {
+          "description": "Specifies the transport layer certificate properties. These options are passed to a cert-manager Certificate object.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ServerCertificateSpec"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchUser": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "attributes": {
+          "description": "Specifies one or more custom attributes, which can be used in index names and DLS queries.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "backendRoles": {
+          "description": "Specifies a list of backend roles assigned to this user. Backend roles can come from the internal user database, LDAP groups, JSON web token claims or SAML assertions.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "description": "Specifies the description of the user",
+          "type": "string"
+        },
+        "name": {
+          "description": "Specifies the name of the user",
+          "type": "string"
+        },
+        "reserved": {
+          "description": "Specifies the reserved status. Default to \"false\".",
+          "type": "boolean"
         }
       }
     },
@@ -30503,6 +30626,51 @@
         "vsphereVolume": {
           "description": "VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
           "$ref": "#/definitions/io.k8s.api.core.v1.VsphereVirtualDiskVolumeSource"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ServerCertificateSpec": {
+      "type": "object",
+      "properties": {
+        "dnsNames": {
+          "description": "DNSNames is a list of subject alt names to be used on the Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "duration": {
+          "description": "Certificate default Duration",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "emailSANs": {
+          "description": "EmailSANs is a list of email subjectAltNames to be set on the Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ipAddresses": {
+          "description": "IPAddresses is a list of IP addresses to be used on the Certificate",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "renewBefore": {
+          "description": "Certificate renew before expiration duration",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "subject": {
+          "description": "Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.X509Subject"
+        },
+        "uriSANs": {
+          "description": "URISANs is a list of URI Subject Alternative Names to be set on this Certificate.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
