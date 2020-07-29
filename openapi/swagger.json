@@ -28288,31 +28288,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.CertificateSecretRef": {
-      "type": "object",
-      "properties": {
-        "admin": {
-          "description": "Specifies the admin certificate secret reference",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
-        },
-        "http": {
-          "description": "Specifies the http(rest) layer certificate secret reference",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
-        },
-        "metricsExporter": {
-          "description": "Specifies the metrics exporter certificate secret reference",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
-        },
-        "stash": {
-          "description": "Specifies the stash(backup recovery) certificate secret reference",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
-        },
-        "transport": {
-          "description": "Specifies the transport layer certificate secret reference",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.CertificateSpec": {
       "type": "object",
       "properties": {
@@ -28368,6 +28343,10 @@
         "renewBefore": {
           "description": "Certificate renew before expiration duration",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "secretName": {
+          "description": "Specifies the k8s secret name that holds the certificates. Default to \u003ces-object-name\u003e-\u003ccert-type\u003e-cert.",
+          "type": "string"
         },
         "subject": {
           "description": "Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).",
@@ -28591,10 +28570,6 @@
           "description": "Secret with SSL certificates Deprecated: Use spec.CertificateSecrets instead",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
-        "certificateSecrets": {
-          "description": "Secrets with SSL certificate",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.CertificateSecretRef"
-        },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
@@ -28699,9 +28674,6 @@
     },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchTLSConfig": {
       "type": "object",
-      "required": [
-        "issuerRef"
-      ],
       "properties": {
         "admin": {
           "description": "Specifies the admin certificate properties. These options are passed to a cert-manager Certificate object.",
@@ -30660,6 +30632,10 @@
         "renewBefore": {
           "description": "Certificate renew before expiration duration",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "secretName": {
+          "description": "Specifies the k8s secret name that holds the certificates. Default to \u003ces-object-name\u003e-\u003ccert-type\u003e-cert.",
+          "type": "string"
         },
         "subject": {
           "description": "Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).",

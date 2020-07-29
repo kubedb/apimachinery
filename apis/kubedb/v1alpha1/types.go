@@ -139,48 +139,58 @@ type CertificateSpec struct {
 }
 
 type ServerCertificateSpec struct {
+	// Specifies the k8s secret name that holds the certificates.
+	// Default to <es-object-name>-<cert-type>-cert.
+	// +optional
+	SecretName string `json:"secretName,omitempty" protobuf:"bytes,1,opt,name=secretName"`
+
 	// Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).
 	// +optional
-	Subject *X509Subject `json:"subject,omitempty" protobuf:"bytes,1,opt,name=subject"`
+	Subject *X509Subject `json:"subject,omitempty" protobuf:"bytes,2,opt,name=subject"`
 
 	// Certificate default Duration
 	// +optional
-	Duration *metav1.Duration `json:"duration,omitempty" protobuf:"bytes,2,opt,name=duration"`
+	Duration *metav1.Duration `json:"duration,omitempty" protobuf:"bytes,3,opt,name=duration"`
 
 	// Certificate renew before expiration duration
 	// +optional
-	RenewBefore *metav1.Duration `json:"renewBefore,omitempty" protobuf:"bytes,3,opt,name=renewBefore"`
+	RenewBefore *metav1.Duration `json:"renewBefore,omitempty" protobuf:"bytes,4,opt,name=renewBefore"`
 
 	// DNSNames is a list of subject alt names to be used on the Certificate.
 	// +optional
-	DNSNames []string `json:"dnsNames,omitempty" protobuf:"bytes,4,rep,name=dnsNames"`
+	DNSNames []string `json:"dnsNames,omitempty" protobuf:"bytes,5,rep,name=dnsNames"`
 
 	// IPAddresses is a list of IP addresses to be used on the Certificate
 	// +optional
-	IPAddresses []string `json:"ipAddresses,omitempty" protobuf:"bytes,5,rep,name=ipAddresses"`
+	IPAddresses []string `json:"ipAddresses,omitempty" protobuf:"bytes,6,rep,name=ipAddresses"`
 
 	// URISANs is a list of URI Subject Alternative Names to be set on this
 	// Certificate.
 	// +optional
-	URISANs []string `json:"uriSANs,omitempty" protobuf:"bytes,6,rep,name=uriSANs"`
+	URISANs []string `json:"uriSANs,omitempty" protobuf:"bytes,7,rep,name=uriSANs"`
 
 	// EmailSANs is a list of email subjectAltNames to be set on the Certificate.
 	// +optional
-	EmailSANs []string `json:"emailSANs,omitempty" protobuf:"bytes,7,rep,name=emailSANs"`
+	EmailSANs []string `json:"emailSANs,omitempty" protobuf:"bytes,8,rep,name=emailSANs"`
 }
 
 type ClientCertificateSpec struct {
+	// Specifies the k8s secret name that holds the certificates.
+	// Default to <es-object-name>-<cert-type>-cert.
+	// +optional
+	SecretName string `json:"secretName,omitempty" protobuf:"bytes,1,opt,name=secretName"`
+
 	// Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).
 	// +optional
-	Subject *X509Subject `json:"subject,omitempty" protobuf:"bytes,1,opt,name=subject"`
+	Subject *X509Subject `json:"subject,omitempty" protobuf:"bytes,2,opt,name=subject"`
 
 	// Certificate default Duration
 	// +optional
-	Duration *metav1.Duration `json:"duration,omitempty" protobuf:"bytes,2,opt,name=duration"`
+	Duration *metav1.Duration `json:"duration,omitempty" protobuf:"bytes,3,opt,name=duration"`
 
 	// Certificate renew before expiration duration
 	// +optional
-	RenewBefore *metav1.Duration `json:"renewBefore,omitempty" protobuf:"bytes,3,opt,name=renewBefore"`
+	RenewBefore *metav1.Duration `json:"renewBefore,omitempty" protobuf:"bytes,4,opt,name=renewBefore"`
 }
 
 // X509Subject Full X509 name specification

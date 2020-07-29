@@ -70,79 +70,75 @@ type ElasticsearchSpec struct {
 	// Deprecated: Use spec.CertificateSecrets instead
 	CertificateSecret *core.SecretVolumeSource `json:"certificateSecret,omitempty" protobuf:"bytes,5,opt,name=certificateSecret"`
 
-	// Secrets with SSL certificate
-	// +optional
-	CertificateSecrets *CertificateSecretRef `json:"certificateSecrets,omitempty" protobuf:"bytes,6,opt,name=certificateSecrets"`
-
 	// disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user.
 	// If unset, default is false
-	DisableSecurity bool `json:"disableSecurity,omitempty" protobuf:"varint,7,opt,name=disableSecurity"`
+	DisableSecurity bool `json:"disableSecurity,omitempty" protobuf:"varint,6,opt,name=disableSecurity"`
 
 	// Authentication plugin used by Elasticsearch cluster. If unset, defaults to SearchGuard.
 	// Deprecated: Use elasticsearchVersion.Spec.AuthPlugin instead
-	AuthPlugin v1alpha1.ElasticsearchAuthPlugin `json:"authPlugin,omitempty" protobuf:"bytes,8,opt,name=authPlugin,casttype=kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchAuthPlugin"`
+	AuthPlugin v1alpha1.ElasticsearchAuthPlugin `json:"authPlugin,omitempty" protobuf:"bytes,7,opt,name=authPlugin,casttype=kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchAuthPlugin"`
 
 	// Database authentication secret
-	DatabaseSecret *core.SecretVolumeSource `json:"databaseSecret,omitempty" protobuf:"bytes,9,opt,name=databaseSecret"`
+	DatabaseSecret *core.SecretVolumeSource `json:"databaseSecret,omitempty" protobuf:"bytes,8,opt,name=databaseSecret"`
 
 	// StorageType can be durable (default) or ephemeral
-	StorageType StorageType `json:"storageType,omitempty" protobuf:"bytes,10,opt,name=storageType,casttype=StorageType"`
+	StorageType StorageType `json:"storageType,omitempty" protobuf:"bytes,9,opt,name=storageType,casttype=StorageType"`
 
 	// Storage to specify how storage shall be used.
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,11,opt,name=storage"`
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,10,opt,name=storage"`
 
 	// Init is used to initialize database
 	// +optional
-	Init *InitSpec `json:"init,omitempty" protobuf:"bytes,12,opt,name=init"`
+	Init *InitSpec `json:"init,omitempty" protobuf:"bytes,11,opt,name=init"`
 
 	// Monitor is used monitor database instance
 	// +optional
-	Monitor *mona.AgentSpec `json:"monitor,omitempty" protobuf:"bytes,13,opt,name=monitor"`
+	Monitor *mona.AgentSpec `json:"monitor,omitempty" protobuf:"bytes,12,opt,name=monitor"`
 
 	// ConfigSource is an optional field to provide custom configuration file for database.
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
-	ConfigSource *core.VolumeSource `json:"configSource,omitempty" protobuf:"bytes,14,opt,name=configSource"`
+	ConfigSource *core.VolumeSource `json:"configSource,omitempty" protobuf:"bytes,13,opt,name=configSource"`
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty" protobuf:"bytes,15,opt,name=podTemplate"`
+	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty" protobuf:"bytes,14,opt,name=podTemplate"`
 
 	// ServiceTemplate is an optional configuration for service used to expose database
 	// +optional
-	ServiceTemplate ofst.ServiceTemplateSpec `json:"serviceTemplate,omitempty" protobuf:"bytes,16,opt,name=serviceTemplate"`
+	ServiceTemplate ofst.ServiceTemplateSpec `json:"serviceTemplate,omitempty" protobuf:"bytes,15,opt,name=serviceTemplate"`
 
 	// An eviction is allowed if at most "maxUnavailable" pods selected by
 	// "selector" are unavailable after the eviction, i.e. even in absence of
 	// the evicted pod. For example, one can prevent all voluntary evictions
 	// by specifying 0. This is a mutually exclusive setting with "minAvailable".
 	// +optional
-	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty" protobuf:"bytes,17,opt,name=maxUnavailable"`
+	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty" protobuf:"bytes,16,opt,name=maxUnavailable"`
 
 	// updateStrategy indicates the StatefulSetUpdateStrategy that will be
 	// employed to update Pods in the StatefulSet when a revision is made to
 	// Template.
 	// Deprecated: UpdateStrategy is default to "OnDelete"
-	UpdateStrategy apps.StatefulSetUpdateStrategy `json:"updateStrategy,omitempty" protobuf:"bytes,18,opt,name=updateStrategy"`
+	UpdateStrategy apps.StatefulSetUpdateStrategy `json:"updateStrategy,omitempty" protobuf:"bytes,17,opt,name=updateStrategy"`
 
 	// Indicates that the database is paused and controller will not sync any changes made to this spec.
 	// +optional
-	Paused bool `json:"paused,omitempty" protobuf:"varint,19,opt,name=paused"`
+	Paused bool `json:"paused,omitempty" protobuf:"varint,18,opt,name=paused"`
 
 	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
 	// +optional
-	Halted bool `json:"halted,omitempty" protobuf:"varint,20,opt,name=halted"`
+	Halted bool `json:"halted,omitempty" protobuf:"varint,19,opt,name=halted"`
 
 	// TerminationPolicy controls the delete operation for database
 	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,21,opt,name=terminationPolicy,casttype=TerminationPolicy"`
+	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,20,opt,name=terminationPolicy,casttype=TerminationPolicy"`
 
 	// TLS contains tls configurations
 	// +optional
-	TLS *ElasticsearchTLSConfig `json:"tls,omitempty" protobuf:"bytes,22,opt,name=tls"`
+	TLS *ElasticsearchTLSConfig `json:"tls,omitempty" protobuf:"bytes,21,opt,name=tls"`
 
 	// InternalUsers contains internal user configurations
 	// +optional
-	InternalUsers []ElasticsearchUser `json:"internalUsers,omitempty" protobuf:"bytes,23,opt,name=internalUsers"`
+	InternalUsers []ElasticsearchUser `json:"internalUsers,omitempty" protobuf:"bytes,22,opt,name=internalUsers"`
 }
 
 type ElasticsearchClusterTopology struct {
@@ -167,31 +163,10 @@ type ElasticsearchNode struct {
 	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty" protobuf:"bytes,5,opt,name=maxUnavailable"`
 }
 
-type CertificateSecretRef struct {
-	// Specifies the transport layer certificate secret reference
-	// +optional
-	Transport *core.SecretVolumeSource `json:"transport,omitempty" protobuf:"bytes,1,opt,name=transport"`
-
-	// Specifies the http(rest) layer certificate secret reference
-	// +optional
-	HTTP *core.SecretVolumeSource `json:"http,omitempty" protobuf:"bytes,2,opt,name=http"`
-
-	// Specifies the admin certificate secret reference
-	// +optional
-	Admin *core.SecretVolumeSource `json:"admin,omitempty" protobuf:"bytes,3,opt,name=admin"`
-
-	// Specifies the stash(backup recovery) certificate secret reference
-	// +optional
-	Stash *core.SecretVolumeSource `json:"stash,omitempty" protobuf:"bytes,4,opt,name=stash"`
-
-	// Specifies the metrics exporter certificate secret reference
-	// +optional
-	MetricsExporter *core.SecretVolumeSource `json:"metricsExporter,omitempty" protobuf:"bytes,5,opt,name=metricsExporter"`
-}
-
 type ElasticsearchTLSConfig struct {
 	// IssuerRef is a reference to a Certificate Issuer.
-	IssuerRef *core.TypedLocalObjectReference `json:"issuerRef" protobuf:"bytes,1,opt,name=issuerRef"`
+	// +optional
+	IssuerRef *core.TypedLocalObjectReference `json:"issuerRef,omitempty" protobuf:"bytes,1,opt,name=issuerRef"`
 
 	// Specifies the transport layer certificate properties.
 	// These options are passed to a cert-manager Certificate object.

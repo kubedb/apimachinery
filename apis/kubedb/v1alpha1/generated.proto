@@ -35,28 +35,6 @@ import "kmodules.xyz/offshoot-api/api/v1/generated.proto";
 // Package-wide variables from generator "generated".
 option go_package = "v1alpha1";
 
-message CertificateSecretRef {
-  // Specifies the transport layer certificate secret reference
-  // +optional
-  optional k8s.io.api.core.v1.SecretVolumeSource transport = 1;
-
-  // Specifies the http(rest) layer certificate secret reference
-  // +optional
-  optional k8s.io.api.core.v1.SecretVolumeSource http = 2;
-
-  // Specifies the admin certificate secret reference
-  // +optional
-  optional k8s.io.api.core.v1.SecretVolumeSource admin = 3;
-
-  // Specifies the stash(backup recovery) certificate secret reference
-  // +optional
-  optional k8s.io.api.core.v1.SecretVolumeSource stash = 4;
-
-  // Specifies the metrics exporter certificate secret reference
-  // +optional
-  optional k8s.io.api.core.v1.SecretVolumeSource metricsExporter = 5;
-}
-
 message CertificateSpec {
   // Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).
   // +optional
@@ -89,17 +67,22 @@ message CertificateSpec {
 }
 
 message ClientCertificateSpec {
+  // Specifies the k8s secret name that holds the certificates.
+  // Default to <es-object-name>-<cert-type>-cert.
+  // +optional
+  optional string secretName = 1;
+
   // Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).
   // +optional
-  optional X509Subject subject = 1;
+  optional X509Subject subject = 2;
 
   // Certificate default Duration
   // +optional
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration duration = 2;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration duration = 3;
 
   // Certificate renew before expiration duration
   // +optional
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration renewBefore = 3;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration renewBefore = 4;
 }
 
 message ConnectionPoolConfig {
@@ -246,79 +229,75 @@ message ElasticsearchSpec {
   // Deprecated: Use spec.CertificateSecrets instead
   optional k8s.io.api.core.v1.SecretVolumeSource certificateSecret = 5;
 
-  // Secrets with SSL certificate
-  // +optional
-  optional CertificateSecretRef certificateSecrets = 6;
-
   // disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user.
   // If unset, default is false
-  optional bool disableSecurity = 7;
+  optional bool disableSecurity = 6;
 
   // Authentication plugin used by Elasticsearch cluster. If unset, defaults to SearchGuard.
   // Deprecated: Use elasticsearchVersion.Spec.AuthPlugin instead
-  optional string authPlugin = 8;
+  optional string authPlugin = 7;
 
   // Database authentication secret
-  optional k8s.io.api.core.v1.SecretVolumeSource databaseSecret = 9;
+  optional k8s.io.api.core.v1.SecretVolumeSource databaseSecret = 8;
 
   // StorageType can be durable (default) or ephemeral
-  optional string storageType = 10;
+  optional string storageType = 9;
 
   // Storage to specify how storage shall be used.
-  optional k8s.io.api.core.v1.PersistentVolumeClaimSpec storage = 11;
+  optional k8s.io.api.core.v1.PersistentVolumeClaimSpec storage = 10;
 
   // Init is used to initialize database
   // +optional
-  optional InitSpec init = 12;
+  optional InitSpec init = 11;
 
   // Monitor is used monitor database instance
   // +optional
-  optional kmodules.xyz.monitoring_agent_api.api.v1.AgentSpec monitor = 13;
+  optional kmodules.xyz.monitoring_agent_api.api.v1.AgentSpec monitor = 12;
 
   // ConfigSource is an optional field to provide custom configuration file for database.
   // If specified, this file will be used as configuration file otherwise default configuration file will be used.
-  optional k8s.io.api.core.v1.VolumeSource configSource = 14;
+  optional k8s.io.api.core.v1.VolumeSource configSource = 13;
 
   // PodTemplate is an optional configuration for pods used to expose database
   // +optional
-  optional kmodules.xyz.offshoot_api.api.v1.PodTemplateSpec podTemplate = 15;
+  optional kmodules.xyz.offshoot_api.api.v1.PodTemplateSpec podTemplate = 14;
 
   // ServiceTemplate is an optional configuration for service used to expose database
   // +optional
-  optional kmodules.xyz.offshoot_api.api.v1.ServiceTemplateSpec serviceTemplate = 16;
+  optional kmodules.xyz.offshoot_api.api.v1.ServiceTemplateSpec serviceTemplate = 15;
 
   // An eviction is allowed if at most "maxUnavailable" pods selected by
   // "selector" are unavailable after the eviction, i.e. even in absence of
   // the evicted pod. For example, one can prevent all voluntary evictions
   // by specifying 0. This is a mutually exclusive setting with "minAvailable".
   // +optional
-  optional k8s.io.apimachinery.pkg.util.intstr.IntOrString maxUnavailable = 17;
+  optional k8s.io.apimachinery.pkg.util.intstr.IntOrString maxUnavailable = 16;
 
   // updateStrategy indicates the StatefulSetUpdateStrategy that will be
   // employed to update Pods in the StatefulSet when a revision is made to
   // Template.
   // Deprecated: UpdateStrategy is default to "OnDelete"
-  optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 18;
+  optional k8s.io.api.apps.v1.StatefulSetUpdateStrategy updateStrategy = 17;
 
   // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
-  optional bool paused = 19;
+  optional bool paused = 18;
 
   // Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
   // +optional
-  optional bool halted = 20;
+  optional bool halted = 19;
 
   // TerminationPolicy controls the delete operation for database
   // +optional
-  optional string terminationPolicy = 21;
+  optional string terminationPolicy = 20;
 
   // TLS contains tls configurations
   // +optional
-  optional ElasticsearchTLSConfig tls = 22;
+  optional ElasticsearchTLSConfig tls = 21;
 
   // InternalUsers contains internal user configurations
   // +optional
-  repeated ElasticsearchUser internalUsers = 23;
+  repeated ElasticsearchUser internalUsers = 22;
 }
 
 message ElasticsearchStatus {
@@ -334,6 +313,7 @@ message ElasticsearchStatus {
 
 message ElasticsearchTLSConfig {
   // IssuerRef is a reference to a Certificate Issuer.
+  // +optional
   optional k8s.io.api.core.v1.TypedLocalObjectReference issuerRef = 1;
 
   // Specifies the transport layer certificate properties.
@@ -1487,34 +1467,39 @@ message ScriptSourceSpec {
 }
 
 message ServerCertificateSpec {
+  // Specifies the k8s secret name that holds the certificates.
+  // Default to <es-object-name>-<cert-type>-cert.
+  // +optional
+  optional string secretName = 1;
+
   // Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).
   // +optional
-  optional X509Subject subject = 1;
+  optional X509Subject subject = 2;
 
   // Certificate default Duration
   // +optional
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration duration = 2;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration duration = 3;
 
   // Certificate renew before expiration duration
   // +optional
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration renewBefore = 3;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration renewBefore = 4;
 
   // DNSNames is a list of subject alt names to be used on the Certificate.
   // +optional
-  repeated string dnsNames = 4;
+  repeated string dnsNames = 5;
 
   // IPAddresses is a list of IP addresses to be used on the Certificate
   // +optional
-  repeated string ipAddresses = 5;
+  repeated string ipAddresses = 6;
 
   // URISANs is a list of URI Subject Alternative Names to be set on this
   // Certificate.
   // +optional
-  repeated string uriSANs = 6;
+  repeated string uriSANs = 7;
 
   // EmailSANs is a list of email subjectAltNames to be set on the Certificate.
   // +optional
-  repeated string emailSANs = 7;
+  repeated string emailSANs = 8;
 }
 
 message TLSConfig {

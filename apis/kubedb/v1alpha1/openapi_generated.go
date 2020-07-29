@@ -371,7 +371,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.CertificateSecretRef":           schema_apimachinery_apis_kubedb_v1alpha1_CertificateSecretRef(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.CertificateSpec":                schema_apimachinery_apis_kubedb_v1alpha1_CertificateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ClientCertificateSpec":          schema_apimachinery_apis_kubedb_v1alpha1_ClientCertificateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ConnectionPoolConfig":           schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref),
@@ -17884,56 +17883,19 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha1_CertificateSecretRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"transport": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the transport layer certificate secret reference",
-							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
-						},
-					},
-					"http": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the http(rest) layer certificate secret reference",
-							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
-						},
-					},
-					"admin": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the admin certificate secret reference",
-							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
-						},
-					},
-					"stash": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the stash(backup recovery) certificate secret reference",
-							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
-						},
-					},
-					"metricsExporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the metrics exporter certificate secret reference",
-							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.SecretVolumeSource"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha1_CertificateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"secretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the k8s secret name that holds the certificates. Default to <es-object-name>-<cert-type>-cert.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"subject": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).",
@@ -18409,12 +18371,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
 						},
 					},
-					"certificateSecrets": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Secrets with SSL certificate",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.CertificateSecretRef"),
-						},
-					},
 					"disableSecurity": {
 						SchemaProps: spec.SchemaProps{
 							Description: "disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user. If unset, default is false",
@@ -18535,7 +18491,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.CertificateSecretRef", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchUser", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchUser", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"},
 	}
 }
 
@@ -18613,7 +18569,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchTLSConfig(ref common.
 						},
 					},
 				},
-				Required: []string{"issuerRef"},
 			},
 		},
 		Dependencies: []string{
@@ -21763,6 +21718,13 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ServerCertificateSpec(ref common.R
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"secretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the k8s secret name that holds the certificates. Default to <es-object-name>-<cert-type>-cert.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"subject": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).",
