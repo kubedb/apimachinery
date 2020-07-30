@@ -23,6 +23,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
@@ -120,25 +121,25 @@ type ElasticsearchSpec struct {
 	// Deprecated: UpdateStrategy is default to "OnDelete"
 	UpdateStrategy apps.StatefulSetUpdateStrategy `json:"updateStrategy,omitempty" protobuf:"bytes,17,opt,name=updateStrategy"`
 
-	// Indicates that the database is paused and controller will not sync any changes made to this spec.
-	// +optional
-	Paused bool `json:"paused,omitempty" protobuf:"varint,18,opt,name=paused"`
-
-	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
-	// +optional
-	Halted bool `json:"halted,omitempty" protobuf:"varint,19,opt,name=halted"`
-
-	// TerminationPolicy controls the delete operation for database
-	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,20,opt,name=terminationPolicy,casttype=TerminationPolicy"`
-
 	// TLS contains tls configurations
 	// +optional
-	TLS *ElasticsearchTLSConfig `json:"tls,omitempty" protobuf:"bytes,21,opt,name=tls"`
+	TLS *kmapi.TLSConfig `json:"tls,omitempty" protobuf:"bytes,18,opt,name=tls"`
 
 	// InternalUsers contains internal user configurations
 	// +optional
-	InternalUsers []ElasticsearchUser `json:"internalUsers,omitempty" protobuf:"bytes,22,opt,name=internalUsers"`
+	InternalUsers []ElasticsearchUser `json:"internalUsers,omitempty" protobuf:"bytes,19,rep,name=internalUsers"`
+
+	// Indicates that the database is paused and controller will not sync any changes made to this spec.
+	// +optional
+	Paused bool `json:"paused,omitempty" protobuf:"varint,20,opt,name=paused"`
+
+	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
+	// +optional
+	Halted bool `json:"halted,omitempty" protobuf:"varint,21,opt,name=halted"`
+
+	// TerminationPolicy controls the delete operation for database
+	// +optional
+	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,22,opt,name=terminationPolicy,casttype=TerminationPolicy"`
 }
 
 type ElasticsearchClusterTopology struct {
@@ -163,36 +164,16 @@ type ElasticsearchNode struct {
 	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty" protobuf:"bytes,5,opt,name=maxUnavailable"`
 }
 
-type ElasticsearchTLSConfig struct {
-	// IssuerRef is a reference to a Certificate Issuer.
-	// +optional
-	IssuerRef *core.TypedLocalObjectReference `json:"issuerRef,omitempty" protobuf:"bytes,1,opt,name=issuerRef"`
+// +kubebuilder:validation:Enum=transport;http;admin;archiver;metrics-exporter
+type ElasticsearchCertificateAlias string
 
-	// Specifies the transport layer certificate properties.
-	// These options are passed to a cert-manager Certificate object.
-	// +optional
-	Transport *ServerCertificateSpec `json:"transport,omitempty" protobuf:"bytes,2,opt,name=transport"`
-
-	// Specifies the http(rest) layer certificate properties.
-	// These options are passed to a cert-manager Certificate object.
-	// +optional
-	HTTP *ServerCertificateSpec `json:"http,omitempty" protobuf:"bytes,3,opt,name=http"`
-
-	// Specifies the admin certificate properties.
-	// These options are passed to a cert-manager Certificate object.
-	// +optional
-	Admin *ClientCertificateSpec `json:"admin,omitempty" protobuf:"bytes,4,opt,name=admin"`
-
-	// Specifies the stash(backup recovery) certificate properties.
-	// These options are passed to a cert-manager Certificate object.
-	// +optional
-	Stash *ClientCertificateSpec `json:"stash,omitempty" protobuf:"bytes,5,opt,name=stash"`
-
-	// Specifies the metrics exporter certificate properties.
-	// These options are passed to a cert-manager Certificate object.
-	// +optional
-	MetricsExporter *ClientCertificateSpec `json:"metricsExporter,omitempty" protobuf:"bytes,6,opt,name=metricsExporter"`
-}
+const (
+	ElasticsearchTransportCert       ElasticsearchCertificateAlias = "transport"
+	ElasticsearchHTTPCert            ElasticsearchCertificateAlias = "http"
+	ElasticsearchAdminCert           ElasticsearchCertificateAlias = "admin"
+	ElasticsearchArchiverCert        ElasticsearchCertificateAlias = "archiver"
+	ElasticsearchMetricsExporterCert ElasticsearchCertificateAlias = "metrics-exporter"
+)
 
 type ElasticsearchUser struct {
 	// Specifies the name of the user

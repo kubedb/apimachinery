@@ -20,6 +20,7 @@ import (
 	apps "k8s.io/api/apps/v1"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
@@ -66,11 +67,11 @@ type ProxySQLSpec struct {
 	// TODO: If replicas > 1, proxysql will be clustered
 	Replicas *int32 `json:"replicas,omitempty" protobuf:"varint,2,opt,name=replicas"`
 
-	// Mode specifies the type of MySQL/Percona-XtraDB/MariaDB cluster for which proxysql
+	// Mode specifies the type of MySQL/Percona-XtraDB/ProxySQL cluster for which proxysql
 	// will be configured. It must be either "Galera" or "GroupReplication"
 	Mode *LoadBalanceMode `json:"mode,omitempty" protobuf:"bytes,3,opt,name=mode,casttype=LoadBalanceMode"`
 
-	// Backend specifies the information about backend MySQL/Percona-XtraDB/MariaDB servers
+	// Backend specifies the information about backend MySQL/Percona-XtraDB/ProxySQL servers
 	Backend *ProxySQLBackendSpec `json:"backend,omitempty" protobuf:"bytes,4,opt,name=backend"`
 
 	// ProxySQL secret containing username and password for root user and proxysql user
@@ -99,16 +100,25 @@ type ProxySQLSpec struct {
 
 	// TLS contains tls configurations for client and server.
 	// +optional
-	TLS *TLSConfig `json:"tls,omitempty" protobuf:"bytes,11,opt,name=tls"`
+	TLS *kmapi.TLSConfig `json:"tls,omitempty" protobuf:"bytes,11,opt,name=tls"`
 
 	// Indicates that the database is paused and controller will not sync any changes made to this spec.
 	// +optional
 	Paused bool `json:"paused,omitempty" protobuf:"varint,12,opt,name=paused"`
 }
 
+// +kubebuilder:validation:Enum=server;archiver;metrics-exporter
+type ProxySQLCertificateAlias string
+
+const (
+	ProxySQLServerCert          ProxySQLCertificateAlias = "server"
+	ProxySQLArchiverCert        ProxySQLCertificateAlias = "archiver"
+	ProxySQLMetricsExporterCert ProxySQLCertificateAlias = "metrics-exporter"
+)
+
 type ProxySQLBackendSpec struct {
 	// Ref lets one to locate the typed referenced object
-	// (in our case, it is the MySQL/Percona-XtraDB/MariaDB object)
+	// (in our case, it is the MySQL/Percona-XtraDB/ProxySQL object)
 	// inside the same namespace.
 	Ref *core.TypedLocalObjectReference `json:"ref,omitempty" protobuf:"bytes,7,opt,name=ref"`
 
