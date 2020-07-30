@@ -95,34 +95,9 @@ func (e Elasticsearch) GvrSvcName() string {
 	return meta_util.NameWithSuffix(e.OffshootName(), "gvr")
 }
 
-// returns the secret name for root certs
-func (e *Elasticsearch) RootCertSecretName() string {
-	return meta_util.NameWithSuffix(e.Name, "root-cert")
-}
-
-// returns the secret name for admin certs
-func (e *Elasticsearch) AdminCertSecretName() string {
-	return meta_util.NameWithSuffix(e.Name, "admin-cert")
-}
-
-// returns the secret name for the transport certs
-func (e *Elasticsearch) TransportCertSecretName() string {
-	return meta_util.NameWithSuffix(e.Name, "transport-cert")
-}
-
-// returns the secret name for the http certs
-func (e *Elasticsearch) HTTPCertSecretName() string {
-	return meta_util.NameWithSuffix(e.Name, "http-cert")
-}
-
-// returns the secret name for the metrics exporter certs
-func (e *Elasticsearch) MetricsExporterCertSecretName() string {
-	return meta_util.NameWithSuffix(e.Name, "exporter-cert")
-}
-
-// returns the secret name for the archiver (i.e. stash) certs
-func (e *Elasticsearch) ArchiverCertSecretName() string {
-	return meta_util.NameWithSuffix(e.Name, "archiver-cert")
+// returns the secret name for certificates
+func (e *Elasticsearch) CertSecretName(alias ElasticsearchCertificateAlias) string {
+	return meta_util.NameWithSuffix(e.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
 // returns the secret name for the  user credentials (ie. username, password)
