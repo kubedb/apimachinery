@@ -68,7 +68,7 @@ type ElasticsearchSpec struct {
 	EnableSSL bool `json:"enableSSL,omitempty" protobuf:"varint,4,opt,name=enableSSL"`
 
 	// Secret with SSL certificates
-	// Deprecated: Use spec.CertificateSecrets instead
+	// Deprecated: Use spec.tls instead
 	CertificateSecret *core.SecretVolumeSource `json:"certificateSecret,omitempty" protobuf:"bytes,5,opt,name=certificateSecret"`
 
 	// disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user.
@@ -164,10 +164,11 @@ type ElasticsearchNode struct {
 	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty" protobuf:"bytes,5,opt,name=maxUnavailable"`
 }
 
-// +kubebuilder:validation:Enum=transport;http;admin;archiver;metrics-exporter
+// +kubebuilder:validation:Enum=root;transport;http;admin;archiver;metrics-exporter
 type ElasticsearchCertificateAlias string
 
 const (
+	ElasticsearchRootCert            ElasticsearchCertificateAlias = "root"
 	ElasticsearchTransportCert       ElasticsearchCertificateAlias = "transport"
 	ElasticsearchHTTPCert            ElasticsearchCertificateAlias = "http"
 	ElasticsearchAdminCert           ElasticsearchCertificateAlias = "admin"
@@ -175,29 +176,50 @@ const (
 	ElasticsearchMetricsExporterCert ElasticsearchCertificateAlias = "metrics-exporter"
 )
 
+const (
+	InternalElasticsearchUserAdmin           string = "admin"
+	InternalElasticsearchUserKibanaserver    string = "kibanaserver"
+	InternalElasticsearchUserKibanaro        string = "kibanaro"
+	InternalElasticsearchUserLogstash        string = "logstash"
+	InternalElasticsearchUserReadall         string = "readall"
+	InternalElasticsearchUserSnapshotrestore string = "snapshotrestore"
+)
+
 type ElasticsearchUser struct {
 	// Specifies the name of the user
 	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
 
 	// Specifies the reserved status.
+	// Resources that have this set to true can’t be changed using the REST API or Kibana.
 	// Default to "false".
 	// +optional
 	Reserved bool `json:"reserved,omitempty" protobuf:"bytes,2,opt,name=reserved"`
+
+	// Specifies the hidden status.
+	// Resources that have this set to true are not returned by the REST API
+	// and not visible in Kibana.
+	// Default to "false".
+	// +optional
+	Hidden bool `json:"hidden,omitempty" protobuf:"bytes,3,opt,name=hidden"`
 
 	// Specifies a list of backend roles assigned to this user.
 	// Backend roles can come from the internal user database,
 	// LDAP groups, JSON web token claims or SAML assertions.
 	// +optional
-	BackendRoles []string `json:"backendRoles,omitempty" protobuf:"bytes,3,opt,name=backendRoles"`
+	BackendRoles []string `json:"backendRoles,omitempty" protobuf:"bytes,4,opt,name=backendRoles"`
+
+	// Specifies a list of security plugin (i.e. opendistro, searchguard) roles assigned to this user.
+	// +optional
+	SecurityRoles []string `json:"securityRoles,omitempty" protobuf:"bytes,5,opt,name=securityRoles"`
 
 	// Specifies one or more custom attributes,
 	// which can be used in index names and DLS queries.
 	// +optional
-	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,4,opt,name=attributes"`
+	Attributes map[string]string `json:"attributes,omitempty" protobuf:"bytes,6,opt,name=attributes"`
 
 	// Specifies the description of the user
 	// +optional
-	Description string `json:"description,omitempty" protobuf:"bytes,5,opt,name=description"`
+	Description string `json:"description,omitempty" protobuf:"bytes,7,opt,name=description"`
 }
 
 type ElasticsearchStatus struct {

@@ -28501,7 +28501,7 @@
           "type": "string"
         },
         "certificateSecret": {
-          "description": "Secret with SSL certificates Deprecated: Use spec.CertificateSecrets instead",
+          "description": "Secret with SSL certificates Deprecated: Use spec.tls instead",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "configSource": {
@@ -28630,13 +28630,24 @@
           "description": "Specifies the description of the user",
           "type": "string"
         },
+        "hidden": {
+          "description": "Specifies the hidden status. Resources that have this set to true are not returned by the REST API and not visible in Kibana. Default to \"false\".",
+          "type": "boolean"
+        },
         "name": {
           "description": "Specifies the name of the user",
           "type": "string"
         },
         "reserved": {
-          "description": "Specifies the reserved status. Default to \"false\".",
+          "description": "Specifies the reserved status. Resources that have this set to true can’t be changed using the REST API or Kibana. Default to \"false\".",
           "type": "boolean"
+        },
+        "securityRoles": {
+          "description": "Specifies a list of security plugin (i.e. opendistro, searchguard) roles assigned to this user.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

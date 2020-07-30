@@ -18234,7 +18234,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 					},
 					"certificateSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Secret with SSL certificates Deprecated: Use spec.CertificateSecrets instead",
+							Description: "Secret with SSL certificates Deprecated: Use spec.tls instead",
 							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
 						},
 					},
@@ -18408,7 +18408,14 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchUser(ref common.Refer
 					},
 					"reserved": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the reserved status. Default to \"false\".",
+							Description: "Specifies the reserved status. Resources that have this set to true can’t be changed using the REST API or Kibana. Default to \"false\".",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"hidden": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the hidden status. Resources that have this set to true are not returned by the REST API and not visible in Kibana. Default to \"false\".",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -18416,6 +18423,20 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchUser(ref common.Refer
 					"backendRoles": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies a list of backend roles assigned to this user. Backend roles can come from the internal user database, LDAP groups, JSON web token claims or SAML assertions.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"securityRoles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of security plugin (i.e. opendistro, searchguard) roles assigned to this user.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

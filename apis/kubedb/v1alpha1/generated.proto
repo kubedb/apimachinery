@@ -177,7 +177,7 @@ message ElasticsearchSpec {
   optional bool enableSSL = 4;
 
   // Secret with SSL certificates
-  // Deprecated: Use spec.CertificateSecrets instead
+  // Deprecated: Use spec.tls instead
   optional k8s.io.api.core.v1.SecretVolumeSource certificateSecret = 5;
 
   // disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user.
@@ -267,24 +267,36 @@ message ElasticsearchUser {
   optional string name = 1;
 
   // Specifies the reserved status.
+  // Resources that have this set to true can’t be changed using the REST API or Kibana.
   // Default to "false".
   // +optional
   optional bool reserved = 2;
+
+  // Specifies the hidden status.
+  // Resources that have this set to true are not returned by the REST API
+  // and not visible in Kibana.
+  // Default to "false".
+  // +optional
+  optional bool hidden = 3;
 
   // Specifies a list of backend roles assigned to this user.
   // Backend roles can come from the internal user database,
   // LDAP groups, JSON web token claims or SAML assertions.
   // +optional
-  repeated string backendRoles = 3;
+  repeated string backendRoles = 4;
+
+  // Specifies a list of security plugin (i.e. opendistro, searchguard) roles assigned to this user.
+  // +optional
+  repeated string securityRoles = 5;
 
   // Specifies one or more custom attributes,
   // which can be used in index names and DLS queries.
   // +optional
-  map<string, string> attributes = 4;
+  map<string, string> attributes = 6;
 
   // Specifies the description of the user
   // +optional
-  optional string description = 5;
+  optional string description = 7;
 }
 
 // +kubebuilder:object:root=true

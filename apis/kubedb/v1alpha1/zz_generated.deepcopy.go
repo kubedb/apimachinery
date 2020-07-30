@@ -330,6 +330,11 @@ func (in *ElasticsearchUser) DeepCopyInto(out *ElasticsearchUser) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	if in.SecurityRoles != nil {
+		in, out := &in.SecurityRoles, &out.SecurityRoles
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	if in.Attributes != nil {
 		in, out := &in.Attributes, &out.Attributes
 		*out = make(map[string]string, len(*in))
