@@ -1224,11 +1224,11 @@ message ProxySQLSpec {
   // TODO: If replicas > 1, proxysql will be clustered
   optional int32 replicas = 2;
 
-  // Mode specifies the type of MySQL/Percona-XtraDB/ProxySQL cluster for which proxysql
+  // Mode specifies the type of MySQL/Percona-XtraDB/MariaDB cluster for which proxysql
   // will be configured. It must be either "Galera" or "GroupReplication"
   optional string mode = 3;
 
-  // Backend specifies the information about backend MySQL/Percona-XtraDB/ProxySQL servers
+  // Backend specifies the information about backend MySQL/Percona-XtraDB/MariaDB servers
   optional ProxySQLBackendSpec backend = 4;
 
   // ProxySQL secret containing username and password for root user and proxysql user

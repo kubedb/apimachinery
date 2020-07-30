@@ -54,7 +54,7 @@ spec:
         spec:
           properties:
             backend:
-              description: Backend specifies the information about backend MySQL/Percona-XtraDB/ProxySQL
+              description: Backend specifies the information about backend MySQL/Percona-XtraDB/MariaDB
                 servers
               properties:
                 ref:
@@ -1251,7 +1251,7 @@ spec:
                   type: object
               type: object
             mode:
-              description: Mode specifies the type of MySQL/Percona-XtraDB/ProxySQL
+              description: Mode specifies the type of MySQL/Percona-XtraDB/MariaDB
                 cluster for which proxysql will be configured. It must be either "Galera"
                 or "GroupReplication"
               enum:

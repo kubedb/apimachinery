@@ -30148,7 +30148,7 @@
       ],
       "properties": {
         "backend": {
-          "description": "Backend specifies the information about backend MySQL/Percona-XtraDB/ProxySQL servers",
+          "description": "Backend specifies the information about backend MySQL/Percona-XtraDB/MariaDB servers",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQLBackendSpec"
         },
         "configSource": {
@@ -30156,7 +30156,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
         },
         "mode": {
-          "description": "Mode specifies the type of MySQL/Percona-XtraDB/ProxySQL cluster for which proxysql will be configured. It must be either \"Galera\" or \"GroupReplication\"",
+          "description": "Mode specifies the type of MySQL/Percona-XtraDB/MariaDB cluster for which proxysql will be configured. It must be either \"Galera\" or \"GroupReplication\"",
           "type": "string"
         },
         "monitor": {
