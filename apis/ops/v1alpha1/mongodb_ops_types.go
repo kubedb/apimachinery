@@ -63,6 +63,8 @@ type MongoDBOpsRequestSpec struct {
 	VerticalScaling *MongoDBVerticalScalingSpec `json:"verticalScaling,omitempty" protobuf:"bytes,5,opt,name=verticalScaling"`
 	// Specifies information necessary for volume expansion
 	VolumeExpansion *MongoDBVolumeExpansionSpec `json:"volumeExpansion,omitempty" protobuf:"bytes,6,opt,name=volumeExpansion"`
+	// Specifies information necessary for custom configuration of MongoDB
+	CustomConfig *MongoDBCustomConfigSpec `json:"customConfig,omitempty" protobuf:"bytes,7,opt,name=customConfig"`
 }
 
 // MongoDBShardNode is the spec for mongodb Shard
@@ -103,6 +105,19 @@ type MongoDBVolumeExpansionSpec struct {
 	Standalone   *resource.Quantity `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
 	ConfigServer *resource.Quantity `json:"configServer,omitempty" protobuf:"bytes,2,opt,name=configServer"`
 	Shard        *resource.Quantity `json:"shard,omitempty" protobuf:"bytes,3,opt,name=shard"`
+}
+
+type MongoDBCustomConfigSpec struct {
+	Standalone   *MongoDBCustomConfig `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
+	Mongos       *MongoDBCustomConfig `json:"mongos,omitempty" protobuf:"bytes,2,opt,name=mongos"`
+	ConfigServer *MongoDBCustomConfig `json:"configServer,omitempty" protobuf:"bytes,3,opt,name=configServer"`
+	Shard        *MongoDBCustomConfig `json:"shard,omitempty" protobuf:"bytes,4,opt,name=shard"`
+}
+
+type MongoDBCustomConfig struct {
+	ConfigMap *core.LocalObjectReference `json:"configMap,omitempty" protobuf:"bytes,1,opt,name=configMap"`
+	// +kubebuilder:pruning:PreserveUnknownFields
+	Data map[string]string `json:"data,omitempty" protobuf:"bytes,2,rep,name=data"`
 }
 
 // MongoDBOpsRequestStatus is the status for MongoDBOpsRequest
