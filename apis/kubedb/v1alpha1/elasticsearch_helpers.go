@@ -27,7 +27,7 @@ import (
 	apps "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	api_util "kmodules.xyz/client-go/api/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -96,9 +96,23 @@ func (e Elasticsearch) GvrSvcName() string {
 	return meta_util.NameWithSuffix(e.OffshootName(), "gvr")
 }
 
-// returns the secret name for certificates
-func (e *Elasticsearch) CertSecretName(alias ElasticsearchCertificateAlias) string {
+// DefaultCertSecretName returns the default secret name for a certificate alias
+func (e *Elasticsearch) DefaultCertSecretName(alias ElasticsearchCertificateAlias) string {
 	return meta_util.NameWithSuffix(e.Name, fmt.Sprintf("%s-cert", string(alias)))
+}
+
+// MustCertSecretName returns the secret name for a certificate alias
+func (e *Elasticsearch) MustCertSecretName(alias ElasticsearchCertificateAlias) string {
+	if e == nil {
+		panic("missing Elasticsearch database")
+	} else if e.Spec.TLS == nil {
+		panic(fmt.Errorf("Elasticsearch %s/%s is missing tls sepc", e.Namespace, e.Name))
+	}
+	name, ok := kmapi.GetCertificateSecretName(e.Spec.TLS.Certificates, string(alias))
+	if !ok {
+		panic(fmt.Errorf("Elasticsearch %s/%s is missing secret name for %s certificate", e.Namespace, e.Name, alias))
+	}
+	return name
 }
 
 // returns the secret name for the  user credentials (ie. username, password)
@@ -257,20 +271,20 @@ func (e *Elasticsearch) setDefaultTLSConfig() {
 
 	tlsConfig := e.Spec.TLS
 	if tlsConfig == nil {
-		tlsConfig = &api_util.TLSConfig{}
+		tlsConfig = &kmapi.TLSConfig{}
 	}
 	// root
-	tlsConfig.Certificates = api_util.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchRootCert), e.CertSecretName(ElasticsearchRootCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchRootCert), e.DefaultCertSecretName(ElasticsearchRootCert))
 	// transport
-	tlsConfig.Certificates = api_util.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchTransportCert), e.CertSecretName(ElasticsearchTransportCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchTransportCert), e.DefaultCertSecretName(ElasticsearchTransportCert))
 	// http
-	tlsConfig.Certificates = api_util.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchHTTPCert), e.CertSecretName(ElasticsearchHTTPCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchHTTPCert), e.DefaultCertSecretName(ElasticsearchHTTPCert))
 	// admin
-	tlsConfig.Certificates = api_util.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchAdminCert), e.CertSecretName(ElasticsearchAdminCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchAdminCert), e.DefaultCertSecretName(ElasticsearchAdminCert))
 	// matrics-exporter
-	tlsConfig.Certificates = api_util.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchMetricsExporterCert), e.CertSecretName(ElasticsearchMetricsExporterCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchMetricsExporterCert), e.DefaultCertSecretName(ElasticsearchMetricsExporterCert))
 	// archiver
-	tlsConfig.Certificates = api_util.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchArchiverCert), e.CertSecretName(ElasticsearchArchiverCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchArchiverCert), e.DefaultCertSecretName(ElasticsearchArchiverCert))
 
 	e.Spec.TLS = tlsConfig
 }
