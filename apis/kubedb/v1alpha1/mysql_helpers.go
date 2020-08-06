@@ -223,3 +223,8 @@ func (e *MySQLSpec) GetSecrets() []string {
 	}
 	return secrets
 }
+
+// returns the secret name for certificates
+func (e *MySQL) CertSecretName(alias MySQLCertificateAlias) string {
+	return meta_util.NameWithSuffix(e.Name, fmt.Sprintf("%s-cert", string(alias)))
+}
