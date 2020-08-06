@@ -26,6 +26,7 @@ import (
 	"github.com/appscode/go/types"
 	apps "k8s.io/api/apps/v1"
 	core "k8s.io/api/core/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
@@ -180,6 +181,12 @@ func (m *MySQL) SetDefaults() {
 	}
 
 	m.Spec.Monitor.SetDefaults()
+
+	if m.Spec.TLS != nil && m.Spec.TLS.IssuerRef != nil {
+		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MySQLServerCert), m.CertSecretName(MySQLServerCert))
+		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MySQLArchiverCert), m.CertSecretName(MySQLArchiverCert))
+		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MySQLMetricsExporterCert), m.CertSecretName(MySQLMetricsExporterCert))
+	}
 }
 
 // setDefaultProbes sets defaults only when probe fields are nil.
