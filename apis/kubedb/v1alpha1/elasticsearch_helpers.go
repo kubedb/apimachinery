@@ -120,6 +120,11 @@ func (e *Elasticsearch) UserCredSecretName(userName string) string {
 	return meta_util.NameWithSuffix(e.Name, fmt.Sprintf("%s-cred", userName))
 }
 
+// returns the secret name for the default elasticsearch configuration
+func (e *Elasticsearch) ConfigSecretName() string {
+	return meta_util.NameWithSuffix(e.Name, "config")
+}
+
 func (e *Elasticsearch) GetConnectionScheme() string {
 	scheme := "http"
 	if e.Spec.EnableSSL {
