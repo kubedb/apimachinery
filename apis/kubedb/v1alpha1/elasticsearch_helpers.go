@@ -106,7 +106,7 @@ func (e *Elasticsearch) MustCertSecretName(alias ElasticsearchCertificateAlias) 
 	if e == nil {
 		panic("missing Elasticsearch database")
 	} else if e.Spec.TLS == nil {
-		panic(fmt.Errorf("Elasticsearch %s/%s is missing tls sepc", e.Namespace, e.Name))
+		panic(fmt.Errorf("Elasticsearch %s/%s is missing tls spec", e.Namespace, e.Name))
 	}
 	name, ok := kmapi.GetCertificateSecretName(e.Spec.TLS.Certificates, string(alias))
 	if !ok {
