@@ -96,8 +96,8 @@ func (e Elasticsearch) GvrSvcName() string {
 	return meta_util.NameWithSuffix(e.OffshootName(), "gvr")
 }
 
-// DefaultCertSecretName returns the default secret name for a certificate alias
-func (e *Elasticsearch) DefaultCertSecretName(alias ElasticsearchCertificateAlias) string {
+// CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
+func (e *Elasticsearch) CertificateName(alias ElasticsearchCertificateAlias) string {
 	return meta_util.NameWithSuffix(e.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
@@ -274,17 +274,17 @@ func (e *Elasticsearch) setDefaultTLSConfig() {
 		tlsConfig = &kmapi.TLSConfig{}
 	}
 	// root
-	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchRootCert), e.DefaultCertSecretName(ElasticsearchRootCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchRootCert), e.CertificateName(ElasticsearchRootCert))
 	// transport
-	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchTransportCert), e.DefaultCertSecretName(ElasticsearchTransportCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchTransportCert), e.CertificateName(ElasticsearchTransportCert))
 	// http
-	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchHTTPCert), e.DefaultCertSecretName(ElasticsearchHTTPCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchHTTPCert), e.CertificateName(ElasticsearchHTTPCert))
 	// admin
-	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchAdminCert), e.DefaultCertSecretName(ElasticsearchAdminCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchAdminCert), e.CertificateName(ElasticsearchAdminCert))
 	// matrics-exporter
-	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchMetricsExporterCert), e.DefaultCertSecretName(ElasticsearchMetricsExporterCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchMetricsExporterCert), e.CertificateName(ElasticsearchMetricsExporterCert))
 	// archiver
-	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchArchiverCert), e.DefaultCertSecretName(ElasticsearchArchiverCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchArchiverCert), e.CertificateName(ElasticsearchArchiverCert))
 
 	e.Spec.TLS = tlsConfig
 }

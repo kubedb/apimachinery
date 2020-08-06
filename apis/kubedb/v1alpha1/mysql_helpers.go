@@ -183,9 +183,9 @@ func (m *MySQL) SetDefaults() {
 	m.Spec.Monitor.SetDefaults()
 
 	if m.Spec.TLS != nil && m.Spec.TLS.IssuerRef != nil {
-		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MySQLServerCert), m.DefaultCertSecretName(MySQLServerCert))
-		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MySQLArchiverCert), m.DefaultCertSecretName(MySQLArchiverCert))
-		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MySQLMetricsExporterCert), m.DefaultCertSecretName(MySQLMetricsExporterCert))
+		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MySQLServerCert), m.CertificateName(MySQLServerCert))
+		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MySQLArchiverCert), m.CertificateName(MySQLArchiverCert))
+		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MySQLMetricsExporterCert), m.CertificateName(MySQLMetricsExporterCert))
 	}
 }
 
@@ -231,8 +231,8 @@ func (m *MySQLSpec) GetSecrets() []string {
 	return secrets
 }
 
-// DefaultCertSecretName returns the default secret name for a certificate alias
-func (m *MySQL) DefaultCertSecretName(alias MySQLCertificateAlias) string {
+// CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
+func (m *MySQL) CertificateName(alias MySQLCertificateAlias) string {
 	return meta_util.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
