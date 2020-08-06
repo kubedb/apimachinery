@@ -27,6 +27,7 @@ import (
 	apps "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	api_util "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -185,9 +186,10 @@ func (e *Elasticsearch) SetDefaults(topology *core_util.Topology) {
 	if e.Spec.StorageType == "" {
 		e.Spec.StorageType = StorageTypeDurable
 	}
-	if e.Spec.UpdateStrategy.Type == "" {
-		e.Spec.UpdateStrategy.Type = apps.RollingUpdateStatefulSetStrategyType
-	}
+
+	// set updateStrategy to "OnDelete"
+	e.Spec.UpdateStrategy = apps.StatefulSetUpdateStrategy{Type: apps.OnDeleteStatefulSetStrategyType}
+
 	if e.Spec.TerminationPolicy == "" {
 		e.Spec.TerminationPolicy = TerminationPolicyDelete
 	} else if e.Spec.TerminationPolicy == TerminationPolicyPause {
@@ -199,7 +201,7 @@ func (e *Elasticsearch) SetDefaults(topology *core_util.Topology) {
 	}
 
 	e.setDefaultAffinity(&e.Spec.PodTemplate, e.OffshootSelectors(), topology)
-
+	e.setDefaultTLSConfig()
 	e.Spec.Monitor.SetDefaults()
 }
 
@@ -244,6 +246,33 @@ func (e *Elasticsearch) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, la
 			},
 		},
 	}
+}
+
+// set default tls configuration (ie. alias, secretName)
+func (e *Elasticsearch) setDefaultTLSConfig() {
+	// If security is disabled (ie. DisableSecurity: true), ignore.
+	if e.Spec.DisableSecurity {
+		return
+	}
+
+	tlsConfig := e.Spec.TLS
+	if tlsConfig == nil {
+		tlsConfig = &api_util.TLSConfig{}
+	}
+	// root
+	tlsConfig.Certificates = api_util.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchRootCert), e.CertSecretName(ElasticsearchRootCert))
+	// transport
+	tlsConfig.Certificates = api_util.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchTransportCert), e.CertSecretName(ElasticsearchTransportCert))
+	// http
+	tlsConfig.Certificates = api_util.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchHTTPCert), e.CertSecretName(ElasticsearchHTTPCert))
+	// admin
+	tlsConfig.Certificates = api_util.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchAdminCert), e.CertSecretName(ElasticsearchAdminCert))
+	// matrics-exporter
+	tlsConfig.Certificates = api_util.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchMetricsExporterCert), e.CertSecretName(ElasticsearchMetricsExporterCert))
+	// archiver
+	tlsConfig.Certificates = api_util.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchArchiverCert), e.CertSecretName(ElasticsearchArchiverCert))
+
+	e.Spec.TLS = tlsConfig
 }
 
 func (e *Elasticsearch) GetMatchExpressions() []metav1.LabelSelectorRequirement {
