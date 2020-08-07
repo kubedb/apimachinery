@@ -34598,9 +34598,6 @@
     },
     "xyz.kmodules.client-go.api.v1.TLSConfig": {
       "type": "object",
-      "required": [
-        "issuerRef"
-      ],
       "properties": {
         "certificates": {
           "description": "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
