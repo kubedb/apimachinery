@@ -63,11 +63,12 @@ const (
 	MongoDBClientCertOrganization = DatabaseNamePrefix + ":client"
 	MongoDBCertificateCN          = "root"
 
-	MySQLUserKey         = "username"
-	MySQLPasswordKey     = "password"
-	MySQLNodePort        = 3306
-	MySQLGroupComPort    = 33060
-	MySQLMaxGroupMembers = 9
+	MySQLMetricsExporterConfigSecretSuffix = "metrics-exporter-config"
+	MySQLUserKey                           = "username"
+	MySQLPasswordKey                       = "password"
+	MySQLNodePort                          = 3306
+	MySQLGroupComPort                      = 33060
+	MySQLMaxGroupMembers                   = 9
 	// The recommended MySQL server version for group replication (GR)
 	MySQLGRRecommendedVersion       = "5.7.25"
 	MySQLDefaultGroupSize           = 3
