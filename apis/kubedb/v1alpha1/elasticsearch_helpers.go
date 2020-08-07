@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -113,6 +114,19 @@ func (e *Elasticsearch) MustCertSecretName(alias ElasticsearchCertificateAlias) 
 		panic(fmt.Errorf("Elasticsearch %s/%s is missing secret name for %s certificate", e.Namespace, e.Name, alias))
 	}
 	return name
+}
+
+// returns the volume name for certificate secret.
+// Values will be like: transport-certs, http-certs etc.
+func (e *Elasticsearch) CertSecretVolumeName(alias ElasticsearchCertificateAlias) string {
+	return string(alias) + "-certs"
+}
+
+// returns the mountPath for certificate secrets.
+// if configDir is "/usr/share/elasticsearch/config",
+// mountPath will be, "/usr/share/elasticsearch/config/certs/<alias>".
+func (e *Elasticsearch) CertSecretVolumeMountPath(configDir string, alias ElasticsearchCertificateAlias) string {
+	return filepath.Join(configDir, "certs", string(alias))
 }
 
 // returns the secret name for the  user credentials (ie. username, password)
