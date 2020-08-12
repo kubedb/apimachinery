@@ -177,6 +177,7 @@ const (
 )
 
 const (
+	InternalElasticsearchUserElastic         string = "elastic"
 	InternalElasticsearchUserAdmin           string = "admin"
 	InternalElasticsearchUserKibanaserver    string = "kibanaserver"
 	InternalElasticsearchUserKibanaro        string = "kibanaro"
