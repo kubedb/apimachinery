@@ -18433,9 +18433,23 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchUser(ref common.Refer
 							},
 						},
 					},
-					"securityRoles": {
+					"searchGuardRoles": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies a list of security plugin (i.e. opendistro, searchguard) roles assigned to this user.",
+							Description: "Specifies a list of searchguard security plugin roles assigned to this user.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"opendistroSecurityRoles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of opendistro security plugin roles assigned to this user.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
