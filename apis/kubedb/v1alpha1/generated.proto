@@ -235,8 +235,14 @@ message ElasticsearchSpec {
   optional kmodules.xyz.client_go.api.v1.TLSConfig tls = 18;
 
   // InternalUsers contains internal user configurations
+  // Expected Input format:
+  // internalUsers:
+  //   <username1>:
+  // 		...
+  //   <username2>:
+  // 		...
   // +optional
-  repeated ElasticsearchUser internalUsers = 19;
+  map<string, ElasticsearchUserSpec> internalUsers = 19;
 
   // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
@@ -262,45 +268,46 @@ message ElasticsearchStatus {
   optional int64 observedGeneration = 3;
 }
 
-message ElasticsearchUser {
-  // Specifies the name of the user
-  optional string name = 1;
-
+// Specifies the security plugin internal user structure.
+// Both 'json' and 'yaml' tags are used in structure metadata.
+// The `json` tags (camel case) are used while taking input from users.
+// The `yaml` tags (snake case) are used by the operator to generate internal_users.yml file.
+message ElasticsearchUserSpec {
   // Specifies the reserved status.
   // Resources that have this set to true can’t be changed using the REST API or Kibana.
   // Default to "false".
   // +optional
-  optional bool reserved = 2;
+  optional bool reserved = 1;
 
   // Specifies the hidden status.
   // Resources that have this set to true are not returned by the REST API
   // and not visible in Kibana.
   // Default to "false".
   // +optional
-  optional bool hidden = 3;
+  optional bool hidden = 2;
 
   // Specifies a list of backend roles assigned to this user.
   // Backend roles can come from the internal user database,
   // LDAP groups, JSON web token claims or SAML assertions.
   // +optional
-  repeated string backendRoles = 4;
+  repeated string backendRoles = 3;
 
   // Specifies a list of searchguard security plugin roles assigned to this user.
   // +optional
-  repeated string searchGuardRoles = 5;
+  repeated string searchGuardRoles = 4;
 
   // Specifies a list of opendistro security plugin roles assigned to this user.
   // +optional
-  repeated string opendistroSecurityRoles = 6;
+  repeated string opendistroSecurityRoles = 5;
 
   // Specifies one or more custom attributes,
   // which can be used in index names and DLS queries.
   // +optional
-  map<string, string> attributes = 7;
+  map<string, string> attributes = 6;
 
   // Specifies the description of the user
   // +optional
-  optional string description = 8;
+  optional string description = 7;
 }
 
 // +kubebuilder:object:root=true

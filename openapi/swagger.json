@@ -28529,10 +28529,10 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
         "internalUsers": {
-          "description": "InternalUsers contains internal user configurations",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchUser"
+          "description": "InternalUsers contains internal user configurations Expected Input format: internalUsers:\n  \u003cusername1\u003e:\n\t\t...\n  \u003cusername2\u003e:\n\t\t...",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchUserSpec"
           }
         },
         "maxUnavailable": {
@@ -28606,11 +28606,9 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchUser": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchUserSpec": {
+      "description": "Specifies the security plugin internal user structure. Both 'json' and 'yaml' tags are used in structure metadata. The `json` tags (camel case) are used while taking input from users. The `yaml` tags (snake case) are used by the operator to generate internal_users.yml file.",
       "type": "object",
-      "required": [
-        "name"
-      ],
       "properties": {
         "attributes": {
           "description": "Specifies one or more custom attributes, which can be used in index names and DLS queries.",
@@ -28633,10 +28631,6 @@
         "hidden": {
           "description": "Specifies the hidden status. Resources that have this set to true are not returned by the REST API and not visible in Kibana. Default to \"false\".",
           "type": "boolean"
-        },
-        "name": {
-          "description": "Specifies the name of the user",
-          "type": "string"
         },
         "opendistroSecurityRoles": {
           "description": "Specifies a list of opendistro security plugin roles assigned to this user.",
