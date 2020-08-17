@@ -273,41 +273,45 @@ message ElasticsearchStatus {
 // The `json` tags (camel case) are used while taking input from users.
 // The `yaml` tags (snake case) are used by the operator to generate internal_users.yml file.
 message ElasticsearchUserSpec {
+  // Specifies the hash of the password.
+  // +optional
+  optional string hash = 1;
+
   // Specifies the reserved status.
   // Resources that have this set to true can’t be changed using the REST API or Kibana.
   // Default to "false".
   // +optional
-  optional bool reserved = 1;
+  optional bool reserved = 2;
 
   // Specifies the hidden status.
   // Resources that have this set to true are not returned by the REST API
   // and not visible in Kibana.
   // Default to "false".
   // +optional
-  optional bool hidden = 2;
+  optional bool hidden = 3;
 
   // Specifies a list of backend roles assigned to this user.
   // Backend roles can come from the internal user database,
   // LDAP groups, JSON web token claims or SAML assertions.
   // +optional
-  repeated string backendRoles = 3;
+  repeated string backendRoles = 4;
 
   // Specifies a list of searchguard security plugin roles assigned to this user.
   // +optional
-  repeated string searchGuardRoles = 4;
+  repeated string searchGuardRoles = 5;
 
   // Specifies a list of opendistro security plugin roles assigned to this user.
   // +optional
-  repeated string opendistroSecurityRoles = 5;
+  repeated string opendistroSecurityRoles = 6;
 
   // Specifies one or more custom attributes,
   // which can be used in index names and DLS queries.
   // +optional
-  map<string, string> attributes = 6;
+  map<string, string> attributes = 7;
 
   // Specifies the description of the user
   // +optional
-  optional string description = 7;
+  optional string description = 8;
 }
 
 // +kubebuilder:object:root=true
