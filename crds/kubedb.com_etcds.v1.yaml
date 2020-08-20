@@ -1325,8 +1325,15 @@ spec:
                     type: object
                   stashRestoreSession:
                     properties:
+                      apiGroup:
+                        type: string
+                      kind:
+                        type: string
                       name:
                         type: string
+                    required:
+                    - kind
+                    - name
                     type: object
                 type: object
               monitor:

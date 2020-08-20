@@ -542,8 +542,8 @@ func (in *InitSpec) DeepCopyInto(out *InitSpec) {
 	}
 	if in.StashRestoreSession != nil {
 		in, out := &in.StashRestoreSession, &out.StashRestoreSession
-		*out = new(v1.LocalObjectReference)
-		**out = **in
+		*out = new(v1.TypedLocalObjectReference)
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }
@@ -2026,6 +2026,11 @@ func (in *RedisSpec) DeepCopyInto(out *RedisSpec) {
 	if in.Storage != nil {
 		in, out := &in.Storage, &out.Storage
 		*out = new(v1.PersistentVolumeClaimSpec)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Init != nil {
+		in, out := &in.Init, &out.Init
+		*out = new(InitSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.Monitor != nil {

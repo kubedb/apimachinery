@@ -25,7 +25,7 @@ type InitSpec struct {
 	PostgresWAL  *PostgresWALSourceSpec `json:"postgresWAL,omitempty" protobuf:"bytes,3,opt,name=postgresWAL"`
 	// Name of stash restoreSession in same namespace of kubedb object.
 	// ref: https://github.com/stashed/stash/blob/09af5d319bb5be889186965afb04045781d6f926/apis/stash/v1beta1/restore_session_types.go#L22
-	StashRestoreSession *core.LocalObjectReference `json:"stashRestoreSession,omitempty" protobuf:"bytes,4,opt,name=stashRestoreSession"`
+	StashRestoreSession *core.TypedLocalObjectReference `json:"stashRestoreSession,omitempty" protobuf:"bytes,4,opt,name=stashRestoreSession"`
 }
 
 type ScriptSourceSpec struct {

@@ -28844,7 +28844,7 @@
         },
         "stashRestoreSession": {
           "description": "Name of stash restoreSession in same namespace of kubedb object. ref: https://github.com/stashed/stash/blob/09af5d319bb5be889186965afb04045781d6f926/apis/stash/v1beta1/restore_session_types.go#L22",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         }
       }
     },
@@ -30351,6 +30351,10 @@
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
           "type": "boolean"
+        },
+        "init": {
+          "description": "Init is used to initialize database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
         },
         "mode": {
           "description": "Default is \"Standalone\". If set to \"Cluster\", ClusterSpec is required and redis servers will start in cluster mode",
