@@ -1985,6 +1985,11 @@ func (in *RedisSpec) DeepCopyInto(out *RedisSpec) {
 		*out = new(corev1.PersistentVolumeClaimSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Init != nil {
+		in, out := &in.Init, &out.Init
+		*out = new(InitSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
 		*out = new(apiv1.AgentSpec)

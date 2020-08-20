@@ -30319,6 +30319,10 @@
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
           "type": "boolean"
         },
+        "init": {
+          "description": "Init is used to initialize database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+        },
         "mode": {
           "description": "Default is \"Standalone\". If set to \"Cluster\", ClusterSpec is required and redis servers will start in cluster mode",
           "type": "string"

@@ -1326,6 +1326,10 @@ message RedisSpec {
   // Storage spec to specify how storage shall be used.
   optional k8s.io.api.core.v1.PersistentVolumeClaimSpec storage = 6;
 
+  // Init is used to initialize database
+  // +optional
+  optional InitSpec init = 16;
+
   // Monitor is used monitor database instance
   // +optional
   optional kmodules.xyz.monitoring_agent_api.api.v1.AgentSpec monitor = 7;
