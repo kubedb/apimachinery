@@ -120,7 +120,7 @@ func (m mysqlStatsService) ServiceName() string {
 }
 
 func (m mysqlStatsService) ServiceMonitorName() string {
-	return m.OffshootName() + "-stats"
+	return m.ServiceName()
 }
 
 func (m mysqlStatsService) Path() string {

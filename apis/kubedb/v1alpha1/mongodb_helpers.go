@@ -283,7 +283,7 @@ func (m mongoDBStatsService) ServiceName() string {
 }
 
 func (m mongoDBStatsService) ServiceMonitorName() string {
-	return fmt.Sprintf("kubedb-%s-%s", m.Namespace, m.Name)
+	return m.ServiceName()
 }
 
 func (m mongoDBStatsService) Path() string {

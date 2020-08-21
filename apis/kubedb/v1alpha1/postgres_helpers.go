@@ -107,7 +107,7 @@ func (p postgresStatsService) ServiceName() string {
 }
 
 func (p postgresStatsService) ServiceMonitorName() string {
-	return fmt.Sprintf("kubedb-%s-%s", p.Namespace, p.Name)
+	return p.ServiceName()
 }
 
 func (p postgresStatsService) Path() string {

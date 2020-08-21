@@ -136,7 +136,7 @@ func (e elasticsearchStatsService) ServiceName() string {
 }
 
 func (e elasticsearchStatsService) ServiceMonitorName() string {
-	return fmt.Sprintf("kubedb-%s-%s", e.Namespace, e.Name)
+	return e.ServiceName()
 }
 
 func (e elasticsearchStatsService) Path() string {
