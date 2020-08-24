@@ -1900,7 +1900,7 @@ spec:
                       - volumePath
                       type: object
                   type: object
-                stashRestoreSession:
+                stash:
                   properties:
                     apiGroup:
                       type: string

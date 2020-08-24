@@ -540,8 +540,8 @@ func (in *InitSpec) DeepCopyInto(out *InitSpec) {
 		*out = new(PostgresWALSourceSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.StashRestoreSession != nil {
-		in, out := &in.StashRestoreSession, &out.StashRestoreSession
+	if in.Stash != nil {
+		in, out := &in.Stash, &out.Stash
 		*out = new(v1.TypedLocalObjectReference)
 		(*in).DeepCopyInto(*out)
 	}
