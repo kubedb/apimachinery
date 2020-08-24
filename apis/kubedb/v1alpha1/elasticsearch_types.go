@@ -192,7 +192,7 @@ const (
 	ElasticsearchInternalUserLogstash        ElasticsearchInternalUser = "logstash"
 	ElasticsearchInternalUserReadall         ElasticsearchInternalUser = "readall"
 	ElasticsearchInternalUserSnapshotrestore ElasticsearchInternalUser = "snapshotrestore"
-	ElasticsearchInternalUserReadallMonitor  ElasticsearchInternalUser = "readall_monitor"
+	ElasticsearchInternalUserMetricsExporter ElasticsearchInternalUser = "metrics_exporter"
 )
 
 // Specifies the security plugin internal user structure.
