@@ -111,7 +111,7 @@ func (m mariadbStatsService) ServiceName() string {
 }
 
 func (m mariadbStatsService) ServiceMonitorName() string {
-	return fmt.Sprintf("kubedb-%s-%s", m.Namespace, m.Name)
+	return m.ServiceName()
 }
 
 func (m mariadbStatsService) Path() string {
