@@ -377,6 +377,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology":   schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchClusterTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchList":              schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode":              schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchNode(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchRoleMapSpec":       schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchRoleMapSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec":              schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus":            schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchUserSpec":          schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchUserSpec(ref),
@@ -436,7 +437,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RedisList":                      schema_apimachinery_apis_kubedb_v1alpha1_RedisList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RedisSpec":                      schema_apimachinery_apis_kubedb_v1alpha1_RedisSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RedisStatus":                    schema_apimachinery_apis_kubedb_v1alpha1_RedisStatus(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RoleMapSpec":                    schema_apimachinery_apis_kubedb_v1alpha1_RoleMapSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ScriptSourceSpec":               schema_apimachinery_apis_kubedb_v1alpha1_ScriptSourceSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSPolicy":                      schema_apimachinery_apis_kubedb_v1alpha1_TLSPolicy(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.elasticsearchApp":               schema_apimachinery_apis_kubedb_v1alpha1_elasticsearchApp(ref),
@@ -18199,6 +18199,89 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchNode(ref common.Refer
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchRoleMapSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Specifies the role mapping structure. Both 'json' and 'yaml' tags are used in structure metadata. The `json` tags (camel case) are used while taking input from users. The `yaml` tags (snake case) are used by the operator to generate roles_mapping.yml file.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"reserved": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the reserved status. Resources that have this set to true can’t be changed using the REST API or Kibana. Default to \"false\".",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"hidden": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the hidden status. Resources that have this set to true are not returned by the REST API and not visible in Kibana. Default to \"false\".",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"backendRoles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of backend roles assigned to this role. Backend roles can come from the internal user database, LDAP groups, JSON web token claims or SAML assertions.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"hosts": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of hosts assigned to this role.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"users": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of users assigned to this role.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"andBackendRoles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of backend roles (migrated from ES-version6) assigned to this role.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18335,7 +18418,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RoleMapSpec"),
+										Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchRoleMapSpec"),
 									},
 								},
 							},
@@ -18367,7 +18450,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RoleMapSpec"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchRoleMapSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"},
 	}
 }
 
@@ -21382,89 +21465,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_RedisStatus(ref common.ReferenceCa
 							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
 							Type:        []string{"integer"},
 							Format:      "int64",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha1_RoleMapSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Specifies the role mapping structure. Both 'json' and 'yaml' tags are used in structure metadata. The `json` tags (camel case) are used while taking input from users. The `yaml` tags (snake case) are used by the operator to generate roles_mapping.yml file.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"reserved": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the reserved status. Resources that have this set to true can’t be changed using the REST API or Kibana. Default to \"false\".",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"hidden": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the hidden status. Resources that have this set to true are not returned by the REST API and not visible in Kibana. Default to \"false\".",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"backendRoles": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies a list of backend roles assigned to this role. Backend roles can come from the internal user database, LDAP groups, JSON web token claims or SAML assertions.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"hosts": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies a list of hosts assigned to this role.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"users": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies a list of users assigned to this role.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"andBackendRoles": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies a list of backend roles (migrated from ES-version6) assigned to this role.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
 						},
 					},
 				},

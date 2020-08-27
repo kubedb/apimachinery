@@ -136,7 +136,7 @@ type ElasticsearchSpec struct {
 	//   <role2>:
 	//		...
 	// +optional
-	RolesMapping map[string]RoleMapSpec `json:"rolesMapping,omitempty" protobuf:"bytes,19,rep,name=rolesMapping"`
+	RolesMapping map[string]ElasticsearchRoleMapSpec `json:"rolesMapping,omitempty" protobuf:"bytes,19,rep,name=rolesMapping"`
 
 	// Indicates that the database is paused and controller will not sync any changes made to this spec.
 	// +optional
@@ -248,7 +248,7 @@ type ElasticsearchUserSpec struct {
 // Both 'json' and 'yaml' tags are used in structure metadata.
 // The `json` tags (camel case) are used while taking input from users.
 // The `yaml` tags (snake case) are used by the operator to generate roles_mapping.yml file.
-type RoleMapSpec struct {
+type ElasticsearchRoleMapSpec struct {
 	// Specifies the reserved status.
 	// Resources that have this set to true can’t be changed using the REST API or Kibana.
 	// Default to "false".

@@ -163,6 +163,42 @@ message ElasticsearchNode {
   optional k8s.io.apimachinery.pkg.util.intstr.IntOrString maxUnavailable = 5;
 }
 
+// Specifies the role mapping structure.
+// Both 'json' and 'yaml' tags are used in structure metadata.
+// The `json` tags (camel case) are used while taking input from users.
+// The `yaml` tags (snake case) are used by the operator to generate roles_mapping.yml file.
+message ElasticsearchRoleMapSpec {
+  // Specifies the reserved status.
+  // Resources that have this set to true can’t be changed using the REST API or Kibana.
+  // Default to "false".
+  // +optional
+  optional bool reserved = 1;
+
+  // Specifies the hidden status.
+  // Resources that have this set to true are not returned by the REST API
+  // and not visible in Kibana.
+  // Default to "false".
+  // +optional
+  optional bool hidden = 2;
+
+  // Specifies a list of backend roles assigned to this role.
+  // Backend roles can come from the internal user database,
+  // LDAP groups, JSON web token claims or SAML assertions.
+  // +optional
+  repeated string backendRoles = 3;
+
+  // Specifies a list of hosts assigned to this role.
+  // +optional
+  repeated string hosts = 4;
+
+  // Specifies a list of users assigned to this role.
+  // +optional
+  repeated string users = 5;
+
+  // Specifies a list of backend roles (migrated from ES-version6) assigned to this role.
+  repeated string andBackendRoles = 6;
+}
+
 message ElasticsearchSpec {
   // Version of Elasticsearch to be deployed.
   optional string version = 1;
@@ -246,7 +282,7 @@ message ElasticsearchSpec {
   //   <role2>:
   // 		...
   // +optional
-  map<string, RoleMapSpec> rolesMapping = 19;
+  map<string, ElasticsearchRoleMapSpec> rolesMapping = 19;
 
   // Indicates that the database is paused and controller will not sync any changes made to this spec.
   // +optional
@@ -1417,42 +1453,6 @@ message RedisStatus {
   // resource's generation, which is updated on mutation by the API Server.
   // +optional
   optional int64 observedGeneration = 3;
-}
-
-// Specifies the role mapping structure.
-// Both 'json' and 'yaml' tags are used in structure metadata.
-// The `json` tags (camel case) are used while taking input from users.
-// The `yaml` tags (snake case) are used by the operator to generate roles_mapping.yml file.
-message RoleMapSpec {
-  // Specifies the reserved status.
-  // Resources that have this set to true can’t be changed using the REST API or Kibana.
-  // Default to "false".
-  // +optional
-  optional bool reserved = 1;
-
-  // Specifies the hidden status.
-  // Resources that have this set to true are not returned by the REST API
-  // and not visible in Kibana.
-  // Default to "false".
-  // +optional
-  optional bool hidden = 2;
-
-  // Specifies a list of backend roles assigned to this role.
-  // Backend roles can come from the internal user database,
-  // LDAP groups, JSON web token claims or SAML assertions.
-  // +optional
-  repeated string backendRoles = 3;
-
-  // Specifies a list of hosts assigned to this role.
-  // +optional
-  repeated string hosts = 4;
-
-  // Specifies a list of users assigned to this role.
-  // +optional
-  repeated string users = 5;
-
-  // Specifies a list of backend roles (migrated from ES-version6) assigned to this role.
-  repeated string andBackendRoles = 6;
 }
 
 message ScriptSourceSpec {
