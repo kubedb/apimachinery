@@ -94,6 +94,7 @@ type MongoDBHorizontalScalingSpec struct {
 // MongoDBVerticalScalingSpec is the spec for mongodb vertical scaling
 type MongoDBVerticalScalingSpec struct {
 	Standalone   *core.ResourceRequirements `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
+	ReplicaSet   *core.ResourceRequirements `json:"replicaSet,omitempty" protobuf:"bytes,6,opt,name=replicaSet"`
 	Mongos       *core.ResourceRequirements `json:"mongos,omitempty" protobuf:"bytes,2,opt,name=mongos"`
 	ConfigServer *core.ResourceRequirements `json:"configServer,omitempty" protobuf:"bytes,3,opt,name=configServer"`
 	Shard        *core.ResourceRequirements `json:"shard,omitempty" protobuf:"bytes,4,opt,name=shard"`
@@ -103,12 +104,14 @@ type MongoDBVerticalScalingSpec struct {
 // MongoDBVolumeExpansionSpec is the spec for mongodb volume expansion
 type MongoDBVolumeExpansionSpec struct {
 	Standalone   *resource.Quantity `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
+	ReplicaSet   *resource.Quantity `json:"replicaSet,omitempty" protobuf:"bytes,4,opt,name=replicaSet"`
 	ConfigServer *resource.Quantity `json:"configServer,omitempty" protobuf:"bytes,2,opt,name=configServer"`
 	Shard        *resource.Quantity `json:"shard,omitempty" protobuf:"bytes,3,opt,name=shard"`
 }
 
 type MongoDBCustomConfigSpec struct {
 	Standalone   *MongoDBCustomConfig `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
+	ReplicaSet   *MongoDBCustomConfig `json:"replicaSet,omitempty" protobuf:"bytes,5,opt,name=replicaSet"`
 	Mongos       *MongoDBCustomConfig `json:"mongos,omitempty" protobuf:"bytes,2,opt,name=mongos"`
 	ConfigServer *MongoDBCustomConfig `json:"configServer,omitempty" protobuf:"bytes,3,opt,name=configServer"`
 	Shard        *MongoDBCustomConfig `json:"shard,omitempty" protobuf:"bytes,4,opt,name=shard"`

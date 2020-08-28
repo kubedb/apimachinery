@@ -207,6 +207,8 @@ message MongoDBCustomConfig {
 message MongoDBCustomConfigSpec {
   optional MongoDBCustomConfig standalone = 1;
 
+  optional MongoDBCustomConfig replicaSet = 5;
+
   optional MongoDBCustomConfig mongos = 2;
 
   optional MongoDBCustomConfig configServer = 3;
@@ -296,6 +298,8 @@ message MongoDBShardNode {
 message MongoDBVerticalScalingSpec {
   optional k8s.io.api.core.v1.ResourceRequirements standalone = 1;
 
+  optional k8s.io.api.core.v1.ResourceRequirements replicaSet = 6;
+
   optional k8s.io.api.core.v1.ResourceRequirements mongos = 2;
 
   optional k8s.io.api.core.v1.ResourceRequirements configServer = 3;
@@ -308,6 +312,8 @@ message MongoDBVerticalScalingSpec {
 // MongoDBVolumeExpansionSpec is the spec for mongodb volume expansion
 message MongoDBVolumeExpansionSpec {
   optional k8s.io.apimachinery.pkg.api.resource.Quantity standalone = 1;
+
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity replicaSet = 4;
 
   optional k8s.io.apimachinery.pkg.api.resource.Quantity configServer = 2;
 

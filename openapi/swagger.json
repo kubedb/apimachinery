@@ -30950,6 +30950,9 @@
         "mongos": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
         },
+        "replicaSet": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
+        },
         "shard": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
         },
@@ -31123,6 +31126,9 @@
         "mongos": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
+        "replicaSet": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "shard": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
@@ -31136,6 +31142,9 @@
       "type": "object",
       "properties": {
         "configServer": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "replicaSet": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "shard": {

@@ -432,6 +432,11 @@ func (in *MongoDBCustomConfigSpec) DeepCopyInto(out *MongoDBCustomConfigSpec) {
 		*out = new(MongoDBCustomConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ReplicaSet != nil {
+		in, out := &in.ReplicaSet, &out.ReplicaSet
+		*out = new(MongoDBCustomConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Mongos != nil {
 		in, out := &in.Mongos, &out.Mongos
 		*out = new(MongoDBCustomConfig)
@@ -646,6 +651,11 @@ func (in *MongoDBVerticalScalingSpec) DeepCopyInto(out *MongoDBVerticalScalingSp
 		*out = new(corev1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ReplicaSet != nil {
+		in, out := &in.ReplicaSet, &out.ReplicaSet
+		*out = new(corev1.ResourceRequirements)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Mongos != nil {
 		in, out := &in.Mongos, &out.Mongos
 		*out = new(corev1.ResourceRequirements)
@@ -684,6 +694,11 @@ func (in *MongoDBVolumeExpansionSpec) DeepCopyInto(out *MongoDBVolumeExpansionSp
 	*out = *in
 	if in.Standalone != nil {
 		in, out := &in.Standalone, &out.Standalone
+		x := (*in).DeepCopy()
+		*out = &x
+	}
+	if in.ReplicaSet != nil {
+		in, out := &in.ReplicaSet, &out.ReplicaSet
 		x := (*in).DeepCopy()
 		*out = &x
 	}

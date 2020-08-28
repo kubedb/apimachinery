@@ -18429,6 +18429,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBCustomConfigSpec(ref common.Re
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBCustomConfig"),
 						},
 					},
+					"replicaSet": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBCustomConfig"),
+						},
+					},
 					"mongos": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBCustomConfig"),
@@ -18715,6 +18720,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBVerticalScalingSpec(ref common
 							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
 					},
+					"replicaSet": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
 					"mongos": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
@@ -18751,6 +18761,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBVolumeExpansionSpec(ref common
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"standalone": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"replicaSet": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
