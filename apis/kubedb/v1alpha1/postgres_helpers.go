@@ -110,6 +110,10 @@ func (p postgresStatsService) ServiceMonitorName() string {
 	return p.ServiceName()
 }
 
+func (p postgresStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return p.OffshootLabels()
+}
+
 func (p postgresStatsService) Path() string {
 	return DefaultStatsPath
 }

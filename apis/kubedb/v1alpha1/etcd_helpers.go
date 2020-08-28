@@ -114,6 +114,10 @@ func (e etcdStatsService) ServiceMonitorName() string {
 	return e.ServiceName()
 }
 
+func (e etcdStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return e.OffshootLabels()
+}
+
 func (e etcdStatsService) Path() string {
 	return "/metrics"
 }
