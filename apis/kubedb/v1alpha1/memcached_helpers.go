@@ -109,6 +109,10 @@ func (m memcachedStatsService) ServiceMonitorName() string {
 	return m.ServiceName()
 }
 
+func (m memcachedStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return m.OffshootLabels()
+}
+
 func (m memcachedStatsService) Path() string {
 	return DefaultStatsPath
 }

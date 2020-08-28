@@ -130,6 +130,10 @@ func (r redisStatsService) ServiceMonitorName() string {
 	return r.ServiceName()
 }
 
+func (p redisStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return p.OffshootLabels()
+}
+
 func (r redisStatsService) Path() string {
 	return DefaultStatsPath
 }

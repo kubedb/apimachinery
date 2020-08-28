@@ -139,6 +139,10 @@ func (e elasticsearchStatsService) ServiceMonitorName() string {
 	return e.ServiceName()
 }
 
+func (e elasticsearchStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return e.OffshootLabels()
+}
+
 func (e elasticsearchStatsService) Path() string {
 	return DefaultStatsPath
 }

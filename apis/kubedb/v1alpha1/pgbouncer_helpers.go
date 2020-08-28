@@ -108,6 +108,10 @@ func (p pgbouncerStatsService) ServiceMonitorName() string {
 	return p.ServiceName()
 }
 
+func (p pgbouncerStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return p.OffshootLabels()
+}
+
 func (p pgbouncerStatsService) Path() string {
 	return DefaultStatsPath
 }

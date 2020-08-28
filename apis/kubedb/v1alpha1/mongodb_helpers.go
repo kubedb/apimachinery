@@ -286,6 +286,10 @@ func (m mongoDBStatsService) ServiceMonitorName() string {
 	return m.ServiceName()
 }
 
+func (m mongoDBStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return m.OffshootLabels()
+}
+
 func (m mongoDBStatsService) Path() string {
 	return DefaultStatsPath
 }

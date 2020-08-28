@@ -131,6 +131,10 @@ func (p perconaXtraDBStatsService) ServiceMonitorName() string {
 	return p.ServiceName()
 }
 
+func (p perconaXtraDBStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return p.OffshootLabels()
+}
+
 func (p perconaXtraDBStatsService) Path() string {
 	return DefaultStatsPath
 }

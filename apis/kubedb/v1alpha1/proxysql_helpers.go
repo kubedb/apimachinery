@@ -111,6 +111,10 @@ func (p proxysqlStatsService) ServiceMonitorName() string {
 	return p.ServiceName()
 }
 
+func (p proxysqlStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return p.OffshootLabels()
+}
+
 func (p proxysqlStatsService) Path() string {
 	return DefaultStatsPath
 }

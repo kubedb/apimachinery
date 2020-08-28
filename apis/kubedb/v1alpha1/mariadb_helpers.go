@@ -114,6 +114,10 @@ func (m mariadbStatsService) ServiceMonitorName() string {
 	return m.ServiceName()
 }
 
+func (m mariadbStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return m.OffshootLabels()
+}
+
 func (m mariadbStatsService) Path() string {
 	return DefaultStatsPath
 }
