@@ -419,7 +419,7 @@ func (m *MongoDB) setDefaultTLSConfig() {
 		return
 	}
 	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MongoDBServerCert), m.CertificateName(MongoDBServerCert))
-	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MongoDBArchiverCert), m.CertificateName(MongoDBArchiverCert))
+	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MongoDBClientCert), m.CertificateName(MongoDBClientCert))
 	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MongoDBMetricsExporterCert), m.CertificateName(MongoDBMetricsExporterCert))
 }
 
