@@ -200,7 +200,6 @@ message MemcachedOpsRequestStatus {
 message MongoDBCustomConfig {
   optional k8s.io.api.core.v1.LocalObjectReference configMap = 1;
 
-  // +kubebuilder:pruning:PreserveUnknownFields
   map<string, string> data = 2;
 }
 

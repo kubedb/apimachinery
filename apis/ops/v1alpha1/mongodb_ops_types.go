@@ -119,8 +119,7 @@ type MongoDBCustomConfigSpec struct {
 
 type MongoDBCustomConfig struct {
 	ConfigMap *core.LocalObjectReference `json:"configMap,omitempty" protobuf:"bytes,1,opt,name=configMap"`
-	// +kubebuilder:pruning:PreserveUnknownFields
-	Data map[string]string `json:"data,omitempty" protobuf:"bytes,2,rep,name=data"`
+	Data      map[string]string          `json:"data,omitempty" protobuf:"bytes,2,rep,name=data"`
 }
 
 // MongoDBOpsRequestStatus is the status for MongoDBOpsRequest
