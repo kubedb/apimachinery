@@ -371,15 +371,16 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.CertificateSpec":                schema_apimachinery_apis_kubedb_v1alpha1_CertificateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ConnectionPoolConfig":           schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Databases":                      schema_apimachinery_apis_kubedb_v1alpha1_Databases(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Elasticsearch":                  schema_apimachinery_apis_kubedb_v1alpha1_Elasticsearch(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology":   schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchClusterTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchList":              schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode":              schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchNode(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchRoleMapSpec":       schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchRoleMapSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchSpec":              schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchStatus":            schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchUserSpec":          schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchUserSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Etcd":                           schema_apimachinery_apis_kubedb_v1alpha1_Etcd(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.EtcdList":                       schema_apimachinery_apis_kubedb_v1alpha1_EtcdList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.EtcdSpec":                       schema_apimachinery_apis_kubedb_v1alpha1_EtcdSpec(ref),
@@ -437,9 +438,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RedisSpec":                      schema_apimachinery_apis_kubedb_v1alpha1_RedisSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RedisStatus":                    schema_apimachinery_apis_kubedb_v1alpha1_RedisStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ScriptSourceSpec":               schema_apimachinery_apis_kubedb_v1alpha1_ScriptSourceSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig":                      schema_apimachinery_apis_kubedb_v1alpha1_TLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSPolicy":                      schema_apimachinery_apis_kubedb_v1alpha1_TLSPolicy(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.X509Subject":                    schema_apimachinery_apis_kubedb_v1alpha1_X509Subject(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.elasticsearchApp":               schema_apimachinery_apis_kubedb_v1alpha1_elasticsearchApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.elasticsearchStatsService":      schema_apimachinery_apis_kubedb_v1alpha1_elasticsearchStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.etcdApp":                        schema_apimachinery_apis_kubedb_v1alpha1_etcdApp(ref),
@@ -17864,94 +17863,6 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha1_CertificateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"subject": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.X509Subject"),
-						},
-					},
-					"duration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Certificate default Duration",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-					"renewBefore": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Certificate renew before expiration duration",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-					"dnsNames": {
-						SchemaProps: spec.SchemaProps{
-							Description: "DNSNames is a list of subject alt names to be used on the Certificate.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"ipAddresses": {
-						SchemaProps: spec.SchemaProps{
-							Description: "IPAddresses is a list of IP addresses to be used on the Certificate",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"uriSANs": {
-						SchemaProps: spec.SchemaProps{
-							Description: "URISANs is a list of URI Subject Alternative Names to be set on this Certificate.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"emailSANs": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EmailSANs is a list of email subjectAltNames to be set on the Certificate.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.X509Subject"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha1_ConnectionPoolConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18274,6 +18185,89 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchNode(ref common.Refer
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchRoleMapSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Specifies the role mapping structure. Both 'json' and 'yaml' tags are used in structure metadata. The `json` tags (camel case) are used while taking input from users. The `yaml` tags (snake case) are used by the operator to generate roles_mapping.yml file.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"reserved": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the reserved status. Resources that have this set to true can’t be changed using the REST API or Kibana. Default to \"false\".",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"hidden": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the hidden status. Resources that have this set to true are not returned by the REST API and not visible in Kibana. Default to \"false\".",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"backendRoles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of backend roles assigned to this role. Backend roles can come from the internal user database, LDAP groups, JSON web token claims or SAML assertions.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"hosts": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of hosts assigned to this role.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"users": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of users assigned to this role.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"andBackendRoles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of backend roles (migrated from ES-version6) assigned to this role.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18309,7 +18303,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 					},
 					"certificateSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Secret with SSL certificates",
+							Description: "Secret with SSL certificates Deprecated: Use spec.tls instead",
 							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
 						},
 					},
@@ -18382,10 +18376,38 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 							Ref:         ref("k8s.io/apimachinery/pkg/util/intstr.IntOrString"),
 						},
 					},
-					"updateStrategy": {
+					"tls": {
 						SchemaProps: spec.SchemaProps{
-							Description: "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
-							Ref:         ref("k8s.io/api/apps/v1.StatefulSetUpdateStrategy"),
+							Description: "TLS contains tls configurations",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+						},
+					},
+					"internalUsers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InternalUsers contains internal user configurations. Expected Input format: internalUsers:\n  <username1>:\n\t\t...\n  <username2>:\n\t\t...",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchUserSpec"),
+									},
+								},
+							},
+						},
+					},
+					"rolesMapping": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RolesMapping contains roles mapping configurations. Expected Input format: rolesMapping:\n  <role1>:\n\t\t...\n  <role2>:\n\t\t...",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchRoleMapSpec"),
+									},
+								},
+							},
 						},
 					},
 					"paused": {
@@ -18414,7 +18436,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchRoleMapSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"},
 	}
 }
 
@@ -18441,6 +18463,97 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchStatus(ref common.Ref
 							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
 							Type:        []string{"integer"},
 							Format:      "int64",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchUserSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Specifies the security plugin internal user structure. Both 'json' and 'yaml' tags are used in structure metadata. The `json` tags (camel case) are used while taking input from users. The `yaml` tags (snake case) are used by the operator to generate internal_users.yml file.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"reserved": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the reserved status. Resources that have this set to true can’t be changed using the REST API or Kibana. Default to \"false\".",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"hidden": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the hidden status. Resources that have this set to true are not returned by the REST API and not visible in Kibana. Default to \"false\".",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"backendRoles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of backend roles assigned to this user. Backend roles can come from the internal user database, LDAP groups, JSON web token claims or SAML assertions.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"searchGuardRoles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of searchguard security plugin roles assigned to this user.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"opendistroSecurityRoles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a list of opendistro security plugin roles assigned to this user.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"attributes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies one or more custom attributes, which can be used in index names and DLS queries.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the description of the user",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -18903,6 +19016,12 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MariaDBSpec(ref common.ReferenceCa
 							Ref:         ref("k8s.io/api/apps/v1.StatefulSetUpdateStrategy"),
 						},
 					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS contains tls configurations",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+						},
+					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
@@ -18929,7 +19048,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MariaDBSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"},
 	}
 }
 
@@ -19135,6 +19254,12 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MemcachedSpec(ref common.Reference
 							Ref:         ref("k8s.io/api/apps/v1.DeploymentStrategy"),
 						},
 					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS contains tls configurations",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+						},
+					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
@@ -19161,7 +19286,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MemcachedSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.DeploymentStrategy", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"},
+			"k8s.io/api/apps/v1.DeploymentStrategy", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"},
 	}
 }
 
@@ -19631,7 +19756,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBSpec(ref common.ReferenceCa
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations for client and server.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
 					"keyFile": {
@@ -19673,7 +19798,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBReplicaSet", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBShardingTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBReplicaSet", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBShardingTopology"},
 	}
 }
 
@@ -19948,7 +20073,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQLSpec(ref common.ReferenceCall
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations for client and server.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
 					"paused": {
@@ -19977,7 +20102,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQLSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLClusterTopology"},
 	}
 }
 
@@ -20176,6 +20301,12 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PerconaXtraDBSpec(ref common.Refer
 							Ref:         ref("k8s.io/api/apps/v1.StatefulSetUpdateStrategy"),
 						},
 					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS contains tls configurations for client and server.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+						},
+					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
@@ -20190,12 +20321,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PerconaXtraDBSpec(ref common.Refer
 							Format:      "",
 						},
 					},
-					"tls": {
-						SchemaProps: spec.SchemaProps{
-							Description: "TLS contains tls configurations for client and server.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"),
-						},
-					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TerminationPolicy controls the delete operation for database",
@@ -20208,7 +20333,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PerconaXtraDBSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"},
 	}
 }
 
@@ -20398,7 +20523,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSpec(ref common.Reference
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations for client and server.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
 					"paused": {
@@ -20413,7 +20538,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ConnectionPoolConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Databases", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ConnectionPoolConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Databases"},
 	}
 }
 
@@ -20665,6 +20790,12 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresSpec(ref common.ReferenceC
 							Ref:         ref("k8s.io/api/apps/v1.StatefulSetUpdateStrategy"),
 						},
 					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS contains tls configurations for client and server.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+						},
+					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
@@ -20679,12 +20810,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresSpec(ref common.ReferenceC
 							Format:      "",
 						},
 					},
-					"tls": {
-						SchemaProps: spec.SchemaProps{
-							Description: "TLS contains tls configurations for client and server.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"),
-						},
-					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TerminationPolicy controls the delete operation for database",
@@ -20697,7 +20822,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.LeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PostgresArchiverSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.LeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PostgresArchiverSpec"},
 	}
 }
 
@@ -20849,7 +20974,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLBackendSpec(ref common.Ref
 				Properties: map[string]spec.Schema{
 					"ref": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Ref lets one to locate the typed referenced object (in our case, it is the MySQL/Percona-XtraDB/MariaDB object) inside the same namespace.",
+							Description: "Ref lets one to locate the typed referenced object (in our case, it is the MySQL/Percona-XtraDB/ProxySQL object) inside the same namespace.",
 							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
 						},
 					},
@@ -20986,7 +21111,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLSpec(ref common.ReferenceC
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations for client and server.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
 					"paused": {
@@ -21001,7 +21126,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQLBackendSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ProxySQLBackendSpec"},
 	}
 }
 
@@ -21270,7 +21395,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_RedisSpec(ref common.ReferenceCall
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations for client and server.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
 					"paused": {
@@ -21299,7 +21424,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_RedisSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RedisClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSConfig"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.RedisClusterSpec"},
 	}
 }
 
@@ -21522,33 +21647,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ScriptSourceSpec(ref common.Refere
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha1_TLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"issuerRef": {
-						SchemaProps: spec.SchemaProps{
-							Description: "IssuerRef is a reference to a Certificate Issuer.",
-							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
-						},
-					},
-					"certificate": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Certificate provides server certificate options used by PgBouncer pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.CertificateSpec"),
-						},
-					},
-				},
-				Required: []string{"issuerRef"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.CertificateSpec"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha1_TLSPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21571,124 +21669,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_TLSPolicy(ref common.ReferenceCall
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MemberSecret"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha1_X509Subject(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "X509Subject Full X509 name specification",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"organizations": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Organizations to be used on the Certificate.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"countries": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Countries to be used on the Certificate.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"organizationalUnits": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Organizational Units to be used on the Certificate.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"localities": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Cities to be used on the Certificate.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"provinces": {
-						SchemaProps: spec.SchemaProps{
-							Description: "State/Provinces to be used on the Certificate.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"streetAddresses": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Street addresses to be used on the Certificate.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"postalCodes": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Postal codes to be used on the Certificate.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"serialNumber": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Serial number to be used on the Certificate.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
 	}
 }
 
