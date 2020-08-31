@@ -30927,6 +30927,40 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig": {
+      "type": "object",
+      "properties": {
+        "configMap": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfigSpec": {
+      "type": "object",
+      "properties": {
+        "configServer": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
+        },
+        "mongos": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
+        },
+        "replicaSet": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
+        },
+        "shard": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
+        },
+        "standalone": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for mongodb horizontal scaling",
       "type": "object",
@@ -31014,6 +31048,10 @@
         "type"
       ],
       "properties": {
+        "customConfig": {
+          "description": "Specifies information necessary for custom configuration of MongoDB",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfigSpec"
+        },
         "databaseRef": {
           "description": "Specifies the MongoDB reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -31088,6 +31126,9 @@
         "mongos": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
+        "replicaSet": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "shard": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
@@ -31101,6 +31142,9 @@
       "type": "object",
       "properties": {
         "configServer": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "replicaSet": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "shard": {
