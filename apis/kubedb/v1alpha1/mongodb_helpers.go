@@ -196,6 +196,9 @@ func (m MongoDB) ServiceName() string {
 // Governing Service Name. Here, name parameter is either
 // OffshootName, ShardNodeName or ConfigSvrNodeName
 func (m MongoDB) GvrSvcName(name string) string {
+	if name == "" {
+		panic(fmt.Sprintf("StatefulSet name is missing for MongoDB %s/%s", m.Namespace, m.Name))
+	}
 	return name + "-gvr"
 }
 
