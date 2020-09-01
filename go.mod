@@ -21,7 +21,7 @@ require (
 	k8s.io/apimachinery v0.18.5
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/kube-openapi v0.0.0-20200410145947-61e04a5be9a6
-	kmodules.xyz/client-go v0.0.0-20200901045026-bf435873b135
+	kmodules.xyz/client-go v0.0.0-20200901064306-0f1faee534af
 	kmodules.xyz/crd-schema-fuzz v0.0.0-20200521005638-2433a187de95
 	kmodules.xyz/custom-resources v0.0.0-20200604135349-9e9f5c4fdba9
 	kmodules.xyz/monitoring-agent-api v0.0.0-20200828051750-42aa8e7852f3
