@@ -23,7 +23,7 @@ BIN      := apimachinery
 CRD_OPTIONS          ?= "crd:trivialVersions=true,preserveUnknownFields=false,crdVersions={v1beta1,v1}"
 # https://github.com/appscodelabs/gengo-builder
 CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.18
-API_GROUPS           ?= kubedb:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1
+API_GROUPS           ?= kubedb:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1
 
 # This version-strategy uses git tags to set the version string
 git_branch       := $(shell git rev-parse --abbrev-ref HEAD)
@@ -153,7 +153,7 @@ openapi-%:
 		openapi-gen                                      \
 			--v 1 --logtostderr                          \
 			--go-header-file "./hack/license/go.txt" \
-			--input-dirs "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*),k8s.io/apimachinery/pkg/apis/meta/v1,k8s.io/apimachinery/pkg/api/resource,k8s.io/apimachinery/pkg/runtime,k8s.io/apimachinery/pkg/util/intstr,k8s.io/apimachinery/pkg/version,k8s.io/api/core/v1,k8s.io/api/apps/v1,kmodules.xyz/offshoot-api/api/v1,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,kmodules.xyz/monitoring-agent-api/api/v1,k8s.io/api/rbac/v1,kmodules.xyz/objectstore-api/api/v1,kmodules.xyz/client-go/api/v1" \
+			--input-dirs "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*),k8s.io/apimachinery/pkg/apis/meta/v1,k8s.io/apimachinery/pkg/api/resource,k8s.io/apimachinery/pkg/runtime,k8s.io/apimachinery/pkg/util/intstr,k8s.io/apimachinery/pkg/version,k8s.io/api/core/v1,k8s.io/api/apps/v1,kmodules.xyz/offshoot-api/api/v1,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,kmodules.xyz/monitoring-agent-api/api/v1,k8s.io/api/rbac/v1,k8s.io/api/autoscaling/v2beta2,kmodules.xyz/objectstore-api/api/v1,kmodules.xyz/client-go/api/v1" \
 			--output-package "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*)" \
 			--report-filename .config/api-rules/violation_exceptions.list
 
@@ -219,7 +219,7 @@ gen-crd-protos-%:
 			--proto-import=$(DOCKER_REPO_ROOT)/vendor    \
 			--proto-import=$(DOCKER_REPO_ROOT)/third_party/protobuf \
 			--apimachinery-packages=-k8s.io/apimachinery/pkg/api/resource,-k8s.io/apimachinery/pkg/apis/meta/v1,-k8s.io/apimachinery/pkg/apis/meta/v1beta1,-k8s.io/apimachinery/pkg/runtime,-k8s.io/apimachinery/pkg/runtime/schema,-k8s.io/apimachinery/pkg/util/intstr \
-			--packages=-k8s.io/api/core/v1,-k8s.io/api/apps/v1,-kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,-kmodules.xyz/monitoring-agent-api/api/v1,-kmodules.xyz/objectstore-api/api/v1,-kmodules.xyz/offshoot-api/api/v1,-kmodules.xyz/client-go/api/v1,kubedb.dev/apimachinery/apis/$(subst _,/,$*)
+			--packages=-k8s.io/api/core/v1,-k8s.io/api/apps/v1,-k8s.io/api/autoscaling/v2beta2,-kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,-kmodules.xyz/monitoring-agent-api/api/v1,-kmodules.xyz/objectstore-api/api/v1,-kmodules.xyz/offshoot-api/api/v1,-kmodules.xyz/client-go/api/v1,kubedb.dev/apimachinery/apis/$(subst _,/,$*)
 
 .PHONY: gen-bindata
 gen-bindata:
