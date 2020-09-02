@@ -28811,10 +28811,6 @@
           "description": "etcd cluster TLS configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.TLSPolicy"
         },
-        "updateStrategy": {
-          "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
-          "$ref": "#/definitions/io.k8s.api.apps.v1.StatefulSetUpdateStrategy"
-        },
         "version": {
           "description": "Version of Etcd to be deployed.",
           "type": "string"
@@ -28996,10 +28992,6 @@
           "description": "TLS contains tls configurations",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TLSConfig"
         },
-        "updateStrategy": {
-          "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
-          "$ref": "#/definitions/io.k8s.api.apps.v1.StatefulSetUpdateStrategy"
-        },
         "version": {
           "description": "Version of MariaDB to be deployed.",
           "type": "string"
@@ -29132,10 +29124,6 @@
         "serviceTemplate": {
           "description": "ServiceTemplate is an optional configuration for service used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
-        },
-        "strategy": {
-          "description": "The deployment strategy to use to replace existing pods with new ones.",
-          "$ref": "#/definitions/io.k8s.api.apps.v1.DeploymentStrategy"
         },
         "terminationPolicy": {
           "description": "TerminationPolicy controls the delete operation for database",
@@ -29436,10 +29424,6 @@
           "description": "TLS contains tls configurations for client and server.",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TLSConfig"
         },
-        "updateStrategy": {
-          "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
-          "$ref": "#/definitions/io.k8s.api.apps.v1.StatefulSetUpdateStrategy"
-        },
         "version": {
           "description": "Version of MongoDB to be deployed.",
           "type": "string"
@@ -29619,10 +29603,6 @@
           "description": "MySQL cluster topology",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLClusterTopology"
         },
-        "updateStrategy": {
-          "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
-          "$ref": "#/definitions/io.k8s.api.apps.v1.StatefulSetUpdateStrategy"
-        },
         "version": {
           "description": "Version of MySQL to be deployed.",
           "type": "string"
@@ -29762,10 +29742,6 @@
         "tls": {
           "description": "TLS contains tls configurations for client and server.",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TLSConfig"
-        },
-        "updateStrategy": {
-          "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
-          "$ref": "#/definitions/io.k8s.api.apps.v1.StatefulSetUpdateStrategy"
         },
         "version": {
           "description": "Version of PerconaXtraDB to be deployed.",
@@ -30064,10 +30040,6 @@
           "description": "TLS contains tls configurations for client and server.",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TLSConfig"
         },
-        "updateStrategy": {
-          "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
-          "$ref": "#/definitions/io.k8s.api.apps.v1.StatefulSetUpdateStrategy"
-        },
         "version": {
           "description": "Version of Postgres to be deployed.",
           "type": "string"
@@ -30245,10 +30217,6 @@
           "description": "TLS contains tls configurations for client and server.",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TLSConfig"
         },
-        "updateStrategy": {
-          "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
-          "$ref": "#/definitions/io.k8s.api.apps.v1.StatefulSetUpdateStrategy"
-        },
         "version": {
           "description": "Version of ProxySQL to be deployed.",
           "type": "string"
@@ -30424,10 +30392,6 @@
         "tls": {
           "description": "TLS contains tls configurations for client and server.",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TLSConfig"
-        },
-        "updateStrategy": {
-          "description": "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
-          "$ref": "#/definitions/io.k8s.api.apps.v1.StatefulSetUpdateStrategy"
         },
         "version": {
           "description": "Version of Redis to be deployed.",
@@ -31788,31 +31752,6 @@
         "maxUnavailable": {
           "description": "The maximum number of pods that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%). Absolute number is calculated from percentage by rounding down. This can not be 0 if MaxSurge is 0. Defaults to 25%. Example: when this is set to 30%, the old ReplicaSet can be scaled down to 70% of desired pods immediately when the rolling update starts. Once new pods are ready, old ReplicaSet can be scaled down further, followed by scaling up the new ReplicaSet, ensuring that the total number of pods available at all times during the update is at least 70% of desired pods.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
-        }
-      }
-    },
-    "io.k8s.api.apps.v1.RollingUpdateStatefulSetStrategy": {
-      "description": "RollingUpdateStatefulSetStrategy is used to communicate parameter for RollingUpdateStatefulSetStrategyType.",
-      "type": "object",
-      "properties": {
-        "partition": {
-          "description": "Partition indicates the ordinal at which the StatefulSet should be partitioned. Default value is 0.",
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "io.k8s.api.apps.v1.StatefulSetUpdateStrategy": {
-      "description": "StatefulSetUpdateStrategy indicates the strategy that the StatefulSet controller will use to perform updates. It includes any additional parameters necessary to perform the update for the indicated strategy.",
-      "type": "object",
-      "properties": {
-        "rollingUpdate": {
-          "description": "RollingUpdate is used to communicate parameters when Type is RollingUpdateStatefulSetStrategyType.",
-          "$ref": "#/definitions/io.k8s.api.apps.v1.RollingUpdateStatefulSetStrategy"
-        },
-        "type": {
-          "description": "Type indicates the type of the StatefulSetUpdateStrategy. Default is RollingUpdate.",
-          "type": "string"
         }
       }
     },
