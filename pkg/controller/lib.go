@@ -186,6 +186,6 @@ func (c *Controller) CreateDeploymentPodDisruptionBudget(deployment *appsv1.Depl
 func (c *Controller) BlockOnStashOperator(stopCh <-chan struct{}) error {
 	return wait.PollImmediateUntil(time.Second*10, func() (bool, error) {
 		return discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindRestoreSession) ||
-				discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindRestoreBatch), nil
+			discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindRestoreBatch), nil
 	}, stopCh)
 }

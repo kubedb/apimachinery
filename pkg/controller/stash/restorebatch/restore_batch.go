@@ -18,6 +18,7 @@ package restorebatch
 
 import (
 	"context"
+
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 	"kubedb.dev/apimachinery/pkg/eventer"
 
@@ -41,17 +42,17 @@ func (c *Controller) handleRestoreBatch(rb *v1beta1.RestoreBatch) error {
 	var meta metav1.ObjectMeta
 
 	switch rb.Labels[api.LabelDatabaseKind] {
-		case api.ResourceKindRedis:
-			sts, err := c.Client.AppsV1().StatefulSets(rb.Namespace).Get(context.TODO(), rb.Spec.Members[0].Target.Ref.Name, metav1.GetOptions{})
-			if err != nil {
-				return err
-			}
-			meta.Name = sts.OwnerReferences[0].Name
+	case api.ResourceKindRedis:
+		sts, err := c.Client.AppsV1().StatefulSets(rb.Namespace).Get(context.TODO(), rb.Spec.Members[0].Target.Ref.Name, metav1.GetOptions{})
+		if err != nil {
+			return err
+		}
+		meta.Name = sts.OwnerReferences[0].Name
 
-		default:
-			meta = metav1.ObjectMeta{
-				Name: rb.Spec.Members[0].Target.Ref.Name,
-			}
+	default:
+		meta = metav1.ObjectMeta{
+			Name: rb.Spec.Members[0].Target.Ref.Name,
+		}
 	}
 
 	meta.Namespace = rb.Namespace
