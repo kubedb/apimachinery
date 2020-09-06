@@ -34549,8 +34549,8 @@
           "description": "Certificate default Duration",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
-        "emailSANs": {
-          "description": "EmailSANs is a list of email subjectAltNames to be set on the Certificate.",
+        "emailAddresses": {
+          "description": "EmailAddresses is a list of email subjectAltNames to be set on the Certificate.",
           "type": "array",
           "items": {
             "type": "string"
@@ -34579,8 +34579,8 @@
           "description": "Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.X509Subject"
         },
-        "uriSANs": {
-          "description": "URISANs is a list of URI Subject Alternative Names to be set on this Certificate.",
+        "uris": {
+          "description": "URIs is a list of URI subjectAltNames to be set on the Certificate.",
           "type": "array",
           "items": {
             "type": "string"
