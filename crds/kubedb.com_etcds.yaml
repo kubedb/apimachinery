@@ -740,7 +740,7 @@ spec:
                           type: string
                       type: object
                   type: object
-                scriptSource:
+                script:
                   properties:
                     awsElasticBlockStore:
                       properties:
@@ -1329,7 +1329,7 @@ spec:
                       - volumePath
                       type: object
                   type: object
-                stash:
+                source:
                   properties:
                     apiGroup:
                       type: string
