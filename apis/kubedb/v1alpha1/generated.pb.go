@@ -3480,9 +3480,9 @@ func (m *InitSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Stash != nil {
+	if m.Source != nil {
 		{
-			size, err := m.Stash.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Source.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -3504,9 +3504,9 @@ func (m *InitSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if m.ScriptSource != nil {
+	if m.Script != nil {
 		{
-			size, err := m.ScriptSource.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Script.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -7294,16 +7294,16 @@ func (m *InitSpec) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.ScriptSource != nil {
-		l = m.ScriptSource.Size()
+	if m.Script != nil {
+		l = m.Script.Size()
 		n += 1 + l + sovGenerated(uint64(l))
 	}
 	if m.PostgresWAL != nil {
 		l = m.PostgresWAL.Size()
 		n += 1 + l + sovGenerated(uint64(l))
 	}
-	if m.Stash != nil {
-		l = m.Stash.Size()
+	if m.Source != nil {
+		l = m.Source.Size()
 		n += 1 + l + sovGenerated(uint64(l))
 	}
 	return n
@@ -8701,9 +8701,9 @@ func (this *InitSpec) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&InitSpec{`,
-		`ScriptSource:` + strings.Replace(this.ScriptSource.String(), "ScriptSourceSpec", "ScriptSourceSpec", 1) + `,`,
+		`ScriptSource:` + strings.Replace(this.Script.String(), "ScriptSourceSpec", "ScriptSourceSpec", 1) + `,`,
 		`PostgresWAL:` + strings.Replace(this.PostgresWAL.String(), "PostgresWALSourceSpec", "PostgresWALSourceSpec", 1) + `,`,
-		`Stash:` + strings.Replace(fmt.Sprintf("%v", this.Stash), "TypedLocalObjectReference", "v1.TypedLocalObjectReference", 1) + `,`,
+		`Stash:` + strings.Replace(fmt.Sprintf("%v", this.Source), "TypedLocalObjectReference", "v1.TypedLocalObjectReference", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -13286,10 +13286,10 @@ func (m *InitSpec) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.ScriptSource == nil {
-				m.ScriptSource = &ScriptSourceSpec{}
+			if m.Script == nil {
+				m.Script = &ScriptSourceSpec{}
 			}
-			if err := m.ScriptSource.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Script.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -13358,10 +13358,10 @@ func (m *InitSpec) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Stash == nil {
-				m.Stash = &v1.TypedLocalObjectReference{}
+			if m.Source == nil {
+				m.Source = &v1.TypedLocalObjectReference{}
 			}
-			if err := m.Stash.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Source.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

@@ -63,8 +63,8 @@ func (c *Controller) handleRestoreSession(rs *v1beta1.RestoreSession) error {
 		}
 
 		for _, px := range pxList.Items {
-			if px.Spec.Init != nil && px.Spec.Init.Stash != nil && px.Spec.Init.Stash.Kind == v1beta1.ResourceKindRestoreSession &&
-				px.Spec.Init.Stash.Name == rs.Name {
+			if px.Spec.Init != nil && px.Spec.Init.Source != nil && px.Spec.Init.Source.Kind == v1beta1.ResourceKindRestoreSession &&
+				px.Spec.Init.Source.Name == rs.Name {
 				meta = metav1.ObjectMeta{
 					Name: px.Name,
 				}

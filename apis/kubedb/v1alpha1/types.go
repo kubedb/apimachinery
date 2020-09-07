@@ -21,11 +21,11 @@ import (
 )
 
 type InitSpec struct {
-	ScriptSource *ScriptSourceSpec      `json:"scriptSource,omitempty" protobuf:"bytes,1,opt,name=scriptSource"`
-	PostgresWAL  *PostgresWALSourceSpec `json:"postgresWAL,omitempty" protobuf:"bytes,2,opt,name=postgresWAL"`
-	// Stash restore object in same namespace of a kubedb object.
+	// Source restore object in same namespace of a KubeDB object.
 	// ref: https://github.com/stashed/stash/blob/09af5d319bb5be889186965afb04045781d6f926/apis/stash/v1beta1/restore_session_types.go#L22
-	Stash *core.TypedLocalObjectReference `json:"stash,omitempty" protobuf:"bytes,3,opt,name=stash"`
+	Source      *core.TypedLocalObjectReference `json:"source,omitempty"`
+	Script      *ScriptSourceSpec               `json:"script,omitempty"`
+	PostgresWAL *PostgresWALSourceSpec          `json:"postgresWAL,omitempty"`
 }
 
 type ScriptSourceSpec struct {
