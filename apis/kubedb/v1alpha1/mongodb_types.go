@@ -33,6 +33,8 @@ const (
 	InitInstallContainerName   = "copy-config"
 	InitBootstrapContainerName = "bootstrap"
 	ConfigDirectoryName        = "configdir"
+	MongoDBContainerName       = ResourceSingularMongoDB
+	ExporterContainerName      = "exporter"
 )
 
 // MongoDB defines a MongoDB database.
