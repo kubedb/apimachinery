@@ -70,6 +70,11 @@ const (
 	ReconfigureMongos           = "ReconfigureMongos"
 	ReconfigureShard            = "ReconfigureShard"
 	ReconfigureConfigServer     = "ReconfigureConfigServer"
+	UpdateStandaloneImage       = "UpdateStandaloneImage"
+	UpdateStandaloneResources   = "UpdateStandaloneResources"
+	ScaleDownStandalone         = "ScaleDownStandalone"
+	ScaleUpStandalone           = "ScaleUpStandalone"
+	ReconfigureStandalone       = "ReconfigureStandalone"
 )
 
 type OpsRequestPhase string
