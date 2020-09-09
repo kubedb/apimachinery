@@ -19664,9 +19664,9 @@ func schema_apimachinery_apis_kubedb_v1alpha1_InitSpec(ref common.ReferenceCallb
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"source": {
+					"initializer": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Source restore object in same namespace of a KubeDB object. ref: https://github.com/stashed/stash/blob/09af5d319bb5be889186965afb04045781d6f926/apis/stash/v1beta1/restore_session_types.go#L22",
+							Description: "Initializer object in same namespace of a KubeDB object. ref: https://github.com/stashed/stash/blob/09af5d319bb5be889186965afb04045781d6f926/apis/stash/v1beta1/restore_session_types.go#L22",
 							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
 						},
 					},

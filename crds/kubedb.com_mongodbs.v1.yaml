@@ -666,6 +666,18 @@ spec:
                 type: boolean
               init:
                 properties:
+                  initializer:
+                    properties:
+                      apiGroup:
+                        type: string
+                      kind:
+                        type: string
+                      name:
+                        type: string
+                    required:
+                    - kind
+                    - name
+                    type: object
                   postgresWAL:
                     properties:
                       azure:
@@ -1916,18 +1928,6 @@ spec:
                         required:
                         - volumePath
                         type: object
-                    type: object
-                  source:
-                    properties:
-                      apiGroup:
-                        type: string
-                      kind:
-                        type: string
-                      name:
-                        type: string
-                    required:
-                    - kind
-                    - name
                     type: object
                 type: object
               keyFile:

@@ -21,9 +21,9 @@ import (
 )
 
 type InitSpec struct {
-	// Source restore object in same namespace of a KubeDB object.
+	// Initializer object in same namespace of a KubeDB object.
 	// ref: https://github.com/stashed/stash/blob/09af5d319bb5be889186965afb04045781d6f926/apis/stash/v1beta1/restore_session_types.go#L22
-	Source      *core.TypedLocalObjectReference `json:"source,omitempty" protobuf:"bytes,1,opt,name=source"`
+	Initializer *core.TypedLocalObjectReference `json:"initializer,omitempty" protobuf:"bytes,1,opt,name=initializer"`
 	Script      *ScriptSourceSpec               `json:"script,omitempty" protobuf:"bytes,2,opt,name=script"`
 	PostgresWAL *PostgresWALSourceSpec          `json:"postgresWAL,omitempty" protobuf:"bytes,3,opt,name=postgresWAL"`
 }

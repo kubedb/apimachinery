@@ -23,6 +23,7 @@ import (
 	"kubedb.dev/apimachinery/pkg/eventer"
 
 	"github.com/appscode/go/log"
+	"github.com/appscode/go/types"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"stash.appscode.dev/apimachinery/apis/stash/v1beta1"
@@ -63,8 +64,11 @@ func (c *Controller) handleRestoreSession(rs *v1beta1.RestoreSession) error {
 		}
 
 		for _, px := range pxList.Items {
-			if px.Spec.Init != nil && px.Spec.Init.Source != nil && px.Spec.Init.Source.Kind == v1beta1.ResourceKindRestoreSession &&
-				px.Spec.Init.Source.Name == rs.Name {
+			if px.Spec.Init != nil &&
+				px.Spec.Init.Initializer != nil &&
+				types.String(px.Spec.Init.Initializer.APIGroup) == v1beta1.SchemeGroupVersion.Group &&
+				px.Spec.Init.Initializer.Kind == v1beta1.ResourceKindRestoreSession &&
+				px.Spec.Init.Initializer.Name == rs.Name {
 				meta = metav1.ObjectMeta{
 					Name: px.Name,
 				}

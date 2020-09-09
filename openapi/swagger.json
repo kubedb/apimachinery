@@ -28836,15 +28836,15 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec": {
       "type": "object",
       "properties": {
+        "initializer": {
+          "description": "Initializer object in same namespace of a KubeDB object. ref: https://github.com/stashed/stash/blob/09af5d319bb5be889186965afb04045781d6f926/apis/stash/v1beta1/restore_session_types.go#L22",
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+        },
         "postgresWAL": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresWALSourceSpec"
         },
         "script": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ScriptSourceSpec"
-        },
-        "source": {
-          "description": "Source restore object in same namespace of a KubeDB object. ref: https://github.com/stashed/stash/blob/09af5d319bb5be889186965afb04045781d6f926/apis/stash/v1beta1/restore_session_types.go#L22",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         }
       }
     },
