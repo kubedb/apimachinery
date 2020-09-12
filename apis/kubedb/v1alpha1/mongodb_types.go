@@ -26,10 +26,11 @@ import (
 )
 
 const (
-	ResourceCodeMongoDB               = "mg"
-	ResourceKindMongoDB               = "MongoDB"
-	ResourceSingularMongoDB           = "mongodb"
-	ResourcePluralMongoDB             = "mongodbs"
+	ResourceCodeMongoDB     = "mg"
+	ResourceKindMongoDB     = "MongoDB"
+	ResourceSingularMongoDB = "mongodb"
+	ResourcePluralMongoDB   = "mongodbs"
+
 	MongoDBInitInstallContainerName   = "copy-config"
 	MongoDBInitBootstrapContainerName = "bootstrap"
 	MongoDBConfigDirectoryName        = "configdir"
