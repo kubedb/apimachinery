@@ -5494,7 +5494,7 @@ func (this *ElasticsearchHorizontalScalingSpec) String() string {
 	s := strings.Join([]string{`&ElasticsearchHorizontalScalingSpec{`,
 		`Master:` + valueToStringGenerated(this.Master) + `,`,
 		`Data:` + valueToStringGenerated(this.Data) + `,`,
-		`Client:` + valueToStringGenerated(this.Client) + `,`,
+		`StashClient:` + valueToStringGenerated(this.Client) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -6381,7 +6381,7 @@ func (m *ElasticsearchHorizontalScalingSpec) Unmarshal(dAtA []byte) error {
 			m.Data = &v
 		case 3:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Client", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field StashClient", wireType)
 			}
 			var v int32
 			for shift := uint(0); ; shift += 7 {

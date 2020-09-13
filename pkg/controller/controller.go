@@ -19,6 +19,8 @@ package controller
 import (
 	"time"
 
+	"kubedb.dev/apimachinery/pkg/controller/initializer/stash"
+
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 	kubedbinformers "kubedb.dev/apimachinery/client/informers/externalversions"
@@ -36,11 +38,9 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
 	core_util "kmodules.xyz/client-go/core/v1"
-	"kmodules.xyz/client-go/tools/queue"
 	appcat_cs "kmodules.xyz/custom-resources/client/clientset/versioned"
 	appcat_in "kmodules.xyz/custom-resources/client/informers/externalversions"
 	scs "stash.appscode.dev/apimachinery/client/clientset/versioned"
-	stashInformers "stash.appscode.dev/apimachinery/client/informers/externalversions"
 )
 
 type Controller struct {
@@ -65,18 +65,12 @@ type Config struct {
 	// Informer factory
 	KubeInformerFactory        informers.SharedInformerFactory
 	KubedbInformerFactory      kubedbinformers.SharedInformerFactory
-	StashInformerFactory       stashInformers.SharedInformerFactory
 	AppCatInformerFactory      appcat_in.SharedInformerFactory
 	ExternalInformerFactory    externalInformers.SharedInformerFactory
 	CertManagerInformerFactory cmInformers.SharedInformerFactory
 
-	// restoreSession queue
-	RSQueue    *queue.Worker
-	RSInformer cache.SharedIndexInformer
-
-	// restoreBatch queue
-	RBQueue    *queue.Worker
-	RBInformer cache.SharedIndexInformer
+	// External tool to initialize the database
+	Initializers Initializers
 
 	// Secret
 	SecretInformer cache.SharedIndexInformer
@@ -95,8 +89,30 @@ type Config struct {
 	EnableMutatingWebhook   bool
 }
 
+type Initializers struct {
+	Stash stash.Stash
+}
+
 type DBHelper interface {
 	GetDatabase(metav1.ObjectMeta) (runtime.Object, error)
 	SetDatabaseStatus(metav1.ObjectMeta, api.DatabasePhase, string) error
 	UpsertDatabaseAnnotation(metav1.ObjectMeta, map[string]string) error
+}
+
+type Initializer interface {
+	Configure()
+	InitWatcher()
+	StartController()
+}
+
+func Configure(i Initializer)  {
+	i.Configure()
+}
+
+func InitWatcher(i Initializer)  {
+	i.InitWatcher()
+}
+
+func StartController(i Initializer)  {
+	i.StartController()
 }

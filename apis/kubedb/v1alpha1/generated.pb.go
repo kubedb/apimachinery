@@ -8495,7 +8495,7 @@ func (this *ElasticsearchClusterTopology) String() string {
 	s := strings.Join([]string{`&ElasticsearchClusterTopology{`,
 		`Master:` + strings.Replace(strings.Replace(this.Master.String(), "ElasticsearchNode", "ElasticsearchNode", 1), `&`, ``, 1) + `,`,
 		`Data:` + strings.Replace(strings.Replace(this.Data.String(), "ElasticsearchNode", "ElasticsearchNode", 1), `&`, ``, 1) + `,`,
-		`Client:` + strings.Replace(strings.Replace(this.Client.String(), "ElasticsearchNode", "ElasticsearchNode", 1), `&`, ``, 1) + `,`,
+		`StashClient:` + strings.Replace(strings.Replace(this.Client.String(), "ElasticsearchNode", "ElasticsearchNode", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -10315,7 +10315,7 @@ func (m *ElasticsearchClusterTopology) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Client", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field StashClient", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
