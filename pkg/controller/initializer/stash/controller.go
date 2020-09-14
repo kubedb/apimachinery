@@ -38,8 +38,6 @@ type Controller struct {
 	*amc.StashInitializer
 	// SnapshotDoer interface
 	snapshotter amc.DBHelper
-	// tweakListOptions for watcher
-	tweakListOptions func(*metav1.ListOptions)
 	// Event Recorder
 	eventRecorder record.EventRecorder
 	// Namespace to watch
@@ -50,7 +48,6 @@ func NewController(
 	ctrl *amc.Controller,
 	initializer *amc.StashInitializer,
 	snapshotter amc.DBHelper,
-	tweakOptions func(*metav1.ListOptions),
 	recorder record.EventRecorder,
 	watchNamespace string,
 ) *Controller {
@@ -58,7 +55,6 @@ func NewController(
 		Controller:       ctrl,
 		StashInitializer: initializer,
 		snapshotter:      snapshotter,
-		tweakListOptions: tweakOptions,
 		eventRecorder:    recorder,
 		watchNamespace:   watchNamespace,
 	}
@@ -82,14 +78,18 @@ func Configure(cfg *rest.Config, s *amc.StashInitializer, resyncPeriod time.Dura
 }
 
 func (c *Controller) InitWatcher(maxNumRequeues, numThreads int, selector labels.Selector) {
+	// only watch  the restore invokers that matches the selector
+	tweakListOptions := func(options *metav1.ListOptions) {
+		options.LabelSelector = selector.String()
+	}
 	// Initialize RestoreSession Watcher
-	c.RSInformer = c.restoreSessionInformer()
+	c.RSInformer = c.restoreSessionInformer(tweakListOptions)
 	c.RSQueue = queue.New(v1beta1.ResourceKindRestoreSession, maxNumRequeues, numThreads, c.processRestoreSession)
 	c.RSLister = c.StashInformerFactory.Stash().V1beta1().RestoreSessions().Lister()
 	c.RSInformer.AddEventHandler(c.restoreSessionEventHandler(selector))
 
 	// Initialize RestoreBatch Watcher
-	c.RBInformer = c.restoreBatchInformer()
+	c.RBInformer = c.restoreBatchInformer(tweakListOptions)
 	c.RBQueue = queue.New(v1beta1.ResourceKindRestoreBatch, maxNumRequeues, numThreads, c.processRestoreBatch)
 	c.RBLister = c.StashInformerFactory.Stash().V1beta1().RestoreBatches().Lister()
 	c.RBInformer.AddEventHandler(c.restoreBatchEventHandler(selector))

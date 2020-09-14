@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"github.com/appscode/go/log"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/tools/cache"
 	"kmodules.xyz/client-go/tools/queue"
@@ -28,14 +29,14 @@ import (
 	stashinformers "stash.appscode.dev/apimachinery/client/informers/externalversions/stash/v1beta1"
 )
 
-func (c *Controller) restoreBatchInformer() cache.SharedIndexInformer {
+func (c *Controller) restoreBatchInformer(tweakListOptions func(options *metav1.ListOptions)) cache.SharedIndexInformer {
 	return c.StashInformerFactory.InformerFor(&v1beta1.RestoreBatch{}, func(client scs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 		return stashinformers.NewFilteredRestoreSessionInformer(
 			client,
 			c.watchNamespace,
 			resyncPeriod,
 			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
-			c.tweakListOptions,
+			tweakListOptions,
 		)
 	})
 }
