@@ -3367,7 +3367,7 @@ func schema_k8sio_api_core_v1_ClientIPConfig(ref common.ReferenceCallback) commo
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ClientIPConfig represents the configurations of StashClient IP based session affinity.",
+				Description: "ClientIPConfig represents the configurations of Client IP based session affinity.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"timeoutSeconds": {
@@ -12531,7 +12531,7 @@ func schema_k8sio_api_core_v1_SessionAffinityConfig(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"clientIP": {
 						SchemaProps: spec.SchemaProps{
-							Description: "clientIP contains the configurations of StashClient IP based session affinity.",
+							Description: "clientIP contains the configurations of Client IP based session affinity.",
 							Ref:         ref("k8s.io/api/core/v1.ClientIPConfig"),
 						},
 					},

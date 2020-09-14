@@ -1,3 +1,19 @@
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package stash
 
 import (
@@ -18,7 +34,6 @@ import (
 )
 
 type Controller struct {
-	amc.Config
 	*amc.Controller
 	*amc.StashInitializer
 	// SnapshotDoer interface
@@ -27,23 +42,25 @@ type Controller struct {
 	tweakListOptions func(*metav1.ListOptions)
 	// Event Recorder
 	eventRecorder record.EventRecorder
+	// Namespace to watch
+	watchNamespace string
 }
 
 func NewController(
-	cfg amc.Config,
 	ctrl *amc.Controller,
 	initializer *amc.StashInitializer,
 	snapshotter amc.DBHelper,
 	tweakOptions func(*metav1.ListOptions),
 	recorder record.EventRecorder,
+	watchNamespace string,
 ) *Controller {
 	return &Controller{
-		Config:           cfg,
 		Controller:       ctrl,
 		StashInitializer: initializer,
 		snapshotter:      snapshotter,
 		tweakListOptions: tweakOptions,
 		eventRecorder:    recorder,
+		watchNamespace:   watchNamespace,
 	}
 }
 
@@ -64,16 +81,16 @@ func Configure(cfg *rest.Config, s *amc.StashInitializer, resyncPeriod time.Dura
 	return nil
 }
 
-func (c *Controller) InitWatcher(selector labels.Selector) {
+func (c *Controller) InitWatcher(maxNumRequeues, numThreads int, selector labels.Selector) {
 	// Initialize RestoreSession Watcher
 	c.RSInformer = c.restoreSessionInformer()
-	c.RSQueue = queue.New(v1beta1.ResourceKindRestoreSession, c.MaxNumRequeues, c.NumThreads, c.processRestoreSession)
+	c.RSQueue = queue.New(v1beta1.ResourceKindRestoreSession, maxNumRequeues, numThreads, c.processRestoreSession)
 	c.RSLister = c.StashInformerFactory.Stash().V1beta1().RestoreSessions().Lister()
 	c.RSInformer.AddEventHandler(c.restoreSessionEventHandler(selector))
 
 	// Initialize RestoreBatch Watcher
 	c.RBInformer = c.restoreBatchInformer()
-	c.RBQueue = queue.New(v1beta1.ResourceKindRestoreBatch, c.MaxNumRequeues, c.NumThreads, c.processRestoreBatch)
+	c.RBQueue = queue.New(v1beta1.ResourceKindRestoreBatch, maxNumRequeues, numThreads, c.processRestoreBatch)
 	c.RBLister = c.StashInformerFactory.Stash().V1beta1().RestoreBatches().Lister()
 	c.RBInformer.AddEventHandler(c.restoreBatchEventHandler(selector))
 }
