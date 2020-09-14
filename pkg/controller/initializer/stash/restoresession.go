@@ -12,31 +12,31 @@ import (
 	stashinformers "stash.appscode.dev/apimachinery/client/informers/externalversions/stash/v1beta1"
 )
 
-func (s *Stash) restoreSessionInformer() cache.SharedIndexInformer {
-	return s.InformerFactory.InformerFor(&v1beta1.RestoreSession{}, func(client scs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+func (c *Controller) restoreSessionInformer() cache.SharedIndexInformer {
+	return c.StashInformerFactory.InformerFor(&v1beta1.RestoreSession{}, func(client scs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 		return stashinformers.NewFilteredRestoreSessionInformer(
 			client,
-			s.WatchNamespace,
+			c.WatchNamespace,
 			resyncPeriod,
 			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
-			s.tweakListOptions,
+			c.tweakListOptions,
 		)
 	})
 }
 
-func (s Stash) restoreSessionEventHandler(selector labels.Selector) cache.ResourceEventHandler {
+func (c Controller) restoreSessionEventHandler(selector labels.Selector) cache.ResourceEventHandler {
 	return queue.NewFilteredHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			rs := obj.(*v1beta1.RestoreSession)
 			if rs.Status.Phase == v1beta1.RestoreSucceeded || rs.Status.Phase == v1beta1.RestoreFailed {
-				queue.Enqueue(s.RSQueue.GetQueue(), obj)
+				queue.Enqueue(c.RSQueue.GetQueue(), obj)
 			}
 		},
 		UpdateFunc: func(old interface{}, new interface{}) {
 			oldObj := old.(*v1beta1.RestoreSession)
 			newObj := new.(*v1beta1.RestoreSession)
 			if newObj.Status.Phase != oldObj.Status.Phase && (newObj.Status.Phase == v1beta1.RestoreSucceeded || newObj.Status.Phase == v1beta1.RestoreFailed) {
-				queue.Enqueue(s.RSQueue.GetQueue(), newObj)
+				queue.Enqueue(c.RSQueue.GetQueue(), newObj)
 			}
 		},
 		DeleteFunc: func(obj interface{}) {
@@ -44,9 +44,9 @@ func (s Stash) restoreSessionEventHandler(selector labels.Selector) cache.Resour
 	}, selector)
 }
 
-func (s Stash) processRestoreSession(key string) error {
+func (c Controller) processRestoreSession(key string) error {
 	log.Debugf("started processing, key: %v", key)
-	obj, exists, err := s.RSInformer.GetIndexer().GetByKey(key)
+	obj, exists, err := c.RSInformer.GetIndexer().GetByKey(key)
 	if err != nil {
 		log.Errorf("Fetching object with key %s from store failed with %v", key, err)
 		return err
@@ -58,12 +58,12 @@ func (s Stash) processRestoreSession(key string) error {
 		// Note that you also have to check the uid if you have a local controlled resource, which
 		// is dependent on the actual instance, to detect that a Job was recreated with the same name
 		rs := obj.(*v1beta1.RestoreSession).DeepCopy()
-		ri, err := s.extractRestoreInfo(rs)
+		ri, err := c.extractRestoreInfo(rs)
 		if err != nil {
 			log.Errorln(err)
 			return err
 		}
-		return s.syncDatabasePhase(ri)
+		return c.syncDatabasePhase(ri)
 	}
 	return nil
 }

@@ -18,8 +18,9 @@ package controller
 
 import (
 	"context"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 	"math"
+
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 
 	"github.com/appscode/go/log"
 	_ "gomodules.xyz/stow/azure"

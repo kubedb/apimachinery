@@ -3,48 +3,48 @@ package stash
 import (
 	"time"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/tools/record"
 	amc "kubedb.dev/apimachinery/pkg/controller"
-
-	"k8s.io/client-go/kubernetes"
-
-	"k8s.io/apimachinery/pkg/labels"
 
 	"github.com/appscode/go/log"
 	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/cache"
+	"k8s.io/client-go/tools/record"
 	"kmodules.xyz/client-go/tools/queue"
-	dbcs "kubedb.dev/apimachinery/client/clientset/versioned"
 	"stash.appscode.dev/apimachinery/apis/stash/v1beta1"
 	scs "stash.appscode.dev/apimachinery/client/clientset/versioned"
-	informers "stash.appscode.dev/apimachinery/client/informers/externalversions"
-	lister "stash.appscode.dev/apimachinery/client/listers/stash/v1beta1"
+	stashinformer "stash.appscode.dev/apimachinery/client/informers/externalversions"
 )
 
-type Stash struct {
-	KubeClient      kubernetes.Interface
-	StashClient     scs.Interface
-	DBClient        dbcs.Interface
-	InformerFactory informers.SharedInformerFactory
-	// Stash RestoreSession
-	RSQueue    *queue.Worker
-	RSInformer cache.SharedIndexInformer
-	RSLister   lister.RestoreSessionLister
-
-	// Stash RestoreBatch
-	RBQueue    *queue.Worker
-	RBInformer cache.SharedIndexInformer
-	RBLister   lister.RestoreBatchLister
+type Controller struct {
+	amc.Config
+	*amc.Controller
+	*amc.StashInitializer
 	// SnapshotDoer interface
 	snapshotter amc.DBHelper
 	// tweakListOptions for watcher
 	tweakListOptions func(*metav1.ListOptions)
 	// Event Recorder
 	eventRecorder record.EventRecorder
-	// restoreSession Lister
-	WatchNamespace string
+}
+
+func NewController(
+	cfg amc.Config,
+	ctrl *amc.Controller,
+	initializer *amc.StashInitializer,
+	snapshotter amc.DBHelper,
+	tweakOptions func(*metav1.ListOptions),
+	recorder record.EventRecorder,
+) *Controller {
+	return &Controller{
+		Config:           cfg,
+		Controller:       ctrl,
+		StashInitializer: initializer,
+		snapshotter:      snapshotter,
+		tweakListOptions: tweakOptions,
+		eventRecorder:    recorder,
+	}
 }
 
 type restoreInfo struct {
@@ -55,46 +55,46 @@ type restoreInfo struct {
 	targetDBKind string
 }
 
-func (s *Stash) Configure(cfg *rest.Config, resyncPeriod time.Duration) error {
+func Configure(cfg *rest.Config, s *amc.StashInitializer, resyncPeriod time.Duration) error {
 	var err error
 	if s.StashClient, err = scs.NewForConfig(cfg); err != nil {
 		return err
 	}
-	s.InformerFactory = informers.NewSharedInformerFactory(s.StashClient, resyncPeriod)
+	s.StashInformerFactory = stashinformer.NewSharedInformerFactory(s.StashClient, resyncPeriod)
 	return nil
 }
 
-func (s *Stash) InitWatcher(maxNumRequeues, numThreads int, selector labels.Selector) {
+func (c *Controller) InitWatcher(selector labels.Selector) {
 	// Initialize RestoreSession Watcher
-	s.RSInformer = s.restoreSessionInformer()
-	s.RSQueue = queue.New(v1beta1.ResourceKindRestoreSession, maxNumRequeues, numThreads, s.processRestoreSession)
-	s.RSLister = s.InformerFactory.Stash().V1beta1().RestoreSessions().Lister()
-	s.RSInformer.AddEventHandler(s.restoreSessionEventHandler(selector))
+	c.RSInformer = c.restoreSessionInformer()
+	c.RSQueue = queue.New(v1beta1.ResourceKindRestoreSession, c.MaxNumRequeues, c.NumThreads, c.processRestoreSession)
+	c.RSLister = c.StashInformerFactory.Stash().V1beta1().RestoreSessions().Lister()
+	c.RSInformer.AddEventHandler(c.restoreSessionEventHandler(selector))
 
 	// Initialize RestoreBatch Watcher
-	s.RBInformer = s.restoreBatchInformer()
-	s.RBQueue = queue.New(v1beta1.ResourceKindRestoreBatch, maxNumRequeues, numThreads, s.processRestoreBatch)
-	s.RBLister = s.InformerFactory.Stash().V1beta1().RestoreBatches().Lister()
-	s.RBInformer.AddEventHandler(s.restoreBatchEventHandler(selector))
+	c.RBInformer = c.restoreBatchInformer()
+	c.RBQueue = queue.New(v1beta1.ResourceKindRestoreBatch, c.MaxNumRequeues, c.NumThreads, c.processRestoreBatch)
+	c.RBLister = c.StashInformerFactory.Stash().V1beta1().RestoreBatches().Lister()
+	c.RBInformer.AddEventHandler(c.restoreBatchEventHandler(selector))
 }
 
-func (s Stash) StartController(stopCh <-chan struct{}) {
+func (c Controller) StartController(stopCh <-chan struct{}) {
 	// start StashInformerFactory only if stash crds (ie, "restoreSession") are available.
-	if err := s.waitUntilStashInstalled(stopCh); err != nil {
+	if err := c.waitUntilStashInstalled(stopCh); err != nil {
 		log.Errorln("error while waiting for restoreSession.", err)
 		return
 	}
 
 	// start informer factory
-	s.InformerFactory.Start(stopCh)
+	c.StashInformerFactory.Start(stopCh)
 	// wait for cache to sync
-	for t, v := range s.InformerFactory.WaitForCacheSync(stopCh) {
+	for t, v := range c.StashInformerFactory.WaitForCacheSync(stopCh) {
 		if !v {
 			log.Fatalf("%v timed out waiting for caches to sync", t)
 			return
 		}
 	}
 	// run the queues
-	s.RSQueue.Run(stopCh)
-	s.RBQueue.Run(stopCh)
+	c.RSQueue.Run(stopCh)
+	c.RBQueue.Run(stopCh)
 }
