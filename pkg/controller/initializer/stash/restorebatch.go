@@ -31,7 +31,7 @@ import (
 
 func (c *Controller) restoreBatchInformer(tweakListOptions func(options *metav1.ListOptions)) cache.SharedIndexInformer {
 	return c.StashInformerFactory.InformerFor(&v1beta1.RestoreBatch{}, func(client scs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-		return stashinformers.NewFilteredRestoreSessionInformer(
+		return stashinformers.NewFilteredRestoreBatchInformer(
 			client,
 			c.watchNamespace,
 			resyncPeriod,
@@ -44,8 +44,8 @@ func (c *Controller) restoreBatchInformer(tweakListOptions func(options *metav1.
 func (c Controller) restoreBatchEventHandler(selector labels.Selector) cache.ResourceEventHandler {
 	return queue.NewFilteredHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
-			rs := obj.(*v1beta1.RestoreBatch)
-			if rs.Status.Phase == v1beta1.RestoreSucceeded || rs.Status.Phase == v1beta1.RestoreFailed {
+			rb := obj.(*v1beta1.RestoreBatch)
+			if rb.Status.Phase == v1beta1.RestoreSucceeded || rb.Status.Phase == v1beta1.RestoreFailed {
 				queue.Enqueue(c.RSQueue.GetQueue(), obj)
 			}
 		},

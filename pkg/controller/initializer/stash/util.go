@@ -248,6 +248,7 @@ func (c *Controller) getDatabaseName(ri restoreInfo) (string, error) {
 // waitUntilStashInstalled waits for Controller to be installed. It check whether Controller has been installed or not by querying RestoreSession crd.
 // It either waits until RestoreSession crd exists or throws error otherwise
 func (c *Controller) waitUntilStashInstalled(stopCh <-chan struct{}) error {
+	log.Infoln("Looking for the Stash operator.......")
 	return wait.PollImmediateUntil(time.Second*10, func() (bool, error) {
 		return discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindRestoreSession) ||
 			discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindRestoreBatch), nil

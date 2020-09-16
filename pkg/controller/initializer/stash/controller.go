@@ -96,12 +96,13 @@ func (c *Controller) InitWatcher(maxNumRequeues, numThreads int, selector labels
 }
 
 func (c Controller) StartController(stopCh <-chan struct{}) {
-	// start StashInformerFactory only if stash crds (ie, "restoreSession") are available.
+	// Start StashInformerFactory only if stash crds (ie, "RestoreSession") are available.
 	if err := c.waitUntilStashInstalled(stopCh); err != nil {
 		log.Errorln("error while waiting for restoreSession.", err)
 		return
 	}
 
+	log.Infoln("Starting Stash controllers...")
 	// start informer factory
 	c.StashInformerFactory.Start(stopCh)
 	// wait for cache to sync
