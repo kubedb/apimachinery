@@ -45,14 +45,19 @@ func (c Controller) restoreBatchEventHandler(selector labels.Selector) cache.Res
 	return queue.NewFilteredHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			rb := obj.(*v1beta1.RestoreBatch)
-			if rb.Status.Phase == v1beta1.RestoreSucceeded || rb.Status.Phase == v1beta1.RestoreFailed {
+			if rb.Status.Phase == v1beta1.RestoreSucceeded ||
+				rb.Status.Phase == v1beta1.RestoreFailed ||
+				rb.Status.Phase == v1beta1.RestorePhaseUnknown {
 				queue.Enqueue(c.RSQueue.GetQueue(), obj)
 			}
 		},
 		UpdateFunc: func(old interface{}, new interface{}) {
 			oldObj := old.(*v1beta1.RestoreBatch)
 			newObj := new.(*v1beta1.RestoreBatch)
-			if newObj.Status.Phase != oldObj.Status.Phase && (newObj.Status.Phase == v1beta1.RestoreSucceeded || newObj.Status.Phase == v1beta1.RestoreFailed) {
+			if newObj.Status.Phase != oldObj.Status.Phase &&
+				(newObj.Status.Phase == v1beta1.RestoreSucceeded ||
+					newObj.Status.Phase == v1beta1.RestoreFailed ||
+					newObj.Status.Phase == v1beta1.RestorePhaseUnknown) {
 				queue.Enqueue(c.RSQueue.GetQueue(), newObj)
 			}
 		},
@@ -62,7 +67,7 @@ func (c Controller) restoreBatchEventHandler(selector labels.Selector) cache.Res
 }
 
 func (c Controller) processRestoreBatch(key string) error {
-	log.Debugf("started processing, key: %v", key)
+	log.Infof("started processing, key: %v", key)
 	obj, exists, err := c.RSInformer.GetIndexer().GetByKey(key)
 	if err != nil {
 		log.Errorf("Fetching object with key %s from store failed with %v", key, err)
@@ -77,7 +82,7 @@ func (c Controller) processRestoreBatch(key string) error {
 		rb := obj.(*v1beta1.RestoreBatch).DeepCopy()
 		ri, err := c.extractRestoreInfo(rb)
 		if err != nil {
-			log.Errorln(err)
+			log.Errorln("failed to extract restore invoker info. Reason: ", err)
 			return err
 		}
 		return c.syncDatabasePhase(ri)

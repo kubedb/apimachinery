@@ -78,6 +78,7 @@ func Configure(cfg *rest.Config, s *amc.StashInitializer, resyncPeriod time.Dura
 }
 
 func (c *Controller) InitWatcher(maxNumRequeues, numThreads int, selector labels.Selector) {
+	log.Infoln("Initializing stash watchers.....")
 	// only watch  the restore invokers that matches the selector
 	tweakListOptions := func(options *metav1.ListOptions) {
 		options.LabelSelector = selector.String()
@@ -95,10 +96,10 @@ func (c *Controller) InitWatcher(maxNumRequeues, numThreads int, selector labels
 	c.RBInformer.AddEventHandler(c.restoreBatchEventHandler(selector))
 }
 
-func (c Controller) StartController(stopCh <-chan struct{}) {
+func (c *Controller) StartController(stopCh <-chan struct{}) {
 	// Start StashInformerFactory only if stash crds (ie, "RestoreSession") are available.
 	if err := c.waitUntilStashInstalled(stopCh); err != nil {
-		log.Errorln("error while waiting for restoreSession.", err)
+		log.Errorln("error during waiting for RestoreSession crd. Reason: ", err)
 		return
 	}
 
@@ -108,7 +109,7 @@ func (c Controller) StartController(stopCh <-chan struct{}) {
 	// wait for cache to sync
 	for t, v := range c.StashInformerFactory.WaitForCacheSync(stopCh) {
 		if !v {
-			log.Fatalf("%v timed out waiting for caches to sync", t)
+			log.Errorf("%v timed out waiting for caches to sync", t)
 			return
 		}
 	}

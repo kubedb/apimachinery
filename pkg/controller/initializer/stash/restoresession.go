@@ -41,18 +41,23 @@ func (c *Controller) restoreSessionInformer(tweakListOptions func(options *metav
 	})
 }
 
-func (c Controller) restoreSessionEventHandler(selector labels.Selector) cache.ResourceEventHandler {
+func (c *Controller) restoreSessionEventHandler(selector labels.Selector) cache.ResourceEventHandler {
 	return queue.NewFilteredHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			rs := obj.(*v1beta1.RestoreSession)
-			if rs.Status.Phase == v1beta1.RestoreSucceeded || rs.Status.Phase == v1beta1.RestoreFailed {
+			if rs.Status.Phase == v1beta1.RestoreSucceeded ||
+				rs.Status.Phase == v1beta1.RestoreFailed ||
+				rs.Status.Phase == v1beta1.RestorePhaseUnknown {
 				queue.Enqueue(c.RSQueue.GetQueue(), obj)
 			}
 		},
 		UpdateFunc: func(old interface{}, new interface{}) {
 			oldObj := old.(*v1beta1.RestoreSession)
 			newObj := new.(*v1beta1.RestoreSession)
-			if newObj.Status.Phase != oldObj.Status.Phase && (newObj.Status.Phase == v1beta1.RestoreSucceeded || newObj.Status.Phase == v1beta1.RestoreFailed) {
+			if newObj.Status.Phase != oldObj.Status.Phase &&
+				(newObj.Status.Phase == v1beta1.RestoreSucceeded ||
+					newObj.Status.Phase == v1beta1.RestoreFailed ||
+					newObj.Status.Phase == v1beta1.RestorePhaseUnknown) {
 				queue.Enqueue(c.RSQueue.GetQueue(), newObj)
 			}
 		},
@@ -61,11 +66,11 @@ func (c Controller) restoreSessionEventHandler(selector labels.Selector) cache.R
 	}, selector)
 }
 
-func (c Controller) processRestoreSession(key string) error {
-	log.Debugf("started processing, key: %v", key)
+func (c *Controller) processRestoreSession(key string) error {
+	log.Infof("started processing, key: %v", key)
 	obj, exists, err := c.RSInformer.GetIndexer().GetByKey(key)
 	if err != nil {
-		log.Errorf("Fetching object with key %s from store failed with %v", key, err)
+		log.Errorf("fetching object with key %s from store failed with %v", key, err)
 		return err
 	}
 
@@ -77,7 +82,7 @@ func (c Controller) processRestoreSession(key string) error {
 		rs := obj.(*v1beta1.RestoreSession).DeepCopy()
 		ri, err := c.extractRestoreInfo(rs)
 		if err != nil {
-			log.Errorln(err)
+			log.Errorln("failed to extract restore invoker info. Reason: ", err)
 			return err
 		}
 		return c.syncDatabasePhase(ri)

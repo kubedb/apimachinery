@@ -38,18 +38,18 @@ import (
 	"stash.appscode.dev/apimachinery/apis/stash/v1beta1"
 )
 
-func (c *Controller) extractRestoreInfo(invoker interface{}) (restoreInfo, error) {
-	ri := restoreInfo{}
+func (c *Controller) extractRestoreInfo(invoker interface{}) (*restoreInfo, error) {
+	ri := &restoreInfo{}
 	var err error
 	switch invoker := invoker.(type) {
-	case v1beta1.RestoreSession:
+	case *v1beta1.RestoreSession:
 		ri.invoker.Kind = invoker.Kind
 		ri.invoker.Name = invoker.Name
 		ri.namespace = invoker.Namespace
 		ri.target = invoker.Spec.Target
 		ri.phase = invoker.Status.Phase
 		ri.targetDBKind = invoker.Labels[api.LabelDatabaseKind]
-	case v1beta1.RestoreBatch:
+	case *v1beta1.RestoreBatch:
 		ri.invoker.Kind = invoker.Kind
 		ri.invoker.Name = invoker.Name
 		ri.namespace = invoker.Namespace
@@ -61,20 +61,23 @@ func (c *Controller) extractRestoreInfo(invoker interface{}) (restoreInfo, error
 		// RestoreBatch can have multiple targets. In this case, only the database related target'c phase does matter.
 		ri.phase = getTargetPhase(invoker.Status, ri.target)
 		ri.targetDBKind = invoker.Labels[api.LabelDatabaseKind]
+	default:
+		return ri, fmt.Errorf("unknown restore invoker type")
 	}
 	return ri, nil
 }
 
-func (c *Controller) syncDatabasePhase(ri restoreInfo) error {
+func (c *Controller) syncDatabasePhase(ri *restoreInfo) error {
 	var err error
+	if ri == nil {
+		return fmt.Errorf("invalid restore information. it must not be nil")
+	}
 	if ri.phase != v1beta1.RestoreSucceeded && ri.phase != v1beta1.RestoreFailed && ri.phase != v1beta1.RestorePhaseUnknown {
-		log.Debugf("Restore process hasn't completed yet. Current restore phase: %s", ri.phase)
-		return nil
+		return fmt.Errorf("restore process hasn't completed yet. Current restore phase: %s", ri.phase)
 	}
 
 	if ri.target == nil {
-		log.Debugln("Restore invoker does not have any target specified. It must not be nil.")
-		return nil
+		return fmt.Errorf("restore invoker does not have any target specified")
 	}
 
 	targetDBMeta := metav1.ObjectMeta{
@@ -104,8 +107,7 @@ func (c *Controller) syncDatabasePhase(ri restoreInfo) error {
 
 	runtimeObj, err := c.snapshotter.GetDatabase(targetDBMeta)
 	if err != nil {
-		log.Errorln(err)
-		return nil
+		return err
 	}
 	if ri.phase == v1beta1.RestoreSucceeded {
 		c.eventRecorder.Event(
@@ -194,7 +196,7 @@ func getTargetPhase(status v1beta1.RestoreBatchStatus, target *v1beta1.RestoreTa
 	return status.Phase
 }
 
-func (c *Controller) getDatabaseName(ri restoreInfo) (string, error) {
+func (c *Controller) getDatabaseName(ri *restoreInfo) (string, error) {
 	switch ri.targetDBKind {
 	// In case of clustered PerconaXtraDB, Controller restores the volumes. Hence, we don't specify the AppBinding object
 	// in `.target.ref` field of the respective restore invoker. As a result, the name of the original PerconaXtraDB object is unknown here.
