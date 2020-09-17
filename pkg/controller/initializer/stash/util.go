@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"time"
 
+	"kubedb.dev/apimachinery/apis/kubedb"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 	"kubedb.dev/apimachinery/pkg/eventer"
 
@@ -31,15 +32,21 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/wait"
+	core_util "kmodules.xyz/client-go/core/v1"
 	"kmodules.xyz/client-go/discovery"
-	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog"
+	ab "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	sapis "stash.appscode.dev/apimachinery/apis"
 	"stash.appscode.dev/apimachinery/apis/stash"
 	"stash.appscode.dev/apimachinery/apis/stash/v1beta1"
 )
 
 func (c *Controller) extractRestoreInfo(invoker interface{}) (*restoreInfo, error) {
-	ri := &restoreInfo{}
+	ri := &restoreInfo{
+		invoker: core.TypedLocalObjectReference{
+			APIGroup: types.StringP(stash.GroupName),
+		},
+	}
 	var err error
 	switch invoker := invoker.(type) {
 	case *v1beta1.RestoreSession:
@@ -131,52 +138,36 @@ func (c *Controller) identifyTarget(members []v1beta1.RestoreTargetSpec, namespa
 	// check if there is any AppBinding as target. if there any, this is the desired target.
 	for i, m := range members {
 		if m.Target != nil {
-			if m.Target.Ref.APIVersion == appcat.SchemeGroupVersion.String() &&
-				m.Target.Ref.Kind == appcat.ResourceKindApp {
+			ok, err := targetOfGroupKind(m.Target.Ref, appcat.GroupName, ab.ResourceKindApp)
+			if err != nil {
+				return nil, err
+			}
+			if ok {
 				return members[i].Target, nil
 			}
 		}
 	}
 	// no AppBinding has found as target. the target might be resulting workload (i.e. StatefulSet or Deployment(for memcached)).
-	// we should check the workload'c owner reference to be sure.
+	// we should check the workload's owner reference to be sure.
 	for i, m := range members {
 		if m.Target != nil {
-			gv, err := schema.ParseGroupVersion(m.Target.Ref.APIVersion)
+			ok, err := targetOfGroupVersionKind(m.Target.Ref, apps.GroupName, apps.SchemeGroupVersion.Version, sapis.KindStatefulSet)
 			if err != nil {
 				return nil, err
 			}
-			if apps.SchemeGroupVersion != gv {
-				return nil, fmt.Errorf("expect API version: %s found: %s", apps.SchemeGroupVersion.String(), gv.String())
-			}
-			switch m.Target.Ref.Kind {
-			case sapis.KindStatefulSet:
+			if ok {
 				sts, err := c.Client.AppsV1().StatefulSets(namespace).Get(context.Background(), m.Target.Ref.Name, metav1.GetOptions{})
 				if err != nil {
 					return nil, err
 				}
-				owner := metav1.GetControllerOf(sts)
-				if owner == nil {
-					continue
-				}
 				// if the controller owner is a KubeDB resource, then this StatefulSet must be the desired target
-				if owner.APIVersion == api.SchemeGroupVersion.String() {
-					return members[i].Target, nil
-				}
-			case sapis.KindDeployment:
-				dpl, err := c.Client.AppsV1().Deployments(namespace).Get(context.Background(), m.Target.Ref.Name, metav1.GetOptions{})
+				ok, _, err := core_util.IsOwnerOfGroup(metav1.GetControllerOf(sts), kubedb.GroupName)
 				if err != nil {
 					return nil, err
 				}
-				owner := metav1.GetControllerOf(dpl)
-				if owner == nil {
-					continue
-				}
-				// if the controller owner is a KubeDB resource, then this Deployment must be the desired target
-				if owner.APIVersion == api.SchemeGroupVersion.String() {
+				if ok {
 					return members[i].Target, nil
 				}
-			default:
-				// nothing to do
 			}
 		}
 	}
@@ -186,9 +177,7 @@ func (c *Controller) identifyTarget(members []v1beta1.RestoreTargetSpec, namespa
 func getTargetPhase(status v1beta1.RestoreBatchStatus, target *v1beta1.RestoreTarget) v1beta1.RestorePhase {
 	if target != nil {
 		for _, m := range status.Members {
-			if m.Ref.APIVersion == target.Ref.APIVersion &&
-				m.Ref.Kind == target.Ref.Kind &&
-				m.Ref.Name == target.Ref.Name {
+			if sapis.TargetMatched(m.Ref, target.Ref) {
 				return v1beta1.RestorePhase(m.Phase)
 			}
 		}
@@ -212,10 +201,7 @@ func (c *Controller) getDatabaseName(ri *restoreInfo) (string, error) {
 		}
 
 		for _, px := range pxList.Items {
-			if px.Spec.Init != nil && px.Spec.Init.Initializer != nil &&
-				types.String(px.Spec.Init.Initializer.APIGroup) == v1beta1.SchemeGroupVersion.Group &&
-				px.Spec.Init.Initializer.Kind == ri.invoker.Kind &&
-				px.Spec.Init.Initializer.Name == ri.invoker.Name {
+			if px.Spec.Init != nil && px.Spec.Init.Initializer != nil && matchRef(*px.Spec.Init.Initializer, ri.invoker) {
 				return px.Name, nil
 			}
 		}
@@ -225,7 +211,7 @@ func (c *Controller) getDatabaseName(ri *restoreInfo) (string, error) {
 	// 2. For restoring from dump, Controller uses job model. In this case, the target is the respective AppBinding.
 	case api.ResourceKindRedis:
 		switch ri.target.Ref.Kind {
-		case appcat.ResourceKindApp:
+		case ab.ResourceKindApp:
 			return ri.target.Ref.Name, nil
 		case sapis.KindStatefulSet:
 			sts, err := c.Client.AppsV1().StatefulSets(ri.namespace).Get(context.TODO(), ri.target.Ref.Name, metav1.GetOptions{})
@@ -233,9 +219,14 @@ func (c *Controller) getDatabaseName(ri *restoreInfo) (string, error) {
 				return "", err
 			}
 			owner := metav1.GetControllerOf(sts)
-			if owner == nil {
+			ok, err := core_util.IsOwnerOfGroupKind(owner, kubedb.GroupName, api.ResourceKindRedis)
+			if err != nil {
+				return "", err
+			}
+			if !ok {
 				return "", fmt.Errorf("respective Redis CR is not found for StatefulSet %s/%s", sts.Namespace, sts.Name)
 			}
+			return owner.Name, nil
 		default:
 			return "", fmt.Errorf("unknown target reference in %s %s/%s", ri.invoker.Kind, ri.namespace, ri.invoker.Name)
 		}
@@ -244,7 +235,6 @@ func (c *Controller) getDatabaseName(ri *restoreInfo) (string, error) {
 		// CR name. In this case, we can just take the `*.target.ref.name` as the database CR name.
 		return ri.target.Ref.Name, nil
 	}
-	return ri.target.Ref.Name, nil
 }
 
 // waitUntilStashInstalled waits for Controller to be installed. It check whether Controller has been installed or not by querying RestoreSession crd.
@@ -255,4 +245,24 @@ func (c *Controller) waitUntilStashInstalled(stopCh <-chan struct{}) error {
 		return discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindRestoreSession) ||
 			discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindRestoreBatch), nil
 	}, stopCh)
+}
+
+func targetOfGroupKind(target v1beta1.TargetRef, group, kind string) (bool, error) {
+	gv, err := schema.ParseGroupVersion(target.APIVersion)
+	if err != nil {
+		return false, err
+	}
+	return gv.Group == group && target.Kind == kind, nil
+}
+
+func targetOfGroupVersionKind(target v1beta1.TargetRef, group, version, kind string) (bool, error) {
+	gv, err := schema.ParseGroupVersion(target.APIVersion)
+	if err != nil {
+		return false, err
+	}
+	return gv.Group == group && gv.Version == version && target.Kind == kind, nil
+}
+
+func matchRef(r1, r2 core.TypedLocalObjectReference) bool {
+	return r1.APIGroup == r2.APIGroup && r1.Kind == r2.Kind && r1.Name == r2.Name
 }
