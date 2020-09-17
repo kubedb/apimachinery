@@ -907,7 +907,7 @@ k8s.io/utils/net
 k8s.io/utils/path
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20200915091229-7df16c29f4e8
+# kmodules.xyz/client-go v0.0.0-20200917092637-d67c3812f2cf
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
 kmodules.xyz/client-go/apiextensions
@@ -955,6 +955,7 @@ sigs.k8s.io/structured-merge-diff/v3/value
 # sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml
 # stash.appscode.dev/apimachinery v0.11.0
+stash.appscode.dev/apimachinery/apis
 stash.appscode.dev/apimachinery/apis/repositories
 stash.appscode.dev/apimachinery/apis/repositories/v1alpha1
 stash.appscode.dev/apimachinery/apis/stash
@@ -965,6 +966,7 @@ stash.appscode.dev/apimachinery/client/clientset/versioned/scheme
 stash.appscode.dev/apimachinery/client/clientset/versioned/typed/repositories/v1alpha1
 stash.appscode.dev/apimachinery/client/clientset/versioned/typed/stash/v1alpha1
 stash.appscode.dev/apimachinery/client/clientset/versioned/typed/stash/v1beta1
+stash.appscode.dev/apimachinery/client/clientset/versioned/typed/stash/v1beta1/util
 stash.appscode.dev/apimachinery/client/informers/externalversions
 stash.appscode.dev/apimachinery/client/informers/externalversions/internalinterfaces
 stash.appscode.dev/apimachinery/client/informers/externalversions/stash
