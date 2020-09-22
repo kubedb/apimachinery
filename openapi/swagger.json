@@ -34532,6 +34532,16 @@
       "type": "string",
       "format": "int-or-string"
     },
+    "xyz.kmodules.client-go.api.v1.CertificatePrivateKey": {
+      "description": "CertificatePrivateKey contains configuration options for private keys used by the Certificate controller. This allows control of how private keys are rotated.",
+      "type": "object",
+      "properties": {
+        "encoding": {
+          "description": "The private key cryptography standards (PKCS) encoding for this certificate's private key to be encoded in. If provided, allowed values are \"pkcs1\" and \"pkcs8\" standing for PKCS#1 and PKCS#8, respectively. Defaults to PKCS#1 if not specified.",
+          "type": "string"
+        }
+      }
+    },
     "xyz.kmodules.client-go.api.v1.CertificateSpec": {
       "type": "object",
       "required": [
@@ -34567,9 +34577,9 @@
             "type": "string"
           }
         },
-        "keyEncoding": {
-          "description": "KeyEncoding is the private key cryptography standards (PKCS) for this certificate's private key to be encoded in. If provided, allowed values are \"pkcs1\" and \"pkcs8\". If KeyEncoding is not specified, then PKCS#1 will be used by default.",
-          "type": "string"
+        "privateKey": {
+          "description": "Options to control private keys used for the Certificate.",
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.CertificatePrivateKey"
         },
         "renewBefore": {
           "description": "Certificate renew before expiration duration",
