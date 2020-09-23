@@ -28421,13 +28421,13 @@
       "required": [
         "master",
         "data",
-        "client"
+        "ingest"
       ],
       "properties": {
-        "client": {
+        "data": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode"
         },
-        "data": {
+        "ingest": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode"
         },
         "master": {

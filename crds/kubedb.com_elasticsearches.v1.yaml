@@ -3767,7 +3767,7 @@ spec:
                 type: object
               topology:
                 properties:
-                  client:
+                  data:
                     properties:
                       maxUnavailable:
                         anyOf:
@@ -3866,7 +3866,7 @@ spec:
                             type: string
                         type: object
                     type: object
-                  data:
+                  ingest:
                     properties:
                       maxUnavailable:
                         anyOf:
@@ -4065,8 +4065,8 @@ spec:
                         type: object
                     type: object
                 required:
-                - client
                 - data
+                - ingest
                 - master
                 type: object
               version:

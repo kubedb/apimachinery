@@ -18977,13 +18977,13 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchClusterTopology(ref c
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
 						},
 					},
-					"client": {
+					"ingest": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchNode"),
 						},
 					},
 				},
-				Required: []string{"master", "data", "client"},
+				Required: []string{"master", "data", "ingest"},
 			},
 		},
 		Dependencies: []string{
