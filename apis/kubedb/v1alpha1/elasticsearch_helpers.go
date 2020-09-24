@@ -327,7 +327,7 @@ func (e *Elasticsearch) setDefaultTLSConfig() {
 		tlsConfig = &kmapi.TLSConfig{}
 	}
 	// root
-	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchRootCert), e.CertificateName(ElasticsearchRootCert))
+	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchCACert), e.CertificateName(ElasticsearchCACert))
 	// transport
 	tlsConfig.Certificates = kmapi.SetMissingSecretNameForCertificate(tlsConfig.Certificates, string(ElasticsearchTransportCert), e.CertificateName(ElasticsearchTransportCert))
 	// http
