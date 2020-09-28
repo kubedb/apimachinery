@@ -108,17 +108,13 @@ type PostgresSpec struct {
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty" protobuf:"bytes,17,opt,name=tls"`
 
-	// Indicates that the database is paused and controller will not sync any changes made to this spec.
-	// +optional
-	Paused bool `json:"paused,omitempty" protobuf:"varint,18,opt,name=paused"`
-
 	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
 	// +optional
-	Halted bool `json:"halted,omitempty" protobuf:"varint,19,opt,name=halted"`
+	Halted bool `json:"halted,omitempty" protobuf:"varint,18,opt,name=halted"`
 
 	// TerminationPolicy controls the delete operation for database
 	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,20,opt,name=terminationPolicy,casttype=TerminationPolicy"`
+	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,19,opt,name=terminationPolicy,casttype=TerminationPolicy"`
 }
 
 // +kubebuilder:validation:Enum=server;archiver;metrics-exporter
@@ -181,11 +177,6 @@ type PostgresStandbyMode string
 const (
 	HotPostgresStandbyMode  PostgresStandbyMode = "Hot"
 	WarmPostgresStandbyMode PostgresStandbyMode = "Warm"
-
-	// Deprecated
-	DeprecatedHotStandby PostgresStandbyMode = "hot"
-	// Deprecated
-	DeprecatedWarmStandby PostgresStandbyMode = "warm"
 )
 
 // +kubebuilder:validation:Enum=Synchronous;Asynchronous
@@ -194,7 +185,4 @@ type PostgresStreamingMode string
 const (
 	SynchronousPostgresStreamingMode  PostgresStreamingMode = "Synchronous"
 	AsynchronousPostgresStreamingMode PostgresStreamingMode = "Asynchronous"
-
-	// Deprecated
-	DeprecatedAsynchronousStreaming PostgresStreamingMode = "asynchronous"
 )

@@ -22,7 +22,6 @@ import (
 	"strings"
 
 	"kubedb.dev/apimachinery/apis"
-	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
@@ -218,18 +217,13 @@ func (e *Elasticsearch) SetDefaults(topology *core_util.Topology) {
 	if e == nil {
 		return
 	}
-	if !e.Spec.DisableSecurity && e.Spec.AuthPlugin == v1alpha1.ElasticsearchAuthPluginNone {
-		e.Spec.DisableSecurity = true
-	}
-	e.Spec.AuthPlugin = ""
+
 	if e.Spec.StorageType == "" {
 		e.Spec.StorageType = StorageTypeDurable
 	}
 
 	if e.Spec.TerminationPolicy == "" {
 		e.Spec.TerminationPolicy = TerminationPolicyDelete
-	} else if e.Spec.TerminationPolicy == TerminationPolicyPause {
-		e.Spec.TerminationPolicy = TerminationPolicyHalt
 	}
 
 	if e.Spec.PodTemplate.Spec.ServiceAccountName == "" {
@@ -369,9 +363,6 @@ func (e *ElasticsearchSpec) GetSecrets() []string {
 	var secrets []string
 	if e.DatabaseSecret != nil {
 		secrets = append(secrets, e.DatabaseSecret.SecretName)
-	}
-	if e.CertificateSecret != nil {
-		secrets = append(secrets, e.CertificateSecret.SecretName)
 	}
 	return secrets
 }

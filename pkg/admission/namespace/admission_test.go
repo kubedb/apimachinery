@@ -146,7 +146,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]*unstructured.Unstructured{editTerminationPolicy(sampleDatabase(), api.TerminationPolicyPause)},
+		[]*unstructured.Unstructured{editTerminationPolicy(sampleDatabase(), api.TerminationPolicyHalt)},
 		false,
 	},
 	{"Delete Namespace containing db with terminationPolicy Delete",

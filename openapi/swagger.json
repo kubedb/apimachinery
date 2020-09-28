@@ -28538,14 +28538,6 @@
         "version"
       ],
       "properties": {
-        "authPlugin": {
-          "description": "Authentication plugin used by Elasticsearch cluster. If unset, defaults to SearchGuard. Deprecated: Use elasticsearchVersion.Spec.AuthPlugin instead",
-          "type": "string"
-        },
-        "certificateSecret": {
-          "description": "Secret with SSL certificates Deprecated: Use spec.tls instead",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
-        },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
@@ -28584,10 +28576,6 @@
         "monitor": {
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
-        },
-        "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-          "type": "boolean"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
@@ -28783,10 +28771,6 @@
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
-        "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-          "type": "boolean"
-        },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
@@ -28969,10 +28953,6 @@
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
-        "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-          "type": "boolean"
-        },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
@@ -29122,10 +29102,6 @@
         "monitor": {
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
-        },
-        "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-          "type": "boolean"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
@@ -29285,10 +29261,6 @@
           "description": "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
           "type": "integer",
           "format": "int32"
-        },
-        "strategy": {
-          "description": "The deployment strategy to use to replace existing pods with new ones. Deprecated: Deployment has been Replaced by StatefulSet. MongosNode now uses spec.updateStrategy",
-          "$ref": "#/definitions/io.k8s.api.apps.v1.DeploymentStrategy"
         }
       }
     },
@@ -29394,10 +29366,6 @@
         "monitor": {
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
-        },
-        "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-          "type": "boolean"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
@@ -29587,10 +29555,6 @@
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
-        "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-          "type": "boolean"
-        },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
@@ -29740,10 +29704,6 @@
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
-        "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-          "type": "boolean"
-        },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
@@ -29879,10 +29839,6 @@
         "monitor": {
           "description": "Monitor is used monitor database instance.",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
-        },
-        "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-          "type": "boolean"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods.",
@@ -30032,10 +29988,6 @@
         "monitor": {
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
-        },
-        "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-          "type": "boolean"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
@@ -30235,10 +30187,6 @@
           "description": "Monitor is used monitor proxysql instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
-        "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-          "type": "boolean"
-        },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose proxysql",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
@@ -30411,10 +30359,6 @@
         "monitor": {
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
-        },
-        "paused": {
-          "description": "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-          "type": "boolean"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
@@ -31781,34 +31725,6 @@
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
           "type": "string"
-        }
-      }
-    },
-    "io.k8s.api.apps.v1.DeploymentStrategy": {
-      "description": "DeploymentStrategy describes how to replace existing pods with new ones.",
-      "type": "object",
-      "properties": {
-        "rollingUpdate": {
-          "description": "Rolling update config params. Present only if DeploymentStrategyType = RollingUpdate.",
-          "$ref": "#/definitions/io.k8s.api.apps.v1.RollingUpdateDeployment"
-        },
-        "type": {
-          "description": "Type of deployment. Can be \"Recreate\" or \"RollingUpdate\". Default is RollingUpdate.",
-          "type": "string"
-        }
-      }
-    },
-    "io.k8s.api.apps.v1.RollingUpdateDeployment": {
-      "description": "Spec to control the desired behavior of rolling update.",
-      "type": "object",
-      "properties": {
-        "maxSurge": {
-          "description": "The maximum number of pods that can be scheduled above the desired number of pods. Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%). This can not be 0 if MaxUnavailable is 0. Absolute number is calculated from percentage by rounding up. Defaults to 25%. Example: when this is set to 30%, the new ReplicaSet can be scaled up immediately when the rolling update starts, such that the total number of old and new pods do not exceed 130% of desired pods. Once old pods have been killed, new ReplicaSet can be scaled up further, ensuring that total number of pods running at any time during the update is at most 130% of desired pods.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
-        },
-        "maxUnavailable": {
-          "description": "The maximum number of pods that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%). Absolute number is calculated from percentage by rounding down. This can not be 0 if MaxSurge is 0. Defaults to 25%. Example: when this is set to 30%, the old ReplicaSet can be scaled down to 70% of desired pods immediately when the rolling update starts. Once new pods are ready, old ReplicaSet can be scaled down further, followed by scaling up the new ReplicaSet, ensuring that the total number of pods available at all times during the update is at least 70% of desired pods.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
         }
       }
     },

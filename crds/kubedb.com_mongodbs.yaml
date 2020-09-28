@@ -2259,8 +2259,6 @@ spec:
                       type: object
                   type: object
               type: object
-            paused:
-              type: boolean
             podTemplate:
               properties:
                 controller:
@@ -7256,24 +7254,6 @@ spec:
                     replicas:
                       format: int32
                       type: integer
-                    strategy:
-                      properties:
-                        rollingUpdate:
-                          properties:
-                            maxSurge:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              x-kubernetes-int-or-string: true
-                            maxUnavailable:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              x-kubernetes-int-or-string: true
-                          type: object
-                        type:
-                          type: string
-                      type: object
                   required:
                   - replicas
                   type: object

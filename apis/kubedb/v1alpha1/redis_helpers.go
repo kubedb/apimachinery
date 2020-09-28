@@ -183,8 +183,6 @@ func (r *Redis) SetDefaults(topology *core_util.Topology) {
 	}
 	if r.Spec.TerminationPolicy == "" {
 		r.Spec.TerminationPolicy = TerminationPolicyDelete
-	} else if r.Spec.TerminationPolicy == TerminationPolicyPause {
-		r.Spec.TerminationPolicy = TerminationPolicyHalt
 	}
 
 	if r.Spec.PodTemplate.Spec.ServiceAccountName == "" {
