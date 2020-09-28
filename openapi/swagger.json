@@ -28638,15 +28638,20 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchStatus": {
       "type": "object",
       "properties": {
+        "conditions": {
+          "description": "Conditions applied to the database, such as approval or denial.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
           "format": "int64"
         },
         "phase": {
-          "type": "string"
-        },
-        "reason": {
+          "description": "Specifies the current phase of the database",
           "type": "string"
         }
       }
@@ -28820,15 +28825,20 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdStatus": {
       "type": "object",
       "properties": {
+        "conditions": {
+          "description": "Conditions applied to the database, such as approval or denial.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
           "format": "int64"
         },
         "phase": {
-          "type": "string"
-        },
-        "reason": {
+          "description": "Specifies the current phase of the database",
           "type": "string"
         }
       }
@@ -29001,15 +29011,20 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBStatus": {
       "type": "object",
       "properties": {
+        "conditions": {
+          "description": "Conditions applied to the database, such as approval or denial.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
           "format": "int64"
         },
         "phase": {
-          "type": "string"
-        },
-        "reason": {
+          "description": "Specifies the current phase of the database",
           "type": "string"
         }
       }
@@ -29142,15 +29157,20 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedStatus": {
       "type": "object",
       "properties": {
+        "conditions": {
+          "description": "Conditions applied to the database, such as approval or denial.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
           "format": "int64"
         },
         "phase": {
-          "type": "string"
-        },
-        "reason": {
+          "description": "Specifies the current phase of the database",
           "type": "string"
         }
       }
@@ -29433,15 +29453,20 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBStatus": {
       "type": "object",
       "properties": {
+        "conditions": {
+          "description": "Conditions applied to the database, such as approval or denial.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
           "format": "int64"
         },
         "phase": {
-          "type": "string"
-        },
-        "reason": {
+          "description": "Specifies the current phase of the database",
           "type": "string"
         }
       }
@@ -29612,15 +29637,20 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLStatus": {
       "type": "object",
       "properties": {
+        "conditions": {
+          "description": "Conditions applied to the database, such as approval or denial.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
           "format": "int64"
         },
         "phase": {
-          "type": "string"
-        },
-        "reason": {
+          "description": "Specifies the current phase of the database",
           "type": "string"
         }
       }
@@ -29752,15 +29782,20 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDBStatus": {
       "type": "object",
       "properties": {
+        "conditions": {
+          "description": "Conditions applied to the database, such as approval or denial.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
           "format": "int64"
         },
         "phase": {
-          "type": "string"
-        },
-        "reason": {
+          "description": "Specifies the current phase of the database",
           "type": "string"
         }
       }
@@ -29879,17 +29914,20 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncerStatus": {
       "type": "object",
       "properties": {
+        "conditions": {
+          "description": "Conditions applied to the database, such as approval or denial.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
           "format": "int64"
         },
         "phase": {
-          "description": "Phase specifies the current state of PgBouncer server.",
-          "type": "string"
-        },
-        "reason": {
-          "description": "Reason is used to explain phases of interest of the server.",
+          "description": "Specifies the current phase of the database",
           "type": "string"
         }
       }
@@ -30049,15 +30087,20 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresStatus": {
       "type": "object",
       "properties": {
+        "conditions": {
+          "description": "Conditions applied to the database, such as approval or denial.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
           "format": "int64"
         },
         "phase": {
-          "type": "string"
-        },
-        "reason": {
+          "description": "Specifies the current phase of the database",
           "type": "string"
         }
       }
@@ -30226,15 +30269,20 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQLStatus": {
       "type": "object",
       "properties": {
+        "conditions": {
+          "description": "Conditions applied to the database, such as approval or denial.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
           "format": "int64"
         },
         "phase": {
-          "type": "string"
-        },
-        "reason": {
+          "description": "Specifies the current phase of the database",
           "type": "string"
         }
       }
@@ -30406,15 +30454,20 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisStatus": {
       "type": "object",
       "properties": {
+        "conditions": {
+          "description": "Conditions applied to the database, such as approval or denial.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
           "format": "int64"
         },
         "phase": {
-          "type": "string"
-        },
-        "reason": {
+          "description": "Specifies the current phase of the database",
           "type": "string"
         }
       }

@@ -139,3 +139,12 @@ const (
 	LocalHost             = "localhost"
 	LocalHostIP           = "127.0.0.1"
 )
+
+const (
+	// Condition types
+	DatabaseInitialized = "DatabaseInitialized"
+
+	// Condition reasons
+	DatabaseSuccessfullyInitialized = "DatabaseSuccessfullyInitialized"
+	FailedToInitializeDatabase      = "FailedToInitializeDatabase"
+)
