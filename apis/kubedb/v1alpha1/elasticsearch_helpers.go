@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"kubedb.dev/apimachinery/apis"
+	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
