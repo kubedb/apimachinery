@@ -136,9 +136,9 @@ const (
 
 const (
 	// Condition types
-	DatabaseInitialized = "DatabaseInitialized"
+	DatabaseInitialized = "Initialized"
 
 	// Condition reasons
-	DatabaseSuccessfullyInitialized = "DatabaseSuccessfullyInitialized"
-	FailedToInitializeDatabase      = "FailedToInitializeDatabase"
+	DatabaseSuccessfullyInitialized = "SuccessfullyInitialized"
+	FailedToInitializeDatabase      = "FailedToInitialize"
 )
