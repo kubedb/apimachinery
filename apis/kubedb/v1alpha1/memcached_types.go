@@ -95,17 +95,13 @@ type MemcachedSpec struct {
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty" protobuf:"bytes,12,opt,name=tls"`
 
-	// Indicates that the database is paused and controller will not sync any changes made to this spec.
-	// +optional
-	Paused bool `json:"paused,omitempty" protobuf:"varint,13,opt,name=paused"`
-
 	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
 	// +optional
-	Halted bool `json:"halted,omitempty" protobuf:"varint,14,opt,name=halted"`
+	Halted bool `json:"halted,omitempty" protobuf:"varint,13,opt,name=halted"`
 
 	// TerminationPolicy controls the delete operation for database
 	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,15,opt,name=terminationPolicy,casttype=TerminationPolicy"`
+	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,14,opt,name=terminationPolicy,casttype=TerminationPolicy"`
 }
 
 // +kubebuilder:validation:Enum=server;metrics-exporter

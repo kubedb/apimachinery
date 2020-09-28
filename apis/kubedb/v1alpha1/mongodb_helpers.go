@@ -27,7 +27,6 @@ import (
 
 	"github.com/appscode/go/types"
 	"gomodules.xyz/version"
-	apps "k8s.io/api/apps/v1"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -332,8 +331,6 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 	}
 	if m.Spec.TerminationPolicy == "" {
 		m.Spec.TerminationPolicy = TerminationPolicyDelete
-	} else if m.Spec.TerminationPolicy == TerminationPolicyPause {
-		m.Spec.TerminationPolicy = TerminationPolicyHalt
 	}
 
 	if m.Spec.SSLMode == "" {
@@ -363,9 +360,6 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 			},
 		}
 
-		if m.Spec.ShardTopology.Mongos.Strategy.Type == "" {
-			m.Spec.ShardTopology.Mongos.Strategy.Type = apps.RollingUpdateDeploymentStrategyType
-		}
 		if m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName == "" {
 			m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 		}

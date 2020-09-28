@@ -49,38 +49,6 @@ spec:
           type: object
         spec:
           properties:
-            authPlugin:
-              enum:
-              - SearchGuard
-              - None
-              - X-Pack
-              - OpenDistro
-              type: string
-            certificateSecret:
-              properties:
-                defaultMode:
-                  format: int32
-                  type: integer
-                items:
-                  items:
-                    properties:
-                      key:
-                        type: string
-                      mode:
-                        format: int32
-                        type: integer
-                      path:
-                        type: string
-                    required:
-                    - key
-                    - path
-                    type: object
-                  type: array
-                optional:
-                  type: boolean
-                secretName:
-                  type: string
-              type: object
             configSource:
               properties:
                 awsElasticBlockStore:
@@ -2295,8 +2263,6 @@ spec:
                       type: object
                   type: object
               type: object
-            paused:
-              type: boolean
             podTemplate:
               properties:
                 controller:

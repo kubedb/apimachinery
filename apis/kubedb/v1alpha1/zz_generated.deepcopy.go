@@ -279,11 +279,6 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 		*out = new(ElasticsearchClusterTopology)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.CertificateSecret != nil {
-		in, out := &in.CertificateSecret, &out.CertificateSecret
-		*out = new(v1.SecretVolumeSource)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.DatabaseSecret != nil {
 		in, out := &in.DatabaseSecret, &out.DatabaseSecret
 		*out = new(v1.SecretVolumeSource)
@@ -955,7 +950,6 @@ func (in *MongoDBList) DeepCopyObject() runtime.Object {
 func (in *MongoDBMongosNode) DeepCopyInto(out *MongoDBMongosNode) {
 	*out = *in
 	in.MongoDBNode.DeepCopyInto(&out.MongoDBNode)
-	in.Strategy.DeepCopyInto(&out.Strategy)
 	return
 }
 

@@ -2895,8 +2895,6 @@ spec:
                       type: object
                   type: object
               type: object
-            paused:
-              type: boolean
             podTemplate:
               properties:
                 controller:

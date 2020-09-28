@@ -145,8 +145,6 @@ func (m *Memcached) SetDefaults() {
 	// perform defaulting
 	if m.Spec.TerminationPolicy == "" {
 		m.Spec.TerminationPolicy = TerminationPolicyDelete
-	} else if m.Spec.TerminationPolicy == TerminationPolicyPause {
-		m.Spec.TerminationPolicy = TerminationPolicyHalt
 	}
 
 	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {

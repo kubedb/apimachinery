@@ -19198,23 +19198,10 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 							Format:      "",
 						},
 					},
-					"certificateSecret": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Secret with SSL certificates Deprecated: Use spec.tls instead",
-							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
-						},
-					},
 					"disableSecurity": {
 						SchemaProps: spec.SchemaProps{
 							Description: "disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user. If unset, default is false",
 							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"authPlugin": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Authentication plugin used by Elasticsearch cluster. If unset, defaults to SearchGuard. Deprecated: Use elasticsearchVersion.Spec.AuthPlugin instead",
-							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
@@ -19305,13 +19292,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 									},
 								},
 							},
-						},
-					},
-					"paused": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-							Type:        []string{"boolean"},
-							Format:      "",
 						},
 					},
 					"halted": {
@@ -19627,13 +19607,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_EtcdSpec(ref common.ReferenceCallb
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"),
 						},
 					},
-					"paused": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"halted": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -19927,13 +19900,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MariaDBSpec(ref common.ReferenceCa
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
-					"paused": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"halted": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -20169,13 +20135,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MemcachedSpec(ref common.Reference
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
-					"paused": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"halted": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -20408,18 +20367,12 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBMongosNode(ref common.Refer
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
 						},
 					},
-					"strategy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The deployment strategy to use to replace existing pods with new ones. Deprecated: Deployment has been Replaced by StatefulSet. MongosNode now uses spec.updateStrategy",
-							Ref:         ref("k8s.io/api/apps/v1.DeploymentStrategy"),
-						},
-					},
 				},
 				Required: []string{"replicas"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.DeploymentStrategy", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+			"k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
 	}
 }
 
@@ -20676,13 +20629,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBSpec(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "Secret for KeyFile. Contains keyfile `key.txt` if spec.clusterAuthMode == keyFile || sendKeyFile",
 							Ref:         ref("k8s.io/api/core/v1.SecretVolumeSource"),
-						},
-					},
-					"paused": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-							Type:        []string{"boolean"},
-							Format:      "",
 						},
 					},
 					"halted": {
@@ -20993,13 +20939,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQLSpec(ref common.ReferenceCall
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
-					"paused": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"halted": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -21228,13 +21167,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PerconaXtraDBSpec(ref common.Refer
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
-					"paused": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"halted": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -21455,13 +21387,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PgBouncerSpec(ref common.Reference
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations for client and server.",
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
-						},
-					},
-					"paused": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-							Type:        []string{"boolean"},
-							Format:      "",
 						},
 					},
 				},
@@ -21727,13 +21652,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresSpec(ref common.ReferenceC
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations for client and server.",
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
-						},
-					},
-					"paused": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-							Type:        []string{"boolean"},
-							Format:      "",
 						},
 					},
 					"halted": {
@@ -22051,13 +21969,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ProxySQLSpec(ref common.ReferenceC
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
-					"paused": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 				},
 				Required: []string{"version"},
 			},
@@ -22343,13 +22254,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_RedisSpec(ref common.ReferenceCall
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations for client and server.",
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
-						},
-					},
-					"paused": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is paused and controller will not sync any changes made to this spec.",
-							Type:        []string{"boolean"},
-							Format:      "",
 						},
 					},
 					"halted": {

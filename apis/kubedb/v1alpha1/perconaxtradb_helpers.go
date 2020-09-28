@@ -173,8 +173,6 @@ func (p *PerconaXtraDB) SetDefaults() {
 	}
 	if p.Spec.TerminationPolicy == "" {
 		p.Spec.TerminationPolicy = TerminationPolicyDelete
-	} else if p.Spec.TerminationPolicy == TerminationPolicyPause {
-		p.Spec.TerminationPolicy = TerminationPolicyHalt
 	}
 
 	p.Spec.setDefaultProbes()
