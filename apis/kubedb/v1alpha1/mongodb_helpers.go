@@ -156,20 +156,20 @@ func (m MongoDB) OffshootLabels() map[string]string {
 	out[meta_util.VersionLabelKey] = string(m.Spec.Version)
 	out[meta_util.InstanceLabelKey] = m.Name
 	out[meta_util.ComponentLabelKey] = ComponentDatabase
-	out[meta_util.ManagedByLabelKey] = GenericKey
-	return meta_util.FilterKeys(GenericKey, out, m.Labels)
+	out[meta_util.ManagedByLabelKey] = kubedb.GroupName
+	return meta_util.FilterKeys(kubedb.GroupName, out, m.Labels)
 }
 
 func (m MongoDB) ShardLabels(nodeNum int32) map[string]string {
-	return meta_util.FilterKeys(GenericKey, m.OffshootLabels(), m.ShardSelectors(nodeNum))
+	return meta_util.FilterKeys(kubedb.GroupName, m.OffshootLabels(), m.ShardSelectors(nodeNum))
 }
 
 func (m MongoDB) ConfigSvrLabels() map[string]string {
-	return meta_util.FilterKeys(GenericKey, m.OffshootLabels(), m.ConfigSvrSelectors())
+	return meta_util.FilterKeys(kubedb.GroupName, m.OffshootLabels(), m.ConfigSvrSelectors())
 }
 
 func (m MongoDB) MongosLabels() map[string]string {
-	return meta_util.FilterKeys(GenericKey, m.OffshootLabels(), m.MongosSelectors())
+	return meta_util.FilterKeys(kubedb.GroupName, m.OffshootLabels(), m.MongosSelectors())
 }
 
 func (m MongoDB) ResourceShortCode() string {
@@ -306,7 +306,7 @@ func (m MongoDB) StatsService() mona.StatsAccessor {
 }
 
 func (m MongoDB) StatsServiceLabels() map[string]string {
-	lbl := meta_util.FilterKeys(GenericKey, m.OffshootSelectors(), m.Labels)
+	lbl := meta_util.FilterKeys(kubedb.GroupName, m.OffshootSelectors(), m.Labels)
 	lbl[LabelRole] = RoleStats
 	return lbl
 }
@@ -418,7 +418,7 @@ func (m *MongoDB) setDefaultTLSConfig() {
 			Alias:      string(MongoDBServerCert),
 			SecretName: "",
 			Subject: &kmapi.X509Subject{
-				Organizations:       []string{DatabaseNamePrefix},
+				Organizations:       []string{KubeDBOrganization},
 				OrganizationalUnits: []string{string(MongoDBServerCert)},
 			},
 		})
@@ -429,7 +429,7 @@ func (m *MongoDB) setDefaultTLSConfig() {
 			Alias:      string(MongoDBServerCert),
 			SecretName: m.CertificateName(MongoDBServerCert, ""),
 			Subject: &kmapi.X509Subject{
-				Organizations:       []string{DatabaseNamePrefix},
+				Organizations:       []string{KubeDBOrganization},
 				OrganizationalUnits: []string{string(MongoDBServerCert)},
 			},
 		})
@@ -438,7 +438,7 @@ func (m *MongoDB) setDefaultTLSConfig() {
 		Alias:      string(MongoDBClientCert),
 		SecretName: m.CertificateName(MongoDBClientCert, ""),
 		Subject: &kmapi.X509Subject{
-			Organizations:       []string{DatabaseNamePrefix},
+			Organizations:       []string{KubeDBOrganization},
 			OrganizationalUnits: []string{string(MongoDBClientCert)},
 		},
 	})
@@ -446,7 +446,7 @@ func (m *MongoDB) setDefaultTLSConfig() {
 		Alias:      string(MongoDBMetricsExporterCert),
 		SecretName: m.CertificateName(MongoDBMetricsExporterCert, ""),
 		Subject: &kmapi.X509Subject{
-			Organizations:       []string{DatabaseNamePrefix},
+			Organizations:       []string{KubeDBOrganization},
 			OrganizationalUnits: []string{string(MongoDBMetricsExporterCert)},
 		},
 	})
