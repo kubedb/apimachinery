@@ -39,14 +39,8 @@ const (
 	EtcdKey          = ResourceSingularEtcd + "." + GenericKey
 	ProxySQLKey      = ResourceSingularProxySQL + "." + GenericKey
 
-	AnnotationInitialized = GenericKey + "/initialized"
-	AnnotationJobType     = GenericKey + "/job-type"
-
 	PrometheusExporterPortNumber = 56790
 	PrometheusExporterPortName   = "prom-http"
-
-	JobTypeBackup  = "backup"
-	JobTypeRestore = "restore"
 
 	ElasticsearchRestPort                        = 9200
 	ElasticsearchRestPortName                    = "http"
@@ -138,4 +132,13 @@ const (
 	ContainerExporterName = "exporter"
 	LocalHost             = "localhost"
 	LocalHostIP           = "127.0.0.1"
+)
+
+const (
+	// Condition types
+	DatabaseInitialized = "Initialized"
+
+	// Condition reasons
+	DatabaseSuccessfullyInitialized = "SuccessfullyInitialized"
+	FailedToInitializeDatabase      = "FailedToInitialize"
 )
