@@ -331,14 +331,16 @@ func (e *Elasticsearch) setDefaultTLSConfig() {
 	if tlsConfig == nil {
 		tlsConfig = &kmapi.TLSConfig{}
 	}
-	// root
-	tlsConfig.Certificates = kmapi.SetMissingSpecForCertificate(tlsConfig.Certificates, kmapi.CertificateSpec{
-		Alias:      string(ElasticsearchCACert),
-		SecretName: e.CertificateName(ElasticsearchCACert),
-		Subject: &kmapi.X509Subject{
-			Organizations: []string{KubeDBOrganization},
-		},
-	})
+	// If the issuerRef is nil, the operator will create the CA certificate.
+	if tlsConfig.IssuerRef == nil {
+		tlsConfig.Certificates = kmapi.SetMissingSpecForCertificate(tlsConfig.Certificates, kmapi.CertificateSpec{
+			Alias:      string(ElasticsearchCACert),
+			SecretName: e.CertificateName(ElasticsearchCACert),
+			Subject: &kmapi.X509Subject{
+				Organizations: []string{KubeDBOrganization},
+			},
+		})
+	}
 	// transport
 	tlsConfig.Certificates = kmapi.SetMissingSpecForCertificate(tlsConfig.Certificates, kmapi.CertificateSpec{
 		Alias:      string(ElasticsearchTransportCert),
@@ -379,6 +381,13 @@ func (e *Elasticsearch) setDefaultTLSConfig() {
 			Organizations: []string{KubeDBOrganization},
 		},
 	})
+
+	// Force overwrite the private key encoding type to PKCS#8
+	for id := range tlsConfig.Certificates {
+		tlsConfig.Certificates[id].PrivateKey = &kmapi.CertificatePrivateKey{
+			Encoding: kmapi.PKCS8,
+		}
+	}
 
 	e.Spec.TLS = tlsConfig
 }
