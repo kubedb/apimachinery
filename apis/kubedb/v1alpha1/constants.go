@@ -39,14 +39,8 @@ const (
 	EtcdKey          = ResourceSingularEtcd + "." + GenericKey
 	ProxySQLKey      = ResourceSingularProxySQL + "." + GenericKey
 
-	AnnotationInitialized = GenericKey + "/initialized"
-	AnnotationJobType     = GenericKey + "/job-type"
-
 	PrometheusExporterPortNumber = 56790
 	PrometheusExporterPortName   = "prom-http"
-
-	JobTypeBackup  = "backup"
-	JobTypeRestore = "restore"
 
 	ElasticsearchRestPort                        = 9200
 	ElasticsearchRestPortName                    = "http"
