@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/appscode/docker-registry-client v0.0.0-20180426150142-1bb02bb202b0
-	github.com/appscode/go v0.0.0-20200323182826-54e98e09185a
+	github.com/appscode/go v0.0.0-20200928211031-cc0c23082d91
 	github.com/docker/libtrust v0.0.0-20160708172513-aabc10ec26b7 // indirect
 	github.com/evanphx/json-patch v4.9.0+incompatible
 	github.com/go-openapi/spec v0.19.8
@@ -21,7 +21,7 @@ require (
 	k8s.io/apimachinery v0.18.9
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/kube-openapi v0.0.0-20200410145947-61e04a5be9a6
-	kmodules.xyz/client-go v0.0.0-20200928072851-0b8648a2b8b9
+	kmodules.xyz/client-go v0.0.0-20200929030759-cce6a3c623c1
 	kmodules.xyz/crd-schema-fuzz v0.0.0-20200922204806-c1426cd7fcf4
 	kmodules.xyz/custom-resources v0.0.0-20200922210108-70f2815a43bb
 	kmodules.xyz/monitoring-agent-api v0.0.0-20200922204510-b8b5610e5385
