@@ -94,7 +94,7 @@ func (c *Controller) extractRestoreInfo(invoker interface{}) (*restoreInfo, erro
 	return ri, nil
 }
 
-func (c *Controller) setInitializationCondition(ri *restoreInfo) error {
+func (c *Controller) setRestoreCompletionCondition(ri *restoreInfo) error {
 	if ri == nil {
 		return fmt.Errorf("invalid restore information. it must not be nil")
 	}
@@ -114,7 +114,7 @@ func (c *Controller) setInitializationCondition(ri *restoreInfo) error {
 	if ri.phase == v1beta1.RestoreSucceeded {
 		dbCond.Status = kmapi.ConditionTrue
 		dbCond.Reason = api.DatabaseSuccessfullyInitialized
-		dbCond.Message = fmt.Sprintf("Successfully restored data by %s %s/%s",
+		dbCond.Message = fmt.Sprintf("Successfully restored data by initializer %s %s/%s",
 			ri.invoker.Kind,
 			ri.do.Namespace,
 			ri.invoker.Name,
