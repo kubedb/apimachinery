@@ -80,12 +80,13 @@ func (c *Controller) processRestoreSession(key string) error {
 		// Note that you also have to check the uid if you have a local controlled resource, which
 		// is dependent on the actual instance, to detect that a Job was recreated with the same name
 		rs := obj.(*v1beta1.RestoreSession).DeepCopy()
+		rs.GetObjectKind().SetGroupVersionKind(v1beta1.SchemeGroupVersion.WithKind(v1beta1.ResourceKindRestoreSession))
 		ri, err := c.extractRestoreInfo(rs)
 		if err != nil {
 			log.Errorln("failed to extract restore invoker info. Reason: ", err)
 			return err
 		}
-		return c.setInitializationCondition(ri)
+		return c.setRestoreCompletionCondition(ri)
 	}
 	return nil
 }
