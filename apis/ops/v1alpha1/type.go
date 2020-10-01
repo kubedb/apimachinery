@@ -16,6 +16,10 @@ limitations under the License.
 
 package v1alpha1
 
+import (
+	kmapi "kmodules.xyz/client-go/api/v1"
+)
+
 // List of possible condition types for a ops request
 const (
 	AccessApproved            = "Approved"
@@ -112,13 +116,25 @@ const (
 	OpsRequestTypeVolumeExpansion OpsRequestType = "VolumeExpansion"
 	// used for Restart operation
 	OpsRequestTypeRestart OpsRequestType = "Restart"
-	// used for RotateCertificates operation
-	OpsRequestTypeRotateCertificates OpsRequestType = "RotateCertificates"
 	// used for Reconfigure operation
 	OpsRequestTypeReconfigure OpsRequestType = "Reconfigure"
+	// used for RotateCertificates operation
+	OpsRequestTypeRotateCertificates OpsRequestType = "ReconfigureTLS"
 )
 
-type UpgradeSpec struct {
-	// Specifies the target version name from catalog
-	TargetVersion string `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+type RestartSpec struct {
+}
+
+type TLSSpec struct {
+	// TLSConfig contains updated tls configurations for client and server.
+	// +optional
+	kmapi.TLSConfig `json:",inline,omitempty" protobuf:"bytes,1,opt,name=tLSConfig"`
+
+	// RotateCertificates tells operator to initiate certificate rotation
+	// +optional
+	RotateCertificates bool `json:"rotateCertificates,omitempty" protobuf:"varint,2,opt,name=rotateCertificates"`
+
+	// Remove tells operator to remove TLS configuration
+	// +optional
+	Remove bool `json:"remove,omitempty" protobuf:"varint,3,opt,name=remove"`
 }

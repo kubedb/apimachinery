@@ -30557,6 +30557,9 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchCustomConfigurationSpec": {
+      "type": "object"
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchHorizontalScalingSpec": {
       "description": "ElasticsearchHorizontalScalingSpec contains the horizontal scaling information of an Elasticsearch cluster",
       "type": "object",
@@ -30646,21 +30649,41 @@
         "type"
       ],
       "properties": {
+        "configuration": {
+          "description": "Specifies information necessary for custom configuration of Elasticsearch",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchCustomConfigurationSpec"
+        },
         "databaseRef": {
           "description": "Specifies the Elasticsearch reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "horizontalScaling": {
-          "description": "HorizontalScaling specifies the horizontal scaling.",
+          "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchHorizontalScalingSpec"
+        },
+        "restart": {
+          "description": "Specifies information necessary for restarting database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "tls": {
+          "description": "Specifies information necessary for configuring TLS",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
         },
         "type": {
           "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
-          "description": "Specifies the field information that needed to be upgraded",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.UpgradeSpec"
+          "description": "Specifies information necessary for upgrading Elasticsearch",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchUpgradeSpec"
+        },
+        "verticalScaling": {
+          "description": "Specifies information necessary for vertical scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVerticalScalingSpec"
+        },
+        "volumeExpansion": {
+          "description": "Specifies information necessary for volume expansion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVolumeExpansionSpec"
         }
       }
     },
@@ -30685,6 +30708,42 @@
           "type": "string"
         }
       }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchReadinessCriteria": {
+      "description": "ElasticsearchReadinessCriteria is the criteria for checking readiness of a Elasticsearch pod after updating, horizontal scaling etc.",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchUpgradeSpec": {
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchReadinessCriteria"
+        },
+        "targetVersion": {
+          "description": "Specifies the target version name from catalog",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVerticalScalingSpec": {
+      "description": "ElasticsearchVerticalScalingSpec is the spec for Elasticsearch vertical scaling",
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchReadinessCriteria"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVolumeExpansionSpec": {
+      "description": "ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdCustomConfigurationSpec": {
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdHorizontalScalingSpec": {
+      "description": "HorizontalScaling is the spec for Etcd horizontal scaling",
+      "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdOpsRequest": {
       "type": "object",
@@ -30754,17 +30813,41 @@
         "type"
       ],
       "properties": {
+        "configuration": {
+          "description": "Specifies information necessary for custom configuration of Etcd",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdCustomConfigurationSpec"
+        },
         "databaseRef": {
-          "description": "Specifies the etcd reference",
+          "description": "Specifies the Etcd reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "horizontalScaling": {
+          "description": "Specifies information necessary for horizontal scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdHorizontalScalingSpec"
+        },
+        "restart": {
+          "description": "Specifies information necessary for restarting database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "tls": {
+          "description": "Specifies information necessary for configuring TLS",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
         },
         "type": {
           "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
-          "description": "Specifies the field information that needed to be upgraded",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.UpgradeSpec"
+          "description": "Specifies information necessary for upgrading Etcd",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdUpgradeSpec"
+        },
+        "verticalScaling": {
+          "description": "Specifies information necessary for vertical scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdVerticalScalingSpec"
+        },
+        "volumeExpansion": {
+          "description": "Specifies information necessary for volume expansion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdVolumeExpansionSpec"
         }
       }
     },
@@ -30788,6 +30871,42 @@
           "type": "string"
         }
       }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdReadinessCriteria": {
+      "description": "EtcdReadinessCriteria is the criteria for checking readiness of a Etcd pod after updating, horizontal scaling etc.",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdUpgradeSpec": {
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdReadinessCriteria"
+        },
+        "targetVersion": {
+          "description": "Specifies the target version name from catalog",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdVerticalScalingSpec": {
+      "description": "EtcdVerticalScalingSpec is the spec for Etcd vertical scaling",
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdReadinessCriteria"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdVolumeExpansionSpec": {
+      "description": "EtcdVolumeExpansionSpec is the spec for Etcd volume expansion",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedCustomConfigurationSpec": {
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedHorizontalScalingSpec": {
+      "description": "HorizontalScaling is the spec for Memcached horizontal scaling",
+      "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedOpsRequest": {
       "type": "object",
@@ -30857,17 +30976,41 @@
         "type"
       ],
       "properties": {
+        "configuration": {
+          "description": "Specifies information necessary for custom configuration of Memcached",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedCustomConfigurationSpec"
+        },
         "databaseRef": {
           "description": "Specifies the Memcached reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "horizontalScaling": {
+          "description": "Specifies information necessary for horizontal scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedHorizontalScalingSpec"
+        },
+        "restart": {
+          "description": "Specifies information necessary for restarting database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "tls": {
+          "description": "Specifies information necessary for configuring TLS",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
         },
         "type": {
           "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
-          "description": "Specifies the field information that needed to be upgraded",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.UpgradeSpec"
+          "description": "Specifies information necessary for upgrading Memcached",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedUpgradeSpec"
+        },
+        "verticalScaling": {
+          "description": "Specifies information necessary for vertical scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedVerticalScalingSpec"
+        },
+        "volumeExpansion": {
+          "description": "Specifies information necessary for volume expansion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedVolumeExpansionSpec"
         }
       }
     },
@@ -30892,7 +31035,36 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedReadinessCriteria": {
+      "description": "MemcachedReadinessCriteria is the criteria for checking readiness of a Memcached pod after updating, horizontal scaling etc.",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedUpgradeSpec": {
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedReadinessCriteria"
+        },
+        "targetVersion": {
+          "description": "Specifies the target version name from catalog",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedVerticalScalingSpec": {
+      "description": "MemcachedVerticalScalingSpec is the spec for Memcached vertical scaling",
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedReadinessCriteria"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedVolumeExpansionSpec": {
+      "description": "MemcachedVolumeExpansionSpec is the spec for Memcached volume expansion",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration": {
       "type": "object",
       "properties": {
         "configMap": {
@@ -30903,26 +31075,29 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        "remove": {
+          "type": "boolean"
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfigSpec": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfigurationSpec": {
       "type": "object",
       "properties": {
         "configServer": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
         },
         "mongos": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
         },
         "replicaSet": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
         },
         "shard": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
         },
         "standalone": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfig"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
         }
       }
     },
@@ -31013,9 +31188,9 @@
         "type"
       ],
       "properties": {
-        "customConfig": {
+        "configuration": {
           "description": "Specifies information necessary for custom configuration of MongoDB",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfigSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfigurationSpec"
         },
         "databaseRef": {
           "description": "Specifies the MongoDB reference",
@@ -31025,13 +31200,21 @@
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBHorizontalScalingSpec"
         },
+        "restart": {
+          "description": "Specifies information necessary for restarting database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "tls": {
+          "description": "Specifies information necessary for configuring TLS",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
+        },
         "type": {
           "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
           "description": "Specifies information necessary for upgrading mongodb",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.UpgradeSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBUpgradeSpec"
         },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
@@ -31064,6 +31247,20 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReadinessCriteria": {
+      "description": "MongoDBReadinessCriteria is the criteria for checking readiness of a MongoDB pod after updating, horizontal scaling etc.",
+      "type": "object",
+      "properties": {
+        "dbSizeDiffPercentage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "oplogMaxLagSeconds": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBShardNode": {
       "description": "MongoDBShardNode is the spec for mongodb Shard",
       "type": "object",
@@ -31075,6 +31272,18 @@
         "shards": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBUpgradeSpec": {
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReadinessCriteria"
+        },
+        "targetVersion": {
+          "description": "Specifies the target version name from catalog",
+          "type": "string"
         }
       }
     },
@@ -31090,6 +31299,9 @@
         },
         "mongos": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReadinessCriteria"
         },
         "replicaSet": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
@@ -31129,6 +31341,9 @@
           "format": "int32"
         }
       }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfigurationSpec": {
+      "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLHorizontalScalingSpec": {
       "type": "object",
@@ -31213,30 +31428,41 @@
         "type"
       ],
       "properties": {
+        "configuration": {
+          "description": "Specifies information necessary for custom configuration of MySQL",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfigurationSpec"
+        },
         "databaseRef": {
-          "description": "Specifies the database reference",
+          "description": "Specifies the MySQL reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "horizontalScaling": {
-          "description": "HorizontalScaling specifies the horizontal scaling.",
+          "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLHorizontalScalingSpec"
         },
-        "statefulSetOrdinal": {
-          "description": "Specifies the current ordinal of the StatefulSet",
-          "type": "integer",
-          "format": "int32"
+        "restart": {
+          "description": "Specifies information necessary for restarting database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "tls": {
+          "description": "Specifies information necessary for configuring TLS",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
         },
         "type": {
-          "description": "Specifies the ops request type; ScaleUp, ScaleDown, Upgrade etc.",
+          "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
-          "description": "Specifies the field information that needed to be upgraded",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.UpgradeSpec"
+          "description": "Specifies information necessary for upgrading MySQL",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUpgradeSpec"
         },
         "verticalScaling": {
-          "description": "VerticalScaling specifies the vertical scaling.",
+          "description": "Specifies information necessary for vertical scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVerticalScalingSpec"
+        },
+        "volumeExpansion": {
+          "description": "Specifies information necessary for volume expansion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVolumeExpansionSpec"
         }
       }
     },
@@ -31261,6 +31487,22 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLReadinessCriteria": {
+      "description": "MySQLReadinessCriteria is the criteria for checking readiness of a MySQL pod after updating, horizontal scaling etc.",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUpgradeSpec": {
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLReadinessCriteria"
+        },
+        "targetVersion": {
+          "description": "Specifies the target version name from catalog",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVerticalScalingSpec": {
       "type": "object",
       "properties": {
@@ -31271,6 +31513,17 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVolumeExpansionSpec": {
+      "description": "MySQLVolumeExpansionSpec is the spec for MySQL volume expansion",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBCustomConfigurationSpec": {
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBHorizontalScalingSpec": {
+      "description": "HorizontalScaling is the spec for PerconaXtraDB horizontal scaling",
+      "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBOpsRequest": {
       "type": "object",
@@ -31340,17 +31593,41 @@
         "type"
       ],
       "properties": {
+        "configuration": {
+          "description": "Specifies information necessary for custom configuration of PerconaXtraDB",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBCustomConfigurationSpec"
+        },
         "databaseRef": {
-          "description": "Specifies the Elasticsearch reference",
+          "description": "Specifies the PerconaXtraDB reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "horizontalScaling": {
+          "description": "Specifies information necessary for horizontal scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBHorizontalScalingSpec"
+        },
+        "restart": {
+          "description": "Specifies information necessary for restarting database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "tls": {
+          "description": "Specifies information necessary for configuring TLS",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
         },
         "type": {
           "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
-          "description": "Specifies the field information that needed to be upgraded",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.UpgradeSpec"
+          "description": "Specifies information necessary for upgrading PerconaXtraDB",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBUpgradeSpec"
+        },
+        "verticalScaling": {
+          "description": "Specifies information necessary for vertical scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBVerticalScalingSpec"
+        },
+        "volumeExpansion": {
+          "description": "Specifies information necessary for volume expansion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBVolumeExpansionSpec"
         }
       }
     },
@@ -31374,6 +31651,42 @@
           "type": "string"
         }
       }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBReadinessCriteria": {
+      "description": "PerconaXtraDBReadinessCriteria is the criteria for checking readiness of a PerconaXtraDB pod after updating, horizontal scaling etc.",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBUpgradeSpec": {
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBReadinessCriteria"
+        },
+        "targetVersion": {
+          "description": "Specifies the target version name from catalog",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBVerticalScalingSpec": {
+      "description": "PerconaXtraDBVerticalScalingSpec is the spec for PerconaXtraDB vertical scaling",
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBReadinessCriteria"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBVolumeExpansionSpec": {
+      "description": "PerconaXtraDBVolumeExpansionSpec is the spec for PerconaXtraDB volume expansion",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresCustomConfigurationSpec": {
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingSpec": {
+      "description": "HorizontalScaling is the spec for Postgres horizontal scaling",
+      "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresOpsRequest": {
       "type": "object",
@@ -31443,17 +31756,41 @@
         "type"
       ],
       "properties": {
+        "configuration": {
+          "description": "Specifies information necessary for custom configuration of Postgres",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresCustomConfigurationSpec"
+        },
         "databaseRef": {
-          "description": "Specifies the Elasticsearch reference",
+          "description": "Specifies the Postgres reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "horizontalScaling": {
+          "description": "Specifies information necessary for horizontal scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingSpec"
+        },
+        "restart": {
+          "description": "Specifies information necessary for restarting database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "tls": {
+          "description": "Specifies information necessary for configuring TLS",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
         },
         "type": {
           "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
-          "description": "Specifies the field information that needed to be upgraded",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.UpgradeSpec"
+          "description": "Specifies information necessary for upgrading Postgres",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresUpgradeSpec"
+        },
+        "verticalScaling": {
+          "description": "Specifies information necessary for vertical scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresVerticalScalingSpec"
+        },
+        "volumeExpansion": {
+          "description": "Specifies information necessary for volume expansion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresVolumeExpansionSpec"
         }
       }
     },
@@ -31477,6 +31814,42 @@
           "type": "string"
         }
       }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReadinessCriteria": {
+      "description": "PostgresReadinessCriteria is the criteria for checking readiness of a Postgres pod after updating, horizontal scaling etc.",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresUpgradeSpec": {
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReadinessCriteria"
+        },
+        "targetVersion": {
+          "description": "Specifies the target version name from catalog",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresVerticalScalingSpec": {
+      "description": "PostgresVerticalScalingSpec is the spec for Postgres vertical scaling",
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReadinessCriteria"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresVolumeExpansionSpec": {
+      "description": "PostgresVolumeExpansionSpec is the spec for Postgres volume expansion",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLCustomConfigurationSpec": {
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLHorizontalScalingSpec": {
+      "description": "HorizontalScaling is the spec for ProxySQL horizontal scaling",
+      "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLOpsRequest": {
       "type": "object",
@@ -31546,17 +31919,41 @@
         "type"
       ],
       "properties": {
+        "configuration": {
+          "description": "Specifies information necessary for custom configuration of ProxySQL",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLCustomConfigurationSpec"
+        },
         "databaseRef": {
-          "description": "Specifies the Elasticsearch reference",
+          "description": "Specifies the ProxySQL reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "horizontalScaling": {
+          "description": "Specifies information necessary for horizontal scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLHorizontalScalingSpec"
+        },
+        "restart": {
+          "description": "Specifies information necessary for restarting database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "tls": {
+          "description": "Specifies information necessary for configuring TLS",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
         },
         "type": {
           "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
-          "description": "Specifies the field information that needed to be upgraded",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.UpgradeSpec"
+          "description": "Specifies information necessary for upgrading ProxySQL",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLUpgradeSpec"
+        },
+        "verticalScaling": {
+          "description": "Specifies information necessary for vertical scaling",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLVerticalScalingSpec"
+        },
+        "volumeExpansion": {
+          "description": "Specifies information necessary for volume expansion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLVolumeExpansionSpec"
         }
       }
     },
@@ -31580,6 +31977,38 @@
           "type": "string"
         }
       }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReadinessCriteria": {
+      "description": "ProxySQLReadinessCriteria is the criteria for checking readiness of a ProxySQL pod after updating, horizontal scaling etc.",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLUpgradeSpec": {
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReadinessCriteria"
+        },
+        "targetVersion": {
+          "description": "Specifies the target version name from catalog",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLVerticalScalingSpec": {
+      "description": "ProxySQLVerticalScalingSpec is the spec for ProxySQL vertical scaling",
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReadinessCriteria"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLVolumeExpansionSpec": {
+      "description": "ProxySQLVolumeExpansionSpec is the spec for ProxySQL volume expansion",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisCustomConfigurationSpec": {
+      "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisHorizontalScalingSpec": {
       "type": "object",
@@ -31664,25 +32093,41 @@
         "type"
       ],
       "properties": {
+        "configuration": {
+          "description": "Specifies information necessary for custom configuration of Redis",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisCustomConfigurationSpec"
+        },
         "databaseRef": {
           "description": "Specifies the Redis reference",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "horizontalScaling": {
-          "description": "Specifies information necessary for horizontal scaling.",
+          "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisHorizontalScalingSpec"
+        },
+        "restart": {
+          "description": "Specifies information necessary for restarting database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "tls": {
+          "description": "Specifies information necessary for configuring TLS",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
         },
         "type": {
           "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
           "type": "string"
         },
         "upgrade": {
-          "description": "Specifies the field information that needed to be upgraded",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.UpgradeSpec"
+          "description": "Specifies information necessary for upgrading Redis",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisUpgradeSpec"
         },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisVerticalScalingSpec"
+        },
+        "volumeExpansion": {
+          "description": "Specifies information necessary for volume expansion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisVolumeExpansionSpec"
         }
       }
     },
@@ -31707,6 +32152,22 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisReadinessCriteria": {
+      "description": "RedisReadinessCriteria is the criteria for checking readiness of a Redis pod after updating, horizontal scaling etc.",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisUpgradeSpec": {
+      "type": "object",
+      "properties": {
+        "readinessCriteria": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisReadinessCriteria"
+        },
+        "targetVersion": {
+          "description": "Specifies the target version name from catalog",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisVerticalScalingSpec": {
       "description": "RedisVerticalScalingSpec is the spec for Redis vertical scaling",
       "type": "object",
@@ -31719,12 +32180,34 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.UpgradeSpec": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisVolumeExpansionSpec": {
+      "description": "RedisVolumeExpansionSpec is the spec for Redis volume expansion",
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec": {
+      "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec": {
       "type": "object",
       "properties": {
-        "targetVersion": {
-          "description": "Specifies the target version name from catalog",
-          "type": "string"
+        "certificates": {
+          "description": "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.CertificateSpec"
+          }
+        },
+        "issuerRef": {
+          "description": "IssuerRef is a reference to a Certificate Issuer.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+        },
+        "remove": {
+          "description": "Remove tells operator to remove TLS configuration",
+          "type": "boolean"
+        },
+        "rotateCertificates": {
+          "description": "RotateCertificates tells operator to initiate certificate rotation",
+          "type": "boolean"
         }
       }
     },

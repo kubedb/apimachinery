@@ -23,91 +23,91 @@ import (
 )
 
 const (
-	ResourceCodeMySQLOpsRequest     = "myops"
-	ResourceKindMySQLOpsRequest     = "MySQLOpsRequest"
-	ResourceSingularMySQLOpsRequest = "mysqlopsrequest"
-	ResourcePluralMySQLOpsRequest   = "mysqlopsrequests"
+	ResourceCodeMariaDBOpsRequest     = "mariaops"
+	ResourceKindMariaDBOpsRequest     = "MariaDBOpsRequest"
+	ResourceSingularMariaDBOpsRequest = "mariadbopsrequest"
+	ResourcePluralMariaDBOpsRequest   = "mariadbopsrequests"
 )
 
-// MySQLOpsRequest defines a MySQL DBA operation.
+// MariaDBOpsRequest defines a MariaDB DBA operation.
 
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=mysqlopsrequests,singular=mysqlopsrequest,shortName=myops,categories={datastore,kubedb,appscode}
+// +kubebuilder:resource:path=mariadbopsrequests,singular=mariadbopsrequest,shortName=mariaops,categories={datastore,kubedb,appscode}
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-type MySQLOpsRequest struct {
+type MariaDBOpsRequest struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Spec              MySQLOpsRequestSpec   `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status            MySQLOpsRequestStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Spec              MariaDBOpsRequestSpec   `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	Status            MariaDBOpsRequestStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
-// MySQLOpsRequestSpec is the spec for MySQLOpsRequest
-type MySQLOpsRequestSpec struct {
-	// Specifies the MySQL reference
+// MariaDBOpsRequestSpec is the spec for MariaDBOpsRequest
+type MariaDBOpsRequestSpec struct {
+	// Specifies the MariaDB reference
 	DatabaseRef core.LocalObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
 	// Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.
 	Type OpsRequestType `json:"type" protobuf:"bytes,2,opt,name=type,casttype=OpsRequestType"`
-	// Specifies information necessary for upgrading MySQL
-	Upgrade *MySQLUpgradeSpec `json:"upgrade,omitempty" protobuf:"bytes,3,opt,name=upgrade"`
+	// Specifies information necessary for upgrading MariaDB
+	Upgrade *MariaDBUpgradeSpec `json:"upgrade,omitempty" protobuf:"bytes,3,opt,name=upgrade"`
 	// Specifies information necessary for horizontal scaling
-	HorizontalScaling *MySQLHorizontalScalingSpec `json:"horizontalScaling,omitempty" protobuf:"bytes,4,opt,name=horizontalScaling"`
+	HorizontalScaling *MariaDBHorizontalScalingSpec `json:"horizontalScaling,omitempty" protobuf:"bytes,4,opt,name=horizontalScaling"`
 	// Specifies information necessary for vertical scaling
-	VerticalScaling *MySQLVerticalScalingSpec `json:"verticalScaling,omitempty" protobuf:"bytes,5,opt,name=verticalScaling"`
+	VerticalScaling *MariaDBVerticalScalingSpec `json:"verticalScaling,omitempty" protobuf:"bytes,5,opt,name=verticalScaling"`
 	// Specifies information necessary for volume expansion
-	VolumeExpansion *MySQLVolumeExpansionSpec `json:"volumeExpansion,omitempty" protobuf:"bytes,6,opt,name=volumeExpansion"`
-	// Specifies information necessary for custom configuration of MySQL
-	Configuration *MySQLCustomConfigurationSpec `json:"configuration,omitempty" protobuf:"bytes,7,opt,name=configuration"`
+	VolumeExpansion *MariaDBVolumeExpansionSpec `json:"volumeExpansion,omitempty" protobuf:"bytes,6,opt,name=volumeExpansion"`
+	// Specifies information necessary for custom configuration of MariaDB
+	Configuration *MariaDBCustomConfigurationSpec `json:"configuration,omitempty" protobuf:"bytes,7,opt,name=configuration"`
 	// Specifies information necessary for configuring TLS
 	TLS *TLSSpec `json:"tls,omitempty" protobuf:"bytes,8,opt,name=tls"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
 
-// MySQLReadinessCriteria is the criteria for checking readiness of a MySQL pod
+// MariaDBReadinessCriteria is the criteria for checking readiness of a MariaDB pod
 // after updating, horizontal scaling etc.
-type MySQLReadinessCriteria struct {
+type MariaDBReadinessCriteria struct {
 }
 
-type MySQLUpgradeSpec struct {
+type MariaDBUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                  `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *MySQLReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion     string                    `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+	ReadinessCriteria *MariaDBReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
 }
 
-type MySQLHorizontalScalingSpec struct {
+type MariaDBHorizontalScalingSpec struct {
 	// Number of nodes/members of the group
 	Member *int32 `json:"member,omitempty" protobuf:"varint,1,opt,name=member"`
 	// specifies the weight of the current member/Node
 	MemberWeight int32 `json:"memberWeight,omitempty" protobuf:"varint,2,opt,name=memberWeight"`
 }
 
-type MySQLVerticalScalingSpec struct {
-	MySQL    *core.ResourceRequirements `json:"mysql,omitempty" protobuf:"bytes,1,opt,name=mysql"`
+type MariaDBVerticalScalingSpec struct {
+	MariaDB  *core.ResourceRequirements `json:"mariadb,omitempty" protobuf:"bytes,1,opt,name=mariadb"`
 	Exporter *core.ResourceRequirements `json:"exporter,omitempty" protobuf:"bytes,2,opt,name=exporter"`
 }
 
-// MySQLVolumeExpansionSpec is the spec for MySQL volume expansion
-type MySQLVolumeExpansionSpec struct {
+// MariaDBVolumeExpansionSpec is the spec for MariaDB volume expansion
+type MariaDBVolumeExpansionSpec struct {
 }
 
-type MySQLCustomConfigurationSpec struct {
+type MariaDBCustomConfigurationSpec struct {
 }
 
-type MySQLCustomConfiguration struct {
+type MariaDBCustomConfiguration struct {
 	ConfigMap *core.LocalObjectReference `json:"configMap,omitempty" protobuf:"bytes,1,opt,name=configMap"`
 	Data      map[string]string          `json:"data,omitempty" protobuf:"bytes,2,rep,name=data"`
 	Remove    bool                       `json:"remove,omitempty" protobuf:"varint,3,opt,name=remove"`
 }
 
-// MySQLOpsRequestStatus is the status for MySQLOpsRequest
-type MySQLOpsRequestStatus struct {
+// MariaDBOpsRequestStatus is the status for MariaDBOpsRequest
+type MariaDBOpsRequestStatus struct {
 	Phase OpsRequestPhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=OpsRequestPhase"`
 	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
 	// resource's generation, which is updated on mutation by the API Server.
@@ -120,10 +120,10 @@ type MySQLOpsRequestStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// MySQLOpsRequestList is a list of MySQLOpsRequests
-type MySQLOpsRequestList struct {
+// MariaDBOpsRequestList is a list of MariaDBOpsRequests
+type MariaDBOpsRequestList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	// Items is a list of MySQLOpsRequest CRD objects
-	Items []MySQLOpsRequest `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
+	// Items is a list of MariaDBOpsRequest CRD objects
+	Items []MariaDBOpsRequest `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
 }
