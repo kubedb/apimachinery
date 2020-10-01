@@ -2387,10 +2387,10 @@ spec:
             phase:
               enum:
               - Provisioning
+              - DataRestoring
               - Ready
               - Critical
               - NotReady
-              - Paused
               - Halted
               type: string
           type: object
