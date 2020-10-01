@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: mysqlopsrequests.ops.kubedb.com
+  name: mariadbopsrequests.ops.kubedb.com
 spec:
   group: ops.kubedb.com
   names:
@@ -12,12 +12,12 @@ spec:
     - datastore
     - kubedb
     - appscode
-    kind: MySQLOpsRequest
-    listKind: MySQLOpsRequestList
-    plural: mysqlopsrequests
+    kind: MariaDBOpsRequest
+    listKind: MariaDBOpsRequestList
+    plural: mariadbopsrequests
     shortNames:
-    - myops
-    singular: mysqlopsrequest
+    - mariaops
+    singular: mariadbopsrequest
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -189,7 +189,7 @@ spec:
                           x-kubernetes-int-or-string: true
                         type: object
                     type: object
-                  mysql:
+                  mariadb:
                     properties:
                       limits:
                         additionalProperties:
