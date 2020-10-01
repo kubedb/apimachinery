@@ -142,14 +142,18 @@ const (
 const (
 	// used for Databases that have started provisioning
 	DatabaseProvisioningStarted = "ProvisioningStarted"
+	// used for Databases which completed provisioning
+	DatabaseProvisioned = "Provisioned"
+	// used for Databases that are currently being initialized using stash
+	DatabaseDataRestoreStarted = "DataRestoreStarted"
+	// used for Databases that have been initialized using stash
+	DatabaseDataRestored = "DataRestored"
 	// used for Databases whose pods are ready
 	DatabaseReplicaReady = "ReplicaReady"
 	// used for Databases that are currently accepting connection
 	DatabaseAcceptingConnection = "AcceptingConnection"
 	// used for Databases that report status OK (also implies that we can connect to it)
 	DatabaseReady = "Ready"
-	// used for Databases that are already initialized using stash
-	DatabaseDataRestored = "DataRestored"
 	// used for Databases that are paused
 	DatabasePaused = "Paused"
 
