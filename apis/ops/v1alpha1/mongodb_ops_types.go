@@ -74,7 +74,10 @@ type MongoDBOpsRequestSpec struct {
 // MongoDBReadinessCriteria is the criteria for checking readiness of a MongoDB pod
 // after updating, horizontal scaling etc.
 type MongoDBReadinessCriteria struct {
-	OplogMaxLagSeconds   int32 `json:"oplogMaxLagSeconds,omitempty" protobuf:"varint,1,opt,name=oplogMaxLagSeconds"`
+	// +kubebuilder:validation:Minimum:=0
+	OplogMaxLagSeconds int32 `json:"oplogMaxLagSeconds,omitempty" protobuf:"varint,1,opt,name=oplogMaxLagSeconds"`
+	// +kubebuilder:validation:Minimum:=0
+	// +kubebuilder:validation:Maximum:=100
 	DBSizeDiffPercentage int32 `json:"dbSizeDiffPercentage,omitempty" protobuf:"varint,2,opt,name=dbSizeDiffPercentage"`
 }
 

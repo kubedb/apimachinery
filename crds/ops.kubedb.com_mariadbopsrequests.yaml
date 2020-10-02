@@ -159,8 +159,8 @@ spec:
               - VerticalScaling
               - VolumeExpansion
               - Restart
-              - RotateCertificates
               - Reconfigure
+              - ReconfigureTLS
               type: string
             upgrade:
               properties:
@@ -247,6 +247,13 @@ spec:
               format: int64
               type: integer
             phase:
+              enum:
+              - Progressing
+              - Successful
+              - WaitingForApproval
+              - Failed
+              - Approved
+              - Denied
               type: string
           type: object
       type: object

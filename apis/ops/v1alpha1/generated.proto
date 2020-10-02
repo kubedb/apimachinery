@@ -559,8 +559,11 @@ message MongoDBOpsRequestStatus {
 // MongoDBReadinessCriteria is the criteria for checking readiness of a MongoDB pod
 // after updating, horizontal scaling etc.
 message MongoDBReadinessCriteria {
+  // +kubebuilder:validation:Minimum:=0
   optional int32 oplogMaxLagSeconds = 1;
 
+  // +kubebuilder:validation:Minimum:=0
+  // +kubebuilder:validation:Maximum:=100
   optional int32 dbSizeDiffPercentage = 2;
 }
 

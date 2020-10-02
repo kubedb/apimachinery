@@ -248,8 +248,8 @@ spec:
               - VerticalScaling
               - VolumeExpansion
               - Restart
-              - RotateCertificates
               - Reconfigure
+              - ReconfigureTLS
               type: string
             upgrade:
               properties:
@@ -257,9 +257,12 @@ spec:
                   properties:
                     dbSizeDiffPercentage:
                       format: int32
+                      maximum: 100
+                      minimum: 0
                       type: integer
                     oplogMaxLagSeconds:
                       format: int32
+                      minimum: 0
                       type: integer
                   type: object
                 targetVersion:
@@ -328,9 +331,12 @@ spec:
                   properties:
                     dbSizeDiffPercentage:
                       format: int32
+                      maximum: 100
+                      minimum: 0
                       type: integer
                     oplogMaxLagSeconds:
                       format: int32
+                      minimum: 0
                       type: integer
                   type: object
                 replicaSet:
@@ -453,6 +459,13 @@ spec:
               format: int64
               type: integer
             phase:
+              enum:
+              - Progressing
+              - Successful
+              - WaitingForApproval
+              - Failed
+              - Approved
+              - Denied
               type: string
           type: object
       type: object

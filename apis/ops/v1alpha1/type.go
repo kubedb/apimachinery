@@ -85,6 +85,7 @@ const (
 	ConfigServerVolumeExpansion = "ConfigServerVolumeExpansion"
 )
 
+// +kubebuilder:validation:Enum=Progressing;Successful;WaitingForApproval;Failed;Approved;Denied
 type OpsRequestPhase string
 
 const (
@@ -102,7 +103,7 @@ const (
 	OpsRequestDenied OpsRequestPhase = "Denied"
 )
 
-// +kubebuilder:validation:Enum=Upgrade;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;RotateCertificates;Reconfigure
+// +kubebuilder:validation:Enum=Upgrade;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
 type OpsRequestType string
 
 const (
@@ -118,8 +119,8 @@ const (
 	OpsRequestTypeRestart OpsRequestType = "Restart"
 	// used for Reconfigure operation
 	OpsRequestTypeReconfigure OpsRequestType = "Reconfigure"
-	// used for RotateCertificates operation
-	OpsRequestTypeRotateCertificates OpsRequestType = "ReconfigureTLS"
+	// used for ReconfigureTLS operation
+	OpsRequestTypeReconfigureTLSs OpsRequestType = "ReconfigureTLS"
 )
 
 type RestartSpec struct {
