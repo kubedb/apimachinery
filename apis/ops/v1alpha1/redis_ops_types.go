@@ -70,15 +70,15 @@ type RedisOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
 
-// RedisReadinessCriteria is the criteria for checking readiness of a Redis pod
+// RedisReplicaReadinessCriteria is the criteria for checking readiness of a Redis pod
 // after updating, horizontal scaling etc.
-type RedisReadinessCriteria struct {
+type RedisReplicaReadinessCriteria struct {
 }
 
 type RedisUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                  `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *RedisReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion     string                         `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+	ReadinessCriteria *RedisReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
 }
 
 type RedisHorizontalScalingSpec struct {

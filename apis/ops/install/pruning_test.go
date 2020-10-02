@@ -36,6 +36,9 @@ func TestPruneTypes(t *testing.T) {
 	if crd := (v1alpha1.EtcdOpsRequest{}).CustomResourceDefinition(); crd.V1 != nil {
 		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
 	}
+	if crd := (v1alpha1.MariaDBOpsRequest{}).CustomResourceDefinition(); crd.V1 != nil {
+		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+	}
 	if crd := (v1alpha1.MemcachedOpsRequest{}).CustomResourceDefinition(); crd.V1 != nil {
 		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
 	}
@@ -63,6 +66,9 @@ func TestPruneTypes(t *testing.T) {
 		crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, crd.V1beta1, fuzzer.Funcs)
 	}
 	if crd := (v1alpha1.EtcdOpsRequest{}).CustomResourceDefinition(); crd.V1beta1 != nil {
+		crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, crd.V1beta1, fuzzer.Funcs)
+	}
+	if crd := (v1alpha1.MariaDBOpsRequest{}).CustomResourceDefinition(); crd.V1beta1 != nil {
 		crdfuzz.SchemaFuzzTestForV1beta1CRD(t, clientsetscheme.Scheme, crd.V1beta1, fuzzer.Funcs)
 	}
 	if crd := (v1alpha1.MemcachedOpsRequest{}).CustomResourceDefinition(); crd.V1beta1 != nil {

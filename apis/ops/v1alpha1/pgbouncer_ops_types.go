@@ -70,15 +70,15 @@ type PgBouncerOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
 
-// PgBouncerReadinessCriteria is the criteria for checking readiness of a PgBouncer pod
+// PgBouncerReplicaReadinessCriteria is the criteria for checking readiness of a PgBouncer pod
 // after updating, horizontal scaling etc.
-type PgBouncerReadinessCriteria struct {
+type PgBouncerReplicaReadinessCriteria struct {
 }
 
 type PgBouncerUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                      `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *PgBouncerReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion     string                             `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+	ReadinessCriteria *PgBouncerReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
 }
 
 // HorizontalScaling is the spec for PgBouncer horizontal scaling
@@ -87,7 +87,7 @@ type PgBouncerHorizontalScalingSpec struct {
 
 // PgBouncerVerticalScalingSpec is the spec for PgBouncer vertical scaling
 type PgBouncerVerticalScalingSpec struct {
-	ReadinessCriteria *PgBouncerReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
+	ReadinessCriteria *PgBouncerReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
 }
 
 // PgBouncerVolumeExpansionSpec is the spec for PgBouncer volume expansion

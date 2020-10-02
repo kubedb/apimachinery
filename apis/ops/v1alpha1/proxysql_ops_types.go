@@ -69,15 +69,15 @@ type ProxySQLOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
 
-// ProxySQLReadinessCriteria is the criteria for checking readiness of a ProxySQL pod
+// ProxySQLReplicaReadinessCriteria is the criteria for checking readiness of a ProxySQL pod
 // after updating, horizontal scaling etc.
-type ProxySQLReadinessCriteria struct {
+type ProxySQLReplicaReadinessCriteria struct {
 }
 
 type ProxySQLUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                     `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *ProxySQLReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion     string                            `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+	ReadinessCriteria *ProxySQLReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
 }
 
 // HorizontalScaling is the spec for ProxySQL horizontal scaling
@@ -86,7 +86,7 @@ type ProxySQLHorizontalScalingSpec struct {
 
 // ProxySQLVerticalScalingSpec is the spec for ProxySQL vertical scaling
 type ProxySQLVerticalScalingSpec struct {
-	ReadinessCriteria *ProxySQLReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
+	ReadinessCriteria *ProxySQLReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
 }
 
 // ProxySQLVolumeExpansionSpec is the spec for ProxySQL volume expansion

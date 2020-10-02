@@ -70,15 +70,15 @@ type ElasticsearchOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
 
-// ElasticsearchReadinessCriteria is the criteria for checking readiness of a Elasticsearch pod
+// ElasticsearchReplicaReadinessCriteria is the criteria for checking readiness of a Elasticsearch pod
 // after updating, horizontal scaling etc.
-type ElasticsearchReadinessCriteria struct {
+type ElasticsearchReplicaReadinessCriteria struct {
 }
 
 type ElasticsearchUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                          `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *ElasticsearchReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion     string                                 `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+	ReadinessCriteria *ElasticsearchReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
 }
 
 // ElasticsearchHorizontalScalingSpec contains the horizontal scaling information of an Elasticsearch cluster
@@ -93,7 +93,7 @@ type ElasticsearchHorizontalScalingSpec struct {
 
 // ElasticsearchVerticalScalingSpec is the spec for Elasticsearch vertical scaling
 type ElasticsearchVerticalScalingSpec struct {
-	ReadinessCriteria *ElasticsearchReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
+	ReadinessCriteria *ElasticsearchReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
 }
 
 // ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion

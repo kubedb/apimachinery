@@ -70,15 +70,15 @@ type PostgresOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
 
-// PostgresReadinessCriteria is the criteria for checking readiness of a Postgres pod
+// PostgresReplicaReadinessCriteria is the criteria for checking readiness of a Postgres pod
 // after updating, horizontal scaling etc.
-type PostgresReadinessCriteria struct {
+type PostgresReplicaReadinessCriteria struct {
 }
 
 type PostgresUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                     `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *PostgresReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion     string                            `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+	ReadinessCriteria *PostgresReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
 }
 
 // HorizontalScaling is the spec for Postgres horizontal scaling
@@ -87,7 +87,7 @@ type PostgresHorizontalScalingSpec struct {
 
 // PostgresVerticalScalingSpec is the spec for Postgres vertical scaling
 type PostgresVerticalScalingSpec struct {
-	ReadinessCriteria *PostgresReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
+	ReadinessCriteria *PostgresReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
 }
 
 // PostgresVolumeExpansionSpec is the spec for Postgres volume expansion

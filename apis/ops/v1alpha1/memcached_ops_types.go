@@ -70,15 +70,15 @@ type MemcachedOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
 
-// MemcachedReadinessCriteria is the criteria for checking readiness of a Memcached pod
+// MemcachedReplicaReadinessCriteria is the criteria for checking readiness of a Memcached pod
 // after updating, horizontal scaling etc.
-type MemcachedReadinessCriteria struct {
+type MemcachedReplicaReadinessCriteria struct {
 }
 
 type MemcachedUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                      `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *MemcachedReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion     string                             `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+	ReadinessCriteria *MemcachedReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
 }
 
 // HorizontalScaling is the spec for Memcached horizontal scaling
@@ -87,7 +87,7 @@ type MemcachedHorizontalScalingSpec struct {
 
 // MemcachedVerticalScalingSpec is the spec for Memcached vertical scaling
 type MemcachedVerticalScalingSpec struct {
-	ReadinessCriteria *MemcachedReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
+	ReadinessCriteria *MemcachedReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
 }
 
 // MemcachedVolumeExpansionSpec is the spec for Memcached volume expansion

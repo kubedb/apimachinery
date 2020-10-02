@@ -70,15 +70,15 @@ type PerconaXtraDBOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
 
-// PerconaXtraDBReadinessCriteria is the criteria for checking readiness of a PerconaXtraDB pod
+// PerconaXtraDBReplicaReadinessCriteria is the criteria for checking readiness of a PerconaXtraDB pod
 // after updating, horizontal scaling etc.
-type PerconaXtraDBReadinessCriteria struct {
+type PerconaXtraDBReplicaReadinessCriteria struct {
 }
 
 type PerconaXtraDBUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                          `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *PerconaXtraDBReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion     string                                 `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+	ReadinessCriteria *PerconaXtraDBReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
 }
 
 // HorizontalScaling is the spec for PerconaXtraDB horizontal scaling
@@ -87,7 +87,7 @@ type PerconaXtraDBHorizontalScalingSpec struct {
 
 // PerconaXtraDBVerticalScalingSpec is the spec for PerconaXtraDB vertical scaling
 type PerconaXtraDBVerticalScalingSpec struct {
-	ReadinessCriteria *PerconaXtraDBReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
+	ReadinessCriteria *PerconaXtraDBReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
 }
 
 // PerconaXtraDBVolumeExpansionSpec is the spec for PerconaXtraDB volume expansion

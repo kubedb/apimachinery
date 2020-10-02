@@ -70,15 +70,15 @@ type MariaDBOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
 
-// MariaDBReadinessCriteria is the criteria for checking readiness of a MariaDB pod
+// MariaDBReplicaReadinessCriteria is the criteria for checking readiness of a MariaDB pod
 // after updating, horizontal scaling etc.
-type MariaDBReadinessCriteria struct {
+type MariaDBReplicaReadinessCriteria struct {
 }
 
 type MariaDBUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                    `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *MariaDBReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion     string                           `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+	ReadinessCriteria *MariaDBReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
 }
 
 type MariaDBHorizontalScalingSpec struct {

@@ -70,15 +70,15 @@ type EtcdOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
 
-// EtcdReadinessCriteria is the criteria for checking readiness of a Etcd pod
+// EtcdReplicaReadinessCriteria is the criteria for checking readiness of a Etcd pod
 // after updating, horizontal scaling etc.
-type EtcdReadinessCriteria struct {
+type EtcdReplicaReadinessCriteria struct {
 }
 
 type EtcdUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                 `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *EtcdReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion     string                        `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+	ReadinessCriteria *EtcdReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
 }
 
 // HorizontalScaling is the spec for Etcd horizontal scaling
@@ -87,7 +87,7 @@ type EtcdHorizontalScalingSpec struct {
 
 // EtcdVerticalScalingSpec is the spec for Etcd vertical scaling
 type EtcdVerticalScalingSpec struct {
-	ReadinessCriteria *EtcdReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
+	ReadinessCriteria *EtcdReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
 }
 
 // EtcdVolumeExpansionSpec is the spec for Etcd volume expansion
