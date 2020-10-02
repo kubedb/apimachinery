@@ -98,6 +98,9 @@ const (
 	// for BaseServerID calculated as max MySQL server_id value - max Replication Group size.
 	// xref: https://dev.mysql.com/doc/refman/5.7/en/replication-options.html
 	MySQLMaxBaseServerID int64 = ((1 << 32) - 1) - 9
+	MySQLRootUserName          = "MYSQL_ROOT_USERNAME"
+	MySQLRootPassword          = "MYSQL_ROOT_PASSWORD"
+	MySQLName                  = "MYSQL_NAME"
 
 	PerconaXtraDBClusterRecommendedVersion    = "5.7"
 	PerconaXtraDBMaxClusterNameLength         = 32
