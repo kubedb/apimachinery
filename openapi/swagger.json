@@ -30709,15 +30709,15 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchReadinessCriteria": {
-      "description": "ElasticsearchReadinessCriteria is the criteria for checking readiness of a Elasticsearch pod after updating, horizontal scaling etc.",
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchReplicaReadinessCriteria": {
+      "description": "ElasticsearchReplicaReadinessCriteria is the criteria for checking readiness of a Elasticsearch pod after updating, horizontal scaling etc.",
       "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchUpgradeSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchReplicaReadinessCriteria"
         },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
@@ -30730,7 +30730,7 @@
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchReplicaReadinessCriteria"
         }
       }
     },
@@ -30872,15 +30872,15 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdReadinessCriteria": {
-      "description": "EtcdReadinessCriteria is the criteria for checking readiness of a Etcd pod after updating, horizontal scaling etc.",
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdReplicaReadinessCriteria": {
+      "description": "EtcdReplicaReadinessCriteria is the criteria for checking readiness of a Etcd pod after updating, horizontal scaling etc.",
       "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdUpgradeSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdReplicaReadinessCriteria"
         },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
@@ -30893,7 +30893,7 @@
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdReplicaReadinessCriteria"
         }
       }
     },
@@ -31035,15 +31035,15 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedReadinessCriteria": {
-      "description": "MemcachedReadinessCriteria is the criteria for checking readiness of a Memcached pod after updating, horizontal scaling etc.",
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedReplicaReadinessCriteria": {
+      "description": "MemcachedReplicaReadinessCriteria is the criteria for checking readiness of a Memcached pod after updating, horizontal scaling etc.",
       "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedUpgradeSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedReplicaReadinessCriteria"
         },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
@@ -31056,7 +31056,7 @@
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedReplicaReadinessCriteria"
         }
       }
     },
@@ -31247,8 +31247,8 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReadinessCriteria": {
-      "description": "MongoDBReadinessCriteria is the criteria for checking readiness of a MongoDB pod after updating, horizontal scaling etc.",
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReplicaReadinessCriteria": {
+      "description": "MongoDBReplicaReadinessCriteria is the criteria for checking readiness of a MongoDB pod after updating, horizontal scaling etc.",
       "type": "object",
       "properties": {
         "dbSizeDiffPercentage": {
@@ -31279,7 +31279,7 @@
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReplicaReadinessCriteria"
         },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
@@ -31301,7 +31301,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReplicaReadinessCriteria"
         },
         "replicaSet": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
@@ -31487,15 +31487,15 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLReadinessCriteria": {
-      "description": "MySQLReadinessCriteria is the criteria for checking readiness of a MySQL pod after updating, horizontal scaling etc.",
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLReplicaReadinessCriteria": {
+      "description": "MySQLReplicaReadinessCriteria is the criteria for checking readiness of a MySQL pod after updating, horizontal scaling etc.",
       "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUpgradeSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLReplicaReadinessCriteria"
         },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
@@ -31652,15 +31652,15 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBReadinessCriteria": {
-      "description": "PerconaXtraDBReadinessCriteria is the criteria for checking readiness of a PerconaXtraDB pod after updating, horizontal scaling etc.",
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBReplicaReadinessCriteria": {
+      "description": "PerconaXtraDBReplicaReadinessCriteria is the criteria for checking readiness of a PerconaXtraDB pod after updating, horizontal scaling etc.",
       "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBUpgradeSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBReplicaReadinessCriteria"
         },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
@@ -31673,7 +31673,7 @@
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBReplicaReadinessCriteria"
         }
       }
     },
@@ -31815,15 +31815,15 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReadinessCriteria": {
-      "description": "PostgresReadinessCriteria is the criteria for checking readiness of a Postgres pod after updating, horizontal scaling etc.",
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReplicaReadinessCriteria": {
+      "description": "PostgresReplicaReadinessCriteria is the criteria for checking readiness of a Postgres pod after updating, horizontal scaling etc.",
       "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresUpgradeSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReplicaReadinessCriteria"
         },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
@@ -31836,7 +31836,7 @@
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReplicaReadinessCriteria"
         }
       }
     },
@@ -31978,15 +31978,15 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReadinessCriteria": {
-      "description": "ProxySQLReadinessCriteria is the criteria for checking readiness of a ProxySQL pod after updating, horizontal scaling etc.",
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReplicaReadinessCriteria": {
+      "description": "ProxySQLReplicaReadinessCriteria is the criteria for checking readiness of a ProxySQL pod after updating, horizontal scaling etc.",
       "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLUpgradeSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReplicaReadinessCriteria"
         },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
@@ -31999,7 +31999,7 @@
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReplicaReadinessCriteria"
         }
       }
     },
@@ -32152,15 +32152,15 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisReadinessCriteria": {
-      "description": "RedisReadinessCriteria is the criteria for checking readiness of a Redis pod after updating, horizontal scaling etc.",
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisReplicaReadinessCriteria": {
+      "description": "RedisReplicaReadinessCriteria is the criteria for checking readiness of a Redis pod after updating, horizontal scaling etc.",
       "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisUpgradeSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisReadinessCriteria"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisReplicaReadinessCriteria"
         },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",

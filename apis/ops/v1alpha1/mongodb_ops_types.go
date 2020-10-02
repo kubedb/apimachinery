@@ -71,9 +71,9 @@ type MongoDBOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
 
-// MongoDBReadinessCriteria is the criteria for checking readiness of a MongoDB pod
+// MongoDBReplicaReadinessCriteria is the criteria for checking readiness of a MongoDB pod
 // after updating, horizontal scaling etc.
-type MongoDBReadinessCriteria struct {
+type MongoDBReplicaReadinessCriteria struct {
 	// +kubebuilder:validation:Minimum:=0
 	OplogMaxLagSeconds int32 `json:"oplogMaxLagSeconds,omitempty" protobuf:"varint,1,opt,name=oplogMaxLagSeconds"`
 	// +kubebuilder:validation:Minimum:=0
@@ -83,8 +83,8 @@ type MongoDBReadinessCriteria struct {
 
 type MongoDBUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                    `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *MongoDBReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion     string                           `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
+	ReadinessCriteria *MongoDBReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
 }
 
 // MongoDBShardNode is the spec for mongodb Shard
@@ -113,13 +113,13 @@ type MongoDBHorizontalScalingSpec struct {
 
 // MongoDBVerticalScalingSpec is the spec for mongodb vertical scaling
 type MongoDBVerticalScalingSpec struct {
-	Standalone        *core.ResourceRequirements `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
-	ReplicaSet        *core.ResourceRequirements `json:"replicaSet,omitempty" protobuf:"bytes,6,opt,name=replicaSet"`
-	Mongos            *core.ResourceRequirements `json:"mongos,omitempty" protobuf:"bytes,2,opt,name=mongos"`
-	ConfigServer      *core.ResourceRequirements `json:"configServer,omitempty" protobuf:"bytes,3,opt,name=configServer"`
-	Shard             *core.ResourceRequirements `json:"shard,omitempty" protobuf:"bytes,4,opt,name=shard"`
-	Exporter          *core.ResourceRequirements `json:"exporter,omitempty" protobuf:"bytes,5,opt,name=exporter"`
-	ReadinessCriteria *MongoDBReadinessCriteria  `json:"readinessCriteria,omitempty" protobuf:"bytes,7,opt,name=readinessCriteria"`
+	Standalone        *core.ResourceRequirements       `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
+	ReplicaSet        *core.ResourceRequirements       `json:"replicaSet,omitempty" protobuf:"bytes,6,opt,name=replicaSet"`
+	Mongos            *core.ResourceRequirements       `json:"mongos,omitempty" protobuf:"bytes,2,opt,name=mongos"`
+	ConfigServer      *core.ResourceRequirements       `json:"configServer,omitempty" protobuf:"bytes,3,opt,name=configServer"`
+	Shard             *core.ResourceRequirements       `json:"shard,omitempty" protobuf:"bytes,4,opt,name=shard"`
+	Exporter          *core.ResourceRequirements       `json:"exporter,omitempty" protobuf:"bytes,5,opt,name=exporter"`
+	ReadinessCriteria *MongoDBReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,7,opt,name=readinessCriteria"`
 }
 
 // MongoDBVolumeExpansionSpec is the spec for mongodb volume expansion

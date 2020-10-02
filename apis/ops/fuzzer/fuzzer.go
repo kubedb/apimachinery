@@ -32,6 +32,9 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 		func(s *v1alpha1.EtcdOpsRequest, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
+		func(s *v1alpha1.MariaDBOpsRequest, c fuzz.Continue) {
+			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		},
 		func(s *v1alpha1.MemcachedOpsRequest, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
