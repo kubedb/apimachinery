@@ -164,4 +164,11 @@ const (
 	DataRestoreStartedByExternalInitializer = "DataRestoreStartedByExternalInitializer"
 	DatabaseSuccessfullyRestored            = "SuccessfullyDataRestored"
 	FailedToRestoreData                     = "FailedToRestoreData"
+	AllReplicasAreReady                     = "AllReplicasReady"
+	SomeReplicasAreNotReady                 = "SomeReplicasNotReady"
+)
+
+// Resource kind related constants
+const (
+	ResourceKindStatefulSet = "StatefulSet"
 )

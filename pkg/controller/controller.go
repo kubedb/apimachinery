@@ -76,9 +76,10 @@ type Config struct {
 	SecretInformer cache.SharedIndexInformer
 	SecretLister   corelisters.SecretLister
 
-	// StatefulSet
-	StatefulSetInformer cache.SharedIndexInformer
-	StatefulSetLister   appslister.StatefulSetLister
+	// StatefulSet Watcher
+	StsQueue    *queue.Worker
+	StsInformer cache.SharedIndexInformer
+	StsLister   appslister.StatefulSetLister
 
 	OperatorNamespace       string
 	GoverningService        string
