@@ -24,6 +24,8 @@ import (
 	"github.com/appscode/go/log"
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/dynamic"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 	core_util "kmodules.xyz/client-go/core/v1"
 	dmcond "kmodules.xyz/client-go/dynamic/conditions"
@@ -36,12 +38,16 @@ type Controller struct {
 }
 
 func NewController(
-	ctrl *amc.Controller,
 	config *amc.Config,
+	client kubernetes.Interface,
+	dmClient dynamic.Interface,
 ) *Controller {
 	return &Controller{
-		Controller: ctrl,
-		Config:     config,
+		Controller: &amc.Controller{
+			Client:        client,
+			DynamicClient: dmClient,
+		},
+		Config: config,
 	}
 }
 
