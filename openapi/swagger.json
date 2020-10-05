@@ -31444,6 +31444,11 @@
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
         },
+        "statefulSetOrdinal": {
+          "description": "Specifies the current ordinal of the StatefulSet",
+          "type": "integer",
+          "format": "int32"
+        },
         "tls": {
           "description": "Specifies information necessary for configuring TLS",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
