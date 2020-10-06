@@ -28,6 +28,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
@@ -436,7 +437,21 @@ func (e *ElasticsearchSpec) GetSecrets() []string {
 }
 
 func (e *Elasticsearch) IsReplicasReady(stsLister appslister.StatefulSetLister) (bool, string, error) {
-	// TODO: Implement database specific logic here
+	stsList, err := stsLister.StatefulSets(e.Namespace).List(labels.SelectorFromSet(e.OffshootLabels()))
+	if err != nil {
+		return false, "", err
+	}
+
+	// Desire number of statefulSet for Elasticsearch
+	numOfStatefulSet := 1
+	if e.Spec.Topology != nil {
+		numOfStatefulSet = 3
+	}
+	if len(stsList) != numOfStatefulSet {
+		return false, fmt.Sprintf("All StatefulSets are not available. Desire number of StatefulSet: %d, Available: %d", numOfStatefulSet, len(stsList)), nil
+	}
+
 	// return isReplicasReady, message, error
-	return false, "", nil
+	ready, msg := IsReplicasReady(stsList)
+	return ready, msg, nil
 }
