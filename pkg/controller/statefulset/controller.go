@@ -18,7 +18,8 @@ package statefulset
 
 import (
 	"kubedb.dev/apimachinery/apis/kubedb"
-	kubedbv1alpha1 "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+	db_cs "kubedb.dev/apimachinery/client/clientset/versioned"
 	amc "kubedb.dev/apimachinery/pkg/controller"
 
 	"github.com/appscode/go/log"
@@ -40,11 +41,13 @@ type Controller struct {
 func NewController(
 	config *amc.Config,
 	client kubernetes.Interface,
+	dbClient db_cs.Interface,
 	dmClient dynamic.Interface,
 ) *Controller {
 	return &Controller{
 		Controller: &amc.Controller{
 			Client:        client,
+			DBClient:      dbClient,
 			DynamicClient: dmClient,
 		},
 		Config: config,
@@ -61,23 +64,9 @@ func (c *Controller) InitStsWatcher() {
 	log.Infoln("Initializing StatefulSet watcher.....")
 	// Initialize RestoreSession Watcher
 	c.StsInformer = c.KubeInformerFactory.Apps().V1().StatefulSets().Informer()
-	c.StsQueue = queue.New(kubedbv1alpha1.ResourceKindStatefulSet, c.MaxNumRequeues, c.NumThreads, c.processStatefulSet)
+	c.StsQueue = queue.New(api.ResourceKindStatefulSet, c.MaxNumRequeues, c.NumThreads, c.processStatefulSet)
 	c.StsLister = c.KubeInformerFactory.Apps().V1().StatefulSets().Lister()
-	c.StsInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
-		AddFunc: func(obj interface{}) {
-			if sts, ok := obj.(*appsv1.StatefulSet); ok {
-				c.enqueueOnlyKubeDBSts(sts)
-			}
-		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
-			if sts, ok := newObj.(*appsv1.StatefulSet); ok {
-				c.enqueueOnlyKubeDBSts(sts)
-			}
-		},
-		DeleteFunc: func(obj interface{}) {
-			// nothing to do
-		},
-	})
+	c.StsInformer.AddEventHandler(c.newStsEventHandlerFuncs())
 }
 
 func (c *Controller) enqueueOnlyKubeDBSts(sts *appsv1.StatefulSet) {

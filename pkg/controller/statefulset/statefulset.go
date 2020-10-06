@@ -21,7 +21,37 @@ import (
 
 	"github.com/appscode/go/log"
 	appsv1 "k8s.io/api/apps/v1"
+	"k8s.io/client-go/tools/cache"
 )
+
+func (c *Controller) newStsEventHandlerFuncs() cache.ResourceEventHandlerFuncs {
+	return cache.ResourceEventHandlerFuncs{
+		AddFunc: func(obj interface{}) {
+			if sts, ok := obj.(*appsv1.StatefulSet); ok {
+				c.enqueueOnlyKubeDBSts(sts)
+			}
+		},
+		UpdateFunc: func(oldObj, newObj interface{}) {
+			if sts, ok := newObj.(*appsv1.StatefulSet); ok {
+				c.enqueueOnlyKubeDBSts(sts)
+			}
+		},
+		DeleteFunc: func(obj interface{}) {
+			if sts, ok := obj.(*appsv1.StatefulSet); ok {
+				dbInfo, err := c.extractDatabaseInfo(sts)
+				if err != nil {
+					log.Warningf("failed to extract database info from StatefulSet: %s/%s. Reason: %v", sts.Namespace, sts.Name, err)
+					return
+				}
+				err = c.ensureReadyReplicasCond(dbInfo)
+				if err != nil {
+					log.Warningf("failed to update ReadyReplicas condition. Reason: %v", err)
+					return
+				}
+			}
+		},
+	}
+}
 
 func (c *Controller) processStatefulSet(key string) error {
 	log.Infof("Started processing, key: %v", key)

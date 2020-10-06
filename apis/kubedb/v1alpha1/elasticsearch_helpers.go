@@ -435,7 +435,7 @@ func (e *ElasticsearchSpec) GetSecrets() []string {
 	return secrets
 }
 
-func (e *Elasticsearch) IsReplicasReady(stsLister *appslister.StatefulSetLister) (bool, string, error) {
+func (e *Elasticsearch) IsReplicasReady(stsLister appslister.StatefulSetLister) (bool, string, error) {
 	// TODO: Implement database specific logic here
 	// return isReplicasReady, message, error
 	return false, "", nil

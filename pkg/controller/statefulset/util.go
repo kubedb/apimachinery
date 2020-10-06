@@ -24,7 +24,6 @@ import (
 
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	dmcond "kmodules.xyz/client-go/dynamic/conditions"
@@ -55,187 +54,121 @@ func (c *Controller) extractDatabaseInfo(sts *appsv1.StatefulSet) (*databaseInfo
 	switch owner.Kind {
 	case api.ResourceKindElasticsearch:
 		dbInfo.do.GVR.Resource = api.ResourcePluralElasticsearch
-		resp, err := dbInfo.do.Client.Resource(dbInfo.do.GVR).Namespace(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		es, err := c.DBClient.KubedbV1alpha1().Elasticsearches(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
-		// convert the unstructured object into Elasticsearch object
-		var es api.Elasticsearch
-		err = runtime.DefaultUnstructuredConverter.FromUnstructured(resp.Object, &es)
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = es.IsReplicasReady(&c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = es.IsReplicasReady(c.StsLister)
 		if err != nil {
 			return nil, err
 		}
 
 	case api.ResourceKindMongoDB:
 		dbInfo.do.GVR.Resource = api.ResourcePluralMongoDB
-		resp, err := dbInfo.do.Client.Resource(dbInfo.do.GVR).Namespace(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		mg, err := c.DBClient.KubedbV1alpha1().MongoDBs(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
-		// convert the unstructured object into MongoDB object
-		var mg api.MongoDB
-		err = runtime.DefaultUnstructuredConverter.FromUnstructured(resp.Object, &mg)
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = mg.IsReplicasReady(&c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = mg.IsReplicasReady(c.StsLister)
 		if err != nil {
 			return nil, err
 		}
 
 	case api.ResourceKindMySQL:
 		dbInfo.do.GVR.Resource = api.ResourcePluralMySQL
-		resp, err := dbInfo.do.Client.Resource(dbInfo.do.GVR).Namespace(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		my, err := c.DBClient.KubedbV1alpha1().MySQLs(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
-		// convert the unstructured object into MySQL object
-		var my api.MySQL
-		err = runtime.DefaultUnstructuredConverter.FromUnstructured(resp.Object, &my)
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = my.IsReplicasReady(&c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = my.IsReplicasReady(c.StsLister)
 		if err != nil {
 			return nil, err
 		}
 
 	case api.ResourceKindPerconaXtraDB:
 		dbInfo.do.GVR.Resource = api.ResourcePluralPerconaXtraDB
-		resp, err := dbInfo.do.Client.Resource(dbInfo.do.GVR).Namespace(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		px, err := c.DBClient.KubedbV1alpha1().PerconaXtraDBs(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
-		// convert the unstructured object into PerconaXtraDB object
-		var px api.PerconaXtraDB
-		err = runtime.DefaultUnstructuredConverter.FromUnstructured(resp.Object, &px)
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = px.IsReplicasReady(&c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = px.IsReplicasReady(c.StsLister)
 		if err != nil {
 			return nil, err
 		}
 
 	case api.ResourceKindMariaDB:
 		dbInfo.do.GVR.Resource = api.ResourcePluralMariaDB
-		resp, err := dbInfo.do.Client.Resource(dbInfo.do.GVR).Namespace(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		mr, err := c.DBClient.KubedbV1alpha1().MariaDBs(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
-		// convert the unstructured object into MariaDB object
-		var mr api.MariaDB
-		err = runtime.DefaultUnstructuredConverter.FromUnstructured(resp.Object, &mr)
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = mr.IsReplicasReady(&c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = mr.IsReplicasReady(c.StsLister)
 		if err != nil {
 			return nil, err
 		}
 
 	case api.ResourceKindPostgres:
 		dbInfo.do.GVR.Resource = api.ResourcePluralPostgres
-		resp, err := dbInfo.do.Client.Resource(dbInfo.do.GVR).Namespace(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		pg, err := c.DBClient.KubedbV1alpha1().Postgreses(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
-		// convert the unstructured object into Postgres object
-		var pg api.Postgres
-		err = runtime.DefaultUnstructuredConverter.FromUnstructured(resp.Object, &pg)
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = pg.IsReplicasReady(&c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = pg.IsReplicasReady(c.StsLister)
 		if err != nil {
 			return nil, err
 		}
 
 	case api.ResourceKindRedis:
 		dbInfo.do.GVR.Resource = api.ResourcePluralRedis
-		resp, err := dbInfo.do.Client.Resource(dbInfo.do.GVR).Namespace(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		rd, err := c.DBClient.KubedbV1alpha1().Redises(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
-		// convert the unstructured object into Redis object
-		var rd api.Redis
-		err = runtime.DefaultUnstructuredConverter.FromUnstructured(resp.Object, &rd)
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = rd.IsReplicasReady(&c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = rd.IsReplicasReady(c.StsLister)
 		if err != nil {
 			return nil, err
 		}
 
 	case api.ResourceKindMemcached:
 		dbInfo.do.GVR.Resource = api.ResourcePluralMemcached
-		resp, err := dbInfo.do.Client.Resource(dbInfo.do.GVR).Namespace(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		mc, err := c.DBClient.KubedbV1alpha1().Memcacheds(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
-		// convert the unstructured object into Memcached object
-		var mc api.Memcached
-		err = runtime.DefaultUnstructuredConverter.FromUnstructured(resp.Object, &mc)
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = mc.IsReplicasReady(&c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = mc.IsReplicasReady(c.StsLister)
 		if err != nil {
 			return nil, err
 		}
 
 	case api.ResourceKindProxySQL:
 		dbInfo.do.GVR.Resource = api.ResourcePluralProxySQL
-		resp, err := dbInfo.do.Client.Resource(dbInfo.do.GVR).Namespace(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		pxql, err := c.DBClient.KubedbV1alpha1().ProxySQLs(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
-		// convert the unstructured object into ProxySQL object
-		var pxql api.ProxySQL
-		err = runtime.DefaultUnstructuredConverter.FromUnstructured(resp.Object, &pxql)
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = pxql.IsReplicasReady(&c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = pxql.IsReplicasReady(c.StsLister)
 		if err != nil {
 			return nil, err
 		}
 
 	case api.ResourceKindPgBouncer:
 		dbInfo.do.GVR.Resource = api.ResourcePluralPgBouncer
-		resp, err := dbInfo.do.Client.Resource(dbInfo.do.GVR).Namespace(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		pgb, err := c.DBClient.KubedbV1alpha1().PgBouncers(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
-		// convert the unstructured object into PgBouncer object
-		var pgb api.PgBouncer
-		err = runtime.DefaultUnstructuredConverter.FromUnstructured(resp.Object, &pgb)
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = pgb.IsReplicasReady(&c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = pgb.IsReplicasReady(c.StsLister)
 		if err != nil {
 			return nil, err
 		}
 
 	case api.ResourceKindEtcd:
 		dbInfo.do.GVR.Resource = api.ResourcePluralEtcd
-		resp, err := dbInfo.do.Client.Resource(dbInfo.do.GVR).Namespace(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		etcd, err := c.DBClient.KubedbV1alpha1().Etcds(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
-		// convert the unstructured object into Etcd object
-		var etcd api.Etcd
-		err = runtime.DefaultUnstructuredConverter.FromUnstructured(resp.Object, &etcd)
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = etcd.IsReplicasReady(&c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = etcd.IsReplicasReady(c.StsLister)
 		if err != nil {
 			return nil, err
 		}

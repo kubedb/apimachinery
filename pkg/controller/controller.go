@@ -49,8 +49,8 @@ type Controller struct {
 	Client kubernetes.Interface
 	// CRD Client
 	CRDClient crd_cs.Interface
-	// ThirdPartyExtension client
-	ExtClient cs.Interface //#TODO: rename to DBClient
+	// KubeDB client
+	DBClient cs.Interface
 	// Dynamic client
 	DynamicClient dynamic.Interface
 	// AppCatalog client
