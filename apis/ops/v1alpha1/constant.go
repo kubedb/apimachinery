@@ -40,4 +40,6 @@ const (
 	SuccessfullyPerformedVerticalScaling   = "SuccessfullyPerformedVerticalScaling"
 	FailedToPerformVerticalScaling         = "FailedToPerformVerticalScaling"
 	OpsRequestProcessedSuccessfully        = "OpsRequestProcessedSuccessfully"
+	SuccessfullyVolumeExpanded             = "SuccessfullyVolumeExpanded"
+	FailedToVolumeExpand                   = "FailedToVolumeExpand"
 )
