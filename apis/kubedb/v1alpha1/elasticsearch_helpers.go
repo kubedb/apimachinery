@@ -32,6 +32,7 @@ import (
 	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	apps_util "kmodules.xyz/client-go/apps/v1"
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
@@ -452,6 +453,6 @@ func (e *Elasticsearch) IsReplicasReady(stsLister appslister.StatefulSetLister) 
 	}
 
 	// return isReplicasReady, message, error
-	ready, msg := IsReplicasReady(stsList)
+	ready, msg := apps_util.StatefulSetsAreReady(stsList)
 	return ready, msg, nil
 }

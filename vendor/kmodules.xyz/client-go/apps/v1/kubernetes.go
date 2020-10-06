@@ -14,25 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package v1
 
 import (
-	"fmt"
-
-	appsv1 "k8s.io/api/apps/v1"
+	jsoniter "github.com/json-iterator/go"
 )
 
-func IsReplicasReady(stsList []*appsv1.StatefulSet) (bool, string) {
-	for _, sts := range stsList {
-		rep := int32(1)
-		if sts.Spec.Replicas != nil {
-			rep = *sts.Spec.Replicas
-		}
-
-		if rep > sts.Status.ReadyReplicas {
-			return false, fmt.Sprintf("All desired replicas are not ready. For StatefulSet: %s/%s Desired replicas: %d, Ready replicas: %d.", sts.Namespace, sts.Name, rep, sts.Status.ReadyReplicas)
-		}
-	}
-
-	return true, fmt.Sprint("All desired replicas are ready.")
-}
+var json = jsoniter.ConfigFastest
