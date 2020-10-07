@@ -29,6 +29,12 @@ import (
 	dmcond "kmodules.xyz/client-go/dynamic/conditions"
 )
 
+type databaseInfo struct {
+	opts          dmcond.DynamicOptions
+	replicasReady bool
+	msg           string
+}
+
 func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, error) {
 	// read the controlling owner
 	owner := metav1.GetControllerOf(sts)
@@ -40,21 +46,21 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		return nil, err
 	}
 	dbInfo := &databaseInfo{
-		do: dmcond.DynamicOptions{
+		opts: dmcond.DynamicOptions{
 			Client:    c.DynamicClient,
 			Kind:      owner.Kind,
 			Name:      owner.Name,
 			Namespace: sts.Namespace,
 		},
 	}
-	dbInfo.do.GVR = schema.GroupVersionResource{
+	dbInfo.opts.GVR = schema.GroupVersionResource{
 		Group:   gv.Group,
 		Version: gv.Version,
 	}
 	switch owner.Kind {
 	case api.ResourceKindElasticsearch:
-		dbInfo.do.GVR.Resource = api.ResourcePluralElasticsearch
-		es, err := c.DBClient.KubedbV1alpha1().Elasticsearches(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		dbInfo.opts.GVR.Resource = api.ResourcePluralElasticsearch
+		es, err := c.DBClient.KubedbV1alpha1().Elasticsearches(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -64,8 +70,8 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		}
 
 	case api.ResourceKindMongoDB:
-		dbInfo.do.GVR.Resource = api.ResourcePluralMongoDB
-		mg, err := c.DBClient.KubedbV1alpha1().MongoDBs(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		dbInfo.opts.GVR.Resource = api.ResourcePluralMongoDB
+		mg, err := c.DBClient.KubedbV1alpha1().MongoDBs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -75,8 +81,8 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		}
 
 	case api.ResourceKindMySQL:
-		dbInfo.do.GVR.Resource = api.ResourcePluralMySQL
-		my, err := c.DBClient.KubedbV1alpha1().MySQLs(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		dbInfo.opts.GVR.Resource = api.ResourcePluralMySQL
+		my, err := c.DBClient.KubedbV1alpha1().MySQLs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -86,8 +92,8 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		}
 
 	case api.ResourceKindPerconaXtraDB:
-		dbInfo.do.GVR.Resource = api.ResourcePluralPerconaXtraDB
-		px, err := c.DBClient.KubedbV1alpha1().PerconaXtraDBs(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		dbInfo.opts.GVR.Resource = api.ResourcePluralPerconaXtraDB
+		px, err := c.DBClient.KubedbV1alpha1().PerconaXtraDBs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -97,8 +103,8 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		}
 
 	case api.ResourceKindMariaDB:
-		dbInfo.do.GVR.Resource = api.ResourcePluralMariaDB
-		mr, err := c.DBClient.KubedbV1alpha1().MariaDBs(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		dbInfo.opts.GVR.Resource = api.ResourcePluralMariaDB
+		mr, err := c.DBClient.KubedbV1alpha1().MariaDBs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -108,8 +114,8 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		}
 
 	case api.ResourceKindPostgres:
-		dbInfo.do.GVR.Resource = api.ResourcePluralPostgres
-		pg, err := c.DBClient.KubedbV1alpha1().Postgreses(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		dbInfo.opts.GVR.Resource = api.ResourcePluralPostgres
+		pg, err := c.DBClient.KubedbV1alpha1().Postgreses(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -119,8 +125,8 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		}
 
 	case api.ResourceKindRedis:
-		dbInfo.do.GVR.Resource = api.ResourcePluralRedis
-		rd, err := c.DBClient.KubedbV1alpha1().Redises(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		dbInfo.opts.GVR.Resource = api.ResourcePluralRedis
+		rd, err := c.DBClient.KubedbV1alpha1().Redises(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -130,8 +136,8 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		}
 
 	case api.ResourceKindMemcached:
-		dbInfo.do.GVR.Resource = api.ResourcePluralMemcached
-		mc, err := c.DBClient.KubedbV1alpha1().Memcacheds(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		dbInfo.opts.GVR.Resource = api.ResourcePluralMemcached
+		mc, err := c.DBClient.KubedbV1alpha1().Memcacheds(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -141,8 +147,8 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		}
 
 	case api.ResourceKindProxySQL:
-		dbInfo.do.GVR.Resource = api.ResourcePluralProxySQL
-		pxql, err := c.DBClient.KubedbV1alpha1().ProxySQLs(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		dbInfo.opts.GVR.Resource = api.ResourcePluralProxySQL
+		pxql, err := c.DBClient.KubedbV1alpha1().ProxySQLs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -152,8 +158,8 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		}
 
 	case api.ResourceKindPgBouncer:
-		dbInfo.do.GVR.Resource = api.ResourcePluralPgBouncer
-		pgb, err := c.DBClient.KubedbV1alpha1().PgBouncers(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		dbInfo.opts.GVR.Resource = api.ResourcePluralPgBouncer
+		pgb, err := c.DBClient.KubedbV1alpha1().PgBouncers(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -163,8 +169,8 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		}
 
 	case api.ResourceKindEtcd:
-		dbInfo.do.GVR.Resource = api.ResourcePluralEtcd
-		etcd, err := c.DBClient.KubedbV1alpha1().Etcds(dbInfo.do.Namespace).Get(context.TODO(), dbInfo.do.Name, metav1.GetOptions{})
+		dbInfo.opts.GVR.Resource = api.ResourcePluralEtcd
+		etcd, err := c.DBClient.KubedbV1alpha1().Etcds(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -194,5 +200,5 @@ func (c *Controller) ensureReadyReplicasCond(dbInfo *databaseInfo) error {
 	}
 
 	// Add "ReplicasReady" condition to the respective database CR
-	return dbInfo.do.SetCondition(dbCond)
+	return dbInfo.opts.SetCondition(dbCond)
 }
