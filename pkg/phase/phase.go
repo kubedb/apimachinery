@@ -45,18 +45,6 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 		phase = api.DatabasePhaseProvisioning
 	}
 
-	// ================================= Handling "ReplicaReady" condition ==========================
-	// If the condition is present and its "false", then the phase should be "Critical".
-	if kmapi.IsConditionFalse(conditions, api.DatabaseReplicaReady) {
-		phase = api.DatabasePhaseCritical
-	}
-
-	// ================================= Handling "AcceptingConnection" condition ==========================
-	// If the condition is present and its "false", then the phase should be "NotReady".
-	if kmapi.IsConditionFalse(conditions, api.DatabaseAcceptingConnection) {
-		phase = api.DatabasePhaseNotReady
-	}
-
 	// =================================== Handling "DataRestoreStarted" and "DataRestored" conditions  ==================================================
 	// For data restoring, there could be the following scenarios:
 	// 1. Data cond["DataRestoreStarted"] = nil and cond["DataRestored"] = nil. In this case, phase will depend on the other conditions.
@@ -91,12 +79,24 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 		}
 	}
 
-	// ================================= Handling "Ready" condition ==========================
-	if kmapi.IsConditionTrue(conditions, api.DatabaseReady) {
-		phase = api.DatabasePhaseReady
+	// ================================= Handling "ReplicaReady" condition ==========================
+	// If the condition is present and its "false", then the phase should be "Critical".
+	if kmapi.IsConditionFalse(conditions, api.DatabaseReplicaReady) {
+		return api.DatabasePhaseCritical
 	}
+
+	// ================================= Handling "AcceptingConnection" condition ==========================
+	// If the condition is present and its "false", then the phase should be "NotReady".
+	if kmapi.IsConditionFalse(conditions, api.DatabaseAcceptingConnection) {
+		return api.DatabasePhaseNotReady
+	}
+
+	// ================================= Handling "Ready" condition ==========================
 	if kmapi.IsConditionFalse(conditions, api.DatabaseReady) {
-		phase = api.DatabasePhaseCritical
+		return api.DatabasePhaseCritical
+	}
+	if kmapi.IsConditionTrue(conditions, api.DatabaseReady) {
+		return api.DatabasePhaseReady
 	}
 
 	// ================================= Handling "Provisioned" and "Paused" conditions ==========================

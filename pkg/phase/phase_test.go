@@ -314,6 +314,38 @@ func TestPhaseForCondition(t *testing.T) {
 			expectedPhase: api.DatabasePhaseReady,
 		},
 		{
+			name: "Database is ready but not accepting connection",
+			conditions: []kmapi.Condition{
+				{
+					Type:   api.DatabaseProvisioningStarted,
+					Status: kmapi.ConditionTrue,
+				},
+				{
+					Type:   api.DatabaseReplicaReady,
+					Status: kmapi.ConditionTrue,
+				},
+				{
+					Type:   api.DatabaseAcceptingConnection,
+					Status: kmapi.ConditionFalse,
+				},
+				{
+					Type:               api.DatabaseDataRestoreStarted,
+					Status:             kmapi.ConditionTrue,
+					LastTransitionTime: lastTransactionTime,
+				},
+				{
+					Type:               api.DatabaseDataRestored,
+					Status:             kmapi.ConditionTrue,
+					LastTransitionTime: lastTransactionTimePlusOne,
+				},
+				{
+					Type:   api.DatabaseReady,
+					Status: kmapi.ConditionTrue,
+				},
+			},
+			expectedPhase: api.DatabasePhaseNotReady,
+		},
+		{
 			name: "With conditions that does not have effect on phase",
 			conditions: []kmapi.Condition{
 				{
