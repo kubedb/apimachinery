@@ -437,7 +437,7 @@ func (e *ElasticsearchSpec) GetSecrets() []string {
 	return secrets
 }
 
-func (e *Elasticsearch) IsReplicasReady(stsLister appslister.StatefulSetLister) (bool, string, error) {
+func (e *Elasticsearch) ReplicasAreReady(stsLister appslister.StatefulSetLister) (bool, string, error) {
 	stsList, err := stsLister.StatefulSets(e.Namespace).List(labels.SelectorFromSet(e.OffshootLabels()))
 	if err != nil {
 		return false, "", err
