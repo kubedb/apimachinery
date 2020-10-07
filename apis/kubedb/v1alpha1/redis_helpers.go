@@ -153,13 +153,6 @@ func (r Redis) StatsServiceLabels() map[string]string {
 	return lbl
 }
 
-func (r *Redis) GetMonitoringVendor() string {
-	if r.Spec.Monitor != nil {
-		return r.Spec.Monitor.Agent.Vendor()
-	}
-	return ""
-}
-
 func (r *Redis) SetDefaults(topology *core_util.Topology) {
 	if r == nil {
 		return

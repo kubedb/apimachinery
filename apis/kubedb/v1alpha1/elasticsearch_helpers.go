@@ -215,13 +215,6 @@ func (e Elasticsearch) StatsServiceLabels() map[string]string {
 	return lbl
 }
 
-func (e *Elasticsearch) GetMonitoringVendor() string {
-	if e.Spec.Monitor != nil {
-		return e.Spec.Monitor.Agent.Vendor()
-	}
-	return ""
-}
-
 func (e *Elasticsearch) SetDefaults(esVersion *v1alpha1.ElasticsearchVersion, topology *core_util.Topology) {
 	if e == nil {
 		return

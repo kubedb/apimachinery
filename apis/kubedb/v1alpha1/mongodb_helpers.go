@@ -312,13 +312,6 @@ func (m MongoDB) StatsServiceLabels() map[string]string {
 	return lbl
 }
 
-func (m *MongoDB) GetMonitoringVendor() string {
-	if m.Spec.Monitor != nil {
-		return m.Spec.Monitor.Agent.Vendor()
-	}
-	return ""
-}
-
 func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core_util.Topology) {
 	if m == nil {
 		return

@@ -132,13 +132,6 @@ func (p PgBouncer) StatsServiceLabels() map[string]string {
 	return lbl
 }
 
-func (p *PgBouncer) GetMonitoringVendor() string {
-	if p.Spec.Monitor != nil {
-		return p.Spec.Monitor.Agent.Vendor()
-	}
-	return ""
-}
-
 func (p PgBouncer) ReplicasServiceName() string {
 	return fmt.Sprintf("%v-replicas", p.Name)
 }

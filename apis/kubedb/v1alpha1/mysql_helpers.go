@@ -150,13 +150,6 @@ func (m MySQL) StatsServiceLabels() map[string]string {
 	return lbl
 }
 
-func (m *MySQL) GetMonitoringVendor() string {
-	if m.Spec.Monitor != nil {
-		return m.Spec.Monitor.Agent.Vendor()
-	}
-	return ""
-}
-
 func (m *MySQL) UsesGroupReplication() bool {
 	return m.Spec.Topology != nil && m.Spec.Topology.Mode != nil && *m.Spec.Topology.Mode == MySQLClusterModeGroup
 }
