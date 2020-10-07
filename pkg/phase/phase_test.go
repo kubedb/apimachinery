@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package util
+package phase
 
 import (
 	"testing"
@@ -438,7 +438,7 @@ func TestCompareLastTransactionTime(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			if got := CompareLastTransactionTime(tc.conditions, "type-1", "type-2"); got != tc.expected {
+			if got := compareLastTransactionTime(tc.conditions, "type-1", "type-2"); got != tc.expected {
 				t.Errorf("Expected: %d Found: %d", tc.expected, got)
 			}
 		})

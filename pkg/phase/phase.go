@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package util
+package phase
 
 import (
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
@@ -47,13 +47,13 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 
 	// ================================= Handling "ReplicaReady" condition ==========================
 	// If the condition is present and its "false", then the phase should be "Critical".
-	if kmapi.HasCondition(conditions, api.DatabaseReplicaReady) && !kmapi.IsConditionTrue(conditions, api.DatabaseReplicaReady) {
+	if kmapi.IsConditionFalse(conditions, api.DatabaseReplicaReady) {
 		phase = api.DatabasePhaseCritical
 	}
 
 	// ================================= Handling "AcceptingConnection" condition ==========================
 	// If the condition is present and its "false", then the phase should be "NotReady".
-	if kmapi.HasCondition(conditions, api.DatabaseAcceptingConnection) && !kmapi.IsConditionTrue(conditions, api.DatabaseAcceptingConnection) {
+	if kmapi.IsConditionFalse(conditions, api.DatabaseAcceptingConnection) {
 		phase = api.DatabasePhaseNotReady
 	}
 
@@ -75,7 +75,7 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 		}
 		// scenario 3
 		if kmapi.IsConditionTrue(conditions, api.DatabaseDataRestoreStarted) && !kmapi.IsConditionTrue(conditions, api.DatabaseDataRestored) {
-			res := CompareLastTransactionTime(conditions, api.DatabaseDataRestoreStarted, api.DatabaseDataRestored)
+			res := compareLastTransactionTime(conditions, api.DatabaseDataRestoreStarted, api.DatabaseDataRestored)
 			if res <= 0 {
 				// Database has failed to restore. User should not connect to the database. So, the database phase should be "NotReady"
 				return api.DatabasePhaseNotReady
@@ -84,7 +84,7 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 		}
 		// scenario 4
 		if kmapi.IsConditionTrue(conditions, api.DatabaseDataRestoreStarted) && kmapi.IsConditionTrue(conditions, api.DatabaseDataRestored) {
-			res := CompareLastTransactionTime(conditions, api.DatabaseDataRestoreStarted, api.DatabaseDataRestored)
+			res := compareLastTransactionTime(conditions, api.DatabaseDataRestoreStarted, api.DatabaseDataRestored)
 			if res == 1 {
 				return api.DatabasePhaseDataRestoring
 			}
@@ -95,7 +95,7 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 	if kmapi.IsConditionTrue(conditions, api.DatabaseReady) {
 		phase = api.DatabasePhaseReady
 	}
-	if kmapi.HasCondition(conditions, api.DatabaseReady) && !kmapi.IsConditionTrue(conditions, api.DatabaseReady) {
+	if kmapi.IsConditionFalse(conditions, api.DatabaseReady) {
 		phase = api.DatabasePhaseCritical
 	}
 
@@ -105,14 +105,14 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 	return phase
 }
 
-// CompareLastTransactionTime compare two condition's "LastTransactionTime" and return an integer based on the followings:
+// compareLastTransactionTime compare two condition's "LastTransactionTime" and return an integer based on the followings:
 // 1. If both conditions does not exist, then return 0
 // 2. If cond1 exist but cond2 does not, then return 1
 // 3. If cond1 does not exist but cond2 exist, then return -1
 // 3. If cond1.LastTransactionTime > cond2.LastTransactionTime, then return 1
 // 4. If cond1.LastTransactionTime = cond2.LastTransactionTime, then return 0
 // 5. If cond1.LastTransactionTime < cond2.LastTransactionTime, then return -1
-func CompareLastTransactionTime(conditions []kmapi.Condition, type1, type2 string) int32 {
+func compareLastTransactionTime(conditions []kmapi.Condition, type1, type2 string) int32 {
 	idx1, cond1 := kmapi.GetCondition(conditions, type1)
 	idx2, cond2 := kmapi.GetCondition(conditions, type2)
 	// both condition does not exist
