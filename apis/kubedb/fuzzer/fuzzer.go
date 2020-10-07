@@ -17,7 +17,7 @@ limitations under the License.
 package fuzzer
 
 import (
-	"kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	fuzz "github.com/google/gofuzz"
 	runtimeserializer "k8s.io/apimachinery/pkg/runtime/serializer"
@@ -26,37 +26,37 @@ import (
 // Funcs returns the fuzzer functions for this api group.
 var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 	return []interface{}{
-		func(s *v1alpha1.Elasticsearch, c fuzz.Continue) {
+		func(s *v1alpha2.Elasticsearch, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.Etcd, c fuzz.Continue) {
+		func(s *v1alpha2.Etcd, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.MariaDB, c fuzz.Continue) {
+		func(s *v1alpha2.MariaDB, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.Memcached, c fuzz.Continue) {
+		func(s *v1alpha2.Memcached, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.MongoDB, c fuzz.Continue) {
+		func(s *v1alpha2.MongoDB, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.MySQL, c fuzz.Continue) {
+		func(s *v1alpha2.MySQL, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.PerconaXtraDB, c fuzz.Continue) {
+		func(s *v1alpha2.PerconaXtraDB, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.PgBouncer, c fuzz.Continue) {
+		func(s *v1alpha2.PgBouncer, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.Postgres, c fuzz.Continue) {
+		func(s *v1alpha2.Postgres, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.ProxySQL, c fuzz.Continue) {
+		func(s *v1alpha2.ProxySQL, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.Redis, c fuzz.Continue) {
+		func(s *v1alpha2.Redis, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 	}

@@ -17,7 +17,7 @@ limitations under the License.
 package phase
 
 import (
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
 )

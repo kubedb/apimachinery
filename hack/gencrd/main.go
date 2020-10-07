@@ -24,7 +24,7 @@ import (
 	cataloginstall "kubedb.dev/apimachinery/apis/catalog/install"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	kubedbinstall "kubedb.dev/apimachinery/apis/kubedb/install"
-	kubedbv1alpha1 "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsinstall "kubedb.dev/apimachinery/apis/ops/install"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -68,23 +68,23 @@ func generateSwaggerJson() {
 			},
 		},
 		OpenAPIDefinitions: []common.GetOpenAPIDefinitions{
-			kubedbv1alpha1.GetOpenAPIDefinitions,
+			kubedbv1alpha2.GetOpenAPIDefinitions,
 			catalogv1alpha1.GetOpenAPIDefinitions,
 			opsv1alpha1.GetOpenAPIDefinitions,
 		},
 		//nolint:govet
 		Resources: []openapi.TypeInfo{
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralElasticsearch, kubedbv1alpha1.ResourceKindElasticsearch, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralEtcd, kubedbv1alpha1.ResourceKindEtcd, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralMariaDB, kubedbv1alpha1.ResourceKindMariaDB, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralMemcached, kubedbv1alpha1.ResourceKindMemcached, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralMongoDB, kubedbv1alpha1.ResourceKindMongoDB, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralMySQL, kubedbv1alpha1.ResourceKindMySQL, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralPerconaXtraDB, kubedbv1alpha1.ResourceKindPerconaXtraDB, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralPgBouncer, kubedbv1alpha1.ResourceKindPgBouncer, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralPostgres, kubedbv1alpha1.ResourceKindPostgres, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralProxySQL, kubedbv1alpha1.ResourceKindProxySQL, true},
-			{kubedbv1alpha1.SchemeGroupVersion, kubedbv1alpha1.ResourcePluralRedis, kubedbv1alpha1.ResourceKindRedis, true},
+			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralElasticsearch, kubedbv1alpha2.ResourceKindElasticsearch, true},
+			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralEtcd, kubedbv1alpha2.ResourceKindEtcd, true},
+			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralMariaDB, kubedbv1alpha2.ResourceKindMariaDB, true},
+			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralMemcached, kubedbv1alpha2.ResourceKindMemcached, true},
+			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralMongoDB, kubedbv1alpha2.ResourceKindMongoDB, true},
+			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralMySQL, kubedbv1alpha2.ResourceKindMySQL, true},
+			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralPerconaXtraDB, kubedbv1alpha2.ResourceKindPerconaXtraDB, true},
+			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralPgBouncer, kubedbv1alpha2.ResourceKindPgBouncer, true},
+			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralPostgres, kubedbv1alpha2.ResourceKindPostgres, true},
+			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralProxySQL, kubedbv1alpha2.ResourceKindProxySQL, true},
+			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralRedis, kubedbv1alpha2.ResourceKindRedis, true},
 
 			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralElasticsearchOpsRequest, opsv1alpha1.ResourceKindElasticsearchOpsRequest, true},
 			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralEtcdOpsRequest, opsv1alpha1.ResourceKindEtcdOpsRequest, true},
