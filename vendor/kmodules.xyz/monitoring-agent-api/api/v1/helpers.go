@@ -17,4 +17,9 @@ limitations under the License.
 package v1
 
 func (agent *AgentSpec) SetDefaults() {
+	if agent.Prometheus != nil {
+		if agent.Prometheus.Exporter.Port == 0 {
+			agent.Prometheus.Exporter.Port = PrometheusExporterPortNumber
+		}
+	}
 }

@@ -198,10 +198,10 @@ func (r *Redis) SetDefaults(topology *core_util.Topology) {
 
 	r.Spec.Monitor.SetDefaults()
 
-	r.setDefaultTLSConfig()
+	r.SetTLSDefaults()
 }
 
-func (r *Redis) setDefaultTLSConfig() {
+func (r *Redis) SetTLSDefaults() {
 	if r.Spec.TLS == nil || r.Spec.TLS.IssuerRef == nil {
 		return
 	}
