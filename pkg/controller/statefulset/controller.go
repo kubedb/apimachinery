@@ -23,7 +23,7 @@ import (
 	amc "kubedb.dev/apimachinery/pkg/controller"
 
 	"github.com/appscode/go/log"
-	appsv1 "k8s.io/api/apps/v1"
+	apps "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
@@ -69,7 +69,7 @@ func (c *Controller) InitStsWatcher() {
 	c.StsInformer.AddEventHandler(c.newStsEventHandlerFuncs())
 }
 
-func (c *Controller) enqueueOnlyKubeDBSts(sts *appsv1.StatefulSet) {
+func (c *Controller) enqueueOnlyKubeDBSts(sts *apps.StatefulSet) {
 	// only enqueue if the controlling owner is a KubeDB resource
 	ok, _, err := core_util.IsOwnerOfGroup(metav1.GetControllerOf(sts), kubedb.GroupName)
 	if err != nil {

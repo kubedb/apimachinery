@@ -20,24 +20,24 @@ import (
 	"fmt"
 
 	"github.com/appscode/go/log"
-	appsv1 "k8s.io/api/apps/v1"
+	apps "k8s.io/api/apps/v1"
 	"k8s.io/client-go/tools/cache"
 )
 
 func (c *Controller) newStsEventHandlerFuncs() cache.ResourceEventHandlerFuncs {
 	return cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
-			if sts, ok := obj.(*appsv1.StatefulSet); ok {
+			if sts, ok := obj.(*apps.StatefulSet); ok {
 				c.enqueueOnlyKubeDBSts(sts)
 			}
 		},
 		UpdateFunc: func(oldObj, newObj interface{}) {
-			if sts, ok := newObj.(*appsv1.StatefulSet); ok {
+			if sts, ok := newObj.(*apps.StatefulSet); ok {
 				c.enqueueOnlyKubeDBSts(sts)
 			}
 		},
 		DeleteFunc: func(obj interface{}) {
-			if sts, ok := obj.(*appsv1.StatefulSet); ok {
+			if sts, ok := obj.(*apps.StatefulSet); ok {
 				dbInfo, err := c.extractDatabaseInfo(sts)
 				if err != nil {
 					log.Warningf("failed to extract database info from StatefulSet: %s/%s. Reason: %v", sts.Namespace, sts.Name, err)
@@ -64,7 +64,7 @@ func (c *Controller) processStatefulSet(key string) error {
 	if !exists {
 		log.Debugf("StatefulSet %s does not exist anymore", key)
 	} else {
-		sts := obj.(*appsv1.StatefulSet).DeepCopy()
+		sts := obj.(*apps.StatefulSet).DeepCopy()
 		dbInfo, err := c.extractDatabaseInfo(sts)
 		if err != nil {
 			return fmt.Errorf("failed to extract database info from StatefulSet: %s/%s. Reason: %v", sts.Namespace, sts.Name, err)

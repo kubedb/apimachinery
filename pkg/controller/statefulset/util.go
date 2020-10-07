@@ -22,14 +22,14 @@ import (
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 
-	appsv1 "k8s.io/api/apps/v1"
+	apps "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	dmcond "kmodules.xyz/client-go/dynamic/conditions"
 )
 
-func (c *Controller) extractDatabaseInfo(sts *appsv1.StatefulSet) (*databaseInfo, error) {
+func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, error) {
 	// read the controlling owner
 	owner := metav1.GetControllerOf(sts)
 	if owner == nil {
