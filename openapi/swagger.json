@@ -7028,7 +7028,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchList"
             }
           }
         },
@@ -7129,7 +7129,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.EtcdList"
             }
           }
         },
@@ -7230,7 +7230,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDBList"
             }
           }
         },
@@ -7331,7 +7331,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MemcachedList"
             }
           }
         },
@@ -7432,7 +7432,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBList"
             }
           }
         },
@@ -7533,7 +7533,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLList"
             }
           }
         },
@@ -7692,7 +7692,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchList"
             }
           }
         },
@@ -7726,7 +7726,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Elasticsearch"
             }
           },
           {
@@ -7748,19 +7748,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Elasticsearch"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Elasticsearch"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Elasticsearch"
             }
           }
         },
@@ -7936,7 +7936,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Elasticsearch"
             }
           }
         },
@@ -7970,7 +7970,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Elasticsearch"
             }
           },
           {
@@ -7992,13 +7992,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Elasticsearch"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Elasticsearch"
             }
           }
         },
@@ -8139,7 +8139,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Elasticsearch"
             }
           }
         },
@@ -8258,7 +8258,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.EtcdList"
             }
           }
         },
@@ -8292,7 +8292,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Etcd"
             }
           },
           {
@@ -8314,19 +8314,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Etcd"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Etcd"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Etcd"
             }
           }
         },
@@ -8502,7 +8502,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Etcd"
             }
           }
         },
@@ -8536,7 +8536,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Etcd"
             }
           },
           {
@@ -8558,13 +8558,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Etcd"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Etcd"
             }
           }
         },
@@ -8705,7 +8705,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Etcd"
             }
           }
         },
@@ -8824,7 +8824,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDBList"
             }
           }
         },
@@ -8858,7 +8858,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDB"
             }
           },
           {
@@ -8880,19 +8880,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDB"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDB"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDB"
             }
           }
         },
@@ -9068,7 +9068,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDB"
             }
           }
         },
@@ -9102,7 +9102,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDB"
             }
           },
           {
@@ -9124,13 +9124,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDB"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDB"
             }
           }
         },
@@ -9271,7 +9271,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDB"
             }
           }
         },
@@ -9390,7 +9390,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MemcachedList"
             }
           }
         },
@@ -9424,7 +9424,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Memcached"
             }
           },
           {
@@ -9446,19 +9446,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Memcached"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Memcached"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Memcached"
             }
           }
         },
@@ -9634,7 +9634,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Memcached"
             }
           }
         },
@@ -9668,7 +9668,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Memcached"
             }
           },
           {
@@ -9690,13 +9690,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Memcached"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Memcached"
             }
           }
         },
@@ -9837,7 +9837,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Memcached"
             }
           }
         },
@@ -9956,7 +9956,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBList"
             }
           }
         },
@@ -9990,7 +9990,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDB"
             }
           },
           {
@@ -10012,19 +10012,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDB"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDB"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDB"
             }
           }
         },
@@ -10200,7 +10200,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDB"
             }
           }
         },
@@ -10234,7 +10234,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDB"
             }
           },
           {
@@ -10256,13 +10256,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDB"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDB"
             }
           }
         },
@@ -10403,7 +10403,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDB"
             }
           }
         },
@@ -10522,7 +10522,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLList"
             }
           }
         },
@@ -10556,7 +10556,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQL"
             }
           },
           {
@@ -10578,19 +10578,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQL"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQL"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQL"
             }
           }
         },
@@ -10766,7 +10766,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQL"
             }
           }
         },
@@ -10800,7 +10800,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQL"
             }
           },
           {
@@ -10822,13 +10822,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQL"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQL"
             }
           }
         },
@@ -10969,7 +10969,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQL"
             }
           }
         },
@@ -11088,7 +11088,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDBList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDBList"
             }
           }
         },
@@ -11122,7 +11122,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDB"
             }
           },
           {
@@ -11144,19 +11144,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDB"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDB"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDB"
             }
           }
         },
@@ -11332,7 +11332,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDB"
             }
           }
         },
@@ -11366,7 +11366,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDB"
             }
           },
           {
@@ -11388,13 +11388,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDB"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDB"
             }
           }
         },
@@ -11535,7 +11535,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDB"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDB"
             }
           }
         },
@@ -11654,7 +11654,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncerList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncerList"
             }
           }
         },
@@ -11688,7 +11688,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncer"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncer"
             }
           },
           {
@@ -11710,19 +11710,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncer"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncer"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncer"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncer"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncer"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncer"
             }
           }
         },
@@ -11898,7 +11898,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncer"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncer"
             }
           }
         },
@@ -11932,7 +11932,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncer"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncer"
             }
           },
           {
@@ -11954,13 +11954,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncer"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncer"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncer"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncer"
             }
           }
         },
@@ -12101,7 +12101,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncer"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncer"
             }
           }
         },
@@ -12220,7 +12220,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresList"
             }
           }
         },
@@ -12254,7 +12254,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres"
             }
           },
           {
@@ -12276,19 +12276,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres"
             }
           }
         },
@@ -12464,7 +12464,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres"
             }
           }
         },
@@ -12498,7 +12498,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres"
             }
           },
           {
@@ -12520,13 +12520,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres"
             }
           }
         },
@@ -12667,7 +12667,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres"
             }
           }
         },
@@ -12786,7 +12786,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQLList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLList"
             }
           }
         },
@@ -12820,7 +12820,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQL"
             }
           },
           {
@@ -12842,19 +12842,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQL"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQL"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQL"
             }
           }
         },
@@ -13030,7 +13030,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQL"
             }
           }
         },
@@ -13064,7 +13064,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQL"
             }
           },
           {
@@ -13086,13 +13086,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQL"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQL"
             }
           }
         },
@@ -13233,7 +13233,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQL"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQL"
             }
           }
         },
@@ -13352,7 +13352,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisList"
             }
           }
         },
@@ -13386,7 +13386,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Redis"
             }
           },
           {
@@ -13408,19 +13408,19 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Redis"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Redis"
             }
           },
           "202": {
             "description": "Accepted",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Redis"
             }
           }
         },
@@ -13596,7 +13596,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Redis"
             }
           }
         },
@@ -13630,7 +13630,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Redis"
             }
           },
           {
@@ -13652,13 +13652,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Redis"
             }
           },
           "201": {
             "description": "Created",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Redis"
             }
           }
         },
@@ -13799,7 +13799,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Redis"
             }
           }
         },
@@ -13860,7 +13860,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDBList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDBList"
             }
           }
         },
@@ -13961,7 +13961,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncerList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncerList"
             }
           }
         },
@@ -14062,7 +14062,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresList"
             }
           }
         },
@@ -14163,7 +14163,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQLList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLList"
             }
           }
         },
@@ -14264,7 +14264,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisList"
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisList"
             }
           }
         },
@@ -28288,7 +28288,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ConnectionPoolConfig": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConnectionPoolConfig": {
       "type": "object",
       "properties": {
         "adminUsers": {
@@ -28361,7 +28361,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Databases": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Databases": {
       "type": "object",
       "required": [
         "alias",
@@ -28387,7 +28387,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Elasticsearch": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -28402,10 +28402,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchSpec"
         },
         "status": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -28416,7 +28416,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchClusterTopology": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchClusterTopology": {
       "type": "object",
       "required": [
         "master",
@@ -28425,17 +28425,17 @@
       ],
       "properties": {
         "data": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
         },
         "ingest": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
         },
         "master": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -28446,7 +28446,7 @@
           "description": "Items is a list of Elasticsearch CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Elasticsearch"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Elasticsearch"
           }
         },
         "kind": {
@@ -28465,7 +28465,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchNode": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode": {
       "type": "object",
       "properties": {
         "maxUnavailable": {
@@ -28490,7 +28490,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchRoleMapSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchRoleMapSpec": {
       "description": "Specifies the role mapping structure. Both 'json' and 'yaml' tags are used in structure metadata. The `json` tags (camel case) are used while taking input from users. The `yaml` tags (snake case) are used by the operator to generate roles_mapping.yml file.",
       "type": "object",
       "properties": {
@@ -28532,7 +28532,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchSpec": {
       "type": "object",
       "required": [
         "version"
@@ -28560,13 +28560,13 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
         },
         "internalUsers": {
           "description": "InternalUsers contains internal user configurations. Expected Input format: internalUsers:\n  \u003cusername1\u003e:\n\t\t...\n  \u003cusername2\u003e:\n\t\t...",
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchUserSpec"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchUserSpec"
           }
         },
         "maxUnavailable": {
@@ -28590,7 +28590,7 @@
           "description": "RolesMapping contains roles mapping configurations. Expected Input format: rolesMapping:\n  \u003crole1\u003e:\n\t\t...\n  \u003crole2\u003e:\n\t\t...",
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchRoleMapSpec"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchRoleMapSpec"
           }
         },
         "serviceTemplate": {
@@ -28615,7 +28615,7 @@
         },
         "topology": {
           "description": "Elasticsearch topology for node specification",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchClusterTopology"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchClusterTopology"
         },
         "version": {
           "description": "Version of Elasticsearch to be deployed.",
@@ -28623,7 +28623,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchStatus": {
       "type": "object",
       "properties": {
         "conditions": {
@@ -28644,7 +28644,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ElasticsearchUserSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchUserSpec": {
       "description": "Specifies the security plugin internal user structure. Both 'json' and 'yaml' tags are used in structure metadata. The `json` tags (camel case) are used while taking input from users. The `yaml` tags (snake case) are used by the operator to generate internal_users.yml file.",
       "type": "object",
       "properties": {
@@ -28690,7 +28690,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Etcd": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -28705,10 +28705,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.EtcdSpec"
         },
         "status": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.EtcdStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -28719,7 +28719,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.EtcdList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -28730,7 +28730,7 @@
           "description": "Items is a list of Etcd TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Etcd"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Etcd"
           }
         },
         "kind": {
@@ -28749,7 +28749,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.EtcdSpec": {
       "type": "object",
       "required": [
         "version"
@@ -28765,7 +28765,7 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -28798,7 +28798,7 @@
         },
         "tls": {
           "description": "etcd cluster TLS configuration",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.TLSPolicy"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.TLSPolicy"
         },
         "version": {
           "description": "Version of Etcd to be deployed.",
@@ -28806,7 +28806,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.EtcdStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.EtcdStatus": {
       "type": "object",
       "properties": {
         "conditions": {
@@ -28827,14 +28827,14 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec": {
       "type": "object",
       "properties": {
         "postgresWAL": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresWALSourceSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresWALSourceSpec"
         },
         "script": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ScriptSourceSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ScriptSourceSpec"
         },
         "waitForInitialRestore": {
           "description": "Wait for initial DataRestore condition",
@@ -28842,7 +28842,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.LeaderElectionConfig": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LeaderElectionConfig": {
       "description": "LeaderElectionConfig contains essential attributes of leader election. ref: https://github.com/kubernetes/client-go/blob/6134db91200ea474868bc6775e62cc294a74c6c6/tools/leaderelection/leaderelection.go#L105-L114",
       "type": "object",
       "required": [
@@ -28868,7 +28868,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDB": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDB": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -28883,10 +28883,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDBSpec"
         },
         "status": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDBStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -28897,7 +28897,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDBList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -28908,7 +28908,7 @@
           "description": "Items is a list of MariaDB TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDB"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDB"
           }
         },
         "kind": {
@@ -28927,7 +28927,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDBSpec": {
       "type": "object",
       "required": [
         "version"
@@ -28947,7 +28947,7 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -28988,7 +28988,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MariaDBStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDBStatus": {
       "type": "object",
       "properties": {
         "conditions": {
@@ -29009,7 +29009,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemberSecret": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MemberSecret": {
       "type": "object",
       "properties": {
         "peerSecret": {
@@ -29022,7 +29022,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Memcached": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -29037,10 +29037,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MemcachedSpec"
         },
         "status": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MemcachedStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -29051,7 +29051,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MemcachedList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -29062,7 +29062,7 @@
           "description": "Items is a list of Memcached TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Memcached"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Memcached"
           }
         },
         "kind": {
@@ -29081,7 +29081,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MemcachedSpec": {
       "type": "object",
       "required": [
         "version"
@@ -29130,7 +29130,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemcachedStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MemcachedStatus": {
       "type": "object",
       "properties": {
         "conditions": {
@@ -29151,7 +29151,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDB": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -29166,10 +29166,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBSpec"
         },
         "status": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -29180,7 +29180,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBConfigNode": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBConfigNode": {
       "type": "object",
       "required": [
         "replicas"
@@ -29209,7 +29209,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -29220,7 +29220,7 @@
           "description": "Items is a list of MongoDB TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDB"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDB"
           }
         },
         "kind": {
@@ -29239,7 +29239,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBMongosNode": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBMongosNode": {
       "type": "object",
       "required": [
         "replicas"
@@ -29264,7 +29264,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBReplicaSet": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBReplicaSet": {
       "type": "object",
       "required": [
         "name"
@@ -29276,7 +29276,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardNode": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBShardNode": {
       "type": "object",
       "required": [
         "shards",
@@ -29311,7 +29311,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardingTopology": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBShardingTopology": {
       "type": "object",
       "required": [
         "shard",
@@ -29321,19 +29321,19 @@
       "properties": {
         "configServer": {
           "description": "Config Server (metadata) component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-config-servers/",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBConfigNode"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBConfigNode"
         },
         "mongos": {
           "description": "Mongos (router) component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-query-router/",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBMongosNode"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBMongosNode"
         },
         "shard": {
           "description": "Shard component of mongodb. More info: https://docs.mongodb.com/manual/core/sharded-cluster-shards/",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardNode"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBShardNode"
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBSpec": {
       "type": "object",
       "required": [
         "version"
@@ -29357,7 +29357,7 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
         },
         "keyFile": {
           "description": "Secret for KeyFile. Contains keyfile `key.txt` if spec.clusterAuthMode == keyFile || sendKeyFile",
@@ -29373,7 +29373,7 @@
         },
         "replicaSet": {
           "description": "MongoDB replica set",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBReplicaSet"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBReplicaSet"
         },
         "replicas": {
           "description": "Number of instances to deploy for a MongoDB database.",
@@ -29386,7 +29386,7 @@
         },
         "shardTopology": {
           "description": "MongoDB sharding topology.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBShardingTopology"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBShardingTopology"
         },
         "sslMode": {
           "description": "SSLMode for both standalone and clusters. (default, disabled.) See more options: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-sslmode",
@@ -29418,7 +29418,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MongoDBStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBStatus": {
       "type": "object",
       "properties": {
         "conditions": {
@@ -29439,7 +29439,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQL": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -29454,10 +29454,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLSpec"
         },
         "status": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -29468,12 +29468,12 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLClusterTopology": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLClusterTopology": {
       "type": "object",
       "properties": {
         "group": {
           "description": "Group replication info for MySQL",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLGroupSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLGroupSpec"
         },
         "mode": {
           "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
@@ -29481,7 +29481,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLGroupSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLGroupSpec": {
       "type": "object",
       "properties": {
         "baseServerID": {
@@ -29499,7 +29499,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -29510,7 +29510,7 @@
           "description": "Items is a list of MySQL TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQL"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQL"
           }
         },
         "kind": {
@@ -29529,7 +29529,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLSpec": {
       "type": "object",
       "required": [
         "version"
@@ -29549,7 +29549,7 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -29590,7 +29590,7 @@
         },
         "topology": {
           "description": "MySQL cluster topology",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLClusterTopology"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLClusterTopology"
         },
         "version": {
           "description": "Version of MySQL to be deployed.",
@@ -29598,7 +29598,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MySQLStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLStatus": {
       "type": "object",
       "properties": {
         "conditions": {
@@ -29619,7 +29619,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDB": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDB": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -29634,10 +29634,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDBSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDBSpec"
         },
         "status": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDBStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDBStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -29648,7 +29648,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDBList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDBList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -29659,7 +29659,7 @@
           "description": "Items is a list of PerconaXtraDB TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDB"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDB"
           }
         },
         "kind": {
@@ -29678,7 +29678,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDBSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDBSpec": {
       "type": "object",
       "required": [
         "version"
@@ -29698,7 +29698,7 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -29739,7 +29739,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PerconaXtraDBStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDBStatus": {
       "type": "object",
       "properties": {
         "conditions": {
@@ -29760,7 +29760,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncer": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncer": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -29775,10 +29775,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncerSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncerSpec"
         },
         "status": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncerStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncerStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -29789,7 +29789,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncerList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncerList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -29800,7 +29800,7 @@
           "description": "Items is a list of PgBouncer CRD objects.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncer"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncer"
           }
         },
         "kind": {
@@ -29819,7 +29819,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncerSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncerSpec": {
       "type": "object",
       "required": [
         "version"
@@ -29827,13 +29827,13 @@
       "properties": {
         "connectionPool": {
           "description": "ConnectionPoolConfig defines Connection pool configuration.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ConnectionPoolConfig"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConnectionPoolConfig"
         },
         "databases": {
           "description": "Databases to proxy by connection pooling.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Databases"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Databases"
           }
         },
         "monitor": {
@@ -29867,7 +29867,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PgBouncerStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PgBouncerStatus": {
       "type": "object",
       "properties": {
         "conditions": {
@@ -29888,7 +29888,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -29903,10 +29903,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresSpec"
         },
         "status": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -29917,7 +29917,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresArchiverSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresArchiverSpec": {
       "type": "object",
       "properties": {
         "storage": {
@@ -29925,7 +29925,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -29936,7 +29936,7 @@
           "description": "Items is a list of Postgres CRD objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Postgres"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres"
           }
         },
         "kind": {
@@ -29955,7 +29955,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresSpec": {
       "type": "object",
       "required": [
         "version"
@@ -29963,7 +29963,7 @@
       "properties": {
         "archiver": {
           "description": "Archive for wal files",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresArchiverSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresArchiverSpec"
         },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -29979,11 +29979,11 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
         },
         "leaderElection": {
           "description": "Leader election configuration",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.LeaderElectionConfig"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LeaderElectionConfig"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -30036,7 +30036,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresStatus": {
       "type": "object",
       "properties": {
         "conditions": {
@@ -30057,7 +30057,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.PostgresWALSourceSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresWALSourceSpec": {
       "type": "object",
       "properties": {
         "azure": {
@@ -30076,7 +30076,7 @@
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.LocalSpec"
         },
         "pitr": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RecoveryTarget"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RecoveryTarget"
         },
         "rest": {
           "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.RestServerSpec"
@@ -30092,7 +30092,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQL": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQL": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -30107,10 +30107,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQLSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLSpec"
         },
         "status": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQLStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -30121,7 +30121,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQLBackendSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLBackendSpec": {
       "type": "object",
       "properties": {
         "ref": {
@@ -30135,7 +30135,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQLList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -30146,7 +30146,7 @@
           "description": "Items is a list of ProxySQL TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQL"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQL"
           }
         },
         "kind": {
@@ -30165,7 +30165,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQLSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLSpec": {
       "type": "object",
       "required": [
         "version"
@@ -30173,7 +30173,7 @@
       "properties": {
         "backend": {
           "description": "Backend specifies the information about backend MySQL/Percona-XtraDB/MariaDB servers",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQLBackendSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLBackendSpec"
         },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for proxysql (i.e custom-proxysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -30214,7 +30214,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ProxySQLStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLStatus": {
       "type": "object",
       "properties": {
         "conditions": {
@@ -30235,7 +30235,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RecoveryTarget": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RecoveryTarget": {
       "type": "object",
       "properties": {
         "targetInclusive": {
@@ -30256,7 +30256,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Redis": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -30271,10 +30271,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSpec"
         },
         "status": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -30285,7 +30285,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisClusterSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisClusterSpec": {
       "type": "object",
       "properties": {
         "master": {
@@ -30300,7 +30300,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisList": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisList": {
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -30311,7 +30311,7 @@
           "description": "Items is a list of Redis TPR objects",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.Redis"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Redis"
           }
         },
         "kind": {
@@ -30330,7 +30330,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSpec": {
       "type": "object",
       "required": [
         "version"
@@ -30338,7 +30338,7 @@
       "properties": {
         "cluster": {
           "description": "Redis cluster configuration for running redis servers in cluster mode. Required if Mode is set to \"Cluster\"",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisClusterSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisClusterSpec"
         },
         "configSource": {
           "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e redis.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -30350,7 +30350,7 @@
         },
         "init": {
           "description": "Init is used to initialize database",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.InitSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
         },
         "mode": {
           "description": "Default is \"Standalone\". If set to \"Cluster\", ClusterSpec is required and redis servers will start in cluster mode",
@@ -30395,7 +30395,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.RedisStatus": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisStatus": {
       "type": "object",
       "properties": {
         "conditions": {
@@ -30416,7 +30416,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.ScriptSourceSpec": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ScriptSourceSpec": {
       "type": "object",
       "properties": {
         "awsElasticBlockStore": {
@@ -30536,11 +30536,11 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha1.TLSPolicy": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.TLSPolicy": {
       "type": "object",
       "properties": {
         "member": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha1.MemberSecret"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MemberSecret"
         },
         "operatorSecret": {
           "type": "string"

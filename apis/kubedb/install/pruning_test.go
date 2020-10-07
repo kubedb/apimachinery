@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"kubedb.dev/apimachinery/apis/kubedb/fuzzer"
-	"kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	crdfuzz "kmodules.xyz/crd-schema-fuzz"
