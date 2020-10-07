@@ -161,6 +161,14 @@ const (
 	DatabasePaused = "Paused"
 
 	// Condition reasons
-	DatabaseSuccessfullyRestored = "SuccessfullyDataRestored"
-	FailedToRestoreData          = "FailedToRestoreData"
+	DataRestoreStartedByExternalInitializer = "DataRestoreStartedByExternalInitializer"
+	DatabaseSuccessfullyRestored            = "SuccessfullyDataRestored"
+	FailedToRestoreData                     = "FailedToRestoreData"
+	AllReplicasAreReady                     = "AllReplicasReady"
+	SomeReplicasAreNotReady                 = "SomeReplicasNotReady"
+)
+
+// Resource kind related constants
+const (
+	ResourceKindStatefulSet = "StatefulSet"
 )
