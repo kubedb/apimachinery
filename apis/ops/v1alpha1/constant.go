@@ -42,4 +42,6 @@ const (
 	OpsRequestProcessedSuccessfully        = "OpsRequestProcessedSuccessfully"
 	SuccessfullyVolumeExpanded             = "SuccessfullyVolumeExpanded"
 	FailedToVolumeExpand                   = "FailedToVolumeExpand"
+	SuccessfullyDBReconfigured             = "SuccessfullyDBReconfigured"
+	FailedToReconfigureDB                  = "FailedToReconfigureDB"
 )

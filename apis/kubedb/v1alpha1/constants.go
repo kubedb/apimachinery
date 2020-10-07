@@ -102,6 +102,11 @@ const (
 	MySQLRootPassword          = "MYSQL_ROOT_PASSWORD"
 	MySQLName                  = "MYSQL_NAME"
 
+	MySQLContainerReplicationModeDetectorName = "replication-mode-detector"
+	MySQLPodPrimary                           = "primary"
+	MySQLPodSecondary                         = "secondary"
+	MySQLLabelRole                            = MySQLKey + "/role"
+
 	PerconaXtraDBClusterRecommendedVersion    = "5.7"
 	PerconaXtraDBMaxClusterNameLength         = 32
 	PerconaXtraDBStandaloneReplicas           = 1
@@ -131,14 +136,11 @@ const (
 
 	PgBouncerUpstreamServerCA = "upstream-server-ca.crt"
 
-	MySQLContainerReplicationModeDetectorName = "replication-mode-detector"
-	MySQLPodPrimary                           = "primary"
-	MySQLPodSecondary                         = "secondary"
-	MySQLLabelRole                            = MySQLKey + "/role"
-
 	ContainerExporterName = "exporter"
 	LocalHost             = "localhost"
 	LocalHostIP           = "127.0.0.1"
+
+	DBCustomConfigName = "custom-config"
 )
 
 // List of possible condition types for a KubeDB object
