@@ -6974,7 +6974,7 @@
         }
       }
     },
-    "/apis/kubedb.com/v1alpha1/": {
+    "/apis/kubedb.com/v1alpha2/": {
       "get": {
         "description": "get available resources",
         "consumes": [
@@ -6991,9 +6991,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "getKubedbComV1alpha1APIResources",
+        "operationId": "getKubedbComV1alpha2APIResources",
         "responses": {
           "200": {
             "description": "OK",
@@ -7004,7 +7004,7 @@
         }
       }
     },
-    "/apis/kubedb.com/v1alpha1/elasticsearches": {
+    "/apis/kubedb.com/v1alpha2/elasticsearches": {
       "get": {
         "description": "list or watch objects of kind Elasticsearch",
         "consumes": [
@@ -7021,9 +7021,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1ElasticsearchForAllNamespaces",
+        "operationId": "listKubedbComV1alpha2ElasticsearchForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -7035,7 +7035,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Elasticsearch"
         }
       },
@@ -7105,7 +7105,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/etcds": {
+    "/apis/kubedb.com/v1alpha2/etcds": {
       "get": {
         "description": "list or watch objects of kind Etcd",
         "consumes": [
@@ -7122,9 +7122,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1EtcdForAllNamespaces",
+        "operationId": "listKubedbComV1alpha2EtcdForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -7136,7 +7136,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Etcd"
         }
       },
@@ -7206,7 +7206,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/mariadbs": {
+    "/apis/kubedb.com/v1alpha2/mariadbs": {
       "get": {
         "description": "list or watch objects of kind MariaDB",
         "consumes": [
@@ -7223,9 +7223,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1MariaDBForAllNamespaces",
+        "operationId": "listKubedbComV1alpha2MariaDBForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -7237,7 +7237,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MariaDB"
         }
       },
@@ -7307,7 +7307,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/memcacheds": {
+    "/apis/kubedb.com/v1alpha2/memcacheds": {
       "get": {
         "description": "list or watch objects of kind Memcached",
         "consumes": [
@@ -7324,9 +7324,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1MemcachedForAllNamespaces",
+        "operationId": "listKubedbComV1alpha2MemcachedForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -7338,7 +7338,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Memcached"
         }
       },
@@ -7408,7 +7408,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/mongodbs": {
+    "/apis/kubedb.com/v1alpha2/mongodbs": {
       "get": {
         "description": "list or watch objects of kind MongoDB",
         "consumes": [
@@ -7425,9 +7425,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1MongoDBForAllNamespaces",
+        "operationId": "listKubedbComV1alpha2MongoDBForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -7439,7 +7439,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MongoDB"
         }
       },
@@ -7509,7 +7509,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/mysqls": {
+    "/apis/kubedb.com/v1alpha2/mysqls": {
       "get": {
         "description": "list or watch objects of kind MySQL",
         "consumes": [
@@ -7526,9 +7526,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1MySQLForAllNamespaces",
+        "operationId": "listKubedbComV1alpha2MySQLForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -7540,7 +7540,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MySQL"
         }
       },
@@ -7610,7 +7610,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/elasticsearches": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/elasticsearches": {
       "get": {
         "description": "list or watch objects of kind Elasticsearch",
         "consumes": [
@@ -7627,9 +7627,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1NamespacedElasticsearch",
+        "operationId": "listKubedbComV1alpha2NamespacedElasticsearch",
         "parameters": [
           {
             "uniqueItems": true,
@@ -7699,7 +7699,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Elasticsearch"
         }
       },
@@ -7717,9 +7717,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "createKubedbComV1alpha1NamespacedElasticsearch",
+        "operationId": "createKubedbComV1alpha2NamespacedElasticsearch",
         "parameters": [
           {
             "name": "body",
@@ -7767,7 +7767,7 @@
         "x-kubernetes-action": "post",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Elasticsearch"
         }
       },
@@ -7785,9 +7785,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1CollectionNamespacedElasticsearch",
+        "operationId": "deleteKubedbComV1alpha2CollectionNamespacedElasticsearch",
         "parameters": [
           {
             "uniqueItems": true,
@@ -7892,7 +7892,7 @@
         "x-kubernetes-action": "deletecollection",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Elasticsearch"
         }
       },
@@ -7914,7 +7914,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/elasticsearches/{name}": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/elasticsearches/{name}": {
       "get": {
         "description": "read the specified Elasticsearch",
         "consumes": [
@@ -7929,9 +7929,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "readKubedbComV1alpha1NamespacedElasticsearch",
+        "operationId": "readKubedbComV1alpha2NamespacedElasticsearch",
         "responses": {
           "200": {
             "description": "OK",
@@ -7943,7 +7943,7 @@
         "x-kubernetes-action": "get",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Elasticsearch"
         }
       },
@@ -7961,9 +7961,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "replaceKubedbComV1alpha1NamespacedElasticsearch",
+        "operationId": "replaceKubedbComV1alpha2NamespacedElasticsearch",
         "parameters": [
           {
             "name": "body",
@@ -8005,7 +8005,7 @@
         "x-kubernetes-action": "put",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Elasticsearch"
         }
       },
@@ -8023,9 +8023,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1NamespacedElasticsearch",
+        "operationId": "deleteKubedbComV1alpha2NamespacedElasticsearch",
         "parameters": [
           {
             "name": "body",
@@ -8080,7 +8080,7 @@
         "x-kubernetes-action": "delete",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Elasticsearch"
         }
       },
@@ -8101,9 +8101,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "patchKubedbComV1alpha1NamespacedElasticsearch",
+        "operationId": "patchKubedbComV1alpha2NamespacedElasticsearch",
         "parameters": [
           {
             "name": "body",
@@ -8146,7 +8146,7 @@
         "x-kubernetes-action": "patch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Elasticsearch"
         }
       },
@@ -8176,7 +8176,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/etcds": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/etcds": {
       "get": {
         "description": "list or watch objects of kind Etcd",
         "consumes": [
@@ -8193,9 +8193,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1NamespacedEtcd",
+        "operationId": "listKubedbComV1alpha2NamespacedEtcd",
         "parameters": [
           {
             "uniqueItems": true,
@@ -8265,7 +8265,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Etcd"
         }
       },
@@ -8283,9 +8283,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "createKubedbComV1alpha1NamespacedEtcd",
+        "operationId": "createKubedbComV1alpha2NamespacedEtcd",
         "parameters": [
           {
             "name": "body",
@@ -8333,7 +8333,7 @@
         "x-kubernetes-action": "post",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Etcd"
         }
       },
@@ -8351,9 +8351,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1CollectionNamespacedEtcd",
+        "operationId": "deleteKubedbComV1alpha2CollectionNamespacedEtcd",
         "parameters": [
           {
             "uniqueItems": true,
@@ -8458,7 +8458,7 @@
         "x-kubernetes-action": "deletecollection",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Etcd"
         }
       },
@@ -8480,7 +8480,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/etcds/{name}": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/etcds/{name}": {
       "get": {
         "description": "read the specified Etcd",
         "consumes": [
@@ -8495,9 +8495,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "readKubedbComV1alpha1NamespacedEtcd",
+        "operationId": "readKubedbComV1alpha2NamespacedEtcd",
         "responses": {
           "200": {
             "description": "OK",
@@ -8509,7 +8509,7 @@
         "x-kubernetes-action": "get",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Etcd"
         }
       },
@@ -8527,9 +8527,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "replaceKubedbComV1alpha1NamespacedEtcd",
+        "operationId": "replaceKubedbComV1alpha2NamespacedEtcd",
         "parameters": [
           {
             "name": "body",
@@ -8571,7 +8571,7 @@
         "x-kubernetes-action": "put",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Etcd"
         }
       },
@@ -8589,9 +8589,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1NamespacedEtcd",
+        "operationId": "deleteKubedbComV1alpha2NamespacedEtcd",
         "parameters": [
           {
             "name": "body",
@@ -8646,7 +8646,7 @@
         "x-kubernetes-action": "delete",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Etcd"
         }
       },
@@ -8667,9 +8667,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "patchKubedbComV1alpha1NamespacedEtcd",
+        "operationId": "patchKubedbComV1alpha2NamespacedEtcd",
         "parameters": [
           {
             "name": "body",
@@ -8712,7 +8712,7 @@
         "x-kubernetes-action": "patch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Etcd"
         }
       },
@@ -8742,7 +8742,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/mariadbs": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/mariadbs": {
       "get": {
         "description": "list or watch objects of kind MariaDB",
         "consumes": [
@@ -8759,9 +8759,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1NamespacedMariaDB",
+        "operationId": "listKubedbComV1alpha2NamespacedMariaDB",
         "parameters": [
           {
             "uniqueItems": true,
@@ -8831,7 +8831,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MariaDB"
         }
       },
@@ -8849,9 +8849,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "createKubedbComV1alpha1NamespacedMariaDB",
+        "operationId": "createKubedbComV1alpha2NamespacedMariaDB",
         "parameters": [
           {
             "name": "body",
@@ -8899,7 +8899,7 @@
         "x-kubernetes-action": "post",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MariaDB"
         }
       },
@@ -8917,9 +8917,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1CollectionNamespacedMariaDB",
+        "operationId": "deleteKubedbComV1alpha2CollectionNamespacedMariaDB",
         "parameters": [
           {
             "uniqueItems": true,
@@ -9024,7 +9024,7 @@
         "x-kubernetes-action": "deletecollection",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MariaDB"
         }
       },
@@ -9046,7 +9046,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/mariadbs/{name}": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/mariadbs/{name}": {
       "get": {
         "description": "read the specified MariaDB",
         "consumes": [
@@ -9061,9 +9061,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "readKubedbComV1alpha1NamespacedMariaDB",
+        "operationId": "readKubedbComV1alpha2NamespacedMariaDB",
         "responses": {
           "200": {
             "description": "OK",
@@ -9075,7 +9075,7 @@
         "x-kubernetes-action": "get",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MariaDB"
         }
       },
@@ -9093,9 +9093,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "replaceKubedbComV1alpha1NamespacedMariaDB",
+        "operationId": "replaceKubedbComV1alpha2NamespacedMariaDB",
         "parameters": [
           {
             "name": "body",
@@ -9137,7 +9137,7 @@
         "x-kubernetes-action": "put",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MariaDB"
         }
       },
@@ -9155,9 +9155,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1NamespacedMariaDB",
+        "operationId": "deleteKubedbComV1alpha2NamespacedMariaDB",
         "parameters": [
           {
             "name": "body",
@@ -9212,7 +9212,7 @@
         "x-kubernetes-action": "delete",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MariaDB"
         }
       },
@@ -9233,9 +9233,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "patchKubedbComV1alpha1NamespacedMariaDB",
+        "operationId": "patchKubedbComV1alpha2NamespacedMariaDB",
         "parameters": [
           {
             "name": "body",
@@ -9278,7 +9278,7 @@
         "x-kubernetes-action": "patch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MariaDB"
         }
       },
@@ -9308,7 +9308,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/memcacheds": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/memcacheds": {
       "get": {
         "description": "list or watch objects of kind Memcached",
         "consumes": [
@@ -9325,9 +9325,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1NamespacedMemcached",
+        "operationId": "listKubedbComV1alpha2NamespacedMemcached",
         "parameters": [
           {
             "uniqueItems": true,
@@ -9397,7 +9397,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Memcached"
         }
       },
@@ -9415,9 +9415,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "createKubedbComV1alpha1NamespacedMemcached",
+        "operationId": "createKubedbComV1alpha2NamespacedMemcached",
         "parameters": [
           {
             "name": "body",
@@ -9465,7 +9465,7 @@
         "x-kubernetes-action": "post",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Memcached"
         }
       },
@@ -9483,9 +9483,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1CollectionNamespacedMemcached",
+        "operationId": "deleteKubedbComV1alpha2CollectionNamespacedMemcached",
         "parameters": [
           {
             "uniqueItems": true,
@@ -9590,7 +9590,7 @@
         "x-kubernetes-action": "deletecollection",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Memcached"
         }
       },
@@ -9612,7 +9612,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/memcacheds/{name}": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/memcacheds/{name}": {
       "get": {
         "description": "read the specified Memcached",
         "consumes": [
@@ -9627,9 +9627,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "readKubedbComV1alpha1NamespacedMemcached",
+        "operationId": "readKubedbComV1alpha2NamespacedMemcached",
         "responses": {
           "200": {
             "description": "OK",
@@ -9641,7 +9641,7 @@
         "x-kubernetes-action": "get",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Memcached"
         }
       },
@@ -9659,9 +9659,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "replaceKubedbComV1alpha1NamespacedMemcached",
+        "operationId": "replaceKubedbComV1alpha2NamespacedMemcached",
         "parameters": [
           {
             "name": "body",
@@ -9703,7 +9703,7 @@
         "x-kubernetes-action": "put",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Memcached"
         }
       },
@@ -9721,9 +9721,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1NamespacedMemcached",
+        "operationId": "deleteKubedbComV1alpha2NamespacedMemcached",
         "parameters": [
           {
             "name": "body",
@@ -9778,7 +9778,7 @@
         "x-kubernetes-action": "delete",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Memcached"
         }
       },
@@ -9799,9 +9799,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "patchKubedbComV1alpha1NamespacedMemcached",
+        "operationId": "patchKubedbComV1alpha2NamespacedMemcached",
         "parameters": [
           {
             "name": "body",
@@ -9844,7 +9844,7 @@
         "x-kubernetes-action": "patch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Memcached"
         }
       },
@@ -9874,7 +9874,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/mongodbs": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/mongodbs": {
       "get": {
         "description": "list or watch objects of kind MongoDB",
         "consumes": [
@@ -9891,9 +9891,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1NamespacedMongoDB",
+        "operationId": "listKubedbComV1alpha2NamespacedMongoDB",
         "parameters": [
           {
             "uniqueItems": true,
@@ -9963,7 +9963,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MongoDB"
         }
       },
@@ -9981,9 +9981,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "createKubedbComV1alpha1NamespacedMongoDB",
+        "operationId": "createKubedbComV1alpha2NamespacedMongoDB",
         "parameters": [
           {
             "name": "body",
@@ -10031,7 +10031,7 @@
         "x-kubernetes-action": "post",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MongoDB"
         }
       },
@@ -10049,9 +10049,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1CollectionNamespacedMongoDB",
+        "operationId": "deleteKubedbComV1alpha2CollectionNamespacedMongoDB",
         "parameters": [
           {
             "uniqueItems": true,
@@ -10156,7 +10156,7 @@
         "x-kubernetes-action": "deletecollection",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MongoDB"
         }
       },
@@ -10178,7 +10178,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/mongodbs/{name}": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/mongodbs/{name}": {
       "get": {
         "description": "read the specified MongoDB",
         "consumes": [
@@ -10193,9 +10193,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "readKubedbComV1alpha1NamespacedMongoDB",
+        "operationId": "readKubedbComV1alpha2NamespacedMongoDB",
         "responses": {
           "200": {
             "description": "OK",
@@ -10207,7 +10207,7 @@
         "x-kubernetes-action": "get",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MongoDB"
         }
       },
@@ -10225,9 +10225,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "replaceKubedbComV1alpha1NamespacedMongoDB",
+        "operationId": "replaceKubedbComV1alpha2NamespacedMongoDB",
         "parameters": [
           {
             "name": "body",
@@ -10269,7 +10269,7 @@
         "x-kubernetes-action": "put",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MongoDB"
         }
       },
@@ -10287,9 +10287,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1NamespacedMongoDB",
+        "operationId": "deleteKubedbComV1alpha2NamespacedMongoDB",
         "parameters": [
           {
             "name": "body",
@@ -10344,7 +10344,7 @@
         "x-kubernetes-action": "delete",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MongoDB"
         }
       },
@@ -10365,9 +10365,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "patchKubedbComV1alpha1NamespacedMongoDB",
+        "operationId": "patchKubedbComV1alpha2NamespacedMongoDB",
         "parameters": [
           {
             "name": "body",
@@ -10410,7 +10410,7 @@
         "x-kubernetes-action": "patch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MongoDB"
         }
       },
@@ -10440,7 +10440,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/mysqls": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/mysqls": {
       "get": {
         "description": "list or watch objects of kind MySQL",
         "consumes": [
@@ -10457,9 +10457,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1NamespacedMySQL",
+        "operationId": "listKubedbComV1alpha2NamespacedMySQL",
         "parameters": [
           {
             "uniqueItems": true,
@@ -10529,7 +10529,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MySQL"
         }
       },
@@ -10547,9 +10547,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "createKubedbComV1alpha1NamespacedMySQL",
+        "operationId": "createKubedbComV1alpha2NamespacedMySQL",
         "parameters": [
           {
             "name": "body",
@@ -10597,7 +10597,7 @@
         "x-kubernetes-action": "post",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MySQL"
         }
       },
@@ -10615,9 +10615,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1CollectionNamespacedMySQL",
+        "operationId": "deleteKubedbComV1alpha2CollectionNamespacedMySQL",
         "parameters": [
           {
             "uniqueItems": true,
@@ -10722,7 +10722,7 @@
         "x-kubernetes-action": "deletecollection",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MySQL"
         }
       },
@@ -10744,7 +10744,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/mysqls/{name}": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/mysqls/{name}": {
       "get": {
         "description": "read the specified MySQL",
         "consumes": [
@@ -10759,9 +10759,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "readKubedbComV1alpha1NamespacedMySQL",
+        "operationId": "readKubedbComV1alpha2NamespacedMySQL",
         "responses": {
           "200": {
             "description": "OK",
@@ -10773,7 +10773,7 @@
         "x-kubernetes-action": "get",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MySQL"
         }
       },
@@ -10791,9 +10791,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "replaceKubedbComV1alpha1NamespacedMySQL",
+        "operationId": "replaceKubedbComV1alpha2NamespacedMySQL",
         "parameters": [
           {
             "name": "body",
@@ -10835,7 +10835,7 @@
         "x-kubernetes-action": "put",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MySQL"
         }
       },
@@ -10853,9 +10853,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1NamespacedMySQL",
+        "operationId": "deleteKubedbComV1alpha2NamespacedMySQL",
         "parameters": [
           {
             "name": "body",
@@ -10910,7 +10910,7 @@
         "x-kubernetes-action": "delete",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MySQL"
         }
       },
@@ -10931,9 +10931,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "patchKubedbComV1alpha1NamespacedMySQL",
+        "operationId": "patchKubedbComV1alpha2NamespacedMySQL",
         "parameters": [
           {
             "name": "body",
@@ -10976,7 +10976,7 @@
         "x-kubernetes-action": "patch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MySQL"
         }
       },
@@ -11006,7 +11006,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/perconaxtradbs": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/perconaxtradbs": {
       "get": {
         "description": "list or watch objects of kind PerconaXtraDB",
         "consumes": [
@@ -11023,9 +11023,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1NamespacedPerconaXtraDB",
+        "operationId": "listKubedbComV1alpha2NamespacedPerconaXtraDB",
         "parameters": [
           {
             "uniqueItems": true,
@@ -11095,7 +11095,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PerconaXtraDB"
         }
       },
@@ -11113,9 +11113,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "createKubedbComV1alpha1NamespacedPerconaXtraDB",
+        "operationId": "createKubedbComV1alpha2NamespacedPerconaXtraDB",
         "parameters": [
           {
             "name": "body",
@@ -11163,7 +11163,7 @@
         "x-kubernetes-action": "post",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PerconaXtraDB"
         }
       },
@@ -11181,9 +11181,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1CollectionNamespacedPerconaXtraDB",
+        "operationId": "deleteKubedbComV1alpha2CollectionNamespacedPerconaXtraDB",
         "parameters": [
           {
             "uniqueItems": true,
@@ -11288,7 +11288,7 @@
         "x-kubernetes-action": "deletecollection",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PerconaXtraDB"
         }
       },
@@ -11310,7 +11310,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/perconaxtradbs/{name}": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/perconaxtradbs/{name}": {
       "get": {
         "description": "read the specified PerconaXtraDB",
         "consumes": [
@@ -11325,9 +11325,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "readKubedbComV1alpha1NamespacedPerconaXtraDB",
+        "operationId": "readKubedbComV1alpha2NamespacedPerconaXtraDB",
         "responses": {
           "200": {
             "description": "OK",
@@ -11339,7 +11339,7 @@
         "x-kubernetes-action": "get",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PerconaXtraDB"
         }
       },
@@ -11357,9 +11357,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "replaceKubedbComV1alpha1NamespacedPerconaXtraDB",
+        "operationId": "replaceKubedbComV1alpha2NamespacedPerconaXtraDB",
         "parameters": [
           {
             "name": "body",
@@ -11401,7 +11401,7 @@
         "x-kubernetes-action": "put",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PerconaXtraDB"
         }
       },
@@ -11419,9 +11419,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1NamespacedPerconaXtraDB",
+        "operationId": "deleteKubedbComV1alpha2NamespacedPerconaXtraDB",
         "parameters": [
           {
             "name": "body",
@@ -11476,7 +11476,7 @@
         "x-kubernetes-action": "delete",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PerconaXtraDB"
         }
       },
@@ -11497,9 +11497,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "patchKubedbComV1alpha1NamespacedPerconaXtraDB",
+        "operationId": "patchKubedbComV1alpha2NamespacedPerconaXtraDB",
         "parameters": [
           {
             "name": "body",
@@ -11542,7 +11542,7 @@
         "x-kubernetes-action": "patch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PerconaXtraDB"
         }
       },
@@ -11572,7 +11572,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/pgbouncers": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/pgbouncers": {
       "get": {
         "description": "list or watch objects of kind PgBouncer",
         "consumes": [
@@ -11589,9 +11589,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1NamespacedPgBouncer",
+        "operationId": "listKubedbComV1alpha2NamespacedPgBouncer",
         "parameters": [
           {
             "uniqueItems": true,
@@ -11661,7 +11661,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PgBouncer"
         }
       },
@@ -11679,9 +11679,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "createKubedbComV1alpha1NamespacedPgBouncer",
+        "operationId": "createKubedbComV1alpha2NamespacedPgBouncer",
         "parameters": [
           {
             "name": "body",
@@ -11729,7 +11729,7 @@
         "x-kubernetes-action": "post",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PgBouncer"
         }
       },
@@ -11747,9 +11747,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1CollectionNamespacedPgBouncer",
+        "operationId": "deleteKubedbComV1alpha2CollectionNamespacedPgBouncer",
         "parameters": [
           {
             "uniqueItems": true,
@@ -11854,7 +11854,7 @@
         "x-kubernetes-action": "deletecollection",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PgBouncer"
         }
       },
@@ -11876,7 +11876,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/pgbouncers/{name}": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/pgbouncers/{name}": {
       "get": {
         "description": "read the specified PgBouncer",
         "consumes": [
@@ -11891,9 +11891,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "readKubedbComV1alpha1NamespacedPgBouncer",
+        "operationId": "readKubedbComV1alpha2NamespacedPgBouncer",
         "responses": {
           "200": {
             "description": "OK",
@@ -11905,7 +11905,7 @@
         "x-kubernetes-action": "get",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PgBouncer"
         }
       },
@@ -11923,9 +11923,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "replaceKubedbComV1alpha1NamespacedPgBouncer",
+        "operationId": "replaceKubedbComV1alpha2NamespacedPgBouncer",
         "parameters": [
           {
             "name": "body",
@@ -11967,7 +11967,7 @@
         "x-kubernetes-action": "put",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PgBouncer"
         }
       },
@@ -11985,9 +11985,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1NamespacedPgBouncer",
+        "operationId": "deleteKubedbComV1alpha2NamespacedPgBouncer",
         "parameters": [
           {
             "name": "body",
@@ -12042,7 +12042,7 @@
         "x-kubernetes-action": "delete",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PgBouncer"
         }
       },
@@ -12063,9 +12063,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "patchKubedbComV1alpha1NamespacedPgBouncer",
+        "operationId": "patchKubedbComV1alpha2NamespacedPgBouncer",
         "parameters": [
           {
             "name": "body",
@@ -12108,7 +12108,7 @@
         "x-kubernetes-action": "patch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PgBouncer"
         }
       },
@@ -12138,7 +12138,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/postgreses": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/postgreses": {
       "get": {
         "description": "list or watch objects of kind Postgres",
         "consumes": [
@@ -12155,9 +12155,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1NamespacedPostgres",
+        "operationId": "listKubedbComV1alpha2NamespacedPostgres",
         "parameters": [
           {
             "uniqueItems": true,
@@ -12227,7 +12227,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Postgres"
         }
       },
@@ -12245,9 +12245,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "createKubedbComV1alpha1NamespacedPostgres",
+        "operationId": "createKubedbComV1alpha2NamespacedPostgres",
         "parameters": [
           {
             "name": "body",
@@ -12295,7 +12295,7 @@
         "x-kubernetes-action": "post",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Postgres"
         }
       },
@@ -12313,9 +12313,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1CollectionNamespacedPostgres",
+        "operationId": "deleteKubedbComV1alpha2CollectionNamespacedPostgres",
         "parameters": [
           {
             "uniqueItems": true,
@@ -12420,7 +12420,7 @@
         "x-kubernetes-action": "deletecollection",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Postgres"
         }
       },
@@ -12442,7 +12442,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/postgreses/{name}": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/postgreses/{name}": {
       "get": {
         "description": "read the specified Postgres",
         "consumes": [
@@ -12457,9 +12457,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "readKubedbComV1alpha1NamespacedPostgres",
+        "operationId": "readKubedbComV1alpha2NamespacedPostgres",
         "responses": {
           "200": {
             "description": "OK",
@@ -12471,7 +12471,7 @@
         "x-kubernetes-action": "get",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Postgres"
         }
       },
@@ -12489,9 +12489,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "replaceKubedbComV1alpha1NamespacedPostgres",
+        "operationId": "replaceKubedbComV1alpha2NamespacedPostgres",
         "parameters": [
           {
             "name": "body",
@@ -12533,7 +12533,7 @@
         "x-kubernetes-action": "put",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Postgres"
         }
       },
@@ -12551,9 +12551,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1NamespacedPostgres",
+        "operationId": "deleteKubedbComV1alpha2NamespacedPostgres",
         "parameters": [
           {
             "name": "body",
@@ -12608,7 +12608,7 @@
         "x-kubernetes-action": "delete",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Postgres"
         }
       },
@@ -12629,9 +12629,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "patchKubedbComV1alpha1NamespacedPostgres",
+        "operationId": "patchKubedbComV1alpha2NamespacedPostgres",
         "parameters": [
           {
             "name": "body",
@@ -12674,7 +12674,7 @@
         "x-kubernetes-action": "patch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Postgres"
         }
       },
@@ -12704,7 +12704,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/proxysqls": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/proxysqls": {
       "get": {
         "description": "list or watch objects of kind ProxySQL",
         "consumes": [
@@ -12721,9 +12721,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1NamespacedProxySQL",
+        "operationId": "listKubedbComV1alpha2NamespacedProxySQL",
         "parameters": [
           {
             "uniqueItems": true,
@@ -12793,7 +12793,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "ProxySQL"
         }
       },
@@ -12811,9 +12811,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "createKubedbComV1alpha1NamespacedProxySQL",
+        "operationId": "createKubedbComV1alpha2NamespacedProxySQL",
         "parameters": [
           {
             "name": "body",
@@ -12861,7 +12861,7 @@
         "x-kubernetes-action": "post",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "ProxySQL"
         }
       },
@@ -12879,9 +12879,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1CollectionNamespacedProxySQL",
+        "operationId": "deleteKubedbComV1alpha2CollectionNamespacedProxySQL",
         "parameters": [
           {
             "uniqueItems": true,
@@ -12986,7 +12986,7 @@
         "x-kubernetes-action": "deletecollection",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "ProxySQL"
         }
       },
@@ -13008,7 +13008,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/proxysqls/{name}": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/proxysqls/{name}": {
       "get": {
         "description": "read the specified ProxySQL",
         "consumes": [
@@ -13023,9 +13023,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "readKubedbComV1alpha1NamespacedProxySQL",
+        "operationId": "readKubedbComV1alpha2NamespacedProxySQL",
         "responses": {
           "200": {
             "description": "OK",
@@ -13037,7 +13037,7 @@
         "x-kubernetes-action": "get",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "ProxySQL"
         }
       },
@@ -13055,9 +13055,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "replaceKubedbComV1alpha1NamespacedProxySQL",
+        "operationId": "replaceKubedbComV1alpha2NamespacedProxySQL",
         "parameters": [
           {
             "name": "body",
@@ -13099,7 +13099,7 @@
         "x-kubernetes-action": "put",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "ProxySQL"
         }
       },
@@ -13117,9 +13117,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1NamespacedProxySQL",
+        "operationId": "deleteKubedbComV1alpha2NamespacedProxySQL",
         "parameters": [
           {
             "name": "body",
@@ -13174,7 +13174,7 @@
         "x-kubernetes-action": "delete",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "ProxySQL"
         }
       },
@@ -13195,9 +13195,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "patchKubedbComV1alpha1NamespacedProxySQL",
+        "operationId": "patchKubedbComV1alpha2NamespacedProxySQL",
         "parameters": [
           {
             "name": "body",
@@ -13240,7 +13240,7 @@
         "x-kubernetes-action": "patch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "ProxySQL"
         }
       },
@@ -13270,7 +13270,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/redises": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/redises": {
       "get": {
         "description": "list or watch objects of kind Redis",
         "consumes": [
@@ -13287,9 +13287,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1NamespacedRedis",
+        "operationId": "listKubedbComV1alpha2NamespacedRedis",
         "parameters": [
           {
             "uniqueItems": true,
@@ -13359,7 +13359,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Redis"
         }
       },
@@ -13377,9 +13377,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "createKubedbComV1alpha1NamespacedRedis",
+        "operationId": "createKubedbComV1alpha2NamespacedRedis",
         "parameters": [
           {
             "name": "body",
@@ -13427,7 +13427,7 @@
         "x-kubernetes-action": "post",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Redis"
         }
       },
@@ -13445,9 +13445,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1CollectionNamespacedRedis",
+        "operationId": "deleteKubedbComV1alpha2CollectionNamespacedRedis",
         "parameters": [
           {
             "uniqueItems": true,
@@ -13552,7 +13552,7 @@
         "x-kubernetes-action": "deletecollection",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Redis"
         }
       },
@@ -13574,7 +13574,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/namespaces/{namespace}/redises/{name}": {
+    "/apis/kubedb.com/v1alpha2/namespaces/{namespace}/redises/{name}": {
       "get": {
         "description": "read the specified Redis",
         "consumes": [
@@ -13589,9 +13589,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "readKubedbComV1alpha1NamespacedRedis",
+        "operationId": "readKubedbComV1alpha2NamespacedRedis",
         "responses": {
           "200": {
             "description": "OK",
@@ -13603,7 +13603,7 @@
         "x-kubernetes-action": "get",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Redis"
         }
       },
@@ -13621,9 +13621,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "replaceKubedbComV1alpha1NamespacedRedis",
+        "operationId": "replaceKubedbComV1alpha2NamespacedRedis",
         "parameters": [
           {
             "name": "body",
@@ -13665,7 +13665,7 @@
         "x-kubernetes-action": "put",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Redis"
         }
       },
@@ -13683,9 +13683,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "deleteKubedbComV1alpha1NamespacedRedis",
+        "operationId": "deleteKubedbComV1alpha2NamespacedRedis",
         "parameters": [
           {
             "name": "body",
@@ -13740,7 +13740,7 @@
         "x-kubernetes-action": "delete",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Redis"
         }
       },
@@ -13761,9 +13761,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "patchKubedbComV1alpha1NamespacedRedis",
+        "operationId": "patchKubedbComV1alpha2NamespacedRedis",
         "parameters": [
           {
             "name": "body",
@@ -13806,7 +13806,7 @@
         "x-kubernetes-action": "patch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Redis"
         }
       },
@@ -13836,7 +13836,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/perconaxtradbs": {
+    "/apis/kubedb.com/v1alpha2/perconaxtradbs": {
       "get": {
         "description": "list or watch objects of kind PerconaXtraDB",
         "consumes": [
@@ -13853,9 +13853,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1PerconaXtraDBForAllNamespaces",
+        "operationId": "listKubedbComV1alpha2PerconaXtraDBForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -13867,7 +13867,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PerconaXtraDB"
         }
       },
@@ -13937,7 +13937,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/pgbouncers": {
+    "/apis/kubedb.com/v1alpha2/pgbouncers": {
       "get": {
         "description": "list or watch objects of kind PgBouncer",
         "consumes": [
@@ -13954,9 +13954,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1PgBouncerForAllNamespaces",
+        "operationId": "listKubedbComV1alpha2PgBouncerForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -13968,7 +13968,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PgBouncer"
         }
       },
@@ -14038,7 +14038,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/postgreses": {
+    "/apis/kubedb.com/v1alpha2/postgreses": {
       "get": {
         "description": "list or watch objects of kind Postgres",
         "consumes": [
@@ -14055,9 +14055,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1PostgresForAllNamespaces",
+        "operationId": "listKubedbComV1alpha2PostgresForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -14069,7 +14069,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Postgres"
         }
       },
@@ -14139,7 +14139,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/proxysqls": {
+    "/apis/kubedb.com/v1alpha2/proxysqls": {
       "get": {
         "description": "list or watch objects of kind ProxySQL",
         "consumes": [
@@ -14156,9 +14156,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1ProxySQLForAllNamespaces",
+        "operationId": "listKubedbComV1alpha2ProxySQLForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -14170,7 +14170,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "ProxySQL"
         }
       },
@@ -14240,7 +14240,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/redises": {
+    "/apis/kubedb.com/v1alpha2/redises": {
       "get": {
         "description": "list or watch objects of kind Redis",
         "consumes": [
@@ -14257,9 +14257,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "listKubedbComV1alpha1RedisForAllNamespaces",
+        "operationId": "listKubedbComV1alpha2RedisForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -14271,7 +14271,7 @@
         "x-kubernetes-action": "list",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Redis"
         }
       },
@@ -14341,7 +14341,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/elasticsearches": {
+    "/apis/kubedb.com/v1alpha2/watch/elasticsearches": {
       "get": {
         "description": "watch individual changes to a list of Elasticsearch. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -14358,9 +14358,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1ElasticsearchListForAllNamespaces",
+        "operationId": "watchKubedbComV1alpha2ElasticsearchListForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -14372,7 +14372,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Elasticsearch"
         }
       },
@@ -14442,7 +14442,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/etcds": {
+    "/apis/kubedb.com/v1alpha2/watch/etcds": {
       "get": {
         "description": "watch individual changes to a list of Etcd. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -14459,9 +14459,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1EtcdListForAllNamespaces",
+        "operationId": "watchKubedbComV1alpha2EtcdListForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -14473,7 +14473,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Etcd"
         }
       },
@@ -14543,7 +14543,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/mariadbs": {
+    "/apis/kubedb.com/v1alpha2/watch/mariadbs": {
       "get": {
         "description": "watch individual changes to a list of MariaDB. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -14560,9 +14560,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1MariaDBListForAllNamespaces",
+        "operationId": "watchKubedbComV1alpha2MariaDBListForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -14574,7 +14574,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MariaDB"
         }
       },
@@ -14644,7 +14644,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/memcacheds": {
+    "/apis/kubedb.com/v1alpha2/watch/memcacheds": {
       "get": {
         "description": "watch individual changes to a list of Memcached. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -14661,9 +14661,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1MemcachedListForAllNamespaces",
+        "operationId": "watchKubedbComV1alpha2MemcachedListForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -14675,7 +14675,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Memcached"
         }
       },
@@ -14745,7 +14745,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/mongodbs": {
+    "/apis/kubedb.com/v1alpha2/watch/mongodbs": {
       "get": {
         "description": "watch individual changes to a list of MongoDB. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -14762,9 +14762,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1MongoDBListForAllNamespaces",
+        "operationId": "watchKubedbComV1alpha2MongoDBListForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -14776,7 +14776,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MongoDB"
         }
       },
@@ -14846,7 +14846,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/mysqls": {
+    "/apis/kubedb.com/v1alpha2/watch/mysqls": {
       "get": {
         "description": "watch individual changes to a list of MySQL. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -14863,9 +14863,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1MySQLListForAllNamespaces",
+        "operationId": "watchKubedbComV1alpha2MySQLListForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -14877,7 +14877,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MySQL"
         }
       },
@@ -14947,7 +14947,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/elasticsearches": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/elasticsearches": {
       "get": {
         "description": "watch individual changes to a list of Elasticsearch. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -14964,9 +14964,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedElasticsearchList",
+        "operationId": "watchKubedbComV1alpha2NamespacedElasticsearchList",
         "responses": {
           "200": {
             "description": "OK",
@@ -14978,7 +14978,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Elasticsearch"
         }
       },
@@ -15056,7 +15056,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/elasticsearches/{name}": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/elasticsearches/{name}": {
       "get": {
         "description": "watch changes to an object of kind Elasticsearch. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter.",
         "consumes": [
@@ -15073,9 +15073,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedElasticsearch",
+        "operationId": "watchKubedbComV1alpha2NamespacedElasticsearch",
         "responses": {
           "200": {
             "description": "OK",
@@ -15087,7 +15087,7 @@
         "x-kubernetes-action": "watch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Elasticsearch"
         }
       },
@@ -15173,7 +15173,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/etcds": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/etcds": {
       "get": {
         "description": "watch individual changes to a list of Etcd. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -15190,9 +15190,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedEtcdList",
+        "operationId": "watchKubedbComV1alpha2NamespacedEtcdList",
         "responses": {
           "200": {
             "description": "OK",
@@ -15204,7 +15204,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Etcd"
         }
       },
@@ -15282,7 +15282,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/etcds/{name}": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/etcds/{name}": {
       "get": {
         "description": "watch changes to an object of kind Etcd. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter.",
         "consumes": [
@@ -15299,9 +15299,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedEtcd",
+        "operationId": "watchKubedbComV1alpha2NamespacedEtcd",
         "responses": {
           "200": {
             "description": "OK",
@@ -15313,7 +15313,7 @@
         "x-kubernetes-action": "watch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Etcd"
         }
       },
@@ -15399,7 +15399,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/mariadbs": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/mariadbs": {
       "get": {
         "description": "watch individual changes to a list of MariaDB. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -15416,9 +15416,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedMariaDBList",
+        "operationId": "watchKubedbComV1alpha2NamespacedMariaDBList",
         "responses": {
           "200": {
             "description": "OK",
@@ -15430,7 +15430,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MariaDB"
         }
       },
@@ -15508,7 +15508,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/mariadbs/{name}": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/mariadbs/{name}": {
       "get": {
         "description": "watch changes to an object of kind MariaDB. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter.",
         "consumes": [
@@ -15525,9 +15525,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedMariaDB",
+        "operationId": "watchKubedbComV1alpha2NamespacedMariaDB",
         "responses": {
           "200": {
             "description": "OK",
@@ -15539,7 +15539,7 @@
         "x-kubernetes-action": "watch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MariaDB"
         }
       },
@@ -15625,7 +15625,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/memcacheds": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/memcacheds": {
       "get": {
         "description": "watch individual changes to a list of Memcached. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -15642,9 +15642,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedMemcachedList",
+        "operationId": "watchKubedbComV1alpha2NamespacedMemcachedList",
         "responses": {
           "200": {
             "description": "OK",
@@ -15656,7 +15656,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Memcached"
         }
       },
@@ -15734,7 +15734,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/memcacheds/{name}": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/memcacheds/{name}": {
       "get": {
         "description": "watch changes to an object of kind Memcached. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter.",
         "consumes": [
@@ -15751,9 +15751,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedMemcached",
+        "operationId": "watchKubedbComV1alpha2NamespacedMemcached",
         "responses": {
           "200": {
             "description": "OK",
@@ -15765,7 +15765,7 @@
         "x-kubernetes-action": "watch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Memcached"
         }
       },
@@ -15851,7 +15851,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/mongodbs": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/mongodbs": {
       "get": {
         "description": "watch individual changes to a list of MongoDB. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -15868,9 +15868,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedMongoDBList",
+        "operationId": "watchKubedbComV1alpha2NamespacedMongoDBList",
         "responses": {
           "200": {
             "description": "OK",
@@ -15882,7 +15882,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MongoDB"
         }
       },
@@ -15960,7 +15960,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/mongodbs/{name}": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/mongodbs/{name}": {
       "get": {
         "description": "watch changes to an object of kind MongoDB. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter.",
         "consumes": [
@@ -15977,9 +15977,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedMongoDB",
+        "operationId": "watchKubedbComV1alpha2NamespacedMongoDB",
         "responses": {
           "200": {
             "description": "OK",
@@ -15991,7 +15991,7 @@
         "x-kubernetes-action": "watch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MongoDB"
         }
       },
@@ -16077,7 +16077,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/mysqls": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/mysqls": {
       "get": {
         "description": "watch individual changes to a list of MySQL. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -16094,9 +16094,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedMySQLList",
+        "operationId": "watchKubedbComV1alpha2NamespacedMySQLList",
         "responses": {
           "200": {
             "description": "OK",
@@ -16108,7 +16108,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MySQL"
         }
       },
@@ -16186,7 +16186,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/mysqls/{name}": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/mysqls/{name}": {
       "get": {
         "description": "watch changes to an object of kind MySQL. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter.",
         "consumes": [
@@ -16203,9 +16203,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedMySQL",
+        "operationId": "watchKubedbComV1alpha2NamespacedMySQL",
         "responses": {
           "200": {
             "description": "OK",
@@ -16217,7 +16217,7 @@
         "x-kubernetes-action": "watch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "MySQL"
         }
       },
@@ -16303,7 +16303,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/perconaxtradbs": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/perconaxtradbs": {
       "get": {
         "description": "watch individual changes to a list of PerconaXtraDB. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -16320,9 +16320,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedPerconaXtraDBList",
+        "operationId": "watchKubedbComV1alpha2NamespacedPerconaXtraDBList",
         "responses": {
           "200": {
             "description": "OK",
@@ -16334,7 +16334,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PerconaXtraDB"
         }
       },
@@ -16412,7 +16412,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/perconaxtradbs/{name}": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/perconaxtradbs/{name}": {
       "get": {
         "description": "watch changes to an object of kind PerconaXtraDB. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter.",
         "consumes": [
@@ -16429,9 +16429,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedPerconaXtraDB",
+        "operationId": "watchKubedbComV1alpha2NamespacedPerconaXtraDB",
         "responses": {
           "200": {
             "description": "OK",
@@ -16443,7 +16443,7 @@
         "x-kubernetes-action": "watch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PerconaXtraDB"
         }
       },
@@ -16529,7 +16529,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/pgbouncers": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/pgbouncers": {
       "get": {
         "description": "watch individual changes to a list of PgBouncer. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -16546,9 +16546,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedPgBouncerList",
+        "operationId": "watchKubedbComV1alpha2NamespacedPgBouncerList",
         "responses": {
           "200": {
             "description": "OK",
@@ -16560,7 +16560,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PgBouncer"
         }
       },
@@ -16638,7 +16638,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/pgbouncers/{name}": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/pgbouncers/{name}": {
       "get": {
         "description": "watch changes to an object of kind PgBouncer. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter.",
         "consumes": [
@@ -16655,9 +16655,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedPgBouncer",
+        "operationId": "watchKubedbComV1alpha2NamespacedPgBouncer",
         "responses": {
           "200": {
             "description": "OK",
@@ -16669,7 +16669,7 @@
         "x-kubernetes-action": "watch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PgBouncer"
         }
       },
@@ -16755,7 +16755,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/postgreses": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/postgreses": {
       "get": {
         "description": "watch individual changes to a list of Postgres. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -16772,9 +16772,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedPostgresList",
+        "operationId": "watchKubedbComV1alpha2NamespacedPostgresList",
         "responses": {
           "200": {
             "description": "OK",
@@ -16786,7 +16786,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Postgres"
         }
       },
@@ -16864,7 +16864,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/postgreses/{name}": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/postgreses/{name}": {
       "get": {
         "description": "watch changes to an object of kind Postgres. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter.",
         "consumes": [
@@ -16881,9 +16881,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedPostgres",
+        "operationId": "watchKubedbComV1alpha2NamespacedPostgres",
         "responses": {
           "200": {
             "description": "OK",
@@ -16895,7 +16895,7 @@
         "x-kubernetes-action": "watch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Postgres"
         }
       },
@@ -16981,7 +16981,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/proxysqls": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/proxysqls": {
       "get": {
         "description": "watch individual changes to a list of ProxySQL. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -16998,9 +16998,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedProxySQLList",
+        "operationId": "watchKubedbComV1alpha2NamespacedProxySQLList",
         "responses": {
           "200": {
             "description": "OK",
@@ -17012,7 +17012,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "ProxySQL"
         }
       },
@@ -17090,7 +17090,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/proxysqls/{name}": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/proxysqls/{name}": {
       "get": {
         "description": "watch changes to an object of kind ProxySQL. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter.",
         "consumes": [
@@ -17107,9 +17107,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedProxySQL",
+        "operationId": "watchKubedbComV1alpha2NamespacedProxySQL",
         "responses": {
           "200": {
             "description": "OK",
@@ -17121,7 +17121,7 @@
         "x-kubernetes-action": "watch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "ProxySQL"
         }
       },
@@ -17207,7 +17207,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/redises": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/redises": {
       "get": {
         "description": "watch individual changes to a list of Redis. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -17224,9 +17224,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedRedisList",
+        "operationId": "watchKubedbComV1alpha2NamespacedRedisList",
         "responses": {
           "200": {
             "description": "OK",
@@ -17238,7 +17238,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Redis"
         }
       },
@@ -17316,7 +17316,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/namespaces/{namespace}/redises/{name}": {
+    "/apis/kubedb.com/v1alpha2/watch/namespaces/{namespace}/redises/{name}": {
       "get": {
         "description": "watch changes to an object of kind Redis. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter.",
         "consumes": [
@@ -17333,9 +17333,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1NamespacedRedis",
+        "operationId": "watchKubedbComV1alpha2NamespacedRedis",
         "responses": {
           "200": {
             "description": "OK",
@@ -17347,7 +17347,7 @@
         "x-kubernetes-action": "watch",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Redis"
         }
       },
@@ -17433,7 +17433,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/perconaxtradbs": {
+    "/apis/kubedb.com/v1alpha2/watch/perconaxtradbs": {
       "get": {
         "description": "watch individual changes to a list of PerconaXtraDB. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -17450,9 +17450,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1PerconaXtraDBListForAllNamespaces",
+        "operationId": "watchKubedbComV1alpha2PerconaXtraDBListForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -17464,7 +17464,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PerconaXtraDB"
         }
       },
@@ -17534,7 +17534,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/pgbouncers": {
+    "/apis/kubedb.com/v1alpha2/watch/pgbouncers": {
       "get": {
         "description": "watch individual changes to a list of PgBouncer. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -17551,9 +17551,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1PgBouncerListForAllNamespaces",
+        "operationId": "watchKubedbComV1alpha2PgBouncerListForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -17565,7 +17565,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "PgBouncer"
         }
       },
@@ -17635,7 +17635,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/postgreses": {
+    "/apis/kubedb.com/v1alpha2/watch/postgreses": {
       "get": {
         "description": "watch individual changes to a list of Postgres. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -17652,9 +17652,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1PostgresListForAllNamespaces",
+        "operationId": "watchKubedbComV1alpha2PostgresListForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -17666,7 +17666,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Postgres"
         }
       },
@@ -17736,7 +17736,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/proxysqls": {
+    "/apis/kubedb.com/v1alpha2/watch/proxysqls": {
       "get": {
         "description": "watch individual changes to a list of ProxySQL. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -17753,9 +17753,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1ProxySQLListForAllNamespaces",
+        "operationId": "watchKubedbComV1alpha2ProxySQLListForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -17767,7 +17767,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "ProxySQL"
         }
       },
@@ -17837,7 +17837,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/v1alpha1/watch/redises": {
+    "/apis/kubedb.com/v1alpha2/watch/redises": {
       "get": {
         "description": "watch individual changes to a list of Redis. deprecated: use the 'watch' parameter with a list operation instead.",
         "consumes": [
@@ -17854,9 +17854,9 @@
           "https"
         ],
         "tags": [
-          "kubedbCom_v1alpha1"
+          "kubedbCom_v1alpha2"
         ],
-        "operationId": "watchKubedbComV1alpha1RedisListForAllNamespaces",
+        "operationId": "watchKubedbComV1alpha2RedisListForAllNamespaces",
         "responses": {
           "200": {
             "description": "OK",
@@ -17868,7 +17868,7 @@
         "x-kubernetes-action": "watchlist",
         "x-kubernetes-group-version-kind": {
           "group": "kubedb.com",
-          "version": "v1alpha1",
+          "version": "v1alpha2",
           "kind": "Redis"
         }
       },
@@ -28412,7 +28412,7 @@
         {
           "group": "kubedb.com",
           "kind": "Elasticsearch",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -28461,7 +28461,7 @@
         {
           "group": "kubedb.com",
           "kind": "ElasticsearchList",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -28715,7 +28715,7 @@
         {
           "group": "kubedb.com",
           "kind": "Etcd",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -28745,7 +28745,7 @@
         {
           "group": "kubedb.com",
           "kind": "EtcdList",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -28893,7 +28893,7 @@
         {
           "group": "kubedb.com",
           "kind": "MariaDB",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -28923,7 +28923,7 @@
         {
           "group": "kubedb.com",
           "kind": "MariaDBList",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -29047,7 +29047,7 @@
         {
           "group": "kubedb.com",
           "kind": "Memcached",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -29077,7 +29077,7 @@
         {
           "group": "kubedb.com",
           "kind": "MemcachedList",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -29176,7 +29176,7 @@
         {
           "group": "kubedb.com",
           "kind": "MongoDB",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -29235,7 +29235,7 @@
         {
           "group": "kubedb.com",
           "kind": "MongoDBList",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -29464,7 +29464,7 @@
         {
           "group": "kubedb.com",
           "kind": "MySQL",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -29525,7 +29525,7 @@
         {
           "group": "kubedb.com",
           "kind": "MySQLList",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -29644,7 +29644,7 @@
         {
           "group": "kubedb.com",
           "kind": "PerconaXtraDB",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -29674,7 +29674,7 @@
         {
           "group": "kubedb.com",
           "kind": "PerconaXtraDBList",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -29785,7 +29785,7 @@
         {
           "group": "kubedb.com",
           "kind": "PgBouncer",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -29815,7 +29815,7 @@
         {
           "group": "kubedb.com",
           "kind": "PgBouncerList",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -29913,7 +29913,7 @@
         {
           "group": "kubedb.com",
           "kind": "Postgres",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -29951,7 +29951,7 @@
         {
           "group": "kubedb.com",
           "kind": "PostgresList",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -30117,7 +30117,7 @@
         {
           "group": "kubedb.com",
           "kind": "ProxySQL",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -30161,7 +30161,7 @@
         {
           "group": "kubedb.com",
           "kind": "ProxySQLList",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -30281,7 +30281,7 @@
         {
           "group": "kubedb.com",
           "kind": "Redis",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -30326,7 +30326,7 @@
         {
           "group": "kubedb.com",
           "kind": "RedisList",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         }
       ]
     },
@@ -34553,7 +34553,7 @@
         {
           "group": "kubedb.com",
           "kind": "DeleteOptions",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         },
         {
           "group": "ops.kubedb.com",
@@ -34902,7 +34902,7 @@
         {
           "group": "kubedb.com",
           "kind": "Status",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         },
         {
           "group": "ops.kubedb.com",
@@ -34998,7 +34998,7 @@
         {
           "group": "kubedb.com",
           "kind": "WatchEvent",
-          "version": "v1alpha1"
+          "version": "v1alpha2"
         },
         {
           "group": "ops.kubedb.com",
