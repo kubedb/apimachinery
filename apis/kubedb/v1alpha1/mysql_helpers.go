@@ -189,10 +189,10 @@ func (m *MySQL) SetDefaults() {
 
 	m.Spec.Monitor.SetDefaults()
 
-	m.setDefaultTLSConfig()
+	m.SetTLSDefaults()
 }
 
-func (m *MySQL) setDefaultTLSConfig() {
+func (m *MySQL) SetTLSDefaults() {
 	if m.Spec.TLS == nil || m.Spec.TLS.IssuerRef == nil {
 		return
 	}

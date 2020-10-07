@@ -149,10 +149,10 @@ func (p *PgBouncer) SetDefaults() {
 	}
 	p.Spec.Monitor.SetDefaults()
 
-	p.setDefaultTLSConfig()
+	p.SetTLSDefaults()
 }
 
-func (p *PgBouncer) setDefaultTLSConfig() {
+func (p *PgBouncer) SetTLSDefaults() {
 	if p.Spec.TLS == nil || p.Spec.TLS.IssuerRef == nil {
 		return
 	}

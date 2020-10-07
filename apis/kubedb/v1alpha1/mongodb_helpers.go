@@ -406,10 +406,10 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		m.setDefaultAffinity(m.Spec.PodTemplate, m.OffshootSelectors(), topology)
 	}
 
-	m.setDefaultTLSConfig()
+	m.SetTLSDefaults()
 }
 
-func (m *MongoDB) setDefaultTLSConfig() {
+func (m *MongoDB) SetTLSDefaults() {
 	if m.Spec.TLS == nil || m.Spec.TLS.IssuerRef == nil {
 		return
 	}
