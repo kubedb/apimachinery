@@ -31342,8 +31342,30 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfiguration": {
+      "type": "object",
+      "properties": {
+        "configMap": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "remove": {
+          "type": "boolean"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfigurationSpec": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "mysql": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfiguration"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLHorizontalScalingSpec": {
       "type": "object",
@@ -31521,7 +31543,12 @@
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVolumeExpansionSpec": {
       "description": "MySQLVolumeExpansionSpec is the spec for MySQL volume expansion",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "mysql": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBCustomConfigurationSpec": {
       "type": "object"
