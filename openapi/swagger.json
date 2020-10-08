@@ -28830,6 +28830,10 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec": {
       "type": "object",
       "properties": {
+        "initialized": {
+          "description": "Initialized indicates that this database has been initialized. This will be set by the operator when status.conditions[\"Provisioned\"] is set to ensure that database is not mistakenly reset when recovered using disaster recovery tools.",
+          "type": "boolean"
+        },
         "postgresWAL": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresWALSourceSpec"
         },
