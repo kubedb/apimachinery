@@ -65,6 +65,9 @@ const (
 	ElasticsearchOpendistroReadallMonitorRole    = "readall_and_monitor"
 	ElasticsearchSearchGuardReadallMonitorRoleV7 = "SGS_READALL_AND_MONITOR"
 	ElasticsearchSearchGuardReadallMonitorRoleV6 = "sg_readall_and_monitor"
+	ElasticsearchStatusGreen                     = "green"
+	ElasticsearchStatusYellow                    = "yellow"
+	ElasticsearchStatusRed                       = "red"
 
 	// Ref:
 	//	- https://www.elastic.co/guide/en/elasticsearch/reference/7.6/heap-size.html#heap-size
