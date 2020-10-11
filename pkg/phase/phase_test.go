@@ -22,6 +22,7 @@ import (
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
@@ -45,7 +46,7 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseProvisioning,
@@ -55,11 +56,11 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionFalse,
+					Status: core.ConditionFalse,
 				},
 			},
 			expectedPhase: api.DatabasePhaseCritical,
@@ -69,11 +70,11 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseProvisioning,
@@ -83,15 +84,15 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: kmapi.ConditionFalse,
+					Status: core.ConditionFalse,
 				},
 			},
 			expectedPhase: api.DatabasePhaseNotReady,
@@ -101,15 +102,15 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseProvisioning,
@@ -119,19 +120,19 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestoreStarted,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTime,
 				},
 			},
@@ -142,24 +143,24 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestoreStarted,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTime,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 			},
@@ -170,24 +171,24 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestoreStarted,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTime,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             kmapi.ConditionFalse,
+					Status:             core.ConditionFalse,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 			},
@@ -198,24 +199,24 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestoreStarted,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTime,
 				},
 			},
@@ -226,24 +227,24 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestoreStarted,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             kmapi.ConditionFalse,
+					Status:             core.ConditionFalse,
 					LastTransitionTime: lastTransactionTime,
 				},
 			},
@@ -254,29 +255,29 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestoreStarted,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTime,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
 					Type:   api.DatabaseReady,
-					Status: kmapi.ConditionFalse,
+					Status: core.ConditionFalse,
 				},
 			},
 			expectedPhase: api.DatabasePhaseCritical,
@@ -286,29 +287,29 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestoreStarted,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTime,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
 					Type:   api.DatabaseReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseReady,
@@ -318,29 +319,29 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: kmapi.ConditionFalse,
+					Status: core.ConditionFalse,
 				},
 				{
 					Type:               api.DatabaseDataRestoreStarted,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTime,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
 					Type:   api.DatabaseReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseNotReady,
@@ -350,37 +351,37 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestoreStarted,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTime,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             kmapi.ConditionTrue,
+					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
 					Type:   api.DatabaseReady,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseProvisioned,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabasePaused,
-					Status: kmapi.ConditionTrue,
+					Status: core.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseReady,
