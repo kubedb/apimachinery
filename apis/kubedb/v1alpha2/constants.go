@@ -172,6 +172,7 @@ const (
 	DatabaseNotAcceptingConnectionRequest   = "DatabaseNotAcceptingConnectionRequest"
 	ReadinessCheckSucceeded                 = "ReadinessCheckSucceeded"
 	ReadinessCheckFailed                    = "ReadinessCheckFailed"
+	DatabaseProvisioningStartedSuccessfully = "DatabaseProvisioningStartedSuccessfully"
 	DatabaseSuccessfullyProvisioned         = "DatabaseSuccessfullyProvisioned"
 )
 
