@@ -168,6 +168,11 @@ const (
 	FailedToRestoreData                     = "FailedToRestoreData"
 	AllReplicasAreReady                     = "AllReplicasReady"
 	SomeReplicasAreNotReady                 = "SomeReplicasNotReady"
+	DatabaseAcceptingConnectionRequest      = "DatabaseAcceptingConnectionRequest"
+	DatabaseNotAcceptingConnectionRequest   = "DatabaseNotAcceptingConnectionRequest"
+	ReadinessCheckSucceeded                 = "ReadinessCheckSucceeded"
+	ReadinessCheckFailed                    = "ReadinessCheckFailed"
+	DatabaseSuccessfullyProvisioned         = "DatabaseSuccessfullyProvisioned"
 )
 
 // Resource kind related constants
