@@ -79,23 +79,27 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 		}
 	}
 
-	// ================================= Handling "ReplicaReady" condition ==========================
-	// If the condition is present and its "false", then the phase should be "Critical".
-	if kmapi.IsConditionFalse(conditions, api.DatabaseReplicaReady) {
-		return api.DatabasePhaseCritical
-	}
-
 	// ================================= Handling "AcceptingConnection" condition ==========================
 	// If the condition is present and its "false", then the phase should be "NotReady".
-	if kmapi.IsConditionFalse(conditions, api.DatabaseAcceptingConnection) {
+	// Skip if the database isn't provisioned yet.
+	if kmapi.IsConditionFalse(conditions, api.DatabaseAcceptingConnection) && kmapi.IsConditionTrue(conditions, api.DatabaseProvisioned) {
 		return api.DatabasePhaseNotReady
 	}
 
-	// ================================= Handling "Ready" condition ==========================
-	if kmapi.IsConditionFalse(conditions, api.DatabaseReady) {
+	// ================================= Handling "ReplicaReady" condition ==========================
+	// If the condition is present and its "false", then the phase should be "Critical".
+	// Skip if the database isn't provisioned yet.
+	if kmapi.IsConditionFalse(conditions, api.DatabaseReplicaReady) && kmapi.IsConditionTrue(conditions, api.DatabaseProvisioned) {
 		return api.DatabasePhaseCritical
 	}
-	if kmapi.IsConditionTrue(conditions, api.DatabaseReady) {
+
+	// ================================= Handling "Ready" condition ==========================
+	// Skip if the database isn't provisioned yet.
+	if kmapi.IsConditionFalse(conditions, api.DatabaseReady) && kmapi.IsConditionTrue(conditions, api.DatabaseProvisioned) {
+		return api.DatabasePhaseCritical
+	}
+	// Ready, if the database is provisioned and readinessProbe passed.
+	if kmapi.IsConditionTrue(conditions, api.DatabaseReady) && kmapi.IsConditionTrue(conditions, api.DatabaseProvisioned) {
 		return api.DatabasePhaseReady
 	}
 
