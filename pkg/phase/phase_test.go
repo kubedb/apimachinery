@@ -63,7 +63,7 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: core.ConditionFalse,
 				},
 			},
-			expectedPhase: api.DatabasePhaseCritical,
+			expectedPhase: api.DatabasePhaseProvisioning,
 		},
 		{
 			name: "All replicas are ready but no other conditions present yet",
@@ -93,6 +93,10 @@ func TestPhaseForCondition(t *testing.T) {
 				{
 					Type:   api.DatabaseAcceptingConnection,
 					Status: core.ConditionFalse,
+				},
+				{
+					Type:   api.DatabaseProvisioned,
+					Status: core.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseNotReady,
@@ -276,6 +280,10 @@ func TestPhaseForCondition(t *testing.T) {
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
+					Type:   api.DatabaseProvisioned,
+					Status: core.ConditionTrue,
+				},
+				{
 					Type:   api.DatabaseReady,
 					Status: core.ConditionFalse,
 				},
@@ -308,6 +316,10 @@ func TestPhaseForCondition(t *testing.T) {
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
+					Type:   api.DatabaseProvisioned,
+					Status: core.ConditionTrue,
+				},
+				{
 					Type:   api.DatabaseReady,
 					Status: core.ConditionTrue,
 				},
@@ -338,6 +350,10 @@ func TestPhaseForCondition(t *testing.T) {
 					Type:               api.DatabaseDataRestored,
 					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
+				},
+				{
+					Type:   api.DatabaseProvisioned,
+					Status: core.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReady,
