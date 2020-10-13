@@ -45,6 +45,13 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 		phase = api.DatabasePhaseProvisioning
 	}
 
+	// ================================== Handling "Halted" condition =======================================
+	// The "Halted" condition has higher priority, that's why it is placed at the top.
+	// If the condition is present and its "true", then the phase should be "Halted".
+	if kmapi.IsConditionTrue(conditions, api.DatabaseHalted) {
+		return api.DatabasePhaseHalted
+	}
+
 	// =================================== Handling "DataRestoreStarted" and "DataRestored" conditions  ==================================================
 	// For data restoring, there could be the following scenarios:
 	// 1. Data cond["DataRestoreStarted"] = nil and cond["DataRestored"] = nil. In this case, phase will depend on the other conditions.
