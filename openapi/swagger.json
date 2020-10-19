@@ -28373,6 +28373,10 @@
           "description": "Alias to uniquely identify a target database running inside a specific Postgres instance.",
           "type": "string"
         },
+        "authSecretRef": {
+          "description": "AuthSecretRef points to a secret that contains the credentials (username and password) of an existing user of this database. It is used to bind a single user to this specific database connection.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
         "databaseName": {
           "description": "DatabaseName is the name of the target database inside a Postgres instance.",
           "type": "string"
@@ -28380,10 +28384,6 @@
         "databaseRef": {
           "description": "DatabaseRef specifies the database appbinding reference in any namespace.",
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.AppReference"
-        },
-        "databaseSecretRef": {
-          "description": "DatabaseSecretRef points to a secret that contains the credentials (username and password) of an existing user of this database. It is used to bind a single user to this specific database connection.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         }
       }
     },
@@ -28538,13 +28538,13 @@
         "version"
       ],
       "properties": {
-        "configSource": {
-          "description": "ConfigSource is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
-        },
-        "databaseSecret": {
+        "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "disableSecurity": {
           "description": "disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user. If unset, default is false",
@@ -28755,9 +28755,9 @@
         "version"
       ],
       "properties": {
-        "databaseSecret": {
+        "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -28937,13 +28937,13 @@
         "version"
       ],
       "properties": {
-        "configSource": {
-          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
-        },
-        "databaseSecret": {
+        "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -29091,9 +29091,9 @@
         "version"
       ],
       "properties": {
-        "configSource": {
-          "description": "ConfigSource is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "dataVolume": {
           "description": "DataVolume is an optional field to add one volume to each memcached pod.  The volume will be made available under /data and owned by the memcached user.\n\nWhile not mandated by the API and not configured automatically, the intended purpose is to use that volume for memcached's persistent memory support (https://memcached.org/blog/persistent-memory/) by adding the memory-file and memory-limit options to the config (https://github.com/memcached/memcached/wiki/WarmRestart).\n\nFor that purpose, a CSI inline volume provided by PMEM-CSI can be used, in which case each pod will get its own, empty volume. Warm restarts are not supported.\n\nFor testing, an empty dir can be used instead.",
@@ -29190,9 +29190,9 @@
         "replicas"
       ],
       "properties": {
-        "configSource": {
-          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
@@ -29249,9 +29249,9 @@
         "replicas"
       ],
       "properties": {
-        "configSource": {
-          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
@@ -29287,9 +29287,9 @@
         "replicas"
       ],
       "properties": {
-        "configSource": {
-          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
@@ -29343,17 +29343,17 @@
         "version"
       ],
       "properties": {
+        "authSecret": {
+          "description": "Database authentication secret",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
         "clusterAuthMode": {
           "description": "ClusterAuthMode for replicaset or sharding. (default will be x509 if sslmode is not `disabled`.) See available ClusterAuthMode: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-clusterauthmode",
           "type": "string"
         },
-        "configSource": {
-          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
-        },
-        "databaseSecret": {
-          "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -29363,9 +29363,9 @@
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
         },
-        "keyFile": {
-          "description": "Secret for KeyFile. Contains keyfile `key.txt` if spec.clusterAuthMode == keyFile || sendKeyFile",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        "keyFileSecret": {
+          "description": "Secret for KeyFileSecret. Contains keyfile `key.txt` if spec.clusterAuthMode == keyFile || sendKeyFile",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -29539,13 +29539,13 @@
         "version"
       ],
       "properties": {
-        "configSource": {
-          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
-        },
-        "databaseSecret": {
+        "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -29688,13 +29688,13 @@
         "version"
       ],
       "properties": {
-        "configSource": {
-          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
-        },
-        "databaseSecret": {
+        "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -29969,13 +29969,13 @@
           "description": "Archive for wal files",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresArchiverSpec"
         },
-        "configSource": {
-          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
-        },
-        "databaseSecret": {
+        "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -30175,13 +30175,17 @@
         "version"
       ],
       "properties": {
+        "authSecret": {
+          "description": "ProxySQL secret containing username and password for root user and proxysql user",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
         "backend": {
           "description": "Backend specifies the information about backend MySQL/Percona-XtraDB/MariaDB servers",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLBackendSpec"
         },
-        "configSource": {
-          "description": "ConfigSource is an optional field to provide custom configuration file for proxysql (i.e custom-proxysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for proxysql (i.e custom-proxysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "mode": {
           "description": "Mode specifies the type of MySQL/Percona-XtraDB/MariaDB cluster for which proxysql will be configured. It must be either \"Galera\" or \"GroupReplication\"",
@@ -30194,10 +30198,6 @@
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose proxysql",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
-        },
-        "proxysqlSecret": {
-          "description": "ProxySQL secret containing username and password for root user and proxysql user",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "replicas": {
           "description": "Number of instances to deploy for ProxySQL. Currently we support only replicas = 1.",
@@ -30344,9 +30344,9 @@
           "description": "Redis cluster configuration for running redis servers in cluster mode. Required if Mode is set to \"Cluster\"",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisClusterSpec"
         },
-        "configSource": {
-          "description": "ConfigSource is an optional field to provide custom configuration file for database (i.e redis.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VolumeSource"
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e redis.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -31071,16 +31071,17 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration": {
       "type": "object",
       "properties": {
-        "configMap": {
+        "configSecret": {
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
-        "data": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
+        "inlineConfig": {
+          "type": "string"
         },
-        "remove": {
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "removeCustomConfig": {
           "type": "boolean"
         }
       }
@@ -32044,7 +32045,22 @@
       "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisCustomConfigurationSpec": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "configSecret": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "inlineConfig": {
+          "type": "string"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "removeCustomConfig": {
+          "type": "boolean"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisHorizontalScalingSpec": {
       "type": "object",
