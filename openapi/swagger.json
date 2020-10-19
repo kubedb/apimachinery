@@ -31350,16 +31350,17 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfiguration": {
       "type": "object",
       "properties": {
-        "configMap": {
+        "configSecret": {
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
-        "data": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
+        "inlineConfig": {
+          "type": "string"
         },
-        "remove": {
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "removeCustomConfig": {
           "type": "boolean"
         }
       }
@@ -32234,7 +32235,12 @@
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisVolumeExpansionSpec": {
       "description": "RedisVolumeExpansionSpec is the spec for Redis volume expansion",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "redis": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec": {
       "type": "object"
