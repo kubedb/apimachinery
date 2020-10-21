@@ -30340,6 +30340,10 @@
         "version"
       ],
       "properties": {
+        "authSecret": {
+          "description": "Database authentication secret",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
         "cluster": {
           "description": "Redis cluster configuration for running redis servers in cluster mode. Required if Mode is set to \"Cluster\"",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisClusterSpec"
@@ -30369,7 +30373,7 @@
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "replicas": {
-          "description": "Number of instances to deploy for a MySQL database.",
+          "description": "Number of instances to deploy for a Redis database.",
           "type": "integer",
           "format": "int32"
         },
@@ -31347,7 +31351,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfiguration": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfigurationSpec": {
       "type": "object",
       "properties": {
         "configSecret": {
@@ -31362,14 +31366,6 @@
         },
         "removeCustomConfig": {
           "type": "boolean"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfigurationSpec": {
-      "type": "object",
-      "properties": {
-        "mysql": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfiguration"
         }
       }
     },
