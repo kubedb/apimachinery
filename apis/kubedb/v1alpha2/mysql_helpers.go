@@ -93,6 +93,14 @@ func (m MySQL) PeerName(idx int) string {
 	return fmt.Sprintf("%s-%d.%s.%s", m.OffshootName(), idx, m.GoverningServiceName(), m.Namespace)
 }
 
+func (m *MySQL) GetConnectionScheme() string {
+	scheme := "http"
+	if m.Spec.TLS != nil && m.Spec.RequireSSL {
+		scheme = "https"
+	}
+	return scheme
+}
+
 func (m MySQL) GetAuthSecretName() string {
 	return m.Spec.AuthSecret.Name
 }
