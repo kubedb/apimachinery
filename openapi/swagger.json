@@ -32045,7 +32045,7 @@
       "description": "ProxySQLVolumeExpansionSpec is the spec for ProxySQL volume expansion",
       "type": "object"
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisCustomConfigurationSpec": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisCustomConfiguration": {
       "type": "object",
       "properties": {
         "configSecret": {
@@ -32060,6 +32060,14 @@
         },
         "removeCustomConfig": {
           "type": "boolean"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisCustomConfigurationSpec": {
+      "type": "object",
+      "properties": {
+        "redis": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisCustomConfiguration"
         }
       }
     },
