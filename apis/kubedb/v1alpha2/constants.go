@@ -163,9 +163,12 @@ const (
 	ProxySQLCustomConfigMountPath = "/etc/custom-config"
 
 	// =========================== Redis Constants ============================
-	RedisShardKey   = RedisKey + "/shard"
-	RedisNodePort   = 6379
-	RedisGossipPort = 16379
+	RedisShardKey               = RedisKey + "/shard"
+	RedisDatabasePortName       = "db"
+	RedisPrimaryServicePortName = "primary"
+	RedisDatabasePort           = 6379
+	RedisGossipPortName         = "gossip"
+	RedisGossipPort             = 16379
 
 	RedisKeyFileSecretSuffix = "key"
 	RedisPEMSecretSuffix     = "pem"
