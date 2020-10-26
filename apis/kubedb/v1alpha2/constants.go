@@ -77,12 +77,6 @@ const (
 	ElasticsearchStatusYellow                    = "yellow"
 	ElasticsearchStatusRed                       = "red"
 
-	// =========================== Memcached Constants ============================
-	MemcachedDatabasePortName       = "db"
-	MemcachedPrimaryServicePortName = "primary"
-	MemcachedDatabasePort           = 11211
-
-	// =========================== MongoDB Constants ============================
 	// Ref:
 	//	- https://www.elastic.co/guide/en/elasticsearch/reference/7.6/heap-size.html#heap-size
 	//	- no more than 50% of your physical RAM
@@ -93,12 +87,19 @@ const (
 	// 128MB
 	ElasticsearchMinHeapSize = 128 * 1024 * 1024
 
-	MongoDBShardPort           = 27017
-	MongoDBConfigdbPort        = 27017
-	MongoDBMongosPort          = 27017
-	MongoDBKeyFileSecretSuffix = "key"
-	MongoDBRootUsername        = "root"
-	MongoDBCustomConfigFile    = "mongod.conf"
+	// =========================== Memcached Constants ============================
+	MemcachedDatabasePortName       = "db"
+	MemcachedPrimaryServicePortName = "primary"
+	MemcachedDatabasePort           = 11211
+
+	// =========================== MongoDB Constants ============================
+
+	MongoDBDatabasePortName       = "db"
+	MongoDBPrimaryServicePortName = "primary"
+	MongoDBDatabasePort           = 27017
+	MongoDBKeyFileSecretSuffix    = "key"
+	MongoDBRootUsername           = "root"
+	MongoDBCustomConfigFile       = "mongod.conf"
 
 	// =========================== MySQL Constants ============================
 	MySQLMetricsExporterConfigSecretSuffix = "metrics-exporter-config"
