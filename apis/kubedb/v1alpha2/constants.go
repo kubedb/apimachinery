@@ -77,6 +77,11 @@ const (
 	ElasticsearchStatusYellow                    = "yellow"
 	ElasticsearchStatusRed                       = "red"
 
+	// =========================== Memcached Constants ============================
+	MemcachedDatabasePortName       = "db"
+	MemcachedPrimaryServicePortName = "primary"
+	MemcachedDatabasePort           = 11211
+
 	// =========================== MongoDB Constants ============================
 	// Ref:
 	//	- https://www.elastic.co/guide/en/elasticsearch/reference/7.6/heap-size.html#heap-size
