@@ -176,7 +176,12 @@ const (
 	RedisRootUsername        = "root"
 
 	// =========================== PgBouncer Constants ============================
-	PgBouncerUpstreamServerCA = "upstream-server-ca.crt"
+	PgBouncerUpstreamServerCA       = "upstream-server-ca.crt"
+	PgBouncerDatabasePortName       = "db"
+	PgBouncerPrimaryServicePortName = "primary"
+	PgBouncerDatabasePort           = 5432
+	PgBouncerConfigFile             = "pgbouncer.ini"
+	PgBouncerAdminUsername          = "kubedb"
 )
 
 // List of possible condition types for a KubeDB object
