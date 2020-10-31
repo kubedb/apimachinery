@@ -76,6 +76,10 @@ const (
 	ElasticsearchStatusGreen                     = "green"
 	ElasticsearchStatusYellow                    = "yellow"
 	ElasticsearchStatusRed                       = "red"
+	ElasticsearchInitSysctlContainerName         = "init-sysctl"
+	ElasticsearchInitConfigMergerContainerName   = "config-merger"
+	ElasticsearchContainerName                   = "elasticsearch"
+	ElasticsearchExporterContainerName           = "exporter"
 
 	// Ref:
 	//	- https://www.elastic.co/guide/en/elasticsearch/reference/7.6/heap-size.html#heap-size
