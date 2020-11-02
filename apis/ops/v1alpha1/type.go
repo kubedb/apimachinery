@@ -48,6 +48,7 @@ const (
 	UpdateStatefulSets        = "UpdateStatefulSets"
 	VolumeExpansion           = "VolumeExpansion"
 	Reconfigure               = "Reconfigure"
+	UpgradingNodes            = "UpgradingNodes"
 
 	// MongoDB Constants
 	StartingBalancer            = "StartingBalancer"
