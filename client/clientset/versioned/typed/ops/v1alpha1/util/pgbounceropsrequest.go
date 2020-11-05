@@ -106,15 +106,20 @@ func UpdatePgBouncerOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.PgBouncerOpsRequestStatus) *api.PgBouncerOpsRequestStatus,
+	transform func(*api.PgBouncerOpsRequestStatus) (types.UID, *api.PgBouncerOpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.PgBouncerOpsRequest, err error) {
 	apply := func(x *api.PgBouncerOpsRequest) *api.PgBouncerOpsRequest {
+		uid, updatedStatus := transform(x.Status.DeepCopy())
+		// Ignore status update when uid does not match
+		if uid != "" && uid != x.UID {
+			return x
+		}
 		return &api.PgBouncerOpsRequest{
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,
-			Status:     *transform(x.Status.DeepCopy()),
+			Status:     *updatedStatus,
 		}
 	}
 

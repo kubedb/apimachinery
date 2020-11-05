@@ -106,15 +106,20 @@ func UpdateRedisOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.RedisOpsRequestStatus) *api.RedisOpsRequestStatus,
+	transform func(*api.RedisOpsRequestStatus) (types.UID, *api.RedisOpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.RedisOpsRequest, err error) {
 	apply := func(x *api.RedisOpsRequest) *api.RedisOpsRequest {
+		uid, updatedStatus := transform(x.Status.DeepCopy())
+		// Ignore status update when uid does not match
+		if uid != "" && uid != x.UID {
+			return x
+		}
 		return &api.RedisOpsRequest{
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,
-			Status:     *transform(x.Status.DeepCopy()),
+			Status:     *updatedStatus,
 		}
 	}
 

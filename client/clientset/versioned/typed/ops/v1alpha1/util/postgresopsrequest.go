@@ -106,15 +106,20 @@ func UpdatePostgresOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.PostgresOpsRequestStatus) *api.PostgresOpsRequestStatus,
+	transform func(*api.PostgresOpsRequestStatus) (types.UID, *api.PostgresOpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.PostgresOpsRequest, err error) {
 	apply := func(x *api.PostgresOpsRequest) *api.PostgresOpsRequest {
+		uid, updatedStatus := transform(x.Status.DeepCopy())
+		// Ignore status update when uid does not match
+		if uid != "" && uid != x.UID {
+			return x
+		}
 		return &api.PostgresOpsRequest{
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,
-			Status:     *transform(x.Status.DeepCopy()),
+			Status:     *updatedStatus,
 		}
 	}
 

@@ -106,15 +106,20 @@ func UpdateMongoDBOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.MongoDBOpsRequestStatus) *api.MongoDBOpsRequestStatus,
+	transform func(*api.MongoDBOpsRequestStatus) (types.UID, *api.MongoDBOpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.MongoDBOpsRequest, err error) {
 	apply := func(x *api.MongoDBOpsRequest) *api.MongoDBOpsRequest {
+		uid, updatedStatus := transform(x.Status.DeepCopy())
+		// Ignore status update when uid does not match
+		if uid != "" && uid != x.UID {
+			return x
+		}
 		return &api.MongoDBOpsRequest{
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,
-			Status:     *transform(x.Status.DeepCopy()),
+			Status:     *updatedStatus,
 		}
 	}
 

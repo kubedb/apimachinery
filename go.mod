@@ -4,7 +4,6 @@ go 1.12
 
 require (
 	github.com/appscode/docker-registry-client v0.0.0-20180426150142-1bb02bb202b0
-	github.com/appscode/go v0.0.0-20201006035845-a0302ac8e3d3
 	github.com/docker/libtrust v0.0.0-20160708172513-aabc10ec26b7 // indirect
 	github.com/evanphx/json-patch v4.9.0+incompatible
 	github.com/go-openapi/spec v0.19.8
@@ -14,22 +13,25 @@ require (
 	github.com/jetstack/cert-manager v0.16.0
 	github.com/json-iterator/go v1.1.10
 	github.com/pkg/errors v0.9.1
+	gomodules.xyz/pointer v0.0.0-20201105071923-daf60fa55209
+	gomodules.xyz/runtime v0.0.0-20201104200926-d838b09dda8b
 	gomodules.xyz/stow v0.2.4
 	gomodules.xyz/version v0.1.0
+	gomodules.xyz/x v0.0.0-20201105065653-91c568df6331
 	k8s.io/api v0.18.9
 	k8s.io/apiextensions-apiserver v0.18.9
 	k8s.io/apimachinery v0.18.9
 	k8s.io/client-go v0.18.9
 	k8s.io/kube-openapi v0.0.0-20200410145947-61e04a5be9a6
-	kmodules.xyz/client-go v0.0.0-20201027113349-01a6d453d836
+	kmodules.xyz/client-go v0.0.0-20201105071625-0b277310b9b8
 	kmodules.xyz/crd-schema-fuzz v0.0.0-20200922204806-c1426cd7fcf4
-	kmodules.xyz/custom-resources v0.0.0-20201008012351-6d8090f759d4
-	kmodules.xyz/monitoring-agent-api v0.0.0-20201022103441-f51a42fb9ac8
-	kmodules.xyz/objectstore-api v0.0.0-20200922210707-59bab27e5d41
-	kmodules.xyz/offshoot-api v0.0.0-20201027212804-f5e6dc573558
-	kmodules.xyz/webhook-runtime v0.0.0-20200922211931-8337935590de
+	kmodules.xyz/custom-resources v0.0.0-20201105075444-3c6af51b4f79
+	kmodules.xyz/monitoring-agent-api v0.0.0-20201105074044-be7a1044891a
+	kmodules.xyz/objectstore-api v0.0.0-20201105133858-cbb2af88d50a
+	kmodules.xyz/offshoot-api v0.0.0-20201105074700-8675f5f686f2
+	kmodules.xyz/webhook-runtime v0.0.0-20201105073856-2dc7382b88c6
 	sigs.k8s.io/yaml v1.2.0
-	stash.appscode.dev/apimachinery v0.11.5
+	stash.appscode.dev/apimachinery v0.11.6-0.20201105125158-b51d7c6a387c
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d

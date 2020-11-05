@@ -106,15 +106,20 @@ func UpdateMemcachedOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.MemcachedOpsRequestStatus) *api.MemcachedOpsRequestStatus,
+	transform func(*api.MemcachedOpsRequestStatus) (types.UID, *api.MemcachedOpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.MemcachedOpsRequest, err error) {
 	apply := func(x *api.MemcachedOpsRequest) *api.MemcachedOpsRequest {
+		uid, updatedStatus := transform(x.Status.DeepCopy())
+		// Ignore status update when uid does not match
+		if uid != "" && uid != x.UID {
+			return x
+		}
 		return &api.MemcachedOpsRequest{
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,
-			Status:     *transform(x.Status.DeepCopy()),
+			Status:     *updatedStatus,
 		}
 	}
 
