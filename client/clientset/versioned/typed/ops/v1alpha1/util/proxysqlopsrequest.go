@@ -106,15 +106,20 @@ func UpdateProxySQLOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.ProxySQLOpsRequestStatus) *api.ProxySQLOpsRequestStatus,
+	transform func(*api.ProxySQLOpsRequestStatus) (types.UID, *api.ProxySQLOpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.ProxySQLOpsRequest, err error) {
 	apply := func(x *api.ProxySQLOpsRequest) *api.ProxySQLOpsRequest {
+		uid, updatedStatus := transform(x.Status.DeepCopy())
+		// Ignore status update when uid does not match
+		if uid != "" && uid != x.UID {
+			return x
+		}
 		return &api.ProxySQLOpsRequest{
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,
-			Status:     *transform(x.Status.DeepCopy()),
+			Status:     *updatedStatus,
 		}
 	}
 

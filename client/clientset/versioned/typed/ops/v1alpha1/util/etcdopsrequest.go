@@ -106,15 +106,20 @@ func UpdateEtcdOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.EtcdOpsRequestStatus) *api.EtcdOpsRequestStatus,
+	transform func(*api.EtcdOpsRequestStatus) (types.UID, *api.EtcdOpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.EtcdOpsRequest, err error) {
 	apply := func(x *api.EtcdOpsRequest) *api.EtcdOpsRequest {
+		uid, updatedStatus := transform(x.Status.DeepCopy())
+		// Ignore status update when uid does not match
+		if uid != "" && uid != x.UID {
+			return x
+		}
 		return &api.EtcdOpsRequest{
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,
-			Status:     *transform(x.Status.DeepCopy()),
+			Status:     *updatedStatus,
 		}
 	}
 

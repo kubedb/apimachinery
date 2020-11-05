@@ -21,7 +21,7 @@ import (
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"github.com/appscode/go/types"
+	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -64,7 +64,7 @@ func TestMongoDB_HostAddress(t *testing.T) {
 								core.ResourceStorage: resource.MustParse("1Gi"),
 							},
 						},
-						StorageClassName: types.StringP("standard"),
+						StorageClassName: pointer.StringP("standard"),
 					},
 				},
 				ConfigServer: MongoDBConfigNode{
@@ -77,7 +77,7 @@ func TestMongoDB_HostAddress(t *testing.T) {
 								core.ResourceStorage: resource.MustParse("1Gi"),
 							},
 						},
-						StorageClassName: types.StringP("standard"),
+						StorageClassName: pointer.StringP("standard"),
 					},
 				},
 				Mongos: MongoDBMongosNode{
@@ -95,7 +95,7 @@ func TestMongoDB_HostAddress(t *testing.T) {
 	t.Log(shardDSN)
 
 	mongodb.Spec.ShardTopology = nil
-	mongodb.Spec.Replicas = types.Int32P(3)
+	mongodb.Spec.Replicas = pointer.Int32P(3)
 	mongodb.Spec.ReplicaSet = &MongoDBReplicaSet{
 		Name: "mgo-rs",
 	}
@@ -128,7 +128,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 								core.ResourceStorage: resource.MustParse("1Gi"),
 							},
 						},
-						StorageClassName: types.StringP("standard"),
+						StorageClassName: pointer.StringP("standard"),
 					},
 				},
 				ConfigServer: MongoDBConfigNode{
@@ -141,7 +141,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 								core.ResourceStorage: resource.MustParse("1Gi"),
 							},
 						},
-						StorageClassName: types.StringP("standard"),
+						StorageClassName: pointer.StringP("standard"),
 					},
 				},
 				Mongos: MongoDBMongosNode{
@@ -182,7 +182,7 @@ func TestMongoDB_ConfigSvrDSN(t *testing.T) {
 								core.ResourceStorage: resource.MustParse("1Gi"),
 							},
 						},
-						StorageClassName: types.StringP("standard"),
+						StorageClassName: pointer.StringP("standard"),
 					},
 				},
 				ConfigServer: MongoDBConfigNode{
@@ -195,7 +195,7 @@ func TestMongoDB_ConfigSvrDSN(t *testing.T) {
 								core.ResourceStorage: resource.MustParse("1Gi"),
 							},
 						},
-						StorageClassName: types.StringP("standard"),
+						StorageClassName: pointer.StringP("standard"),
 					},
 				},
 				Mongos: MongoDBMongosNode{
@@ -225,7 +225,7 @@ func TestMongoDB_SetDefaults(t *testing.T) {
 						core.ResourceStorage: resource.MustParse("1Gi"),
 					},
 				},
-				StorageClassName: types.StringP("standard"),
+				StorageClassName: pointer.StringP("standard"),
 			},
 		},
 	}

@@ -20,8 +20,8 @@ import (
 	"net/http"
 
 	docker "github.com/appscode/docker-registry-client/registry"
-	"github.com/appscode/go/ioutil"
 	"github.com/pkg/errors"
+	"gomodules.xyz/x/ioutil"
 )
 
 const (

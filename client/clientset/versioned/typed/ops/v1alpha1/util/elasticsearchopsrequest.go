@@ -106,15 +106,20 @@ func UpdateElasticsearchOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.ElasticsearchOpsRequestStatus) *api.ElasticsearchOpsRequestStatus,
+	transform func(*api.ElasticsearchOpsRequestStatus) (types.UID, *api.ElasticsearchOpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.ElasticsearchOpsRequest, err error) {
 	apply := func(x *api.ElasticsearchOpsRequest) *api.ElasticsearchOpsRequest {
+		uid, updatedStatus := transform(x.Status.DeepCopy())
+		// Ignore status update when uid does not match
+		if uid != "" && uid != x.UID {
+			return x
+		}
 		return &api.ElasticsearchOpsRequest{
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,
-			Status:     *transform(x.Status.DeepCopy()),
+			Status:     *updatedStatus,
 		}
 	}
 
