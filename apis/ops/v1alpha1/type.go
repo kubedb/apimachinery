@@ -49,6 +49,7 @@ const (
 	VolumeExpansion           = "VolumeExpansion"
 	Reconfigure               = "Reconfigure"
 	UpgradeNodes              = "UpgradeNodes"
+	RestartNodes              = "RestartNodes"
 
 	// MongoDB Constants
 	StartingBalancer            = "StartingBalancer"
