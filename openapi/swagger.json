@@ -30002,10 +30002,6 @@
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
-        "replicaServiceTemplate": {
-          "description": "ReplicaServiceTemplate is an optional configuration for service used to expose postgres replicas",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
-        },
         "replicas": {
           "description": "Number of instances to deploy for a Postgres database.",
           "type": "integer",
