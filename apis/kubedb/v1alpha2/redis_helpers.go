@@ -196,6 +196,7 @@ func (r *Redis) SetDefaults(topology *core_util.Topology) {
 	r.Spec.Monitor.SetDefaults()
 
 	r.SetTLSDefaults()
+	setDefaultResource(&r.Spec.PodTemplate)
 }
 
 func (r *Redis) SetTLSDefaults() {

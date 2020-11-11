@@ -269,6 +269,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *v1alpha1.ElasticsearchVersion, to
 	e.setDefaultAffinity(&e.Spec.PodTemplate, e.OffshootSelectors(), topology)
 	e.SetTLSDefaults(esVersion)
 	e.Spec.Monitor.SetDefaults()
+	setDefaultResource(&e.Spec.PodTemplate)
 }
 
 // setDefaultAffinity
