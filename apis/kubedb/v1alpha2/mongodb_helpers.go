@@ -363,9 +363,9 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 	}
 
 	if m.Spec.ShardTopology != nil {
-		setDefaultResource(&m.Spec.ShardTopology.Mongos.PodTemplate)
-		setDefaultResource(&m.Spec.ShardTopology.Shard.PodTemplate)
-		setDefaultResource(&m.Spec.ShardTopology.ConfigServer.PodTemplate)
+		setDefaultResourceLimits(&m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Resources)
+		setDefaultResourceLimits(&m.Spec.ShardTopology.Shard.PodTemplate.Spec.Resources)
+		setDefaultResourceLimits(&m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.Resources)
 
 		if m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle == nil {
 			m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle = new(core.Lifecycle)
@@ -425,7 +425,7 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		// set default affinity (PodAntiAffinity)
 		m.setDefaultAffinity(m.Spec.PodTemplate, m.OffshootSelectors(), topology)
 
-		setDefaultResource(m.Spec.PodTemplate)
+		setDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources)
 	}
 
 	m.SetTLSDefaults()

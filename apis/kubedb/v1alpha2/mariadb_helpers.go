@@ -154,7 +154,7 @@ func (m *MariaDB) SetDefaults() {
 	}
 
 	m.Spec.Monitor.SetDefaults()
-	setDefaultResource(&m.Spec.PodTemplate)
+	setDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources)
 }
 
 func (m *MariaDBSpec) GetPersistentSecrets() []string {

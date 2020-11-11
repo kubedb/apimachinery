@@ -171,7 +171,7 @@ func (p *PerconaXtraDB) SetDefaults() {
 
 	p.Spec.setDefaultProbes()
 	p.Spec.Monitor.SetDefaults()
-	setDefaultResource(&p.Spec.PodTemplate)
+	setDefaultResourceLimits(&p.Spec.PodTemplate.Spec.Resources)
 }
 
 // setDefaultProbes sets defaults only when probe fields are nil.
