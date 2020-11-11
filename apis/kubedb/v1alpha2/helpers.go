@@ -19,6 +19,8 @@ package v1alpha2
 import (
 	"fmt"
 
+	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
 	apps_util "kmodules.xyz/client-go/apps/v1"
@@ -59,4 +61,22 @@ func GetServiceTemplate(templates []NamedServiceTemplateSpec, alias ServiceAlias
 		}
 	}
 	return ofst.ServiceTemplateSpec{}
+}
+
+func setDefaultResource(podTemplate *ofst.PodTemplateSpec) {
+	res := podTemplate.Spec.Resources
+	if res.Limits == nil {
+		if res.Requests == nil {
+			res = core.ResourceRequirements{
+				Limits: map[core.ResourceName]resource.Quantity{
+					core.ResourceMemory: resource.MustParse("512Mi"),
+					core.ResourceCPU:    resource.MustParse(".25"),
+				},
+			}
+		} else {
+			res.Limits = res.Requests
+		}
+	}
+
+	podTemplate.Spec.Resources = res
 }
