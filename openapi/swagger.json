@@ -28598,9 +28598,12 @@
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchRoleMapSpec"
           }
         },
-        "serviceTemplate": {
-          "description": "ServiceTemplate is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        "serviceTemplates": {
+          "description": "ServiceTemplates is an optional configuration for services used to expose database",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
+          }
         },
         "storage": {
           "description": "Storage to specify how storage shall be used.",
@@ -28785,9 +28788,12 @@
           "type": "integer",
           "format": "int32"
         },
-        "serviceTemplate": {
-          "description": "ServiceTemplate is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        "serviceTemplates": {
+          "description": "ServiceTemplates is an optional configuration for services used to expose database",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
+          }
         },
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
@@ -28971,9 +28977,12 @@
           "type": "integer",
           "format": "int32"
         },
-        "serviceTemplate": {
-          "description": "ServiceTemplate is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        "serviceTemplates": {
+          "description": "ServiceTemplates is an optional configuration for services used to expose database",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
+          }
         },
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
@@ -29121,9 +29130,12 @@
           "type": "integer",
           "format": "int32"
         },
-        "serviceTemplate": {
-          "description": "ServiceTemplate is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        "serviceTemplates": {
+          "description": "ServiceTemplates is an optional configuration for services used to expose database",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
+          }
         },
         "terminationPolicy": {
           "description": "TerminationPolicy controls the delete operation for database",
@@ -29389,9 +29401,12 @@
           "type": "integer",
           "format": "int32"
         },
-        "serviceTemplate": {
-          "description": "ServiceTemplate is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        "serviceTemplates": {
+          "description": "ServiceTemplates is an optional configuration for services used to expose database",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
+          }
         },
         "shardTopology": {
           "description": "MongoDB sharding topology.",
@@ -29577,9 +29592,12 @@
           "description": "Indicates that the database server need to be encrypted connections(ssl)",
           "type": "boolean"
         },
-        "serviceTemplate": {
-          "description": "ServiceTemplate is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        "serviceTemplates": {
+          "description": "ServiceTemplates is an optional configuration for services used to expose database",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
+          }
         },
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
@@ -29625,6 +29643,26 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec": {
+      "type": "object",
+      "required": [
+        "alias"
+      ],
+      "properties": {
+        "alias": {
+          "description": "Alias represents the identifier of the service.",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceSpec"
         }
       }
     },
@@ -29722,9 +29760,12 @@
           "type": "integer",
           "format": "int32"
         },
-        "serviceTemplate": {
-          "description": "ServiceTemplate is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        "serviceTemplates": {
+          "description": "ServiceTemplates is an optional configuration for services used to expose database",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
+          }
         },
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
@@ -29858,9 +29899,12 @@
           "type": "integer",
           "format": "int32"
         },
-        "serviceTemplate": {
-          "description": "ServiceTemplate is an optional configuration for service used to expose database.",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        "serviceTemplates": {
+          "description": "ServiceTemplates is an optional configuration for services used to expose database",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
+          }
         },
         "tls": {
           "description": "TLS contains tls configurations for client and server.",
@@ -30007,9 +30051,12 @@
           "type": "integer",
           "format": "int32"
         },
-        "serviceTemplate": {
-          "description": "ServiceTemplate is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        "serviceTemplates": {
+          "description": "ServiceTemplates is an optional configuration for services used to expose database",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
+          }
         },
         "standbyMode": {
           "description": "Standby mode",
@@ -30205,9 +30252,12 @@
           "type": "integer",
           "format": "int32"
         },
-        "serviceTemplate": {
-          "description": "ServiceTemplate is an optional configuration for service used to expose proxysql",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        "serviceTemplates": {
+          "description": "ServiceTemplates is an optional configuration for services used to expose database",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
+          }
         },
         "tls": {
           "description": "TLS contains tls configurations for client and server.",
@@ -30378,9 +30428,12 @@
           "type": "integer",
           "format": "int32"
         },
-        "serviceTemplate": {
-          "description": "ServiceTemplate is an optional configuration for service used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        "serviceTemplates": {
+          "description": "ServiceTemplates is an optional configuration for services used to expose database",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
+          }
         },
         "storage": {
           "description": "Storage spec to specify how storage shall be used.",
@@ -35790,20 +35843,6 @@
         "type": {
           "description": "type determines how the Service is exposed. Defaults to ClusterIP. Valid options are ExternalName, ClusterIP, NodePort, and LoadBalancer. \"ExternalName\" maps to the specified externalName. \"ClusterIP\" allocates a cluster-internal IP address for load-balancing to endpoints. Endpoints are determined by the selector or if that is not specified, by manual construction of an Endpoints object. If clusterIP is \"None\", no virtual IP is allocated and the endpoints are published as a set of endpoints rather than a stable IP. \"NodePort\" builds on ClusterIP and allocates a port on every node which routes to the clusterIP. \"LoadBalancer\" builds on NodePort and creates an external load-balancer (if supported in the current cloud) which routes to the clusterIP. More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types",
           "type": "string"
-        }
-      }
-    },
-    "xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec": {
-      "description": "ServiceTemplateSpec describes the data a service should have when created from a template",
-      "type": "object",
-      "properties": {
-        "metadata": {
-          "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ObjectMeta"
-        },
-        "spec": {
-          "description": "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceSpec"
         }
       }
     }
