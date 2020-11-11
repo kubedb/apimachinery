@@ -27515,8 +27515,8 @@
         "exporter",
         "tools",
         "initContainer",
-        "replicationModeDetector",
-        "podSecurityPolicies"
+        "podSecurityPolicies",
+        "replicationModeDetector"
       ],
       "properties": {
         "db": {
