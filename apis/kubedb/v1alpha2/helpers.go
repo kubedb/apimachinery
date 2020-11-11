@@ -64,19 +64,25 @@ func GetServiceTemplate(templates []NamedServiceTemplateSpec, alias ServiceAlias
 }
 
 func setDefaultResource(podTemplate *ofst.PodTemplateSpec) {
-	res := podTemplate.Spec.Resources
-	if res.Limits == nil {
-		if res.Requests == nil {
-			res = core.ResourceRequirements{
-				Limits: map[core.ResourceName]resource.Quantity{
-					core.ResourceMemory: resource.MustParse("512Mi"),
-					core.ResourceCPU:    resource.MustParse(".25"),
-				},
+	fn := func(req core.ResourceRequirements, name core.ResourceName, defaultValue resource.Quantity) resource.Quantity {
+		if req.Limits != nil {
+			if v, ok := req.Limits[name]; ok {
+				return v
 			}
-		} else {
-			res.Limits = res.Requests
 		}
+		if req.Requests != nil {
+			if v, ok := req.Requests[name]; ok {
+				return v
+			}
+		}
+		return defaultValue
 	}
 
-	podTemplate.Spec.Resources = res
+	req := podTemplate.Spec.Resources
+	if req.Limits == nil {
+		req.Limits = core.ResourceList{}
+	}
+	req.Limits[core.ResourceCPU] = fn(req, core.ResourceCPU, resource.MustParse(DefaultCPULimit))
+	req.Limits[core.ResourceMemory] = fn(req, core.ResourceMemory, resource.MustParse(DefaultMemoryLimit))
+	podTemplate.Spec.Resources = req
 }
