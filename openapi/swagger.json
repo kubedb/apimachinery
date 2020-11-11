@@ -27515,6 +27515,7 @@
         "exporter",
         "tools",
         "initContainer",
+        "replicationModeDetector",
         "podSecurityPolicies"
       ],
       "properties": {
@@ -27537,6 +27538,10 @@
         "podSecurityPolicies": {
           "description": "PSP names",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionPodSecurityPolicy"
+        },
+        "replicationModeDetector": {
+          "description": "ReplicationModeDetector Image",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ReplicationModeDetector"
         },
         "tools": {
           "description": "Tools Image",
@@ -27678,18 +27683,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionReplicationModeDetector": {
-      "description": "MySQLVersionReplicationModeDetector is the image for the MySQL replication mode detector",
-      "type": "object",
-      "required": [
-        "image"
-      ],
-      "properties": {
-        "image": {
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionSpec": {
       "description": "MySQLVersionSpec is the spec for MySQL version",
       "type": "object",
@@ -27726,7 +27719,7 @@
         },
         "replicationModeDetector": {
           "description": "ReplicationModeDetector Image",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionReplicationModeDetector"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ReplicationModeDetector"
         },
         "tools": {
           "description": "Tools Image",
@@ -28284,6 +28277,18 @@
         },
         "version": {
           "description": "Version",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ReplicationModeDetector": {
+      "description": "ReplicationModeDetector is the image for the MySQL replication mode detector",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
           "type": "string"
         }
       }
