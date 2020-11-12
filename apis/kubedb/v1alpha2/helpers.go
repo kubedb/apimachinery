@@ -57,7 +57,7 @@ func GetServiceTemplate(templates []NamedServiceTemplateSpec, alias ServiceAlias
 	for i := range templates {
 		c := templates[i]
 		if c.Alias == alias {
-			return c.ServiceTemplate
+			return c.ServiceTemplateSpec
 		}
 	}
 	return ofst.ServiceTemplateSpec{}
