@@ -24,6 +24,7 @@ import (
 	"kubedb.dev/apimachinery/crds"
 
 	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
 	"kmodules.xyz/client-go/apiextensions"
@@ -176,6 +177,49 @@ func (m *MariaDB) SetDefaults() {
 }
 
 func (m *MariaDBSpec) setDefaultProbes() {
+	if m == nil {
+		return
+	}
+
+	var readynessProbeCmd []string
+	if pointer.Int32(m.Replicas) > 1 {
+		readynessProbeCmd = []string{
+			"bash",
+			"-c",
+			`export MYSQL_PWD="${MYSQL_ROOT_PASSWORD}"
+ping_resp=$(mysqladmin -uroot ping)
+if [[ "$ping_resp" != "mysqld is alive" ]]; then
+    echo "[ERROR] server is not ready. PING_RESPONSE: $ping_resp"
+    exit 1
+fi
+`,
+		}
+	} else {
+		readynessProbeCmd = []string{
+			"bash",
+			"-c",
+			`export MYSQL_PWD="${MYSQL_ROOT_PASSWORD}"
+ping_resp=$(mysqladmin -uroot ping)
+if [[ "$ping_resp" != "mysqld is alive" ]]; then
+    echo "[ERROR] server is not ready. PING_RESPONSE: $ping_resp"
+    exit 1
+fi
+`,
+		}
+	}
+
+	readinessProbe := &core.Probe{
+		Handler: core.Handler{
+			Exec: &core.ExecAction{
+				Command: readynessProbeCmd,
+			},
+		},
+		InitialDelaySeconds: 30,
+		PeriodSeconds:       10,
+	}
+	if m.PodTemplate.Spec.ReadinessProbe == nil {
+		m.PodTemplate.Spec.ReadinessProbe = readinessProbe
+	}
 }
 
 func (m *MariaDBSpec) GetPersistentSecrets() []string {
