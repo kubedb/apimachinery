@@ -31529,7 +31529,7 @@
         },
         "tls": {
           "description": "Specifies information necessary for configuring TLS",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLTLSSpec"
         },
         "type": {
           "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
@@ -31573,6 +31573,34 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLReplicaReadinessCriteria": {
       "description": "MySQLReplicaReadinessCriteria is the criteria for checking readiness of a MySQL pod after updating, horizontal scaling etc.",
       "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLTLSSpec": {
+      "type": "object",
+      "properties": {
+        "certificates": {
+          "description": "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.CertificateSpec"
+          }
+        },
+        "issuerRef": {
+          "description": "IssuerRef is a reference to a Certificate Issuer.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+        },
+        "remove": {
+          "description": "Remove tells operator to remove TLS configuration",
+          "type": "boolean"
+        },
+        "requireSSL": {
+          "description": "Indicates that the database server need to be encrypted connections(ssl)",
+          "type": "boolean"
+        },
+        "rotateCertificates": {
+          "description": "RotateCertificates tells operator to initiate certificate rotation",
+          "type": "boolean"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUpgradeSpec": {
       "type": "object",
