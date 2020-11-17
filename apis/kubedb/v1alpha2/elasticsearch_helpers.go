@@ -27,7 +27,6 @@ import (
 	"kubedb.dev/apimachinery/crds"
 
 	core "k8s.io/api/core/v1"
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -288,26 +287,26 @@ func (e *Elasticsearch) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, la
 		return
 	}
 
-	podTemplate.Spec.Affinity = &corev1.Affinity{
-		PodAntiAffinity: &corev1.PodAntiAffinity{
-			PreferredDuringSchedulingIgnoredDuringExecution: []corev1.WeightedPodAffinityTerm{
+	podTemplate.Spec.Affinity = &core.Affinity{
+		PodAntiAffinity: &core.PodAntiAffinity{
+			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
 				// Prefer to not schedule multiple pods on the same node
 				{
 					Weight: 100,
-					PodAffinityTerm: corev1.PodAffinityTerm{
+					PodAffinityTerm: core.PodAffinityTerm{
 						Namespaces: []string{e.Namespace},
 						LabelSelector: &metav1.LabelSelector{
 							MatchLabels:      labels,
 							MatchExpressions: e.GetMatchExpressions(),
 						},
 
-						TopologyKey: corev1.LabelHostname,
+						TopologyKey: core.LabelHostname,
 					},
 				},
 				// Prefer to not schedule multiple pods on the node with same zone
 				{
 					Weight: 50,
-					PodAffinityTerm: corev1.PodAffinityTerm{
+					PodAffinityTerm: core.PodAffinityTerm{
 						Namespaces: []string{e.Namespace},
 						LabelSelector: &metav1.LabelSelector{
 							MatchLabels:      labels,
