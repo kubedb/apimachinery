@@ -16,7 +16,12 @@ limitations under the License.
 
 package v1alpha2
 
-import "kubedb.dev/apimachinery/apis/kubedb"
+import (
+	"kubedb.dev/apimachinery/apis/kubedb"
+
+	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
+)
 
 const (
 	// Deprecated
@@ -42,11 +47,6 @@ const (
 	LocalHostIP           = "127.0.0.1"
 
 	DBCustomConfigName = "custom-config"
-
-	DefaultCPULimit      = ".250"
-	DefaultMemoryLimit   = "512Mi"
-	DefaultCPURequest    = ".100"
-	DefaultMemoryRequest = "256Mi"
 
 	// =========================== Database key Constants ============================
 	PostgresKey      = ResourceSingularPostgres + "." + kubedb.GroupName
@@ -98,9 +98,7 @@ const (
 	// 26 GB is safe on most systems
 	ElasticsearchMaxHeapSize = 26 * 1024 * 1024 * 1024
 	// 128MB
-	ElasticsearchMinHeapSize       = 128 * 1024 * 1024
-	DefaultElasticsearchCPULimit   = ".600"
-	DefaultElasticsearchCPURequest = ".300"
+	ElasticsearchMinHeapSize = 128 * 1024 * 1024
 
 	// =========================== Memcached Constants ============================
 	MemcachedDatabasePortName       = "db"
@@ -246,4 +244,24 @@ const (
 // Resource kind related constants
 const (
 	ResourceKindStatefulSet = "StatefulSet"
+)
+
+var (
+	defaultResourceLimits = core.ResourceList{
+		core.ResourceCPU:    resource.MustParse(".250"),
+		core.ResourceMemory: resource.MustParse("512Mi"),
+	}
+	defaultResourceRequests = core.ResourceList{
+		core.ResourceCPU:    resource.MustParse(".100"),
+		core.ResourceMemory: resource.MustParse("256Mi"),
+	}
+
+	defaultElasticsearchResourceLimits = core.ResourceList{
+		core.ResourceCPU:    resource.MustParse(".600"),
+		core.ResourceMemory: resource.MustParse("512Mi"),
+	}
+	defaultElasticsearchResourceRequests = core.ResourceList{
+		core.ResourceCPU:    resource.MustParse(".300"),
+		core.ResourceMemory: resource.MustParse("256Mi"),
+	}
 )
