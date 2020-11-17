@@ -13,7 +13,6 @@ require (
 	github.com/jetstack/cert-manager v0.16.0
 	github.com/json-iterator/go v1.1.10
 	github.com/pkg/errors v0.9.1
-	golang.org/x/net v0.0.0-20200625001655-4c5254603344 // indirect
 	gomodules.xyz/pointer v0.0.0-20201105071923-daf60fa55209
 	gomodules.xyz/runtime v0.0.0-20201104200926-d838b09dda8b
 	gomodules.xyz/stow v0.2.4
@@ -32,7 +31,7 @@ require (
 	kmodules.xyz/offshoot-api v0.0.0-20201105074700-8675f5f686f2
 	kmodules.xyz/webhook-runtime v0.0.0-20201105073856-2dc7382b88c6
 	sigs.k8s.io/yaml v1.2.0
-	stash.appscode.dev/apimachinery v0.11.6
+	stash.appscode.dev/apimachinery v0.11.7
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d
