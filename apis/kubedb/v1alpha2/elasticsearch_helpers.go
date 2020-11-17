@@ -26,7 +26,9 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	core "k8s.io/api/core/v1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
@@ -254,21 +256,21 @@ func (e *Elasticsearch) SetDefaults(esVersion *v1alpha1.ElasticsearchVersion, to
 		if e.Spec.Topology.Ingest.Prefix == "" {
 			e.Spec.Topology.Ingest.Prefix = ElasticsearchIngestNodePrefix
 		}
-		setDefaultResourceLimits(&e.Spec.Topology.Ingest.Resources)
+		setDefaultElasticsearchResourceLimits(&e.Spec.Topology.Ingest.Resources)
 
 		// Default to "data"
 		if e.Spec.Topology.Data.Prefix == "" {
 			e.Spec.Topology.Data.Prefix = ElasticsearchDataNodePrefix
 		}
-		setDefaultResourceLimits(&e.Spec.Topology.Data.Resources)
+		setDefaultElasticsearchResourceLimits(&e.Spec.Topology.Data.Resources)
 
 		// Default to "master"
 		if e.Spec.Topology.Master.Prefix == "" {
 			e.Spec.Topology.Master.Prefix = ElasticsearchMasterNodePrefix
 		}
-		setDefaultResourceLimits(&e.Spec.Topology.Master.Resources)
+		setDefaultElasticsearchResourceLimits(&e.Spec.Topology.Master.Resources)
 	} else {
-		setDefaultResourceLimits(&e.Spec.PodTemplate.Spec.Resources)
+		setDefaultElasticsearchResourceLimits(&e.Spec.PodTemplate.Spec.Resources)
 	}
 
 	e.setDefaultAffinity(&e.Spec.PodTemplate, e.OffshootSelectors(), topology)
@@ -453,4 +455,35 @@ func (e *Elasticsearch) ReplicasAreReady(lister appslister.StatefulSetLister) (b
 		expectedItems = 3
 	}
 	return checkReplicas(lister.StatefulSets(e.Namespace), labels.SelectorFromSet(e.OffshootLabels()), expectedItems)
+}
+
+func setDefaultElasticsearchResourceLimits(req *core.ResourceRequirements) {
+	fn := func(name core.ResourceName, defaultValue resource.Quantity) resource.Quantity {
+		if req.Limits != nil {
+			if v, ok := req.Limits[name]; ok {
+				return v
+			}
+		}
+		if req.Requests != nil {
+			if v, ok := req.Requests[name]; ok {
+				return v
+			}
+		}
+		return defaultValue
+	}
+
+	if req.Limits == nil {
+		req.Limits = core.ResourceList{}
+	}
+	if req.Requests == nil {
+		req.Requests = core.ResourceList{}
+	}
+	req.Limits[core.ResourceCPU] = fn(core.ResourceCPU, resource.MustParse(DefaultElasticsearchCPULimit))
+	if _, ok := req.Requests[core.ResourceCPU]; !ok {
+		req.Requests[core.ResourceCPU] = resource.MustParse(DefaultElasticsearchCPURequest)
+	}
+	req.Limits[core.ResourceMemory] = fn(core.ResourceMemory, resource.MustParse(DefaultMemoryLimit))
+	if _, ok := req.Requests[core.ResourceMemory]; !ok {
+		req.Requests[core.ResourceMemory] = resource.MustParse(DefaultMemoryRequest)
+	}
 }

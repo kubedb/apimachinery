@@ -98,7 +98,9 @@ const (
 	// 26 GB is safe on most systems
 	ElasticsearchMaxHeapSize = 26 * 1024 * 1024 * 1024
 	// 128MB
-	ElasticsearchMinHeapSize = 128 * 1024 * 1024
+	ElasticsearchMinHeapSize       = 128 * 1024 * 1024
+	DefaultElasticsearchCPULimit   = ".600"
+	DefaultElasticsearchCPURequest = ".300"
 
 	// =========================== Memcached Constants ============================
 	MemcachedDatabasePortName       = "db"
