@@ -18823,9 +18823,9 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingSpec(re
 							Format:      "int32",
 						},
 					},
-					"client": {
+					"ingest": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of client nodes",
+							Description: "Number of ingest nodes",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
