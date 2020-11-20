@@ -30626,13 +30626,13 @@
       "description": "ElasticsearchHorizontalScalingSpec contains the horizontal scaling information of an Elasticsearch cluster",
       "type": "object",
       "properties": {
-        "client": {
-          "description": "Number of client nodes",
+        "data": {
+          "description": "Number of data nodes",
           "type": "integer",
           "format": "int32"
         },
-        "data": {
-          "description": "Number of data nodes",
+        "ingest": {
+          "description": "Number of ingest nodes",
           "type": "integer",
           "format": "int32"
         },
