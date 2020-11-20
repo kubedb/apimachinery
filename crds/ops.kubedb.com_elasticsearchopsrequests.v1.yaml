@@ -51,10 +51,10 @@ spec:
                 type: object
               horizontalScaling:
                 properties:
-                  client:
+                  data:
                     format: int32
                     type: integer
-                  data:
+                  ingest:
                     format: int32
                     type: integer
                   master:

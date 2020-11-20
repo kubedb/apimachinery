@@ -87,8 +87,8 @@ type ElasticsearchHorizontalScalingSpec struct {
 	Master *int32 `json:"master,omitempty" protobuf:"bytes,1,opt,name=master"`
 	// Number of data nodes
 	Data *int32 `json:"data,omitempty" protobuf:"bytes,2,opt,name=data"`
-	// Number of client nodes
-	Client *int32 `json:"client,omitempty" protobuf:"bytes,3,opt,name=client"`
+	// Number of ingest nodes
+	Ingest *int32 `json:"ingest,omitempty" protobuf:"bytes,3,opt,name=ingest"`
 }
 
 // ElasticsearchVerticalScalingSpec is the spec for Elasticsearch vertical scaling

@@ -56,8 +56,8 @@ message ElasticsearchHorizontalScalingSpec {
   // Number of data nodes
   optional int32 data = 2;
 
-  // Number of client nodes
-  optional int32 client = 3;
+  // Number of ingest nodes
+  optional int32 ingest = 3;
 }
 
 // +kubebuilder:object:root=true
