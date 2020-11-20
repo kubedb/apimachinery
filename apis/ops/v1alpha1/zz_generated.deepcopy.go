@@ -99,8 +99,8 @@ func (in *ElasticsearchHorizontalScalingSpec) DeepCopyInto(out *ElasticsearchHor
 		*out = new(int32)
 		**out = **in
 	}
-	if in.Client != nil {
-		in, out := &in.Client, &out.Client
+	if in.Ingest != nil {
+		in, out := &in.Ingest, &out.Ingest
 		*out = new(int32)
 		**out = **in
 	}
