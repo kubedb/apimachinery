@@ -74,10 +74,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ProxySQLAutoscalerList{},
 		&RedisAutoscaler{},
 		&RedisAutoscalerList{},
-		&VerticalAutoscaler{},
-		&VerticalAutoscalerList{},
-		&VerticalAutoscalerCheckpoint{},
-		&VerticalAutoscalerCheckpointList{},
+		&MongoDBAutoscaler{},
+		&MongoDBAutoscalerList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

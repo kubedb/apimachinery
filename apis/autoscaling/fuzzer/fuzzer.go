@@ -56,10 +56,7 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 		func(s *v1alpha1.RedisAutoscaler, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.VerticalAutoscaler, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.VerticalAutoscalerCheckpoint, c fuzz.Continue) {
+		func(s *v1alpha1.MongoDBAutoscaler, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 	}
