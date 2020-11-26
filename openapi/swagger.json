@@ -30786,16 +30786,9 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchReplicaReadinessCriteria": {
-      "description": "ElasticsearchReplicaReadinessCriteria is the criteria for checking readiness of a Elasticsearch pod after updating, horizontal scaling etc.",
-      "type": "object"
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchUpgradeSpec": {
       "type": "object",
       "properties": {
-        "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchReplicaReadinessCriteria"
-        },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
           "type": "string"
@@ -30806,8 +30799,31 @@
       "description": "ElasticsearchVerticalScalingSpec is the spec for Elasticsearch vertical scaling",
       "type": "object",
       "properties": {
-        "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchReplicaReadinessCriteria"
+        "node": {
+          "description": "Resource spec for combined nodes",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "topology": {
+          "description": "Specifies the resource spec for cluster in topology mode",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVerticalScalingTopologySpec"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVerticalScalingTopologySpec": {
+      "description": "ElasticsearchVerticalScalingTopologySpec is the resource spec in the cluster topology mode",
+      "type": "object",
+      "properties": {
+        "data": {
+          "description": "Resource spec for data nodes",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "ingest": {
+          "description": "Resource spec for ingest nodes",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "master": {
+          "description": "Resource spec for master nodes",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       }
     },
