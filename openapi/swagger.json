@@ -30799,6 +30799,10 @@
       "description": "ElasticsearchVerticalScalingSpec is the spec for Elasticsearch vertical scaling",
       "type": "object",
       "properties": {
+        "exporter": {
+          "description": "Resource spec for exporter sidecar",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "node": {
           "description": "Resource spec for combined nodes",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
