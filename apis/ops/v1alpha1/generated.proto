@@ -147,8 +147,11 @@ message ElasticsearchVerticalScalingSpec {
   // Resource spec for combined nodes
   optional k8s.io.api.core.v1.ResourceRequirements node = 1;
 
+  // Resource spec for exporter sidecar
+  optional k8s.io.api.core.v1.ResourceRequirements exporter = 2;
+
   // Specifies the resource spec for cluster in topology mode
-  optional ElasticsearchVerticalScalingTopologySpec topology = 2;
+  optional ElasticsearchVerticalScalingTopologySpec topology = 3;
 }
 
 // ElasticsearchVerticalScalingTopologySpec is the resource spec in the cluster topology mode

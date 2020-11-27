@@ -303,6 +303,11 @@ func (in *ElasticsearchVerticalScalingSpec) DeepCopyInto(out *ElasticsearchVerti
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Exporter != nil {
+		in, out := &in.Exporter, &out.Exporter
+		*out = new(v1.ResourceRequirements)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Topology != nil {
 		in, out := &in.Topology, &out.Topology
 		*out = new(ElasticsearchVerticalScalingTopologySpec)
