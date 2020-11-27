@@ -97,8 +97,10 @@ type ElasticsearchHorizontalScalingTopologySpec struct {
 type ElasticsearchVerticalScalingSpec struct {
 	// Resource spec for combined nodes
 	Node *core.ResourceRequirements `json:"node,omitempty" protobuf:"bytes,1,opt,name=node"`
+	// Resource spec for exporter sidecar
+	Exporter *core.ResourceRequirements `json:"exporter,omitempty" protobuf:"bytes,2,opt,name=exporter"`
 	// Specifies the resource spec for cluster in topology mode
-	Topology *ElasticsearchVerticalScalingTopologySpec `json:"topology,omitempty" protobuf:"bytes,2,opt,name=topology"`
+	Topology *ElasticsearchVerticalScalingTopologySpec `json:"topology,omitempty" protobuf:"bytes,3,opt,name=topology"`
 }
 
 // ElasticsearchVerticalScalingTopologySpec is the resource spec in the cluster topology mode

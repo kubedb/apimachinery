@@ -19100,6 +19100,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVerticalScalingSpec(ref 
 							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
 					},
+					"exporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for exporter sidecar",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the resource spec for cluster in topology mode",
