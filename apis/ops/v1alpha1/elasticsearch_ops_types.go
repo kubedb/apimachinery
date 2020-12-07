@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
@@ -115,6 +116,20 @@ type ElasticsearchVerticalScalingTopologySpec struct {
 
 // ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion
 type ElasticsearchVolumeExpansionSpec struct {
+	// volume specification for combined nodes
+	Node *resource.Quantity `json:"node,omitempty" protobuf:"bytes,1,opt,name=node"`
+	// volume specification for nodes in cluster topology
+	Topology *ElasticsearchVolumeExpansionTopologySpec `json:"topology,omitempty" protobuf:"bytes,2,opt,name=topology"`
+}
+
+// ElasticsearchVolumeExpansionTopologySpec is the spec for Elasticsearch volume expansion in topology mode
+type ElasticsearchVolumeExpansionTopologySpec struct {
+	// volume specification for master nodes
+	Master *resource.Quantity `json:"master,omitempty" protobuf:"bytes,1,opt,name=master"`
+	// volume specification for data nodes
+	Data *resource.Quantity `json:"data,omitempty" protobuf:"bytes,2,opt,name=data"`
+	// volume specification for ingest nodes
+	Ingest *resource.Quantity `json:"ingest,omitempty" protobuf:"bytes,3,opt,name=ingest"`
 }
 
 type ElasticsearchCustomConfigurationSpec struct {

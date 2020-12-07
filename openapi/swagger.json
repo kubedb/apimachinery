@@ -30833,7 +30833,35 @@
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVolumeExpansionSpec": {
       "description": "ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "node": {
+          "description": "volume specification for combined nodes",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "topology": {
+          "description": "volume specification for nodes in cluster topology",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVolumeExpansionTopologySpec"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVolumeExpansionTopologySpec": {
+      "description": "ElasticsearchVolumeExpansionTopologySpec is the spec for Elasticsearch volume expansion in topology mode",
+      "type": "object",
+      "properties": {
+        "data": {
+          "description": "volume specification for data nodes",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "ingest": {
+          "description": "volume specification for ingest nodes",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "master": {
+          "description": "volume specification for master nodes",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdCustomConfigurationSpec": {
       "type": "object"
