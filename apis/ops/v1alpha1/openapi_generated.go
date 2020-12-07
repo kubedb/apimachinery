@@ -408,6 +408,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingSpec":           schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingTopologySpec":   schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVerticalScalingTopologySpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionSpec":           schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionTopologySpec":   schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVolumeExpansionTopologySpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCustomConfiguration":                    schema_apimachinery_apis_ops_v1alpha1_EtcdCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCustomConfigurationSpec":                schema_apimachinery_apis_ops_v1alpha1_EtcdCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdHorizontalScalingSpec":                  schema_apimachinery_apis_ops_v1alpha1_EtcdHorizontalScalingSpec(ref),
@@ -19159,8 +19160,57 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVolumeExpansionSpec(ref 
 			SchemaProps: spec.SchemaProps{
 				Description: "ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for combined nodes",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"topology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for nodes in cluster topology",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionTopologySpec"),
+						},
+					},
+				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionTopologySpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVolumeExpansionTopologySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchVolumeExpansionTopologySpec is the spec for Elasticsearch volume expansion in topology mode",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"master": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for master nodes",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"data": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for data nodes",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"ingest": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for ingest nodes",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
