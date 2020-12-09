@@ -205,10 +205,7 @@ API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSp
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,Ports
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/autoscaling/v1alpha1,ComputeAutoscalerSpec,ControlledResources
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/autoscaling/v1alpha1,ElasticsearchAutoscalerList,Items
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/autoscaling/v1alpha1,ElasticsearchAutoscalerSpec,Metrics
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/autoscaling/v1alpha1,ElasticsearchAutoscalerStatus,Conditions
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/autoscaling/v1alpha1,ElasticsearchAutoscalerStatus,CurrentMetrics
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/autoscaling/v1alpha1,ElasticsearchScalingRules,Policies
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/autoscaling/v1alpha1,EtcdAutoscalerList,Items
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/autoscaling/v1alpha1,EtcdAutoscalerSpec,Metrics
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/autoscaling/v1alpha1,EtcdAutoscalerStatus,Conditions
