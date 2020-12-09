@@ -64,18 +64,18 @@ type MongoDBAutoscalerSpec struct {
 }
 
 type MongoDBComputeAutoscalerSpec struct {
-	Standalone   *ComputeAutoscalerSpec `json:"standalone,omitempty" protobuf:"bytes,2,opt,name=standalone"`
-	ReplicaSet   *ComputeAutoscalerSpec `json:"replicaSet,omitempty" protobuf:"bytes,3,opt,name=replicaSet"`
-	ConfigServer *ComputeAutoscalerSpec `json:"configServer,omitempty" protobuf:"bytes,4,opt,name=configServer"`
-	Shard        *ComputeAutoscalerSpec `json:"shard,omitempty" protobuf:"bytes,5,opt,name=shard"`
-	Mongos       *ComputeAutoscalerSpec `json:"mongos,omitempty" protobuf:"bytes,6,opt,name=mongos"`
+	Standalone   *ComputeAutoscalerSpec `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
+	ReplicaSet   *ComputeAutoscalerSpec `json:"replicaSet,omitempty" protobuf:"bytes,2,opt,name=replicaSet"`
+	ConfigServer *ComputeAutoscalerSpec `json:"configServer,omitempty" protobuf:"bytes,3,opt,name=configServer"`
+	Shard        *ComputeAutoscalerSpec `json:"shard,omitempty" protobuf:"bytes,4,opt,name=shard"`
+	Mongos       *ComputeAutoscalerSpec `json:"mongos,omitempty" protobuf:"bytes,5,opt,name=mongos"`
 }
 
 type MongoDBStorageAutoscalerSpec struct {
-	Standalone   *StorageAutoscalerSpec `json:"standalone,omitempty" protobuf:"bytes,2,opt,name=standalone"`
-	ReplicaSet   *StorageAutoscalerSpec `json:"replicaSet,omitempty" protobuf:"bytes,3,opt,name=replicaSet"`
-	ConfigServer *StorageAutoscalerSpec `json:"configServer,omitempty" protobuf:"bytes,4,opt,name=configServer"`
-	Shard        *StorageAutoscalerSpec `json:"shard,omitempty" protobuf:"bytes,5,opt,name=shard"`
+	Standalone   *StorageAutoscalerSpec `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
+	ReplicaSet   *StorageAutoscalerSpec `json:"replicaSet,omitempty" protobuf:"bytes,2,opt,name=replicaSet"`
+	ConfigServer *StorageAutoscalerSpec `json:"configServer,omitempty" protobuf:"bytes,3,opt,name=configServer"`
+	Shard        *StorageAutoscalerSpec `json:"shard,omitempty" protobuf:"bytes,4,opt,name=shard"`
 }
 
 // MongoDBAutoscalerStatus describes the runtime state of the autoscaler.
@@ -95,10 +95,10 @@ type MongoDBAutoscalerConditionType string
 var (
 	// ConfigDeprecated indicates that this VPA configuration is deprecated
 	// and will stop being supported soon.
-	ConfigDeprecated MongoDBAutoscalerConditionType = "ConfigDeprecated"
+	MongoDBAutoscalerConfigDeprecated MongoDBAutoscalerConditionType = "ConfigDeprecated"
 	// ConfigUnsupported indicates that this VPA configuration is unsupported
 	// and recommendations will not be provided for it.
-	ConfigUnsupported MongoDBAutoscalerConditionType = "ConfigUnsupported"
+	MongoDBAutoscalerConfigUnsupported MongoDBAutoscalerConditionType = "ConfigUnsupported"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

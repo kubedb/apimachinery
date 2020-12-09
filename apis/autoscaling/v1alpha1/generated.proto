@@ -653,25 +653,25 @@ message MongoDBAutoscalerStatus {
 }
 
 message MongoDBComputeAutoscalerSpec {
-  optional ComputeAutoscalerSpec standalone = 2;
+  optional ComputeAutoscalerSpec standalone = 1;
 
-  optional ComputeAutoscalerSpec replicaSet = 3;
+  optional ComputeAutoscalerSpec replicaSet = 2;
 
-  optional ComputeAutoscalerSpec configServer = 4;
+  optional ComputeAutoscalerSpec configServer = 3;
 
-  optional ComputeAutoscalerSpec shard = 5;
+  optional ComputeAutoscalerSpec shard = 4;
 
-  optional ComputeAutoscalerSpec mongos = 6;
+  optional ComputeAutoscalerSpec mongos = 5;
 }
 
 message MongoDBStorageAutoscalerSpec {
-  optional StorageAutoscalerSpec standalone = 2;
+  optional StorageAutoscalerSpec standalone = 1;
 
-  optional StorageAutoscalerSpec replicaSet = 3;
+  optional StorageAutoscalerSpec replicaSet = 2;
 
-  optional StorageAutoscalerSpec configServer = 4;
+  optional StorageAutoscalerSpec configServer = 3;
 
-  optional StorageAutoscalerSpec shard = 5;
+  optional StorageAutoscalerSpec shard = 4;
 }
 
 // +kubebuilder:object:root=true
