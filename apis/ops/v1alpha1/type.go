@@ -102,6 +102,7 @@ const (
 	UpdateIngestNodePVCs   = "UpdateIngestNodePVCs"
 	UpdateCombinedNodePVCs = "UpdateCombinedNodePVCs"
 	OrphanStatefulSetPods  = "OrphanStatefulSetPods"
+	RecreateStatefulSets   = "RecreateStatefulSets"
 )
 
 // +kubebuilder:validation:Enum=Progressing;Successful;WaitingForApproval;Failed;Approved;Denied
