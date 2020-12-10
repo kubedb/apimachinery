@@ -18910,6 +18910,13 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchAutoscalerStatus
 				Description: "ElasticsearchAutoscalerStatus describes the runtime state of the autoscaler.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 					"conditions": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -20146,6 +20153,13 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBAutoscalerStatus(ref c
 				Description: "MongoDBAutoscalerStatus describes the runtime state of the autoscaler.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 					"conditions": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{

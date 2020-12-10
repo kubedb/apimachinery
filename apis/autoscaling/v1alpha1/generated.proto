@@ -110,6 +110,10 @@ message ElasticsearchAutoscalerSpec {
 
 // ElasticsearchAutoscalerStatus describes the runtime state of the autoscaler.
 message ElasticsearchAutoscalerStatus {
+  // observedGeneration is the most recent generation observed by this autoscaler.
+  // +optional
+  optional int64 observedGeneration = 1;
+
   // Conditions is the set of conditions required for this autoscaler to scale its target,
   // and indicates whether or not those conditions are met.
   // +optional
@@ -644,6 +648,10 @@ message MongoDBAutoscalerSpec {
 
 // MongoDBAutoscalerStatus describes the runtime state of the autoscaler.
 message MongoDBAutoscalerStatus {
+  // observedGeneration is the most recent generation observed by this autoscaler.
+  // +optional
+  optional int64 observedGeneration = 1;
+
   // Conditions is the set of conditions required for this autoscaler to scale its target,
   // and indicates whether or not those conditions are met.
   // +optional

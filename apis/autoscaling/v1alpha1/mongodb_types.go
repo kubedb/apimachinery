@@ -80,6 +80,10 @@ type MongoDBStorageAutoscalerSpec struct {
 
 // MongoDBAutoscalerStatus describes the runtime state of the autoscaler.
 type MongoDBAutoscalerStatus struct {
+	// observedGeneration is the most recent generation observed by this autoscaler.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,1,opt,name=observedGeneration"`
+
 	// Conditions is the set of conditions required for this autoscaler to scale its target,
 	// and indicates whether or not those conditions are met.
 	// +optional
