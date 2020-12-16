@@ -117,22 +117,6 @@ var cases = []struct {
 		nil,
 		true,
 	},
-	{"Delete Namespace containing doNotPause db",
-		requestKind,
-		"demo",
-		admission.Delete,
-		sampleNamespace(),
-		[]*unstructured.Unstructured{editDoNotPause(sampleDatabase(), true)},
-		false,
-	},
-	{"Delete Namespace containing NO doNotPause db",
-		requestKind,
-		"demo",
-		admission.Delete,
-		sampleNamespace(),
-		[]*unstructured.Unstructured{editDoNotPause(sampleDatabase(), false)},
-		true,
-	},
 	{"Delete Namespace containing db with terminationPolicy DoNotTerminate",
 		requestKind,
 		"demo",
@@ -206,14 +190,6 @@ func sampleDatabase() *unstructured.Unstructured {
 			"status": map[string]interface{}{},
 		},
 	}
-}
-
-func editDoNotPause(db *unstructured.Unstructured, doNotPause bool) *unstructured.Unstructured {
-	err := unstructured.SetNestedField(db.Object, doNotPause, "spec", "doNotPause")
-	if err != nil {
-		panic(err)
-	}
-	return db
 }
 
 func editTerminationPolicy(db *unstructured.Unstructured, terminationPolicy api.TerminationPolicy) *unstructured.Unstructured {
