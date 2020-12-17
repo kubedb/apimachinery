@@ -18769,6 +18769,13 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ComputeAutoscalerSpec(ref com
 							Format:      "int64",
 						},
 					},
+					"inMemoryScalingThreshold": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the percentage of the Memory that will be passed as inMemorySizeGB The default is 70%.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 			},
 		},

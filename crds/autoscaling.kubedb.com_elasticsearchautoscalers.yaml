@@ -43,6 +43,9 @@ spec:
                       items:
                         type: string
                       type: array
+                    inMemoryScalingThreshold:
+                      format: int32
+                      type: integer
                     maxAllowed:
                       additionalProperties:
                         anyOf:
@@ -78,6 +81,9 @@ spec:
                           items:
                             type: string
                           type: array
+                        inMemoryScalingThreshold:
+                          format: int32
+                          type: integer
                         maxAllowed:
                           additionalProperties:
                             anyOf:
@@ -111,6 +117,9 @@ spec:
                           items:
                             type: string
                           type: array
+                        inMemoryScalingThreshold:
+                          format: int32
+                          type: integer
                         maxAllowed:
                           additionalProperties:
                             anyOf:
@@ -144,6 +153,9 @@ spec:
                           items:
                             type: string
                           type: array
+                        inMemoryScalingThreshold:
+                          format: int32
+                          type: integer
                         maxAllowed:
                           additionalProperties:
                             anyOf:

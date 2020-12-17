@@ -82,6 +82,11 @@ type ComputeAutoscalerSpec struct {
 	// The default is 12h.
 	// +optional
 	PodLifeTimeThreshold time.Duration `json:"podLifeTimeThreshold,omitempty" protobuf:"varint,8,opt,name=podLifeTimeThreshold,casttype=time.Duration"`
+
+	// Specifies the percentage of the Memory that will be passed as inMemorySizeGB
+	// The default is 70%.
+	// +optional
+	InMemoryScalingThreshold int32 `json:"inMemoryScalingThreshold,omitempty" protobuf:"varint,10,opt,name=inMemoryScalingThreshold"`
 }
 
 type StorageAutoscalerSpec struct {

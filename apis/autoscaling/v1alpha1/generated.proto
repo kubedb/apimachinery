@@ -67,6 +67,11 @@ message ComputeAutoscalerSpec {
   // The default is 12h.
   // +optional
   optional int64 podLifeTimeThreshold = 8;
+
+  // Specifies the percentage of the Memory that will be passed as inMemorySizeGB
+  // The default is 70%.
+  // +optional
+  optional int32 inMemoryScalingThreshold = 10;
 }
 
 // +kubebuilder:object:root=true
