@@ -50,6 +50,8 @@ const (
 	Reconfigure               = "Reconfigure"
 	UpgradeNodes              = "UpgradeNodes"
 	RestartNodes              = "RestartNodes"
+	TLSRemoved                = "TLSRemoved"
+	TLSAdded                  = "TLSAdded"
 
 	// MongoDB Constants
 	StartingBalancer            = "StartingBalancer"
