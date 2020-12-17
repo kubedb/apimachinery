@@ -1393,8 +1393,6 @@ kmodules.xyz/client-go v0.0.0-20201208053851-a1d7be95e006/go.mod h1:WXDwZBmvrcLg
 kmodules.xyz/constants v0.0.0-20200923054614-6b87dbbae4d6/go.mod h1:DbiFk1bJ1KEO94t1SlAn7tzc+Zz95rSXgyUKa2nzPmY=
 kmodules.xyz/crd-schema-fuzz v0.0.0-20200922204806-c1426cd7fcf4 h1:NWWv+Qju8xzHZT9hIk1+BbgQtIytNOoCU4g4vqUmh3M=
 kmodules.xyz/crd-schema-fuzz v0.0.0-20200922204806-c1426cd7fcf4/go.mod h1:WrO3fryNyFCgqqyWnwI89lnzWA7kN072Ehya7ELGfzE=
-kmodules.xyz/custom-resources v0.0.0-20201105075444-3c6af51b4f79 h1:BKPPUY/w0ac4R6g172zrejs+MLae2CHGqHCFpzrbRLc=
-kmodules.xyz/custom-resources v0.0.0-20201105075444-3c6af51b4f79/go.mod h1:/r3/eJ3LIfwGyBEVaobqUZRZGh7GJv5RJojj/bdD14Q=
 kmodules.xyz/custom-resources v0.0.0-20201124062543-bd8d35c21b0c h1:OIAnTI2yik4i1DSe23kO+89RMw/Eu6WUG/IQ++ivYNo=
 kmodules.xyz/custom-resources v0.0.0-20201124062543-bd8d35c21b0c/go.mod h1:/r3/eJ3LIfwGyBEVaobqUZRZGh7GJv5RJojj/bdD14Q=
 kmodules.xyz/monitoring-agent-api v0.0.0-20201105074044-be7a1044891a h1:3uwHtoj4msqYEoAJ7lyS7z3OFeQPF9v3J4Iv8shs86U=
@@ -1434,6 +1432,6 @@ sigs.k8s.io/yaml v1.2.0/go.mod h1:yfXDCHCao9+ENCvLSE62v9VSji2MKu5jeNfTrofGhJc=
 software.sslmate.com/src/go-pkcs12 v0.0.0-20180114231543-2291e8f0f237/go.mod h1:/xvNRWUqm0+/ZMiF4EX00vrSCMsE4/NHb+Pt3freEeQ=
 sourcegraph.com/sourcegraph/appdash v0.0.0-20190731080439-ebfcffb1b5c0/go.mod h1:hI742Nqp5OhwiqlzhgfbWU4mW4yO10fP+LoT9WOswdU=
 sourcegraph.com/sqs/pbtypes v0.0.0-20180604144634-d3ebe8f20ae4/go.mod h1:ketZ/q3QxT9HOBeFhu6RdvsftgpsbFHBF5Cas6cDKZ0=
-stash.appscode.dev/apimachinery v0.11.7 h1:NgAES2E1YWPAKJE7agHPOC9jGV2rFB/zW3XjRcSlyUo=
-stash.appscode.dev/apimachinery v0.11.7/go.mod h1:QnuI/VQTYxiT5ikxHqwOmqO96emPJPykbxfEp7pgjhk=
+stash.appscode.dev/apimachinery v0.11.8 h1:Po7gDpZqd+iQ8DR3zu1iJgIPQiFODPjiA6NIKhO2+7s=
+stash.appscode.dev/apimachinery v0.11.8/go.mod h1:s91NxOW9K/CLv9Cl9XVCzBLgdKqVcUOyc9VrYg0NNB0=
 vbom.ml/util v0.0.0-20160121211510-db5cfe13f5cc/go.mod h1:so/NYdZXCz+E3ZpW0uAoCj6uzU2+8OWDFv/HxUSs7kI=
