@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
+	kmapi "kmodules.xyz/client-go/api/v1"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -225,6 +226,27 @@ func (m *MariaDBSpec) GetPersistentSecrets() []string {
 	}
 	return secrets
 }
+
+
+// CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
+func (m *MariaDB) CertificateName(alias MariaDBCertificateAlias) string {
+	return meta_util.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias)))
+}
+
+// MustCertSecretName returns the secret name for a certificate alias
+func (m *MariaDB) MustCertSecretName(alias MariaDBCertificateAlias) string {
+	if m == nil {
+		panic("missing MariaDB database")
+	} else if m.Spec.TLS == nil {
+		panic(fmt.Errorf("MariaDB %s/%s is missing tls spec", m.Namespace, m.Name))
+	}
+	name, ok := kmapi.GetCertificateSecretName(m.Spec.TLS.Certificates, string(alias))
+	if !ok {
+		panic(fmt.Errorf("MariaDB %s/%s is missing secret name for %s certificate", m.Namespace, m.Name, alias))
+	}
+	return name
+}
+
 
 func (m *MariaDB) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
 	// Desire number of statefulSets
