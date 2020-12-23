@@ -18,7 +18,6 @@ package v1alpha2
 
 import (
 	"fmt"
-	kmapi "kmodules.xyz/client-go/api/v1"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -28,6 +27,7 @@ import (
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
@@ -174,7 +174,18 @@ func (m *MariaDB) SetDefaults() {
 
 	m.Spec.setDefaultProbes()
 	m.Spec.Monitor.SetDefaults()
+
+	m.SetTLSDefaults()
 	setDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, defaultResourceLimits, defaultResourceLimits)
+}
+
+func (m *MariaDB) SetTLSDefaults() {
+	if m.Spec.TLS == nil || m.Spec.TLS.IssuerRef == nil {
+		return
+	}
+	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MariaDBServerCert), m.CertificateName(MariaDBServerCert))
+	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MariaDBArchiverCert), m.CertificateName(MariaDBArchiverCert))
+	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MariaDBMetricsExporterCert), m.CertificateName(MariaDBMetricsExporterCert))
 }
 
 func (m *MariaDBSpec) setDefaultProbes() {
@@ -227,7 +238,6 @@ func (m *MariaDBSpec) GetPersistentSecrets() []string {
 	return secrets
 }
 
-
 // CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
 func (m *MariaDB) CertificateName(alias MariaDBCertificateAlias) string {
 	return meta_util.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias)))
@@ -246,7 +256,6 @@ func (m *MariaDB) MustCertSecretName(alias MariaDBCertificateAlias) string {
 	}
 	return name
 }
-
 
 func (m *MariaDB) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
 	// Desire number of statefulSets
