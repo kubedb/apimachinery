@@ -52,6 +52,7 @@ const (
 	RestartNodes              = "RestartNodes"
 	TLSRemoved                = "TLSRemoved"
 	TLSAdded                  = "TLSAdded"
+	TLSChanged                = "TLSChanged"
 
 	// MongoDB Constants
 	StartingBalancer            = "StartingBalancer"
