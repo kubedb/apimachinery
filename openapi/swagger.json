@@ -30626,13 +30626,28 @@
       "description": "ElasticsearchHorizontalScalingSpec contains the horizontal scaling information of an Elasticsearch cluster",
       "type": "object",
       "properties": {
-        "client": {
-          "description": "Number of client nodes",
+        "node": {
+          "description": "Number of combined (i.e. master, data, ingest) node",
           "type": "integer",
           "format": "int32"
         },
+        "topology": {
+          "description": "Node topology specification",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchHorizontalScalingTopologySpec"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchHorizontalScalingTopologySpec": {
+      "description": "ElasticsearchHorizontalScalingTopologySpec contains the horizontal scaling information in cluster topology mode",
+      "type": "object",
+      "properties": {
         "data": {
           "description": "Number of data nodes",
+          "type": "integer",
+          "format": "int32"
+        },
+        "ingest": {
+          "description": "Number of ingest nodes",
           "type": "integer",
           "format": "int32"
         },
