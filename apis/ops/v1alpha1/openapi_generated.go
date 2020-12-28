@@ -404,9 +404,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchOpsRequestList":                schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchOpsRequestSpec":                schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchOpsRequestStatus":              schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestStatus(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchReplicaReadinessCriteria":      schema_apimachinery_apis_ops_v1alpha1_ElasticsearchReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchUpgradeSpec":                   schema_apimachinery_apis_ops_v1alpha1_ElasticsearchUpgradeSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingSpec":           schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVerticalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingTopologySpec":   schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVerticalScalingTopologySpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionSpec":           schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCustomConfiguration":                    schema_apimachinery_apis_ops_v1alpha1_EtcdCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCustomConfigurationSpec":                schema_apimachinery_apis_ops_v1alpha1_EtcdCustomConfigurationSpec(ref),
@@ -19068,17 +19068,6 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestStatus(ref com
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchReplicaReadinessCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchReplicaReadinessCriteria is the criteria for checking readiness of a Elasticsearch pod after updating, horizontal scaling etc.",
-				Type:        []string{"object"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchUpgradeSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19092,16 +19081,9 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchUpgradeSpec(ref common.R
 							Format:      "",
 						},
 					},
-					"readinessCriteria": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchReplicaReadinessCriteria"),
-						},
-					},
 				},
 			},
 		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchReplicaReadinessCriteria"},
 	}
 }
 
@@ -19112,16 +19094,62 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVerticalScalingSpec(ref 
 				Description: "ElasticsearchVerticalScalingSpec is the spec for Elasticsearch vertical scaling",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"readinessCriteria": {
+					"node": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchReplicaReadinessCriteria"),
+							Description: "Resource spec for combined nodes",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"exporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for exporter sidecar",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"topology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the resource spec for cluster in topology mode",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingTopologySpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchReplicaReadinessCriteria"},
+			"k8s.io/api/core/v1.ResourceRequirements", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingTopologySpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVerticalScalingTopologySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchVerticalScalingTopologySpec is the resource spec in the cluster topology mode",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"master": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for master nodes",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"data": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for data nodes",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"ingest": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for ingest nodes",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements"},
 	}
 }
 

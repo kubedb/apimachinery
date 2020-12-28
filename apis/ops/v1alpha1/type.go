@@ -96,6 +96,7 @@ const (
 	ScaleDownDataNode     = "ScaleDownDataNode"
 	ScaleDownIngestNode   = "ScaleDownIngestNode"
 	ScaleDownCombinedNode = "ScaleDownCombinedNode"
+	UpdateNodeResources   = "UpdateNodeResources"
 )
 
 // +kubebuilder:validation:Enum=Progressing;Successful;WaitingForApproval;Failed;Approved;Denied

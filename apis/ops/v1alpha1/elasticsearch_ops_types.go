@@ -70,15 +70,9 @@ type ElasticsearchOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
 
-// ElasticsearchReplicaReadinessCriteria is the criteria for checking readiness of a Elasticsearch pod
-// after updating, horizontal scaling etc.
-type ElasticsearchReplicaReadinessCriteria struct {
-}
-
 type ElasticsearchUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                                 `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *ElasticsearchReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion string `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
 }
 
 // ElasticsearchHorizontalScalingSpec contains the horizontal scaling information of an Elasticsearch cluster
@@ -101,7 +95,22 @@ type ElasticsearchHorizontalScalingTopologySpec struct {
 
 // ElasticsearchVerticalScalingSpec is the spec for Elasticsearch vertical scaling
 type ElasticsearchVerticalScalingSpec struct {
-	ReadinessCriteria *ElasticsearchReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,1,opt,name=readinessCriteria"`
+	// Resource spec for combined nodes
+	Node *core.ResourceRequirements `json:"node,omitempty" protobuf:"bytes,1,opt,name=node"`
+	// Resource spec for exporter sidecar
+	Exporter *core.ResourceRequirements `json:"exporter,omitempty" protobuf:"bytes,2,opt,name=exporter"`
+	// Specifies the resource spec for cluster in topology mode
+	Topology *ElasticsearchVerticalScalingTopologySpec `json:"topology,omitempty" protobuf:"bytes,3,opt,name=topology"`
+}
+
+// ElasticsearchVerticalScalingTopologySpec is the resource spec in the cluster topology mode
+type ElasticsearchVerticalScalingTopologySpec struct {
+	// Resource spec for master nodes
+	Master *core.ResourceRequirements `json:"master,omitempty" protobuf:"bytes,1,opt,name=master"`
+	// Resource spec for data nodes
+	Data *core.ResourceRequirements `json:"data,omitempty" protobuf:"bytes,2,opt,name=data"`
+	// Resource spec for ingest nodes
+	Ingest *core.ResourceRequirements `json:"ingest,omitempty" protobuf:"bytes,3,opt,name=ingest"`
 }
 
 // ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion
