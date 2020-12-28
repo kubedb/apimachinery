@@ -88,15 +88,20 @@ const (
 	ConfigServerVolumeExpansion = "ConfigServerVolumeExpansion"
 
 	// Elasticsearch Constant
-	ScaleUpMasterNode     = "ScaleUpMasterNode"
-	ScaleUpDataNode       = "ScaleUpDataNode"
-	ScaleUpIngestNode     = "ScaleUpIngestNode"
-	ScaleUpCombinedNode   = "ScaleUpCombinedNode"
-	ScaleDownMasterNode   = "ScaleDownMasterNode"
-	ScaleDownDataNode     = "ScaleDownDataNode"
-	ScaleDownIngestNode   = "ScaleDownIngestNode"
-	ScaleDownCombinedNode = "ScaleDownCombinedNode"
-	UpdateNodeResources   = "UpdateNodeResources"
+	OrphanStatefulSetPods  = "OrphanStatefulSetPods"
+	ReadyStatefulSets      = "ReadyStatefulSets"
+	ScaleDownCombinedNode  = "ScaleDownCombinedNode"
+	ScaleDownDataNode      = "ScaleDownDataNode"
+	ScaleDownIngestNode    = "ScaleDownIngestNode"
+	ScaleDownMasterNode    = "ScaleDownMasterNode"
+	ScaleUpCombinedNode    = "ScaleUpCombinedNode"
+	ScaleUpDataNode        = "ScaleUpDataNode"
+	ScaleUpIngestNode      = "ScaleUpIngestNode"
+	ScaleUpMasterNode      = "ScaleUpMasterNode"
+	UpdateCombinedNodePVCs = "UpdateCombinedNodePVCs"
+	UpdateDataNodePVCs     = "UpdateDataNodePVCs"
+	UpdateIngestNodePVCs   = "UpdateIngestNodePVCs"
+	UpdateNodeResources    = "UpdateNodeResources"
 )
 
 // +kubebuilder:validation:Enum=Progressing;Successful;WaitingForApproval;Failed;Approved;Denied

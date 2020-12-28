@@ -168,6 +168,23 @@ message ElasticsearchVerticalScalingTopologySpec {
 
 // ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion
 message ElasticsearchVolumeExpansionSpec {
+  // volume specification for combined nodes
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity node = 1;
+
+  // volume specification for nodes in cluster topology
+  optional ElasticsearchVolumeExpansionTopologySpec topology = 2;
+}
+
+// ElasticsearchVolumeExpansionTopologySpec is the spec for Elasticsearch volume expansion in topology mode
+message ElasticsearchVolumeExpansionTopologySpec {
+  // volume specification for master nodes
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity master = 1;
+
+  // volume specification for data nodes
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity data = 2;
+
+  // volume specification for ingest nodes
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity ingest = 3;
 }
 
 message EtcdCustomConfiguration {
