@@ -102,6 +102,17 @@ const (
 	UpdateDataNodePVCs     = "UpdateDataNodePVCs"
 	UpdateIngestNodePVCs   = "UpdateIngestNodePVCs"
 	UpdateNodeResources    = "UpdateNodeResources"
+
+	//Redis Constants
+	PatchedSecret                = "patchedSecret"
+	ConfigKeyRedis               = "redis.conf"
+	IssuingConditionUpdated      = "IssuingConditionUpdated"
+	CertificateIssuingSuccessful = "CertificateIssuingSuccessful"
+	TLSAdded                     = "TLSAdded"
+	TLSRemoved                   = "TLSRemoved"
+	RedisTLSArg                  = "--tls-port 6379"
+	DBReady                      = "DBReady"
+	RestartedPods                = "RestartedPods"
 )
 
 // +kubebuilder:validation:Enum=Progressing;Successful;WaitingForApproval;Failed;Approved;Denied
