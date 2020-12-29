@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"testing"
 
+	"kubedb.dev/apimachinery/apis/kubedb"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 
@@ -33,7 +34,7 @@ import (
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	fake_dynamic "k8s.io/client-go/dynamic/fake"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
-	"kmodules.xyz/client-go/meta"
+	meta_util "kmodules.xyz/client-go/meta"
 )
 
 func init() {
@@ -55,7 +56,7 @@ func TestNamespaceValidator_Admit(t *testing.T) {
 			validator.initialized = true
 			validator.dc = fake_dynamic.NewSimpleDynamicClient(clientsetscheme.Scheme)
 
-			objJS, err := meta.MarshalToJson(c.object, core.SchemeGroupVersion)
+			objJS, err := meta_util.MarshalToJson(c.object, core.SchemeGroupVersion)
 			if err != nil {
 				t.Fatalf("failed create marshal for input %s: %s", c.testName, err)
 			}
@@ -181,7 +182,7 @@ func sampleDatabase() *unstructured.Unstructured {
 				"name":      "foo",
 				"namespace": "demo",
 				"labels": map[string]interface{}{
-					api.LabelDatabaseKind: api.ResourceKindPostgres,
+					meta_util.ManagedByLabelKey: kubedb.GroupName,
 				},
 			},
 			"spec": map[string]interface{}{
