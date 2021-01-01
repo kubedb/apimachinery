@@ -83,7 +83,7 @@ func (m MongoDB) ShardCommonNodeName() string {
 	if m.Spec.ShardTopology == nil {
 		return ""
 	}
-	shardName := fmt.Sprintf("%v-shard", m.OffshootName())
+	shardName := fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeShard)
 	return m.Spec.ShardTopology.Shard.Prefix + shardName
 }
 
@@ -91,7 +91,7 @@ func (m MongoDB) ConfigSvrNodeName() string {
 	if m.Spec.ShardTopology == nil {
 		return ""
 	}
-	configsvrName := fmt.Sprintf("%v-configsvr", m.OffshootName())
+	configsvrName := fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeConfig)
 	return m.Spec.ShardTopology.ConfigServer.Prefix + configsvrName
 }
 
@@ -99,7 +99,7 @@ func (m MongoDB) MongosNodeName() string {
 	if m.Spec.ShardTopology == nil {
 		return ""
 	}
-	mongosName := fmt.Sprintf("%v-mongos", m.OffshootName())
+	mongosName := fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeMongos)
 	return m.Spec.ShardTopology.Mongos.Prefix + mongosName
 }
 

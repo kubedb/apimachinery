@@ -115,6 +115,12 @@ const (
 	MongoDBKeyFileSecretSuffix    = "key"
 	MongoDBRootUsername           = "root"
 	MongoDBCustomConfigFile       = "mongod.conf"
+	NodeTypeMongos                = "mongos"
+	NodeTypeShard                 = "shard"
+	NodeTypeConfig                = "configsvr"
+
+	configDirectoryPath        = "/data/configdb"
+	initialConfigDirectoryPath = "/configdb-readonly"
 
 	// =========================== MySQL Constants ============================
 	MySQLMetricsExporterConfigSecretSuffix = "metrics-exporter-config"
