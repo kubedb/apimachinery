@@ -47,6 +47,9 @@ const (
 	DBCustomConfigName             = "custom-config"
 	DefaultVolumeClaimTemplateName = "data"
 
+	DBTLSVolume         = "tls-volume"
+	DBExporterTLSVolume = "exporter-tls-volume"
+
 	// =========================== Database key Constants ============================
 	PostgresKey      = ResourceSingularPostgres + "." + kubedb.GroupName
 	ElasticsearchKey = ResourceSingularElasticsearch + "." + kubedb.GroupName
