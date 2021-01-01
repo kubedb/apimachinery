@@ -66,8 +66,9 @@ type ElasticsearchAutoscalerSpec struct {
 }
 
 type ElasticsearchComputeAutoscalerSpec struct {
-	Node     *ComputeAutoscalerSpec                      `json:"node,omitempty" protobuf:"bytes,1,opt,name=node"`
-	Topology *ElasticsearchComputeTopologyAutoscalerSpec `json:"topology,omitempty" protobuf:"bytes,2,opt,name=topology"`
+	Node             *ComputeAutoscalerSpec                      `json:"node,omitempty" protobuf:"bytes,1,opt,name=node"`
+	Topology         *ElasticsearchComputeTopologyAutoscalerSpec `json:"topology,omitempty" protobuf:"bytes,2,opt,name=topology"`
+	DisableScaleDown bool                                        `json:"disableScaleDown,omitempty" protobuf:"varint,3,opt,name=disableScaleDown"`
 }
 
 type ElasticsearchComputeTopologyAutoscalerSpec struct {

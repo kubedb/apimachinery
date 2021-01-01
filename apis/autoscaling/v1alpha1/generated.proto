@@ -66,12 +66,12 @@ message ComputeAutoscalerSpec {
   // Specifies the minimum pod life time
   // The default is 12h.
   // +optional
-  optional int64 podLifeTimeThreshold = 8;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration podLifeTimeThreshold = 10;
 
   // Specifies the percentage of the Memory that will be passed as inMemorySizeGB
   // The default is 70%.
   // +optional
-  optional int32 inMemoryScalingThreshold = 10;
+  optional int32 inMemoryScalingThreshold = 11;
 }
 
 // +kubebuilder:object:root=true
@@ -131,6 +131,8 @@ message ElasticsearchComputeAutoscalerSpec {
   optional ComputeAutoscalerSpec node = 1;
 
   optional ElasticsearchComputeTopologyAutoscalerSpec topology = 2;
+
+  optional bool disableScaleDown = 3;
 }
 
 message ElasticsearchComputeTopologyAutoscalerSpec {
@@ -675,6 +677,8 @@ message MongoDBComputeAutoscalerSpec {
   optional ComputeAutoscalerSpec shard = 4;
 
   optional ComputeAutoscalerSpec mongos = 5;
+
+  optional bool disableScaleDown = 6;
 }
 
 message MongoDBStorageAutoscalerSpec {

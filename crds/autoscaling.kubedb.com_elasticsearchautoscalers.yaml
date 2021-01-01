@@ -35,6 +35,8 @@ spec:
           properties:
             compute:
               properties:
+                disableScaleDown:
+                  type: boolean
                 node:
                   properties:
                     containerControlledValues:
@@ -63,8 +65,7 @@ spec:
                         x-kubernetes-int-or-string: true
                       type: object
                     podLifeTimeThreshold:
-                      format: int64
-                      type: integer
+                      type: string
                     resourceDiffPercentage:
                       format: int32
                       type: integer
@@ -101,8 +102,7 @@ spec:
                             x-kubernetes-int-or-string: true
                           type: object
                         podLifeTimeThreshold:
-                          format: int64
-                          type: integer
+                          type: string
                         resourceDiffPercentage:
                           format: int32
                           type: integer
@@ -137,8 +137,7 @@ spec:
                             x-kubernetes-int-or-string: true
                           type: object
                         podLifeTimeThreshold:
-                          format: int64
-                          type: integer
+                          type: string
                         resourceDiffPercentage:
                           format: int32
                           type: integer
@@ -173,8 +172,7 @@ spec:
                             x-kubernetes-int-or-string: true
                           type: object
                         podLifeTimeThreshold:
-                          format: int64
-                          type: integer
+                          type: string
                         resourceDiffPercentage:
                           format: int32
                           type: integer

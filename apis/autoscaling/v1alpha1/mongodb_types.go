@@ -64,11 +64,12 @@ type MongoDBAutoscalerSpec struct {
 }
 
 type MongoDBComputeAutoscalerSpec struct {
-	Standalone   *ComputeAutoscalerSpec `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
-	ReplicaSet   *ComputeAutoscalerSpec `json:"replicaSet,omitempty" protobuf:"bytes,2,opt,name=replicaSet"`
-	ConfigServer *ComputeAutoscalerSpec `json:"configServer,omitempty" protobuf:"bytes,3,opt,name=configServer"`
-	Shard        *ComputeAutoscalerSpec `json:"shard,omitempty" protobuf:"bytes,4,opt,name=shard"`
-	Mongos       *ComputeAutoscalerSpec `json:"mongos,omitempty" protobuf:"bytes,5,opt,name=mongos"`
+	Standalone       *ComputeAutoscalerSpec `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
+	ReplicaSet       *ComputeAutoscalerSpec `json:"replicaSet,omitempty" protobuf:"bytes,2,opt,name=replicaSet"`
+	ConfigServer     *ComputeAutoscalerSpec `json:"configServer,omitempty" protobuf:"bytes,3,opt,name=configServer"`
+	Shard            *ComputeAutoscalerSpec `json:"shard,omitempty" protobuf:"bytes,4,opt,name=shard"`
+	Mongos           *ComputeAutoscalerSpec `json:"mongos,omitempty" protobuf:"bytes,5,opt,name=mongos"`
+	DisableScaleDown bool                   `json:"disableScaleDown,omitempty" protobuf:"varint,6,opt,name=disableScaleDown"`
 }
 
 type MongoDBStorageAutoscalerSpec struct {

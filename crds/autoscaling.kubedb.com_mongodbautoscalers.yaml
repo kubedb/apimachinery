@@ -63,14 +63,15 @@ spec:
                         x-kubernetes-int-or-string: true
                       type: object
                     podLifeTimeThreshold:
-                      format: int64
-                      type: integer
+                      type: string
                     resourceDiffPercentage:
                       format: int32
                       type: integer
                     trigger:
                       type: string
                   type: object
+                disableScaleDown:
+                  type: boolean
                 mongos:
                   properties:
                     containerControlledValues:
@@ -99,8 +100,7 @@ spec:
                         x-kubernetes-int-or-string: true
                       type: object
                     podLifeTimeThreshold:
-                      format: int64
-                      type: integer
+                      type: string
                     resourceDiffPercentage:
                       format: int32
                       type: integer
@@ -135,8 +135,7 @@ spec:
                         x-kubernetes-int-or-string: true
                       type: object
                     podLifeTimeThreshold:
-                      format: int64
-                      type: integer
+                      type: string
                     resourceDiffPercentage:
                       format: int32
                       type: integer
@@ -171,8 +170,7 @@ spec:
                         x-kubernetes-int-or-string: true
                       type: object
                     podLifeTimeThreshold:
-                      format: int64
-                      type: integer
+                      type: string
                     resourceDiffPercentage:
                       format: int32
                       type: integer
@@ -207,8 +205,7 @@ spec:
                         x-kubernetes-int-or-string: true
                       type: object
                     podLifeTimeThreshold:
-                      format: int64
-                      type: integer
+                      type: string
                     resourceDiffPercentage:
                       format: int32
                       type: integer

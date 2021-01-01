@@ -54,6 +54,7 @@ func (in *ComputeAutoscalerSpec) DeepCopyInto(out *ComputeAutoscalerSpec) {
 		*out = new(ContainerControlledValues)
 		**out = **in
 	}
+	out.PodLifeTimeThreshold = in.PodLifeTimeThreshold
 	return
 }
 

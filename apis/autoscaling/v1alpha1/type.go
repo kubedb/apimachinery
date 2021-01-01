@@ -17,9 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"time"
-
 	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // List of possible condition types for a autoscaler
@@ -81,12 +80,12 @@ type ComputeAutoscalerSpec struct {
 	// Specifies the minimum pod life time
 	// The default is 12h.
 	// +optional
-	PodLifeTimeThreshold time.Duration `json:"podLifeTimeThreshold,omitempty" protobuf:"varint,8,opt,name=podLifeTimeThreshold,casttype=time.Duration"`
+	PodLifeTimeThreshold metav1.Duration `json:"podLifeTimeThreshold,omitempty" protobuf:"bytes,10,opt,name=podLifeTimeThreshold"`
 
 	// Specifies the percentage of the Memory that will be passed as inMemorySizeGB
 	// The default is 70%.
 	// +optional
-	InMemoryScalingThreshold int32 `json:"inMemoryScalingThreshold,omitempty" protobuf:"varint,10,opt,name=inMemoryScalingThreshold"`
+	InMemoryScalingThreshold int32 `json:"inMemoryScalingThreshold,omitempty" protobuf:"varint,11,opt,name=inMemoryScalingThreshold"`
 }
 
 type StorageAutoscalerSpec struct {
