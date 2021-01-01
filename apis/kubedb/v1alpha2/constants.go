@@ -119,8 +119,8 @@ const (
 	NodeTypeShard                 = "shard"
 	NodeTypeConfig                = "configsvr"
 
-	configDirectoryPath        = "/data/configdb"
-	initialConfigDirectoryPath = "/configdb-readonly"
+	ConfigDirectoryPath        = "/data/configdb"
+	InitialConfigDirectoryPath = "/configdb-readonly"
 
 	// =========================== MySQL Constants ============================
 	MySQLMetricsExporterConfigSecretSuffix = "metrics-exporter-config"

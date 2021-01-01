@@ -675,3 +675,11 @@ func (m *MongoDB) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, s
 	}
 	return checkReplicas(lister.StatefulSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
 }
+
+// ConfigSecretName returns the secret name for different nodetype
+func (m *MongoDB) ConfigSecretName(nodeType string) string {
+	if nodeType != "" {
+		nodeType = "-" + nodeType
+	}
+	return m.Name + nodeType + "-config"
+}
