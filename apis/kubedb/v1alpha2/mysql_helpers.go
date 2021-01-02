@@ -46,18 +46,20 @@ func (m MySQL) OffshootName() string {
 
 func (m MySQL) OffshootSelectors() map[string]string {
 	return map[string]string{
-		LabelDatabaseName: m.Name,
-		LabelDatabaseKind: ResourceKindMySQL,
+		meta_util.NameLabelKey:      m.ResourceFQN(),
+		meta_util.InstanceLabelKey:  m.Name,
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
 }
 
 func (m MySQL) OffshootLabels() map[string]string {
 	out := m.OffshootSelectors()
-	out[meta_util.NameLabelKey] = ResourceSingularMySQL
-	out[meta_util.InstanceLabelKey] = m.Name
 	out[meta_util.ComponentLabelKey] = ComponentDatabase
-	out[meta_util.ManagedByLabelKey] = kubedb.GroupName
 	return meta_util.FilterKeys(kubedb.GroupName, out, m.Labels)
+}
+
+func (m MySQL) ResourceFQN() string {
+	return fmt.Sprintf("%s.%s", ResourcePluralMySQL, kubedb.GroupName)
 }
 
 func (m MySQL) ResourceShortCode() string {
@@ -183,7 +185,7 @@ func (m *MySQL) SetDefaults() {
 	m.Spec.Monitor.SetDefaults()
 
 	m.SetTLSDefaults()
-	setDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, defaultMySQLResourceLimits, defaultMySQLResourceLimits)
+	setDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, defaultResourceLimits, defaultResourceLimits)
 }
 
 func (m *MySQL) SetTLSDefaults() {
@@ -260,4 +262,25 @@ func (m *MySQL) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, str
 	// Desire number of statefulSets
 	expectedItems := 1
 	return checkReplicas(lister.StatefulSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
+}
+
+func MySQLRequireSSLArg() string {
+	return "--require-secure-transport=ON"
+}
+
+func MySQLExporterTLSArg() string {
+	return "--config.my-cnf=/etc/mysql/certs/exporter.cnf"
+}
+
+func (m *MySQL) MySQLTLSArgs() []string {
+	tlsArgs := []string{
+		"--ssl-capath=/etc/mysql/certs",
+		"--ssl-ca=/etc/mysql/certs/ca.crt",
+		"--ssl-cert=/etc/mysql/certs/server.crt",
+		"--ssl-key=/etc/mysql/certs/server.key",
+	}
+	if m.Spec.RequireSSL {
+		tlsArgs = append(tlsArgs, MySQLRequireSSLArg())
+	}
+	return tlsArgs
 }

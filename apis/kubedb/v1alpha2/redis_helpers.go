@@ -53,18 +53,20 @@ func (r Redis) OffshootName() string {
 
 func (r Redis) OffshootSelectors() map[string]string {
 	return map[string]string{
-		LabelDatabaseName: r.Name,
-		LabelDatabaseKind: ResourceKindRedis,
+		meta_util.NameLabelKey:      r.ResourceFQN(),
+		meta_util.InstanceLabelKey:  r.Name,
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
 }
 
 func (r Redis) OffshootLabels() map[string]string {
 	out := r.OffshootSelectors()
-	out[meta_util.NameLabelKey] = ResourceSingularRedis
-	out[meta_util.InstanceLabelKey] = r.Name
 	out[meta_util.ComponentLabelKey] = ComponentDatabase
-	out[meta_util.ManagedByLabelKey] = kubedb.GroupName
 	return meta_util.FilterKeys(kubedb.GroupName, out, r.Labels)
+}
+
+func (r Redis) ResourceFQN() string {
+	return fmt.Sprintf("%s.%s", ResourcePluralRedis, kubedb.GroupName)
 }
 
 func (r Redis) ResourceShortCode() string {
@@ -101,6 +103,10 @@ func (r Redis) BaseNameForShard() string {
 
 func (r Redis) StatefulSetNameWithShard(i int) string {
 	return fmt.Sprintf("%s%d", r.BaseNameForShard(), i)
+}
+
+func (r Redis) Address() string {
+	return fmt.Sprintf("%v.%v.svc:%d", r.Name, r.Namespace, RedisDatabasePort)
 }
 
 type redisApp struct {

@@ -83,7 +83,7 @@ func (m MongoDB) ShardCommonNodeName() string {
 	if m.Spec.ShardTopology == nil {
 		return ""
 	}
-	shardName := fmt.Sprintf("%v-shard", m.OffshootName())
+	shardName := fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeShard)
 	return m.Spec.ShardTopology.Shard.Prefix + shardName
 }
 
@@ -91,7 +91,7 @@ func (m MongoDB) ConfigSvrNodeName() string {
 	if m.Spec.ShardTopology == nil {
 		return ""
 	}
-	configsvrName := fmt.Sprintf("%v-configsvr", m.OffshootName())
+	configsvrName := fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeConfig)
 	return m.Spec.ShardTopology.ConfigServer.Prefix + configsvrName
 }
 
@@ -99,7 +99,7 @@ func (m MongoDB) MongosNodeName() string {
 	if m.Spec.ShardTopology == nil {
 		return ""
 	}
-	mongosName := fmt.Sprintf("%v-mongos", m.OffshootName())
+	mongosName := fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeMongos)
 	return m.Spec.ShardTopology.Mongos.Prefix + mongosName
 }
 
@@ -129,8 +129,9 @@ func (m MongoDB) ConfigSvrRepSetName() string {
 
 func (m MongoDB) OffshootSelectors() map[string]string {
 	return map[string]string{
-		LabelDatabaseName: m.Name,
-		LabelDatabaseKind: ResourceKindMongoDB,
+		meta_util.NameLabelKey:      m.ResourceFQN(),
+		meta_util.InstanceLabelKey:  m.Name,
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
 }
 
@@ -154,10 +155,7 @@ func (m MongoDB) MongosSelectors() map[string]string {
 
 func (m MongoDB) OffshootLabels() map[string]string {
 	out := m.OffshootSelectors()
-	out[meta_util.NameLabelKey] = ResourceSingularMongoDB
-	out[meta_util.InstanceLabelKey] = m.Name
 	out[meta_util.ComponentLabelKey] = ComponentDatabase
-	out[meta_util.ManagedByLabelKey] = kubedb.GroupName
 	return meta_util.FilterKeys(kubedb.GroupName, out, m.Labels)
 }
 
@@ -171,6 +169,10 @@ func (m MongoDB) ConfigSvrLabels() map[string]string {
 
 func (m MongoDB) MongosLabels() map[string]string {
 	return meta_util.FilterKeys(kubedb.GroupName, m.OffshootLabels(), m.MongosSelectors())
+}
+
+func (m MongoDB) ResourceFQN() string {
+	return fmt.Sprintf("%s.%s", ResourcePluralMongoDB, kubedb.GroupName)
 }
 
 func (m MongoDB) ResourceShortCode() string {
@@ -672,4 +674,12 @@ func (m *MongoDB) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, s
 		expectedItems = 2 + int(m.Spec.ShardTopology.Shard.Shards)
 	}
 	return checkReplicas(lister.StatefulSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
+}
+
+// ConfigSecretName returns the secret name for different nodetype
+func (m *MongoDB) ConfigSecretName(nodeType string) string {
+	if nodeType != "" {
+		nodeType = "-" + nodeType
+	}
+	return m.Name + nodeType + "-config"
 }
