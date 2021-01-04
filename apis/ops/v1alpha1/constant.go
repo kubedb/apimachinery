@@ -44,4 +44,12 @@ const (
 	FailedToVolumeExpand                   = "FailedToVolumeExpand"
 	SuccessfullyDBReconfigured             = "SuccessfullyDBReconfigured"
 	FailedToReconfigureDB                  = "FailedToReconfigureDB"
+	SuccessfullyRestartedDBMembers         = "SuccessfullyRestartedDBMembers"
+	FailToRestartDBMembers                 = "FailToRestartDBMembers"
+	SuccessfullyRestatedStatefulSet        = "SuccessfullyRestatedStatefulSet"
+	FailedToRestartStatefulSet             = "FailedToRestartStatefulSet"
+	SuccessfullyRemovedTLSConfig           = "SuccessfullyRemovedTLSConfig"
+	FailedToRemoveTLSConfig                = "FailedToRemoveTLSConfig"
+	SuccessfullyIssuedCertificates         = "SuccessfullyIssuedCertificates"
+	FailedToIssueCertificates              = "FailedToIssueCertificates"
 )
