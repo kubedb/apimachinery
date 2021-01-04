@@ -50,6 +50,8 @@ const (
 	FailedToRestartStatefulSet             = "FailedToRestartStatefulSet"
 	SuccessfullyRemovedTLSConfig           = "SuccessfullyRemovedTLSConfig"
 	FailedToRemoveTLSConfig                = "FailedToRemoveTLSConfig"
+	SuccessfullyAddedTLSConfig             = "SuccessfullyAddedTLSConfig"
+	FailedToAddTLSConfig                   =  "FailedToAddTLSConfig"
 	SuccessfullyIssuedCertificates         = "SuccessfullyIssuedCertificates"
 	FailedToIssueCertificates              = "FailedToIssueCertificates"
 )
