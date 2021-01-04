@@ -28555,6 +28555,10 @@
           "description": "disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user. If unset, default is false",
           "type": "boolean"
         },
+        "disableSysctlInitContainer": {
+          "description": "DisableSysctlInitContainer specifies whether to disable sysctl initContainer or not",
+          "type": "boolean"
+        },
         "enableSSL": {
           "description": "To enable ssl in transport \u0026 http layer",
           "type": "boolean"
