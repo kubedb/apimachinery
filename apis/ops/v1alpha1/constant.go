@@ -51,7 +51,7 @@ const (
 	SuccessfullyRemovedTLSConfig           = "SuccessfullyRemovedTLSConfig"
 	FailedToRemoveTLSConfig                = "FailedToRemoveTLSConfig"
 	SuccessfullyAddedTLSConfig             = "SuccessfullyAddedTLSConfig"
-	FailedToAddTLSConfig                   =  "FailedToAddTLSConfig"
+	FailedToAddTLSConfig                   = "FailedToAddTLSConfig"
 	SuccessfullyIssuedCertificates         = "SuccessfullyIssuedCertificates"
 	FailedToIssueCertificates              = "FailedToIssueCertificates"
 )
