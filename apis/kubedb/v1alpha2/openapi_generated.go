@@ -19863,6 +19863,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MariaDBSpec(ref common.ReferenceCa
 							},
 						},
 					},
+					"requireSSL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Indicates that the database server need to be encrypted connections(ssl)",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations",
