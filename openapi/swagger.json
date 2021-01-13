@@ -28477,9 +28477,6 @@
           "description": "An eviction is allowed if at most \"maxUnavailable\" pods selected by \"selector\" are unavailable after the eviction, i.e. even in absence of the evicted pod. For example, one can prevent all voluntary evictions by specifying 0. This is a mutually exclusive setting with \"minAvailable\".",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
         },
-        "prefix": {
-          "type": "string"
-        },
         "replicas": {
           "description": "Replicas represents number of replica for this specific type of node",
           "type": "integer",
@@ -28492,6 +28489,9 @@
         "storage": {
           "description": "Storage to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "suffix": {
+          "type": "string"
         }
       }
     },
