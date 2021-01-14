@@ -63,18 +63,14 @@ func GetServiceTemplate(templates []NamedServiceTemplateSpec, alias ServiceAlias
 	return ofst.ServiceTemplateSpec{}
 }
 
-func setDefaultResourceLimits(req *core.ResourceRequirements, defaultLimits, defaultRequests core.ResourceList) {
-	// if both request & limit is empty, return default
+func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultLimits core.ResourceList) {
 	// if request is set,
 	//		- limit set:
 	//			- return max(limit,request)
-	//		- limit not set:
-	//			- return request
-	// else request is not set:
-	// 		- limit set:
-	//			- return limit
-	// 		- limit not set:
-	//			- return default
+	// else if limit set:
+	//		- return limit
+	// else
+	//		- return default
 	fn := func(name core.ResourceName, defaultValue resource.Quantity) resource.Quantity {
 		if r, ok := req.Requests[name]; ok {
 			// l is greater than r == 1.
@@ -98,19 +94,12 @@ func setDefaultResourceLimits(req *core.ResourceRequirements, defaultLimits, def
 
 	// for: cpu & memory
 	//		- calculate limit
-	//		- if request not set
-	//			- return min(defaultRequest, limit)
+	//		- if request not set, set to limit
 	for resourceName := range defaultLimits {
 		req.Limits[resourceName] = fn(resourceName, defaultLimits[resourceName])
 
 		if _, ok := req.Requests[resourceName]; !ok {
-			// considering values always exist
-			req.Requests[resourceName] = defaultRequests[resourceName]
-			l := req.Limits[resourceName]
-			// l is less than default request
-			if l.Cmp(req.Requests[resourceName]) == -1 {
-				req.Requests[resourceName] = l
-			}
+			req.Requests[resourceName] = req.Limits[resourceName]
 		}
 	}
 }
