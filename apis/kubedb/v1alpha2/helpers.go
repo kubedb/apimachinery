@@ -99,12 +99,18 @@ func setDefaultResourceLimits(req *core.ResourceRequirements, defaultLimits, def
 	// for: cpu & memory
 	//		- calculate limit
 	//		- if request not set
-	//			- same as limit
+	//			- return min(defaultRequest, limit)
 	for resourceName := range defaultLimits {
 		req.Limits[resourceName] = fn(resourceName, defaultLimits[resourceName])
 
 		if _, ok := req.Requests[resourceName]; !ok {
-			req.Requests[resourceName] = req.Limits[resourceName]
+			// considering values always exist
+			req.Requests[resourceName] = defaultRequests[resourceName]
+			l := req.Limits[resourceName]
+			// l is less than default request
+			if l.Cmp(req.Requests[resourceName]) == -1 {
+				req.Requests[resourceName] = l
+			}
 		}
 	}
 }
