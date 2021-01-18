@@ -172,7 +172,7 @@ func (m *MariaDB) SetDefaults() {
 		m.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
 
-	m.Spec.setDefaultProbes()
+	//m.Spec.setDefaultProbes()
 	m.Spec.Monitor.SetDefaults()
 
 	m.SetTLSDefaults()
