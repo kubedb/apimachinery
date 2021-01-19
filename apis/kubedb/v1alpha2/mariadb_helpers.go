@@ -156,6 +156,11 @@ func (m MariaDB) StatsServiceLabels() map[string]string {
 	return lbl
 }
 
+
+func (m MariaDB) PrimaryServiceDNS() string {
+	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
+}
+
 func (m *MariaDB) SetDefaults() {
 	if m == nil {
 		return
