@@ -177,7 +177,6 @@ func (m *MariaDB) SetDefaults() {
 		m.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
 
-	//m.Spec.setDefaultProbes()
 	m.Spec.Monitor.SetDefaults()
 
 	m.SetTLSDefaults()
@@ -194,17 +193,19 @@ func (m *MariaDB) SetTLSDefaults() {
 }
 
 func (m *MariaDBSpec) setDefaultProbes() {
+	// this function is replaced with Pod's readinessGates
+	// https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-readiness-gate
 	if m == nil {
 		return
 	}
 
-	var readynessProbeCmd []string
+	var readinessProbeCmd []string
 	if pointer.Int32(m.Replicas) > 1 {
-		readynessProbeCmd = []string{
+		readinessProbeCmd = []string{
 			"/cluster-check.sh",
 		}
 	} else {
-		readynessProbeCmd = []string{
+		readinessProbeCmd = []string{
 			"bash",
 			"-c",
 			`export MYSQL_PWD="${MYSQL_ROOT_PASSWORD}"
@@ -220,7 +221,7 @@ fi
 	readinessProbe := &core.Probe{
 		Handler: core.Handler{
 			Exec: &core.ExecAction{
-				Command: readynessProbeCmd,
+				Command: readinessProbeCmd,
 			},
 		},
 		InitialDelaySeconds: 30,
