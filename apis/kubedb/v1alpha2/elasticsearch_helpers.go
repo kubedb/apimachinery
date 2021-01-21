@@ -445,7 +445,10 @@ func (e *Elasticsearch) SetTLSDefaults(esVersion *v1alpha1.ElasticsearchVersion)
 		tlsConfig.Certificates[id].PrivateKey = &kmapi.CertificatePrivateKey{
 			Encoding: kmapi.PKCS8,
 		}
-		// Set default subject to O:KubeDB,if missing
+		// Set default subject to O:KubeDB, if missing.
+		// It isn't set from SetMissingSpecForCertificate(),
+		// Because the default organization(ie. kubedb) gets merged, even if
+		// the organizations[] isn't empty.
 		if tlsConfig.Certificates[id].Subject == nil {
 			tlsConfig.Certificates[id].Subject = &kmapi.X509Subject{
 				Organizations: []string{KubeDBOrganization},
