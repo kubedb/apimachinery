@@ -31397,7 +31397,7 @@
       "description": "MongoDBReplicaReadinessCriteria is the criteria for checking readiness of a MongoDB pod after updating, horizontal scaling etc.",
       "type": "object",
       "properties": {
-        "dbSizeDiffPercentage": {
+        "objectsCountDiffPercentage": {
           "type": "integer",
           "format": "int32"
         },
