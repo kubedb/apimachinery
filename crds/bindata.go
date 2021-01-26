@@ -22,10 +22,6 @@
 // autoscaling.kubedb.com_proxysqlautoscalers.yaml
 // autoscaling.kubedb.com_redisautoscalers.v1.yaml
 // autoscaling.kubedb.com_redisautoscalers.yaml
-// autoscaling.kubedb.com_verticalautoscalercheckpoints.v1.yaml
-// autoscaling.kubedb.com_verticalautoscalercheckpoints.yaml
-// autoscaling.kubedb.com_verticalautoscalers.v1.yaml
-// autoscaling.kubedb.com_verticalautoscalers.yaml
 // catalog.kubedb.com_elasticsearchversions.v1.yaml
 // catalog.kubedb.com_elasticsearchversions.yaml
 // catalog.kubedb.com_etcdversions.v1.yaml
@@ -604,86 +600,6 @@ func autoscalingKubedbCom_redisautoscalersYaml() (*asset, error) {
 	}
 
 	info := bindataFileInfo{name: "autoscaling.kubedb.com_redisautoscalers.yaml", size: 23363, mode: os.FileMode(420), modTime: time.Unix(1573722179, 0)}
-	a := &asset{bytes: bytes, info: info}
-	return a, nil
-}
-
-var _autoscalingKubedbCom_verticalautoscalercheckpointsV1Yaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xec\x56\x4f\x6f\xd4\x4e\x0c\xbd\xe7\x53\xf8\x0b\x74\x7f\xea\xaf\x08\xa1\xdc\xaa\x72\x00\x81\xa0\xa2\x50\xce\xce\xc4\x9b\x35\x3b\xff\xe4\xf1\xac\xa8\x10\xdf\x1d\x4d\xb2\x69\x43\x9b\xa4\x45\x82\x03\x12\xbe\xc5\xf3\xec\xf7\xfc\xc6\x9b\x0d\x46\xbe\x26\x49\x1c\x7c\x0d\x18\x99\xbe\x2a\xf9\xf2\x94\x36\xfb\x17\x69\xc3\xe1\xbf\xc3\x69\xb5\x67\xdf\xd6\x70\x91\x93\x06\xf7\x81\x52\xc8\x62\xe8\x25\x6d\xd9\xb3\x72\xf0\x95\x23\xc5\x16\x15\xeb\x0a\xc0\x08\x61\x49\x7e\x64\x47\x49\xd1\xc5\x1a\x7c\xb6\xb6\x02\xb0\xd8\x90\x4d\x05\x03\x80\x31\x6e\xf6\xb9\x21\xf1\xa4\xd4\xb3\x78\x74\x54\x43\xc9\xb5\x4d\x05\x30\x3c\x1e\x48\x94\x0d\x5a\xcc\x1a\x92\x41\x4b\x62\x76\x64\xf6\x31\xb0\xd7\xb4\x19\xb3\xec\xbb\xcd\x50\xb8\x31\xc1\x55\x29\x92\x29\x2c\x9d\x84\x1c\x6b\x58\x40\x0d\x14\x47\x39\xc3\x7c\xd7\x47\xb6\xf3\x5b\xb6\x8b\x5b\xb6\x1e\x66\x39\xe9\x9b\x47\xa1\x6f\x39\x0d\xf0\x68\xb3\xa0\x7d\x64\x8a\x1e\x99\xd8\x77\xd9\xa2\xac\x63\x2b\x80\x64\x42\xa4\x1a\xde\x15\xe9\x11\x0d\xb5\x15\x94\x92\xfe\xbe\xca\x28\x27\xa3\x71\xa7\x68\xe3\x0e\x4f\x87\xee\x66\x47\x0e\x87\x49\x01\x42\x24\x7f\x7e\xf9\xfa\xfa\xec\xea\xa7\x34\x40\x94\x10\x0b\xfb\x68\xca\x10\x93\xf5\x98\x64\x01\xf4\xa6\x08\x49\x2a\xec\xbb\xc9\x41\xef\xe4\x53\x80\xd3\x9d\xb9\x0f\x0e\xcd\x17\x32\x3a\x39\x18\xaf\xf4\x2e\xe6\xc5\x96\x30\xc1\x2b\xb2\x27\x29\x26\xdd\x3f\x5c\x94\x53\xe2\x10\xf1\x7d\xcf\xfc\x8b\x95\x4b\xa2\x15\x35\xa7\x27\xcb\x8e\xf9\x15\x27\x0d\x9d\xa0\x7b\xc8\xbd\x5c\x57\xa2\xc9\x66\x4f\xfa\x99\xb8\xdb\xe9\x2c\x00\x00\xdb\xb6\xff\xad\xa2\xbd\x5c\x6d\x55\x62\x1b\xc4\xa1\xd6\xc0\x5e\xcf\xfe\x5f\xc0\x0c\x33\xb3\x57\xea\x48\x66\x31\x0b\xae\x8c\x21\xb4\x25\x21\x6f\xe8\xee\x45\x31\xdb\x66\x14\xd3\xa2\xd2\x89\xb2\xa3\x15\xb2\xd9\x5b\xed\x8f\x83\xa2\x1d\xfc\x59\x67\xd9\xda\x80\x73\x6a\x47\x06\x9f\x5d\x33\x33\xef\xca\xac\x5b\x96\xa4\x57\xe8\xa2\xa5\x2b\x45\x99\xe1\x7f\x7c\xc2\x95\xe9\x2c\xfe\xe9\xee\x9f\x62\x29\x2d\xb7\xf4\x9b\x9b\x3b\x72\x41\x6e\xfe\x2d\xfd\x8a\x98\xbf\x75\xe9\x7b\xea\x61\x2d\xd3\x45\xc8\x7e\x65\x2f\xd9\xeb\xf3\x67\x0b\xbd\xe7\x9d\x3e\xcc\xfd\x1d\xad\xfa\x31\xab\xf4\x41\x32\x91\x1c\xa8\xad\x41\x25\x0f\x7e\x27\x0d\x82\x1d\x4d\x33\xb9\x91\xe3\xe7\xcf\xed\x22\x1d\x5f\xf3\xf0\xed\x7b\xf5\x23\x00\x00\xff\xff\xd7\x1c\x14\xf3\x4b\x09\x00\x00")
-
-func autoscalingKubedbCom_verticalautoscalercheckpointsV1YamlBytes() ([]byte, error) {
-	return bindataRead(
-		_autoscalingKubedbCom_verticalautoscalercheckpointsV1Yaml,
-		"autoscaling.kubedb.com_verticalautoscalercheckpoints.v1.yaml",
-	)
-}
-
-func autoscalingKubedbCom_verticalautoscalercheckpointsV1Yaml() (*asset, error) {
-	bytes, err := autoscalingKubedbCom_verticalautoscalercheckpointsV1YamlBytes()
-	if err != nil {
-		return nil, err
-	}
-
-	info := bindataFileInfo{name: "autoscaling.kubedb.com_verticalautoscalercheckpoints.v1.yaml", size: 2379, mode: os.FileMode(420), modTime: time.Unix(1573722179, 0)}
-	a := &asset{bytes: bytes, info: info}
-	return a, nil
-}
-
-var _autoscalingKubedbCom_verticalautoscalercheckpointsYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xec\x56\xdd\x6e\xd4\x4c\x0c\xbd\xcf\x53\xf8\x05\xba\x9f\xf6\x2b\x42\x28\x77\x55\x11\x02\x81\xa0\xa2\xb4\x5c\x3b\x13\x6f\xd6\xec\xfc\x69\xc6\x13\xa8\x10\xef\x8e\x26\xb3\x49\x69\x37\xd9\x05\x09\x2e\x90\xf0\x5d\xce\x9c\xf1\xf1\xb1\xdd\xce\xa2\xe7\x5b\x0a\x91\x9d\xad\x01\x3d\xd3\x17\x21\x9b\xbf\xe2\x6a\xf7\x2c\xae\xd8\xfd\xd7\xaf\x1b\x12\x5c\x57\x3b\xb6\x6d\x0d\x97\x29\x8a\x33\xef\x29\xba\x14\x14\x3d\xa7\x0d\x5b\x16\x76\xb6\x32\x24\xd8\xa2\x60\x5d\x01\xa8\x40\x98\xc1\x0f\x6c\x28\x0a\x1a\x5f\x83\x4d\x5a\x57\x00\x1a\x1b\xd2\x31\x73\x00\xd0\xfb\xd5\x2e\x35\x14\x2c\x09\x0d\x52\x16\x0d\xd5\x90\xb1\xb6\xa9\x00\xca\x67\x4f\x41\x58\xa1\xc6\x24\x2e\x2a\xd4\x14\xd4\x96\xd4\xce\x3b\xb6\x12\x57\x23\xca\xb6\x5b\x95\x8b\x2b\xe5\x4c\x15\x3d\xa9\xac\xd2\x05\x97\x7c\x0d\x0b\xac\x22\xb1\x2f\xa7\xf8\xbb\xdd\xab\x5d\x4c\x6a\x97\x93\xda\x40\xd3\x1c\xe5\xf5\x49\xea\x1b\x8e\x85\xee\x75\x0a\xa8\x4f\xb8\x18\x98\x91\x6d\x97\x34\x86\xe3\xdc\x0a\xc0\x07\x8a\x14\x7a\xba\xb1\x3b\xeb\x3e\xdb\x17\x4c\xba\x8d\x35\x6c\x50\x47\xaa\x00\xa2\x72\x9e\x6a\x78\x9b\x9d\x79\x54\xd4\x66\x2c\x35\x61\x3f\xb2\xbd\xdb\x28\x28\x29\xd6\xf0\xf5\x5b\x05\xd0\xa3\xe6\x76\x98\x58\x39\x74\x9e\xec\xc5\xd5\xab\xdb\xf3\x6b\xb5\x25\x83\x05\xcc\xc2\xce\xe7\xd2\xc6\x1c\x65\x88\xd3\xfa\x4c\x18\x80\xdc\xe5\x12\xa2\x04\xb6\xdd\x04\x0f\x0d\x3e\x45\xfa\x71\x8d\x1e\x12\x5d\xf3\x89\x94\x4c\xf0\x38\xe1\x31\xe6\x8a\xcb\xa1\x9c\x15\x64\x4b\x21\x37\xe4\xe1\xd1\x42\x09\x39\x7a\x8f\xef\x06\xbd\x5f\xb8\x35\x5f\x66\xe9\xf3\xcf\x14\xea\xd3\x4b\x8e\xe2\xba\x80\xe6\xb1\xe2\xd2\x9d\x1c\x4d\x52\x3b\x92\x8f\xc4\xdd\x56\x66\x8e\x01\xb0\x6d\x87\x3f\x51\xd4\x57\x47\xd2\xe4\xd8\xb8\x60\x50\x6a\x60\x2b\xe7\xff\xcf\x32\x8a\x47\xb6\x42\x1d\x85\x19\xc6\x6c\x0f\xc6\x08\xb4\xa1\x40\x56\xd1\xfd\xff\x85\x99\x14\x63\x11\x2d\x0a\x9d\x09\x1b\x5a\x94\x99\x99\xdb\x70\xe8\x04\x75\xe9\xc7\xb1\xfc\x1b\xed\xf0\xb0\xc6\x31\xb7\x4d\xa6\x39\x70\xb8\xe8\x6e\xc3\x21\xca\x35\x1a\xaf\xe9\x5a\x30\x1c\xe8\x9e\xf2\xb4\xe8\x47\xe3\x9f\xcb\x7b\xe3\xf3\xb5\x3c\x8b\xdf\x96\xd6\x90\x71\xe1\xee\xdf\x1a\xff\xa5\x6b\x3c\x48\x96\x75\x8b\x97\x2e\xd9\xc5\x7d\x63\x2b\x4f\x9f\xcc\x66\x9d\xeb\x69\x7f\xf8\x40\x1c\x71\x3f\x53\xdd\x23\x68\xcc\x07\xfd\x1a\xb5\xdf\xe2\xfa\x1e\x1b\x36\xe2\x6c\xfc\xe5\x70\x7f\x0c\x30\x3c\x99\x6d\x0d\x12\x12\xed\x5f\x40\x17\xb0\xa3\x3d\xf2\x3d\x00\x00\xff\xff\x0e\x8b\x3e\xfe\x07\x09\x00\x00")
-
-func autoscalingKubedbCom_verticalautoscalercheckpointsYamlBytes() ([]byte, error) {
-	return bindataRead(
-		_autoscalingKubedbCom_verticalautoscalercheckpointsYaml,
-		"autoscaling.kubedb.com_verticalautoscalercheckpoints.yaml",
-	)
-}
-
-func autoscalingKubedbCom_verticalautoscalercheckpointsYaml() (*asset, error) {
-	bytes, err := autoscalingKubedbCom_verticalautoscalercheckpointsYamlBytes()
-	if err != nil {
-		return nil, err
-	}
-
-	info := bindataFileInfo{name: "autoscaling.kubedb.com_verticalautoscalercheckpoints.yaml", size: 2311, mode: os.FileMode(420), modTime: time.Unix(1573722179, 0)}
-	a := &asset{bytes: bytes, info: info}
-	return a, nil
-}
-
-var _autoscalingKubedbCom_verticalautoscalersV1Yaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xec\x5a\x5f\x6f\xdb\x36\x10\x7f\xd7\xa7\xe0\xc3\x1e\xec\x05\xf2\x96\x75\x18\x36\xbf\x04\x59\x5b\x04\x43\xdb\x2d\x68\x82\xbc\xa4\x19\x70\x96\xce\x32\x17\x8a\xe4\x8e\x94\x97\x60\xd9\x77\x1f\x48\x5a\x8d\x6c\x53\x92\xd3\x3e\x05\xe1\x3d\x99\xbc\xbf\xbc\x23\xef\x77\x80\x05\x9a\x5f\x21\x19\xae\xe4\x9c\x81\xe6\x78\x67\x51\xba\x95\x99\xdd\xfe\x6c\x66\x5c\x7d\xb7\x3e\xce\x6e\xb9\x2c\xe7\xec\x75\x63\xac\xaa\x3f\xa2\x51\x0d\x15\xf8\x06\x97\x5c\x72\xcb\x95\xcc\x6a\xb4\x50\x82\x85\x79\xc6\x58\x41\x08\x6e\xf3\x92\xd7\x68\x2c\xd4\x7a\xce\x64\x23\x44\xc6\x98\x80\x05\x0a\xe3\x64\x18\x03\xad\x67\xb7\xcd\x02\x49\xa2\x45\xef\x45\x42\x8d\x73\xe6\xf6\xca\x45\xc6\x58\x58\xae\x91\x2c\x2f\x40\x40\x63\x95\x29\x40\x20\x99\x59\xfb\x9b\xcb\x6a\x16\xc4\x67\x85\xaa\x33\xa3\xb1\x70\xb6\x2b\x52\x8d\x9e\xb3\x1e\xa9\x60\x78\x13\x44\x01\x16\x2b\x45\xbc\x5d\xe7\xcc\x1d\xc2\x58\x45\xb8\x59\x7f\x0e\xc7\x2d\x40\x6b\x53\xa8\x32\xf0\x42\x46\x3e\x28\x59\xa9\x37\xbf\x9e\x7e\x0e\xcf\xf3\x04\x37\xf6\x5d\x9c\xff\x9e\x1b\xeb\x65\xb4\x68\x08\x44\xf4\x84\x9e\x6f\x56\x8a\xec\xef\x8f\xb1\xe6\x6c\x0d\x1d\x17\x86\xcb\xaa\x11\x40\x31\x03\x19\x63\xa6\x50\x1a\xe7\xcc\xeb\x6b\x28\xb0\xcc\x98\x13\xf4\x65\x75\xf6\xf2\x36\xbf\xc7\x20\xf4\x0a\x8e\x83\xcd\x62\x85\x35\x04\x77\x8c\x29\x8d\xf2\xf4\xfc\xb7\xab\x57\x17\x5b\xdb\x8c\x69\x52\xda\xf9\x6c\x23\x0b\xd4\xb9\x45\x9d\x5d\xc6\xec\xbd\x0b\xc4\x58\xe2\xb2\xea\x30\x7c\xfa\x0e\x11\xec\x5e\xad\x5d\x61\xb5\xf8\x0b\x0b\xdb\x61\xb4\x77\xe0\x91\xe2\xc1\xfa\xe2\x2b\xb9\xe4\xd5\x05\xd2\x1a\x69\x97\x37\xa4\x17\x74\x6b\xdd\x58\x8c\xb1\xc6\x54\x37\xae\x2d\x70\x89\xf4\x5a\x49\x4b\x4a\x08\x2c\xaf\x40\x34\xfd\x0a\xbd\xd9\xd9\xb5\x1a\x8c\xb5\x2f\x74\xc0\x1e\xb7\x58\x0f\xb0\x0f\x72\xd8\x0a\x01\x11\xdc\xf7\xc8\x94\xdc\xc0\x42\xf4\x64\xea\xd1\xc4\x42\x29\x81\x20\x7b\xa4\x6a\xb8\x3b\x15\x42\xfd\x83\x65\xbf\x1d\x28\x4b\xdf\x8b\x40\x9c\x8f\xe6\xdf\xcb\xcb\xfb\x3f\x96\x43\x02\xf9\x26\x34\x2e\x2d\x56\x9b\x57\x37\x2c\x39\x92\x2c\xc6\x34\x58\x8b\x24\xe7\xec\xcf\xc9\xa7\xa3\x87\x7c\x7a\x32\x99\x5c\x7f\x9f\xff\x72\x73\x34\xf9\x34\xf3\x3f\xbe\x9d\x9e\x4c\x1f\xda\xc5\xd1\x74\x3a\x99\x5c\xbf\xfb\x70\x76\x79\xfe\xf6\x86\x4f\x1f\xae\x65\x53\xdf\x86\xd5\xc3\xe4\x1a\xdf\xde\x1c\x68\x64\x3a\x3d\xf9\x66\x20\xa8\xbb\xfc\xb1\x0f\xe7\x5c\xda\x5c\x51\x1e\x4e\x32\x67\x96\x1a\x1c\xa9\xdc\xde\x1b\xec\x52\xcd\x65\x2a\xdc\x73\x2c\x9c\x56\xe5\x7b\xbe\x44\x87\xe1\x97\x2b\x42\xb3\x52\x62\xa0\x84\x4b\x45\x35\x58\x9f\xf1\x9f\x7e\x1c\x71\x3b\x5c\x15\x6a\x67\x0b\xbe\x5c\x9e\x23\x15\x28\x2d\x54\x03\xdd\xa3\xe3\xf9\xd5\x0f\x5f\xe1\x79\x24\x25\x6e\x24\xe8\x8d\x63\xbc\xdf\x6f\xe6\x90\x03\x32\x79\x48\x8e\x1a\x03\xd5\x21\x55\xf9\xca\x53\x0f\x30\x1d\x1e\x2f\xc0\xe0\x47\x8c\x3c\xc4\xe1\x74\x80\xe6\x67\x7e\x40\x1b\x08\xa8\xf7\x39\xee\x0f\x0d\x07\x2a\xfa\x61\xe7\xe9\x8a\x84\x7f\x37\x9c\x62\xcd\x2b\xf7\xb1\x44\xb6\x9d\xa7\xa7\xa4\xb2\x76\x03\x62\x24\x53\x69\xfe\x48\xf3\x47\x82\xb1\x34\x7f\x04\x7a\x71\x85\x4b\xf3\xc7\x16\xa5\xf9\x63\x8b\x08\xb5\xe0\x05\x5c\xa0\x4d\xc0\xf9\x25\x0e\x13\x70\x6e\x4b\xa6\xfe\xbb\x4b\x09\x38\x9f\x69\xe1\x12\x70\x6e\x51\x02\xce\xed\xf3\xac\x80\x22\x8e\x13\x66\x26\xcc\x4c\xad\x37\x61\x66\xa0\x17\x57\xb8\x84\x99\x5b\x94\x30\x73\xfb\x3c\x16\x64\x09\x42\xc9\x48\x46\x12\x70\x26\xe0\x4c\xfd\x37\x01\x67\xa0\x17\x57\xb8\x04\x9c\x5b\x94\x80\xb3\x43\xf1\xff\x4e\xf3\xee\x7f\xc7\xd9\x01\x86\x8c\x05\xdb\x98\x27\x7c\xd3\x15\xda\x44\x24\xc9\xbd\x58\x36\x56\x19\x01\xc6\x5e\x12\x48\xc3\xdb\xcf\x1a\xfb\xb2\xd9\xde\xb3\x12\x2c\xe6\x96\x47\xfe\x09\xee\x9e\x75\xa0\x9f\xd4\x68\xcc\xc0\x8d\x1e\xd5\x57\x0b\x83\xb4\xc6\xf2\x0c\x25\x92\xff\x1a\x73\x2c\xe4\xa1\x47\x39\x7e\x45\x08\xc1\xf4\xfb\x18\x0d\x37\x56\xe4\x27\xa8\x7b\x81\x2f\x53\xee\xff\x87\xdf\xdd\xd5\xfd\xca\x47\xc5\x36\xd5\x8a\xf2\x42\x66\xa2\xac\x70\xea\x28\xcb\x45\x1d\x61\x1c\xf0\x12\xf7\xa7\xac\xa8\xd2\xfe\xb9\x73\xff\xf1\x64\xd6\xab\x15\x2e\x54\x07\x33\xda\x6e\xd7\xd9\x69\x16\xb4\x3b\x53\x6e\x4a\xcb\xfe\xfd\x2f\xfb\x3f\x00\x00\xff\xff\x57\xdc\x3d\x16\x68\x2c\x00\x00")
-
-func autoscalingKubedbCom_verticalautoscalersV1YamlBytes() ([]byte, error) {
-	return bindataRead(
-		_autoscalingKubedbCom_verticalautoscalersV1Yaml,
-		"autoscaling.kubedb.com_verticalautoscalers.v1.yaml",
-	)
-}
-
-func autoscalingKubedbCom_verticalautoscalersV1Yaml() (*asset, error) {
-	bytes, err := autoscalingKubedbCom_verticalautoscalersV1YamlBytes()
-	if err != nil {
-		return nil, err
-	}
-
-	info := bindataFileInfo{name: "autoscaling.kubedb.com_verticalautoscalers.v1.yaml", size: 11368, mode: os.FileMode(420), modTime: time.Unix(1573722179, 0)}
-	a := &asset{bytes: bytes, info: info}
-	return a, nil
-}
-
-var _autoscalingKubedbCom_verticalautoscalersYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xec\x5a\x51\x6f\xe4\x34\x10\x7e\xcf\xaf\xf0\x03\x0f\xbb\x9c\xb2\x50\x0e\x21\xc8\x4b\x55\xae\x47\x85\xee\x0e\xaa\xb6\xf4\xa5\x57\xa4\x49\x32\x9b\x35\xeb\xd8\xc6\x76\xf6\x5a\x51\xfe\x3b\xb2\x93\xec\xa6\x9b\x38\xd9\x83\xa7\xb2\xf6\x53\x3c\x33\x9e\x19\xcf\xd8\xf3\x8d\x14\x83\xa4\xb7\xa8\x34\x15\x3c\x21\x20\x29\x3e\x18\xe4\x76\xa6\x17\xeb\xef\xf5\x82\x8a\xaf\x36\x27\x29\x1a\x38\x89\xd6\x94\xe7\x09\x79\x53\x69\x23\xca\x2b\xd4\xa2\x52\x19\x9e\xe3\x92\x72\x6a\xa8\xe0\x51\x89\x06\x72\x30\x90\x44\x84\x64\x0a\xc1\x12\x6f\x68\x89\xda\x40\x29\x13\xc2\x2b\xc6\x22\x42\x18\xa4\xc8\xb4\x95\x21\x04\xa4\x5c\xac\xab\x14\x15\x47\x83\xce\x14\x87\x12\x13\x62\x69\x79\x1a\x11\x52\x4f\x37\xa8\x0c\xcd\x80\x41\x65\x84\xce\x80\xa1\xd2\x8b\xf6\x9b\xf2\x62\x51\x8b\x2f\x32\x51\x46\x5a\x62\x66\x75\x17\x4a\x54\x32\x21\x1e\xa9\x5a\x71\xe3\x44\x06\x06\x0b\xa1\x68\x3b\x8f\x89\xdd\x84\x36\x42\x61\x33\xdf\xba\x63\x27\x20\xa5\xce\x44\x5e\xf3\xea\x88\x7c\x10\xbc\x10\xe7\x3f\x9e\x6d\xdd\x73\x3c\x46\xb5\x79\x37\xcc\x7f\x4f\xb5\x71\x32\x92\x55\x0a\xd8\xe0\x0e\x1d\x5f\xaf\x84\x32\xbf\xec\x7c\x8d\xc9\x06\x3a\x26\x34\xe5\x45\xc5\x40\x0d\x29\x88\x08\x91\x0a\x35\xaa\x0d\xfe\xc6\xd7\x5c\x7c\xe2\x3f\x51\x64\xb9\x4e\xc8\x12\x98\xb6\xee\xeb\x4c\x48\x4c\x88\x53\x2f\x21\xc3\xdc\xd2\xaa\x54\x35\x99\x6d\x4c\x6a\x03\xa6\xd2\x09\xf9\xeb\xef\x88\x90\x0d\x30\x9a\xbb\xc4\xd6\x4c\x21\x91\x9f\x5d\xfe\x7c\xfb\xfa\x3a\x5b\x61\x09\x35\xd1\x1a\x16\xd2\x3a\xd4\xea\xa8\x73\xbd\x3d\x65\x5b\x1a\x21\xe6\xd1\xba\xa0\x8d\xa2\xbc\xd8\x92\x5d\x54\xa7\x84\xba\xa7\xed\xb9\xa0\x48\xff\xc0\xcc\x6c\xc9\xed\x91\x68\xc7\x90\x73\xee\x1c\x08\xbe\xa4\xc5\xb5\x0d\x98\x7a\xce\xf1\xaf\xa9\xd7\x95\xb2\x32\xd8\x67\x8c\x2f\x6b\x4c\x1a\xa0\x1c\xd5\x1b\xc1\x8d\x12\x8c\x61\x7e\x0b\xac\xf2\x89\x7b\x22\xb1\xaf\xb1\x56\x74\xf5\x3c\x8d\xfd\x41\x0d\x96\x5e\xe6\x01\xa6\x5a\x11\x50\x0a\x1e\x07\x25\x72\xaa\x21\x65\x83\x91\xd9\x2d\x4f\x85\x60\x08\x7c\x50\xa6\x84\x87\x33\xc6\xc4\x27\xcc\x7d\x3a\x20\xcf\x5d\xf1\x01\x76\x39\x11\x6b\x27\xcd\x1f\x7f\x5d\xfa\xd9\x71\xe3\x12\xe5\x06\x8b\xe6\x8a\x8d\xc9\x8d\x06\x87\x10\x09\xc6\xa0\xe2\x09\xf9\x7d\xf6\xf1\xd5\x53\x3c\x3f\x9d\xcd\xee\xbe\x8e\x7f\xb8\x7f\x35\xfb\xb8\x70\x1f\x5f\xce\x4f\xe7\x4f\xed\xe4\xd5\x7c\x3e\x9b\xdd\xbd\xfb\x70\x71\x73\xf9\xf6\x9e\xce\x9f\xee\x78\x55\xae\xeb\xd9\xd3\xec\x0e\xdf\xde\x1f\xa8\x64\x3e\x3f\xfd\xc2\xeb\xd2\x43\xbc\x2b\xb7\x31\xe5\x26\x16\x2a\xae\x77\x91\x10\xa3\x2a\x1c\xcd\xd4\xde\xbd\xea\x8e\x92\xf2\x90\xa8\x97\x90\x28\x29\xf2\xf7\x74\x89\x16\x96\x6f\x56\x0a\xf5\x4a\x30\x6f\xca\x96\x42\x95\x60\x5c\x94\xbf\xfb\x76\xd4\xe0\x58\x1e\x5a\x38\x39\xa7\xcb\xe5\x25\xaa\x0c\xb9\x81\xc2\x5b\x13\x3a\x36\x5f\x7f\xf3\x2f\x6d\x8e\x06\xc1\xe2\xba\xc7\xfe\x54\xb5\x6e\x1a\x89\xc9\xb8\x4d\xc7\xa4\xd2\x50\x4c\xc7\xff\x3f\xec\xd3\xcb\xb2\x88\x99\x82\xc6\x2b\xec\x5d\xaf\xb1\xed\x83\xa4\x17\xae\xa3\xf2\xba\xe1\xb9\x62\xfb\x50\x7e\xd0\x22\xd7\xf5\x7d\xde\x22\x85\x7f\x56\x54\xf5\xcb\x4f\xec\x3c\xe8\x11\xad\x85\x43\x43\x56\xda\xee\xad\x17\x93\xd0\x11\xf8\x45\x42\x47\xe0\x19\x47\x04\x34\xa1\x23\x78\x21\x89\x0a\x1d\xc1\x71\x77\x04\x0a\x25\xa3\x19\x5c\xa3\x09\x10\x17\x20\x2e\x54\xce\xed\x08\x10\xf7\x7f\x49\x54\x80\xb8\xe3\x86\x38\xbd\x02\xd5\x33\x18\xd0\xcd\x2f\x12\xd0\xcd\x33\x8e\xa8\x68\x06\x74\x7b\x21\x89\x0a\xe8\x76\xe4\xe8\x66\x80\xe7\xc0\x04\xef\x45\x20\x40\x9c\x5f\x24\x40\x9c\x67\x1c\x51\xe5\x0c\x10\xf7\x42\x12\x15\x20\xee\x98\x21\x6e\xe8\xdf\x5e\xdc\xfd\x93\x19\x4d\xa8\x68\x9e\x30\x75\xc4\x46\xde\x00\xd5\x17\xbe\x17\x4c\x0f\xee\x8c\x47\x9f\x81\x36\x37\x0a\xb8\xa6\xed\x5b\xb8\xe1\xa8\xb5\xe7\x27\x07\x83\xb1\xa1\xbd\x7f\x93\xdd\xbd\x79\xab\x42\x89\x5a\x7b\xcf\xe8\xc4\x5a\x91\xba\x87\x62\xf9\x05\x72\x54\x9d\xf7\x5d\x3e\x47\xfd\x97\x6b\x2a\xfd\x0a\x41\xfb\xb4\x4f\x38\xd9\x4f\xe3\xc1\x4b\x1d\xfb\xf3\x17\xfa\xfe\x2a\xdb\xf3\xd7\xcf\xed\x80\x50\x93\x93\x01\x4e\x1d\x87\x01\x46\xbd\xcb\x01\x86\xf5\xb4\x47\x9e\xbc\x4d\xfb\x7d\xce\xc0\x82\xfd\x5d\xc6\xee\xc9\x5c\x34\x28\xbf\x69\x1f\x8a\x6e\x4e\x80\xc9\x15\x9c\xec\x68\x2e\x33\x71\xfb\x64\x73\xc7\x26\xa4\x3e\x5b\x1d\x08\x68\xcb\x59\x4d\xf9\x27\x00\x00\xff\xff\xeb\xb8\xda\xda\x80\x2a\x00\x00")
-
-func autoscalingKubedbCom_verticalautoscalersYamlBytes() ([]byte, error) {
-	return bindataRead(
-		_autoscalingKubedbCom_verticalautoscalersYaml,
-		"autoscaling.kubedb.com_verticalautoscalers.yaml",
-	)
-}
-
-func autoscalingKubedbCom_verticalautoscalersYaml() (*asset, error) {
-	bytes, err := autoscalingKubedbCom_verticalautoscalersYamlBytes()
-	if err != nil {
-		return nil, err
-	}
-
-	info := bindataFileInfo{name: "autoscaling.kubedb.com_verticalautoscalers.yaml", size: 10880, mode: os.FileMode(420), modTime: time.Unix(1573722179, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2060,98 +1976,94 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"autoscaling.kubedb.com_elasticsearchautoscalers.v1.yaml":      autoscalingKubedbCom_elasticsearchautoscalersV1Yaml,
-	"autoscaling.kubedb.com_elasticsearchautoscalers.yaml":         autoscalingKubedbCom_elasticsearchautoscalersYaml,
-	"autoscaling.kubedb.com_etcdautoscalers.v1.yaml":               autoscalingKubedbCom_etcdautoscalersV1Yaml,
-	"autoscaling.kubedb.com_etcdautoscalers.yaml":                  autoscalingKubedbCom_etcdautoscalersYaml,
-	"autoscaling.kubedb.com_mariadbautoscalers.v1.yaml":            autoscalingKubedbCom_mariadbautoscalersV1Yaml,
-	"autoscaling.kubedb.com_mariadbautoscalers.yaml":               autoscalingKubedbCom_mariadbautoscalersYaml,
-	"autoscaling.kubedb.com_memcachedautoscalers.v1.yaml":          autoscalingKubedbCom_memcachedautoscalersV1Yaml,
-	"autoscaling.kubedb.com_memcachedautoscalers.yaml":             autoscalingKubedbCom_memcachedautoscalersYaml,
-	"autoscaling.kubedb.com_mongodbautoscalers.v1.yaml":            autoscalingKubedbCom_mongodbautoscalersV1Yaml,
-	"autoscaling.kubedb.com_mongodbautoscalers.yaml":               autoscalingKubedbCom_mongodbautoscalersYaml,
-	"autoscaling.kubedb.com_mysqlautoscalers.v1.yaml":              autoscalingKubedbCom_mysqlautoscalersV1Yaml,
-	"autoscaling.kubedb.com_mysqlautoscalers.yaml":                 autoscalingKubedbCom_mysqlautoscalersYaml,
-	"autoscaling.kubedb.com_perconaxtradbautoscalers.v1.yaml":      autoscalingKubedbCom_perconaxtradbautoscalersV1Yaml,
-	"autoscaling.kubedb.com_perconaxtradbautoscalers.yaml":         autoscalingKubedbCom_perconaxtradbautoscalersYaml,
-	"autoscaling.kubedb.com_pgbouncerautoscalers.v1.yaml":          autoscalingKubedbCom_pgbouncerautoscalersV1Yaml,
-	"autoscaling.kubedb.com_pgbouncerautoscalers.yaml":             autoscalingKubedbCom_pgbouncerautoscalersYaml,
-	"autoscaling.kubedb.com_postgresautoscalers.v1.yaml":           autoscalingKubedbCom_postgresautoscalersV1Yaml,
-	"autoscaling.kubedb.com_postgresautoscalers.yaml":              autoscalingKubedbCom_postgresautoscalersYaml,
-	"autoscaling.kubedb.com_proxysqlautoscalers.v1.yaml":           autoscalingKubedbCom_proxysqlautoscalersV1Yaml,
-	"autoscaling.kubedb.com_proxysqlautoscalers.yaml":              autoscalingKubedbCom_proxysqlautoscalersYaml,
-	"autoscaling.kubedb.com_redisautoscalers.v1.yaml":              autoscalingKubedbCom_redisautoscalersV1Yaml,
-	"autoscaling.kubedb.com_redisautoscalers.yaml":                 autoscalingKubedbCom_redisautoscalersYaml,
-	"autoscaling.kubedb.com_verticalautoscalercheckpoints.v1.yaml": autoscalingKubedbCom_verticalautoscalercheckpointsV1Yaml,
-	"autoscaling.kubedb.com_verticalautoscalercheckpoints.yaml":    autoscalingKubedbCom_verticalautoscalercheckpointsYaml,
-	"autoscaling.kubedb.com_verticalautoscalers.v1.yaml":           autoscalingKubedbCom_verticalautoscalersV1Yaml,
-	"autoscaling.kubedb.com_verticalautoscalers.yaml":              autoscalingKubedbCom_verticalautoscalersYaml,
-	"catalog.kubedb.com_elasticsearchversions.v1.yaml":             catalogKubedbCom_elasticsearchversionsV1Yaml,
-	"catalog.kubedb.com_elasticsearchversions.yaml":                catalogKubedbCom_elasticsearchversionsYaml,
-	"catalog.kubedb.com_etcdversions.v1.yaml":                      catalogKubedbCom_etcdversionsV1Yaml,
-	"catalog.kubedb.com_etcdversions.yaml":                         catalogKubedbCom_etcdversionsYaml,
-	"catalog.kubedb.com_mariadbversions.v1.yaml":                   catalogKubedbCom_mariadbversionsV1Yaml,
-	"catalog.kubedb.com_mariadbversions.yaml":                      catalogKubedbCom_mariadbversionsYaml,
-	"catalog.kubedb.com_memcachedversions.v1.yaml":                 catalogKubedbCom_memcachedversionsV1Yaml,
-	"catalog.kubedb.com_memcachedversions.yaml":                    catalogKubedbCom_memcachedversionsYaml,
-	"catalog.kubedb.com_mongodbversions.v1.yaml":                   catalogKubedbCom_mongodbversionsV1Yaml,
-	"catalog.kubedb.com_mongodbversions.yaml":                      catalogKubedbCom_mongodbversionsYaml,
-	"catalog.kubedb.com_mysqlversions.v1.yaml":                     catalogKubedbCom_mysqlversionsV1Yaml,
-	"catalog.kubedb.com_mysqlversions.yaml":                        catalogKubedbCom_mysqlversionsYaml,
-	"catalog.kubedb.com_perconaxtradbversions.v1.yaml":             catalogKubedbCom_perconaxtradbversionsV1Yaml,
-	"catalog.kubedb.com_perconaxtradbversions.yaml":                catalogKubedbCom_perconaxtradbversionsYaml,
-	"catalog.kubedb.com_pgbouncerversions.v1.yaml":                 catalogKubedbCom_pgbouncerversionsV1Yaml,
-	"catalog.kubedb.com_pgbouncerversions.yaml":                    catalogKubedbCom_pgbouncerversionsYaml,
-	"catalog.kubedb.com_postgresversions.v1.yaml":                  catalogKubedbCom_postgresversionsV1Yaml,
-	"catalog.kubedb.com_postgresversions.yaml":                     catalogKubedbCom_postgresversionsYaml,
-	"catalog.kubedb.com_proxysqlversions.v1.yaml":                  catalogKubedbCom_proxysqlversionsV1Yaml,
-	"catalog.kubedb.com_proxysqlversions.yaml":                     catalogKubedbCom_proxysqlversionsYaml,
-	"catalog.kubedb.com_redisversions.v1.yaml":                     catalogKubedbCom_redisversionsV1Yaml,
-	"catalog.kubedb.com_redisversions.yaml":                        catalogKubedbCom_redisversionsYaml,
-	"kubedb.com_elasticsearches.v1.yaml":                           kubedbCom_elasticsearchesV1Yaml,
-	"kubedb.com_elasticsearches.yaml":                              kubedbCom_elasticsearchesYaml,
-	"kubedb.com_etcds.v1.yaml":                                     kubedbCom_etcdsV1Yaml,
-	"kubedb.com_etcds.yaml":                                        kubedbCom_etcdsYaml,
-	"kubedb.com_mariadbs.v1.yaml":                                  kubedbCom_mariadbsV1Yaml,
-	"kubedb.com_mariadbs.yaml":                                     kubedbCom_mariadbsYaml,
-	"kubedb.com_memcacheds.v1.yaml":                                kubedbCom_memcachedsV1Yaml,
-	"kubedb.com_memcacheds.yaml":                                   kubedbCom_memcachedsYaml,
-	"kubedb.com_mongodbs.v1.yaml":                                  kubedbCom_mongodbsV1Yaml,
-	"kubedb.com_mongodbs.yaml":                                     kubedbCom_mongodbsYaml,
-	"kubedb.com_mysqls.v1.yaml":                                    kubedbCom_mysqlsV1Yaml,
-	"kubedb.com_mysqls.yaml":                                       kubedbCom_mysqlsYaml,
-	"kubedb.com_perconaxtradbs.v1.yaml":                            kubedbCom_perconaxtradbsV1Yaml,
-	"kubedb.com_perconaxtradbs.yaml":                               kubedbCom_perconaxtradbsYaml,
-	"kubedb.com_pgbouncers.v1.yaml":                                kubedbCom_pgbouncersV1Yaml,
-	"kubedb.com_pgbouncers.yaml":                                   kubedbCom_pgbouncersYaml,
-	"kubedb.com_postgreses.v1.yaml":                                kubedbCom_postgresesV1Yaml,
-	"kubedb.com_postgreses.yaml":                                   kubedbCom_postgresesYaml,
-	"kubedb.com_proxysqls.v1.yaml":                                 kubedbCom_proxysqlsV1Yaml,
-	"kubedb.com_proxysqls.yaml":                                    kubedbCom_proxysqlsYaml,
-	"kubedb.com_redises.v1.yaml":                                   kubedbCom_redisesV1Yaml,
-	"kubedb.com_redises.yaml":                                      kubedbCom_redisesYaml,
-	"ops.kubedb.com_elasticsearchopsrequests.v1.yaml":              opsKubedbCom_elasticsearchopsrequestsV1Yaml,
-	"ops.kubedb.com_elasticsearchopsrequests.yaml":                 opsKubedbCom_elasticsearchopsrequestsYaml,
-	"ops.kubedb.com_etcdopsrequests.v1.yaml":                       opsKubedbCom_etcdopsrequestsV1Yaml,
-	"ops.kubedb.com_etcdopsrequests.yaml":                          opsKubedbCom_etcdopsrequestsYaml,
-	"ops.kubedb.com_mariadbopsrequests.v1.yaml":                    opsKubedbCom_mariadbopsrequestsV1Yaml,
-	"ops.kubedb.com_mariadbopsrequests.yaml":                       opsKubedbCom_mariadbopsrequestsYaml,
-	"ops.kubedb.com_memcachedopsrequests.v1.yaml":                  opsKubedbCom_memcachedopsrequestsV1Yaml,
-	"ops.kubedb.com_memcachedopsrequests.yaml":                     opsKubedbCom_memcachedopsrequestsYaml,
-	"ops.kubedb.com_mongodbopsrequests.v1.yaml":                    opsKubedbCom_mongodbopsrequestsV1Yaml,
-	"ops.kubedb.com_mongodbopsrequests.yaml":                       opsKubedbCom_mongodbopsrequestsYaml,
-	"ops.kubedb.com_mysqlopsrequests.v1.yaml":                      opsKubedbCom_mysqlopsrequestsV1Yaml,
-	"ops.kubedb.com_mysqlopsrequests.yaml":                         opsKubedbCom_mysqlopsrequestsYaml,
-	"ops.kubedb.com_perconaxtradbopsrequests.v1.yaml":              opsKubedbCom_perconaxtradbopsrequestsV1Yaml,
-	"ops.kubedb.com_perconaxtradbopsrequests.yaml":                 opsKubedbCom_perconaxtradbopsrequestsYaml,
-	"ops.kubedb.com_pgbounceropsrequests.v1.yaml":                  opsKubedbCom_pgbounceropsrequestsV1Yaml,
-	"ops.kubedb.com_pgbounceropsrequests.yaml":                     opsKubedbCom_pgbounceropsrequestsYaml,
-	"ops.kubedb.com_postgresopsrequests.v1.yaml":                   opsKubedbCom_postgresopsrequestsV1Yaml,
-	"ops.kubedb.com_postgresopsrequests.yaml":                      opsKubedbCom_postgresopsrequestsYaml,
-	"ops.kubedb.com_proxysqlopsrequests.v1.yaml":                   opsKubedbCom_proxysqlopsrequestsV1Yaml,
-	"ops.kubedb.com_proxysqlopsrequests.yaml":                      opsKubedbCom_proxysqlopsrequestsYaml,
-	"ops.kubedb.com_redisopsrequests.v1.yaml":                      opsKubedbCom_redisopsrequestsV1Yaml,
-	"ops.kubedb.com_redisopsrequests.yaml":                         opsKubedbCom_redisopsrequestsYaml,
+	"autoscaling.kubedb.com_elasticsearchautoscalers.v1.yaml": autoscalingKubedbCom_elasticsearchautoscalersV1Yaml,
+	"autoscaling.kubedb.com_elasticsearchautoscalers.yaml":    autoscalingKubedbCom_elasticsearchautoscalersYaml,
+	"autoscaling.kubedb.com_etcdautoscalers.v1.yaml":          autoscalingKubedbCom_etcdautoscalersV1Yaml,
+	"autoscaling.kubedb.com_etcdautoscalers.yaml":             autoscalingKubedbCom_etcdautoscalersYaml,
+	"autoscaling.kubedb.com_mariadbautoscalers.v1.yaml":       autoscalingKubedbCom_mariadbautoscalersV1Yaml,
+	"autoscaling.kubedb.com_mariadbautoscalers.yaml":          autoscalingKubedbCom_mariadbautoscalersYaml,
+	"autoscaling.kubedb.com_memcachedautoscalers.v1.yaml":     autoscalingKubedbCom_memcachedautoscalersV1Yaml,
+	"autoscaling.kubedb.com_memcachedautoscalers.yaml":        autoscalingKubedbCom_memcachedautoscalersYaml,
+	"autoscaling.kubedb.com_mongodbautoscalers.v1.yaml":       autoscalingKubedbCom_mongodbautoscalersV1Yaml,
+	"autoscaling.kubedb.com_mongodbautoscalers.yaml":          autoscalingKubedbCom_mongodbautoscalersYaml,
+	"autoscaling.kubedb.com_mysqlautoscalers.v1.yaml":         autoscalingKubedbCom_mysqlautoscalersV1Yaml,
+	"autoscaling.kubedb.com_mysqlautoscalers.yaml":            autoscalingKubedbCom_mysqlautoscalersYaml,
+	"autoscaling.kubedb.com_perconaxtradbautoscalers.v1.yaml": autoscalingKubedbCom_perconaxtradbautoscalersV1Yaml,
+	"autoscaling.kubedb.com_perconaxtradbautoscalers.yaml":    autoscalingKubedbCom_perconaxtradbautoscalersYaml,
+	"autoscaling.kubedb.com_pgbouncerautoscalers.v1.yaml":     autoscalingKubedbCom_pgbouncerautoscalersV1Yaml,
+	"autoscaling.kubedb.com_pgbouncerautoscalers.yaml":        autoscalingKubedbCom_pgbouncerautoscalersYaml,
+	"autoscaling.kubedb.com_postgresautoscalers.v1.yaml":      autoscalingKubedbCom_postgresautoscalersV1Yaml,
+	"autoscaling.kubedb.com_postgresautoscalers.yaml":         autoscalingKubedbCom_postgresautoscalersYaml,
+	"autoscaling.kubedb.com_proxysqlautoscalers.v1.yaml":      autoscalingKubedbCom_proxysqlautoscalersV1Yaml,
+	"autoscaling.kubedb.com_proxysqlautoscalers.yaml":         autoscalingKubedbCom_proxysqlautoscalersYaml,
+	"autoscaling.kubedb.com_redisautoscalers.v1.yaml":         autoscalingKubedbCom_redisautoscalersV1Yaml,
+	"autoscaling.kubedb.com_redisautoscalers.yaml":            autoscalingKubedbCom_redisautoscalersYaml,
+	"catalog.kubedb.com_elasticsearchversions.v1.yaml":        catalogKubedbCom_elasticsearchversionsV1Yaml,
+	"catalog.kubedb.com_elasticsearchversions.yaml":           catalogKubedbCom_elasticsearchversionsYaml,
+	"catalog.kubedb.com_etcdversions.v1.yaml":                 catalogKubedbCom_etcdversionsV1Yaml,
+	"catalog.kubedb.com_etcdversions.yaml":                    catalogKubedbCom_etcdversionsYaml,
+	"catalog.kubedb.com_mariadbversions.v1.yaml":              catalogKubedbCom_mariadbversionsV1Yaml,
+	"catalog.kubedb.com_mariadbversions.yaml":                 catalogKubedbCom_mariadbversionsYaml,
+	"catalog.kubedb.com_memcachedversions.v1.yaml":            catalogKubedbCom_memcachedversionsV1Yaml,
+	"catalog.kubedb.com_memcachedversions.yaml":               catalogKubedbCom_memcachedversionsYaml,
+	"catalog.kubedb.com_mongodbversions.v1.yaml":              catalogKubedbCom_mongodbversionsV1Yaml,
+	"catalog.kubedb.com_mongodbversions.yaml":                 catalogKubedbCom_mongodbversionsYaml,
+	"catalog.kubedb.com_mysqlversions.v1.yaml":                catalogKubedbCom_mysqlversionsV1Yaml,
+	"catalog.kubedb.com_mysqlversions.yaml":                   catalogKubedbCom_mysqlversionsYaml,
+	"catalog.kubedb.com_perconaxtradbversions.v1.yaml":        catalogKubedbCom_perconaxtradbversionsV1Yaml,
+	"catalog.kubedb.com_perconaxtradbversions.yaml":           catalogKubedbCom_perconaxtradbversionsYaml,
+	"catalog.kubedb.com_pgbouncerversions.v1.yaml":            catalogKubedbCom_pgbouncerversionsV1Yaml,
+	"catalog.kubedb.com_pgbouncerversions.yaml":               catalogKubedbCom_pgbouncerversionsYaml,
+	"catalog.kubedb.com_postgresversions.v1.yaml":             catalogKubedbCom_postgresversionsV1Yaml,
+	"catalog.kubedb.com_postgresversions.yaml":                catalogKubedbCom_postgresversionsYaml,
+	"catalog.kubedb.com_proxysqlversions.v1.yaml":             catalogKubedbCom_proxysqlversionsV1Yaml,
+	"catalog.kubedb.com_proxysqlversions.yaml":                catalogKubedbCom_proxysqlversionsYaml,
+	"catalog.kubedb.com_redisversions.v1.yaml":                catalogKubedbCom_redisversionsV1Yaml,
+	"catalog.kubedb.com_redisversions.yaml":                   catalogKubedbCom_redisversionsYaml,
+	"kubedb.com_elasticsearches.v1.yaml":                      kubedbCom_elasticsearchesV1Yaml,
+	"kubedb.com_elasticsearches.yaml":                         kubedbCom_elasticsearchesYaml,
+	"kubedb.com_etcds.v1.yaml":                                kubedbCom_etcdsV1Yaml,
+	"kubedb.com_etcds.yaml":                                   kubedbCom_etcdsYaml,
+	"kubedb.com_mariadbs.v1.yaml":                             kubedbCom_mariadbsV1Yaml,
+	"kubedb.com_mariadbs.yaml":                                kubedbCom_mariadbsYaml,
+	"kubedb.com_memcacheds.v1.yaml":                           kubedbCom_memcachedsV1Yaml,
+	"kubedb.com_memcacheds.yaml":                              kubedbCom_memcachedsYaml,
+	"kubedb.com_mongodbs.v1.yaml":                             kubedbCom_mongodbsV1Yaml,
+	"kubedb.com_mongodbs.yaml":                                kubedbCom_mongodbsYaml,
+	"kubedb.com_mysqls.v1.yaml":                               kubedbCom_mysqlsV1Yaml,
+	"kubedb.com_mysqls.yaml":                                  kubedbCom_mysqlsYaml,
+	"kubedb.com_perconaxtradbs.v1.yaml":                       kubedbCom_perconaxtradbsV1Yaml,
+	"kubedb.com_perconaxtradbs.yaml":                          kubedbCom_perconaxtradbsYaml,
+	"kubedb.com_pgbouncers.v1.yaml":                           kubedbCom_pgbouncersV1Yaml,
+	"kubedb.com_pgbouncers.yaml":                              kubedbCom_pgbouncersYaml,
+	"kubedb.com_postgreses.v1.yaml":                           kubedbCom_postgresesV1Yaml,
+	"kubedb.com_postgreses.yaml":                              kubedbCom_postgresesYaml,
+	"kubedb.com_proxysqls.v1.yaml":                            kubedbCom_proxysqlsV1Yaml,
+	"kubedb.com_proxysqls.yaml":                               kubedbCom_proxysqlsYaml,
+	"kubedb.com_redises.v1.yaml":                              kubedbCom_redisesV1Yaml,
+	"kubedb.com_redises.yaml":                                 kubedbCom_redisesYaml,
+	"ops.kubedb.com_elasticsearchopsrequests.v1.yaml":         opsKubedbCom_elasticsearchopsrequestsV1Yaml,
+	"ops.kubedb.com_elasticsearchopsrequests.yaml":            opsKubedbCom_elasticsearchopsrequestsYaml,
+	"ops.kubedb.com_etcdopsrequests.v1.yaml":                  opsKubedbCom_etcdopsrequestsV1Yaml,
+	"ops.kubedb.com_etcdopsrequests.yaml":                     opsKubedbCom_etcdopsrequestsYaml,
+	"ops.kubedb.com_mariadbopsrequests.v1.yaml":               opsKubedbCom_mariadbopsrequestsV1Yaml,
+	"ops.kubedb.com_mariadbopsrequests.yaml":                  opsKubedbCom_mariadbopsrequestsYaml,
+	"ops.kubedb.com_memcachedopsrequests.v1.yaml":             opsKubedbCom_memcachedopsrequestsV1Yaml,
+	"ops.kubedb.com_memcachedopsrequests.yaml":                opsKubedbCom_memcachedopsrequestsYaml,
+	"ops.kubedb.com_mongodbopsrequests.v1.yaml":               opsKubedbCom_mongodbopsrequestsV1Yaml,
+	"ops.kubedb.com_mongodbopsrequests.yaml":                  opsKubedbCom_mongodbopsrequestsYaml,
+	"ops.kubedb.com_mysqlopsrequests.v1.yaml":                 opsKubedbCom_mysqlopsrequestsV1Yaml,
+	"ops.kubedb.com_mysqlopsrequests.yaml":                    opsKubedbCom_mysqlopsrequestsYaml,
+	"ops.kubedb.com_perconaxtradbopsrequests.v1.yaml":         opsKubedbCom_perconaxtradbopsrequestsV1Yaml,
+	"ops.kubedb.com_perconaxtradbopsrequests.yaml":            opsKubedbCom_perconaxtradbopsrequestsYaml,
+	"ops.kubedb.com_pgbounceropsrequests.v1.yaml":             opsKubedbCom_pgbounceropsrequestsV1Yaml,
+	"ops.kubedb.com_pgbounceropsrequests.yaml":                opsKubedbCom_pgbounceropsrequestsYaml,
+	"ops.kubedb.com_postgresopsrequests.v1.yaml":              opsKubedbCom_postgresopsrequestsV1Yaml,
+	"ops.kubedb.com_postgresopsrequests.yaml":                 opsKubedbCom_postgresopsrequestsYaml,
+	"ops.kubedb.com_proxysqlopsrequests.v1.yaml":              opsKubedbCom_proxysqlopsrequestsV1Yaml,
+	"ops.kubedb.com_proxysqlopsrequests.yaml":                 opsKubedbCom_proxysqlopsrequestsYaml,
+	"ops.kubedb.com_redisopsrequests.v1.yaml":                 opsKubedbCom_redisopsrequestsV1Yaml,
+	"ops.kubedb.com_redisopsrequests.yaml":                    opsKubedbCom_redisopsrequestsYaml,
 }
 
 // AssetDir returns the file names below a certain
@@ -2195,98 +2107,94 @@ type bintree struct {
 }
 
 var _bintree = &bintree{nil, map[string]*bintree{
-	"autoscaling.kubedb.com_elasticsearchautoscalers.v1.yaml":      {autoscalingKubedbCom_elasticsearchautoscalersV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_elasticsearchautoscalers.yaml":         {autoscalingKubedbCom_elasticsearchautoscalersYaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_etcdautoscalers.v1.yaml":               {autoscalingKubedbCom_etcdautoscalersV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_etcdautoscalers.yaml":                  {autoscalingKubedbCom_etcdautoscalersYaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_mariadbautoscalers.v1.yaml":            {autoscalingKubedbCom_mariadbautoscalersV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_mariadbautoscalers.yaml":               {autoscalingKubedbCom_mariadbautoscalersYaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_memcachedautoscalers.v1.yaml":          {autoscalingKubedbCom_memcachedautoscalersV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_memcachedautoscalers.yaml":             {autoscalingKubedbCom_memcachedautoscalersYaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_mongodbautoscalers.v1.yaml":            {autoscalingKubedbCom_mongodbautoscalersV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_mongodbautoscalers.yaml":               {autoscalingKubedbCom_mongodbautoscalersYaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_mysqlautoscalers.v1.yaml":              {autoscalingKubedbCom_mysqlautoscalersV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_mysqlautoscalers.yaml":                 {autoscalingKubedbCom_mysqlautoscalersYaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_perconaxtradbautoscalers.v1.yaml":      {autoscalingKubedbCom_perconaxtradbautoscalersV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_perconaxtradbautoscalers.yaml":         {autoscalingKubedbCom_perconaxtradbautoscalersYaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_pgbouncerautoscalers.v1.yaml":          {autoscalingKubedbCom_pgbouncerautoscalersV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_pgbouncerautoscalers.yaml":             {autoscalingKubedbCom_pgbouncerautoscalersYaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_postgresautoscalers.v1.yaml":           {autoscalingKubedbCom_postgresautoscalersV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_postgresautoscalers.yaml":              {autoscalingKubedbCom_postgresautoscalersYaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_proxysqlautoscalers.v1.yaml":           {autoscalingKubedbCom_proxysqlautoscalersV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_proxysqlautoscalers.yaml":              {autoscalingKubedbCom_proxysqlautoscalersYaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_redisautoscalers.v1.yaml":              {autoscalingKubedbCom_redisautoscalersV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_redisautoscalers.yaml":                 {autoscalingKubedbCom_redisautoscalersYaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_verticalautoscalercheckpoints.v1.yaml": {autoscalingKubedbCom_verticalautoscalercheckpointsV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_verticalautoscalercheckpoints.yaml":    {autoscalingKubedbCom_verticalautoscalercheckpointsYaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_verticalautoscalers.v1.yaml":           {autoscalingKubedbCom_verticalautoscalersV1Yaml, map[string]*bintree{}},
-	"autoscaling.kubedb.com_verticalautoscalers.yaml":              {autoscalingKubedbCom_verticalautoscalersYaml, map[string]*bintree{}},
-	"catalog.kubedb.com_elasticsearchversions.v1.yaml":             {catalogKubedbCom_elasticsearchversionsV1Yaml, map[string]*bintree{}},
-	"catalog.kubedb.com_elasticsearchversions.yaml":                {catalogKubedbCom_elasticsearchversionsYaml, map[string]*bintree{}},
-	"catalog.kubedb.com_etcdversions.v1.yaml":                      {catalogKubedbCom_etcdversionsV1Yaml, map[string]*bintree{}},
-	"catalog.kubedb.com_etcdversions.yaml":                         {catalogKubedbCom_etcdversionsYaml, map[string]*bintree{}},
-	"catalog.kubedb.com_mariadbversions.v1.yaml":                   {catalogKubedbCom_mariadbversionsV1Yaml, map[string]*bintree{}},
-	"catalog.kubedb.com_mariadbversions.yaml":                      {catalogKubedbCom_mariadbversionsYaml, map[string]*bintree{}},
-	"catalog.kubedb.com_memcachedversions.v1.yaml":                 {catalogKubedbCom_memcachedversionsV1Yaml, map[string]*bintree{}},
-	"catalog.kubedb.com_memcachedversions.yaml":                    {catalogKubedbCom_memcachedversionsYaml, map[string]*bintree{}},
-	"catalog.kubedb.com_mongodbversions.v1.yaml":                   {catalogKubedbCom_mongodbversionsV1Yaml, map[string]*bintree{}},
-	"catalog.kubedb.com_mongodbversions.yaml":                      {catalogKubedbCom_mongodbversionsYaml, map[string]*bintree{}},
-	"catalog.kubedb.com_mysqlversions.v1.yaml":                     {catalogKubedbCom_mysqlversionsV1Yaml, map[string]*bintree{}},
-	"catalog.kubedb.com_mysqlversions.yaml":                        {catalogKubedbCom_mysqlversionsYaml, map[string]*bintree{}},
-	"catalog.kubedb.com_perconaxtradbversions.v1.yaml":             {catalogKubedbCom_perconaxtradbversionsV1Yaml, map[string]*bintree{}},
-	"catalog.kubedb.com_perconaxtradbversions.yaml":                {catalogKubedbCom_perconaxtradbversionsYaml, map[string]*bintree{}},
-	"catalog.kubedb.com_pgbouncerversions.v1.yaml":                 {catalogKubedbCom_pgbouncerversionsV1Yaml, map[string]*bintree{}},
-	"catalog.kubedb.com_pgbouncerversions.yaml":                    {catalogKubedbCom_pgbouncerversionsYaml, map[string]*bintree{}},
-	"catalog.kubedb.com_postgresversions.v1.yaml":                  {catalogKubedbCom_postgresversionsV1Yaml, map[string]*bintree{}},
-	"catalog.kubedb.com_postgresversions.yaml":                     {catalogKubedbCom_postgresversionsYaml, map[string]*bintree{}},
-	"catalog.kubedb.com_proxysqlversions.v1.yaml":                  {catalogKubedbCom_proxysqlversionsV1Yaml, map[string]*bintree{}},
-	"catalog.kubedb.com_proxysqlversions.yaml":                     {catalogKubedbCom_proxysqlversionsYaml, map[string]*bintree{}},
-	"catalog.kubedb.com_redisversions.v1.yaml":                     {catalogKubedbCom_redisversionsV1Yaml, map[string]*bintree{}},
-	"catalog.kubedb.com_redisversions.yaml":                        {catalogKubedbCom_redisversionsYaml, map[string]*bintree{}},
-	"kubedb.com_elasticsearches.v1.yaml":                           {kubedbCom_elasticsearchesV1Yaml, map[string]*bintree{}},
-	"kubedb.com_elasticsearches.yaml":                              {kubedbCom_elasticsearchesYaml, map[string]*bintree{}},
-	"kubedb.com_etcds.v1.yaml":                                     {kubedbCom_etcdsV1Yaml, map[string]*bintree{}},
-	"kubedb.com_etcds.yaml":                                        {kubedbCom_etcdsYaml, map[string]*bintree{}},
-	"kubedb.com_mariadbs.v1.yaml":                                  {kubedbCom_mariadbsV1Yaml, map[string]*bintree{}},
-	"kubedb.com_mariadbs.yaml":                                     {kubedbCom_mariadbsYaml, map[string]*bintree{}},
-	"kubedb.com_memcacheds.v1.yaml":                                {kubedbCom_memcachedsV1Yaml, map[string]*bintree{}},
-	"kubedb.com_memcacheds.yaml":                                   {kubedbCom_memcachedsYaml, map[string]*bintree{}},
-	"kubedb.com_mongodbs.v1.yaml":                                  {kubedbCom_mongodbsV1Yaml, map[string]*bintree{}},
-	"kubedb.com_mongodbs.yaml":                                     {kubedbCom_mongodbsYaml, map[string]*bintree{}},
-	"kubedb.com_mysqls.v1.yaml":                                    {kubedbCom_mysqlsV1Yaml, map[string]*bintree{}},
-	"kubedb.com_mysqls.yaml":                                       {kubedbCom_mysqlsYaml, map[string]*bintree{}},
-	"kubedb.com_perconaxtradbs.v1.yaml":                            {kubedbCom_perconaxtradbsV1Yaml, map[string]*bintree{}},
-	"kubedb.com_perconaxtradbs.yaml":                               {kubedbCom_perconaxtradbsYaml, map[string]*bintree{}},
-	"kubedb.com_pgbouncers.v1.yaml":                                {kubedbCom_pgbouncersV1Yaml, map[string]*bintree{}},
-	"kubedb.com_pgbouncers.yaml":                                   {kubedbCom_pgbouncersYaml, map[string]*bintree{}},
-	"kubedb.com_postgreses.v1.yaml":                                {kubedbCom_postgresesV1Yaml, map[string]*bintree{}},
-	"kubedb.com_postgreses.yaml":                                   {kubedbCom_postgresesYaml, map[string]*bintree{}},
-	"kubedb.com_proxysqls.v1.yaml":                                 {kubedbCom_proxysqlsV1Yaml, map[string]*bintree{}},
-	"kubedb.com_proxysqls.yaml":                                    {kubedbCom_proxysqlsYaml, map[string]*bintree{}},
-	"kubedb.com_redises.v1.yaml":                                   {kubedbCom_redisesV1Yaml, map[string]*bintree{}},
-	"kubedb.com_redises.yaml":                                      {kubedbCom_redisesYaml, map[string]*bintree{}},
-	"ops.kubedb.com_elasticsearchopsrequests.v1.yaml":              {opsKubedbCom_elasticsearchopsrequestsV1Yaml, map[string]*bintree{}},
-	"ops.kubedb.com_elasticsearchopsrequests.yaml":                 {opsKubedbCom_elasticsearchopsrequestsYaml, map[string]*bintree{}},
-	"ops.kubedb.com_etcdopsrequests.v1.yaml":                       {opsKubedbCom_etcdopsrequestsV1Yaml, map[string]*bintree{}},
-	"ops.kubedb.com_etcdopsrequests.yaml":                          {opsKubedbCom_etcdopsrequestsYaml, map[string]*bintree{}},
-	"ops.kubedb.com_mariadbopsrequests.v1.yaml":                    {opsKubedbCom_mariadbopsrequestsV1Yaml, map[string]*bintree{}},
-	"ops.kubedb.com_mariadbopsrequests.yaml":                       {opsKubedbCom_mariadbopsrequestsYaml, map[string]*bintree{}},
-	"ops.kubedb.com_memcachedopsrequests.v1.yaml":                  {opsKubedbCom_memcachedopsrequestsV1Yaml, map[string]*bintree{}},
-	"ops.kubedb.com_memcachedopsrequests.yaml":                     {opsKubedbCom_memcachedopsrequestsYaml, map[string]*bintree{}},
-	"ops.kubedb.com_mongodbopsrequests.v1.yaml":                    {opsKubedbCom_mongodbopsrequestsV1Yaml, map[string]*bintree{}},
-	"ops.kubedb.com_mongodbopsrequests.yaml":                       {opsKubedbCom_mongodbopsrequestsYaml, map[string]*bintree{}},
-	"ops.kubedb.com_mysqlopsrequests.v1.yaml":                      {opsKubedbCom_mysqlopsrequestsV1Yaml, map[string]*bintree{}},
-	"ops.kubedb.com_mysqlopsrequests.yaml":                         {opsKubedbCom_mysqlopsrequestsYaml, map[string]*bintree{}},
-	"ops.kubedb.com_perconaxtradbopsrequests.v1.yaml":              {opsKubedbCom_perconaxtradbopsrequestsV1Yaml, map[string]*bintree{}},
-	"ops.kubedb.com_perconaxtradbopsrequests.yaml":                 {opsKubedbCom_perconaxtradbopsrequestsYaml, map[string]*bintree{}},
-	"ops.kubedb.com_pgbounceropsrequests.v1.yaml":                  {opsKubedbCom_pgbounceropsrequestsV1Yaml, map[string]*bintree{}},
-	"ops.kubedb.com_pgbounceropsrequests.yaml":                     {opsKubedbCom_pgbounceropsrequestsYaml, map[string]*bintree{}},
-	"ops.kubedb.com_postgresopsrequests.v1.yaml":                   {opsKubedbCom_postgresopsrequestsV1Yaml, map[string]*bintree{}},
-	"ops.kubedb.com_postgresopsrequests.yaml":                      {opsKubedbCom_postgresopsrequestsYaml, map[string]*bintree{}},
-	"ops.kubedb.com_proxysqlopsrequests.v1.yaml":                   {opsKubedbCom_proxysqlopsrequestsV1Yaml, map[string]*bintree{}},
-	"ops.kubedb.com_proxysqlopsrequests.yaml":                      {opsKubedbCom_proxysqlopsrequestsYaml, map[string]*bintree{}},
-	"ops.kubedb.com_redisopsrequests.v1.yaml":                      {opsKubedbCom_redisopsrequestsV1Yaml, map[string]*bintree{}},
-	"ops.kubedb.com_redisopsrequests.yaml":                         {opsKubedbCom_redisopsrequestsYaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_elasticsearchautoscalers.v1.yaml": {autoscalingKubedbCom_elasticsearchautoscalersV1Yaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_elasticsearchautoscalers.yaml":    {autoscalingKubedbCom_elasticsearchautoscalersYaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_etcdautoscalers.v1.yaml":          {autoscalingKubedbCom_etcdautoscalersV1Yaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_etcdautoscalers.yaml":             {autoscalingKubedbCom_etcdautoscalersYaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_mariadbautoscalers.v1.yaml":       {autoscalingKubedbCom_mariadbautoscalersV1Yaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_mariadbautoscalers.yaml":          {autoscalingKubedbCom_mariadbautoscalersYaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_memcachedautoscalers.v1.yaml":     {autoscalingKubedbCom_memcachedautoscalersV1Yaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_memcachedautoscalers.yaml":        {autoscalingKubedbCom_memcachedautoscalersYaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_mongodbautoscalers.v1.yaml":       {autoscalingKubedbCom_mongodbautoscalersV1Yaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_mongodbautoscalers.yaml":          {autoscalingKubedbCom_mongodbautoscalersYaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_mysqlautoscalers.v1.yaml":         {autoscalingKubedbCom_mysqlautoscalersV1Yaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_mysqlautoscalers.yaml":            {autoscalingKubedbCom_mysqlautoscalersYaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_perconaxtradbautoscalers.v1.yaml": {autoscalingKubedbCom_perconaxtradbautoscalersV1Yaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_perconaxtradbautoscalers.yaml":    {autoscalingKubedbCom_perconaxtradbautoscalersYaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_pgbouncerautoscalers.v1.yaml":     {autoscalingKubedbCom_pgbouncerautoscalersV1Yaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_pgbouncerautoscalers.yaml":        {autoscalingKubedbCom_pgbouncerautoscalersYaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_postgresautoscalers.v1.yaml":      {autoscalingKubedbCom_postgresautoscalersV1Yaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_postgresautoscalers.yaml":         {autoscalingKubedbCom_postgresautoscalersYaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_proxysqlautoscalers.v1.yaml":      {autoscalingKubedbCom_proxysqlautoscalersV1Yaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_proxysqlautoscalers.yaml":         {autoscalingKubedbCom_proxysqlautoscalersYaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_redisautoscalers.v1.yaml":         {autoscalingKubedbCom_redisautoscalersV1Yaml, map[string]*bintree{}},
+	"autoscaling.kubedb.com_redisautoscalers.yaml":            {autoscalingKubedbCom_redisautoscalersYaml, map[string]*bintree{}},
+	"catalog.kubedb.com_elasticsearchversions.v1.yaml":        {catalogKubedbCom_elasticsearchversionsV1Yaml, map[string]*bintree{}},
+	"catalog.kubedb.com_elasticsearchversions.yaml":           {catalogKubedbCom_elasticsearchversionsYaml, map[string]*bintree{}},
+	"catalog.kubedb.com_etcdversions.v1.yaml":                 {catalogKubedbCom_etcdversionsV1Yaml, map[string]*bintree{}},
+	"catalog.kubedb.com_etcdversions.yaml":                    {catalogKubedbCom_etcdversionsYaml, map[string]*bintree{}},
+	"catalog.kubedb.com_mariadbversions.v1.yaml":              {catalogKubedbCom_mariadbversionsV1Yaml, map[string]*bintree{}},
+	"catalog.kubedb.com_mariadbversions.yaml":                 {catalogKubedbCom_mariadbversionsYaml, map[string]*bintree{}},
+	"catalog.kubedb.com_memcachedversions.v1.yaml":            {catalogKubedbCom_memcachedversionsV1Yaml, map[string]*bintree{}},
+	"catalog.kubedb.com_memcachedversions.yaml":               {catalogKubedbCom_memcachedversionsYaml, map[string]*bintree{}},
+	"catalog.kubedb.com_mongodbversions.v1.yaml":              {catalogKubedbCom_mongodbversionsV1Yaml, map[string]*bintree{}},
+	"catalog.kubedb.com_mongodbversions.yaml":                 {catalogKubedbCom_mongodbversionsYaml, map[string]*bintree{}},
+	"catalog.kubedb.com_mysqlversions.v1.yaml":                {catalogKubedbCom_mysqlversionsV1Yaml, map[string]*bintree{}},
+	"catalog.kubedb.com_mysqlversions.yaml":                   {catalogKubedbCom_mysqlversionsYaml, map[string]*bintree{}},
+	"catalog.kubedb.com_perconaxtradbversions.v1.yaml":        {catalogKubedbCom_perconaxtradbversionsV1Yaml, map[string]*bintree{}},
+	"catalog.kubedb.com_perconaxtradbversions.yaml":           {catalogKubedbCom_perconaxtradbversionsYaml, map[string]*bintree{}},
+	"catalog.kubedb.com_pgbouncerversions.v1.yaml":            {catalogKubedbCom_pgbouncerversionsV1Yaml, map[string]*bintree{}},
+	"catalog.kubedb.com_pgbouncerversions.yaml":               {catalogKubedbCom_pgbouncerversionsYaml, map[string]*bintree{}},
+	"catalog.kubedb.com_postgresversions.v1.yaml":             {catalogKubedbCom_postgresversionsV1Yaml, map[string]*bintree{}},
+	"catalog.kubedb.com_postgresversions.yaml":                {catalogKubedbCom_postgresversionsYaml, map[string]*bintree{}},
+	"catalog.kubedb.com_proxysqlversions.v1.yaml":             {catalogKubedbCom_proxysqlversionsV1Yaml, map[string]*bintree{}},
+	"catalog.kubedb.com_proxysqlversions.yaml":                {catalogKubedbCom_proxysqlversionsYaml, map[string]*bintree{}},
+	"catalog.kubedb.com_redisversions.v1.yaml":                {catalogKubedbCom_redisversionsV1Yaml, map[string]*bintree{}},
+	"catalog.kubedb.com_redisversions.yaml":                   {catalogKubedbCom_redisversionsYaml, map[string]*bintree{}},
+	"kubedb.com_elasticsearches.v1.yaml":                      {kubedbCom_elasticsearchesV1Yaml, map[string]*bintree{}},
+	"kubedb.com_elasticsearches.yaml":                         {kubedbCom_elasticsearchesYaml, map[string]*bintree{}},
+	"kubedb.com_etcds.v1.yaml":                                {kubedbCom_etcdsV1Yaml, map[string]*bintree{}},
+	"kubedb.com_etcds.yaml":                                   {kubedbCom_etcdsYaml, map[string]*bintree{}},
+	"kubedb.com_mariadbs.v1.yaml":                             {kubedbCom_mariadbsV1Yaml, map[string]*bintree{}},
+	"kubedb.com_mariadbs.yaml":                                {kubedbCom_mariadbsYaml, map[string]*bintree{}},
+	"kubedb.com_memcacheds.v1.yaml":                           {kubedbCom_memcachedsV1Yaml, map[string]*bintree{}},
+	"kubedb.com_memcacheds.yaml":                              {kubedbCom_memcachedsYaml, map[string]*bintree{}},
+	"kubedb.com_mongodbs.v1.yaml":                             {kubedbCom_mongodbsV1Yaml, map[string]*bintree{}},
+	"kubedb.com_mongodbs.yaml":                                {kubedbCom_mongodbsYaml, map[string]*bintree{}},
+	"kubedb.com_mysqls.v1.yaml":                               {kubedbCom_mysqlsV1Yaml, map[string]*bintree{}},
+	"kubedb.com_mysqls.yaml":                                  {kubedbCom_mysqlsYaml, map[string]*bintree{}},
+	"kubedb.com_perconaxtradbs.v1.yaml":                       {kubedbCom_perconaxtradbsV1Yaml, map[string]*bintree{}},
+	"kubedb.com_perconaxtradbs.yaml":                          {kubedbCom_perconaxtradbsYaml, map[string]*bintree{}},
+	"kubedb.com_pgbouncers.v1.yaml":                           {kubedbCom_pgbouncersV1Yaml, map[string]*bintree{}},
+	"kubedb.com_pgbouncers.yaml":                              {kubedbCom_pgbouncersYaml, map[string]*bintree{}},
+	"kubedb.com_postgreses.v1.yaml":                           {kubedbCom_postgresesV1Yaml, map[string]*bintree{}},
+	"kubedb.com_postgreses.yaml":                              {kubedbCom_postgresesYaml, map[string]*bintree{}},
+	"kubedb.com_proxysqls.v1.yaml":                            {kubedbCom_proxysqlsV1Yaml, map[string]*bintree{}},
+	"kubedb.com_proxysqls.yaml":                               {kubedbCom_proxysqlsYaml, map[string]*bintree{}},
+	"kubedb.com_redises.v1.yaml":                              {kubedbCom_redisesV1Yaml, map[string]*bintree{}},
+	"kubedb.com_redises.yaml":                                 {kubedbCom_redisesYaml, map[string]*bintree{}},
+	"ops.kubedb.com_elasticsearchopsrequests.v1.yaml":         {opsKubedbCom_elasticsearchopsrequestsV1Yaml, map[string]*bintree{}},
+	"ops.kubedb.com_elasticsearchopsrequests.yaml":            {opsKubedbCom_elasticsearchopsrequestsYaml, map[string]*bintree{}},
+	"ops.kubedb.com_etcdopsrequests.v1.yaml":                  {opsKubedbCom_etcdopsrequestsV1Yaml, map[string]*bintree{}},
+	"ops.kubedb.com_etcdopsrequests.yaml":                     {opsKubedbCom_etcdopsrequestsYaml, map[string]*bintree{}},
+	"ops.kubedb.com_mariadbopsrequests.v1.yaml":               {opsKubedbCom_mariadbopsrequestsV1Yaml, map[string]*bintree{}},
+	"ops.kubedb.com_mariadbopsrequests.yaml":                  {opsKubedbCom_mariadbopsrequestsYaml, map[string]*bintree{}},
+	"ops.kubedb.com_memcachedopsrequests.v1.yaml":             {opsKubedbCom_memcachedopsrequestsV1Yaml, map[string]*bintree{}},
+	"ops.kubedb.com_memcachedopsrequests.yaml":                {opsKubedbCom_memcachedopsrequestsYaml, map[string]*bintree{}},
+	"ops.kubedb.com_mongodbopsrequests.v1.yaml":               {opsKubedbCom_mongodbopsrequestsV1Yaml, map[string]*bintree{}},
+	"ops.kubedb.com_mongodbopsrequests.yaml":                  {opsKubedbCom_mongodbopsrequestsYaml, map[string]*bintree{}},
+	"ops.kubedb.com_mysqlopsrequests.v1.yaml":                 {opsKubedbCom_mysqlopsrequestsV1Yaml, map[string]*bintree{}},
+	"ops.kubedb.com_mysqlopsrequests.yaml":                    {opsKubedbCom_mysqlopsrequestsYaml, map[string]*bintree{}},
+	"ops.kubedb.com_perconaxtradbopsrequests.v1.yaml":         {opsKubedbCom_perconaxtradbopsrequestsV1Yaml, map[string]*bintree{}},
+	"ops.kubedb.com_perconaxtradbopsrequests.yaml":            {opsKubedbCom_perconaxtradbopsrequestsYaml, map[string]*bintree{}},
+	"ops.kubedb.com_pgbounceropsrequests.v1.yaml":             {opsKubedbCom_pgbounceropsrequestsV1Yaml, map[string]*bintree{}},
+	"ops.kubedb.com_pgbounceropsrequests.yaml":                {opsKubedbCom_pgbounceropsrequestsYaml, map[string]*bintree{}},
+	"ops.kubedb.com_postgresopsrequests.v1.yaml":              {opsKubedbCom_postgresopsrequestsV1Yaml, map[string]*bintree{}},
+	"ops.kubedb.com_postgresopsrequests.yaml":                 {opsKubedbCom_postgresopsrequestsYaml, map[string]*bintree{}},
+	"ops.kubedb.com_proxysqlopsrequests.v1.yaml":              {opsKubedbCom_proxysqlopsrequestsV1Yaml, map[string]*bintree{}},
+	"ops.kubedb.com_proxysqlopsrequests.yaml":                 {opsKubedbCom_proxysqlopsrequestsYaml, map[string]*bintree{}},
+	"ops.kubedb.com_redisopsrequests.v1.yaml":                 {opsKubedbCom_redisopsrequestsV1Yaml, map[string]*bintree{}},
+	"ops.kubedb.com_redisopsrequests.yaml":                    {opsKubedbCom_redisopsrequestsYaml, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory
