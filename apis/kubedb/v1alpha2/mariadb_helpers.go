@@ -24,7 +24,6 @@ import (
 	"kubedb.dev/apimachinery/crds"
 
 	"gomodules.xyz/pointer"
-	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -156,7 +155,6 @@ func (m MariaDB) StatsServiceLabels() map[string]string {
 	return lbl
 }
 
-
 func (m MariaDB) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
 }
@@ -190,46 +188,6 @@ func (m *MariaDB) SetTLSDefaults() {
 	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MariaDBServerCert), m.CertificateName(MariaDBServerCert))
 	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MariaDBArchiverCert), m.CertificateName(MariaDBArchiverCert))
 	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MariaDBMetricsExporterCert), m.CertificateName(MariaDBMetricsExporterCert))
-}
-
-func (m *MariaDBSpec) setDefaultProbes() {
-	// this function is replaced with Pod's readinessGates
-	// https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-readiness-gate
-	if m == nil {
-		return
-	}
-
-	var readinessProbeCmd []string
-	if pointer.Int32(m.Replicas) > 1 {
-		readinessProbeCmd = []string{
-			"/cluster-check.sh",
-		}
-	} else {
-		readinessProbeCmd = []string{
-			"bash",
-			"-c",
-			`export MYSQL_PWD="${MYSQL_ROOT_PASSWORD}"
-ping_resp=$(mysqladmin -uroot ping)
-if [[ "$ping_resp" != "mysqld is alive" ]]; then
-    echo "[ERROR] server is not ready. PING_RESPONSE: $ping_resp"
-    exit 1
-fi
-`,
-		}
-	}
-
-	readinessProbe := &core.Probe{
-		Handler: core.Handler{
-			Exec: &core.ExecAction{
-				Command: readinessProbeCmd,
-			},
-		},
-		InitialDelaySeconds: 30,
-		PeriodSeconds:       10,
-	}
-	if m.PodTemplate.Spec.ReadinessProbe == nil {
-		m.PodTemplate.Spec.ReadinessProbe = readinessProbe
-	}
 }
 
 func (m *MariaDBSpec) GetPersistentSecrets() []string {
