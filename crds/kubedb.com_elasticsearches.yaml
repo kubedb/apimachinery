@@ -1350,6 +1350,23 @@ spec:
                     type: array
                 type: object
               type: object
+            kernelSettings:
+              properties:
+                privileged:
+                  type: boolean
+                sysctls:
+                  items:
+                    properties:
+                      name:
+                        type: string
+                      value:
+                        type: string
+                    required:
+                    - name
+                    - value
+                    type: object
+                  type: array
+              type: object
             maxUnavailable:
               anyOf:
               - type: integer
@@ -3025,8 +3042,6 @@ spec:
                       - type: integer
                       - type: string
                       x-kubernetes-int-or-string: true
-                    prefix:
-                      type: string
                     replicas:
                       format: int32
                       type: integer
@@ -3116,6 +3131,8 @@ spec:
                         volumeName:
                           type: string
                       type: object
+                    suffix:
+                      type: string
                   type: object
                 ingest:
                   properties:
@@ -3124,8 +3141,6 @@ spec:
                       - type: integer
                       - type: string
                       x-kubernetes-int-or-string: true
-                    prefix:
-                      type: string
                     replicas:
                       format: int32
                       type: integer
@@ -3215,6 +3230,8 @@ spec:
                         volumeName:
                           type: string
                       type: object
+                    suffix:
+                      type: string
                   type: object
                 master:
                   properties:
@@ -3223,8 +3240,6 @@ spec:
                       - type: integer
                       - type: string
                       x-kubernetes-int-or-string: true
-                    prefix:
-                      type: string
                     replicas:
                       format: int32
                       type: integer
@@ -3314,6 +3329,8 @@ spec:
                         volumeName:
                           type: string
                       type: object
+                    suffix:
+                      type: string
                   type: object
               required:
               - data

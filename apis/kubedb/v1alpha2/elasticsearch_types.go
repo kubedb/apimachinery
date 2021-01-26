@@ -135,6 +135,10 @@ type ElasticsearchSpec struct {
 	// TerminationPolicy controls the delete operation for database
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,19,opt,name=terminationPolicy,casttype=TerminationPolicy"`
+
+	// KernelSettings contains the additional kernel settings.
+	// +optional
+	KernelSettings *KernelSettings `json:"kernelSettings,omitempty" protobuf:"bytes,20,opt,name=kernelSettings"`
 }
 
 type ElasticsearchClusterTopology struct {
@@ -146,7 +150,7 @@ type ElasticsearchClusterTopology struct {
 type ElasticsearchNode struct {
 	// Replicas represents number of replica for this specific type of node
 	Replicas *int32 `json:"replicas,omitempty" protobuf:"varint,1,opt,name=replicas"`
-	Prefix   string `json:"prefix,omitempty" protobuf:"bytes,2,opt,name=prefix"`
+	Suffix   string `json:"suffix,omitempty" protobuf:"bytes,2,opt,name=suffix"`
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,3,opt,name=storage"`
 	// Compute Resources required by the sidecar container.

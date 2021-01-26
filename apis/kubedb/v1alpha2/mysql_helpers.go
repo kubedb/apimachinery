@@ -25,13 +25,16 @@ import (
 
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
 func (_ MySQL) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -172,7 +175,7 @@ func (m *MySQL) UsesGroupReplication() bool {
 	return m.Spec.Topology != nil && m.Spec.Topology.Mode != nil && *m.Spec.Topology.Mode == MySQLClusterModeGroup
 }
 
-func (m *MySQL) SetDefaults() {
+func (m *MySQL) SetDefaults(topology *core_util.Topology) {
 	if m == nil {
 		return
 	}
@@ -187,7 +190,6 @@ func (m *MySQL) SetDefaults() {
 		if m.Spec.Replicas == nil {
 			m.Spec.Replicas = pointer.Int32P(MySQLDefaultGroupSize)
 		}
-		m.Spec.setDefaultProbes()
 	} else {
 		if m.Spec.Replicas == nil {
 			m.Spec.Replicas = pointer.Int32P(1)
@@ -200,8 +202,49 @@ func (m *MySQL) SetDefaults() {
 
 	m.Spec.Monitor.SetDefaults()
 
+	m.setDefaultAffinity(&m.Spec.PodTemplate, m.OffshootSelectors(), topology)
 	m.SetTLSDefaults()
-	setDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, defaultResourceLimits, defaultResourceLimits)
+	SetDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, DefaultResourceLimits)
+}
+
+// setDefaultAffinity
+func (m *MySQL) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
+	if podTemplate == nil {
+		return
+	} else if podTemplate.Spec.Affinity != nil {
+		// Update topologyKey fields according to Kubernetes version
+		topology.ConvertAffinity(podTemplate.Spec.Affinity)
+		return
+	}
+
+	podTemplate.Spec.Affinity = &core.Affinity{
+		PodAntiAffinity: &core.PodAntiAffinity{
+			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
+				// Prefer to not schedule multiple pods on the same node
+				{
+					Weight: 100,
+					PodAffinityTerm: core.PodAffinityTerm{
+						Namespaces: []string{m.Namespace},
+						LabelSelector: &metav1.LabelSelector{
+							MatchLabels: labels,
+						},
+						TopologyKey: core.LabelHostname,
+					},
+				},
+				// Prefer to not schedule multiple pods on the node with same zone
+				{
+					Weight: 50,
+					PodAffinityTerm: core.PodAffinityTerm{
+						Namespaces: []string{m.Namespace},
+						LabelSelector: &metav1.LabelSelector{
+							MatchLabels: labels,
+						},
+						TopologyKey: topology.LabelZone,
+					},
+				},
+			},
+		},
+	}
 }
 
 func (m *MySQL) SetTLSDefaults() {
@@ -211,36 +254,6 @@ func (m *MySQL) SetTLSDefaults() {
 	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MySQLServerCert), m.CertificateName(MySQLServerCert))
 	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MySQLClientCert), m.CertificateName(MySQLClientCert))
 	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MySQLMetricsExporterCert), m.CertificateName(MySQLMetricsExporterCert))
-}
-
-// setDefaultProbes sets defaults only when probe fields are nil.
-// In operator, check if the value of probe fields is "{}".
-// For "{}", ignore readinessprobe or livenessprobe in statefulset.
-// Ref: https://github.com/mattlord/Docker-InnoDB-Cluster/blob/master/healthcheck.sh#L10
-func (m *MySQLSpec) setDefaultProbes() {
-	probe := &core.Probe{
-		Handler: core.Handler{
-			Exec: &core.ExecAction{
-				Command: []string{
-					"bash",
-					"-c",
-					`
-export MYSQL_PWD=${MYSQL_ROOT_PASSWORD}
-mysql -h localhost -nsLNE -e "select member_state from performance_schema.replication_group_members where member_id=@@server_uuid;" 2>/dev/null | grep "ONLINE"
-`,
-				},
-			},
-		},
-		InitialDelaySeconds: 30,
-		PeriodSeconds:       5,
-	}
-
-	if m.PodTemplate.Spec.LivenessProbe == nil {
-		m.PodTemplate.Spec.LivenessProbe = probe
-	}
-	if m.PodTemplate.Spec.ReadinessProbe == nil {
-		m.PodTemplate.Spec.ReadinessProbe = probe
-	}
 }
 
 func (m *MySQLSpec) GetPersistentSecrets() []string {

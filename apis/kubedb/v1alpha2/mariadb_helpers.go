@@ -174,11 +174,9 @@ func (m *MariaDB) SetDefaults() {
 	if m.Spec.TerminationPolicy == "" {
 		m.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
-
 	m.Spec.Monitor.SetDefaults()
-
 	m.SetTLSDefaults()
-	setDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, defaultResourceLimits, defaultResourceLimits)
+	SetDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, DefaultResourceLimits)
 }
 
 func (m *MariaDB) SetTLSDefaults() {

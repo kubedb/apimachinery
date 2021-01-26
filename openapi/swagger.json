@@ -28477,9 +28477,6 @@
           "description": "An eviction is allowed if at most \"maxUnavailable\" pods selected by \"selector\" are unavailable after the eviction, i.e. even in absence of the evicted pod. For example, one can prevent all voluntary evictions by specifying 0. This is a mutually exclusive setting with \"minAvailable\".",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
         },
-        "prefix": {
-          "type": "string"
-        },
         "replicas": {
           "description": "Replicas represents number of replica for this specific type of node",
           "type": "integer",
@@ -28492,6 +28489,9 @@
         "storage": {
           "description": "Storage to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "suffix": {
+          "type": "string"
         }
       }
     },
@@ -28573,6 +28573,10 @@
           "additionalProperties": {
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchUserSpec"
           }
+        },
+        "kernelSettings": {
+          "description": "KernelSettings contains the additional kernel settings.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.KernelSettings"
         },
         "maxUnavailable": {
           "description": "An eviction is allowed if at most \"maxUnavailable\" pods selected by \"selector\" are unavailable after the eviction, i.e. even in absence of the evicted pod. For example, one can prevent all voluntary evictions by specifying 0. This is a mutually exclusive setting with \"minAvailable\".",
@@ -28854,6 +28858,22 @@
         "waitForInitialRestore": {
           "description": "Wait for initial DataRestore condition",
           "type": "boolean"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.KernelSettings": {
+      "type": "object",
+      "properties": {
+        "privileged": {
+          "description": "Privileged specifies the status whether the init container requires privileged access to perform the following commands.",
+          "type": "boolean"
+        },
+        "sysctls": {
+          "description": "Sysctls hold a list of sysctls commands needs to apply to kernel.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.core.v1.Sysctl"
+          }
         }
       }
     },
@@ -31381,7 +31401,7 @@
       "description": "MongoDBReplicaReadinessCriteria is the criteria for checking readiness of a MongoDB pod after updating, horizontal scaling etc.",
       "type": "object",
       "properties": {
-        "dbSizeDiffPercentage": {
+        "objectsCountDiffPercentage": {
           "type": "integer",
           "format": "int32"
         },
