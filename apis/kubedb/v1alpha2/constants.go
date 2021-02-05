@@ -165,7 +165,7 @@ const (
 	MySQLGroupComPort                      = 33060
 	MySQLMaxGroupMembers                   = 9
 	// The recommended MySQL server version for group replication (GR)
-	MySQLGRRecommendedVersion = "5.7.25"
+	MySQLGRRecommendedVersion = "8.0.23"
 	MySQLDefaultGroupSize     = 3
 	MySQLRootUserName         = "MYSQL_ROOT_USERNAME"
 	MySQLRootPassword         = "MYSQL_ROOT_PASSWORD"
