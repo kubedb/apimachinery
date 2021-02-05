@@ -29532,11 +29532,6 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLGroupSpec": {
       "type": "object",
       "properties": {
-        "baseServerID": {
-          "description": "On a replication master and each replication slave, the --server-id option must be specified to establish a unique replication ID in the range from 1 to 2^32 − 1. “Unique”, means that each ID must be different from every other ID in use by any other replication master or slave. ref: https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_server_id\n\nSo, BaseServerID is needed to calculate a unique server_id for each member.",
-          "type": "integer",
-          "format": "int64"
-        },
         "mode": {
           "description": "Group Replication can be deployed in either \"Single-Primary\" or \"Multi-Primary\" mode",
           "type": "string"
