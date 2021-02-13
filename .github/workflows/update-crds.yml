@@ -1,0 +1,53 @@
+name: update-crds
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.15
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.15
+        id: go
+
+      - uses: actions/checkout@v1
+
+      - name: Install GitHub CLI
+        run: |
+          curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
+          sudo mv bin/hub /usr/local/bin
+
+      - name: Install crd-importer
+        run: |
+          curl -L -o crd-importer https://github.com/kmodules/crd-importer/releases/download/v0.0.1/crd-importer-linux-amd64
+          chmod +x ./crd-importer
+          sudo mv ./crd-importer /usr/local/bin/crd-importer
+
+      - name: Clone installer repository
+        env:
+          GITHUB_USER: 1gtm
+          GITHUB_TOKEN: ${{ secrets.LGTM_GITHUB_TOKEN }}
+          INSTALLER_REPOSITORY: ${{ secrets.INSTALLER_REPOSITORY }}
+        run: |
+          url="https://${GITHUB_USER}:${GITHUB_TOKEN}@${INSTALLER_REPOSITORY}.git"
+          cd $RUNNER_WORKSPACE
+          git clone $url
+          cd $(basename $INSTALLER_REPOSITORY)
+          git config user.name "${GITHUB_USER}"
+          git config user.email "${GITHUB_USER}@appscode.com"
+
+      - name: Update crds
+        env:
+          GITHUB_USER: 1gtm
+          GITHUB_TOKEN: ${{ secrets.LGTM_GITHUB_TOKEN }}
+          INSTALLER_REPOSITORY: ${{ secrets.INSTALLER_REPOSITORY }}
+        run: |
+          export INSTALLER_ROOT=$RUNNER_WORKSPACE/$(basename $INSTALLER_REPOSITORY)
+          crd-importer --input=./crds --out=$INSTALLER_ROOT/charts/kubedb-crds/crds --v=v1
+          $INSTALLER_ROOT/hack/scripts/open-pr.sh
