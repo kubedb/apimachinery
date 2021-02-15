@@ -20823,13 +20823,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLGroupSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
-					"baseServerID": {
-						SchemaProps: spec.SchemaProps{
-							Description: "On a replication master and each replication slave, the --server-id option must be specified to establish a unique replication ID in the range from 1 to 2^32 − 1. “Unique”, means that each ID must be different from every other ID in use by any other replication master or slave. ref: https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_server_id\n\nSo, BaseServerID is needed to calculate a unique server_id for each member.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
 				},
 			},
 		},
