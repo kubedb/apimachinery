@@ -27129,6 +27129,10 @@
           "description": "PSP names",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionPodSecurityPolicy"
         },
+        "stash": {
+          "description": "Stash defines backup and restore task definitions.",
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
+        },
         "tools": {
           "description": "Tools Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionTools"
@@ -27253,6 +27257,10 @@
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionExporter"
+        },
+        "stash": {
+          "description": "Stash defines backup and restore task definitions.",
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
         },
         "tools": {
           "description": "Tools Image",
@@ -27543,6 +27551,10 @@
           "description": "ReplicationModeDetector Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ReplicationModeDetector"
         },
+        "stash": {
+          "description": "Stash defines backup and restore task definitions.",
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
+        },
         "tools": {
           "description": "Tools Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionTools"
@@ -27721,6 +27733,10 @@
           "description": "ReplicationModeDetector Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ReplicationModeDetector"
         },
+        "stash": {
+          "description": "Stash defines backup and restore task definitions.",
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
+        },
         "tools": {
           "description": "Tools Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionTools"
@@ -27883,6 +27899,10 @@
           "description": "PSP names",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PerconaXtraDBVersionPodSecurityPolicy"
         },
+        "stash": {
+          "description": "Stash defines backup and restore task definitions.",
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
+        },
         "version": {
           "description": "Version",
           "type": "string"
@@ -28008,6 +28028,10 @@
         "podSecurityPolicies": {
           "description": "PSP names",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionPodSecurityPolicy"
+        },
+        "stash": {
+          "description": "Stash defines backup and restore task definitions.",
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
         },
         "tools": {
           "description": "Tools Image",
@@ -28274,6 +28298,10 @@
         "podSecurityPolicies": {
           "description": "PSP names",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionPodSecurityPolicy"
+        },
+        "stash": {
+          "description": "Stash defines backup and restore task definitions.",
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
         },
         "version": {
           "description": "Version",
@@ -35442,6 +35470,58 @@
         "parameters": {
           "description": "Parameters is a set of the parameters to be used to override default parameters. The inline YAML/JSON payload to be translated into equivalent JSON object.\n\nThe Parameters field is NOT secret or secured in any way and should NEVER be used to hold sensitive information.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        }
+      }
+    },
+    "xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.Param": {
+      "description": "Param declares a value to use for the Param called Name.",
+      "type": "object",
+      "required": [
+        "name",
+        "value"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec": {
+      "description": "StashTaskSpec is the spec for app",
+      "type": "object",
+      "required": [
+        "backupTask",
+        "restoreTask"
+      ],
+      "properties": {
+        "backupTask": {
+          "description": "Backup task definition",
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.TaskRef"
+        },
+        "restoreTask": {
+          "description": "Restore task definition",
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.TaskRef"
+        }
+      }
+    },
+    "xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.TaskRef": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "params": {
+          "description": "Params specifies a list of parameter to pass to the Task. Stash will use this parameters to resolve the task.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.Param"
+          }
         }
       }
     },
