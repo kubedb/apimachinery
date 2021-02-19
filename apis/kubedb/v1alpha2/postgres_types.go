@@ -21,7 +21,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	store "kmodules.xyz/objectstore-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
@@ -64,25 +63,27 @@ type PostgresSpec struct {
 	// Streaming mode
 	StreamingMode *PostgresStreamingMode `json:"streamingMode,omitempty" protobuf:"bytes,4,opt,name=streamingMode,casttype=PostgresStreamingMode"`
 
-	// Archive for wal files
-	Archiver *PostgresArchiverSpec `json:"archiver,omitempty" protobuf:"bytes,5,opt,name=archiver"`
-
 	// Leader election configuration
 	// +optional
-	LeaderElection *LeaderElectionConfig `json:"leaderElection,omitempty" protobuf:"bytes,6,opt,name=leaderElection"`
+	LeaderElection *LeaderElectionConfig `json:"leaderElection,omitempty" protobuf:"bytes,5,opt,name=leaderElection"`
 
 	// Database authentication secret
-	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty" protobuf:"bytes,7,opt,name=authSecret"`
+	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty" protobuf:"bytes,6,opt,name=authSecret"`
 
 	// StorageType can be durable (default) or ephemeral
-	StorageType StorageType `json:"storageType,omitempty" protobuf:"bytes,8,opt,name=storageType,casttype=StorageType"`
+	StorageType StorageType `json:"storageType,omitempty" protobuf:"bytes,7,opt,name=storageType,casttype=StorageType"`
 
 	// Storage to specify how storage shall be used.
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,9,opt,name=storage"`
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,8,opt,name=storage"`
+	// ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
+	ClientAuthMode ClientAuthMode `json:"clientAuthMode,omitempty" protobuf:"bytes,9,opt,name=clientAuthMode,casttype=ClientAuthMode"`
+	// SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]
+
+	SSLMode PgSSLMode `json:"sslMode,omitempty" protobuf:"bytes,10,opt,name=sslMode,casttype=SSLMode"`
 
 	// Init is used to initialize database
 	// +optional
-	Init *InitSpec `json:"init,omitempty" protobuf:"bytes,10,opt,name=init"`
+	Init *InitSpec `json:"init,omitempty" protobuf:"bytes,11,opt,name=init"`
 
 	// Monitor is used monitor database instance
 	// +optional
@@ -118,14 +119,10 @@ type PostgresCertificateAlias string
 
 const (
 	PostgresServerCert          PostgresCertificateAlias = "server"
+	PostgresClientCert          PostgresCertificateAlias = "client"
 	PostgresArchiverCert        PostgresCertificateAlias = "archiver"
 	PostgresMetricsExporterCert PostgresCertificateAlias = "metrics-exporter"
 )
-
-type PostgresArchiverSpec struct {
-	Storage *store.Backend `json:"storage,omitempty" protobuf:"bytes,1,opt,name=storage"`
-	// wal_keep_segments
-}
 
 type PostgresStatus struct {
 	// Specifies the current phase of the database
@@ -147,12 +144,6 @@ type PostgresList struct {
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	// Items is a list of Postgres CRD objects
 	Items []Postgres `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
-}
-
-type PostgresWALSourceSpec struct {
-	BackupName    string          `json:"backupName,omitempty" protobuf:"bytes,1,opt,name=backupName"`
-	PITR          *RecoveryTarget `json:"pitr,omitempty" protobuf:"bytes,2,opt,name=pitr"`
-	store.Backend `json:",inline,omitempty" protobuf:"bytes,3,opt,name=backend"`
 }
 
 type RecoveryTarget struct {
@@ -181,4 +172,55 @@ type PostgresStreamingMode string
 const (
 	SynchronousPostgresStreamingMode  PostgresStreamingMode = "Synchronous"
 	AsynchronousPostgresStreamingMode PostgresStreamingMode = "Asynchronous"
+)
+
+// ref: https://www.postgresql.org/docs/13/libpq-ssl.html
+// +kubebuilder:validation:Enum=disable;allow;prefer;require;verify-ca;verify-full
+type PgSSLMode string
+
+const (
+	// PgSSLModeDisable represents `disable` sslMode. It ensures that the server does not use TLS/SSL.
+	PgSSLModeDisable PgSSLMode = "disable"
+
+	// PgSSLModeAllow represents `allow` sslMode. 	I don't care about security, but I will pay the overhead of encryption if the server insists on it.
+	PgSSLModeAllow PgSSLMode = "allow"
+
+	// PgSSLModePrefer represents `preferSSL` sslMode.
+	//I don't care about encryption, but I wish to pay the overhead of encryption if the server supports it.
+	PgSSLModePrefer PgSSLMode = "prefer"
+
+	// PgSSLModeRequire represents `requiteSSL` sslmode. I want my data to be encrypted, and I accept the overhead.
+	// I trust that the network will make sure I always connect to the server I want.
+	PgSSLModeRequire PgSSLMode = "require"
+
+	// PgSSLModeVerifyCA represents `verify-ca` sslmode. I want my data encrypted, and I accept the overhead.
+	//I want to be sure that I connect to a server that I trust.
+	PgSSLModeVerifyCA PgSSLMode = "verify-ca"
+
+	// PgSSLModeVerifyFull represents `verify-full` sslmode. I want my data encrypted, and I accept the overhead.
+	//I want to be sure that I connect to a server I trust, and that it's the one I specify.
+	PgSSLModeVerifyFull PgSSLMode = "verify-full"
+)
+
+// ClientAuthMode represents the clusterAuthMode of mongodb clusters ( replicaset or sharding)
+// ref: https://www.postgresql.org/docs/12/auth-methods.html
+// +kubebuilder:validation:Enum=md5;scram;cert
+type ClientAuthMode string
+
+const (
+	// The method md5 uses a custom less secure challenge-response mechanism.
+	// It prevents password sniffing and avoids storing passwords on the server in plain text but provides no protection
+	// if an attacker manages to steal the password hash from the server.
+	// Also, the MD5 hash algorithm is nowadays no longer considered secure against determined attacks
+	ClientAuthModeMD5 ClientAuthMode = "md5"
+
+	//The method scram-sha-256 performs SCRAM-SHA-256 authentication, as described in RFC 7677.
+	//It is a challenge-response scheme that prevents password sniffing on untrusted connections
+	//and supports storing passwords on the server in a cryptographically hashed form that is thought to be secure.
+	//This is the most secure of the currently provided methods, but it is not supported by older client libraries.
+	ClientAuthModeScram ClientAuthMode = "scram"
+
+	// ClusterAuthModeSendX509 represents `sendx509` mongodb clusterAuthMode. This mode is usually for rolling upgrade purposes.
+	// Send the x.509 certificate for authentication but can accept both keyfiles and x.509 certificates.
+	ClientAuthModeCert ClientAuthMode = "cert"
 )

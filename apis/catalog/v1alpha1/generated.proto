@@ -580,6 +580,11 @@ message PostgresVersion {
   optional PostgresVersionSpec spec = 2;
 }
 
+// PostgresVersionCoordinator is the Postgres leader elector image
+message PostgresVersionCoordinator {
+  optional string image = 1;
+}
+
 // PostgresVersionDatabase is the Postgres Database image
 message PostgresVersionDatabase {
   optional string image = 1;
@@ -587,6 +592,11 @@ message PostgresVersionDatabase {
 
 // PostgresVersionExporter is the image for the Postgres exporter
 message PostgresVersionExporter {
+  optional string image = 1;
+}
+
+// PostgresVersionInitContainer is the Postgres init container image
+message PostgresVersionInitContainer {
   optional string image = 1;
 }
 
@@ -608,30 +618,28 @@ message PostgresVersionSpec {
   // Version
   optional string version = 1;
 
+  // init container image
+  optional PostgresVersionInitContainer initContainer = 2;
+
   // Database Image
-  optional PostgresVersionDatabase db = 2;
+  optional PostgresVersionDatabase db = 3;
 
   // Exporter Image
-  optional PostgresVersionExporter exporter = 3;
+  optional PostgresVersionExporter exporter = 4;
 
-  // Tools Image
-  optional PostgresVersionTools tools = 4;
+  // Coordinator Image
+  optional PostgresVersionCoordinator coordinator = 5;
 
   // Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
   // +optional
-  optional bool deprecated = 5;
+  optional bool deprecated = 6;
 
   // PSP names
-  optional PostgresVersionPodSecurityPolicy podSecurityPolicies = 6;
+  optional PostgresVersionPodSecurityPolicy podSecurityPolicies = 7;
 
   // Stash defines backup and restore task definitions.
   // +optional
-  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 7;
-}
-
-// PostgresVersionTools is the image for the postgres tools
-message PostgresVersionTools {
-  optional string image = 1;
+  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 8;
 }
 
 // +kubebuilder:object:root=true
