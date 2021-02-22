@@ -18799,9 +18799,17 @@ func schema_apimachinery_apis_config_v1alpha1_GaleraArbitratorConfiguration(ref 
 							Format:      "",
 						},
 					},
+					"stash": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Stash defines backup and restore task definitions.",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"},
 	}
 }
 
@@ -18848,8 +18856,16 @@ func schema_apimachinery_apis_config_v1alpha1_MongoDBConfiguration(ref common.Re
 							},
 						},
 					},
+					"stash": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Stash defines backup and restore task definitions.",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"},
 	}
 }
