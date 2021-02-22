@@ -69,7 +69,7 @@ type MongoDBVersionSpec struct {
 	ReplicationModeDetector ReplicationModeDetector `json:"replicationModeDetector" protobuf:"bytes,8,opt,name=replicationModeDetector"`
 	// Stash defines backup and restore task definitions.
 	// +optional
-	Stash appcat.StashTaskSpec `json:"stash,omitempty" protobuf:"bytes,9,opt,name=stash"`
+	Stash appcat.StashAddonSpec `json:"stash,omitempty" protobuf:"bytes,9,opt,name=stash"`
 }
 
 // MongoDBVersionDatabase is the MongoDB Database image

@@ -71,7 +71,7 @@ type ElasticsearchVersionSpec struct {
 	PodSecurityPolicies ElasticsearchVersionPodSecurityPolicy `json:"podSecurityPolicies" protobuf:"bytes,8,opt,name=podSecurityPolicies"`
 	// Stash defines backup and restore task definitions.
 	// +optional
-	Stash appcat.StashTaskSpec `json:"stash,omitempty" protobuf:"bytes,9,opt,name=stash"`
+	Stash appcat.StashAddonSpec `json:"stash,omitempty" protobuf:"bytes,9,opt,name=stash"`
 }
 
 // ElasticsearchVersionDatabase is the Elasticsearch Database image

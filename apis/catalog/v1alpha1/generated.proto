@@ -118,7 +118,7 @@ message ElasticsearchVersionSpec {
 
   // Stash defines backup and restore task definitions.
   // +optional
-  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashTaskSpec stash = 9;
+  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 9;
 }
 
 // ElasticsearchVersionTools is the image for the elasticsearch tools
@@ -176,7 +176,7 @@ message EtcdVersionSpec {
 
   // Stash defines backup and restore task definitions.
   // +optional
-  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashTaskSpec stash = 6;
+  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 6;
 }
 
 // EtcdVersionTools is the image for the Etcd exporter
@@ -248,7 +248,7 @@ message MariaDBVersionSpec {
 
   // Stash defines backup and restore task definitions.
   // +optional
-  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashTaskSpec stash = 7;
+  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 7;
 }
 
 // +kubebuilder:object:root=true
@@ -374,7 +374,7 @@ message MongoDBVersionSpec {
 
   // Stash defines backup and restore task definitions.
   // +optional
-  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashTaskSpec stash = 9;
+  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 9;
 }
 
 // MongoDBVersionTools is the image for the mongodb tools
@@ -462,7 +462,7 @@ message MySQLVersionSpec {
 
   // Stash defines backup and restore task definitions.
   // +optional
-  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashTaskSpec stash = 10;
+  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 10;
 }
 
 // MySQLVersionTools is the image for the MySQL tools
@@ -534,7 +534,7 @@ message PerconaXtraDBVersionSpec {
 
   // Stash defines backup and restore task definitions.
   // +optional
-  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashTaskSpec stash = 7;
+  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 7;
 }
 
 // PgBouncerServerVersion is the PgBouncer Database image
@@ -641,7 +641,7 @@ message PostgresVersionSpec {
 
   // Stash defines backup and restore task definitions.
   // +optional
-  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashTaskSpec stash = 7;
+  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 7;
 }
 
 // PostgresVersionTools is the image for the postgres tools
@@ -758,7 +758,7 @@ message RedisVersionSpec {
 
   // Stash defines backup and restore task definitions.
   // +optional
-  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashTaskSpec stash = 6;
+  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 6;
 }
 
 // ReplicationModeDetector is the image for the MySQL replication mode detector

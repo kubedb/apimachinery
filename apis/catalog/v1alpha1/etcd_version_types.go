@@ -63,7 +63,7 @@ type EtcdVersionSpec struct {
 	Deprecated bool `json:"deprecated,omitempty" protobuf:"varint,5,opt,name=deprecated"`
 	// Stash defines backup and restore task definitions.
 	// +optional
-	Stash appcat.StashTaskSpec `json:"stash,omitempty" protobuf:"bytes,6,opt,name=stash"`
+	Stash appcat.StashAddonSpec `json:"stash,omitempty" protobuf:"bytes,6,opt,name=stash"`
 }
 
 // EtcdVersionDatabase is the Etcd Database image

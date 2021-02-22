@@ -63,7 +63,7 @@ type RedisVersionSpec struct {
 	PodSecurityPolicies RedisVersionPodSecurityPolicy `json:"podSecurityPolicies" protobuf:"bytes,5,opt,name=podSecurityPolicies"`
 	// Stash defines backup and restore task definitions.
 	// +optional
-	Stash appcat.StashTaskSpec `json:"stash,omitempty" protobuf:"bytes,6,opt,name=stash"`
+	Stash appcat.StashAddonSpec `json:"stash,omitempty" protobuf:"bytes,6,opt,name=stash"`
 }
 
 // RedisVersionDatabase is the Redis Database image
