@@ -71,7 +71,7 @@ type MySQLVersionSpec struct {
 	UpgradeConstraints MySQLUpgradeConstraints `json:"upgradeConstraints" protobuf:"bytes,9,opt,name=upgradeConstraints"`
 	// Stash defines backup and restore task definitions.
 	// +optional
-	Stash appcat.StashTaskSpec `json:"stash,omitempty" protobuf:"bytes,10,opt,name=stash"`
+	Stash appcat.StashAddonSpec `json:"stash,omitempty" protobuf:"bytes,10,opt,name=stash"`
 }
 
 // MySQLVersionDatabase is the MySQL Database image

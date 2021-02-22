@@ -27131,7 +27131,7 @@
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
-          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
         "tools": {
           "description": "Tools Image",
@@ -27260,7 +27260,7 @@
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
-          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
         "tools": {
           "description": "Tools Image",
@@ -27553,7 +27553,7 @@
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
-          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
         "tools": {
           "description": "Tools Image",
@@ -27735,7 +27735,7 @@
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
-          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
         "tools": {
           "description": "Tools Image",
@@ -27901,7 +27901,7 @@
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
-          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
         "version": {
           "description": "Version",
@@ -28031,7 +28031,7 @@
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
-          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
         "tools": {
           "description": "Tools Image",
@@ -28301,7 +28301,7 @@
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
-          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
         "version": {
           "description": "Version",
@@ -35486,6 +35486,15 @@
         },
         "value": {
           "type": "string"
+        }
+      }
+    },
+    "xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec": {
+      "description": "StashAddonSpec is the spec for app",
+      "type": "object",
+      "properties": {
+        "addon": {
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashTaskSpec"
         }
       }
     },
