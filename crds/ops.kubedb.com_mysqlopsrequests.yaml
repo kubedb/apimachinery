@@ -1310,10 +1310,10 @@ spec:
                 member:
                   format: int32
                   type: integer
-                memberWeight:
-                  format: int32
-                  type: integer
               type: object
+            memberWeight:
+              format: int32
+              type: integer
             restart:
               type: object
             statefulSetOrdinal:

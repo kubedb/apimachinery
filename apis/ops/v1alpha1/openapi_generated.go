@@ -20913,13 +20913,6 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLHorizontalScalingSpec(ref common
 							Format:      "int32",
 						},
 					},
-					"memberWeight": {
-						SchemaProps: spec.SchemaProps{
-							Description: "specifies the weight of the current member/Node",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 				},
 			},
 		},
@@ -21081,6 +21074,13 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestSpec(ref common.Refere
 					"statefulSetOrdinal": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the current ordinal of the StatefulSet",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"memberWeight": {
+						SchemaProps: spec.SchemaProps{
+							Description: "specifies the weight of the current member/Node",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

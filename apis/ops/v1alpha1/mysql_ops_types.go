@@ -73,6 +73,9 @@ type MySQLOpsRequestSpec struct {
 
 	// Specifies the current ordinal of the StatefulSet
 	StatefulSetOrdinal *int32 `json:"statefulSetOrdinal,omitempty" protobuf:"varint,10,opt,name=statefulSetOrdinal"`
+
+	// specifies the weight of the current member/Node
+	MemberWeight int32 `json:"memberWeight,omitempty" protobuf:"varint,11,opt,name=memberWeight"`
 }
 
 // MySQLReplicaReadinessCriteria is the criteria for checking readiness of a MySQL pod
@@ -89,8 +92,6 @@ type MySQLUpgradeSpec struct {
 type MySQLHorizontalScalingSpec struct {
 	// Number of nodes/members of the group
 	Member *int32 `json:"member,omitempty" protobuf:"varint,1,opt,name=member"`
-	// specifies the weight of the current member/Node
-	MemberWeight int32 `json:"memberWeight,omitempty" protobuf:"varint,2,opt,name=memberWeight"`
 }
 
 type MySQLVerticalScalingSpec struct {
