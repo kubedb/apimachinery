@@ -75,7 +75,7 @@ type MySQLOpsRequestSpec struct {
 	StatefulSetOrdinal *int32 `json:"statefulSetOrdinal,omitempty" protobuf:"varint,10,opt,name=statefulSetOrdinal"`
 
 	// specifies the weight of the current member/Node
-	MemberWeight int32 `json:"memberWeight,omitempty" protobuf:"varint,11,opt,name=memberWeight"`
+	MemberWeight *int32 `json:"memberWeight,omitempty" protobuf:"varint,11,opt,name=memberWeight"`
 }
 
 // MySQLReplicaReadinessCriteria is the criteria for checking readiness of a MySQL pod

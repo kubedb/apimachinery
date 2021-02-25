@@ -1773,6 +1773,11 @@ func (in *MySQLOpsRequestSpec) DeepCopyInto(out *MySQLOpsRequestSpec) {
 		*out = new(int32)
 		**out = **in
 	}
+	if in.MemberWeight != nil {
+		in, out := &in.MemberWeight, &out.MemberWeight
+		*out = new(int32)
+		**out = **in
+	}
 	return
 }
 
