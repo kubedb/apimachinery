@@ -442,7 +442,7 @@ func (m *MongoDB) SetTLSDefaults() {
 	if m.Spec.ShardTopology != nil {
 		_, cert := kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MongoDBServerCert))
 		if cert != nil && cert.Subject != nil && cert.Subject.Organizations != nil {
-			defaultServerOrg = []string{}
+			defaultServerOrg = cert.Subject.Organizations
 		}
 
 		m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
@@ -458,7 +458,7 @@ func (m *MongoDB) SetTLSDefaults() {
 	} else {
 		_, cert := kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MongoDBServerCert))
 		if cert != nil && cert.Subject != nil && cert.Subject.Organizations != nil {
-			defaultServerOrg = []string{}
+			defaultServerOrg = cert.Subject.Organizations
 		}
 		m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
 			Alias:      string(MongoDBServerCert),
@@ -472,7 +472,7 @@ func (m *MongoDB) SetTLSDefaults() {
 	defaultClientOrg := []string{KubeDBOrganization}
 	_, cert := kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MongoDBClientCert))
 	if cert != nil && cert.Subject != nil && cert.Subject.Organizations != nil {
-		defaultClientOrg = []string{}
+		defaultClientOrg = cert.Subject.Organizations
 	}
 	m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
 		Alias:      string(MongoDBClientCert),
@@ -485,7 +485,7 @@ func (m *MongoDB) SetTLSDefaults() {
 	defaultExporterOrg := []string{KubeDBOrganization}
 	_, cert = kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MongoDBMetricsExporterCert))
 	if cert != nil && cert.Subject != nil && cert.Subject.Organizations != nil {
-		defaultExporterOrg = []string{}
+		defaultExporterOrg = cert.Subject.Organizations
 	}
 	m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
 		Alias:      string(MongoDBMetricsExporterCert),
