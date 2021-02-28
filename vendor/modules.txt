@@ -939,7 +939,7 @@ kmodules.xyz/monitoring-agent-api/api/v1
 kmodules.xyz/objectstore-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20210218144050-e1d794cb382a
 kmodules.xyz/offshoot-api/api/v1
-# kmodules.xyz/prober v0.0.0-20201105074402-a243b3a27fd8
+# kmodules.xyz/prober v0.0.0-20210218144026-43e923722d81
 kmodules.xyz/prober/api/v1
 # kmodules.xyz/webhook-runtime v0.0.0-20201105073856-2dc7382b88c6
 kmodules.xyz/webhook-runtime/admission/v1beta1
