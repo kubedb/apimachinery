@@ -30072,6 +30072,7 @@
           }
         },
         "sslMode": {
+          "description": "SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]",
           "type": "string"
         },
         "standbyMode": {

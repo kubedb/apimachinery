@@ -1161,6 +1161,7 @@ message PostgresSpec {
   // ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
   optional string clientAuthMode = 9;
 
+  // SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]
   optional string sslMode = 10;
 
   // Init is used to initialize database

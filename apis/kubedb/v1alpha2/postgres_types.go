@@ -75,11 +75,12 @@ type PostgresSpec struct {
 
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,8,opt,name=storage"`
-	// ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
-	ClientAuthMode ClientAuthMode `json:"clientAuthMode,omitempty" protobuf:"bytes,9,opt,name=clientAuthMode,casttype=ClientAuthMode"`
-	// SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]
 
-	SSLMode PgSSLMode `json:"sslMode,omitempty" protobuf:"bytes,10,opt,name=sslMode,casttype=SSLMode"`
+	// ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
+	ClientAuthMode PostgresClientAuthMode `json:"clientAuthMode,omitempty" protobuf:"bytes,9,opt,name=clientAuthMode,casttype=PostgresClientAuthMode"`
+
+	// SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]
+	SSLMode PostgresSSLMode `json:"sslMode,omitempty" protobuf:"bytes,10,opt,name=sslMode,casttype=PostgresSSLMode"`
 
 	// Init is used to initialize database
 	// +optional
@@ -176,51 +177,51 @@ const (
 
 // ref: https://www.postgresql.org/docs/13/libpq-ssl.html
 // +kubebuilder:validation:Enum=disable;allow;prefer;require;verify-ca;verify-full
-type PgSSLMode string
+type PostgresSSLMode string
 
 const (
-	// PgSSLModeDisable represents `disable` sslMode. It ensures that the server does not use TLS/SSL.
-	PgSSLModeDisable PgSSLMode = "disable"
+	// PostgresSSLModeDisable represents `disable` sslMode. It ensures that the server does not use TLS/SSL.
+	PostgresSSLModeDisable PostgresSSLMode = "disable"
 
-	// PgSSLModeAllow represents `allow` sslMode. 	I don't care about security, but I will pay the overhead of encryption if the server insists on it.
-	PgSSLModeAllow PgSSLMode = "allow"
+	// PostgresSSLModeAllow represents `allow` sslMode. 	I don't care about security, but I will pay the overhead of encryption if the server insists on it.
+	PostgresSSLModeAllow PostgresSSLMode = "allow"
 
-	// PgSSLModePrefer represents `preferSSL` sslMode.
+	// PostgresSSLModePrefer represents `preferSSL` sslMode.
 	//I don't care about encryption, but I wish to pay the overhead of encryption if the server supports it.
-	PgSSLModePrefer PgSSLMode = "prefer"
+	PostgresSSLModePrefer PostgresSSLMode = "prefer"
 
-	// PgSSLModeRequire represents `requiteSSL` sslmode. I want my data to be encrypted, and I accept the overhead.
+	// PostgresSSLModeRequire represents `requiteSSL` sslmode. I want my data to be encrypted, and I accept the overhead.
 	// I trust that the network will make sure I always connect to the server I want.
-	PgSSLModeRequire PgSSLMode = "require"
+	PostgresSSLModeRequire PostgresSSLMode = "require"
 
-	// PgSSLModeVerifyCA represents `verify-ca` sslmode. I want my data encrypted, and I accept the overhead.
-	//I want to be sure that I connect to a server that I trust.
-	PgSSLModeVerifyCA PgSSLMode = "verify-ca"
+	// PostgresSSLModeVerifyCA represents `verify-ca` sslmode. I want my data encrypted, and I accept the overhead.
+	// I want to be sure that I connect to a server that I trust.
+	PostgresSSLModeVerifyCA PostgresSSLMode = "verify-ca"
 
-	// PgSSLModeVerifyFull represents `verify-full` sslmode. I want my data encrypted, and I accept the overhead.
-	//I want to be sure that I connect to a server I trust, and that it's the one I specify.
-	PgSSLModeVerifyFull PgSSLMode = "verify-full"
+	// PostgresSSLModeVerifyFull represents `verify-full` sslmode. I want my data encrypted, and I accept the overhead.
+	// I want to be sure that I connect to a server I trust, and that it's the one I specify.
+	PostgresSSLModeVerifyFull PostgresSSLMode = "verify-full"
 )
 
-// ClientAuthMode represents the clusterAuthMode of mongodb clusters ( replicaset or sharding)
+// PostgresClientAuthMode represents the clusterAuthMode of mongodb clusters ( replicaset or sharding)
 // ref: https://www.postgresql.org/docs/12/auth-methods.html
 // +kubebuilder:validation:Enum=md5;scram;cert
-type ClientAuthMode string
+type PostgresClientAuthMode string
 
 const (
-	// The method md5 uses a custom less secure challenge-response mechanism.
+	// ClientAuthModeMD5 uses a custom less secure challenge-response mechanism.
 	// It prevents password sniffing and avoids storing passwords on the server in plain text but provides no protection
 	// if an attacker manages to steal the password hash from the server.
 	// Also, the MD5 hash algorithm is nowadays no longer considered secure against determined attacks
-	ClientAuthModeMD5 ClientAuthMode = "md5"
+	ClientAuthModeMD5 PostgresClientAuthMode = "md5"
 
-	//The method scram-sha-256 performs SCRAM-SHA-256 authentication, as described in RFC 7677.
-	//It is a challenge-response scheme that prevents password sniffing on untrusted connections
-	//and supports storing passwords on the server in a cryptographically hashed form that is thought to be secure.
-	//This is the most secure of the currently provided methods, but it is not supported by older client libraries.
-	ClientAuthModeScram ClientAuthMode = "scram"
+	// ClientAuthModeScram performs SCRAM-SHA-256 authentication, as described in RFC 7677.
+	// It is a challenge-response scheme that prevents password sniffing on untrusted connections
+	// and supports storing passwords on the server in a cryptographically hashed form that is thought to be secure.
+	// This is the most secure of the currently provided methods, but it is not supported by older client libraries.
+	ClientAuthModeScram PostgresClientAuthMode = "scram"
 
-	// ClusterAuthModeSendX509 represents `sendx509` mongodb clusterAuthMode. This mode is usually for rolling upgrade purposes.
+	// ClientAuthModeCert represents `sendx509` mongodb clusterAuthMode. This mode is usually for rolling upgrade purposes.
 	// Send the x.509 certificate for authentication but can accept both keyfiles and x.509 certificates.
-	ClientAuthModeCert ClientAuthMode = "cert"
+	ClientAuthModeCert PostgresClientAuthMode = "cert"
 )

@@ -174,14 +174,14 @@ func (p *Postgres) SetDefaults(topology *core_util.Topology) {
 
 	if p.Spec.TLS != nil {
 		if p.Spec.SSLMode == "" {
-			p.Spec.SSLMode = PgSSLModeVerifyFull
+			p.Spec.SSLMode = PostgresSSLModeVerifyFull
 		}
 		if p.Spec.ClientAuthMode == "" {
 			p.Spec.ClientAuthMode = ClientAuthModeMD5
 		}
 	} else {
 		if p.Spec.SSLMode == "" {
-			p.Spec.SSLMode = PgSSLModeDisable
+			p.Spec.SSLMode = PostgresSSLModeDisable
 		}
 		if p.Spec.ClientAuthMode == "" {
 			p.Spec.ClientAuthMode = ClientAuthModeMD5

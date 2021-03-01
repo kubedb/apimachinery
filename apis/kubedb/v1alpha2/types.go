@@ -29,7 +29,6 @@ type InitSpec struct {
 	// Wait for initial DataRestore condition
 	WaitForInitialRestore bool              `json:"waitForInitialRestore,omitempty" protobuf:"varint,2,opt,name=waitForInitialRestore"`
 	Script                *ScriptSourceSpec `json:"script,omitempty" protobuf:"bytes,3,opt,name=script"`
-	//PostgresWAL           *PostgresWALSourceSpec `json:"postgresWAL,omitempty" protobuf:"bytes,4,opt,name=postgresWAL"`
 }
 
 type ScriptSourceSpec struct {
