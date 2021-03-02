@@ -31468,11 +31468,6 @@
           "description": "Number of nodes/members of the group",
           "type": "integer",
           "format": "int32"
-        },
-        "memberWeight": {
-          "description": "specifies the weight of the current member/Node",
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
