@@ -27897,6 +27897,18 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionCoordinator": {
+      "description": "PostgresVersionCoordinator is the Postgres leader elector image",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionDatabase": {
       "description": "PostgresVersionDatabase is the Postgres Database image",
       "type": "object",
@@ -27911,6 +27923,18 @@
     },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionExporter": {
       "description": "PostgresVersionExporter is the image for the Postgres exporter",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionInitContainer": {
+      "description": "PostgresVersionInitContainer is the Postgres init container image",
       "type": "object",
       "required": [
         "image"
@@ -27971,10 +27995,13 @@
         "version",
         "db",
         "exporter",
-        "tools",
         "podSecurityPolicies"
       ],
       "properties": {
+        "coordinator": {
+          "description": "Coordinator Image",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionCoordinator"
+        },
         "db": {
           "description": "Database Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionDatabase"
@@ -27987,6 +28014,10 @@
           "description": "Exporter Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionExporter"
         },
+        "initContainer": {
+          "description": "init container image",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionInitContainer"
+        },
         "podSecurityPolicies": {
           "description": "PSP names",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionPodSecurityPolicy"
@@ -27995,24 +28026,8 @@
           "description": "Stash defines backup and restore task definitions.",
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
-        "tools": {
-          "description": "Tools Image",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTools"
-        },
         "version": {
           "description": "Version",
-          "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTools": {
-      "description": "PostgresVersionTools is the image for the postgres tools",
-      "type": "object",
-      "required": [
-        "image"
-      ],
-      "properties": {
-        "image": {
           "type": "string"
         }
       }
@@ -28839,9 +28854,6 @@
           "description": "Initialized indicates that this database has been initialized. This will be set by the operator when status.conditions[\"Provisioned\"] is set to ensure that database is not mistakenly reset when recovered using disaster recovery tools.",
           "type": "boolean"
         },
-        "postgresWAL": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresWALSourceSpec"
-        },
         "script": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ScriptSourceSpec"
         },
@@ -28864,32 +28876,6 @@
           "items": {
             "$ref": "#/definitions/io.k8s.api.core.v1.Sysctl"
           }
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LeaderElectionConfig": {
-      "description": "LeaderElectionConfig contains essential attributes of leader election. ref: https://github.com/kubernetes/client-go/blob/6134db91200ea474868bc6775e62cc294a74c6c6/tools/leaderelection/leaderelection.go#L105-L114",
-      "type": "object",
-      "required": [
-        "leaseDurationSeconds",
-        "renewDeadlineSeconds",
-        "retryPeriodSeconds"
-      ],
-      "properties": {
-        "leaseDurationSeconds": {
-          "description": "LeaseDuration is the duration in second that non-leader candidates will wait to force acquire leadership. This is measured against time of last observed ack. Default 15",
-          "type": "integer",
-          "format": "int32"
-        },
-        "renewDeadlineSeconds": {
-          "description": "RenewDeadline is the duration in second that the acting master will retry refreshing leadership before giving up. Normally, LeaseDuration * 2 / 3. Default 10",
-          "type": "integer",
-          "format": "int32"
-        },
-        "retryPeriodSeconds": {
-          "description": "RetryPeriod is the duration in second the LeaderElector clients should wait between tries of actions. Normally, LeaseDuration / 3. Default 2",
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -29950,6 +29936,46 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgreLeaderElectionConfig": {
+      "description": "PostgreLeaderElectionConfig contains essential attributes of leader election.",
+      "type": "object",
+      "properties": {
+        "electionTick": {
+          "description": "ElectionTick is the number of Node.Tick invocations that must pass between\n\telections. That is, if a follower does not receive any message from the\n leader of current term before ElectionTick has elapsed, it will become\n\tcandidate and start an election. ElectionTick must be greater than\n HeartbeatTick. We suggest ElectionTick = 10 * HeartbeatTick to avoid\n unnecessary leader switching. default value is 10.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "heartbeatTick": {
+          "description": "HeartbeatTick is the number of Node.Tick invocations that must pass between heartbeats. That is, a leader sends heartbeat messages to maintain its leadership every HeartbeatTick ticks. default value is 1.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "leaseDurationSeconds": {
+          "description": "LeaseDuration is the duration in second that non-leader candidates will wait to force acquire leadership. This is measured against time of last observed ack. Default 15 Deprecated",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maximumLagBeforeFailover": {
+          "description": "MaximumLagBeforeFailover is used as maximum lag tolerance for the cluster. when ever a replica is lagging more than MaximumLagBeforeFailover this node need to sync manually with the primary node. default value is 32MB",
+          "type": "integer",
+          "format": "int64"
+        },
+        "period": {
+          "description": "Period between Node.Tick invocations",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "renewDeadlineSeconds": {
+          "description": "RenewDeadline is the duration in second that the acting master will retry refreshing leadership before giving up. Normally, LeaseDuration * 2 / 3. Default 10 Deprecated",
+          "type": "integer",
+          "format": "int32"
+        },
+        "retryPeriodSeconds": {
+          "description": "RetryPeriod is the duration in second the LeaderElector clients should wait between tries of actions. Normally, LeaseDuration / 3. Default 2 Deprecated",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres": {
       "type": "object",
       "properties": {
@@ -29978,14 +30004,6 @@
           "version": "v1alpha2"
         }
       ]
-    },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresArchiverSpec": {
-      "type": "object",
-      "properties": {
-        "storage": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.Backend"
-        }
-      }
     },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresList": {
       "type": "object",
@@ -30023,13 +30041,13 @@
         "version"
       ],
       "properties": {
-        "archiver": {
-          "description": "Archive for wal files",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresArchiverSpec"
-        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "clientAuthMode": {
+          "description": "ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])",
+          "type": "string"
         },
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -30045,7 +30063,7 @@
         },
         "leaderElection": {
           "description": "Leader election configuration",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LeaderElectionConfig"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgreLeaderElectionConfig"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
@@ -30066,6 +30084,10 @@
           "items": {
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
           }
+        },
+        "sslMode": {
+          "description": "SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]",
+          "type": "string"
         },
         "standbyMode": {
           "description": "Standby mode",
@@ -30115,41 +30137,6 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresWALSourceSpec": {
-      "type": "object",
-      "properties": {
-        "azure": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.AzureSpec"
-        },
-        "b2": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.B2Spec"
-        },
-        "backupName": {
-          "type": "string"
-        },
-        "gcs": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.GCSSpec"
-        },
-        "local": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.LocalSpec"
-        },
-        "pitr": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RecoveryTarget"
-        },
-        "rest": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.RestServerSpec"
-        },
-        "s3": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.S3Spec"
-        },
-        "storageSecretName": {
-          "type": "string"
-        },
-        "swift": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.SwiftSpec"
         }
       }
     },
@@ -30295,27 +30282,6 @@
         },
         "phase": {
           "description": "Specifies the current phase of the database",
-          "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RecoveryTarget": {
-      "type": "object",
-      "properties": {
-        "targetInclusive": {
-          "description": "TargetInclusive specifies whether to include ongoing transaction in given target point.",
-          "type": "boolean"
-        },
-        "targetTime": {
-          "description": "TargetTime specifies the time stamp up to which recovery will proceed.",
-          "type": "string"
-        },
-        "targetTimeline": {
-          "description": "TargetTimeline specifies recovering into a particular timeline. The default is to recover along the same timeline that was current when the base backup was taken.",
-          "type": "string"
-        },
-        "targetXID": {
-          "description": "TargetXID specifies the transaction ID up to which recovery will proceed.",
           "type": "string"
         }
       }
@@ -35565,239 +35531,6 @@
           "additionalProperties": {
             "type": "string"
           }
-        }
-      }
-    },
-    "xyz.kmodules.objectstore-api.api.v1.AzureSpec": {
-      "type": "object",
-      "properties": {
-        "container": {
-          "type": "string"
-        },
-        "maxConnections": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "prefix": {
-          "type": "string"
-        }
-      }
-    },
-    "xyz.kmodules.objectstore-api.api.v1.B2Spec": {
-      "type": "object",
-      "properties": {
-        "bucket": {
-          "type": "string"
-        },
-        "maxConnections": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "prefix": {
-          "type": "string"
-        }
-      }
-    },
-    "xyz.kmodules.objectstore-api.api.v1.Backend": {
-      "type": "object",
-      "properties": {
-        "azure": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.AzureSpec"
-        },
-        "b2": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.B2Spec"
-        },
-        "gcs": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.GCSSpec"
-        },
-        "local": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.LocalSpec"
-        },
-        "rest": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.RestServerSpec"
-        },
-        "s3": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.S3Spec"
-        },
-        "storageSecretName": {
-          "type": "string"
-        },
-        "swift": {
-          "$ref": "#/definitions/xyz.kmodules.objectstore-api.api.v1.SwiftSpec"
-        }
-      }
-    },
-    "xyz.kmodules.objectstore-api.api.v1.GCSSpec": {
-      "type": "object",
-      "properties": {
-        "bucket": {
-          "type": "string"
-        },
-        "maxConnections": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "prefix": {
-          "type": "string"
-        }
-      }
-    },
-    "xyz.kmodules.objectstore-api.api.v1.LocalSpec": {
-      "type": "object",
-      "properties": {
-        "awsElasticBlockStore": {
-          "description": "AWSElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
-          "$ref": "#/definitions/io.k8s.api.core.v1.AWSElasticBlockStoreVolumeSource"
-        },
-        "azureDisk": {
-          "description": "AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.AzureDiskVolumeSource"
-        },
-        "azureFile": {
-          "description": "AzureFile represents an Azure File Service mount on the host and bind mount to the pod.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.AzureFileVolumeSource"
-        },
-        "cephfs": {
-          "description": "CephFS represents a Ceph FS mount on the host that shares a pod's lifetime",
-          "$ref": "#/definitions/io.k8s.api.core.v1.CephFSVolumeSource"
-        },
-        "cinder": {
-          "description": "Cinder represents a cinder volume attached and mounted on kubelets host machine. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
-          "$ref": "#/definitions/io.k8s.api.core.v1.CinderVolumeSource"
-        },
-        "configMap": {
-          "description": "ConfigMap represents a configMap that should populate this volume",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ConfigMapVolumeSource"
-        },
-        "csi": {
-          "description": "CSI (Container Storage Interface) represents storage that is handled by an external CSI driver (Alpha feature).",
-          "$ref": "#/definitions/io.k8s.api.core.v1.CSIVolumeSource"
-        },
-        "downwardAPI": {
-          "description": "DownwardAPI represents downward API about the pod that should populate this volume",
-          "$ref": "#/definitions/io.k8s.api.core.v1.DownwardAPIVolumeSource"
-        },
-        "emptyDir": {
-          "description": "EmptyDir represents a temporary directory that shares a pod's lifetime. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir",
-          "$ref": "#/definitions/io.k8s.api.core.v1.EmptyDirVolumeSource"
-        },
-        "fc": {
-          "description": "FC represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.FCVolumeSource"
-        },
-        "flexVolume": {
-          "description": "FlexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.FlexVolumeSource"
-        },
-        "flocker": {
-          "description": "Flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running",
-          "$ref": "#/definitions/io.k8s.api.core.v1.FlockerVolumeSource"
-        },
-        "gcePersistentDisk": {
-          "description": "GCEPersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
-          "$ref": "#/definitions/io.k8s.api.core.v1.GCEPersistentDiskVolumeSource"
-        },
-        "gitRepo": {
-          "description": "GitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.GitRepoVolumeSource"
-        },
-        "glusterfs": {
-          "description": "Glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
-          "$ref": "#/definitions/io.k8s.api.core.v1.GlusterfsVolumeSource"
-        },
-        "hostPath": {
-          "description": "HostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath",
-          "$ref": "#/definitions/io.k8s.api.core.v1.HostPathVolumeSource"
-        },
-        "iscsi": {
-          "description": "ISCSI represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://examples.k8s.io/volumes/iscsi/README.md",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ISCSIVolumeSource"
-        },
-        "mountPath": {
-          "type": "string"
-        },
-        "nfs": {
-          "description": "NFS represents an NFS mount on the host that shares a pod's lifetime More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs",
-          "$ref": "#/definitions/io.k8s.api.core.v1.NFSVolumeSource"
-        },
-        "persistentVolumeClaim": {
-          "description": "PersistentVolumeClaimVolumeSource represents a reference to a PersistentVolumeClaim in the same namespace. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimVolumeSource"
-        },
-        "photonPersistentDisk": {
-          "description": "PhotonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PhotonPersistentDiskVolumeSource"
-        },
-        "portworxVolume": {
-          "description": "PortworxVolume represents a portworx volume attached and mounted on kubelets host machine",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PortworxVolumeSource"
-        },
-        "projected": {
-          "description": "Items for all in one resources secrets, configmaps, and downward API",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ProjectedVolumeSource"
-        },
-        "quobyte": {
-          "description": "Quobyte represents a Quobyte mount on the host that shares a pod's lifetime",
-          "$ref": "#/definitions/io.k8s.api.core.v1.QuobyteVolumeSource"
-        },
-        "rbd": {
-          "description": "RBD represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/rbd/README.md",
-          "$ref": "#/definitions/io.k8s.api.core.v1.RBDVolumeSource"
-        },
-        "scaleIO": {
-          "description": "ScaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ScaleIOVolumeSource"
-        },
-        "secret": {
-          "description": "Secret represents a secret that should populate this volume. More info: https://kubernetes.io/docs/concepts/storage/volumes#secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
-        },
-        "storageos": {
-          "description": "StorageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.StorageOSVolumeSource"
-        },
-        "subPath": {
-          "type": "string"
-        },
-        "vsphereVolume": {
-          "description": "VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VsphereVirtualDiskVolumeSource"
-        }
-      }
-    },
-    "xyz.kmodules.objectstore-api.api.v1.RestServerSpec": {
-      "type": "object",
-      "properties": {
-        "url": {
-          "type": "string"
-        }
-      }
-    },
-    "xyz.kmodules.objectstore-api.api.v1.S3Spec": {
-      "type": "object",
-      "properties": {
-        "bucket": {
-          "type": "string"
-        },
-        "endpoint": {
-          "type": "string"
-        },
-        "prefix": {
-          "type": "string"
-        },
-        "region": {
-          "type": "string"
-        }
-      }
-    },
-    "xyz.kmodules.objectstore-api.api.v1.SwiftSpec": {
-      "type": "object",
-      "properties": {
-        "container": {
-          "type": "string"
-        },
-        "prefix": {
-          "type": "string"
         }
       }
     },
