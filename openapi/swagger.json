@@ -27230,8 +27230,7 @@
       "required": [
         "version",
         "db",
-        "exporter",
-        "tools"
+        "exporter"
       ],
       "properties": {
         "db": {
@@ -27250,24 +27249,8 @@
           "description": "Stash defines backup and restore task definitions.",
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
-        "tools": {
-          "description": "Tools Image",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionTools"
-        },
         "version": {
           "description": "Version",
-          "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionTools": {
-      "description": "EtcdVersionTools is the image for the Etcd exporter",
-      "type": "object",
-      "required": [
-        "image"
-      ],
-      "properties": {
-        "image": {
           "type": "string"
         }
       }

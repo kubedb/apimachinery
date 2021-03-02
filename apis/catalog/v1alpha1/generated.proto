@@ -162,21 +162,13 @@ message EtcdVersionSpec {
   // Exporter Image
   optional EtcdVersionExporter exporter = 3;
 
-  // Tools Image
-  optional EtcdVersionTools tools = 4;
-
   // Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
   // +optional
-  optional bool deprecated = 5;
+  optional bool deprecated = 4;
 
   // Stash defines backup and restore task definitions.
   // +optional
-  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 6;
-}
-
-// EtcdVersionTools is the image for the Etcd exporter
-message EtcdVersionTools {
-  optional string image = 1;
+  optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 5;
 }
 
 // +kubebuilder:object:root=true
