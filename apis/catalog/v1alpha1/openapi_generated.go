@@ -414,7 +414,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionExporter":                   schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionExporter(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionList":                       schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionSpec":                       schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionTools":                      schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionTools(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersion":                        schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionDatabase":                schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionExporter":                schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionExporter(ref),
@@ -19307,12 +19306,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionSpec(ref common.Refere
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionExporter"),
 						},
 					},
-					"tools": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Tools Image",
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionTools"),
-						},
-					},
 					"deprecated": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -19327,31 +19320,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionSpec(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "tools"},
+				Required: []string{"version", "db", "exporter"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionTools"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionTools(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "EtcdVersionTools is the image for the Etcd exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionExporter"},
 	}
 }
 
