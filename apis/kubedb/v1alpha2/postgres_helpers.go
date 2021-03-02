@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
+	"time"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -159,9 +160,10 @@ func (p *Postgres) SetDefaults(topology *core_util.Topology) {
 	}
 
 	if p.Spec.LeaderElection == nil {
-		p.Spec.LeaderElection = &LeaderElectionConfig{
+		p.Spec.LeaderElection = &PostgreLeaderElectionConfig{
 			//we have set this default to 33554432. if the difference between primary and replica is more then this,
 			//the replica node is going to manually sync itself.
+			Period:                   metav1.Duration{Duration: 100 * time.Millisecond},
 			MaximumLagBeforeFailover: 33554432,
 			ElectionTick:             10,
 			HeartbeatTick:            1,

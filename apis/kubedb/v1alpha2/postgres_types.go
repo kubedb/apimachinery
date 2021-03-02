@@ -65,7 +65,7 @@ type PostgresSpec struct {
 
 	// Leader election configuration
 	// +optional
-	LeaderElection *LeaderElectionConfig `json:"leaderElection,omitempty" protobuf:"bytes,5,opt,name=leaderElection"`
+	LeaderElection *PostgreLeaderElectionConfig `json:"leaderElection,omitempty" protobuf:"bytes,5,opt,name=leaderElection"`
 
 	// Database authentication secret
 	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty" protobuf:"bytes,6,opt,name=authSecret"`
@@ -113,6 +113,58 @@ type PostgresSpec struct {
 	// TerminationPolicy controls the delete operation for database
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,18,opt,name=terminationPolicy,casttype=TerminationPolicy"`
+}
+
+// PostgreLeaderElectionConfig contains essential attributes of leader election.
+type PostgreLeaderElectionConfig struct {
+	// LeaseDuration is the duration in second that non-leader candidates will
+	// wait to force acquire leadership. This is measured against time of
+	// last observed ack. Default 15
+	// Deprecated
+	LeaseDurationSeconds int32 `json:"leaseDurationSeconds,omitempty" protobuf:"varint,1,opt,name=leaseDurationSeconds"`
+	// RenewDeadline is the duration in second that the acting master will retry
+	// refreshing leadership before giving up. Normally, LeaseDuration * 2 / 3.
+	// Default 10
+	// Deprecated
+	RenewDeadlineSeconds int32 `json:"renewDeadlineSeconds,omitempty" protobuf:"varint,2,opt,name=renewDeadlineSeconds"`
+	// RetryPeriod is the duration in second the LeaderElector clients should wait
+	// between tries of actions. Normally, LeaseDuration / 3.
+	// Default 2
+	// Deprecated
+	RetryPeriodSeconds int32 `json:"retryPeriodSeconds,omitempty" protobuf:"varint,3,opt,name=retryPeriodSeconds"`
+
+	// MaximumLagBeforeFailover is used as maximum lag tolerance for the cluster.
+	// when ever a replica is lagging more than MaximumLagBeforeFailover
+	// this node need to sync manually with the primary node. default value is 32MB
+	// +default=33554432
+	// +kubebuilder:default:=33554432
+	// +optional
+	MaximumLagBeforeFailover uint64 `json:"maximumLagBeforeFailover,omitempty" protobuf:"varint,4,opt,name=maximumLagBeforeFailover"`
+
+	// Period between Node.Tick invocations
+	// +default="100ms"
+	// +kubebuilder:default:="100ms"
+	// +optional
+	Period metav1.Duration `json:"period,omitempty" protobuf:"bytes,5,opt,name=period"`
+
+	// ElectionTick is the number of Node.Tick invocations that must pass between
+	//	elections. That is, if a follower does not receive any message from the
+	//  leader of current term before ElectionTick has elapsed, it will become
+	//	candidate and start an election. ElectionTick must be greater than
+	//  HeartbeatTick. We suggest ElectionTick = 10 * HeartbeatTick to avoid
+	//  unnecessary leader switching. default value is 10.
+	// +default=10
+	// +kubebuilder:default:=10
+	// +optional
+	ElectionTick int32 `json:"electionTick,omitempty" protobuf:"varint,6,opt,name=electionTick"`
+
+	// HeartbeatTick is the number of Node.Tick invocations that must pass between
+	// heartbeats. That is, a leader sends heartbeat messages to maintain its
+	// leadership every HeartbeatTick ticks. default value is 1.
+	// +default=1
+	// +kubebuilder:default:=1
+	// +optional
+	HeartbeatTick int32 `json:"heartbeatTick,omitempty" protobuf:"varint,7,opt,name=heartbeatTick"`
 }
 
 // +kubebuilder:validation:Enum=server;archiver;metrics-exporter

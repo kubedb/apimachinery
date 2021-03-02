@@ -660,18 +660,29 @@ spec:
               leaderElection:
                 properties:
                   electionTick:
-                    format: int64
+                    default: 10
+                    format: int32
                     type: integer
                   heartbeatTick:
-                    format: int64
+                    default: 1
+                    format: int32
+                    type: integer
+                  leaseDurationSeconds:
+                    format: int32
                     type: integer
                   maximumLagBeforeFailover:
+                    default: 33554432
                     format: int64
                     type: integer
-                required:
-                - electionTick
-                - heartbeatTick
-                - maximumLagBeforeFailover
+                  period:
+                    default: 100ms
+                    type: string
+                  renewDeadlineSeconds:
+                    format: int32
+                    type: integer
+                  retryPeriodSeconds:
+                    format: int32
+                    type: integer
                 type: object
               monitor:
                 properties:

@@ -28879,32 +28879,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LeaderElectionConfig": {
-      "description": "LeaderElectionConfig contains essential attributes of leader election.",
-      "type": "object",
-      "required": [
-        "maximumLagBeforeFailover",
-        "electionTick",
-        "heartbeatTick"
-      ],
-      "properties": {
-        "electionTick": {
-          "description": "ElectionTick is the number of Node.Tick invocations that must pass between\n\telections. That is, if a follower does not receive any message from the\n leader of current term before ElectionTick has elapsed, it will become\n\tcandidate and start an election. ElectionTick must be greater than\n HeartbeatTick. We suggest ElectionTick = 10 * HeartbeatTick to avoid\n unnecessary leader switching. default value is 10.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "heartbeatTick": {
-          "description": "HeartbeatTick is the number of Node.Tick invocations that must pass between heartbeats. That is, a leader sends heartbeat messages to maintain its leadership every HeartbeatTick ticks. default value is 1.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "maximumLagBeforeFailover": {
-          "description": "MaximumLagBeforeFailover is used as maximum lag tolerance for the cluster. when ever a replica is lagging more than MaximumLagBeforeFailover this node need to sync manually with the primary node",
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDB": {
       "type": "object",
       "properties": {
@@ -29962,6 +29936,46 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgreLeaderElectionConfig": {
+      "description": "PostgreLeaderElectionConfig contains essential attributes of leader election.",
+      "type": "object",
+      "properties": {
+        "electionTick": {
+          "description": "ElectionTick is the number of Node.Tick invocations that must pass between\n\telections. That is, if a follower does not receive any message from the\n leader of current term before ElectionTick has elapsed, it will become\n\tcandidate and start an election. ElectionTick must be greater than\n HeartbeatTick. We suggest ElectionTick = 10 * HeartbeatTick to avoid\n unnecessary leader switching. default value is 10.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "heartbeatTick": {
+          "description": "HeartbeatTick is the number of Node.Tick invocations that must pass between heartbeats. That is, a leader sends heartbeat messages to maintain its leadership every HeartbeatTick ticks. default value is 1.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "leaseDurationSeconds": {
+          "description": "LeaseDuration is the duration in second that non-leader candidates will wait to force acquire leadership. This is measured against time of last observed ack. Default 15 Deprecated",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maximumLagBeforeFailover": {
+          "description": "MaximumLagBeforeFailover is used as maximum lag tolerance for the cluster. when ever a replica is lagging more than MaximumLagBeforeFailover this node need to sync manually with the primary node. default value is 32MB",
+          "type": "integer",
+          "format": "int64"
+        },
+        "period": {
+          "description": "Period between Node.Tick invocations",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "renewDeadlineSeconds": {
+          "description": "RenewDeadline is the duration in second that the acting master will retry refreshing leadership before giving up. Normally, LeaseDuration * 2 / 3. Default 10 Deprecated",
+          "type": "integer",
+          "format": "int32"
+        },
+        "retryPeriodSeconds": {
+          "description": "RetryPeriod is the duration in second the LeaderElector clients should wait between tries of actions. Normally, LeaseDuration / 3. Default 2 Deprecated",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Postgres": {
       "type": "object",
       "properties": {
@@ -30049,7 +30063,7 @@
         },
         "leaderElection": {
           "description": "Leader election configuration",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LeaderElectionConfig"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgreLeaderElectionConfig"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance",
