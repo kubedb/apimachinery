@@ -409,7 +409,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionList":              schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionPodSecurityPolicy": schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionSpec":              schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionTools":             schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionTools(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersion":                           schema_apimachinery_apis_catalog_v1alpha1_EtcdVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionDatabase":                   schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionExporter":                   schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionExporter(ref),
@@ -436,7 +435,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionList":                    schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionPodSecurityPolicy":       schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionSpec":                    schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionTools":                   schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionTools(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLUpgradeConstraints":               schema_apimachinery_apis_catalog_v1alpha1_MySQLUpgradeConstraints(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersion":                          schema_apimachinery_apis_catalog_v1alpha1_MySQLVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDatabase":                  schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionDatabase(ref),
@@ -445,7 +443,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionList":                      schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionPodSecurityPolicy":         schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionSpec":                      schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionTools":                     schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionTools(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersion":                  schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionDatabase":          schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionExporter":          schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionExporter(ref),
@@ -19098,9 +19095,16 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref comm
 							Format:      "",
 						},
 					},
+					"distribution": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distribution",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"authPlugin": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Authentication plugin used by Elasticsearch cluster.",
+							Description: "Authentication plugin used by Elasticsearch cluster Deprecated",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -19115,12 +19119,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref comm
 						SchemaProps: spec.SchemaProps{
 							Description: "Exporter Image",
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter"),
-						},
-					},
-					"tools": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Tools Image",
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionTools"),
 						},
 					},
 					"deprecated": {
@@ -19153,27 +19151,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref comm
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionTools"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionTools(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchVersionTools is the image for the elasticsearch tools",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionPodSecurityPolicy"},
 	}
 }
 
@@ -19973,6 +19951,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionSpec(ref common.Ref
 							Format:      "",
 						},
 					},
+					"distribution": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distribution",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"db": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Database Image",
@@ -19983,12 +19968,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionSpec(ref common.Ref
 						SchemaProps: spec.SchemaProps{
 							Description: "Exporter Image",
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionExporter"),
-						},
-					},
-					"tools": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Tools Image",
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionTools"),
 						},
 					},
 					"deprecated": {
@@ -20023,31 +20002,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionSpec(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "tools", "initContainer", "podSecurityPolicies", "replicationModeDetector"},
+				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies", "replicationModeDetector"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionTools", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionTools(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MongoDBVersionTools is the image for the mongodb tools",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector"},
 	}
 }
 
@@ -20256,6 +20215,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref common.Refer
 							Format:      "",
 						},
 					},
+					"distribution": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distribution",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"db": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Database Image",
@@ -20266,12 +20232,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref common.Refer
 						SchemaProps: spec.SchemaProps{
 							Description: "Exporter Image",
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionExporter"),
-						},
-					},
-					"tools": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Tools Image",
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionTools"),
 						},
 					},
 					"replicationModeDetector": {
@@ -20312,31 +20272,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "tools", "replicationModeDetector", "initContainer", "podSecurityPolicies", "upgradeConstraints"},
+				Required: []string{"version", "db", "exporter", "replicationModeDetector", "initContainer", "podSecurityPolicies", "upgradeConstraints"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLUpgradeConstraints", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionTools", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionTools(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MySQLVersionTools is the image for the MySQL tools",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLUpgradeConstraints", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector"},
 	}
 }
 
