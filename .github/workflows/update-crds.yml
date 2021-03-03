@@ -49,5 +49,5 @@ jobs:
           INSTALLER_REPOSITORY: ${{ secrets.INSTALLER_REPOSITORY }}
         run: |
           export INSTALLER_ROOT=$RUNNER_WORKSPACE/$(basename $INSTALLER_REPOSITORY)
-          crd-importer --input=./crds --out=$INSTALLER_ROOT/charts/kubedb-crds/crds --v=v1
+          $INSTALLER_ROOT/hack/scripts/import-crds.sh $(pwd)/crds
           $INSTALLER_ROOT/hack/scripts/open-pr.sh
