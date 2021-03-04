@@ -209,10 +209,10 @@ const (
 	PostgresLabelRole              = kubedb.GroupName + "/role"
 
 	PostgresCoordinatorContainerName = "pg-coordinator"
-	PostgresCoordinatorPort          = 12345
+	PostgresCoordinatorPort          = 2380
 	PostgresCoordinatorPortName      = "coordinator"
 
-	PostgresCoordinatorClientPort     = 12380
+	PostgresCoordinatorClientPort     = 2379
 	PostgresCoordinatorClientPortName = "coordinatclient"
 
 	PostgresRunScriptMountPath  = "/run_scripts"
