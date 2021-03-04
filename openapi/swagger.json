@@ -27993,6 +27993,10 @@
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
           "type": "boolean"
         },
+        "distribution": {
+          "description": "Distribution",
+          "type": "string"
+        },
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionExporter"
