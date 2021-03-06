@@ -355,6 +355,15 @@ func (e *Elasticsearch) SetDefaults(esVersion *v1alpha1.ElasticsearchVersion, to
 		}
 	}
 
+	if e.Spec.PodTemplate.Spec.Container.SecurityContext == nil {
+		e.Spec.PodTemplate.Spec.Container.SecurityContext = &core.SecurityContext{
+			Privileged: pointer.BoolP(false),
+			Capabilities: &core.Capabilities{
+				Add: []core.Capability{"IPC_LOCK", "SYS_RESOURCE"},
+			},
+		}
+	}
+
 	e.setDefaultAffinity(&e.Spec.PodTemplate, e.OffshootSelectors(), topology)
 	e.SetTLSDefaults(esVersion)
 	e.Spec.Monitor.SetDefaults()
