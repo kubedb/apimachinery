@@ -192,12 +192,12 @@ API rule violation: list_type_missing,kmodules.xyz/monitoring-agent-api/api/v1,P
 API rule violation: list_type_missing,kmodules.xyz/monitoring-agent-api/api/v1,PrometheusExporterSpec,Env
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ContainerRuntimeSettings,Env
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ContainerRuntimeSettings,EnvFrom
+API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ContainerTemplate,Args
+API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ContainerTemplate,Env
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PartialObjectMeta,OwnerReferences
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodRuntimeSettings,ImagePullSecrets
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodRuntimeSettings,ReadinessGates
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodRuntimeSettings,Tolerations
-API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,Args
-API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,Env
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,ImagePullSecrets
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,InitContainers
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,Tolerations
