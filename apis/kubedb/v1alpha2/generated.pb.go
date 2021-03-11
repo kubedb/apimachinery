@@ -21,15 +21,18 @@ package v1alpha2
 
 import (
 	fmt "fmt"
+
 	io "io"
+
+	proto "github.com/gogo/protobuf/proto"
+	github_com_gogo_protobuf_sortkeys "github.com/gogo/protobuf/sortkeys"
+	v1 "k8s.io/api/core/v1"
+
 	math "math"
 	math_bits "math/bits"
 	reflect "reflect"
 	strings "strings"
 
-	proto "github.com/gogo/protobuf/proto"
-	github_com_gogo_protobuf_sortkeys "github.com/gogo/protobuf/sortkeys"
-	v1 "k8s.io/api/core/v1"
 	intstr "k8s.io/apimachinery/pkg/util/intstr"
 	v14 "kmodules.xyz/client-go/api/v1"
 	v12 "kmodules.xyz/monitoring-agent-api/api/v1"
