@@ -22,7 +22,7 @@ import (
 	"strings"
 
 	"kubedb.dev/apimachinery/apis"
-	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
@@ -282,7 +282,7 @@ func (e Elasticsearch) StatsServiceLabels() map[string]string {
 	return lbl
 }
 
-func (e *Elasticsearch) SetDefaults(esVersion *v1alpha1.ElasticsearchVersion, topology *core_util.Topology) {
+func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, topology *core_util.Topology) {
 	if e == nil {
 		return
 	}
@@ -297,24 +297,6 @@ func (e *Elasticsearch) SetDefaults(esVersion *v1alpha1.ElasticsearchVersion, to
 
 	if e.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		e.Spec.PodTemplate.Spec.ServiceAccountName = e.OffshootName()
-	}
-
-	// Set default values for internal admin user
-	if e.Spec.InternalUsers != nil {
-		var userSpec ElasticsearchUserSpec
-
-		// load values
-		if value, exist := e.Spec.InternalUsers[string(ElasticsearchInternalUserAdmin)]; exist {
-			userSpec = value
-		}
-
-		// set defaults
-		userSpec.Reserved = true
-		userSpec.BackendRoles = []string{"admin"}
-
-		// overwrite values
-		e.Spec.InternalUsers[string(ElasticsearchInternalUserAdmin)] = userSpec
-
 	}
 
 	// set default elasticsearch node name prefix
@@ -366,6 +348,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *v1alpha1.ElasticsearchVersion, to
 
 	e.setDefaultAffinity(&e.Spec.PodTemplate, e.OffshootSelectors(), topology)
 	e.SetTLSDefaults(esVersion)
+	e.setDefaultInternalUsersAndRoleMappings(esVersion)
 	e.Spec.Monitor.SetDefaults()
 }
 
@@ -412,8 +395,109 @@ func (e *Elasticsearch) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, la
 	}
 }
 
+// Set Default internal users settings
+func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalog.ElasticsearchVersion) {
+	// The internalUsers feature only works with searchGuard and openDistro
+	if esVersion.Spec.Distribution == catalog.ElasticsearchDistroOpenDistro ||
+		esVersion.Spec.Distribution == catalog.ElasticsearchDistroSearchGuard {
+
+		// Here, map[] is shallow copied.
+		// Making changes in "inUsers" is the same as making changes in "e.spec.InternalUsers".
+		inUsers := e.Spec.InternalUsers
+		// If not set, create empty map
+		if inUsers == nil {
+			inUsers = make(map[string]ElasticsearchUserSpec)
+		}
+
+		// "Admin" user
+		if userSpec, exists := inUsers[string(ElasticsearchInternalUserAdmin)]; !exists {
+			inUsers[string(ElasticsearchInternalUserAdmin)] = ElasticsearchUserSpec{
+				Reserved:     true,
+				BackendRoles: []string{"admin"},
+			}
+		} else {
+			// upsert "admin" role, if missing
+			userSpec.BackendRoles = upsertStringSlice(userSpec.BackendRoles, "admin")
+			inUsers[string(ElasticsearchInternalUserAdmin)] = userSpec
+		}
+		// "Kibanaserver" user
+		if _, exists := inUsers[string(ElasticsearchInternalUserKibanaserver)]; !exists {
+			inUsers[string(ElasticsearchInternalUserKibanaserver)] = ElasticsearchUserSpec{
+				Reserved: true,
+			}
+		}
+		// "Kibanaro" user
+		if _, exists := inUsers[string(ElasticsearchInternalUserKibanaro)]; !exists {
+			inUsers[string(ElasticsearchInternalUserKibanaro)] = ElasticsearchUserSpec{}
+		}
+		// "Logstash" user
+		if _, exists := inUsers[string(ElasticsearchInternalUserLogstash)]; !exists {
+			inUsers[string(ElasticsearchInternalUserLogstash)] = ElasticsearchUserSpec{}
+		}
+		// "Readall" user
+		if _, exists := inUsers[string(ElasticsearchInternalUserReadall)]; !exists {
+			inUsers[string(ElasticsearchInternalUserReadall)] = ElasticsearchUserSpec{}
+		}
+		// "Snapshotrestore" user
+		if _, exists := inUsers[string(ElasticsearchInternalUserSnapshotrestore)]; !exists {
+			inUsers[string(ElasticsearchInternalUserSnapshotrestore)] = ElasticsearchUserSpec{}
+		}
+		// "MetricsExporter" user
+		// Only if the monitoring is enabled.
+		if e.Spec.Monitor != nil {
+			if _, exists := inUsers[string(ElasticsearchInternalUserMetricsExporter)]; !exists {
+				inUsers[string(ElasticsearchInternalUserMetricsExporter)] = ElasticsearchUserSpec{}
+			}
+		}
+
+		// Set missing user secret names
+		for username, userSpec := range inUsers {
+			if userSpec.SecretName == "" {
+				userSpec.SecretName = e.UserCredSecretName(username)
+			}
+			inUsers[username] = userSpec
+		}
+
+		// Here, map[] is shallow copied.
+		// Making changes in "roleMapping" is the same as making changes in "e.spec.roleMapping".
+		rolesMapping := e.Spec.RolesMapping
+		if rolesMapping == nil {
+			rolesMapping = make(map[string]ElasticsearchRoleMapSpec)
+		}
+
+		// If monitoring is enabled,
+		// The "metric_exporter" user needs to have "readall_monitor" role mapped to itself.
+		if e.Spec.Monitor != nil {
+			var monitorRole string
+			if esVersion.Spec.Distribution == catalog.ElasticsearchDistroSearchGuard {
+				// readall_and_monitor role name varies in ES version
+				// 	V7        = "SGS_READALL_AND_MONITOR"
+				//	V6        = "sg_readall_and_monitor"
+				if strings.HasPrefix(esVersion.Spec.Version, "6.") {
+					monitorRole = ElasticsearchSearchGuardReadallMonitorRoleV6
+				} else {
+					monitorRole = ElasticsearchSearchGuardReadallMonitorRoleV7
+				}
+			} else {
+				monitorRole = ElasticsearchOpendistroReadallMonitorRole
+			}
+
+			// Create rolesMapping if not exists.
+			if value, exist := rolesMapping[monitorRole]; exist {
+				value.Users = upsertStringSlice(value.Users, string(ElasticsearchInternalUserMetricsExporter))
+				rolesMapping[monitorRole] = value
+			} else {
+				rolesMapping[monitorRole] = ElasticsearchRoleMapSpec{
+					Users: []string{string(ElasticsearchInternalUserMetricsExporter)},
+				}
+			}
+		}
+	}
+
+}
+
 // set default tls configuration (ie. alias, secretName)
-func (e *Elasticsearch) SetTLSDefaults(esVersion *v1alpha1.ElasticsearchVersion) {
+func (e *Elasticsearch) SetTLSDefaults(esVersion *catalog.ElasticsearchVersion) {
 	// If security is disabled (ie. DisableSecurity: true), ignore.
 	if e.Spec.DisableSecurity {
 		return
@@ -450,8 +534,8 @@ func (e *Elasticsearch) SetTLSDefaults(esVersion *v1alpha1.ElasticsearchVersion)
 		})
 
 		// Set missing admin certificate spec, if authPlugin is either "OpenDistro" or "SearchGuard"
-		if esVersion.Spec.AuthPlugin == v1alpha1.ElasticsearchAuthPluginOpenDistro ||
-			esVersion.Spec.AuthPlugin == v1alpha1.ElasticsearchAuthPluginSearchGuard {
+		if esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginOpenDistro ||
+			esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginSearchGuard {
 			tlsConfig.Certificates = kmapi.SetMissingSpecForCertificate(tlsConfig.Certificates, kmapi.CertificateSpec{
 				Alias:      string(ElasticsearchAdminCert),
 				SecretName: e.CertificateName(ElasticsearchAdminCert),
