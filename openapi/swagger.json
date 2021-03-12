@@ -28691,6 +28691,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "secretName": {
+          "description": "Specifies the k8s secret name that holds the user credentials. Default to \"\u003cresource-name\u003e-\u003cusername\u003e-cred\".",
+          "type": "string"
         }
       }
     },
