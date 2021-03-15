@@ -435,14 +435,14 @@ func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalo
 		}
 
 		// "Kibanaserver", "Kibanaro", "Logstash", "Readall", "Snapshotrestore"
-		setMissingElasticsearchUser(inUsers, ElasticsearchInternalUserKibanaserver, ElasticsearchUserSpec{Reserved: true})
-		setMissingElasticsearchUser(inUsers, ElasticsearchInternalUserKibanaro, ElasticsearchUserSpec{})
-		setMissingElasticsearchUser(inUsers, ElasticsearchInternalUserLogstash, ElasticsearchUserSpec{})
-		setMissingElasticsearchUser(inUsers, ElasticsearchInternalUserReadall, ElasticsearchUserSpec{})
-		setMissingElasticsearchUser(inUsers, ElasticsearchInternalUserSnapshotrestore, ElasticsearchUserSpec{})
+		setMissingElasticsearchUser(inUsers, string(ElasticsearchInternalUserKibanaserver), ElasticsearchUserSpec{Reserved: true})
+		setMissingElasticsearchUser(inUsers, string(ElasticsearchInternalUserKibanaro), ElasticsearchUserSpec{})
+		setMissingElasticsearchUser(inUsers, string(ElasticsearchInternalUserLogstash), ElasticsearchUserSpec{})
+		setMissingElasticsearchUser(inUsers, string(ElasticsearchInternalUserReadall), ElasticsearchUserSpec{})
+		setMissingElasticsearchUser(inUsers, string(ElasticsearchInternalUserSnapshotrestore), ElasticsearchUserSpec{})
 		// "MetricsExporter", Only if the monitoring is enabled.
 		if e.Spec.Monitor != nil {
-			setMissingElasticsearchUser(inUsers, ElasticsearchInternalUserMetricsExporter, ElasticsearchUserSpec{})
+			setMissingElasticsearchUser(inUsers, string(ElasticsearchInternalUserMetricsExporter), ElasticsearchUserSpec{})
 		}
 
 		// Set missing user secret names
