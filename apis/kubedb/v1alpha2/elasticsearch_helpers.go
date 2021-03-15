@@ -453,7 +453,10 @@ func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalo
 
 		// Set missing user secret names
 		for username, userSpec := range inUsers {
-			if userSpec.SecretName == "" {
+			// For admin user, spec.authSecret.Name must have high precedence over default field
+			if username == string(ElasticsearchInternalUserAdmin) && e.Spec.AuthSecret != nil && e.Spec.AuthSecret.Name != "" {
+				userSpec.SecretName = e.Spec.AuthSecret.Name
+			} else if userSpec.SecretName == "" {
 				userSpec.SecretName = e.UserCredSecretName(username)
 			}
 			inUsers[username] = userSpec
