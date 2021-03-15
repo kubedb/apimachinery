@@ -421,34 +421,16 @@ func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalo
 			userSpec.BackendRoles = upsertStringSlice(userSpec.BackendRoles, "admin")
 			inUsers[string(ElasticsearchInternalUserAdmin)] = userSpec
 		}
-		// "Kibanaserver" user
-		if _, exists := inUsers[string(ElasticsearchInternalUserKibanaserver)]; !exists {
-			inUsers[string(ElasticsearchInternalUserKibanaserver)] = ElasticsearchUserSpec{
-				Reserved: true,
-			}
-		}
-		// "Kibanaro" user
-		if _, exists := inUsers[string(ElasticsearchInternalUserKibanaro)]; !exists {
-			inUsers[string(ElasticsearchInternalUserKibanaro)] = ElasticsearchUserSpec{}
-		}
-		// "Logstash" user
-		if _, exists := inUsers[string(ElasticsearchInternalUserLogstash)]; !exists {
-			inUsers[string(ElasticsearchInternalUserLogstash)] = ElasticsearchUserSpec{}
-		}
-		// "Readall" user
-		if _, exists := inUsers[string(ElasticsearchInternalUserReadall)]; !exists {
-			inUsers[string(ElasticsearchInternalUserReadall)] = ElasticsearchUserSpec{}
-		}
-		// "Snapshotrestore" user
-		if _, exists := inUsers[string(ElasticsearchInternalUserSnapshotrestore)]; !exists {
-			inUsers[string(ElasticsearchInternalUserSnapshotrestore)] = ElasticsearchUserSpec{}
-		}
-		// "MetricsExporter" user
-		// Only if the monitoring is enabled.
+
+		// "Kibanaserver", "Kibanaro", "Logstash", "Readall", "Snapshotrestore"
+		setMissingElasticsearchUser(inUsers, ElasticsearchInternalUserKibanaserver, ElasticsearchUserSpec{Reserved: true})
+		setMissingElasticsearchUser(inUsers, ElasticsearchInternalUserKibanaro, ElasticsearchUserSpec{})
+		setMissingElasticsearchUser(inUsers, ElasticsearchInternalUserLogstash, ElasticsearchUserSpec{})
+		setMissingElasticsearchUser(inUsers, ElasticsearchInternalUserReadall, ElasticsearchUserSpec{})
+		setMissingElasticsearchUser(inUsers, ElasticsearchInternalUserSnapshotrestore, ElasticsearchUserSpec{})
+		// "MetricsExporter", Only if the monitoring is enabled.
 		if e.Spec.Monitor != nil {
-			if _, exists := inUsers[string(ElasticsearchInternalUserMetricsExporter)]; !exists {
-				inUsers[string(ElasticsearchInternalUserMetricsExporter)] = ElasticsearchUserSpec{}
-			}
+			setMissingElasticsearchUser(inUsers, ElasticsearchInternalUserMetricsExporter, ElasticsearchUserSpec{})
 		}
 
 		// Set missing user secret names
@@ -628,4 +610,21 @@ func (e *Elasticsearch) ReplicasAreReady(lister appslister.StatefulSetLister) (b
 		expectedItems = 3
 	}
 	return checkReplicas(lister.StatefulSets(e.Namespace), labels.SelectorFromSet(e.OffshootLabels()), expectedItems)
+}
+
+// returns true if the user exists.
+// otherwise false.
+func hasElasticsearchUser(userList map[string]ElasticsearchUserSpec, username ElasticsearchInternalUser) bool {
+	if _, exist := userList[string(username)]; exist {
+		return true
+	}
+	return false
+}
+
+// Set user if missing
+func setMissingElasticsearchUser(userList map[string]ElasticsearchUserSpec, username ElasticsearchInternalUser, userSpec ElasticsearchUserSpec) {
+	if hasElasticsearchUser(userList, username) {
+		return
+	}
+	userList[string(username)] = userSpec
 }
