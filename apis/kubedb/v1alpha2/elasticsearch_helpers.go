@@ -417,6 +417,7 @@ func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalo
 			}
 		} else {
 			// upsert "admin" role, if missing
+			// Admin user must have the admin role
 			userSpec.BackendRoles = upsertStringSlice(userSpec.BackendRoles, "admin")
 			inUsers[string(ElasticsearchInternalUserAdmin)] = userSpec
 		}
@@ -458,16 +459,15 @@ func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalo
 			inUsers[username] = userSpec
 		}
 
-		// Here, map[] is shallow copied.
-		// Making changes in "roleMapping" is the same as making changes in "e.spec.roleMapping".
-		rolesMapping := e.Spec.RolesMapping
-		if rolesMapping == nil {
-			rolesMapping = make(map[string]ElasticsearchRoleMapSpec)
-		}
-
 		// If monitoring is enabled,
 		// The "metric_exporter" user needs to have "readall_monitor" role mapped to itself.
 		if e.Spec.Monitor != nil {
+			// Here, map[] is shallow copied.
+			// Making changes in "roleMapping" is the same as making changes in "e.spec.roleMapping".
+			rolesMapping := e.Spec.RolesMapping
+			if rolesMapping == nil {
+				rolesMapping = make(map[string]ElasticsearchRoleMapSpec)
+			}
 			var monitorRole string
 			if esVersion.Spec.Distribution == catalog.ElasticsearchDistroSearchGuard {
 				// readall_and_monitor role name varies in ES version
