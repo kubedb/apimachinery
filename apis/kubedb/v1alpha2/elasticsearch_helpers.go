@@ -475,8 +475,13 @@ func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalo
 				//	V6        = "sg_readall_and_monitor"
 				if strings.HasPrefix(esVersion.Spec.Version, "6.") {
 					monitorRole = ElasticsearchSearchGuardReadallMonitorRoleV6
+					// Delete unsupported role, if any
+					delete(rolesMapping, string(ElasticsearchSearchGuardReadallMonitorRoleV7))
 				} else {
 					monitorRole = ElasticsearchSearchGuardReadallMonitorRoleV7
+					// Delete unsupported role, if any
+					// Required during upgrade process, from v6 --> v7
+					delete(rolesMapping, string(ElasticsearchSearchGuardReadallMonitorRoleV6))
 				}
 			} else {
 				monitorRole = ElasticsearchOpendistroReadallMonitorRole
@@ -493,7 +498,6 @@ func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalo
 			}
 		}
 	}
-
 }
 
 // set default tls configuration (ie. alias, secretName)
@@ -534,8 +538,8 @@ func (e *Elasticsearch) SetTLSDefaults(esVersion *catalog.ElasticsearchVersion) 
 		})
 
 		// Set missing admin certificate spec, if authPlugin is either "OpenDistro" or "SearchGuard"
-		if esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginOpenDistro ||
-			esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginSearchGuard {
+		if esVersion.Spec.Distribution == catalog.ElasticsearchDistroSearchGuard ||
+			esVersion.Spec.Distribution == catalog.ElasticsearchDistroOpenDistro {
 			tlsConfig.Certificates = kmapi.SetMissingSpecForCertificate(tlsConfig.Certificates, kmapi.CertificateSpec{
 				Alias:      string(ElasticsearchAdminCert),
 				SecretName: e.CertificateName(ElasticsearchAdminCert),
