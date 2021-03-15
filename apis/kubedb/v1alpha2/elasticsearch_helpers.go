@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 	"strings"
@@ -155,11 +156,24 @@ func (e *Elasticsearch) CertSecretVolumeMountPath(configDir string, alias Elasti
 	return filepath.Join(configDir, "certs", string(alias))
 }
 
-// returns the secret name for the  user credentials (ie. username, password)
+// returns the default secret name for the  user credentials (ie. username, password)
 // If username contains underscore (_), it will be replaced by hyphen (‐) for
 // the Kubernetes naming convention.
 func (e *Elasticsearch) DefaultUserCredSecretName(userName string) string {
 	return meta_util.NameWithSuffix(e.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", userName), "_", "-"))
+}
+
+// Return the secret name for the given user.
+// Return error, if the secret name is missing.
+func (e *Elasticsearch) GetUserCredSecretName(username ElasticsearchInternalUser) (string, error) {
+	userSpec, err := getElasticsearchUser(e.Spec.InternalUsers, username)
+	if err != nil {
+		return "", err
+	}
+	if userSpec.SecretName == "" {
+		return "", errors.New("secretName cannot be empty")
+	}
+	return userSpec.SecretName, nil
 }
 
 // returns the secret name for the default elasticsearch configuration
@@ -625,4 +639,13 @@ func setMissingElasticsearchUser(userList map[string]ElasticsearchUserSpec, user
 		return
 	}
 	userList[string(username)] = userSpec
+}
+
+// Returns userSpec if exists
+func getElasticsearchUser(userList map[string]ElasticsearchUserSpec, username ElasticsearchInternalUser) (*ElasticsearchUserSpec, error) {
+	if !hasElasticsearchUser(userList, username) {
+		return nil, errors.New("user is missing")
+	}
+	userSpec, _ := userList[string(username)]
+	return &userSpec, nil
 }
