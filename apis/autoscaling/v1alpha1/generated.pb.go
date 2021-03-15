@@ -21,8 +21,11 @@ package v1alpha1
 
 import (
 	fmt "fmt"
-
 	io "io"
+	math "math"
+	math_bits "math/bits"
+	reflect "reflect"
+	strings "strings"
 
 	proto "github.com/gogo/protobuf/proto"
 	github_com_gogo_protobuf_sortkeys "github.com/gogo/protobuf/sortkeys"
@@ -30,15 +33,8 @@ import (
 	v2beta2 "k8s.io/api/autoscaling/v2beta2"
 	k8s_io_api_core_v1 "k8s.io/api/core/v1"
 	v11 "k8s.io/api/core/v1"
-
 	resource "k8s.io/apimachinery/pkg/api/resource"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-	math "math"
-	math_bits "math/bits"
-	reflect "reflect"
-	strings "strings"
-
 	v12 "kmodules.xyz/client-go/api/v1"
 )
 
