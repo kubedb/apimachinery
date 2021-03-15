@@ -401,8 +401,6 @@ func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalo
 	if esVersion.Spec.Distribution == catalog.ElasticsearchDistroOpenDistro ||
 		esVersion.Spec.Distribution == catalog.ElasticsearchDistroSearchGuard {
 
-		// Here, map[] is shallow copied.
-		// Making changes in "inUsers" is the same as making changes in "e.spec.InternalUsers".
 		inUsers := e.Spec.InternalUsers
 		// If not set, create empty map
 		if inUsers == nil {
@@ -447,8 +445,6 @@ func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalo
 		// If monitoring is enabled,
 		// The "metric_exporter" user needs to have "readall_monitor" role mapped to itself.
 		if e.Spec.Monitor != nil {
-			// Here, map[] is shallow copied.
-			// Making changes in "roleMapping" is the same as making changes in "e.spec.roleMapping".
 			rolesMapping := e.Spec.RolesMapping
 			if rolesMapping == nil {
 				rolesMapping = make(map[string]ElasticsearchRoleMapSpec)
@@ -481,7 +477,9 @@ func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalo
 					Users: []string{string(ElasticsearchInternalUserMetricsExporter)},
 				}
 			}
+			e.Spec.RolesMapping = rolesMapping
 		}
+		e.Spec.InternalUsers = inUsers
 	}
 }
 
