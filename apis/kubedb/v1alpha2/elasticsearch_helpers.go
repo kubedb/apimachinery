@@ -158,7 +158,7 @@ func (e *Elasticsearch) CertSecretVolumeMountPath(configDir string, alias Elasti
 // returns the secret name for the  user credentials (ie. username, password)
 // If username contains underscore (_), it will be replaced by hyphen (‐) for
 // the Kubernetes naming convention.
-func (e *Elasticsearch) UserCredSecretName(userName string) string {
+func (e *Elasticsearch) DefaultUserCredSecretName(userName string) string {
 	return meta_util.NameWithSuffix(e.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", userName), "_", "-"))
 }
 
@@ -437,7 +437,7 @@ func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalo
 			if username == string(ElasticsearchInternalUserAdmin) && e.Spec.AuthSecret != nil && e.Spec.AuthSecret.Name != "" {
 				userSpec.SecretName = e.Spec.AuthSecret.Name
 			} else if userSpec.SecretName == "" {
-				userSpec.SecretName = e.UserCredSecretName(username)
+				userSpec.SecretName = e.DefaultUserCredSecretName(username)
 			}
 			inUsers[username] = userSpec
 		}
@@ -595,7 +595,7 @@ func (e *Elasticsearch) GetPersistentSecrets() []string {
 			if user == string(ElasticsearchInternalUserAdmin) || user == string(ElasticsearchInternalUserElastic) {
 				continue
 			}
-			secrets = append(secrets, e.UserCredSecretName(user))
+			secrets = append(secrets, e.DefaultUserCredSecretName(user))
 		}
 	}
 	return secrets
