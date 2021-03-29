@@ -27854,6 +27854,25 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresFeatures": {
+      "description": "PostgresFeatures is the additional features for the Postgres",
+      "type": "object",
+      "required": [
+        "modifyUser",
+        "defaultUser"
+      ],
+      "properties": {
+        "defaultUser": {
+          "description": "DefaultUser is default UID for the DB container. It is by default 999 for debian image and 70 for alpine image postgres UID 999 for debian images https://github.com/docker-library/postgres/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/Dockerfile#L15 postgres UID 70  for alpine images https://github.com/docker-library/postgres/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/alpine/Dockerfile#L6",
+          "type": "integer",
+          "format": "int64"
+        },
+        "modifyUser": {
+          "description": "ModifyUser will be true if user can change the default db container user to other than postgres user. It will be always false for alpine images https://hub.docker.com/_/postgres/ # section : Arbitrary --user Notes",
+          "type": "boolean"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersion": {
       "type": "object",
       "properties": {
@@ -27978,7 +27997,8 @@
         "version",
         "db",
         "exporter",
-        "podSecurityPolicies"
+        "podSecurityPolicies",
+        "features"
       ],
       "properties": {
         "coordinator": {
@@ -28000,6 +28020,10 @@
         "exporter": {
           "description": "Exporter Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionExporter"
+        },
+        "features": {
+          "description": "Features is for the additional config for postgres",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresFeatures"
         },
         "initContainer": {
           "description": "init container image",
