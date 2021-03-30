@@ -124,18 +124,16 @@ func (e *Elasticsearch) CertificateName(alias ElasticsearchCertificateAlias) str
 	return meta_util.NameWithSuffix(e.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
-// GetCertSecretName returns the secret name for a certificate alias
-func (e *Elasticsearch) GetCertSecretName(alias ElasticsearchCertificateAlias) (string, error) {
-	if e == nil {
-		return "", errors.New("missing Elasticsearch database")
-	} else if e.Spec.TLS == nil {
-		return "", fmt.Errorf("Elasticsearch %s/%s is missing tls spec", e.Namespace, e.Name)
+// GetCertSecretName returns the secret name for a certificate alias if any,
+// otherwise returns default certificate secret name for the given alias.
+func (e *Elasticsearch) GetCertSecretName(alias ElasticsearchCertificateAlias) string {
+	if e.Spec.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(e.Spec.TLS.Certificates, string(alias))
+		if ok {
+			return name
+		}
 	}
-	name, ok := kmapi.GetCertificateSecretName(e.Spec.TLS.Certificates, string(alias))
-	if !ok {
-		return "", fmt.Errorf("Elasticsearch %s/%s is missing secret name for %s certificate", e.Namespace, e.Name, alias)
-	}
-	return name, nil
+	return e.CertificateName(alias)
 }
 
 // ClientCertificateCN returns the CN for a client certificate
