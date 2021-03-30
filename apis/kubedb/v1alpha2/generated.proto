@@ -829,6 +829,9 @@ message MySQLClusterTopology {
 
   // Group replication info for MySQL
   optional MySQLGroupSpec group = 2;
+
+  // Group member PodIdentity using IP/DNS
+  optional string podIdentity = 3;
 }
 
 message MySQLGroupSpec {

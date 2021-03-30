@@ -29531,6 +29531,10 @@
         "mode": {
           "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
           "type": "string"
+        },
+        "podIdentity": {
+          "description": "Group member PodIdentity using IP/DNS",
+          "type": "string"
         }
       }
     },

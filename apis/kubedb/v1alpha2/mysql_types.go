@@ -123,7 +123,7 @@ type MySQLSpec struct {
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,16,opt,name=terminationPolicy,casttype=TerminationPolicy"`
 }
 
-// +kubebuilder:validation:Enum=server;archiver;metrics-exporter
+// +kubebuilder:validation:Enum=server;client;metrics-exporter
 type MySQLCertificateAlias string
 
 const (
@@ -139,6 +139,9 @@ type MySQLClusterTopology struct {
 
 	// Group replication info for MySQL
 	Group *MySQLGroupSpec `json:"group,omitempty" protobuf:"bytes,2,opt,name=group"`
+
+	// Group member PodIdentity using IP/DNS
+	PodIdentity DBPodIdentity `json:"podIdentity,omitempty" protobuf:"bytes,3,opt,name=podIdentity"`
 }
 
 type MySQLGroupSpec struct {

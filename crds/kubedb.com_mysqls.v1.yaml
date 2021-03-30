@@ -2377,6 +2377,11 @@ spec:
                     enum:
                     - GroupReplication
                     type: string
+                  podIdentity:
+                    enum:
+                    - IP
+                    - DNS
+                    type: string
                 type: object
               version:
                 type: string

@@ -20946,6 +20946,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLClusterTopology(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLGroupSpec"),
 						},
 					},
+					"podIdentity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Group member PodIdentity using IP/DNS",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
