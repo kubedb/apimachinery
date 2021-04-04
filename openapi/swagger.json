@@ -29531,10 +29531,6 @@
         "mode": {
           "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
           "type": "string"
-        },
-        "podIdentity": {
-          "description": "Group member PodIdentity using IP/DNS",
-          "type": "string"
         }
       }
     },
@@ -29606,6 +29602,10 @@
         "monitor": {
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
+        },
+        "podIdentity": {
+          "description": "db pod identifies using IP or DNS",
+          "type": "string"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",

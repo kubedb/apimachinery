@@ -121,6 +121,9 @@ type MySQLSpec struct {
 	// TerminationPolicy controls the delete operation for database
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,16,opt,name=terminationPolicy,casttype=TerminationPolicy"`
+
+	// db pod identifies using IP or DNS
+	PodIdentity DBPodIdentity `json:"podIdentity,omitempty" protobuf:"bytes,17,opt,name=podIdentity"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter
@@ -139,9 +142,6 @@ type MySQLClusterTopology struct {
 
 	// Group replication info for MySQL
 	Group *MySQLGroupSpec `json:"group,omitempty" protobuf:"bytes,2,opt,name=group"`
-
-	// Group member PodIdentity using IP/DNS
-	PodIdentity DBPodIdentity `json:"podIdentity,omitempty" protobuf:"bytes,3,opt,name=podIdentity"`
 }
 
 type MySQLGroupSpec struct {
