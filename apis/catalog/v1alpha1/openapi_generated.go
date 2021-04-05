@@ -20694,22 +20694,21 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresFeatures(ref common.Refer
 				Description: "PostgresFeatures is the additional features for the Postgres",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"modifyUser": {
+					"runAsUser": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ModifyUser will be true if user can change the default db container user to other than postgres user. It will be always false for alpine images https://hub.docker.com/_/postgres/ # section : Arbitrary --user Notes",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"defaultUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "DefaultUser is default UID for the DB container. It is by default 999 for debian image and 70 for alpine image postgres UID 999 for debian images https://github.com/docker-library/postgres/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/Dockerfile#L15 postgres UID 70  for alpine images https://github.com/docker-library/postgres/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/alpine/Dockerfile#L6",
+							Description: "RunAsUser is default UID for the DB container. It is by default 999 for debian based image and 70 for alpine based image. postgres UID 999 for debian images https://github.com/docker-library/postgres/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/Dockerfile#L15 postgres UID 70  for alpine images https://github.com/docker-library/postgres/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/alpine/Dockerfile#L6",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
+					"runAsAny": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RunAsAny will be true if user can change the default db container user to other than postgres user. It will be always false for alpine images https://hub.docker.com/_/postgres/ # section : Arbitrary --user Notes",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
-				Required: []string{"modifyUser", "defaultUser"},
 			},
 		},
 	}
@@ -20971,7 +20970,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionSpec(ref common.Re
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "podSecurityPolicies", "features"},
+				Required: []string{"version", "db", "exporter", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{

@@ -78,14 +78,11 @@ spec:
                 type: object
               features:
                 properties:
-                  defaultUser:
+                  runAsAny:
+                    type: boolean
+                  runAsUser:
                     format: int64
                     type: integer
-                  modifyUser:
-                    type: boolean
-                required:
-                - defaultUser
-                - modifyUser
                 type: object
               initContainer:
                 properties:
@@ -153,7 +150,6 @@ spec:
             required:
             - db
             - exporter
-            - features
             - podSecurityPolicies
             - version
             type: object
