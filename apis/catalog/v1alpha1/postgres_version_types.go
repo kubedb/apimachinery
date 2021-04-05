@@ -121,9 +121,9 @@ type PostgresFeatures struct {
 	// postgres UID 70  for alpine images https://github.com/docker-library/postgres/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/alpine/Dockerfile#L6
 	RunAsUser *int64 `json:"runAsUser,omitempty" protobuf:"varint,1,opt,name=runAsUser"`
 
-	// RunAsAny will be true if user can change the default db container user to other than postgres user.
+	// RunAsAnyNonRoot will be true if user can change the default db container user to other than postgres user.
 	// It will be always false for alpine images https://hub.docker.com/_/postgres/ # section : Arbitrary --user Notes
-	RunAsAny *bool `json:"runAsAny,omitempty" protobuf:"varint,2,opt,name=runAsAny"`
+	RunAsAnyNonRoot *bool `json:"runAsAnyNonRoot,omitempty" protobuf:"varint,2,opt,name=runAsAnyNonRoot"`
 }
 
 const (

@@ -569,9 +569,9 @@ message PostgresFeatures {
   // postgres UID 70  for alpine images https://github.com/docker-library/postgres/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/alpine/Dockerfile#L6
   optional int64 runAsUser = 1;
 
-  // RunAsAny will be true if user can change the default db container user to other than postgres user.
+  // RunAsAnyNonRoot will be true if user can change the default db container user to other than postgres user.
   // It will be always false for alpine images https://hub.docker.com/_/postgres/ # section : Arbitrary --user Notes
-  optional bool runAsAny = 2;
+  optional bool runAsAnyNonRoot = 2;
 }
 
 // +kubebuilder:object:root=true

@@ -27858,8 +27858,8 @@
       "description": "PostgresFeatures is the additional features for the Postgres",
       "type": "object",
       "properties": {
-        "runAsAny": {
-          "description": "RunAsAny will be true if user can change the default db container user to other than postgres user. It will be always false for alpine images https://hub.docker.com/_/postgres/ # section : Arbitrary --user Notes",
+        "runAsAnyNonRoot": {
+          "description": "RunAsAnyNonRoot will be true if user can change the default db container user to other than postgres user. It will be always false for alpine images https://hub.docker.com/_/postgres/ # section : Arbitrary --user Notes",
           "type": "boolean"
         },
         "runAsUser": {

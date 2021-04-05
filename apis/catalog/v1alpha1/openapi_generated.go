@@ -20701,9 +20701,9 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresFeatures(ref common.Refer
 							Format:      "int64",
 						},
 					},
-					"runAsAny": {
+					"runAsAnyNonRoot": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RunAsAny will be true if user can change the default db container user to other than postgres user. It will be always false for alpine images https://hub.docker.com/_/postgres/ # section : Arbitrary --user Notes",
+							Description: "RunAsAnyNonRoot will be true if user can change the default db container user to other than postgres user. It will be always false for alpine images https://hub.docker.com/_/postgres/ # section : Arbitrary --user Notes",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},

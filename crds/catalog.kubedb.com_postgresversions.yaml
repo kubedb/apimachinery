@@ -78,7 +78,7 @@ spec:
               type: object
             features:
               properties:
-                runAsAny:
+                runAsAnyNonRoot:
                   type: boolean
                 runAsUser:
                   format: int64
