@@ -27854,8 +27854,8 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresFeatures": {
-      "description": "PostgresFeatures is the additional features for the Postgres",
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresSecurityContext": {
+      "description": "PostgresSecurityContext is the additional features for the Postgres",
       "type": "object",
       "properties": {
         "runAsAnyNonRoot": {
@@ -28016,10 +28016,6 @@
           "description": "Exporter Image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionExporter"
         },
-        "features": {
-          "description": "Features is for the additional config for postgres",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresFeatures"
-        },
         "initContainer": {
           "description": "init container image",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionInitContainer"
@@ -28027,6 +28023,10 @@
         "podSecurityPolicies": {
           "description": "PSP names",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionPodSecurityPolicy"
+        },
+        "securityContext": {
+          "description": "SecurityContext is for the additional config for postgres DB container",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresSecurityContext"
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
