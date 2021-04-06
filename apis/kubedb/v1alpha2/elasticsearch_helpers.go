@@ -355,7 +355,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			Capabilities: &core.Capabilities{
 				Add: []core.Capability{"IPC_LOCK", "SYS_RESOURCE"},
 			},
+			RunAsUser: pointer.Int64P(ElasticsearchDefaultUID),
 		}
+	} else if e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser == nil {
+		e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser = pointer.Int64P(ElasticsearchDefaultUID)
 	}
 
 	e.setDefaultAffinity(&e.Spec.PodTemplate, e.OffshootSelectors(), topology)
