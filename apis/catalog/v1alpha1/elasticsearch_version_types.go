@@ -114,7 +114,7 @@ type ElasticsearchSecurityContext struct {
 	RunAsUser *int64 `json:"runAsUser,omitempty" protobuf:"varint,1,opt,name=runAsUser"`
 
 	// RunAsAnyNonRoot will be true if user can change the default UID to other than 1000.
-	RunAsAnyNonRoot *bool `json:"runAsAnyNonRoot,omitempty" protobuf:"varint,2,opt,name=runAsAnyNonRoot"`
+	RunAsAnyNonRoot bool `json:"runAsAnyNonRoot,omitempty" protobuf:"varint,2,opt,name=runAsAnyNonRoot"`
 }
 
 // +kubebuilder:validation:Enum=OpenDistro;SearchGuard;X-Pack

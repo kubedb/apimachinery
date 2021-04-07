@@ -84,11 +84,6 @@ func (in *ElasticsearchSecurityContext) DeepCopyInto(out *ElasticsearchSecurityC
 		*out = new(int64)
 		**out = **in
 	}
-	if in.RunAsAnyNonRoot != nil {
-		in, out := &in.RunAsAnyNonRoot, &out.RunAsAnyNonRoot
-		*out = new(bool)
-		**out = **in
-	}
 	return
 }
 
