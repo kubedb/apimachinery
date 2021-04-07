@@ -26984,6 +26984,21 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchSecurityContext": {
+      "description": "ElasticsearchSecurityContext provides additional securityContext settings for the Elasticsearch Image",
+      "type": "object",
+      "properties": {
+        "runAsAnyNonRoot": {
+          "description": "RunAsAnyNonRoot will be true if user can change the default UID to other than 1000.",
+          "type": "boolean"
+        },
+        "runAsUser": {
+          "description": "RunAsUser is default UID for the DB container. It defaults to 1000.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersion": {
       "type": "object",
       "properties": {
@@ -27132,6 +27147,10 @@
         "podSecurityPolicies": {
           "description": "PSP names",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionPodSecurityPolicy"
+        },
+        "securityContext": {
+          "description": "SecurityContext is for the additional security information for the Elasticsearch container",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchSecurityContext"
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
