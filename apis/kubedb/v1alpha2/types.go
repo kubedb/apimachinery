@@ -100,6 +100,10 @@ const (
 	AddressTypeIPv6 AddressType = "IPv6"
 )
 
+func (a AddressType) IsIP() bool {
+	return a == AddressTypeIP || a == AddressTypeIPv4 || a == AddressTypeIPv6
+}
+
 type NamedServiceTemplateSpec struct {
 	// Alias represents the identifier of the service.
 	Alias ServiceAlias `json:"alias" protobuf:"bytes,1,opt,name=alias"`
