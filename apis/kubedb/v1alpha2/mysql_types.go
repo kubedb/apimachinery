@@ -127,7 +127,7 @@ type MySQLSpec struct {
 	// +kubebuilder:default:=DNS
 	// +optional
 	// +default="DNS"
-	UseAddressType AddressType `json:"useAddressType,omitempty"`
+	UseAddressType AddressType `json:"useAddressType,omitempty" protobuf:"bytes,17,opt,name=useAddressType,casttype=AddressType"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter

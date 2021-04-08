@@ -29603,10 +29603,6 @@
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
-        "podIdentity": {
-          "description": "db pod identifies using IP or DNS",
-          "type": "string"
-        },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
@@ -29646,6 +29642,10 @@
         "topology": {
           "description": "MySQL cluster topology",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLClusterTopology"
+        },
+        "useAddressType": {
+          "description": "Indicated whether to use DNS or IP address to address pods in a db cluster. If IP address is used, HostNetwork will be used. Defaults to DNS.",
+          "type": "string"
         },
         "version": {
           "description": "Version of MySQL to be deployed.",

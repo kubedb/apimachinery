@@ -93,11 +93,11 @@ type AddressType string
 const (
 	AddressTypeDNS AddressType = "DNS"
 	// Uses spec.podIP as address for db pods.
-	AddressTypeIP  AddressType = "IP"
+	AddressTypeIP AddressType = "IP"
 	// Uses first IPv4 address from spec.podIP, spec.podIPs fields as address for db pods.
-	AddressTypeIPv4  AddressType = "IPv4"
+	AddressTypeIPv4 AddressType = "IPv4"
 	// Uses first IPv6 address from spec.podIP, spec.podIPs fields as address for db pods.
-	AddressTypeIPv6  AddressType = "IPv6"
+	AddressTypeIPv6 AddressType = "IPv6"
 )
 
 type NamedServiceTemplateSpec struct {
