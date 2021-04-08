@@ -29643,6 +29643,10 @@
           "description": "MySQL cluster topology",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLClusterTopology"
         },
+        "useAddressType": {
+          "description": "Indicated whether to use DNS or IP address to address pods in a db cluster. If IP address is used, HostNetwork will be used. Defaults to DNS.",
+          "type": "string"
+        },
         "version": {
           "description": "Version of MySQL to be deployed.",
           "type": "string"
