@@ -125,10 +125,12 @@ const (
 	RestartedPods  = "RestartedPods"
 )
 
-// +kubebuilder:validation:Enum=Progressing;Successful;WaitingForApproval;Failed;Approved;Denied
+// +kubebuilder:validation:Enum=Pending;Progressing;Successful;WaitingForApproval;Failed;Approved;Denied
 type OpsRequestPhase string
 
 const (
+	// used for ops requests that are currently in queue
+	OpsRequestPhasePending OpsRequestPhase = "Pending"
 	// used for ops requests that are currently Progressing
 	OpsRequestPhaseProgressing OpsRequestPhase = "Progressing"
 	// used for ops requests that are executed successfully
