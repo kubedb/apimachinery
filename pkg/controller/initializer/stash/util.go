@@ -212,14 +212,16 @@ func getTargetPhase(status v1beta1.RestoreBatchStatus, target *v1beta1.RestoreTa
 func (c *Controller) waitUntilStashInstalled(stopCh <-chan struct{}) error {
 	log.Infoln("Looking for the Stash operator.......")
 	return wait.PollImmediateUntil(time.Second*10, func() (bool, error) {
-		return discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1alpha1.ResourceKindRepository) &&
-			discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindBackupConfiguration) &&
-			discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindBackupSession) &&
-			discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindBackupBlueprint) &&
-			discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindRestoreSession) &&
-			discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindRestoreBatch) &&
-			discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindTask) &&
-			discovery.ExistsGroupKind(c.Client.Discovery(), stash.GroupName, v1beta1.ResourceKindFunction), nil
+		return discovery.ExistsGroupKinds(c.Client.Discovery(),
+			schema.GroupKind{Group: stash.GroupName, Kind: v1alpha1.ResourceKindRepository},
+			schema.GroupKind{Group: stash.GroupName, Kind: v1beta1.ResourceKindBackupConfiguration},
+			schema.GroupKind{Group: stash.GroupName, Kind: v1beta1.ResourceKindBackupSession},
+			schema.GroupKind{Group: stash.GroupName, Kind: v1beta1.ResourceKindBackupBlueprint},
+			schema.GroupKind{Group: stash.GroupName, Kind: v1beta1.ResourceKindRestoreSession},
+			schema.GroupKind{Group: stash.GroupName, Kind: v1beta1.ResourceKindRestoreBatch},
+			schema.GroupKind{Group: stash.GroupName, Kind: v1beta1.ResourceKindTask},
+			schema.GroupKind{Group: stash.GroupName, Kind: v1beta1.ResourceKindFunction},
+		), nil
 	}, stopCh)
 }
 
