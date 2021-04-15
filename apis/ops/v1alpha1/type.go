@@ -123,6 +123,10 @@ const (
 	RedisTLSArg    = "--tls-port 6379"
 	DBReady        = "DBReady"
 	RestartedPods  = "RestartedPods"
+
+	//Stash Constants
+	PauseBackupConfiguration  = "PauseBackupConfiguration"
+	ResumeBackupConfiguration = "ResumeBackupConfiguration"
 )
 
 // +kubebuilder:validation:Enum=Progressing;Successful;WaitingForApproval;Failed;Approved;Denied
