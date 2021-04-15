@@ -31334,9 +31334,18 @@
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBHorizontalScalingSpec"
         },
+        "readinessCriteria": {
+          "description": "Specifies the Readiness Criteria",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReplicaReadinessCriteria"
+        },
         "restart": {
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "timeoutSeconds": {
+          "description": "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+          "type": "integer",
+          "format": "int32"
         },
         "tls": {
           "description": "Specifies information necessary for configuring TLS",
@@ -31382,7 +31391,7 @@
       }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReplicaReadinessCriteria": {
-      "description": "MongoDBReplicaReadinessCriteria is the criteria for checking readiness of a MongoDB pod after updating, horizontal scaling etc.",
+      "description": "MongoDBReplicaReadinessCriteria is the criteria for checking readiness of a MongoDB pod after restarting the pod",
       "type": "object",
       "properties": {
         "objectsCountDiffPercentage": {
@@ -31412,9 +31421,6 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBUpgradeSpec": {
       "type": "object",
       "properties": {
-        "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReplicaReadinessCriteria"
-        },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
           "type": "string"
@@ -31433,9 +31439,6 @@
         },
         "mongos": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
-        "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReplicaReadinessCriteria"
         },
         "replicaSet": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
