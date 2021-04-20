@@ -69,6 +69,8 @@ type ElasticsearchOpsRequestSpec struct {
 	TLS *TLSSpec `json:"tls,omitempty" protobuf:"bytes,8,opt,name=tls"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
+	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
+	TimeoutSeconds *int32 `json:"timeoutSeconds,omitempty" protobuf:"varint,10,opt,name=timeoutSeconds"`
 }
 
 type ElasticsearchUpgradeSpec struct {
