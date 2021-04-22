@@ -394,6 +394,7 @@ message MariaDBVerticalScalingSpec {
 
 // MariaDBVolumeExpansionSpec is the spec for MariaDB volume expansion
 message MariaDBVolumeExpansionSpec {
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity mariadb = 1;
 }
 
 message MemcachedCustomConfiguration {

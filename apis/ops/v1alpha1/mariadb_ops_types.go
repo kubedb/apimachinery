@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
@@ -95,6 +96,7 @@ type MariaDBVerticalScalingSpec struct {
 
 // MariaDBVolumeExpansionSpec is the spec for MariaDB volume expansion
 type MariaDBVolumeExpansionSpec struct {
+	MariaDB *resource.Quantity `json:"mariadb,omitempty" protobuf:"bytes,1,opt,name=mariadb"`
 }
 
 type MariaDBCustomConfigurationSpec struct {

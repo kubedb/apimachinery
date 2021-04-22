@@ -21236,8 +21236,17 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBVolumeExpansionSpec(ref common
 			SchemaProps: spec.SchemaProps{
 				Description: "MariaDBVolumeExpansionSpec is the spec for MariaDB volume expansion",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mariadb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
