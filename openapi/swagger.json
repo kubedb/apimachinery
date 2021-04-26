@@ -31933,6 +31933,11 @@
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
         },
+        "timeoutSeconds": {
+          "description": "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+          "type": "integer",
+          "format": "int32"
+        },
         "tls": {
           "description": "Specifies information necessary for configuring TLS",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
@@ -33043,7 +33048,13 @@
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresVolumeExpansionSpec": {
       "description": "PostgresVolumeExpansionSpec is the spec for Postgres volume expansion",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "postgres": {
+          "description": "volume specification for Postgres",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLCustomConfigurationSpec": {
       "type": "object"
