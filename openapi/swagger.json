@@ -32025,8 +32025,11 @@
       "description": "PostgresVerticalScalingSpec is the spec for Postgres vertical scaling",
       "type": "object",
       "properties": {
-        "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReplicaReadinessCriteria"
+        "exporter": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "postgres": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       }
     },
