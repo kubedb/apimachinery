@@ -25,18 +25,18 @@ import (
 	ascs "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
 	jsonpatch "github.com/evanphx/json-patch"
-	"github.com/golang/glog"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/klog/v2"
 	kutil "kmodules.xyz/client-go"
 )
 
 func CreateOrPatchMongoDBAutoscaler(ctx context.Context, c ascs.AutoscalingV1alpha1Interface, meta metav1.ObjectMeta, transform func(*asapi.MongoDBAutoscaler) *asapi.MongoDBAutoscaler, opts metav1.PatchOptions) (*asapi.MongoDBAutoscaler, kutil.VerbType, error) {
 	cur, err := c.MongoDBAutoscalers(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
-		glog.V(3).Infof("Creating MongoDBAutoscaler %s/%s.", meta.Namespace, meta.Name)
+		klog.V(3).Infof("Creating MongoDBAutoscaler %s/%s.", meta.Namespace, meta.Name)
 		out, err := c.MongoDBAutoscalers(meta.Namespace).Create(ctx, transform(&asapi.MongoDBAutoscaler{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "MongoDBAutoscaler",
@@ -76,7 +76,7 @@ func PatchMongoDBAutoscalerObject(ctx context.Context, c ascs.AutoscalingV1alpha
 	if len(patch) == 0 || string(patch) == "{}" {
 		return cur, kutil.VerbUnchanged, nil
 	}
-	glog.V(3).Infof("Patching MongoDBAutoscaler %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
+	klog.V(3).Infof("Patching MongoDBAutoscaler %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
 	out, err := c.MongoDBAutoscalers(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
@@ -93,7 +93,7 @@ func TryUpdateMongoDBAutoscaler(ctx context.Context, c ascs.AutoscalingV1alpha1I
 			result, e2 = c.MongoDBAutoscalers(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
-		glog.Errorf("Attempt %d failed to update MongoDBAutoscaler %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
+		klog.Errorf("Attempt %d failed to update MongoDBAutoscaler %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
 		return false, nil
 	})
 
