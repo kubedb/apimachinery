@@ -29,10 +29,10 @@ import (
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/go-openapi/spec"
-	"github.com/golang/glog"
 	gort "gomodules.xyz/runtime"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
+	"k8s.io/klog/v2"
 	"k8s.io/kube-openapi/pkg/common"
 	"kmodules.xyz/client-go/openapi"
 )
@@ -104,17 +104,17 @@ func generateSwaggerJson() {
 		},
 	})
 	if err != nil {
-		glog.Fatal(err)
+		klog.Fatal(err)
 	}
 
 	filename := gort.GOPath() + "/src/kubedb.dev/apimachinery/openapi/swagger.json"
 	err = os.MkdirAll(filepath.Dir(filename), 0755)
 	if err != nil {
-		glog.Fatal(err)
+		klog.Fatal(err)
 	}
 	err = ioutil.WriteFile(filename, []byte(apispec), 0644)
 	if err != nil {
-		glog.Fatal(err)
+		klog.Fatal(err)
 	}
 }
 

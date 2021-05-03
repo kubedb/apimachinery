@@ -25,18 +25,18 @@ import (
 	cs "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
 	jsonpatch "github.com/evanphx/json-patch"
-	"github.com/golang/glog"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/klog/v2"
 	kutil "kmodules.xyz/client-go"
 )
 
 func CreateOrPatchElasticsearchAutoscaler(ctx context.Context, c cs.AutoscalingV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.ElasticsearchAutoscaler) *api.ElasticsearchAutoscaler, opts metav1.PatchOptions) (*api.ElasticsearchAutoscaler, kutil.VerbType, error) {
 	cur, err := c.ElasticsearchAutoscalers(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
-		glog.V(3).Infof("Creating ElasticsearchAutoscaler %s/%s.", meta.Namespace, meta.Name)
+		klog.V(3).Infof("Creating ElasticsearchAutoscaler %s/%s.", meta.Namespace, meta.Name)
 		out, err := c.ElasticsearchAutoscalers(meta.Namespace).Create(ctx, transform(&api.ElasticsearchAutoscaler{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "ElasticsearchAutoscaler",
@@ -76,7 +76,7 @@ func PatchElasticsearchAutoscalerObject(ctx context.Context, c cs.AutoscalingV1a
 	if len(patch) == 0 || string(patch) == "{}" {
 		return cur, kutil.VerbUnchanged, nil
 	}
-	glog.V(3).Infof("Patching ElasticsearchAutoscaler %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
+	klog.V(3).Infof("Patching ElasticsearchAutoscaler %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
 	out, err := c.ElasticsearchAutoscalers(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
@@ -93,7 +93,7 @@ func TryUpdateElasticsearchAutoscaler(ctx context.Context, c cs.AutoscalingV1alp
 			result, e2 = c.ElasticsearchAutoscalers(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
-		glog.Errorf("Attempt %d failed to update ElasticsearchAutoscaler %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
+		klog.Errorf("Attempt %d failed to update ElasticsearchAutoscaler %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
 		return false, nil
 	})
 

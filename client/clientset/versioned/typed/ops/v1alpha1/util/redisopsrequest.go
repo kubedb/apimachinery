@@ -25,18 +25,18 @@ import (
 	cs "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
 	jsonpatch "github.com/evanphx/json-patch"
-	"github.com/golang/glog"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/klog/v2"
 	kutil "kmodules.xyz/client-go"
 )
 
 func CreateOrPatchRedisOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.RedisOpsRequest) *api.RedisOpsRequest, opts metav1.PatchOptions) (*api.RedisOpsRequest, kutil.VerbType, error) {
 	cur, err := c.RedisOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
-		glog.V(3).Infof("Creating RedisOpsRequest %s/%s.", meta.Namespace, meta.Name)
+		klog.V(3).Infof("Creating RedisOpsRequest %s/%s.", meta.Namespace, meta.Name)
 		out, err := c.RedisOpsRequests(meta.Namespace).Create(ctx, transform(&api.RedisOpsRequest{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "RedisOpsRequest",
@@ -76,7 +76,7 @@ func PatchRedisOpsRequestObject(ctx context.Context, c cs.OpsV1alpha1Interface, 
 	if len(patch) == 0 || string(patch) == "{}" {
 		return cur, kutil.VerbUnchanged, nil
 	}
-	glog.V(3).Infof("Patching RedisOpsRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
+	klog.V(3).Infof("Patching RedisOpsRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
 	out, err := c.RedisOpsRequests(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
@@ -92,7 +92,7 @@ func TryUpdateRedisOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, me
 			result, e2 = c.RedisOpsRequests(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
-		glog.Errorf("Attempt %d failed to update RedisOpsRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
+		klog.Errorf("Attempt %d failed to update RedisOpsRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
 		return false, nil
 	})
 
