@@ -17,7 +17,6 @@ limitations under the License.
 package namespace
 
 import (
-	"context"
 	"net/http"
 	"testing"
 
@@ -28,9 +27,8 @@ import (
 	admission "k8s.io/api/admission/v1beta1"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	core "k8s.io/api/core/v1"
-	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	fake_dynamic "k8s.io/client-go/dynamic/fake"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
@@ -54,7 +52,6 @@ func TestNamespaceValidator_Admit(t *testing.T) {
 				Resources: []string{api.ResourcePluralPostgres},
 			}
 			validator.initialized = true
-			validator.dc = fake_dynamic.NewSimpleDynamicClient(clientsetscheme.Scheme)
 
 			objJS, err := meta_util.MarshalToJson(c.object, core.SchemeGroupVersion)
 			if err != nil {
@@ -68,23 +65,13 @@ func TestNamespaceValidator_Admit(t *testing.T) {
 			req.UserInfo = authenticationv1.UserInfo{}
 			req.Object.Raw = objJS
 
+			var storeObjects []runtime.Object
+
 			if c.operation == admission.Delete {
-				if _, err := validator.dc.
-					Resource(core.SchemeGroupVersion.WithResource("namespaces")).
-					Create(context.TODO(), c.object, metav1.CreateOptions{}); err != nil && !kerr.IsAlreadyExists(err) {
-					t.Fatalf("failed create namespace for input %s: %s", c.testName, err)
-				}
+				storeObjects = append(storeObjects, c.object)
 			}
-			if len(c.heatUp) > 0 {
-				for _, u := range c.heatUp {
-					if _, err := validator.dc.
-						Resource(api.SchemeGroupVersion.WithResource(api.ResourcePluralPostgres)).
-						Namespace("demo").
-						Create(context.TODO(), u, metav1.CreateOptions{}); err != nil && !kerr.IsAlreadyExists(err) {
-						t.Fatalf("failed create db for input %s: %s", c.testName, err)
-					}
-				}
-			}
+			storeObjects = append(storeObjects, c.heatUp...)
+			validator.dc = fake_dynamic.NewSimpleDynamicClient(clientsetscheme.Scheme, storeObjects...)
 
 			response := validator.Admit(req)
 			if c.result == true {
@@ -106,8 +93,8 @@ var cases = []struct {
 	kind      metav1.GroupVersionKind
 	namespace string
 	operation admission.Operation
-	object    *unstructured.Unstructured
-	heatUp    []*unstructured.Unstructured
+	object    runtime.Object
+	heatUp    []runtime.Object
 	result    bool
 }{
 	{"Create Namespace",
@@ -123,7 +110,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]*unstructured.Unstructured{editTerminationPolicy(sampleDatabase(), api.TerminationPolicyDoNotTerminate)},
+		[]runtime.Object{setTerminationPolicy(sampleDatabase(), api.TerminationPolicyDoNotTerminate)},
 		false,
 	},
 	{"Delete Namespace containing db with terminationPolicy Pause",
@@ -131,7 +118,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]*unstructured.Unstructured{editTerminationPolicy(sampleDatabase(), api.TerminationPolicyHalt)},
+		[]runtime.Object{setTerminationPolicy(sampleDatabase(), api.TerminationPolicyHalt)},
 		false,
 	},
 	{"Delete Namespace containing db with terminationPolicy Delete",
@@ -139,7 +126,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]*unstructured.Unstructured{editTerminationPolicy(sampleDatabase(), api.TerminationPolicyDelete)},
+		[]runtime.Object{setTerminationPolicy(sampleDatabase(), api.TerminationPolicyDelete)},
 		true,
 	},
 	{"Delete Namespace containing db with terminationPolicy WipeOut",
@@ -147,7 +134,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]*unstructured.Unstructured{editTerminationPolicy(sampleDatabase(), api.TerminationPolicyWipeOut)},
+		[]runtime.Object{setTerminationPolicy(sampleDatabase(), api.TerminationPolicyWipeOut)},
 		true,
 	},
 	{"Delete Namespace containing db with NO terminationPolicy",
@@ -155,53 +142,50 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]*unstructured.Unstructured{deleteTerminationPolicy(sampleDatabase())},
+		[]runtime.Object{deleteTerminationPolicy(sampleDatabase())},
 		true,
 	},
 }
 
-func sampleNamespace() *unstructured.Unstructured {
-	return &unstructured.Unstructured{
-		Object: map[string]interface{}{
-			"apiVersion": core.SchemeGroupVersion.String(),
-			"kind":       "Namespace",
-			"metadata": map[string]interface{}{
-				"name": "demo",
-			},
-			"spec": map[string]interface{}{},
+func sampleNamespace() *core.Namespace {
+	return &core.Namespace{
+		TypeMeta: metav1.TypeMeta{
+			APIVersion: core.SchemeGroupVersion.String(),
+			Kind:       "Namespace",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "demo",
 		},
 	}
 }
 
-func sampleDatabase() *unstructured.Unstructured {
-	return &unstructured.Unstructured{
-		Object: map[string]interface{}{
-			"apiVersion": api.SchemeGroupVersion.String(),
-			"kind":       "Postgres",
-			"metadata": map[string]interface{}{
-				"name":      "foo",
-				"namespace": "demo",
-				"labels": map[string]interface{}{
-					meta_util.ManagedByLabelKey: kubedb.GroupName,
-				},
+func sampleDatabase() *api.Postgres {
+	return &api.Postgres{
+		TypeMeta: metav1.TypeMeta{
+			APIVersion: api.SchemeGroupVersion.String(),
+			Kind:       "Postgres",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "foo",
+			Namespace: "demo",
+			Labels: map[string]string{
+				meta_util.ManagedByLabelKey: kubedb.GroupName,
 			},
-			"spec": map[string]interface{}{
-				"terminationPolicy": string(api.TerminationPolicyDelete),
-			},
-			"status": map[string]interface{}{},
+		},
+		Spec: api.PostgresSpec{
+			TerminationPolicy: api.TerminationPolicyDelete,
 		},
 	}
 }
 
-func editTerminationPolicy(db *unstructured.Unstructured, terminationPolicy api.TerminationPolicy) *unstructured.Unstructured {
-	err := unstructured.SetNestedField(db.Object, string(terminationPolicy), "spec", "terminationPolicy")
-	if err != nil {
-		panic(err)
-	}
-	return db
+func setTerminationPolicy(obj runtime.Object, terminationPolicy api.TerminationPolicy) runtime.Object {
+	db := obj.(*api.Postgres)
+	db.Spec.TerminationPolicy = terminationPolicy
+	return obj
 }
 
-func deleteTerminationPolicy(db *unstructured.Unstructured) *unstructured.Unstructured {
-	unstructured.RemoveNestedField(db.Object, "spec", "terminationPolicy")
-	return db
+func deleteTerminationPolicy(obj runtime.Object) runtime.Object {
+	db := obj.(*api.Postgres)
+	db.Spec.TerminationPolicy = ""
+	return obj
 }
