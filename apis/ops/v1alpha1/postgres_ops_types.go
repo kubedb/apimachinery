@@ -86,6 +86,7 @@ type PostgresUpgradeSpec struct {
 
 // HorizontalScaling is the spec for Postgres horizontal scaling
 type PostgresHorizontalScalingSpec struct {
+	Replicas *int32 `json:"replicas,omitempty" protobuf:"bytes,1,opt,name=replicas"`
 }
 
 // PostgresVerticalScalingSpec is the spec for Postgres vertical scaling

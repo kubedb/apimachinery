@@ -50,6 +50,10 @@ spec:
                     type: string
                 type: object
               horizontalScaling:
+                properties:
+                  replicas:
+                    format: int32
+                    type: integer
                 type: object
               restart:
                 type: object
