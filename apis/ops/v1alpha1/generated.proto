@@ -993,6 +993,7 @@ message PostgresCustomConfigurationSpec {
 
 // HorizontalScaling is the spec for Postgres horizontal scaling
 message PostgresHorizontalScalingSpec {
+  optional int32 replicas = 1;
 }
 
 // +kubebuilder:object:root=true
