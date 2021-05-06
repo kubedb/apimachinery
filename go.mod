@@ -11,26 +11,28 @@ require (
 	github.com/jetstack/cert-manager v1.3.1
 	github.com/json-iterator/go v1.1.10
 	github.com/pkg/errors v0.9.1
+	gomodules.xyz/kglog v0.0.1
 	gomodules.xyz/pointer v0.0.0-20201105071923-daf60fa55209
 	gomodules.xyz/runtime v0.2.0
 	gomodules.xyz/sets v0.0.0-20210218105342-2efe2fb519a2 // indirect
 	gomodules.xyz/stow v0.2.4
 	gomodules.xyz/version v0.1.0
-	gomodules.xyz/x v0.0.3
+	gomodules.xyz/x v0.0.4
 	k8s.io/api v0.21.0
 	k8s.io/apiextensions-apiserver v0.21.0
 	k8s.io/apimachinery v0.21.0
 	k8s.io/client-go v0.21.0
 	k8s.io/klog/v2 v2.8.0
 	k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7
-	kmodules.xyz/client-go v0.0.0-20210504024435-1eb80721e9b8
+	kmodules.xyz/client-go v0.0.0-20210505231546-fa4fb8e1d04e
 	kmodules.xyz/crd-schema-fuzz v0.0.0-20210503192455-da44af375c4c
 	kmodules.xyz/custom-resources v0.0.0-20210504034124-54c54fcdb690
 	kmodules.xyz/monitoring-agent-api v0.0.0-20210504040241-261c2428d207
 	kmodules.xyz/offshoot-api v0.0.0-20210504040651-7951e351f0f5
+	kmodules.xyz/prober v0.0.0-20210504215326-2e406706b970 // indirect
 	kmodules.xyz/webhook-runtime v0.0.0-20210504042742-3a9911e3dcdc
 	sigs.k8s.io/yaml v1.2.0
-	stash.appscode.dev/apimachinery v0.13.1-0.20210504044941-15d8c532c990
+	stash.appscode.dev/apimachinery v0.13.1-0.20210505235659-974fc12c7593
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d
@@ -116,6 +118,8 @@ replace google.golang.org/api => google.golang.org/api v0.20.0
 replace google.golang.org/genproto => google.golang.org/genproto v0.0.0-20201110150050-8816d57aaa9a
 
 replace google.golang.org/grpc => google.golang.org/grpc v1.27.1
+
+replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.3.0
 
 replace helm.sh/helm/v3 => github.com/kubepack/helm/v3 v3.1.0-rc.1.0.20210503022716-7e2d4913a125
 
