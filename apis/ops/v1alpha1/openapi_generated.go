@@ -22714,13 +22714,6 @@ func schema_apimachinery_apis_ops_v1alpha1_PerconaXtraDBOpsRequestSpec(ref commo
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
-					"timeoutSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 				},
 				Required: []string{"databaseRef", "type"},
 			},
@@ -23405,6 +23398,13 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref common.Ref
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
+						},
+					},
+					"timeoutSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 				},
