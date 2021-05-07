@@ -1608,6 +1608,8 @@ spec:
                     type: object
                   remove:
                     type: boolean
+                  requireSSL:
+                    type: boolean
                   rotateCertificates:
                     type: boolean
                 type: object

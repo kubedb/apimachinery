@@ -363,7 +363,7 @@ message MariaDBOpsRequestSpec {
   optional MariaDBCustomConfigurationSpec configuration = 7;
 
   // Specifies information necessary for configuring TLS
-  optional TLSSpec tls = 8;
+  optional MariaDBTLSSpec tls = 8;
 
   // Specifies information necessary for restarting database
   optional RestartSpec restart = 9;
@@ -386,6 +386,14 @@ message MariaDBOpsRequestStatus {
 // MariaDBReplicaReadinessCriteria is the criteria for checking readiness of a MariaDB pod
 // after updating, horizontal scaling etc.
 message MariaDBReplicaReadinessCriteria {
+}
+
+message MariaDBTLSSpec {
+  optional TLSSpec tLSSpec = 1;
+
+  // Indicates that the database server need to be encrypted connections(ssl)
+  // +optional
+  optional bool requireSSL = 2;
 }
 
 message MariaDBUpgradeSpec {

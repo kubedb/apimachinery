@@ -67,7 +67,7 @@ type MariaDBOpsRequestSpec struct {
 	// Specifies information necessary for custom configuration of MariaDB
 	Configuration *MariaDBCustomConfigurationSpec `json:"configuration,omitempty" protobuf:"bytes,7,opt,name=configuration"`
 	// Specifies information necessary for configuring TLS
-	TLS *TLSSpec `json:"tls,omitempty" protobuf:"bytes,8,opt,name=tls"`
+	TLS *MariaDBTLSSpec `json:"tls,omitempty" protobuf:"bytes,8,opt,name=tls"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 }
@@ -113,6 +113,14 @@ type MariaDBCustomConfiguration struct {
 	ConfigMap *core.LocalObjectReference `json:"configMap,omitempty" protobuf:"bytes,1,opt,name=configMap"`
 	Data      map[string]string          `json:"data,omitempty" protobuf:"bytes,2,rep,name=data"`
 	Remove    bool                       `json:"remove,omitempty" protobuf:"varint,3,opt,name=remove"`
+}
+
+type MariaDBTLSSpec struct {
+	TLSSpec `json:",inline,omitempty" protobuf:"bytes,1,opt,name=tLSSpec"`
+
+	// Indicates that the database server need to be encrypted connections(ssl)
+	// +optional
+	RequireSSL *bool `json:"requireSSL,omitempty" protobuf:"varint,2,opt,name=requireSSL"`
 }
 
 // MariaDBOpsRequestStatus is the status for MariaDBOpsRequest
