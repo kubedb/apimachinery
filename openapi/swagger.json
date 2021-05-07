@@ -32875,7 +32875,23 @@
       "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresCustomConfigurationSpec": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "configSecret": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "inlineConfig": {
+          "type": "string"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "removeCustomConfig": {
+          "type": "boolean"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for Postgres horizontal scaling",
