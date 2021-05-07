@@ -302,9 +302,12 @@ func (p *Postgres) GetCertSecretName(alias PostgresCertificateAlias) string {
 	return p.CertificateName(alias)
 }
 
+// GetSharedBufferSizeForPostgres this func takes a input type int64 which is in bytes
+// return the 25% of the input in Bytes, KiloBytes, MegaBytes, GigaBytes, or TeraBytes
 func GetSharedBufferSizeForPostgres(val int64) string {
 	// no more than 25% of main memory (RAM)
 	ret := (val / 100) * 25
+	// the shared buffer value can't be less then this
 	minSharedBuffer := 128 * 1024 * 1024
 	//128 MB  is the minimum
 	if ret < (128 * 1024 * 1024) {
@@ -318,6 +321,8 @@ func Round(val float64, roundOn float64, places int) (newVal float64) {
 	var round float64
 	pow := math.Pow(10, float64(places))
 	digit := pow * val
+	// this func take a float and return the int and fractional part separately
+	// math.modf(100.4) will return int part = 100 and fractional part = 0.40000000000000000
 	_, div := math.Modf(digit)
 	if div >= roundOn {
 		round = math.Ceil(digit)
@@ -328,6 +333,8 @@ func Round(val float64, roundOn float64, places int) (newVal float64) {
 	return newVal
 }
 
+// ConvertBytesInMB this func takes a input type int64 which is in bytes
+// return the input in Bytes, KiloBytes, MegaBytes, GigaBytes, or TeraBytes
 func ConvertBytesInMB(value int64) string {
 	var suffixes [5]string
 	suffixes[0] = "B"
@@ -336,6 +343,9 @@ func ConvertBytesInMB(value int64) string {
 	suffixes[3] = "GB"
 	suffixes[4] = "TB"
 
+	// here base is the type we are going to represent the value in string
+	// if base is 2 then we will represent the value in MB.
+	// if base is 0 then represent the value in B.
 	base := math.Log(float64(value)) / math.Log(1024)
 	getSize := Round(math.Pow(1024, base-math.Floor(base)), .5, 2)
 	getSuffix := suffixes[int(math.Floor(base))]

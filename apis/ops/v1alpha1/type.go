@@ -142,6 +142,7 @@ const (
 	UpdateStandbyPodImage                   = "UpdateStandbyPodImage"
 	PausePgCoordinator                      = "PausePgCoordinator"
 	ResumePgCoordinator                     = "ResumePgCoordinator"
+	ResumePrimaryPgCoordinator              = "NonTransferableResumePgCoordinator"
 	DataDirectoryInitialized                = "DataDirectoryInitialized"
 	PgUpgraded                              = "PgUpgraded"
 	ReplacedDataDirectory                   = "ReplacedDataDirectory"
@@ -150,6 +151,9 @@ const (
 
 	TransferLeaderShipToFirstNode                        = "TransferPrimaryRoleToDefault"
 	TransferLeaderShipToFirstNodeBeforeCoordinatorPaused = "TransferLeaderShipToFirstNodeBeforeCoordinatorPaused"
+
+	ReconfigurePrimaryPod  = "ReconfigurePrimaryPod"
+	ReconfigureStandbyPods = "ReconfigureStandbyPods"
 )
 
 // +kubebuilder:validation:Enum=Pending;Progressing;Successful;WaitingForApproval;Failed;Approved;Denied

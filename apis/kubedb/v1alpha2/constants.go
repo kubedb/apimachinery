@@ -234,9 +234,14 @@ const (
 	PostgresLastWalReplayLSN      = "pg_last_wal_replay_lsn"
 	PostgresWalLSNDiff            = "pg_wal_lsn_diff"
 
-	PostgresKeyFileSecretSuffix = "key"
-	PostgresPEMSecretSuffix     = "pem"
-	PostgresDefaultUsername     = "postgres"
+	PostgresKeyFileSecretSuffix       = "key"
+	PostgresPEMSecretSuffix           = "pem"
+	PostgresDefaultUsername           = "postgres"
+	PostgresPgCoordinatorStatus       = "Coordinator/Status"
+	PostgresPgCoordinatorStatusPause  = "Pause"
+	PostgresPgCoordinatorStatusResume = "Resume"
+
+	PostgresPgCoordinatorStatusResumeNonTransferable = "NonTransferableResume"
 
 	// =========================== ProxySQL Constants ============================
 	LabelProxySQLName        = ProxySQLKey + "/name"
@@ -249,11 +254,6 @@ const (
 	ProxySQLAdminPortName          = "admin"
 	ProxySQLDataMountPath          = "/var/lib/proxysql"
 	ProxySQLCustomConfigMountPath  = "/etc/custom-config"
-
-	PostgresPgCoordinatorStatus       = "Coordinator/Status"
-	PostgresPgCoordinatorStatusPause  = "Pause"
-	PostgresPgCoordinatorStatusResume = "Resume"
-
 	// =========================== Redis Constants ============================
 	RedisShardKey               = RedisKey + "/shard"
 	RedisDatabasePortName       = "db"
