@@ -58,6 +58,7 @@ const (
 	TLSEnabling                  = "TLSEnabling"
 	Restart                      = "Restart"
 	RestartStatefulSet           = "RestartStatefulSet"
+	CertificateSynced            = "CertificateSynced"
 
 	// MongoDB Constants
 	StartingBalancer            = "StartingBalancer"
