@@ -435,6 +435,12 @@ message MySQLVersionPodSecurityPolicy {
   optional string databasePolicyName = 1;
 }
 
+// MySQLVersionRouter is the MySQL Router lightweight middleware
+// that provides transparent routing between your application and back-end MySQL Servers
+message MySQLVersionRouter {
+  optional string image = 1;
+}
+
 // MySQLVersionSpec is the spec for MySQL version
 message MySQLVersionSpec {
   // Version
@@ -468,6 +474,10 @@ message MySQLVersionSpec {
   // Stash defines backup and restore task definitions.
   // +optional
   optional kmodules.xyz.custom_resources.apis.appcatalog.v1alpha1.StashAddonSpec stash = 10;
+
+  // Router image
+  // +optional
+  optional MySQLVersionRouter router = 11;
 }
 
 // +kubebuilder:object:root=true

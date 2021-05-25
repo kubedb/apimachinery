@@ -151,6 +151,10 @@ type MySQLClusterTopology struct {
 
 	// Group replication info for MySQL
 	Group *MySQLGroupSpec `json:"group,omitempty" protobuf:"bytes,2,opt,name=group"`
+
+	// InnoDBCluster replication info for MySQL InnodbCluster
+	// +optional
+	InnoDBCluster *MySQLInnoDBClusterSpec `json:"innoDBCluster,omitempty" protobuf:"bytes,3,opt,name=innoDBCluster"`
 }
 
 type MySQLGroupSpec struct {
@@ -161,6 +165,21 @@ type MySQLGroupSpec struct {
 	// Group name is a version 4 UUID
 	// ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-options.html#sysvar_group_replication_group_name
 	Name string `json:"name,omitempty" protobuf:"bytes,2,opt,name=name"`
+}
+
+type MySQLInnoDBClusterSpec struct {
+	Mode   *MySQLGroupMode `json:"mode,omitempty" protobuf:"bytes,1,opt,name=mode,casttype=MySQLGroupMode"`
+	Router MySQLRouterSpec `json:"router,omitempty" protobuf:"bytes,2,opt,name=router"`
+}
+type MySQLRouterSpec struct {
+	// +optional
+	Replica int32 `json:"replica,omitempty" protobuf:"bytes,1,opt,name=replica"`
+	// PodTemplate is an optional configuration for pods used to expose database
+	// +optional
+	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty" protbuf:"bytes,2,opt,name=podTemplate" protobuf:"bytes,2,opt,name=podTemplate"`
+	//ServiceTemplate is an optional configuration for pods used to expose database
+	// +optional
+	ServiceTemplate ofst.ServiceTemplateSpec `json:"ServiceTemplate,omitempty" protbuf:"bytes,3,name=serviceTemplate" protobuf:"bytes,3,opt,name=ServiceTemplate"`
 }
 
 type MySQLStatus struct {

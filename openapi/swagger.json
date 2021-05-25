@@ -28425,6 +28425,19 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionRouter": {
+      "description": "MySQLVersionRouter is the MySQL Router lightweight middleware that provides transparent routing between your application and back-end MySQL Servers",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionSpec": {
       "description": "MySQLVersionSpec is the spec for MySQL version",
       "type": "object",
@@ -28470,6 +28483,11 @@
           "description": "ReplicationModeDetector Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ReplicationModeDetector"
+        },
+        "router": {
+          "description": "Router image",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionRouter"
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
@@ -30508,6 +30526,10 @@
           "description": "Group replication info for MySQL",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLGroupSpec"
         },
+        "innoDBCluster": {
+          "description": "InnoDBCluster replication info for MySQL InnodbCluster",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLInnoDBClusterSpec"
+        },
         "mode": {
           "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
           "type": "string"
@@ -30524,6 +30546,18 @@
         "name": {
           "description": "Group name is a version 4 UUID ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-options.html#sysvar_group_replication_group_name",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLInnoDBClusterSpec": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "router": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLRouterSpec"
         }
       }
     },
@@ -30558,6 +30592,25 @@
           "version": "v1alpha2"
         }
       ]
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLRouterSpec": {
+      "type": "object",
+      "properties": {
+        "ServiceTemplate": {
+          "description": "ServiceTemplate is an optional configuration for pods used to expose database",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "replica": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLSpec": {
       "type": "object",
@@ -37333,6 +37386,22 @@
         "type": {
           "description": "type determines how the Service is exposed. Defaults to ClusterIP. Valid options are ExternalName, ClusterIP, NodePort, and LoadBalancer. \"ExternalName\" maps to the specified externalName. \"ClusterIP\" allocates a cluster-internal IP address for load-balancing to endpoints. Endpoints are determined by the selector or if that is not specified, by manual construction of an Endpoints object. If clusterIP is \"None\", no virtual IP is allocated and the endpoints are published as a set of endpoints rather than a stable IP. \"NodePort\" builds on ClusterIP and allocates a port on every node which routes to the clusterIP. \"LoadBalancer\" builds on NodePort and creates an external load-balancer (if supported in the current cloud) which routes to the clusterIP. More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types",
           "type": "string"
+        }
+      }
+    },
+    "xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec": {
+      "description": "ServiceTemplateSpec describes the data a service should have when created from a template",
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceSpec"
         }
       }
     }
