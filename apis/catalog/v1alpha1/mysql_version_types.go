@@ -73,6 +73,9 @@ type MySQLVersionSpec struct {
 	// Stash defines backup and restore task definitions.
 	// +optional
 	Stash appcat.StashAddonSpec `json:"stash,omitempty" protobuf:"bytes,10,opt,name=stash"`
+	// Router image
+	// +optional
+	Router MySQLVersionRouter `json:"router" protobuf:"bytes,11,opt,name=router"`
 }
 
 // MySQLVersionDatabase is the MySQL Database image
@@ -87,6 +90,12 @@ type MySQLVersionExporter struct {
 
 // MySQLVersionInitContainer is the MySQL Container initializer
 type MySQLVersionInitContainer struct {
+	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
+}
+
+// MySQLVersionRouter is the MySQL Router lightweight middleware
+//that provides transparent routing between your application and back-end MySQL Servers
+type MySQLVersionRouter struct {
 	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
 }
 
