@@ -148,6 +148,8 @@ const (
 	ReplacedDataDirectory                   = "ReplacedDataDirectory"
 	PgCoordinatorStatusResumeDefaultPrimary = "ResumeDefaultPrimary"
 	PostgresPrimaryPodReady                 = "PostgresPrimaryPodReady"
+	RestartPrimaryPods                      = "RestartPrimaryPods"
+	RestartStandbyPods                      = "RestartStandbyPods"
 
 	TransferLeaderShipToFirstNode                        = "TransferPrimaryRoleToDefault"
 	TransferLeaderShipToFirstNodeBeforeCoordinatorPaused = "TransferLeaderShipToFirstNodeBeforeCoordinatorPaused"
