@@ -855,6 +855,11 @@ func (in *MariaDBOpsRequestSpec) DeepCopyInto(out *MariaDBOpsRequestSpec) {
 		*out = new(RestartSpec)
 		**out = **in
 	}
+	if in.TimeoutSeconds != nil {
+		in, out := &in.TimeoutSeconds, &out.TimeoutSeconds
+		*out = new(int32)
+		**out = **in
+	}
 	return
 }
 
