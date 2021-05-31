@@ -323,8 +323,13 @@ const (
 )
 
 var (
-	DefaultResourceLimits = core.ResourceList{
-		core.ResourceCPU:    resource.MustParse(".500"),
-		core.ResourceMemory: resource.MustParse("1024Mi"),
+	DefaultResources = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".500"),
+			core.ResourceMemory: resource.MustParse("1024Mi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("1024Mi"),
+		},
 	}
 )
