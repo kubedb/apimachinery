@@ -507,7 +507,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresOpsRequestList":                     schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresOpsRequestSpec":                     schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresOpsRequestStatus":                   schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestStatus(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresReplicaReadinessCriteria":           schema_apimachinery_apis_ops_v1alpha1_PostgresReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpgradeSpec":                        schema_apimachinery_apis_ops_v1alpha1_PostgresUpgradeSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec":                schema_apimachinery_apis_ops_v1alpha1_PostgresVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec":                schema_apimachinery_apis_ops_v1alpha1_PostgresVolumeExpansionSpec(ref),
@@ -21589,7 +21588,6 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBCustomConfiguration(ref common
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
 						},
 					},
@@ -22093,7 +22091,6 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLCustomConfigurationSpec(ref comm
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
 						},
 					},
@@ -23221,7 +23218,6 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresCustomConfigurationSpec(ref c
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
 						},
 					},
@@ -23428,11 +23424,10 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
-					"timeoutSeconds": {
+					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 				},
@@ -23440,7 +23435,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -23486,17 +23481,6 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestStatus(ref common.R
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_PostgresReplicaReadinessCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PostgresReplicaReadinessCriteria is the criteria for checking readiness of a Postgres pod after updating, horizontal scaling etc.",
-				Type:        []string{"object"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_ops_v1alpha1_PostgresUpgradeSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23510,16 +23494,9 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresUpgradeSpec(ref common.Refere
 							Format:      "",
 						},
 					},
-					"readinessCriteria": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresReplicaReadinessCriteria"),
-						},
-					},
 				},
 			},
 		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresReplicaReadinessCriteria"},
 	}
 }
 

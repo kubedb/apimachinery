@@ -32189,7 +32189,6 @@
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
-          "default": {},
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "removeCustomConfig": {
@@ -32480,7 +32479,6 @@
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
-          "default": {},
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "removeCustomConfig": {
@@ -32885,7 +32883,6 @@
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
-          "default": {},
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "removeCustomConfig": {
@@ -32993,10 +32990,9 @@
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
         },
-        "timeoutSeconds": {
+        "timeout": {
           "description": "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
-          "type": "integer",
-          "format": "int32"
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "tls": {
           "description": "Specifies information necessary for configuring TLS",
@@ -33043,16 +33039,9 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReplicaReadinessCriteria": {
-      "description": "PostgresReplicaReadinessCriteria is the criteria for checking readiness of a Postgres pod after updating, horizontal scaling etc.",
-      "type": "object"
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresUpgradeSpec": {
       "type": "object",
       "properties": {
-        "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReplicaReadinessCriteria"
-        },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
           "type": "string"
