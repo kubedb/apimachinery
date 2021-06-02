@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	apis "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,6 +51,17 @@ type PostgresOpsRequest struct {
 	Spec              PostgresOpsRequestSpec   `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 	Status            PostgresOpsRequestStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
+type PostgresTLSSpec struct {
+	TLSSpec `json:",inline,omitempty" protobuf:"bytes,1,opt,name=tLSSpec"`
+
+	// SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]
+	// +optional
+	SSLMode apis.PostgresSSLMode `json:"sslMode,omitempty" protobuf:"bytes,2,opt,name=sslMode,casttype=PostgresSSLMode"`
+
+	// ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
+	// +optional
+	ClientAuthMode apis.PostgresClientAuthMode `json:"clientAuthMode,omitempty" protobuf:"bytes,3,opt,name=clientAuthMode,casttype=PostgresClientAuthMode"`
+}
 
 // PostgresOpsRequestSpec is the spec for PostgresOpsRequest
 type PostgresOpsRequestSpec struct {
@@ -66,8 +79,9 @@ type PostgresOpsRequestSpec struct {
 	VolumeExpansion *PostgresVolumeExpansionSpec `json:"volumeExpansion,omitempty" protobuf:"bytes,6,opt,name=volumeExpansion"`
 	// Specifies information necessary for custom configuration of Postgres
 	Configuration *PostgresCustomConfigurationSpec `json:"configuration,omitempty" protobuf:"bytes,7,opt,name=configuration"`
+
 	// Specifies information necessary for configuring TLS
-	TLS *TLSSpec `json:"tls,omitempty" protobuf:"bytes,8,opt,name=tls"`
+	TLS *PostgresTLSSpec `json:"tls,omitempty" protobuf:"bytes,8,opt,name=tls"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.

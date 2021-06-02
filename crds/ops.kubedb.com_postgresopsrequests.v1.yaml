@@ -1593,6 +1593,12 @@ spec:
                       - alias
                       type: object
                     type: array
+                  clientAuthMode:
+                    enum:
+                    - md5
+                    - scram
+                    - cert
+                    type: string
                   issuerRef:
                     properties:
                       apiGroup:
@@ -1609,6 +1615,15 @@ spec:
                     type: boolean
                   rotateCertificates:
                     type: boolean
+                  sslMode:
+                    enum:
+                    - disable
+                    - allow
+                    - prefer
+                    - require
+                    - verify-ca
+                    - verify-full
+                    type: string
                 type: object
               type:
                 enum:

@@ -1051,7 +1051,7 @@ message PostgresOpsRequestSpec {
   optional PostgresCustomConfigurationSpec configuration = 7;
 
   // Specifies information necessary for configuring TLS
-  optional TLSSpec tls = 8;
+  optional PostgresTLSSpec tls = 8;
 
   // Specifies information necessary for restarting database
   optional RestartSpec restart = 9;
@@ -1072,6 +1072,18 @@ message PostgresOpsRequestStatus {
   // Conditions applied to the request, such as approval or denial.
   // +optional
   repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
+}
+
+message PostgresTLSSpec {
+  optional TLSSpec tLSSpec = 1;
+
+  // SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]
+  // +optional
+  optional string sslMode = 2;
+
+  // ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
+  // +optional
+  optional string clientAuthMode = 3;
 }
 
 message PostgresUpgradeSpec {

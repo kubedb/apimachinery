@@ -507,6 +507,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresOpsRequestList":                     schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresOpsRequestSpec":                     schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresOpsRequestStatus":                   schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestStatus(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresTLSSpec":                            schema_apimachinery_apis_ops_v1alpha1_PostgresTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpgradeSpec":                        schema_apimachinery_apis_ops_v1alpha1_PostgresUpgradeSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec":                schema_apimachinery_apis_ops_v1alpha1_PostgresVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec":                schema_apimachinery_apis_ops_v1alpha1_PostgresVolumeExpansionSpec(ref),
@@ -23415,7 +23416,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref common.Ref
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for configuring TLS",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresTLSSpec"),
 						},
 					},
 					"restart": {
@@ -23435,7 +23436,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -23478,6 +23479,68 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestStatus(ref common.R
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_PostgresTLSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IssuerRef is a reference to a Certificate Issuer.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"certificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"rotateCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RotateCertificates tells operator to initiate certificate rotation",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"remove": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Remove tells operator to remove TLS configuration",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"sslMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clientAuthMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
 	}
 }
 

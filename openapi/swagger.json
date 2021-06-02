@@ -32996,7 +32996,7 @@
         },
         "tls": {
           "description": "Specifies information necessary for configuring TLS",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresTLSSpec"
         },
         "type": {
           "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
@@ -33035,6 +33035,39 @@
           "format": "int64"
         },
         "phase": {
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresTLSSpec": {
+      "type": "object",
+      "properties": {
+        "certificates": {
+          "description": "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.CertificateSpec"
+          }
+        },
+        "clientAuthMode": {
+          "description": "ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])",
+          "type": "string"
+        },
+        "issuerRef": {
+          "description": "IssuerRef is a reference to a Certificate Issuer.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+        },
+        "remove": {
+          "description": "Remove tells operator to remove TLS configuration",
+          "type": "boolean"
+        },
+        "rotateCertificates": {
+          "description": "RotateCertificates tells operator to initiate certificate rotation",
+          "type": "boolean"
+        },
+        "sslMode": {
+          "description": "SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]",
           "type": "string"
         }
       }
