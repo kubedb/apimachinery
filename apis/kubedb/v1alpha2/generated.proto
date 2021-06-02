@@ -876,15 +876,13 @@ message MySQLList {
 
 message MySQLRouterSpec {
   // +optional
+  // +kubebuilder:default:=1
+  // +kubebuilder:validation:Minimum:=1
   optional int32 replica = 1;
 
-  // PodTemplate is an optional configuration for pods used to expose database
+  // PodTemplate is an optional configuration for pods used to expose MySQL router
   // +optional
   optional kmodules.xyz.offshoot_api.api.v1.PodTemplateSpec podTemplate = 2;
-
-  // ServiceTemplate is an optional configuration for pods used to expose database
-  // +optional
-  optional kmodules.xyz.offshoot_api.api.v1.ServiceTemplateSpec ServiceTemplate = 3;
 }
 
 message MySQLSpec {

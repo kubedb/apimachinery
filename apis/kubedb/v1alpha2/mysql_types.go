@@ -169,13 +169,12 @@ type MySQLInnoDBClusterSpec struct {
 }
 type MySQLRouterSpec struct {
 	// +optional
-	Replica int32 `json:"replica,omitempty" protobuf:"bytes,1,opt,name=replica"`
-	// PodTemplate is an optional configuration for pods used to expose database
+	// +kubebuilder:default:=1
+	// +kubebuilder:validation:Minimum:=1
+	Replica *int32 `json:"replica,omitempty" protobuf:"varint,1,opt,name=replica"`
+	// PodTemplate is an optional configuration for pods used to expose MySQL router
 	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty" protbuf:"bytes,2,opt,name=podTemplate" protobuf:"bytes,2,opt,name=podTemplate"`
-	//ServiceTemplate is an optional configuration for pods used to expose database
-	// +optional
-	ServiceTemplate ofst.ServiceTemplateSpec `json:"ServiceTemplate,omitempty" protbuf:"bytes,3,name=serviceTemplate" protobuf:"bytes,3,opt,name=ServiceTemplate"`
+	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty" protobuf:"bytes,2,opt,name=podTemplate"`
 }
 
 type MySQLStatus struct {

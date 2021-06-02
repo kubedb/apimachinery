@@ -22381,23 +22381,15 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLRouterSpec(ref common.Referen
 					},
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Default:     map[string]interface{}{},
+							Description: "PodTemplate is an optional configuration for pods used to expose MySQL router",
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
-						},
-					},
-					"ServiceTemplate": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ServiceTemplate is an optional configuration for pods used to expose database",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"},
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
 	}
 }
 
