@@ -71,18 +71,12 @@ type PostgresOpsRequestSpec struct {
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
-	TimeoutSeconds *int32 `json:"timeoutSeconds,omitempty" protobuf:"varint,10,opt,name=timeoutSeconds"`
-}
-
-// PostgresReplicaReadinessCriteria is the criteria for checking readiness of a Postgres pod
-// after updating, horizontal scaling etc.
-type PostgresReplicaReadinessCriteria struct {
+	Timeout *metav1.Duration `json:"timeout,omitempty" protobuf:"varint,10,opt,name=timeout"`
 }
 
 type PostgresUpgradeSpec struct {
 	// Specifies the target version name from catalog
-	TargetVersion     string                            `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
-	ReadinessCriteria *PostgresReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,2,opt,name=readinessCriteria"`
+	TargetVersion string `json:"targetVersion,omitempty" protobuf:"bytes,1,opt,name=targetVersion"`
 }
 
 // HorizontalScaling is the spec for Postgres horizontal scaling
@@ -94,7 +88,6 @@ type PostgresHorizontalScalingSpec struct {
 type PostgresVerticalScalingSpec struct {
 	Postgres *core.ResourceRequirements `json:"postgres,omitempty" protobuf:"bytes,1,opt,name=postgres"`
 	Exporter *core.ResourceRequirements `json:"exporter,omitempty" protobuf:"bytes,2,opt,name=exporter"`
-	//ReadinessCriteria *PostgresReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,3,opt,name=readinessCriteria"`
 }
 
 // PostgresVolumeExpansionSpec is the spec for Postgres volume expansion
@@ -106,7 +99,7 @@ type PostgresVolumeExpansionSpec struct {
 type PostgresCustomConfigurationSpec struct {
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate        ofst.PodTemplateSpec       `json:"podTemplate,omitempty" protobuf:"bytes,1,opt,name=podTemplate"`
+	PodTemplate        *ofst.PodTemplateSpec      `json:"podTemplate,omitempty" protobuf:"bytes,1,opt,name=podTemplate"`
 	ConfigSecret       *core.LocalObjectReference `json:"configSecret,omitempty" protobuf:"bytes,2,opt,name=configSecret"`
 	InlineConfig       string                     `json:"inlineConfig,omitempty" protobuf:"bytes,3,opt,name=inlineConfig"`
 	RemoveCustomConfig bool                       `json:"removeCustomConfig,omitempty" protobuf:"varint,4,opt,name=removeCustomConfig"`

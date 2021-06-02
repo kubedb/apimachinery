@@ -1057,7 +1057,7 @@ message PostgresOpsRequestSpec {
   optional RestartSpec restart = 9;
 
   // Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
-  optional int32 timeoutSeconds = 10;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration timeout = 10;
 }
 
 // PostgresOpsRequestStatus is the status for PostgresOpsRequest
@@ -1074,16 +1074,9 @@ message PostgresOpsRequestStatus {
   repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
 }
 
-// PostgresReplicaReadinessCriteria is the criteria for checking readiness of a Postgres pod
-// after updating, horizontal scaling etc.
-message PostgresReplicaReadinessCriteria {
-}
-
 message PostgresUpgradeSpec {
   // Specifies the target version name from catalog
   optional string targetVersion = 1;
-
-  optional PostgresReplicaReadinessCriteria readinessCriteria = 2;
 }
 
 // PostgresVerticalScalingSpec is the spec for Postgres vertical scaling

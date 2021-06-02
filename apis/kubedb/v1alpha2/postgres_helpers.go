@@ -346,6 +346,9 @@ func ConvertBytesInMB(value int64) string {
 	// here base is the type we are going to represent the value in string
 	// if base is 2 then we will represent the value in MB.
 	// if base is 0 then represent the value in B.
+	if value == 0 {
+		return "0B"
+	}
 	base := math.Log(float64(value)) / math.Log(1024)
 	getSize := Round(math.Pow(1024, base-math.Floor(base)), .5, 2)
 	getSuffix := suffixes[int(math.Floor(base))]
