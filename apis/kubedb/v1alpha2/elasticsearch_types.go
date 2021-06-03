@@ -303,3 +303,19 @@ type ElasticsearchList struct {
 	// Items is a list of Elasticsearch CRD objects
 	Items []Elasticsearch `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
 }
+
+type ElasticsearchNodeRoleType string
+
+const (
+	ElasticsearchNodeRoleTypeMaster              ElasticsearchNodeRoleType = "master"
+	ElasticsearchNodeRoleTypeData                ElasticsearchNodeRoleType = "data"
+	ElasticsearchNodeRoleTypeDataContent         ElasticsearchNodeRoleType = "data-content"
+	ElasticsearchNodeRoleTypeDataHot             ElasticsearchNodeRoleType = "data-hot"
+	ElasticsearchNodeRoleTypeDataWarm            ElasticsearchNodeRoleType = "data-warm"
+	ElasticsearchNodeRoleTypeDataCold            ElasticsearchNodeRoleType = "data-cold"
+	ElasticsearchNodeRoleTypeDataFrozen          ElasticsearchNodeRoleType = "data-frozen"
+	ElasticsearchNodeRoleTypeIngest              ElasticsearchNodeRoleType = "ingest"
+	ElasticsearchNodeRoleTypeML                  ElasticsearchNodeRoleType = "ml"
+	ElasticsearchNodeRoleTypeRemoteClusterClient ElasticsearchNodeRoleType = "remote-cluster-client"
+	ElasticsearchNodeRoleTypeTransform           ElasticsearchNodeRoleType = "transform"
+)

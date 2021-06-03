@@ -62,6 +62,9 @@ func (e Elasticsearch) OffshootSelectors() map[string]string {
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
 }
+func (e Elasticsearch) NodeRoleSpecificAnnotationKey(roleType ElasticsearchNodeRoleType) string {
+	return kubedb.GroupName + "/role-" + string(roleType)
+}
 
 func (e Elasticsearch) MasterSelectors() map[string]string {
 	selectors := e.OffshootSelectors()
