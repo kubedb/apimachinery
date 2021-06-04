@@ -32187,10 +32187,6 @@
         "inlineConfig": {
           "type": "string"
         },
-        "podTemplate": {
-          "description": "PodTemplate is an optional configuration for pods used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
-        },
         "removeCustomConfig": {
           "type": "boolean"
         }
@@ -32476,10 +32472,6 @@
         },
         "inlineConfig": {
           "type": "string"
-        },
-        "podTemplate": {
-          "description": "PodTemplate is an optional configuration for pods used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "removeCustomConfig": {
           "type": "boolean"
@@ -32880,10 +32872,6 @@
         },
         "inlineConfig": {
           "type": "string"
-        },
-        "podTemplate": {
-          "description": "PodTemplate is an optional configuration for pods used to expose database",
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "removeCustomConfig": {
           "type": "boolean"
