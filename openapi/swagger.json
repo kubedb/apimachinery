@@ -29278,12 +29278,10 @@
       "type": "object",
       "required": [
         "master",
-        "data",
         "ingest"
       ],
       "properties": {
         "data": {
-          "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
         },
         "dataCold": {

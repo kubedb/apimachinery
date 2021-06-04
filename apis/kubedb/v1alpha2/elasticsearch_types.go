@@ -143,8 +143,8 @@ type ElasticsearchSpec struct {
 
 type ElasticsearchClusterTopology struct {
 	Master      ElasticsearchNode  `json:"master" protobuf:"bytes,1,opt,name=master"`
-	Data        ElasticsearchNode  `json:"data" protobuf:"bytes,2,opt,name=data"`
-	Ingest      ElasticsearchNode  `json:"ingest" protobuf:"bytes,3,opt,name=ingest"`
+	Ingest      ElasticsearchNode  `json:"ingest" protobuf:"bytes,2,opt,name=ingest"`
+	Data        *ElasticsearchNode `json:"data,omitempty" protobuf:"bytes,3,opt,name=data"`
 	DataContent *ElasticsearchNode `json:"dataContent,omitempty" protobuf:"bytes,4,opt,name=dataContent"`
 	DataHot     *ElasticsearchNode `json:"dataHot,omitempty" protobuf:"bytes,5,opt,name=dataHot"`
 	DataWarm    *ElasticsearchNode `json:"dataWarm,omitempty" protobuf:"bytes,6,opt,name=dataWarm"`
