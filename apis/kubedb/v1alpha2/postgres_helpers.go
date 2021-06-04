@@ -29,6 +29,7 @@ import (
 
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
@@ -304,15 +305,19 @@ func (p *Postgres) GetCertSecretName(alias PostgresCertificateAlias) string {
 
 // GetSharedBufferSizeForPostgres this func takes a input type int64 which is in bytes
 // return the 25% of the input in Bytes, KiloBytes, MegaBytes, GigaBytes, or TeraBytes
-func GetSharedBufferSizeForPostgres(val int64) string {
+func GetSharedBufferSizeForPostgres(resource *resource.Quantity) string {
 	// no more than 25% of main memory (RAM)
-	ret := (val / 100) * 25
-	// the shared buffer value can't be less then this
-	minSharedBuffer := 128 * 1024 * 1024
-	//128 MB  is the minimum
-	if ret < (128 * 1024 * 1024) {
-		ret = int64(minSharedBuffer)
+	minSharedBuffer := int64(128 * 1024 * 1024)
+	ret := minSharedBuffer
+	if resource != nil {
+		ret = (resource.Value() / 100) * 25
 	}
+	// the shared buffer value can't be less then this
+	//128 MB  is the minimum
+	if ret < minSharedBuffer {
+		ret = minSharedBuffer
+	}
+
 	sharedBuffer := ConvertBytesInMB(ret)
 	return sharedBuffer
 }

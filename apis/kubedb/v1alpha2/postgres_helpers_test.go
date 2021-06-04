@@ -18,47 +18,9 @@ package v1alpha2
 
 import (
 	"testing"
-)
 
-func TestGetSharedBufferSizeForPostgres(t *testing.T) {
-	type args struct {
-		val int64
-	}
-	var tests = []struct {
-		name string
-		args args
-		want string
-	}{
-		{
-			name: "initial",
-			args: args{
-				val: 0,
-			},
-			want: "128MB",
-		},
-		{
-			name: "1GB",
-			args: args{
-				val: 1024 * 1024 * 1024,
-			},
-			want: "256MB",
-		},
-		{
-			name: "10GB",
-			args: args{
-				val: 1024 * 1024 * 1024 * 10,
-			},
-			want: "2.5GB",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := GetSharedBufferSizeForPostgres(tt.args.val); got != tt.want {
-				t.Errorf("GetSharedBufferSizeForPostgres() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+	"k8s.io/apimachinery/pkg/api/resource"
+)
 
 func TestRound(t *testing.T) {
 	type args struct {
@@ -125,6 +87,54 @@ func TestConvertBytesInMB(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := ConvertBytesInMB(tt.args.value); got != tt.want {
 				t.Errorf("ConvertBytesInMB() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestGetSharedBufferSizeForPostgres(t *testing.T) {
+	type args struct {
+		resource *resource.Quantity
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "1st",
+			args: args{
+				// 10GB
+				resource: resource.NewQuantity(int64(1024*1024*1024*10), resource.DecimalSI),
+			},
+			want: "2.5GB",
+		},
+		{
+			name: "2nd",
+			args: args{
+				resource: resource.NewQuantity(int64(1024*1024*1024), resource.DecimalSI),
+			},
+			want: "256MB",
+		},
+		{
+			name: "3rd",
+			args: args{
+				resource: resource.NewQuantity(int64(1024*1024), resource.DecimalSI),
+			},
+			want: "128MB",
+		},
+		{
+			name: "4th",
+			args: args{
+				resource: nil,
+			},
+			want: "128MB",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := GetSharedBufferSizeForPostgres(tt.args.resource); got != tt.want {
+				t.Errorf("GetSharedBufferSizeForPostgres() = %v, want %v", got, tt.want)
 			}
 		})
 	}
