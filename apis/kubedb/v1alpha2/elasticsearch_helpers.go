@@ -209,21 +209,70 @@ func (e *Elasticsearch) MasterStatefulSetName() string {
 	if e.Spec.Topology.Master.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.Master.Suffix)
 	}
-	return meta_util.NameWithSuffix(e.OffshootName(), ElasticsearchMasterNodeSuffix)
+	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeMaster))
 }
 
 func (e *Elasticsearch) DataStatefulSetName() string {
 	if e.Spec.Topology.Data.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.Data.Suffix)
 	}
-	return meta_util.NameWithSuffix(e.OffshootName(), ElasticsearchDataNodeSuffix)
+	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeData))
 }
 
 func (e *Elasticsearch) IngestStatefulSetName() string {
 	if e.Spec.Topology.Ingest.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.Ingest.Suffix)
 	}
-	return meta_util.NameWithSuffix(e.OffshootName(), ElasticsearchIngestNodeSuffix)
+	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeIngest))
+}
+
+func (e *Elasticsearch) DataContentStatefulSetName() string {
+	if e.Spec.Topology.DataContent.Suffix != "" {
+		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.DataContent.Suffix)
+	}
+	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeDataContent))
+}
+
+func (e *Elasticsearch) DataFrozenStatefulSetName() string {
+	if e.Spec.Topology.DataFrozen.Suffix != "" {
+		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.DataFrozen.Suffix)
+	}
+	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeDataFrozen))
+}
+
+func (e *Elasticsearch) DataColdStatefulSetName() string {
+	if e.Spec.Topology.DataCold.Suffix != "" {
+		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.DataCold.Suffix)
+	}
+	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeDataCold))
+}
+
+func (e *Elasticsearch) DataHotStatefulSetName() string {
+	if e.Spec.Topology.DataHot.Suffix != "" {
+		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.DataHot.Suffix)
+	}
+	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeDataHot))
+}
+
+func (e *Elasticsearch) DataWarmStatefulSetName() string {
+	if e.Spec.Topology.DataWarm.Suffix != "" {
+		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.DataWarm.Suffix)
+	}
+	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeDataWarm))
+}
+
+func (e *Elasticsearch) MLStatefulSetName() string {
+	if e.Spec.Topology.ML.Suffix != "" {
+		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.ML.Suffix)
+	}
+	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeML))
+}
+
+func (e *Elasticsearch) TransformStatefulSetName() string {
+	if e.Spec.Topology.Transform.Suffix != "" {
+		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.Transform.Suffix)
+	}
+	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeTransform))
 }
 
 func (e *Elasticsearch) InitialMasterNodes() []string {

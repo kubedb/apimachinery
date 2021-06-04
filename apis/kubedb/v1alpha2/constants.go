@@ -71,9 +71,6 @@ const (
 	ElasticsearchTransportPort                   = 9300
 	ElasticsearchTransportPortName               = "transport"
 	ElasticsearchMetricsPort                     = 9600
-	ElasticsearchIngestNodeSuffix                = "ingest"
-	ElasticsearchDataNodeSuffix                  = "data"
-	ElasticsearchMasterNodeSuffix                = "master"
 	ElasticsearchNodeRoleSet                     = "set"
 	ElasticsearchConfigDir                       = "/usr/share/elasticsearch/config"
 	ElasticsearchTempConfigDir                   = "/elasticsearch/temp-config"
