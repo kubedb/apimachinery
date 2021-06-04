@@ -62,25 +62,32 @@ func (e Elasticsearch) OffshootSelectors() map[string]string {
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
 }
-func (e Elasticsearch) NodeRoleSpecificAnnotationKey(roleType ElasticsearchNodeRoleType) string {
+
+func (e Elasticsearch) NodeRoleSpecificLabelKey(roleType ElasticsearchNodeRoleType) string {
 	return kubedb.GroupName + "/role-" + string(roleType)
 }
 
 func (e Elasticsearch) MasterSelectors() map[string]string {
 	selectors := e.OffshootSelectors()
-	selectors[ElasticsearchNodeRoleMaster] = ElasticsearchNodeRoleSet
+	selectors[e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeMaster)] = ElasticsearchNodeRoleSet
 	return selectors
 }
 
 func (e Elasticsearch) DataSelectors() map[string]string {
 	selectors := e.OffshootSelectors()
-	selectors[ElasticsearchNodeRoleData] = ElasticsearchNodeRoleSet
+	selectors[e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeData)] = ElasticsearchNodeRoleSet
 	return selectors
 }
 
 func (e Elasticsearch) IngestSelectors() map[string]string {
 	selectors := e.OffshootSelectors()
-	selectors[ElasticsearchNodeRoleIngest] = ElasticsearchNodeRoleSet
+	selectors[e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeIngest)] = ElasticsearchNodeRoleSet
+	return selectors
+}
+
+func (e Elasticsearch) NodeRoleSpecificSelectors(roleType ElasticsearchNodeRoleType) map[string]string {
+	selectors := e.OffshootSelectors()
+	selectors[e.NodeRoleSpecificLabelKey(roleType)] = ElasticsearchNodeRoleSet
 	return selectors
 }
 
