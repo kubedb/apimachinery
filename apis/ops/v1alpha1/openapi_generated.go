@@ -439,7 +439,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBOpsRequestList":                      schema_apimachinery_apis_ops_v1alpha1_MariaDBOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBOpsRequestSpec":                      schema_apimachinery_apis_ops_v1alpha1_MariaDBOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBOpsRequestStatus":                    schema_apimachinery_apis_ops_v1alpha1_MariaDBOpsRequestStatus(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBReplicaReadinessCriteria":            schema_apimachinery_apis_ops_v1alpha1_MariaDBReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBTLSSpec":                             schema_apimachinery_apis_ops_v1alpha1_MariaDBTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBUpgradeSpec":                         schema_apimachinery_apis_ops_v1alpha1_MariaDBUpgradeSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVerticalScalingSpec":                 schema_apimachinery_apis_ops_v1alpha1_MariaDBVerticalScalingSpec(ref),
@@ -20930,13 +20929,6 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBCustomConfigurationSpec(ref co
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"podTemplate": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
-						},
-					},
 					"configSecret": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
@@ -20958,7 +20950,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBCustomConfigurationSpec(ref co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -21204,17 +21196,6 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBOpsRequestStatus(ref common.Re
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_MariaDBReplicaReadinessCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MariaDBReplicaReadinessCriteria is the criteria for checking readiness of a MariaDB pod after updating, horizontal scaling etc.",
-				Type:        []string{"object"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_ops_v1alpha1_MariaDBTLSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21283,16 +21264,9 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBUpgradeSpec(ref common.Referen
 							Format:      "",
 						},
 					},
-					"readinessCriteria": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBReplicaReadinessCriteria"),
-						},
-					},
 				},
 			},
 		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBReplicaReadinessCriteria"},
 	}
 }
 
