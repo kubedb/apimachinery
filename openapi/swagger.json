@@ -32187,11 +32187,6 @@
         "inlineConfig": {
           "type": "string"
         },
-        "podTemplate": {
-          "description": "PodTemplate is an optional configuration for pods used to expose database",
-          "default": {},
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
-        },
         "removeCustomConfig": {
           "type": "boolean"
         }
@@ -32477,11 +32472,6 @@
         },
         "inlineConfig": {
           "type": "string"
-        },
-        "podTemplate": {
-          "description": "PodTemplate is an optional configuration for pods used to expose database",
-          "default": {},
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "removeCustomConfig": {
           "type": "boolean"
@@ -32875,11 +32865,28 @@
       "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresCustomConfigurationSpec": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "configSecret": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "inlineConfig": {
+          "type": "string"
+        },
+        "removeCustomConfig": {
+          "type": "boolean"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for Postgres horizontal scaling",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "replicas": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresOpsRequest": {
       "type": "object",
@@ -32971,9 +32978,13 @@
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
         },
+        "timeout": {
+          "description": "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
         "tls": {
           "description": "Specifies information necessary for configuring TLS",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresTLSSpec"
         },
         "type": {
           "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
@@ -33016,16 +33027,42 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReplicaReadinessCriteria": {
-      "description": "PostgresReplicaReadinessCriteria is the criteria for checking readiness of a Postgres pod after updating, horizontal scaling etc.",
-      "type": "object"
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresTLSSpec": {
+      "type": "object",
+      "properties": {
+        "certificates": {
+          "description": "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.CertificateSpec"
+          }
+        },
+        "clientAuthMode": {
+          "description": "ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])",
+          "type": "string"
+        },
+        "issuerRef": {
+          "description": "IssuerRef is a reference to a Certificate Issuer.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+        },
+        "remove": {
+          "description": "Remove tells operator to remove TLS configuration",
+          "type": "boolean"
+        },
+        "rotateCertificates": {
+          "description": "RotateCertificates tells operator to initiate certificate rotation",
+          "type": "boolean"
+        },
+        "sslMode": {
+          "description": "SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]",
+          "type": "string"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresUpgradeSpec": {
       "type": "object",
       "properties": {
-        "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReplicaReadinessCriteria"
-        },
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
           "type": "string"
@@ -33036,14 +33073,23 @@
       "description": "PostgresVerticalScalingSpec is the spec for Postgres vertical scaling",
       "type": "object",
       "properties": {
-        "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReplicaReadinessCriteria"
+        "exporter": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "postgres": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresVolumeExpansionSpec": {
       "description": "PostgresVolumeExpansionSpec is the spec for Postgres volume expansion",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "postgres": {
+          "description": "volume specification for Postgres",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLCustomConfigurationSpec": {
       "type": "object"
