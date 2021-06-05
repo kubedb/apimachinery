@@ -267,6 +267,10 @@ func (m *MariaDB) GetCertSecretName(alias MariaDBCertificateAlias) string {
 	return m.CertificateName(alias)
 }
 
+func (m *MariaDB) AuthSecretName() string {
+	return meta_util.NameWithSuffix(m.Name, "auth")
+}
+
 func (m *MariaDB) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
