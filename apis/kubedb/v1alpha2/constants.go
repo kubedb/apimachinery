@@ -204,6 +204,8 @@ const (
 	MariaDBInitDBMountPath              = "/docker-entrypoint-initdb.d"
 	MariaDBCustomConfigMountPath        = "/etc/percona-server.conf.d/"
 	MariaDBClusterCustomConfigMountPath = "/etc/percona-xtradb-cluster.conf.d/"
+	MariaDBTLSConfigCustom              = "custom"
+	MariaDBInitContainerName            = "mariadb-init"
 
 	// =========================== PostgreSQL Constants ============================
 	PostgresDatabasePortName       = "db"
