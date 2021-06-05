@@ -244,9 +244,9 @@ func (in *ElasticsearchOpsRequestSpec) DeepCopyInto(out *ElasticsearchOpsRequest
 		*out = new(RestartSpec)
 		**out = **in
 	}
-	if in.TimeoutSeconds != nil {
-		in, out := &in.TimeoutSeconds, &out.TimeoutSeconds
-		*out = new(int32)
+	if in.Timeout != nil {
+		in, out := &in.Timeout, &out.Timeout
+		*out = new(metav1.Duration)
 		**out = **in
 	}
 	return

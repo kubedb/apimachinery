@@ -20347,11 +20347,10 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestSpec(ref commo
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
-					"timeoutSeconds": {
+					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 				},
@@ -20359,7 +20358,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestSpec(ref commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 

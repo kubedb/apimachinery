@@ -31713,10 +31713,9 @@
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
         },
-        "timeoutSeconds": {
+        "timeout": {
           "description": "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
-          "type": "integer",
-          "format": "int32"
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "tls": {
           "description": "Specifies information necessary for configuring TLS",
