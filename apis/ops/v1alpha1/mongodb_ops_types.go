@@ -72,7 +72,7 @@ type MongoDBOpsRequestSpec struct {
 	// Specifies the Readiness Criteria
 	ReadinessCriteria *MongoDBReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,10,opt,name=readinessCriteria"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
-	TimeoutSeconds *int32 `json:"timeoutSeconds,omitempty" protobuf:"varint,11,opt,name=timeoutSeconds"`
+	Timeout *metav1.Duration `json:"timeout,omitempty" protobuf:"bytes,11,opt,name=timeout"`
 }
 
 // MongoDBReplicaReadinessCriteria is the criteria for checking readiness of a MongoDB pod

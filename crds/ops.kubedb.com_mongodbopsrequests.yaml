@@ -152,9 +152,8 @@ spec:
               type: object
             restart:
               type: object
-            timeoutSeconds:
-              format: int32
-              type: integer
+            timeout:
+              type: string
             tls:
               properties:
                 certificates:
