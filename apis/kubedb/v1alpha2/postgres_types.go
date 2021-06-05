@@ -170,7 +170,6 @@ type PostgreLeaderElectionConfig struct {
 type PostgresCertificateAlias string
 
 const (
-	PostgresCACert              PostgresCertificateAlias = "ca"
 	PostgresServerCert          PostgresCertificateAlias = "server"
 	PostgresClientCert          PostgresCertificateAlias = "client"
 	PostgresArchiverCert        PostgresCertificateAlias = "archiver"

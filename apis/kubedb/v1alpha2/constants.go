@@ -234,13 +234,17 @@ const (
 	PostgresLastWalReplayLSN      = "pg_last_wal_replay_lsn"
 	PostgresWalLSNDiff            = "pg_wal_lsn_diff"
 
-	PostgresKeyFileSecretSuffix       = "key"
-	PostgresPEMSecretSuffix           = "pem"
-	PostgresDefaultUsername           = "postgres"
-	PostgresPgCoordinatorStatus       = "Coordinator/Status"
-	PostgresPgCoordinatorStatusPause  = "Pause"
+	PostgresKeyFileSecretSuffix = "key"
+	PostgresPEMSecretSuffix     = "pem"
+	PostgresDefaultUsername     = "postgres"
+	PostgresPgCoordinatorStatus = "Coordinator/Status"
+	// to pause the failover for postgres. this is helpful for ops request
+	PostgresPgCoordinatorStatusPause = "Pause"
+	// to resume the failover for postgres. this is helpful for ops request
 	PostgresPgCoordinatorStatusResume = "Resume"
 
+	// when we need to resume pg-coordinator as non transferable we are going to set this state.
+	// this is useful when we have set a node as primary and you don't want other node rather then this node to become primary.
 	PostgresPgCoordinatorStatusResumeNonTransferable = "NonTransferableResume"
 
 	// =========================== ProxySQL Constants ============================
