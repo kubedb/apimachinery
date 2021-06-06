@@ -1459,9 +1459,9 @@ func (in *MongoDBOpsRequestSpec) DeepCopyInto(out *MongoDBOpsRequestSpec) {
 		*out = new(MongoDBReplicaReadinessCriteria)
 		**out = **in
 	}
-	if in.TimeoutSeconds != nil {
-		in, out := &in.TimeoutSeconds, &out.TimeoutSeconds
-		*out = new(int32)
+	if in.Timeout != nil {
+		in, out := &in.Timeout, &out.Timeout
+		*out = new(metav1.Duration)
 		**out = **in
 	}
 	return

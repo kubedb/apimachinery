@@ -597,7 +597,7 @@ message MongoDBOpsRequestSpec {
   optional MongoDBReplicaReadinessCriteria readinessCriteria = 10;
 
   // Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
-  optional int32 timeoutSeconds = 11;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration timeout = 11;
 }
 
 // MongoDBOpsRequestStatus is the status for MongoDBOpsRequest
