@@ -25,8 +25,8 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	"github.com/Masterminds/semver/v3"
 	"gomodules.xyz/pointer"
-	"gomodules.xyz/version"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -535,9 +535,9 @@ func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion) []string {
 		sslArgs = fmt.Sprintf("--tls --tlsCAFile=%v/%v --tlsCertificateKeyFile=%v/%v",
 			MongoCertDirectory, TLSCACertFileName, MongoCertDirectory, MongoClientFileName)
 
-		breakingVer, _ := version.NewVersion("4.1")
-		exceptionVer, _ := version.NewVersion("4.1.4")
-		currentVer, err := version.NewVersion(mgVersion.Spec.Version)
+		breakingVer, _ := semver.NewVersion("4.1")
+		exceptionVer, _ := semver.NewVersion("4.1.4")
+		currentVer, err := semver.NewVersion(mgVersion.Spec.Version)
 		if err != nil {
 			panic(fmt.Errorf("MongoDB %s/%s: unable to parse version. reason: %s", m.Namespace, m.Name, err.Error()))
 		}
