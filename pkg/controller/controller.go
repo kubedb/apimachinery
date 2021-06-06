@@ -63,6 +63,8 @@ type Controller struct {
 	Mapper meta.RESTMapper
 	// Event Recorder
 	Recorder record.EventRecorder
+	// Audit Event Publisher
+	Auditor cache.ResourceEventHandler
 }
 
 type Config struct {
