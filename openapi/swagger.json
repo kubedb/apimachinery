@@ -29281,6 +29281,9 @@
         "ingest"
       ],
       "properties": {
+        "coordinating": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
+        },
         "data": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
         },
