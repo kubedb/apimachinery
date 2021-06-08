@@ -77,7 +77,7 @@ type MySQLVersionSpec struct {
 	// +optional
 	Router MySQLVersionRouter `json:"router" protobuf:"bytes,11,opt,name=router"`
 	// +optional
-	RouterInitContainerImage MySQLVersionRouterInitContainer `json:"routerInitContainer,omitempty" protobuf:"bytes,12,opt,name=routerInitContainer"`
+	RouterInitContainer MySQLVersionRouterInitContainer `json:"routerInitContainer,omitempty" protobuf:"bytes,12,opt,name=routerInitContainer"`
 }
 
 // MySQLVersionDatabase is the MySQL Database image

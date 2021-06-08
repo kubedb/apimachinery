@@ -334,3 +334,6 @@ func (m *MySQL) MySQLTLSArgs() []string {
 	}
 	return tlsArgs
 }
+func (m *MySQL) GetRouterName() string {
+	return fmt.Sprintf("%s-router", m.Name)
+}

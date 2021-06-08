@@ -162,6 +162,8 @@ const (
 	// =========================== MySQL Constants ============================
 	MySQLMetricsExporterConfigSecretSuffix = "metrics-exporter-config"
 	MySQLDatabasePortName                  = "db"
+	MySQLRouterReadWritePortName           = "read-write"
+	MySQLRouterReadOnlyPortName            = "read-only"
 	MySQLPrimaryServicePortName            = "primary"
 	MySQLStandbyServicePortName            = "standby"
 	MySQLDatabasePort                      = 3306
@@ -179,6 +181,8 @@ const (
 	MySQLTLSConfigTrue       = "true"
 	MySQLTLSConfigFalse      = "false"
 	MySQLTLSConfigPreferred  = "preferred"
+
+	MysqlRouterContainerName = "mysql-router"
 
 	// =========================== PerconaXtraDB Constants ============================
 	PerconaXtraDBClusterRecommendedVersion    = "5.7"
