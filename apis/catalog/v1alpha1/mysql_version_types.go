@@ -76,6 +76,8 @@ type MySQLVersionSpec struct {
 	// Router image
 	// +optional
 	Router MySQLVersionRouter `json:"router" protobuf:"bytes,11,opt,name=router"`
+	// +optional
+	RouterInitContainerImage MySQLVersionRouterInitContainer `json:"routerInitContainer,omitempty" protobuf:"bytes,12,opt,name=routerInitContainer"`
 }
 
 // MySQLVersionDatabase is the MySQL Database image
@@ -96,6 +98,11 @@ type MySQLVersionInitContainer struct {
 // MySQLVersionRouter is the MySQL Router lightweight middleware
 //that provides transparent routing between your application and back-end MySQL Servers
 type MySQLVersionRouter struct {
+	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
+}
+
+// MySQLVersionRouterInitContainer is mysql router init container
+type MySQLVersionRouterInitContainer struct {
 	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
 }
 

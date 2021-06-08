@@ -28438,6 +28438,19 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionRouterInitContainer": {
+      "description": "MySQLVersionRouterInitContainer is mysql router init container",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionSpec": {
       "description": "MySQLVersionSpec is the spec for MySQL version",
       "type": "object",
@@ -28488,6 +28501,10 @@
           "description": "Router image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionRouter"
+        },
+        "routerInitContainer": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionRouterInitContainer"
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",

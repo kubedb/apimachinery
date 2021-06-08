@@ -52,7 +52,21 @@ func (m MySQL) OffshootSelectors() map[string]string {
 		meta_util.NameLabelKey:      m.ResourceFQN(),
 		meta_util.InstanceLabelKey:  m.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
+		"mysql.kubedb.com/node.db":  "set",
 	}
+}
+func (m MySQL) RouterOffshootSelectors() map[string]string {
+	return map[string]string{
+		meta_util.NameLabelKey:         m.ResourceFQN(),
+		meta_util.InstanceLabelKey:     m.Name,
+		meta_util.ManagedByLabelKey:    kubedb.GroupName,
+		"mysql.kubedb.com/node.router": "set",
+	}
+}
+func (m MySQL) RouterOffshootLabels() map[string]string {
+	out := m.RouterOffshootSelectors()
+	out[meta_util.ComponentLabelKey] = ComponentDatabase
+	return meta_util.FilterKeys(kubedb.GroupName, out, m.Labels)
 }
 
 func (m MySQL) OffshootLabels() map[string]string {
