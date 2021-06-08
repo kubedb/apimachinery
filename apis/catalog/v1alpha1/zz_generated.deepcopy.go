@@ -957,7 +957,7 @@ func (in *MySQLVersionSpec) DeepCopyInto(out *MySQLVersionSpec) {
 	in.UpgradeConstraints.DeepCopyInto(&out.UpgradeConstraints)
 	in.Stash.DeepCopyInto(&out.Stash)
 	out.Router = in.Router
-	out.RouterInitContainerImage = in.RouterInitContainerImage
+	out.RouterInitContainer = in.RouterInitContainer
 	return
 }
 
