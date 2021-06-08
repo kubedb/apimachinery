@@ -433,6 +433,11 @@ message MySQLVersionRouter {
   optional string image = 1;
 }
 
+// MySQLVersionRouterInitContainer is mysql router init container
+message MySQLVersionRouterInitContainer {
+  optional string image = 1;
+}
+
 // MySQLVersionSpec is the spec for MySQL version
 message MySQLVersionSpec {
   // Version
@@ -470,6 +475,9 @@ message MySQLVersionSpec {
   // Router image
   // +optional
   optional MySQLVersionRouter router = 11;
+
+  // +optional
+  optional MySQLVersionRouterInitContainer routerInitContainer = 12;
 }
 
 // +kubebuilder:object:root=true
