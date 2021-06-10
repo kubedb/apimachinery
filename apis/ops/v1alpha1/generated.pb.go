@@ -21,20 +21,22 @@ package v1alpha1
 
 import (
 	fmt "fmt"
-	io "io"
-	math "math"
-	math_bits "math/bits"
-	reflect "reflect"
-	strings "strings"
 
-	kubedb_dev_apimachinery_apis_kubedb_v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	io "io"
 
 	proto "github.com/gogo/protobuf/proto"
 	github_com_gogo_protobuf_sortkeys "github.com/gogo/protobuf/sortkeys"
 	v1 "k8s.io/api/core/v1"
 	resource "k8s.io/apimachinery/pkg/api/resource"
 	v11 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	math "math"
+	math_bits "math/bits"
+	reflect "reflect"
+	strings "strings"
+
 	v12 "kmodules.xyz/client-go/api/v1"
+	kubedb_dev_apimachinery_apis_kubedb_v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.

@@ -31,6 +31,11 @@ import (
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	serializer "k8s.io/apimachinery/pkg/runtime/serializer"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	configv1alpha1 "kubedb.dev/apimachinery/apis/config/v1alpha1"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 )
 
 var Scheme = runtime.NewScheme()
