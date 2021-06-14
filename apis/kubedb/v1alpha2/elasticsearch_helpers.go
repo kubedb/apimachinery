@@ -789,3 +789,38 @@ func getElasticsearchUser(userList map[string]ElasticsearchUserSpec, username st
 	userSpec := userList[username]
 	return &userSpec, nil
 }
+
+// ToMap returns ClusterTopology in a Map
+func (esTopology *ElasticsearchClusterTopology) ToMap() map[ElasticsearchNodeRoleType]ElasticsearchNode {
+	topology := make(map[ElasticsearchNodeRoleType]ElasticsearchNode)
+	topology[ElasticsearchNodeRoleTypeMaster] = esTopology.Master
+	topology[ElasticsearchNodeRoleTypeIngest] = esTopology.Ingest
+	if esTopology.Data != nil {
+		topology[ElasticsearchNodeRoleTypeData] = *esTopology.Data
+	}
+	if esTopology.DataHot != nil {
+		topology[ElasticsearchNodeRoleTypeDataHot] = *esTopology.DataHot
+	}
+	if esTopology.DataWarm != nil {
+		topology[ElasticsearchNodeRoleTypeDataWarm] = *esTopology.DataWarm
+	}
+	if esTopology.DataCold != nil {
+		topology[ElasticsearchNodeRoleTypeDataCold] = *esTopology.DataCold
+	}
+	if esTopology.DataFrozen != nil {
+		topology[ElasticsearchNodeRoleTypeDataFrozen] = *esTopology.DataFrozen
+	}
+	if esTopology.DataContent != nil {
+		topology[ElasticsearchNodeRoleTypeDataContent] = *esTopology.DataContent
+	}
+	if esTopology.ML != nil {
+		topology[ElasticsearchNodeRoleTypeML] = *esTopology.ML
+	}
+	if esTopology.Transform != nil {
+		topology[ElasticsearchNodeRoleTypeTransform] = *esTopology.Transform
+	}
+	if esTopology.Coordinating != nil {
+		topology[ElasticsearchNodeRoleTypeCoordinating] = *esTopology.Coordinating
+	}
+	return topology
+}
