@@ -29,7 +29,7 @@ require (
 	kmodules.xyz/offshoot-api v0.0.0-20210504040651-7951e351f0f5
 	kmodules.xyz/webhook-runtime v0.0.0-20210504042742-3a9911e3dcdc
 	sigs.k8s.io/yaml v1.2.0
-	stash.appscode.dev/apimachinery v0.13.1-0.20210605201829-a382bbe2f22a
+	stash.appscode.dev/apimachinery v0.14.0
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d
