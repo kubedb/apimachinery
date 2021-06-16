@@ -29278,12 +29278,28 @@
       "type": "object",
       "required": [
         "master",
-        "data",
         "ingest"
       ],
       "properties": {
+        "coordinating": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
+        },
         "data": {
-          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
+        },
+        "dataCold": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
+        },
+        "dataContent": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
+        },
+        "dataFrozen": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
+        },
+        "dataHot": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
+        },
+        "dataWarm": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
         },
         "ingest": {
@@ -29292,6 +29308,12 @@
         },
         "master": {
           "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
+        },
+        "ml": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
+        },
+        "transform": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode"
         }
       }
