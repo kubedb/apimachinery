@@ -5,31 +5,32 @@ go 1.16
 require (
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/appscode/docker-registry-client v0.0.0-20180426150142-1bb02bb202b0
-	github.com/evanphx/json-patch v4.9.0+incompatible
+	github.com/evanphx/json-patch v4.11.0+incompatible
 	github.com/go-openapi/spec v0.19.5
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/gofuzz v1.2.0
-	github.com/jetstack/cert-manager v1.4.0-beta.0
+	github.com/jetstack/cert-manager v1.4.0
 	github.com/json-iterator/go v1.1.10
 	github.com/pkg/errors v0.9.1
+	go.bytebuilders.dev/audit v0.0.7
 	gomodules.xyz/pointer v0.0.0-20201105071923-daf60fa55209
 	gomodules.xyz/runtime v0.2.0
 	gomodules.xyz/stow v0.2.4
 	gomodules.xyz/x v0.0.5
-	k8s.io/api v0.21.0
-	k8s.io/apiextensions-apiserver v0.21.0
-	k8s.io/apimachinery v0.21.0
-	k8s.io/client-go v0.21.0
+	k8s.io/api v0.21.1
+	k8s.io/apiextensions-apiserver v0.21.1
+	k8s.io/apimachinery v0.21.1
+	k8s.io/client-go v0.21.1
 	k8s.io/klog/v2 v2.8.0
 	k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7
-	kmodules.xyz/client-go v0.0.0-20210614094429-affdb80e35c8
-	kmodules.xyz/crd-schema-fuzz v0.0.0-20210503192455-da44af375c4c
-	kmodules.xyz/custom-resources v0.0.0-20210605111625-741fcb992541
-	kmodules.xyz/monitoring-agent-api v0.0.0-20210504040241-261c2428d207
-	kmodules.xyz/offshoot-api v0.0.0-20210504040651-7951e351f0f5
-	kmodules.xyz/webhook-runtime v0.0.0-20210504042742-3a9911e3dcdc
+	kmodules.xyz/client-go v0.0.0-20210617233340-13d22e91512b
+	kmodules.xyz/crd-schema-fuzz v0.0.0-20210618002152-fae23aef5fb4
+	kmodules.xyz/custom-resources v0.0.0-20210618003440-c6bb400da153
+	kmodules.xyz/monitoring-agent-api v0.0.0-20210618110729-9cd872c66513
+	kmodules.xyz/offshoot-api v0.0.0-20210618005544-5217a24765da
+	kmodules.xyz/webhook-runtime v0.0.0-20210618013329-0accb929102b
 	sigs.k8s.io/yaml v1.2.0
-	stash.appscode.dev/apimachinery v0.14.0
+	stash.appscode.dev/apimachinery v0.14.1-0.20210618025054-0cae462d7e04
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d
@@ -116,21 +117,21 @@ replace google.golang.org/grpc => google.golang.org/grpc v1.27.1
 
 replace helm.sh/helm/v3 => github.com/kubepack/helm/v3 v3.1.0-rc.1.0.20210503022716-7e2d4913a125
 
-replace k8s.io/api => k8s.io/api v0.21.0
+replace k8s.io/api => k8s.io/api v0.21.1
 
-replace k8s.io/apimachinery => github.com/kmodules/apimachinery v0.21.1-rc.0.0.20210405112358-ad4c2289ba4c
+replace k8s.io/apimachinery => github.com/kmodules/apimachinery v0.21.2-rc.0.0.20210617231004-332981b97d2d
 
-replace k8s.io/apiserver => github.com/kmodules/apiserver v0.21.1-0.20210427013338-53dee545b83c
+replace k8s.io/apiserver => github.com/kmodules/apiserver v0.21.2-0.20210617231348-daadbf0c8d5e
 
-replace k8s.io/cli-runtime => k8s.io/cli-runtime v0.21.0
+replace k8s.io/cli-runtime => k8s.io/cli-runtime v0.21.1
 
-replace k8s.io/client-go => k8s.io/client-go v0.21.0
+replace k8s.io/client-go => k8s.io/client-go v0.21.1
 
-replace k8s.io/component-base => k8s.io/component-base v0.21.0
+replace k8s.io/component-base => k8s.io/component-base v0.21.1
 
 replace k8s.io/kube-openapi => k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7
 
-replace k8s.io/kubernetes => github.com/kmodules/kubernetes v1.22.0-alpha.0.0.20210427080452-22d2e66bae50
+replace k8s.io/kubernetes => github.com/kmodules/kubernetes v1.22.0-alpha.0.0.20210617232219-a432af45d932
 
 replace k8s.io/utils => k8s.io/utils v0.0.0-20201110183641-67b214c5f920
 
