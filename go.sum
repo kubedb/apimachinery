@@ -1224,5 +1224,5 @@ sigs.k8s.io/yaml v1.2.0/go.mod h1:yfXDCHCao9+ENCvLSE62v9VSji2MKu5jeNfTrofGhJc=
 software.sslmate.com/src/go-pkcs12 v0.0.0-20180114231543-2291e8f0f237/go.mod h1:/xvNRWUqm0+/ZMiF4EX00vrSCMsE4/NHb+Pt3freEeQ=
 software.sslmate.com/src/go-pkcs12 v0.0.0-20200830195227-52f69702a001/go.mod h1:/xvNRWUqm0+/ZMiF4EX00vrSCMsE4/NHb+Pt3freEeQ=
 sourcegraph.com/sourcegraph/appdash v0.0.0-20190731080439-ebfcffb1b5c0/go.mod h1:hI742Nqp5OhwiqlzhgfbWU4mW4yO10fP+LoT9WOswdU=
-stash.appscode.dev/apimachinery v0.14.1-0.20210618025054-0cae462d7e04 h1:7cnkwSU9ACHkN+qHv15EKdftXGqHyK8G5fJ+aVUSvk4=
-stash.appscode.dev/apimachinery v0.14.1-0.20210618025054-0cae462d7e04/go.mod h1:/Ys7EVp/ved+2xkfhqMbRpaJtI3p/KpCPRLJ6ZgDddA=
+stash.appscode.dev/apimachinery v0.14.1 h1:HU6ediYchu138WckGEN+uXF7l99kd9bAbqBeZFnQLNk=
+stash.appscode.dev/apimachinery v0.14.1/go.mod h1:/Ys7EVp/ved+2xkfhqMbRpaJtI3p/KpCPRLJ6ZgDddA=
