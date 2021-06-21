@@ -298,7 +298,7 @@ const (
 	// used for Databases that report status OK (also implies that we can connect to it)
 	DatabaseReady = "Ready"
 	// used for database that reports ok when all the instances are available
-	ServerReday = "ServerReady"
+	ServerReady = "ServerReady"
 	// used for Databases that are paused
 	DatabasePaused = "Paused"
 	// used for Databases that are halted

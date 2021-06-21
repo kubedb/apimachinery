@@ -138,6 +138,7 @@ const (
 	MySQLServerCert          MySQLCertificateAlias = "server"
 	MySQLClientCert          MySQLCertificateAlias = "client"
 	MySQLMetricsExporterCert MySQLCertificateAlias = "metrics-exporter"
+	MySQLRouterCert 		 MySQLCertificateAlias = "router"
 )
 
 type MySQLClusterTopology struct {
