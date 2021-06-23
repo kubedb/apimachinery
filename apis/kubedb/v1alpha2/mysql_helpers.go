@@ -52,17 +52,19 @@ func (m MySQL) OffshootSelectors() map[string]string {
 		meta_util.NameLabelKey:      m.ResourceFQN(),
 		meta_util.InstanceLabelKey:  m.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
-		"mysql.kubedb.com/node.db":  "set",
+		MySQLNodeRoleDB:             MySQLNodeRoleSet,
 	}
 }
+
 func (m MySQL) RouterOffshootSelectors() map[string]string {
 	return map[string]string{
-		meta_util.NameLabelKey:         m.ResourceFQN(),
-		meta_util.InstanceLabelKey:     m.Name,
-		meta_util.ManagedByLabelKey:    kubedb.GroupName,
-		"mysql.kubedb.com/node.router": "set",
+		meta_util.NameLabelKey:      m.ResourceFQN(),
+		meta_util.InstanceLabelKey:  m.Name,
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
+		MySQLNodeRoleRouter:         MySQLNodeRoleSet,
 	}
 }
+
 func (m MySQL) RouterOffshootLabels() map[string]string {
 	out := m.RouterOffshootSelectors()
 	out[meta_util.ComponentLabelKey] = ComponentDatabase
@@ -111,7 +113,7 @@ func (m MySQL) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
 }
 func (m MySQL) RouterPrimaryServiceDNS() string {
-	return fmt.Sprintf("%s.%s.svc", "router", m.Namespace)
+	return fmt.Sprintf("%s.%s.svc", ResourceRouterMySQL, m.Namespace)
 }
 func (m MySQL) Hosts() []string {
 	replicas := 1

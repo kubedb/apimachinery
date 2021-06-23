@@ -167,6 +167,8 @@ const (
 	MySQLPrimaryServicePortName            = "primary"
 	MySQLStandbyServicePortName            = "standby"
 	MySQLDatabasePort                      = 3306
+	MySQLRouterReadWritePort               = 6446
+	MySQLRouterReadOnlyPort                = 6447
 	MySQLGroupComPort                      = 33060
 	MySQLMaxGroupMembers                   = 9
 	// The recommended MySQL server version for group replication (GR)
@@ -182,7 +184,13 @@ const (
 	MySQLTLSConfigFalse      = "false"
 	MySQLTLSConfigPreferred  = "preferred"
 
-	MysqlRouterContainerName = "mysql-router"
+	MySQLRouterContainerName = "mysql-router"
+
+	MySQLNodeRoleDB     = ResourceSingularMySQL + "." + kubedb.GroupName + "/" + "node.db"
+	MySQLNodeRoleRouter = ResourceSingularMySQL + "." + kubedb.GroupName + "/" + "node.router"
+	MySQLNodeRoleSet    = "set"
+
+	ResourceRouterMySQL = "router"
 
 	// =========================== PerconaXtraDB Constants ============================
 	PerconaXtraDBClusterRecommendedVersion    = "5.7"
