@@ -30950,6 +30950,11 @@
           "type": "integer",
           "format": "int32"
         },
+        "resources": {
+          "description": "Compute Resources required by pg-coordinator container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "retryPeriodSeconds": {
           "description": "RetryPeriod is the duration in second the LeaderElector clients should wait between tries of actions. Normally, LeaseDuration / 3. Default 2 Deprecated",
           "type": "integer",
