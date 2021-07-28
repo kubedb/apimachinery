@@ -29013,6 +29013,19 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionCoordinator": {
+      "description": "RedisVersionCoordinator is the Redis coordinator image",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionDatabase": {
       "description": "RedisVersionDatabase is the Redis Database image",
       "type": "object",
@@ -29028,6 +29041,19 @@
     },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionExporter": {
       "description": "RedisVersionExporter is the image for the Redis exporter",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionInitContainer": {
+      "description": "RedisVersionInitContainer is the Redis init container image",
       "type": "object",
       "required": [
         "image"
@@ -29095,6 +29121,11 @@
         "podSecurityPolicies"
       ],
       "properties": {
+        "coordinator": {
+          "description": "Coordinator Image",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionCoordinator"
+        },
         "db": {
           "description": "Database Image",
           "default": {},
@@ -29108,6 +29139,11 @@
           "description": "Exporter Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionExporter"
+        },
+        "initContainer": {
+          "description": "init container image",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionInitContainer"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
@@ -31403,6 +31439,19 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSentinelRef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the refereed sentinel",
+          "type": "string"
+        },
+        "namespace": {
+          "description": "Namespace where refereed sentinel has been deployed",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSpec": {
       "type": "object",
       "required": [
@@ -31451,6 +31500,9 @@
           "description": "Number of instances to deploy for a Redis database.",
           "type": "integer",
           "format": "int32"
+        },
+        "sentinelRef": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSentinelRef"
         },
         "serviceTemplates": {
           "description": "ServiceTemplates is an optional configuration for services used to expose database",
