@@ -20611,6 +20611,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchSpec(ref common.Refer
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"secureConfigSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecureConfigSecret is an optional field to provide secure settings for database.\n\t- Ref: https://www.elastic.co/guide/en/elasticsearch/reference/7.14/secure-settings.html\nSecure settings are store at \"ES_CONFIG_DIR/elasticsearch.keystore\" file (contents are encoded with password), once the keystore created. Expects a k8s secret name with data format:\n\tdata:\n\t\tsettingKey: value\n\t\ts3.client.default.access_key: ACCESS_KEY\n\t\ts3.client.default.secret_key: SECRET_KEY",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
