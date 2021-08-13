@@ -95,7 +95,8 @@ type ElasticsearchSpec struct {
 	// once the keystore created.
 	// Expects a k8s secret name with data format:
 	//	data:
-	//		settingKey: value
+	//		key: value
+	//		password: KEYSTORE_PASSWORD
 	//		s3.client.default.access_key: ACCESS_KEY
 	//		s3.client.default.secret_key: SECRET_KEY
 	// +optional
