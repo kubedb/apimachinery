@@ -95,7 +95,6 @@ type Config struct {
 	NumThreads              int
 	EnableAnalytics         bool
 	AnalyticsClientID       string
-	WatchNamespace          string
 	EnableValidatingWebhook bool
 	EnableMutatingWebhook   bool
 }
