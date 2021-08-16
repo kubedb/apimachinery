@@ -61,7 +61,7 @@ type ElasticsearchSpec struct {
 	// Elasticsearch topology for node specification
 	Topology *ElasticsearchClusterTopology `json:"topology,omitempty" protobuf:"bytes,3,opt,name=topology"`
 
-	// To enable ssl in transport & http layer
+	// To enable ssl for http layer
 	EnableSSL bool `json:"enableSSL,omitempty" protobuf:"varint,4,opt,name=enableSSL"`
 
 	// disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user.

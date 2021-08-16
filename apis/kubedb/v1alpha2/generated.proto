@@ -223,7 +223,7 @@ message ElasticsearchSpec {
   // Elasticsearch topology for node specification
   optional ElasticsearchClusterTopology topology = 3;
 
-  // To enable ssl in transport & http layer
+  // To enable ssl for http layer
   optional bool enableSSL = 4;
 
   // disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user.
