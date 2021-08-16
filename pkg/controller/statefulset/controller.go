@@ -38,8 +38,14 @@ import (
 )
 
 type Controller struct {
-	*amc.Controller
 	*amc.Config
+
+	// Kubernetes client
+	Client kubernetes.Interface
+	// KubeDB client
+	DBClient db_cs.Interface
+	// Dynamic client
+	DynamicClient dynamic.Interface
 }
 
 func NewController(
@@ -49,12 +55,10 @@ func NewController(
 	dmClient dynamic.Interface,
 ) *Controller {
 	return &Controller{
-		Controller: &amc.Controller{
-			Client:        client,
-			DBClient:      dbClient,
-			DynamicClient: dmClient,
-		},
-		Config: config,
+		Config:        config,
+		Client:        client,
+		DBClient:      dbClient,
+		DynamicClient: dmClient,
 	}
 }
 

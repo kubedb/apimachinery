@@ -65,15 +65,6 @@ type Controller struct {
 	Recorder record.EventRecorder
 	// Audit Event Publisher
 	Auditor *auditlib.EventPublisher
-	// Only watch or reconcile objects in this namespace (usually for license reasons)
-	RestrictToNamespace string
-	// Secret
-	SecretInformer cache.SharedIndexInformer
-	SecretLister   corelisters.SecretLister
-	// StatefulSet Watcher
-	StsQueue    *queue.Worker
-	StsInformer cache.SharedIndexInformer
-	StsLister   appslister.StatefulSetLister
 }
 
 type Config struct {
@@ -87,6 +78,17 @@ type Config struct {
 	// External tool to initialize the database
 	Initializers Initializers
 
+	// Secret
+	SecretInformer cache.SharedIndexInformer
+	SecretLister   corelisters.SecretLister
+
+	// StatefulSet Watcher
+	StsQueue    *queue.Worker
+	StsInformer cache.SharedIndexInformer
+	StsLister   appslister.StatefulSetLister
+
+	// Only watch or reconcile objects in this namespace (usually for license reasons)
+	RestrictToNamespace     string
 	ResyncPeriod            time.Duration
 	ReadinessProbeInterval  time.Duration
 	MaxNumRequeues          int
