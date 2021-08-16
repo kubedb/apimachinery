@@ -29441,7 +29441,7 @@
           "type": "boolean"
         },
         "enableSSL": {
-          "description": "To enable ssl in transport \u0026 http layer",
+          "description": "To enable ssl for http layer",
           "type": "boolean"
         },
         "halted": {
