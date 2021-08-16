@@ -65,6 +65,8 @@ type Controller struct {
 	Recorder record.EventRecorder
 	// Audit Event Publisher
 	Auditor *auditlib.EventPublisher
+	// Only watch or reconcile objects in this namespace (usually for license reasons)
+	RestrictToNamespace string
 }
 
 type Config struct {
