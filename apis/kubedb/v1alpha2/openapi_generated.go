@@ -20562,7 +20562,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchSpec(ref common.Refer
 					},
 					"enableSSL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "To enable ssl in transport & http layer",
+							Description: "To enable ssl for http layer",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
