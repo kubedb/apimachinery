@@ -28340,6 +28340,19 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionCoordinator": {
+      "description": "MySQLVersionCoordinator is the image for coordinator",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionDatabase": {
       "description": "MySQLVersionDatabase is the MySQL Database image",
       "type": "object",
@@ -28464,6 +28477,11 @@
         "upgradeConstraints"
       ],
       "properties": {
+        "coordinator": {
+          "description": "Coordinator Image",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionCoordinator"
+        },
         "db": {
           "description": "Database Image",
           "default": {},

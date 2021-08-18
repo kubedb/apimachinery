@@ -407,6 +407,11 @@ message MySQLVersion {
   optional MySQLVersionSpec spec = 2;
 }
 
+// MySQLVersionCoordinator is the image for coordinator
+message MySQLVersionCoordinator {
+  optional string image = 1;
+}
+
 // MySQLVersionDatabase is the MySQL Database image
 message MySQLVersionDatabase {
   optional string image = 1;
@@ -459,6 +464,10 @@ message MySQLVersionSpec {
 
   // Exporter Image
   optional MySQLVersionExporter exporter = 4;
+
+  // Coordinator Image
+  // +optional
+  optional MySQLVersionCoordinator coordinator = 13;
 
   // ReplicationModeDetector Image
   optional ReplicationModeDetector replicationModeDetector = 5;

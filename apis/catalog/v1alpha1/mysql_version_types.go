@@ -59,6 +59,9 @@ type MySQLVersionSpec struct {
 	DB MySQLVersionDatabase `json:"db" protobuf:"bytes,3,opt,name=db"`
 	// Exporter Image
 	Exporter MySQLVersionExporter `json:"exporter" protobuf:"bytes,4,opt,name=exporter"`
+	// Coordinator Image
+	// +optional
+	Coordinator MySQLVersionCoordinator `json:"coordinator" protobuf:"bytes,13,opt,name=coordinator"`
 	// ReplicationModeDetector Image
 	ReplicationModeDetector ReplicationModeDetector `json:"replicationModeDetector" protobuf:"bytes,5,opt,name=replicationModeDetector"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
@@ -87,6 +90,11 @@ type MySQLVersionDatabase struct {
 
 // MySQLVersionExporter is the image for the MySQL exporter
 type MySQLVersionExporter struct {
+	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
+}
+
+// MySQLVersionCoordinator is the image for coordinator
+type MySQLVersionCoordinator struct {
 	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
 }
 
