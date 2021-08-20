@@ -108,7 +108,7 @@ type MariaDBCertificateAlias string
 
 const (
 	MariaDBServerCert          MariaDBCertificateAlias = "server"
-	MariaDBArchiverCert        MariaDBCertificateAlias = "archiver"
+	MariaDBClientCert          MariaDBCertificateAlias = "client"
 	MariaDBMetricsExporterCert MariaDBCertificateAlias = "metrics-exporter"
 )
 
