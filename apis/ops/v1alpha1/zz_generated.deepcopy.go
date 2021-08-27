@@ -477,13 +477,53 @@ func (in *ElasticsearchVolumeExpansionTopologySpec) DeepCopyInto(out *Elasticsea
 		x := (*in).DeepCopy()
 		*out = &x
 	}
+	if in.Ingest != nil {
+		in, out := &in.Ingest, &out.Ingest
+		x := (*in).DeepCopy()
+		*out = &x
+	}
 	if in.Data != nil {
 		in, out := &in.Data, &out.Data
 		x := (*in).DeepCopy()
 		*out = &x
 	}
-	if in.Ingest != nil {
-		in, out := &in.Ingest, &out.Ingest
+	if in.DataContent != nil {
+		in, out := &in.DataContent, &out.DataContent
+		x := (*in).DeepCopy()
+		*out = &x
+	}
+	if in.DataHot != nil {
+		in, out := &in.DataHot, &out.DataHot
+		x := (*in).DeepCopy()
+		*out = &x
+	}
+	if in.DataWarm != nil {
+		in, out := &in.DataWarm, &out.DataWarm
+		x := (*in).DeepCopy()
+		*out = &x
+	}
+	if in.DataCold != nil {
+		in, out := &in.DataCold, &out.DataCold
+		x := (*in).DeepCopy()
+		*out = &x
+	}
+	if in.DataFrozen != nil {
+		in, out := &in.DataFrozen, &out.DataFrozen
+		x := (*in).DeepCopy()
+		*out = &x
+	}
+	if in.ML != nil {
+		in, out := &in.ML, &out.ML
+		x := (*in).DeepCopy()
+		*out = &x
+	}
+	if in.Transform != nil {
+		in, out := &in.Transform, &out.Transform
+		x := (*in).DeepCopy()
+		*out = &x
+	}
+	if in.Coordinating != nil {
+		in, out := &in.Coordinating, &out.Coordinating
 		x := (*in).DeepCopy()
 		*out = &x
 	}

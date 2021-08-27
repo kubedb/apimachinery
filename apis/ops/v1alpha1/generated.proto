@@ -212,11 +212,27 @@ message ElasticsearchVolumeExpansionTopologySpec {
   // volume specification for master nodes
   optional k8s.io.apimachinery.pkg.api.resource.Quantity master = 1;
 
-  // volume specification for data nodes
-  optional k8s.io.apimachinery.pkg.api.resource.Quantity data = 2;
-
   // volume specification for ingest nodes
-  optional k8s.io.apimachinery.pkg.api.resource.Quantity ingest = 3;
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity ingest = 2;
+
+  // volume specification for data nodes
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity data = 3;
+
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity dataContent = 4;
+
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity dataHot = 5;
+
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity dataWarm = 6;
+
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity dataCold = 7;
+
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity dataFrozen = 8;
+
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity ml = 9;
+
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity transform = 10;
+
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity coordinating = 11;
 }
 
 message EtcdCustomConfiguration {

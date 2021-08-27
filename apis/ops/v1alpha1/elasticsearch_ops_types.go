@@ -141,10 +141,18 @@ type ElasticsearchVolumeExpansionSpec struct {
 type ElasticsearchVolumeExpansionTopologySpec struct {
 	// volume specification for master nodes
 	Master *resource.Quantity `json:"master,omitempty" protobuf:"bytes,1,opt,name=master"`
-	// volume specification for data nodes
-	Data *resource.Quantity `json:"data,omitempty" protobuf:"bytes,2,opt,name=data"`
 	// volume specification for ingest nodes
-	Ingest *resource.Quantity `json:"ingest,omitempty" protobuf:"bytes,3,opt,name=ingest"`
+	Ingest *resource.Quantity `json:"ingest,omitempty" protobuf:"bytes,2,opt,name=ingest"`
+	// volume specification for data nodes
+	Data         *resource.Quantity `json:"data,omitempty" protobuf:"bytes,3,opt,name=data"`
+	DataContent  *resource.Quantity `json:"dataContent,omitempty" protobuf:"bytes,4,opt,name=dataContent"`
+	DataHot      *resource.Quantity `json:"dataHot,omitempty" protobuf:"bytes,5,opt,name=dataHot"`
+	DataWarm     *resource.Quantity `json:"dataWarm,omitempty" protobuf:"bytes,6,opt,name=dataWarm"`
+	DataCold     *resource.Quantity `json:"dataCold,omitempty" protobuf:"bytes,7,opt,name=dataCold"`
+	DataFrozen   *resource.Quantity `json:"dataFrozen,omitempty" protobuf:"bytes,8,opt,name=dataFrozen"`
+	ML           *resource.Quantity `json:"ml,omitempty" protobuf:"bytes,9,opt,name=ml"`
+	Transform    *resource.Quantity `json:"transform,omitempty" protobuf:"bytes,10,opt,name=transform"`
+	Coordinating *resource.Quantity `json:"coordinating,omitempty" protobuf:"bytes,11,opt,name=coordinating"`
 }
 
 type ElasticsearchCustomConfigurationSpec struct {
