@@ -31637,8 +31637,32 @@
       "description": "ElasticsearchHorizontalScalingTopologySpec contains the horizontal scaling information in cluster topology mode",
       "type": "object",
       "properties": {
+        "coordinating": {
+          "type": "integer",
+          "format": "int32"
+        },
         "data": {
           "description": "Number of data nodes",
+          "type": "integer",
+          "format": "int32"
+        },
+        "dataCold": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dataContent": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dataFrozen": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dataHot": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dataWarm": {
           "type": "integer",
           "format": "int32"
         },
@@ -31649,6 +31673,14 @@
         },
         "master": {
           "description": "Number of master nodes",
+          "type": "integer",
+          "format": "int32"
+        },
+        "ml": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "transform": {
           "type": "integer",
           "format": "int32"
         }
@@ -31825,16 +31857,37 @@
       "description": "ElasticsearchVerticalScalingTopologySpec is the resource spec in the cluster topology mode",
       "type": "object",
       "properties": {
+        "coordinating": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "data": {
-          "description": "Resource spec for data nodes",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "dataCold": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "dataContent": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "dataFrozen": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "dataHot": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "dataWarm": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "ingest": {
-          "description": "Resource spec for ingest nodes",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "master": {
-          "description": "Resource spec for master nodes",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "ml": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "transform": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       }
