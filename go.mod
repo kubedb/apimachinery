@@ -13,6 +13,7 @@ require (
 	github.com/json-iterator/go v1.1.11
 	github.com/pkg/errors v0.9.1
 	go.bytebuilders.dev/audit v0.0.7
+	go.bytebuilders.dev/license-verifier v0.9.3 // indirect
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.2.0
 	gomodules.xyz/stow v0.2.4
@@ -23,13 +24,12 @@ require (
 	k8s.io/client-go v0.21.1
 	k8s.io/klog/v2 v2.8.0
 	k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7
-	kmodules.xyz/client-go v0.0.0-20210816193105-1158390a19cd
+	kmodules.xyz/client-go v0.0.0-20210827153326-54ead9c6225f
 	kmodules.xyz/crd-schema-fuzz v0.0.0-20210618002152-fae23aef5fb4
-	kmodules.xyz/custom-resources v0.0.0-20210812193424-1631fae03a1a
-	kmodules.xyz/monitoring-agent-api v0.0.0-20210618110729-9cd872c66513
+	kmodules.xyz/custom-resources v0.0.0-20210824055127-e5a3d2d6c161
+	kmodules.xyz/monitoring-agent-api v0.0.0-20210828012421-78a792a84818
 	kmodules.xyz/offshoot-api v0.0.0-20210804100837-d0388be3e60d
-	kmodules.xyz/resource-metadata v0.5.8-0.20210812062826-71d20972a852 // indirect
-	kmodules.xyz/webhook-runtime v0.0.0-20210716205500-e489faf01981
+	kmodules.xyz/webhook-runtime v0.0.0-20210804101750-5c602fd5cf06
 	sigs.k8s.io/yaml v1.2.0
 	stash.appscode.dev/apimachinery v0.14.2-0.20210715200631-5399637188c0
 )
