@@ -23,7 +23,7 @@ BIN      := apimachinery
 CRD_OPTIONS          ?= "crd:trivialVersions=true,preserveUnknownFields=false,maxDescLen=0,generateEmbeddedObjectMeta=true"
 # https://github.com/appscodelabs/gengo-builder
 CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.21
-API_GROUPS           ?= kubedb:v1alpha2 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1
+API_GROUPS           ?= kubedb:v1alpha1 kubedb:v1alpha2 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1
 
 # This version-strategy uses git tags to set the version string
 git_branch       := $(shell git rev-parse --abbrev-ref HEAD)
@@ -123,6 +123,22 @@ clientset:
 			"$(API_GROUPS)" \
 			--go-header-file "./hack/license/go.txt"
 
+.PHONY: gen-conversion
+gen-conversion:
+	rm -rf ./apis/kubedb/v1alpha1/zz_generated.conversion.go
+	@docker run --rm                                   \
+		-u $$(id -u):$$(id -g)                           \
+		-v /tmp:/.cache                                  \
+		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
+		-w $(DOCKER_REPO_ROOT)                           \
+		--env HTTP_PROXY=$(HTTP_PROXY)                   \
+		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
+		$(CODE_GENERATOR_IMAGE)                          \
+		/go/bin/conversion-gen --go-header-file ./hack/license/go.txt \
+			--input-dirs $(GO_PKG)/$(REPO)/apis/kubedb/v1alpha1 \
+			--extra-peer-dirs "kmodules.xyz/monitoring-agent-api/api/v1alpha1" \
+			-O zz_generated.conversion
+
 # Generate openapi schema
 .PHONY: openapi
 openapi: $(addprefix openapi-, $(subst :,_, $(API_GROUPS)))
@@ -203,6 +219,8 @@ label-crds: $(BUILD_DIRS)
 
 .PHONY: gen-crd-protos
 gen-crd-protos: $(addprefix gen-crd-protos-, $(subst :,_, $(API_GROUPS)))
+	@rm -rf apis/kubedb/v1alpha1/generated.pb.go
+	@rm -rf apis/kubedb/v1alpha1/generated.proto
 
 gen-crd-protos-%:
 	@echo "Generating protobuf for $(subst _,/,$*)"
