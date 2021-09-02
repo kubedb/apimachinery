@@ -403,6 +403,10 @@ golang.org/x/text/unicode/norm
 golang.org/x/text/width
 # golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba
 golang.org/x/time/rate
+# gomodules.xyz/encoding v0.0.2
+## explicit
+gomodules.xyz/encoding/json
+gomodules.xyz/encoding/json/types
 # gomodules.xyz/jsonpatch/v2 v2.2.0
 gomodules.xyz/jsonpatch/v2
 # gomodules.xyz/jsonpath v0.0.1
@@ -416,7 +420,7 @@ gomodules.xyz/pointer
 # gomodules.xyz/runtime v0.2.0
 ## explicit
 gomodules.xyz/runtime
-# gomodules.xyz/sets v0.1.0
+# gomodules.xyz/sets v0.2.0
 gomodules.xyz/sets
 # gomodules.xyz/stow v0.2.4
 ## explicit
@@ -1039,7 +1043,7 @@ k8s.io/utils/pointer
 k8s.io/utils/trace
 # kmodules.xyz/apiversion v0.2.0
 kmodules.xyz/apiversion
-# kmodules.xyz/client-go v0.0.0-20210827153326-54ead9c6225f
+# kmodules.xyz/client-go v0.0.0-20210831030638-b1d662179991
 ## explicit
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -1082,10 +1086,12 @@ kmodules.xyz/custom-resources/client/informers/externalversions/metrics/v1alpha1
 kmodules.xyz/custom-resources/client/listers/appcatalog/v1alpha1
 kmodules.xyz/custom-resources/client/listers/metrics/v1alpha1
 kmodules.xyz/custom-resources/crds
-# kmodules.xyz/monitoring-agent-api v0.0.0-20210828012421-78a792a84818
+# kmodules.xyz/monitoring-agent-api v0.0.0-20210902163558-0323c6034f70
 ## explicit
 kmodules.xyz/monitoring-agent-api/api/v1
+kmodules.xyz/monitoring-agent-api/api/v1alpha1
 # kmodules.xyz/objectstore-api v0.0.0-20210618005912-71f8a80f48f9
+## explicit
 kmodules.xyz/objectstore-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20210804100837-d0388be3e60d
 ## explicit
