@@ -225,7 +225,9 @@ func Convert_v1alpha2_ElasticsearchNode_To_v1alpha1_ElasticsearchNode(in *v1alph
 
 func Convert_v1alpha1_ElasticsearchStatus_To_v1alpha2_ElasticsearchStatus(in *ElasticsearchStatus, out *v1alpha2.ElasticsearchStatus, s conversion.Scope) error {
 	out.Phase = v1alpha2.DatabasePhase(in.Phase)
-	out.ObservedGeneration = in.ObservedGeneration.Generation()
+	if in.ObservedGeneration != nil {
+		out.ObservedGeneration = in.ObservedGeneration.Generation()
+	}
 	// WARNING: in.Reason requires manual conversion: does not exist in peer-type
 	return nil
 }
@@ -313,7 +315,9 @@ func Convert_v1alpha2_EtcdSpec_To_v1alpha1_EtcdSpec(in *v1alpha2.EtcdSpec, out *
 
 func Convert_v1alpha1_EtcdStatus_To_v1alpha2_EtcdStatus(in *EtcdStatus, out *v1alpha2.EtcdStatus, s conversion.Scope) error {
 	out.Phase = v1alpha2.DatabasePhase(in.Phase)
-	out.ObservedGeneration = in.ObservedGeneration.Generation()
+	if in.ObservedGeneration != nil {
+		out.ObservedGeneration = in.ObservedGeneration.Generation()
+	}
 	// WARNING: in.Reason requires manual conversion: does not exist in peer-type
 	return nil
 }
@@ -412,7 +416,9 @@ func Convert_v1alpha2_MariaDBSpec_To_v1alpha1_MariaDBSpec(in *v1alpha2.MariaDBSp
 
 func Convert_v1alpha1_MariaDBStatus_To_v1alpha2_MariaDBStatus(in *MariaDBStatus, out *v1alpha2.MariaDBStatus, s conversion.Scope) error {
 	out.Phase = v1alpha2.DatabasePhase(in.Phase)
-	out.ObservedGeneration = in.ObservedGeneration.Generation()
+	if in.ObservedGeneration != nil {
+		out.ObservedGeneration = in.ObservedGeneration.Generation()
+	}
 	// WARNING: in.Reason requires manual conversion: does not exist in peer-type
 	return nil
 }
@@ -483,7 +489,9 @@ func Convert_v1alpha2_MemcachedSpec_To_v1alpha1_MemcachedSpec(in *v1alpha2.Memca
 
 func Convert_v1alpha1_MemcachedStatus_To_v1alpha2_MemcachedStatus(in *MemcachedStatus, out *v1alpha2.MemcachedStatus, s conversion.Scope) error {
 	out.Phase = v1alpha2.DatabasePhase(in.Phase)
-	out.ObservedGeneration = in.ObservedGeneration.Generation()
+	if in.ObservedGeneration != nil {
+		out.ObservedGeneration = in.ObservedGeneration.Generation()
+	}
 	// WARNING: in.Reason requires manual conversion: does not exist in peer-type
 	return nil
 }
@@ -675,7 +683,9 @@ func Convert_v1alpha1_MongoDBReplicaSet_To_v1alpha2_MongoDBReplicaSet(in *MongoD
 
 func Convert_v1alpha1_MongoDBStatus_To_v1alpha2_MongoDBStatus(in *MongoDBStatus, out *v1alpha2.MongoDBStatus, s conversion.Scope) error {
 	out.Phase = v1alpha2.DatabasePhase(in.Phase)
-	out.ObservedGeneration = in.ObservedGeneration.Generation()
+	if in.ObservedGeneration != nil {
+		out.ObservedGeneration = in.ObservedGeneration.Generation()
+	}
 	// WARNING: in.Reason requires manual conversion: does not exist in peer-type
 	return nil
 }
@@ -801,7 +811,9 @@ func Convert_v1alpha1_MySQLGroupSpec_To_v1alpha2_MySQLGroupSpec(in *MySQLGroupSp
 
 func Convert_v1alpha1_MySQLStatus_To_v1alpha2_MySQLStatus(in *MySQLStatus, out *v1alpha2.MySQLStatus, s conversion.Scope) error {
 	out.Phase = v1alpha2.DatabasePhase(in.Phase)
-	out.ObservedGeneration = in.ObservedGeneration.Generation()
+	if in.ObservedGeneration != nil {
+		out.ObservedGeneration = in.ObservedGeneration.Generation()
+	}
 	// WARNING: in.Reason requires manual conversion: does not exist in peer-type
 	return nil
 }
@@ -900,7 +912,9 @@ func Convert_v1alpha2_PerconaXtraDBSpec_To_v1alpha1_PerconaXtraDBSpec(in *v1alph
 
 func Convert_v1alpha1_PerconaXtraDBStatus_To_v1alpha2_PerconaXtraDBStatus(in *PerconaXtraDBStatus, out *v1alpha2.PerconaXtraDBStatus, s conversion.Scope) error {
 	out.Phase = v1alpha2.DatabasePhase(in.Phase)
-	out.ObservedGeneration = in.ObservedGeneration.Generation()
+	if in.ObservedGeneration != nil {
+		out.ObservedGeneration = in.ObservedGeneration.Generation()
+	}
 	// WARNING: in.Reason requires manual conversion: does not exist in peer-type
 	return nil
 }
@@ -1002,7 +1016,9 @@ func Convert_v1alpha2_PostgreLeaderElectionConfig_To_v1alpha1_LeaderElectionConf
 
 func Convert_v1alpha1_PostgresStatus_To_v1alpha2_PostgresStatus(in *PostgresStatus, out *v1alpha2.PostgresStatus, s conversion.Scope) error {
 	out.Phase = v1alpha2.DatabasePhase(in.Phase)
-	out.ObservedGeneration = in.ObservedGeneration.Generation()
+	if in.ObservedGeneration != nil {
+		out.ObservedGeneration = in.ObservedGeneration.Generation()
+	}
 	// WARNING: in.Reason requires manual conversion: does not exist in peer-type
 	return nil
 }
@@ -1060,7 +1076,9 @@ func Convert_v1alpha2_RedisSpec_To_v1alpha1_RedisSpec(in *v1alpha2.RedisSpec, ou
 
 func Convert_v1alpha1_RedisStatus_To_v1alpha2_RedisStatus(in *RedisStatus, out *v1alpha2.RedisStatus, s conversion.Scope) error {
 	out.Phase = v1alpha2.DatabasePhase(in.Phase)
-	out.ObservedGeneration = in.ObservedGeneration.Generation()
+	if in.ObservedGeneration != nil {
+		out.ObservedGeneration = in.ObservedGeneration.Generation()
+	}
 	// WARNING: in.Reason requires manual conversion: does not exist in peer-type
 	return nil
 }
