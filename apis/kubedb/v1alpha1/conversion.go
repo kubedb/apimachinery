@@ -32,8 +32,14 @@ import (
 )
 
 func Convert_v1alpha1_InitSpec_To_v1alpha2_InitSpec(in *InitSpec, out *v1alpha2.InitSpec, s conversion.Scope) error {
-	if err := Convert_v1alpha1_ScriptSourceSpec_To_v1alpha2_ScriptSourceSpec(in.ScriptSource, out.Script, s); err != nil {
-		return err
+	if in.ScriptSource != nil {
+		in, out := &in.ScriptSource, &out.Script
+		*out = new(v1alpha2.ScriptSourceSpec)
+		if err := Convert_v1alpha1_ScriptSourceSpec_To_v1alpha2_ScriptSourceSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Script = nil
 	}
 	// WARNING: in.SnapshotSource requires manual conversion: does not exist in peer-type
 	// WARNING: in.PostgresWAL requires manual conversion: does not exist in peer-type
@@ -42,8 +48,14 @@ func Convert_v1alpha1_InitSpec_To_v1alpha2_InitSpec(in *InitSpec, out *v1alpha2.
 }
 
 func Convert_v1alpha2_InitSpec_To_v1alpha1_InitSpec(in *v1alpha2.InitSpec, out *InitSpec, s conversion.Scope) error {
-	if err := Convert_v1alpha2_ScriptSourceSpec_To_v1alpha1_ScriptSourceSpec(in.Script, out.ScriptSource, s); err != nil {
-		return err
+	if in.Script != nil {
+		in, out := &in.Script, &out.ScriptSource
+		*out = new(ScriptSourceSpec)
+		if err := Convert_v1alpha2_ScriptSourceSpec_To_v1alpha1_ScriptSourceSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.ScriptSource = nil
 	}
 	// WARNING: in.Initialized requires manual conversion: does not exist in peer-type
 	// WARNING: in.WaitForInitialRestore requires manual conversion: does not exist in peer-type
@@ -179,12 +191,17 @@ func Convert_v1alpha1_ElasticsearchClusterTopology_To_v1alpha2_ElasticsearchClus
 	if err := Convert_v1alpha1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(&in.Master, &out.Master, s); err != nil {
 		return err
 	}
-	if err := Convert_v1alpha1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(&in.Data, out.Data, s); err != nil {
-		return err
-	}
 	if err := Convert_v1alpha1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(&in.Client, &out.Ingest, s); err != nil {
 		return err
 	}
+	{
+		out := &out.Data
+		*out = new(v1alpha2.ElasticsearchNode)
+		if err := Convert_v1alpha1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(&in.Data, *out, s); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
