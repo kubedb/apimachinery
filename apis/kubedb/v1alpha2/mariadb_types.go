@@ -101,6 +101,10 @@ type MariaDBSpec struct {
 	// TerminationPolicy controls the delete operation for database
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,14,opt,name=terminationPolicy,casttype=TerminationPolicy"`
+
+	// Coordinator defines attributes of the coordinator container
+	// +optional
+	Coordinator CoordinatorSpec `json:"coordinator,omitempty" protobuf:"bytes,15,opt,name=coordinator"`
 }
 
 // +kubebuilder:validation:Enum=server;archiver;metrics-exporter
