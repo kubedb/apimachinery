@@ -126,10 +126,11 @@ type MongoDBVerticalScalingSpec struct {
 
 // MongoDBVolumeExpansionSpec is the spec for mongodb volume expansion
 type MongoDBVolumeExpansionSpec struct {
-	Standalone   *resource.Quantity `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
-	ReplicaSet   *resource.Quantity `json:"replicaSet,omitempty" protobuf:"bytes,4,opt,name=replicaSet"`
-	ConfigServer *resource.Quantity `json:"configServer,omitempty" protobuf:"bytes,2,opt,name=configServer"`
-	Shard        *resource.Quantity `json:"shard,omitempty" protobuf:"bytes,3,opt,name=shard"`
+	Mode         *VolumeExpansionMode `json:"mode,omitempty" protobuf:"bytes,5,opt,name=mode,casttype=VolumeExpansionMode"`
+	Standalone   *resource.Quantity   `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
+	ReplicaSet   *resource.Quantity   `json:"replicaSet,omitempty" protobuf:"bytes,4,opt,name=replicaSet"`
+	ConfigServer *resource.Quantity   `json:"configServer,omitempty" protobuf:"bytes,2,opt,name=configServer"`
+	Shard        *resource.Quantity   `json:"shard,omitempty" protobuf:"bytes,3,opt,name=shard"`
 }
 
 type MongoDBCustomConfigurationSpec struct {
