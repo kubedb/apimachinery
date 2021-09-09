@@ -205,14 +205,15 @@ const (
 	MariaDBInitContainerName            = "mariadb-init"
 
 	// =========================== PostgreSQL Constants ============================
-	PostgresDatabasePortName       = "db"
-	PostgresPrimaryServicePortName = "primary"
-	PostgresStandbyServicePortName = "standby"
-	PostgresDatabasePort           = 5432
-	PostgresPodPrimary             = "primary"
-	PostgresPodStandby             = "standby"
-	PostgresLabelRole              = kubedb.GroupName + "/role"
-
+	PostgresDatabasePortName         = "db"
+	PostgresPrimaryServicePortName   = "primary"
+	PostgresStandbyServicePortName   = "standby"
+	PostgresDatabasePort             = 5432
+	PostgresPodPrimary               = "primary"
+	PostgresPodStandby               = "standby"
+	PostgresLabelRole                = kubedb.GroupName + "/role"
+	EnvPostgresUser                  = "POSTGRES_USER"
+	EnvPostgresPassword              = "POSTGRES_PASSWORD"
 	PostgresCoordinatorContainerName = "pg-coordinator"
 	PostgresCoordinatorPort          = 2380
 	PostgresCoordinatorPortName      = "coordinator"
@@ -222,16 +223,6 @@ const (
 
 	PostgresRunScriptMountPath  = "/run_scripts"
 	PostgresRunScriptVolumeName = "scripts"
-
-	PostgresCurrentXlogLocation     = "pg_current_xlog_location"
-	PostgresLastXlogReceiveLocation = "pg_last_xlog_receive_location"
-	PostgresLastXlogReplayLocation  = "pg_last_xlog_replay_location"
-	PostgresXlogLocationDiff        = "pg_xlog_location_diff"
-
-	PostgresCurrentWalLSN         = "pg_current_wal_lsn"
-	PostgresLastWalReceivePostion = "pg_last_wal_receive_lsn"
-	PostgresLastWalReplayLSN      = "pg_last_wal_replay_lsn"
-	PostgresWalLSNDiff            = "pg_wal_lsn_diff"
 
 	PostgresKeyFileSecretSuffix = "key"
 	PostgresPEMSecretSuffix     = "pem"
