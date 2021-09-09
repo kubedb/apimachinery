@@ -204,6 +204,8 @@ const (
 	MariaDBTLSConfigCustom              = "custom"
 	MariaDBInitContainerName            = "mariadb-init"
 	MariaDBCoordinatorContainerName     = "md-coordinator"
+	MariaDBRunScriptVolumeName          = "run-script"
+	MariaDBRunScriptVolumeMountPath     = "/run-script"
 
 	// =========================== PostgreSQL Constants ============================
 	PostgresDatabasePortName         = "db"
