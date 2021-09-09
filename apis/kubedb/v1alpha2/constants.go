@@ -197,6 +197,7 @@ const (
 	MariaDBDefaultClusterSize           = 3
 	MariaDBDataMountPath                = "/var/lib/mysql"
 	MariaDBDataLostFoundPath            = MariaDBDataMountPath + "lost+found"
+	MariaDBInitDBVolumeName             = "initial-script"
 	MariaDBInitDBMountPath              = "/docker-entrypoint-initdb.d"
 	MariaDBCustomConfigMountPath        = "/etc/mysql/conf.d/"
 	MariaDBClusterCustomConfigMountPath = "/etc/mysql/custom.conf.d/"
@@ -204,6 +205,10 @@ const (
 	MariaDBTLSConfigCustom              = "custom"
 	MariaDBInitContainerName            = "mariadb-init"
 	MariaDBCoordinatorContainerName     = "md-coordinator"
+	MariaDBRunScriptVolumeName          = "run-script"
+	MariaDBRunScriptVolumeMountPath     = "/run-script"
+	MariaDBInitScriptVolumeName         = "init-scripts"
+	MariaDBInitScriptVolumeMountPath    = "/scripts"
 
 	// =========================== PostgreSQL Constants ============================
 	PostgresDatabasePortName         = "db"
