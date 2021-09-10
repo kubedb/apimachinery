@@ -171,6 +171,18 @@ func (rs *RedisSentinel) SetTLSDefaults() {
 	rs.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(rs.Spec.TLS.Certificates, string(RedisMetricsExporterCert), rs.CertificateName(RedisMetricsExporterCert))
 }
 
+func (r *RedisSentinel) GetPersistentSecrets() []string {
+	if r == nil {
+		return nil
+	}
+
+	var secrets []string
+	if r.Spec.AuthSecret != nil {
+		secrets = append(secrets, r.Spec.AuthSecret.Name)
+	}
+	return secrets
+}
+
 func (rs *RedisSentinel) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
 	if podTemplate == nil {
 		return
