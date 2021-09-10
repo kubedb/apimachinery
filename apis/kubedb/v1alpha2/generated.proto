@@ -914,7 +914,7 @@ message MySQLRouterSpec {
   // +optional
   // +kubebuilder:default:=1
   // +kubebuilder:validation:Minimum:=1
-  optional int32 replica = 1;
+  optional int32 replicas = 3;
 
   // PodTemplate is an optional configuration for pods used to expose MySQL router
   // +optional
