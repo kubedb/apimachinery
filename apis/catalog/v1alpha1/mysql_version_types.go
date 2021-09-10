@@ -61,7 +61,7 @@ type MySQLVersionSpec struct {
 	Exporter MySQLVersionExporter `json:"exporter" protobuf:"bytes,4,opt,name=exporter"`
 	// Coordinator Image
 	// +optional
-	Coordinator MySQLVersionCoordinator `json:"coordinator" protobuf:"bytes,13,opt,name=coordinator"`
+	Coordinator MySQLVersionCoordinator `json:"coordinator,omitempty" protobuf:"bytes,13,opt,name=coordinator"`
 	// ReplicationModeDetector Image
 	ReplicationModeDetector ReplicationModeDetector `json:"replicationModeDetector" protobuf:"bytes,5,opt,name=replicationModeDetector"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.

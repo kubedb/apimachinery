@@ -30635,7 +30635,7 @@
           "description": "PodTemplate is an optional configuration for pods used to expose MySQL router",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
-        "replica": {
+        "replicas": {
           "type": "integer",
           "format": "int32"
         }

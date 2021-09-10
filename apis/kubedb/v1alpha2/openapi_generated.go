@@ -22460,7 +22460,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLRouterSpec(ref common.Referen
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"replica": {
+					"replicas": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"integer"},
 							Format: "int32",
