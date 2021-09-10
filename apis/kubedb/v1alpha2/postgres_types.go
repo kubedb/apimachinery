@@ -113,6 +113,10 @@ type PostgresSpec struct {
 	// TerminationPolicy controls the delete operation for database
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,18,opt,name=terminationPolicy,casttype=TerminationPolicy"`
+
+	// Coordinator defines attributes of the coordinator container
+	// +optional
+	Coordinator CoordinatorSpec `json:"coordinator,omitempty" protobuf:"bytes,19,opt,name=coordinator"`
 }
 
 // PostgreLeaderElectionConfig contains essential attributes of leader election.
@@ -164,12 +168,6 @@ type PostgreLeaderElectionConfig struct {
 	// +kubebuilder:default:=1
 	// +optional
 	HeartbeatTick int32 `json:"heartbeatTick,omitempty" protobuf:"varint,7,opt,name=heartbeatTick"`
-
-	// Compute Resources required by pg-coordinator container.
-	// Cannot be updated.
-	// More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-	// +optional
-	Resources core.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,8,opt,name=resources"`
 }
 
 // +kubebuilder:validation:Enum=server;archiver;metrics-exporter

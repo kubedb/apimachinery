@@ -20,10 +20,10 @@ REPO     := $(notdir $(shell pwd))
 BIN      := apimachinery
 
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
-CRD_OPTIONS          ?= "crd:trivialVersions=true,preserveUnknownFields=false,maxDescLen=0,generateEmbeddedObjectMeta=true,crdVersions={v1beta1,v1}"
+CRD_OPTIONS          ?= "crd:trivialVersions=true,preserveUnknownFields=false,maxDescLen=0,generateEmbeddedObjectMeta=true"
 # https://github.com/appscodelabs/gengo-builder
 CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.21
-API_GROUPS           ?= kubedb:v1alpha2 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1
+API_GROUPS           ?= kubedb:v1alpha1 kubedb:v1alpha2 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1
 
 # This version-strategy uses git tags to set the version string
 git_branch       := $(shell git rev-parse --abbrev-ref HEAD)
@@ -59,10 +59,10 @@ BIN_PLATFORMS    := $(DOCKER_PLATFORMS) windows/amd64 darwin/amd64
 OS   := $(if $(GOOS),$(GOOS),$(shell go env GOOS))
 ARCH := $(if $(GOARCH),$(GOARCH),$(shell go env GOARCH))
 
-BASEIMAGE_PROD   ?= gcr.io/distroless/static-debian10
+BASEIMAGE_PROD   ?= gcr.io/distroless/static:nonroot
 BASEIMAGE_DBG    ?= debian:buster
 
-GO_VERSION       ?= 1.16
+GO_VERSION       ?= 1.17
 BUILD_IMAGE      ?= appscode/golang-dev:$(GO_VERSION)
 
 OUTBIN = bin/$(OS)_$(ARCH)/$(BIN)
@@ -122,6 +122,22 @@ clientset:
 			$(GO_PKG)/$(REPO)/apis                       \
 			"$(API_GROUPS)" \
 			--go-header-file "./hack/license/go.txt"
+
+.PHONY: gen-conversion
+gen-conversion:
+	rm -rf ./apis/kubedb/v1alpha1/zz_generated.conversion.go
+	@docker run --rm                                   \
+		-u $$(id -u):$$(id -g)                           \
+		-v /tmp:/.cache                                  \
+		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
+		-w $(DOCKER_REPO_ROOT)                           \
+		--env HTTP_PROXY=$(HTTP_PROXY)                   \
+		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
+		$(CODE_GENERATOR_IMAGE)                          \
+		/go/bin/conversion-gen --go-header-file ./hack/license/go.txt \
+			--input-dirs $(GO_PKG)/$(REPO)/apis/kubedb/v1alpha1 \
+			--extra-peer-dirs "kmodules.xyz/monitoring-agent-api/api/v1alpha1" \
+			-O zz_generated.conversion
 
 # Generate openapi schema
 .PHONY: openapi
@@ -203,6 +219,8 @@ label-crds: $(BUILD_DIRS)
 
 .PHONY: gen-crd-protos
 gen-crd-protos: $(addprefix gen-crd-protos-, $(subst :,_, $(API_GROUPS)))
+	@rm -rf apis/kubedb/v1alpha1/generated.pb.go
+	@rm -rf apis/kubedb/v1alpha1/generated.proto
 
 gen-crd-protos-%:
 	@echo "Generating protobuf for $(subst _,/,$*)"

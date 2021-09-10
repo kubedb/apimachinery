@@ -1,7 +1,7 @@
 [
   {
     "op": "add",
-    "path": "/spec/validation/openAPIV3Schema/properties/metadata/properties",
+    "path": "/spec/versions/0/schema/openAPIV3Schema/properties/metadata/properties",
     "value": {
       "name": {
         "maxLength": 63,

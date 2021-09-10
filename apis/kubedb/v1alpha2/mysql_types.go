@@ -129,6 +129,10 @@ type MySQLSpec struct {
 	// +optional
 	// +default="DNS"
 	UseAddressType AddressType `json:"useAddressType,omitempty" protobuf:"bytes,17,opt,name=useAddressType,casttype=AddressType"`
+
+	// Coordinator defines attributes of the coordinator container
+	// +optional
+	Coordinator CoordinatorSpec `json:"coordinator,omitempty" protobuf:"bytes,18,opt,name=coordinator"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter
@@ -172,7 +176,8 @@ type MySQLRouterSpec struct {
 	// +optional
 	// +kubebuilder:default:=1
 	// +kubebuilder:validation:Minimum:=1
-	Replica *int32 `json:"replica,omitempty" protobuf:"varint,1,opt,name=replica"`
+	Replicas *int32 `json:"replicas,omitempty" protobuf:"varint,1,opt,name=replicas"`
+
 	// PodTemplate is an optional configuration for pods used to expose MySQL router
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty" protobuf:"bytes,2,opt,name=podTemplate"`

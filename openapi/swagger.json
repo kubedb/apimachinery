@@ -29048,6 +29048,19 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionCoordinator": {
+      "description": "RedisVersionCoordinator is the Redis coordinator image",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionDatabase": {
       "description": "RedisVersionDatabase is the Redis Database image",
       "type": "object",
@@ -29063,6 +29076,19 @@
     },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionExporter": {
       "description": "RedisVersionExporter is the image for the Redis exporter",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionInitContainer": {
+      "description": "RedisVersionInitContainer is the Redis init container image",
       "type": "object",
       "required": [
         "image"
@@ -29130,6 +29156,11 @@
         "podSecurityPolicies"
       ],
       "properties": {
+        "coordinator": {
+          "description": "Coordinator Image",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionCoordinator"
+        },
         "db": {
           "description": "Database Image",
           "default": {},
@@ -29143,6 +29174,11 @@
           "description": "Exporter Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionExporter"
+        },
+        "initContainer": {
+          "description": "init container image",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionInitContainer"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
@@ -29245,6 +29281,21 @@
           "description": "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log.",
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.CoordinatorSpec": {
+      "description": "CoordinatorSpec defines attributes of the coordinator container",
+      "type": "object",
+      "properties": {
+        "resources": {
+          "description": "Compute Resources required by coordinator container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "securityContext": {
+          "description": "Security options the coordinator container should run with. More info: https://kubernetes.io/docs/concepts/policy/security-context/ More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecurityContext"
         }
       }
     },
@@ -29476,7 +29527,7 @@
           "type": "boolean"
         },
         "enableSSL": {
-          "description": "To enable ssl in transport \u0026 http layer",
+          "description": "To enable ssl for http layer",
           "type": "boolean"
         },
         "halted": {
@@ -29524,6 +29575,10 @@
             "default": {},
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchRoleMapSpec"
           }
+        },
+        "secureConfigSecret": {
+          "description": "SecureConfigSecret is an optional field to provide secure settings for database.\n\t- Ref: https://www.elastic.co/guide/en/elasticsearch/reference/7.14/secure-settings.html\nSecure settings are store at \"ES_CONFIG_DIR/elasticsearch.keystore\" file (contents are encoded with password), once the keystore created. Expects a k8s secret name with data format:\n\tdata:\n\t\tkey: value\n\t\tpassword: KEYSTORE_PASSWORD\n\t\ts3.client.default.access_key: ACCESS_KEY\n\t\ts3.client.default.secret_key: SECRET_KEY",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "serviceTemplates": {
           "description": "ServiceTemplates is an optional configuration for services used to expose database",
@@ -29895,6 +29950,11 @@
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "coordinator": {
+          "description": "Coordinator defines attributes of the coordinator container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.CoordinatorSpec"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -30345,6 +30405,11 @@
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "coordinator": {
+          "description": "Coordinator defines attributes of the coordinator container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.CoordinatorSpec"
+        },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
           "type": "boolean"
@@ -30552,7 +30617,7 @@
           "description": "PodTemplate is an optional configuration for pods used to expose MySQL router",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
-        "replica": {
+        "replicas": {
           "type": "integer",
           "format": "int32"
         }
@@ -30571,6 +30636,11 @@
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "coordinator": {
+          "description": "Coordinator defines attributes of the coordinator container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.CoordinatorSpec"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -31014,11 +31084,6 @@
           "type": "integer",
           "format": "int32"
         },
-        "resources": {
-          "description": "Compute Resources required by pg-coordinator container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
         "retryPeriodSeconds": {
           "description": "RetryPeriod is the duration in second the LeaderElector clients should wait between tries of actions. Normally, LeaseDuration / 3. Default 2 Deprecated",
           "type": "integer",
@@ -31107,6 +31172,11 @@
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "coordinator": {
+          "description": "Coordinator defines attributes of the coordinator container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.CoordinatorSpec"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -31433,6 +31503,19 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSentinelRef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the refereed sentinel",
+          "type": "string"
+        },
+        "namespace": {
+          "description": "Namespace where refereed sentinel has been deployed",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSpec": {
       "type": "object",
       "required": [
@@ -31450,6 +31533,11 @@
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e redis.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "coordinator": {
+          "description": "Coordinator defines attributes of the coordinator container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.CoordinatorSpec"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -31476,6 +31564,9 @@
           "description": "Number of instances to deploy for a Redis database.",
           "type": "integer",
           "format": "int32"
+        },
+        "sentinelRef": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSentinelRef"
         },
         "serviceTemplates": {
           "description": "ServiceTemplates is an optional configuration for services used to expose database",
@@ -31697,8 +31788,32 @@
       "description": "ElasticsearchHorizontalScalingTopologySpec contains the horizontal scaling information in cluster topology mode",
       "type": "object",
       "properties": {
+        "coordinating": {
+          "type": "integer",
+          "format": "int32"
+        },
         "data": {
           "description": "Number of data nodes",
+          "type": "integer",
+          "format": "int32"
+        },
+        "dataCold": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dataContent": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dataFrozen": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dataHot": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dataWarm": {
           "type": "integer",
           "format": "int32"
         },
@@ -31709,6 +31824,14 @@
         },
         "master": {
           "description": "Number of master nodes",
+          "type": "integer",
+          "format": "int32"
+        },
+        "ml": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "transform": {
           "type": "integer",
           "format": "int32"
         }
@@ -31885,16 +32008,37 @@
       "description": "ElasticsearchVerticalScalingTopologySpec is the resource spec in the cluster topology mode",
       "type": "object",
       "properties": {
+        "coordinating": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "data": {
-          "description": "Resource spec for data nodes",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "dataCold": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "dataContent": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "dataFrozen": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "dataHot": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "dataWarm": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "ingest": {
-          "description": "Resource spec for ingest nodes",
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "master": {
-          "description": "Resource spec for master nodes",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "ml": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "transform": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       }
@@ -31917,8 +32061,26 @@
       "description": "ElasticsearchVolumeExpansionTopologySpec is the spec for Elasticsearch volume expansion in topology mode",
       "type": "object",
       "properties": {
+        "coordinating": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
         "data": {
           "description": "volume specification for data nodes",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "dataCold": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "dataContent": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "dataFrozen": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "dataHot": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "dataWarm": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "ingest": {
@@ -31927,6 +32089,12 @@
         },
         "master": {
           "description": "volume specification for master nodes",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "ml": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "transform": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }
