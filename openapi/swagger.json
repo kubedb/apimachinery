@@ -32641,6 +32641,9 @@
         "configServer": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
+        "mode": {
+          "type": "string"
+        },
         "replicaSet": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
