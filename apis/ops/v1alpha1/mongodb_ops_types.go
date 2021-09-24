@@ -126,6 +126,7 @@ type MongoDBVerticalScalingSpec struct {
 
 // MongoDBVolumeExpansionSpec is the spec for mongodb volume expansion
 type MongoDBVolumeExpansionSpec struct {
+	// +kubebuilder:default:="Online"
 	Mode         *VolumeExpansionMode `json:"mode,omitempty" protobuf:"bytes,5,opt,name=mode,casttype=VolumeExpansionMode"`
 	Standalone   *resource.Quantity   `json:"standalone,omitempty" protobuf:"bytes,1,opt,name=standalone"`
 	ReplicaSet   *resource.Quantity   `json:"replicaSet,omitempty" protobuf:"bytes,4,opt,name=replicaSet"`
