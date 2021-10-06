@@ -172,11 +172,13 @@ type MySQLInnoDBClusterSpec struct {
 	Mode   *MySQLGroupMode `json:"mode,omitempty" protobuf:"bytes,1,opt,name=mode,casttype=MySQLGroupMode"`
 	Router MySQLRouterSpec `json:"router,omitempty" protobuf:"bytes,2,opt,name=router"`
 }
+
 type MySQLRouterSpec struct {
 	// +optional
 	// +kubebuilder:default:=1
 	// +kubebuilder:validation:Minimum:=1
 	Replicas *int32 `json:"replicas,omitempty" protobuf:"varint,3,opt,name=replicas"`
+
 	// PodTemplate is an optional configuration for pods used to expose MySQL router
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty" protobuf:"bytes,2,opt,name=podTemplate"`

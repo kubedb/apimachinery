@@ -186,11 +186,9 @@ const (
 
 	MySQLRouterContainerName = "mysql-router"
 
-	MySQLNodeRoleDB     = ResourceSingularMySQL + "." + kubedb.GroupName + "/" + "node.db"
-	MySQLNodeRoleRouter = ResourceSingularMySQL + "." + kubedb.GroupName + "/" + "node.router"
-	MySQLNodeRoleSet    = "set"
-
-	ResourceRouterMySQL = "router"
+	MySQLComponentKey    = MySQLKey + "/component"
+	MySQLComponentDB     = "database"
+	MySQLComponentRouter = "router"
 
 	// =========================== PerconaXtraDB Constants ============================
 	PerconaXtraDBClusterRecommendedVersion    = "5.7"
@@ -229,7 +227,6 @@ const (
 	PostgresDatabasePort             = 5432
 	PostgresPodPrimary               = "primary"
 	PostgresPodStandby               = "standby"
-	PostgresLabelRole                = kubedb.GroupName + "/role"
 	EnvPostgresUser                  = "POSTGRES_USER"
 	EnvPostgresPassword              = "POSTGRES_PASSWORD"
 	PostgresCoordinatorContainerName = "pg-coordinator"

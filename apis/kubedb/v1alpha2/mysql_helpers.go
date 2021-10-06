@@ -48,21 +48,27 @@ func (m MySQL) OffshootName() string {
 }
 
 func (m MySQL) OffshootSelectors() map[string]string {
-	return map[string]string{
+	selectors := map[string]string{
 		meta_util.NameLabelKey:      m.ResourceFQN(),
 		meta_util.InstanceLabelKey:  m.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
-		MySQLNodeRoleDB:             MySQLNodeRoleSet,
 	}
+	if m.IsInnoDBCluster() {
+		selectors[MySQLComponentKey] = MySQLComponentDB
+	}
+	return selectors
 }
 
 func (m MySQL) RouterOffshootSelectors() map[string]string {
-	return map[string]string{
+	selectors := map[string]string{
 		meta_util.NameLabelKey:      m.ResourceFQN(),
 		meta_util.InstanceLabelKey:  m.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
-		MySQLNodeRoleRouter:         MySQLNodeRoleSet,
 	}
+	if m.IsInnoDBCluster() {
+		selectors[MySQLComponentKey] = MySQLComponentRouter
+	}
+	return selectors
 }
 
 func (m MySQL) RouterOffshootLabels() map[string]string {
@@ -112,9 +118,11 @@ func (m MySQL) GoverningServiceName() string {
 func (m MySQL) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
 }
+
 func (m MySQL) RouterPrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", ResourceRouterMySQL, m.Namespace)
 }
+
 func (m MySQL) Hosts() []string {
 	replicas := 1
 	if m.Spec.Replicas != nil {
@@ -339,6 +347,7 @@ func (m *MySQL) MySQLTLSArgs() []string {
 	}
 	return tlsArgs
 }
+
 func (m *MySQL) GetRouterName() string {
 	return fmt.Sprintf("%s-router", m.Name)
 }
