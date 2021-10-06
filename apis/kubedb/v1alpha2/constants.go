@@ -162,8 +162,8 @@ const (
 	// =========================== MySQL Constants ============================
 	MySQLMetricsExporterConfigSecretSuffix = "metrics-exporter-config"
 	MySQLDatabasePortName                  = "db"
-	MySQLRouterReadWritePortName           = "read-write"
-	MySQLRouterReadOnlyPortName            = "read-only"
+	MySQLRouterReadWritePortName           = "rw"
+	MySQLRouterReadOnlyPortName            = "ro"
 	MySQLPrimaryServicePortName            = "primary"
 	MySQLStandbyServicePortName            = "standby"
 	MySQLDatabasePort                      = 3306
