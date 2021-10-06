@@ -21745,7 +21745,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "replicationModeDetector", "initContainer", "podSecurityPolicies", "upgradeConstraints"},
+				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies", "upgradeConstraints"},
 			},
 		},
 		Dependencies: []string{

@@ -63,7 +63,8 @@ type MySQLVersionSpec struct {
 	// +optional
 	Coordinator MySQLVersionCoordinator `json:"coordinator,omitempty" protobuf:"bytes,13,opt,name=coordinator"`
 	// ReplicationModeDetector Image
-	ReplicationModeDetector ReplicationModeDetector `json:"replicationModeDetector" protobuf:"bytes,5,opt,name=replicationModeDetector"`
+	// +optional
+	ReplicationModeDetector ReplicationModeDetector `json:"replicationModeDetector,omitempty" protobuf:"bytes,5,opt,name=replicationModeDetector"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty" protobuf:"varint,6,opt,name=deprecated"`
@@ -78,7 +79,7 @@ type MySQLVersionSpec struct {
 	Stash appcat.StashAddonSpec `json:"stash,omitempty" protobuf:"bytes,10,opt,name=stash"`
 	// Router image
 	// +optional
-	Router MySQLVersionRouter `json:"router" protobuf:"bytes,11,opt,name=router"`
+	Router MySQLVersionRouter `json:"router,omitempty" protobuf:"bytes,11,opt,name=router"`
 	// +optional
 	RouterInitContainer MySQLVersionRouterInitContainer `json:"routerInitContainer,omitempty" protobuf:"bytes,12,opt,name=routerInitContainer"`
 }

@@ -470,6 +470,7 @@ message MySQLVersionSpec {
   optional MySQLVersionCoordinator coordinator = 13;
 
   // ReplicationModeDetector Image
+  // +optional
   optional ReplicationModeDetector replicationModeDetector = 5;
 
   // Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.

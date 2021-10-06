@@ -190,7 +190,6 @@ spec:
             - exporter
             - initContainer
             - podSecurityPolicies
-            - replicationModeDetector
             - upgradeConstraints
             - version
             type: object
