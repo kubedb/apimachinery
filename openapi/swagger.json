@@ -28340,6 +28340,19 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionCoordinator": {
+      "description": "MySQLVersionCoordinator is the image for coordinator",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionDatabase": {
       "description": "MySQLVersionDatabase is the MySQL Database image",
       "type": "object",
@@ -28425,6 +28438,32 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionRouter": {
+      "description": "MySQLVersionRouter is the MySQL Router lightweight middleware that provides transparent routing between your application and back-end MySQL Servers",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionRouterInitContainer": {
+      "description": "MySQLVersionRouterInitContainer is mysql router init container",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionSpec": {
       "description": "MySQLVersionSpec is the spec for MySQL version",
       "type": "object",
@@ -28432,12 +28471,16 @@
         "version",
         "db",
         "exporter",
-        "replicationModeDetector",
         "initContainer",
         "podSecurityPolicies",
         "upgradeConstraints"
       ],
       "properties": {
+        "coordinator": {
+          "description": "Coordinator Image",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionCoordinator"
+        },
         "db": {
           "description": "Database Image",
           "default": {},
@@ -28470,6 +28513,15 @@
           "description": "ReplicationModeDetector Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ReplicationModeDetector"
+        },
+        "router": {
+          "description": "Router image",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionRouter"
+        },
+        "routerInitContainer": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionRouterInitContainer"
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
@@ -30508,6 +30560,10 @@
           "description": "Group replication info for MySQL",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLGroupSpec"
         },
+        "innoDBCluster": {
+          "description": "InnoDBCluster replication info for MySQL InnodbCluster",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLInnoDBClusterSpec"
+        },
         "mode": {
           "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
           "type": "string"
@@ -30524,6 +30580,18 @@
         "name": {
           "description": "Group name is a version 4 UUID ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-options.html#sysvar_group_replication_group_name",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLInnoDBClusterSpec": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "router": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLRouterSpec"
         }
       }
     },
@@ -30558,6 +30626,19 @@
           "version": "v1alpha2"
         }
       ]
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLRouterSpec": {
+      "type": "object",
+      "properties": {
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose MySQL router",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "replicas": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLSpec": {
       "type": "object",
