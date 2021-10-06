@@ -2687,9 +2687,9 @@ spec:
                   group:
                     properties:
                       mode:
+                        default: Single-Primary
                         enum:
                         - Single-Primary
-                        - Multi-Primary
                         type: string
                       name:
                         type: string
@@ -2697,9 +2697,9 @@ spec:
                   innoDBCluster:
                     properties:
                       mode:
+                        default: Single-Primary
                         enum:
                         - Single-Primary
-                        - Multi-Primary
                         type: string
                       router:
                         properties:

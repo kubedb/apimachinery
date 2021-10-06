@@ -39,12 +39,12 @@ const (
 	InnoDBClusterModeGroup MySQLClusterMode = "InnoDBCluster"
 )
 
-// +kubebuilder:validation:Enum=Single-Primary;Multi-Primary
+// +kubebuilder:validation:Enum=Single-Primary
 type MySQLGroupMode string
 
 const (
 	MySQLGroupModeSinglePrimary MySQLGroupMode = "Single-Primary"
-	MySQLGroupModeMultiPrimary  MySQLGroupMode = "Multi-Primary"
+	// MySQLGroupModeMultiPrimary  MySQLGroupMode = "Multi-Primary"
 )
 
 // Mysql defines a Mysql database.
@@ -161,6 +161,7 @@ type MySQLClusterTopology struct {
 type MySQLGroupSpec struct {
 	// TODO: "Multi-Primary" needs to be implemented
 	// Group Replication can be deployed in either "Single-Primary" or "Multi-Primary" mode
+	// +kubebuilder:default=Single-Primary
 	Mode *MySQLGroupMode `json:"mode,omitempty" protobuf:"bytes,1,opt,name=mode,casttype=MySQLGroupMode"`
 
 	// Group name is a version 4 UUID
@@ -169,7 +170,10 @@ type MySQLGroupSpec struct {
 }
 
 type MySQLInnoDBClusterSpec struct {
-	Mode   *MySQLGroupMode `json:"mode,omitempty" protobuf:"bytes,1,opt,name=mode,casttype=MySQLGroupMode"`
+	// +kubebuilder:default=Single-Primary
+	// +optional
+	Mode *MySQLGroupMode `json:"mode,omitempty" protobuf:"bytes,1,opt,name=mode,casttype=MySQLGroupMode"`
+
 	Router MySQLRouterSpec `json:"router,omitempty" protobuf:"bytes,2,opt,name=router"`
 }
 

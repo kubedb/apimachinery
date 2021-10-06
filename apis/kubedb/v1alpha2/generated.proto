@@ -890,6 +890,7 @@ message MySQLClusterTopology {
 message MySQLGroupSpec {
   // TODO: "Multi-Primary" needs to be implemented
   // Group Replication can be deployed in either "Single-Primary" or "Multi-Primary" mode
+  // +kubebuilder:default=Single-Primary
   optional string mode = 1;
 
   // Group name is a version 4 UUID
@@ -898,6 +899,8 @@ message MySQLGroupSpec {
 }
 
 message MySQLInnoDBClusterSpec {
+  // +kubebuilder:default=Single-Primary
+  // +optional
   optional string mode = 1;
 
   optional MySQLRouterSpec router = 2;

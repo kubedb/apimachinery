@@ -28471,7 +28471,6 @@
         "version",
         "db",
         "exporter",
-        "replicationModeDetector",
         "initContainer",
         "podSecurityPolicies",
         "upgradeConstraints"
