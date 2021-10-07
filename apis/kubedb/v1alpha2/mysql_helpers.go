@@ -114,7 +114,9 @@ func (m MySQL) StandbyServiceName() string {
 func (m MySQL) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(m.ServiceName(), "pods")
 }
-
+func (m MySQL) GoverningServiceDNS() string {
+	return fmt.Sprintf("%s.%s.svc", m.GoverningServiceName(), m.Namespace)
+}
 func (m MySQL) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
 }
