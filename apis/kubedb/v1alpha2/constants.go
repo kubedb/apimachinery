@@ -184,15 +184,14 @@ const (
 	MySQLTLSConfigFalse      = "false"
 	MySQLTLSConfigPreferred  = "preferred"
 
-	MySQLRouterContainerName = "mysql-router"
+	MySQLRouterContainerName           = "mysql-router"
 	MySQLRouterInitScriptDirectoryName = "init-scripts"
 	MySQLRouterInitScriptDirectoryPath = "/scripts"
-	MySQLRouterConfigDirectoryName = "router-config-secret"
-	MySQLRouterConfigDirectoryPath = "/etc/mysqlrouter"
-	MySQLRouterTLSDirectoryName = "router-tls-volume"
-	MySQLRouterTLSDirectoryPath = "/etc/mysql/certs"
-	MySQLReplicationUser = "repl"
-
+	MySQLRouterConfigDirectoryName     = "router-config-secret"
+	MySQLRouterConfigDirectoryPath     = "/etc/mysqlrouter"
+	MySQLRouterTLSDirectoryName        = "router-tls-volume"
+	MySQLRouterTLSDirectoryPath        = "/etc/mysql/certs"
+	MySQLReplicationUser               = "repl"
 
 	MySQLComponentKey    = MySQLKey + "/component"
 	MySQLComponentDB     = "database"
