@@ -66,8 +66,10 @@ spec:
                 type: boolean
               distribution:
                 enum:
-                - Oracle
+                - Official
+                - MySQL
                 - Percona
+                - Oracle
                 type: string
               exporter:
                 properties:
