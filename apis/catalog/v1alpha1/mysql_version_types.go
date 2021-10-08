@@ -151,10 +151,11 @@ type MySQLVersionList struct {
 	Items []MySQLVersion `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
 }
 
-// +kubebuilder:validation:Enum=Oracle;Percona
+// +kubebuilder:validation:Enum=Official;MySQL;Percona;Oracle
 type MySQLDistro string
 
 const (
-	MySQLDistroOracle  MySQLDistro = "Oracle"
-	MySQLDistroPercona MySQLDistro = "Percona"
+	MySQLDistroOfficial MySQLDistro = "Official"
+	MySQLDistroMySQL    MySQLDistro = "MySQL"
+	MySQLDistroPercona  MySQLDistro = "Percona"
 )
