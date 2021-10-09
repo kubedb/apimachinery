@@ -13,27 +13,26 @@ require (
 	github.com/json-iterator/go v1.1.11
 	github.com/pkg/errors v0.9.1
 	go.bytebuilders.dev/audit v0.0.7
-	go.bytebuilders.dev/license-verifier v0.9.3 // indirect
 	gomodules.xyz/encoding v0.0.2
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.2.0
 	gomodules.xyz/stow v0.2.4
-	gomodules.xyz/x v0.0.7
+	gomodules.xyz/x v0.0.8
 	k8s.io/api v0.21.1
 	k8s.io/apiextensions-apiserver v0.21.1
 	k8s.io/apimachinery v0.21.1
 	k8s.io/client-go v0.21.1
 	k8s.io/klog/v2 v2.8.0
 	k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7
-	kmodules.xyz/client-go v0.0.0-20210831030638-b1d662179991
+	kmodules.xyz/client-go v0.0.0-20210928133955-8df5bb467db6
 	kmodules.xyz/crd-schema-fuzz v0.0.0-20210618002152-fae23aef5fb4
-	kmodules.xyz/custom-resources v0.0.0-20210824055127-e5a3d2d6c161
+	kmodules.xyz/custom-resources v0.0.0-20211007080833-72bd9e8cae6e
 	kmodules.xyz/monitoring-agent-api v0.0.0-20210902163558-0323c6034f70
-	kmodules.xyz/objectstore-api v0.0.0-20210618005912-71f8a80f48f9
-	kmodules.xyz/offshoot-api v0.0.0-20210804100837-d0388be3e60d
+	kmodules.xyz/objectstore-api v0.0.0-20210928135706-fdf68f88ea6e
+	kmodules.xyz/offshoot-api v0.0.0-20210829122105-6f4d481b0c61
 	kmodules.xyz/webhook-runtime v0.0.0-20210804101750-5c602fd5cf06
 	sigs.k8s.io/yaml v1.2.0
-	stash.appscode.dev/apimachinery v0.14.2-0.20210715200631-5399637188c0
+	stash.appscode.dev/apimachinery v0.16.0
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d
