@@ -12,7 +12,7 @@ require (
 	github.com/jetstack/cert-manager v1.4.0
 	github.com/json-iterator/go v1.1.11
 	github.com/pkg/errors v0.9.1
-	go.bytebuilders.dev/audit v0.0.7
+	go.bytebuilders.dev/audit v0.0.10
 	gomodules.xyz/encoding v0.0.2
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.2.0
@@ -27,10 +27,10 @@ require (
 	kmodules.xyz/client-go v0.0.0-20210928133955-8df5bb467db6
 	kmodules.xyz/crd-schema-fuzz v0.0.0-20210618002152-fae23aef5fb4
 	kmodules.xyz/custom-resources v0.0.0-20211007080833-72bd9e8cae6e
-	kmodules.xyz/monitoring-agent-api v0.0.0-20210902163558-0323c6034f70
+	kmodules.xyz/monitoring-agent-api v0.0.0-20210928135619-38ca075a2dbd
 	kmodules.xyz/objectstore-api v0.0.0-20210928135706-fdf68f88ea6e
 	kmodules.xyz/offshoot-api v0.0.0-20210829122105-6f4d481b0c61
-	kmodules.xyz/webhook-runtime v0.0.0-20210804101750-5c602fd5cf06
+	kmodules.xyz/webhook-runtime v0.0.0-20210928141616-7f73c2ab318a
 	sigs.k8s.io/yaml v1.2.0
 	stash.appscode.dev/apimachinery v0.16.0
 )
@@ -140,3 +140,9 @@ replace k8s.io/utils => k8s.io/utils v0.0.0-20201110183641-67b214c5f920
 replace sigs.k8s.io/application => github.com/kmodules/application v0.8.4-0.20210427030912-90eeee3bc4ad
 
 replace github.com/satori/go.uuid => github.com/gofrs/uuid v4.0.0+incompatible
+
+replace github.com/dgrijalva/jwt-go => github.com/gomodules/jwt v3.2.2+incompatible
+
+replace github.com/golang-jwt/jwt => github.com/golang-jwt/jwt v3.2.2+incompatible
+
+replace github.com/form3tech-oss/jwt-go => github.com/form3tech-oss/jwt-go v3.2.5+incompatible
