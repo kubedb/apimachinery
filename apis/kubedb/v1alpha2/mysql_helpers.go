@@ -196,13 +196,13 @@ func (m MySQL) StatsServiceLabels() map[string]string {
 func (m *MySQL) UsesGroupReplication() bool {
 	return m.Spec.Topology != nil &&
 		m.Spec.Topology.Mode != nil &&
-		*m.Spec.Topology.Mode == MySQLClusterModeGroup
+		*m.Spec.Topology.Mode == MySQLClusterModeGroupReplication
 }
 
 func (m *MySQL) IsInnoDBCluster() bool {
 	return m.Spec.Topology != nil &&
 		m.Spec.Topology.Mode != nil &&
-		*m.Spec.Topology.Mode == InnoDBClusterModeGroup
+		*m.Spec.Topology.Mode == MySQLClusterModeInnoDBCluster
 }
 
 func (m *MySQL) SetDefaults(topology *core_util.Topology) {
