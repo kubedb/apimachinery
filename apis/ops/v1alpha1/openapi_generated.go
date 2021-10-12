@@ -22578,13 +22578,6 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestSpec(ref common.Refere
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
-					"statefulSetOrdinal": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the current ordinal of the StatefulSet",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 				},
 				Required: []string{"databaseRef", "type"},
 			},

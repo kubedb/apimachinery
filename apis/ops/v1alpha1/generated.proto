@@ -779,9 +779,6 @@ message MySQLOpsRequestSpec {
 
   // Specifies information necessary for restarting database
   optional RestartSpec restart = 9;
-
-  // Specifies the current ordinal of the StatefulSet
-  optional int32 statefulSetOrdinal = 10;
 }
 
 // MySQLOpsRequestStatus is the status for MySQLOpsRequest
