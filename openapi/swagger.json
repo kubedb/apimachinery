@@ -32488,10 +32488,18 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration": {
       "type": "object",
       "properties": {
+        "applyConfig": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
         "configSecret": {
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "inlineConfig": {
+          "description": "Deprecated",
           "type": "string"
         },
         "removeCustomConfig": {

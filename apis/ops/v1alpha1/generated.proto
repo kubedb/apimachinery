@@ -593,7 +593,10 @@ message MemcachedVolumeExpansionSpec {
 message MongoDBCustomConfiguration {
   optional k8s.io.api.core.v1.LocalObjectReference configSecret = 2;
 
+  // Deprecated
   optional string inlineConfig = 3;
+
+  map<string, string> applyConfig = 5;
 
   optional bool removeCustomConfig = 4;
 }

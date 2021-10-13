@@ -21927,8 +21927,24 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBCustomConfiguration(ref common
 					},
 					"inlineConfig": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Deprecated",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"applyConfig": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
 						},
 					},
 					"removeCustomConfig": {
