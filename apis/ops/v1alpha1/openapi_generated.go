@@ -20220,18 +20220,9 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchCustomConfigurationSpec(
 					},
 					"applyConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ApplyConfig is an optional field to provide Elasticsearch configuration. Provided configuration will be applied to config files stored in ConfigSecret. If the ConfigSecret is missing, the operator will create a new k8s secret by the following naming convention: {db-name}-user-config . Expected input format:\n\tapplyConfig:\n\t\tfile-name.yml: |\n\t\t\tkey: value\n\t\telasticsearch.yml: |\n\t\t\tthread_pool:\n\t\t\t\twrite:\n\t\t\t\t\tsize: 30",
-							Type:        []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
+							Description: "ApplyConfig is an optional field to provide Elasticsearch configuration. Provided configuration will be applied to config files stored in ConfigSecret. If the ConfigSecret is missing, the operator will create a new k8s secret by the following naming convention: {db-name}-user-config .",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"removeCustomConfig": {

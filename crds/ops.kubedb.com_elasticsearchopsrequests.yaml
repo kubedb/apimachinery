@@ -45,9 +45,7 @@ spec:
               configuration:
                 properties:
                   applyConfig:
-                    additionalProperties:
-                      type: string
-                    type: object
+                    type: string
                   configSecret:
                     properties:
                       name:
