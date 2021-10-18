@@ -27820,7 +27820,7 @@
       ],
       "properties": {
         "authPlugin": {
-          "description": "Authentication plugin used by Elasticsearch cluster Deprecated",
+          "description": "Authentication plugin used by Elasticsearch cluster",
           "type": "string",
           "default": ""
         },

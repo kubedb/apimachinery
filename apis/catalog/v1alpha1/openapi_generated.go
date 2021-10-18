@@ -20411,7 +20411,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref comm
 					},
 					"authPlugin": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Authentication plugin used by Elasticsearch cluster Deprecated",
+							Description: "Authentication plugin used by Elasticsearch cluster",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
