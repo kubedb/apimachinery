@@ -85,6 +85,13 @@ func (in *ElasticsearchCustomConfigurationSpec) DeepCopyInto(out *ElasticsearchC
 		*out = new(v1.LocalObjectReference)
 		**out = **in
 	}
+	if in.ApplyConfig != nil {
+		in, out := &in.ApplyConfig, &out.ApplyConfig
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
 	return
 }
 
