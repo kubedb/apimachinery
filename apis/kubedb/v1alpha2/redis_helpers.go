@@ -98,7 +98,11 @@ func (r Redis) GoverningServiceName() string {
 }
 
 func (r Redis) ConfigSecretName() string {
-	return r.OffshootName()
+	return meta_util.NameWithSuffix(r.OffshootName(), "config")
+}
+
+func (r Redis) CustomConfigSecretName() string {
+	return meta_util.NameWithSuffix(r.OffshootName(), "custom-config")
 }
 
 func (r Redis) BaseNameForShard() string {
