@@ -116,16 +116,17 @@ type ElasticsearchSecurityContext struct {
 	RunAsAnyNonRoot bool `json:"runAsAnyNonRoot,omitempty" protobuf:"varint,2,opt,name=runAsAnyNonRoot"`
 }
 
-// +kubebuilder:validation:Enum=OpenDistro;SearchGuard;X-Pack
+// +kubebuilder:validation:Enum=OpenDistro;SearchGuard;X-Pack;OpenSearch
 type ElasticsearchAuthPlugin string
 
 const (
 	ElasticsearchAuthPluginOpenDistro  ElasticsearchAuthPlugin = "OpenDistro"
+	ElasticsearchAuthPluginOpenSearch  ElasticsearchAuthPlugin = "OpenSearch"
 	ElasticsearchAuthPluginSearchGuard ElasticsearchAuthPlugin = "SearchGuard"
 	ElasticsearchAuthPluginXpack       ElasticsearchAuthPlugin = "X-Pack"
 )
 
-// +kubebuilder:validation:Enum=ElasticStack;OpenDistro;SearchGuard;KubeDB
+// +kubebuilder:validation:Enum=ElasticStack;OpenDistro;SearchGuard;KubeDB;OpenSearch
 type ElasticsearchDistro string
 
 const (
@@ -133,4 +134,5 @@ const (
 	ElasticsearchDistroOpenDistro   ElasticsearchDistro = "OpenDistro"
 	ElasticsearchDistroSearchGuard  ElasticsearchDistro = "SearchGuard"
 	ElasticsearchDistroKubeDB       ElasticsearchDistro = "KubeDB"
+	ElasticsearchDistroOpenSearch   ElasticsearchDistro = "OpenSearch"
 )

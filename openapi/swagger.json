@@ -27820,7 +27820,7 @@
       ],
       "properties": {
         "authPlugin": {
-          "description": "Authentication plugin used by Elasticsearch cluster Deprecated",
+          "description": "Authentication plugin used by Elasticsearch cluster",
           "type": "string",
           "default": ""
         },
@@ -31788,8 +31788,12 @@
       "type": "object",
       "properties": {
         "applyConfig": {
-          "description": "ApplyConfig is an optional field to provide Elasticsearch configuration. Provided configuration will be applied to config files stored in ConfigSecret. If the ConfigSecret is missing, the operator will create a new k8s secret by the following naming convention: {db-name}-user-config .",
-          "type": "string"
+          "description": "ApplyConfig is an optional field to provide Elasticsearch configuration. Provided configuration will be applied to config files stored in ConfigSecret. If the ConfigSecret is missing, the operator will create a new k8s secret by the following naming convention: {db-name}-user-config . Expected input format:\n\tapplyConfig:\n\t\tfile-name.yml: |\n\t\t\tkey: value\n\t\telasticsearch.yml: |\n\t\t\tthread_pool:\n\t\t\t\twrite:\n\t\t\t\t\tsize: 30",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
         },
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database.",
