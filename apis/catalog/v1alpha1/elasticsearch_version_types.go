@@ -56,7 +56,6 @@ type ElasticsearchVersionSpec struct {
 	// Distribution
 	Distribution ElasticsearchDistro `json:"distribution,omitempty" protobuf:"bytes,2,opt,name=distribution,casttype=ElasticsearchDistro"`
 	// Authentication plugin used by Elasticsearch cluster
-	// Deprecated
 	AuthPlugin ElasticsearchAuthPlugin `json:"authPlugin" protobuf:"bytes,3,opt,name=authPlugin,casttype=ElasticsearchAuthPlugin"`
 	// Database Image
 	DB ElasticsearchVersionDatabase `json:"db" protobuf:"bytes,4,opt,name=db"`
