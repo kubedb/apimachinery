@@ -356,11 +356,10 @@ var (
 	// CoordinatorDefaultResources must be used for raft backed coordinators to avoid unintended leader switches
 	CoordinatorDefaultResources = core.ResourceRequirements{
 		Limits: core.ResourceList{
-			core.ResourceCPU:    resource.MustParse(".500"),
 			core.ResourceMemory: resource.MustParse("256Mi"),
 		},
 		Requests: core.ResourceList{
-			core.ResourceCPU:    resource.MustParse(".500"),
+			core.ResourceCPU:    resource.MustParse(".200"),
 			core.ResourceMemory: resource.MustParse("256Mi"),
 		},
 	}

@@ -178,9 +178,9 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topolog
 			ElectionTick: 10,
 			// this value should be one.
 			HeartbeatTick: 1,
-			//we have set this default to 33554432. if the difference between primary and replica is more then this,
+			//we have set this default to 67108864. if the difference between primary and replica is more then this,
 			//the replica node is going to manually sync itself.
-			MaximumLagBeforeFailover: 32 * 1024 * 1024,
+			MaximumLagBeforeFailover: 64 * 1024 * 1024,
 		}
 	}
 	SetDefaultResourceLimits(&p.Spec.Coordinator.Resources, CoordinatorDefaultResources)
