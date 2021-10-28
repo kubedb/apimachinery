@@ -715,6 +715,17 @@ func (e *Elasticsearch) SetTLSDefaults(esVersion *catalog.ElasticsearchVersion) 
 		SecretName: e.CertificateName(ElasticsearchTransportCert),
 	})
 
+	// Set missing admin certificate spec, if authPlugin is "OpenDistro", "SearchGuard", or "OpenSearch"
+	// Create the admin certificate, even if the enable.SSL is false. This is necessary to securityadmin.sh command.
+	if esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginSearchGuard ||
+		esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginOpenDistro ||
+		esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginOpenSearch {
+		tlsConfig.Certificates = kmapi.SetMissingSpecForCertificate(tlsConfig.Certificates, kmapi.CertificateSpec{
+			Alias:      string(ElasticsearchAdminCert),
+			SecretName: e.CertificateName(ElasticsearchAdminCert),
+		})
+	}
+
 	// If SSL is enabled, set missing certificate spec
 	if e.Spec.EnableSSL {
 		// http
@@ -722,16 +733,6 @@ func (e *Elasticsearch) SetTLSDefaults(esVersion *catalog.ElasticsearchVersion) 
 			Alias:      string(ElasticsearchHTTPCert),
 			SecretName: e.CertificateName(ElasticsearchHTTPCert),
 		})
-
-		// Set missing admin certificate spec, if authPlugin is "OpenDistro", "SearchGuard", or "OpenSearch"
-		if esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginSearchGuard ||
-			esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginOpenDistro ||
-			esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginOpenSearch {
-			tlsConfig.Certificates = kmapi.SetMissingSpecForCertificate(tlsConfig.Certificates, kmapi.CertificateSpec{
-				Alias:      string(ElasticsearchAdminCert),
-				SecretName: e.CertificateName(ElasticsearchAdminCert),
-			})
-		}
 
 		// Set missing metrics-exporter certificate, if monitoring is enabled.
 		if e.Spec.Monitor != nil {
