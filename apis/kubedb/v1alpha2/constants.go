@@ -122,6 +122,7 @@ const (
 	MongoDBKeyFileSecretSuffix    = "-key"
 	MongoDBRootUsername           = "root"
 	MongoDBCustomConfigFile       = "mongod.conf"
+	MongoDBReplicaSetConfig       = "replicaset.json"
 	NodeTypeMongos                = "mongos"
 	NodeTypeShard                 = "shard"
 	NodeTypeConfig                = "configsvr"

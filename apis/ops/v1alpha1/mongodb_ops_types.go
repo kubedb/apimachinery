@@ -143,9 +143,12 @@ type MongoDBCustomConfigurationSpec struct {
 }
 
 type MongoDBCustomConfiguration struct {
-	ConfigSecret       *core.LocalObjectReference `json:"configSecret,omitempty" protobuf:"bytes,2,opt,name=configSecret"`
-	InlineConfig       string                     `json:"inlineConfig,omitempty" protobuf:"bytes,3,opt,name=inlineConfig"`
-	RemoveCustomConfig bool                       `json:"removeCustomConfig,omitempty" protobuf:"varint,4,opt,name=removeCustomConfig"`
+	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty" protobuf:"bytes,2,opt,name=configSecret"`
+	// Deprecated
+	InlineConfig string `json:"inlineConfig,omitempty" protobuf:"bytes,3,opt,name=inlineConfig"`
+
+	ApplyConfig        map[string]string `json:"applyConfig,omitempty" protobuf:"bytes,5,rep,name=applyConfig"`
+	RemoveCustomConfig bool              `json:"removeCustomConfig,omitempty" protobuf:"varint,4,opt,name=removeCustomConfig"`
 }
 
 // MongoDBOpsRequestStatus is the status for MongoDBOpsRequest
