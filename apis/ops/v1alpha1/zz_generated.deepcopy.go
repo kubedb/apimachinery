@@ -1090,6 +1090,11 @@ func (in *MariaDBVerticalScalingSpec) DeepCopyInto(out *MariaDBVerticalScalingSp
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Coordinator != nil {
+		in, out := &in.Coordinator, &out.Coordinator
+		*out = new(v1.ResourceRequirements)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -1726,6 +1731,11 @@ func (in *MongoDBVerticalScalingSpec) DeepCopyInto(out *MongoDBVerticalScalingSp
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Coordinator != nil {
+		in, out := &in.Coordinator, &out.Coordinator
+		*out = new(v1.ResourceRequirements)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -2043,6 +2053,11 @@ func (in *MySQLVerticalScalingSpec) DeepCopyInto(out *MySQLVerticalScalingSpec) 
 	}
 	if in.Exporter != nil {
 		in, out := &in.Exporter, &out.Exporter
+		*out = new(v1.ResourceRequirements)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Coordinator != nil {
+		in, out := &in.Coordinator, &out.Coordinator
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
@@ -2877,6 +2892,11 @@ func (in *PostgresVerticalScalingSpec) DeepCopyInto(out *PostgresVerticalScaling
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Coordinator != nil {
+		in, out := &in.Coordinator, &out.Coordinator
+		*out = new(v1.ResourceRequirements)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -3412,6 +3432,11 @@ func (in *RedisVerticalScalingSpec) DeepCopyInto(out *RedisVerticalScalingSpec) 
 	}
 	if in.Exporter != nil {
 		in, out := &in.Exporter, &out.Exporter
+		*out = new(v1.ResourceRequirements)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Coordinator != nil {
+		in, out := &in.Coordinator, &out.Coordinator
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}

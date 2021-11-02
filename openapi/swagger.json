@@ -32733,6 +32733,9 @@
         "configServer": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
+        "coordinator": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "exporter": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
@@ -32988,6 +32991,9 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVerticalScalingSpec": {
       "type": "object",
       "properties": {
+        "coordinator": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "exporter": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
@@ -33385,6 +33391,9 @@
       "description": "PostgresVerticalScalingSpec is the spec for Postgres vertical scaling",
       "type": "object",
       "properties": {
+        "coordinator": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "exporter": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
@@ -33763,6 +33772,9 @@
       "description": "RedisVerticalScalingSpec is the spec for Redis vertical scaling",
       "type": "object",
       "properties": {
+        "coordinator": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "exporter": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
