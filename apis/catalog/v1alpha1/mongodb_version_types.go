@@ -103,10 +103,11 @@ type MongoDBVersionList struct {
 	Items []MongoDBVersion `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
 }
 
-// +kubebuilder:validation:Enum=Official;Percona;MongoDB
+// +kubebuilder:validation:Enum=Official;Percona;KubeDB;MongoDB
 type MongoDBDistro string
 
 const (
 	MongoDBDistroOfficaial MongoDBDistro = "Official"
 	MongoDBDistroPercona   MongoDBDistro = "Percona"
+	MongoDBDistroKubeDB    MongoDBDistro = "KubeDB"
 )
