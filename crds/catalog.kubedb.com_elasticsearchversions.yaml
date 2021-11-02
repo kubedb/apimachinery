@@ -53,6 +53,7 @@ spec:
                 - OpenDistro
                 - SearchGuard
                 - X-Pack
+                - OpenSearch
                 type: string
               db:
                 properties:
@@ -69,6 +70,7 @@ spec:
                 - OpenDistro
                 - SearchGuard
                 - KubeDB
+                - OpenSearch
                 type: string
               exporter:
                 properties:
