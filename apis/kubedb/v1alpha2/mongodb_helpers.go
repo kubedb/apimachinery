@@ -154,9 +154,20 @@ func (m MongoDB) MongosSelectors() map[string]string {
 }
 
 func (m MongoDB) OffshootLabels() map[string]string {
-	out := m.OffshootSelectors()
-	out[meta_util.ComponentLabelKey] = ComponentDatabase
-	return meta_util.FilterKeys(kubedb.GroupName, out, m.Labels)
+	return m.offshootLabels(m.OffshootSelectors(), nil)
+}
+
+func (m MongoDB) PodLabels() map[string]string {
+	return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Labels)
+}
+
+func (m MongoDB) PodControllerLabels() map[string]string {
+	return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Controller.Labels)
+}
+
+func (m MongoDB) offshootLabels(selector, overwrite map[string]string) map[string]string {
+	selector[meta_util.ComponentLabelKey] = ComponentDatabase
+	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(m.Labels, overwrite))
 }
 
 func (m MongoDB) ShardLabels(nodeNum int32) map[string]string {
