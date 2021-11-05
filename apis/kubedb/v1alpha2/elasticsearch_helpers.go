@@ -95,8 +95,12 @@ func (e Elasticsearch) OffshootLabels() map[string]string {
 	return e.offshootLabels(e.OffshootSelectors(), nil)
 }
 
-func (e Elasticsearch) PodLabels() map[string]string {
-	return e.offshootLabels(e.OffshootSelectors(), e.Spec.PodTemplate.Labels)
+func (e Elasticsearch) PodLabels(overwrites ...map[string]string) map[string]string {
+	pLabels := e.offshootLabels(e.OffshootSelectors(), e.Spec.PodTemplate.Labels)
+	for _, overwrite := range overwrites {
+		pLabels = meta_util.OverwriteKeys(pLabels, overwrite)
+	}
+	return pLabels
 }
 
 func (e Elasticsearch) PodControllerLabels() map[string]string {
