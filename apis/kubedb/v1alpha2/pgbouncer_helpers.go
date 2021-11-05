@@ -63,7 +63,7 @@ func (p PgBouncer) PodControllerLabels() map[string]string {
 }
 
 func (p PgBouncer) offshootLabels(selector, overwrite map[string]string) map[string]string {
-	selector[meta_util.ComponentLabelKey] = "connection-pooler"
+	selector[meta_util.ComponentLabelKey] = ComponentConnectionPooler
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(p.Labels, overwrite))
 }
 

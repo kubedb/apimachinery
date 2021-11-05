@@ -37,11 +37,12 @@ const (
 	DatabasePodPrimary                   = "primary"
 	DatabasePodStandby                   = "standby"
 
-	ComponentDatabase     = "database"
-	RoleStats             = "stats"
-	DefaultStatsPath      = "/metrics"
-	DefaultPasswordLength = 16
-	HealthCheckInterval   = 10 * time.Second
+	ComponentDatabase         = "database"
+	ComponentConnectionPooler = "connection-pooler"
+	RoleStats                 = "stats"
+	DefaultStatsPath          = "/metrics"
+	DefaultPasswordLength     = 16
+	HealthCheckInterval       = 10 * time.Second
 
 	ContainerExporterName = "exporter"
 	LocalHost             = "localhost"
