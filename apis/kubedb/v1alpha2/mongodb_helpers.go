@@ -163,12 +163,6 @@ func (m MongoDB) PodLabels(podTemplateLabels, overwrite map[string]string) map[s
 	return pLabels
 }
 
-func (m MongoDB) PodControllerLabels(podTemplateLabels, overwrite map[string]string) map[string]string {
-	pcLabels := m.offshootLabels(m.OffshootSelectors(), podTemplateLabels)
-	pcLabels = meta_util.OverwriteKeys(pcLabels, overwrite)
-	return pcLabels
-}
-
 func (m MongoDB) offshootLabels(selector, overwrite map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(m.Labels, overwrite))
