@@ -84,11 +84,11 @@ func (m MySQL) RouterOffshootLabels() map[string]string {
 }
 
 func (m MySQL) RouterPodLabels() map[string]string {
-	return m.offshootLabels(m.RouterOffshootLabels(), m.Spec.PodTemplate.Labels)
+	return m.offshootLabels(m.RouterOffshootLabels(), m.Spec.Topology.InnoDBCluster.Router.PodTemplate.Labels)
 }
 
 func (m MySQL) RouterPodControllerLabels() map[string]string {
-	return m.offshootLabels(m.RouterOffshootLabels(), m.Spec.PodTemplate.Controller.Labels)
+	return m.offshootLabels(m.RouterOffshootLabels(), m.Spec.Topology.InnoDBCluster.Router.PodTemplate.Controller.Labels)
 }
 
 func (m MySQL) offshootLabels(selector, override map[string]string) map[string]string {
