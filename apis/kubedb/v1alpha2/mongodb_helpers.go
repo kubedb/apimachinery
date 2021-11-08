@@ -157,12 +157,16 @@ func (m MongoDB) OffshootLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
 
-func (m MongoDB) PodLabels() map[string]string {
-	return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Labels)
+func (m MongoDB) PodLabels(podTemplateLabels, overwrite map[string]string) map[string]string {
+	pLabels := m.offshootLabels(m.OffshootSelectors(), podTemplateLabels)
+	pLabels = meta_util.OverwriteKeys(pLabels, overwrite)
+	return pLabels
 }
 
-func (m MongoDB) PodControllerLabels() map[string]string {
-	return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Controller.Labels)
+func (m MongoDB) PodControllerLabels(podTemplateLabels, overwrite map[string]string) map[string]string {
+	pcLabels := m.offshootLabels(m.OffshootSelectors(), podTemplateLabels)
+	pcLabels = meta_util.OverwriteKeys(pcLabels, overwrite)
+	return pcLabels
 }
 
 func (m MongoDB) offshootLabels(selector, overwrite map[string]string) map[string]string {
