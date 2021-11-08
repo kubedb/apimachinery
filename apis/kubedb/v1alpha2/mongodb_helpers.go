@@ -169,15 +169,15 @@ func (m MongoDB) offshootLabels(selector, overwrite map[string]string) map[strin
 }
 
 func (m MongoDB) ShardLabels(nodeNum int32) map[string]string {
-	return meta_util.FilterKeys(kubedb.GroupName, m.OffshootLabels(), m.ShardSelectors(nodeNum))
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ShardSelectors(nodeNum))
 }
 
 func (m MongoDB) ConfigSvrLabels() map[string]string {
-	return meta_util.FilterKeys(kubedb.GroupName, m.OffshootLabels(), m.ConfigSvrSelectors())
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ConfigSvrSelectors())
 }
 
 func (m MongoDB) MongosLabels() map[string]string {
-	return meta_util.FilterKeys(kubedb.GroupName, m.OffshootLabels(), m.MongosSelectors())
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.MongosSelectors())
 }
 
 func (m MongoDB) ResourceFQN() string {
