@@ -55,12 +55,16 @@ func (e Elasticsearch) OffshootName() string {
 	return e.Name
 }
 
-func (e Elasticsearch) OffshootSelectors() map[string]string {
-	return map[string]string{
+func (e Elasticsearch) OffshootSelectors(overwrites ...map[string]string) map[string]string {
+	selector := map[string]string{
 		meta_util.NameLabelKey:      e.ResourceFQN(),
 		meta_util.InstanceLabelKey:  e.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
+	for _, overwrite := range overwrites {
+		selector = meta_util.OverwriteKeys(selector, overwrite)
+	}
+	return selector
 }
 
 func (e Elasticsearch) NodeRoleSpecificLabelKey(roleType ElasticsearchNodeRoleType) string {
