@@ -72,6 +72,15 @@ func (m MariaDB) offshootLabels(selector, overwrite map[string]string) map[strin
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(m.Labels, overwrite))
 }
 
+func (m MariaDB) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
+	svcLabels := m.offshootLabels(m.OffshootSelectors(), svcTemplate.Labels)
+	for _, overwrite := range overwrites {
+		meta_util.OverwriteKeys(svcLabels, overwrite)
+	}
+	return svcLabels
+}
+
 func (m MariaDB) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", ResourcePluralMariaDB, kubedb.GroupName)
 }
@@ -165,9 +174,7 @@ func (m MariaDB) StatsService() mona.StatsAccessor {
 }
 
 func (m MariaDB) StatsServiceLabels() map[string]string {
-	lbl := meta_util.FilterKeys(kubedb.GroupName, m.OffshootSelectors(), m.Labels)
-	lbl[LabelRole] = RoleStats
-	return lbl
+	return m.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (m MariaDB) PrimaryServiceDNS() string {
