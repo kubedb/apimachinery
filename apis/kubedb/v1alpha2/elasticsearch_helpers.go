@@ -115,6 +115,15 @@ func (e Elasticsearch) PodControllerLabels(overwrites ...map[string]string) map[
 	return pcLabels
 }
 
+func (e Elasticsearch) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(e.Spec.ServiceTemplates, alias)
+	svcLabels := e.offshootLabels(e.OffshootSelectors(), svcTemplate.Labels)
+	for _, overwrite := range overwrites {
+		meta_util.OverwriteKeys(svcLabels, overwrite)
+	}
+	return svcLabels
+}
+
 func (e Elasticsearch) offshootLabels(selector, overwrite map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(e.Labels, overwrite))
@@ -378,9 +387,7 @@ func (e Elasticsearch) StatsService() mona.StatsAccessor {
 }
 
 func (e Elasticsearch) StatsServiceLabels() map[string]string {
-	lbl := meta_util.FilterKeys(kubedb.GroupName, e.OffshootSelectors(), e.Labels)
-	lbl[LabelRole] = RoleStats
-	return lbl
+	return e.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, topology *core_util.Topology) {
