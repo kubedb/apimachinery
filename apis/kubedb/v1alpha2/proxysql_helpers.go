@@ -63,6 +63,15 @@ func (p ProxySQL) PodControllerLabels() map[string]string {
 	return p.offshootLabels(p.OffshootSelectors(), p.Spec.PodTemplate.Controller.Labels)
 }
 
+func (p ProxySQL) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(p.Spec.ServiceTemplates, alias)
+	svcLabels := p.offshootLabels(p.OffshootSelectors(), svcTemplate.Labels)
+	for _, overwrite := range overwrites {
+		meta_util.OverwriteKeys(svcLabels, overwrite)
+	}
+	return svcLabels
+}
+
 func (p ProxySQL) offshootLabels(selector, overwrite map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(p.Labels, overwrite))
@@ -145,9 +154,7 @@ func (p ProxySQL) StatsService() mona.StatsAccessor {
 }
 
 func (p ProxySQL) StatsServiceLabels() map[string]string {
-	lbl := meta_util.FilterKeys(kubedb.GroupName, p.OffshootSelectors(), p.Labels)
-	lbl[LabelRole] = RoleStats
-	return lbl
+	return p.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (p *ProxySQL) SetDefaults() {

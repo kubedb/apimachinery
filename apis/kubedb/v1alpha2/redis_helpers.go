@@ -71,6 +71,15 @@ func (r Redis) PodControllerLabels() map[string]string {
 	return r.offshootLabels(r.OffshootSelectors(), r.Spec.PodTemplate.Controller.Labels)
 }
 
+func (r Redis) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(r.Spec.ServiceTemplates, alias)
+	svcLabels := r.offshootLabels(r.OffshootSelectors(), svcTemplate.Labels)
+	for _, overwrite := range overwrites {
+		meta_util.OverwriteKeys(svcLabels, overwrite)
+	}
+	return svcLabels
+}
+
 func (r Redis) offshootLabels(selector, overwrite map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(r.Labels, overwrite))
@@ -177,9 +186,7 @@ func (r Redis) StatsService() mona.StatsAccessor {
 }
 
 func (r Redis) StatsServiceLabels() map[string]string {
-	lbl := meta_util.FilterKeys(kubedb.GroupName, r.OffshootSelectors(), r.Labels)
-	lbl[LabelRole] = RoleStats
-	return lbl
+	return r.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (r *Redis) SetDefaults(topology *core_util.Topology) {

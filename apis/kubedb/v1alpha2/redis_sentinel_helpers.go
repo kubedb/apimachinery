@@ -63,6 +63,15 @@ func (rs RedisSentinel) PodControllerLabels() map[string]string {
 	return rs.offshootLabels(rs.OffshootSelectors(), rs.Spec.PodTemplate.Controller.Labels)
 }
 
+func (rs RedisSentinel) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(rs.Spec.ServiceTemplates, alias)
+	svcLabels := rs.offshootLabels(rs.OffshootSelectors(), svcTemplate.Labels)
+	for _, overwrite := range overwrites {
+		meta_util.OverwriteKeys(svcLabels, overwrite)
+	}
+	return svcLabels
+}
+
 func (rs RedisSentinel) offshootLabels(selector, overwrite map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(rs.Labels, overwrite))
@@ -145,9 +154,7 @@ func (rs RedisSentinel) StatsService() mona.StatsAccessor {
 }
 
 func (rs RedisSentinel) StatsServiceLabels() map[string]string {
-	lbl := meta_util.FilterKeys(kubedb.GroupName, rs.OffshootSelectors(), rs.Labels)
-	lbl[LabelRole] = RoleStats
-	return lbl
+	return rs.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (rs *RedisSentinel) SetDefaults(topology *core_util.Topology) {

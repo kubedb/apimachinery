@@ -62,6 +62,15 @@ func (e Etcd) PodControllerLabels() map[string]string {
 	return e.offshootLabels(e.OffshootSelectors(), e.Spec.PodTemplate.Controller.Labels)
 }
 
+func (e Etcd) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(e.Spec.ServiceTemplates, alias)
+	svcLabels := e.offshootLabels(e.OffshootSelectors(), svcTemplate.Labels)
+	for _, overwrite := range overwrites {
+		meta_util.OverwriteKeys(svcLabels, overwrite)
+	}
+	return svcLabels
+}
+
 func (e Etcd) offshootLabels(selector, overwrite map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(e.Labels, overwrite))
@@ -144,9 +153,7 @@ func (e Etcd) StatsService() mona.StatsAccessor {
 }
 
 func (e Etcd) StatsServiceLabels() map[string]string {
-	lbl := meta_util.FilterKeys(kubedb.GroupName, e.OffshootSelectors(), e.Labels)
-	lbl[LabelRole] = RoleStats
-	return lbl
+	return e.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (e *Etcd) SetDefaults() {

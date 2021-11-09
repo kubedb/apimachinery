@@ -72,6 +72,15 @@ func (p Postgres) PodControllerLabels() map[string]string {
 	return p.offshootLabels(p.OffshootSelectors(), p.Spec.PodTemplate.Controller.Labels)
 }
 
+func (p Postgres) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(p.Spec.ServiceTemplates, alias)
+	svcLabels := p.offshootLabels(p.OffshootSelectors(), svcTemplate.Labels)
+	for _, overwrite := range overwrites {
+		meta_util.OverwriteKeys(svcLabels, overwrite)
+	}
+	return svcLabels
+}
+
 func (p Postgres) offshootLabels(selector, overwrite map[string]string) map[string]string {
 	// out := p.OffshootSelectors()
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
@@ -159,9 +168,7 @@ func (p Postgres) StatsService() mona.StatsAccessor {
 }
 
 func (p Postgres) StatsServiceLabels() map[string]string {
-	lbl := meta_util.FilterKeys(kubedb.GroupName, p.OffshootSelectors(), p.Labels)
-	lbl[LabelRole] = RoleStats
-	return lbl
+	return p.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topology *core_util.Topology) {
