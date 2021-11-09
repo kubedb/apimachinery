@@ -34,7 +34,6 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
-	v1 "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
@@ -136,19 +135,19 @@ func (m MongoDB) OffshootSelectors() map[string]string {
 }
 
 func (m MongoDB) ShardSelectors(nodeNum int32) map[string]string {
-	return v1.UpsertMap(m.OffshootSelectors(), map[string]string{
+	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
 		MongoDBShardLabelKey: m.ShardNodeName(nodeNum),
 	})
 }
 
 func (m MongoDB) ConfigSvrSelectors() map[string]string {
-	return v1.UpsertMap(m.OffshootSelectors(), map[string]string{
+	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
 		MongoDBConfigLabelKey: m.ConfigSvrNodeName(),
 	})
 }
 
 func (m MongoDB) MongosSelectors() map[string]string {
-	return v1.UpsertMap(m.OffshootSelectors(), map[string]string{
+	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
 		MongoDBMongosLabelKey: m.MongosNodeName(),
 	})
 }
@@ -178,6 +177,12 @@ func (m MongoDB) ConfigSvrLabels() map[string]string {
 
 func (m MongoDB) MongosLabels() map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.MongosSelectors())
+}
+
+func (m MongoDB) ServiceLabels(svcTemplateLabels, overwrite map[string]string) map[string]string {
+	svcLabels := m.offshootLabels(m.OffshootSelectors(), svcTemplateLabels)
+	svcLabels = meta_util.OverwriteKeys(svcLabels, overwrite)
+	return svcLabels
 }
 
 func (m MongoDB) ResourceFQN() string {
@@ -341,9 +346,9 @@ func (m MongoDB) StatsService() mona.StatsAccessor {
 }
 
 func (m MongoDB) StatsServiceLabels() map[string]string {
-	lbl := meta_util.FilterKeys(kubedb.GroupName, m.OffshootSelectors(), m.Labels)
-	lbl[LabelRole] = RoleStats
-	return lbl
+	return meta_util.OverwriteKeys(m.OffshootLabels(), map[string]string{
+		LabelRole: RoleStats,
+	})
 }
 
 func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core_util.Topology) {
