@@ -91,6 +91,15 @@ func (m MySQL) RouterPodControllerLabels() map[string]string {
 	return m.offshootLabels(m.RouterOffshootLabels(), m.Spec.Topology.InnoDBCluster.Router.PodTemplate.Controller.Labels)
 }
 
+func (m MySQL) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
+	svcLabels := m.offshootLabels(m.OffshootSelectors(), svcTemplate.Labels)
+	for _, overwrite := range overwrites {
+		meta_util.OverwriteKeys(svcLabels, overwrite)
+	}
+	return svcLabels
+}
+
 func (m MySQL) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(m.Labels, override))
@@ -201,9 +210,7 @@ func (m MySQL) StatsService() mona.StatsAccessor {
 }
 
 func (m MySQL) StatsServiceLabels() map[string]string {
-	lbl := meta_util.FilterKeys(kubedb.GroupName, m.OffshootSelectors(), m.Labels)
-	lbl[LabelRole] = RoleStats
-	return lbl
+	return m.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (m *MySQL) UsesGroupReplication() bool {
