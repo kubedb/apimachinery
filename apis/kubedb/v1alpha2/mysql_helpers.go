@@ -91,18 +91,14 @@ func (m MySQL) RouterPodControllerLabels() map[string]string {
 	return m.offshootLabels(m.RouterOffshootLabels(), m.Spec.Topology.InnoDBCluster.Router.PodTemplate.Controller.Labels)
 }
 
-func (m MySQL) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
+func (m MySQL) ServiceLabels(alias ServiceAlias, overrides ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
-	svcLabels := m.offshootLabels(m.OffshootSelectors(), svcTemplate.Labels)
-	for _, overwrite := range overwrites {
-		meta_util.OverwriteKeys(svcLabels, overwrite)
-	}
-	return svcLabels
+	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), overrides...), svcTemplate.Labels)
 }
 
 func (m MySQL) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
-	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(m.Labels, override))
+	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, m.Labels, override))
 }
 
 func (m MySQL) ResourceFQN() string {

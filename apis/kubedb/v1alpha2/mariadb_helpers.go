@@ -67,18 +67,14 @@ func (m MariaDB) PodControllerLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Controller.Labels)
 }
 
-func (m MariaDB) offshootLabels(selector, overwrite map[string]string) map[string]string {
+func (m MariaDB) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
-	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(m.Labels, overwrite))
+	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, m.Labels, override))
 }
 
-func (m MariaDB) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
+func (m MariaDB) ServiceLabels(alias ServiceAlias, overrides ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
-	svcLabels := m.offshootLabels(m.OffshootSelectors(), svcTemplate.Labels)
-	for _, overwrite := range overwrites {
-		meta_util.OverwriteKeys(svcLabels, overwrite)
-	}
-	return svcLabels
+	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), overrides...), svcTemplate.Labels)
 }
 
 func (m MariaDB) ResourceFQN() string {

@@ -55,16 +55,13 @@ func (e Elasticsearch) OffshootName() string {
 	return e.Name
 }
 
-func (e Elasticsearch) OffshootSelectors(overwrites ...map[string]string) map[string]string {
+func (e Elasticsearch) OffshootSelectors(overrides ...map[string]string) map[string]string {
 	selector := map[string]string{
 		meta_util.NameLabelKey:      e.ResourceFQN(),
 		meta_util.InstanceLabelKey:  e.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
-	for _, overwrite := range overwrites {
-		selector = meta_util.OverwriteKeys(selector, overwrite)
-	}
-	return selector
+	return meta_util.OverwriteKeys(selector, overrides...)
 }
 
 func (e Elasticsearch) NodeRoleSpecificLabelKey(roleType ElasticsearchNodeRoleType) string {
@@ -99,34 +96,22 @@ func (e Elasticsearch) OffshootLabels() map[string]string {
 	return e.offshootLabels(e.OffshootSelectors(), nil)
 }
 
-func (e Elasticsearch) PodLabels(overwrites ...map[string]string) map[string]string {
-	pLabels := e.offshootLabels(e.OffshootSelectors(), e.Spec.PodTemplate.Labels)
-	for _, overwrite := range overwrites {
-		pLabels = meta_util.OverwriteKeys(pLabels, overwrite)
-	}
-	return pLabels
+func (e Elasticsearch) PodLabels(overrides ...map[string]string) map[string]string {
+	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), overrides...), e.Spec.PodTemplate.Labels)
 }
 
-func (e Elasticsearch) PodControllerLabels(overwrites ...map[string]string) map[string]string {
-	pcLabels := e.offshootLabels(e.OffshootSelectors(), e.Spec.PodTemplate.Controller.Labels)
-	for _, overwrite := range overwrites {
-		pcLabels = meta_util.OverwriteKeys(pcLabels, overwrite)
-	}
-	return pcLabels
+func (e Elasticsearch) PodControllerLabels(overrides ...map[string]string) map[string]string {
+	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), overrides...), e.Spec.PodTemplate.Controller.Labels)
 }
 
-func (e Elasticsearch) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
+func (e Elasticsearch) ServiceLabels(alias ServiceAlias, override ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(e.Spec.ServiceTemplates, alias)
-	svcLabels := e.offshootLabels(e.OffshootSelectors(), svcTemplate.Labels)
-	for _, overwrite := range overwrites {
-		meta_util.OverwriteKeys(svcLabels, overwrite)
-	}
-	return svcLabels
+	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), override...), svcTemplate.Labels)
 }
 
-func (e Elasticsearch) offshootLabels(selector, overwrite map[string]string) map[string]string {
+func (e Elasticsearch) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
-	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(e.Labels, overwrite))
+	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, e.Labels, override))
 }
 
 func (e Elasticsearch) ResourceFQN() string {

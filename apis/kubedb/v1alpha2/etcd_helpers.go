@@ -64,16 +64,12 @@ func (e Etcd) PodControllerLabels() map[string]string {
 
 func (e Etcd) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(e.Spec.ServiceTemplates, alias)
-	svcLabels := e.offshootLabels(e.OffshootSelectors(), svcTemplate.Labels)
-	for _, overwrite := range overwrites {
-		meta_util.OverwriteKeys(svcLabels, overwrite)
-	}
-	return svcLabels
+	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), overwrites...), svcTemplate.Labels)
 }
 
 func (e Etcd) offshootLabels(selector, overwrite map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
-	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(e.Labels, overwrite))
+	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, e.Labels, overwrite))
 }
 
 func (e Etcd) ResourceFQN() string {

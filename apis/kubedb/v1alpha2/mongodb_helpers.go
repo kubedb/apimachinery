@@ -156,15 +156,15 @@ func (m MongoDB) OffshootLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
 
-func (m MongoDB) PodLabels(podTemplateLabels, overwrite map[string]string) map[string]string {
+func (m MongoDB) PodLabels(podTemplateLabels, override map[string]string) map[string]string {
 	pLabels := m.offshootLabels(m.OffshootSelectors(), podTemplateLabels)
-	pLabels = meta_util.OverwriteKeys(pLabels, overwrite)
+	pLabels = meta_util.OverwriteKeys(pLabels, override)
 	return pLabels
 }
 
-func (m MongoDB) offshootLabels(selector, overwrite map[string]string) map[string]string {
+func (m MongoDB) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
-	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(m.Labels, overwrite))
+	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, m.Labels, override))
 }
 
 func (m MongoDB) ShardLabels(nodeNum int32) map[string]string {
@@ -179,9 +179,9 @@ func (m MongoDB) MongosLabels() map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.MongosSelectors())
 }
 
-func (m MongoDB) ServiceLabels(svcTemplateLabels, overwrite map[string]string) map[string]string {
+func (m MongoDB) ServiceLabels(svcTemplateLabels, override map[string]string) map[string]string {
 	svcLabels := m.offshootLabels(m.OffshootSelectors(), svcTemplateLabels)
-	svcLabels = meta_util.OverwriteKeys(svcLabels, overwrite)
+	svcLabels = meta_util.OverwriteKeys(svcLabels, override)
 	return svcLabels
 }
 

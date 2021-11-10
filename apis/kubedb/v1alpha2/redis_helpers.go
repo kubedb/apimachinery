@@ -71,18 +71,14 @@ func (r Redis) PodControllerLabels() map[string]string {
 	return r.offshootLabels(r.OffshootSelectors(), r.Spec.PodTemplate.Controller.Labels)
 }
 
-func (r Redis) ServiceLabels(alias ServiceAlias, overwrites ...map[string]string) map[string]string {
+func (r Redis) ServiceLabels(alias ServiceAlias, overrides ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(r.Spec.ServiceTemplates, alias)
-	svcLabels := r.offshootLabels(r.OffshootSelectors(), svcTemplate.Labels)
-	for _, overwrite := range overwrites {
-		meta_util.OverwriteKeys(svcLabels, overwrite)
-	}
-	return svcLabels
+	return r.offshootLabels(meta_util.OverwriteKeys(r.OffshootSelectors(), overrides...), svcTemplate.Labels)
 }
 
-func (r Redis) offshootLabels(selector, overwrite map[string]string) map[string]string {
+func (r Redis) offshootLabels(selector, overrides map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
-	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(r.Labels, overwrite))
+	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, r.Labels, overrides))
 }
 
 func (r Redis) ResourceFQN() string {
