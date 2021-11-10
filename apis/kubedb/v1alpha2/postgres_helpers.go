@@ -72,9 +72,9 @@ func (p Postgres) PodControllerLabels() map[string]string {
 	return p.offshootLabels(p.OffshootSelectors(), p.Spec.PodTemplate.Controller.Labels)
 }
 
-func (p Postgres) ServiceLabels(alias ServiceAlias, overrides ...map[string]string) map[string]string {
+func (p Postgres) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(p.Spec.ServiceTemplates, alias)
-	return p.offshootLabels(meta_util.OverwriteKeys(p.OffshootSelectors(), overrides...), svcTemplate.Labels)
+	return p.offshootLabels(meta_util.OverwriteKeys(p.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 func (p Postgres) offshootLabels(selector, override map[string]string) map[string]string {

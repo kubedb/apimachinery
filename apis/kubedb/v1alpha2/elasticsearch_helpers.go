@@ -55,13 +55,13 @@ func (e Elasticsearch) OffshootName() string {
 	return e.Name
 }
 
-func (e Elasticsearch) OffshootSelectors(overrides ...map[string]string) map[string]string {
+func (e Elasticsearch) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
 		meta_util.NameLabelKey:      e.ResourceFQN(),
 		meta_util.InstanceLabelKey:  e.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
-	return meta_util.OverwriteKeys(selector, overrides...)
+	return meta_util.OverwriteKeys(selector, extraSelectors...)
 }
 
 func (e Elasticsearch) NodeRoleSpecificLabelKey(roleType ElasticsearchNodeRoleType) string {
@@ -69,44 +69,36 @@ func (e Elasticsearch) NodeRoleSpecificLabelKey(roleType ElasticsearchNodeRoleTy
 }
 
 func (e Elasticsearch) MasterSelectors() map[string]string {
-	selectors := e.OffshootSelectors()
-	selectors[e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeMaster)] = ElasticsearchNodeRoleSet
-	return selectors
+	return e.OffshootSelectors(map[string]string{e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeMaster): ElasticsearchNodeRoleSet})
 }
 
 func (e Elasticsearch) DataSelectors() map[string]string {
-	selectors := e.OffshootSelectors()
-	selectors[e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeData)] = ElasticsearchNodeRoleSet
-	return selectors
+	return e.OffshootSelectors(map[string]string{e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeData): ElasticsearchNodeRoleSet})
 }
 
 func (e Elasticsearch) IngestSelectors() map[string]string {
-	selectors := e.OffshootSelectors()
-	selectors[e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeIngest)] = ElasticsearchNodeRoleSet
-	return selectors
+	return e.OffshootSelectors(map[string]string{e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeIngest): ElasticsearchNodeRoleSet})
 }
 
 func (e Elasticsearch) NodeRoleSpecificSelectors(roleType ElasticsearchNodeRoleType) map[string]string {
-	selectors := e.OffshootSelectors()
-	selectors[e.NodeRoleSpecificLabelKey(roleType)] = ElasticsearchNodeRoleSet
-	return selectors
+	return e.OffshootSelectors(map[string]string{e.NodeRoleSpecificLabelKey(roleType): ElasticsearchNodeRoleSet})
 }
 
 func (e Elasticsearch) OffshootLabels() map[string]string {
 	return e.offshootLabels(e.OffshootSelectors(), nil)
 }
 
-func (e Elasticsearch) PodLabels(overrides ...map[string]string) map[string]string {
-	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), overrides...), e.Spec.PodTemplate.Labels)
+func (e Elasticsearch) PodLabels(extraLabels ...map[string]string) map[string]string {
+	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), extraLabels...), e.Spec.PodTemplate.Labels)
 }
 
-func (e Elasticsearch) PodControllerLabels(overrides ...map[string]string) map[string]string {
-	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), overrides...), e.Spec.PodTemplate.Controller.Labels)
+func (e Elasticsearch) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
+	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), extraLabels...), e.Spec.PodTemplate.Controller.Labels)
 }
 
-func (e Elasticsearch) ServiceLabels(alias ServiceAlias, override ...map[string]string) map[string]string {
+func (e Elasticsearch) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(e.Spec.ServiceTemplates, alias)
-	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), override...), svcTemplate.Labels)
+	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 func (e Elasticsearch) offshootLabels(selector, override map[string]string) map[string]string {

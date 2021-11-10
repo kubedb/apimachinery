@@ -156,10 +156,17 @@ func (m MongoDB) OffshootLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
 
-func (m MongoDB) PodLabels(podTemplateLabels, override map[string]string) map[string]string {
-	pLabels := m.offshootLabels(m.OffshootSelectors(), podTemplateLabels)
-	pLabels = meta_util.OverwriteKeys(pLabels, override)
-	return pLabels
+func (m MongoDB) PodLabels(podTemplateLabels map[string]string, extraLabels ...map[string]string) map[string]string {
+	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), podTemplateLabels)
+}
+
+func (m MongoDB) PodControllerLabels(podControllerLabels map[string]string, extraLabels ...map[string]string) map[string]string {
+	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), podControllerLabels)
+}
+
+func (m MongoDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
+	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 func (m MongoDB) offshootLabels(selector, override map[string]string) map[string]string {
@@ -177,12 +184,6 @@ func (m MongoDB) ConfigSvrLabels() map[string]string {
 
 func (m MongoDB) MongosLabels() map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.MongosSelectors())
-}
-
-func (m MongoDB) ServiceLabels(svcTemplateLabels, override map[string]string) map[string]string {
-	svcLabels := m.offshootLabels(m.OffshootSelectors(), svcTemplateLabels)
-	svcLabels = meta_util.OverwriteKeys(svcLabels, override)
-	return svcLabels
 }
 
 func (m MongoDB) ResourceFQN() string {
@@ -346,9 +347,7 @@ func (m MongoDB) StatsService() mona.StatsAccessor {
 }
 
 func (m MongoDB) StatsServiceLabels() map[string]string {
-	return meta_util.OverwriteKeys(m.OffshootLabels(), map[string]string{
-		LabelRole: RoleStats,
-	})
+	return m.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core_util.Topology) {

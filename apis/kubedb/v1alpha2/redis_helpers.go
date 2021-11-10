@@ -71,9 +71,9 @@ func (r Redis) PodControllerLabels() map[string]string {
 	return r.offshootLabels(r.OffshootSelectors(), r.Spec.PodTemplate.Controller.Labels)
 }
 
-func (r Redis) ServiceLabels(alias ServiceAlias, overrides ...map[string]string) map[string]string {
+func (r Redis) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(r.Spec.ServiceTemplates, alias)
-	return r.offshootLabels(meta_util.OverwriteKeys(r.OffshootSelectors(), overrides...), svcTemplate.Labels)
+	return r.offshootLabels(meta_util.OverwriteKeys(r.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 func (r Redis) offshootLabels(selector, overrides map[string]string) map[string]string {

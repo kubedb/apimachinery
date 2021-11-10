@@ -91,9 +91,9 @@ func (m MySQL) RouterPodControllerLabels() map[string]string {
 	return m.offshootLabels(m.RouterOffshootLabels(), m.Spec.Topology.InnoDBCluster.Router.PodTemplate.Controller.Labels)
 }
 
-func (m MySQL) ServiceLabels(alias ServiceAlias, overrides ...map[string]string) map[string]string {
+func (m MySQL) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
-	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), overrides...), svcTemplate.Labels)
+	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 func (m MySQL) offshootLabels(selector, override map[string]string) map[string]string {

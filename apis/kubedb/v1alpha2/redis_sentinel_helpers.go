@@ -63,9 +63,9 @@ func (rs RedisSentinel) PodControllerLabels() map[string]string {
 	return rs.offshootLabels(rs.OffshootSelectors(), rs.Spec.PodTemplate.Controller.Labels)
 }
 
-func (rs RedisSentinel) ServiceLabels(alias ServiceAlias, overrides ...map[string]string) map[string]string {
+func (rs RedisSentinel) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(rs.Spec.ServiceTemplates, alias)
-	return rs.offshootLabels(meta_util.OverwriteKeys(rs.OffshootSelectors(), overrides...), svcTemplate.Labels)
+	return rs.offshootLabels(meta_util.OverwriteKeys(rs.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 func (rs RedisSentinel) offshootLabels(selector, override map[string]string) map[string]string {
