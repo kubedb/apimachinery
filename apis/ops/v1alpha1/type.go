@@ -100,6 +100,8 @@ const (
 	RestartMongos               = "RestartMongos"
 	RestartConfigServer         = "RestartConfigServer"
 	RestartShard                = "RestartShard"
+	DeleteStatefulSets          = "DeleteStatefulSets"
+	DatabaseReady               = "DatabaseReady"
 
 	// Elasticsearch Constant
 	OrphanStatefulSetPods              = "OrphanStatefulSetPods"
@@ -198,7 +200,7 @@ const (
 	OpsRequestDenied OpsRequestPhase = "Denied"
 )
 
-// +kubebuilder:validation:Enum=Upgrade;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
+// +kubebuilder:validation:Enum=Upgrade;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;Reprovision
 type OpsRequestType string
 
 const (
@@ -216,6 +218,8 @@ const (
 	OpsRequestTypeReconfigure OpsRequestType = "Reconfigure"
 	// used for ReconfigureTLS operation
 	OpsRequestTypeReconfigureTLSs OpsRequestType = "ReconfigureTLS"
+	// used for Reprovision operation
+	OpsRequestTypeReprovision OpsRequestType = "Reprovision"
 )
 
 // +kubebuilder:validation:Enum=Offline;Online
@@ -229,6 +233,9 @@ const (
 )
 
 type RestartSpec struct {
+}
+
+type Reprovision struct {
 }
 
 type TLSSpec struct {

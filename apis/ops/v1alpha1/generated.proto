@@ -677,6 +677,9 @@ message MongoDBOpsRequestSpec {
   // Specifies information necessary for restarting database
   optional RestartSpec restart = 9;
 
+  // Specifies information necessary for reprovisioning database
+  optional Reprovision reprovision = 12;
+
   // Specifies the Readiness Criteria
   optional MongoDBReplicaReadinessCriteria readinessCriteria = 10;
 
@@ -1407,6 +1410,9 @@ message RedisVerticalScalingSpec {
 // RedisVolumeExpansionSpec is the spec for Redis volume expansion
 message RedisVolumeExpansionSpec {
   optional k8s.io.apimachinery.pkg.api.resource.Quantity redis = 1;
+}
+
+message Reprovision {
 }
 
 message RestartSpec {
