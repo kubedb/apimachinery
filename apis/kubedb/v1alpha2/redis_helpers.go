@@ -51,24 +51,25 @@ func (r Redis) OffshootName() string {
 	return r.Name
 }
 
-func (r Redis) OffshootSelectors() map[string]string {
-	return map[string]string{
+func (r Redis) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
+	selector := map[string]string{
 		meta_util.NameLabelKey:      r.ResourceFQN(),
 		meta_util.InstanceLabelKey:  r.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
+	return meta_util.OverwriteKeys(selector, extraSelectors...)
 }
 
 func (r Redis) OffshootLabels() map[string]string {
 	return r.offshootLabels(r.OffshootSelectors(), nil)
 }
 
-func (r Redis) PodLabels() map[string]string {
-	return r.offshootLabels(r.OffshootSelectors(), r.Spec.PodTemplate.Labels)
+func (r Redis) PodLabels(extraLabels ...map[string]string) map[string]string {
+	return r.offshootLabels(meta_util.OverwriteKeys(r.OffshootSelectors(), extraLabels...), r.Spec.PodTemplate.Labels)
 }
 
-func (r Redis) PodControllerLabels() map[string]string {
-	return r.offshootLabels(r.OffshootSelectors(), r.Spec.PodTemplate.Controller.Labels)
+func (r Redis) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
+	return r.offshootLabels(meta_util.OverwriteKeys(r.OffshootSelectors(), extraLabels...), r.Spec.PodTemplate.Controller.Labels)
 }
 
 func (r Redis) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
