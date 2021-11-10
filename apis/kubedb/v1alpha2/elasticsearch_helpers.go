@@ -55,12 +55,13 @@ func (e Elasticsearch) OffshootName() string {
 	return e.Name
 }
 
-func (e Elasticsearch) OffshootSelectors() map[string]string {
-	return map[string]string{
+func (e Elasticsearch) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
+	selector := map[string]string{
 		meta_util.NameLabelKey:      e.ResourceFQN(),
 		meta_util.InstanceLabelKey:  e.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
+	return meta_util.OverwriteKeys(selector, extraSelectors...)
 }
 
 func (e Elasticsearch) NodeRoleSpecificLabelKey(roleType ElasticsearchNodeRoleType) string {
@@ -68,33 +69,41 @@ func (e Elasticsearch) NodeRoleSpecificLabelKey(roleType ElasticsearchNodeRoleTy
 }
 
 func (e Elasticsearch) MasterSelectors() map[string]string {
-	selectors := e.OffshootSelectors()
-	selectors[e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeMaster)] = ElasticsearchNodeRoleSet
-	return selectors
+	return e.OffshootSelectors(map[string]string{e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeMaster): ElasticsearchNodeRoleSet})
 }
 
 func (e Elasticsearch) DataSelectors() map[string]string {
-	selectors := e.OffshootSelectors()
-	selectors[e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeData)] = ElasticsearchNodeRoleSet
-	return selectors
+	return e.OffshootSelectors(map[string]string{e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeData): ElasticsearchNodeRoleSet})
 }
 
 func (e Elasticsearch) IngestSelectors() map[string]string {
-	selectors := e.OffshootSelectors()
-	selectors[e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeIngest)] = ElasticsearchNodeRoleSet
-	return selectors
+	return e.OffshootSelectors(map[string]string{e.NodeRoleSpecificLabelKey(ElasticsearchNodeRoleTypeIngest): ElasticsearchNodeRoleSet})
 }
 
 func (e Elasticsearch) NodeRoleSpecificSelectors(roleType ElasticsearchNodeRoleType) map[string]string {
-	selectors := e.OffshootSelectors()
-	selectors[e.NodeRoleSpecificLabelKey(roleType)] = ElasticsearchNodeRoleSet
-	return selectors
+	return e.OffshootSelectors(map[string]string{e.NodeRoleSpecificLabelKey(roleType): ElasticsearchNodeRoleSet})
 }
 
 func (e Elasticsearch) OffshootLabels() map[string]string {
-	out := e.OffshootSelectors()
-	out[meta_util.ComponentLabelKey] = ComponentDatabase
-	return meta_util.FilterKeys(kubedb.GroupName, out, e.Labels)
+	return e.offshootLabels(e.OffshootSelectors(), nil)
+}
+
+func (e Elasticsearch) PodLabels(extraLabels ...map[string]string) map[string]string {
+	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), extraLabels...), e.Spec.PodTemplate.Labels)
+}
+
+func (e Elasticsearch) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
+	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), extraLabels...), e.Spec.PodTemplate.Controller.Labels)
+}
+
+func (e Elasticsearch) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(e.Spec.ServiceTemplates, alias)
+	return e.offshootLabels(meta_util.OverwriteKeys(e.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
+}
+
+func (e Elasticsearch) offshootLabels(selector, override map[string]string) map[string]string {
+	selector[meta_util.ComponentLabelKey] = ComponentDatabase
+	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, e.Labels, override))
 }
 
 func (e Elasticsearch) ResourceFQN() string {
@@ -355,9 +364,7 @@ func (e Elasticsearch) StatsService() mona.StatsAccessor {
 }
 
 func (e Elasticsearch) StatsServiceLabels() map[string]string {
-	lbl := meta_util.FilterKeys(kubedb.GroupName, e.OffshootSelectors(), e.Labels)
-	lbl[LabelRole] = RoleStats
-	return lbl
+	return e.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, topology *core_util.Topology) {
