@@ -996,6 +996,11 @@ func (in *MongoDBConfigNode) DeepCopyInto(out *MongoDBConfigNode) {
 		*out = new(v1.PersistentVolumeClaimSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.EphemeralStorage != nil {
+		in, out := &in.EphemeralStorage, &out.EphemeralStorage
+		*out = new(v1.EmptyDirVolumeSource)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -1106,6 +1111,11 @@ func (in *MongoDBShardNode) DeepCopyInto(out *MongoDBShardNode) {
 		*out = new(v1.PersistentVolumeClaimSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.EphemeralStorage != nil {
+		in, out := &in.EphemeralStorage, &out.EphemeralStorage
+		*out = new(v1.EmptyDirVolumeSource)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -1159,6 +1169,11 @@ func (in *MongoDBSpec) DeepCopyInto(out *MongoDBSpec) {
 	if in.Storage != nil {
 		in, out := &in.Storage, &out.Storage
 		*out = new(v1.PersistentVolumeClaimSpec)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.EphemeralStorage != nil {
+		in, out := &in.EphemeralStorage, &out.EphemeralStorage
+		*out = new(v1.EmptyDirVolumeSource)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.AuthSecret != nil {
