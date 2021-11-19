@@ -122,13 +122,13 @@ func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultResources c
 	}
 }
 
-func FilterDatabasePods(db metav1.Object, stsLister appslister.StatefulSetLister, pods []core.Pod) ([]core.Pod, error) {
+func GetDatabasePods(db metav1.Object, stsLister appslister.StatefulSetLister, pods []core.Pod) ([]core.Pod, error) {
 	var dbPods []core.Pod
 
 	for i := range pods {
 		owner := metav1.GetControllerOf(&pods[i])
 		if owner == nil {
-			return nil, fmt.Errorf("unable to find controller of Pod %s/%s", pods[i].Namespace, pods[i].Name)
+			continue
 		}
 
 		// If the Pod is not control by a StatefulSet, then it is not a KubeDB database Pod
