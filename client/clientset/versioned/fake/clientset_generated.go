@@ -32,6 +32,8 @@ import (
 	fakekubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2/fake"
 	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 	fakeopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1/fake"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
+	fakeuiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1/fake"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
@@ -115,4 +117,9 @@ func (c *Clientset) KubedbV1alpha2() kubedbv1alpha2.KubedbV1alpha2Interface {
 // OpsV1alpha1 retrieves the OpsV1alpha1Client
 func (c *Clientset) OpsV1alpha1() opsv1alpha1.OpsV1alpha1Interface {
 	return &fakeopsv1alpha1.FakeOpsV1alpha1{Fake: &c.Fake}
+}
+
+// UiV1alpha1 retrieves the UiV1alpha1Client
+func (c *Clientset) UiV1alpha1() uiv1alpha1.UiV1alpha1Interface {
+	return &fakeuiv1alpha1.FakeUiV1alpha1{Fake: &c.Fake}
 }

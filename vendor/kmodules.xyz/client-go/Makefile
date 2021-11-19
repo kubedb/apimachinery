@@ -25,13 +25,7 @@ CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.21
 git_branch       := $(shell git rev-parse --abbrev-ref HEAD)
 git_tag          := $(shell git describe --exact-match --abbrev=0 2>/dev/null || echo "")
 commit_hash      := $(shell git rev-parse --verify HEAD)
-OS               ?= $(shell uname -s)
-ifeq ($(OS),Linux)
-  commit_timestamp := $(shell date --date="@$$(git show -s --format=%ct)" --utc +%FT%T)
-endif
-ifeq ($(OS),Darwin)
-  commit_timestamp := $(shell date -r "$$(git show -s --format=%ct)" -u +%FT%T)
-endif
+commit_timestamp := $(shell date --date="@$$(git show -s --format=%ct)" --utc +%FT%T)
 
 VERSION          := $(shell git describe --tags --always --dirty)
 version_strategy := commit_hash
@@ -61,8 +55,8 @@ BIN_PLATFORMS    := $(DOCKER_PLATFORMS)
 OS   := $(if $(GOOS),$(GOOS),$(shell go env GOOS))
 ARCH := $(if $(GOARCH),$(GOARCH),$(shell go env GOARCH))
 
-BASEIMAGE_PROD   ?= gcr.io/distroless/static-debian10
-BASEIMAGE_DBG    ?= debian:buster
+BASEIMAGE_PROD   ?= gcr.io/distroless/static-debian11
+BASEIMAGE_DBG    ?= debian:bullseye
 
 GO_VERSION       ?= 1.17
 BUILD_IMAGE      ?= appscode/golang-dev:$(GO_VERSION)

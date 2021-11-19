@@ -23,7 +23,8 @@ BIN      := apimachinery
 CRD_OPTIONS          ?= "crd:trivialVersions=true,preserveUnknownFields=false,maxDescLen=0,generateEmbeddedObjectMeta=true"
 # https://github.com/appscodelabs/gengo-builder
 CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.21
-API_GROUPS           ?= kubedb:v1alpha1 kubedb:v1alpha2 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1
+CORE_API_GROUPS      ?= kubedb:v1alpha1 kubedb:v1alpha2 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1
+API_GROUPS           ?= $(CORE_API_GROUPS) ui:v1alpha1
 
 # This version-strategy uses git tags to set the version string
 git_branch       := $(shell git rev-parse --abbrev-ref HEAD)
@@ -218,9 +219,11 @@ label-crds: $(BUILD_DIRS)
 	done
 
 .PHONY: gen-crd-protos
-gen-crd-protos: $(addprefix gen-crd-protos-, $(subst :,_, $(API_GROUPS)))
+gen-crd-protos: $(addprefix gen-crd-protos-, $(subst :,_, $(CORE_API_GROUPS))) gen-crd-protos-ui-v1alpha1
 	@rm -rf apis/kubedb/v1alpha1/generated.pb.go
 	@rm -rf apis/kubedb/v1alpha1/generated.proto
+	@rm -rf vendor/sigs.k8s.io/controller-runtime/pkg/scheme/generated.pb.go
+	@rm -rf vendor/sigs.k8s.io/controller-runtime/pkg/scheme/generated.proto
 
 gen-crd-protos-%:
 	@echo "Generating protobuf for $(subst _,/,$*)"
@@ -237,7 +240,25 @@ gen-crd-protos-%:
 			--proto-import=$(DOCKER_REPO_ROOT)/vendor    \
 			--proto-import=$(DOCKER_REPO_ROOT)/third_party/protobuf \
 			--apimachinery-packages=-k8s.io/apimachinery/pkg/api/resource,-k8s.io/apimachinery/pkg/apis/meta/v1,-k8s.io/apimachinery/pkg/apis/meta/v1beta1,-k8s.io/apimachinery/pkg/runtime,-k8s.io/apimachinery/pkg/runtime/schema,-k8s.io/apimachinery/pkg/util/intstr \
-			--packages=-k8s.io/api/core/v1,-k8s.io/api/apps/v1,-k8s.io/api/autoscaling/v2beta2,-kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,-kmodules.xyz/monitoring-agent-api/api/v1,-kmodules.xyz/objectstore-api/api/v1,-kmodules.xyz/offshoot-api/api/v1,-kmodules.xyz/client-go/api/v1,kubedb.dev/apimachinery/apis/$(subst _,/,$*)
+			--packages=+sigs.k8s.io/controller-runtime/pkg/scheme,-k8s.io/api/core/v1,-k8s.io/api/apps/v1,-k8s.io/api/autoscaling/v2beta2,-kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,-kmodules.xyz/monitoring-agent-api/api/v1,-kmodules.xyz/objectstore-api/api/v1,-kmodules.xyz/offshoot-api/api/v1,-kmodules.xyz/client-go/api/v1,kubedb.dev/apimachinery/apis/$(subst _,/,$*)
+
+.PHONY: gen-crd-protos-ui-v1alpha1
+gen-crd-protos-ui-v1alpha1:
+	@echo "Generating protobuf for ui/v1alpha1"
+	@docker run --rm                                     \
+		-u $$(id -u):$$(id -g)                           \
+		-v /tmp:/.cache                                  \
+		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
+		-w $(DOCKER_REPO_ROOT)                           \
+		--env HTTP_PROXY=$(HTTP_PROXY)                   \
+		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
+		$(CODE_GENERATOR_IMAGE)                          \
+		go-to-protobuf                                   \
+			--go-header-file "./hack/license/go.txt"     \
+			--proto-import=$(DOCKER_REPO_ROOT)/vendor    \
+			--proto-import=$(DOCKER_REPO_ROOT)/third_party/protobuf \
+			--apimachinery-packages=-k8s.io/apimachinery/pkg/api/resource,-k8s.io/apimachinery/pkg/apis/meta/v1,-k8s.io/apimachinery/pkg/apis/meta/v1beta1,-k8s.io/apimachinery/pkg/runtime,-k8s.io/apimachinery/pkg/runtime/schema,-k8s.io/apimachinery/pkg/util/intstr \
+			--packages=+sigs.k8s.io/controller-runtime/pkg/scheme,-k8s.io/api/core/v1,-k8s.io/api/apps/v1,-k8s.io/api/autoscaling/v2beta2,-kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,-kmodules.xyz/monitoring-agent-api/api/v1,-kmodules.xyz/objectstore-api/api/v1,-kmodules.xyz/offshoot-api/api/v1,-kmodules.xyz/client-go/api/v1,kubedb.dev/apimachinery/apis/ui/v1alpha1,kubedb.dev/apimachinery/apis/kubedb/v1alpha2
 
 .PHONY: manifests
 manifests: gen-crds patch-crds label-crds
