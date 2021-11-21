@@ -26,27 +26,6 @@ import (
 // Funcs returns the fuzzer functions for this api group.
 var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 	return []interface{}{
-		func(s *v1alpha1.ClusterSummary, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.DatabaseNodeView, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.DatabaseSummary, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.DatabaseTable, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.DatabasesIndex, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.DBInfoResponse, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.DBNodeResponse, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
 		func(s *v1alpha1.ElasticsearchOverview, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
@@ -54,12 +33,6 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.ElasticsearchNodesStats, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.GrafanaChartResponse, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.GrafanaDashboard, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.MariaDBOverview, c fuzz.Continue) {
@@ -99,9 +72,6 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.PostgresQueries, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.RecentDatabase, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.RedisOverview, c fuzz.Continue) {

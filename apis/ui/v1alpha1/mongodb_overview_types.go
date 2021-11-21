@@ -35,7 +35,7 @@ type MongoDBOverviewSpec struct {
 	Namespace      string                  `json:"namespace" protobuf:"bytes,2,opt,name=namespace"`
 	Version        string                  `json:"version" protobuf:"bytes,3,opt,name=version"`
 	Type           MongoDBMode             `json:"type" protobuf:"bytes,4,opt,name=type,casttype=MongoDBMode"`
-	Status         DBStatus                `json:"status" protobuf:"bytes,5,opt,name=status,casttype=DBStatus"`
+	Status         api.DatabasePhase       `json:"status" protobuf:"bytes,5,opt,name=status,casttype=DBStatus"`
 	ConnectionInfo *DBConnectionInfo       `json:"connectionInfo" protobuf:"bytes,6,opt,name=connectionInfo"`
 	Credentials    *DBCredentials          `json:"credentials" protobuf:"bytes,7,opt,name=credentials"`
 	Connections    *MongoDBConnectionsInfo `json:"connections" protobuf:"bytes,8,opt,name=connections"`
