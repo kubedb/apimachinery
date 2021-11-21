@@ -11,6 +11,7 @@ require (
 	github.com/google/gofuzz v1.2.0
 	github.com/jetstack/cert-manager v1.4.0
 	github.com/json-iterator/go v1.1.11
+	github.com/opencontainers/image-spec v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1
 	go.bytebuilders.dev/audit v0.0.10
 	gomodules.xyz/encoding v0.0.2
