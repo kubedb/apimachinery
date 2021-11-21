@@ -175,19 +175,10 @@ API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,T
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,ExternalIPs
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,LoadBalancerSourceRanges
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,Ports
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ClusterResource,ResourceInfo
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ClusterSummarySpec,Resources
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ClusterSummarySpec,Summary
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseTableColumn,Properties
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseTableSpec,Columns
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseTableSpec,Rows
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabasesIndexSpec,Databases
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchNodesStatSpec,Roles
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchNodesStatsSpec,Nodes
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchSchemaOverviewSpec,Indices
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,GenericSchemaOverviewSpec,Databases
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,GrafanaChartResponseSpec,EmbeddedURLs
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,GrafanaDashboardSpec,PanelID
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MariaDBQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBCollectionSpec,TotalSize
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBQueriesSpec,Queries
@@ -199,7 +190,6 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,P
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,RedisQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,RedisQuerySpec,Args
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,RedisSchemaOverviewSpec,Databases
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,TableRow,Data
 API rule violation: names_match,k8s.io/api/core/v1,AzureDiskVolumeSource,DataDiskURI
 API rule violation: names_match,k8s.io/api/core/v1,ContainerStatus,LastTerminationState
 API rule violation: names_match,k8s.io/api/core/v1,DaemonEndpoint,Port
@@ -255,7 +245,6 @@ API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDB
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MySQLOverviewSpec,ConnectionInfo
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MySQLQuerySpec,RowsExamined
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MySQLQuerySpec,RowsSent
-API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodeMetrics,StorageLimit
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsCompletionFields,SizeInBytes
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsCompletionFields,TotalSize
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsCompletionStats,SizeInBytes

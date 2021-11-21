@@ -31,47 +31,6 @@ import "sigs.k8s.io/controller-runtime/pkg/scheme/generated.proto";
 // Package-wide variables from generator "generated".
 option go_package = "v1alpha1";
 
-message ClusterResource {
-  optional string clusterName = 1;
-
-  repeated Resource resourceInfo = 2;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message ClusterSummary {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
-
-  optional ClusterSummarySpec spec = 2;
-
-  optional ClusterSummaryStatus status = 3;
-}
-
-message ClusterSummaryInfo {
-  optional string label = 1;
-
-  optional string value = 2;
-
-  optional string icon = 3;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message ClusterSummaryList {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
-
-  repeated ClusterSummary items = 2;
-}
-
-// ClusterSummarySpec defines the desired state of ClusterSummary
-message ClusterSummarySpec {
-  repeated ClusterSummaryInfo summary = 1;
-
-  repeated ClusterResource resources = 2;
-}
-
-// ClusterSummaryStatus defines the observed state of ClusterSummary
-message ClusterSummaryStatus {
-}
-
 message DBConnectionInfo {
   optional string url = 1;
 
@@ -84,242 +43,6 @@ message DBCredentials {
   optional string password = 2;
 
   optional string certificate = 3;
-}
-
-message DBDisplay {
-  optional string title = 1;
-
-  optional string id = 2;
-
-  optional string url = 3;
-
-  optional string icon = 4;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message DBInfoResponse {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
-
-  optional DBInfoResponseSpec spec = 2;
-
-  optional DBInfoResponseStatus status = 3;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message DBInfoResponseList {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
-
-  repeated DBInfoResponse items = 2;
-}
-
-// DBInfoResponseSpec defines the desired state of DBInfoResponse
-message DBInfoResponseSpec {
-  map<string, k8s.io.apimachinery.pkg.api.resource.Quantity> resources = 1;
-
-  optional string cluster = 2;
-
-  optional string database = 3;
-
-  optional int64 numberOfInstance = 4;
-
-  optional int64 prodDatabases = 5;
-
-  optional int64 devDatabases = 6;
-
-  optional int64 qaDatabases = 7;
-
-  optional int64 cost = 8;
-
-  optional string status = 9;
-
-  optional int64 age = 10;
-}
-
-// DBInfoResponseStatus defines the observed state of DBInfoResponse
-message DBInfoResponseStatus {
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message DBNodeResponse {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
-
-  optional DBNodeResponseSpec spec = 2;
-
-  optional DBNodeResponseStatus status = 3;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message DBNodeResponseList {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
-
-  repeated DBNodeResponse items = 2;
-}
-
-// DBNodeResponseSpec defines the desired state of DBNodeResponse
-message DBNodeResponseSpec {
-  optional string name = 1;
-
-  optional string type = 2;
-
-  optional string role = 3;
-
-  optional string cpu = 4;
-
-  optional string memory = 5;
-
-  optional string storage = 6;
-
-  optional string status = 7;
-}
-
-// DBNodeResponseStatus defines the observed state of DBNodeResponse
-message DBNodeResponseStatus {
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message DatabaseNodeView {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
-
-  optional DatabaseNodeViewSpec spec = 2;
-
-  optional DatabaseNodeViewStatus status = 3;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message DatabaseNodeViewList {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
-
-  repeated DatabaseNodeView items = 2;
-}
-
-// DatabaseNodeViewSpec defines the desired state of DatabaseNodeView
-message DatabaseNodeViewSpec {
-  // INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-  // Important: Run "make" to regenerate code after modifying this file
-  optional string name = 1;
-
-  optional string type = 2;
-
-  optional string role = 3;
-
-  optional string cpu = 4;
-
-  optional string memory = 5;
-
-  optional string storage = 6;
-
-  optional string status = 7;
-}
-
-// DatabaseNodeViewStatus defines the observed state of DatabaseNodeView
-message DatabaseNodeViewStatus {
-}
-
-message DatabaseProperties {
-  optional string value = 1;
-
-  optional string class = 2;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message DatabaseSummary {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
-
-  optional DatabaseSummarySpec spec = 2;
-
-  optional DatabaseSummaryStatus status = 3;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message DatabaseSummaryList {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
-
-  repeated DatabaseSummary items = 2;
-}
-
-// DatabaseSummarySpec defines the desired state of DatabaseSummary
-message DatabaseSummarySpec {
-  // INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-  // Important: Run "make" to regenerate code after modifying this file
-  optional int64 numberOfClusters = 1;
-
-  optional int64 totalDatabases = 2;
-
-  optional int64 prodDatabases = 3;
-
-  optional int64 devDatabases = 4;
-
-  optional int64 qaDatabases = 5;
-
-  map<string, k8s.io.apimachinery.pkg.api.resource.Quantity> resources = 6;
-
-  optional string totalCost = 7;
-}
-
-// DatabaseSummaryStatus defines the observed state of DatabaseSummary
-message DatabaseSummaryStatus {
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message DatabaseTable {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
-
-  optional DatabaseTableSpec spec = 2;
-
-  optional DatabaseTableStatus status = 3;
-}
-
-message DatabaseTableColumn {
-  optional string title = 1;
-
-  optional string type = 2;
-
-  repeated DatabaseProperties properties = 3;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message DatabaseTableList {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
-
-  repeated DatabaseTable items = 2;
-}
-
-// DatabaseTableSpec defines the desired state of DatabaseTable
-message DatabaseTableSpec {
-  repeated DatabaseTableColumn columns = 1;
-
-  repeated TableRow rows = 2;
-}
-
-// DatabaseTableStatus defines the observed state of DatabaseTable
-message DatabaseTableStatus {
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message DatabasesIndex {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
-
-  optional DatabasesIndexSpec spec = 2;
-
-  optional DatabasesIndexStatus status = 3;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message DatabasesIndexList {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
-
-  repeated DatabasesIndex items = 2;
-}
-
-// DatabasesIndexSpec defines the desired state of DatabasesIndex
-message DatabasesIndexSpec {
-  // INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-  // Important: Run "make" to regenerate code after modifying this file
-  repeated DBDisplay databases = 1;
-}
-
-// DatabasesIndexStatus defines the observed state of DatabasesIndex
-message DatabasesIndexStatus {
 }
 
 message ElasticsearchClusterHealth {
@@ -471,72 +194,6 @@ message GenericDatabaseSpec {
 
 message GenericSchemaOverviewSpec {
   repeated GenericDatabaseSpec databases = 1;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message GrafanaChartResponse {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
-
-  optional GrafanaChartResponseSpec spec = 2;
-
-  optional GrafanaChartResponseStatus status = 3;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message GrafanaChartResponseList {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
-
-  repeated GrafanaChartResponse items = 2;
-}
-
-// GrafanaChartResponseSpec defines the desired state of GrafanaChartResponse
-message GrafanaChartResponseSpec {
-  repeated string embeddedURLs = 1;
-}
-
-// GrafanaChartResponseStatus defines the observed state of GrafanaChartResponse
-message GrafanaChartResponseStatus {
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message GrafanaDashboard {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
-
-  optional GrafanaDashboardSpec spec = 2;
-
-  optional GrafanaDashboardStatus status = 3;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message GrafanaDashboardList {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
-
-  repeated GrafanaDashboard items = 2;
-}
-
-// GrafanaDashboardSpec defines the desired state of GrafanaDashboard
-message GrafanaDashboardSpec {
-  optional TargetRef targetRef = 1;
-
-  optional string dashboardName = 2;
-
-  optional string url = 3;
-
-  optional int64 orgID = 4;
-
-  optional string boardUID = 5;
-
-  repeated int64 panelID = 6;
-
-  // +optional
-  optional int64 from = 7;
-
-  // +kubebuilder:validation:Enum=dark;light;
-  optional string theme = 8;
-}
-
-// GrafanaDashboardStatus defines the observed state of GrafanaDashboard
-message GrafanaDashboardStatus {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -902,14 +559,6 @@ message MySQLSchemaOverviewList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 
   repeated MySQLSchemaOverview items = 2;
-}
-
-message NodeMetrics {
-  optional string cpuLimit = 1;
-
-  optional string memoryLimit = 2;
-
-  optional string storageCapacity = 3;
 }
 
 message NodesStatsCompletionFields {
@@ -1455,45 +1104,6 @@ message PostgresVacuumInfo {
   optional int64 activeVacuumProcess = 2;
 }
 
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message RecentDatabase {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
-
-  optional RecentDatabaseSpec spec = 2;
-
-  optional RecentDatabaseStatus status = 3;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message RecentDatabaseList {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
-
-  repeated RecentDatabase items = 2;
-}
-
-// RecentDatabaseSpec defines the desired state of RecentDatabase
-message RecentDatabaseSpec {
-  optional string name = 1;
-
-  optional string type = 2;
-
-  optional string clusterID = 3;
-
-  optional string clusterName = 4;
-
-  optional string environment = 5;
-
-  optional string status = 6;
-
-  optional string age = 7;
-
-  map<string, k8s.io.apimachinery.pkg.api.resource.Quantity> resources = 8;
-}
-
-// RecentDatabaseStatus defines the observed state of RecentDatabase
-message RecentDatabaseStatus {
-}
-
 message RedisDatabaseSpec {
   optional string dbId = 1;
 
@@ -1599,27 +1209,11 @@ message RedisSchemaOverviewSpec {
   repeated RedisDatabaseSpec databases = 1;
 }
 
-message Resource {
-  optional string label = 1;
-
-  optional string value = 2;
-}
-
 message SecurityReport {
   optional bool tlsSecured = 1;
 
   optional bool backupEnabled = 2;
 
   optional bool monitoringEnabled = 3;
-}
-
-message TableRow {
-  repeated string data = 1;
-}
-
-message TargetRef {
-  optional string apiVersion = 1;
-
-  optional string kind = 2;
 }
 
