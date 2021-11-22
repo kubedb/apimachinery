@@ -20,7 +20,7 @@ REPO     := $(notdir $(shell pwd))
 BIN      := apimachinery
 
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
-CRD_OPTIONS          ?= "crd:trivialVersions=true,preserveUnknownFields=false,maxDescLen=0,generateEmbeddedObjectMeta=true"
+CRD_OPTIONS          ?= "crd:trivialVersions=true,preserveUnknownFields=false,maxDescLen=0,generateEmbeddedObjectMeta=true,allowDangerousTypes=true"
 # https://github.com/appscodelabs/gengo-builder
 CODE_GENERATOR_IMAGE ?= appscode/gengo:release-1.21
 CORE_API_GROUPS      ?= kubedb:v1alpha1 kubedb:v1alpha2 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1

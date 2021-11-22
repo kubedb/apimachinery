@@ -20,5 +20,4 @@ limitations under the License.
 // +k8s:openapi-gen=true
 // +k8s:defaulter-gen=TypeMeta
 // +groupName=ui.kubedb.com
-// +kubebuilder:skip
 package v1alpha1
