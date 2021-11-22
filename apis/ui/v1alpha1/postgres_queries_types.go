@@ -23,7 +23,7 @@ import (
 const (
 	ResourceKindPostgresQueries = "PostgresQueries"
 	ResourcePostgresQueries     = "postgresqueries"
-	ResourcePostgresQuerieses   = "postgresquerieses"
+	ResourcePostgresQuerieses   = "postgresqueries"
 )
 
 // PostgresQueriesSpec defines the desired state of PostgresQueries

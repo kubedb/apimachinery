@@ -22,8 +22,8 @@ import (
 
 const (
 	ResourceKindPostgresSettings = "PostgresSettings"
-	ResourcePostgresSettings     = "PostgresSettings"
-	ResourcePostgresSettingss    = "PostgresSettingss"
+	ResourcePostgresSettings     = "postgressettings"
+	ResourcePostgresSettingss    = "postgressettings"
 )
 
 // PostgresSettingsSpec defines the desired state of PostgresSettings

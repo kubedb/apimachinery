@@ -23,7 +23,7 @@ import (
 const (
 	ResourceKindMariaDBQueries = "MariaDBQueries"
 	ResourceMariaDBQueries     = "mariadbqueries"
-	ResourceMariaDBQuerieses   = "mariadbquerieses"
+	ResourceMariaDBQuerieses   = "mariadbqueries"
 )
 
 // MariaDBQueriesSpec defines the desired state of MariaDBQueries

@@ -23,7 +23,7 @@ import (
 const (
 	ResourceKindRedisQueries = "RedisQueries"
 	ResourceRedisQueries     = "redisqueries"
-	ResourceRedisQuerieses   = "redisquerieses"
+	ResourceRedisQuerieses   = "redisqueries"
 )
 
 // RedisQueriesSpec defines the desired state of RedisQueries

@@ -23,7 +23,7 @@ import (
 const (
 	ResourceKindElasticsearchNodesStats = "ElasticsearchNodesStats"
 	ResourceElasticsearchNodesStats     = "elasticsearchnodesstats"
-	ResourceElasticsearchNodesStatses   = "elasticsearchnodesstatses"
+	ResourceElasticsearchNodesStatses   = "elasticsearchnodesstats"
 )
 
 // ElasticsearchNodesStatsSpec defines the desired state of ElasticsearchNodesStats

@@ -22,8 +22,8 @@ import (
 
 const (
 	ResourceKindMongoDBQueries = "MongoDBQueries"
-	ResourceMongoDBQueries     = "mongodbqqueries"
-	ResourceMongoDBQuerieses   = "mongodbqquerieses"
+	ResourceMongoDBQueries     = "mongodbqueries"
+	ResourceMongoDBQuerieses   = "mongodbqueries"
 )
 
 // MongoDBQueriesSpec defines the desired state of MongoDBQueries

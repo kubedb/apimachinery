@@ -23,7 +23,7 @@ import (
 const (
 	ResourceKindMySQLQueries = "MySQLQueries"
 	ResourceMySQLQueries     = "mysqlqueries"
-	ResourceMySQLQuerieses   = "mysqlquerieses"
+	ResourceMySQLQuerieses   = "mysqlqueries"
 )
 
 // MySQLQueriesSpec defines the desired state of MySQLQueries
