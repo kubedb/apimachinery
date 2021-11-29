@@ -131,10 +131,12 @@ type ElasticsearchVerticalScalingTopologySpec struct {
 
 // ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion
 type ElasticsearchVolumeExpansionSpec struct {
+	// +kubebuilder:default:="Online"
+	Mode *VolumeExpansionMode `json:"mode,omitempty" protobuf:"bytes,1,opt,name=mode,casttype=VolumeExpansionMode"`
 	// volume specification for combined nodes
-	Node *resource.Quantity `json:"node,omitempty" protobuf:"bytes,1,opt,name=node"`
+	Node *resource.Quantity `json:"node,omitempty" protobuf:"bytes,2,opt,name=node"`
 	// volume specification for nodes in cluster topology
-	Topology *ElasticsearchVolumeExpansionTopologySpec `json:"topology,omitempty" protobuf:"bytes,2,opt,name=topology"`
+	Topology *ElasticsearchVolumeExpansionTopologySpec `json:"topology,omitempty" protobuf:"bytes,3,opt,name=topology"`
 }
 
 // ElasticsearchVolumeExpansionTopologySpec is the spec for Elasticsearch volume expansion in topology mode

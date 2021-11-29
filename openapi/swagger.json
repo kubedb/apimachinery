@@ -32103,6 +32103,9 @@
       "description": "ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion",
       "type": "object",
       "properties": {
+        "mode": {
+          "type": "string"
+        },
         "node": {
           "description": "volume specification for combined nodes",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
