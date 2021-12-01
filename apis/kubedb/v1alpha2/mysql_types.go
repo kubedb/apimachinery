@@ -133,6 +133,21 @@ type MySQLSpec struct {
 	// Coordinator defines attributes of the coordinator container
 	// +optional
 	Coordinator CoordinatorSpec `json:"coordinator,omitempty" protobuf:"bytes,18,opt,name=coordinator"`
+	// ReadReplica implies that the instance will be a MySQL Read Only Replica
+	// and it will take reference of  appbinding of the source
+	ReadReplica *MySQLReadReplica `json:"readReplica,omitempty" protobuf:"bytes,19,opt,name=readReplica"`
+}
+
+type MySQLReadReplica struct {
+
+	//SourceRef specifies the  source object appbinding
+	SourceRef SourceRef `json:"sourceRef" protobuf:"bytes,1,opt,name=sourceRef"`
+}
+type SourceRef struct {
+	//Name of the appbinding
+	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
+	//Namespace of the appbinding
+	Namespace string `json:"namespace" protobuf:"bytes,2,opt,name=namespace"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter

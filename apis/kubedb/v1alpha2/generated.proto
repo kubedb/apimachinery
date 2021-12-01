@@ -913,6 +913,11 @@ message MySQLList {
   repeated MySQL items = 2;
 }
 
+message MySQLReadReplica {
+  // SourceRef specifies the  source object appbinding
+  optional SourceRef sourceRef = 1;
+}
+
 message MySQLRouterSpec {
   // +optional
   // +kubebuilder:default:=1
@@ -991,6 +996,10 @@ message MySQLSpec {
   // Coordinator defines attributes of the coordinator container
   // +optional
   optional CoordinatorSpec coordinator = 18;
+
+  // ReadReplica implies that the instance will be a MySQL Read Only Replica
+  // and it will take reference of  appbinding of the source
+  optional MySQLReadReplica readReplica = 19;
 }
 
 message MySQLStatus {
@@ -1631,6 +1640,14 @@ message ScriptSourceSpec {
   optional string scriptPath = 1;
 
   optional k8s.io.api.core.v1.VolumeSource volumeSource = 2;
+}
+
+message SourceRef {
+  // Name of the appbinding
+  optional string name = 1;
+
+  // Namespace of the appbinding
+  optional string namespace = 2;
 }
 
 message TLSPolicy {

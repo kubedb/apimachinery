@@ -2441,6 +2441,21 @@ spec:
                         type: array
                     type: object
                 type: object
+              readReplica:
+                properties:
+                  sourceRef:
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    required:
+                    - name
+                    - namespace
+                    type: object
+                required:
+                - sourceRef
+                type: object
               replicas:
                 format: int32
                 type: integer

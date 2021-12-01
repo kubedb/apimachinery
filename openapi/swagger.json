@@ -30627,6 +30627,19 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplica": {
+      "type": "object",
+      "required": [
+        "sourceRef"
+      ],
+      "properties": {
+        "sourceRef": {
+          "description": "SourceRef specifies the  source object appbinding",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SourceRef"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLRouterSpec": {
       "type": "object",
       "properties": {
@@ -30675,6 +30688,10 @@
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "readReplica": {
+          "description": "ReadReplica implies that the instance will be a MySQL Read Only Replica and it will take reference of  appbinding of the source",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplica"
         },
         "replicas": {
           "description": "Number of instances to deploy for a MySQL database. In case of MySQL group replication, max allowed value is 9 (default 3). (see ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-frequently-asked-questions.html)",
@@ -31759,6 +31776,25 @@
         "vsphereVolume": {
           "description": "VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
           "$ref": "#/definitions/io.k8s.api.core.v1.VsphereVirtualDiskVolumeSource"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SourceRef": {
+      "type": "object",
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "description": "Name of the appbinding",
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "description": "Namespace of the appbinding",
+          "type": "string",
+          "default": ""
         }
       }
     },
