@@ -139,15 +139,8 @@ type MySQLSpec struct {
 }
 
 type MySQLReadReplica struct {
-
 	//SourceRef specifies the  source object appbinding
-	SourceRef SourceRef `json:"sourceRef" protobuf:"bytes,1,opt,name=sourceRef"`
-}
-type SourceRef struct {
-	//Name of the appbinding
-	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
-	//Namespace of the appbinding
-	Namespace string `json:"namespace" protobuf:"bytes,2,opt,name=namespace"`
+	SourceRef *core.ObjectReference `json:"sourceRef,omitempty" protobuf:"bytes,1,opt,name=sourceRef"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter

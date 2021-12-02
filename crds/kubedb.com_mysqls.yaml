@@ -2445,16 +2445,21 @@ spec:
                 properties:
                   sourceRef:
                     properties:
+                      apiVersion:
+                        type: string
+                      fieldPath:
+                        type: string
+                      kind:
+                        type: string
                       name:
                         type: string
                       namespace:
                         type: string
-                    required:
-                    - name
-                    - namespace
+                      resourceVersion:
+                        type: string
+                      uid:
+                        type: string
                     type: object
-                required:
-                - sourceRef
                 type: object
               replicas:
                 format: int32
