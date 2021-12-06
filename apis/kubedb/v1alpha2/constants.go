@@ -124,6 +124,7 @@ const (
 	MongoDBRootUsername           = "root"
 	MongoDBCustomConfigFile       = "mongod.conf"
 	MongoDBReplicaSetConfig       = "replicaset.json"
+	MongoDBConfigurationJSFile    = "configuration.js"
 	NodeTypeMongos                = "mongos"
 	NodeTypeShard                 = "shard"
 	NodeTypeConfig                = "configsvr"
