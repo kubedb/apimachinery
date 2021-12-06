@@ -69,6 +69,8 @@ type MongoDBOpsRequestSpec struct {
 	TLS *TLSSpec `json:"tls,omitempty" protobuf:"bytes,8,opt,name=tls"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty" protobuf:"bytes,9,opt,name=restart"`
+	// Specifies information necessary for reprovisioning database
+	Reprovision *Reprovision `json:"reprovision,omitempty" protobuf:"bytes,12,opt,name=reprovision"`
 	// Specifies the Readiness Criteria
 	ReadinessCriteria *MongoDBReplicaReadinessCriteria `json:"readinessCriteria,omitempty" protobuf:"bytes,10,opt,name=readinessCriteria"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.

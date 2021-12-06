@@ -32648,6 +32648,10 @@
           "description": "Specifies the Readiness Criteria",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReplicaReadinessCriteria"
         },
+        "reprovision": {
+          "description": "Specifies information necessary for reprovisioning database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.Reprovision"
+        },
         "restart": {
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
@@ -33803,6 +33807,9 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.Reprovision": {
+      "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec": {
       "type": "object"
