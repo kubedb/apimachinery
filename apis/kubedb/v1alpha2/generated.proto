@@ -709,6 +709,9 @@ message MongoDBConfigNode {
 
   // Storage to specify how storage shall be used.
   optional k8s.io.api.core.v1.PersistentVolumeClaimSpec storage = 2;
+
+  // EphemeralStorage spec to specify the configuration of ephemeral storage type.
+  optional k8s.io.api.core.v1.EmptyDirVolumeSource ephemeralStorage = 3;
 }
 
 message MongoDBList {
@@ -755,6 +758,9 @@ message MongoDBShardNode {
 
   // Storage to specify how storage shall be used.
   optional k8s.io.api.core.v1.PersistentVolumeClaimSpec storage = 3;
+
+  // EphemeralStorage spec to specify the configuration of ephemeral storage type.
+  optional k8s.io.api.core.v1.EmptyDirVolumeSource ephemeralStorage = 4;
 }
 
 message MongoDBShardingTopology {
@@ -789,6 +795,9 @@ message MongoDBSpec {
 
   // Storage spec to specify how storage shall be used.
   optional k8s.io.api.core.v1.PersistentVolumeClaimSpec storage = 6;
+
+  // EphemeralStorage spec to specify the configuration of ephemeral storage type.
+  optional k8s.io.api.core.v1.EmptyDirVolumeSource ephemeralStorage = 21;
 
   // Database authentication secret
   optional k8s.io.api.core.v1.LocalObjectReference authSecret = 7;

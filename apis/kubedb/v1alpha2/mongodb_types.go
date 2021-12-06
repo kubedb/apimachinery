@@ -69,6 +69,9 @@ type MongoDBSpec struct {
 	// Storage spec to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,6,opt,name=storage"`
 
+	// EphemeralStorage spec to specify the configuration of ephemeral storage type.
+	EphemeralStorage *core.EmptyDirVolumeSource `json:"ephemeralStorage,omitempty" protobuf:"bytes,21,opt,name=ephemeralStorage"`
+
 	// Database authentication secret
 	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty" protobuf:"bytes,7,opt,name=authSecret"`
 
@@ -218,6 +221,9 @@ type MongoDBShardNode struct {
 
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,3,opt,name=storage"`
+
+	// EphemeralStorage spec to specify the configuration of ephemeral storage type.
+	EphemeralStorage *core.EmptyDirVolumeSource `json:"ephemeralStorage,omitempty" protobuf:"bytes,4,opt,name=ephemeralStorage"`
 }
 
 type MongoDBConfigNode struct {
@@ -226,6 +232,9 @@ type MongoDBConfigNode struct {
 
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,2,opt,name=storage"`
+
+	// EphemeralStorage spec to specify the configuration of ephemeral storage type.
+	EphemeralStorage *core.EmptyDirVolumeSource `json:"ephemeralStorage,omitempty" protobuf:"bytes,3,opt,name=ephemeralStorage"`
 }
 
 type MongoDBMongosNode struct {
