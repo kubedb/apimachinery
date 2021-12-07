@@ -1205,8 +1205,8 @@ kmodules.xyz/monitoring-agent-api v0.0.0-20210928135619-38ca075a2dbd/go.mod h1:0
 kmodules.xyz/objectstore-api v0.0.0-20210928135706-fdf68f88ea6e h1:2QZBUcUI6r7mLU5/9+Xxd1eDClEIEkZkJlyCU91UoY8=
 kmodules.xyz/objectstore-api v0.0.0-20210928135706-fdf68f88ea6e/go.mod h1:Tkcf9uTplnrJ6C8o0zlw2kpgS1SaWAiMO5P2YgLjTo8=
 kmodules.xyz/offshoot-api v0.0.0-20210829122105-6f4d481b0c61/go.mod h1:3LECbAL3FgbyK80NP3V3Pmiuo/a3hFWg/PR6SPFhTns=
-kmodules.xyz/offshoot-api v0.0.0-20211207113640-fe10959e97de h1:tPC7Z5VaRW7/O0LbaNnAKjqwdAd9E1+UMvwqjBHSPQ4=
-kmodules.xyz/offshoot-api v0.0.0-20211207113640-fe10959e97de/go.mod h1:sJYyxf84ZvbVz4SivxMgSelGRYn19wOLUtObiEncCxk=
+kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf h1:cVaxFPsZyaymGsx4XoTii1MEvtwGxmLg75qwMxNHB4w=
+kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf/go.mod h1:sJYyxf84ZvbVz4SivxMgSelGRYn19wOLUtObiEncCxk=
 kmodules.xyz/openshift v0.0.0-20210618001443-f2507caa512f/go.mod h1:8E5ckbd1KMNmR4hc7ScvmQnGfx1ULUUp+UTmoDdxRkc=
 kmodules.xyz/prober v0.0.0-20210618020259-5836fb959027 h1:rtSPsruEkoBOLcbJkxMQjnPafpv8/vJnfWlTIj9yRBg=
 kmodules.xyz/prober v0.0.0-20210618020259-5836fb959027/go.mod h1:H4NcvS1RQxeXtQONALbU6r9OT3Xa7cMhfamX/k9t9wo=

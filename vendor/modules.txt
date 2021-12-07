@@ -1196,7 +1196,7 @@ kmodules.xyz/monitoring-agent-api/api/v1alpha1
 # kmodules.xyz/objectstore-api v0.0.0-20210928135706-fdf68f88ea6e
 ## explicit; go 1.15
 kmodules.xyz/objectstore-api/api/v1
-# kmodules.xyz/offshoot-api v0.0.0-20211207113640-fe10959e97de
+# kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf
 ## explicit; go 1.15
 kmodules.xyz/offshoot-api/api/v1
 # kmodules.xyz/prober v0.0.0-20210618020259-5836fb959027
