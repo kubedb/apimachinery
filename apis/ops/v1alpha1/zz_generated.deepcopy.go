@@ -1116,6 +1116,11 @@ func (in *MariaDBVolumeExpansionSpec) DeepCopyInto(out *MariaDBVolumeExpansionSp
 		x := (*in).DeepCopy()
 		*out = &x
 	}
+	if in.Mode != nil {
+		in, out := &in.Mode, &out.Mode
+		*out = new(VolumeExpansionMode)
+		**out = **in
+	}
 	return
 }
 
