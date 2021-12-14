@@ -20,6 +20,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const (
+	ResourceKindBackupOverview = "BackupOverview"
+	ResourceBackupOverview     = "backupoverview"
+	ResourceBackupOverviews    = "backupoverviews"
+)
+
 // BackupOverviewSpec defines the desired state of BackupOverview
 type BackupOverviewSpec struct {
 	Schedule           string       `json:"schedule,omitempty" protobuf:"bytes,1,opt,name=schedule"`
