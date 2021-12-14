@@ -20239,14 +20239,12 @@ func schema_apimachinery_apis_ui_v1alpha1_BackupOverviewSpec(ref common.Referenc
 					},
 					"lastBackupTime": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"upcomingBackupTime": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"backupStorage": {
@@ -20284,6 +20282,8 @@ func schema_apimachinery_apis_ui_v1alpha1_BackupOverviewSpec(ref common.Referenc
 				Required: []string{"dataSize"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 

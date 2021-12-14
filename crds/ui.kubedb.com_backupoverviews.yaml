@@ -35,16 +35,16 @@ spec:
               dataSize:
                 type: string
               lastBackupTime:
-                format: int64
-                type: integer
+                format: date-time
+                type: string
               numberOfSnapshots:
                 format: int64
                 type: integer
               schedule:
                 type: string
               upcomingBackupTime:
-                format: int64
-                type: integer
+                format: date-time
+                type: string
             required:
             - dataSize
             type: object

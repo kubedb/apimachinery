@@ -49,9 +49,9 @@ message BackupOverviewList {
 message BackupOverviewSpec {
   optional string schedule = 1;
 
-  optional int64 lastBackupTime = 2;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastBackupTime = 2;
 
-  optional int64 upcomingBackupTime = 3;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time upcomingBackupTime = 3;
 
   optional string backupStorage = 4;
 
