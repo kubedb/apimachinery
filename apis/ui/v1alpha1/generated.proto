@@ -31,6 +31,39 @@ import "sigs.k8s.io/controller-runtime/pkg/scheme/generated.proto";
 // Package-wide variables from generator "generated".
 option go_package = "v1alpha1";
 
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+message BackupOverview {
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+
+  optional BackupOverviewSpec spec = 2;
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+message BackupOverviewList {
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
+
+  repeated BackupOverview items = 2;
+}
+
+// BackupOverviewSpec defines the desired state of BackupOverview
+message BackupOverviewSpec {
+  optional string schedule = 1;
+
+  optional int64 lastBackupTime = 2;
+
+  optional int64 upcomingBackupTime = 3;
+
+  optional string backupStorage = 4;
+
+  optional string dataSize = 5;
+
+  optional int64 numberOfSnapshots = 6;
+
+  optional bool dataIntegrity = 7;
+
+  optional string dataDirectory = 8;
+}
+
 message DBConnectionInfo {
   optional string url = 1;
 
