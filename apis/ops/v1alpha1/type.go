@@ -59,6 +59,7 @@ const (
 	Restart                      = "Restart"
 	RestartStatefulSet           = "RestartStatefulSet"
 	CertificateSynced            = "CertificateSynced"
+	Reconciled                   = "Reconciled"
 
 	// MongoDB Constants
 	StartingBalancer            = "StartingBalancer"
