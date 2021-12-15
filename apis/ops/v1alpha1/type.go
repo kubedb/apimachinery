@@ -127,6 +127,7 @@ const (
 	UpdateMLNodePVCs           = "UpdateMLNodePVCs"
 	UpdateTransformNodePVCs    = "UpdateTransformNodePVCs"
 	UpdateCoordinatingNodePVCs = "UpdateCoordinatingNodePVCs"
+	UpdateElasticsearchCR      = "UpdateElasticsearchCR"
 
 	UpdateNodeResources                = "UpdateNodeResources"
 	UpdateMasterStatefulSetResources   = "UpdateMasterStatefulSetResources"
