@@ -1201,6 +1201,8 @@ message PostgresVerticalScalingSpec {
 message PostgresVolumeExpansionSpec {
   // volume specification for Postgres
   optional k8s.io.apimachinery.pkg.api.resource.Quantity postgres = 1;
+
+  optional string mode = 2;
 }
 
 message ProxySQLCustomConfiguration {
