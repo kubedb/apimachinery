@@ -200,12 +200,14 @@ const (
 	OpsRequestDenied OpsRequestPhase = "Denied"
 )
 
-// +kubebuilder:validation:Enum=Upgrade;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;Reprovision
+// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;Reprovision
 type OpsRequestType string
 
 const (
-	// used for Upgrade operation
+	// Deprecated. Use UpdateVersion
 	OpsRequestTypeUpgrade OpsRequestType = "Upgrade"
+	// used for UpdateVersion operation
+	OpsRequestTypeUpdateVersion OpsRequestType = "UpdateVersion"
 	// used for HorizontalScaling operation
 	OpsRequestTypeHorizontalScaling OpsRequestType = "HorizontalScaling"
 	// used for VerticalScaling operation
