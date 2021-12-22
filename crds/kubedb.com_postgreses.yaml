@@ -145,6 +145,8 @@ spec:
                         type: object
                     type: object
                 type: object
+              enforceFsGroup:
+                type: boolean
               halted:
                 type: boolean
               init:

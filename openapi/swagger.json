@@ -31207,6 +31207,10 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.CoordinatorSpec"
         },
+        "enforceFsGroup": {
+          "description": "EnforceFsGroup Is Used when the storageClass's CSI Driver doesn't support FsGroup properties properly. If It's true then The Init Container will run as RootUser and the init-container will set user's permission for the mounted pvc volume with which coordinator and postgres containers are going to run. In postgres it is /var/pv",
+          "type": "boolean"
+        },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
           "type": "boolean"
