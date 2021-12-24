@@ -6173,6 +6173,13 @@ func (m *MariaDBVolumeExpansionSpec) MarshalToSizedBuffer(dAtA []byte) (int, err
 	_ = i
 	var l int
 	_ = l
+	if m.Mode != nil {
+		i -= len(*m.Mode)
+		copy(dAtA[i:], *m.Mode)
+		i = encodeVarintGenerated(dAtA, i, uint64(len(*m.Mode)))
+		i--
+		dAtA[i] = 0x12
+	}
 	if m.MariaDB != nil {
 		{
 			size, err := m.MariaDB.MarshalToSizedBuffer(dAtA[:i])
@@ -11512,6 +11519,10 @@ func (m *MariaDBVolumeExpansionSpec) Size() (n int) {
 		l = m.MariaDB.Size()
 		n += 1 + l + sovGenerated(uint64(l))
 	}
+	if m.Mode != nil {
+		l = len(*m.Mode)
+		n += 1 + l + sovGenerated(uint64(l))
+	}
 	return n
 }
 
@@ -13642,6 +13653,7 @@ func (this *MariaDBVolumeExpansionSpec) String() string {
 	}
 	s := strings.Join([]string{`&MariaDBVolumeExpansionSpec{`,
 		`MariaDB:` + strings.Replace(fmt.Sprintf("%v", this.MariaDB), "Quantity", "resource.Quantity", 1) + `,`,
+		`Mode:` + valueToStringGenerated(this.Mode) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -20994,6 +21006,39 @@ func (m *MariaDBVolumeExpansionSpec) Unmarshal(dAtA []byte) error {
 			if err := m.MariaDB.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Mode", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := VolumeExpansionMode(dAtA[iNdEx:postIndex])
+			m.Mode = &s
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

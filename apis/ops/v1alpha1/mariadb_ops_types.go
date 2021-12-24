@@ -93,7 +93,8 @@ type MariaDBVerticalScalingSpec struct {
 
 // MariaDBVolumeExpansionSpec is the spec for MariaDB volume expansion
 type MariaDBVolumeExpansionSpec struct {
-	MariaDB *resource.Quantity `json:"mariadb,omitempty" protobuf:"bytes,1,opt,name=mariadb"`
+	MariaDB *resource.Quantity   `json:"mariadb,omitempty" protobuf:"bytes,1,opt,name=mariadb"`
+	Mode    *VolumeExpansionMode `json:"mode,omitempty" protobuf:"bytes,2,opt,name=mode,casttype=VolumeExpansionMode"`
 }
 
 type MariaDBCustomConfigurationSpec struct {

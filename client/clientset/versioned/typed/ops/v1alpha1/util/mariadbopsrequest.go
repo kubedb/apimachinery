@@ -18,17 +18,68 @@ package util
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	api "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	cs "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
+	jsonpatch "github.com/evanphx/json-patch"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/klog/v2"
 	kutil "kmodules.xyz/client-go"
 )
+
+func CreateOrPatchMariaDBOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.MariaDBOpsRequest) *api.MariaDBOpsRequest, opts metav1.PatchOptions) (*api.MariaDBOpsRequest, kutil.VerbType, error) {
+	cur, err := c.MariaDBOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+	if kerr.IsNotFound(err) {
+		klog.V(3).Infof("Creating MariaDBOpsRequest %s/%s.", meta.Namespace, meta.Name)
+		out, err := c.MariaDBOpsRequests(meta.Namespace).Create(ctx, transform(&api.MariaDBOpsRequest{
+			TypeMeta: metav1.TypeMeta{
+				Kind:       "MariaDBOpsRequest",
+				APIVersion: api.SchemeGroupVersion.String(),
+			},
+			ObjectMeta: meta,
+		}), metav1.CreateOptions{
+			DryRun:       opts.DryRun,
+			FieldManager: opts.FieldManager,
+		})
+		return out, kutil.VerbCreated, err
+	} else if err != nil {
+		return nil, kutil.VerbUnchanged, err
+	}
+	return PatchMariaDBOpsRequest(ctx, c, cur, transform, opts)
+}
+
+func PatchMariaDBOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, cur *api.MariaDBOpsRequest, transform func(*api.MariaDBOpsRequest) *api.MariaDBOpsRequest, opts metav1.PatchOptions) (*api.MariaDBOpsRequest, kutil.VerbType, error) {
+	return PatchMariaDBOpsRequestObject(ctx, c, cur, transform(cur.DeepCopy()), opts)
+}
+
+func PatchMariaDBOpsRequestObject(ctx context.Context, c cs.OpsV1alpha1Interface, cur, mod *api.MariaDBOpsRequest, opts metav1.PatchOptions) (*api.MariaDBOpsRequest, kutil.VerbType, error) {
+	curJson, err := json.Marshal(cur)
+	if err != nil {
+		return nil, kutil.VerbUnchanged, err
+	}
+
+	modJson, err := json.Marshal(mod)
+	if err != nil {
+		return nil, kutil.VerbUnchanged, err
+	}
+
+	patch, err := jsonpatch.CreateMergePatch(curJson, modJson)
+	if err != nil {
+		return nil, kutil.VerbUnchanged, err
+	}
+	if len(patch) == 0 || string(patch) == "{}" {
+		return cur, kutil.VerbUnchanged, nil
+	}
+	klog.V(3).Infof("Patching MariaDBOpsRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
+	out, err := c.MariaDBOpsRequests(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
+	return out, kutil.VerbPatched, err
+}
 
 func UpdateMariaDBOpsRequestStatus(
 	ctx context.Context,
