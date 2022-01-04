@@ -20729,6 +20729,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVolumeExpansionSpec(ref 
 				Description: "ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"node": {
 						SchemaProps: spec.SchemaProps{
 							Description: "volume specification for combined nodes",

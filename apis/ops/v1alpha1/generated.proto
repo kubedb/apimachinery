@@ -234,11 +234,14 @@ message ElasticsearchVerticalScalingTopologySpec {
 
 // ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion
 message ElasticsearchVolumeExpansionSpec {
+  // +kubebuilder:default:="Online"
+  optional string mode = 1;
+
   // volume specification for combined nodes
-  optional k8s.io.apimachinery.pkg.api.resource.Quantity node = 1;
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity node = 2;
 
   // volume specification for nodes in cluster topology
-  optional ElasticsearchVolumeExpansionTopologySpec topology = 2;
+  optional ElasticsearchVolumeExpansionTopologySpec topology = 3;
 }
 
 // ElasticsearchVolumeExpansionTopologySpec is the spec for Elasticsearch volume expansion in topology mode
