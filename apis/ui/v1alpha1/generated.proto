@@ -21,8 +21,6 @@ syntax = "proto2";
 
 package kubedb.dev.apimachinery.apis.ui.v1alpha1;
 
-import "k8s.io/api/core/v1/generated.proto";
-import "k8s.io/apimachinery/pkg/api/resource/generated.proto";
 import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
 import "k8s.io/apimachinery/pkg/runtime/schema/generated.proto";
 import "kubedb.dev/apimachinery/apis/kubedb/v1alpha2/generated.proto";
@@ -31,12 +29,14 @@ import "sigs.k8s.io/controller-runtime/pkg/scheme/generated.proto";
 // Package-wide variables from generator "generated".
 option go_package = "v1alpha1";
 
+// remove?
 message DBConnectionInfo {
   optional string url = 1;
 
   optional int32 port = 2;
 }
 
+// remove?
 message DBCredentials {
   optional string username = 1;
 
@@ -72,7 +72,7 @@ message ElasticsearchClusterHealth {
 
   optional int32 unassignedShards = 13;
 
-  optional int32 taskMaxWaitingInQueueMillis = 14;
+  optional int32 taskMaxWaitingInQueueMilliSeconds = 14;
 }
 
 message ElasticsearchIndexSpec {
@@ -83,8 +83,37 @@ message ElasticsearchIndexSpec {
   optional string totalStoreSizeInBytes = 3;
 }
 
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+message ElasticsearchInsight {
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+
+  optional ElasticsearchInsightSpec spec = 2;
+
+  optional .kubedb.dev.apimachinery.apis.kubedb.v1alpha2.ElasticsearchStatus status = 3;
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+message ElasticsearchInsightList {
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
+
+  repeated ElasticsearchInsight items = 2;
+}
+
+// ElasticsearchInsightSpec defines the desired state of ElasticsearchInsight
+message ElasticsearchInsightSpec {
+  optional string version = 1;
+
+  optional string status = 2;
+
+  optional string mode = 3;
+
+  // inline?
+  optional ElasticsearchClusterHealth clusterHealth = 6;
+}
+
 message ElasticsearchNodesStatSpec {
   // Time the node stats were collected for this response in Unix
+  // string?
   optional int64 timestamp = 1;
 
   // Human-readable identifier for the node.
@@ -135,37 +164,6 @@ message ElasticsearchNodesStatsStatus {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message ElasticsearchOverview {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
-
-  optional ElasticsearchOverviewSpec spec = 2;
-
-  optional .kubedb.dev.apimachinery.apis.kubedb.v1alpha2.ElasticsearchStatus status = 3;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message ElasticsearchOverviewList {
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
-
-  repeated ElasticsearchOverview items = 2;
-}
-
-// ElasticsearchOverviewSpec defines the desired state of ElasticsearchOverview
-message ElasticsearchOverviewSpec {
-  optional string version = 1;
-
-  optional string status = 2;
-
-  optional string mode = 3;
-
-  optional DBConnectionInfo connectionInfo = 4;
-
-  optional DBCredentials credentials = 5;
-
-  optional ElasticsearchClusterHealth clusterHealth = 6;
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 message ElasticsearchSchemaOverview {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
@@ -197,33 +195,31 @@ message GenericSchemaOverviewSpec {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message MariaDBOverview {
+message MariaDBInsight {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
-  optional MariaDBOverviewSpec spec = 2;
+  optional MariaDBInsightSpec spec = 2;
 
   optional .kubedb.dev.apimachinery.apis.kubedb.v1alpha2.MariaDBStatus status = 3;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message MariaDBOverviewList {
+message MariaDBInsightList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 
-  repeated MariaDBOverview items = 2;
+  repeated MariaDBInsight items = 2;
 }
 
-// MariaDBOverviewSpec defines the desired state of MariaDBOverview
-message MariaDBOverviewSpec {
+// MariaDBInsightSpec defines the desired state of MariaDBInsight
+message MariaDBInsightSpec {
   optional string version = 1;
 
   optional string status = 2;
 
   optional string mode = 3;
 
-  optional DBConnectionInfo connectionsInfo = 4;
-
-  optional DBCredentials credentials = 5;
-
+  // ConnectionInfo         DBConnectionInfo `json:"connectionsInfo,omitempty" protobuf:"bytes,4,opt,name=connectionsInfo"`
+  // Credentials            DBCredentials    `json:"credentials,omitempty" protobuf:"bytes,5,opt,name=credentials"`
   optional int32 maxConnections = 6;
 
   optional int32 maxUsedConnections = 7;
@@ -267,13 +263,14 @@ message MariaDBQueriesSpec {
 }
 
 message MariaDBQuerySpec {
+  // timestamp?
   optional string startTime = 1;
 
   optional string userHost = 2;
 
-  optional string queryTimeInMilli = 3;
+  optional string queryTimeInMilliSeconds = 3;
 
-  optional string lockTimeInMilli = 4;
+  optional string lockTimeInMilliSeconds = 4;
 
   optional int64 rows_sent = 5;
 
@@ -311,6 +308,7 @@ message MariaDBSchemaOverviewList {
 message MongoDBCollectionSpec {
   optional string name = 1;
 
+  // why array?
   repeated int32 size = 2;
 }
 
@@ -335,37 +333,33 @@ message MongoDBDatabaseStats {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message MongoDBOverview {
+message MongoDBInsight {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
-  optional MongoDBOverviewSpec spec = 2;
+  optional MongoDBInsightSpec spec = 2;
 
   optional .kubedb.dev.apimachinery.apis.kubedb.v1alpha2.MongoDBStatus status = 3;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message MongoDBOverviewList {
+message MongoDBInsightList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 
-  repeated MongoDBOverview items = 2;
+  repeated MongoDBInsight items = 2;
 }
 
-// MongoDBOverviewSpec defines the desired state of MongoDBOverview
-message MongoDBOverviewSpec {
-  optional string name = 1;
-
-  optional string namespace = 2;
-
+// MongoDBInsightSpec defines the desired state of MongoDBInsight
+message MongoDBInsightSpec {
+  // Name           string                  `json:"name" protobuf:"bytes,1,opt,name=name"`
+  // Namespace      string                  `json:"namespace" protobuf:"bytes,2,opt,name=namespace"`
   optional string version = 3;
 
   optional string type = 4;
 
   optional string status = 5;
 
-  optional DBConnectionInfo connectionInfo = 6;
-
-  optional DBCredentials credentials = 7;
-
+  // ConnectionInfo *DBConnectionInfo       `json:"connectionInfo" protobuf:"bytes,6,opt,name=connectionInfo"`
+  // Credentials    *DBCredentials          `json:"credentials" protobuf:"bytes,7,opt,name=credentials"`
   optional MongoDBConnectionsInfo connections = 8;
 
   optional MongoDBDatabaseStats dbStats = 9;
@@ -373,10 +367,6 @@ message MongoDBOverviewSpec {
   optional MongoDBShardsInfo shardsInfo = 10;
 
   optional MongoDBReplicaSetInfo replicaSetInfo = 11;
-
-  map<string, k8s.io.apimachinery.pkg.api.resource.Quantity> resources = 12;
-
-  optional SecurityReport securityReport = 13;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -409,6 +399,7 @@ message MongoDBQuerySpec {
 
   optional int64 count = 5;
 
+  // units?
   optional int64 avgExecutionTimeInMS = 6;
 
   optional int64 minExecutionTimeInMS = 7;
@@ -452,23 +443,23 @@ message MongoDBShardsInfo {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message MySQLOverview {
+message MySQLInsight {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
-  optional MySQLOverviewSpec spec = 2;
+  optional MySQLInsightSpec spec = 2;
 
   optional .kubedb.dev.apimachinery.apis.kubedb.v1alpha2.MySQLStatus status = 3;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message MySQLOverviewList {
+message MySQLInsightList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 
-  repeated MySQLOverview items = 2;
+  repeated MySQLInsight items = 2;
 }
 
-// MySQLOverviewSpec defines the desired state of MySQLOverview
-message MySQLOverviewSpec {
+// MySQLInsightSpec defines the desired state of MySQLInsight
+message MySQLInsightSpec {
   optional string version = 1;
 
   optional string status = 2;
@@ -479,12 +470,14 @@ message MySQLOverviewSpec {
 
   optional DBCredentials credentials = 5;
 
+  // why pointer?
   optional int32 maxConnections = 6;
 
   optional int32 maxUsedConnections = 7;
 
   optional int32 questions = 8;
 
+  // units?
   optional double longQueryTimeThreshold = 9;
 
   optional int32 numberOfSlowQueries = 10;
@@ -522,13 +515,16 @@ message MySQLQueriesSpec {
 }
 
 message MySQLQuerySpec {
+  // timestamp?
   optional string startTime = 1;
 
   optional string userHost = 2;
 
-  optional string queryTimeInMilli = 3;
+  // units
+  optional string queryTimeInMilliSeconds = 3;
 
-  optional string lockTimeInMilli = 4;
+  // units
+  optional string lockTimeInMilliSeconds = 4;
 
   optional int64 rows_sent = 5;
 
@@ -950,23 +946,23 @@ message PostgresConnectionInfo {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message PostgresOverview {
+message PostgresInsight {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
-  optional PostgresOverviewSpec spec = 2;
+  optional PostgresInsightSpec spec = 2;
 
   optional .kubedb.dev.apimachinery.apis.kubedb.v1alpha2.PostgresStatus status = 3;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message PostgresOverviewList {
+message PostgresInsightList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 
-  repeated PostgresOverview items = 2;
+  repeated PostgresInsight items = 2;
 }
 
-// PostgresOverviewSpec defines the desired state of PostgresOverview
-message PostgresOverviewSpec {
+// PostgresInsightSpec defines the desired state of PostgresInsight
+message PostgresInsightSpec {
   optional string version = 1;
 
   optional string connectionURL = 2;
@@ -982,10 +978,6 @@ message PostgresOverviewSpec {
   optional PostgresBackupInfo backupInfo = 7;
 
   optional PostgresVacuumInfo vacuumInfo = 8;
-}
-
-// PostgresOverviewStatus defines the observed state of PostgresOverview
-message PostgresOverviewStatus {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -1018,10 +1010,13 @@ message PostgresQuerySpec {
 
   optional int64 rows = 5;
 
+  // units?
   optional double totalTime = 6;
 
+  // units?
   optional double minTime = 7;
 
+  // units?
   optional double maxTime = 8;
 
   optional int64 sharedBlksHit = 9;
@@ -1044,12 +1039,16 @@ message PostgresQuerySpec {
 
   optional int64 tempBlksWritten = 18;
 
+  // units?
   optional double blkReadTime = 19;
 
+  // units?
   optional double blkWriteTime = 20;
 
+  // ? fraction?
   optional string bufferHitPercentage = 21;
 
+  // ? fraction?
   optional string localBufferHitPercentage = 22;
 }
 
@@ -1109,29 +1108,31 @@ message RedisDatabaseSpec {
 
   optional string keys = 2;
 
+  // timestamp?
   optional string expires = 3;
 
+  // unit?
   optional string avgTTL = 4;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message RedisOverview {
+message RedisInsight {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
-  optional RedisOverviewSpec spec = 2;
+  optional RedisInsightSpec spec = 2;
 
   optional .kubedb.dev.apimachinery.apis.kubedb.v1alpha2.RedisStatus status = 3;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-message RedisOverviewList {
+message RedisInsightList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 
-  repeated RedisOverview items = 2;
+  repeated RedisInsight items = 2;
 }
 
-// RedisOverviewSpec defines the desired state of RedisOverview
-message RedisOverviewSpec {
+// RedisInsightSpec defines the desired state of RedisInsight
+message RedisInsightSpec {
   optional string version = 1;
 
   optional string status = 2;
@@ -1156,7 +1157,7 @@ message RedisOverviewSpec {
 
   optional int64 rejectedConnections = 12;
 
-  optional int64 slowLogThresholdMicroSec = 13;
+  optional int64 slowLogThresholdMircoSeconds = 13;
 
   optional int64 slowLogMaxLen = 14;
 }
@@ -1183,6 +1184,7 @@ message RedisQueriesSpec {
 message RedisQuerySpec {
   optional int64 queryId = 1;
 
+  // timestamp?
   optional int64 queryTimestamp = 2;
 
   optional int64 execTimeInMircoSeconds = 3;
@@ -1209,6 +1211,7 @@ message RedisSchemaOverviewSpec {
   repeated RedisDatabaseSpec databases = 1;
 }
 
+// remove?
 message SecurityReport {
   optional bool tlsSecured = 1;
 

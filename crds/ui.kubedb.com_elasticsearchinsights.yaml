@@ -4,14 +4,14 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: mariadboverviews.ui.kubedb.com
+  name: elasticsearchinsights.ui.kubedb.com
 spec:
   group: ui.kubedb.com
   names:
-    kind: MariaDBOverview
-    listKind: MariaDBOverviewList
-    plural: mariadboverviews
-    singular: mariadboverview
+    kind: ElasticsearchInsight
+    listKind: ElasticsearchInsightList
+    plural: elasticsearchinsights
+    singular: elasticsearchinsight
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -26,65 +26,72 @@ spec:
             type: object
           spec:
             properties:
-              abortedClients:
-                format: int32
-                type: integer
-              abortedConnections:
-                format: int32
-                type: integer
-              connectionsInfo:
+              clusterHealth:
                 properties:
-                  port:
+                  activePrimaryShards:
                     format: int32
                     type: integer
-                  url:
+                  activeShards:
+                    format: int32
+                    type: integer
+                  activeShardsPercentAsNumber:
+                    format: int32
+                    type: integer
+                  clusterName:
                     type: string
+                  delayedUnassignedShards:
+                    format: int32
+                    type: integer
+                  initializingShards:
+                    format: int32
+                    type: integer
+                  numberOfDataNodes:
+                    format: int32
+                    type: integer
+                  numberOfInFlightFetch:
+                    format: int32
+                    type: integer
+                  numberOfNodes:
+                    format: int32
+                    type: integer
+                  numberOfPendingTasks:
+                    format: int32
+                    type: integer
+                  relocatingShards:
+                    format: int32
+                    type: integer
+                  status:
+                    type: string
+                  taskMaxWaitingInQueueMilliSeconds:
+                    format: int32
+                    type: integer
+                  unassignedShards:
+                    format: int32
+                    type: integer
+                required:
+                - activePrimaryShards
+                - activeShards
+                - activeShardsPercentAsNumber
+                - clusterName
+                - delayedUnassignedShards
+                - initializingShards
+                - numberOfDataNodes
+                - numberOfInFlightFetch
+                - numberOfNodes
+                - numberOfPendingTasks
+                - relocatingShards
+                - status
+                - taskMaxWaitingInQueueMilliSeconds
+                - unassignedShards
                 type: object
-              credentials:
-                properties:
-                  certificate:
-                    type: string
-                  password:
-                    type: string
-                  username:
-                    type: string
-                type: object
-              longQueryTimeThreshold:
-                format: double
-                type: number
-              maxConnections:
-                format: int32
-                type: integer
-              maxUsedConnections:
-                format: int32
-                type: integer
               mode:
                 type: string
-              numberOfSlowQueries:
-                format: int32
-                type: integer
-              questions:
-                format: int32
-                type: integer
               status:
                 type: string
-              threadsCached:
-                format: int32
-                type: integer
-              threadsConnected:
-                format: int32
-                type: integer
-              threadsCreated:
-                format: int32
-                type: integer
-              threadsRunning:
-                format: int32
-                type: integer
               version:
                 type: string
             required:
             - mode
-            - questions
             - status
             - version
             type: object

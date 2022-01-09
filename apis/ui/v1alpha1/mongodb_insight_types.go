@@ -19,31 +19,30 @@ package v1alpha1
 import (
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
-	ResourceKindMongoDBOverview = "MongoDBOverview"
-	ResourceMongoDBOverview     = "mongodboverview"
-	ResourceMongoDBOverviews    = "mongodboverviews"
+	ResourceKindMongoDBInsight = "MongoDBInsight"
+	ResourceMongoDBInsight     = "mongodbinsight"
+	ResourceMongoDBInsights    = "mongodbinsights"
 )
 
-// MongoDBOverviewSpec defines the desired state of MongoDBOverview
-type MongoDBOverviewSpec struct {
-	Name           string                  `json:"name" protobuf:"bytes,1,opt,name=name"`
-	Namespace      string                  `json:"namespace" protobuf:"bytes,2,opt,name=namespace"`
-	Version        string                  `json:"version" protobuf:"bytes,3,opt,name=version"`
-	Type           MongoDBMode             `json:"type" protobuf:"bytes,4,opt,name=type,casttype=MongoDBMode"`
-	Status         api.DatabasePhase       `json:"status" protobuf:"bytes,5,opt,name=status,casttype=DBStatus"`
-	ConnectionInfo *DBConnectionInfo       `json:"connectionInfo" protobuf:"bytes,6,opt,name=connectionInfo"`
-	Credentials    *DBCredentials          `json:"credentials" protobuf:"bytes,7,opt,name=credentials"`
+// MongoDBInsightSpec defines the desired state of MongoDBInsight
+type MongoDBInsightSpec struct {
+	// Name           string                  `json:"name" protobuf:"bytes,1,opt,name=name"`
+	// Namespace      string                  `json:"namespace" protobuf:"bytes,2,opt,name=namespace"`
+	Version string            `json:"version" protobuf:"bytes,3,opt,name=version"`
+	Type    MongoDBMode       `json:"type" protobuf:"bytes,4,opt,name=type,casttype=MongoDBMode"`
+	Status  api.DatabasePhase `json:"status" protobuf:"bytes,5,opt,name=status,casttype=DBStatus"`
+	// ConnectionInfo *DBConnectionInfo       `json:"connectionInfo" protobuf:"bytes,6,opt,name=connectionInfo"`
+	// Credentials    *DBCredentials          `json:"credentials" protobuf:"bytes,7,opt,name=credentials"`
 	Connections    *MongoDBConnectionsInfo `json:"connections" protobuf:"bytes,8,opt,name=connections"`
 	DBStats        *MongoDBDatabaseStats   `json:"dbStats" protobuf:"bytes,9,opt,name=dbStats"`
 	ShardsInfo     *MongoDBShardsInfo      `json:"shardsInfo,omitempty" protobuf:"bytes,10,opt,name=shardsInfo"`
 	ReplicaSetInfo *MongoDBReplicaSetInfo  `json:"replicaSetInfo,omitempty" protobuf:"bytes,11,opt,name=replicaSetInfo"`
-	Resources      corev1.ResourceList     `json:"resources" protobuf:"bytes,12,rep,name=resources,casttype=k8s.io/api/core/v1.ResourceList,castkey=k8s.io/api/core/v1.ResourceName"`
-	SecurityReport *SecurityReport         `json:"securityReport" protobuf:"bytes,13,opt,name=securityReport"`
+	// Resources      corev1.ResourceList     `json:"resources" protobuf:"bytes,12,rep,name=resources,casttype=k8s.io/api/core/v1.ResourceList,castkey=k8s.io/api/core/v1.ResourceName"`
+	// SecurityReport *SecurityReport         `json:"securityReport" protobuf:"bytes,13,opt,name=securityReport"`
 }
 
 type MongoDBDatabaseStats struct {
@@ -64,12 +63,14 @@ type MongoDBReplicaSetInfo struct {
 	NumberOfReplicas int32 `json:"numberOfReplicas" protobuf:"varint,1,opt,name=numberOfReplicas"`
 }
 
+// remove?
 type SecurityReport struct {
 	TLSSecured        bool `json:"tlsSecured" protobuf:"varint,1,opt,name=tlsSecured"`
 	BackupEnabled     bool `json:"backupEnabled" protobuf:"varint,2,opt,name=backupEnabled"`
 	MonitoringEnabled bool `json:"monitoringEnabled" protobuf:"varint,3,opt,name=monitoringEnabled"`
 }
 
+// remove?
 type DBConnectionInfo struct {
 	URL  string `json:"url,omitempty" protobuf:"bytes,1,opt,name=url"`
 	Port int32  `json:"port,omitempty" protobuf:"varint,2,opt,name=port"`
@@ -83,32 +84,33 @@ type MongoDBShardsInfo struct {
 	ChunksBalanced    bool  `json:"chunksBalanced" protobuf:"varint,5,opt,name=chunksBalanced"`
 }
 
+// remove?
 type DBCredentials struct {
 	Username    string `json:"username,omitempty" protobuf:"bytes,1,opt,name=username"`
 	Password    string `json:"password,omitempty" protobuf:"bytes,2,opt,name=password"`
 	Certificate string `json:"certificate,omitempty" protobuf:"bytes,3,opt,name=certificate"`
 }
 
-// MongoDBOverview is the Schema for the MongoDBOverviews API
+// MongoDBInsight is the Schema for the MongoDBInsights API
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type MongoDBOverview struct {
+type MongoDBInsight struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
-	Spec   MongoDBOverviewSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status api.MongoDBStatus   `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Spec   MongoDBInsightSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	Status api.MongoDBStatus  `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
-// MongoDBOverviewList contains a list of MongoDBOverview
+// MongoDBInsightList contains a list of MongoDBInsight
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type MongoDBOverviewList struct {
+type MongoDBInsightList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items           []MongoDBOverview `json:"items" protobuf:"bytes,2,rep,name=items"`
+	Items           []MongoDBInsight `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&MongoDBOverview{}, &MongoDBOverviewList{})
+	SchemeBuilder.Register(&MongoDBInsight{}, &MongoDBInsightList{})
 }

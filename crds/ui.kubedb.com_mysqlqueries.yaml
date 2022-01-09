@@ -37,9 +37,9 @@ spec:
                     lastInsertId:
                       format: int64
                       type: integer
-                    lockTimeInMilli:
+                    lockTimeInMilliSeconds:
                       type: string
-                    queryTimeInMilli:
+                    queryTimeInMilliSeconds:
                       type: string
                     rows_examined:
                       format: int64
@@ -63,8 +63,8 @@ spec:
                   - db
                   - insertId
                   - lastInsertId
-                  - lockTimeInMilli
-                  - queryTimeInMilli
+                  - lockTimeInMilliSeconds
+                  - queryTimeInMilliSeconds
                   - rows_examined
                   - rows_sent
                   - serverId

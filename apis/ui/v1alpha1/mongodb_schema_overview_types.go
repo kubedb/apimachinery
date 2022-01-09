@@ -32,7 +32,8 @@ type MongoDBSchemaOverviewSpec struct {
 }
 
 type MongoDBCollectionSpec struct {
-	Name      string  `json:"name" protobuf:"bytes,1,opt,name=name"`
+	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
+	// why array?
 	TotalSize []int32 `json:"size" protobuf:"varint,2,rep,name=size"`
 }
 

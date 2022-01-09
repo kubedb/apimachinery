@@ -4,14 +4,14 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: redisoverviews.ui.kubedb.com
+  name: mariadbinsights.ui.kubedb.com
 spec:
   group: ui.kubedb.com
   names:
-    kind: RedisOverview
-    listKind: RedisOverviewList
-    plural: redisoverviews
-    singular: redisoverview
+    kind: MariaDBInsight
+    listKind: MariaDBInsightList
+    plural: mariadbinsights
+    singular: mariadbinsight
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -26,58 +26,49 @@ spec:
             type: object
           spec:
             properties:
-              blockedClients:
-                format: int64
+              abortedClients:
+                format: int32
                 type: integer
-              connectedClients:
-                format: int64
+              abortedConnections:
+                format: int32
                 type: integer
-              evictedKeys:
-                format: int64
+              longQueryTimeThreshold:
+                format: double
+                type: number
+              maxConnections:
+                format: int32
                 type: integer
-              evictionPolicy:
-                type: string
-              expiredKeys:
-                format: int64
-                type: integer
-              maxClients:
-                format: int64
+              maxUsedConnections:
+                format: int32
                 type: integer
               mode:
                 type: string
-              receivedConnections:
-                format: int64
+              numberOfSlowQueries:
+                format: int32
                 type: integer
-              rejectedConnections:
-                format: int64
-                type: integer
-              slowLogMaxLen:
-                format: int64
-                type: integer
-              slowLogThresholdMicroSec:
-                format: int64
+              questions:
+                format: int32
                 type: integer
               status:
                 type: string
-              totalKeys:
-                format: int64
+              threadsCached:
+                format: int32
+                type: integer
+              threadsConnected:
+                format: int32
+                type: integer
+              threadsCreated:
+                format: int32
+                type: integer
+              threadsRunning:
+                format: int32
                 type: integer
               version:
                 type: string
             required:
-            - blockedClients
-            - connectedClients
-            - evictedKeys
-            - evictionPolicy
-            - expiredKeys
-            - maxClients
             - mode
-            - receivedConnections
-            - rejectedConnections
-            - slowLogMaxLen
-            - slowLogThresholdMicroSec
+            - questions
             - status
-            - totalKeys
             - version
             type: object
           status:

@@ -32,18 +32,21 @@ type MySQLQueriesSpec struct {
 }
 
 type MySQLQuerySpec struct {
-	StartTime        string `json:"startTime" protobuf:"bytes,1,opt,name=startTime"`
-	UserHost         string `json:"userHost" protobuf:"bytes,2,opt,name=userHost"`
-	QueryTimeInMilli string `json:"queryTimeInMilli" protobuf:"bytes,3,opt,name=queryTimeInMilli"`
-	LockTimeInMilli  string `json:"lockTimeInMilli" protobuf:"bytes,4,opt,name=lockTimeInMilli"`
-	RowsSent         int64  `json:"rows_sent" protobuf:"varint,5,opt,name=rows_sent,json=rowsSent"`
-	RowsExamined     int64  `json:"rows_examined" protobuf:"varint,6,opt,name=rows_examined,json=rowsExamined"`
-	DB               string `json:"db" protobuf:"bytes,7,opt,name=db"`
-	LastInsertId     int64  `json:"lastInsertId" protobuf:"varint,8,opt,name=lastInsertId"`
-	InsertId         int64  `json:"insertId" protobuf:"varint,9,opt,name=insertId"`
-	ServerId         int64  `json:"serverId" protobuf:"varint,10,opt,name=serverId"`
-	SQLText          string `json:"sqlText" protobuf:"bytes,11,opt,name=sqlText"`
-	ThreadId         int64  `json:"threadId" protobuf:"varint,12,opt,name=threadId"`
+	// timestamp?
+	StartTime string `json:"startTime" protobuf:"bytes,1,opt,name=startTime"`
+	UserHost  string `json:"userHost" protobuf:"bytes,2,opt,name=userHost"`
+	// units
+	QueryTimeInMilliSeconds string `json:"queryTimeInMilliSeconds" protobuf:"bytes,3,opt,name=queryTimeInMilliSeconds"`
+	// units
+	LockTimeInMilliSeconds string `json:"lockTimeInMilliSeconds" protobuf:"bytes,4,opt,name=lockTimeInMilliSeconds"`
+	RowsSent               int64  `json:"rows_sent" protobuf:"varint,5,opt,name=rows_sent,json=rowsSent"`
+	RowsExamined           int64  `json:"rows_examined" protobuf:"varint,6,opt,name=rows_examined,json=rowsExamined"`
+	DB                     string `json:"db" protobuf:"bytes,7,opt,name=db"`
+	LastInsertId           int64  `json:"lastInsertId" protobuf:"varint,8,opt,name=lastInsertId"`
+	InsertId               int64  `json:"insertId" protobuf:"varint,9,opt,name=insertId"`
+	ServerId               int64  `json:"serverId" protobuf:"varint,10,opt,name=serverId"`
+	SQLText                string `json:"sqlText" protobuf:"bytes,11,opt,name=sqlText"`
+	ThreadId               int64  `json:"threadId" protobuf:"varint,12,opt,name=threadId"`
 }
 
 // MySQLQueries is the Schema for the MySQLQueries API

@@ -23,13 +23,13 @@ import (
 )
 
 const (
-	ResourceKindPostgresOverview = "PostgresOverview"
-	ResourcePostgresOverview     = "postgresoverview"
-	ResourcePostgresOverviews    = "postgresoverviews"
+	ResourceKindPostgresInsight = "PostgresInsight"
+	ResourcePostgresInsight     = "postgresinsight"
+	ResourcePostgresInsights    = "postgresinsights"
 )
 
-// PostgresOverviewSpec defines the desired state of PostgresOverview
-type PostgresOverviewSpec struct {
+// PostgresInsightSpec defines the desired state of PostgresInsight
+type PostgresInsightSpec struct {
 	Version           string                      `json:"version" protobuf:"bytes,1,opt,name=version"`
 	ConnectionURL     string                      `json:"connectionURL" protobuf:"bytes,2,opt,name=connectionURL"`
 	Status            string                      `json:"status" protobuf:"bytes,3,opt,name=status"`
@@ -63,32 +63,26 @@ type PostgresReplicationStatus struct {
 	ReplayLag       int64  `json:"replayLag" protobuf:"varint,5,opt,name=replayLag"`
 }
 
-// PostgresOverviewStatus defines the observed state of PostgresOverview
-type PostgresOverviewStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-}
-
-// PostgresOverview is the Schema for the postgresoverviews API
+// PostgresInsight is the Schema for the postgresinsights API
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type PostgresOverview struct {
+type PostgresInsight struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
-	Spec   PostgresOverviewSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status api.PostgresStatus   `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Spec   PostgresInsightSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	Status api.PostgresStatus  `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
-// PostgresOverviewList contains a list of PostgresOverview
+// PostgresInsightList contains a list of PostgresInsight
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type PostgresOverviewList struct {
+type PostgresInsightList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items           []PostgresOverview `json:"items" protobuf:"bytes,2,rep,name=items"`
+	Items           []PostgresInsight `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&PostgresOverview{}, &PostgresOverviewList{})
+	SchemeBuilder.Register(&PostgresInsight{}, &PostgresInsightList{})
 }

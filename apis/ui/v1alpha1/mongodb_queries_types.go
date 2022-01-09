@@ -32,14 +32,15 @@ type MongoDBQueriesSpec struct {
 }
 
 type MongoDBQuerySpec struct {
-	Operation            MongoDBOperation `json:"operation" protobuf:"bytes,1,opt,name=operation,casttype=MongoDBOperation"`
-	DatabaseName         string           `json:"databaseName" protobuf:"bytes,2,opt,name=databaseName"`
-	CollectionName       string           `json:"collectionName" protobuf:"bytes,3,opt,name=collectionName"`
-	Command              string           `json:"command" protobuf:"bytes,4,opt,name=command"`
-	Count                int64            `json:"count" protobuf:"varint,5,opt,name=count"`
-	AvgExecutionTimeInMS int64            `json:"avgExecutionTimeInMS" protobuf:"varint,6,opt,name=avgExecutionTimeInMS"`
-	MinExecutionTimeInMS int64            `json:"minExecutionTimeInMS" protobuf:"varint,7,opt,name=minExecutionTimeInMS"`
-	MaxExecutionTimeInMS int64            `json:"maxExecutionTimeInMS" protobuf:"varint,8,opt,name=maxExecutionTimeInMS"`
+	Operation      MongoDBOperation `json:"operation" protobuf:"bytes,1,opt,name=operation,casttype=MongoDBOperation"`
+	DatabaseName   string           `json:"databaseName" protobuf:"bytes,2,opt,name=databaseName"`
+	CollectionName string           `json:"collectionName" protobuf:"bytes,3,opt,name=collectionName"`
+	Command        string           `json:"command" protobuf:"bytes,4,opt,name=command"`
+	Count          int64            `json:"count" protobuf:"varint,5,opt,name=count"`
+	// units?
+	AvgExecutionTimeInMS int64 `json:"avgExecutionTimeInMS" protobuf:"varint,6,opt,name=avgExecutionTimeInMS"`
+	MinExecutionTimeInMS int64 `json:"minExecutionTimeInMS" protobuf:"varint,7,opt,name=minExecutionTimeInMS"`
+	MaxExecutionTimeInMS int64 `json:"maxExecutionTimeInMS" protobuf:"varint,8,opt,name=maxExecutionTimeInMS"`
 }
 
 // MongoDBQueries is the Schema for the MongoDBQueriess API
