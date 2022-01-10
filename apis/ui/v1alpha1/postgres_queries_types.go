@@ -32,35 +32,28 @@ type PostgresQueriesSpec struct {
 }
 
 type PostgresQuerySpec struct {
-	UserOID     int64  `json:"userOID" protobuf:"varint,1,opt,name=userOID"`
-	DatabaseOID int64  `json:"databaseOID" protobuf:"varint,2,opt,name=databaseOID"`
-	Query       string `json:"query" protobuf:"bytes,3,opt,name=query"`
-	Calls       int64  `json:"calls" protobuf:"varint,4,opt,name=calls"`
-	Rows        int64  `json:"rows" protobuf:"varint,5,opt,name=rows"`
-	// units?
-	TotalTime float64 `json:"totalTime" protobuf:"fixed64,6,opt,name=totalTime"`
-	// units?
-	MinTime float64 `json:"minTime" protobuf:"fixed64,7,opt,name=minTime"`
-	// units?
-	MaxTime           float64 `json:"maxTime" protobuf:"fixed64,8,opt,name=maxTime"`
-	SharedBlksHit     int64   `json:"sharedBlksHit" protobuf:"varint,9,opt,name=sharedBlksHit"`
-	SharedBlksRead    int64   `json:"sharedBlksRead" protobuf:"varint,10,opt,name=sharedBlksRead"`
-	SharedBlksDirtied int64   `json:"sharedBlksDirtied" protobuf:"varint,11,opt,name=sharedBlksDirtied"`
-	SharedBlksWritten int64   `json:"sharedBlksWritten" protobuf:"varint,12,opt,name=sharedBlksWritten"`
-	LocalBlksHit      int64   `json:"localBlksHit" protobuf:"varint,13,opt,name=localBlksHit"`
-	LocalBlksRead     int64   `json:"localBlksRead" protobuf:"varint,14,opt,name=localBlksRead"`
-	LocalBlksDirtied  int64   `json:"localBlksDirtied" protobuf:"varint,15,opt,name=localBlksDirtied"`
-	LocalBlksWritten  int64   `json:"localBlksWritten" protobuf:"varint,16,opt,name=localBlksWritten"`
-	TempBlksRead      int64   `json:"tempBlksRead" protobuf:"varint,17,opt,name=tempBlksRead"`
-	TempBlksWritten   int64   `json:"tempBlksWritten" protobuf:"varint,18,opt,name=tempBlksWritten"`
-	// units?
-	BlkReadTime float64 `json:"blkReadTime" protobuf:"fixed64,19,opt,name=blkReadTime"`
-	// units?
-	BlkWriteTime float64 `json:"blkWriteTime" protobuf:"fixed64,20,opt,name=blkWriteTime"`
-	// ? fraction?
-	BufferHitPercentage string `json:"bufferHitPercentage" protobuf:"bytes,21,opt,name=bufferHitPercentage"`
-	// ? fraction?
-	LocalBufferHitPercentage string `json:"localBufferHitPercentage" protobuf:"bytes,22,opt,name=localBufferHitPercentage"`
+	UserOID                  int64   `json:"userOID,omitempty" protobuf:"varint,1,opt,name=userOID"`
+	DatabaseOID              int64   `json:"databaseOID,omitempty" protobuf:"varint,2,opt,name=databaseOID"`
+	Query                    string  `json:"query,omitempty" protobuf:"bytes,3,opt,name=query"`
+	Calls                    int64   `json:"calls,omitempty" protobuf:"varint,4,opt,name=calls"`
+	Rows                     int64   `json:"rows,omitempty" protobuf:"varint,5,opt,name=rows"`
+	TotalTimeMilliSeconds    float64 `json:"totalTimeMilliSeconds,omitempty" protobuf:"fixed64,6,opt,name=totalTimeMilliSeconds"`
+	MinTimeMilliSeconds      float64 `json:"minTimeMilliSeconds,omitempty" protobuf:"fixed64,7,opt,name=minTimeMilliSeconds"`
+	MaxTimeMilliSeconds      float64 `json:"maxTimeMilliSeconds,omitempty" protobuf:"fixed64,8,opt,name=maxTimeMilliSeconds"`
+	SharedBlksHit            int64   `json:"sharedBlksHit,omitempty" protobuf:"varint,9,opt,name=sharedBlksHit"`
+	SharedBlksRead           int64   `json:"sharedBlksRead,omitempty" protobuf:"varint,10,opt,name=sharedBlksRead"`
+	SharedBlksDirtied        int64   `json:"sharedBlksDirtied,omitempty" protobuf:"varint,11,opt,name=sharedBlksDirtied"`
+	SharedBlksWritten        int64   `json:"sharedBlksWritten,omitempty" protobuf:"varint,12,opt,name=sharedBlksWritten"`
+	LocalBlksHit             int64   `json:"localBlksHit,omitempty" protobuf:"varint,13,opt,name=localBlksHit"`
+	LocalBlksRead            int64   `json:"localBlksRead,omitempty" protobuf:"varint,14,opt,name=localBlksRead"`
+	LocalBlksDirtied         int64   `json:"localBlksDirtied,omitempty" protobuf:"varint,15,opt,name=localBlksDirtied"`
+	LocalBlksWritten         int64   `json:"localBlksWritten,omitempty" protobuf:"varint,16,opt,name=localBlksWritten"`
+	TempBlksRead             int64   `json:"tempBlksRead,omitempty" protobuf:"varint,17,opt,name=tempBlksRead"`
+	TempBlksWritten          int64   `json:"tempBlksWritten,omitempty" protobuf:"varint,18,opt,name=tempBlksWritten"`
+	BlkReadTimeMilliSeconds  float64 `json:"blkReadTimeMilliSeconds,omitempty" protobuf:"fixed64,19,opt,name=blkReadTimeMilliSeconds"`
+	BlkWriteTime             float64 `json:"blkWriteTime,omitempty" protobuf:"fixed64,20,opt,name=blkWriteTime"`
+	BufferHitPercentage      float64 `json:"bufferHitPercentage,omitempty" protobuf:"fixed64,21,opt,name=bufferHitPercentage"`
+	LocalBufferHitPercentage float64 `json:"localBufferHitPercentage,omitempty" protobuf:"fixed64,22,opt,name=localBufferHitPercentage"`
 }
 
 // PostgresQueries is the Schema for the PostgresQueries API

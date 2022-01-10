@@ -32,24 +32,7 @@ spec:
               abortedConnections:
                 format: int32
                 type: integer
-              connectionsInfo:
-                properties:
-                  port:
-                    format: int32
-                    type: integer
-                  url:
-                    type: string
-                type: object
-              credentials:
-                properties:
-                  certificate:
-                    type: string
-                  password:
-                    type: string
-                  username:
-                    type: string
-                type: object
-              longQueryTimeThreshold:
+              longQueryTimeThresholdSeconds:
                 format: double
                 type: number
               maxConnections:
@@ -82,11 +65,6 @@ spec:
                 type: integer
               version:
                 type: string
-            required:
-            - mode
-            - questions
-            - status
-            - version
             type: object
           status:
             properties:

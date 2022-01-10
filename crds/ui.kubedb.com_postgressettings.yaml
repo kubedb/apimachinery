@@ -39,12 +39,6 @@ spec:
                       type: string
                     unit:
                       type: string
-                  required:
-                  - currentValue
-                  - defaultValue
-                  - name
-                  - source
-                  - unit
                   type: object
                 type: array
             required:

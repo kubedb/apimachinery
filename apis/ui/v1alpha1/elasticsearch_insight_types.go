@@ -30,31 +30,28 @@ const (
 
 // ElasticsearchInsightSpec defines the desired state of ElasticsearchInsight
 type ElasticsearchInsightSpec struct {
-	Version string `json:"version" protobuf:"bytes,1,opt,name=version"`
-	Status  string `json:"status" protobuf:"bytes,2,opt,name=status"`
-	Mode    string `json:"mode" protobuf:"bytes,3,opt,name=mode"`
-	// ConnectionInfo DBConnectionInfo           `json:"connectionInfo,omitempty" protobuf:"bytes,4,opt,name=connectionInfo"`
-	// Credentials    DBCredentials              `json:"credentials,omitempty" protobuf:"bytes,5,opt,name=credentials"`
+	Version string `json:"version,omitempty" protobuf:"bytes,1,opt,name=version"`
+	Status  string `json:"status,omitempty" protobuf:"bytes,2,opt,name=status"`
+	Mode    string `json:"mode,omitempty" protobuf:"bytes,3,opt,name=mode"`
 
-	// inline?
-	ClusterHealth ElasticsearchClusterHealth `json:"clusterHealth,omitempty" protobuf:"bytes,6,opt,name=clusterHealth"`
+	ClusterHealth ElasticsearchClusterHealth `json:",inline" protobuf:"bytes,4,opt,name=clusterHealth"`
 }
 
 type ElasticsearchClusterHealth struct {
-	ActivePrimaryShards               int32  `json:"activePrimaryShards" protobuf:"varint,1,opt,name=activePrimaryShards"`
-	ActiveShards                      int32  `json:"activeShards" protobuf:"varint,2,opt,name=activeShards"`
-	ActiveShardsPercentAsNumber       int32  `json:"activeShardsPercentAsNumber" protobuf:"varint,3,opt,name=activeShardsPercentAsNumber"`
-	ClusterName                       string `json:"clusterName" protobuf:"bytes,4,opt,name=clusterName"`
-	DelayedUnassignedShards           int32  `json:"delayedUnassignedShards" protobuf:"varint,5,opt,name=delayedUnassignedShards"`
-	InitializingShards                int32  `json:"initializingShards" protobuf:"varint,6,opt,name=initializingShards"`
-	NumberOfDataNodes                 int32  `json:"numberOfDataNodes" protobuf:"varint,7,opt,name=numberOfDataNodes"`
-	NumberOfInFlightFetch             int32  `json:"numberOfInFlightFetch" protobuf:"varint,8,opt,name=numberOfInFlightFetch"`
-	NumberOfNodes                     int32  `json:"numberOfNodes" protobuf:"varint,9,opt,name=numberOfNodes"`
-	NumberOfPendingTasks              int32  `json:"numberOfPendingTasks" protobuf:"varint,10,opt,name=numberOfPendingTasks"`
-	RelocatingShards                  int32  `json:"relocatingShards" protobuf:"varint,11,opt,name=relocatingShards"`
-	Status                            string `json:"status" protobuf:"bytes,12,opt,name=status"`
-	UnassignedShards                  int32  `json:"unassignedShards" protobuf:"varint,13,opt,name=unassignedShards"`
-	TaskMaxWaitingInQueueMilliSeconds int32  `json:"taskMaxWaitingInQueueMilliSeconds" protobuf:"varint,14,opt,name=taskMaxWaitingInQueueMilliSeconds"`
+	ActivePrimaryShards               int32  `json:"activePrimaryShards,omitempty" protobuf:"varint,1,opt,name=activePrimaryShards"`
+	ActiveShards                      int32  `json:"activeShards,omitempty" protobuf:"varint,2,opt,name=activeShards"`
+	ActiveShardsPercentAsNumber       int32  `json:"activeShardsPercentAsNumber,omitempty" protobuf:"varint,3,opt,name=activeShardsPercentAsNumber"`
+	ClusterName                       string `json:"clusterName,omitempty" protobuf:"bytes,4,opt,name=clusterName"`
+	DelayedUnassignedShards           int32  `json:"delayedUnassignedShards,omitempty" protobuf:"varint,5,opt,name=delayedUnassignedShards"`
+	InitializingShards                int32  `json:"initializingShards,omitempty" protobuf:"varint,6,opt,name=initializingShards"`
+	NumberOfDataNodes                 int32  `json:"numberOfDataNodes,omitempty" protobuf:"varint,7,opt,name=numberOfDataNodes"`
+	NumberOfInFlightFetch             int32  `json:"numberOfInFlightFetch,omitempty" protobuf:"varint,8,opt,name=numberOfInFlightFetch"`
+	NumberOfNodes                     int32  `json:"numberOfNodes,omitempty" protobuf:"varint,9,opt,name=numberOfNodes"`
+	NumberOfPendingTasks              int32  `json:"numberOfPendingTasks,omitempty" protobuf:"varint,10,opt,name=numberOfPendingTasks"`
+	RelocatingShards                  int32  `json:"relocatingShards,omitempty" protobuf:"varint,11,opt,name=relocatingShards"`
+	ClusterStatus                     string `json:"clusterStatus,omitempty" protobuf:"bytes,12,opt,name=clusterStatus"`
+	UnassignedShards                  int32  `json:"unassignedShards,omitempty" protobuf:"varint,13,opt,name=unassignedShards"`
+	TaskMaxWaitingInQueueMilliSeconds int32  `json:"taskMaxWaitingInQueueMilliSeconds,omitempty" protobuf:"varint,14,opt,name=taskMaxWaitingInQueueMilliSeconds"`
 }
 
 // ElasticsearchInsight is the Schema for the elasticsearchinsights API

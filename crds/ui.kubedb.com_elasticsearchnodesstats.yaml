@@ -126,8 +126,8 @@ spec:
                         type: string
                       type: array
                     timestamp:
-                      format: int64
-                      type: integer
+                      format: date-time
+                      type: string
                     transport_addr:
                       type: string
                   required:

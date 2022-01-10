@@ -53,6 +53,7 @@ spec:
                     sqlText:
                       type: string
                     startTime:
+                      format: date-time
                       type: string
                     threadId:
                       format: int64

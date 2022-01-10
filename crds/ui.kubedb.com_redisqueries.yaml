@@ -40,13 +40,8 @@ spec:
                       format: int64
                       type: integer
                     queryTimestamp:
-                      format: int64
-                      type: integer
-                  required:
-                  - args
-                  - execTimeInMircoSeconds
-                  - queryId
-                  - queryTimestamp
+                      format: date-time
+                      type: string
                   type: object
                 type: array
             required:

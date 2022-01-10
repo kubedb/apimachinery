@@ -26,74 +26,52 @@ spec:
             type: object
           spec:
             properties:
-              clusterHealth:
-                properties:
-                  activePrimaryShards:
-                    format: int32
-                    type: integer
-                  activeShards:
-                    format: int32
-                    type: integer
-                  activeShardsPercentAsNumber:
-                    format: int32
-                    type: integer
-                  clusterName:
-                    type: string
-                  delayedUnassignedShards:
-                    format: int32
-                    type: integer
-                  initializingShards:
-                    format: int32
-                    type: integer
-                  numberOfDataNodes:
-                    format: int32
-                    type: integer
-                  numberOfInFlightFetch:
-                    format: int32
-                    type: integer
-                  numberOfNodes:
-                    format: int32
-                    type: integer
-                  numberOfPendingTasks:
-                    format: int32
-                    type: integer
-                  relocatingShards:
-                    format: int32
-                    type: integer
-                  status:
-                    type: string
-                  taskMaxWaitingInQueueMilliSeconds:
-                    format: int32
-                    type: integer
-                  unassignedShards:
-                    format: int32
-                    type: integer
-                required:
-                - activePrimaryShards
-                - activeShards
-                - activeShardsPercentAsNumber
-                - clusterName
-                - delayedUnassignedShards
-                - initializingShards
-                - numberOfDataNodes
-                - numberOfInFlightFetch
-                - numberOfNodes
-                - numberOfPendingTasks
-                - relocatingShards
-                - status
-                - taskMaxWaitingInQueueMilliSeconds
-                - unassignedShards
-                type: object
+              activePrimaryShards:
+                format: int32
+                type: integer
+              activeShards:
+                format: int32
+                type: integer
+              activeShardsPercentAsNumber:
+                format: int32
+                type: integer
+              clusterName:
+                type: string
+              clusterStatus:
+                type: string
+              delayedUnassignedShards:
+                format: int32
+                type: integer
+              initializingShards:
+                format: int32
+                type: integer
               mode:
                 type: string
+              numberOfDataNodes:
+                format: int32
+                type: integer
+              numberOfInFlightFetch:
+                format: int32
+                type: integer
+              numberOfNodes:
+                format: int32
+                type: integer
+              numberOfPendingTasks:
+                format: int32
+                type: integer
+              relocatingShards:
+                format: int32
+                type: integer
               status:
                 type: string
+              taskMaxWaitingInQueueMilliSeconds:
+                format: int32
+                type: integer
+              unassignedShards:
+                format: int32
+                type: integer
               version:
                 type: string
-            required:
-            - mode
-            - status
-            - version
             type: object
           status:
             properties:

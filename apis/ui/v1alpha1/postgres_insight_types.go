@@ -41,26 +41,26 @@ type PostgresInsightSpec struct {
 }
 
 type PostgresVacuumInfo struct {
-	AutoVacuum          string `json:"autoVacuum" protobuf:"bytes,1,opt,name=autoVacuum"`
-	ActiveVacuumProcess int64  `json:"activeVacuumProcess" protobuf:"varint,2,opt,name=activeVacuumProcess"`
+	AutoVacuum          string `json:"autoVacuum,omitempty" protobuf:"bytes,1,opt,name=autoVacuum"`
+	ActiveVacuumProcess int64  `json:"activeVacuumProcess,omitempty" protobuf:"varint,2,opt,name=activeVacuumProcess"`
 }
 
 type PostgresBackupInfo struct {
 }
 
 type PostgresConnectionInfo struct {
-	MaxConnections    int64 `json:"maxConnections" protobuf:"varint,1,opt,name=maxConnections"`
-	ActiveConnections int64 `json:"activeConnections" protobuf:"varint,2,opt,name=activeConnections"`
+	MaxConnections    int64 `json:"maxConnections,omitempty" protobuf:"varint,1,opt,name=maxConnections"`
+	ActiveConnections int64 `json:"activeConnections,omitempty" protobuf:"varint,2,opt,name=activeConnections"`
 }
 
 // Ref: https://www.postgresql.org/docs/10/monitoring-stats.html#PG-STAT-REPLICATION-VIEW
 
 type PostgresReplicationStatus struct {
-	ApplicationName string `json:"applicationName" protobuf:"bytes,1,opt,name=applicationName"`
-	State           string `json:"state" protobuf:"bytes,2,opt,name=state"`
-	WriteLag        int64  `json:"writeLag" protobuf:"varint,3,opt,name=writeLag"`
-	FlushLag        int64  `json:"flushLag" protobuf:"varint,4,opt,name=flushLag"`
-	ReplayLag       int64  `json:"replayLag" protobuf:"varint,5,opt,name=replayLag"`
+	ApplicationName string `json:"applicationName,omitempty" protobuf:"bytes,1,opt,name=applicationName"`
+	State           string `json:"state,omitempty" protobuf:"bytes,2,opt,name=state"`
+	WriteLag        int64  `json:"writeLag,omitempty" protobuf:"varint,3,opt,name=writeLag"`
+	FlushLag        int64  `json:"flushLag,omitempty" protobuf:"varint,4,opt,name=flushLag"`
+	ReplayLag       int64  `json:"replayLag,omitempty" protobuf:"varint,5,opt,name=replayLag"`
 }
 
 // PostgresInsight is the Schema for the postgresinsights API

@@ -32,9 +32,8 @@ type MySQLQueriesSpec struct {
 }
 
 type MySQLQuerySpec struct {
-	// timestamp?
-	StartTime string `json:"startTime" protobuf:"bytes,1,opt,name=startTime"`
-	UserHost  string `json:"userHost" protobuf:"bytes,2,opt,name=userHost"`
+	StartTime *metav1.Time `json:"startTime" protobuf:"bytes,1,opt,name=startTime"`
+	UserHost  string       `json:"userHost" protobuf:"bytes,2,opt,name=userHost"`
 	// units
 	QueryTimeInMilliSeconds string `json:"queryTimeInMilliSeconds" protobuf:"bytes,3,opt,name=queryTimeInMilliSeconds"`
 	// units

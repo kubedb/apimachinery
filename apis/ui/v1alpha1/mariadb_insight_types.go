@@ -30,22 +30,20 @@ const (
 
 // MariaDBInsightSpec defines the desired state of MariaDBInsight
 type MariaDBInsightSpec struct {
-	Version string `json:"version" protobuf:"bytes,1,opt,name=version"`
-	Status  string `json:"status" protobuf:"bytes,2,opt,name=status"`
-	Mode    string `json:"mode" protobuf:"bytes,3,opt,name=mode"`
-	// ConnectionInfo         DBConnectionInfo `json:"connectionsInfo,omitempty" protobuf:"bytes,4,opt,name=connectionsInfo"`
-	// Credentials            DBCredentials    `json:"credentials,omitempty" protobuf:"bytes,5,opt,name=credentials"`
-	MaxConnections         *int32   `json:"maxConnections,omitempty" protobuf:"varint,6,opt,name=maxConnections"`
-	MaxUsedConnections     *int32   `json:"maxUsedConnections,omitempty" protobuf:"varint,7,opt,name=maxUsedConnections"`
-	Questions              *int32   `json:"questions" protobuf:"varint,8,opt,name=questions"`
-	LongQueryTimeThreshold *float64 `json:"longQueryTimeThreshold,omitempty" protobuf:"fixed64,9,opt,name=longQueryTimeThreshold"`
-	NumberOfSlowQueries    *int32   `json:"numberOfSlowQueries,omitempty" protobuf:"varint,10,opt,name=numberOfSlowQueries"`
-	AbortedClients         *int32   `json:"abortedClients,omitempty" protobuf:"varint,11,opt,name=abortedClients"`
-	AbortedConnections     *int32   `json:"abortedConnections,omitempty" protobuf:"varint,12,opt,name=abortedConnections"`
-	ThreadsCached          *int32   `json:"threadsCached,omitempty" protobuf:"varint,13,opt,name=threadsCached"`
-	ThreadsConnected       *int32   `json:"threadsConnected,omitempty" protobuf:"varint,14,opt,name=threadsConnected"`
-	ThreadsCreated         *int32   `json:"threadsCreated,omitempty" protobuf:"varint,15,opt,name=threadsCreated"`
-	ThreadsRunning         *int32   `json:"threadsRunning,omitempty" protobuf:"varint,16,opt,name=threadsRunning"`
+	Version                       string  `json:"version,omitempty" protobuf:"bytes,1,opt,name=version"`
+	Status                        string  `json:"status,omitempty" protobuf:"bytes,2,opt,name=status"`
+	Mode                          string  `json:"mode,omitempty" protobuf:"bytes,3,opt,name=mode"`
+	MaxConnections                int32   `json:"maxConnections,omitempty" protobuf:"varint,4,opt,name=maxConnections"`
+	MaxUsedConnections            int32   `json:"maxUsedConnections,omitempty" protobuf:"varint,5,opt,name=maxUsedConnections"`
+	Questions                     int32   `json:"questions,omitempty" protobuf:"varint,6,opt,name=questions"`
+	LongQueryTimeThresholdSeconds float64 `json:"longQueryTimeThresholdSeconds,omitempty" protobuf:"fixed64,7,opt,name=longQueryTimeThresholdSeconds"`
+	NumberOfSlowQueries           int32   `json:"numberOfSlowQueries,omitempty" protobuf:"varint,8,opt,name=numberOfSlowQueries"`
+	AbortedClients                int32   `json:"abortedClients,omitempty" protobuf:"varint,9,opt,name=abortedClients"`
+	AbortedConnections            int32   `json:"abortedConnections,omitempty" protobuf:"varint,10,opt,name=abortedConnections"`
+	ThreadsCached                 int32   `json:"threadsCached,omitempty" protobuf:"varint,11,opt,name=threadsCached"`
+	ThreadsConnected              int32   `json:"threadsConnected,omitempty" protobuf:"varint,12,opt,name=threadsConnected"`
+	ThreadsCreated                int32   `json:"threadsCreated,omitempty" protobuf:"varint,13,opt,name=threadsCreated"`
+	ThreadsRunning                int32   `json:"threadsRunning,omitempty" protobuf:"varint,14,opt,name=threadsRunning"`
 }
 
 // MariaDBInsight is the Schema for the mariaDBinsights API

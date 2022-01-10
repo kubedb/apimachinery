@@ -29,22 +29,6 @@ import "sigs.k8s.io/controller-runtime/pkg/scheme/generated.proto";
 // Package-wide variables from generator "generated".
 option go_package = "v1alpha1";
 
-// remove?
-message DBConnectionInfo {
-  optional string url = 1;
-
-  optional int32 port = 2;
-}
-
-// remove?
-message DBCredentials {
-  optional string username = 1;
-
-  optional string password = 2;
-
-  optional string certificate = 3;
-}
-
 message ElasticsearchClusterHealth {
   optional int32 activePrimaryShards = 1;
 
@@ -68,7 +52,7 @@ message ElasticsearchClusterHealth {
 
   optional int32 relocatingShards = 11;
 
-  optional string status = 12;
+  optional string clusterStatus = 12;
 
   optional int32 unassignedShards = 13;
 
@@ -107,14 +91,12 @@ message ElasticsearchInsightSpec {
 
   optional string mode = 3;
 
-  // inline?
-  optional ElasticsearchClusterHealth clusterHealth = 6;
+  optional ElasticsearchClusterHealth clusterHealth = 4;
 }
 
 message ElasticsearchNodesStatSpec {
   // Time the node stats were collected for this response in Unix
-  // string?
-  optional int64 timestamp = 1;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time timestamp = 1;
 
   // Human-readable identifier for the node.
   optional string name = 2;
@@ -218,29 +200,27 @@ message MariaDBInsightSpec {
 
   optional string mode = 3;
 
-  // ConnectionInfo         DBConnectionInfo `json:"connectionsInfo,omitempty" protobuf:"bytes,4,opt,name=connectionsInfo"`
-  // Credentials            DBCredentials    `json:"credentials,omitempty" protobuf:"bytes,5,opt,name=credentials"`
-  optional int32 maxConnections = 6;
+  optional int32 maxConnections = 4;
 
-  optional int32 maxUsedConnections = 7;
+  optional int32 maxUsedConnections = 5;
 
-  optional int32 questions = 8;
+  optional int32 questions = 6;
 
-  optional double longQueryTimeThreshold = 9;
+  optional double longQueryTimeThresholdSeconds = 7;
 
-  optional int32 numberOfSlowQueries = 10;
+  optional int32 numberOfSlowQueries = 8;
 
-  optional int32 abortedClients = 11;
+  optional int32 abortedClients = 9;
 
-  optional int32 abortedConnections = 12;
+  optional int32 abortedConnections = 10;
 
-  optional int32 threadsCached = 13;
+  optional int32 threadsCached = 11;
 
-  optional int32 threadsConnected = 14;
+  optional int32 threadsConnected = 12;
 
-  optional int32 threadsCreated = 15;
+  optional int32 threadsCreated = 13;
 
-  optional int32 threadsRunning = 16;
+  optional int32 threadsRunning = 14;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -263,8 +243,7 @@ message MariaDBQueriesSpec {
 }
 
 message MariaDBQuerySpec {
-  // timestamp?
-  optional string startTime = 1;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time startTime = 1;
 
   optional string userHost = 2;
 
@@ -308,7 +287,7 @@ message MariaDBSchemaOverviewList {
 message MongoDBCollectionSpec {
   optional string name = 1;
 
-  // why array?
+  // Slice is used to store shards specific collection size for Sharded MongoDB
   repeated int32 size = 2;
 }
 
@@ -350,23 +329,19 @@ message MongoDBInsightList {
 
 // MongoDBInsightSpec defines the desired state of MongoDBInsight
 message MongoDBInsightSpec {
-  // Name           string                  `json:"name" protobuf:"bytes,1,opt,name=name"`
-  // Namespace      string                  `json:"namespace" protobuf:"bytes,2,opt,name=namespace"`
-  optional string version = 3;
+  optional string version = 1;
 
-  optional string type = 4;
+  optional string type = 2;
 
-  optional string status = 5;
+  optional string status = 3;
 
-  // ConnectionInfo *DBConnectionInfo       `json:"connectionInfo" protobuf:"bytes,6,opt,name=connectionInfo"`
-  // Credentials    *DBCredentials          `json:"credentials" protobuf:"bytes,7,opt,name=credentials"`
-  optional MongoDBConnectionsInfo connections = 8;
+  optional MongoDBConnectionsInfo connections = 4;
 
-  optional MongoDBDatabaseStats dbStats = 9;
+  optional MongoDBDatabaseStats dbStats = 5;
 
-  optional MongoDBShardsInfo shardsInfo = 10;
+  optional MongoDBShardsInfo shardsInfo = 6;
 
-  optional MongoDBReplicaSetInfo replicaSetInfo = 11;
+  optional MongoDBReplicaSetInfo replicaSetInfo = 7;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -399,12 +374,11 @@ message MongoDBQuerySpec {
 
   optional int64 count = 5;
 
-  // units?
-  optional int64 avgExecutionTimeInMS = 6;
+  optional int64 avgExecutionTimeMilliSeconds = 6;
 
-  optional int64 minExecutionTimeInMS = 7;
+  optional int64 minExecutionTimeMilliSeconds = 7;
 
-  optional int64 maxExecutionTimeInMS = 8;
+  optional int64 maxExecutionTimeMilliSeconds = 8;
 }
 
 message MongoDBReplicaSetInfo {
@@ -466,33 +440,27 @@ message MySQLInsightSpec {
 
   optional string mode = 3;
 
-  optional DBConnectionInfo connectionsInfo = 4;
+  optional int32 maxConnections = 4;
 
-  optional DBCredentials credentials = 5;
+  optional int32 maxUsedConnections = 5;
 
-  // why pointer?
-  optional int32 maxConnections = 6;
+  optional int32 questions = 6;
 
-  optional int32 maxUsedConnections = 7;
+  optional double longQueryTimeThresholdSeconds = 7;
 
-  optional int32 questions = 8;
+  optional int32 numberOfSlowQueries = 8;
 
-  // units?
-  optional double longQueryTimeThreshold = 9;
+  optional int32 abortedClients = 9;
 
-  optional int32 numberOfSlowQueries = 10;
+  optional int32 abortedConnections = 10;
 
-  optional int32 abortedClients = 11;
+  optional int32 threadsCached = 11;
 
-  optional int32 abortedConnections = 12;
+  optional int32 threadsConnected = 12;
 
-  optional int32 threadsCached = 13;
+  optional int32 threadsCreated = 13;
 
-  optional int32 threadsConnected = 14;
-
-  optional int32 threadsCreated = 15;
-
-  optional int32 threadsRunning = 16;
+  optional int32 threadsRunning = 14;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -515,8 +483,7 @@ message MySQLQueriesSpec {
 }
 
 message MySQLQuerySpec {
-  // timestamp?
-  optional string startTime = 1;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time startTime = 1;
 
   optional string userHost = 2;
 
@@ -1010,14 +977,11 @@ message PostgresQuerySpec {
 
   optional int64 rows = 5;
 
-  // units?
-  optional double totalTime = 6;
+  optional double totalTimeMilliSeconds = 6;
 
-  // units?
-  optional double minTime = 7;
+  optional double minTimeMilliSeconds = 7;
 
-  // units?
-  optional double maxTime = 8;
+  optional double maxTimeMilliSeconds = 8;
 
   optional int64 sharedBlksHit = 9;
 
@@ -1039,17 +1003,13 @@ message PostgresQuerySpec {
 
   optional int64 tempBlksWritten = 18;
 
-  // units?
-  optional double blkReadTime = 19;
+  optional double blkReadTimeMilliSeconds = 19;
 
-  // units?
   optional double blkWriteTime = 20;
 
-  // ? fraction?
-  optional string bufferHitPercentage = 21;
+  optional double bufferHitPercentage = 21;
 
-  // ? fraction?
-  optional string localBufferHitPercentage = 22;
+  optional double localBufferHitPercentage = 22;
 }
 
 message PostgresReplicationStatus {
@@ -1108,11 +1068,9 @@ message RedisDatabaseSpec {
 
   optional string keys = 2;
 
-  // timestamp?
-  optional string expires = 3;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time expires = 3;
 
-  // unit?
-  optional string avgTTL = 4;
+  optional string avgTTLMilliSeconds = 4;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -1184,8 +1142,7 @@ message RedisQueriesSpec {
 message RedisQuerySpec {
   optional int64 queryId = 1;
 
-  // timestamp?
-  optional int64 queryTimestamp = 2;
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time queryTimestamp = 2;
 
   optional int64 execTimeInMircoSeconds = 3;
 
@@ -1209,14 +1166,5 @@ message RedisSchemaOverviewList {
 // RedisSchemaOverviewSpec defines the desired state of RedisSchemaOverview
 message RedisSchemaOverviewSpec {
   repeated RedisDatabaseSpec databases = 1;
-}
-
-// remove?
-message SecurityReport {
-  optional bool tlsSecured = 1;
-
-  optional bool backupEnabled = 2;
-
-  optional bool monitoringEnabled = 3;
 }
 

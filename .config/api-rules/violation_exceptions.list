@@ -238,10 +238,7 @@ API rule violation: names_match,k8s.io/apimachinery/pkg/util/intstr,IntOrString,
 API rule violation: names_match,kmodules.xyz/client-go/api/v1,CertificateSpec,URIs
 API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,ContainerRuntimeSettings,IONice
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchNodesStatSpec,TransportAddr
-API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MariaDBQuerySpec,RowsExamined
-API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MariaDBQuerySpec,RowsSent
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBCollectionSpec,TotalSize
-API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MySQLInsightSpec,ConnectionInfo
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MySQLQuerySpec,RowsExamined
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MySQLQuerySpec,RowsSent
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsCompletionFields,SizeInBytes

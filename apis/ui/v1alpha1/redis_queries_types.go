@@ -32,11 +32,10 @@ type RedisQueriesSpec struct {
 }
 
 type RedisQuerySpec struct {
-	QueryId int64 `json:"queryId" protobuf:"varint,1,opt,name=queryId"`
-	//timestamp?
-	QueryTimestamp         int64    `json:"queryTimestamp" protobuf:"varint,2,opt,name=queryTimestamp"`
-	ExecTimeInMircoSeconds int64    `json:"execTimeInMircoSeconds" protobuf:"varint,3,opt,name=execTimeInMircoSeconds"`
-	Args                   []string `json:"args" protobuf:"bytes,4,rep,name=args"`
+	QueryId                int64        `json:"queryId,omitempty" protobuf:"varint,1,opt,name=queryId"`
+	QueryTimestamp         *metav1.Time `json:"queryTimestamp,omitempty" protobuf:"varint,2,opt,name=queryTimestamp"`
+	ExecTimeInMircoSeconds int64        `json:"execTimeInMircoSeconds,omitempty" protobuf:"varint,3,opt,name=execTimeInMircoSeconds"`
+	Args                   []string     `json:"args,omitempty" protobuf:"bytes,4,rep,name=args"`
 }
 
 // RedisQueries is the Schema for the RedisQueries API

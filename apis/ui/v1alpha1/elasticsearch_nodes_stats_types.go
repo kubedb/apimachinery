@@ -33,8 +33,7 @@ type ElasticsearchNodesStatsSpec struct {
 
 type ElasticsearchNodesStatSpec struct {
 	// Time the node stats were collected for this response in Unix
-	// string?
-	Timestamp int64 `json:"timestamp" protobuf:"varint,1,opt,name=timestamp"`
+	Timestamp *metav1.Time `json:"timestamp" protobuf:"varint,1,opt,name=timestamp"`
 
 	// Human-readable identifier for the node.
 	Name string `json:"name" protobuf:"bytes,2,opt,name=name"`
