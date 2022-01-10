@@ -487,15 +487,13 @@ message MySQLQuerySpec {
 
   optional string userHost = 2;
 
-  // units
   optional string queryTimeInMilliSeconds = 3;
 
-  // units
   optional string lockTimeInMilliSeconds = 4;
 
-  optional int64 rows_sent = 5;
+  optional int64 rowsSent = 5;
 
-  optional int64 rows_examined = 6;
+  optional int64 rowsExamined = 6;
 
   optional string db = 7;
 

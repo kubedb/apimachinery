@@ -41,10 +41,10 @@ spec:
                       type: string
                     queryTimeInMilliSeconds:
                       type: string
-                    rows_examined:
+                    rowsExamined:
                       format: int64
                       type: integer
-                    rows_sent:
+                    rowsSent:
                       format: int64
                       type: integer
                     serverId:
@@ -60,19 +60,6 @@ spec:
                       type: integer
                     userHost:
                       type: string
-                  required:
-                  - db
-                  - insertId
-                  - lastInsertId
-                  - lockTimeInMilliSeconds
-                  - queryTimeInMilliSeconds
-                  - rows_examined
-                  - rows_sent
-                  - serverId
-                  - sqlText
-                  - startTime
-                  - threadId
-                  - userHost
                   type: object
                 type: array
             required:

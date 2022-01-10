@@ -239,8 +239,6 @@ API rule violation: names_match,kmodules.xyz/client-go/api/v1,CertificateSpec,UR
 API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,ContainerRuntimeSettings,IONice
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchNodesStatSpec,TransportAddr
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBCollectionSpec,TotalSize
-API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MySQLQuerySpec,RowsExamined
-API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MySQLQuerySpec,RowsSent
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsCompletionFields,SizeInBytes
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsCompletionFields,TotalSize
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsCompletionStats,SizeInBytes

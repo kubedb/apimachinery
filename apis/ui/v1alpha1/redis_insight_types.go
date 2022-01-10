@@ -30,20 +30,20 @@ const (
 
 // RedisInsightSpec defines the desired state of RedisInsight
 type RedisInsightSpec struct {
-	Version                      string `json:"version" protobuf:"bytes,1,opt,name=version"`
-	Status                       string `json:"status" protobuf:"bytes,2,opt,name=status"`
-	Mode                         string `json:"mode" protobuf:"bytes,3,opt,name=mode"`
-	EvictionPolicy               string `json:"evictionPolicy" protobuf:"bytes,4,opt,name=evictionPolicy"`
-	MaxClients                   int64  `json:"maxClients" protobuf:"varint,5,opt,name=maxClients"`
-	ConnectedClients             int64  `json:"connectedClients" protobuf:"varint,6,opt,name=connectedClients"`
-	BlockedClients               int64  `json:"blockedClients" protobuf:"varint,7,opt,name=blockedClients"`
-	TotalKeys                    int64  `json:"totalKeys" protobuf:"varint,8,opt,name=totalKeys"`
-	ExpiredKeys                  int64  `json:"expiredKeys" protobuf:"varint,9,opt,name=expiredKeys"`
-	EvictedKeys                  int64  `json:"evictedKeys" protobuf:"varint,10,opt,name=evictedKeys"`
-	ReceivedConnections          int64  `json:"receivedConnections" protobuf:"varint,11,opt,name=receivedConnections"`
-	RejectedConnections          int64  `json:"rejectedConnections" protobuf:"varint,12,opt,name=rejectedConnections"`
-	SlowLogThresholdMircoSeconds int64  `json:"slowLogThresholdMircoSeconds" protobuf:"varint,13,opt,name=slowLogThresholdMircoSeconds"`
-	SlowLogMaxLen                int64  `json:"slowLogMaxLen" protobuf:"varint,14,opt,name=slowLogMaxLen"`
+	Version                      string `json:"version,omitempty" protobuf:"bytes,1,opt,name=version"`
+	Status                       string `json:"status,omitempty" protobuf:"bytes,2,opt,name=status"`
+	Mode                         string `json:"mode,omitempty" protobuf:"bytes,3,opt,name=mode"`
+	EvictionPolicy               string `json:"evictionPolicy,omitempty" protobuf:"bytes,4,opt,name=evictionPolicy"`
+	MaxClients                   int64  `json:"maxClients,omitempty" protobuf:"varint,5,opt,name=maxClients"`
+	ConnectedClients             int64  `json:"connectedClients,omitempty" protobuf:"varint,6,opt,name=connectedClients"`
+	BlockedClients               int64  `json:"blockedClients,omitempty" protobuf:"varint,7,opt,name=blockedClients"`
+	TotalKeys                    int64  `json:"totalKeys,omitempty" protobuf:"varint,8,opt,name=totalKeys"`
+	ExpiredKeys                  int64  `json:"expiredKeys,omitempty" protobuf:"varint,9,opt,name=expiredKeys"`
+	EvictedKeys                  int64  `json:"evictedKeys,omitempty" protobuf:"varint,10,opt,name=evictedKeys"`
+	ReceivedConnections          int64  `json:"receivedConnections,omitempty" protobuf:"varint,11,opt,name=receivedConnections"`
+	RejectedConnections          int64  `json:"rejectedConnections,omitempty" protobuf:"varint,12,opt,name=rejectedConnections"`
+	SlowLogThresholdMircoSeconds int64  `json:"slowLogThresholdMircoSeconds,omitempty" protobuf:"varint,13,opt,name=slowLogThresholdMircoSeconds"`
+	SlowLogMaxLen                int64  `json:"slowLogMaxLen,omitempty" protobuf:"varint,14,opt,name=slowLogMaxLen"`
 }
 
 // RedisInsight is the Schema for the redisinsights API

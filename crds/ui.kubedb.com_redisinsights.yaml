@@ -64,21 +64,6 @@ spec:
                 type: integer
               version:
                 type: string
-            required:
-            - blockedClients
-            - connectedClients
-            - evictedKeys
-            - evictionPolicy
-            - expiredKeys
-            - maxClients
-            - mode
-            - receivedConnections
-            - rejectedConnections
-            - slowLogMaxLen
-            - slowLogThresholdMircoSeconds
-            - status
-            - totalKeys
-            - version
             type: object
           status:
             properties:
