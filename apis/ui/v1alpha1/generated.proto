@@ -102,7 +102,7 @@ message ElasticsearchNodesStatSpec {
   optional string name = 2;
 
   // Transport address for the node
-  optional string transport_addr = 3;
+  optional string transportAddr = 3;
 
   // Network host for the node
   optional string host = 4;
@@ -247,9 +247,9 @@ message MariaDBQuerySpec {
 
   optional string userHost = 2;
 
-  optional string queryTimeInMilliSeconds = 3;
+  optional string queryTimeMilliSeconds = 3;
 
-  optional string lockTimeInMilliSeconds = 4;
+  optional string lockTimeMilliSeconds = 4;
 
   optional int64 rows_sent = 5;
 
@@ -487,9 +487,9 @@ message MySQLQuerySpec {
 
   optional string userHost = 2;
 
-  optional string queryTimeInMilliSeconds = 3;
+  optional string queryTimeMilliSeconds = 3;
 
-  optional string lockTimeInMilliSeconds = 4;
+  optional string lockTimeMilliSeconds = 4;
 
   optional int64 rowsSent = 5;
 
@@ -1142,7 +1142,7 @@ message RedisQuerySpec {
 
   optional k8s.io.apimachinery.pkg.apis.meta.v1.Time queryTimestamp = 2;
 
-  optional int64 execTimeInMircoSeconds = 3;
+  optional int64 execTimeMircoSeconds = 3;
 
   repeated string args = 4;
 }

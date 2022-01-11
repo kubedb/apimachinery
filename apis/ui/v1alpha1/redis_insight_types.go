@@ -30,9 +30,9 @@ const (
 
 // RedisInsightSpec defines the desired state of RedisInsight
 type RedisInsightSpec struct {
-	Version                      string `json:"version,omitempty" protobuf:"bytes,1,opt,name=version"`
-	Status                       string `json:"status,omitempty" protobuf:"bytes,2,opt,name=status"`
-	Mode                         string `json:"mode,omitempty" protobuf:"bytes,3,opt,name=mode"`
+	Version                      string `json:"version" protobuf:"bytes,1,opt,name=version"`
+	Status                       string `json:"status" protobuf:"bytes,2,opt,name=status"`
+	Mode                         string `json:"mode" protobuf:"bytes,3,opt,name=mode"`
 	EvictionPolicy               string `json:"evictionPolicy,omitempty" protobuf:"bytes,4,opt,name=evictionPolicy"`
 	MaxClients                   int64  `json:"maxClients,omitempty" protobuf:"varint,5,opt,name=maxClients"`
 	ConnectedClients             int64  `json:"connectedClients,omitempty" protobuf:"varint,6,opt,name=connectedClients"`

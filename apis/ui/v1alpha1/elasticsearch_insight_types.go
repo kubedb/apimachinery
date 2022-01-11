@@ -30,9 +30,9 @@ const (
 
 // ElasticsearchInsightSpec defines the desired state of ElasticsearchInsight
 type ElasticsearchInsightSpec struct {
-	Version string `json:"version,omitempty" protobuf:"bytes,1,opt,name=version"`
-	Status  string `json:"status,omitempty" protobuf:"bytes,2,opt,name=status"`
-	Mode    string `json:"mode,omitempty" protobuf:"bytes,3,opt,name=mode"`
+	Version string `json:"version" protobuf:"bytes,1,opt,name=version"`
+	Status  string `json:"status" protobuf:"bytes,2,opt,name=status"`
+	Mode    string `json:"mode" protobuf:"bytes,3,opt,name=mode"`
 
 	ClusterHealth ElasticsearchClusterHealth `json:",inline" protobuf:"bytes,4,opt,name=clusterHealth"`
 }

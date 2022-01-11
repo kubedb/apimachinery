@@ -32,11 +32,11 @@ type MongoDBQueriesSpec struct {
 }
 
 type MongoDBQuerySpec struct {
-	Operation                    MongoDBOperation `json:"operation,omitempty" protobuf:"bytes,1,opt,name=operation,casttype=MongoDBOperation"`
-	DatabaseName                 string           `json:"databaseName,omitempty" protobuf:"bytes,2,opt,name=databaseName"`
-	CollectionName               string           `json:"collectionName,omitempty" protobuf:"bytes,3,opt,name=collectionName"`
-	Command                      string           `json:"command,omitempty" protobuf:"bytes,4,opt,name=command"`
-	Count                        int64            `json:"count,omitempty" protobuf:"varint,5,opt,name=count"`
+	Operation                    MongoDBOperation `json:"operation" protobuf:"bytes,1,opt,name=operation,casttype=MongoDBOperation"`
+	DatabaseName                 string           `json:"databaseName" protobuf:"bytes,2,opt,name=databaseName"`
+	CollectionName               string           `json:"collectionName" protobuf:"bytes,3,opt,name=collectionName"`
+	Command                      string           `json:"command" protobuf:"bytes,4,opt,name=command"`
+	Count                        int64            `json:"count" protobuf:"varint,5,opt,name=count"`
 	AvgExecutionTimeMilliSeconds int64            `json:"avgExecutionTimeMilliSeconds,omitempty" protobuf:"varint,6,opt,name=avgExecutionTimeMilliSeconds"`
 	MinExecutionTimeMilliSeconds int64            `json:"minExecutionTimeMilliSeconds,omitempty" protobuf:"varint,7,opt,name=minExecutionTimeMilliSeconds"`
 	MaxExecutionTimeMilliSeconds int64            `json:"maxExecutionTimeMilliSeconds,omitempty" protobuf:"varint,8,opt,name=maxExecutionTimeMilliSeconds"`

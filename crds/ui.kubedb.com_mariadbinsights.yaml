@@ -65,6 +65,13 @@ spec:
                 type: integer
               version:
                 type: string
+            required:
+            - maxConnections
+            - maxUsedConnections
+            - mode
+            - questions
+            - status
+            - version
             type: object
           status:
             properties:

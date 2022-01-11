@@ -35,6 +35,10 @@ spec:
                       type: string
                     totalStoreSizeInBytes:
                       type: string
+                  required:
+                  - indexName
+                  - primaryStoreSizeInBytes
+                  - totalStoreSizeInBytes
                   type: object
                 type: array
             required:

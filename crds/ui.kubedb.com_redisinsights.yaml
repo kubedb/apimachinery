@@ -64,6 +64,10 @@ spec:
                 type: integer
               version:
                 type: string
+            required:
+            - mode
+            - status
+            - version
             type: object
           status:
             properties:

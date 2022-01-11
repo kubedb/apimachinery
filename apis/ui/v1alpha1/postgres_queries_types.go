@@ -32,14 +32,14 @@ type PostgresQueriesSpec struct {
 }
 
 type PostgresQuerySpec struct {
-	UserOID                  int64   `json:"userOID,omitempty" protobuf:"varint,1,opt,name=userOID"`
-	DatabaseOID              int64   `json:"databaseOID,omitempty" protobuf:"varint,2,opt,name=databaseOID"`
-	Query                    string  `json:"query,omitempty" protobuf:"bytes,3,opt,name=query"`
-	Calls                    int64   `json:"calls,omitempty" protobuf:"varint,4,opt,name=calls"`
-	Rows                     int64   `json:"rows,omitempty" protobuf:"varint,5,opt,name=rows"`
-	TotalTimeMilliSeconds    float64 `json:"totalTimeMilliSeconds,omitempty" protobuf:"fixed64,6,opt,name=totalTimeMilliSeconds"`
-	MinTimeMilliSeconds      float64 `json:"minTimeMilliSeconds,omitempty" protobuf:"fixed64,7,opt,name=minTimeMilliSeconds"`
-	MaxTimeMilliSeconds      float64 `json:"maxTimeMilliSeconds,omitempty" protobuf:"fixed64,8,opt,name=maxTimeMilliSeconds"`
+	UserOID                  int64   `json:"userOID" protobuf:"varint,1,opt,name=userOID"`
+	DatabaseOID              int64   `json:"databaseOID" protobuf:"varint,2,opt,name=databaseOID"`
+	Query                    string  `json:"query" protobuf:"bytes,3,opt,name=query"`
+	Calls                    int64   `json:"calls" protobuf:"varint,4,opt,name=calls"`
+	Rows                     int64   `json:"rows" protobuf:"varint,5,opt,name=rows"`
+	TotalTimeMilliSeconds    float64 `json:"totalTimeMilliSeconds" protobuf:"fixed64,6,opt,name=totalTimeMilliSeconds"`
+	MinTimeMilliSeconds      float64 `json:"minTimeMilliSeconds" protobuf:"fixed64,7,opt,name=minTimeMilliSeconds"`
+	MaxTimeMilliSeconds      float64 `json:"maxTimeMilliSeconds" protobuf:"fixed64,8,opt,name=maxTimeMilliSeconds"`
 	SharedBlksHit            int64   `json:"sharedBlksHit,omitempty" protobuf:"varint,9,opt,name=sharedBlksHit"`
 	SharedBlksRead           int64   `json:"sharedBlksRead,omitempty" protobuf:"varint,10,opt,name=sharedBlksRead"`
 	SharedBlksDirtied        int64   `json:"sharedBlksDirtied,omitempty" protobuf:"varint,11,opt,name=sharedBlksDirtied"`

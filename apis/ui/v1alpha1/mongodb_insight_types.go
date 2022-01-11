@@ -30,9 +30,9 @@ const (
 
 // MongoDBInsightSpec defines the desired state of MongoDBInsight
 type MongoDBInsightSpec struct {
-	Version        string                  `json:"version,omitempty" protobuf:"bytes,1,opt,name=version"`
-	Type           MongoDBMode             `json:"type,omitempty" protobuf:"bytes,2,opt,name=type,casttype=MongoDBMode"`
-	Status         api.DatabasePhase       `json:"status,omitempty" protobuf:"bytes,3,opt,name=status,casttype=DBStatus"`
+	Version        string                  `json:"version" protobuf:"bytes,1,opt,name=version"`
+	Type           MongoDBMode             `json:"type" protobuf:"bytes,2,opt,name=type,casttype=MongoDBMode"`
+	Status         api.DatabasePhase       `json:"status" protobuf:"bytes,3,opt,name=status,casttype=DBStatus"`
 	Connections    *MongoDBConnectionsInfo `json:"connections,omitempty" protobuf:"bytes,4,opt,name=connections"`
 	DBStats        *MongoDBDatabaseStats   `json:"dbStats,omitempty" protobuf:"bytes,5,opt,name=dbStats"`
 	ShardsInfo     *MongoDBShardsInfo      `json:"shardsInfo,omitempty" protobuf:"bytes,6,opt,name=shardsInfo"`
@@ -40,27 +40,27 @@ type MongoDBInsightSpec struct {
 }
 
 type MongoDBDatabaseStats struct {
-	TotalCollections int32 `json:"totalCollections,omitempty" protobuf:"varint,1,opt,name=totalCollections"`
-	DataSize         int64 `json:"dataSize,omitempty" protobuf:"varint,2,opt,name=dataSize"`
-	TotalIndexes     int32 `json:"totalIndexes,omitempty" protobuf:"varint,3,opt,name=totalIndexes"`
-	IndexSize        int64 `json:"indexSize,omitempty" protobuf:"varint,4,opt,name=indexSize"`
+	TotalCollections int32 `json:"totalCollections" protobuf:"varint,1,opt,name=totalCollections"`
+	DataSize         int64 `json:"dataSize" protobuf:"varint,2,opt,name=dataSize"`
+	TotalIndexes     int32 `json:"totalIndexes" protobuf:"varint,3,opt,name=totalIndexes"`
+	IndexSize        int64 `json:"indexSize" protobuf:"varint,4,opt,name=indexSize"`
 }
 
 type MongoDBConnectionsInfo struct {
-	CurrentConnections   int32 `json:"currentConnections,omitempty" protobuf:"varint,1,opt,name=currentConnections"`
-	TotalConnections     int32 `json:"totalConnections,omitempty" protobuf:"varint,2,opt,name=totalConnections"`
-	AvailableConnections int32 `json:"availableConnections,omitempty" protobuf:"varint,3,opt,name=availableConnections"`
-	ActiveConnections    int32 `json:"activeConnections,omitempty" protobuf:"varint,4,opt,name=activeConnections"`
+	CurrentConnections   int32 `json:"currentConnections" protobuf:"varint,1,opt,name=currentConnections"`
+	TotalConnections     int32 `json:"totalConnections" protobuf:"varint,2,opt,name=totalConnections"`
+	AvailableConnections int32 `json:"availableConnections" protobuf:"varint,3,opt,name=availableConnections"`
+	ActiveConnections    int32 `json:"activeConnections" protobuf:"varint,4,opt,name=activeConnections"`
 }
 
 type MongoDBReplicaSetInfo struct {
-	NumberOfReplicas int32 `json:"numberOfReplicas,omitempty" protobuf:"varint,1,opt,name=numberOfReplicas"`
+	NumberOfReplicas int32 `json:"numberOfReplicas" protobuf:"varint,1,opt,name=numberOfReplicas"`
 }
 
 type MongoDBShardsInfo struct {
-	NumberOfShards    int32 `json:"numberOfShards,omitempty" protobuf:"varint,1,opt,name=numberOfShards"`
-	ReplicasPerShards int32 `json:"replicasPerShards,omitempty" protobuf:"varint,2,opt,name=replicasPerShards"`
-	NumberOfChunks    int32 `json:"numberOfChunks,omitempty" protobuf:"varint,3,opt,name=numberOfChunks"`
+	NumberOfShards    int32 `json:"numberOfShards" protobuf:"varint,1,opt,name=numberOfShards"`
+	ReplicasPerShards int32 `json:"replicasPerShards" protobuf:"varint,2,opt,name=replicasPerShards"`
+	NumberOfChunks    int32 `json:"numberOfChunks" protobuf:"varint,3,opt,name=numberOfChunks"`
 	BalancerEnabled   bool  `json:"balancerEnabled,omitempty" protobuf:"varint,4,opt,name=balancerEnabled"`
 	ChunksBalanced    bool  `json:"chunksBalanced,omitempty" protobuf:"varint,5,opt,name=chunksBalanced"`
 }

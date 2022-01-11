@@ -94,6 +94,15 @@ spec:
                     userOID:
                       format: int64
                       type: integer
+                  required:
+                  - calls
+                  - databaseOID
+                  - maxTimeMilliSeconds
+                  - minTimeMilliSeconds
+                  - query
+                  - rows
+                  - totalTimeMilliSeconds
+                  - userOID
                   type: object
                 type: array
             required:

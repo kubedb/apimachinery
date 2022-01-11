@@ -32,9 +32,9 @@ type ElasticsearchSchemaOverviewSpec struct {
 }
 
 type ElasticsearchIndexSpec struct {
-	IndexName               string `json:"indexName,omitempty" protobuf:"bytes,1,opt,name=indexName"`
-	PrimaryStoreSizeInBytes string `json:"primaryStoreSizeInBytes,omitempty" protobuf:"bytes,2,opt,name=primaryStoreSizeInBytes"`
-	TotalStoreSizeInBytes   string `json:"totalStoreSizeInBytes,omitempty" protobuf:"bytes,3,opt,name=totalStoreSizeInBytes"`
+	IndexName               string `json:"indexName" protobuf:"bytes,1,opt,name=indexName"`
+	PrimaryStoreSizeInBytes string `json:"primaryStoreSizeInBytes" protobuf:"bytes,2,opt,name=primaryStoreSizeInBytes"`
+	TotalStoreSizeInBytes   string `json:"totalStoreSizeInBytes" protobuf:"bytes,3,opt,name=totalStoreSizeInBytes"`
 }
 
 // ElasticsearchSchemaOverview is the Schema for the elasticsearchindices API

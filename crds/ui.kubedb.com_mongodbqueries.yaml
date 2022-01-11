@@ -55,6 +55,12 @@ spec:
                       - DELETE
                       - GETMORE
                       type: string
+                  required:
+                  - collectionName
+                  - command
+                  - count
+                  - databaseName
+                  - operation
                   type: object
                 type: array
             required:

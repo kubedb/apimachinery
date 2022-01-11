@@ -39,7 +39,7 @@ type ElasticsearchNodesStatSpec struct {
 	Name string `json:"name" protobuf:"bytes,2,opt,name=name"`
 
 	// Transport address for the node
-	TransportAddr string `json:"transport_addr" protobuf:"bytes,3,opt,name=transport_addr,json=transportAddr"`
+	TransportAddr string `json:"transportAddr" protobuf:"bytes,3,opt,name=transportAddr"`
 
 	// Network host for the node
 	Host string `json:"host" protobuf:"bytes,4,opt,name=host"`

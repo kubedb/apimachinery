@@ -36,6 +36,9 @@ spec:
                   maxConnections:
                     format: int64
                     type: integer
+                required:
+                - activeConnections
+                - maxConnections
                 type: object
               connectionURL:
                 type: string
@@ -57,6 +60,9 @@ spec:
                     writeLag:
                       format: int64
                       type: integer
+                  required:
+                  - applicationName
+                  - state
                   type: object
                 type: array
               status:
@@ -68,6 +74,9 @@ spec:
                     type: integer
                   autoVacuum:
                     type: string
+                required:
+                - activeVacuumProcess
+                - autoVacuum
                 type: object
               version:
                 type: string
