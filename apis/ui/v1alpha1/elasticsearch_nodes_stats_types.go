@@ -33,13 +33,13 @@ type ElasticsearchNodesStatsSpec struct {
 
 type ElasticsearchNodesStatSpec struct {
 	// Time the node stats were collected for this response in Unix
-	Timestamp int64 `json:"timestamp" protobuf:"varint,1,opt,name=timestamp"`
+	Timestamp *metav1.Time `json:"timestamp" protobuf:"varint,1,opt,name=timestamp"`
 
 	// Human-readable identifier for the node.
 	Name string `json:"name" protobuf:"bytes,2,opt,name=name"`
 
 	// Transport address for the node
-	TransportAddr string `json:"transport_addr" protobuf:"bytes,3,opt,name=transport_addr,json=transportAddr"`
+	TransportAddr string `json:"transportAddr" protobuf:"bytes,3,opt,name=transportAddr"`
 
 	// Network host for the node
 	Host string `json:"host" protobuf:"bytes,4,opt,name=host"`
@@ -90,8 +90,8 @@ type NodesStatsShardCountStats struct {
 }
 
 type NodesStatsStoreStats struct {
-	TotalSize   string `json:"size" protobuf:"bytes,3,opt,name=size"`
-	SizeInBytes int64  `json:"size_in_bytes" protobuf:"varint,2,opt,name=size_in_bytes,json=sizeInBytes"`
+	TotalSize string `json:"size" protobuf:"bytes,3,opt,name=size"`
+	SizeBytes int64  `json:"size_in_bytes" protobuf:"varint,2,opt,name=size_in_bytes,json=sizeBytes"`
 }
 
 type NodesStatsIndexingStats struct {
@@ -147,19 +147,19 @@ type NodesStatsMergeStats struct {
 	Current                    int64  `json:"current" protobuf:"varint,1,opt,name=current"`
 	CurrentDocs                int64  `json:"current_docs" protobuf:"varint,2,opt,name=current_docs,json=currentDocs"`
 	CurrentSize                string `json:"current_size" protobuf:"bytes,3,opt,name=current_size,json=currentSize"`
-	CurrentSizeInBytes         int64  `json:"current_size_in_bytes" protobuf:"varint,4,opt,name=current_size_in_bytes,json=currentSizeInBytes"`
+	CurrentSizeBytes           int64  `json:"current_size_in_bytes" protobuf:"varint,4,opt,name=current_size_in_bytes,json=currentSizeBytes"`
 	Total                      int64  `json:"total" protobuf:"varint,5,opt,name=total"`
 	TotalTime                  string `json:"total_time" protobuf:"bytes,6,opt,name=total_time,json=totalTime"`
 	TotalTimeInMillis          int64  `json:"total_time_in_millis" protobuf:"varint,7,opt,name=total_time_in_millis,json=totalTimeInMillis"`
 	TotalDocs                  int64  `json:"total_docs" protobuf:"varint,8,opt,name=total_docs,json=totalDocs"`
 	TotalSize                  string `json:"total_size" protobuf:"bytes,9,opt,name=total_size,json=totalSize"`
-	TotalSizeInBytes           int64  `json:"total_size_in_bytes" protobuf:"varint,10,opt,name=total_size_in_bytes,json=totalSizeInBytes"`
+	TotalSizeBytes             int64  `json:"total_size_in_bytes" protobuf:"varint,10,opt,name=total_size_in_bytes,json=totalSizeBytes"`
 	TotalStoppedTime           string `json:"total_stopped_time" protobuf:"bytes,11,opt,name=total_stopped_time,json=totalStoppedTime"`
 	TotalStoppedTimeInMillis   int64  `json:"total_stopped_time_in_millis" protobuf:"varint,12,opt,name=total_stopped_time_in_millis,json=totalStoppedTimeInMillis"`
 	TotalThrottledTime         string `json:"total_throttled_time" protobuf:"bytes,13,opt,name=total_throttled_time,json=totalThrottledTime"`
 	TotalThrottledTimeInMillis int64  `json:"total_throttled_time_in_millis" protobuf:"varint,14,opt,name=total_throttled_time_in_millis,json=totalThrottledTimeInMillis"`
 	TotalThrottleBytes         string `json:"total_auto_throttle" protobuf:"bytes,15,opt,name=total_auto_throttle,json=totalAutoThrottle"`
-	TotalThrottleBytesInBytes  int64  `json:"total_auto_throttle_in_bytes" protobuf:"varint,16,opt,name=total_auto_throttle_in_bytes,json=totalAutoThrottleInBytes"`
+	TotalThrottleBytesBytes    int64  `json:"total_auto_throttle_in_bytes" protobuf:"varint,16,opt,name=total_auto_throttle_in_bytes,json=totalAutoThrottleBytes"`
 }
 
 type NodesStatsRefreshStats struct {
@@ -182,75 +182,75 @@ type NodesStatsWarmerStats struct {
 }
 
 type NodesStatsQueryCacheStats struct {
-	MemorySize        string `json:"memory_size" protobuf:"bytes,1,opt,name=memory_size,json=memorySize"`
-	MemorySizeInBytes int64  `json:"memory_size_in_bytes" protobuf:"varint,2,opt,name=memory_size_in_bytes,json=memorySizeInBytes"`
-	TotalCount        int64  `json:"total_count" protobuf:"varint,3,opt,name=total_count,json=totalCount"`
-	HitCount          int64  `json:"hit_count" protobuf:"varint,4,opt,name=hit_count,json=hitCount"`
-	MissCount         int64  `json:"miss_count" protobuf:"varint,5,opt,name=miss_count,json=missCount"`
-	CacheSize         int64  `json:"cache_size" protobuf:"varint,6,opt,name=cache_size,json=cacheSize"`
-	CacheCount        int64  `json:"cache_count" protobuf:"varint,7,opt,name=cache_count,json=cacheCount"`
-	Evictions         int64  `json:"evictions" protobuf:"varint,8,opt,name=evictions"`
+	MemorySize      string `json:"memory_size" protobuf:"bytes,1,opt,name=memory_size,json=memorySize"`
+	MemorySizeBytes int64  `json:"memory_size_in_bytes" protobuf:"varint,2,opt,name=memory_size_in_bytes,json=memorySizeBytes"`
+	TotalCount      int64  `json:"total_count" protobuf:"varint,3,opt,name=total_count,json=totalCount"`
+	HitCount        int64  `json:"hit_count" protobuf:"varint,4,opt,name=hit_count,json=hitCount"`
+	MissCount       int64  `json:"miss_count" protobuf:"varint,5,opt,name=miss_count,json=missCount"`
+	CacheSize       int64  `json:"cache_size" protobuf:"varint,6,opt,name=cache_size,json=cacheSize"`
+	CacheCount      int64  `json:"cache_count" protobuf:"varint,7,opt,name=cache_count,json=cacheCount"`
+	Evictions       int64  `json:"evictions" protobuf:"varint,8,opt,name=evictions"`
 }
 
 type NodesStatsFielddataStats struct {
-	MemorySize        string                     `json:"memory_size" protobuf:"bytes,1,opt,name=memory_size,json=memorySize"`
-	MemorySizeInBytes int64                      `json:"memory_size_in_bytes" protobuf:"varint,2,opt,name=memory_size_in_bytes,json=memorySizeInBytes"`
-	Evictions         int64                      `json:"evictions" protobuf:"varint,3,opt,name=evictions"`
-	Fields            *NodesStatsFieldDataFields `json:"fields" protobuf:"bytes,4,opt,name=fields"`
+	MemorySize      string                     `json:"memory_size" protobuf:"bytes,1,opt,name=memory_size,json=memorySize"`
+	MemorySizeBytes int64                      `json:"memory_size_in_bytes" protobuf:"varint,2,opt,name=memory_size_in_bytes,json=memorySizeBytes"`
+	Evictions       int64                      `json:"evictions" protobuf:"varint,3,opt,name=evictions"`
+	Fields          *NodesStatsFieldDataFields `json:"fields" protobuf:"bytes,4,opt,name=fields"`
 }
 
 type NodesStatsFieldDataFields struct {
-	MemorySize        string `json:"memory_size" protobuf:"bytes,1,opt,name=memory_size,json=memorySize"`
-	MemorySizeInBytes int64  `json:"memory_size_in_bytes" protobuf:"varint,2,opt,name=memory_size_in_bytes,json=memorySizeInBytes"`
+	MemorySize      string `json:"memory_size" protobuf:"bytes,1,opt,name=memory_size,json=memorySize"`
+	MemorySizeBytes int64  `json:"memory_size_in_bytes" protobuf:"varint,2,opt,name=memory_size_in_bytes,json=memorySizeBytes"`
 }
 
 type NodesStatsCompletionStats struct {
-	TotalSize   string                      `json:"size" protobuf:"bytes,4,opt,name=size"`
-	SizeInBytes int64                       `json:"size_in_bytes" protobuf:"varint,2,opt,name=size_in_bytes,json=sizeInBytes"`
-	Fields      *NodesStatsCompletionFields `json:"fields" protobuf:"bytes,3,opt,name=fields"`
+	TotalSize string                      `json:"size" protobuf:"bytes,4,opt,name=size"`
+	SizeBytes int64                       `json:"size_in_bytes" protobuf:"varint,2,opt,name=size_in_bytes,json=sizeBytes"`
+	Fields    *NodesStatsCompletionFields `json:"fields" protobuf:"bytes,3,opt,name=fields"`
 }
 
 type NodesStatsCompletionFields struct {
-	TotalSize   string `json:"size" protobuf:"bytes,3,opt,name=size"`
-	SizeInBytes int64  `json:"size_in_bytes" protobuf:"varint,2,opt,name=size_in_bytes,json=sizeInBytes"`
+	TotalSize string `json:"size" protobuf:"bytes,3,opt,name=size"`
+	SizeBytes int64  `json:"size_in_bytes" protobuf:"varint,2,opt,name=size_in_bytes,json=sizeBytes"`
 }
 
 type NodesStatsSegmentsStats struct {
-	Count                       int64  `json:"count" protobuf:"varint,1,opt,name=count"`
-	Memory                      string `json:"memory" protobuf:"bytes,2,opt,name=memory"`
-	MemoryInBytes               int64  `json:"memory_in_bytes" protobuf:"varint,3,opt,name=memory_in_bytes,json=memoryInBytes"`
-	TermsMemory                 string `json:"terms_memory" protobuf:"bytes,4,opt,name=terms_memory,json=termsMemory"`
-	TermsMemoryInBytes          int64  `json:"terms_memory_in_bytes" protobuf:"varint,5,opt,name=terms_memory_in_bytes,json=termsMemoryInBytes"`
-	StoredFieldsMemory          string `json:"stored_fields_memory" protobuf:"bytes,6,opt,name=stored_fields_memory,json=storedFieldsMemory"`
-	StoredFieldsMemoryInBytes   int64  `json:"stored_fields_memory_in_bytes" protobuf:"varint,7,opt,name=stored_fields_memory_in_bytes,json=storedFieldsMemoryInBytes"`
-	TermVectorsMemory           string `json:"term_vectors_memory" protobuf:"bytes,8,opt,name=term_vectors_memory,json=termVectorsMemory"`
-	TermVectorsMemoryInBytes    int64  `json:"term_vectors_memory_in_bytes" protobuf:"varint,9,opt,name=term_vectors_memory_in_bytes,json=termVectorsMemoryInBytes"`
-	NormsMemory                 string `json:"norms_memory" protobuf:"bytes,10,opt,name=norms_memory,json=normsMemory"`
-	NormsMemoryInBytes          int64  `json:"norms_memory_in_bytes" protobuf:"varint,11,opt,name=norms_memory_in_bytes,json=normsMemoryInBytes"`
-	DocValuesMemory             string `json:"doc_values_memory" protobuf:"bytes,12,opt,name=doc_values_memory,json=docValuesMemory"`
-	DocValuesMemoryInBytes      int64  `json:"doc_values_memory_in_bytes" protobuf:"varint,13,opt,name=doc_values_memory_in_bytes,json=docValuesMemoryInBytes"`
-	IndexWriterMemory           string `json:"index_writer_memory" protobuf:"bytes,14,opt,name=index_writer_memory,json=indexWriterMemory"`
-	IndexWriterMemoryInBytes    int64  `json:"index_writer_memory_in_bytes" protobuf:"varint,15,opt,name=index_writer_memory_in_bytes,json=indexWriterMemoryInBytes"`
-	IndexWriterMaxMemory        string `json:"index_writer_max_memory" protobuf:"bytes,16,opt,name=index_writer_max_memory,json=indexWriterMaxMemory"`
-	IndexWriterMaxMemoryInBytes int64  `json:"index_writer_max_memory_in_bytes" protobuf:"varint,17,opt,name=index_writer_max_memory_in_bytes,json=indexWriterMaxMemoryInBytes"`
-	VersionMapMemory            string `json:"version_map_memory" protobuf:"bytes,18,opt,name=version_map_memory,json=versionMapMemory"`
-	VersionMapMemoryInBytes     int64  `json:"version_map_memory_in_bytes" protobuf:"varint,19,opt,name=version_map_memory_in_bytes,json=versionMapMemoryInBytes"`
-	FixedBitSetMemory           string `json:"fixed_bit_set" protobuf:"bytes,20,opt,name=fixed_bit_set,json=fixedBitSet"` // not a typo
-	FixedBitSetMemoryInBytes    int64  `json:"fixed_bit_set_memory_in_bytes" protobuf:"varint,21,opt,name=fixed_bit_set_memory_in_bytes,json=fixedBitSetMemoryInBytes"`
+	Count                     int64  `json:"count" protobuf:"varint,1,opt,name=count"`
+	Memory                    string `json:"memory" protobuf:"bytes,2,opt,name=memory"`
+	MemoryBytes               int64  `json:"memory_in_bytes" protobuf:"varint,3,opt,name=memory_in_bytes,json=memoryBytes"`
+	TermsMemory               string `json:"terms_memory" protobuf:"bytes,4,opt,name=terms_memory,json=termsMemory"`
+	TermsMemoryBytes          int64  `json:"terms_memory_in_bytes" protobuf:"varint,5,opt,name=terms_memory_in_bytes,json=termsMemoryBytes"`
+	StoredFieldsMemory        string `json:"stored_fields_memory" protobuf:"bytes,6,opt,name=stored_fields_memory,json=storedFieldsMemory"`
+	StoredFieldsMemoryBytes   int64  `json:"stored_fields_memory_in_bytes" protobuf:"varint,7,opt,name=stored_fields_memory_in_bytes,json=storedFieldsMemoryBytes"`
+	TermVectorsMemory         string `json:"term_vectors_memory" protobuf:"bytes,8,opt,name=term_vectors_memory,json=termVectorsMemory"`
+	TermVectorsMemoryBytes    int64  `json:"term_vectors_memory_in_bytes" protobuf:"varint,9,opt,name=term_vectors_memory_in_bytes,json=termVectorsMemoryBytes"`
+	NormsMemory               string `json:"norms_memory" protobuf:"bytes,10,opt,name=norms_memory,json=normsMemory"`
+	NormsMemoryBytes          int64  `json:"norms_memory_in_bytes" protobuf:"varint,11,opt,name=norms_memory_in_bytes,json=normsMemoryBytes"`
+	DocValuesMemory           string `json:"doc_values_memory" protobuf:"bytes,12,opt,name=doc_values_memory,json=docValuesMemory"`
+	DocValuesMemoryBytes      int64  `json:"doc_values_memory_in_bytes" protobuf:"varint,13,opt,name=doc_values_memory_in_bytes,json=docValuesMemoryBytes"`
+	IndexWriterMemory         string `json:"index_writer_memory" protobuf:"bytes,14,opt,name=index_writer_memory,json=indexWriterMemory"`
+	IndexWriterMemoryBytes    int64  `json:"index_writer_memory_in_bytes" protobuf:"varint,15,opt,name=index_writer_memory_in_bytes,json=indexWriterMemoryBytes"`
+	IndexWriterMaxMemory      string `json:"index_writer_max_memory" protobuf:"bytes,16,opt,name=index_writer_max_memory,json=indexWriterMaxMemory"`
+	IndexWriterMaxMemoryBytes int64  `json:"index_writer_max_memory_in_bytes" protobuf:"varint,17,opt,name=index_writer_max_memory_in_bytes,json=indexWriterMaxMemoryBytes"`
+	VersionMapMemory          string `json:"version_map_memory" protobuf:"bytes,18,opt,name=version_map_memory,json=versionMapMemory"`
+	VersionMapMemoryBytes     int64  `json:"version_map_memory_in_bytes" protobuf:"varint,19,opt,name=version_map_memory_in_bytes,json=versionMapMemoryBytes"`
+	FixedBitSetMemory         string `json:"fixed_bit_set" protobuf:"bytes,20,opt,name=fixed_bit_set,json=fixedBitSet"` // not a typo
+	FixedBitSetMemoryBytes    int64  `json:"fixed_bit_set_memory_in_bytes" protobuf:"varint,21,opt,name=fixed_bit_set_memory_in_bytes,json=fixedBitSetMemoryBytes"`
 }
 
 type NodesStatsTranslogStats struct {
-	Operations  int64  `json:"operations" protobuf:"varint,1,opt,name=operations"`
-	TotalSize   string `json:"size" protobuf:"bytes,4,opt,name=size"`
-	SizeInBytes int64  `json:"size_in_bytes" protobuf:"varint,3,opt,name=size_in_bytes,json=sizeInBytes"`
+	Operations int64  `json:"operations" protobuf:"varint,1,opt,name=operations"`
+	TotalSize  string `json:"size" protobuf:"bytes,4,opt,name=size"`
+	SizeBytes  int64  `json:"size_in_bytes" protobuf:"varint,3,opt,name=size_in_bytes,json=sizeBytes"`
 }
 
 type NodesStatsRequestCacheStats struct {
-	MemorySize        string `json:"memory_size" protobuf:"bytes,1,opt,name=memory_size,json=memorySize"`
-	MemorySizeInBytes int64  `json:"memory_size_in_bytes" protobuf:"varint,2,opt,name=memory_size_in_bytes,json=memorySizeInBytes"`
-	Evictions         int64  `json:"evictions" protobuf:"varint,3,opt,name=evictions"`
-	HitCount          int64  `json:"hit_count" protobuf:"varint,4,opt,name=hit_count,json=hitCount"`
-	MissCount         int64  `json:"miss_count" protobuf:"varint,5,opt,name=miss_count,json=missCount"`
+	MemorySize      string `json:"memory_size" protobuf:"bytes,1,opt,name=memory_size,json=memorySize"`
+	MemorySizeBytes int64  `json:"memory_size_in_bytes" protobuf:"varint,2,opt,name=memory_size_in_bytes,json=memorySizeBytes"`
+	Evictions       int64  `json:"evictions" protobuf:"varint,3,opt,name=evictions"`
+	HitCount        int64  `json:"hit_count" protobuf:"varint,4,opt,name=hit_count,json=hitCount"`
+	MissCount       int64  `json:"miss_count" protobuf:"varint,5,opt,name=miss_count,json=missCount"`
 }
 
 type NodesStatsRecoveryStats struct {
@@ -271,23 +271,23 @@ type NodesStatsNodeOSCPU struct {
 }
 
 type NodesStatsNodeOSMem struct {
-	Total        string `json:"total" protobuf:"bytes,1,opt,name=total"`
-	TotalInBytes int64  `json:"total_in_bytes" protobuf:"varint,2,opt,name=total_in_bytes,json=totalInBytes"`
-	Free         string `json:"free" protobuf:"bytes,3,opt,name=free"`
-	FreeInBytes  int64  `json:"free_in_bytes" protobuf:"varint,4,opt,name=free_in_bytes,json=freeInBytes"`
-	Used         string `json:"used" protobuf:"bytes,5,opt,name=used"`
-	UsedInBytes  int64  `json:"used_in_bytes" protobuf:"varint,6,opt,name=used_in_bytes,json=usedInBytes"`
-	FreePercent  int64  `json:"free_percent" protobuf:"varint,7,opt,name=free_percent,json=freePercent"`
-	UsedPercent  int64  `json:"used_percent" protobuf:"varint,8,opt,name=used_percent,json=usedPercent"`
+	Total       string `json:"total" protobuf:"bytes,1,opt,name=total"`
+	TotalBytes  int64  `json:"total_in_bytes" protobuf:"varint,2,opt,name=total_in_bytes,json=totalBytes"`
+	Free        string `json:"free" protobuf:"bytes,3,opt,name=free"`
+	FreeBytes   int64  `json:"free_in_bytes" protobuf:"varint,4,opt,name=free_in_bytes,json=freeBytes"`
+	Used        string `json:"used" protobuf:"bytes,5,opt,name=used"`
+	UsedBytes   int64  `json:"used_in_bytes" protobuf:"varint,6,opt,name=used_in_bytes,json=usedBytes"`
+	FreePercent int64  `json:"free_percent" protobuf:"varint,7,opt,name=free_percent,json=freePercent"`
+	UsedPercent int64  `json:"used_percent" protobuf:"varint,8,opt,name=used_percent,json=usedPercent"`
 }
 
 type NodesStatsNodeOSSwap struct {
-	Total        string `json:"total" protobuf:"bytes,1,opt,name=total"`
-	TotalInBytes int64  `json:"total_in_bytes" protobuf:"varint,2,opt,name=total_in_bytes,json=totalInBytes"`
-	Free         string `json:"free" protobuf:"bytes,3,opt,name=free"`
-	FreeInBytes  int64  `json:"free_in_bytes" protobuf:"varint,4,opt,name=free_in_bytes,json=freeInBytes"`
-	Used         string `json:"used" protobuf:"bytes,5,opt,name=used"`
-	UsedInBytes  int64  `json:"used_in_bytes" protobuf:"varint,6,opt,name=used_in_bytes,json=usedInBytes"`
+	Total      string `json:"total" protobuf:"bytes,1,opt,name=total"`
+	TotalBytes int64  `json:"total_in_bytes" protobuf:"varint,2,opt,name=total_in_bytes,json=totalBytes"`
+	Free       string `json:"free" protobuf:"bytes,3,opt,name=free"`
+	FreeBytes  int64  `json:"free_in_bytes" protobuf:"varint,4,opt,name=free_in_bytes,json=freeBytes"`
+	Used       string `json:"used" protobuf:"bytes,5,opt,name=used"`
+	UsedBytes  int64  `json:"used_in_bytes" protobuf:"varint,6,opt,name=used_in_bytes,json=usedBytes"`
 }
 
 // ElasticsearchNodesStatsStatus defines the observed state of ElasticsearchNodesStats

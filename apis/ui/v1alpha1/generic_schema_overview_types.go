@@ -22,7 +22,7 @@ type GenericSchemaOverviewSpec struct {
 }
 
 type GenericDatabaseSpec struct {
-	DatabaseName     string `json:"databaseName,omitempty" protobuf:"bytes,1,opt,name=databaseName"`
-	TableName        string `json:"tableName,omitempty" protobuf:"bytes,2,opt,name=tableName"`
-	TableSizeInBytes string `json:"tableSizeInBytes,omitempty" protobuf:"bytes,3,opt,name=tableSizeInBytes"`
+	DatabaseName   string `json:"databaseName,omitempty" protobuf:"bytes,1,opt,name=databaseName"`
+	TableName      string `json:"tableName,omitempty" protobuf:"bytes,2,opt,name=tableName"`
+	TableSizeBytes string `json:"tableSizeBytes,omitempty" protobuf:"bytes,3,opt,name=tableSizeBytes"`
 }

@@ -4,14 +4,14 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: mariadboverviews.ui.kubedb.com
+  name: postgresinsights.ui.kubedb.com
 spec:
   group: ui.kubedb.com
   names:
-    kind: MariaDBOverview
-    listKind: MariaDBOverviewList
-    plural: mariadboverviews
-    singular: mariadboverview
+    kind: PostgresInsight
+    listKind: PostgresInsightList
+    plural: postgresinsights
+    singular: postgresinsight
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -26,65 +26,58 @@ spec:
             type: object
           spec:
             properties:
-              abortedClients:
-                format: int32
-                type: integer
-              abortedConnections:
-                format: int32
-                type: integer
-              connectionsInfo:
+              connectionInfo:
                 properties:
-                  port:
-                    format: int32
+                  activeConnections:
+                    format: int64
                     type: integer
-                  url:
-                    type: string
+                  maxConnections:
+                    format: int64
+                    type: integer
+                required:
+                - activeConnections
+                - maxConnections
                 type: object
-              credentials:
-                properties:
-                  certificate:
-                    type: string
-                  password:
-                    type: string
-                  username:
-                    type: string
-                type: object
-              longQueryTimeThreshold:
-                format: double
-                type: number
-              maxConnections:
-                format: int32
-                type: integer
-              maxUsedConnections:
-                format: int32
-                type: integer
               mode:
                 type: string
-              numberOfSlowQueries:
-                format: int32
-                type: integer
-              questions:
-                format: int32
-                type: integer
+              replicationStatus:
+                items:
+                  properties:
+                    applicationName:
+                      type: string
+                    flushLag:
+                      format: int64
+                      type: integer
+                    replayLag:
+                      format: int64
+                      type: integer
+                    state:
+                      type: string
+                    writeLag:
+                      format: int64
+                      type: integer
+                  required:
+                  - applicationName
+                  - state
+                  type: object
+                type: array
               status:
                 type: string
-              threadsCached:
-                format: int32
-                type: integer
-              threadsConnected:
-                format: int32
-                type: integer
-              threadsCreated:
-                format: int32
-                type: integer
-              threadsRunning:
-                format: int32
-                type: integer
+              vacuumInfo:
+                properties:
+                  activeVacuumProcess:
+                    format: int64
+                    type: integer
+                  autoVacuum:
+                    type: string
+                required:
+                - activeVacuumProcess
+                - autoVacuum
+                type: object
               version:
                 type: string
             required:
             - mode
-            - questions
             - status
             - version
             type: object

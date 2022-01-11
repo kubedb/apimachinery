@@ -4,14 +4,14 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: elasticsearchoverviews.ui.kubedb.com
+  name: mongodbinsights.ui.kubedb.com
 spec:
   group: ui.kubedb.com
   names:
-    kind: ElasticsearchOverview
-    listKind: ElasticsearchOverviewList
-    plural: elasticsearchoverviews
-    singular: elasticsearchoverview
+    kind: MongoDBInsight
+    listKind: MongoDBInsightList
+    plural: mongodbinsights
+    singular: mongodbinsight
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -26,90 +26,94 @@ spec:
             type: object
           spec:
             properties:
-              clusterHealth:
+              connections:
                 properties:
-                  activePrimaryShards:
+                  activeConnections:
                     format: int32
                     type: integer
-                  activeShards:
+                  availableConnections:
                     format: int32
                     type: integer
-                  activeShardsPercentAsNumber:
+                  currentConnections:
                     format: int32
                     type: integer
-                  clusterName:
-                    type: string
-                  delayedUnassignedShards:
-                    format: int32
-                    type: integer
-                  initializingShards:
-                    format: int32
-                    type: integer
-                  numberOfDataNodes:
-                    format: int32
-                    type: integer
-                  numberOfInFlightFetch:
-                    format: int32
-                    type: integer
-                  numberOfNodes:
-                    format: int32
-                    type: integer
-                  numberOfPendingTasks:
-                    format: int32
-                    type: integer
-                  relocatingShards:
-                    format: int32
-                    type: integer
-                  status:
-                    type: string
-                  taskMaxWaitingInQueueMillis:
-                    format: int32
-                    type: integer
-                  unassignedShards:
+                  totalConnections:
                     format: int32
                     type: integer
                 required:
-                - activePrimaryShards
-                - activeShards
-                - activeShardsPercentAsNumber
-                - clusterName
-                - delayedUnassignedShards
-                - initializingShards
-                - numberOfDataNodes
-                - numberOfInFlightFetch
-                - numberOfNodes
-                - numberOfPendingTasks
-                - relocatingShards
-                - status
-                - taskMaxWaitingInQueueMillis
-                - unassignedShards
+                - activeConnections
+                - availableConnections
+                - currentConnections
+                - totalConnections
                 type: object
-              connectionInfo:
+              dbStats:
                 properties:
-                  port:
+                  dataSize:
+                    format: int64
+                    type: integer
+                  indexSize:
+                    format: int64
+                    type: integer
+                  totalCollections:
                     format: int32
                     type: integer
-                  url:
-                    type: string
+                  totalIndexes:
+                    format: int32
+                    type: integer
+                required:
+                - dataSize
+                - indexSize
+                - totalCollections
+                - totalIndexes
                 type: object
-              credentials:
+              replicaSetInfo:
                 properties:
-                  certificate:
-                    type: string
-                  password:
-                    type: string
-                  username:
-                    type: string
+                  numberOfReplicas:
+                    format: int32
+                    type: integer
+                required:
+                - numberOfReplicas
                 type: object
-              mode:
-                type: string
+              shardsInfo:
+                properties:
+                  balancerEnabled:
+                    type: boolean
+                  chunksBalanced:
+                    type: boolean
+                  numberOfChunks:
+                    format: int32
+                    type: integer
+                  numberOfShards:
+                    format: int32
+                    type: integer
+                  replicasPerShards:
+                    format: int32
+                    type: integer
+                required:
+                - numberOfChunks
+                - numberOfShards
+                - replicasPerShards
+                type: object
               status:
+                enum:
+                - Provisioning
+                - DataRestoring
+                - Ready
+                - Critical
+                - NotReady
+                - Halted
+                type: string
+              type:
+                enum:
+                - Standalone
+                - ReplicaSet
+                - Sharded
                 type: string
               version:
                 type: string
             required:
-            - mode
             - status
+            - type
             - version
             type: object
           status:

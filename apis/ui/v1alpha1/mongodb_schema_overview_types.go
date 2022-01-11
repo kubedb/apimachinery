@@ -32,7 +32,9 @@ type MongoDBSchemaOverviewSpec struct {
 }
 
 type MongoDBCollectionSpec struct {
-	Name      string  `json:"name" protobuf:"bytes,1,opt,name=name"`
+	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
+
+	// Slice is used to store shards specific collection size for Sharded MongoDB
 	TotalSize []int32 `json:"size" protobuf:"varint,2,rep,name=size"`
 }
 

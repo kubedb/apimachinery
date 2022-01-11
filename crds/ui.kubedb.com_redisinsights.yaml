@@ -4,14 +4,14 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: mysqloverviews.ui.kubedb.com
+  name: redisinsights.ui.kubedb.com
 spec:
   group: ui.kubedb.com
   names:
-    kind: MySQLOverview
-    listKind: MySQLOverviewList
-    plural: mysqloverviews
-    singular: mysqloverview
+    kind: RedisInsight
+    listKind: RedisInsightList
+    plural: redisinsights
+    singular: redisinsight
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -26,65 +26,46 @@ spec:
             type: object
           spec:
             properties:
-              abortedClients:
-                format: int32
+              blockedClients:
+                format: int64
                 type: integer
-              abortedConnections:
-                format: int32
+              connectedClients:
+                format: int64
                 type: integer
-              connectionsInfo:
-                properties:
-                  port:
-                    format: int32
-                    type: integer
-                  url:
-                    type: string
-                type: object
-              credentials:
-                properties:
-                  certificate:
-                    type: string
-                  password:
-                    type: string
-                  username:
-                    type: string
-                type: object
-              longQueryTimeThreshold:
-                format: double
-                type: number
-              maxConnections:
-                format: int32
+              evictedKeys:
+                format: int64
                 type: integer
-              maxUsedConnections:
-                format: int32
+              evictionPolicy:
+                type: string
+              expiredKeys:
+                format: int64
+                type: integer
+              maxClients:
+                format: int64
                 type: integer
               mode:
                 type: string
-              numberOfSlowQueries:
-                format: int32
+              receivedConnections:
+                format: int64
                 type: integer
-              questions:
-                format: int32
+              rejectedConnections:
+                format: int64
+                type: integer
+              slowLogMaxLen:
+                format: int64
+                type: integer
+              slowLogThresholdMircoSeconds:
+                format: int64
                 type: integer
               status:
                 type: string
-              threadsCached:
-                format: int32
-                type: integer
-              threadsConnected:
-                format: int32
-                type: integer
-              threadsCreated:
-                format: int32
-                type: integer
-              threadsRunning:
-                format: int32
+              totalKeys:
+                format: int64
                 type: integer
               version:
                 type: string
             required:
             - mode
-            - questions
             - status
             - version
             type: object

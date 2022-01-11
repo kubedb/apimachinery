@@ -32,10 +32,10 @@ type RedisSchemaOverviewSpec struct {
 }
 
 type RedisDatabaseSpec struct {
-	DBId    string `json:"dbId,omitempty" protobuf:"bytes,1,opt,name=dbId"`
-	Keys    string `json:"keys,omitempty" protobuf:"bytes,2,opt,name=keys"`
-	Expires string `json:"expires,omitempty" protobuf:"bytes,3,opt,name=expires"`
-	AvgTTL  string `json:"avgTTL,omitempty" protobuf:"bytes,4,opt,name=avgTTL"`
+	DBId               string       `json:"dbId" protobuf:"bytes,1,opt,name=dbId"`
+	Keys               string       `json:"keys" protobuf:"bytes,2,opt,name=keys"`
+	Expires            *metav1.Time `json:"expires,omitempty" protobuf:"bytes,3,opt,name=expires"`
+	AvgTTLMilliSeconds string       `json:"avgTTLMilliSeconds,omitempty" protobuf:"bytes,4,opt,name=avgTTLMilliSeconds"`
 }
 
 // RedisSchemaOverview is the Schema for the RedisSchemaOverviews API

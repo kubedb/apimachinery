@@ -35,8 +35,8 @@ type PGSetting struct {
 	Name         string `json:"name" protobuf:"bytes,1,opt,name=name"`
 	CurrentValue string `json:"currentValue" protobuf:"bytes,2,opt,name=currentValue"`
 	DefaultValue string `json:"defaultValue" protobuf:"bytes,3,opt,name=defaultValue"`
-	Unit         string `json:"unit" protobuf:"bytes,4,opt,name=unit"`
-	Source       string `json:"source" protobuf:"bytes,5,opt,name=source"`
+	Unit         string `json:"unit,omitempty" protobuf:"bytes,4,opt,name=unit"`
+	Source       string `json:"source,omitempty" protobuf:"bytes,5,opt,name=source"`
 }
 
 // PostgresSettings is the Schema for the PostgresSettingss API
