@@ -20237,14 +20237,14 @@ func schema_apimachinery_apis_ui_v1alpha1_ElasticsearchIndexSpec(ref common.Refe
 							Format:  "",
 						},
 					},
-					"primaryStoreSizeInBytes": {
+					"primaryStoreSizeBytes": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
 							Type:    []string{"string"},
 							Format:  "",
 						},
 					},
-					"totalStoreSizeInBytes": {
+					"totalStoreSizeBytes": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
 							Type:    []string{"string"},
@@ -20252,7 +20252,7 @@ func schema_apimachinery_apis_ui_v1alpha1_ElasticsearchIndexSpec(ref common.Refe
 						},
 					},
 				},
-				Required: []string{"indexName", "primaryStoreSizeInBytes", "totalStoreSizeInBytes"},
+				Required: []string{"indexName", "primaryStoreSizeBytes", "totalStoreSizeBytes"},
 			},
 		},
 	}
@@ -20820,7 +20820,7 @@ func schema_apimachinery_apis_ui_v1alpha1_GenericDatabaseSpec(ref common.Referen
 							Format: "",
 						},
 					},
-					"tableSizeInBytes": {
+					"tableSizeBytes": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
 							Format: "",

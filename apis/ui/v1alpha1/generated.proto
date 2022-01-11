@@ -62,9 +62,9 @@ message ElasticsearchClusterHealth {
 message ElasticsearchIndexSpec {
   optional string indexName = 1;
 
-  optional string primaryStoreSizeInBytes = 2;
+  optional string primaryStoreSizeBytes = 2;
 
-  optional string totalStoreSizeInBytes = 3;
+  optional string totalStoreSizeBytes = 3;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -169,7 +169,7 @@ message GenericDatabaseSpec {
 
   optional string tableName = 2;
 
-  optional string tableSizeInBytes = 3;
+  optional string tableSizeBytes = 3;
 }
 
 message GenericSchemaOverviewSpec {
