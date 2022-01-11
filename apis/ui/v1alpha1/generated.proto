@@ -901,9 +901,6 @@ message PGSetting {
   optional string source = 5;
 }
 
-message PostgresBackupInfo {
-}
-
 message PostgresConnectionInfo {
   optional int64 maxConnections = 1;
 
@@ -930,19 +927,15 @@ message PostgresInsightList {
 message PostgresInsightSpec {
   optional string version = 1;
 
-  optional string connectionURL = 2;
+  optional string status = 2;
 
-  optional string status = 3;
+  optional string mode = 3;
 
-  optional string mode = 4;
+  repeated PostgresReplicationStatus replicationStatus = 4;
 
-  repeated PostgresReplicationStatus replicationStatus = 5;
+  optional PostgresConnectionInfo connectionInfo = 5;
 
-  optional PostgresConnectionInfo connectionInfo = 6;
-
-  optional PostgresBackupInfo backupInfo = 7;
-
-  optional PostgresVacuumInfo vacuumInfo = 8;
+  optional PostgresVacuumInfo vacuumInfo = 6;
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -483,7 +483,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.NodesStatsTranslogStats":            schema_apimachinery_apis_ui_v1alpha1_NodesStatsTranslogStats(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.NodesStatsWarmerStats":              schema_apimachinery_apis_ui_v1alpha1_NodesStatsWarmerStats(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PGSetting":                          schema_apimachinery_apis_ui_v1alpha1_PGSetting(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresBackupInfo":                 schema_apimachinery_apis_ui_v1alpha1_PostgresBackupInfo(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresConnectionInfo":             schema_apimachinery_apis_ui_v1alpha1_PostgresConnectionInfo(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresInsight":                    schema_apimachinery_apis_ui_v1alpha1_PostgresInsight(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresInsightList":                schema_apimachinery_apis_ui_v1alpha1_PostgresInsightList(ref),
@@ -23963,16 +23962,6 @@ func schema_apimachinery_apis_ui_v1alpha1_PGSetting(ref common.ReferenceCallback
 	}
 }
 
-func schema_apimachinery_apis_ui_v1alpha1_PostgresBackupInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_ui_v1alpha1_PostgresConnectionInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24108,13 +24097,6 @@ func schema_apimachinery_apis_ui_v1alpha1_PostgresInsightSpec(ref common.Referen
 							Format:  "",
 						},
 					},
-					"connectionURL": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
@@ -24148,12 +24130,6 @@ func schema_apimachinery_apis_ui_v1alpha1_PostgresInsightSpec(ref common.Referen
 							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresConnectionInfo"),
 						},
 					},
-					"backupInfo": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresBackupInfo"),
-						},
-					},
 					"vacuumInfo": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
@@ -24161,11 +24137,11 @@ func schema_apimachinery_apis_ui_v1alpha1_PostgresInsightSpec(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"version", "connectionURL", "status", "mode"},
+				Required: []string{"version", "status", "mode"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresBackupInfo", "kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresConnectionInfo", "kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresReplicationStatus", "kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresVacuumInfo"},
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresConnectionInfo", "kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresReplicationStatus", "kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresVacuumInfo"},
 	}
 }
 

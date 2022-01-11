@@ -26,8 +26,6 @@ spec:
             type: object
           spec:
             properties:
-              backupInfo:
-                type: object
               connectionInfo:
                 properties:
                   activeConnections:
@@ -40,8 +38,6 @@ spec:
                 - activeConnections
                 - maxConnections
                 type: object
-              connectionURL:
-                type: string
               mode:
                 type: string
               replicationStatus:
@@ -81,7 +77,6 @@ spec:
               version:
                 type: string
             required:
-            - connectionURL
             - mode
             - status
             - version

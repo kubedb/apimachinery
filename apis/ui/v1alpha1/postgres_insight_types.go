@@ -31,21 +31,16 @@ const (
 // PostgresInsightSpec defines the desired state of PostgresInsight
 type PostgresInsightSpec struct {
 	Version           string                      `json:"version" protobuf:"bytes,1,opt,name=version"`
-	ConnectionURL     string                      `json:"connectionURL" protobuf:"bytes,2,opt,name=connectionURL"`
-	Status            string                      `json:"status" protobuf:"bytes,3,opt,name=status"`
-	Mode              string                      `json:"mode" protobuf:"bytes,4,opt,name=mode"`
-	ReplicationStatus []PostgresReplicationStatus `json:"replicationStatus,omitempty" protobuf:"bytes,5,rep,name=replicationStatus"`
-	ConnectionInfo    PostgresConnectionInfo      `json:"connectionInfo,omitempty" protobuf:"bytes,6,opt,name=connectionInfo"`
-	BackupInfo        PostgresBackupInfo          `json:"backupInfo,omitempty" protobuf:"bytes,7,opt,name=backupInfo"`
-	VacuumInfo        PostgresVacuumInfo          `json:"vacuumInfo,omitempty" protobuf:"bytes,8,opt,name=vacuumInfo"`
+	Status            string                      `json:"status" protobuf:"bytes,2,opt,name=status"`
+	Mode              string                      `json:"mode" protobuf:"bytes,3,opt,name=mode"`
+	ReplicationStatus []PostgresReplicationStatus `json:"replicationStatus,omitempty" protobuf:"bytes,4,rep,name=replicationStatus"`
+	ConnectionInfo    PostgresConnectionInfo      `json:"connectionInfo,omitempty" protobuf:"bytes,5,opt,name=connectionInfo"`
+	VacuumInfo        PostgresVacuumInfo          `json:"vacuumInfo,omitempty" protobuf:"bytes,6,opt,name=vacuumInfo"`
 }
 
 type PostgresVacuumInfo struct {
 	AutoVacuum          string `json:"autoVacuum" protobuf:"bytes,1,opt,name=autoVacuum"`
 	ActiveVacuumProcess int64  `json:"activeVacuumProcess" protobuf:"varint,2,opt,name=activeVacuumProcess"`
-}
-
-type PostgresBackupInfo struct {
 }
 
 type PostgresConnectionInfo struct {
