@@ -141,6 +141,7 @@ type MySQLSpec struct {
 type MySQLReadReplica struct {
 	//SourceRef specifies the  source object appbinding
 	SourceRef *core.ObjectReference `json:"sourceRef,omitempty" protobuf:"bytes,1,opt,name=sourceRef"`
+	Topology  *MySQLClusterTopology `json:"topology,omitempty" protobuf:"bytes,2,opt,name=topology"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter

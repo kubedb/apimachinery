@@ -22483,11 +22483,16 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLReadReplica(ref common.Refere
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
 					},
+					"topology": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLClusterTopology"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference"},
+			"k8s.io/api/core/v1.ObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLClusterTopology"},
 	}
 }
 

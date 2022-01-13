@@ -1383,6 +1383,11 @@ func (in *MySQLReadReplica) DeepCopyInto(out *MySQLReadReplica) {
 		*out = new(v1.ObjectReference)
 		**out = **in
 	}
+	if in.Topology != nil {
+		in, out := &in.Topology, &out.Topology
+		*out = new(MySQLClusterTopology)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

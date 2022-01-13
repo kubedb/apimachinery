@@ -30633,6 +30633,9 @@
         "sourceRef": {
           "description": "SourceRef specifies the  source object appbinding",
           "$ref": "#/definitions/io.k8s.api.core.v1.ObjectReference"
+        },
+        "topology": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLClusterTopology"
         }
       }
     },
