@@ -1106,7 +1106,7 @@ message RedisInsightSpec {
 
   optional int64 rejectedConnections = 12;
 
-  optional int64 slowLogThresholdMircoSeconds = 13;
+  optional int64 slowLogThresholdMicroSeconds = 13;
 
   optional int64 slowLogMaxLen = 14;
 }
@@ -1135,7 +1135,7 @@ message RedisQuerySpec {
 
   optional k8s.io.apimachinery.pkg.apis.meta.v1.Time queryTimestamp = 2;
 
-  optional int64 execTimeMircoSeconds = 3;
+  optional int64 execTimeMicroSeconds = 3;
 
   repeated string args = 4;
 }

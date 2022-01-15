@@ -24908,7 +24908,7 @@ func schema_apimachinery_apis_ui_v1alpha1_RedisInsightSpec(ref common.ReferenceC
 							Format: "int64",
 						},
 					},
-					"slowLogThresholdMircoSeconds": {
+					"slowLogThresholdMicroSeconds": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"integer"},
 							Format: "int64",
@@ -25062,7 +25062,7 @@ func schema_apimachinery_apis_ui_v1alpha1_RedisQuerySpec(ref common.ReferenceCal
 							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
-					"execTimeMircoSeconds": {
+					"execTimeMicroSeconds": {
 						SchemaProps: spec.SchemaProps{
 							Default: 0,
 							Type:    []string{"integer"},
@@ -25084,7 +25084,7 @@ func schema_apimachinery_apis_ui_v1alpha1_RedisQuerySpec(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"queryId", "queryTimestamp", "execTimeMircoSeconds", "args"},
+				Required: []string{"queryId", "queryTimestamp", "execTimeMicroSeconds", "args"},
 			},
 		},
 		Dependencies: []string{

@@ -42,7 +42,7 @@ type RedisInsightSpec struct {
 	EvictedKeys                  int64  `json:"evictedKeys,omitempty" protobuf:"varint,10,opt,name=evictedKeys"`
 	ReceivedConnections          int64  `json:"receivedConnections,omitempty" protobuf:"varint,11,opt,name=receivedConnections"`
 	RejectedConnections          int64  `json:"rejectedConnections,omitempty" protobuf:"varint,12,opt,name=rejectedConnections"`
-	SlowLogThresholdMircoSeconds int64  `json:"slowLogThresholdMircoSeconds,omitempty" protobuf:"varint,13,opt,name=slowLogThresholdMircoSeconds"`
+	SlowLogThresholdMicroSeconds int64  `json:"slowLogThresholdMicroSeconds,omitempty" protobuf:"varint,13,opt,name=slowLogThresholdMicroSeconds"`
 	SlowLogMaxLen                int64  `json:"slowLogMaxLen,omitempty" protobuf:"varint,14,opt,name=slowLogMaxLen"`
 }
 

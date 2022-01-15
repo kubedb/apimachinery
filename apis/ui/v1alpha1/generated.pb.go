@@ -3362,7 +3362,7 @@ var fileDescriptor_28547d2d7dcabf55 = []byte{
 	0x06, 0x22, 0x3a, 0x1e, 0x33, 0xb7, 0x31, 0xf5, 0x68, 0xb0, 0x67, 0x3e, 0x47, 0x57, 0x36, 0xcd,
 	0x2d, 0xc9, 0xa3, 0x90, 0x22, 0x3a, 0xce, 0xee, 0x4b, 0x5c, 0x81, 0x1a, 0xbb, 0x71, 0x9b, 0x5d,
 	0x0e, 0x85, 0x14, 0xd1, 0xe1, 0x06, 0x7a, 0x3c, 0x69, 0x46, 0xf7, 0xd6, 0xa2, 0xba, 0x7a, 0xd5,
-	0x6f, 0x3d, 0x88, 0xbd, 0x48, 0x9a, 0xc6, 0x09, 0xf3, 0xe1, 0xdf, 0xda, 0x21, 0xb8, 0xe4, 0x50,
+	0x6f, 0x3d, 0xf0, 0xe2, 0x48, 0x9a, 0xc6, 0x09, 0xf3, 0xe1, 0xdf, 0xda, 0x21, 0xb8, 0xe4, 0x50,
 	0x4e, 0x10, 0x99, 0x73, 0xf8, 0xba, 0xbb, 0xbf, 0x46, 0x43, 0x3b, 0xa0, 0xac, 0xe9, 0x40, 0x62,
 	0xe2, 0xc2, 0x1b, 0x74, 0x30, 0xcf, 0x1e, 0x82, 0x37, 0xe8, 0x74, 0x39, 0x0f, 0x7d, 0x83, 0x4e,
 	0x47, 0xfc, 0xe0, 0x1b, 0xc2, 0x23, 0xdf, 0xa0, 0xb3, 0xdb, 0x7d, 0xa2, 0x37, 0xe8, 0x14, 0xb3,
@@ -3377,7 +3377,7 @@ var fileDescriptor_28547d2d7dcabf55 = []byte{
 	0x70, 0xfc, 0x7f, 0xff, 0x5a, 0x5d, 0x78, 0xe7, 0xdd, 0x0b, 0x8f, 0x7c, 0xe3, 0xdd, 0x0b, 0x8f,
 	0x7c, 0xeb, 0xdd, 0x0b, 0x8f, 0x7c, 0xe5, 0xc1, 0x05, 0xe7, 0x9d, 0x07, 0x17, 0x9c, 0x6f, 0x3c,
 	0xb8, 0xe0, 0x7c, 0xeb, 0xc1, 0x05, 0xe7, 0xbb, 0x0f, 0x2e, 0x38, 0x5f, 0xfd, 0xde, 0x85, 0x47,
-	0x7e, 0x6a, 0x54, 0xf2, 0xff, 0xbf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x5a, 0xd4, 0x41, 0x0e, 0xcc,
+	0x7e, 0x6a, 0x54, 0xf2, 0xff, 0xbf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x17, 0x71, 0xd9, 0x82, 0xcc,
 	0x88, 0x00, 0x00,
 }
 
@@ -8105,7 +8105,7 @@ func (m *RedisInsightSpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i = encodeVarintGenerated(dAtA, i, uint64(m.SlowLogMaxLen))
 	i--
 	dAtA[i] = 0x70
-	i = encodeVarintGenerated(dAtA, i, uint64(m.SlowLogThresholdMircoSeconds))
+	i = encodeVarintGenerated(dAtA, i, uint64(m.SlowLogThresholdMicroSeconds))
 	i--
 	dAtA[i] = 0x68
 	i = encodeVarintGenerated(dAtA, i, uint64(m.RejectedConnections))
@@ -8311,7 +8311,7 @@ func (m *RedisQuerySpec) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0x22
 		}
 	}
-	i = encodeVarintGenerated(dAtA, i, uint64(m.ExecTimeMircoSeconds))
+	i = encodeVarintGenerated(dAtA, i, uint64(m.ExecTimeMicroSeconds))
 	i--
 	dAtA[i] = 0x18
 	if m.QueryTimestamp != nil {
@@ -10149,7 +10149,7 @@ func (m *RedisInsightSpec) Size() (n int) {
 	n += 1 + sovGenerated(uint64(m.EvictedKeys))
 	n += 1 + sovGenerated(uint64(m.ReceivedConnections))
 	n += 1 + sovGenerated(uint64(m.RejectedConnections))
-	n += 1 + sovGenerated(uint64(m.SlowLogThresholdMircoSeconds))
+	n += 1 + sovGenerated(uint64(m.SlowLogThresholdMicroSeconds))
 	n += 1 + sovGenerated(uint64(m.SlowLogMaxLen))
 	return n
 }
@@ -10210,7 +10210,7 @@ func (m *RedisQuerySpec) Size() (n int) {
 		l = m.QueryTimestamp.Size()
 		n += 1 + l + sovGenerated(uint64(l))
 	}
-	n += 1 + sovGenerated(uint64(m.ExecTimeMircoSeconds))
+	n += 1 + sovGenerated(uint64(m.ExecTimeMicroSeconds))
 	if len(m.Args) > 0 {
 		for _, s := range m.Args {
 			l = len(s)
@@ -11696,7 +11696,7 @@ func (this *RedisInsightSpec) String() string {
 		`EvictedKeys:` + fmt.Sprintf("%v", this.EvictedKeys) + `,`,
 		`ReceivedConnections:` + fmt.Sprintf("%v", this.ReceivedConnections) + `,`,
 		`RejectedConnections:` + fmt.Sprintf("%v", this.RejectedConnections) + `,`,
-		`SlowLogThresholdMircoSeconds:` + fmt.Sprintf("%v", this.SlowLogThresholdMircoSeconds) + `,`,
+		`SlowLogThresholdMicroSeconds:` + fmt.Sprintf("%v", this.SlowLogThresholdMicroSeconds) + `,`,
 		`SlowLogMaxLen:` + fmt.Sprintf("%v", this.SlowLogMaxLen) + `,`,
 		`}`,
 	}, "")
@@ -11751,7 +11751,7 @@ func (this *RedisQuerySpec) String() string {
 	s := strings.Join([]string{`&RedisQuerySpec{`,
 		`QueryId:` + fmt.Sprintf("%v", this.QueryId) + `,`,
 		`QueryTimestamp:` + strings.Replace(fmt.Sprintf("%v", this.QueryTimestamp), "Time", "v1.Time", 1) + `,`,
-		`ExecTimeMircoSeconds:` + fmt.Sprintf("%v", this.ExecTimeMircoSeconds) + `,`,
+		`ExecTimeMicroSeconds:` + fmt.Sprintf("%v", this.ExecTimeMicroSeconds) + `,`,
 		`Args:` + fmt.Sprintf("%v", this.Args) + `,`,
 		`}`,
 	}, "")
@@ -27920,9 +27920,9 @@ func (m *RedisInsightSpec) Unmarshal(dAtA []byte) error {
 			}
 		case 13:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SlowLogThresholdMircoSeconds", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field SlowLogThresholdMicroSeconds", wireType)
 			}
-			m.SlowLogThresholdMircoSeconds = 0
+			m.SlowLogThresholdMicroSeconds = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGenerated
@@ -27932,7 +27932,7 @@ func (m *RedisInsightSpec) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.SlowLogThresholdMircoSeconds |= int64(b&0x7F) << shift
+				m.SlowLogThresholdMicroSeconds |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -28380,9 +28380,9 @@ func (m *RedisQuerySpec) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ExecTimeMircoSeconds", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ExecTimeMicroSeconds", wireType)
 			}
-			m.ExecTimeMircoSeconds = 0
+			m.ExecTimeMicroSeconds = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGenerated
@@ -28392,7 +28392,7 @@ func (m *RedisQuerySpec) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ExecTimeMircoSeconds |= int64(b&0x7F) << shift
+				m.ExecTimeMicroSeconds |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

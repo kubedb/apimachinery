@@ -34,7 +34,7 @@ type RedisQueriesSpec struct {
 type RedisQuerySpec struct {
 	QueryId              int64        `json:"queryId" protobuf:"varint,1,opt,name=queryId"`
 	QueryTimestamp       *metav1.Time `json:"queryTimestamp" protobuf:"varint,2,opt,name=queryTimestamp"`
-	ExecTimeMircoSeconds int64        `json:"execTimeMircoSeconds" protobuf:"varint,3,opt,name=execTimeMircoSeconds"`
+	ExecTimeMicroSeconds int64        `json:"execTimeMicroSeconds" protobuf:"varint,3,opt,name=execTimeMicroSeconds"`
 	Args                 []string     `json:"args" protobuf:"bytes,4,rep,name=args"`
 }
 
