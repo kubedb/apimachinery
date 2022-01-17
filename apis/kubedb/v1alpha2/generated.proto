@@ -34,6 +34,25 @@ import "kmodules.xyz/offshoot-api/api/v1/generated.proto";
 // Package-wide variables from generator "generated".
 option go_package = "v1alpha2";
 
+// AllowedReadReplicas defines which ReadReplicas may be attached to this Listener.
+message AllowedReadReplicas {
+  // Namespaces indicates namespaces from which ReadReplicas may be attached to
+  //
+  // Support: Core
+  //
+  // +optional
+  // +kubebuilder:default={from: Same}
+  optional ReadRouteNamespaces namespaces = 1;
+
+  // ReplicaSelector specifies a selector for ReadReplicas that are allowed to bind
+  // to the MySQL Instance.
+  //
+  // Support: Core
+  //
+  // +optional
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.LabelSelector replicaSelector = 2;
+}
+
 message ConnectionPoolConfig {
   // Port is the port number on which PgBouncer listens to clients. Default: 5432.
   // +optional
@@ -1002,6 +1021,15 @@ message MySQLSpec {
   // ReadReplica implies that the instance will be a MySQL Read Only Replica
   // and it will take reference of  appbinding of the source
   optional MySQLReadReplica readReplica = 19;
+
+  // AllowedReadReplicas defines the types of read replicas that MAY be attached to a
+  // MySQL instance and the trusted namespaces where those Read Replica resources MAY be
+  // present.
+  //
+  // Support: Core
+  // +kubebuilder:default={namespaces:{from: Same}}
+  // +optional
+  optional AllowedReadReplicas allowedReadReplicas = 20;
 }
 
 message MySQLStatus {
@@ -1430,6 +1458,29 @@ message ProxySQLStatus {
   // Conditions applied to the database, such as approval or denial.
   // +optional
   repeated kmodules.xyz.client_go.api.v1.Condition conditions = 3;
+}
+
+// ReadRouteNamespaces indicate which namespaces ReadReplicas should be selected from.
+message ReadRouteNamespaces {
+  // From indicates where ReadReplicas will be selected for the MySQL Instance. Possible
+  // values are:
+  // * All: ReadReplicas in all namespaces.
+  // * Selector: ReadReplicas in namespaces selected by the selector
+  // * Same: Only ReadReplicas in the same namespace
+  // Support: Core
+  //
+  // +optional
+  // +kubebuilder:default=Same
+  optional string from = 1;
+
+  // Selector must be specified when From is set to "Selector". In that case,
+  // only ReadReplicas in Namespaces matching this Selector will be selected by the
+  // MySQL instance. This field is ignored for other values of "From".
+  //
+  // Support: Core
+  //
+  // +optional
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.LabelSelector selector = 2;
 }
 
 message RecoveryTarget {

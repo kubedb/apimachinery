@@ -29227,6 +29227,20 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedReadReplicas": {
+      "description": "AllowedReadReplicas defines which ReadReplicas may be attached to this Listener.",
+      "type": "object",
+      "properties": {
+        "namespaces": {
+          "description": "Namespaces indicates namespaces from which ReadReplicas may be attached to\n\nSupport: Core",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ReadRouteNamespaces"
+        },
+        "replicaSelector": {
+          "description": "ReplicaSelector specifies a selector for ReadReplicas that are allowed to bind to the MySQL Instance.\n\nSupport: Core",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConnectionPoolConfig": {
       "type": "object",
       "properties": {
@@ -30658,6 +30672,10 @@
         "version"
       ],
       "properties": {
+        "allowedReadReplicas": {
+          "description": "AllowedReadReplicas defines the types of read replicas that MAY be attached to a MySQL instance and the trusted namespaces where those Read Replica resources MAY be present.\n\nSupport: Core",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedReadReplicas"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -31454,6 +31472,20 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ReadRouteNamespaces": {
+      "description": "ReadRouteNamespaces indicate which namespaces ReadReplicas should be selected from.",
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "From indicates where ReadReplicas will be selected for the MySQL Instance. Possible values are: * All: ReadReplicas in all namespaces. * Selector: ReadReplicas in namespaces selected by the selector * Same: Only ReadReplicas in the same namespace Support: Core",
+          "type": "string"
+        },
+        "selector": {
+          "description": "Selector must be specified when From is set to \"Selector\". In that case, only ReadReplicas in Namespaces matching this Selector will be selected by the MySQL instance. This field is ignored for other values of \"From\".\n\nSupport: Core",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         }
       }
     },

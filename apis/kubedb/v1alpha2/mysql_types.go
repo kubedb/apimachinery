@@ -133,9 +133,76 @@ type MySQLSpec struct {
 	// Coordinator defines attributes of the coordinator container
 	// +optional
 	Coordinator CoordinatorSpec `json:"coordinator,omitempty" protobuf:"bytes,18,opt,name=coordinator"`
+
 	// ReadReplica implies that the instance will be a MySQL Read Only Replica
 	// and it will take reference of  appbinding of the source
 	ReadReplica *MySQLReadReplica `json:"readReplica,omitempty" protobuf:"bytes,19,opt,name=readReplica"`
+
+	// AllowedReadReplicas defines the types of read replicas that MAY be attached to a
+	// MySQL instance and the trusted namespaces where those Read Replica resources MAY be
+	// present.
+	//
+	// Support: Core
+	// +kubebuilder:default={namespaces:{from: Same}}
+	// +optional
+	AllowedReadReplicas *AllowedReadReplicas `json:"allowedReadReplicas,omitempty" protobuf:"bytes,20,opt,name=allowedReadReplicas"`
+}
+
+// AllowedReadReplicas defines which ReadReplicas may be attached to this Listener.
+type AllowedReadReplicas struct {
+	// Namespaces indicates namespaces from which ReadReplicas may be attached to
+	//
+	// Support: Core
+	//
+	// +optional
+	// +kubebuilder:default={from: Same}
+	Namespaces *ReadRouteNamespaces `json:"namespaces,omitempty" protobuf:"bytes,1,opt,name=namespaces"`
+
+	// ReplicaSelector specifies a selector for ReadReplicas that are allowed to bind
+	// to the MySQL Instance.
+	//
+	// Support: Core
+	//
+	// +optional
+	ReplicaSelector *metav1.LabelSelector `json:"replicaSelector,omitempty" protobuf:"bytes,2,opt,name=replicaSelector"`
+}
+
+// FromNamespaces specifies namespace from which ReadReplicas may be attached to a
+// MySQL instance.
+//
+// +kubebuilder:validation:Enum=All;Selector;Same
+type FromNamespaces string
+
+const (
+	// ReadReplicas in all namespaces may be attached to the MySQL Instance.
+	NamespacesFromAll FromNamespaces = "All"
+	// Only ReadReplicas in namespaces selected by the selector may be attached to the MySQL instance.
+	NamespacesFromSelector FromNamespaces = "Selector"
+	// Only ReadReplicas in the same namespace as the MySQL Instance may be attached to this
+	NamespacesFromSame FromNamespaces = "Same"
+)
+
+// ReadRouteNamespaces indicate which namespaces ReadReplicas should be selected from.
+type ReadRouteNamespaces struct {
+	// From indicates where ReadReplicas will be selected for the MySQL Instance. Possible
+	// values are:
+	// * All: ReadReplicas in all namespaces.
+	// * Selector: ReadReplicas in namespaces selected by the selector
+	// * Same: Only ReadReplicas in the same namespace
+	// Support: Core
+	//
+	// +optional
+	// +kubebuilder:default=Same
+	From *FromNamespaces `json:"from,omitempty" protobuf:"bytes,1,opt,name=from,casttype=FromNamespaces"`
+
+	// Selector must be specified when From is set to "Selector". In that case,
+	// only ReadReplicas in Namespaces matching this Selector will be selected by the
+	// MySQL instance. This field is ignored for other values of "From".
+	//
+	// Support: Core
+	//
+	// +optional
+	Selector *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,2,opt,name=selector"`
 }
 
 type MySQLReadReplica struct {
