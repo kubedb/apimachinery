@@ -233,6 +233,7 @@ const (
 	MariaDBRunScriptVolumeMountPath     = "/run-script"
 	MariaDBInitScriptVolumeName         = "init-scripts"
 	MariaDBInitScriptVolumeMountPath    = "/scripts"
+	MariaDBContainerName                = ResourceSingularMariaDB
 
 	// =========================== PostgreSQL Constants ============================
 	PostgresDatabasePortName         = "db"

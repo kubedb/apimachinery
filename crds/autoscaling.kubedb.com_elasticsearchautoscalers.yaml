@@ -189,6 +189,11 @@ spec:
                 properties:
                   node:
                     properties:
+                      mode:
+                        enum:
+                        - Offline
+                        - Online
+                        type: string
                       scalingThreshold:
                         format: int32
                         type: integer
@@ -202,6 +207,11 @@ spec:
                     properties:
                       data:
                         properties:
+                          mode:
+                            enum:
+                            - Offline
+                            - Online
+                            type: string
                           scalingThreshold:
                             format: int32
                             type: integer
@@ -213,6 +223,11 @@ spec:
                         type: object
                       ingest:
                         properties:
+                          mode:
+                            enum:
+                            - Offline
+                            - Online
+                            type: string
                           scalingThreshold:
                             format: int32
                             type: integer
@@ -224,6 +239,11 @@ spec:
                         type: object
                       master:
                         properties:
+                          mode:
+                            enum:
+                            - Offline
+                            - Online
+                            type: string
                           scalingThreshold:
                             format: int32
                             type: integer

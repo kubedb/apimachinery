@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -90,7 +92,8 @@ type ComputeAutoscalerSpec struct {
 
 type StorageAutoscalerSpec struct {
 	// Whether compute autoscaler is enabled. The default is Off".
-	Trigger          AutoscalerTrigger `json:"trigger,omitempty" protobuf:"bytes,1,opt,name=trigger,casttype=AutoscalerTrigger"`
-	UsageThreshold   int32             `json:"usageThreshold,omitempty" protobuf:"varint,2,opt,name=usageThreshold"`
-	ScalingThreshold int32             `json:"scalingThreshold,omitempty" protobuf:"varint,3,opt,name=scalingThreshold"`
+	Trigger          AutoscalerTrigger           `json:"trigger,omitempty" protobuf:"bytes,1,opt,name=trigger,casttype=AutoscalerTrigger"`
+	UsageThreshold   int32                       `json:"usageThreshold,omitempty" protobuf:"varint,2,opt,name=usageThreshold"`
+	ScalingThreshold int32                       `json:"scalingThreshold,omitempty" protobuf:"varint,3,opt,name=scalingThreshold"`
+	ExpansionMode    *opsapi.VolumeExpansionMode `json:"mode,omitempty" protobuf:"bytes,4,opt,name=expansionMode,casttype=VolumeExpansionMode"`
 }
