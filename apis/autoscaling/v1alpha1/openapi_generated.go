@@ -23699,6 +23699,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_StorageAutoscalerSpec(ref com
 							Format: "int32",
 						},
 					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 				},
 			},
 		},

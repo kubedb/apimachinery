@@ -1524,5 +1524,7 @@ message StorageAutoscalerSpec {
   optional int32 usageThreshold = 2;
 
   optional int32 scalingThreshold = 3;
+
+  optional string expansionMode = 4;
 }
 

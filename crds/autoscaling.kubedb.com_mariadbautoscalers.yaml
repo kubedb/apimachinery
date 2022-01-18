@@ -81,6 +81,11 @@ spec:
                 properties:
                   mariadb:
                     properties:
+                      mode:
+                        enum:
+                        - Offline
+                        - Online
+                        type: string
                       scalingThreshold:
                         format: int32
                         type: integer
