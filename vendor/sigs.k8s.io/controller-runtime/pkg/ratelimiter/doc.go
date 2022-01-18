@@ -1,5 +1,5 @@
 /*
-Copyright AppsCode Inc. and Contributors
+Copyright 2020 The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,12 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package v1alpha1 is the v1alpha1 version of the API.
+/*
+Package ratelimiter defines rate limiters used by Controllers to limit how frequently requests may be queued.
 
-// +k8s:deepcopy-gen=package,register
-// +k8s:conversion-gen=kubedb.dev/apimachinery/apis/catalog
-// +k8s:openapi-gen=true
-// +k8s:defaulter-gen=TypeMeta
-
-// +groupName=catalog.kubedb.com
-package v1alpha1
+Typical rate limiters that can be used are implemented in client-go's workqueue package.
+*/
+package ratelimiter

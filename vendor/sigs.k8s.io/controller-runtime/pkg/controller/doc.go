@@ -1,5 +1,5 @@
 /*
-Copyright AppsCode Inc. and Contributors
+Copyright 2018 The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package v1alpha1 is the v1alpha1 version of the API.
+/*
+Package controller provides types and functions for building Controllers.  Controllers implement Kubernetes APIs.
 
-// +k8s:deepcopy-gen=package,register
-// +k8s:conversion-gen=kubedb.dev/apimachinery/apis/catalog
-// +k8s:openapi-gen=true
-// +k8s:defaulter-gen=TypeMeta
+Creation
 
-// +groupName=catalog.kubedb.com
-package v1alpha1
+To create a new Controller, first create a manager.Manager and pass it to the controller.New function.
+The Controller MUST be started by calling Manager.Start.
+*/
+package controller

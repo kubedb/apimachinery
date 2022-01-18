@@ -1,5 +1,5 @@
 /*
-Copyright AppsCode Inc. and Contributors
+Copyright 2018 The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,12 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package v1alpha1 is the v1alpha1 version of the API.
-
-// +k8s:deepcopy-gen=package,register
-// +k8s:conversion-gen=kubedb.dev/apimachinery/apis/catalog
-// +k8s:openapi-gen=true
-// +k8s:defaulter-gen=TypeMeta
-
-// +groupName=catalog.kubedb.com
-package v1alpha1
+/*
+Package source provides event streams to hook up to Controllers with Controller.Watch.  Events are
+used with handler.EventHandlers to enqueue reconcile.Requests and trigger Reconciles for Kubernetes
+objects.
+*/
+package source
