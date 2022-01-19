@@ -221,7 +221,7 @@ spec:
                 properties:
                   configServer:
                     properties:
-                      mode:
+                      expansionMode:
                         enum:
                         - Offline
                         - Online
@@ -237,7 +237,7 @@ spec:
                     type: object
                   replicaSet:
                     properties:
-                      mode:
+                      expansionMode:
                         enum:
                         - Offline
                         - Online
@@ -253,7 +253,7 @@ spec:
                     type: object
                   shard:
                     properties:
-                      mode:
+                      expansionMode:
                         enum:
                         - Offline
                         - Online
@@ -269,7 +269,7 @@ spec:
                     type: object
                   standalone:
                     properties:
-                      mode:
+                      expansionMode:
                         enum:
                         - Offline
                         - Online

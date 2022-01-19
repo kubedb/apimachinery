@@ -81,7 +81,7 @@ spec:
                 properties:
                   mariadb:
                     properties:
-                      mode:
+                      expansionMode:
                         enum:
                         - Offline
                         - Online
