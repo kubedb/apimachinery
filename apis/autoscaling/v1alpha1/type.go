@@ -95,5 +95,5 @@ type StorageAutoscalerSpec struct {
 	Trigger          AutoscalerTrigger           `json:"trigger,omitempty"`
 	UsageThreshold   int32                       `json:"usageThreshold,omitempty"`
 	ScalingThreshold int32                       `json:"scalingThreshold,omitempty"`
-	ExpansionMode    *opsapi.VolumeExpansionMode `json:"mode,omitempty"`
+	ExpansionMode    *opsapi.VolumeExpansionMode `json:"expansionMode,omitempty"`
 }

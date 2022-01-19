@@ -189,7 +189,7 @@ spec:
                 properties:
                   node:
                     properties:
-                      mode:
+                      expansionMode:
                         enum:
                         - Offline
                         - Online
@@ -207,7 +207,7 @@ spec:
                     properties:
                       data:
                         properties:
-                          mode:
+                          expansionMode:
                             enum:
                             - Offline
                             - Online
@@ -223,7 +223,7 @@ spec:
                         type: object
                       ingest:
                         properties:
-                          mode:
+                          expansionMode:
                             enum:
                             - Offline
                             - Online
@@ -239,7 +239,7 @@ spec:
                         type: object
                       master:
                         properties:
-                          mode:
+                          expansionMode:
                             enum:
                             - Offline
                             - Online
