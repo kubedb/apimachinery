@@ -118,6 +118,13 @@ type PostgresSpec struct {
 	// +optional
 	Coordinator CoordinatorSpec `json:"coordinator,omitempty"`
 
+	// EnforceFsGroup Is Used when the storageClass's CSI Driver doesn't support FsGroup properties properly.
+	// If It's true then The Init Container will run as RootUser and
+	// the init-container will set user's permission for the mounted pvc volume with which coordinator and postgres containers are going to run.
+	// In postgres it is /var/pv
+	// +optional
+	EnforceFsGroup bool `json:"enforceFsGroup,omitempty"`
+
 	// AllowedSchemas defines the types of database schemas that MAY refer to
 	// a database instance and the trusted namespaces where those schema resources MAY be
 	// present.

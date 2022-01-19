@@ -24146,6 +24146,12 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresVolumeExpansionSpec(ref commo
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 				},
 			},
 		},

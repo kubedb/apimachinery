@@ -107,7 +107,8 @@ type PostgresVerticalScalingSpec struct {
 // PostgresVolumeExpansionSpec is the spec for Postgres volume expansion
 type PostgresVolumeExpansionSpec struct {
 	// volume specification for Postgres
-	Postgres *resource.Quantity `json:"postgres,omitempty"`
+	Postgres *resource.Quantity   `json:"postgres,omitempty"`
+	Mode     *VolumeExpansionMode `json:"mode,omitempty"`
 }
 
 type PostgresCustomConfigurationSpec struct {
