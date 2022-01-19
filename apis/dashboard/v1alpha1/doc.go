@@ -19,8 +19,8 @@ limitations under the License.
 // +k8s:deepcopy-gen=package,register
 // +k8s:openapi-gen=true
 // +k8s:defaulter-gen=TypeMeta
-//+kubebuilder:object:generate=true
-//+groupName=dashboard.kubedb.com
+// +kubebuilder:object:generate=true
+// +groupName=dashboard.kubedb.com
 package v1alpha1
 
 import (

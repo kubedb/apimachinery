@@ -26,6 +26,7 @@ import (
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	autoscaling "kubedb.dev/apimachinery/client/informers/externalversions/autoscaling"
 	catalog "kubedb.dev/apimachinery/client/informers/externalversions/catalog"
+	dashboard "kubedb.dev/apimachinery/client/informers/externalversions/dashboard"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
 	kubedb "kubedb.dev/apimachinery/client/informers/externalversions/kubedb"
 	ops "kubedb.dev/apimachinery/client/informers/externalversions/ops"
@@ -179,6 +180,7 @@ type SharedInformerFactory interface {
 
 	Autoscaling() autoscaling.Interface
 	Catalog() catalog.Interface
+	Dashboard() dashboard.Interface
 	Kubedb() kubedb.Interface
 	Ops() ops.Interface
 	Schema() externalversionsschema.Interface
@@ -190,6 +192,10 @@ func (f *sharedInformerFactory) Autoscaling() autoscaling.Interface {
 
 func (f *sharedInformerFactory) Catalog() catalog.Interface {
 	return catalog.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Dashboard() dashboard.Interface {
+	return dashboard.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) Kubedb() kubedb.Interface {

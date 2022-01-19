@@ -14,24 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package fuzzer
 
 import (
-	"kubedb.dev/apimachinery/crds"
+	"kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
 
-	"kmodules.xyz/client-go/apiextensions"
+	fuzz "github.com/google/gofuzz"
+	runtimeserializer "k8s.io/apimachinery/pkg/runtime/serializer"
 )
 
-func (_ RedisDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceRedisDatabases))
-}
-
-var _ Interface = &RedisDatabase{}
-
-func (in *RedisDatabase) GetInit() *InitSpec {
-	return in.Spec.Init
-}
-
-func (in *RedisDatabase) GetStatus() DatabaseStatus {
-	return in.Status
+// Funcs returns the fuzzer functions for this api group.
+var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
+	return []interface{}{
+		func(s *v1alpha1.ElasticsearchDashboard, c fuzz.Continue) {
+			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		},
+	}
 }

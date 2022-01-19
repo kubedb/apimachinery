@@ -26,8 +26,12 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+const (
+	ResourceCodeElasticsearchDashboard = "ed"
+	ResourceKindElasticsearchDashboard = "ElasticsearchDashboard"
+	ResourceElasticsearchDashboard     = "elasticsearchdashboard"
+	ResourceElasticsearchDashboards    = "elasticsearchdashboards"
+)
 
 // ElasticsearchDashboardSpec defines the desired state of ElasticsearchDashboard
 
@@ -100,16 +104,19 @@ type ElasticsearchDashboardStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:resource:shortName=ed,scope=Namespaced
-//+kubebuilder:subresource:status
-//+kubebuilder:subresource:scale:specpath=.spec.replicas,statuspath=.status.replicas
-//+kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
-//+kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
-//+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-//+kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
-
 // ElasticsearchDashboard is the Schema for the elasticsearchdashboards API
+
+// +genclient
+// +k8s:openapi-gen=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:shortName=ed,scope=Namespaced
+// +kubebuilder:subresource:status
+// +kubebuilder:subresource:scale:specpath=.spec.replicas,statuspath=.status.replicas
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 type ElasticsearchDashboard struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -118,9 +125,10 @@ type ElasticsearchDashboard struct {
 	Status ElasticsearchDashboardStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-
 // ElasticsearchDashboardList contains a list of ElasticsearchDashboard
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
 type ElasticsearchDashboardList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

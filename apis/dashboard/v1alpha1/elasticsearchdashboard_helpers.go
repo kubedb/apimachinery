@@ -41,7 +41,7 @@ import (
 )
 
 func (_ ElasticsearchDashboard) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralElasticsearchDashboard))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceElasticsearchDashboards))
 }
 
 var _ apis.ResourceInfo = &ElasticsearchDashboard{}
@@ -66,7 +66,7 @@ func (ed ElasticsearchDashboard) Owner() *meta.OwnerReference {
 }
 
 func (ed ElasticsearchDashboard) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", ResourcePluralElasticsearchDashboard, kubedb.GroupName)
+	return fmt.Sprintf("%s.%s", ResourceElasticsearchDashboards, kubedb.GroupName)
 }
 
 func (ed ElasticsearchDashboard) ResourceShortCode() string {
@@ -78,11 +78,11 @@ func (ed ElasticsearchDashboard) ResourceKind() string {
 }
 
 func (ed ElasticsearchDashboard) ResourceSingular() string {
-	return ResourceSingularElasticsearchDashboard
+	return ResourceElasticsearchDashboard
 }
 
 func (ed ElasticsearchDashboard) ResourcePlural() string {
-	return ResourcePluralElasticsearchDashboard
+	return ResourceElasticsearchDashboards
 }
 
 func (ed ElasticsearchDashboard) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {

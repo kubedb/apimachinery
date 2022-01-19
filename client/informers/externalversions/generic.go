@@ -23,6 +23,7 @@ import (
 
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	dashboardv1alpha1 "kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	schemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
@@ -104,6 +105,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().ProxySQLVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("redisversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().RedisVersions().Informer()}, nil
+
+		// Group=dashboard.kubedb.com, Version=v1alpha1
+	case dashboardv1alpha1.SchemeGroupVersion.WithResource("elasticsearchdashboards"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Dashboard().V1alpha1().ElasticsearchDashboards().Informer()}, nil
 
 		// Group=kubedb.com, Version=v1alpha2
 	case v1alpha2.SchemeGroupVersion.WithResource("elasticsearches"):

@@ -14,24 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package install
 
 import (
-	"kubedb.dev/apimachinery/crds"
+	"kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"kmodules.xyz/client-go/apiextensions"
+	"k8s.io/apimachinery/pkg/runtime"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 )
 
-func (_ RedisDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceRedisDatabases))
-}
-
-var _ Interface = &RedisDatabase{}
-
-func (in *RedisDatabase) GetInit() *InitSpec {
-	return in.Spec.Init
-}
-
-func (in *RedisDatabase) GetStatus() DatabaseStatus {
-	return in.Status
+// Install registers the API group and adds types to a scheme
+func Install(scheme *runtime.Scheme) {
+	utilruntime.Must(v1alpha2.AddToScheme(scheme))
+	utilruntime.Must(scheme.SetVersionPriority(v1alpha2.SchemeGroupVersion))
 }

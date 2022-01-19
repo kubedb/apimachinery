@@ -14,24 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package install
 
 import (
-	"kubedb.dev/apimachinery/crds"
+	"testing"
 
-	"kmodules.xyz/client-go/apiextensions"
+	"k8s.io/apimachinery/pkg/api/apitesting/roundtrip"
 )
 
-func (_ RedisDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceRedisDatabases))
-}
-
-var _ Interface = &RedisDatabase{}
-
-func (in *RedisDatabase) GetInit() *InitSpec {
-	return in.Spec.Init
-}
-
-func (in *RedisDatabase) GetStatus() DatabaseStatus {
-	return in.Status
+func TestRoundTripTypes(t *testing.T) {
+	roundtrip.RoundTripTestForAPIGroup(t, Install, nil)
 }

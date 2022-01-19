@@ -27,11 +27,16 @@ import (
 
 type DashboardV1alpha1Interface interface {
 	RESTClient() rest.Interface
+	ElasticsearchDashboardsGetter
 }
 
 // DashboardV1alpha1Client is used to interact with features provided by the dashboard.kubedb.com group.
 type DashboardV1alpha1Client struct {
 	restClient rest.Interface
+}
+
+func (c *DashboardV1alpha1Client) ElasticsearchDashboards(namespace string) ElasticsearchDashboardInterface {
+	return newElasticsearchDashboards(c, namespace)
 }
 
 // NewForConfig creates a new DashboardV1alpha1Client for the given config.

@@ -14,24 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package install
 
 import (
-	"kubedb.dev/apimachinery/crds"
+	"testing"
 
-	"kmodules.xyz/client-go/apiextensions"
+	"kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb/fuzzer"
+
+	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
+	crdfuzz "kmodules.xyz/crd-schema-fuzz"
 )
 
-func (_ RedisDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceRedisDatabases))
-}
+func TestPruneTypes(t *testing.T) {
+	Install(clientsetscheme.Scheme)
 
-var _ Interface = &RedisDatabase{}
-
-func (in *RedisDatabase) GetInit() *InitSpec {
-	return in.Spec.Init
-}
-
-func (in *RedisDatabase) GetStatus() DatabaseStatus {
-	return in.Status
+	// CRD v1
+	if crd := (v1alpha1.ElasticsearchDashboard{}).CustomResourceDefinition(); crd.V1 != nil {
+		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+	}
 }

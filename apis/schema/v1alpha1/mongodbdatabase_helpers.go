@@ -17,7 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	kdm "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -74,5 +74,5 @@ func (in *MongoDBDatabase) GetMongoSecretEngineName() string {
 }
 
 func (in *MongoDBDatabase) GetAuthSecretName(dbServerName string) string {
-	return dbServerName + kdm.MongoDBAuthSecretSuffix
+	return dbServerName + dbapi.MongoDBAuthSecretSuffix
 }

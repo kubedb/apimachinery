@@ -72,13 +72,6 @@ const (
 	StatusError   DashboardStatus = "Error"
 )
 
-const (
-	ResourceCodeElasticsearchDashboard     = "ed"
-	ResourceKindElasticsearchDashboard     = "ElasticsearchDashboard"
-	ResourceSingularElasticsearchDashboard = "elasticsearchdashboard"
-	ResourcePluralElasticsearchDashboard   = "elasticsearchdashboards"
-)
-
 type ElasticsearchDashboardCertificateAlias string
 
 const (

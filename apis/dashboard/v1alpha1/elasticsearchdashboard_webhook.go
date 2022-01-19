@@ -69,7 +69,7 @@ func (r *ElasticsearchDashboard) SetupWebhookWithManager(mgr manager.Manager) er
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 
-//+kubebuilder:webhook:path=/mutate-dashboard-kubedb-com-v1alpha1-elasticsearchdashboard,mutating=true,failurePolicy=fail,sideEffects=None,groups=dashboard.kubedb.com,resources=elasticsearchdashboards,verbs=create;update,versions=v1alpha1,name=melasticsearchdashboard.kb.io,admissionReviewVersions={v1,v1beta1}
+// +kubebuilder:webhook:path=/mutate-dashboard-kubedb-com-v1alpha1-elasticsearchdashboard,mutating=true,failurePolicy=fail,sideEffects=None,groups=dashboard.kubedb.com,resources=elasticsearchdashboards,verbs=create;update,versions=v1alpha1,name=melasticsearchdashboard.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Defaulter = &ElasticsearchDashboard{}
 
@@ -102,7 +102,7 @@ func (r *ElasticsearchDashboard) Default() {
 }
 
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
-//+kubebuilder:webhook:path=/validate-dashboard-kubedb-com-v1alpha1-elasticsearchdashboard,mutating=false,failurePolicy=fail,sideEffects=None,groups=dashboard.kubedb.com,resources=elasticsearchdashboards,verbs=create;update;delete,versions=v1alpha1,name=velasticsearchdashboard.kb.io,admissionReviewVersions={v1,v1beta1}
+// +kubebuilder:webhook:path=/validate-dashboard-kubedb-com-v1alpha1-elasticsearchdashboard,mutating=false,failurePolicy=fail,sideEffects=None,groups=dashboard.kubedb.com,resources=elasticsearchdashboards,verbs=create;update;delete,versions=v1alpha1,name=velasticsearchdashboard.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Validator = &ElasticsearchDashboard{}
 

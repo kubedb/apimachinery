@@ -263,7 +263,7 @@ gen-crd-protos-ui-v1alpha1:
 manifests: gen-crds patch-crds label-crds
 
 .PHONY: gen
-gen: clientset gen-crd-protos manifests openapi
+gen: clientset manifests openapi #gen-crd-protos
 
 fmt: $(BUILD_DIRS)
 	@docker run                                                 \
