@@ -61,82 +61,90 @@ const (
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type MySQL struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Spec              MySQLSpec   `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status            MySQLStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              MySQLSpec   `json:"spec,omitempty"`
+	Status            MySQLStatus `json:"status,omitempty"`
 }
 
 type MySQLSpec struct {
 	// Version of MySQL to be deployed.
-	Version string `json:"version" protobuf:"bytes,1,opt,name=version"`
+	Version string `json:"version"`
 
 	// Number of instances to deploy for a MySQL database. In case of MySQL group
 	// replication, max allowed value is 9 (default 3).
 	// (see ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-frequently-asked-questions.html)
-	Replicas *int32 `json:"replicas,omitempty" protobuf:"varint,2,opt,name=replicas"`
+	Replicas *int32 `json:"replicas,omitempty"`
 
 	// MySQL cluster topology
-	Topology *MySQLClusterTopology `json:"topology,omitempty" protobuf:"bytes,3,opt,name=topology"`
+	Topology *MySQLClusterTopology `json:"topology,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
-	StorageType StorageType `json:"storageType,omitempty" protobuf:"bytes,4,opt,name=storageType,casttype=StorageType"`
+	StorageType StorageType `json:"storageType,omitempty"`
 
 	// Storage spec to specify how storage shall be used.
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty" protobuf:"bytes,5,opt,name=storage"`
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
 	// Database authentication secret
-	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty" protobuf:"bytes,6,opt,name=authSecret"`
+	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty"`
 
 	// Init is used to initialize database
 	// +optional
-	Init *InitSpec `json:"init,omitempty" protobuf:"bytes,7,opt,name=init"`
+	Init *InitSpec `json:"init,omitempty"`
 
 	// Monitor is used monitor database instance
 	// +optional
-	Monitor *mona.AgentSpec `json:"monitor,omitempty" protobuf:"bytes,9,opt,name=monitor"`
+	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 
 	// ConfigSecret is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf).
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
-	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty" protobuf:"bytes,10,opt,name=configSecret"`
+	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty" protobuf:"bytes,11,opt,name=podTemplate"`
+	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
-	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty" protobuf:"bytes,12,rep,name=serviceTemplates"`
+	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
 
 	// Indicates that the database server need to be encrypted connections(ssl)
 	// +optional
-	RequireSSL bool `json:"requireSSL,omitempty" protobuf:"varint,13,opt,name=requireSSL"`
+	RequireSSL bool `json:"requireSSL,omitempty"`
 
 	// TLS contains tls configurations for client and server.
 	// +optional
-	TLS *kmapi.TLSConfig `json:"tls,omitempty" protobuf:"bytes,14,opt,name=tls"`
+	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 
 	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
 	// +optional
-	Halted bool `json:"halted,omitempty" protobuf:"varint,15,opt,name=halted"`
+	Halted bool `json:"halted,omitempty"`
 
 	// TerminationPolicy controls the delete operation for database
 	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,16,opt,name=terminationPolicy,casttype=TerminationPolicy"`
+	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
 
 	// Indicated whether to use DNS or IP address to address pods in a db cluster.
 	// If IP address is used, HostNetwork will be used. Defaults to DNS.
 	// +kubebuilder:default:=DNS
 	// +optional
 	// +default="DNS"
-	UseAddressType AddressType `json:"useAddressType,omitempty" protobuf:"bytes,17,opt,name=useAddressType,casttype=AddressType"`
+	UseAddressType AddressType `json:"useAddressType,omitempty"`
 
 	// Coordinator defines attributes of the coordinator container
 	// +optional
-	Coordinator CoordinatorSpec `json:"coordinator,omitempty" protobuf:"bytes,18,opt,name=coordinator"`
+	Coordinator CoordinatorSpec `json:"coordinator,omitempty"`
+
+	// AllowedSchemas defines the types of database schemas that MAY refer to
+	// a database instance and the trusted namespaces where those schema resources MAY be
+	// present.
+	//
+	// +kubebuilder:default={namespaces:{from: Same}}
+	// +optional
+	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty"`
 
 	// ReadReplica implies that the instance will be a MySQL Read Only Replica
 	// and it will take reference of  appbinding of the source
-	ReadReplica *MySQLReadReplica `json:"readReplica,omitempty" protobuf:"bytes,19,opt,name=readReplica"`
+	ReadReplica *MySQLReadReplica `json:"readReplica,omitempty"`
 
 	// AllowedReadReplicas defines the types of read replicas that MAY be attached to a
 	// MySQL instance and the trusted namespaces where those Read Replica resources MAY be
@@ -145,70 +153,7 @@ type MySQLSpec struct {
 	// Support: Core
 	// +kubebuilder:default={namespaces:{from: Same}}
 	// +optional
-	AllowedReadReplicas *AllowedReadReplicas `json:"allowedReadReplicas,omitempty" protobuf:"bytes,20,opt,name=allowedReadReplicas"`
-}
-
-// AllowedReadReplicas defines which ReadReplicas may be attached to this Listener.
-type AllowedReadReplicas struct {
-	// Namespaces indicates namespaces from which ReadReplicas may be attached to
-	//
-	// Support: Core
-	//
-	// +optional
-	// +kubebuilder:default={from: Same}
-	Namespaces *ReadRouteNamespaces `json:"namespaces,omitempty" protobuf:"bytes,1,opt,name=namespaces"`
-
-	// ReplicaSelector specifies a selector for ReadReplicas that are allowed to bind
-	// to the MySQL Instance.
-	//
-	// Support: Core
-	//
-	// +optional
-	ReplicaSelector *metav1.LabelSelector `json:"replicaSelector,omitempty" protobuf:"bytes,2,opt,name=replicaSelector"`
-}
-
-// FromNamespaces specifies namespace from which ReadReplicas may be attached to a
-// MySQL instance.
-//
-// +kubebuilder:validation:Enum=All;Selector;Same
-type FromNamespaces string
-
-const (
-	// ReadReplicas in all namespaces may be attached to the MySQL Instance.
-	NamespacesFromAll FromNamespaces = "All"
-	// Only ReadReplicas in namespaces selected by the selector may be attached to the MySQL instance.
-	NamespacesFromSelector FromNamespaces = "Selector"
-	// Only ReadReplicas in the same namespace as the MySQL Instance may be attached to this
-	NamespacesFromSame FromNamespaces = "Same"
-)
-
-// ReadRouteNamespaces indicate which namespaces ReadReplicas should be selected from.
-type ReadRouteNamespaces struct {
-	// From indicates where ReadReplicas will be selected for the MySQL Instance. Possible
-	// values are:
-	// * All: ReadReplicas in all namespaces.
-	// * Selector: ReadReplicas in namespaces selected by the selector
-	// * Same: Only ReadReplicas in the same namespace
-	// Support: Core
-	//
-	// +optional
-	// +kubebuilder:default=Same
-	From *FromNamespaces `json:"from,omitempty" protobuf:"bytes,1,opt,name=from,casttype=FromNamespaces"`
-
-	// Selector must be specified when From is set to "Selector". In that case,
-	// only ReadReplicas in Namespaces matching this Selector will be selected by the
-	// MySQL instance. This field is ignored for other values of "From".
-	//
-	// Support: Core
-	//
-	// +optional
-	Selector *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,2,opt,name=selector"`
-}
-
-type MySQLReadReplica struct {
-	//SourceRef specifies the  source object appbinding
-	SourceRef *core.ObjectReference `json:"sourceRef,omitempty" protobuf:"bytes,1,opt,name=sourceRef"`
-	Topology  *MySQLClusterTopology `json:"topology,omitempty" protobuf:"bytes,2,opt,name=topology"`
+	AllowedReadReplicas *AllowedConsumers `json:"allowedReadReplicas,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter
@@ -224,64 +169,64 @@ const (
 type MySQLClusterTopology struct {
 	// If set to -
 	// "GroupReplication", GroupSpec is required and MySQL servers will start  a replication group
-	Mode *MySQLClusterMode `json:"mode,omitempty" protobuf:"bytes,1,opt,name=mode,casttype=MySQLClusterMode"`
+	Mode *MySQLClusterMode `json:"mode,omitempty"`
 
 	// Group replication info for MySQL
-	Group *MySQLGroupSpec `json:"group,omitempty" protobuf:"bytes,2,opt,name=group"`
+	Group *MySQLGroupSpec `json:"group,omitempty"`
 
 	// InnoDBCluster replication info for MySQL InnodbCluster
 	// +optional
-	InnoDBCluster *MySQLInnoDBClusterSpec `json:"innoDBCluster,omitempty" protobuf:"bytes,3,opt,name=innoDBCluster"`
+	InnoDBCluster *MySQLInnoDBClusterSpec `json:"innoDBCluster,omitempty"`
 }
 
 type MySQLGroupSpec struct {
 	// TODO: "Multi-Primary" needs to be implemented
 	// Group Replication can be deployed in either "Single-Primary" or "Multi-Primary" mode
 	// +kubebuilder:default=Single-Primary
-	Mode *MySQLGroupMode `json:"mode,omitempty" protobuf:"bytes,1,opt,name=mode,casttype=MySQLGroupMode"`
+	Mode *MySQLGroupMode `json:"mode,omitempty"`
 
 	// Group name is a version 4 UUID
 	// ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-options.html#sysvar_group_replication_group_name
-	Name string `json:"name,omitempty" protobuf:"bytes,2,opt,name=name"`
+	Name string `json:"name,omitempty"`
 }
 
 type MySQLInnoDBClusterSpec struct {
 	// +kubebuilder:default=Single-Primary
 	// +optional
-	Mode *MySQLGroupMode `json:"mode,omitempty" protobuf:"bytes,1,opt,name=mode,casttype=MySQLGroupMode"`
+	Mode *MySQLGroupMode `json:"mode,omitempty"`
 
-	Router MySQLRouterSpec `json:"router,omitempty" protobuf:"bytes,2,opt,name=router"`
+	Router MySQLRouterSpec `json:"router,omitempty"`
 }
 
 type MySQLRouterSpec struct {
 	// +optional
 	// +kubebuilder:default:=1
 	// +kubebuilder:validation:Minimum:=1
-	Replicas *int32 `json:"replicas,omitempty" protobuf:"varint,3,opt,name=replicas"`
+	Replicas *int32 `json:"replicas,omitempty"`
 
 	// PodTemplate is an optional configuration for pods used to expose MySQL router
 	// +optional
-	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty" protobuf:"bytes,2,opt,name=podTemplate"`
+	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 }
 
 type MySQLStatus struct {
 	// Specifies the current phase of the database
 	// +optional
-	Phase DatabasePhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=DatabasePhase"`
+	Phase DatabasePhase `json:"phase,omitempty"`
 	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
 	// resource's generation, which is updated on mutation by the API Server.
 	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,2,opt,name=observedGeneration"`
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
-	Conditions []kmapi.Condition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type MySQLList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	// Items is a list of MySQL TPR objects
-	Items []MySQL `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
+	Items []MySQL `json:"items,omitempty"`
 }

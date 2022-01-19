@@ -16,7 +16,13 @@ limitations under the License.
 
 package info
 
-import "strconv"
+import (
+	"net/url"
+	"path"
+	"strconv"
+	"strings"
+	"unicode"
+)
 
 var (
 	EnforceLicense string
@@ -28,9 +34,20 @@ var (
 	ProductName string // This has been renamed to Features
 	ProductUID  string
 
-	prodRegistrationAPIEndpoint string = "https://byte.builders/api/v1/register"
-	qaRegistrationAPIEndpoint   string = "https://appscode.ninja/api/v1/register"
+	prodAddress         = "https://byte.builders"
+	qaAddress           = "https://appscode.ninja"
+	registrationAPIPath = "api/v1/register"
 )
+
+func Features() []string {
+	return ParseFeatures(ProductName)
+}
+
+func ParseFeatures(features string) []string {
+	return strings.FieldsFunc(features, func(r rune) bool {
+		return unicode.IsSpace(r) || r == ',' || r == ';'
+	})
+}
 
 func SkipLicenseVerification() bool {
 	v, _ := strconv.ParseBool(EnforceLicense)
@@ -38,8 +55,16 @@ func SkipLicenseVerification() bool {
 }
 
 func RegistrationAPIEndpoint() string {
+	u := APIServerAddress()
+	u.Path = path.Join(u.Path, registrationAPIPath)
+	return u.String()
+}
+
+func APIServerAddress() *url.URL {
 	if SkipLicenseVerification() {
-		return qaRegistrationAPIEndpoint
+		u, _ := url.Parse(qaAddress)
+		return u
 	}
-	return prodRegistrationAPIEndpoint
+	u, _ := url.Parse(prodAddress)
+	return u
 }

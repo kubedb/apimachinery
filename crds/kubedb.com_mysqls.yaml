@@ -48,7 +48,11 @@ spec:
             type: object
           spec:
             properties:
+<<<<<<< HEAD
               allowedReadReplicas:
+=======
+              allowedSchemas:
+>>>>>>> master
                 default:
                   namespaces:
                     from: Same
@@ -88,7 +92,11 @@ spec:
                             type: object
                         type: object
                     type: object
+<<<<<<< HEAD
                   replicaSelector:
+=======
+                  selector:
+>>>>>>> master
                     properties:
                       matchExpressions:
                         items:

@@ -33,3 +33,5 @@ _testmain.go
 
 /bin
 /.go
+
+.DS_Store
