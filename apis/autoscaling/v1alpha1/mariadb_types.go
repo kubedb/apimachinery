@@ -44,46 +44,46 @@ type MariaDBAutoscaler struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
 	// +optional
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// Specification of the behavior of the autoscaler.
 	// More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status.
-	Spec MariaDBAutoscalerSpec `json:"spec" protobuf:"bytes,2,name=spec"`
+	Spec MariaDBAutoscalerSpec `json:"spec"`
 
 	// Current information about the autoscaler.
 	// +optional
-	Status MariaDBAutoscalerStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Status MariaDBAutoscalerStatus `json:"status,omitempty"`
 }
 
 // MariaDBAutoscalerSpec is the specification of the behavior of the autoscaler.
 type MariaDBAutoscalerSpec struct {
-	DatabaseRef *core.LocalObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
+	DatabaseRef *core.LocalObjectReference `json:"databaseRef"`
 
-	Compute *MariaDBComputeAutoscalerSpec `json:"compute,omitempty" protobuf:"bytes,2,opt,name=compute"`
-	Storage *MariaDBStorageAutoscalerSpec `json:"storage,omitempty" protobuf:"bytes,3,opt,name=storage"`
+	Compute *MariaDBComputeAutoscalerSpec `json:"compute,omitempty"`
+	Storage *MariaDBStorageAutoscalerSpec `json:"storage,omitempty"`
 }
 
 type MariaDBComputeAutoscalerSpec struct {
-	MariaDB          *ComputeAutoscalerSpec `json:"mariadb,omitempty" protobuf:"bytes,1,opt,name=mariadb"`
-	DisableScaleDown bool                   `json:"disableScaleDown,omitempty" protobuf:"varint,6,opt,name=disableScaleDown"`
+	MariaDB          *ComputeAutoscalerSpec `json:"mariadb,omitempty"`
+	DisableScaleDown bool                   `json:"disableScaleDown,omitempty"`
 }
 
 type MariaDBStorageAutoscalerSpec struct {
-	MariaDB *StorageAutoscalerSpec `json:"mariadb,omitempty" protobuf:"bytes,1,opt,name=mariadb"`
+	MariaDB *StorageAutoscalerSpec `json:"mariadb,omitempty"`
 }
 
 // MariaDBAutoscalerStatus describes the runtime state of the autoscaler.
 type MariaDBAutoscalerStatus struct {
 	// observedGeneration is the most recent generation observed by this autoscaler.
 	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,1,opt,name=observedGeneration"`
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// Conditions is the set of conditions required for this autoscaler to scale its target,
 	// and indicates whether or not those conditions are met.
 	// +optional
 	// +patchMergeKey=type
 	// +patchStrategy=merge
-	Conditions []kmapi.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,2,rep,name=conditions"`
+	Conditions []kmapi.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // MariaDBAutoscalerConditionType are the valid conditions of
@@ -105,8 +105,8 @@ type MariaDBAutoscalerList struct {
 	metav1.TypeMeta `json:",inline"`
 	// metadata is the standard list metadata.
 	// +optional
-	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata"`
 
 	// items is the list of mariadb database autoscaler objects.
-	Items []MariaDBAutoscaler `json:"items" protobuf:"bytes,2,rep,name=items"`
+	Items []MariaDBAutoscaler `json:"items"`
 }

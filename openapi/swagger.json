@@ -29227,6 +29227,20 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers": {
+      "description": "AllowedConsumers defines which consumers may refer to a database instance.",
+      "type": "object",
+      "properties": {
+        "namespaces": {
+          "description": "Namespaces indicates namespaces from which Consumers may be attached to",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConsumerNamespaces"
+        },
+        "selector": {
+          "description": "Selector specifies a selector for consumers that are allowed to bind to this database instance.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConnectionPoolConfig": {
       "type": "object",
       "properties": {
@@ -29298,6 +29312,20 @@
           "description": "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log.",
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConsumerNamespaces": {
+      "description": "ConsumerNamespaces indicate which namespaces Consumers should be selected from.",
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "From indicates where Consumers will be selected for the database instance. Possible values are: * All: Consumers in all namespaces. * Selector: Consumers in namespaces selected by the selector * Same: Only Consumers in the same namespace",
+          "type": "string"
+        },
+        "selector": {
+          "description": "Selector must be specified when From is set to \"Selector\". In that case, only Consumers in Namespaces matching this Selector will be selected by the database instance. This field is ignored for other values of \"From\".",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         }
       }
     },
@@ -29960,6 +29988,10 @@
         "version"
       ],
       "properties": {
+        "allowedSchemas": {
+          "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -30418,6 +30450,10 @@
         "version"
       ],
       "properties": {
+        "allowedSchemas": {
+          "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -30658,6 +30694,10 @@
         "version"
       ],
       "properties": {
+        "allowedSchemas": {
+          "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -31190,6 +31230,10 @@
         "version"
       ],
       "properties": {
+        "allowedSchemas": {
+          "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -31555,6 +31599,10 @@
         "version"
       ],
       "properties": {
+        "allowedSchemas": {
+          "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"

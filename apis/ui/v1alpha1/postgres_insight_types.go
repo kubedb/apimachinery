@@ -30,32 +30,32 @@ const (
 
 // PostgresInsightSpec defines the desired state of PostgresInsight
 type PostgresInsightSpec struct {
-	Version           string                      `json:"version" protobuf:"bytes,1,opt,name=version"`
-	Status            string                      `json:"status" protobuf:"bytes,2,opt,name=status"`
-	Mode              string                      `json:"mode" protobuf:"bytes,3,opt,name=mode"`
-	ReplicationStatus []PostgresReplicationStatus `json:"replicationStatus,omitempty" protobuf:"bytes,4,rep,name=replicationStatus"`
-	ConnectionInfo    PostgresConnectionInfo      `json:"connectionInfo,omitempty" protobuf:"bytes,5,opt,name=connectionInfo"`
-	VacuumInfo        PostgresVacuumInfo          `json:"vacuumInfo,omitempty" protobuf:"bytes,6,opt,name=vacuumInfo"`
+	Version           string                      `json:"version"`
+	Status            string                      `json:"status"`
+	Mode              string                      `json:"mode"`
+	ReplicationStatus []PostgresReplicationStatus `json:"replicationStatus,omitempty"`
+	ConnectionInfo    PostgresConnectionInfo      `json:"connectionInfo,omitempty"`
+	VacuumInfo        PostgresVacuumInfo          `json:"vacuumInfo,omitempty"`
 }
 
 type PostgresVacuumInfo struct {
-	AutoVacuum          string `json:"autoVacuum" protobuf:"bytes,1,opt,name=autoVacuum"`
-	ActiveVacuumProcess int64  `json:"activeVacuumProcess" protobuf:"varint,2,opt,name=activeVacuumProcess"`
+	AutoVacuum          string `json:"autoVacuum"`
+	ActiveVacuumProcess int64  `json:"activeVacuumProcess"`
 }
 
 type PostgresConnectionInfo struct {
-	MaxConnections    int64 `json:"maxConnections" protobuf:"varint,1,opt,name=maxConnections"`
-	ActiveConnections int64 `json:"activeConnections" protobuf:"varint,2,opt,name=activeConnections"`
+	MaxConnections    int64 `json:"maxConnections"`
+	ActiveConnections int64 `json:"activeConnections"`
 }
 
 // Ref: https://www.postgresql.org/docs/10/monitoring-stats.html#PG-STAT-REPLICATION-VIEW
 
 type PostgresReplicationStatus struct {
-	ApplicationName string `json:"applicationName" protobuf:"bytes,1,opt,name=applicationName"`
-	State           string `json:"state" protobuf:"bytes,2,opt,name=state"`
-	WriteLag        int64  `json:"writeLag,omitempty" protobuf:"varint,3,opt,name=writeLag"`
-	FlushLag        int64  `json:"flushLag,omitempty" protobuf:"varint,4,opt,name=flushLag"`
-	ReplayLag       int64  `json:"replayLag,omitempty" protobuf:"varint,5,opt,name=replayLag"`
+	ApplicationName string `json:"applicationName"`
+	State           string `json:"state"`
+	WriteLag        int64  `json:"writeLag,omitempty"`
+	FlushLag        int64  `json:"flushLag,omitempty"`
+	ReplayLag       int64  `json:"replayLag,omitempty"`
 }
 
 // PostgresInsight is the Schema for the postgresinsights API
@@ -63,10 +63,10 @@ type PostgresReplicationStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type PostgresInsight struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   PostgresInsightSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status api.PostgresStatus  `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Spec   PostgresInsightSpec `json:"spec,omitempty"`
+	Status api.PostgresStatus  `json:"status,omitempty"`
 }
 
 // PostgresInsightList contains a list of PostgresInsight
@@ -74,8 +74,8 @@ type PostgresInsight struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type PostgresInsightList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items           []PostgresInsight `json:"items" protobuf:"bytes,2,rep,name=items"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []PostgresInsight `json:"items"`
 }
 
 func init() {

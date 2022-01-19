@@ -254,13 +254,13 @@ type Reprovision struct {
 type TLSSpec struct {
 	// TLSConfig contains updated tls configurations for client and server.
 	// +optional
-	kmapi.TLSConfig `json:",inline,omitempty" protobuf:"bytes,1,opt,name=tLSConfig"`
+	kmapi.TLSConfig `json:",inline,omitempty"`
 
 	// RotateCertificates tells operator to initiate certificate rotation
 	// +optional
-	RotateCertificates bool `json:"rotateCertificates,omitempty" protobuf:"varint,2,opt,name=rotateCertificates"`
+	RotateCertificates bool `json:"rotateCertificates,omitempty"`
 
 	// Remove tells operator to remove TLS configuration
 	// +optional
-	Remove bool `json:"remove,omitempty" protobuf:"varint,3,opt,name=remove"`
+	Remove bool `json:"remove,omitempty"`
 }

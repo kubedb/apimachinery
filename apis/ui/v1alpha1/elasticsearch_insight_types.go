@@ -30,28 +30,28 @@ const (
 
 // ElasticsearchInsightSpec defines the desired state of ElasticsearchInsight
 type ElasticsearchInsightSpec struct {
-	Version string `json:"version" protobuf:"bytes,1,opt,name=version"`
-	Status  string `json:"status" protobuf:"bytes,2,opt,name=status"`
-	Mode    string `json:"mode" protobuf:"bytes,3,opt,name=mode"`
+	Version string `json:"version"`
+	Status  string `json:"status"`
+	Mode    string `json:"mode"`
 
-	ClusterHealth ElasticsearchClusterHealth `json:",inline" protobuf:"bytes,4,opt,name=clusterHealth"`
+	ClusterHealth ElasticsearchClusterHealth `json:",inline"`
 }
 
 type ElasticsearchClusterHealth struct {
-	ActivePrimaryShards               int32  `json:"activePrimaryShards,omitempty" protobuf:"varint,1,opt,name=activePrimaryShards"`
-	ActiveShards                      int32  `json:"activeShards,omitempty" protobuf:"varint,2,opt,name=activeShards"`
-	ActiveShardsPercentAsNumber       int32  `json:"activeShardsPercentAsNumber,omitempty" protobuf:"varint,3,opt,name=activeShardsPercentAsNumber"`
-	ClusterName                       string `json:"clusterName,omitempty" protobuf:"bytes,4,opt,name=clusterName"`
-	DelayedUnassignedShards           int32  `json:"delayedUnassignedShards,omitempty" protobuf:"varint,5,opt,name=delayedUnassignedShards"`
-	InitializingShards                int32  `json:"initializingShards,omitempty" protobuf:"varint,6,opt,name=initializingShards"`
-	NumberOfDataNodes                 int32  `json:"numberOfDataNodes,omitempty" protobuf:"varint,7,opt,name=numberOfDataNodes"`
-	NumberOfInFlightFetch             int32  `json:"numberOfInFlightFetch,omitempty" protobuf:"varint,8,opt,name=numberOfInFlightFetch"`
-	NumberOfNodes                     int32  `json:"numberOfNodes,omitempty" protobuf:"varint,9,opt,name=numberOfNodes"`
-	NumberOfPendingTasks              int32  `json:"numberOfPendingTasks,omitempty" protobuf:"varint,10,opt,name=numberOfPendingTasks"`
-	RelocatingShards                  int32  `json:"relocatingShards,omitempty" protobuf:"varint,11,opt,name=relocatingShards"`
-	ClusterStatus                     string `json:"clusterStatus,omitempty" protobuf:"bytes,12,opt,name=clusterStatus"`
-	UnassignedShards                  int32  `json:"unassignedShards,omitempty" protobuf:"varint,13,opt,name=unassignedShards"`
-	TaskMaxWaitingInQueueMilliSeconds int32  `json:"taskMaxWaitingInQueueMilliSeconds,omitempty" protobuf:"varint,14,opt,name=taskMaxWaitingInQueueMilliSeconds"`
+	ActivePrimaryShards               int32  `json:"activePrimaryShards,omitempty"`
+	ActiveShards                      int32  `json:"activeShards,omitempty"`
+	ActiveShardsPercentAsNumber       int32  `json:"activeShardsPercentAsNumber,omitempty"`
+	ClusterName                       string `json:"clusterName,omitempty"`
+	DelayedUnassignedShards           int32  `json:"delayedUnassignedShards,omitempty"`
+	InitializingShards                int32  `json:"initializingShards,omitempty"`
+	NumberOfDataNodes                 int32  `json:"numberOfDataNodes,omitempty"`
+	NumberOfInFlightFetch             int32  `json:"numberOfInFlightFetch,omitempty"`
+	NumberOfNodes                     int32  `json:"numberOfNodes,omitempty"`
+	NumberOfPendingTasks              int32  `json:"numberOfPendingTasks,omitempty"`
+	RelocatingShards                  int32  `json:"relocatingShards,omitempty"`
+	ClusterStatus                     string `json:"clusterStatus,omitempty"`
+	UnassignedShards                  int32  `json:"unassignedShards,omitempty"`
+	TaskMaxWaitingInQueueMilliSeconds int32  `json:"taskMaxWaitingInQueueMilliSeconds,omitempty"`
 }
 
 // ElasticsearchInsight is the Schema for the elasticsearchinsights API
@@ -59,10 +59,10 @@ type ElasticsearchClusterHealth struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ElasticsearchInsight struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ElasticsearchInsightSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status api.ElasticsearchStatus  `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Spec   ElasticsearchInsightSpec `json:"spec,omitempty"`
+	Status api.ElasticsearchStatus  `json:"status,omitempty"`
 }
 
 // ElasticsearchInsightList contains a list of ElasticsearchInsight
@@ -70,8 +70,8 @@ type ElasticsearchInsight struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ElasticsearchInsightList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items           []ElasticsearchInsight `json:"items" protobuf:"bytes,2,rep,name=items"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []ElasticsearchInsight `json:"items"`
 }
 
 func init() {
