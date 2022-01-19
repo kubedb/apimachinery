@@ -31,7 +31,8 @@ type ScriptSourceSpec struct {
 
 type SnapshotSourceSpec struct {
 	Repository kmapi.TypedObjectReference `json:"repository,omitempty"`
-	SnapshotID string                     `json:"snapshotID,omitempty"`
+	// +kubebuilder:default:="latest"
+	SnapshotID string `json:"snapshotID,omitempty"`
 }
 
 // DatabaseStatus defines the observed state of schema api types
@@ -61,6 +62,89 @@ const (
 	Failed      DatabaseSchemaPhase = "Failed"
 	Expired     DatabaseSchemaPhase = "Expired"
 	Terminating DatabaseSchemaPhase = "Terminating"
+)
+
+type SchemaDatabasePhase string
+
+const (
+	// used for SchemaDatabases that are currently running
+	SchemaDatabasePhaseRunning SchemaDatabasePhase = "Running"
+	// used for SchemaDatabases that are Successfull
+	SchemaDatabasePhaseSuccessfull SchemaDatabasePhase = "Succeeded"
+	// used for SchemaDatabases that are Failed
+	SchemaDatabasePhaseFailed SchemaDatabasePhase = "Failed"
+)
+
+type SchemaDatabaseCondition string
+
+const (
+	SchemaDatabaseConditionDBReady                  SchemaDatabaseCondition = "DatabaseReady"
+	SchemaDatabaseConditionVaultReady               SchemaDatabaseCondition = "VaultReady"
+	SchemaDatabaseConditionSecretEngineReady        SchemaDatabaseCondition = "SecretEngineReady"
+	SchemaDatabaseConditionMongoDBRoleReady         SchemaDatabaseCondition = "MongoRoleDBReady"
+	SchemaDatabaseConditionPostgresRoleReady        SchemaDatabaseCondition = "PostgresRoleReady"
+	SchemaDatabaseConditionMysqlRoleReady           SchemaDatabaseCondition = "MysqlRoleReady"
+	SchemaDatabaseConditionMariaDBRoleReady         SchemaDatabaseCondition = "MariaDBRoleReady"
+	SchemaDatabaseConditionSecretAccessRequestReady SchemaDatabaseCondition = "SecretAccessRequestReady"
+	SchemaDatabaseConditionJobCompleted             SchemaDatabaseCondition = "JobCompleted"
+	SchemaDatabaseConditionRepositoryReady          SchemaDatabaseCondition = "RepositoryReady"
+	SchemaDatabaseConditionRestoreSecretReady       SchemaDatabaseCondition = "RestoreSecretReady"
+	SchemaDatabaseConditionAppBindingReady          SchemaDatabaseCondition = "AppBindingReady"
+	SchemaDatabaseConditionRestoreSessionReady      SchemaDatabaseCondition = "RestoreSessionReady"
+)
+
+type SchemaDatabaseReason string
+
+const (
+	SchemaDatabaseReasonDBReady                     SchemaDatabaseReason = "CheckDBIsReady"
+	SchemaDatabaseReasonDBNotReady                  SchemaDatabaseReason = "CheckDBIsNotReady"
+	SchemaDatabaseReasonVaultReady                  SchemaDatabaseReason = "CheckVaultIsReady"
+	SchemaDatabaseReasonVaultNotReady               SchemaDatabaseReason = "CheckVaultIsNotReady"
+	SchemaDatabaseReasonSecretEngineReady           SchemaDatabaseReason = "CheckSecretEngineIsReady"
+	SchemaDatabaseReasonSecretEngineNotReady        SchemaDatabaseReason = "CheckSecretEngineIsNotReady"
+	SchemaDatabaseReasonPostgresRoleReady           SchemaDatabaseReason = "CheckPostgresRoleIsReady"
+	SchemaDatabaseReasonPostgresRoleNotReady        SchemaDatabaseReason = "CheckPostgresRoleIsNotReady"
+	SchemaDatabaseReasonSecretAccessRequestReady    SchemaDatabaseReason = "CheckSecretAccessRequestIsReady"
+	SchemaDatabaseReasonSecretAccessRequestNotReady SchemaDatabaseReason = "CheckSecretAccessRequestIsNotReady"
+	SchemaDatabaseReasonJobNotCompleted             SchemaDatabaseReason = "CheckJobIsNotCompleted"
+	SchemaDatabaseReasonJobCompleted                SchemaDatabaseReason = "CheckJobIsCompleted"
+	SchemaDatabaseReasonRepositoryReady             SchemaDatabaseReason = "CheckRepositoryIsReady"
+	SchemaDatabaseReasonRepositoryNotReady          SchemaDatabaseReason = "CheckRepositoryIsNotReady"
+	SchemaDatabaseReasonRestoreSecretReady          SchemaDatabaseReason = "CheckRestoreSecretIsReady"
+	SchemaDatabaseReasonRestoreSecretNotReady       SchemaDatabaseReason = "CheckRestoreSecretIsNotReady"
+	SchemaDatabaseReasonAppBindingReady             SchemaDatabaseReason = "CheckAppBindingIsReady"
+	SchemaDatabaseReasonAppBindingNotReady          SchemaDatabaseReason = "CheckAppBindingIsNotReady"
+	SchemaDatabaseReasonRestoreSessionReady         SchemaDatabaseReason = "CheckRestoreSessionIsReady"
+	SchemaDatabaseReasonRestoreSessionNotReady      SchemaDatabaseReason = "CheckRestoreSessionIsNotReady"
+)
+
+type MySQLDatabaseCondition string
+type MySQLDatabaseVerbs string
+
+const (
+	AddCondition    MySQLDatabaseVerbs = "AddCondition"
+	RemoveCondition MySQLDatabaseVerbs = "RemoveCondition"
+
+	MySQLRoleCreated           MySQLDatabaseCondition = "MySQLRoleCreated"
+	VaultSecretEngineCreated   MySQLDatabaseCondition = "VaultSecretEngineCreated"
+	SecretAccessRequestCreated MySQLDatabaseCondition = "SecretAccessRequestCreated"
+
+	MySQLNotReady               MySQLDatabaseCondition = "MySQLNotReady"
+	VaultNotReady               MySQLDatabaseCondition = "VaultNotReady"
+	SecretAccessRequestApproved MySQLDatabaseCondition = "SecretAccessRequestApproved"
+	SecretAccessRequestDenied   MySQLDatabaseCondition = "SecretAccessRequestDenied"
+	SecretAccessRequestExpired  MySQLDatabaseCondition = "SecretAccessRequestExpired"
+
+	SchemaIgnored          MySQLDatabaseCondition = "SchemaIgnored"
+	DatabaseCreated        MySQLDatabaseCondition = "DatabaseCreated"
+	DatabaseDeleted        MySQLDatabaseCondition = "DatabaseDeleted"
+	DatabaseAltered        MySQLDatabaseCondition = "DatabaseAltered"
+	ScriptApplied          MySQLDatabaseCondition = "ScriptApplied"
+	RestoredFromRepository MySQLDatabaseCondition = "RestoredFromRepository"
+	FailedInitializing     MySQLDatabaseCondition = "FailedInitializing"
+	FailedRestoring        MySQLDatabaseCondition = "FailedRestoring"
+	TerminationHalted      MySQLDatabaseCondition = "TerminationHalted"
+	UserDisconnected       MySQLDatabaseCondition = "UserDisconnected"
 )
 
 //todo do phase works, update phase of success schema aftel altering databases, check more cases

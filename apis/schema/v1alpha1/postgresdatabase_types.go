@@ -27,60 +27,6 @@ const (
 	ResourcePostgresDatabases    = "postgresdatabases"
 )
 
-type SchemaDatabasePhase string
-
-const (
-	// used for SchemaDatabases that are currently running
-	SchemaDatabasePhaseRunning SchemaDatabasePhase = "Running"
-	// used for SchemaDatabases that are Successfull
-	SchemaDatabasePhaseSuccessfull SchemaDatabasePhase = "Succeeded"
-	// used for SchemaDatabases that are Failed
-	SchemaDatabasePhaseFailed SchemaDatabasePhase = "Failed"
-)
-
-type SchemaDatabaseCondition string
-
-const (
-	SchemaDatabaseConditionDBReady                  SchemaDatabaseCondition = "DatabaseReady"
-	SchemaDatabaseConditionVaultReady               SchemaDatabaseCondition = "VaultReady"
-	SchemaDatabaseConditionSecretEngineReady        SchemaDatabaseCondition = "SecretEngineReady"
-	SchemaDatabaseConditionMongoDBRoleReady         SchemaDatabaseCondition = "MongoRoleDBReady"
-	SchemaDatabaseConditionPostgresRoleReady        SchemaDatabaseCondition = "PostgresRoleReady"
-	SchemaDatabaseConditionMysqlRoleReady           SchemaDatabaseCondition = "MysqlRoleReady"
-	SchemaDatabaseConditionMariaDBRoleReady         SchemaDatabaseCondition = "MariaDBRoleReady"
-	SchemaDatabaseConditionSecretAccessRequestReady SchemaDatabaseCondition = "SecretAccessRequestReady"
-	SchemaDatabaseConditionJobCompleted             SchemaDatabaseCondition = "JobCompleted"
-	SchemaDatabaseConditionRepositoryReady          SchemaDatabaseCondition = "RepositoryReady"
-	SchemaDatabaseConditionRestoreSecretReady       SchemaDatabaseCondition = "RestoreSecretReady"
-	SchemaDatabaseConditionAppBindingReady          SchemaDatabaseCondition = "AppBindingReady"
-	SchemaDatabaseConditionRestoreSessionReady      SchemaDatabaseCondition = "RestoreSessionReady"
-)
-
-type SchemaDatabaseReason string
-
-const (
-	SchemaDatabaseReasonDBReady                     SchemaDatabaseReason = "CheckDBIsReady"
-	SchemaDatabaseReasonDBNotReady                  SchemaDatabaseReason = "CheckDBIsNotReady"
-	SchemaDatabaseReasonVaultReady                  SchemaDatabaseReason = "CheckVaultIsReady"
-	SchemaDatabaseReasonVaultNotReady               SchemaDatabaseReason = "CheckVaultIsNotReady"
-	SchemaDatabaseReasonSecretEngineReady           SchemaDatabaseReason = "CheckSecretEngineIsReady"
-	SchemaDatabaseReasonSecretEngineNotReady        SchemaDatabaseReason = "CheckSecretEngineIsNotReady"
-	SchemaDatabaseReasonPostgresRoleReady           SchemaDatabaseReason = "CheckPostgresRoleIsReady"
-	SchemaDatabaseReasonPostgresRoleNotReady        SchemaDatabaseReason = "CheckPostgresRoleIsNotReady"
-	SchemaDatabaseReasonSecretAccessRequestReady    SchemaDatabaseReason = "CheckSecretAccessRequestIsReady"
-	SchemaDatabaseReasonSecretAccessRequestNotReady SchemaDatabaseReason = "CheckSecretAccessRequestIsNotReady"
-	SchemaDatabaseReasonJobNotCompleted             SchemaDatabaseReason = "CheckJobIsNotCompleted"
-	SchemaDatabaseReasonJobCompleted                SchemaDatabaseReason = "CheckJobIsCompleted"
-	SchemaDatabaseReasonRepositoryReady             SchemaDatabaseReason = "CheckRepositoryIsReady"
-	SchemaDatabaseReasonRepositoryNotReady          SchemaDatabaseReason = "CheckRepositoryIsNotReady"
-	SchemaDatabaseReasonRestoreSecretReady          SchemaDatabaseReason = "CheckRestoreSecretIsReady"
-	SchemaDatabaseReasonRestoreSecretNotReady       SchemaDatabaseReason = "CheckRestoreSecretIsNotReady"
-	SchemaDatabaseReasonAppBindingReady             SchemaDatabaseReason = "CheckAppBindingIsReady"
-	SchemaDatabaseReasonAppBindingNotReady          SchemaDatabaseReason = "CheckAppBindingIsNotReady"
-	SchemaDatabaseReasonRestoreSessionReady         SchemaDatabaseReason = "CheckRestoreSessionIsReady"
-	SchemaDatabaseReasonRestoreSessionNotReady      SchemaDatabaseReason = "CheckRestoreSessionIsNotReady"
-)
-
 // PostgresDatabaseSpec defines the desired state of PostgresDatabase
 type PostgresDatabaseSpec struct {
 	// DatabaseRef refers to a KubeDB managed database instance
@@ -126,12 +72,6 @@ type PostgresDatabaseList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []PostgresDatabase `json:"items"`
-}
-
-type DatabaseRef struct {
-	Name       string `json:"name"`
-	Namespace  string `json:"namespace"`
-	PluginName string `json:"pluginName"`
 }
 
 type Param struct {

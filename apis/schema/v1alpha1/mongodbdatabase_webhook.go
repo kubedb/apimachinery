@@ -44,13 +44,6 @@ var _ webhook.Defaulter = &MongoDBDatabase{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (db *MongoDBDatabase) Default() {
-	mongodbdatabaselog.Info("default", "name", db.Name)
-
-	if db.Spec.Restore != nil {
-		if db.Spec.Restore.Snapshot == "" {
-			db.Spec.Restore.Snapshot = "latest"
-		}
-	}
 }
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mongodbdatabase,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mongodbdatabases,verbs=create;update;delete,versions=v1alpha1,name=vmongodbdatabase.kb.io,admissionReviewVersions={v1,v1beta1}
@@ -67,7 +60,7 @@ func (db *MongoDBDatabase) ValidateCreate() error {
 func (db *MongoDBDatabase) ValidateUpdate(old runtime.Object) error {
 	mongodbdatabaselog.Info("validate update", "name", db.Name)
 	oldDb := old.(*MongoDBDatabase)
-	if oldDb.Status.Phase == SchemaDatabasePhaseSuccessfull && oldDb.Spec.DatabaseConfig.Name != db.Spec.DatabaseConfig.Name {
+	if oldDb.Status.Phase == Success && oldDb.Spec.DatabaseConfig.Name != db.Spec.DatabaseConfig.Name {
 		return errors.New("you can't change the Database Schema name now")
 	}
 
@@ -119,7 +112,7 @@ func (db *MongoDBDatabase) ValidateMongoDBDatabase() error {
 
 func (db *MongoDBDatabase) validateSchemaInitRestore() *field.Error {
 	path := field.NewPath("spec")
-	if db.Spec.Init != nil && db.Spec.Restore != nil {
+	if db.Spec.Init != nil && db.Spec.Init.Snapshot != nil {
 		return field.Invalid(path, db.Name, `cannot initialize database using both restore and initSpec`)
 	}
 	return nil
@@ -157,11 +150,9 @@ func (db *MongoDBDatabase) CheckIfNameFieldsAreOkOrNot() *field.Error {
 		str := fmt.Sprintf("Vault Ref name cant be empty")
 		return field.Invalid(field.NewPath("spec").Child("vaultRef").Child("name"), db.Name, str)
 	}
-	if db.Spec.Restore != nil {
-		if db.Spec.Restore.Repository.Name == "" {
-			str := fmt.Sprintf("Repository name cant be empty")
-			return field.Invalid(field.NewPath("spec").Child("restore").Child("repository").Child("name"), db.Name, str)
-		}
+	if db.Spec.Init.Snapshot != nil && db.Spec.Init.Snapshot.Repository.Name == "" {
+		str := fmt.Sprintf("Repository name cant be empty")
+		return field.Invalid(field.NewPath("spec").Child("restore").Child("repository").Child("name"), db.Name, str)
 	}
 	return nil
 }

@@ -101,32 +101,3 @@ type MySQLDatabaseConfiguration struct {
 	// +optional
 	ReadOnly int32 `json:"readOnly,omitempty"`
 }
-
-type MySQLDatabaseCondition string
-type MySQLDatabaseVerbs string
-
-const (
-	AddCondition    MySQLDatabaseVerbs = "AddCondition"
-	RemoveCondition MySQLDatabaseVerbs = "RemoveCondition"
-
-	MySQLRoleCreated           MySQLDatabaseCondition = "MySQLRoleCreated"
-	VaultSecretEngineCreated   MySQLDatabaseCondition = "VaultSecretEngineCreated"
-	SecretAccessRequestCreated MySQLDatabaseCondition = "SecretAccessRequestCreated"
-
-	MySQLNotReady               MySQLDatabaseCondition = "MySQLNotReady"
-	VaultNotReady               MySQLDatabaseCondition = "VaultNotReady"
-	SecretAccessRequestApproved MySQLDatabaseCondition = "SecretAccessRequestApproved"
-	SecretAccessRequestDenied   MySQLDatabaseCondition = "SecretAccessRequestDenied"
-	SecretAccessRequestExpired  MySQLDatabaseCondition = "SecretAccessRequestExpired"
-
-	SchemaIgnored          MySQLDatabaseCondition = "SchemaIgnored"
-	DatabaseCreated        MySQLDatabaseCondition = "DatabaseCreated"
-	DatabaseDeleted        MySQLDatabaseCondition = "DatabaseDeleted"
-	DatabaseAltered        MySQLDatabaseCondition = "DatabaseAltered"
-	ScriptApplied          MySQLDatabaseCondition = "ScriptApplied"
-	RestoredFromRepository MySQLDatabaseCondition = "RestoredFromRepository"
-	FailedInitializing     MySQLDatabaseCondition = "FailedInitializing"
-	FailedRestoring        MySQLDatabaseCondition = "FailedRestoring"
-	TerminationHalted      MySQLDatabaseCondition = "TerminationHalted"
-	UserDisconnected       MySQLDatabaseCondition = "UserDisconnected"
-)

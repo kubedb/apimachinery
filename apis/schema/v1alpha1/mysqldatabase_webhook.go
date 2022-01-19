@@ -120,8 +120,8 @@ func validateMySQLDatabaseUpdate(oldobj *MySQLDatabase, newobj *MySQLDatabase) e
 		//	klog.Infof("printing old object %+v\n", &oldobj.Spec.Init)
 		//	klog.Infof("printing new object %+v\n", &newobj.Spec.Init)
 		//}
-		if oldobj.Spec.Init.PodTemplate != newobj.Spec.Init.PodTemplate {
-			if newobj.Spec.Init.PodTemplate != nil {
+		if !reflect.DeepEqual(oldobj.Spec.Init.Script.PodTemplate, newobj.Spec.Init.Script.PodTemplate) {
+			if newobj.Spec.Init.Script.PodTemplate != nil {
 				klog.Infof("script already applied : Changes in the pod template won't be applied")
 			}
 		}
@@ -141,7 +141,7 @@ func validateMySQLDatabaseUpdate(oldobj *MySQLDatabase, newobj *MySQLDatabase) e
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
 func (obj *MySQLDatabase) ValidateDelete() error {
 	mysqldatabaselog.Info("validate delete", "name", obj.Name)
-	if obj.Spec.TerminationPolicy == TerminationPolicyDoNotDelete {
+	if obj.Spec.DeletionPolicy == DeletionPolicyDoNotDelete {
 		return field.Invalid(field.NewPath("spec").Child("terminationPolicy"), obj.Name, `cannot delete object when terminationPolicy is set to "DoNotDelete"`)
 	}
 	if obj.Spec.DatabaseConfig.ReadOnly == 1 {
@@ -152,9 +152,6 @@ func (obj *MySQLDatabase) ValidateDelete() error {
 
 func (obj *MySQLDatabase) ValidateMySQLDatabase() error {
 	var allErrs field.ErrorList
-	if err := obj.validateTerminationPolicy(); err != nil {
-		allErrs = append(allErrs, err)
-	}
 	if err := obj.validateInitailizationSchema(); err != nil {
 		allErrs = append(allErrs, err)
 	}
@@ -171,14 +168,6 @@ func (obj *MySQLDatabase) ValidateMySQLDatabase() error {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "schema.kubedb.com", Kind: "MySQLDatabase"}, obj.Name, allErrs)
-}
-
-func (obj *MySQLDatabase) validateTerminationPolicy() *field.Error {
-	val := obj.Spec.TerminationPolicy
-	if val != TerminationPolicyDelete && val != TerminationPolicyDoNotDelete {
-		return field.Invalid(field.NewPath("spec").Child("terminationPolicy"), obj.Name, `terminationPolicy must be either "Delete" or "DoNotDelete"`)
-	}
-	return nil
 }
 
 func (obj *MySQLDatabase) validateInitailizationSchema() *field.Error {

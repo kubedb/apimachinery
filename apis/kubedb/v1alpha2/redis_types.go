@@ -119,6 +119,14 @@ type RedisSpec struct {
 	// Coordinator defines attributes of the coordinator container
 	// +optional
 	Coordinator CoordinatorSpec `json:"coordinator,omitempty" protobuf:"bytes,17,opt,name=coordinator"`
+
+	// AllowedSchemas defines the types of database schemas that MAY refer to
+	// a database instance and the trusted namespaces where those schema resources MAY be
+	// present.
+	//
+	// +kubebuilder:default={namespaces:{from: Same}}
+	// +optional
+	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter
