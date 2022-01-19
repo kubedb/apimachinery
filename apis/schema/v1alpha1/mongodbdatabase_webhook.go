@@ -143,15 +143,15 @@ Ensure that the name of database, vault & repository are not empty
 
 func (in *MongoDBDatabase) CheckIfNameFieldsAreOkOrNot() *field.Error {
 	if in.Spec.DatabaseRef.Name == "" {
-		str := fmt.Sprintf("Database Ref name cant be empty")
+		str := "Database Ref name cant be empty"
 		return field.Invalid(field.NewPath("spec").Child("databaseRef").Child("name"), in.Name, str)
 	}
 	if in.Spec.VaultRef.Name == "" {
-		str := fmt.Sprintf("Vault Ref name cant be empty")
+		str := "Vault Ref name cant be empty"
 		return field.Invalid(field.NewPath("spec").Child("vaultRef").Child("name"), in.Name, str)
 	}
 	if in.Spec.Init.Snapshot != nil && in.Spec.Init.Snapshot.Repository.Name == "" {
-		str := fmt.Sprintf("Repository name cant be empty")
+		str := "Repository name cant be empty"
 		return field.Invalid(field.NewPath("spec").Child("restore").Child("repository").Child("name"), in.Name, str)
 	}
 	return nil
