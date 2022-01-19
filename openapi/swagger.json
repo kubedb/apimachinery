@@ -29227,18 +29227,6 @@
         }
       }
     },
-<<<<<<< HEAD
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedReadReplicas": {
-      "description": "AllowedReadReplicas defines which ReadReplicas may be attached to this Listener.",
-      "type": "object",
-      "properties": {
-        "namespaces": {
-          "description": "Namespaces indicates namespaces from which ReadReplicas may be attached to\n\nSupport: Core",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ReadRouteNamespaces"
-        },
-        "replicaSelector": {
-          "description": "ReplicaSelector specifies a selector for ReadReplicas that are allowed to bind to the MySQL Instance.\n\nSupport: Core",
-=======
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers": {
       "description": "AllowedConsumers defines which consumers may refer to a database instance.",
       "type": "object",
@@ -29249,7 +29237,6 @@
         },
         "selector": {
           "description": "Selector specifies a selector for consumers that are allowed to bind to this database instance.",
->>>>>>> master
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         }
       }
@@ -30628,6 +30615,10 @@
         "mode": {
           "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
           "type": "string"
+        },
+        "readReplica": {
+          "description": "ReadReplica implies that the instance will be a MySQL Read Only Replica and it will take reference of  appbinding of the source",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplicaSpec"
         }
       }
     },
@@ -30688,7 +30679,7 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplica": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplicaSpec": {
       "type": "object",
       "properties": {
         "sourceRef": {
@@ -30719,15 +30710,13 @@
         "version"
       ],
       "properties": {
-<<<<<<< HEAD
         "allowedReadReplicas": {
           "description": "AllowedReadReplicas defines the types of read replicas that MAY be attached to a MySQL instance and the trusted namespaces where those Read Replica resources MAY be present.\n\nSupport: Core",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedReadReplicas"
-=======
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "allowedSchemas": {
           "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
->>>>>>> master
         },
         "authSecret": {
           "description": "Database authentication secret",
@@ -30758,10 +30747,6 @@
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
-        },
-        "readReplica": {
-          "description": "ReadReplica implies that the instance will be a MySQL Read Only Replica and it will take reference of  appbinding of the source",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplica"
         },
         "replicas": {
           "description": "Number of instances to deploy for a MySQL database. In case of MySQL group replication, max allowed value is 9 (default 3). (see ref: https://dev.mysql.com/doc/refman/5.7/en/group-replication-frequently-asked-questions.html)",
@@ -31533,20 +31518,6 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ReadRouteNamespaces": {
-      "description": "ReadRouteNamespaces indicate which namespaces ReadReplicas should be selected from.",
-      "type": "object",
-      "properties": {
-        "from": {
-          "description": "From indicates where ReadReplicas will be selected for the MySQL Instance. Possible values are: * All: ReadReplicas in all namespaces. * Selector: ReadReplicas in namespaces selected by the selector * Same: Only ReadReplicas in the same namespace Support: Core",
-          "type": "string"
-        },
-        "selector": {
-          "description": "Selector must be specified when From is set to \"Selector\". In that case, only ReadReplicas in Namespaces matching this Selector will be selected by the MySQL instance. This field is ignored for other values of \"From\".\n\nSupport: Core",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         }
       }
     },

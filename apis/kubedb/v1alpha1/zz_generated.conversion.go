@@ -1658,7 +1658,7 @@ func Convert_v1alpha2_MySQL_To_v1alpha1_MySQL(in *v1alpha2.MySQL, out *MySQL, s 
 }
 
 func autoConvert_v1alpha1_MySQLClusterTopology_To_v1alpha2_MySQLClusterTopology(in *MySQLClusterTopology, out *v1alpha2.MySQLClusterTopology, s conversion.Scope) error {
-	out.Mode = (*v1alpha2.MySQLClusterMode)(unsafe.Pointer(in.Mode))
+	out.Mode = (*v1alpha2.MySQLMode)(unsafe.Pointer(in.Mode))
 	if in.Group != nil {
 		in, out := &in.Group, &out.Group
 		*out = new(v1alpha2.MySQLGroupSpec)
@@ -1677,7 +1677,7 @@ func Convert_v1alpha1_MySQLClusterTopology_To_v1alpha2_MySQLClusterTopology(in *
 }
 
 func autoConvert_v1alpha2_MySQLClusterTopology_To_v1alpha1_MySQLClusterTopology(in *v1alpha2.MySQLClusterTopology, out *MySQLClusterTopology, s conversion.Scope) error {
-	out.Mode = (*MySQLClusterMode)(unsafe.Pointer(in.Mode))
+	out.Mode = (*MySQLMode)(unsafe.Pointer(in.Mode))
 	if in.Group != nil {
 		in, out := &in.Group, &out.Group
 		*out = new(MySQLGroupSpec)

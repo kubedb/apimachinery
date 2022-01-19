@@ -32,10 +32,10 @@ const (
 	ResourcePluralMySQL   = "mysqls"
 )
 
-type MySQLClusterMode string
+type MySQLMode string
 
 const (
-	MySQLClusterModeGroup MySQLClusterMode = "GroupReplication"
+	MySQLModeGroup MySQLMode = "GroupReplication"
 )
 
 type MySQLGroupMode string
@@ -116,7 +116,7 @@ type MySQLSpec struct {
 type MySQLClusterTopology struct {
 	// If set to -
 	// "GroupReplication", GroupSpec is required and MySQL servers will start  a replication group
-	Mode *MySQLClusterMode `json:"mode,omitempty"`
+	Mode *MySQLMode `json:"mode,omitempty"`
 
 	// Group replication info for MySQL
 	Group *MySQLGroupSpec `json:"group,omitempty"`
