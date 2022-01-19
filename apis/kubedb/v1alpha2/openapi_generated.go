@@ -23499,6 +23499,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresSpec(ref common.ReferenceC
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec"),
 						},
 					},
+					"enforceFsGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EnforceFsGroup Is Used when the storageClass's CSI Driver doesn't support FsGroup properties properly. If It's true then The Init Container will run as RootUser and the init-container will set user's permission for the mounted pvc volume with which coordinator and postgres containers are going to run. In postgres it is /var/pv",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"version"},
 			},

@@ -117,6 +117,12 @@ type PostgresSpec struct {
 	// Coordinator defines attributes of the coordinator container
 	// +optional
 	Coordinator CoordinatorSpec `json:"coordinator,omitempty" protobuf:"bytes,19,opt,name=coordinator"`
+	// EnforceFsGroup Is Used when the storageClass's CSI Driver doesn't support FsGroup properties properly.
+	// If It's true then The Init Container will run as RootUser and
+	// the init-container will set user's permission for the mounted pvc volume with which coordinator and postgres containers are going to run.
+	// In postgres it is /var/pv
+	// +optional
+	EnforceFsGroup bool `json:"enforceFsGroup,omitempty" protobuf:"bytes,20,opt,name=enforceFsGroup"`
 }
 
 // PostgreLeaderElectionConfig contains essential attributes of leader election.
