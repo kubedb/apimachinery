@@ -19,8 +19,8 @@ package install
 import (
 	"testing"
 
+	"kubedb.dev/apimachinery/apis/dashboard/fuzzer"
 	"kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb/fuzzer"
 
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	crdfuzz "kmodules.xyz/crd-schema-fuzz"

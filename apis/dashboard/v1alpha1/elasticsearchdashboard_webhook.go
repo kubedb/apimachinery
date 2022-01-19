@@ -171,7 +171,7 @@ func (r *ElasticsearchDashboard) Validate() error {
 	//database ref is required
 	if r.Spec.DatabaseRef == nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("databaseref"), r.Name,
-			fmt.Sprintf("spec.databaseref can't be empty")))
+			"spec.databaseref can't be empty"))
 	}
 
 	// validate if user provided replicas are non-negative
@@ -184,7 +184,7 @@ func (r *ElasticsearchDashboard) Validate() error {
 	// SSL can not be enabled if security is disabled
 	if r.Spec.DisableSecurity && r.Spec.EnableSSL {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("disablesecurity", "enablessl"), r.Name,
-			fmt.Sprintf("to enable spec.enableSSL, spec.disableSecurity needs to be set to false")))
+			"to enable spec.enableSSL, spec.disableSecurity needs to be set to false"))
 	}
 
 	// env variables needs to be validated
@@ -192,7 +192,7 @@ func (r *ElasticsearchDashboard) Validate() error {
 	// and credential env may not be overwritten
 	if err := amv.ValidateEnvVar(r.Spec.PodTemplate.Spec.Env, forbiddenEnvVars, ResourceKindElasticsearchDashboard); err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podtemplate").Child("spec").Child("env"), r.Name,
-			fmt.Sprintf("Invalid spec.podtemplate.spec.env , avoid using the forbidden env variables")))
+			"Invalid spec.podtemplate.spec.env , avoid using the forbidden env variables"))
 	}
 
 	if err := r.ValidateVersion(r.Spec.Version); err != nil {

@@ -235,7 +235,6 @@ func (d *MySQLDatabaseConfiguration) AlterDatabase(cl *sql.DB) error {
 
 //GetDatabase fetches database with the name provided and maps it into a database structure
 func GetDatabase(name string, cl *sql.DB) (ret MySQLDatabaseConfiguration, err error) {
-
 	//make query string ready
 	query := SHOW + CREATE + DATABASE + name + SEMICOLON
 
@@ -251,7 +250,10 @@ func GetDatabase(name string, cl *sql.DB) (ret MySQLDatabaseConfiguration, err e
 	//process
 	for res.Next() {
 		var dbname, retquery string
-		res.Scan(&dbname, &retquery)
+		err = res.Scan(&dbname, &retquery)
+		if err != nil {
+			return
+		}
 		ret.Name = dbname
 		split := strings.Split(retquery, " ")
 		pre1 := ""
