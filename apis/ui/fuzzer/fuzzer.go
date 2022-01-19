@@ -26,7 +26,7 @@ import (
 // Funcs returns the fuzzer functions for this api group.
 var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 	return []interface{}{
-		func(s *v1alpha1.ElasticsearchOverview, c fuzz.Continue) {
+		func(s *v1alpha1.ElasticsearchInsight, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.ElasticsearchSchemaOverview, c fuzz.Continue) {
@@ -35,7 +35,7 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 		func(s *v1alpha1.ElasticsearchNodesStats, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.MariaDBOverview, c fuzz.Continue) {
+		func(s *v1alpha1.MariaDBInsight, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.MariaDBSchemaOverview, c fuzz.Continue) {
@@ -53,7 +53,7 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 		func(s *v1alpha1.MongoDBQueries, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.MySQLOverview, c fuzz.Continue) {
+		func(s *v1alpha1.MySQLInsight, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.MySQLSchemaOverview, c fuzz.Continue) {
@@ -62,7 +62,7 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 		func(s *v1alpha1.MySQLQueries, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.PostgresOverview, c fuzz.Continue) {
+		func(s *v1alpha1.PostgresInsight, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.PostgresSchemaOverview, c fuzz.Continue) {
@@ -74,7 +74,7 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 		func(s *v1alpha1.PostgresQueries, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.RedisOverview, c fuzz.Continue) {
+		func(s *v1alpha1.RedisInsight, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.RedisSchemaOverview, c fuzz.Continue) {

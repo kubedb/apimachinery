@@ -29227,6 +29227,20 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers": {
+      "description": "AllowedConsumers defines which consumers may refer to a database instance.",
+      "type": "object",
+      "properties": {
+        "namespaces": {
+          "description": "Namespaces indicates namespaces from which Consumers may be attached to",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConsumerNamespaces"
+        },
+        "selector": {
+          "description": "Selector specifies a selector for consumers that are allowed to bind to this database instance.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConnectionPoolConfig": {
       "type": "object",
       "properties": {
@@ -29298,6 +29312,20 @@
           "description": "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log.",
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConsumerNamespaces": {
+      "description": "ConsumerNamespaces indicate which namespaces Consumers should be selected from.",
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "From indicates where Consumers will be selected for the database instance. Possible values are: * All: Consumers in all namespaces. * Selector: Consumers in namespaces selected by the selector * Same: Only Consumers in the same namespace",
+          "type": "string"
+        },
+        "selector": {
+          "description": "Selector must be specified when From is set to \"Selector\". In that case, only Consumers in Namespaces matching this Selector will be selected by the database instance. This field is ignored for other values of \"From\".",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         }
       }
     },
@@ -29960,6 +29988,10 @@
         "version"
       ],
       "properties": {
+        "allowedSchemas": {
+          "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -30248,6 +30280,10 @@
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "ephemeralStorage": {
+          "description": "EphemeralStorage spec to specify the configuration of ephemeral storage type.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.EmptyDirVolumeSource"
+        },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "default": {},
@@ -30352,6 +30388,10 @@
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "ephemeralStorage": {
+          "description": "EphemeralStorage spec to specify the configuration of ephemeral storage type.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.EmptyDirVolumeSource"
+        },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "default": {},
@@ -30410,6 +30450,10 @@
         "version"
       ],
       "properties": {
+        "allowedSchemas": {
+          "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -30426,6 +30470,10 @@
           "description": "Coordinator defines attributes of the coordinator container",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.CoordinatorSpec"
+        },
+        "ephemeralStorage": {
+          "description": "EphemeralStorage spec to specify the configuration of ephemeral storage type.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.EmptyDirVolumeSource"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -30646,6 +30694,10 @@
         "version"
       ],
       "properties": {
+        "allowedSchemas": {
+          "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -31178,6 +31230,10 @@
         "version"
       ],
       "properties": {
+        "allowedSchemas": {
+          "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -31194,6 +31250,10 @@
           "description": "Coordinator defines attributes of the coordinator container",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.CoordinatorSpec"
+        },
+        "enforceFsGroup": {
+          "description": "EnforceFsGroup Is Used when the storageClass's CSI Driver doesn't support FsGroup properties properly. If It's true then The Init Container will run as RootUser and the init-container will set user's permission for the mounted pvc volume with which coordinator and postgres containers are going to run. In postgres it is /var/pv",
+          "type": "boolean"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -31539,6 +31599,10 @@
         "version"
       ],
       "properties": {
+        "allowedSchemas": {
+          "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -32091,6 +32155,9 @@
       "description": "ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion",
       "type": "object",
       "properties": {
+        "mode": {
+          "type": "string"
+        },
         "node": {
           "description": "volume specification for combined nodes",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
@@ -32635,6 +32702,10 @@
         "readinessCriteria": {
           "description": "Specifies the Readiness Criteria",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReplicaReadinessCriteria"
+        },
+        "reprovision": {
+          "description": "Specifies information necessary for reprovisioning database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.Reprovision"
         },
         "restart": {
           "description": "Specifies information necessary for restarting database",
@@ -33410,6 +33481,9 @@
       "description": "PostgresVolumeExpansionSpec is the spec for Postgres volume expansion",
       "type": "object",
       "properties": {
+        "mode": {
+          "type": "string"
+        },
         "postgres": {
           "description": "volume specification for Postgres",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
@@ -33795,6 +33869,9 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.Reprovision": {
+      "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec": {
       "type": "object"
