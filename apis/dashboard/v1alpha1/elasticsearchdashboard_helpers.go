@@ -107,14 +107,14 @@ func (ed ElasticsearchDashboard) Selectors() *meta.LabelSelector {
 
 func (ed ElasticsearchDashboard) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDashboard
-	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, ed.Labels(), override))
+	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, ed.getLabels(), override))
 }
 
 func (ed ElasticsearchDashboard) OffshootLabels() map[string]string {
 	return ed.offshootLabels(ed.OffshootSelectors(), nil)
 }
 
-func (ed ElasticsearchDashboard) Labels(extraLabels ...map[string]string) map[string]string {
+func (ed ElasticsearchDashboard) getLabels(extraLabels ...map[string]string) map[string]string {
 	return meta_util.OverwriteKeys(ed.OffshootSelectors(), extraLabels...)
 }
 
@@ -166,12 +166,12 @@ func (ed ElasticsearchDashboard) GetServicePort(alias ServiceAlias) int32 {
 
 func (ed ElasticsearchDashboard) DatabaseConnectionURL(servicePort int32) (string, error) {
 	if ed.Spec.DatabaseRef != nil {
-		if &ed.Spec.DatabaseRef.Name == nil || &ed.Spec.DatabaseRef.Namespace == nil {
+		if ed.Spec.DatabaseRef.Name == "" {
 			return "", errors.New("required database fields not found")
 		}
-		return fmt.Sprintf("%s://%s.%s.svc:%d", ed.GetConnectionScheme(), ed.Spec.DatabaseRef.Name, ed.Spec.DatabaseRef.Namespace, servicePort), nil
+		return fmt.Sprintf("%s://%s.%s.svc:%d", ed.GetConnectionScheme(), ed.Spec.DatabaseRef.Name, ed.Namespace, servicePort), nil
 	}
-	return fmt.Sprintf("%s://%s.%s.svc:%d", ed.GetConnectionScheme(), ed.Spec.DatabaseRef.Name, ed.Spec.DatabaseRef.Namespace, servicePort), nil
+	return fmt.Sprintf("%s://%s.%s.svc:%d", ed.GetConnectionScheme(), ed.Spec.DatabaseRef.Name, ed.Namespace, servicePort), nil
 }
 
 func (ed *ElasticsearchDashboard) GetConnectionScheme() string {

@@ -36,9 +36,6 @@ const (
 // ElasticsearchDashboardSpec defines the desired state of ElasticsearchDashboard
 
 type ElasticsearchDashboardSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// Version of ElasticsearchDashboard to be deployed.
 	Version string `json:"version"`
 
@@ -55,7 +52,7 @@ type ElasticsearchDashboardSpec struct {
 	DisableSecurity bool `json:"disableSecurity,omitempty"`
 
 	// host elasticsearch name and namespace
-	DatabaseRef *core.ObjectReference `json:"databaseRef,omitempty"`
+	DatabaseRef *core.LocalObjectReference `json:"databaseRef,omitempty"`
 
 	// Dashboard authentication secret
 	// +optional
@@ -89,9 +86,6 @@ type ElasticsearchDashboardSpec struct {
 
 // ElasticsearchDashboardStatus defines the observed state of ElasticsearchDashboard
 type ElasticsearchDashboardStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// Specifies the current phase of the database
 	// +optional
 	Phase DashboardPhase `json:"phase,omitempty"`

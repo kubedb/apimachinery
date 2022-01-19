@@ -20357,7 +20357,7 @@ func schema_apimachinery_apis_dashboard_v1alpha1_ElasticsearchDashboardSpec(ref 
 					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "host elasticsearch name and namespace",
-							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"authSecret": {
@@ -20417,7 +20417,7 @@ func schema_apimachinery_apis_dashboard_v1alpha1_ElasticsearchDashboardSpec(ref 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
 

@@ -127,7 +127,7 @@ func (in *ElasticsearchDashboardSpec) DeepCopyInto(out *ElasticsearchDashboardSp
 	}
 	if in.DatabaseRef != nil {
 		in, out := &in.DatabaseRef, &out.DatabaseRef
-		*out = new(v1.ObjectReference)
+		*out = new(v1.LocalObjectReference)
 		**out = **in
 	}
 	if in.AuthSecret != nil {
