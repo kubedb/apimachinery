@@ -30,6 +30,7 @@ import (
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	intstr "k8s.io/apimachinery/pkg/util/intstr"
 	common "k8s.io/kube-openapi/pkg/common"
+	apiv1 "kmodules.xyz/client-go/api/v1"
 )
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
@@ -362,10 +363,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"k8s.io/apimachinery/pkg/version.Info":                                        schema_k8sio_apimachinery_pkg_version_Info(ref),
 		"kmodules.xyz/client-go/api/v1.CertificatePrivateKey":                         schema_kmodulesxyz_client_go_api_v1_CertificatePrivateKey(ref),
 		"kmodules.xyz/client-go/api/v1.CertificateSpec":                               schema_kmodulesxyz_client_go_api_v1_CertificateSpec(ref),
+		"kmodules.xyz/client-go/api/v1.ClusterMetadata":                               schema_kmodulesxyz_client_go_api_v1_ClusterMetadata(ref),
 		"kmodules.xyz/client-go/api/v1.Condition":                                     schema_kmodulesxyz_client_go_api_v1_Condition(ref),
+		"kmodules.xyz/client-go/api/v1.ObjectID":                                      schema_kmodulesxyz_client_go_api_v1_ObjectID(ref),
+		"kmodules.xyz/client-go/api/v1.ObjectInfo":                                    schema_kmodulesxyz_client_go_api_v1_ObjectInfo(ref),
 		"kmodules.xyz/client-go/api/v1.ObjectReference":                               schema_kmodulesxyz_client_go_api_v1_ObjectReference(ref),
 		"kmodules.xyz/client-go/api/v1.ResourceID":                                    schema_kmodulesxyz_client_go_api_v1_ResourceID(ref),
 		"kmodules.xyz/client-go/api/v1.TLSConfig":                                     schema_kmodulesxyz_client_go_api_v1_TLSConfig(ref),
+		"kmodules.xyz/client-go/api/v1.TimeOfDay":                                     schema_kmodulesxyz_client_go_api_v1_TimeOfDay(ref),
+		"kmodules.xyz/client-go/api/v1.TypedObjectReference":                          schema_kmodulesxyz_client_go_api_v1_TypedObjectReference(ref),
 		"kmodules.xyz/client-go/api/v1.X509Subject":                                   schema_kmodulesxyz_client_go_api_v1_X509Subject(ref),
 		"kmodules.xyz/client-go/api/v1.stringSetMerger":                               schema_kmodulesxyz_client_go_api_v1_stringSetMerger(ref),
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeyTransform":      schema_custom_resources_apis_appcatalog_v1alpha1_AddKeyTransform(ref),
@@ -421,7 +427,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.EtcdList":                       schema_apimachinery_apis_kubedb_v1alpha1_EtcdList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.EtcdSpec":                       schema_apimachinery_apis_kubedb_v1alpha1_EtcdSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.EtcdStatus":                     schema_apimachinery_apis_kubedb_v1alpha1_EtcdStatus(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init":                           schema_apimachinery_apis_kubedb_v1alpha1_InitSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec":                       schema_apimachinery_apis_kubedb_v1alpha1_InitSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.LeaderElectionConfig":           schema_apimachinery_apis_kubedb_v1alpha1_LeaderElectionConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MariaDB":                        schema_apimachinery_apis_kubedb_v1alpha1_MariaDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MariaDBList":                    schema_apimachinery_apis_kubedb_v1alpha1_MariaDBList(ref),
@@ -17689,6 +17695,44 @@ func schema_kmodulesxyz_client_go_api_v1_CertificateSpec(ref common.ReferenceCal
 	}
 }
 
+func schema_kmodulesxyz_client_go_api_v1_ClusterMetadata(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"displayName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"provider": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"uid"},
+			},
+		},
+	}
+}
+
 func schema_kmodulesxyz_client_go_api_v1_Condition(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -17747,6 +17791,69 @@ func schema_kmodulesxyz_client_go_api_v1_Condition(ref common.ReferenceCallback)
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_kmodulesxyz_client_go_api_v1_ObjectID(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_client_go_api_v1_ObjectInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/client-go/api/v1.ResourceID"),
+						},
+					},
+					"ref": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+				},
+				Required: []string{"resource", "ref"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.ResourceID"},
 	}
 }
 
@@ -17861,6 +17968,59 @@ func schema_kmodulesxyz_client_go_api_v1_TLSConfig(ref common.ReferenceCallback)
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
+	}
+}
+
+func schema_kmodulesxyz_client_go_api_v1_TimeOfDay(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TimeOfDay is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+				Type:        apiv1.TimeOfDay{}.OpenAPISchemaType(),
+				Format:      apiv1.TimeOfDay{}.OpenAPISchemaFormat(),
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_client_go_api_v1_TypedObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TypedObjectReference represents an typed namespaced object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"apiGroup": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
 	}
 }
 
@@ -20415,7 +20575,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 					"init": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init is used to initialize database",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
 						},
 					},
 					"backupSchedule": {
@@ -20475,7 +20635,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_ElasticsearchSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"},
 	}
 }
 
@@ -20649,7 +20809,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_EtcdSpec(ref common.ReferenceCallb
 					"init": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init is used to initialize database",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
 						},
 					},
 					"backupSchedule": {
@@ -20703,7 +20863,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_EtcdSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSPolicy"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.TLSPolicy"},
 	}
 }
 
@@ -20951,7 +21111,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MariaDBSpec(ref common.ReferenceCa
 					"init": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init is used to initialize database",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
 						},
 					},
 					"monitor": {
@@ -20999,7 +21159,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MariaDBSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"},
 	}
 }
 
@@ -21692,7 +21852,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBSpec(ref common.ReferenceCa
 					"init": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init is used to initialize database",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
 						},
 					},
 					"backupSchedule": {
@@ -21745,7 +21905,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MongoDBSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBReplicaSet", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBShardingTopology"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBReplicaSet", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBShardingTopology"},
 	}
 }
 
@@ -21985,7 +22145,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQLSpec(ref common.ReferenceCall
 					"init": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init is used to initialize database",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
 						},
 					},
 					"backupSchedule": {
@@ -22039,7 +22199,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQLSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLClusterTopology"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLClusterTopology"},
 	}
 }
 
@@ -22247,7 +22407,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PerconaXtraDBSpec(ref common.Refer
 					"init": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init is used to initialize database",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
 						},
 					},
 					"monitor": {
@@ -22295,7 +22455,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PerconaXtraDBSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PXCSpec"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PXCSpec"},
 	}
 }
 
@@ -22542,7 +22702,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresSpec(ref common.ReferenceC
 					"init": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init is used to initialize database",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec"),
 						},
 					},
 					"backupSchedule": {
@@ -22603,7 +22763,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_PostgresSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.Init", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.LeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PostgresArchiverSpec"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.LeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PostgresArchiverSpec"},
 	}
 }
 

@@ -126,7 +126,7 @@ type RedisSpec struct {
 	//
 	// +kubebuilder:default={namespaces:{from: Same}}
 	// +optional
-	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty"`
+	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty" protobuf:"bytes,18,opt,name=allowedSchemas"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter

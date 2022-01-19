@@ -8,13 +8,13 @@ type AllowedConsumers struct {
 	//
 	// +optional
 	// +kubebuilder:default={from: Same}
-	Namespaces *ConsumerNamespaces `json:"namespaces,omitempty"`
+	Namespaces *ConsumerNamespaces `json:"namespaces,omitempty" protobuf:"bytes,1,opt,name=namespaces"`
 
 	// Selector specifies a selector for consumers that are allowed to bind
 	// to this database instance.
 	//
 	// +optional
-	Selector *metav1.LabelSelector `json:"selector,omitempty"`
+	Selector *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,2,opt,name=selector"`
 }
 
 // FromNamespaces specifies namespace from which Consumers may be attached to a
@@ -42,12 +42,12 @@ type ConsumerNamespaces struct {
 	//
 	// +optional
 	// +kubebuilder:default=Same
-	From *FromNamespaces `json:"from,omitempty"`
+	From *FromNamespaces `json:"from,omitempty" protobuf:"bytes,1,opt,name=from,casttype=FromNamespaces"`
 
 	// Selector must be specified when From is set to "Selector". In that case,
 	// only Consumers in Namespaces matching this Selector will be selected by the
 	// database instance. This field is ignored for other values of "From".
 	//
 	// +optional
-	Selector *metav1.LabelSelector `json:"selector,omitempty"`
+	Selector *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,2,opt,name=selector"`
 }

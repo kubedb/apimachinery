@@ -30,28 +30,28 @@ const (
 // MongoDBDatabaseSpec defines the desired state of MongoDBDatabase
 type MongoDBDatabaseSpec struct {
 	// DatabaseRef refers to a KubeDB managed database instance
-	DatabaseRef kmapi.ObjectReference `json:"databaseRef"`
+	DatabaseRef kmapi.ObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
 
 	// VaultRef refers to a KubeVault managed vault server
-	VaultRef kmapi.ObjectReference `json:"vaultRef"`
+	VaultRef kmapi.ObjectReference `json:"vaultRef" protobuf:"bytes,2,opt,name=vaultRef"`
 
 	// DatabaseConfig defines various configuration options for a database
-	DatabaseConfig MongoDBDatabaseConfiguration `json:"databaseConfig"`
+	DatabaseConfig MongoDBDatabaseConfiguration `json:"databaseConfig" protobuf:"bytes,3,opt,name=databaseConfig"`
 
-	AccessPolicy VaultSecretEngineRole `json:"accessPolicy"`
+	AccessPolicy VaultSecretEngineRole `json:"accessPolicy" protobuf:"bytes,4,opt,name=accessPolicy"`
 
 	// Init contains info about the init script or snapshot info
 	// +optional
-	Init *InitSpec `json:"init,omitempty"`
+	Init *InitSpec `json:"init,omitempty" protobuf:"bytes,5,opt,name=init"`
 
 	// DeletionPolicy controls the delete operation for database
 	// +optional
 	// +kubebuilder:default:="Delete"
-	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty" protobuf:"bytes,6,opt,name=deletionPolicy,casttype=DeletionPolicy"`
 }
 
 type MongoDBDatabaseConfiguration struct {
-	Name string `json:"name"`
+	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
 }
 
 // +genclient
@@ -66,10 +66,10 @@ type MongoDBDatabaseConfiguration struct {
 // MongoDBDatabase is the Schema for the mongodbdatabases API
 type MongoDBDatabase struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
-	Spec   MongoDBDatabaseSpec `json:"spec,omitempty"`
-	Status DatabaseStatus      `json:"status,omitempty"`
+	Spec   MongoDBDatabaseSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	Status DatabaseStatus      `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
 // +kubebuilder:object:root=true
@@ -77,8 +77,8 @@ type MongoDBDatabase struct {
 // MongoDBDatabaseList contains a list of MongoDBDatabase
 type MongoDBDatabaseList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MongoDBDatabase `json:"items"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Items           []MongoDBDatabase `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
 func init() {

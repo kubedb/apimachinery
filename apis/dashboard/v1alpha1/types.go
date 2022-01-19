@@ -130,6 +130,6 @@ var (
 )
 
 type CertSecrets struct {
-	Ca  *core.Secret
-	Crt *core.Secret
+	Ca  *core.Secret `protobuf:"bytes,1,opt,name=ca"`
+	Crt *core.Secret `protobuf:"bytes,2,opt,name=crt"`
 }

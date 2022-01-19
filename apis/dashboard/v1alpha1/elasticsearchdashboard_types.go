@@ -36,51 +36,51 @@ type ElasticsearchDashboardSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Version of ElasticsearchDashboard to be deployed.
-	Version string `json:"version"`
+	Version string `json:"version" protobuf:"bytes,1,opt,name=version"`
 
 	// Number of instances to deploy for a ElasticsearchDashboard Dashboard.
 
-	Replicas *int32 `json:"replicas,omitempty"`
+	Replicas *int32 `json:"replicas,omitempty" protobuf:"varint,2,opt,name=replicas"`
 
 	// To enable ssl for http layer
-	EnableSSL bool `json:"enableSSL,omitempty"`
+	EnableSSL bool `json:"enableSSL,omitempty" protobuf:"varint,3,opt,name=enableSSL"`
 
 	// disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user.
 	// If unset, default is false
 	// +optional
-	DisableSecurity bool `json:"disableSecurity,omitempty"`
+	DisableSecurity bool `json:"disableSecurity,omitempty" protobuf:"varint,4,opt,name=disableSecurity"`
 
 	// host elasticsearch name and namespace
-	DatabaseRef *core.ObjectReference `json:"databaseRef,omitempty"`
+	DatabaseRef *core.ObjectReference `json:"databaseRef,omitempty" protobuf:"bytes,5,opt,name=databaseRef"`
 
 	// Dashboard authentication secret
 	// +optional
-	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty"`
+	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty" protobuf:"bytes,6,opt,name=authSecret"`
 
 	// Monitor is used monitor Dashboard instance
 	// +optional
-	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
+	Monitor *mona.AgentSpec `json:"monitor,omitempty" protobuf:"bytes,7,opt,name=monitor"`
 
 	// ConfigSecret is an optional field to provide custom configuration file for dashboard.
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
 	// +optional
-	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
+	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty" protobuf:"bytes,8,opt,name=configSecret"`
 
 	// PodTemplate is an optional configuration for pods used to expose Dashboard
 	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty" protobuf:"bytes,9,opt,name=podTemplate"`
 
 	// ServiceTemplates is an optional configuration for services used to expose Dashboard
 	// +optional
-	ServiceTemplates []api.NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
+	ServiceTemplates []api.NamedServiceTemplateSpec `json:"serviceTemplates,omitempty" protobuf:"bytes,10,rep,name=serviceTemplates"`
 
 	// TLS contains tls configurations
 	// +optional
-	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
+	TLS *kmapi.TLSConfig `json:"tls,omitempty" protobuf:"bytes,11,opt,name=tls"`
 
 	// TerminationPolicy controls the delete operation for Dashboard
 	// +optional
-	TerminationPolicy api.TerminationPolicy `json:"terminationPolicy,omitempty"`
+	TerminationPolicy api.TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,12,opt,name=terminationPolicy,casttype=kubedb.dev/apimachinery/apis/kubedb/v1alpha2.TerminationPolicy"`
 }
 
 // ElasticsearchDashboardStatus defines the observed state of ElasticsearchDashboard
@@ -90,14 +90,14 @@ type ElasticsearchDashboardStatus struct {
 
 	// Specifies the current phase of the database
 	// +optional
-	Phase DashboardPhase `json:"phase,omitempty"`
+	Phase DashboardPhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=DashboardPhase"`
 	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
 	// resource's generation, which is updated on mutation by the API Server.
 	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
+	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,2,opt,name=observedGeneration"`
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
-	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+	Conditions []kmapi.Condition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
 }
 
 //+kubebuilder:object:root=true
@@ -112,10 +112,10 @@ type ElasticsearchDashboardStatus struct {
 // ElasticsearchDashboard is the Schema for the elasticsearchdashboards API
 type ElasticsearchDashboard struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
-	Spec   ElasticsearchDashboardSpec   `json:"spec,omitempty"`
-	Status ElasticsearchDashboardStatus `json:"status,omitempty"`
+	Spec   ElasticsearchDashboardSpec   `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	Status ElasticsearchDashboardStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
 //+kubebuilder:object:root=true
@@ -123,8 +123,8 @@ type ElasticsearchDashboard struct {
 // ElasticsearchDashboardList contains a list of ElasticsearchDashboard
 type ElasticsearchDashboardList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []ElasticsearchDashboard `json:"items"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Items           []ElasticsearchDashboard `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
 func init() {

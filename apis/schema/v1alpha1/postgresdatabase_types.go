@@ -30,24 +30,24 @@ const (
 // PostgresDatabaseSpec defines the desired state of PostgresDatabase
 type PostgresDatabaseSpec struct {
 	// DatabaseRef refers to a KubeDB managed database instance
-	DatabaseRef kmapi.ObjectReference `json:"databaseRef"`
+	DatabaseRef kmapi.ObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
 
 	// VaultRef refers to a KubeVault managed vault server
-	VaultRef kmapi.ObjectReference `json:"vaultRef"`
+	VaultRef kmapi.ObjectReference `json:"vaultRef" protobuf:"bytes,2,opt,name=vaultRef"`
 
 	// DatabaseConfig defines various configuration options for a database
-	DatabaseConfig PostgresDatabaseConfiguration `json:"databaseConfig"`
+	DatabaseConfig PostgresDatabaseConfiguration `json:"databaseConfig" protobuf:"bytes,3,opt,name=databaseConfig"`
 
-	AccessPolicy VaultSecretEngineRole `json:"accessPolicy"`
+	AccessPolicy VaultSecretEngineRole `json:"accessPolicy" protobuf:"bytes,4,opt,name=accessPolicy"`
 
 	// Init contains info about the init script or snapshot info
 	// +optional
-	Init *InitSpec `json:"init,omitempty"`
+	Init *InitSpec `json:"init,omitempty" protobuf:"bytes,5,opt,name=init"`
 
 	// DeletionPolicy controls the delete operation for database
 	// +optional
 	// +kubebuilder:default:="Delete"
-	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty" protobuf:"bytes,6,opt,name=deletionPolicy,casttype=DeletionPolicy"`
 }
 
 // +genclient
@@ -59,10 +59,10 @@ type PostgresDatabaseSpec struct {
 // PostgresDatabase is the Schema for the postgresdatabases API
 type PostgresDatabase struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
-	Spec   PostgresDatabaseSpec `json:"spec,omitempty"`
-	Status DatabaseStatus       `json:"status,omitempty"`
+	Spec   PostgresDatabaseSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	Status DatabaseStatus       `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
 // +kubebuilder:object:root=true
@@ -70,19 +70,19 @@ type PostgresDatabase struct {
 // PostgresDatabaseList contains a list of PostgresDatabase
 type PostgresDatabaseList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []PostgresDatabase `json:"items"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Items           []PostgresDatabase `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
 type Param struct {
-	ConfigParameter string  `json:"configParameter"`
-	Value           *string `json:"value"`
+	ConfigParameter string  `json:"configParameter" protobuf:"bytes,1,opt,name=configParameter"`
+	Value           *string `json:"value" protobuf:"bytes,2,opt,name=value"`
 }
 
 type PostgresDatabaseConfiguration struct {
-	DBName     string  `json:"dBName"`
-	Tablespace *string `json:"tablespace,omitempty"`
-	Params     []Param `json:"params,omitempty"`
+	DBName     string  `json:"dBName" protobuf:"bytes,1,opt,name=dBName"`
+	Tablespace *string `json:"tablespace,omitempty" protobuf:"bytes,2,opt,name=tablespace"`
+	Params     []Param `json:"params,omitempty" protobuf:"bytes,3,rep,name=params"`
 }
 
 func init() {

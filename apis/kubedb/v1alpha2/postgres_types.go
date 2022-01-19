@@ -124,7 +124,7 @@ type PostgresSpec struct {
 	//
 	// +kubebuilder:default={namespaces:{from: Same}}
 	// +optional
-	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty"`
+	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty" protobuf:"bytes,20,opt,name=allowedSchemas"`
 }
 
 // PostgreLeaderElectionConfig contains essential attributes of leader election.

@@ -34,6 +34,21 @@ import "kmodules.xyz/offshoot-api/api/v1/generated.proto";
 // Package-wide variables from generator "generated".
 option go_package = "v1alpha2";
 
+// AllowedConsumers defines which consumers may refer to a database instance.
+message AllowedConsumers {
+  // Namespaces indicates namespaces from which Consumers may be attached to
+  //
+  // +optional
+  // +kubebuilder:default={from: Same}
+  optional ConsumerNamespaces namespaces = 1;
+
+  // Selector specifies a selector for consumers that are allowed to bind
+  // to this database instance.
+  //
+  // +optional
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.LabelSelector selector = 2;
+}
+
 message ConnectionPoolConfig {
   // Port is the port number on which PgBouncer listens to clients. Default: 5432.
   // +optional
@@ -93,6 +108,26 @@ message ConnectionPoolConfig {
   // pgbouncer knows are handled by admin and it can ignore them.
   // +optional
   optional string ignoreStartupParameters = 14;
+}
+
+// ConsumerNamespaces indicate which namespaces Consumers should be selected from.
+message ConsumerNamespaces {
+  // From indicates where Consumers will be selected for the database instance. Possible
+  // values are:
+  // * All: Consumers in all namespaces.
+  // * Selector: Consumers in namespaces selected by the selector
+  // * Same: Only Consumers in the same namespace
+  //
+  // +optional
+  // +kubebuilder:default=Same
+  optional string from = 1;
+
+  // Selector must be specified when From is set to "Selector". In that case,
+  // only Consumers in Namespaces matching this Selector will be selected by the
+  // database instance. This field is ignored for other values of "From".
+  //
+  // +optional
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.LabelSelector selector = 2;
 }
 
 // CoordinatorSpec defines attributes of the coordinator container
@@ -572,6 +607,14 @@ message MariaDBSpec {
   // Coordinator defines attributes of the coordinator container
   // +optional
   optional CoordinatorSpec coordinator = 15;
+
+  // AllowedSchemas defines the types of database schemas that MAY refer to
+  // a database instance and the trusted namespaces where those schema resources MAY be
+  // present.
+  //
+  // +kubebuilder:default={namespaces:{from: Same}}
+  // +optional
+  optional AllowedConsumers allowedSchemas = 16;
 }
 
 message MariaDBStatus {
@@ -852,6 +895,14 @@ message MongoDBSpec {
   // Coordinator defines attributes of the coordinator container
   // +optional
   optional CoordinatorSpec coordinator = 20;
+
+  // AllowedSchemas defines the types of database schemas that MAY refer to
+  // a database instance and the trusted namespaces where those schema resources MAY be
+  // present.
+  //
+  // +kubebuilder:default={namespaces:{from: Same}}
+  // +optional
+  optional AllowedConsumers allowedSchemas = 22;
 }
 
 message MongoDBStatus {
@@ -1000,6 +1051,14 @@ message MySQLSpec {
   // Coordinator defines attributes of the coordinator container
   // +optional
   optional CoordinatorSpec coordinator = 18;
+
+  // AllowedSchemas defines the types of database schemas that MAY refer to
+  // a database instance and the trusted namespaces where those schema resources MAY be
+  // present.
+  //
+  // +kubebuilder:default={namespaces:{from: Same}}
+  // +optional
+  optional AllowedConsumers allowedSchemas = 19;
 }
 
 message MySQLStatus {
@@ -1328,6 +1387,14 @@ message PostgresSpec {
   // Coordinator defines attributes of the coordinator container
   // +optional
   optional CoordinatorSpec coordinator = 19;
+
+  // AllowedSchemas defines the types of database schemas that MAY refer to
+  // a database instance and the trusted namespaces where those schema resources MAY be
+  // present.
+  //
+  // +kubebuilder:default={namespaces:{from: Same}}
+  // +optional
+  optional AllowedConsumers allowedSchemas = 20;
 }
 
 message PostgresStatus {
@@ -1619,6 +1686,14 @@ message RedisSpec {
   // Coordinator defines attributes of the coordinator container
   // +optional
   optional CoordinatorSpec coordinator = 17;
+
+  // AllowedSchemas defines the types of database schemas that MAY refer to
+  // a database instance and the trusted namespaces where those schema resources MAY be
+  // present.
+  //
+  // +kubebuilder:default={namespaces:{from: Same}}
+  // +optional
+  optional AllowedConsumers allowedSchemas = 18;
 }
 
 message RedisStatus {

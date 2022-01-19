@@ -112,7 +112,7 @@ type MariaDBSpec struct {
 	//
 	// +kubebuilder:default={namespaces:{from: Same}}
 	// +optional
-	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty"`
+	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty" protobuf:"bytes,16,opt,name=allowedSchemas"`
 }
 
 // +kubebuilder:validation:Enum=server;archiver;metrics-exporter
