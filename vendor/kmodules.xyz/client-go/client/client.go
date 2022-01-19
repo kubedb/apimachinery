@@ -20,6 +20,9 @@ import (
 	"context"
 	"strings"
 
+	kmapi "kmodules.xyz/client-go/api/v1"
+	"kmodules.xyz/client-go/tools/clusterid"
+
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -32,12 +35,12 @@ import (
 
 type TransformFunc func(obj client.Object, createOp bool) client.Object
 
-func CreateOrPatch(c client.Client, obj client.Object, transform TransformFunc, opts ...client.PatchOption) (client.Object, kutil.VerbType, error) {
+func CreateOrPatch(ctx context.Context, c client.Client, obj client.Object, transform TransformFunc, opts ...client.PatchOption) (client.Object, kutil.VerbType, error) {
 	key := types.NamespacedName{
 		Namespace: obj.GetNamespace(),
 		Name:      obj.GetName(),
 	}
-	err := c.Get(context.TODO(), key, obj)
+	err := c.Get(ctx, key, obj)
 	if kerr.IsNotFound(err) {
 		klog.V(3).Infof("Creating %+v %s/%s.", obj.GetObjectKind().GroupVersionKind(), key.Namespace, key.Name)
 
@@ -48,7 +51,7 @@ func CreateOrPatch(c client.Client, obj client.Object, transform TransformFunc, 
 			}
 		}
 		obj = transform(obj.DeepCopyObject().(client.Object), true)
-		err := c.Create(context.TODO(), obj, createOpts...)
+		err := c.Create(ctx, obj, createOpts...)
 		return obj, kutil.VerbCreated, err
 	} else if err != nil {
 		return nil, kutil.VerbUnchanged, err
@@ -62,7 +65,32 @@ func CreateOrPatch(c client.Client, obj client.Object, transform TransformFunc, 
 	}
 
 	obj = transform(obj.DeepCopyObject().(client.Object), false)
-	err = c.Patch(context.TODO(), obj, patch, opts...)
+	err = c.Patch(ctx, obj, patch, opts...)
+	if err != nil {
+		return nil, kutil.VerbUnchanged, err
+	}
+	return obj, kutil.VerbPatched, nil
+}
+
+func PatchStatus(ctx context.Context, c client.Client, obj client.Object, transform TransformFunc, opts ...client.PatchOption) (client.Object, kutil.VerbType, error) {
+	key := types.NamespacedName{
+		Namespace: obj.GetNamespace(),
+		Name:      obj.GetName(),
+	}
+	err := c.Get(ctx, key, obj)
+	if err != nil {
+		return nil, kutil.VerbUnchanged, err
+	}
+
+	var patch client.Patch
+	if isOfficialTypes(obj.GetObjectKind().GroupVersionKind().Group) {
+		patch = client.StrategicMergeFrom(obj)
+	} else {
+		patch = client.MergeFrom(obj)
+	}
+
+	obj = transform(obj.DeepCopyObject().(client.Object), false)
+	err = c.Status().Patch(ctx, obj, patch, opts...)
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
 	}
@@ -73,7 +101,7 @@ func isOfficialTypes(group string) bool {
 	return !strings.ContainsRune(group, '.')
 }
 
-func GetForGVR(c client.Client, gvr schema.GroupVersionResource, ref types.NamespacedName) (client.Object, error) {
+func GetForGVR(ctx context.Context, c client.Client, gvr schema.GroupVersionResource, ref types.NamespacedName) (client.Object, error) {
 	gvk, err := c.RESTMapper().KindFor(gvr)
 	if err != nil {
 		return nil, err
@@ -83,11 +111,11 @@ func GetForGVR(c client.Client, gvr schema.GroupVersionResource, ref types.Names
 		return nil, err
 	}
 	obj := o.(client.Object)
-	err = c.Get(context.TODO(), ref, obj)
+	err = c.Get(ctx, ref, obj)
 	return obj, err
 }
 
-func GetForGVK(c client.Client, gvk schema.GroupVersionKind, ref types.NamespacedName) (client.Object, error) {
+func GetForGVK(ctx context.Context, c client.Client, gvk schema.GroupVersionKind, ref types.NamespacedName) (client.Object, error) {
 	if gvk.Version == "" {
 		mapping, err := c.RESTMapper().RESTMapping(gvk.GroupKind())
 		if err != nil {
@@ -100,15 +128,24 @@ func GetForGVK(c client.Client, gvk schema.GroupVersionKind, ref types.Namespace
 		return nil, err
 	}
 	obj := o.(client.Object)
-	err = c.Get(context.TODO(), ref, obj)
+	err = c.Get(ctx, ref, obj)
 	return obj, err
 }
 
-func ClusterUID(c client.Client) (string, error) {
+func ClusterUID(c client.Reader) (string, error) {
 	var ns core.Namespace
 	err := c.Get(context.TODO(), client.ObjectKey{Name: metav1.NamespaceSystem}, &ns)
 	if err != nil {
 		return "", err
 	}
 	return string(ns.UID), nil
+}
+
+func ClusterMetadata(c client.Reader) (*kmapi.ClusterMetadata, error) {
+	var ns core.Namespace
+	err := c.Get(context.TODO(), client.ObjectKey{Name: metav1.NamespaceSystem}, &ns)
+	if err != nil {
+		return nil, err
+	}
+	return clusterid.ClusterMetadataForNamespace(&ns)
 }

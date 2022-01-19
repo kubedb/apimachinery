@@ -18,39 +18,57 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+const (
+	ResourceKindRedisDatabase = "RedisDatabase"
+	ResourceRedisDatabase     = "redisdatabase"
+	ResourceRedisDatabases    = "redisdatabases"
+)
 
 // RedisDatabaseSpec defines the desired state of RedisDatabase
 type RedisDatabaseSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// DatabaseRef refers to a KubeDB managed database instance
+	DatabaseRef kmapi.ObjectReference `json:"databaseRef"`
 
-	// Foo is an example field of RedisDatabase. Edit redisdatabase_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// VaultRef refers to a KubeVault managed vault server
+	VaultRef kmapi.ObjectReference `json:"vaultRef"`
+
+	// DatabaseConfig defines various configuration options for a database
+	DatabaseConfig RedisDatabaseConfiguration `json:"databaseConfig"`
+
+	AccessPolicy VaultSecretEngineRole `json:"accessPolicy"`
+
+	// Init contains info about the init script or snapshot info
+	// +optional
+	Init *InitSpec `json:"init,omitempty"`
+
+	// DeletionPolicy controls the delete operation for database
+	// +optional
+	// +kubebuilder:default:="Delete"
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 }
 
-// RedisDatabaseStatus defines the observed state of RedisDatabase
-type RedisDatabaseStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+type RedisDatabaseConfiguration struct {
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +genclient
+// +k8s:openapi-gen=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 
 // RedisDatabase is the Schema for the redisdatabases API
 type RedisDatabase struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   RedisDatabaseSpec   `json:"spec,omitempty"`
-	Status RedisDatabaseStatus `json:"status,omitempty"`
+	Spec   RedisDatabaseSpec `json:"spec,omitempty"`
+	Status DatabaseStatus    `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // RedisDatabaseList contains a list of RedisDatabase
 type RedisDatabaseList struct {

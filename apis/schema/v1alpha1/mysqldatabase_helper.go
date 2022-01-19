@@ -21,139 +21,106 @@ import (
 	"strconv"
 	"strings"
 
+	"kubedb.dev/apimachinery/crds"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/klog/v2"
-	kmodulesv1 "kmodules.xyz/client-go/api/v1"
+	"kmodules.xyz/client-go/apiextensions"
 )
 
+func (_ MySQLDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourceMySQLDatabases))
+}
+
+var _ Interface = &MySQLDatabase{}
+
+func (in *MySQLDatabase) GetInit() *InitSpec {
+	return in.Spec.Init
+}
+
+func (in *MySQLDatabase) GetStatus() DatabaseStatus {
+	return in.Status
+}
+
 //GetAppBindingMeta returns meta info of the appbinding which has been created by schema manager
-func (m *MySQLDatabase) GetAppBindingMeta() metav1.ObjectMeta {
+func (obj *MySQLDatabase) GetAppBindingMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      m.Name + "-appbinding",
-		Namespace: m.Namespace,
+		Name:      obj.Name + "-appbinding",
+		Namespace: obj.Namespace,
 	}
 	return meta
 }
 
 //GetVaultSecretEngineMeta returns meta info of the secret engine which has been created by schema manager
-func (m *MySQLDatabase) GetVaultSecretEngineMeta() metav1.ObjectMeta {
+func (obj *MySQLDatabase) GetVaultSecretEngineMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      m.Name + "-secret-engine",
-		Namespace: m.Namespace,
+		Name:      obj.Name + "-secret-engine",
+		Namespace: obj.Namespace,
 	}
 	return meta
 }
 
 //GetMySQLRoleMeta returns meta info of the MySQL role which has been created by schema manager
-func (m *MySQLDatabase) GetMySQLRoleMeta() metav1.ObjectMeta {
+func (obj *MySQLDatabase) GetMySQLRoleMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      m.Name + "-mysql-role",
-		Namespace: m.Namespace,
+		Name:      obj.Name + "-mysql-role",
+		Namespace: obj.Namespace,
 	}
 	return meta
 }
 
 //GetSecretAccessRequestMeta returns meta info of the secret access request which has been created by schema manager
-func (m *MySQLDatabase) GetSecretAccessRequestMeta() metav1.ObjectMeta {
+func (obj *MySQLDatabase) GetSecretAccessRequestMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      m.Name + "-secret-access-request",
-		Namespace: m.Namespace,
+		Name:      obj.Name + "-secret-access-request",
+		Namespace: obj.Namespace,
 	}
 	return meta
 }
 
 //GetInitJobMeta returns meta info of the init job which has been created by schema manager
-func (m *MySQLDatabase) GetInitJobMeta() metav1.ObjectMeta {
+func (obj *MySQLDatabase) GetInitJobMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      m.Name + "-init-job",
-		Namespace: m.Namespace,
+		Name:      obj.Name + "-init-job",
+		Namespace: obj.Namespace,
 	}
 	return meta
 }
 
 //GetMySQLAuthSecretMeta returns meta info of the mysql auth secret
-func (m *MySQLDatabase) GetMySQLAuthSecretMeta() metav1.ObjectMeta {
+func (obj *MySQLDatabase) GetMySQLAuthSecretMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      m.Spec.MySQLRef.Name + "-auth",
-		Namespace: m.Spec.MySQLRef.Namespace,
+		Name:      obj.Spec.DatabaseRef.Name + "-auth",
+		Namespace: obj.Spec.DatabaseRef.Namespace,
 	}
 	return meta
 }
 
 //GetRestoreSessionMeta returns meta info of the restore session which has been created by schema manager
-func (m *MySQLDatabase) GetRestoreSessionMeta() metav1.ObjectMeta {
+func (obj *MySQLDatabase) GetRestoreSessionMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      m.Name + "-restoresession",
-		Namespace: m.Namespace,
+		Name:      obj.Name + "-restoresession",
+		Namespace: obj.Namespace,
 	}
 	return meta
 }
 
 //GetRepositoryMeta returns meta info of the repository which has been created by schema manager
-func (m *MySQLDatabase) GetRepositoryMeta() metav1.ObjectMeta {
+func (obj *MySQLDatabase) GetRepositoryMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      m.Name + "-repository",
-		Namespace: m.Namespace,
+		Name:      obj.Name + "-repository",
+		Namespace: obj.Namespace,
 	}
 	return meta
 }
 
 //GetRepositorySecretMeta returns meta info of the repository which has been created by schema manager
-func (m *MySQLDatabase) GetRepositorySecretMeta() metav1.ObjectMeta {
+func (obj *MySQLDatabase) GetRepositorySecretMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      m.Name + "-repository-secret",
-		Namespace: m.Namespace,
+		Name:      obj.Name + "-repository-secret",
+		Namespace: obj.Namespace,
 	}
 	return meta
-}
-
-//todo do phase works, update phase of success schema aftel altering databases, check more cases
-func (schemaObj *MySQLDatabase) GetPhase() MySQLDatabasePhase {
-	conditions := schemaObj.Status.Conditions
-
-	if !schemaObj.DeletionTimestamp.IsZero() {
-		return Terminating
-	}
-	if kmodulesv1.IsConditionTrue(conditions, string(SecretAccessRequestExpired)) {
-		return Expired
-	}
-	if schemaObj.Status.Phase == Success {
-		return Success
-	}
-	if kmodulesv1.IsConditionTrue(conditions, string(SchemaIgnored)) {
-		return Failed
-	}
-	if kmodulesv1.IsConditionTrue(conditions, string(MySQLNotReady)) {
-		return Waiting
-	}
-	if kmodulesv1.IsConditionTrue(conditions, string(VaultNotReady)) {
-		return Waiting
-	}
-
-	if kmodulesv1.IsConditionTrue(conditions, string(SecretAccessRequestCreated)) && !kmodulesv1.IsConditionTrue(conditions, string(SecretAccessRequestApproved)) {
-		if kmodulesv1.IsConditionTrue(conditions, string(SecretAccessRequestDenied)) {
-			return Failed
-		}
-		return Waiting
-	}
-	if kmodulesv1.IsConditionTrue(conditions, string(DatabaseCreated)) {
-		if schemaObj.Spec.InitSpec != nil {
-			if kmodulesv1.IsConditionTrue(conditions, string(FailedInitializing)) {
-				return Failed
-			} else if !kmodulesv1.IsConditionTrue(conditions, string(ScriptApplied)) {
-				return Running
-			}
-		}
-		if schemaObj.Spec.Restore != nil {
-			if kmodulesv1.IsConditionTrue(conditions, string(FailedRestoring)) {
-				return Failed
-			} else if !kmodulesv1.IsConditionTrue(conditions, string(RestoredFromRepository)) {
-				return Running
-			}
-		}
-		return Success
-	}
-	return Waiting
 }
 
 //======================================================database functions=====================================
@@ -179,7 +146,7 @@ const (
 )
 
 //CreateDatabase function creates database in the server as per the configuration of d database
-func (d *MySQLDatabaseSchema) CreateDatabase(cl *sql.DB) error {
+func (d *MySQLDatabaseConfiguration) CreateDatabase(cl *sql.DB) error {
 
 	//make queryString string ready
 	queryString := CREATE + DATABASE + IFNOTEXISTS + d.Name
@@ -207,7 +174,7 @@ func (d *MySQLDatabaseSchema) CreateDatabase(cl *sql.DB) error {
 }
 
 //DeleteDatabase drops the database d from the server
-func (d *MySQLDatabaseSchema) DeleteDatabase(cl *sql.DB) error {
+func (d *MySQLDatabaseConfiguration) DeleteDatabase(cl *sql.DB) error {
 
 	//make queryString string ready
 	queryString := DROP + DATABASE + IFEXISTS + d.Name + SEMICOLON
@@ -225,7 +192,7 @@ func (d *MySQLDatabaseSchema) DeleteDatabase(cl *sql.DB) error {
 }
 
 //AlterDatabase alters the existing database of the same name with the updated configuration
-func (d *MySQLDatabaseSchema) AlterDatabase(cl *sql.DB) error {
+func (d *MySQLDatabaseConfiguration) AlterDatabase(cl *sql.DB) error {
 
 	curDatabase, err := GetDatabase(d.Name, cl)
 
@@ -267,7 +234,7 @@ func (d *MySQLDatabaseSchema) AlterDatabase(cl *sql.DB) error {
 }
 
 //GetDatabase fetches database with the name provided and maps it into a database structure
-func GetDatabase(name string, cl *sql.DB) (ret MySQLDatabaseSchema, err error) {
+func GetDatabase(name string, cl *sql.DB) (ret MySQLDatabaseConfiguration, err error) {
 
 	//make query string ready
 	query := SHOW + CREATE + DATABASE + name + SEMICOLON

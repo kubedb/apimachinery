@@ -14,15 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1
+package openapi
 
-// ObjectReference contains enough information to let you inspect or modify the referred object.
-type ObjectReference struct {
-	// Namespace of the referent.
-	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
-	// +optional
-	Namespace string `json:"namespace,omitempty" protobuf:"bytes,1,opt,name=namespace"`
-	// Name of the referent.
-	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-	Name string `json:"name" protobuf:"bytes,2,opt,name=name"`
+import (
+	"k8s.io/kube-openapi/pkg/common"
+)
+
+func GetDefinitions(first common.GetOpenAPIDefinitions, rest ...common.GetOpenAPIDefinitions) common.GetOpenAPIDefinitions {
+	return func(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
+		n := len(first(ref))
+		for _, fn := range rest {
+			n += len(fn(ref))
+		}
+
+		defs := make(map[string]common.OpenAPIDefinition, n)
+		for k, v := range first(ref) {
+			defs[k] = v
+		}
+		for _, fn := range rest {
+			for k, v := range fn(ref) {
+				defs[k] = v
+			}
+		}
+		return defs
+	}
 }

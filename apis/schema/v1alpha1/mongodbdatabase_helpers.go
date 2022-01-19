@@ -16,16 +16,34 @@ limitations under the License.
 
 package v1alpha1
 
-import kdm "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+import (
+	kdm "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	"kubedb.dev/apimachinery/crds"
+
+	"kmodules.xyz/client-go/apiextensions"
+)
 
 const (
-	ResourceKindMongoDBDatabase string = "MongoDBDatabase"
 	InitScriptName              string = "init.js"
 	MongoInitScriptPath         string = "/init-scripts"
 	MongoPrefix                 string = "-mongo"
 	MongoDatabaseNameForEntry   string = "kubedb-system"
 	MongoCollectionNameForEntry string = "databases"
 )
+
+func (_ MongoDBDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourceMongoDBDatabases))
+}
+
+var _ Interface = &MongoDBDatabase{}
+
+func (in *MongoDBDatabase) GetInit() *InitSpec {
+	return in.Spec.Init
+}
+
+func (in *MongoDBDatabase) GetStatus() DatabaseStatus {
+	return in.Status
+}
 
 func (db *MongoDBDatabase) GetMongoInitVolumeNameForPod() string {
 	return db.GetName() + "-init-volume"

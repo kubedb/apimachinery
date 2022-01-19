@@ -17,58 +17,44 @@ limitations under the License.
 package v1alpha1
 
 import (
-	core "k8s.io/api/core/v1"
-	rbac "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	kmodulesv1 "kmodules.xyz/client-go/api/v1"
-	kmodulesv1alpha1 "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-// Important: Run "make" to regenerate code after modifying this file
+const (
+	ResourceKindMySQLDatabase = "MySQLDatabase"
+	ResourceMySQLDatabase     = "mysqldatabase"
+	ResourceMySQLDatabases    = "mysqldatabases"
+)
 
 // MySQLDatabaseSpec defines the desired state of MySQLDatabase
 type MySQLDatabaseSpec struct {
+	// DatabaseRef refers to a KubeDB managed database instance
+	DatabaseRef kmapi.ObjectReference `json:"databaseRef"`
 
-	//MySQLRef refers to kubedb MySQL instance
-	MySQLRef kmodulesv1alpha1.AppReference `json:"mySqlRef"`
+	// VaultRef refers to a KubeVault managed vault server
+	VaultRef kmapi.ObjectReference `json:"vaultRef"`
 
-	//VaultRef refers to kubevault Vault server
-	VaultRef kmodulesv1.ObjectReference `json:"vaultRef"`
+	// DatabaseConfig defines various configuration options for a database
+	DatabaseConfig MySQLDatabaseConfiguration `json:"databaseConfig"`
 
-	//DatabaseConfig contains the expected/target database properties
-	DatabaseConfig MySQLDatabaseSchema `json:"databaseConfig"`
+	AccessPolicy VaultSecretEngineRole `json:"accessPolicy"`
 
-	//todo add specification
-	Subjects []rbac.Subject `json:"subjects"`
+	// Init contains info about the init script or snapshot info
+	// +optional
+	Init *InitSpec `json:"init,omitempty"`
 
-	//InitSpec contains info about the init script volume source
-	//+optional
-	InitSpec *InitSpec `json:"initSpec,omitempty"`
-
-	//Restore contains info for stash restore
-	//+optional
-	Restore *RestoreConf `json:"restore,omitempty"`
-
-	//ValidationTimeLimit contains the time duration for which the schema user
-	//would have access to the MySQL server
-	//+optional
-	ValidationTimeLimit *TTL `json:"validationTimeLimit,omitempty"`
-
-	//TerminationPolicy contains the deletion policy
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy"`
+	// DeletionPolicy controls the delete operation for database
+	// +optional
+	// +kubebuilder:default:="Delete"
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 }
 
-// MySQLDatabaseStatus defines the observed state of MySQLDatabase
-type MySQLDatabaseStatus struct {
-	Phase              MySQLDatabasePhase          `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=MySQLDatabasePhase"`
-	ObservedGeneration int64                       `json:"observedGeneration,omitempty" protobuf:"varint,2,opt,name=observedGeneration"`
-	Conditions         []kmodulesv1.Condition      `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
-	LoginCreds         *kmodulesv1.ObjectReference `json:"loginCreds,omitempty" protobuf:"bytes,5,opt,name=secret"`
-}
-
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +genclient
+// +k8s:openapi-gen=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:printcolumn:name="Login Credential",type="string",JSONPath=".status.loginCreds.name"
@@ -78,11 +64,11 @@ type MySQLDatabase struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   MySQLDatabaseSpec   `json:"spec,omitempty"`
-	Status MySQLDatabaseStatus `json:"status,omitempty"`
+	Spec   MySQLDatabaseSpec `json:"spec,omitempty"`
+	Status DatabaseStatus    `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // MySQLDatabaseList contains a list of MySQLDatabase
 type MySQLDatabaseList struct {
@@ -95,65 +81,33 @@ func init() {
 	SchemeBuilder.Register(&MySQLDatabase{}, &MySQLDatabaseList{})
 }
 
-type MySQLDatabaseSchema struct {
+type MySQLDatabaseConfiguration struct {
 	// Name is target database name
 	Name string `json:"name"`
 
 	//CharacterSet is the target database character set
-	//+optional
+	// +optional
 	CharacterSet string `json:"characterSet,omitempty"`
 
 	//Collation is the target database collation
-	//+optional
+	// +optional
 	Collation string `json:"collation,omitempty"`
 
 	//Encryption is the target databae encryption mode
-	//+optional
+	// +optional
 	Encryption string `json:"encryption,omitempty"`
 
 	//ReadOnly is the target database read only mode
-	//+optional
+	// +optional
 	ReadOnly int32 `json:"readOnly,omitempty"`
 }
 
-// type InitSpec struct {
-// 	//Script is the volume source which contains script.sql data field
-// 	Script core.VolumeSource `json:"script,omitempty"`
-
-// 	//PodTemplate contains user preferred pod configuration
-// 	//+optional
-// 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
-// }
-
-type RestoreConf struct {
-	//Repository is the stash repository reference
-	Repository core.ObjectReference `json:"repository,omitempty"`
-
-	//Snapshot is the rules for restore
-	//+optional
-	Snapshot string `json:"snapshot,omitempty"`
-}
-
-type TTL struct {
-	//DefaultTTL refers to the actual validation time limit
-	DefaultTTL string `json:"defaultTTL"`
-
-	//MaxTTL refers to the maximum validation time limit
-	//+optional
-	MaxTTL string `json:"maxTTL,omitempty"`
-}
-
-type MySQLDatabasePhase string
-type TerminationPolicy string
 type MySQLDatabaseCondition string
 type MySQLDatabaseVerbs string
 
 const (
 	AddCondition    MySQLDatabaseVerbs = "AddCondition"
 	RemoveCondition MySQLDatabaseVerbs = "RemoveCondition"
-
-	TerminationPolicyDelete      TerminationPolicy = "Delete"
-	TerminationPolicyDoNotDelete TerminationPolicy = "DoNotDelete"
 
 	MySQLRoleCreated           MySQLDatabaseCondition = "MySQLRoleCreated"
 	VaultSecretEngineCreated   MySQLDatabaseCondition = "VaultSecretEngineCreated"
@@ -175,12 +129,4 @@ const (
 	FailedRestoring        MySQLDatabaseCondition = "FailedRestoring"
 	TerminationHalted      MySQLDatabaseCondition = "TerminationHalted"
 	UserDisconnected       MySQLDatabaseCondition = "UserDisconnected"
-
-	Success     MySQLDatabasePhase = "Success"
-	Running     MySQLDatabasePhase = "Running"
-	Waiting     MySQLDatabasePhase = "Waiting"
-	Ignored     MySQLDatabasePhase = "Ignored"
-	Failed      MySQLDatabasePhase = "Failed"
-	Expired     MySQLDatabasePhase = "Expired"
-	Terminating MySQLDatabasePhase = "Terminating"
 )

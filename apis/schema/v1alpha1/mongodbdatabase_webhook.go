@@ -38,7 +38,7 @@ func (db *MongoDBDatabase) SetupWebhookWithManager(mgr manager.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-schema-kubedb-com-v1alpha1-mongodbdatabase,mutating=true,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mongodbdatabases,verbs=create;update,versions=v1alpha1,name=mmongodbdatabase.kb.io,admissionReviewVersions={v1,v1beta1}
+// +kubebuilder:webhook:path=/mutate-schema-kubedb-com-v1alpha1-mongodbdatabase,mutating=true,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mongodbdatabases,verbs=create;update,versions=v1alpha1,name=mmongodbdatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Defaulter = &MongoDBDatabase{}
 
@@ -53,7 +53,7 @@ func (db *MongoDBDatabase) Default() {
 	}
 }
 
-//+kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mongodbdatabase,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mongodbdatabases,verbs=create;update;delete,versions=v1alpha1,name=vmongodbdatabase.kb.io,admissionReviewVersions={v1,v1beta1}
+// +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mongodbdatabase,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mongodbdatabases,verbs=create;update;delete,versions=v1alpha1,name=vmongodbdatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Validator = &MongoDBDatabase{}
 
@@ -67,7 +67,7 @@ func (db *MongoDBDatabase) ValidateCreate() error {
 func (db *MongoDBDatabase) ValidateUpdate(old runtime.Object) error {
 	mongodbdatabaselog.Info("validate update", "name", db.Name)
 	oldDb := old.(*MongoDBDatabase)
-	if oldDb.Status.Phase == SchemaDatabasePhaseSuccessfull && oldDb.Spec.DatabaseSchema.Name != db.Spec.DatabaseSchema.Name {
+	if oldDb.Status.Phase == SchemaDatabasePhaseSuccessfull && oldDb.Spec.DatabaseConfig.Name != db.Spec.DatabaseConfig.Name {
 		return errors.New("you can't change the Database Schema name now")
 	}
 
@@ -127,7 +127,7 @@ func (db *MongoDBDatabase) validateSchemaInitRestore() *field.Error {
 
 func (db *MongoDBDatabase) validateMongoDBDatabaseSchemaName() *field.Error {
 	path := field.NewPath("spec").Child("databaseSchema").Child("name")
-	name := db.Spec.DatabaseSchema.Name
+	name := db.Spec.DatabaseConfig.Name
 
 	if name == MongoDatabaseNameForEntry || name == "admin" || name == "config" || name == "local" {
 		str := fmt.Sprintf("cannot use \"%v\" as the database name", name)

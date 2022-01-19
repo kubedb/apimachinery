@@ -47,7 +47,7 @@ type SnapshotSourceSpec struct {
 type BackupScheduleSpec struct {
 	CronExpression string `json:"cronExpression,omitempty" protobuf:"bytes,1,opt,name=cronExpression"`
 
-	// Snapshot Spec
+	// SnapshotID Spec
 	store.Backend `json:",inline" protobuf:"bytes,2,opt,name=backend"`
 
 	// StorageType can be durable or ephemeral.

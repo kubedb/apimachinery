@@ -20069,7 +20069,7 @@ func schema_apimachinery_apis_config_v1alpha1_GaleraArbitratorConfiguration(ref 
 					},
 					"sstMethod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SSTMethod denotes the method or script the node uses during a State Snapshot Transfer. This method is needed to form the SST request string that contains SST request to trigger state snapshot dump (state backup) on one of the other nodes. Ref: https://galeracluster.com/library/documentation/mysql-wsrep-options.html#wsrep-sst-method",
+							Description: "SSTMethod denotes the method or script the node uses during a State SnapshotID Transfer. This method is needed to form the SST request string that contains SST request to trigger state snapshot dump (state backup) on one of the other nodes. Ref: https://galeracluster.com/library/documentation/mysql-wsrep-options.html#wsrep-sst-method",
 							Type:        []string{"string"},
 							Format:      "",
 						},

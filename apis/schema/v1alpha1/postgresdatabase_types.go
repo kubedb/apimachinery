@@ -17,20 +17,14 @@ limitations under the License.
 package v1alpha1
 
 import (
-	core "k8s.io/api/core/v1"
-	rbac "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
-type DeletionPolicy string
-
 const (
-	// DeletionPolicyDelete Deletes database pods, service, pvcs and stash backup data.
-	DeletionPolicyDelete DeletionPolicy = "Delete"
-	// DeletionPolicyDoNotDelete Rejects attempt to delete database using ValidationWebhook.
-	DeletionPolicyDoNotDelete DeletionPolicy = "DoNotDelete"
+	ResourceKindPostgresDatabase = "PostgresDatabase"
+	ResourcePostgresDatabase     = "postgresdatabase"
+	ResourcePostgresDatabases    = "postgresdatabases"
 )
 
 type SchemaDatabasePhase string
@@ -87,59 +81,51 @@ const (
 	SchemaDatabaseReasonRestoreSessionNotReady      SchemaDatabaseReason = "CheckRestoreSessionIsNotReady"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // PostgresDatabaseSpec defines the desired state of PostgresDatabase
 type PostgresDatabaseSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	VaultRef       kmapi.ObjectReference  `json:"vaultRef"`
-	DatabaseRef    DatabaseRef            `json:"databaseRef"`
-	Database       PostgresDatabaseSchema `json:"database"`
-	Subjects       []rbac.Subject         `json:"subjects,omitempty"`
-	Init           *Init                  `json:"init,omitempty"`
-	Restore        *RestoreRef            `json:"restore,omitempty"`
-	DeletionPolicy DeletionPolicy         `json:"deletionPolicy"`
-	AutoApproval   bool                   `json:"autoApproval"`
-	DefaultTTL     string                 `json:"defaultTTL"`
-	MaxTTL         string                 `json:"maxTTL"`
+	// DatabaseRef refers to a KubeDB managed database instance
+	DatabaseRef kmapi.ObjectReference `json:"databaseRef"`
+
+	// VaultRef refers to a KubeVault managed vault server
+	VaultRef kmapi.ObjectReference `json:"vaultRef"`
+
+	// DatabaseConfig defines various configuration options for a database
+	DatabaseConfig PostgresDatabaseConfiguration `json:"databaseConfig"`
+
+	AccessPolicy VaultSecretEngineRole `json:"accessPolicy"`
+
+	// Init contains info about the init script or snapshot info
+	// +optional
+	Init *InitSpec `json:"init,omitempty"`
+
+	// DeletionPolicy controls the delete operation for database
+	// +optional
+	// +kubebuilder:default:="Delete"
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 }
 
-// PostgresDatabaseStatus defines the observed state of PostgresDatabase
-type PostgresDatabaseStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	Phase      SchemaDatabasePhase    `json:"phase"`
-	Conditions []kmapi.Condition      `json:"conditions"`
-	LoginCreds *kmapi.ObjectReference `json:"loginCreds,omitempty"`
-}
-
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +genclient
+// +k8s:openapi-gen=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 
 // PostgresDatabase is the Schema for the postgresdatabases API
 type PostgresDatabase struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   PostgresDatabaseSpec   `json:"spec,omitempty"`
-	Status PostgresDatabaseStatus `json:"status,omitempty"`
+	Spec   PostgresDatabaseSpec `json:"spec,omitempty"`
+	Status DatabaseStatus       `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // PostgresDatabaseList contains a list of PostgresDatabase
 type PostgresDatabaseList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []PostgresDatabase `json:"items"`
-}
-
-type RestoreRef struct {
-	Repository      core.ObjectReference `json:"repository,omitempty"`
-	Snapshot        string               `json:"snapshot,omitempty"`
-	RuntimeSettings ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
 }
 
 type DatabaseRef struct {
@@ -153,15 +139,10 @@ type Param struct {
 	Value           *string `json:"value"`
 }
 
-type PostgresDatabaseSchema struct {
+type PostgresDatabaseConfiguration struct {
 	DBName     string  `json:"dBName"`
 	Tablespace *string `json:"tablespace,omitempty"`
 	Params     []Param `json:"params,omitempty"`
-}
-
-type Init struct {
-	Script      core.VolumeSource    `json:"script"`
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate"`
 }
 
 func init() {

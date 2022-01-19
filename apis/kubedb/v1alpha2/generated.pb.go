@@ -2194,7 +2194,7 @@ func init() {
 	proto.RegisterType((*EtcdList)(nil), "kubedb.dev.apimachinery.apis.kubedb.v1alpha2.EtcdList")
 	proto.RegisterType((*EtcdSpec)(nil), "kubedb.dev.apimachinery.apis.kubedb.v1alpha2.EtcdSpec")
 	proto.RegisterType((*EtcdStatus)(nil), "kubedb.dev.apimachinery.apis.kubedb.v1alpha2.EtcdStatus")
-	proto.RegisterType((*InitSpec)(nil), "kubedb.dev.apimachinery.apis.kubedb.v1alpha2.InitSpec")
+	proto.RegisterType((*InitSpec)(nil), "kubedb.dev.apimachinery.apis.kubedb.v1alpha2.Init")
 	proto.RegisterType((*KernelSettings)(nil), "kubedb.dev.apimachinery.apis.kubedb.v1alpha2.KernelSettings")
 	proto.RegisterType((*MariaDB)(nil), "kubedb.dev.apimachinery.apis.kubedb.v1alpha2.MariaDB")
 	proto.RegisterType((*MariaDBList)(nil), "kubedb.dev.apimachinery.apis.kubedb.v1alpha2.MariaDBList")
@@ -9865,7 +9865,7 @@ func (this *ElasticsearchSpec) String() string {
 		`AuthSecret:` + strings.Replace(fmt.Sprintf("%v", this.AuthSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
 		`StorageType:` + fmt.Sprintf("%v", this.StorageType) + `,`,
 		`Storage:` + strings.Replace(fmt.Sprintf("%v", this.Storage), "PersistentVolumeClaimSpec", "v1.PersistentVolumeClaimSpec", 1) + `,`,
-		`Init:` + strings.Replace(this.Init.String(), "InitSpec", "InitSpec", 1) + `,`,
+		`Init:` + strings.Replace(this.Init.String(), "Init", "Init", 1) + `,`,
 		`Monitor:` + strings.Replace(fmt.Sprintf("%v", this.Monitor), "AgentSpec", "v12.AgentSpec", 1) + `,`,
 		`ConfigSecret:` + strings.Replace(fmt.Sprintf("%v", this.ConfigSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
 		`SecureConfigSecret:` + strings.Replace(fmt.Sprintf("%v", this.SecureConfigSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
@@ -9969,7 +9969,7 @@ func (this *EtcdSpec) String() string {
 		`StorageType:` + fmt.Sprintf("%v", this.StorageType) + `,`,
 		`Storage:` + strings.Replace(fmt.Sprintf("%v", this.Storage), "PersistentVolumeClaimSpec", "v1.PersistentVolumeClaimSpec", 1) + `,`,
 		`AuthSecret:` + strings.Replace(fmt.Sprintf("%v", this.AuthSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
-		`Init:` + strings.Replace(this.Init.String(), "InitSpec", "InitSpec", 1) + `,`,
+		`Init:` + strings.Replace(this.Init.String(), "Init", "Init", 1) + `,`,
 		`Monitor:` + strings.Replace(fmt.Sprintf("%v", this.Monitor), "AgentSpec", "v12.AgentSpec", 1) + `,`,
 		`TLS:` + strings.Replace(this.TLS.String(), "TLSPolicy", "TLSPolicy", 1) + `,`,
 		`PodTemplate:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.PodTemplate), "PodTemplateSpec", "v13.PodTemplateSpec", 1), `&`, ``, 1) + `,`,
@@ -10001,7 +10001,7 @@ func (this *InitSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&InitSpec{`,
+	s := strings.Join([]string{`&Init{`,
 		`Initialized:` + fmt.Sprintf("%v", this.Initialized) + `,`,
 		`WaitForInitialRestore:` + fmt.Sprintf("%v", this.WaitForInitialRestore) + `,`,
 		`Script:` + strings.Replace(this.Script.String(), "ScriptSourceSpec", "ScriptSourceSpec", 1) + `,`,
@@ -10068,7 +10068,7 @@ func (this *MariaDBSpec) String() string {
 		`StorageType:` + fmt.Sprintf("%v", this.StorageType) + `,`,
 		`Storage:` + strings.Replace(fmt.Sprintf("%v", this.Storage), "PersistentVolumeClaimSpec", "v1.PersistentVolumeClaimSpec", 1) + `,`,
 		`AuthSecret:` + strings.Replace(fmt.Sprintf("%v", this.AuthSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
-		`Init:` + strings.Replace(this.Init.String(), "InitSpec", "InitSpec", 1) + `,`,
+		`Init:` + strings.Replace(this.Init.String(), "Init", "Init", 1) + `,`,
 		`Monitor:` + strings.Replace(fmt.Sprintf("%v", this.Monitor), "AgentSpec", "v12.AgentSpec", 1) + `,`,
 		`ConfigSecret:` + strings.Replace(fmt.Sprintf("%v", this.ConfigSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
 		`PodTemplate:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.PodTemplate), "PodTemplateSpec", "v13.PodTemplateSpec", 1), `&`, ``, 1) + `,`,
@@ -10296,7 +10296,7 @@ func (this *MongoDBSpec) String() string {
 		`AuthSecret:` + strings.Replace(fmt.Sprintf("%v", this.AuthSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
 		`ClusterAuthMode:` + fmt.Sprintf("%v", this.ClusterAuthMode) + `,`,
 		`SSLMode:` + fmt.Sprintf("%v", this.SSLMode) + `,`,
-		`Init:` + strings.Replace(this.Init.String(), "InitSpec", "InitSpec", 1) + `,`,
+		`Init:` + strings.Replace(this.Init.String(), "Init", "Init", 1) + `,`,
 		`Monitor:` + strings.Replace(fmt.Sprintf("%v", this.Monitor), "AgentSpec", "v12.AgentSpec", 1) + `,`,
 		`ConfigSecret:` + strings.Replace(fmt.Sprintf("%v", this.ConfigSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
 		`PodTemplate:` + strings.Replace(fmt.Sprintf("%v", this.PodTemplate), "PodTemplateSpec", "v13.PodTemplateSpec", 1) + `,`,
@@ -10418,7 +10418,7 @@ func (this *MySQLSpec) String() string {
 		`StorageType:` + fmt.Sprintf("%v", this.StorageType) + `,`,
 		`Storage:` + strings.Replace(fmt.Sprintf("%v", this.Storage), "PersistentVolumeClaimSpec", "v1.PersistentVolumeClaimSpec", 1) + `,`,
 		`AuthSecret:` + strings.Replace(fmt.Sprintf("%v", this.AuthSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
-		`Init:` + strings.Replace(this.Init.String(), "InitSpec", "InitSpec", 1) + `,`,
+		`Init:` + strings.Replace(this.Init.String(), "Init", "Init", 1) + `,`,
 		`Monitor:` + strings.Replace(fmt.Sprintf("%v", this.Monitor), "AgentSpec", "v12.AgentSpec", 1) + `,`,
 		`ConfigSecret:` + strings.Replace(fmt.Sprintf("%v", this.ConfigSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
 		`PodTemplate:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.PodTemplate), "PodTemplateSpec", "v13.PodTemplateSpec", 1), `&`, ``, 1) + `,`,
@@ -10504,7 +10504,7 @@ func (this *PerconaXtraDBSpec) String() string {
 		`StorageType:` + fmt.Sprintf("%v", this.StorageType) + `,`,
 		`Storage:` + strings.Replace(fmt.Sprintf("%v", this.Storage), "PersistentVolumeClaimSpec", "v1.PersistentVolumeClaimSpec", 1) + `,`,
 		`AuthSecret:` + strings.Replace(fmt.Sprintf("%v", this.AuthSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
-		`Init:` + strings.Replace(this.Init.String(), "InitSpec", "InitSpec", 1) + `,`,
+		`Init:` + strings.Replace(this.Init.String(), "Init", "Init", 1) + `,`,
 		`Monitor:` + strings.Replace(fmt.Sprintf("%v", this.Monitor), "AgentSpec", "v12.AgentSpec", 1) + `,`,
 		`ConfigSecret:` + strings.Replace(fmt.Sprintf("%v", this.ConfigSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
 		`PodTemplate:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.PodTemplate), "PodTemplateSpec", "v13.PodTemplateSpec", 1), `&`, ``, 1) + `,`,
@@ -10670,7 +10670,7 @@ func (this *PostgresSpec) String() string {
 		`Storage:` + strings.Replace(fmt.Sprintf("%v", this.Storage), "PersistentVolumeClaimSpec", "v1.PersistentVolumeClaimSpec", 1) + `,`,
 		`ClientAuthMode:` + fmt.Sprintf("%v", this.ClientAuthMode) + `,`,
 		`SSLMode:` + fmt.Sprintf("%v", this.SSLMode) + `,`,
-		`Init:` + strings.Replace(this.Init.String(), "InitSpec", "InitSpec", 1) + `,`,
+		`Init:` + strings.Replace(this.Init.String(), "Init", "Init", 1) + `,`,
 		`Monitor:` + strings.Replace(fmt.Sprintf("%v", this.Monitor), "AgentSpec", "v12.AgentSpec", 1) + `,`,
 		`ConfigSecret:` + strings.Replace(fmt.Sprintf("%v", this.ConfigSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
 		`PodTemplate:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.PodTemplate), "PodTemplateSpec", "v13.PodTemplateSpec", 1), `&`, ``, 1) + `,`,
@@ -10931,7 +10931,7 @@ func (this *RedisSpec) String() string {
 		`StorageType:` + fmt.Sprintf("%v", this.StorageType) + `,`,
 		`Storage:` + strings.Replace(fmt.Sprintf("%v", this.Storage), "PersistentVolumeClaimSpec", "v1.PersistentVolumeClaimSpec", 1) + `,`,
 		`AuthSecret:` + strings.Replace(fmt.Sprintf("%v", this.AuthSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
-		`Init:` + strings.Replace(this.Init.String(), "InitSpec", "InitSpec", 1) + `,`,
+		`Init:` + strings.Replace(this.Init.String(), "Init", "Init", 1) + `,`,
 		`Monitor:` + strings.Replace(fmt.Sprintf("%v", this.Monitor), "AgentSpec", "v12.AgentSpec", 1) + `,`,
 		`ConfigSecret:` + strings.Replace(fmt.Sprintf("%v", this.ConfigSecret), "LocalObjectReference", "v1.LocalObjectReference", 1) + `,`,
 		`PodTemplate:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.PodTemplate), "PodTemplateSpec", "v13.PodTemplateSpec", 1), `&`, ``, 1) + `,`,
@@ -15094,10 +15094,10 @@ func (m *InitSpec) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: InitSpec: wiretype end group for non-group")
+			return fmt.Errorf("proto: Init: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: InitSpec: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: Init: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
