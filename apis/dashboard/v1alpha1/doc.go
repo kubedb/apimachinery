@@ -15,6 +15,10 @@ limitations under the License.
 */
 
 // Package v1alpha1 contains API Schema definitions for the dashboard v1alpha1 API group
+
+// +k8s:deepcopy-gen=package,register
+// +k8s:openapi-gen=true
+// +k8s:defaulter-gen=TypeMeta
 //+kubebuilder:object:generate=true
 //+groupName=dashboard.kubedb.com
 package v1alpha1
@@ -25,12 +29,22 @@ import (
 )
 
 var (
-	// GroupVersion is group version used to register these objects
-	GroupVersion = schema.GroupVersion{Group: "dashboard.kubedb.com", Version: "v1alpha1"}
+	// SchemeGroupVersion is group version used to register these objects
+	SchemeGroupVersion = schema.GroupVersion{Group: "dashboard.kubedb.com", Version: "v1alpha1"}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
-	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
+	SchemeBuilder = &scheme.Builder{GroupVersion: SchemeGroupVersion}
 
 	// AddToScheme adds the types in this group-version to the given scheme.
 	AddToScheme = SchemeBuilder.AddToScheme
 )
+
+// Kind takes an unqualified kind and returns a Group qualified GroupKind
+func Kind(kind string) schema.GroupKind {
+	return SchemeGroupVersion.WithKind(kind).GroupKind()
+}
+
+// Resource takes an unqualified resource and returns a Group qualified GroupResource
+func Resource(resource string) schema.GroupResource {
+	return SchemeGroupVersion.WithResource(resource).GroupResource()
+}

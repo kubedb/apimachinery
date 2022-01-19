@@ -30,39 +30,39 @@ const (
 
 // MongoDBInsightSpec defines the desired state of MongoDBInsight
 type MongoDBInsightSpec struct {
-	Version        string                  `json:"version" protobuf:"bytes,1,opt,name=version"`
-	Type           MongoDBMode             `json:"type" protobuf:"bytes,2,opt,name=type,casttype=MongoDBMode"`
-	Status         api.DatabasePhase       `json:"status" protobuf:"bytes,3,opt,name=status,casttype=DBStatus"`
-	Connections    *MongoDBConnectionsInfo `json:"connections,omitempty" protobuf:"bytes,4,opt,name=connections"`
-	DBStats        *MongoDBDatabaseStats   `json:"dbStats,omitempty" protobuf:"bytes,5,opt,name=dbStats"`
-	ShardsInfo     *MongoDBShardsInfo      `json:"shardsInfo,omitempty" protobuf:"bytes,6,opt,name=shardsInfo"`
-	ReplicaSetInfo *MongoDBReplicaSetInfo  `json:"replicaSetInfo,omitempty" protobuf:"bytes,7,opt,name=replicaSetInfo"`
+	Version        string                  `json:"version"`
+	Type           MongoDBMode             `json:"type"`
+	Status         api.DatabasePhase       `json:"status"`
+	Connections    *MongoDBConnectionsInfo `json:"connections,omitempty"`
+	DBStats        *MongoDBDatabaseStats   `json:"dbStats,omitempty"`
+	ShardsInfo     *MongoDBShardsInfo      `json:"shardsInfo,omitempty"`
+	ReplicaSetInfo *MongoDBReplicaSetInfo  `json:"replicaSetInfo,omitempty"`
 }
 
 type MongoDBDatabaseStats struct {
-	TotalCollections int32 `json:"totalCollections" protobuf:"varint,1,opt,name=totalCollections"`
-	DataSize         int64 `json:"dataSize" protobuf:"varint,2,opt,name=dataSize"`
-	TotalIndexes     int32 `json:"totalIndexes" protobuf:"varint,3,opt,name=totalIndexes"`
-	IndexSize        int64 `json:"indexSize" protobuf:"varint,4,opt,name=indexSize"`
+	TotalCollections int32 `json:"totalCollections"`
+	DataSize         int64 `json:"dataSize"`
+	TotalIndexes     int32 `json:"totalIndexes"`
+	IndexSize        int64 `json:"indexSize"`
 }
 
 type MongoDBConnectionsInfo struct {
-	CurrentConnections   int32 `json:"currentConnections" protobuf:"varint,1,opt,name=currentConnections"`
-	TotalConnections     int32 `json:"totalConnections" protobuf:"varint,2,opt,name=totalConnections"`
-	AvailableConnections int32 `json:"availableConnections" protobuf:"varint,3,opt,name=availableConnections"`
-	ActiveConnections    int32 `json:"activeConnections" protobuf:"varint,4,opt,name=activeConnections"`
+	CurrentConnections   int32 `json:"currentConnections"`
+	TotalConnections     int32 `json:"totalConnections"`
+	AvailableConnections int32 `json:"availableConnections"`
+	ActiveConnections    int32 `json:"activeConnections"`
 }
 
 type MongoDBReplicaSetInfo struct {
-	NumberOfReplicas int32 `json:"numberOfReplicas" protobuf:"varint,1,opt,name=numberOfReplicas"`
+	NumberOfReplicas int32 `json:"numberOfReplicas"`
 }
 
 type MongoDBShardsInfo struct {
-	NumberOfShards    int32 `json:"numberOfShards" protobuf:"varint,1,opt,name=numberOfShards"`
-	ReplicasPerShards int32 `json:"replicasPerShards" protobuf:"varint,2,opt,name=replicasPerShards"`
-	NumberOfChunks    int32 `json:"numberOfChunks" protobuf:"varint,3,opt,name=numberOfChunks"`
-	BalancerEnabled   bool  `json:"balancerEnabled,omitempty" protobuf:"varint,4,opt,name=balancerEnabled"`
-	ChunksBalanced    bool  `json:"chunksBalanced,omitempty" protobuf:"varint,5,opt,name=chunksBalanced"`
+	NumberOfShards    int32 `json:"numberOfShards"`
+	ReplicasPerShards int32 `json:"replicasPerShards"`
+	NumberOfChunks    int32 `json:"numberOfChunks"`
+	BalancerEnabled   bool  `json:"balancerEnabled,omitempty"`
+	ChunksBalanced    bool  `json:"chunksBalanced,omitempty"`
 }
 
 // MongoDBInsight is the Schema for the MongoDBInsights API
@@ -70,10 +70,10 @@ type MongoDBShardsInfo struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type MongoDBInsight struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   MongoDBInsightSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status api.MongoDBStatus  `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Spec   MongoDBInsightSpec `json:"spec,omitempty"`
+	Status api.MongoDBStatus  `json:"status,omitempty"`
 }
 
 // MongoDBInsightList contains a list of MongoDBInsight
@@ -81,8 +81,8 @@ type MongoDBInsight struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type MongoDBInsightList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items           []MongoDBInsight `json:"items" protobuf:"bytes,2,rep,name=items"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []MongoDBInsight `json:"items"`
 }
 
 func init() {

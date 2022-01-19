@@ -30,20 +30,20 @@ const (
 
 // RedisInsightSpec defines the desired state of RedisInsight
 type RedisInsightSpec struct {
-	Version                      string `json:"version" protobuf:"bytes,1,opt,name=version"`
-	Status                       string `json:"status" protobuf:"bytes,2,opt,name=status"`
-	Mode                         string `json:"mode" protobuf:"bytes,3,opt,name=mode"`
-	EvictionPolicy               string `json:"evictionPolicy,omitempty" protobuf:"bytes,4,opt,name=evictionPolicy"`
-	MaxClients                   int64  `json:"maxClients,omitempty" protobuf:"varint,5,opt,name=maxClients"`
-	ConnectedClients             int64  `json:"connectedClients,omitempty" protobuf:"varint,6,opt,name=connectedClients"`
-	BlockedClients               int64  `json:"blockedClients,omitempty" protobuf:"varint,7,opt,name=blockedClients"`
-	TotalKeys                    int64  `json:"totalKeys,omitempty" protobuf:"varint,8,opt,name=totalKeys"`
-	ExpiredKeys                  int64  `json:"expiredKeys,omitempty" protobuf:"varint,9,opt,name=expiredKeys"`
-	EvictedKeys                  int64  `json:"evictedKeys,omitempty" protobuf:"varint,10,opt,name=evictedKeys"`
-	ReceivedConnections          int64  `json:"receivedConnections,omitempty" protobuf:"varint,11,opt,name=receivedConnections"`
-	RejectedConnections          int64  `json:"rejectedConnections,omitempty" protobuf:"varint,12,opt,name=rejectedConnections"`
-	SlowLogThresholdMicroSeconds int64  `json:"slowLogThresholdMicroSeconds,omitempty" protobuf:"varint,13,opt,name=slowLogThresholdMicroSeconds"`
-	SlowLogMaxLen                int64  `json:"slowLogMaxLen,omitempty" protobuf:"varint,14,opt,name=slowLogMaxLen"`
+	Version                      string `json:"version"`
+	Status                       string `json:"status"`
+	Mode                         string `json:"mode"`
+	EvictionPolicy               string `json:"evictionPolicy,omitempty"`
+	MaxClients                   int64  `json:"maxClients,omitempty"`
+	ConnectedClients             int64  `json:"connectedClients,omitempty"`
+	BlockedClients               int64  `json:"blockedClients,omitempty"`
+	TotalKeys                    int64  `json:"totalKeys,omitempty"`
+	ExpiredKeys                  int64  `json:"expiredKeys,omitempty"`
+	EvictedKeys                  int64  `json:"evictedKeys,omitempty"`
+	ReceivedConnections          int64  `json:"receivedConnections,omitempty"`
+	RejectedConnections          int64  `json:"rejectedConnections,omitempty"`
+	SlowLogThresholdMicroSeconds int64  `json:"slowLogThresholdMicroSeconds,omitempty"`
+	SlowLogMaxLen                int64  `json:"slowLogMaxLen,omitempty"`
 }
 
 // RedisInsight is the Schema for the redisinsights API
@@ -51,10 +51,10 @@ type RedisInsightSpec struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type RedisInsight struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   RedisInsightSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status api.RedisStatus  `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Spec   RedisInsightSpec `json:"spec,omitempty"`
+	Status api.RedisStatus  `json:"status,omitempty"`
 }
 
 // RedisInsightList contains a list of RedisInsight
@@ -62,8 +62,8 @@ type RedisInsight struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type RedisInsightList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items           []RedisInsight `json:"items" protobuf:"bytes,2,rep,name=items"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []RedisInsight `json:"items"`
 }
 
 func init() {

@@ -32,7 +32,7 @@ const (
 )
 
 func (in MongoDBDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourceMongoDBDatabases))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceMongoDBDatabases))
 }
 
 var _ Interface = &MongoDBDatabase{}

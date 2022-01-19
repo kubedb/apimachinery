@@ -30,51 +30,52 @@ const (
 // RedisDatabaseSpec defines the desired state of RedisDatabase
 type RedisDatabaseSpec struct {
 	// DatabaseRef refers to a KubeDB managed database instance
-	DatabaseRef kmapi.ObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
+	DatabaseRef kmapi.ObjectReference `json:"databaseRef"`
 
 	// VaultRef refers to a KubeVault managed vault server
-	VaultRef kmapi.ObjectReference `json:"vaultRef" protobuf:"bytes,2,opt,name=vaultRef"`
+	VaultRef kmapi.ObjectReference `json:"vaultRef"`
 
 	// DatabaseConfig defines various configuration options for a database
-	DatabaseConfig RedisDatabaseConfiguration `json:"databaseConfig" protobuf:"bytes,3,opt,name=databaseConfig"`
+	DatabaseConfig RedisDatabaseConfiguration `json:"databaseConfig"`
 
-	AccessPolicy VaultSecretEngineRole `json:"accessPolicy" protobuf:"bytes,4,opt,name=accessPolicy"`
+	AccessPolicy VaultSecretEngineRole `json:"accessPolicy"`
 
 	// Init contains info about the init script or snapshot info
 	// +optional
-	Init *InitSpec `json:"init,omitempty" protobuf:"bytes,5,opt,name=init"`
+	Init *InitSpec `json:"init,omitempty"`
 
 	// DeletionPolicy controls the delete operation for database
 	// +optional
 	// +kubebuilder:default:="Delete"
-	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty" protobuf:"bytes,6,opt,name=deletionPolicy,casttype=DeletionPolicy"`
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 }
 
 type RedisDatabaseConfiguration struct {
 }
+
+// RedisDatabase is the Schema for the redisdatabases API
 
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-
-// RedisDatabase is the Schema for the redisdatabases API
 type RedisDatabase struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   RedisDatabaseSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status DatabaseStatus    `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Spec   RedisDatabaseSpec `json:"spec,omitempty"`
+	Status DatabaseStatus    `json:"status,omitempty"`
 }
 
-// +kubebuilder:object:root=true
-
 // RedisDatabaseList contains a list of RedisDatabase
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
 type RedisDatabaseList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items           []RedisDatabase `json:"items" protobuf:"bytes,2,rep,name=items"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []RedisDatabase `json:"items"`
 }
 
 func init() {

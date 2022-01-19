@@ -7,7 +7,7 @@ import (
 )
 
 func (_ RedisDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourceRedisDatabases))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceRedisDatabases))
 }
 
 var _ Interface = &RedisDatabase{}

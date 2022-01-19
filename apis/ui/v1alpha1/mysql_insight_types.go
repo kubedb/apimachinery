@@ -30,20 +30,20 @@ const (
 
 // MySQLInsightSpec defines the desired state of MySQLInsight
 type MySQLInsightSpec struct {
-	Version                       string  `json:"version" protobuf:"bytes,1,opt,name=version"`
-	Status                        string  `json:"status" protobuf:"bytes,2,opt,name=status"`
-	Mode                          string  `json:"mode" protobuf:"bytes,3,opt,name=mode"`
-	MaxConnections                int32   `json:"maxConnections" protobuf:"varint,4,opt,name=maxConnections"`
-	MaxUsedConnections            int32   `json:"maxUsedConnections" protobuf:"varint,5,opt,name=maxUsedConnections"`
-	Questions                     int32   `json:"questions" protobuf:"varint,6,opt,name=questions"`
-	LongQueryTimeThresholdSeconds float64 `json:"longQueryTimeThresholdSeconds,omitempty" protobuf:"fixed64,7,opt,name=longQueryTimeThresholdSeconds"`
-	NumberOfSlowQueries           int32   `json:"numberOfSlowQueries,omitempty" protobuf:"varint,8,opt,name=numberOfSlowQueries"`
-	AbortedClients                int32   `json:"abortedClients,omitempty" protobuf:"varint,9,opt,name=abortedClients"`
-	AbortedConnections            int32   `json:"abortedConnections,omitempty" protobuf:"varint,10,opt,name=abortedConnections"`
-	ThreadsCached                 int32   `json:"threadsCached,omitempty" protobuf:"varint,11,opt,name=threadsCached"`
-	ThreadsConnected              int32   `json:"threadsConnected,omitempty" protobuf:"varint,12,opt,name=threadsConnected"`
-	ThreadsCreated                int32   `json:"threadsCreated,omitempty" protobuf:"varint,13,opt,name=threadsCreated"`
-	ThreadsRunning                int32   `json:"threadsRunning,omitempty" protobuf:"varint,14,opt,name=threadsRunning"`
+	Version                       string  `json:"version"`
+	Status                        string  `json:"status"`
+	Mode                          string  `json:"mode"`
+	MaxConnections                int32   `json:"maxConnections"`
+	MaxUsedConnections            int32   `json:"maxUsedConnections"`
+	Questions                     int32   `json:"questions"`
+	LongQueryTimeThresholdSeconds float64 `json:"longQueryTimeThresholdSeconds,omitempty"`
+	NumberOfSlowQueries           int32   `json:"numberOfSlowQueries,omitempty"`
+	AbortedClients                int32   `json:"abortedClients,omitempty"`
+	AbortedConnections            int32   `json:"abortedConnections,omitempty"`
+	ThreadsCached                 int32   `json:"threadsCached,omitempty"`
+	ThreadsConnected              int32   `json:"threadsConnected,omitempty"`
+	ThreadsCreated                int32   `json:"threadsCreated,omitempty"`
+	ThreadsRunning                int32   `json:"threadsRunning,omitempty"`
 }
 
 // MySQLInsight is the Schema for the mysqlinsights API
@@ -51,10 +51,10 @@ type MySQLInsightSpec struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type MySQLInsight struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   MySQLInsightSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status api.MySQLStatus  `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Spec   MySQLInsightSpec `json:"spec,omitempty"`
+	Status api.MySQLStatus  `json:"status,omitempty"`
 }
 
 // MySQLInsightList contains a list of MySQLInsight
@@ -62,8 +62,8 @@ type MySQLInsight struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type MySQLInsightList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items           []MySQLInsight `json:"items" protobuf:"bytes,2,rep,name=items"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []MySQLInsight `json:"items"`
 }
 
 func init() {

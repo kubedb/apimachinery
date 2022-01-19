@@ -29,7 +29,7 @@ import (
 )
 
 func (in MySQLDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourceMySQLDatabases))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceMySQLDatabases))
 }
 
 var _ Interface = &MySQLDatabase{}

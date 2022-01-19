@@ -35,9 +35,9 @@ type RedisConfiguration struct {
 	// ClientCertSecret is the client secret name which needs to provide when the Redis client need to authenticate with client key and cert.
 	// It will be used when `tls-auth-clients` value is set to `required` or `yes`.
 	// +optional
-	ClientCertSecret *v1.LocalObjectReference `json:"clientCertSecret,omitempty" protobuf:"bytes,1,opt,name=clientCertSecret"`
+	ClientCertSecret *v1.LocalObjectReference `json:"clientCertSecret,omitempty"`
 
 	// Stash defines backup and restore task definitions.
 	// +optional
-	Stash appcat.StashAddonSpec `json:"stash,omitempty" protobuf:"bytes,2,opt,name=stash"`
+	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
 }

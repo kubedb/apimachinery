@@ -7,7 +7,7 @@ import (
 )
 
 func (_ PostgresDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePostgresDatabases))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePostgresDatabases))
 }
 
 var _ Interface = &PostgresDatabase{}

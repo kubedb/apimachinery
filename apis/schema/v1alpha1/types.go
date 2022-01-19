@@ -17,39 +17,39 @@ type InitSpec struct {
 	// Initialized indicates that this database has been initialized.
 	// This will be set by the operator to ensure
 	// that database is not mistakenly reset when recovered using disaster recovery tools.
-	Initialized bool                `json:"initialized" protobuf:"varint,1,opt,name=initialized"`
-	Script      *ScriptSourceSpec   `json:"script,omitempty" protobuf:"bytes,2,opt,name=script"`
-	Snapshot    *SnapshotSourceSpec `json:"snapshot,omitempty" protobuf:"bytes,3,opt,name=snapshot"`
+	Initialized bool                `json:"initialized"`
+	Script      *ScriptSourceSpec   `json:"script,omitempty"`
+	Snapshot    *SnapshotSourceSpec `json:"snapshot,omitempty"`
 }
 
 type ScriptSourceSpec struct {
-	ScriptPath        string `json:"scriptPath,omitempty" protobuf:"bytes,1,opt,name=scriptPath"`
-	core.VolumeSource `json:",inline,omitempty" protobuf:"bytes,2,opt,name=volumeSource"`
+	ScriptPath        string `json:"scriptPath,omitempty"`
+	core.VolumeSource `json:",inline,omitempty"`
 	// This will take some database related config from the user
-	PodTemplate *core.PodTemplateSpec `json:"podTemplate,omitempty" protobuf:"bytes,3,opt,name=podTemplate"`
+	PodTemplate *core.PodTemplateSpec `json:"podTemplate,omitempty"`
 }
 
 type SnapshotSourceSpec struct {
-	Repository kmapi.TypedObjectReference `json:"repository,omitempty" protobuf:"bytes,1,opt,name=repository"`
+	Repository kmapi.TypedObjectReference `json:"repository,omitempty"`
 	// +kubebuilder:default:="latest"
-	SnapshotID string `json:"snapshotID,omitempty" protobuf:"bytes,2,opt,name=snapshotID"`
+	SnapshotID string `json:"snapshotID,omitempty"`
 }
 
 // DatabaseStatus defines the observed state of schema api types
 type DatabaseStatus struct {
 	// Specifies the current phase of the database
 	// +optional
-	Phase DatabaseSchemaPhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=DatabaseSchemaPhase"`
+	Phase DatabaseSchemaPhase `json:"phase,omitempty"`
 	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
 	// resource's generation, which is updated on mutation by the API Server.
 	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,2,opt,name=observedGeneration"`
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
-	Conditions []kmapi.Condition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 	// Database authentication secret
 	// +optional
-	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty" protobuf:"bytes,4,opt,name=authSecret"`
+	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty"`
 }
 
 type DatabaseSchemaPhase string
@@ -207,9 +207,9 @@ const (
 )
 
 type VaultSecretEngineRole struct {
-	Subjects []rbac.Subject `json:"subjects" protobuf:"bytes,1,rep,name=subjects"`
+	Subjects []rbac.Subject `json:"subjects"`
 	// +optional
-	DefaultTTL string `json:"defaultTTL,omitempty" protobuf:"bytes,2,opt,name=defaultTTL"`
+	DefaultTTL string `json:"defaultTTL,omitempty"`
 	// +optional
-	MaxTTL string `json:"maxTTL,omitempty" protobuf:"bytes,3,opt,name=maxTTL"`
+	MaxTTL string `json:"maxTTL,omitempty"`
 }

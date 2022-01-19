@@ -41,7 +41,7 @@ import (
 )
 
 func (_ ElasticsearchDashboard) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralElasticsearchDashboard))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralElasticsearchDashboard))
 }
 
 var _ apis.ResourceInfo = &ElasticsearchDashboard{}
@@ -62,7 +62,7 @@ func (ed ElasticsearchDashboard) ContainerName() string {
 // returns owner reference to resources
 
 func (ed ElasticsearchDashboard) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(&ed, GroupVersion.WithKind(ResourceKindElasticsearchDashboard))
+	return meta.NewControllerRef(&ed, SchemeGroupVersion.WithKind(ResourceKindElasticsearchDashboard))
 }
 
 func (ed ElasticsearchDashboard) ResourceFQN() string {

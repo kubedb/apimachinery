@@ -30,29 +30,31 @@ const (
 // MongoDBDatabaseSpec defines the desired state of MongoDBDatabase
 type MongoDBDatabaseSpec struct {
 	// DatabaseRef refers to a KubeDB managed database instance
-	DatabaseRef kmapi.ObjectReference `json:"databaseRef" protobuf:"bytes,1,opt,name=databaseRef"`
+	DatabaseRef kmapi.ObjectReference `json:"databaseRef"`
 
 	// VaultRef refers to a KubeVault managed vault server
-	VaultRef kmapi.ObjectReference `json:"vaultRef" protobuf:"bytes,2,opt,name=vaultRef"`
+	VaultRef kmapi.ObjectReference `json:"vaultRef"`
 
 	// DatabaseConfig defines various configuration options for a database
-	DatabaseConfig MongoDBDatabaseConfiguration `json:"databaseConfig" protobuf:"bytes,3,opt,name=databaseConfig"`
+	DatabaseConfig MongoDBDatabaseConfiguration `json:"databaseConfig"`
 
-	AccessPolicy VaultSecretEngineRole `json:"accessPolicy" protobuf:"bytes,4,opt,name=accessPolicy"`
+	AccessPolicy VaultSecretEngineRole `json:"accessPolicy"`
 
 	// Init contains info about the init script or snapshot info
 	// +optional
-	Init *InitSpec `json:"init,omitempty" protobuf:"bytes,5,opt,name=init"`
+	Init *InitSpec `json:"init,omitempty"`
 
 	// DeletionPolicy controls the delete operation for database
 	// +optional
 	// +kubebuilder:default:="Delete"
-	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty" protobuf:"bytes,6,opt,name=deletionPolicy,casttype=DeletionPolicy"`
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 }
 
 type MongoDBDatabaseConfiguration struct {
-	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
+	Name string `json:"name"`
 }
+
+// MongoDBDatabase is the Schema for the mongodbdatabases API
 
 // +genclient
 // +k8s:openapi-gen=true
@@ -62,23 +64,22 @@ type MongoDBDatabaseConfiguration struct {
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="DatabaseName",type="string",JSONPath=".spec.databaseSchema.name"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-
-// MongoDBDatabase is the Schema for the mongodbdatabases API
 type MongoDBDatabase struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   MongoDBDatabaseSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status DatabaseStatus      `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Spec   MongoDBDatabaseSpec `json:"spec,omitempty"`
+	Status DatabaseStatus      `json:"status,omitempty"`
 }
 
-// +kubebuilder:object:root=true
-
 // MongoDBDatabaseList contains a list of MongoDBDatabase
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
 type MongoDBDatabaseList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items           []MongoDBDatabase `json:"items" protobuf:"bytes,2,rep,name=items"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []MongoDBDatabase `json:"items"`
 }
 
 func init() {

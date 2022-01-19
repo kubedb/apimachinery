@@ -7,7 +7,7 @@ import (
 )
 
 func (_ MariaDBDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourceMariaDBDatabases))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceMariaDBDatabases))
 }
 
 var _ Interface = &MariaDBDatabase{}
