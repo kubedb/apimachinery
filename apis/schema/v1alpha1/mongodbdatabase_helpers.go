@@ -31,7 +31,7 @@ const (
 	MongoCollectionNameForEntry string = "databases"
 )
 
-func (_ MongoDBDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (in MongoDBDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourceMongoDBDatabases))
 }
 
@@ -45,34 +45,34 @@ func (in *MongoDBDatabase) GetStatus() DatabaseStatus {
 	return in.Status
 }
 
-func (db *MongoDBDatabase) GetMongoInitVolumeNameForPod() string {
-	return db.GetName() + "-init-volume"
+func (in *MongoDBDatabase) GetMongoInitVolumeNameForPod() string {
+	return in.GetName() + "-init-volume"
 }
-func (db *MongoDBDatabase) GetMongoInitJobName() string {
-	return db.GetName() + "-init-job"
+func (in *MongoDBDatabase) GetMongoInitJobName() string {
+	return in.GetName() + "-init-job"
 }
-func (db *MongoDBDatabase) GetMongoInitScriptContainerName() string {
-	return db.GetName() + "-init-container"
+func (in *MongoDBDatabase) GetMongoInitScriptContainerName() string {
+	return in.GetName() + "-init-container"
 }
-func (db *MongoDBDatabase) GetMongoRestoreSessionName() string {
-	return db.GetName() + "-restore-session"
+func (in *MongoDBDatabase) GetMongoRestoreSessionName() string {
+	return in.GetName() + "-restore-session"
 }
 
 // For MongoDB Admin Role
-func (db *MongoDBDatabase) GetMongoAdminRoleName() string {
-	return db.GetName() + MongoPrefix + "-admin-role"
+func (in *MongoDBDatabase) GetMongoAdminRoleName() string {
+	return in.GetName() + MongoPrefix + "-admin-role"
 }
-func (db *MongoDBDatabase) GetMongoAdminSecretAccessRequestName() string {
-	return db.GetName() + MongoPrefix + "-admin-secret-access-req"
+func (in *MongoDBDatabase) GetMongoAdminSecretAccessRequestName() string {
+	return in.GetName() + MongoPrefix + "-admin-secret-access-req"
 }
-func (db *MongoDBDatabase) GetMongoAdminServiceAccountName() string {
-	return db.GetName() + MongoPrefix + "-admin-service-account"
-}
-
-func (db *MongoDBDatabase) GetMongoSecretEngineName() string {
-	return db.GetName() + MongoPrefix + "-secret-engine"
+func (in *MongoDBDatabase) GetMongoAdminServiceAccountName() string {
+	return in.GetName() + MongoPrefix + "-admin-service-account"
 }
 
-func (db *MongoDBDatabase) GetAuthSecretName(dbServerName string) string {
+func (in *MongoDBDatabase) GetMongoSecretEngineName() string {
+	return in.GetName() + MongoPrefix + "-secret-engine"
+}
+
+func (in *MongoDBDatabase) GetAuthSecretName(dbServerName string) string {
 	return dbServerName + kdm.MongoDBAuthSecretSuffix
 }

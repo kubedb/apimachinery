@@ -28,7 +28,7 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (_ MySQLDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (in MySQLDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourceMySQLDatabases))
 }
 
@@ -43,82 +43,82 @@ func (in *MySQLDatabase) GetStatus() DatabaseStatus {
 }
 
 //GetAppBindingMeta returns meta info of the appbinding which has been created by schema manager
-func (obj *MySQLDatabase) GetAppBindingMeta() metav1.ObjectMeta {
+func (in *MySQLDatabase) GetAppBindingMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      obj.Name + "-appbinding",
-		Namespace: obj.Namespace,
+		Name:      in.Name + "-appbinding",
+		Namespace: in.Namespace,
 	}
 	return meta
 }
 
 //GetVaultSecretEngineMeta returns meta info of the secret engine which has been created by schema manager
-func (obj *MySQLDatabase) GetVaultSecretEngineMeta() metav1.ObjectMeta {
+func (in *MySQLDatabase) GetVaultSecretEngineMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      obj.Name + "-secret-engine",
-		Namespace: obj.Namespace,
+		Name:      in.Name + "-secret-engine",
+		Namespace: in.Namespace,
 	}
 	return meta
 }
 
 //GetMySQLRoleMeta returns meta info of the MySQL role which has been created by schema manager
-func (obj *MySQLDatabase) GetMySQLRoleMeta() metav1.ObjectMeta {
+func (in *MySQLDatabase) GetMySQLRoleMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      obj.Name + "-mysql-role",
-		Namespace: obj.Namespace,
+		Name:      in.Name + "-mysql-role",
+		Namespace: in.Namespace,
 	}
 	return meta
 }
 
 //GetSecretAccessRequestMeta returns meta info of the secret access request which has been created by schema manager
-func (obj *MySQLDatabase) GetSecretAccessRequestMeta() metav1.ObjectMeta {
+func (in *MySQLDatabase) GetSecretAccessRequestMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      obj.Name + "-secret-access-request",
-		Namespace: obj.Namespace,
+		Name:      in.Name + "-secret-access-request",
+		Namespace: in.Namespace,
 	}
 	return meta
 }
 
 //GetInitJobMeta returns meta info of the init job which has been created by schema manager
-func (obj *MySQLDatabase) GetInitJobMeta() metav1.ObjectMeta {
+func (in *MySQLDatabase) GetInitJobMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      obj.Name + "-init-job",
-		Namespace: obj.Namespace,
+		Name:      in.Name + "-init-job",
+		Namespace: in.Namespace,
 	}
 	return meta
 }
 
 //GetMySQLAuthSecretMeta returns meta info of the mysql auth secret
-func (obj *MySQLDatabase) GetMySQLAuthSecretMeta() metav1.ObjectMeta {
+func (in *MySQLDatabase) GetMySQLAuthSecretMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      obj.Spec.DatabaseRef.Name + "-auth",
-		Namespace: obj.Spec.DatabaseRef.Namespace,
+		Name:      in.Spec.DatabaseRef.Name + "-auth",
+		Namespace: in.Spec.DatabaseRef.Namespace,
 	}
 	return meta
 }
 
 //GetRestoreSessionMeta returns meta info of the restore session which has been created by schema manager
-func (obj *MySQLDatabase) GetRestoreSessionMeta() metav1.ObjectMeta {
+func (in *MySQLDatabase) GetRestoreSessionMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      obj.Name + "-restoresession",
-		Namespace: obj.Namespace,
+		Name:      in.Name + "-restoresession",
+		Namespace: in.Namespace,
 	}
 	return meta
 }
 
 //GetRepositoryMeta returns meta info of the repository which has been created by schema manager
-func (obj *MySQLDatabase) GetRepositoryMeta() metav1.ObjectMeta {
+func (in *MySQLDatabase) GetRepositoryMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      obj.Name + "-repository",
-		Namespace: obj.Namespace,
+		Name:      in.Name + "-repository",
+		Namespace: in.Namespace,
 	}
 	return meta
 }
 
 //GetRepositorySecretMeta returns meta info of the repository which has been created by schema manager
-func (obj *MySQLDatabase) GetRepositorySecretMeta() metav1.ObjectMeta {
+func (in *MySQLDatabase) GetRepositorySecretMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      obj.Name + "-repository-secret",
-		Namespace: obj.Namespace,
+		Name:      in.Name + "-repository-secret",
+		Namespace: in.Namespace,
 	}
 	return meta
 }
