@@ -221,6 +221,12 @@ func (m *MySQL) IsInnoDBCluster() bool {
 		*m.Spec.Topology.Mode == MySQLModeInnoDBCluster
 }
 
+func (m *MySQL) IsReadReplica() bool {
+	return m.Spec.Topology != nil &&
+		m.Spec.Topology.Mode != nil &&
+		*m.Spec.Topology.Mode == MySQLModeReadReplica
+}
+
 func (m *MySQL) SetDefaults(topology *core_util.Topology) {
 	if m == nil {
 		return
