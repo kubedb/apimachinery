@@ -77,7 +77,7 @@ type MySQLSpec struct {
 	Replicas *int32 `json:"replicas,omitempty"`
 
 	// MySQL cluster topology
-	Topology *MySQLClusterTopology `json:"topology,omitempty"`
+	Topology *MySQLTopology `json:"topology,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -163,7 +163,7 @@ const (
 	MySQLRouterCert          MySQLCertificateAlias = "router"
 )
 
-type MySQLClusterTopology struct {
+type MySQLTopology struct {
 	// If set to -
 	// "GroupReplication", GroupSpec is required and MySQL servers will start  a replication group
 	Mode *MySQLMode `json:"mode,omitempty"`
@@ -214,8 +214,7 @@ type MySQLRouterSpec struct {
 
 type MySQLReadReplicaSpec struct {
 	//SourceRef specifies the  source object appbinding
-	SourceRef *core.ObjectReference `json:"sourceRef,omitempty" protobuf:"bytes,1,opt,name=sourceRef"`
-	Topology  *MySQLClusterTopology `json:"topology,omitempty" protobuf:"bytes,2,opt,name=topology"`
+	SourceRef core.ObjectReference `json:"sourceRef" protobuf:"bytes,1,opt,name=sourceRef"`
 }
 
 type MySQLStatus struct {

@@ -30601,27 +30601,6 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLClusterTopology": {
-      "type": "object",
-      "properties": {
-        "group": {
-          "description": "Group replication info for MySQL",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLGroupSpec"
-        },
-        "innoDBCluster": {
-          "description": "InnoDBCluster replication info for MySQL InnodbCluster",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLInnoDBClusterSpec"
-        },
-        "mode": {
-          "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
-          "type": "string"
-        },
-        "readReplica": {
-          "description": "ReadReplica implies that the instance will be a MySQL Read Only Replica and it will take reference of  appbinding of the source",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplicaSpec"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLGroupSpec": {
       "type": "object",
       "properties": {
@@ -30681,13 +30660,14 @@
     },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplicaSpec": {
       "type": "object",
+      "required": [
+        "sourceRef"
+      ],
       "properties": {
         "sourceRef": {
           "description": "SourceRef specifies the  source object appbinding",
+          "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.ObjectReference"
-        },
-        "topology": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLClusterTopology"
         }
       }
     },
@@ -30783,7 +30763,7 @@
         },
         "topology": {
           "description": "MySQL cluster topology",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLClusterTopology"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLTopology"
         },
         "useAddressType": {
           "description": "Indicated whether to use DNS or IP address to address pods in a db cluster. If IP address is used, HostNetwork will be used. Defaults to DNS.",
@@ -30816,6 +30796,27 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLTopology": {
+      "type": "object",
+      "properties": {
+        "group": {
+          "description": "Group replication info for MySQL",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLGroupSpec"
+        },
+        "innoDBCluster": {
+          "description": "InnoDBCluster replication info for MySQL InnodbCluster",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLInnoDBClusterSpec"
+        },
+        "mode": {
+          "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
+          "type": "string"
+        },
+        "readReplica": {
+          "description": "ReadReplica implies that the instance will be a MySQL Read Only Replica and it will take reference of  appbinding of the source",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplicaSpec"
         }
       }
     },
