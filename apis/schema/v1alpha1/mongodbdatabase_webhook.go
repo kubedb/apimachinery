@@ -60,7 +60,7 @@ func (in *MongoDBDatabase) ValidateCreate() error {
 func (in *MongoDBDatabase) ValidateUpdate(old runtime.Object) error {
 	mongodbdatabaselog.Info("validate update", "name", in.Name)
 	oldDb := old.(*MongoDBDatabase)
-	if oldDb.Status.Phase == Success && oldDb.Spec.DatabaseConfig.Name != in.Spec.DatabaseConfig.Name {
+	if oldDb.Status.Phase == DatabaseSchemaPhaseSuccessful && oldDb.Spec.DatabaseConfig.Name != in.Spec.DatabaseConfig.Name {
 		return errors.New("you can't change the Database Schema name now")
 	}
 
