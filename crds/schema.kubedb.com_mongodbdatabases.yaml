@@ -3795,6 +3795,13 @@ spec:
                 format: int64
                 type: integer
               phase:
+                enum:
+                - Pending
+                - Progressing
+                - Terminating
+                - Successful
+                - Failed
+                - Expired
                 type: string
             type: object
         type: object

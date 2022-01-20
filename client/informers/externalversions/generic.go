@@ -21,15 +21,14 @@ package externalversions
 import (
 	"fmt"
 
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
+	cache "k8s.io/client-go/tools/cache"
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dashboardv1alpha1 "kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	schemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
-
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
-	cache "k8s.io/client-go/tools/cache"
 )
 
 // GenericInformer is type of SharedIndexInformer which will locate and delegate to other
