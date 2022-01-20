@@ -30601,23 +30601,6 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLClusterTopology": {
-      "type": "object",
-      "properties": {
-        "group": {
-          "description": "Group replication info for MySQL",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLGroupSpec"
-        },
-        "innoDBCluster": {
-          "description": "InnoDBCluster replication info for MySQL InnodbCluster",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLInnoDBClusterSpec"
-        },
-        "mode": {
-          "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLGroupSpec": {
       "type": "object",
       "properties": {
@@ -30675,6 +30658,19 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplicaSpec": {
+      "type": "object",
+      "required": [
+        "sourceRef"
+      ],
+      "properties": {
+        "sourceRef": {
+          "description": "SourceRef specifies the  source object appbinding",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.ObjectReference"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLRouterSpec": {
       "type": "object",
       "properties": {
@@ -30694,6 +30690,10 @@
         "version"
       ],
       "properties": {
+        "allowedReadReplicas": {
+          "description": "AllowedReadReplicas defines the types of read replicas that MAY be attached to a MySQL instance and the trusted namespaces where those Read Replica resources MAY be present.\n\nSupport: Core",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "allowedSchemas": {
           "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
@@ -30763,7 +30763,7 @@
         },
         "topology": {
           "description": "MySQL cluster topology",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLClusterTopology"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLTopology"
         },
         "useAddressType": {
           "description": "Indicated whether to use DNS or IP address to address pods in a db cluster. If IP address is used, HostNetwork will be used. Defaults to DNS.",
@@ -30796,6 +30796,27 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLTopology": {
+      "type": "object",
+      "properties": {
+        "group": {
+          "description": "Group replication info for MySQL",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLGroupSpec"
+        },
+        "innoDBCluster": {
+          "description": "InnoDBCluster replication info for MySQL InnodbCluster",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLInnoDBClusterSpec"
+        },
+        "mode": {
+          "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
+          "type": "string"
+        },
+        "readReplica": {
+          "description": "ReadReplica implies that the instance will be a MySQL Read Only Replica and it will take reference of  appbinding of the source",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplicaSpec"
         }
       }
     },
@@ -35036,6 +35057,40 @@
           "description": "Path of the field to select in the specified API version.",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "io.k8s.api.core.v1.ObjectReference": {
+      "description": "ObjectReference contains enough information to let you inspect or modify the referred object.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "API version of the referent.",
+          "type": "string"
+        },
+        "fieldPath": {
+          "description": "If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: \"spec.containers{name}\" (where \"name\" refers to the name of the container that triggered the event) or if no container name is specified \"spec.containers[2]\" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object.",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string"
+        },
+        "namespace": {
+          "description": "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+          "type": "string"
+        },
+        "resourceVersion": {
+          "description": "Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency",
+          "type": "string"
+        },
+        "uid": {
+          "description": "UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids",
+          "type": "string"
         }
       }
     },

@@ -31,12 +31,13 @@ const (
 	ResourcePluralMySQL   = "mysqls"
 )
 
-// +kubebuilder:validation:Enum=GroupReplication;InnoDBCluster
-type MySQLClusterMode string
+// +kubebuilder:validation:Enum=GroupReplication;InnoDBCluster;ReadReplica
+type MySQLMode string
 
 const (
-	MySQLClusterModeGroupReplication MySQLClusterMode = "GroupReplication"
-	MySQLClusterModeInnoDBCluster    MySQLClusterMode = "InnoDBCluster"
+	MySQLModeGroupReplication MySQLMode = "GroupReplication"
+	MySQLModeInnoDBCluster    MySQLMode = "InnoDBCluster"
+	MySQLModeReadReplica      MySQLMode = "ReadReplica"
 )
 
 // +kubebuilder:validation:Enum=Single-Primary
@@ -76,7 +77,7 @@ type MySQLSpec struct {
 	Replicas *int32 `json:"replicas,omitempty"`
 
 	// MySQL cluster topology
-	Topology *MySQLClusterTopology `json:"topology,omitempty"`
+	Topology *MySQLTopology `json:"topology,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -141,6 +142,15 @@ type MySQLSpec struct {
 	// +kubebuilder:default={namespaces:{from: Same}}
 	// +optional
 	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty"`
+
+	// AllowedReadReplicas defines the types of read replicas that MAY be attached to a
+	// MySQL instance and the trusted namespaces where those Read Replica resources MAY be
+	// present.
+	//
+	// Support: Core
+	// +kubebuilder:default={namespaces:{from: Same}}
+	// +optional
+	AllowedReadReplicas *AllowedConsumers `json:"allowedReadReplicas,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter
@@ -153,17 +163,23 @@ const (
 	MySQLRouterCert          MySQLCertificateAlias = "router"
 )
 
-type MySQLClusterTopology struct {
+type MySQLTopology struct {
 	// If set to -
 	// "GroupReplication", GroupSpec is required and MySQL servers will start  a replication group
-	Mode *MySQLClusterMode `json:"mode,omitempty"`
+	Mode *MySQLMode `json:"mode,omitempty"`
 
 	// Group replication info for MySQL
+	// +optional
 	Group *MySQLGroupSpec `json:"group,omitempty"`
 
 	// InnoDBCluster replication info for MySQL InnodbCluster
 	// +optional
 	InnoDBCluster *MySQLInnoDBClusterSpec `json:"innoDBCluster,omitempty"`
+
+	// ReadReplica implies that the instance will be a MySQL Read Only Replica
+	// and it will take reference of  appbinding of the source
+	// +optional
+	ReadReplica *MySQLReadReplicaSpec `json:"readReplica,omitempty"`
 }
 
 type MySQLGroupSpec struct {
@@ -194,6 +210,11 @@ type MySQLRouterSpec struct {
 	// PodTemplate is an optional configuration for pods used to expose MySQL router
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+}
+
+type MySQLReadReplicaSpec struct {
+	//SourceRef specifies the  source object appbinding
+	SourceRef core.ObjectReference `json:"sourceRef" protobuf:"bytes,1,opt,name=sourceRef"`
 }
 
 type MySQLStatus struct {

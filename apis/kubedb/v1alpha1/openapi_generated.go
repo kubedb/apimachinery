@@ -449,11 +449,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBSpec":                    schema_apimachinery_apis_kubedb_v1alpha1_MongoDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MongoDBStatus":                  schema_apimachinery_apis_kubedb_v1alpha1_MongoDBStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQL":                          schema_apimachinery_apis_kubedb_v1alpha1_MySQL(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLClusterTopology":           schema_apimachinery_apis_kubedb_v1alpha1_MySQLClusterTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLGroupSpec":                 schema_apimachinery_apis_kubedb_v1alpha1_MySQLGroupSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLList":                      schema_apimachinery_apis_kubedb_v1alpha1_MySQLList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLSpec":                      schema_apimachinery_apis_kubedb_v1alpha1_MySQLSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLStatus":                    schema_apimachinery_apis_kubedb_v1alpha1_MySQLStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLTopology":                  schema_apimachinery_apis_kubedb_v1alpha1_MySQLTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PXCSpec":                        schema_apimachinery_apis_kubedb_v1alpha1_PXCSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PerconaXtraDB":                  schema_apimachinery_apis_kubedb_v1alpha1_PerconaXtraDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.PerconaXtraDBList":              schema_apimachinery_apis_kubedb_v1alpha1_PerconaXtraDBList(ref),
@@ -21995,33 +21995,6 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQL(ref common.ReferenceCallback
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha1_MySQLClusterTopology(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"mode": {
-						SchemaProps: spec.SchemaProps{
-							Description: "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"group": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Group replication info for MySQL",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLGroupSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLGroupSpec"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha1_MySQLGroupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22127,7 +22100,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQLSpec(ref common.ReferenceCall
 					"topology": {
 						SchemaProps: spec.SchemaProps{
 							Description: "MySQL cluster topology",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLClusterTopology"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLTopology"),
 						},
 					},
 					"storageType": {
@@ -22206,7 +22179,7 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQLSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLClusterTopology"},
+			"k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/monitoring-agent-api/api/v1alpha1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.BackupScheduleSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLTopology"},
 	}
 }
 
@@ -22239,6 +22212,33 @@ func schema_apimachinery_apis_kubedb_v1alpha1_MySQLStatus(ref common.ReferenceCa
 		},
 		Dependencies: []string{
 			"gomodules.xyz/encoding/json/types.IntHash"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha1_MySQLTopology(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Group replication info for MySQL",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLGroupSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha1.MySQLGroupSpec"},
 	}
 }
 
