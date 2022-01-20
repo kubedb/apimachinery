@@ -78,11 +78,10 @@ func (in *MySQLDatabase) ValidateCreate() error {
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (in *MySQLDatabase) ValidateUpdate(old runtime.Object) error {
 	mysqldatabaselog.Info("validate update", "name", in.Name)
-	oldobj := old.(*MySQLDatabase)
-	return validateMySQLDatabaseUpdate(oldobj, in)
+	return validateMySQLDatabaseUpdate(in)
 }
 
-func validateMySQLDatabaseUpdate(oldobj *MySQLDatabase, newobj *MySQLDatabase) error {
+func validateMySQLDatabaseUpdate(newobj *MySQLDatabase) error {
 	if newobj.Finalizers == nil {
 		return nil
 	}
