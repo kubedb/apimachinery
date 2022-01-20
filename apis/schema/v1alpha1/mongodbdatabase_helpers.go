@@ -47,30 +47,30 @@ func (in *MongoDBDatabase) GetStatus() DatabaseStatus {
 }
 
 func (in *MongoDBDatabase) GetMongoInitVolumeNameForPod() string {
-	return meta.NameWithSuffix(in.GetName(), "-init-volume")
+	return meta.NameWithSuffix(in.GetName(), "init-volume")
 }
 func (in *MongoDBDatabase) GetMongoInitJobName() string {
-	return meta.NameWithSuffix(in.GetName(), "-init-job")
+	return meta.NameWithSuffix(in.GetName(), "init-job")
 }
 func (in *MongoDBDatabase) GetMongoInitScriptContainerName() string {
-	return meta.NameWithSuffix(in.GetName(), "-init-container")
+	return meta.NameWithSuffix(in.GetName(), "init-container")
 }
 func (in *MongoDBDatabase) GetMongoRestoreSessionName() string {
-	return meta.NameWithSuffix(in.GetName(), "-restore-session")
+	return meta.NameWithSuffix(in.GetName(), "restore-session")
 }
 
 func (in *MongoDBDatabase) GetMongoAdminRoleName() string {
-	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "-admin-role")
+	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "admin-role")
 }
 func (in *MongoDBDatabase) GetMongoAdminSecretAccessRequestName() string {
-	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "-admin-secret-access-req")
+	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "admin-secret-access-req")
 }
 func (in *MongoDBDatabase) GetMongoAdminServiceAccountName() string {
-	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "-admin-service-account")
+	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "admin-service-account")
 }
 
 func (in *MongoDBDatabase) GetMongoSecretEngineName() string {
-	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "-secret-engine")
+	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "secret-engine")
 }
 
 func (in *MongoDBDatabase) GetAuthSecretName(dbServerName string) string {
