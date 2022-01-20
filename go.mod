@@ -9,6 +9,7 @@ require (
 	github.com/go-openapi/spec v0.19.5
 	github.com/google/go-cmp v0.5.6
 	github.com/google/gofuzz v1.2.0
+	github.com/iancoleman/orderedmap v0.2.0
 	github.com/jetstack/cert-manager v1.4.0
 	github.com/json-iterator/go v1.1.11
 	github.com/pkg/errors v0.9.1
