@@ -23,7 +23,7 @@ import (
 	"github.com/iancoleman/orderedmap"
 )
 
-const CustomConfigBlockDivider = "#________******KubeDB.com/InlineConfigDivider******________#"
+const CustomConfigBlockDivider = "#________******kubedb.com/inline-config******________#"
 
 type CustomConfigGenerator struct {
 	CurrentConfig      string   // current config string
