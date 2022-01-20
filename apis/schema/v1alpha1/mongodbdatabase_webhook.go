@@ -98,9 +98,6 @@ func (in *MongoDBDatabase) ValidateMongoDBDatabase() error {
 	if err := in.validateMongoDBDatabaseSchemaName(); err != nil {
 		allErrs = append(allErrs, err)
 	}
-	if err := in.validateCRDName(); err != nil {
-		allErrs = append(allErrs, err)
-	}
 	if err := in.CheckIfNameFieldsAreOkOrNot(); err != nil {
 		allErrs = append(allErrs, err)
 	}
@@ -125,14 +122,6 @@ func (in *MongoDBDatabase) validateMongoDBDatabaseSchemaName() *field.Error {
 	if name == MongoDatabaseNameForEntry || name == "admin" || name == "config" || name == "local" {
 		str := fmt.Sprintf("cannot use \"%v\" as the database name", name)
 		return field.Invalid(path, in.Name, str)
-	}
-	return nil
-}
-
-func (in *MongoDBDatabase) validateCRDName() *field.Error {
-	// This is a workaround value. So that after appending some characters after the schema name, it doesn't exceed the standard size
-	if len(in.ObjectMeta.Name) > 40 {
-		return field.Invalid(field.NewPath("metadata").Child("name"), in.Name, "must be no more than 40 characters")
 	}
 	return nil
 }

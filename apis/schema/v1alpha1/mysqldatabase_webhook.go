@@ -36,8 +36,6 @@ func (in *MySQLDatabase) SetupWebhookWithManager(mgr manager.Manager) error {
 		Complete()
 }
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-
 // +kubebuilder:webhook:path=/mutate-schema-kubedb-com-v1alpha1-mysqldatabase,mutating=true,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mysqldatabases,verbs=create;update,versions=v1alpha1,name=mmysqldatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Defaulter = &MySQLDatabase{}
@@ -66,7 +64,6 @@ func (in *MySQLDatabase) Default() {
 
 }
 
-// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mysqldatabase,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mysqldatabases,verbs=create;update;delete,versions=v1alpha1,name=vmysqldatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Validator = &MySQLDatabase{}
@@ -90,44 +87,6 @@ func validateMySQLDatabaseUpdate(oldobj *MySQLDatabase, newobj *MySQLDatabase) e
 		return nil
 	}
 	var allErrs field.ErrorList
-	/*
-		path := field.NewPath("spec")
-
-		if !kmapi.IsConditionTrue(oldobj.Status.Conditions, string(SchemaIgnored)) {
-			if oldobj.Spec.DatabaseConfig.Name != newobj.Spec.DatabaseConfig.Name {
-				allErrs = append(allErrs, field.Invalid(path.Child("databaseConfig"), newobj.Name, `Cannot change target database name`))
-			}
-			if oldobj.Spec.DatabaseRef != newobj.Spec.DatabaseRef {
-				allErrs = append(allErrs, field.Invalid(path.Child("mysqlRef"), newobj.Name, `Cannot change mysql reference`))
-			}
-			if oldobj.Spec.VaultRef != newobj.Spec.VaultRef {
-				allErrs = append(allErrs, field.Invalid(path.Child("vaultRef"), newobj.Name, `Cannot change vault reference`))
-			}
-		}
-		if err := newobj.ValidateMySQLDatabase(); err != nil {
-			allErrs = append(allErrs, field.Invalid(field.NewPath(""), newobj.Name, err.Error()))
-		}
-		if kmapi.IsConditionTrue(oldobj.Status.Conditions, string(ScriptApplied)) {
-
-			if !gocmp.Equal(oldobj.Spec.Init.Script, newobj.Spec.Init.Script) {
-				allErrs = append(allErrs, field.Invalid(path.Child("initSpec.script"), newobj.Name, "Cannot change initSpec script, former script already applied"))
-			}
-			//if oldobj.Spec.Init.Script !=  newobj.Spec.Init.Script {
-			//	klog.Info("\nupdated2\n")
-			//	klog.Infof("printing old object %+v\n", &oldobj.Spec.Init)
-			//	klog.Infof("printing new object %+v\n", &newobj.Spec.Init)
-			//}
-			if !reflect.DeepEqual(oldobj.Spec.Init.Script.PodTemplate, newobj.Spec.Init.Script.PodTemplate) {
-				if newobj.Spec.Init.Script.PodTemplate != nil {
-					klog.Infof("script already applied : Changes in the pod template won't be applied")
-				}
-			}
-		}
-		if kmapi.IsConditionTrue(oldobj.Status.Conditions, string(RestoredFromRepository)) {
-			if !reflect.DeepEqual(oldobj.Spec.Init.Snapshot, newobj.Spec.Init.Snapshot) {
-				allErrs = append(allErrs, field.Invalid(path.Child("restore"), newobj.Name, "Cannot change restore, former restore session already applied"))
-			}
-		}*/
 
 	if len(allErrs) == 0 {
 		return nil
