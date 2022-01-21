@@ -66,9 +66,9 @@ type MariaDBDatabaseConfiguration struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="DB_SERVER",type="string",JSONPath=".spec.database.serverRef.name"
 // +kubebuilder:printcolumn:name="DB_NAME",type="string",JSONPath=".spec.database.config.name"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type MariaDBDatabase struct {
 	metav1.TypeMeta   `json:",inline"`

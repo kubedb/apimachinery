@@ -102,10 +102,10 @@ type DatabaseSchemaConditionType string
 type DatabaseSchemaMessage string
 
 const (
-	DatabaseSchemaConditionTypeDatabaseReady  DatabaseSchemaConditionType = "DatabaseReady"
-	DatabaseSchemaMessageDatabaseNotCreated   DatabaseSchemaMessage       = "Database is not created yet"
-	DatabaseSchemaMessageDatabaseProvisioning DatabaseSchemaMessage       = "Database is provisioning"
-	DatabaseSchemaMessageDatabaseReady        DatabaseSchemaMessage       = "Database is Ready"
+	DatabaseSchemaConditionTypeDBServerReady  DatabaseSchemaConditionType = "DatabaseServerReady"
+	DatabaseSchemaMessageDBServerNotCreated   DatabaseSchemaMessage       = "Database Server is not created yet"
+	DatabaseSchemaMessageDBServerProvisioning DatabaseSchemaMessage       = "Database Server is provisioning"
+	DatabaseSchemaMessageDBServerReady        DatabaseSchemaMessage       = "Database Server is Ready"
 
 	DatabaseSchemaConditionTypeVaultReady  DatabaseSchemaConditionType = "VaultReady"
 	DatabaseSchemaMessageVaultNotCreated   DatabaseSchemaMessage       = "VaultServer is not created yet"
@@ -170,7 +170,7 @@ func GetPhase(obj Interface) DatabaseSchemaPhase {
 	}
 
 	// If Database or vault is not in ready state, Phase is 'Pending'
-	if !kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeDatabaseReady)) ||
+	if !kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeDBServerReady)) ||
 		!kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeVaultReady)) {
 		return DatabaseSchemaPhasePending
 	}

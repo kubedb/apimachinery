@@ -15,14 +15,14 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .status.phase
-      name: Status
-      type: string
     - jsonPath: .spec.database.serverRef.name
       name: DB_SERVER
       type: string
     - jsonPath: .spec.database.config.name
       name: DB_NAME
+      type: string
+    - jsonPath: .status.phase
+      name: Status
       type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
