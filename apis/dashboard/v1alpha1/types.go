@@ -16,20 +16,12 @@ limitations under the License.
 
 package v1alpha1
 
-import (
-	"time"
-
-	core "k8s.io/api/core/v1"
-	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
-)
-
+// +kubebuilder:validation:Enum=Provisioning;Ready;Critical;NotReady
 type DashboardPhase string
 
 const (
 	// used for Dashboards that are currently provisioning
 	DashboardPhaseProvisioning DashboardPhase = "Provisioning"
-	// used for Dashboards that are provisionined / deployments and serices are ready
-	DashboardPhaseProvisioned DashboardPhase = "Provisioned"
 	// used for Dashboards that are currently ReplicaReady, AcceptingConnection and Ready
 	DashboardPhaseReady DashboardPhase = "Ready"
 	// used for Dashboards that can connect, ReplicaReady == false || Ready == false (eg, ES yellow)
@@ -38,31 +30,32 @@ const (
 	DashboardPhaseNotReady DashboardPhase = "NotReady"
 )
 
+// +kubebuilder:validation:Enum=DeploymentReconciled;ServiceReconciled;DashboardProvisioned;ServerAcceptingConnection;ServerHealthy
 type DashboardConditionType string
 
 const (
-	DashboardConditionInitialized         DashboardConditionType = "Initializing"
-	DashboardConditionDeploymentAvailable DashboardConditionType = "DeploymentAvailable"
-	DashboardConditionServiceReady        DashboardConditionType = "ServiceReady"
-	DashboardConditionAcceptingConnection DashboardConditionType = "AcceptingConnection"
-	DashboardConditionStateGreenOrYellow  DashboardConditionType = "ServerReady"
-	DashboardConditionStateRed            DashboardConditionType = "ServerNotReady"
+	DashboardConditionDeploymentReconciled DashboardConditionType = "DeploymentReconciled"
+	DashboardConditionServiceReconciled    DashboardConditionType = "ServiceReconciled"
+	DashboardConditionProvisioned          DashboardConditionType = "DashboardProvisioned"
+	DashboardConditionAcceptingConnection  DashboardConditionType = "ServerAcceptingConnection"
+	DashboardConditionServerHealthy        DashboardConditionType = "ServerHealthy"
 )
-
-type DashboardConditionReason string
 
 const (
-	DashboardDeploymentAvailable                DashboardConditionReason = "MinimumReplicasAvailable"
-	DashboardDeploymentNotAvailable             DashboardConditionReason = "MinimumReplicasNotAvailable"
-	DashboardServiceReady                       DashboardConditionReason = "ServiceAcceptingRequests"
-	DashboardServiceNotReady                    DashboardConditionReason = "ServiceNotAcceptingRequests"
-	DashboardAcceptingConnectionRequest         DashboardConditionReason = "DashboardAcceptingConnectionRequests"
-	DashboardNotAcceptingConnectionRequest      DashboardConditionReason = "DashboardNotAcceptingConnectionRequests"
-	DashboardReadinessCheckSucceeded            DashboardConditionReason = "DashboardReadinessCheckSucceeded"
-	DashboardReadinessCheckSucceededWithWarning DashboardConditionReason = "DashboardReadinessCheckSucceeded"
-	DashboardReadinessCheckFailed               DashboardConditionReason = "DashboardReadinessCheckFailed"
+	DashboardDeploymentAvailable           = "MinimumReplicasAvailable"
+	DashboardDeploymentNotAvailable        = "MinimumReplicasNotAvailable"
+	DashboardServiceReady                  = "ServiceAcceptingRequests"
+	DashboardServiceNotReady               = "ServiceNotAcceptingRequests"
+	DashboardAcceptingConnectionRequest    = "DashboardAcceptingConnectionRequests"
+	DashboardNotAcceptingConnectionRequest = "DashboardNotAcceptingConnectionRequests"
+	DashboardReadinessCheckSucceeded       = "DashboardReadinessCheckSucceeded"
+	DashboardReadinessCheckFailed          = "DashboardReadinessCheckFailed"
+	DashboardStateGreen                    = "ServerHealthGood"
+	DashboardStateYellow                   = "ServerHealthCritical"
+	DashboardStateRed                      = "ServerUnhealthy"
 )
 
+// +kubebuilder:validation:Enum=Available;OK;Warning;Error
 type DashboardStatus string
 
 const (
@@ -72,6 +65,7 @@ const (
 	StatusError   DashboardStatus = "Error"
 )
 
+// +kubebuilder:validation:Enum=ca;database-client;kibana-server;dashboard-config
 type ElasticsearchDashboardCertificateAlias string
 
 const (
@@ -81,6 +75,7 @@ const (
 	ElasticsearchDashboardConfig           ElasticsearchDashboardCertificateAlias = "dashboard-config"
 )
 
+// +kubebuilder:validation:Enum=primary;stats
 type ServiceAlias string
 
 const (
@@ -88,41 +83,11 @@ const (
 	StatsServiceAlias   ServiceAlias = "stats"
 )
 
-type ServerState string
-
-var (
-	StateGreen  ServerState = "green"
-	StateYellow ServerState = "yellow"
-	StateRed    ServerState = "red"
-)
-
-var (
-	ElasticsearchDashboardKibanaConfigDir = "/usr/share/kibana/config"
-	ElasticsearchDashboardDefaultPort     = (int32)(5601)
-	ElasticsearchDashboardCpuReq          = "500m"
-	ElasticsearchDashboardMemReq          = "1Gi"
-	ElasticsearchDashboardMemLimit        = "1Gi"
-)
-
-const CaCertKey string = "ca.crt"
-const ComponentDashboard string = "dashboard"
-const KibanaHealthStatusAPi string = "/api/status"
-const KibanaSecretDataKey string = "kibana.yml"
-const DefaultDatabaseClientCertSuffix = "archiver-cert"
-const HealthCheckInterval = time.Second * 30
-const GlobalHost = "0.0.0.0"
+// +kubebuilder:validation:Enum=green;yellow;red
+type DashboardServerState string
 
 const (
-	ES_USER_ENV     = "ELASTICSEARCH_USERNAME"
-	ES_PASSWORD_ENV = "ELASTICSEARCH_PASSWORD"
+	StateGreen  DashboardServerState = "green"
+	StateYellow DashboardServerState = "yellow"
+	StateRed    DashboardServerState = "red"
 )
-
-var (
-	DeletionPolicy         = meta.DeletePropagationForeground
-	GracefulDeletionPeriod = (int64)(time.Duration(time.Second * 3))
-)
-
-type CertSecrets struct {
-	Ca  *core.Secret `protobuf:"bytes,1,opt,name=ca"`
-	Crt *core.Secret `protobuf:"bytes,2,opt,name=crt"`
-}

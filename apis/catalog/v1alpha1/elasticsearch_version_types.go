@@ -59,6 +59,9 @@ type ElasticsearchVersionSpec struct {
 	AuthPlugin ElasticsearchAuthPlugin `json:"authPlugin"`
 	// Database Image
 	DB ElasticsearchVersionDatabase `json:"db"`
+	// Dashboard Image
+	// +optional
+	Dashboard ElasticsearchDashboardVersionDatabase `json:"dashboard"`
 	// Exporter Image
 	Exporter ElasticsearchVersionExporter `json:"exporter"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
@@ -66,6 +69,8 @@ type ElasticsearchVersionSpec struct {
 	Deprecated bool `json:"deprecated,omitempty"`
 	// Init container Image
 	InitContainer ElasticsearchVersionInitContainer `json:"initContainer"`
+	// Init container Image
+	DashboardInitContainer ElasticsearchVersionDashboardInitContainer `json:"dashboardInitContainer"`
 	// PSP names
 	PodSecurityPolicies ElasticsearchVersionPodSecurityPolicy `json:"podSecurityPolicies"`
 	// Stash defines backup and restore task definitions.
@@ -92,6 +97,11 @@ type ElasticsearchVersionInitContainer struct {
 	YQImage string `json:"yqImage"`
 }
 
+// ElasticsearchVersionDashboardInitContainer is the ElasticsearchDashboard Container initializer
+type ElasticsearchVersionDashboardInitContainer struct {
+	YQImage string `json:"yqImage"`
+}
+
 // ElasticsearchVersionPodSecurityPolicy is the Elasticsearch pod security policies
 type ElasticsearchVersionPodSecurityPolicy struct {
 	DatabasePolicyName string `json:"databasePolicyName"`
@@ -114,6 +124,11 @@ type ElasticsearchSecurityContext struct {
 
 	// RunAsAnyNonRoot will be true if user can change the default UID to other than 1000.
 	RunAsAnyNonRoot bool `json:"runAsAnyNonRoot,omitempty"`
+}
+
+// ElasticsearchDashboardVersionDatabase is the Elasticsearch Dashboard image
+type ElasticsearchDashboardVersionDatabase struct {
+	Image string `json:"image"`
 }
 
 // +kubebuilder:validation:Enum=OpenDistro;SearchGuard;X-Pack;OpenSearch

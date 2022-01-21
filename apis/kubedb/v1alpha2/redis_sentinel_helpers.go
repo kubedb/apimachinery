@@ -176,7 +176,7 @@ func (rs *RedisSentinel) SetDefaults(topology *core_util.Topology) {
 
 	rs.Spec.Monitor.SetDefaults()
 	rs.SetTLSDefaults()
-	SetDefaultResourceLimits(&rs.Spec.PodTemplate.Spec.Resources, DefaultResources)
+	apis.SetDefaultResourceLimits(&rs.Spec.PodTemplate.Spec.Resources, DefaultResources)
 }
 
 func (rs *RedisSentinel) SetTLSDefaults() {

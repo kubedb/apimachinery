@@ -22700,7 +22700,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLReadReplicaSpec(ref common.Re
 				Properties: map[string]spec.Schema{
 					"sourceRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SourceRef specifies the  source object",
+							Description: "SourceRef specifies the  source object appbinding",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
