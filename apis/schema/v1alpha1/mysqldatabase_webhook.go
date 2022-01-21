@@ -17,15 +17,10 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"reflect"
-
-	gocmp "github.com/google/go-cmp/cmp"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
-	"k8s.io/klog/v2"
-	kmapi "kmodules.xyz/client-go/api/v1"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -41,8 +36,6 @@ func (in *MySQLDatabase) SetupWebhookWithManager(mgr manager.Manager) error {
 		Complete()
 }
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-
 // +kubebuilder:webhook:path=/mutate-schema-kubedb-com-v1alpha1-mysqldatabase,mutating=true,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mysqldatabases,verbs=create;update,versions=v1alpha1,name=mmysqldatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Defaulter = &MySQLDatabase{}
@@ -56,22 +49,21 @@ func (in *MySQLDatabase) Default() {
 			in.Spec.Init.Snapshot.SnapshotID = "latest"
 		}
 	}
-	val := in.Spec.DatabaseConfig.Encryption
+	val := in.Spec.Database.Config.Encryption
 	if val == "enable" || val == ENCRYPTIONENABLE {
-		in.Spec.DatabaseConfig.Encryption = ENCRYPTIONENABLE
+		in.Spec.Database.Config.Encryption = ENCRYPTIONENABLE
 	} else {
-		in.Spec.DatabaseConfig.Encryption = ENCRYPTIONDISABLE
+		in.Spec.Database.Config.Encryption = ENCRYPTIONDISABLE
 	}
-	if in.Spec.DatabaseConfig.ReadOnly != 1 {
-		in.Spec.DatabaseConfig.ReadOnly = 0
+	if in.Spec.Database.Config.ReadOnly != 1 {
+		in.Spec.Database.Config.ReadOnly = 0
 	}
-	if in.Spec.DatabaseConfig.CharacterSet == "" {
-		in.Spec.DatabaseConfig.CharacterSet = "utf8"
+	if in.Spec.Database.Config.CharacterSet == "" {
+		in.Spec.Database.Config.CharacterSet = "utf8"
 	}
 
 }
 
-// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mysqldatabase,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mysqldatabases,verbs=create;update;delete,versions=v1alpha1,name=vmysqldatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Validator = &MySQLDatabase{}
@@ -86,51 +78,14 @@ func (in *MySQLDatabase) ValidateCreate() error {
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (in *MySQLDatabase) ValidateUpdate(old runtime.Object) error {
 	mysqldatabaselog.Info("validate update", "name", in.Name)
-	oldobj := old.(*MySQLDatabase)
-	return validateMySQLDatabaseUpdate(oldobj, in)
+	return validateMySQLDatabaseUpdate(in)
 }
 
-func validateMySQLDatabaseUpdate(oldobj *MySQLDatabase, newobj *MySQLDatabase) error {
+func validateMySQLDatabaseUpdate(newobj *MySQLDatabase) error {
 	if newobj.Finalizers == nil {
 		return nil
 	}
 	var allErrs field.ErrorList
-	path := field.NewPath("spec")
-	if !kmapi.IsConditionTrue(oldobj.Status.Conditions, string(SchemaIgnored)) {
-		if oldobj.Spec.DatabaseConfig.Name != newobj.Spec.DatabaseConfig.Name {
-			allErrs = append(allErrs, field.Invalid(path.Child("databaseConfig"), newobj.Name, `Cannot change target database name`))
-		}
-		if oldobj.Spec.DatabaseRef != newobj.Spec.DatabaseRef {
-			allErrs = append(allErrs, field.Invalid(path.Child("mysqlRef"), newobj.Name, `Cannot change mysql reference`))
-		}
-		if oldobj.Spec.VaultRef != newobj.Spec.VaultRef {
-			allErrs = append(allErrs, field.Invalid(path.Child("vaultRef"), newobj.Name, `Cannot change vault reference`))
-		}
-	}
-	if err := newobj.ValidateMySQLDatabase(); err != nil {
-		allErrs = append(allErrs, field.Invalid(field.NewPath(""), newobj.Name, err.Error()))
-	}
-	if kmapi.IsConditionTrue(oldobj.Status.Conditions, string(ScriptApplied)) {
-
-		if !gocmp.Equal(oldobj.Spec.Init.Script, newobj.Spec.Init.Script) {
-			allErrs = append(allErrs, field.Invalid(path.Child("initSpec.script"), newobj.Name, "Cannot change initSpec script, former script already applied"))
-		}
-		//if oldobj.Spec.Init.Script !=  newobj.Spec.Init.Script {
-		//	klog.Info("\nupdated2\n")
-		//	klog.Infof("printing old object %+v\n", &oldobj.Spec.Init)
-		//	klog.Infof("printing new object %+v\n", &newobj.Spec.Init)
-		//}
-		if !reflect.DeepEqual(oldobj.Spec.Init.Script.PodTemplate, newobj.Spec.Init.Script.PodTemplate) {
-			if newobj.Spec.Init.Script.PodTemplate != nil {
-				klog.Infof("script already applied : Changes in the pod template won't be applied")
-			}
-		}
-	}
-	if kmapi.IsConditionTrue(oldobj.Status.Conditions, string(RestoredFromRepository)) {
-		if !reflect.DeepEqual(oldobj.Spec.Init.Snapshot, newobj.Spec.Init.Snapshot) {
-			allErrs = append(allErrs, field.Invalid(path.Child("restore"), newobj.Name, "Cannot change restore, former restore session already applied"))
-		}
-	}
 
 	if len(allErrs) == 0 {
 		return nil
@@ -144,7 +99,7 @@ func (in *MySQLDatabase) ValidateDelete() error {
 	if in.Spec.DeletionPolicy == DeletionPolicyDoNotDelete {
 		return field.Invalid(field.NewPath("spec").Child("terminationPolicy"), in.Name, `cannot delete object when terminationPolicy is set to "DoNotDelete"`)
 	}
-	if in.Spec.DatabaseConfig.ReadOnly == 1 {
+	if in.Spec.Database.Config.ReadOnly == 1 {
 		return field.Invalid(field.NewPath("spec").Child("databaseConfig.readOnly"), in.Name, `schema manger cannot be deleted : database is read only enabled`)
 	}
 	return nil
@@ -180,7 +135,7 @@ func (in *MySQLDatabase) validateInitailizationSchema() *field.Error {
 
 func (in *MySQLDatabase) validateMySQLDatabaseConfig() *field.Error {
 	path := field.NewPath("spec").Child("databaseConfig").Child("name")
-	name := in.Spec.DatabaseConfig.Name
+	name := in.Spec.Database.Config.Name
 	if name == "sys" {
 		return field.Invalid(path, in.Name, `cannot use "sys" as the database name`)
 	}
@@ -203,9 +158,9 @@ func (in *MySQLDatabase) validateMySQLDatabaseConfig() *field.Error {
 		return field.Invalid(path, in.Name, `cannot use "config" as the database name`)
 	}
 	path = field.NewPath("spec").Child("databaseConfig").Child("readOnly")
-	val := in.Spec.DatabaseConfig.ReadOnly
+	val := in.Spec.Database.Config.ReadOnly
 	if val == 1 {
-		if (in.Spec.Init != nil || in.Spec.Init.Snapshot != nil) && in.Status.Phase != Success {
+		if (in.Spec.Init != nil || in.Spec.Init.Snapshot != nil) && in.Status.Phase != DatabaseSchemaPhaseSuccessful {
 			return field.Invalid(path, in.Name, `cannot make the database readonly , init/restore yet to be applied`)
 		}
 	}

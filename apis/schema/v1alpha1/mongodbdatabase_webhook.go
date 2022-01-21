@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"errors"
 	"fmt"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -53,22 +52,37 @@ var _ webhook.Validator = &MongoDBDatabase{}
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (in *MongoDBDatabase) ValidateCreate() error {
 	mongodbdatabaselog.Info("validate create", "name", in.Name)
+	var allErrs field.ErrorList
+	path := field.NewPath("spec")
+	if in.Spec.Init != nil && in.Spec.Init.Initialized {
+		allErrs = append(allErrs, field.Invalid(path.Child("init").Child("initialized"), in.Name, `cannot set the initialized field to true directly`))
+		return apierrors.NewInvalid(in.GroupVersionKind().GroupKind(), in.Name, allErrs)
+	}
 	return in.ValidateMongoDBDatabase()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (in *MongoDBDatabase) ValidateUpdate(old runtime.Object) error {
 	mongodbdatabaselog.Info("validate update", "name", in.Name)
+	var allErrs field.ErrorList
+	path := field.NewPath("spec")
 	oldDb := old.(*MongoDBDatabase)
-	if oldDb.Status.Phase == Success && oldDb.Spec.DatabaseConfig.Name != in.Spec.DatabaseConfig.Name {
-		return errors.New("you can't change the Database Schema name now")
+
+	// if phase is 'Successful', do not give permission to change the DatabaseConfig.Name
+	if oldDb.Status.Phase == DatabaseSchemaPhaseSuccessful && oldDb.Spec.Database.Config.Name != in.Spec.Database.Config.Name {
+		allErrs = append(allErrs, field.Invalid(path.Child("database").Child("config"), in.Name, `you can't change the Database Config name now`))
+		return apierrors.NewInvalid(in.GroupVersionKind().GroupKind(), in.Name, allErrs)
+	}
+
+	// If Initialized==false, Do not give permission to set it to true directly
+	if oldDb.Spec.Init != nil && !oldDb.Spec.Init.Initialized && in.Spec.Init != nil && in.Spec.Init.Initialized {
+		allErrs = append(allErrs, field.Invalid(path.Child("init").Child("initialized"), in.Name, `cannot set the initialized field to true directly`))
+		return apierrors.NewInvalid(in.GroupVersionKind().GroupKind(), in.Name, allErrs)
 	}
 
 	// making VaultRef & DatabaseRef fields immutable
-	var allErrs field.ErrorList
-	path := field.NewPath("spec")
-	if oldDb.Spec.DatabaseRef != in.Spec.DatabaseRef {
-		allErrs = append(allErrs, field.Invalid(path.Child("databaseRef"), in.Name, `Cannot change mongodb reference`))
+	if oldDb.Spec.Database.ServerRef != in.Spec.Database.ServerRef {
+		allErrs = append(allErrs, field.Invalid(path.Child("database").Child("serverRef"), in.Name, `Cannot change mongodb reference`))
 	}
 	if oldDb.Spec.VaultRef != in.Spec.VaultRef {
 		allErrs = append(allErrs, field.Invalid(path.Child("vaultRef"), in.Name, `Cannot change vault reference`))
@@ -85,7 +99,10 @@ const ValidateDeleteMessage = "MongoDBDatabase schema can't be deleted if the de
 func (in *MongoDBDatabase) ValidateDelete() error {
 	mongodbdatabaselog.Info("validate delete", "name", in.Name)
 	if in.Spec.DeletionPolicy == DeletionPolicyDoNotDelete {
-		return errors.New(ValidateDeleteMessage)
+		var allErrs field.ErrorList
+		path := field.NewPath("spec").Child("deletionPolicy")
+		allErrs = append(allErrs, field.Invalid(path, in.Name, ValidateDeleteMessage))
+		return apierrors.NewInvalid(in.GroupVersionKind().GroupKind(), in.Name, allErrs)
 	}
 	return nil
 }
@@ -98,9 +115,6 @@ func (in *MongoDBDatabase) ValidateMongoDBDatabase() error {
 	if err := in.validateMongoDBDatabaseSchemaName(); err != nil {
 		allErrs = append(allErrs, err)
 	}
-	if err := in.validateCRDName(); err != nil {
-		allErrs = append(allErrs, err)
-	}
 	if err := in.CheckIfNameFieldsAreOkOrNot(); err != nil {
 		allErrs = append(allErrs, err)
 	}
@@ -111,28 +125,20 @@ func (in *MongoDBDatabase) ValidateMongoDBDatabase() error {
 }
 
 func (in *MongoDBDatabase) validateSchemaInitRestore() *field.Error {
-	path := field.NewPath("spec")
-	if in.Spec.Init != nil && in.Spec.Init.Snapshot != nil {
+	path := field.NewPath("spec").Child("init")
+	if in.Spec.Init != nil && in.Spec.Init.Script != nil && in.Spec.Init.Snapshot != nil {
 		return field.Invalid(path, in.Name, `cannot initialize database using both restore and initSpec`)
 	}
 	return nil
 }
 
 func (in *MongoDBDatabase) validateMongoDBDatabaseSchemaName() *field.Error {
-	path := field.NewPath("spec").Child("databaseSchema").Child("name")
-	name := in.Spec.DatabaseConfig.Name
+	path := field.NewPath("spec").Child("database").Child("config").Child("name")
+	name := in.Spec.Database.Config.Name
 
 	if name == MongoDatabaseNameForEntry || name == "admin" || name == "config" || name == "local" {
 		str := fmt.Sprintf("cannot use \"%v\" as the database name", name)
 		return field.Invalid(path, in.Name, str)
-	}
-	return nil
-}
-
-func (in *MongoDBDatabase) validateCRDName() *field.Error {
-	// This is a workaround value. So that after appending some characters after the schema name, it doesn't exceed the standard size
-	if len(in.ObjectMeta.Name) > 40 {
-		return field.Invalid(field.NewPath("metadata").Child("name"), in.Name, "must be no more than 40 characters")
 	}
 	return nil
 }
@@ -142,17 +148,17 @@ Ensure that the name of database, vault & repository are not empty
 */
 
 func (in *MongoDBDatabase) CheckIfNameFieldsAreOkOrNot() *field.Error {
-	if in.Spec.DatabaseRef.Name == "" {
+	if in.Spec.Database.ServerRef.Name == "" {
 		str := "Database Ref name cant be empty"
-		return field.Invalid(field.NewPath("spec").Child("databaseRef").Child("name"), in.Name, str)
+		return field.Invalid(field.NewPath("spec").Child("database").Child("serverRef").Child("name"), in.Name, str)
 	}
 	if in.Spec.VaultRef.Name == "" {
 		str := "Vault Ref name cant be empty"
 		return field.Invalid(field.NewPath("spec").Child("vaultRef").Child("name"), in.Name, str)
 	}
-	if in.Spec.Init.Snapshot != nil && in.Spec.Init.Snapshot.Repository.Name == "" {
+	if in.Spec.Init != nil && in.Spec.Init.Snapshot != nil && in.Spec.Init.Snapshot.Repository.Name == "" {
 		str := "Repository name cant be empty"
-		return field.Invalid(field.NewPath("spec").Child("restore").Child("repository").Child("name"), in.Name, str)
+		return field.Invalid(field.NewPath("spec").Child("init").Child("snapshot").Child("repository").Child("name"), in.Name, str)
 	}
 	return nil
 }

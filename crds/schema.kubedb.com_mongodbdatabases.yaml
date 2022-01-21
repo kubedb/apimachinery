@@ -15,11 +15,14 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
+    - jsonPath: .spec.database.serverRef.name
+      name: DB_SERVER
+      type: string
+    - jsonPath: .spec.database.config.name
+      name: DB_NAME
+      type: string
     - jsonPath: .status.phase
       name: Status
-      type: string
-    - jsonPath: .spec.databaseSchema.name
-      name: DatabaseName
       type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
@@ -61,21 +64,27 @@ spec:
                 required:
                 - subjects
                 type: object
-              databaseConfig:
+              database:
                 properties:
-                  name:
-                    type: string
+                  config:
+                    properties:
+                      name:
+                        type: string
+                    required:
+                    - name
+                    type: object
+                  serverRef:
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    required:
+                    - name
+                    type: object
                 required:
-                - name
-                type: object
-              databaseRef:
-                properties:
-                  name:
-                    type: string
-                  namespace:
-                    type: string
-                required:
-                - name
+                - config
+                - serverRef
                 type: object
               deletionPolicy:
                 default: Delete
@@ -3755,8 +3764,7 @@ spec:
                 type: object
             required:
             - accessPolicy
-            - databaseConfig
-            - databaseRef
+            - database
             - vaultRef
             type: object
           status:
@@ -3795,6 +3803,13 @@ spec:
                 format: int64
                 type: integer
               phase:
+                enum:
+                - Pending
+                - Progressing
+                - Terminating
+                - Successful
+                - Failed
+                - Expired
                 type: string
             type: object
         type: object

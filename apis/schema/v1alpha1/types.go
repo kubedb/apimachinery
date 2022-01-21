@@ -68,150 +68,6 @@ type DatabaseStatus struct {
 	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty"`
 }
 
-type DatabaseSchemaPhase string
-
-const (
-	Success     DatabaseSchemaPhase = "Success"
-	Running     DatabaseSchemaPhase = "Running"
-	Waiting     DatabaseSchemaPhase = "Waiting"
-	Ignored     DatabaseSchemaPhase = "Ignored"
-	Failed      DatabaseSchemaPhase = "Failed"
-	Expired     DatabaseSchemaPhase = "Expired"
-	Terminating DatabaseSchemaPhase = "Terminating"
-)
-
-type SchemaDatabasePhase string
-
-const (
-	// used for SchemaDatabases that are currently running
-	SchemaDatabasePhaseRunning SchemaDatabasePhase = "Running"
-	// used for SchemaDatabases that are Successfull
-	SchemaDatabasePhaseSuccessfull SchemaDatabasePhase = "Succeeded"
-	// used for SchemaDatabases that are Failed
-	SchemaDatabasePhaseFailed SchemaDatabasePhase = "Failed"
-)
-
-type SchemaDatabaseCondition string
-
-const (
-	SchemaDatabaseConditionDBReady                  SchemaDatabaseCondition = "DatabaseReady"
-	SchemaDatabaseConditionVaultReady               SchemaDatabaseCondition = "VaultReady"
-	SchemaDatabaseConditionSecretEngineReady        SchemaDatabaseCondition = "SecretEngineReady"
-	SchemaDatabaseConditionMongoDBRoleReady         SchemaDatabaseCondition = "MongoRoleDBReady"
-	SchemaDatabaseConditionPostgresRoleReady        SchemaDatabaseCondition = "PostgresRoleReady"
-	SchemaDatabaseConditionMysqlRoleReady           SchemaDatabaseCondition = "MysqlRoleReady"
-	SchemaDatabaseConditionMariaDBRoleReady         SchemaDatabaseCondition = "MariaDBRoleReady"
-	SchemaDatabaseConditionSecretAccessRequestReady SchemaDatabaseCondition = "SecretAccessRequestReady"
-	SchemaDatabaseConditionJobCompleted             SchemaDatabaseCondition = "JobCompleted"
-	SchemaDatabaseConditionRepositoryReady          SchemaDatabaseCondition = "RepositoryReady"
-	SchemaDatabaseConditionRestoreSecretReady       SchemaDatabaseCondition = "RestoreSecretReady"
-	SchemaDatabaseConditionAppBindingReady          SchemaDatabaseCondition = "AppBindingReady"
-	SchemaDatabaseConditionRestoreSessionReady      SchemaDatabaseCondition = "RestoreSessionReady"
-)
-
-type SchemaDatabaseReason string
-
-const (
-	SchemaDatabaseReasonDBReady                     SchemaDatabaseReason = "CheckDBIsReady"
-	SchemaDatabaseReasonDBNotReady                  SchemaDatabaseReason = "CheckDBIsNotReady"
-	SchemaDatabaseReasonVaultReady                  SchemaDatabaseReason = "CheckVaultIsReady"
-	SchemaDatabaseReasonVaultNotReady               SchemaDatabaseReason = "CheckVaultIsNotReady"
-	SchemaDatabaseReasonSecretEngineReady           SchemaDatabaseReason = "CheckSecretEngineIsReady"
-	SchemaDatabaseReasonSecretEngineNotReady        SchemaDatabaseReason = "CheckSecretEngineIsNotReady"
-	SchemaDatabaseReasonPostgresRoleReady           SchemaDatabaseReason = "CheckPostgresRoleIsReady"
-	SchemaDatabaseReasonPostgresRoleNotReady        SchemaDatabaseReason = "CheckPostgresRoleIsNotReady"
-	SchemaDatabaseReasonSecretAccessRequestReady    SchemaDatabaseReason = "CheckSecretAccessRequestIsReady"
-	SchemaDatabaseReasonSecretAccessRequestNotReady SchemaDatabaseReason = "CheckSecretAccessRequestIsNotReady"
-	SchemaDatabaseReasonJobNotCompleted             SchemaDatabaseReason = "CheckJobIsNotCompleted"
-	SchemaDatabaseReasonJobCompleted                SchemaDatabaseReason = "CheckJobIsCompleted"
-	SchemaDatabaseReasonRepositoryReady             SchemaDatabaseReason = "CheckRepositoryIsReady"
-	SchemaDatabaseReasonRepositoryNotReady          SchemaDatabaseReason = "CheckRepositoryIsNotReady"
-	SchemaDatabaseReasonRestoreSecretReady          SchemaDatabaseReason = "CheckRestoreSecretIsReady"
-	SchemaDatabaseReasonRestoreSecretNotReady       SchemaDatabaseReason = "CheckRestoreSecretIsNotReady"
-	SchemaDatabaseReasonAppBindingReady             SchemaDatabaseReason = "CheckAppBindingIsReady"
-	SchemaDatabaseReasonAppBindingNotReady          SchemaDatabaseReason = "CheckAppBindingIsNotReady"
-	SchemaDatabaseReasonRestoreSessionReady         SchemaDatabaseReason = "CheckRestoreSessionIsReady"
-	SchemaDatabaseReasonRestoreSessionNotReady      SchemaDatabaseReason = "CheckRestoreSessionIsNotReady"
-)
-
-type MySQLDatabaseCondition string
-type MySQLDatabaseVerbs string
-
-const (
-	AddCondition    MySQLDatabaseVerbs = "AddCondition"
-	RemoveCondition MySQLDatabaseVerbs = "RemoveCondition"
-
-	MySQLRoleCreated           MySQLDatabaseCondition = "MySQLRoleCreated"
-	VaultSecretEngineCreated   MySQLDatabaseCondition = "VaultSecretEngineCreated"
-	SecretAccessRequestCreated MySQLDatabaseCondition = "SecretAccessRequestCreated"
-
-	MySQLNotReady               MySQLDatabaseCondition = "MySQLNotReady"
-	VaultNotReady               MySQLDatabaseCondition = "VaultNotReady"
-	SecretAccessRequestApproved MySQLDatabaseCondition = "SecretAccessRequestApproved"
-	SecretAccessRequestDenied   MySQLDatabaseCondition = "SecretAccessRequestDenied"
-	SecretAccessRequestExpired  MySQLDatabaseCondition = "SecretAccessRequestExpired"
-
-	SchemaIgnored          MySQLDatabaseCondition = "SchemaIgnored"
-	DatabaseCreated        MySQLDatabaseCondition = "DatabaseCreated"
-	DatabaseDeleted        MySQLDatabaseCondition = "DatabaseDeleted"
-	DatabaseAltered        MySQLDatabaseCondition = "DatabaseAltered"
-	ScriptApplied          MySQLDatabaseCondition = "ScriptApplied"
-	RestoredFromRepository MySQLDatabaseCondition = "RestoredFromRepository"
-	FailedInitializing     MySQLDatabaseCondition = "FailedInitializing"
-	FailedRestoring        MySQLDatabaseCondition = "FailedRestoring"
-	TerminationHalted      MySQLDatabaseCondition = "TerminationHalted"
-	UserDisconnected       MySQLDatabaseCondition = "UserDisconnected"
-)
-
-//todo do phase works, update phase of success schema aftel altering databases, check more cases
-func GetPhase(obj Interface) DatabaseSchemaPhase {
-	conditions := obj.GetStatus().Conditions
-
-	if !obj.GetDeletionTimestamp().IsZero() {
-		return Terminating
-	}
-	if kmapi.IsConditionTrue(conditions, string(SecretAccessRequestExpired)) {
-		return Expired
-	}
-	if obj.GetStatus().Phase == Success {
-		return Success
-	}
-	if kmapi.IsConditionTrue(conditions, string(SchemaIgnored)) {
-		return Failed
-	}
-	if kmapi.IsConditionTrue(conditions, string(MySQLNotReady)) {
-		return Waiting
-	}
-	if kmapi.IsConditionTrue(conditions, string(VaultNotReady)) {
-		return Waiting
-	}
-
-	if kmapi.IsConditionTrue(conditions, string(SecretAccessRequestCreated)) && !kmapi.IsConditionTrue(conditions, string(SecretAccessRequestApproved)) {
-		if kmapi.IsConditionTrue(conditions, string(SecretAccessRequestDenied)) {
-			return Failed
-		}
-		return Waiting
-	}
-	if kmapi.IsConditionTrue(conditions, string(DatabaseCreated)) {
-		if obj.GetInit() != nil {
-			if kmapi.IsConditionTrue(conditions, string(FailedInitializing)) {
-				return Failed
-			} else if !kmapi.IsConditionTrue(conditions, string(ScriptApplied)) {
-				return Running
-			}
-		}
-		if obj.GetInit().Snapshot != nil {
-			if kmapi.IsConditionTrue(conditions, string(FailedRestoring)) {
-				return Failed
-			} else if !kmapi.IsConditionTrue(conditions, string(RestoredFromRepository)) {
-				return Running
-			}
-		}
-		return Success
-	}
-	return Waiting
-}
-
 // +kubebuilder:validation:Enum=Delete;DoNotDelete
 type DeletionPolicy string
 
@@ -228,4 +84,145 @@ type VaultSecretEngineRole struct {
 	DefaultTTL string `json:"defaultTTL,omitempty"`
 	// +optional
 	MaxTTL string `json:"maxTTL,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=Pending;Progressing;Terminating;Successful;Failed;Expired
+type DatabaseSchemaPhase string
+
+const (
+	DatabaseSchemaPhasePending     DatabaseSchemaPhase = "Pending"
+	DatabaseSchemaPhaseProgressing DatabaseSchemaPhase = "Progressing"
+	DatabaseSchemaPhaseTerminating DatabaseSchemaPhase = "Terminating"
+	DatabaseSchemaPhaseSuccessful  DatabaseSchemaPhase = "Successful"
+	DatabaseSchemaPhaseFailed      DatabaseSchemaPhase = "Failed"
+	DatabaseSchemaPhaseExpired     DatabaseSchemaPhase = "Expired"
+)
+
+type DatabaseSchemaConditionType string
+type DatabaseSchemaMessage string
+
+const (
+	DatabaseSchemaConditionTypeDBServerReady  DatabaseSchemaConditionType = "DatabaseServerReady"
+	DatabaseSchemaMessageDBServerNotCreated   DatabaseSchemaMessage       = "Database Server is not created yet"
+	DatabaseSchemaMessageDBServerProvisioning DatabaseSchemaMessage       = "Database Server is provisioning"
+	DatabaseSchemaMessageDBServerReady        DatabaseSchemaMessage       = "Database Server is Ready"
+
+	DatabaseSchemaConditionTypeVaultReady  DatabaseSchemaConditionType = "VaultReady"
+	DatabaseSchemaMessageVaultNotCreated   DatabaseSchemaMessage       = "VaultServer is not created yet"
+	DatabaseSchemaMessageVaultProvisioning DatabaseSchemaMessage       = "VaultServer is provisioning"
+	DatabaseSchemaMessageVaultReady        DatabaseSchemaMessage       = "VaultServer is Ready"
+
+	DatabaseSchemaConditionTypeSecretEngineReady DatabaseSchemaConditionType = "SecretEngineReady"
+	DatabaseSchemaMessageSecretEngineNotCreated  DatabaseSchemaMessage       = "SecretEngine is not created yet"
+	DatabaseSchemaMessageSecretEngineCreating    DatabaseSchemaMessage       = "SecretEngine is being creating"
+	DatabaseSchemaMessageSecretEngineSuccess     DatabaseSchemaMessage       = "SecretEngine phase is success"
+
+	DatabaseSchemaConditionTypeRoleReady        DatabaseSchemaConditionType = "RoleReady"
+	DatabaseSchemaMessageDatabaseRoleNotCreated DatabaseSchemaMessage       = "Database Role is not created yet"
+	DatabaseSchemaMessageDatabaseRoleCreating   DatabaseSchemaMessage       = "Database Role is being creating"
+	DatabaseSchemaMessageDatabaseRoleSuccess    DatabaseSchemaMessage       = "Database Role is success"
+
+	DatabaseSchemaConditionTypeSecretAccessRequestReady DatabaseSchemaConditionType = "SecretAccessRequestReady"
+	DatabaseSchemaMessageSecretAccessRequestNotCreated  DatabaseSchemaMessage       = "SecretAccessRequest is not created yet"
+	DatabaseSchemaMessageSecretAccessRequestWaiting     DatabaseSchemaMessage       = "SecretAccessRequest is waiting for approval"
+	DatabaseSchemaMessageSecretAccessRequestApproved    DatabaseSchemaMessage       = "SecretAccessRequest has been approved"
+	DatabaseSchemaMessageSecretAccessRequestExpired     DatabaseSchemaMessage       = "SecretAccessRequest has been expired"
+
+	DatabaseSchemaConditionTypeSchemaNameConflict DatabaseSchemaConditionType = "SchemaNameConflict"
+	DatabaseSchemaMessageSchemaNameConflicted     DatabaseSchemaMessage       = "Schema name is conflicted"
+
+	DatabaseSchemaConditionTypeInitScriptCompleted DatabaseSchemaConditionType = "InitScriptCompleted"
+	DatabaseSchemaMessageInitScriptNotApplied      DatabaseSchemaMessage       = "InitScript is not applied yet"
+	DatabaseSchemaMessageInitScriptRunning         DatabaseSchemaMessage       = "InitScript is running"
+	DatabaseSchemaMessageInitScriptCompleted       DatabaseSchemaMessage       = "InitScript is completed"
+	DatabaseSchemaMessageInitScriptSucceeded       DatabaseSchemaMessage       = "InitScript is succeeded"
+	DatabaseSchemaMessageInitScriptFailed          DatabaseSchemaMessage       = "InitScript is failed"
+
+	DatabaseSchemaConditionTypeRepositoryFound DatabaseSchemaConditionType = "RepositoryFound"
+	DatabaseSchemaMessageRepositoryNotCreated  DatabaseSchemaMessage       = "Repository is not created yet"
+	DatabaseSchemaMessageRepositoryFound       DatabaseSchemaMessage       = "Repository has been successfully copied"
+
+	DatabaseSchemaConditionTypeAppBindingFound DatabaseSchemaConditionType = "AppBindingFound"
+	DatabaseSchemaMessageAppBindingNotCreated  DatabaseSchemaMessage       = "AppBinding is not created yet"
+	DatabaseSchemaMessageAppBindingFound       DatabaseSchemaMessage       = "AppBinding is Found"
+
+	DatabaseSchemaConditionTypeRestoreCompleted   DatabaseSchemaConditionType = "RestoreSessionCompleted"
+	DatabaseSchemaMessageRestoreSessionNotCreated DatabaseSchemaMessage       = "RestoreSession is not created yet"
+	DatabaseSchemaMessageRestoreSessionRunning    DatabaseSchemaMessage       = "RestoreSession is running"
+	DatabaseSchemaMessageRestoreSessionSucceed    DatabaseSchemaMessage       = "RestoreSession is succeeded"
+	DatabaseSchemaMessageRestoreSessionFailed     DatabaseSchemaMessage       = "RestoreSession is failed"
+)
+
+func GetPhase(obj Interface) DatabaseSchemaPhase {
+	conditions := obj.GetStatus().Conditions
+
+	if !obj.GetDeletionTimestamp().IsZero() {
+		return DatabaseSchemaPhaseTerminating
+	}
+	if CheckIfSecretExpired(conditions) {
+		return DatabaseSchemaPhaseExpired
+	}
+	if obj.GetStatus().Phase == DatabaseSchemaPhaseSuccessful {
+		return DatabaseSchemaPhaseSuccessful
+	}
+	if kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeSchemaNameConflict)) {
+		return DatabaseSchemaPhaseFailed
+	}
+
+	// If Database or vault is not in ready state, Phase is 'Pending'
+	if !kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeDBServerReady)) ||
+		!kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeVaultReady)) {
+		return DatabaseSchemaPhasePending
+	}
+
+	// If SecretEngine or Role is not in ready state, Phase is 'Progressing'
+	if !kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeSecretEngineReady)) ||
+		!kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeRoleReady)) ||
+		!kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeSecretAccessRequestReady)) {
+		return DatabaseSchemaPhaseProgressing
+	}
+	// we are here means, SecretAccessRequest is approved and not expired. Now handle Init-Restore cases.
+
+	if kmapi.HasCondition(conditions, string(DatabaseSchemaConditionTypeRepositoryFound)) {
+		//  ----------------------------- Restore case -----------------------------
+		if !kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeRepositoryFound)) ||
+			!kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeAppBindingFound)) ||
+			!kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeRestoreCompleted)) {
+			return DatabaseSchemaPhaseProgressing
+		}
+		if CheckIfRestoreFailed(conditions) {
+			return DatabaseSchemaPhaseFailed
+		} else {
+			return DatabaseSchemaPhaseSuccessful
+		}
+	} else if kmapi.HasCondition(conditions, string(DatabaseSchemaConditionTypeInitScriptCompleted)) {
+		//  ----------------------------- Init case -----------------------------
+		if !kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeInitScriptCompleted)) {
+			return DatabaseSchemaPhaseProgressing
+		}
+		if CheckIfInitScriptFailed(conditions) {
+			return DatabaseSchemaPhaseFailed
+		} else {
+			return DatabaseSchemaPhaseSuccessful
+		}
+	}
+	return DatabaseSchemaPhaseSuccessful
+}
+
+func CheckIfInitScriptFailed(conditions []kmapi.Condition) bool {
+	_, cond := kmapi.GetCondition(conditions, string(DatabaseSchemaConditionTypeInitScriptCompleted))
+	return cond.Message == string(DatabaseSchemaMessageInitScriptFailed)
+}
+
+func CheckIfRestoreFailed(conditions []kmapi.Condition) bool {
+	_, cond := kmapi.GetCondition(conditions, string(DatabaseSchemaConditionTypeRestoreCompleted))
+	return cond.Message == string(DatabaseSchemaMessageRestoreSessionFailed)
+}
+
+func CheckIfSecretExpired(conditions []kmapi.Condition) bool {
+	i, cond := kmapi.GetCondition(conditions, string(DatabaseSchemaConditionTypeSecretAccessRequestReady))
+	if i == -1 {
+		return false
+	}
+	return cond.Message == string(DatabaseSchemaMessageSecretAccessRequestExpired)
 }

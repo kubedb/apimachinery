@@ -29,15 +29,13 @@ const (
 
 // RedisDatabaseSpec defines the desired state of RedisDatabase
 type RedisDatabaseSpec struct {
-	// DatabaseRef refers to a KubeDB managed database instance
-	DatabaseRef kmapi.ObjectReference `json:"databaseRef"`
+	// Database defines various configuration options for a database
+	Database RedisDatabaseInfo `json:"database"`
 
 	// VaultRef refers to a KubeVault managed vault server
 	VaultRef kmapi.ObjectReference `json:"vaultRef"`
 
-	// DatabaseConfig defines various configuration options for a database
-	DatabaseConfig RedisDatabaseConfiguration `json:"databaseConfig"`
-
+	// AccessPolicy contains the serviceAccount details and TTL values of the vault-created secret
 	AccessPolicy VaultSecretEngineRole `json:"accessPolicy"`
 
 	// Init contains info about the init script or snapshot info
@@ -50,6 +48,14 @@ type RedisDatabaseSpec struct {
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 }
 
+type RedisDatabaseInfo struct {
+	// ServerRef refers to a KubeDB managed database instance
+	ServerRef kmapi.ObjectReference `json:"serverRef"`
+
+	// DatabaseConfig defines various configuration options for a database
+	Config RedisDatabaseConfiguration `json:"config"`
+}
+
 type RedisDatabaseConfiguration struct {
 }
 
@@ -60,6 +66,10 @@ type RedisDatabaseConfiguration struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="DB_SERVER",type="string",JSONPath=".spec.database.serverRef.name"
+// +kubebuilder:printcolumn:name="DB_NAME",type="string",JSONPath=".spec.database.config.name"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type RedisDatabase struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

@@ -90,8 +90,8 @@ func (in *MySQLDatabase) GetInitJobMeta() metav1.ObjectMeta {
 //GetMySQLAuthSecretMeta returns meta info of the mysql auth secret
 func (in *MySQLDatabase) GetMySQLAuthSecretMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      in.Spec.DatabaseRef.Name + "-auth",
-		Namespace: in.Spec.DatabaseRef.Namespace,
+		Name:      in.Spec.Database.ServerRef.Name + "-auth",
+		Namespace: in.Spec.Database.ServerRef.Namespace,
 	}
 	return meta
 }

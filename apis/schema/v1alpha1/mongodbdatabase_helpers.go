@@ -21,6 +21,7 @@ import (
 	"kubedb.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
+	"kmodules.xyz/client-go/meta"
 )
 
 const (
@@ -46,33 +47,32 @@ func (in *MongoDBDatabase) GetStatus() DatabaseStatus {
 }
 
 func (in *MongoDBDatabase) GetMongoInitVolumeNameForPod() string {
-	return in.GetName() + "-init-volume"
+	return meta.NameWithSuffix(in.GetName(), "init-volume")
 }
 func (in *MongoDBDatabase) GetMongoInitJobName() string {
-	return in.GetName() + "-init-job"
+	return meta.NameWithSuffix(in.GetName(), "init-job")
 }
 func (in *MongoDBDatabase) GetMongoInitScriptContainerName() string {
-	return in.GetName() + "-init-container"
+	return meta.NameWithSuffix(in.GetName(), "init-container")
 }
 func (in *MongoDBDatabase) GetMongoRestoreSessionName() string {
-	return in.GetName() + "-restore-session"
+	return meta.NameWithSuffix(in.GetName(), "restore-session")
 }
 
-// For MongoDB Admin Role
 func (in *MongoDBDatabase) GetMongoAdminRoleName() string {
-	return in.GetName() + MongoPrefix + "-admin-role"
+	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "admin-role")
 }
 func (in *MongoDBDatabase) GetMongoAdminSecretAccessRequestName() string {
-	return in.GetName() + MongoPrefix + "-admin-secret-access-req"
+	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "admin-secret-access-req")
 }
 func (in *MongoDBDatabase) GetMongoAdminServiceAccountName() string {
-	return in.GetName() + MongoPrefix + "-admin-service-account"
+	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "admin-service-account")
 }
 
 func (in *MongoDBDatabase) GetMongoSecretEngineName() string {
-	return in.GetName() + MongoPrefix + "-secret-engine"
+	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "secret-engine")
 }
 
 func (in *MongoDBDatabase) GetAuthSecretName(dbServerName string) string {
-	return dbServerName + dbapi.MongoDBAuthSecretSuffix
+	return meta.NameWithSuffix(dbServerName, dbapi.MongoDBAuthSecretSuffix)
 }

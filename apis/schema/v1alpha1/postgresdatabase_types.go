@@ -29,15 +29,13 @@ const (
 
 // PostgresDatabaseSpec defines the desired state of PostgresDatabase
 type PostgresDatabaseSpec struct {
-	// DatabaseRef refers to a KubeDB managed database instance
-	DatabaseRef kmapi.ObjectReference `json:"databaseRef"`
+	// Database defines various configuration options for a database
+	Database PostgresDatabaseInfo `json:"database"`
 
 	// VaultRef refers to a KubeVault managed vault server
 	VaultRef kmapi.ObjectReference `json:"vaultRef"`
 
-	// DatabaseConfig defines various configuration options for a database
-	DatabaseConfig PostgresDatabaseConfiguration `json:"databaseConfig"`
-
+	// AccessPolicy contains the serviceAccount details and TTL values of the vault-created secret
 	AccessPolicy VaultSecretEngineRole `json:"accessPolicy"`
 
 	// Init contains info about the init script or snapshot info
@@ -50,6 +48,25 @@ type PostgresDatabaseSpec struct {
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 }
 
+type PostgresDatabaseInfo struct {
+	// ServerRef refers to a KubeDB managed database instance
+	ServerRef kmapi.ObjectReference `json:"serverRef"`
+
+	// DatabaseConfig defines various configuration options for a database
+	Config PostgresDatabaseConfiguration `json:"config"`
+}
+
+type PostgresDatabaseConfiguration struct {
+	DBName     string  `json:"dBName"`
+	Tablespace *string `json:"tablespace,omitempty"`
+	Params     []Param `json:"params,omitempty"`
+}
+
+type Param struct {
+	ConfigParameter string  `json:"configParameter"`
+	Value           *string `json:"value"`
+}
+
 // PostgresDatabase is the Schema for the postgresdatabases API
 
 // +genclient
@@ -57,6 +74,10 @@ type PostgresDatabaseSpec struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="DB_SERVER",type="string",JSONPath=".spec.database.serverRef.name"
+// +kubebuilder:printcolumn:name="DB_NAME",type="string",JSONPath=".spec.database.config.name"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type PostgresDatabase struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -73,17 +94,6 @@ type PostgresDatabaseList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []PostgresDatabase `json:"items"`
-}
-
-type Param struct {
-	ConfigParameter string  `json:"configParameter"`
-	Value           *string `json:"value"`
-}
-
-type PostgresDatabaseConfiguration struct {
-	DBName     string  `json:"dBName"`
-	Tablespace *string `json:"tablespace,omitempty"`
-	Params     []Param `json:"params,omitempty"`
 }
 
 func init() {

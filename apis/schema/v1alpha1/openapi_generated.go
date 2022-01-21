@@ -420,23 +420,28 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.InitSpec":                       schema_apimachinery_apis_schema_v1alpha1_InitSpec(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MariaDBDatabase":                schema_apimachinery_apis_schema_v1alpha1_MariaDBDatabase(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MariaDBDatabaseConfiguration":   schema_apimachinery_apis_schema_v1alpha1_MariaDBDatabaseConfiguration(ref),
+		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MariaDBDatabaseInfo":            schema_apimachinery_apis_schema_v1alpha1_MariaDBDatabaseInfo(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MariaDBDatabaseList":            schema_apimachinery_apis_schema_v1alpha1_MariaDBDatabaseList(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MariaDBDatabaseSpec":            schema_apimachinery_apis_schema_v1alpha1_MariaDBDatabaseSpec(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MongoDBDatabase":                schema_apimachinery_apis_schema_v1alpha1_MongoDBDatabase(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MongoDBDatabaseConfiguration":   schema_apimachinery_apis_schema_v1alpha1_MongoDBDatabaseConfiguration(ref),
+		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MongoDBDatabaseInfo":            schema_apimachinery_apis_schema_v1alpha1_MongoDBDatabaseInfo(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MongoDBDatabaseList":            schema_apimachinery_apis_schema_v1alpha1_MongoDBDatabaseList(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MongoDBDatabaseSpec":            schema_apimachinery_apis_schema_v1alpha1_MongoDBDatabaseSpec(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MySQLDatabase":                  schema_apimachinery_apis_schema_v1alpha1_MySQLDatabase(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MySQLDatabaseConfiguration":     schema_apimachinery_apis_schema_v1alpha1_MySQLDatabaseConfiguration(ref),
+		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MySQLDatabaseInfo":              schema_apimachinery_apis_schema_v1alpha1_MySQLDatabaseInfo(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MySQLDatabaseList":              schema_apimachinery_apis_schema_v1alpha1_MySQLDatabaseList(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.MySQLDatabaseSpec":              schema_apimachinery_apis_schema_v1alpha1_MySQLDatabaseSpec(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.Param":                          schema_apimachinery_apis_schema_v1alpha1_Param(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.PostgresDatabase":               schema_apimachinery_apis_schema_v1alpha1_PostgresDatabase(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.PostgresDatabaseConfiguration":  schema_apimachinery_apis_schema_v1alpha1_PostgresDatabaseConfiguration(ref),
+		"kubedb.dev/apimachinery/apis/schema/v1alpha1.PostgresDatabaseInfo":           schema_apimachinery_apis_schema_v1alpha1_PostgresDatabaseInfo(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.PostgresDatabaseList":           schema_apimachinery_apis_schema_v1alpha1_PostgresDatabaseList(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.PostgresDatabaseSpec":           schema_apimachinery_apis_schema_v1alpha1_PostgresDatabaseSpec(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.RedisDatabase":                  schema_apimachinery_apis_schema_v1alpha1_RedisDatabase(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.RedisDatabaseConfiguration":     schema_apimachinery_apis_schema_v1alpha1_RedisDatabaseConfiguration(ref),
+		"kubedb.dev/apimachinery/apis/schema/v1alpha1.RedisDatabaseInfo":              schema_apimachinery_apis_schema_v1alpha1_RedisDatabaseInfo(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.RedisDatabaseList":              schema_apimachinery_apis_schema_v1alpha1_RedisDatabaseList(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.RedisDatabaseSpec":              schema_apimachinery_apis_schema_v1alpha1_RedisDatabaseSpec(ref),
 		"kubedb.dev/apimachinery/apis/schema/v1alpha1.ScriptSourceSpec":               schema_apimachinery_apis_schema_v1alpha1_ScriptSourceSpec(ref),
@@ -20360,6 +20365,35 @@ func schema_apimachinery_apis_schema_v1alpha1_MariaDBDatabaseConfiguration(ref c
 	}
 }
 
+func schema_apimachinery_apis_schema_v1alpha1_MariaDBDatabaseInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"serverRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServerRef refers to a KubeDB managed database instance",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"config": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseConfig defines various configuration options for a database",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.MariaDBDatabaseConfiguration"),
+						},
+					},
+				},
+				Required: []string{"serverRef", "config"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.MariaDBDatabaseConfiguration"},
+	}
+}
+
 func schema_apimachinery_apis_schema_v1alpha1_MariaDBDatabaseList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -20415,11 +20449,11 @@ func schema_apimachinery_apis_schema_v1alpha1_MariaDBDatabaseSpec(ref common.Ref
 				Description: "MariaDBDatabaseSpec defines the desired state of MariaDBDatabase",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"databaseRef": {
+					"database": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseRef refers to a KubeDB managed database instance",
+							Description: "Database defines various configuration options for a database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.MariaDBDatabaseInfo"),
 						},
 					},
 					"vaultRef": {
@@ -20429,17 +20463,11 @@ func schema_apimachinery_apis_schema_v1alpha1_MariaDBDatabaseSpec(ref common.Ref
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
-					"databaseConfig": {
-						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseConfig defines various configuration options for a database",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.MariaDBDatabaseConfiguration"),
-						},
-					},
 					"accessPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"),
+							Description: "AccessPolicy contains the serviceAccount details and TTL values of the vault-created secret",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"),
 						},
 					},
 					"init": {
@@ -20456,11 +20484,11 @@ func schema_apimachinery_apis_schema_v1alpha1_MariaDBDatabaseSpec(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"databaseRef", "vaultRef", "databaseConfig", "accessPolicy"},
+				Required: []string{"database", "vaultRef", "accessPolicy"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/schema/v1alpha1.MariaDBDatabaseConfiguration", "kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/schema/v1alpha1.MariaDBDatabaseInfo", "kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"},
 	}
 }
 
@@ -20530,6 +20558,35 @@ func schema_apimachinery_apis_schema_v1alpha1_MongoDBDatabaseConfiguration(ref c
 	}
 }
 
+func schema_apimachinery_apis_schema_v1alpha1_MongoDBDatabaseInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"serverRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServerRef refers to a KubeDB managed database instance",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"config": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseConfig defines various configuration options for a database",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.MongoDBDatabaseConfiguration"),
+						},
+					},
+				},
+				Required: []string{"serverRef", "config"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.MongoDBDatabaseConfiguration"},
+	}
+}
+
 func schema_apimachinery_apis_schema_v1alpha1_MongoDBDatabaseList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -20585,11 +20642,11 @@ func schema_apimachinery_apis_schema_v1alpha1_MongoDBDatabaseSpec(ref common.Ref
 				Description: "MongoDBDatabaseSpec defines the desired state of MongoDBDatabase",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"databaseRef": {
+					"database": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseRef refers to a KubeDB managed database instance",
+							Description: "Database defines various configuration options for a database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.MongoDBDatabaseInfo"),
 						},
 					},
 					"vaultRef": {
@@ -20599,17 +20656,11 @@ func schema_apimachinery_apis_schema_v1alpha1_MongoDBDatabaseSpec(ref common.Ref
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
-					"databaseConfig": {
-						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseConfig defines various configuration options for a database",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.MongoDBDatabaseConfiguration"),
-						},
-					},
 					"accessPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"),
+							Description: "AccessPolicy contains the serviceAccount details and TTL values of the vault-created secret",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"),
 						},
 					},
 					"init": {
@@ -20626,11 +20677,11 @@ func schema_apimachinery_apis_schema_v1alpha1_MongoDBDatabaseSpec(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"databaseRef", "vaultRef", "databaseConfig", "accessPolicy"},
+				Required: []string{"database", "vaultRef", "accessPolicy"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/schema/v1alpha1.MongoDBDatabaseConfiguration", "kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/schema/v1alpha1.MongoDBDatabaseInfo", "kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"},
 	}
 }
 
@@ -20729,6 +20780,35 @@ func schema_apimachinery_apis_schema_v1alpha1_MySQLDatabaseConfiguration(ref com
 	}
 }
 
+func schema_apimachinery_apis_schema_v1alpha1_MySQLDatabaseInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"serverRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServerRef refers to a KubeDB managed database instance",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"config": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseConfig defines various configuration options for a database",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.MySQLDatabaseConfiguration"),
+						},
+					},
+				},
+				Required: []string{"serverRef", "config"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.MySQLDatabaseConfiguration"},
+	}
+}
+
 func schema_apimachinery_apis_schema_v1alpha1_MySQLDatabaseList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -20784,11 +20864,11 @@ func schema_apimachinery_apis_schema_v1alpha1_MySQLDatabaseSpec(ref common.Refer
 				Description: "MySQLDatabaseSpec defines the desired state of MySQLDatabase",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"databaseRef": {
+					"database": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseRef refers to a KubeDB managed database instance",
+							Description: "Database defines various configuration options for a database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.MySQLDatabaseInfo"),
 						},
 					},
 					"vaultRef": {
@@ -20798,17 +20878,11 @@ func schema_apimachinery_apis_schema_v1alpha1_MySQLDatabaseSpec(ref common.Refer
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
-					"databaseConfig": {
-						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseConfig defines various configuration options for a database",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.MySQLDatabaseConfiguration"),
-						},
-					},
 					"accessPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"),
+							Description: "AccessPolicy contains the serviceAccount details and TTL values of the vault-created secret",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"),
 						},
 					},
 					"init": {
@@ -20825,11 +20899,11 @@ func schema_apimachinery_apis_schema_v1alpha1_MySQLDatabaseSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"databaseRef", "vaultRef", "databaseConfig", "accessPolicy"},
+				Required: []string{"database", "vaultRef", "accessPolicy"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/schema/v1alpha1.MySQLDatabaseConfiguration", "kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/schema/v1alpha1.MySQLDatabaseInfo", "kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"},
 	}
 }
 
@@ -20946,6 +21020,35 @@ func schema_apimachinery_apis_schema_v1alpha1_PostgresDatabaseConfiguration(ref 
 	}
 }
 
+func schema_apimachinery_apis_schema_v1alpha1_PostgresDatabaseInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"serverRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServerRef refers to a KubeDB managed database instance",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"config": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseConfig defines various configuration options for a database",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.PostgresDatabaseConfiguration"),
+						},
+					},
+				},
+				Required: []string{"serverRef", "config"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.PostgresDatabaseConfiguration"},
+	}
+}
+
 func schema_apimachinery_apis_schema_v1alpha1_PostgresDatabaseList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21001,11 +21104,11 @@ func schema_apimachinery_apis_schema_v1alpha1_PostgresDatabaseSpec(ref common.Re
 				Description: "PostgresDatabaseSpec defines the desired state of PostgresDatabase",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"databaseRef": {
+					"database": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseRef refers to a KubeDB managed database instance",
+							Description: "Database defines various configuration options for a database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.PostgresDatabaseInfo"),
 						},
 					},
 					"vaultRef": {
@@ -21015,17 +21118,11 @@ func schema_apimachinery_apis_schema_v1alpha1_PostgresDatabaseSpec(ref common.Re
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
-					"databaseConfig": {
-						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseConfig defines various configuration options for a database",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.PostgresDatabaseConfiguration"),
-						},
-					},
 					"accessPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"),
+							Description: "AccessPolicy contains the serviceAccount details and TTL values of the vault-created secret",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"),
 						},
 					},
 					"init": {
@@ -21042,11 +21139,11 @@ func schema_apimachinery_apis_schema_v1alpha1_PostgresDatabaseSpec(ref common.Re
 						},
 					},
 				},
-				Required: []string{"databaseRef", "vaultRef", "databaseConfig", "accessPolicy"},
+				Required: []string{"database", "vaultRef", "accessPolicy"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/schema/v1alpha1.PostgresDatabaseConfiguration", "kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/schema/v1alpha1.PostgresDatabaseInfo", "kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"},
 	}
 }
 
@@ -21106,6 +21203,35 @@ func schema_apimachinery_apis_schema_v1alpha1_RedisDatabaseConfiguration(ref com
 	}
 }
 
+func schema_apimachinery_apis_schema_v1alpha1_RedisDatabaseInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"serverRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServerRef refers to a KubeDB managed database instance",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"config": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseConfig defines various configuration options for a database",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.RedisDatabaseConfiguration"),
+						},
+					},
+				},
+				Required: []string{"serverRef", "config"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.RedisDatabaseConfiguration"},
+	}
+}
+
 func schema_apimachinery_apis_schema_v1alpha1_RedisDatabaseList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21161,11 +21287,11 @@ func schema_apimachinery_apis_schema_v1alpha1_RedisDatabaseSpec(ref common.Refer
 				Description: "RedisDatabaseSpec defines the desired state of RedisDatabase",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"databaseRef": {
+					"database": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseRef refers to a KubeDB managed database instance",
+							Description: "Database defines various configuration options for a database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.RedisDatabaseInfo"),
 						},
 					},
 					"vaultRef": {
@@ -21175,17 +21301,11 @@ func schema_apimachinery_apis_schema_v1alpha1_RedisDatabaseSpec(ref common.Refer
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
-					"databaseConfig": {
-						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseConfig defines various configuration options for a database",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.RedisDatabaseConfiguration"),
-						},
-					},
 					"accessPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"),
+							Description: "AccessPolicy contains the serviceAccount details and TTL values of the vault-created secret",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"),
 						},
 					},
 					"init": {
@@ -21202,11 +21322,11 @@ func schema_apimachinery_apis_schema_v1alpha1_RedisDatabaseSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"databaseRef", "vaultRef", "databaseConfig", "accessPolicy"},
+				Required: []string{"database", "vaultRef", "accessPolicy"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/schema/v1alpha1.RedisDatabaseConfiguration", "kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/schema/v1alpha1.InitSpec", "kubedb.dev/apimachinery/apis/schema/v1alpha1.RedisDatabaseInfo", "kubedb.dev/apimachinery/apis/schema/v1alpha1.VaultSecretEngineRole"},
 	}
 }
 
