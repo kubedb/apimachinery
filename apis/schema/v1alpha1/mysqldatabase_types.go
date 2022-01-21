@@ -29,14 +29,11 @@ const (
 
 // MySQLDatabaseSpec defines the desired state of MySQLDatabase
 type MySQLDatabaseSpec struct {
-	// DatabaseRef refers to a KubeDB managed database instance
-	DatabaseRef kmapi.ObjectReference `json:"databaseRef"`
+	// Database defines various configuration options for a database
+	Database MySQLDatabaseInfo `json:"database"`
 
 	// VaultRef refers to a KubeVault managed vault server
 	VaultRef kmapi.ObjectReference `json:"vaultRef"`
-
-	// DatabaseConfig defines various configuration options for a database
-	DatabaseConfig MySQLDatabaseConfiguration `json:"databaseConfig"`
 
 	AccessPolicy VaultSecretEngineRole `json:"accessPolicy"`
 
@@ -80,6 +77,14 @@ type MySQLDatabaseList struct {
 
 func init() {
 	SchemeBuilder.Register(&MySQLDatabase{}, &MySQLDatabaseList{})
+}
+
+type MySQLDatabaseInfo struct {
+	// ServerRef refers to a KubeDB managed database instance
+	ServerRef kmapi.ObjectReference `json:"serverRef"`
+
+	// DatabaseConfig defines various configuration options for a database
+	Config MySQLDatabaseConfiguration `json:"config"`
 }
 
 type MySQLDatabaseConfiguration struct {
