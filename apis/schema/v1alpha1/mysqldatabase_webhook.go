@@ -49,17 +49,17 @@ func (in *MySQLDatabase) Default() {
 			in.Spec.Init.Snapshot.SnapshotID = "latest"
 		}
 	}
-	val := in.Spec.DatabaseConfig.Encryption
+	val := in.Spec.Database.Config.Encryption
 	if val == "enable" || val == ENCRYPTIONENABLE {
-		in.Spec.DatabaseConfig.Encryption = ENCRYPTIONENABLE
+		in.Spec.Database.Config.Encryption = ENCRYPTIONENABLE
 	} else {
-		in.Spec.DatabaseConfig.Encryption = ENCRYPTIONDISABLE
+		in.Spec.Database.Config.Encryption = ENCRYPTIONDISABLE
 	}
-	if in.Spec.DatabaseConfig.ReadOnly != 1 {
-		in.Spec.DatabaseConfig.ReadOnly = 0
+	if in.Spec.Database.Config.ReadOnly != 1 {
+		in.Spec.Database.Config.ReadOnly = 0
 	}
-	if in.Spec.DatabaseConfig.CharacterSet == "" {
-		in.Spec.DatabaseConfig.CharacterSet = "utf8"
+	if in.Spec.Database.Config.CharacterSet == "" {
+		in.Spec.Database.Config.CharacterSet = "utf8"
 	}
 
 }
@@ -99,7 +99,7 @@ func (in *MySQLDatabase) ValidateDelete() error {
 	if in.Spec.DeletionPolicy == DeletionPolicyDoNotDelete {
 		return field.Invalid(field.NewPath("spec").Child("terminationPolicy"), in.Name, `cannot delete object when terminationPolicy is set to "DoNotDelete"`)
 	}
-	if in.Spec.DatabaseConfig.ReadOnly == 1 {
+	if in.Spec.Database.Config.ReadOnly == 1 {
 		return field.Invalid(field.NewPath("spec").Child("databaseConfig.readOnly"), in.Name, `schema manger cannot be deleted : database is read only enabled`)
 	}
 	return nil
@@ -135,7 +135,7 @@ func (in *MySQLDatabase) validateInitailizationSchema() *field.Error {
 
 func (in *MySQLDatabase) validateMySQLDatabaseConfig() *field.Error {
 	path := field.NewPath("spec").Child("databaseConfig").Child("name")
-	name := in.Spec.DatabaseConfig.Name
+	name := in.Spec.Database.Config.Name
 	if name == "sys" {
 		return field.Invalid(path, in.Name, `cannot use "sys" as the database name`)
 	}
@@ -158,7 +158,7 @@ func (in *MySQLDatabase) validateMySQLDatabaseConfig() *field.Error {
 		return field.Invalid(path, in.Name, `cannot use "config" as the database name`)
 	}
 	path = field.NewPath("spec").Child("databaseConfig").Child("readOnly")
-	val := in.Spec.DatabaseConfig.ReadOnly
+	val := in.Spec.Database.Config.ReadOnly
 	if val == 1 {
 		if (in.Spec.Init != nil || in.Spec.Init.Snapshot != nil) && in.Status.Phase != DatabaseSchemaPhaseSuccessful {
 			return field.Invalid(path, in.Name, `cannot make the database readonly , init/restore yet to be applied`)

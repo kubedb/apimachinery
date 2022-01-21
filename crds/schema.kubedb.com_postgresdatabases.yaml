@@ -18,8 +18,11 @@ spec:
     - jsonPath: .status.phase
       name: Status
       type: string
-    - jsonPath: .spec.databaseConfig.name
-      name: DatabaseName
+    - jsonPath: .spec.database.serverRef.name
+      name: DB_SERVER
+      type: string
+    - jsonPath: .spec.database.config.name
+      name: DB_NAME
       type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
@@ -61,35 +64,41 @@ spec:
                 required:
                 - subjects
                 type: object
-              databaseConfig:
+              database:
                 properties:
-                  dBName:
-                    type: string
-                  params:
-                    items:
-                      properties:
-                        configParameter:
-                          type: string
-                        value:
-                          type: string
-                      required:
-                      - configParameter
-                      - value
-                      type: object
-                    type: array
-                  tablespace:
-                    type: string
+                  config:
+                    properties:
+                      dBName:
+                        type: string
+                      params:
+                        items:
+                          properties:
+                            configParameter:
+                              type: string
+                            value:
+                              type: string
+                          required:
+                          - configParameter
+                          - value
+                          type: object
+                        type: array
+                      tablespace:
+                        type: string
+                    required:
+                    - dBName
+                    type: object
+                  serverRef:
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    required:
+                    - name
+                    type: object
                 required:
-                - dBName
-                type: object
-              databaseRef:
-                properties:
-                  name:
-                    type: string
-                  namespace:
-                    type: string
-                required:
-                - name
+                - config
+                - serverRef
                 type: object
               deletionPolicy:
                 default: Delete
@@ -3769,8 +3778,7 @@ spec:
                 type: object
             required:
             - accessPolicy
-            - databaseConfig
-            - databaseRef
+            - database
             - vaultRef
             type: object
           status:

@@ -35,6 +35,7 @@ type MySQLDatabaseSpec struct {
 	// VaultRef refers to a KubeVault managed vault server
 	VaultRef kmapi.ObjectReference `json:"vaultRef"`
 
+	// AccessPolicy contains the serviceAccount details and TTL values of the vault-created secret
 	AccessPolicy VaultSecretEngineRole `json:"accessPolicy"`
 
 	// Init contains info about the init script or snapshot info
@@ -45,38 +46,6 @@ type MySQLDatabaseSpec struct {
 	// +optional
 	// +kubebuilder:default:="Delete"
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
-}
-
-// MySQLDatabase is the Schema for the mysqldatabases API
-
-// +genclient
-// +k8s:openapi-gen=true
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
-// +kubebuilder:printcolumn:name="DatabaseName",type="string",JSONPath=".spec.databaseConfig.name"
-// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-type MySQLDatabase struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   MySQLDatabaseSpec `json:"spec,omitempty"`
-	Status DatabaseStatus    `json:"status,omitempty"`
-}
-
-// MySQLDatabaseList contains a list of MySQLDatabase
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:object:root=true
-type MySQLDatabaseList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MySQLDatabase `json:"items"`
-}
-
-func init() {
-	SchemeBuilder.Register(&MySQLDatabase{}, &MySQLDatabaseList{})
 }
 
 type MySQLDatabaseInfo struct {
@@ -106,4 +75,37 @@ type MySQLDatabaseConfiguration struct {
 	//ReadOnly is the target database read only mode
 	// +optional
 	ReadOnly int32 `json:"readOnly,omitempty"`
+}
+
+// MySQLDatabase is the Schema for the mysqldatabases API
+
+// +genclient
+// +k8s:openapi-gen=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="DB_SERVER",type="string",JSONPath=".spec.database.serverRef.name"
+// +kubebuilder:printcolumn:name="DB_NAME",type="string",JSONPath=".spec.database.config.name"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+type MySQLDatabase struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   MySQLDatabaseSpec `json:"spec,omitempty"`
+	Status DatabaseStatus    `json:"status,omitempty"`
+}
+
+// MySQLDatabaseList contains a list of MySQLDatabase
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+type MySQLDatabaseList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []MySQLDatabase `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(&MySQLDatabase{}, &MySQLDatabaseList{})
 }

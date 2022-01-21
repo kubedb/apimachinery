@@ -29,15 +29,13 @@ const (
 
 // MariaDBDatabaseSpec defines the desired state of MariaDBDatabase
 type MariaDBDatabaseSpec struct {
-	// DatabaseRef refers to a KubeDB managed database instance
-	DatabaseRef kmapi.ObjectReference `json:"databaseRef"`
+	// Database defines various configuration options for a database
+	Database MariaDBDatabaseInfo `json:"database"`
 
 	// VaultRef refers to a KubeVault managed vault server
 	VaultRef kmapi.ObjectReference `json:"vaultRef"`
 
-	// DatabaseConfig defines various configuration options for a database
-	DatabaseConfig MariaDBDatabaseConfiguration `json:"databaseConfig"`
-
+	// AccessPolicy contains the serviceAccount details and TTL values of the vault-created secret
 	AccessPolicy VaultSecretEngineRole `json:"accessPolicy"`
 
 	// Init contains info about the init script or snapshot info
@@ -48,6 +46,14 @@ type MariaDBDatabaseSpec struct {
 	// +optional
 	// +kubebuilder:default:="Delete"
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
+}
+
+type MariaDBDatabaseInfo struct {
+	// ServerRef refers to a KubeDB managed database instance
+	ServerRef kmapi.ObjectReference `json:"serverRef"`
+
+	// DatabaseConfig defines various configuration options for a database
+	Config MariaDBDatabaseConfiguration `json:"config"`
 }
 
 type MariaDBDatabaseConfiguration struct {
@@ -61,7 +67,8 @@ type MariaDBDatabaseConfiguration struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
-// +kubebuilder:printcolumn:name="DatabaseName",type="string",JSONPath=".spec.databaseConfig.name"
+// +kubebuilder:printcolumn:name="DB_SERVER",type="string",JSONPath=".spec.database.serverRef.name"
+// +kubebuilder:printcolumn:name="DB_NAME",type="string",JSONPath=".spec.database.config.name"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type MariaDBDatabase struct {
 	metav1.TypeMeta   `json:",inline"`

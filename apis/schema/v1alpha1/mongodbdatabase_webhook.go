@@ -69,8 +69,8 @@ func (in *MongoDBDatabase) ValidateUpdate(old runtime.Object) error {
 	oldDb := old.(*MongoDBDatabase)
 
 	// if phase is 'Successful', do not give permission to change the DatabaseConfig.Name
-	if oldDb.Status.Phase == DatabaseSchemaPhaseSuccessful && oldDb.Spec.DatabaseConfig.Name != in.Spec.DatabaseConfig.Name {
-		allErrs = append(allErrs, field.Invalid(path.Child("databaseConfig"), in.Name, `you can't change the Database Config name now`))
+	if oldDb.Status.Phase == DatabaseSchemaPhaseSuccessful && oldDb.Spec.Database.Config.Name != in.Spec.Database.Config.Name {
+		allErrs = append(allErrs, field.Invalid(path.Child("database").Child("config"), in.Name, `you can't change the Database Config name now`))
 		return apierrors.NewInvalid(in.GroupVersionKind().GroupKind(), in.Name, allErrs)
 	}
 
@@ -81,8 +81,8 @@ func (in *MongoDBDatabase) ValidateUpdate(old runtime.Object) error {
 	}
 
 	// making VaultRef & DatabaseRef fields immutable
-	if oldDb.Spec.DatabaseRef != in.Spec.DatabaseRef {
-		allErrs = append(allErrs, field.Invalid(path.Child("databaseRef"), in.Name, `Cannot change mongodb reference`))
+	if oldDb.Spec.Database.ServerRef != in.Spec.Database.ServerRef {
+		allErrs = append(allErrs, field.Invalid(path.Child("database").Child("serverRef"), in.Name, `Cannot change mongodb reference`))
 	}
 	if oldDb.Spec.VaultRef != in.Spec.VaultRef {
 		allErrs = append(allErrs, field.Invalid(path.Child("vaultRef"), in.Name, `Cannot change vault reference`))
@@ -133,8 +133,8 @@ func (in *MongoDBDatabase) validateSchemaInitRestore() *field.Error {
 }
 
 func (in *MongoDBDatabase) validateMongoDBDatabaseSchemaName() *field.Error {
-	path := field.NewPath("spec").Child("databaseConfig").Child("name")
-	name := in.Spec.DatabaseConfig.Name
+	path := field.NewPath("spec").Child("database").Child("config").Child("name")
+	name := in.Spec.Database.Config.Name
 
 	if name == MongoDatabaseNameForEntry || name == "admin" || name == "config" || name == "local" {
 		str := fmt.Sprintf("cannot use \"%v\" as the database name", name)
@@ -148,9 +148,9 @@ Ensure that the name of database, vault & repository are not empty
 */
 
 func (in *MongoDBDatabase) CheckIfNameFieldsAreOkOrNot() *field.Error {
-	if in.Spec.DatabaseRef.Name == "" {
+	if in.Spec.Database.ServerRef.Name == "" {
 		str := "Database Ref name cant be empty"
-		return field.Invalid(field.NewPath("spec").Child("databaseRef").Child("name"), in.Name, str)
+		return field.Invalid(field.NewPath("spec").Child("database").Child("serverRef").Child("name"), in.Name, str)
 	}
 	if in.Spec.VaultRef.Name == "" {
 		str := "Vault Ref name cant be empty"
