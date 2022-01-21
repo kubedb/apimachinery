@@ -17,10 +17,37 @@ limitations under the License.
 package phase
 
 import (
+	dapi "kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
+
+func DashboardPhaseFromCondition(conditions []kmapi.Condition) dapi.DashboardPhase {
+
+	if !kmapi.IsConditionTrue(conditions, string(dapi.DashboardConditionProvisioned)) {
+		return dapi.DashboardPhaseProvisioning
+	}
+
+	if !kmapi.IsConditionTrue(conditions, string(dapi.DashboardConditionAcceptingConnection)) {
+		return dapi.DashboardPhaseNotReady
+	}
+
+	// TODO: implement deployment watcher to handle replica ready
+
+	if !kmapi.IsConditionTrue(conditions, string(dapi.DashboardConditionServerHealthy)) {
+
+		_, cond := kmapi.GetCondition(conditions, string(dapi.DashboardConditionServerHealthy))
+
+		if cond.Reason == string(dapi.DashboardStateRed) {
+			return dapi.DashboardPhaseNotReady
+		} else {
+			return dapi.DashboardPhaseCritical
+		}
+	}
+
+	return dapi.DashboardPhaseReady
+}
 
 func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 	// Generally, the conditions should maintain the following chronological order

@@ -17,20 +17,16 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"errors"
 	"fmt"
 
+	"kubedb.dev/apimachinery/apis"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"gomodules.xyz/pointer"
-	"gomodules.xyz/x/arrays"
-	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/apimachinery/pkg/util/validation"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -54,16 +50,12 @@ var forbiddenEnvVars = []string{
 	"elasticsearch.ssl.certificateAuthorities",
 }
 
-var allowedVersions = []string{
-	"xpack-7.14.0",
-}
-
 // log is for logging in this package.
-var elasticsearchdashboardlog = logf.Log.WithName("elasticsearchdashboard-resource")
+var edLog = logf.Log.WithName("elasticsearchdashboard-validation")
 
-func (r *ElasticsearchDashboard) SetupWebhookWithManager(mgr manager.Manager) error {
+func (ed *ElasticsearchDashboard) SetupWebhookWithManager(mgr manager.Manager) error {
 	return builder.WebhookManagedBy(mgr).
-		For(r).
+		For(ed).
 		Complete()
 }
 
@@ -74,73 +66,55 @@ func (r *ElasticsearchDashboard) SetupWebhookWithManager(mgr manager.Manager) er
 var _ webhook.Defaulter = &ElasticsearchDashboard{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *ElasticsearchDashboard) Default() {
-	elasticsearchdashboardlog.Info("default", "name", r.Name)
+func (ed *ElasticsearchDashboard) Default() {
+	edLog.Info("default", "name", ed.Name)
 
-	// TODO(user): fill in your defaulting logic.
-
-	if r.Spec.Replicas == nil {
-		r.Spec.Replicas = pointer.Int32P(1)
+	if ed.Spec.Replicas == nil {
+		ed.Spec.Replicas = pointer.Int32P(1)
 	}
 
-	if r.Spec.PodTemplate.Spec.Resources.Limits == nil {
-		r.Spec.PodTemplate.Spec.Resources.Limits = core.ResourceList{
-			"memory": resource.MustParse(ElasticsearchDashboardMemLimit),
-		}
+	if ed.Spec.PodTemplate.Spec.Resources.Size() == 0 {
+		apis.SetDefaultResourceLimits(&ed.Spec.PodTemplate.Spec.Resources, DefaultResources)
 	}
 
-	if r.Spec.PodTemplate.Spec.Resources.Requests == nil {
-		r.Spec.PodTemplate.Spec.Resources.Requests = core.ResourceList{
-			"cpu":    resource.MustParse(ElasticsearchDashboardCpuReq),
-			"memory": resource.MustParse(ElasticsearchDashboardMemReq),
-		}
-	}
-
-	if len(r.Spec.TerminationPolicy) == 0 {
-		r.Spec.TerminationPolicy = api.TerminationPolicyDoNotTerminate
+	if len(ed.Spec.TerminationPolicy) == 0 {
+		ed.Spec.TerminationPolicy = api.TerminationPolicyDoNotTerminate
 	}
 }
 
-// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 // +kubebuilder:webhook:path=/validate-dashboard-kubedb-com-v1alpha1-elasticsearchdashboard,mutating=false,failurePolicy=fail,sideEffects=None,groups=dashboard.kubedb.com,resources=elasticsearchdashboards,verbs=create;update;delete,versions=v1alpha1,name=velasticsearchdashboard.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Validator = &ElasticsearchDashboard{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *ElasticsearchDashboard) ValidateCreate() error {
-	elasticsearchdashboardlog.Info("validate create", "name", r.Name)
-
-	// TODO(user): fill in your validation logic upon object creation.
-
-	err := r.Validate()
+func (ed *ElasticsearchDashboard) ValidateCreate() error {
+	edLog.Info("validate create", "name", ed.Name)
+	err := ed.Validate()
 	return err
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *ElasticsearchDashboard) ValidateUpdate(old runtime.Object) error {
-	elasticsearchdashboardlog.Info("validate update", "name", r.Name)
+func (ed *ElasticsearchDashboard) ValidateUpdate(old runtime.Object) error {
+	edLog.Info("validate update", "name", ed.Name)
 
-	// TODO(user): fill in your validation logic upon object update.
 	// Skip validation, if UPDATE operation is called after deletion.
 	// Case: Removing Finalizer
-	if r.DeletionTimestamp != nil {
+	if ed.DeletionTimestamp != nil {
 		return nil
 	}
-	err := r.Validate()
+	err := ed.Validate()
 	return err
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *ElasticsearchDashboard) ValidateDelete() error {
-	elasticsearchdashboardlog.Info("validate delete", "name", r.Name)
-
-	// TODO(user): fill in your validation logic upon object deletion.
+func (ed *ElasticsearchDashboard) ValidateDelete() error {
+	edLog.Info("validate delete", "name", ed.Name)
 
 	var allErr field.ErrorList
 
-	if r.Spec.TerminationPolicy == api.TerminationPolicyDoNotTerminate {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationpolicy"), r.Name,
-			fmt.Sprintf("ElasticsearchDashboard %s/%s can't be deleted. Change .spec.terminationpolicy", r.Namespace, r.Name)))
+	if ed.Spec.TerminationPolicy == api.TerminationPolicyDoNotTerminate {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationpolicy"), ed.Name,
+			fmt.Sprintf("ElasticsearchDashboard %s/%s can't be deleted. Change .spec.terminationpolicy", ed.Namespace, ed.Name)))
 	}
 
 	if len(allErr) == 0 {
@@ -149,70 +123,37 @@ func (r *ElasticsearchDashboard) ValidateDelete() error {
 
 	return apierrors.NewInvalid(
 		schema.GroupKind{Group: "dashboard.kubedb.com", Kind: "ElasticsearchDashboard"},
-		r.Name, allErr)
+		ed.Name, allErr)
 }
 
-func (r *ElasticsearchDashboard) Validate() error {
-
-	// TODO(user): fill in your validation logic upon object creation or update
+func (ed *ElasticsearchDashboard) Validate() error {
 
 	var allErr field.ErrorList
 
-	// The resource name length is 63 character like all Kubernetes objects
-	// (which must fit in a DNS subdomain). The ElasticsearchDashboard controller appends
-	// suffixes(max 13 characters) to resources that it creates and watches.  Therefore, ElasticsearchDashboard
-	// names must have length <= 63-13=50. If we don't validate this here,
-	// then ElasticsearchDashboard resource creations will fail later.
-	if len(r.Name) == validation.DNS1035LabelMaxLength-13 {
-		allErr = append(allErr, field.Invalid(field.NewPath("Name"), r.Name,
-			fmt.Sprintf("%v is too long. keep it within 50 characters", r.Name)))
-	}
-
 	//database ref is required
-	if r.Spec.DatabaseRef == nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("databaseref"), r.Name,
+	if ed.Spec.DatabaseRef == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("databaseref"), ed.Name,
 			"spec.databaseref can't be empty"))
 	}
 
 	// validate if user provided replicas are non-negative
 	// user may provide 0 replicas
-	if *r.Spec.Replicas < 0 {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"), r.Name,
-			fmt.Sprintf("spec.replicas %v invalid. Must be greater than zero", r.Spec.Replicas)))
-	}
-
-	// SSL can not be enabled if security is disabled
-	if r.Spec.DisableSecurity && r.Spec.EnableSSL {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("disablesecurity", "enablessl"), r.Name,
-			"to enable spec.enableSSL, spec.disableSecurity needs to be set to false"))
+	if *ed.Spec.Replicas < 0 {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"), ed.Name,
+			fmt.Sprintf("spec.replicas %v invalid. Must be greater than zero", ed.Spec.Replicas)))
 	}
 
 	// env variables needs to be validated
 	// so that variables provided in config secret
 	// and credential env may not be overwritten
-	if err := amv.ValidateEnvVar(r.Spec.PodTemplate.Spec.Env, forbiddenEnvVars, ResourceKindElasticsearchDashboard); err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podtemplate").Child("spec").Child("env"), r.Name,
+	if err := amv.ValidateEnvVar(ed.Spec.PodTemplate.Spec.Env, forbiddenEnvVars, ResourceKindElasticsearchDashboard); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podtemplate").Child("spec").Child("env"), ed.Name,
 			"Invalid spec.podtemplate.spec.env , avoid using the forbidden env variables"))
-	}
-
-	if err := r.ValidateVersion(r.Spec.Version); err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"), r.Name,
-			fmt.Sprintf("Invalid spec.version , use a valid version for "+ResourceKindElasticsearchDashboard)))
 	}
 
 	if len(allErr) == 0 {
 		return nil
 	}
 
-	return apierrors.NewInvalid(schema.GroupKind{Group: "dashboard.kubedb.com", Kind: "ElasticsearchDashboard"}, r.Name, allErr)
-}
-
-func (r *ElasticsearchDashboard) ValidateVersion(version string) error {
-
-	present, _ := arrays.Contains(allowedVersions, version)
-	if !present {
-		return errors.New("invalid version")
-	}
-	return nil
-
+	return apierrors.NewInvalid(schema.GroupKind{Group: "dashboard.kubedb.com", Kind: "ElasticsearchDashboard"}, ed.Name, allErr)
 }

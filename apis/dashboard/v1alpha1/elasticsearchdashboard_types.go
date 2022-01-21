@@ -20,9 +20,8 @@ import (
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	core "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
@@ -34,33 +33,19 @@ const (
 )
 
 // ElasticsearchDashboardSpec defines the desired state of ElasticsearchDashboard
-
 type ElasticsearchDashboardSpec struct {
-	// Version of ElasticsearchDashboard to be deployed.
-	Version string `json:"version"`
+	// host elasticsearch name and namespace
+	DatabaseRef *core.LocalObjectReference `json:"databaseRef,omitempty"`
 
 	// Number of instances to deploy for a ElasticsearchDashboard Dashboard.
-
 	Replicas *int32 `json:"replicas,omitempty"`
 
 	// To enable ssl for http layer
 	EnableSSL bool `json:"enableSSL,omitempty"`
 
-	// disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user.
-	// If unset, default is false
-	// +optional
-	DisableSecurity bool `json:"disableSecurity,omitempty"`
-
-	// host elasticsearch name and namespace
-	DatabaseRef *core.LocalObjectReference `json:"databaseRef,omitempty"`
-
 	// Dashboard authentication secret
 	// +optional
 	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty"`
-
-	// Monitor is used monitor Dashboard instance
-	// +optional
-	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 
 	// ConfigSecret is an optional field to provide custom configuration file for dashboard.
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
@@ -99,7 +84,6 @@ type ElasticsearchDashboardStatus struct {
 }
 
 // ElasticsearchDashboard is the Schema for the elasticsearchdashboards API
-
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -112,8 +96,8 @@ type ElasticsearchDashboardStatus struct {
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 type ElasticsearchDashboard struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	meta.TypeMeta   `json:",inline"`
+	meta.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec   ElasticsearchDashboardSpec   `json:"spec,omitempty"`
 	Status ElasticsearchDashboardStatus `json:"status,omitempty"`
@@ -124,9 +108,9 @@ type ElasticsearchDashboard struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 type ElasticsearchDashboardList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []ElasticsearchDashboard `json:"items"`
+	meta.TypeMeta `json:",inline"`
+	meta.ListMeta `json:"metadata,omitempty"`
+	Items         []ElasticsearchDashboard `json:"items"`
 }
 
 func init() {

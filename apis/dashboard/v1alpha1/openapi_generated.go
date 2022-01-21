@@ -416,7 +416,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                 schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                 schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                         schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
-		"kubedb.dev/apimachinery/apis/dashboard/v1alpha1.CertSecrets":                  schema_apimachinery_apis_dashboard_v1alpha1_CertSecrets(ref),
 		"kubedb.dev/apimachinery/apis/dashboard/v1alpha1.ElasticsearchDashboard":       schema_apimachinery_apis_dashboard_v1alpha1_ElasticsearchDashboard(ref),
 		"kubedb.dev/apimachinery/apis/dashboard/v1alpha1.ElasticsearchDashboardList":   schema_apimachinery_apis_dashboard_v1alpha1_ElasticsearchDashboardList(ref),
 		"kubedb.dev/apimachinery/apis/dashboard/v1alpha1.ElasticsearchDashboardSpec":   schema_apimachinery_apis_dashboard_v1alpha1_ElasticsearchDashboardSpec(ref),
@@ -20201,36 +20200,12 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_dashboard_v1alpha1_CertSecrets(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"Ca": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.Secret"),
-						},
-					},
-					"Crt": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.Secret"),
-						},
-					},
-				},
-				Required: []string{"Ca", "Crt"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.Secret"},
-	}
-}
-
 func schema_apimachinery_apis_dashboard_v1alpha1_ElasticsearchDashboard(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ElasticsearchDashboard is the Schema for the elasticsearchdashboards API",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -20324,20 +20299,20 @@ func schema_apimachinery_apis_dashboard_v1alpha1_ElasticsearchDashboardSpec(ref 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ElasticsearchDashboardSpec defines the desired state of ElasticsearchDashboard",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"version": {
+					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Version of ElasticsearchDashboard to be deployed.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "host elasticsearch name and namespace",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "Number of instances to deploy for a ElasticsearchDashboard Dashboard.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"enableSSL": {
@@ -20347,29 +20322,10 @@ func schema_apimachinery_apis_dashboard_v1alpha1_ElasticsearchDashboardSpec(ref 
 							Format:      "",
 						},
 					},
-					"disableSecurity": {
-						SchemaProps: spec.SchemaProps{
-							Description: "disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user. If unset, default is false",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"databaseRef": {
-						SchemaProps: spec.SchemaProps{
-							Description: "host elasticsearch name and namespace",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Dashboard authentication secret",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"monitor": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Monitor is used monitor Dashboard instance",
-							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
 						},
 					},
 					"configSecret": {
@@ -20413,11 +20369,10 @@ func schema_apimachinery_apis_dashboard_v1alpha1_ElasticsearchDashboardSpec(ref 
 						},
 					},
 				},
-				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
 

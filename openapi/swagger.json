@@ -27674,6 +27674,19 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchDashboardVersionDatabase": {
+      "description": "ElasticsearchDashboardVersionDatabase is the Elasticsearch Dashboard image",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchSecurityContext": {
       "description": "ElasticsearchSecurityContext provides additional securityContext settings for the Elasticsearch Image",
       "type": "object",
@@ -27716,6 +27729,19 @@
           "version": "v1alpha1"
         }
       ]
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionDashboardInitContainer": {
+      "description": "ElasticsearchVersionDashboardInitContainer is the ElasticsearchDashboard Container initializer",
+      "type": "object",
+      "required": [
+        "yqImage"
+      ],
+      "properties": {
+        "yqImage": {
+          "type": "string",
+          "default": ""
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionDatabase": {
       "description": "ElasticsearchVersionDatabase is the Elasticsearch Database image",
@@ -27816,6 +27842,7 @@
         "db",
         "exporter",
         "initContainer",
+        "dashboardInitContainer",
         "podSecurityPolicies"
       ],
       "properties": {
@@ -27823,6 +27850,16 @@
           "description": "Authentication plugin used by Elasticsearch cluster",
           "type": "string",
           "default": ""
+        },
+        "dashboard": {
+          "description": "Dashboard Image",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchDashboardVersionDatabase"
+        },
+        "dashboardInitContainer": {
+          "description": "Init container Image",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionDashboardInitContainer"
         },
         "db": {
           "description": "Database Image",
@@ -30665,7 +30702,7 @@
       ],
       "properties": {
         "sourceRef": {
-          "description": "SourceRef specifies the  source object",
+          "description": "SourceRef specifies the  source object appbinding",
           "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.ObjectReference"
         }
