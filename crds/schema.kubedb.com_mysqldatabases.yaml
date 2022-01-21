@@ -18,12 +18,12 @@ spec:
     - jsonPath: .status.phase
       name: Status
       type: string
+    - jsonPath: .spec.databaseConfig.name
+      name: DatabaseName
+      type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
-    - jsonPath: .status.loginCreds.name
-      name: Login Credential
-      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:

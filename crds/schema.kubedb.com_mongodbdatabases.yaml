@@ -18,7 +18,7 @@ spec:
     - jsonPath: .status.phase
       name: Status
       type: string
-    - jsonPath: .spec.databaseSchema.name
+    - jsonPath: .spec.databaseConfig.name
       name: DatabaseName
       type: string
     - jsonPath: .metadata.creationTimestamp
