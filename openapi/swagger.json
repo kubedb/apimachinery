@@ -30665,7 +30665,7 @@
       ],
       "properties": {
         "sourceRef": {
-          "description": "SourceRef specifies the  source object appbinding",
+          "description": "SourceRef specifies the  source object",
           "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.ObjectReference"
         }
