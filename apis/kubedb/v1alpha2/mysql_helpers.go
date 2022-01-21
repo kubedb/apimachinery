@@ -137,6 +137,10 @@ func (m MySQL) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
 }
 
+func (m MySQL) StandbyServiceDNS() string {
+	return fmt.Sprintf("%s.%s.svc", m.StandbyServiceName(), m.Namespace)
+}
+
 func (m MySQL) Hosts() []string {
 	replicas := 1
 	if m.Spec.Replicas != nil {
@@ -219,6 +223,12 @@ func (m *MySQL) IsInnoDBCluster() bool {
 	return m.Spec.Topology != nil &&
 		m.Spec.Topology.Mode != nil &&
 		*m.Spec.Topology.Mode == MySQLModeInnoDBCluster
+}
+
+func (m *MySQL) IsReadReplica() bool {
+	return m.Spec.Topology != nil &&
+		m.Spec.Topology.Mode != nil &&
+		*m.Spec.Topology.Mode == MySQLModeReadReplica
 }
 
 func (m *MySQL) SetDefaults(topology *core_util.Topology) {
