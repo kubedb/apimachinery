@@ -44,6 +44,10 @@ spec:
             properties:
               configuration:
                 properties:
+                  applyConfig:
+                    additionalProperties:
+                      type: string
+                    type: object
                   configSecret:
                     properties:
                       name:
