@@ -16,12 +16,6 @@ limitations under the License.
 
 package v1alpha1
 
-import (
-	"time"
-
-	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
-)
-
 // +kubebuilder:validation:Enum=Provisioning;Ready;Critical;NotReady
 type DashboardPhase string
 
@@ -47,21 +41,18 @@ const (
 	DashboardConditionServerHealthy        DashboardConditionType = "ServerHealthy"
 )
 
-// +kubebuilder:validation:Enum=ServerHealthGood;ServerHealthCritical;ServerUnhealthy;MinimumReplicasAvailable;MinimumReplicasNotAvailable;ServiceAcceptingRequests;ServiceNotAcceptingRequests;DashboardAcceptingConnectionRequests;DashboardNotAcceptingConnectionRequests;DashboardReadinessCheckSucceeded;DashboardReadinessCheckFailed
-type DashboardConditionReason string
-
 const (
-	DashboardDeploymentAvailable           DashboardConditionReason = "MinimumReplicasAvailable"
-	DashboardDeploymentNotAvailable        DashboardConditionReason = "MinimumReplicasNotAvailable"
-	DashboardServiceReady                  DashboardConditionReason = "ServiceAcceptingRequests"
-	DashboardServiceNotReady               DashboardConditionReason = "ServiceNotAcceptingRequests"
-	DashboardAcceptingConnectionRequest    DashboardConditionReason = "DashboardAcceptingConnectionRequests"
-	DashboardNotAcceptingConnectionRequest DashboardConditionReason = "DashboardNotAcceptingConnectionRequests"
-	DashboardReadinessCheckSucceeded       DashboardConditionReason = "DashboardReadinessCheckSucceeded"
-	DashboardReadinessCheckFailed          DashboardConditionReason = "DashboardReadinessCheckFailed"
-	DashboardStateGreen                    DashboardConditionReason = "ServerHealthGood"
-	DashboardStateYellow                   DashboardConditionReason = "ServerHealthCritical"
-	DashboardStateRed                      DashboardConditionReason = "ServerUnhealthy"
+	DashboardDeploymentAvailable           = "MinimumReplicasAvailable"
+	DashboardDeploymentNotAvailable        = "MinimumReplicasNotAvailable"
+	DashboardServiceReady                  = "ServiceAcceptingRequests"
+	DashboardServiceNotReady               = "ServiceNotAcceptingRequests"
+	DashboardAcceptingConnectionRequest    = "DashboardAcceptingConnectionRequests"
+	DashboardNotAcceptingConnectionRequest = "DashboardNotAcceptingConnectionRequests"
+	DashboardReadinessCheckSucceeded       = "DashboardReadinessCheckSucceeded"
+	DashboardReadinessCheckFailed          = "DashboardReadinessCheckFailed"
+	DashboardStateGreen                    = "ServerHealthGood"
+	DashboardStateYellow                   = "ServerHealthCritical"
+	DashboardStateRed                      = "ServerUnhealthy"
 )
 
 // +kubebuilder:validation:Enum=Available;OK;Warning;Error
@@ -99,23 +90,4 @@ const (
 	StateGreen  DashboardServerState = "green"
 	StateYellow DashboardServerState = "yellow"
 	StateRed    DashboardServerState = "red"
-)
-
-const (
-	ES_USER_ENV                         = "ELASTICSEARCH_USERNAME"
-	ES_PASSWORD_ENV                     = "ELASTICSEARCH_PASSWORD"
-	CaCertKey                           = "ca.crt"
-	ComponentDashboard                  = "dashboard"
-	KibanaStatusEndpoint                = "/api/status"
-	KibanaConfigFileName                = "kibana.yml"
-	DefaultElasticsearchClientCertAlias = "archiver"
-	HealthCheckInterval                 = 10 * time.Second
-	GlobalHost                          = "0.0.0.0"
-)
-
-var (
-	ElasticsearchDashboardKibanaConfigDir        = "/usr/share/kibana/config"
-	ElasticsearchDashboardPropagationPolicy      = meta.DeletePropagationForeground
-	ElasticsearchDashboardDefaultPort            = (int32)(5601)
-	ElasticsearchDashboardGracefulDeletionPeriod = (int64)(time.Duration(3 * time.Second))
 )
