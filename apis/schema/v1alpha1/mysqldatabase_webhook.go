@@ -118,8 +118,9 @@ func ValidateMySQLDatabaseUpdate(newobj *MySQLDatabase, oldobj *MySQLDatabase) e
 		}
 	}
 	er := newobj.ValidateMySQLDatabase()
-	allErrs = append(allErrs, field.Invalid(field.NewPath("spec"), newobj.Name, er.Error()))
-
+	if er != nil {
+		allErrs = append(allErrs, field.Invalid(field.NewPath("spec"), newobj.Name, er.Error()))
+	}
 	if len(allErrs) == 0 {
 		return nil
 	}
