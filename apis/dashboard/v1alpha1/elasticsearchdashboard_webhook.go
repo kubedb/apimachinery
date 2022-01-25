@@ -67,18 +67,20 @@ var _ webhook.Defaulter = &ElasticsearchDashboard{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (ed *ElasticsearchDashboard) Default() {
-	edLog.Info("default", "name", ed.Name)
 
 	if ed.Spec.Replicas == nil {
 		ed.Spec.Replicas = pointer.Int32P(1)
+		edLog.Info(".Spec.Replicas have been set to default")
 	}
 
 	if ed.Spec.PodTemplate.Spec.Resources.Size() == 0 {
 		apis.SetDefaultResourceLimits(&ed.Spec.PodTemplate.Spec.Resources, DefaultResources)
+		edLog.Info("Spec.PodTemplate.Spec.Resources have been set to default")
 	}
 
 	if len(ed.Spec.TerminationPolicy) == 0 {
 		ed.Spec.TerminationPolicy = api.TerminationPolicyDoNotTerminate
+		edLog.Info(".Spec.TerminationPolicy have been set to TerminationPolicyDoNotTerminate")
 	}
 }
 
@@ -95,7 +97,6 @@ func (ed *ElasticsearchDashboard) ValidateCreate() error {
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (ed *ElasticsearchDashboard) ValidateUpdate(old runtime.Object) error {
-	edLog.Info("validate update", "name", ed.Name)
 
 	// Skip validation, if UPDATE operation is called after deletion.
 	// Case: Removing Finalizer
