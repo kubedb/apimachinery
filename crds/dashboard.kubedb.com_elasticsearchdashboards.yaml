@@ -20,15 +20,15 @@ spec:
     - jsonPath: .apiVersion
       name: Type
       type: string
+    - jsonPath: .spec.databaseRef.name
+      name: Database
+      type: string
     - jsonPath: .status.phase
       name: Status
       type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
-    - jsonPath: .spec.version
-      name: Version
-      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
