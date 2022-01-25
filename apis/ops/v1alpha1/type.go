@@ -60,6 +60,7 @@ const (
 	RestartStatefulSet           = "RestartStatefulSet"
 	CertificateSynced            = "CertificateSynced"
 	Reconciled                   = "Reconciled"
+	RestartStatefulSetPods       = "RestartStatefulSetPods"
 
 	// MongoDB Constants
 	StartingBalancer            = "StartingBalancer"
@@ -193,6 +194,9 @@ const (
 
 	ReconfigurePrimaryPod  = "ReconfigurePrimaryPod"
 	ReconfigureStandbyPods = "ReconfigureStandbyPods"
+
+	// MySQL/MariaDB Constants
+	TempIniFilesPath = "/tmp/kubedb-custom-ini-files"
 )
 
 // +kubebuilder:validation:Enum=Pending;Progressing;Successful;WaitingForApproval;Failed;Approved;Denied
