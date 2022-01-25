@@ -61,7 +61,7 @@ type ElasticsearchVersionSpec struct {
 	DB ElasticsearchVersionDatabase `json:"db"`
 	// Dashboard Image
 	// +optional
-	Dashboard ElasticsearchDashboardVersionDatabase `json:"dashboard"`
+	Dashboard ElasticsearchDashboardVersionDatabase `json:"dashboard,omitempty"`
 	// Exporter Image
 	Exporter ElasticsearchVersionExporter `json:"exporter"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
@@ -70,7 +70,8 @@ type ElasticsearchVersionSpec struct {
 	// Init container Image
 	InitContainer ElasticsearchVersionInitContainer `json:"initContainer"`
 	// Init container Image
-	DashboardInitContainer ElasticsearchVersionDashboardInitContainer `json:"dashboardInitContainer"`
+	// +optional
+	DashboardInitContainer ElasticsearchVersionDashboardInitContainer `json:"dashboardInitContainer,omitempty"`
 	// PSP names
 	PodSecurityPolicies ElasticsearchVersionPodSecurityPolicy `json:"podSecurityPolicies"`
 	// Stash defines backup and restore task definitions.
