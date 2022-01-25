@@ -70,6 +70,7 @@ type ElasticsearchVersionSpec struct {
 	// Init container Image
 	InitContainer ElasticsearchVersionInitContainer `json:"initContainer"`
 	// Init container Image
+	// +optional
 	DashboardInitContainer ElasticsearchVersionDashboardInitContainer `json:"dashboardInitContainer"`
 	// PSP names
 	PodSecurityPolicies ElasticsearchVersionPodSecurityPolicy `json:"podSecurityPolicies"`

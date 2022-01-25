@@ -27842,7 +27842,6 @@
         "db",
         "exporter",
         "initContainer",
-        "dashboardInitContainer",
         "podSecurityPolicies"
       ],
       "properties": {
