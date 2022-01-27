@@ -1070,7 +1070,7 @@ func Convert_v1alpha1_RedisSpec_To_v1alpha2_RedisSpec(in *RedisSpec, out *v1alph
 			}
 		} else if in.ConfigSource.ConfigMap != nil {
 			out.ConfigSecret = &v1.LocalObjectReference{
-				Name: "FIXIT_" + in.ConfigSource.ConfigMap.Name,
+				Name: "FIX_CONVERT_TO_SECRET_" + in.ConfigSource.ConfigMap.Name,
 			}
 		}
 	}
