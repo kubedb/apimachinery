@@ -74,8 +74,14 @@ var _ webhook.Validator = &MySQLDatabase{}
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (in *MySQLDatabase) ValidateCreate() error {
 	mysqldatabaselog.Info("validate create", "name", in.Name)
-
-	return in.ValidateMySQLDatabase()
+	var allErrs field.ErrorList
+	if in.Spec.Database.Config.ReadOnly == 1 {
+		allErrs = append(allErrs, field.Invalid(field.NewPath("spec.database.config"), in.Name, "Cannot create readOnly database"))
+	}
+	if err := in.ValidateMySQLDatabase(); err != nil {
+		allErrs = append(allErrs, field.Invalid(field.NewPath(""), in.Name, err.Error()))
+	}
+	return apierrors.NewInvalid(schema.GroupKind{Group: "schema.kubedb.com", Kind: "MySQLDatabase"}, in.Name, allErrs)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -160,7 +166,7 @@ func (in *MySQLDatabase) ValidateMySQLDatabase() error {
 }
 
 func (in *MySQLDatabase) validateInitailizationSchema() *field.Error {
-	path := field.NewPath("spec")
+	path := field.NewPath("spec.init")
 	if in.Spec.Init != nil {
 		if in.Spec.Init.Script != nil && in.Spec.Init.Snapshot != nil {
 			return field.Invalid(path, in.Name, `cannot initialize database using both restore and initSpec`)
@@ -170,7 +176,7 @@ func (in *MySQLDatabase) validateInitailizationSchema() *field.Error {
 }
 
 func (in *MySQLDatabase) validateMySQLDatabaseConfig() *field.Error {
-	path := field.NewPath("spec").Child("databaseConfig").Child("name")
+	path := field.NewPath("spec").Child("database.config").Child("name")
 	name := in.Spec.Database.Config.Name
 	if name == "sys" {
 		return field.Invalid(path, in.Name, `cannot use "sys" as the database name`)
@@ -193,12 +199,18 @@ func (in *MySQLDatabase) validateMySQLDatabaseConfig() *field.Error {
 	if name == "config" {
 		return field.Invalid(path, in.Name, `cannot use "config" as the database name`)
 	}
-	path = field.NewPath("spec").Child("databaseConfig").Child("readOnly")
+	path = field.NewPath("spec").Child("database.config")
 	val := in.Spec.Database.Config.ReadOnly
 	if val == 1 {
 		if in.Spec.Init != nil {
 			if (in.Spec.Init.Script != nil || in.Spec.Init.Snapshot != nil) && in.Status.Phase != DatabaseSchemaPhaseSuccessful {
-				return field.Invalid(path, in.Name, `cannot make the database readonly , init/restore yet to be applied`)
+				return field.Invalid(path.Child("readOnly"), in.Name, `cannot make the database readonly , init/restore yet to be applied`)
+			}
+		}
+	} else if in.Spec.Database.Config.Encryption == "'Y'" {
+		if in.Spec.Init != nil {
+			if (in.Spec.Init.Script != nil || in.Spec.Init.Snapshot != nil) && in.Status.Phase != DatabaseSchemaPhaseSuccessful {
+				return field.Invalid(path.Child("encryption"), in.Name, `cannot make the database encryption enables , init/restore yet to be applied`)
 			}
 		}
 	}
