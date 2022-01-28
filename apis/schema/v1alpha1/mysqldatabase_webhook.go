@@ -81,6 +81,9 @@ func (in *MySQLDatabase) ValidateCreate() error {
 	if err := in.ValidateMySQLDatabase(); err != nil {
 		allErrs = append(allErrs, field.Invalid(field.NewPath(""), in.Name, err.Error()))
 	}
+	if len(allErrs) == 0 {
+		return nil
+	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "schema.kubedb.com", Kind: "MySQLDatabase"}, in.Name, allErrs)
 }
 
