@@ -17,9 +17,13 @@ limitations under the License.
 package v1alpha1
 
 import (
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
 	core "k8s.io/api/core/v1"
 	rbac "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/klog/v2"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
@@ -33,9 +37,11 @@ type InitSpec struct {
 	// Initialized indicates that this database has been initialized.
 	// This will be set by the operator to ensure
 	// that database is not mistakenly reset when recovered using disaster recovery tools.
-	Initialized bool                `json:"initialized"`
-	Script      *ScriptSourceSpec   `json:"script,omitempty"`
-	Snapshot    *SnapshotSourceSpec `json:"snapshot,omitempty"`
+	Initialized bool              `json:"initialized"`
+	Script      *ScriptSourceSpec `json:"script,omitempty"`
+
+	// Snapshot contains the restore-related details
+	Snapshot *SnapshotSourceSpec `json:"snapshot,omitempty"`
 }
 
 type ScriptSourceSpec struct {
@@ -86,14 +92,14 @@ type VaultSecretEngineRole struct {
 	MaxTTL string `json:"maxTTL,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Pending;Progressing;Terminating;Successful;Failed;Expired
+// +kubebuilder:validation:Enum=Pending;Progressing;Terminating;Current;Failed;Expired
 type DatabaseSchemaPhase string
 
 const (
 	DatabaseSchemaPhasePending     DatabaseSchemaPhase = "Pending"
 	DatabaseSchemaPhaseProgressing DatabaseSchemaPhase = "Progressing"
 	DatabaseSchemaPhaseTerminating DatabaseSchemaPhase = "Terminating"
-	DatabaseSchemaPhaseSuccessful  DatabaseSchemaPhase = "Successful"
+	DatabaseSchemaPhaseCurrent     DatabaseSchemaPhase = "Current"
 	DatabaseSchemaPhaseFailed      DatabaseSchemaPhase = "Failed"
 	DatabaseSchemaPhaseExpired     DatabaseSchemaPhase = "Expired"
 )
@@ -111,6 +117,9 @@ const (
 	DatabaseSchemaMessageVaultNotCreated   DatabaseSchemaMessage       = "VaultServer is not created yet"
 	DatabaseSchemaMessageVaultProvisioning DatabaseSchemaMessage       = "VaultServer is provisioning"
 	DatabaseSchemaMessageVaultReady        DatabaseSchemaMessage       = "VaultServer is Ready"
+
+	DatabaseSchemaConditionTypeDoubleOptInNotPossible DatabaseSchemaConditionType = "DoubleOptInNotPossible"
+	DatabaseSchemaMessageDoubleOptInNotPossible       DatabaseSchemaMessage       = "Double OptIn is not possible between the applied Schema & Database server"
 
 	DatabaseSchemaConditionTypeSecretEngineReady DatabaseSchemaConditionType = "SecretEngineReady"
 	DatabaseSchemaMessageSecretEngineNotCreated  DatabaseSchemaMessage       = "SecretEngine is not created yet"
@@ -140,7 +149,7 @@ const (
 
 	DatabaseSchemaConditionTypeRepositoryFound DatabaseSchemaConditionType = "RepositoryFound"
 	DatabaseSchemaMessageRepositoryNotCreated  DatabaseSchemaMessage       = "Repository is not created yet"
-	DatabaseSchemaMessageRepositoryFound       DatabaseSchemaMessage       = "Repository has been successfully copied"
+	DatabaseSchemaMessageRepositoryFound       DatabaseSchemaMessage       = "Repository has been found"
 
 	DatabaseSchemaConditionTypeAppBindingFound DatabaseSchemaConditionType = "AppBindingFound"
 	DatabaseSchemaMessageAppBindingNotCreated  DatabaseSchemaMessage       = "AppBinding is not created yet"
@@ -153,6 +162,17 @@ const (
 	DatabaseSchemaMessageRestoreSessionFailed     DatabaseSchemaMessage       = "RestoreSession is failed"
 )
 
+func GetFinalizerForSchema() string {
+	return SchemeGroupVersion.Group
+}
+
+func GetSchemaDoubleOptInLabelKey() string {
+	return SchemeGroupVersion.Group + "/doubleoptin"
+}
+func GetSchemaDoubleOptInLabelValue() string {
+	return "enabled"
+}
+
 func GetPhase(obj Interface) DatabaseSchemaPhase {
 	conditions := obj.GetStatus().Conditions
 
@@ -162,9 +182,6 @@ func GetPhase(obj Interface) DatabaseSchemaPhase {
 	if CheckIfSecretExpired(conditions) {
 		return DatabaseSchemaPhaseExpired
 	}
-	if obj.GetStatus().Phase == DatabaseSchemaPhaseSuccessful {
-		return DatabaseSchemaPhaseSuccessful
-	}
 	if kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeSchemaNameConflict)) {
 		return DatabaseSchemaPhaseFailed
 	}
@@ -173,6 +190,10 @@ func GetPhase(obj Interface) DatabaseSchemaPhase {
 	if !kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeDBServerReady)) ||
 		!kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeVaultReady)) {
 		return DatabaseSchemaPhasePending
+	}
+
+	if kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeDoubleOptInNotPossible)) {
+		return DatabaseSchemaPhaseFailed
 	}
 
 	// If SecretEngine or Role is not in ready state, Phase is 'Progressing'
@@ -193,7 +214,7 @@ func GetPhase(obj Interface) DatabaseSchemaPhase {
 		if CheckIfRestoreFailed(conditions) {
 			return DatabaseSchemaPhaseFailed
 		} else {
-			return DatabaseSchemaPhaseSuccessful
+			return DatabaseSchemaPhaseCurrent
 		}
 	} else if kmapi.HasCondition(conditions, string(DatabaseSchemaConditionTypeInitScriptCompleted)) {
 		//  ----------------------------- Init case -----------------------------
@@ -203,10 +224,10 @@ func GetPhase(obj Interface) DatabaseSchemaPhase {
 		if CheckIfInitScriptFailed(conditions) {
 			return DatabaseSchemaPhaseFailed
 		} else {
-			return DatabaseSchemaPhaseSuccessful
+			return DatabaseSchemaPhaseCurrent
 		}
 	}
-	return DatabaseSchemaPhaseSuccessful
+	return DatabaseSchemaPhaseCurrent
 }
 
 func CheckIfInitScriptFailed(conditions []kmapi.Condition) bool {
@@ -225,4 +246,69 @@ func CheckIfSecretExpired(conditions []kmapi.Condition) bool {
 		return false
 	}
 	return cond.Message == string(DatabaseSchemaMessageSecretAccessRequestExpired)
+}
+
+/*
+Double OptIn related helpers start here. CheckIfDoubleOptInPossible() is the intended function to be called from operator
+*/
+
+func CheckIfDoubleOptInPossible(schemaMeta metav1.ObjectMeta, namespaceMeta metav1.ObjectMeta, consumers *dbapi.AllowedConsumers) (bool, error) {
+	if consumers == nil {
+		return false, nil
+	}
+	matchNamespace, err := IsInAllowedNamespaces(schemaMeta, namespaceMeta, consumers)
+	if err != nil {
+		return false, err
+	}
+	matchLabels, err := IsMatchByLabels(schemaMeta, consumers)
+	if err != nil {
+		return false, err
+	}
+	return matchNamespace && matchLabels, nil
+}
+
+func IsInAllowedNamespaces(schemaMeta metav1.ObjectMeta, namespaceMeta metav1.ObjectMeta, consumers *dbapi.AllowedConsumers) (bool, error) {
+	if consumers.Namespaces == nil || consumers.Namespaces.From == nil {
+		return false, nil
+	}
+
+	if *consumers.Namespaces.From == dbapi.NamespacesFromAll {
+		return true, nil
+	}
+	if *consumers.Namespaces.From == dbapi.NamespacesFromSame {
+		return schemaMeta.Namespace == namespaceMeta.Name, nil
+	}
+	if *consumers.Namespaces.From == dbapi.NamespacesFromSelector {
+		if consumers.Namespaces.Selector == nil {
+			// this says, Select namespace from the Selector, but the Namespace.Selector field is nil. So, no way to select namespace here.
+			return false, nil
+		}
+		ret, err := selectorMatches(consumers.Namespaces.Selector, namespaceMeta.GetLabels())
+		if err != nil {
+			return false, err
+		}
+		return ret, nil
+	}
+	return false, nil
+}
+
+func IsMatchByLabels(schemaMeta metav1.ObjectMeta, consumers *dbapi.AllowedConsumers) (bool, error) {
+	if consumers.Selector != nil {
+		ret, err := selectorMatches(consumers.Selector, schemaMeta.Labels)
+		if err != nil {
+			return false, err
+		}
+		return ret, nil
+	}
+	// if Selector is not given, all the Schemas are allowed of the selected namespace
+	return true, nil
+}
+
+func selectorMatches(ls *metav1.LabelSelector, srcLabels map[string]string) (bool, error) {
+	selector, err := metav1.LabelSelectorAsSelector(ls)
+	if err != nil {
+		klog.Infoln("invalid selector: ", ls)
+		return false, err
+	}
+	return selector.Matches(labels.Set(srcLabels)), nil
 }

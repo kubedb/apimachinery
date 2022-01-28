@@ -3821,7 +3821,7 @@ spec:
                 - Pending
                 - Progressing
                 - Terminating
-                - Successful
+                - Current
                 - Failed
                 - Expired
                 type: string

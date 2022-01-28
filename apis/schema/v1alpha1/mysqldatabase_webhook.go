@@ -160,7 +160,7 @@ func (in *MySQLDatabase) validateMySQLDatabaseConfig() *field.Error {
 	path = field.NewPath("spec").Child("databaseConfig").Child("readOnly")
 	val := in.Spec.Database.Config.ReadOnly
 	if val == 1 {
-		if (in.Spec.Init != nil || in.Spec.Init.Snapshot != nil) && in.Status.Phase != DatabaseSchemaPhaseSuccessful {
+		if (in.Spec.Init != nil || in.Spec.Init.Snapshot != nil) && in.Status.Phase != DatabaseSchemaPhaseCurrent {
 			return field.Invalid(path, in.Name, `cannot make the database readonly , init/restore yet to be applied`)
 		}
 	}
