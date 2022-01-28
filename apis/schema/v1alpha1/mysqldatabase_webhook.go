@@ -53,10 +53,10 @@ func (in *MySQLDatabase) Default() {
 		}
 	}
 	val := in.Spec.Database.Config.Encryption
-	if val == "enable" || val == "'Y'" {
-		in.Spec.Database.Config.Encryption = "'Y'"
+	if val == "enable" || val == EncryptionEnable {
+		in.Spec.Database.Config.Encryption = EncryptionEnable
 	} else {
-		in.Spec.Database.Config.Encryption = "'N'"
+		in.Spec.Database.Config.Encryption = Encryptiondisable
 	}
 	if in.Spec.Database.Config.ReadOnly != 1 {
 		in.Spec.Database.Config.ReadOnly = 0
@@ -207,7 +207,7 @@ func (in *MySQLDatabase) validateMySQLDatabaseConfig() *field.Error {
 				return field.Invalid(path.Child("readOnly"), in.Name, `cannot make the database readonly , init/restore yet to be applied`)
 			}
 		}
-	} else if in.Spec.Database.Config.Encryption == "'Y'" {
+	} else if in.Spec.Database.Config.Encryption == EncryptionEnable {
 		if in.Spec.Init != nil {
 			if (in.Spec.Init.Script != nil || in.Spec.Init.Snapshot != nil) && in.Status.Phase != DatabaseSchemaPhaseSuccessful {
 				return field.Invalid(path.Child("encryption"), in.Name, `cannot make the database encryption enables , init/restore yet to be applied`)
@@ -247,3 +247,8 @@ func (in *MySQLDatabase) validateMySQLDatabaseName() *field.Error {
 	}
 	return nil
 }
+
+const (
+	EncryptionEnable  string = "'Y'"
+	Encryptiondisable string = "'N'"
+)
