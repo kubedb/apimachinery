@@ -25,9 +25,9 @@ import (
 
 const (
 	InitScriptName              string = "init.js"
-	MongoInitScriptPath         string = "/init-scripts"
-	MongoPrefix                 string = "MongoDB-"
-	MongoSuffix                 string = "-mongo"
+	MongoInitScriptPath         string = "init-scripts"
+	MongoPrefix                 string = "MongoDB"
+	MongoSuffix                 string = "mongo"
 	MongoDatabaseNameForEntry   string = "kubedb-system"
 	MongoCollectionNameForEntry string = "databases"
 )
@@ -47,30 +47,30 @@ func (in *MongoDBDatabase) GetStatus() DatabaseStatus {
 }
 
 func (in *MongoDBDatabase) GetMongoInitVolumeNameForPod() string {
-	return meta.NameWithSuffix(in.GetName(), "init-volume")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-vol")
 }
 func (in *MongoDBDatabase) GetMongoInitJobName() string {
-	return meta.NameWithSuffix(in.GetName(), "init-job")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-job")
 }
 func (in *MongoDBDatabase) GetMongoInitScriptContainerName() string {
-	return meta.NameWithSuffix(in.GetName(), "init-container")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix)
 }
 func (in *MongoDBDatabase) GetMongoRestoreSessionName() string {
-	return meta.NameWithSuffix(in.GetName(), "restore-session")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-rs")
 }
 
 func (in *MongoDBDatabase) GetMongoAdminRoleName() string {
-	return meta.NameWithSuffix(in.GetName()+MongoSuffix, "admin-role")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-role")
 }
 func (in *MongoDBDatabase) GetMongoAdminSecretAccessRequestName() string {
-	return meta.NameWithSuffix(in.GetName()+MongoSuffix, "admin-secret-access-req")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-req")
 }
 func (in *MongoDBDatabase) GetMongoAdminServiceAccountName() string {
-	return meta.NameWithSuffix(in.GetName()+MongoSuffix, "admin-service-account")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-sa")
 }
 
 func (in *MongoDBDatabase) GetMongoSecretEngineName() string {
-	return meta.NameWithSuffix(in.GetName()+MongoSuffix, "secret-engine")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-engine")
 }
 
 func (in *MongoDBDatabase) GetAuthSecretName(dbServerName string) string {
