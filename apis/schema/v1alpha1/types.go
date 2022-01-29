@@ -92,12 +92,12 @@ type VaultSecretEngineRole struct {
 	MaxTTL string `json:"maxTTL,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Pending;Progressing;Terminating;Current;Failed;Expired
+// +kubebuilder:validation:Enum=Pending;InProgress;Terminating;Current;Failed;Expired
 type DatabaseSchemaPhase string
 
 const (
 	DatabaseSchemaPhasePending     DatabaseSchemaPhase = "Pending"
-	DatabaseSchemaPhaseProgressing DatabaseSchemaPhase = "Progressing"
+	DatabaseSchemaPhaseInProgress  DatabaseSchemaPhase = "InProgress"
 	DatabaseSchemaPhaseTerminating DatabaseSchemaPhase = "Terminating"
 	DatabaseSchemaPhaseCurrent     DatabaseSchemaPhase = "Current"
 	DatabaseSchemaPhaseFailed      DatabaseSchemaPhase = "Failed"
@@ -196,11 +196,11 @@ func GetPhase(obj Interface) DatabaseSchemaPhase {
 		return DatabaseSchemaPhaseFailed
 	}
 
-	// If SecretEngine or Role is not in ready state, Phase is 'Progressing'
+	// If SecretEngine or Role is not in ready state, Phase is 'InProgress'
 	if !kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeSecretEngineReady)) ||
 		!kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeRoleReady)) ||
 		!kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeSecretAccessRequestReady)) {
-		return DatabaseSchemaPhaseProgressing
+		return DatabaseSchemaPhaseInProgress
 	}
 	// we are here means, SecretAccessRequest is approved and not expired. Now handle Init-Restore cases.
 
@@ -209,7 +209,7 @@ func GetPhase(obj Interface) DatabaseSchemaPhase {
 		if !kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeRepositoryFound)) ||
 			!kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeAppBindingFound)) ||
 			!kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeRestoreCompleted)) {
-			return DatabaseSchemaPhaseProgressing
+			return DatabaseSchemaPhaseInProgress
 		}
 		if CheckIfRestoreFailed(conditions) {
 			return DatabaseSchemaPhaseFailed
@@ -219,7 +219,7 @@ func GetPhase(obj Interface) DatabaseSchemaPhase {
 	} else if kmapi.HasCondition(conditions, string(DatabaseSchemaConditionTypeInitScriptCompleted)) {
 		//  ----------------------------- Init case -----------------------------
 		if !kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeInitScriptCompleted)) {
-			return DatabaseSchemaPhaseProgressing
+			return DatabaseSchemaPhaseInProgress
 		}
 		if CheckIfInitScriptFailed(conditions) {
 			return DatabaseSchemaPhaseFailed

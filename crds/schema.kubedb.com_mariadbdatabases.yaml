@@ -3800,7 +3800,7 @@ spec:
               phase:
                 enum:
                 - Pending
-                - Progressing
+                - InProgress
                 - Terminating
                 - Current
                 - Failed
