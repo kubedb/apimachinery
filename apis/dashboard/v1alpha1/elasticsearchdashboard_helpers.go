@@ -47,7 +47,7 @@ func (ed ElasticsearchDashboard) ServiceName() string {
 func (ed ElasticsearchDashboard) DeploymentName() string {
 	return ed.OffshootName()
 }
-func (ed ElasticsearchDashboard) ContainerName() string {
+func (ed ElasticsearchDashboard) DashboardContainerName() string {
 	return meta_util.NameWithSuffix(ed.Name, "dashboard")
 }
 
