@@ -137,8 +137,9 @@ const (
 	DatabaseSchemaMessageSecretAccessRequestApproved    DatabaseSchemaMessage       = "SecretAccessRequest has been approved"
 	DatabaseSchemaMessageSecretAccessRequestExpired     DatabaseSchemaMessage       = "SecretAccessRequest has been expired"
 
-	DatabaseSchemaConditionTypeSchemaNameConflict DatabaseSchemaConditionType = "SchemaNameConflict"
-	DatabaseSchemaMessageSchemaNameConflicted     DatabaseSchemaMessage       = "Schema name is conflicted"
+	DatabaseSchemaConditionTypeDBCreationUnsuccessful DatabaseSchemaConditionType = "DatabaseCreationUnsuccessful"
+	DatabaseSchemaMessageSchemaNameConflicted         DatabaseSchemaMessage       = "Schema name is conflicted"
+	DatabaseSchemaMessageDBCreationUnsuccessful       DatabaseSchemaMessage       = "Internal error occurred when creating database"
 
 	DatabaseSchemaConditionTypeInitScriptCompleted DatabaseSchemaConditionType = "InitScriptCompleted"
 	DatabaseSchemaMessageInitScriptNotApplied      DatabaseSchemaMessage       = "InitScript is not applied yet"
@@ -182,7 +183,7 @@ func GetPhase(obj Interface) DatabaseSchemaPhase {
 	if CheckIfSecretExpired(conditions) {
 		return DatabaseSchemaPhaseExpired
 	}
-	if kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeSchemaNameConflict)) {
+	if kmapi.IsConditionTrue(conditions, string(DatabaseSchemaConditionTypeDBCreationUnsuccessful)) {
 		return DatabaseSchemaPhaseFailed
 	}
 
