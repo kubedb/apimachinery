@@ -52,12 +52,6 @@ var _ webhook.Validator = &MongoDBDatabase{}
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (in *MongoDBDatabase) ValidateCreate() error {
 	mongodbdatabaselog.Info("validate create", "name", in.Name)
-	var allErrs field.ErrorList
-	path := field.NewPath("spec")
-	if in.Spec.Init != nil && in.Spec.Init.Initialized {
-		allErrs = append(allErrs, field.Invalid(path.Child("init").Child("initialized"), in.Name, MongoDBValidateInitializedSetError))
-		return apierrors.NewInvalid(in.GroupVersionKind().GroupKind(), in.Name, allErrs)
-	}
 	return in.ValidateMongoDBDatabase()
 }
 
@@ -74,10 +68,15 @@ func (in *MongoDBDatabase) ValidateUpdate(old runtime.Object) error {
 		return apierrors.NewInvalid(in.GroupVersionKind().GroupKind(), in.Name, allErrs)
 	}
 
-	// If Initialized==true, Do not give permission to set it to false directly
-	if oldDb.Spec.Init != nil && oldDb.Spec.Init.Initialized && in.Spec.Init != nil && !in.Spec.Init.Initialized {
-		allErrs = append(allErrs, field.Invalid(path.Child("init").Child("initialized"), in.Name, MongoDBValidateInitializedUnsetError))
-		return apierrors.NewInvalid(in.GroupVersionKind().GroupKind(), in.Name, allErrs)
+	// If Initialized==true, Do not give permission to unset it
+	if oldDb.Spec.Init != nil && oldDb.Spec.Init.Initialized { // initialized is already set in old object
+		// If user updated the Schema-yaml with no Spec.Init
+		// Or
+		// user updated the Schema-yaml with Spec.Init.Initialized = true
+		if in.Spec.Init == nil || (in.Spec.Init != nil && !in.Spec.Init.Initialized) {
+			allErrs = append(allErrs, field.Invalid(path.Child("init").Child("initialized"), in.Name, MongoDBValidateInitializedUnsetError))
+			return apierrors.NewInvalid(in.GroupVersionKind().GroupKind(), in.Name, allErrs)
+		}
 	}
 
 	// making VaultRef & DatabaseRef fields immutable
@@ -98,8 +97,7 @@ const (
 
 	MongoDBValidateDeletionPolicyError     = "schema can't be deleted if the deletion policy is DoNotDelete"
 	MongoDBValidateInitTypeBothError       = "cannot initialize database using both restore and initSpec"
-	MongoDBValidateInitializedSetError     = "cannot set the initialized field to true directly"
-	MongoDBValidateInitializedUnsetError   = "cannot set the initialized field to false directly"
+	MongoDBValidateInitializedUnsetError   = "cannot unset the initialized field directly"
 	MongoDBValidateDatabaseNameChangeError = "you can't change the Database Config name now"
 	MongoDBValidateDBServerRefChangeError  = "cannot change mongodb reference"
 	MongoDBValidateVaultRefChangeError     = "cannot change vault reference"
