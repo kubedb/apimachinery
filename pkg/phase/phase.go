@@ -47,11 +47,12 @@ func DashboardPhaseFromCondition(conditions []kmapi.Condition) dapi.DashboardPha
 				return dapi.DashboardPhaseCritical
 			}
 		}
-	} else {
-		return dapi.DashboardPhaseNotReady
+
+		return dapi.DashboardPhaseReady
 	}
 
-	return dapi.DashboardPhaseReady
+	return dapi.DashboardPhaseNotReady
+
 }
 
 func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
