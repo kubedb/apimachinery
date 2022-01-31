@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"fmt"
+	kmapi "kmodules.xyz/client-go/api/v1"
 
 	"kubedb.dev/apimachinery/apis"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -81,6 +82,27 @@ func (ed *ElasticsearchDashboard) Default() {
 	if len(ed.Spec.TerminationPolicy) == 0 {
 		ed.Spec.TerminationPolicy = api.TerminationPolicyDoNotTerminate
 		edLog.Info(".Spec.TerminationPolicy have been set to TerminationPolicyDoNotTerminate")
+	}
+
+	if ed.Spec.EnableSSL {
+		if ed.Spec.TLS.IssuerRef == nil {
+			_, IsCACertSecretAvailable := kmapi.GetCertificateSecretName(ed.Spec.TLS.Certificates, string(ElasticsearchDashboardCACert))
+			if !IsCACertSecretAvailable {
+				ed.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(ed.Spec.TLS.Certificates, kmapi.CertificateSpec{
+					Alias:      string(ElasticsearchDashboardCACert),
+					SecretName: ed.CertificateName(ElasticsearchDashboardCACert),
+				})
+			}
+
+			_, IsServerCertSecretAvailable := kmapi.GetCertificateSecretName(ed.Spec.TLS.Certificates, string(ElasticsearchDashboardKibanaServerCert))
+			if !IsServerCertSecretAvailable {
+				ed.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(ed.Spec.TLS.Certificates, kmapi.CertificateSpec{
+					Alias:      string(ElasticsearchDashboardKibanaServerCert),
+					SecretName: ed.CertificateName(ElasticsearchDashboardKibanaServerCert),
+				})
+			}
+
+		}
 	}
 }
 
