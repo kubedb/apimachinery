@@ -92,9 +92,9 @@ type ElasticsearchDashboardStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:subresource:scale:specpath=.spec.replicas,statuspath=.status.replicas
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
+// +kubebuilder:printcolumn:name="Database",type="string",JSONPath=".spec.databaseRef.name"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 type ElasticsearchDashboard struct {
 	meta.TypeMeta   `json:",inline"`
 	meta.ObjectMeta `json:"metadata,omitempty"`

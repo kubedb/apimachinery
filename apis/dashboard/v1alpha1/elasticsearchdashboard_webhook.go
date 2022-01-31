@@ -28,6 +28,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -67,18 +68,36 @@ var _ webhook.Defaulter = &ElasticsearchDashboard{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (ed *ElasticsearchDashboard) Default() {
-	edLog.Info("default", "name", ed.Name)
 
 	if ed.Spec.Replicas == nil {
 		ed.Spec.Replicas = pointer.Int32P(1)
+		edLog.Info(".Spec.Replicas have been set to default")
 	}
 
 	if ed.Spec.PodTemplate.Spec.Resources.Size() == 0 {
 		apis.SetDefaultResourceLimits(&ed.Spec.PodTemplate.Spec.Resources, DefaultResources)
+		edLog.Info("Spec.PodTemplate.Spec.Resources have been set to default")
 	}
 
 	if len(ed.Spec.TerminationPolicy) == 0 {
 		ed.Spec.TerminationPolicy = api.TerminationPolicyDoNotTerminate
+		edLog.Info(".Spec.TerminationPolicy have been set to TerminationPolicyDoNotTerminate")
+	}
+
+	if ed.Spec.EnableSSL {
+		if ed.Spec.TLS == nil {
+			ed.Spec.TLS = &kmapi.TLSConfig{}
+		}
+		if ed.Spec.TLS.IssuerRef == nil {
+			ed.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(ed.Spec.TLS.Certificates, kmapi.CertificateSpec{
+				Alias:      string(ElasticsearchDashboardCACert),
+				SecretName: ed.CertificateName(ElasticsearchDashboardCACert),
+			})
+		}
+		ed.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(ed.Spec.TLS.Certificates, kmapi.CertificateSpec{
+			Alias:      string(ElasticsearchDashboardKibanaServerCert),
+			SecretName: ed.CertificateName(ElasticsearchDashboardKibanaServerCert),
+		})
 	}
 }
 
@@ -95,7 +114,6 @@ func (ed *ElasticsearchDashboard) ValidateCreate() error {
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (ed *ElasticsearchDashboard) ValidateUpdate(old runtime.Object) error {
-	edLog.Info("validate update", "name", ed.Name)
 
 	// Skip validation, if UPDATE operation is called after deletion.
 	// Case: Removing Finalizer

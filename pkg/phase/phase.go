@@ -35,18 +35,24 @@ func DashboardPhaseFromCondition(conditions []kmapi.Condition) dapi.DashboardPha
 
 	// TODO: implement deployment watcher to handle replica ready
 
-	if !kmapi.IsConditionTrue(conditions, string(dapi.DashboardConditionServerHealthy)) {
+	if kmapi.HasCondition(conditions, string(dapi.DashboardConditionServerHealthy)) {
 
-		_, cond := kmapi.GetCondition(conditions, string(dapi.DashboardConditionServerHealthy))
+		if !kmapi.IsConditionTrue(conditions, string(dapi.DashboardConditionServerHealthy)) {
 
-		if cond.Reason == string(dapi.DashboardStateRed) {
-			return dapi.DashboardPhaseNotReady
-		} else {
-			return dapi.DashboardPhaseCritical
+			_, cond := kmapi.GetCondition(conditions, string(dapi.DashboardConditionServerHealthy))
+
+			if cond.Reason == dapi.DashboardStateRed {
+				return dapi.DashboardPhaseNotReady
+			} else {
+				return dapi.DashboardPhaseCritical
+			}
 		}
+
+		return dapi.DashboardPhaseReady
 	}
 
-	return dapi.DashboardPhaseReady
+	return dapi.DashboardPhaseNotReady
+
 }
 
 func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
