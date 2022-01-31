@@ -46,6 +46,7 @@ const (
 	DefaultElasticsearchClientCertAlias = "archiver"
 	HealthCheckInterval                 = 10 * time.Second
 	GlobalHost                          = "0.0.0.0"
+	ElasticsearchDashboardPortServer    = "server"
 )
 
 var (
