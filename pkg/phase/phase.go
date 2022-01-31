@@ -37,9 +37,9 @@ func DashboardPhaseFromCondition(conditions []kmapi.Condition) dapi.DashboardPha
 
 	if kmapi.HasCondition(conditions, string(dapi.DashboardConditionServerHealthy)) {
 
-		_, cond := kmapi.GetCondition(conditions, string(dapi.DashboardConditionServerHealthy))
-
 		if !kmapi.IsConditionTrue(conditions, string(dapi.DashboardConditionServerHealthy)) {
+
+			_, cond := kmapi.GetCondition(conditions, string(dapi.DashboardConditionServerHealthy))
 
 			if cond.Reason == dapi.DashboardStateRed {
 				return dapi.DashboardPhaseNotReady
