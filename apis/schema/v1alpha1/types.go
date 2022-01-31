@@ -252,11 +252,11 @@ func CheckIfSecretExpired(conditions []kmapi.Condition) bool {
 Double OptIn related helpers start here. CheckIfDoubleOptInPossible() is the intended function to be called from operator
 */
 
-func CheckIfDoubleOptInPossible(schemaMeta metav1.ObjectMeta, namespaceMeta metav1.ObjectMeta, consumers *dbapi.AllowedConsumers) (bool, error) {
+func CheckIfDoubleOptInPossible(schemaMeta metav1.ObjectMeta, schemaNSMeta metav1.ObjectMeta, dbNSMeta metav1.ObjectMeta, consumers *dbapi.AllowedConsumers) (bool, error) {
 	if consumers == nil {
 		return false, nil
 	}
-	matchNamespace, err := IsInAllowedNamespaces(schemaMeta, namespaceMeta, consumers)
+	matchNamespace, err := IsInAllowedNamespaces(schemaNSMeta, dbNSMeta, consumers)
 	if err != nil {
 		return false, err
 	}
@@ -267,7 +267,7 @@ func CheckIfDoubleOptInPossible(schemaMeta metav1.ObjectMeta, namespaceMeta meta
 	return matchNamespace && matchLabels, nil
 }
 
-func IsInAllowedNamespaces(schemaMeta metav1.ObjectMeta, namespaceMeta metav1.ObjectMeta, consumers *dbapi.AllowedConsumers) (bool, error) {
+func IsInAllowedNamespaces(schemaNSMeta metav1.ObjectMeta, dbNSMeta metav1.ObjectMeta, consumers *dbapi.AllowedConsumers) (bool, error) {
 	if consumers.Namespaces == nil || consumers.Namespaces.From == nil {
 		return false, nil
 	}
@@ -276,14 +276,14 @@ func IsInAllowedNamespaces(schemaMeta metav1.ObjectMeta, namespaceMeta metav1.Ob
 		return true, nil
 	}
 	if *consumers.Namespaces.From == dbapi.NamespacesFromSame {
-		return schemaMeta.Namespace == namespaceMeta.Name, nil
+		return schemaNSMeta.GetName() == dbNSMeta.GetName(), nil
 	}
 	if *consumers.Namespaces.From == dbapi.NamespacesFromSelector {
 		if consumers.Namespaces.Selector == nil {
 			// this says, Select namespace from the Selector, but the Namespace.Selector field is nil. So, no way to select namespace here.
 			return false, nil
 		}
-		ret, err := selectorMatches(consumers.Namespaces.Selector, namespaceMeta.GetLabels())
+		ret, err := selectorMatches(consumers.Namespaces.Selector, schemaNSMeta.GetLabels())
 		if err != nil {
 			return false, err
 		}
