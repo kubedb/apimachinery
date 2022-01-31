@@ -72,7 +72,7 @@ func (in *MongoDBDatabase) ValidateUpdate(old runtime.Object) error {
 	if oldDb.Spec.Init != nil && oldDb.Spec.Init.Initialized { // initialized is already set in old object
 		// If user updated the Schema-yaml with no Spec.Init
 		// Or
-		// user updated the Schema-yaml with Spec.Init.Initialized = true
+		// user updated the Schema-yaml with Spec.Init.Initialized = false
 		if in.Spec.Init == nil || (in.Spec.Init != nil && !in.Spec.Init.Initialized) {
 			allErrs = append(allErrs, field.Invalid(path.Child("init").Child("initialized"), in.Name, MongoDBValidateInitializedUnsetError))
 			return apierrors.NewInvalid(in.GroupVersionKind().GroupKind(), in.Name, allErrs)
