@@ -20297,7 +20297,8 @@ func schema_apimachinery_apis_schema_v1alpha1_InitSpec(ref common.ReferenceCallb
 					},
 					"snapshot": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.SnapshotSourceSpec"),
+							Description: "Snapshot contains the restore-related details",
+							Ref:         ref("kubedb.dev/apimachinery/apis/schema/v1alpha1.SnapshotSourceSpec"),
 						},
 					},
 				},

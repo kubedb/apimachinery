@@ -3814,9 +3814,9 @@ spec:
               phase:
                 enum:
                 - Pending
-                - Progressing
+                - InProgress
                 - Terminating
-                - Successful
+                - Current
                 - Failed
                 - Expired
                 type: string

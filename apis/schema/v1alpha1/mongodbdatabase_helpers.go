@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -26,8 +25,9 @@ import (
 
 const (
 	InitScriptName              string = "init.js"
-	MongoInitScriptPath         string = "/init-scripts"
-	MongoPrefix                 string = "-mongo"
+	MongoInitScriptPath         string = "init-scripts"
+	MongoPrefix                 string = "MongoDB"
+	MongoSuffix                 string = "mongo"
 	MongoDatabaseNameForEntry   string = "kubedb-system"
 	MongoCollectionNameForEntry string = "databases"
 )
@@ -47,32 +47,36 @@ func (in *MongoDBDatabase) GetStatus() DatabaseStatus {
 }
 
 func (in *MongoDBDatabase) GetMongoInitVolumeNameForPod() string {
-	return meta.NameWithSuffix(in.GetName(), "init-volume")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-vol")
 }
 func (in *MongoDBDatabase) GetMongoInitJobName() string {
-	return meta.NameWithSuffix(in.GetName(), "init-job")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-job")
 }
 func (in *MongoDBDatabase) GetMongoInitScriptContainerName() string {
-	return meta.NameWithSuffix(in.GetName(), "init-container")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix)
 }
 func (in *MongoDBDatabase) GetMongoRestoreSessionName() string {
-	return meta.NameWithSuffix(in.GetName(), "restore-session")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-rs")
 }
 
 func (in *MongoDBDatabase) GetMongoAdminRoleName() string {
-	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "admin-role")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-role")
 }
 func (in *MongoDBDatabase) GetMongoAdminSecretAccessRequestName() string {
-	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "admin-secret-access-req")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-req")
 }
 func (in *MongoDBDatabase) GetMongoAdminServiceAccountName() string {
-	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "admin-service-account")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-sa")
 }
 
 func (in *MongoDBDatabase) GetMongoSecretEngineName() string {
-	return meta.NameWithSuffix(in.GetName()+MongoPrefix, "secret-engine")
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-engine")
+}
+
+func (in *MongoDBDatabase) GetMongoAppBindingName() string {
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-apbng")
 }
 
 func (in *MongoDBDatabase) GetAuthSecretName(dbServerName string) string {
-	return meta.NameWithSuffix(dbServerName, dbapi.MongoDBAuthSecretSuffix)
+	return meta.NameWithSuffix(dbServerName, "auth")
 }

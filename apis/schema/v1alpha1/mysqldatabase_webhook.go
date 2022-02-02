@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	gocmp "github.com/google/go-cmp/cmp"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -44,16 +45,18 @@ var _ webhook.Defaulter = &MySQLDatabase{}
 func (in *MySQLDatabase) Default() {
 	mysqldatabaselog.Info("default", "name", in.Name)
 
-	if in.Spec.Init.Snapshot != nil {
-		if in.Spec.Init.Snapshot.SnapshotID == "" {
-			in.Spec.Init.Snapshot.SnapshotID = "latest"
+	if in.Spec.Init != nil {
+		if in.Spec.Init.Snapshot != nil {
+			if in.Spec.Init.Snapshot.SnapshotID == "" {
+				in.Spec.Init.Snapshot.SnapshotID = "latest"
+			}
 		}
 	}
 	val := in.Spec.Database.Config.Encryption
-	if val == "enable" || val == ENCRYPTIONENABLE {
-		in.Spec.Database.Config.Encryption = ENCRYPTIONENABLE
+	if val == "enable" || val == MySQLEncryptionEnabled {
+		in.Spec.Database.Config.Encryption = MySQLEncryptionEnabled
 	} else {
-		in.Spec.Database.Config.Encryption = ENCRYPTIONDISABLE
+		in.Spec.Database.Config.Encryption = MySQLEncryptionDisabled
 	}
 	if in.Spec.Database.Config.ReadOnly != 1 {
 		in.Spec.Database.Config.ReadOnly = 0
@@ -71,22 +74,62 @@ var _ webhook.Validator = &MySQLDatabase{}
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (in *MySQLDatabase) ValidateCreate() error {
 	mysqldatabaselog.Info("validate create", "name", in.Name)
-
-	return in.ValidateMySQLDatabase()
+	var allErrs field.ErrorList
+	//if in.Spec.Database.Config.ReadOnly == 1 { //todo handle this case if possible
+	//	allErrs = append(allErrs, field.Invalid(field.NewPath("spec.database.config"), in.Name, "Cannot create readOnly database"))
+	//}
+	if err := in.ValidateMySQLDatabase(); err != nil {
+		allErrs = append(allErrs, field.Invalid(field.NewPath(""), in.Name, err.Error()))
+	}
+	if len(allErrs) == 0 {
+		return nil
+	}
+	return apierrors.NewInvalid(schema.GroupKind{Group: "schema.kubedb.com", Kind: "MySQLDatabase"}, in.Name, allErrs)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (in *MySQLDatabase) ValidateUpdate(old runtime.Object) error {
 	mysqldatabaselog.Info("validate update", "name", in.Name)
-	return validateMySQLDatabaseUpdate(in)
+	oldobj := old.(*MySQLDatabase)
+	return ValidateMySQLDatabaseUpdate(in, oldobj)
 }
 
-func validateMySQLDatabaseUpdate(newobj *MySQLDatabase) error {
+func ValidateMySQLDatabaseUpdate(newobj *MySQLDatabase, oldobj *MySQLDatabase) error {
 	if newobj.Finalizers == nil {
 		return nil
 	}
 	var allErrs field.ErrorList
-
+	if !gocmp.Equal(oldobj.Spec.Database.ServerRef, newobj.Spec.Database.ServerRef) {
+		allErrs = append(allErrs, field.Invalid(field.NewPath("spec.database.serverRef"), newobj.Name, "cannot change database serverRef"))
+	}
+	if !gocmp.Equal(oldobj.Spec.Database.Config.Name, newobj.Spec.Database.Config.Name) {
+		allErrs = append(allErrs, field.Invalid(field.NewPath("spec.database.config.name"), newobj.Name, "cannot change database name configuration"))
+	}
+	if !gocmp.Equal(oldobj.Spec.VaultRef, newobj.Spec.VaultRef) {
+		allErrs = append(allErrs, field.Invalid(field.NewPath("spec.vaultRef"), newobj.Name, "cannot change vaultRef"))
+	}
+	if !gocmp.Equal(oldobj.Spec.AccessPolicy, newobj.Spec.AccessPolicy) {
+		allErrs = append(allErrs, field.Invalid(field.NewPath("spec.accessPolicy"), newobj.Name, "cannot change accessPolicy"))
+	}
+	if newobj.Spec.Init != nil {
+		if oldobj.Spec.Init == nil {
+			allErrs = append(allErrs, field.Invalid(field.NewPath("spec.init"), newobj.Name, "cannot change init"))
+		}
+	}
+	if oldobj.Spec.Init != nil {
+		if newobj.Spec.Init == nil {
+			allErrs = append(allErrs, field.Invalid(field.NewPath("spec.init"), newobj.Name, "cannot change init"))
+		}
+	}
+	if newobj.Spec.Init != nil && oldobj.Spec.Init != nil {
+		if !gocmp.Equal(newobj.Spec.Init, oldobj.Spec.Init) {
+			allErrs = append(allErrs, field.Invalid(field.NewPath("spec.init"), newobj.Name, "cannot change init"))
+		}
+	}
+	er := newobj.ValidateMySQLDatabase()
+	if er != nil {
+		allErrs = append(allErrs, field.Invalid(field.NewPath("spec"), newobj.Name, er.Error()))
+	}
 	if len(allErrs) == 0 {
 		return nil
 	}
@@ -126,15 +169,17 @@ func (in *MySQLDatabase) ValidateMySQLDatabase() error {
 }
 
 func (in *MySQLDatabase) validateInitailizationSchema() *field.Error {
-	path := field.NewPath("spec")
-	if in.Spec.Init != nil && in.Spec.Init.Snapshot != nil {
-		return field.Invalid(path, in.Name, `cannot initialize database using both restore and initSpec`)
+	path := field.NewPath("spec.init")
+	if in.Spec.Init != nil {
+		if in.Spec.Init.Script != nil && in.Spec.Init.Snapshot != nil {
+			return field.Invalid(path, in.Name, `cannot initialize database using both restore and initSpec`)
+		}
 	}
 	return nil
 }
 
 func (in *MySQLDatabase) validateMySQLDatabaseConfig() *field.Error {
-	path := field.NewPath("spec").Child("databaseConfig").Child("name")
+	path := field.NewPath("spec").Child("database.config").Child("name")
 	name := in.Spec.Database.Config.Name
 	if name == "sys" {
 		return field.Invalid(path, in.Name, `cannot use "sys" as the database name`)
@@ -157,11 +202,19 @@ func (in *MySQLDatabase) validateMySQLDatabaseConfig() *field.Error {
 	if name == "config" {
 		return field.Invalid(path, in.Name, `cannot use "config" as the database name`)
 	}
-	path = field.NewPath("spec").Child("databaseConfig").Child("readOnly")
+	path = field.NewPath("spec").Child("database.config")
 	val := in.Spec.Database.Config.ReadOnly
 	if val == 1 {
-		if (in.Spec.Init != nil || in.Spec.Init.Snapshot != nil) && in.Status.Phase != DatabaseSchemaPhaseSuccessful {
-			return field.Invalid(path, in.Name, `cannot make the database readonly , init/restore yet to be applied`)
+		if in.Spec.Init != nil {
+			if (in.Spec.Init.Script != nil || in.Spec.Init.Snapshot != nil) && in.Status.Phase != DatabaseSchemaPhaseCurrent {
+				return field.Invalid(path.Child("readOnly"), in.Name, `cannot make the database readonly , init/restore yet to be applied`)
+			}
+		}
+	} else if in.Spec.Database.Config.Encryption == MySQLEncryptionEnabled {
+		if in.Spec.Init != nil {
+			if (in.Spec.Init.Script != nil || in.Spec.Init.Snapshot != nil) && in.Status.Phase != DatabaseSchemaPhaseCurrent {
+				return field.Invalid(path.Child("encryption"), in.Name, `cannot make the database encryption enables , init/restore yet to be applied`)
+			}
 		}
 	}
 	return nil
@@ -192,7 +245,7 @@ func (in *MySQLDatabase) validateMySQLDatabaseNamespace() *field.Error {
 }
 
 func (in *MySQLDatabase) validateMySQLDatabaseName() *field.Error {
-	if len(in.ObjectMeta.Name) > 30 {
+	if len(in.ObjectMeta.Name) > 45 {
 		return field.Invalid(field.NewPath("metadata").Child("name"), in.Name, "must be no more than 30 characters")
 	}
 	return nil
