@@ -24,6 +24,10 @@ import (
 	"kmodules.xyz/client-go/meta"
 )
 
+const (
+	MySQLSuffix string = "mysql"
+)
+
 func (in MySQLDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceMySQLDatabases))
 }
@@ -41,7 +45,7 @@ func (in *MySQLDatabase) GetStatus() DatabaseStatus {
 //GetAppBindingMeta returns meta info of the appbinding which has been created by schema manager
 func (in *MySQLDatabase) GetAppBindingMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      meta.NameWithSuffix(in.Name, "appbinding"),
+		Name:      meta.NameWithSuffix(in.Name, MySQLSuffix+"-apbng"),
 		Namespace: in.Namespace,
 	}
 	return meta
@@ -50,7 +54,7 @@ func (in *MySQLDatabase) GetAppBindingMeta() metav1.ObjectMeta {
 //GetVaultSecretEngineMeta returns meta info of the secret engine which has been created by schema manager
 func (in *MySQLDatabase) GetVaultSecretEngineMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      meta.NameWithSuffix(in.Name, "secret-engine"),
+		Name:      meta.NameWithSuffix(in.Name, MySQLSuffix+"-engine"),
 		Namespace: in.Namespace,
 	}
 	return meta
@@ -59,7 +63,7 @@ func (in *MySQLDatabase) GetVaultSecretEngineMeta() metav1.ObjectMeta {
 //GetMySQLRoleMeta returns meta info of the MySQL role which has been created by schema manager
 func (in *MySQLDatabase) GetMySQLRoleMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      meta.NameWithSuffix(in.Name, "mysql-role"),
+		Name:      meta.NameWithSuffix(in.Name, MySQLSuffix+"-role"),
 		Namespace: in.Namespace,
 	}
 	return meta
@@ -68,7 +72,7 @@ func (in *MySQLDatabase) GetMySQLRoleMeta() metav1.ObjectMeta {
 //GetSecretAccessRequestMeta returns meta info of the secret access request which has been created by schema manager
 func (in *MySQLDatabase) GetSecretAccessRequestMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      meta.NameWithSuffix(in.Name, "secret-access-request"),
+		Name:      meta.NameWithSuffix(in.Name, MySQLSuffix+"-req"),
 		Namespace: in.Namespace,
 	}
 	return meta
@@ -77,7 +81,7 @@ func (in *MySQLDatabase) GetSecretAccessRequestMeta() metav1.ObjectMeta {
 //GetInitJobMeta returns meta info of the init job which has been created by schema manager
 func (in *MySQLDatabase) GetInitJobMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      meta.NameWithSuffix(in.Name, "init-job"),
+		Name:      meta.NameWithSuffix(in.Name, MySQLSuffix+"-job"),
 		Namespace: in.Namespace,
 	}
 	return meta
@@ -95,7 +99,7 @@ func (in *MySQLDatabase) GetMySQLAuthSecretMeta() metav1.ObjectMeta {
 //GetRestoreSessionMeta returns meta info of the restore session which has been created by schema manager
 func (in *MySQLDatabase) GetRestoreSessionMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      meta.NameWithSuffix(in.Name, "restoresession"),
+		Name:      meta.NameWithSuffix(in.Name, MySQLSuffix+"-rs"),
 		Namespace: in.Namespace,
 	}
 	return meta
@@ -104,7 +108,7 @@ func (in *MySQLDatabase) GetRestoreSessionMeta() metav1.ObjectMeta {
 //GetRepositoryMeta returns meta info of the repository which has been created by schema manager
 func (in *MySQLDatabase) GetRepositoryMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      meta.NameWithSuffix(in.Name, "repository"),
+		Name:      meta.NameWithSuffix(in.Name, MySQLSuffix+"-rp"),
 		Namespace: in.Namespace,
 	}
 	return meta
@@ -113,7 +117,7 @@ func (in *MySQLDatabase) GetRepositoryMeta() metav1.ObjectMeta {
 //GetRepositorySecretMeta returns meta info of the repository which has been created by schema manager
 func (in *MySQLDatabase) GetRepositorySecretMeta() metav1.ObjectMeta {
 	meta := metav1.ObjectMeta{
-		Name:      meta.NameWithSuffix(in.Name, "repository-secret"),
+		Name:      meta.NameWithSuffix(in.Name, MySQLSuffix+"-rp-sec"),
 		Namespace: in.Namespace,
 	}
 	return meta

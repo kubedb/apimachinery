@@ -75,9 +75,9 @@ var _ webhook.Validator = &MySQLDatabase{}
 func (in *MySQLDatabase) ValidateCreate() error {
 	mysqldatabaselog.Info("validate create", "name", in.Name)
 	var allErrs field.ErrorList
-	if in.Spec.Database.Config.ReadOnly == 1 {
-		allErrs = append(allErrs, field.Invalid(field.NewPath("spec.database.config"), in.Name, "Cannot create readOnly database"))
-	}
+	//if in.Spec.Database.Config.ReadOnly == 1 { //todo handle this case if possible
+	//	allErrs = append(allErrs, field.Invalid(field.NewPath("spec.database.config"), in.Name, "Cannot create readOnly database"))
+	//}
 	if err := in.ValidateMySQLDatabase(); err != nil {
 		allErrs = append(allErrs, field.Invalid(field.NewPath(""), in.Name, err.Error()))
 	}
@@ -245,7 +245,7 @@ func (in *MySQLDatabase) validateMySQLDatabaseNamespace() *field.Error {
 }
 
 func (in *MySQLDatabase) validateMySQLDatabaseName() *field.Error {
-	if len(in.ObjectMeta.Name) > 30 {
+	if len(in.ObjectMeta.Name) > 45 {
 		return field.Invalid(field.NewPath("metadata").Child("name"), in.Name, "must be no more than 30 characters")
 	}
 	return nil
