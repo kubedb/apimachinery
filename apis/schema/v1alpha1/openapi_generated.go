@@ -20426,6 +20426,38 @@ func schema_apimachinery_apis_schema_v1alpha1_MariaDBDatabaseConfiguration(ref c
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name is target database name",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"characterSet": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CharacterSet is the target database character set",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"collation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Collation is the target database collation",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"comment": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Comment is the additional comment to the mariadb Database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
 			},
 		},
 	}

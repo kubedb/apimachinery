@@ -17,11 +17,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"kmodules.xyz/client-go/meta"
 	"kubedb.dev/apimachinery/crds"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	"kmodules.xyz/client-go/meta"
 )
 
 const (
@@ -41,7 +41,6 @@ func (in *MariaDBDatabase) GetInit() *InitSpec {
 func (in *MariaDBDatabase) GetStatus() DatabaseStatus {
 	return in.Status
 }
-
 
 //GetAppBindingMeta returns meta info of the appbinding which has been created by schema manager
 func (in *MariaDBDatabase) GetAppBindingMeta() metav1.ObjectMeta {

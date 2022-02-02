@@ -80,7 +80,7 @@ func (r *MariaDBDatabase) ValidateCreate() error {
 func (r *MariaDBDatabase) ValidateUpdate(old runtime.Object) error {
 	mariadbdatabaselog.Info("validate update", "name", r.Name)
 	oldobj := old.(*MariaDBDatabase)
-	return ValidateMariaDBDatabaseUpdate(r,oldobj)
+	return ValidateMariaDBDatabaseUpdate(r, oldobj)
 }
 
 func ValidateMariaDBDatabaseUpdate(newobj *MariaDBDatabase, oldobj *MariaDBDatabase) error {
