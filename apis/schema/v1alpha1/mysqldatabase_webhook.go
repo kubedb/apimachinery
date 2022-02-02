@@ -189,16 +189,16 @@ func (in *MySQLDatabase) validateMySQLDatabaseConfig() *field.Error {
 	if name == "mysql" {
 		return field.Invalid(path, in.Name, `cannot use "mysql" as the database name`)
 	}
-	if name == "kubedb_system" {
+	if name == DatabaseForEntry {
 		return field.Invalid(path, in.Name, `cannot use "kubedb_system" as the database name`)
 	}
 	if name == "information_schema" {
 		return field.Invalid(path, in.Name, `cannot use "information_schema" as the database name`)
 	}
-	if name == "admin" {
+	if name == DatabaseNameAdmin {
 		return field.Invalid(path, in.Name, `cannot use "admin" as the database name`)
 	}
-	if name == "config" {
+	if name == DatabaseNameConfig {
 		return field.Invalid(path, in.Name, `cannot use "config" as the database name`)
 	}
 	path = field.NewPath("spec").Child("database.config")
