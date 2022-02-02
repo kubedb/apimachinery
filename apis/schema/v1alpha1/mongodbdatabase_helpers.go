@@ -73,6 +73,10 @@ func (in *MongoDBDatabase) GetMongoSecretEngineName() string {
 	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-engine")
 }
 
+func (in *MongoDBDatabase) GetMongoAppBindingName() string {
+	return meta.NameWithSuffix(in.GetName(), MongoSuffix+"-apbng")
+}
+
 func (in *MongoDBDatabase) GetAuthSecretName(dbServerName string) string {
 	return meta.NameWithSuffix(dbServerName, "auth")
 }

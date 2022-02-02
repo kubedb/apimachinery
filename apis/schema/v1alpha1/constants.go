@@ -87,3 +87,8 @@ const (
 	DatabaseSchemaMessageRestoreSessionSucceed    DatabaseSchemaMessage       = "RestoreSession is succeeded"
 	DatabaseSchemaMessageRestoreSessionFailed     DatabaseSchemaMessage       = "RestoreSession is failed"
 )
+
+const (
+	MySQLEncryptionEnabled  string = "'Y'"
+	MySQLEncryptionDisabled string = "'N'"
+)
