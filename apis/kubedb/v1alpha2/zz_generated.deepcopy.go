@@ -1733,6 +1733,12 @@ func (in *PerconaXtraDBSpec) DeepCopyInto(out *PerconaXtraDBSpec) {
 		*out = new(clientgoapiv1.TLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	in.Coordinator.DeepCopyInto(&out.Coordinator)
+	if in.AllowedSchemas != nil {
+		in, out := &in.AllowedSchemas, &out.AllowedSchemas
+		*out = new(AllowedConsumers)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

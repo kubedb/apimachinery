@@ -213,9 +213,19 @@ const (
 	PerconaXtraDBDefaultClusterSize           = 3
 	PerconaXtraDBDataMountPath                = "/var/lib/mysql"
 	PerconaXtraDBDataLostFoundPath            = PerconaXtraDBDataMountPath + "lost+found"
+	PerconaXtraDBInitDBVolumeName             = "initial-script"
 	PerconaXtraDBInitDBMountPath              = "/docker-entrypoint-initdb.d"
 	PerconaXtraDBCustomConfigMountPath        = "/etc/percona-server.conf.d/"
 	PerconaXtraDBClusterCustomConfigMountPath = "/etc/percona-xtradb-cluster.conf.d/"
+	PerconaXtraDBCustomConfigVolumeName       = "custom-config"
+	PerconaXtraDBTLSConfigCustom              = "custom"
+	PerconaXtraDBInitContainerName            = "px-init"
+	PerconaXtraDBCoordinatorContainerName     = "px-coordinator"
+	PerconaXtraDBRunScriptVolumeName          = "run-script"
+	PerconaXtraDBRunScriptVolumeMountPath     = "/run-script"
+	PerconaXtraDBInitScriptVolumeName         = "init-scripts"
+	PerconaXtraDBInitScriptVolumeMountPath    = "/scripts"
+	PerconaXtraDBContainerName                = ResourceSingularPerconaXtraDB
 
 	// =========================== MariaDB Constants ============================
 	MariaDBMaxClusterNameLength         = 32
