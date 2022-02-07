@@ -24438,6 +24438,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RedisSentinelSpec(ref common.Refer
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"disableAuth": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If disable Auth true then don't create any auth secret",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"halted": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -24565,6 +24572,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RedisSpec(ref common.ReferenceCall
 						SchemaProps: spec.SchemaProps{
 							Description: "Database authentication secret",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"disableAuth": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If disable Auth true then don't create any auth secret",
+							Type:        []string{"boolean"},
+							Format:      "",
 						},
 					},
 					"init": {
