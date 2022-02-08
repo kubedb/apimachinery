@@ -29522,7 +29522,6 @@
       "properties": {
         "heapSizePercentage": {
           "description": "HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage. Node level values have higher precedence than global values.",
-          "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HeapSizePercentage"
         },
         "maxUnavailable": {
@@ -29622,7 +29621,6 @@
         },
         "heapSizePercentage": {
           "description": "HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage. It will be applied to all nodes. If the node level `heapSizePercentage` is specified,  this global value will be overwritten. It defaults to 50% of memory limit.",
-          "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HeapSizePercentage"
         },
         "init": {

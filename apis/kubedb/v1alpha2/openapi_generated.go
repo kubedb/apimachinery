@@ -20733,7 +20733,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchNode(ref common.Refer
 					"heapSizePercentage": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage. Node level values have higher precedence than global values.",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HeapSizePercentage"),
 						},
 					},
@@ -21021,7 +21020,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchSpec(ref common.Refer
 					"heapSizePercentage": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage. It will be applied to all nodes. If the node level `heapSizePercentage` is specified,  this global value will be overwritten. It defaults to 50% of memory limit.",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HeapSizePercentage"),
 						},
 					},

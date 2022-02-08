@@ -162,7 +162,7 @@ type ElasticsearchSpec struct {
 	// It will be applied to all nodes. If the node level `heapSizePercentage` is specified,  this global value will be overwritten.
 	// It defaults to 50% of memory limit.
 	// +optional
-	HeapSizePercentage HeapSizePercentage `json:"heapSizePercentage,omitempty"`
+	HeapSizePercentage *HeapSizePercentage `json:"heapSizePercentage,omitempty"`
 }
 
 type ElasticsearchClusterTopology struct {
@@ -188,7 +188,7 @@ type ElasticsearchNode struct {
 	// HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage.
 	// Node level values have higher precedence than global values.
 	// +optional
-	HeapSizePercentage HeapSizePercentage `json:"heapSizePercentage,omitempty"`
+	HeapSizePercentage *HeapSizePercentage `json:"heapSizePercentage,omitempty"`
 	// Storage to specify how storage shall be used.
 	// +optional
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
