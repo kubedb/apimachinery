@@ -158,11 +158,14 @@ type ElasticsearchSpec struct {
 	// +optional
 	KernelSettings *KernelSettings `json:"kernelSettings,omitempty"`
 
-	// HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage.
+	// HeapSizePercentage specifies both the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage.
+	// Elasticsearch bootstrap fails, if -Xms and -Xmx are not equal.
+	// Error: initial heap size [X] not equal to maximum heap size [Y]; this can cause resize pauses.
 	// It will be applied to all nodes. If the node level `heapSizePercentage` is specified,  this global value will be overwritten.
 	// It defaults to 50% of memory limit.
 	// +optional
-	HeapSizePercentage *HeapSizePercentage `json:"heapSizePercentage,omitempty"`
+	// +kubebuilder:default:=50
+	HeapSizePercentage *int32 `json:"heapSizePercentage,omitempty"`
 }
 
 type ElasticsearchClusterTopology struct {
@@ -185,10 +188,10 @@ type ElasticsearchNode struct {
 	Replicas *int32 `json:"replicas,omitempty"`
 	// +optional
 	Suffix string `json:"suffix,omitempty"`
-	// HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage.
+	// HeapSizePercentage specifies both the initial heap allocation (-Xms) percentage and the maximum heap allocation (-Xmx) percentage.
 	// Node level values have higher precedence than global values.
 	// +optional
-	HeapSizePercentage *HeapSizePercentage `json:"heapSizePercentage,omitempty"`
+	HeapSizePercentage *int32 `json:"heapSizePercentage,omitempty"`
 	// Storage to specify how storage shall be used.
 	// +optional
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
@@ -353,10 +356,3 @@ const (
 	ElasticsearchNodeRoleTypeTransform           ElasticsearchNodeRoleType = "transform"
 	ElasticsearchNodeRoleTypeCoordinating        ElasticsearchNodeRoleType = "coordinating"
 )
-
-type HeapSizePercentage struct {
-	// +optional
-	Xms *int32 `json:"xms,omitempty"`
-	// +optional
-	Xmx *int32 `json:"xmx,omitempty"`
-}

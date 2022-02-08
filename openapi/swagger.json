@@ -29521,8 +29521,9 @@
       "type": "object",
       "properties": {
         "heapSizePercentage": {
-          "description": "HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage. Node level values have higher precedence than global values.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HeapSizePercentage"
+          "description": "HeapSizePercentage specifies both the initial heap allocation (-Xms) percentage and the maximum heap allocation (-Xmx) percentage. Node level values have higher precedence than global values.",
+          "type": "integer",
+          "format": "int32"
         },
         "maxUnavailable": {
           "description": "An eviction is allowed if at most \"maxUnavailable\" pods selected by \"selector\" are unavailable after the eviction, i.e. even in absence of the evicted pod. For example, one can prevent all voluntary evictions by specifying 0. This is a mutually exclusive setting with \"minAvailable\".",
@@ -29620,8 +29621,9 @@
           "type": "boolean"
         },
         "heapSizePercentage": {
-          "description": "HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage. It will be applied to all nodes. If the node level `heapSizePercentage` is specified,  this global value will be overwritten. It defaults to 50% of memory limit.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HeapSizePercentage"
+          "description": "HeapSizePercentage specifies both the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage. Elasticsearch bootstrap fails, if -Xms and -Xmx are not equal. Error: initial heap size [X] not equal to maximum heap size [Y]; this can cause resize pauses. It will be applied to all nodes. If the node level `heapSizePercentage` is specified,  this global value will be overwritten. It defaults to 50% of memory limit.",
+          "type": "integer",
+          "format": "int32"
         },
         "init": {
           "description": "Init is used to initialize database",
@@ -29926,19 +29928,6 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HeapSizePercentage": {
-      "type": "object",
-      "properties": {
-        "xms": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "xmx": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },

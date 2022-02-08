@@ -65,14 +65,9 @@ spec:
               halted:
                 type: boolean
               heapSizePercentage:
-                properties:
-                  xms:
-                    format: int32
-                    type: integer
-                  xmx:
-                    format: int32
-                    type: integer
-                type: object
+                default: 50
+                format: int32
+                type: integer
               init:
                 properties:
                   initialized:
@@ -2710,14 +2705,8 @@ spec:
                   coordinating:
                     properties:
                       heapSizePercentage:
-                        properties:
-                          xms:
-                            format: int32
-                            type: integer
-                          xmx:
-                            format: int32
-                            type: integer
-                        type: object
+                        format: int32
+                        type: integer
                       maxUnavailable:
                         anyOf:
                         - type: integer
@@ -2818,14 +2807,8 @@ spec:
                   data:
                     properties:
                       heapSizePercentage:
-                        properties:
-                          xms:
-                            format: int32
-                            type: integer
-                          xmx:
-                            format: int32
-                            type: integer
-                        type: object
+                        format: int32
+                        type: integer
                       maxUnavailable:
                         anyOf:
                         - type: integer
@@ -2926,14 +2909,8 @@ spec:
                   dataCold:
                     properties:
                       heapSizePercentage:
-                        properties:
-                          xms:
-                            format: int32
-                            type: integer
-                          xmx:
-                            format: int32
-                            type: integer
-                        type: object
+                        format: int32
+                        type: integer
                       maxUnavailable:
                         anyOf:
                         - type: integer
@@ -3034,14 +3011,8 @@ spec:
                   dataContent:
                     properties:
                       heapSizePercentage:
-                        properties:
-                          xms:
-                            format: int32
-                            type: integer
-                          xmx:
-                            format: int32
-                            type: integer
-                        type: object
+                        format: int32
+                        type: integer
                       maxUnavailable:
                         anyOf:
                         - type: integer
@@ -3142,14 +3113,8 @@ spec:
                   dataFrozen:
                     properties:
                       heapSizePercentage:
-                        properties:
-                          xms:
-                            format: int32
-                            type: integer
-                          xmx:
-                            format: int32
-                            type: integer
-                        type: object
+                        format: int32
+                        type: integer
                       maxUnavailable:
                         anyOf:
                         - type: integer
@@ -3250,14 +3215,8 @@ spec:
                   dataHot:
                     properties:
                       heapSizePercentage:
-                        properties:
-                          xms:
-                            format: int32
-                            type: integer
-                          xmx:
-                            format: int32
-                            type: integer
-                        type: object
+                        format: int32
+                        type: integer
                       maxUnavailable:
                         anyOf:
                         - type: integer
@@ -3358,14 +3317,8 @@ spec:
                   dataWarm:
                     properties:
                       heapSizePercentage:
-                        properties:
-                          xms:
-                            format: int32
-                            type: integer
-                          xmx:
-                            format: int32
-                            type: integer
-                        type: object
+                        format: int32
+                        type: integer
                       maxUnavailable:
                         anyOf:
                         - type: integer
@@ -3466,14 +3419,8 @@ spec:
                   ingest:
                     properties:
                       heapSizePercentage:
-                        properties:
-                          xms:
-                            format: int32
-                            type: integer
-                          xmx:
-                            format: int32
-                            type: integer
-                        type: object
+                        format: int32
+                        type: integer
                       maxUnavailable:
                         anyOf:
                         - type: integer
@@ -3574,14 +3521,8 @@ spec:
                   master:
                     properties:
                       heapSizePercentage:
-                        properties:
-                          xms:
-                            format: int32
-                            type: integer
-                          xmx:
-                            format: int32
-                            type: integer
-                        type: object
+                        format: int32
+                        type: integer
                       maxUnavailable:
                         anyOf:
                         - type: integer
@@ -3682,14 +3623,8 @@ spec:
                   ml:
                     properties:
                       heapSizePercentage:
-                        properties:
-                          xms:
-                            format: int32
-                            type: integer
-                          xmx:
-                            format: int32
-                            type: integer
-                        type: object
+                        format: int32
+                        type: integer
                       maxUnavailable:
                         anyOf:
                         - type: integer
@@ -3790,14 +3725,8 @@ spec:
                   transform:
                     properties:
                       heapSizePercentage:
-                        properties:
-                          xms:
-                            format: int32
-                            type: integer
-                          xmx:
-                            format: int32
-                            type: integer
-                        type: object
+                        format: int32
+                        type: integer
                       maxUnavailable:
                         anyOf:
                         - type: integer
