@@ -37,20 +37,23 @@ var (
 )
 
 const (
-	ES_USER_ENV                         = "ELASTICSEARCH_USERNAME"
-	ES_PASSWORD_ENV                     = "ELASTICSEARCH_PASSWORD"
-	CaCertKey                           = "ca.crt"
-	ComponentDashboard                  = "dashboard"
-	KibanaStatusEndpoint                = "/api/status"
-	KibanaConfigFileName                = "kibana.yml"
-	DefaultElasticsearchClientCertAlias = "archiver"
-	HealthCheckInterval                 = 10 * time.Second
-	GlobalHost                          = "0.0.0.0"
-	ElasticsearchDashboardPortServer    = "server"
+	ES_USER_ENV                                 = "ELASTICSEARCH_USERNAME"
+	ES_PASSWORD_ENV                             = "ELASTICSEARCH_PASSWORD"
+	CaCertKey                                   = "ca.crt"
+	ComponentDashboard                          = "dashboard"
+	KibanaStatusEndpoint                        = "/api/status"
+	KibanaConfigFileName                        = "kibana.yml"
+	DefaultElasticsearchClientCertAlias         = "archiver"
+	HealthCheckInterval                         = 10 * time.Second
+	GlobalHost                                  = "0.0.0.0"
+	ElasticsearchDashboardPortServer            = "server"
+	ElasticsearchDashboardKibanaConfigDir       = "/usr/share/kibana/config"
+	ElasticsearchDashboardKibanaDataDir         = "/usr/share/kibana/data"
+	ElasticsearchDashboardKibanaTempConfigDir   = "/usr/share/kibana/temp-config"
+	ElasticsearchDashboardKibanaCustomConfigDir = "/usr/share/kibana/custom-config"
 )
 
 var (
-	ElasticsearchDashboardKibanaConfigDir        = "/usr/share/kibana/config"
 	ElasticsearchDashboardPropagationPolicy      = meta.DeletePropagationForeground
 	ElasticsearchDashboardDefaultPort            = (int32)(5601)
 	ElasticsearchDashboardGracefulDeletionPeriod = (int64)(time.Duration(3 * time.Second))
