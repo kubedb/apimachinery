@@ -29520,6 +29520,11 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchNode": {
       "type": "object",
       "properties": {
+        "heapSizePercentage": {
+          "description": "HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage. Node level values have higher precedence than global values.",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HeapSizePercentage"
+        },
         "maxUnavailable": {
           "description": "An eviction is allowed if at most \"maxUnavailable\" pods selected by \"selector\" are unavailable after the eviction, i.e. even in absence of the evicted pod. For example, one can prevent all voluntary evictions by specifying 0. This is a mutually exclusive setting with \"minAvailable\".",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
@@ -29614,6 +29619,11 @@
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
           "type": "boolean"
+        },
+        "heapSizePercentage": {
+          "description": "HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage. It will be applied to all nodes. If the node level `heapSizePercentage` is specified,  this global value will be overwritten. It defaults to 50% of memory limit.",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HeapSizePercentage"
         },
         "init": {
           "description": "Init is used to initialize database",
@@ -29918,6 +29928,19 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HeapSizePercentage": {
+      "type": "object",
+      "properties": {
+        "xms": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "xmx": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

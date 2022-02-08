@@ -45,6 +45,8 @@ const (
 	ElasticsearchNodeAffinityTemplateVar = "NODE_ROLE"
 )
 
+var DefaultHeapAllocationPercentage int32 = 50
+
 func (_ Elasticsearch) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralElasticsearch))
 }

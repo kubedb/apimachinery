@@ -152,6 +152,12 @@ type ElasticsearchSpec struct {
 	// KernelSettings contains the additional kernel settings.
 	// +optional
 	KernelSettings *KernelSettings `json:"kernelSettings,omitempty"`
+
+	// HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage.
+	// It will be applied to all nodes. If the node level `heapSizePercentage` is specified,  this global value will be overwritten.
+	// It defaults to 50% of memory limit.
+	// +optional
+	HeapSizePercentage HeapSizePercentage `json:"heapSizePercentage,omitempty"`
 }
 
 type ElasticsearchClusterTopology struct {
@@ -172,6 +178,9 @@ type ElasticsearchNode struct {
 	// Replicas represents number of replica for this specific type of node
 	Replicas *int32 `json:"replicas,omitempty"`
 	Suffix   string `json:"suffix,omitempty"`
+	// HeapSizePercentage specifies the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage.
+	// Node level values have higher precedence than global values.
+	HeapSizePercentage HeapSizePercentage `json:"heapSizePercentage,omitempty"`
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 	// Compute Resources required by the sidecar container.
@@ -334,3 +343,10 @@ const (
 	ElasticsearchNodeRoleTypeTransform           ElasticsearchNodeRoleType = "transform"
 	ElasticsearchNodeRoleTypeCoordinating        ElasticsearchNodeRoleType = "coordinating"
 )
+
+type HeapSizePercentage struct {
+	// +optional
+	Xms *int32 `json:"xms,omitempty"`
+	// +optional
+	Xmx *int32 `json:"xmx,omitempty"`
+}
