@@ -81,9 +81,9 @@ const (
 type DashboardVolumeName string
 
 const (
-	customConfig            DashboardVolumeName = "dashboard-custom-config"
-	operatorGeneratedConfig DashboardVolumeName = "dashboard-temp-config"
-	dashboardConfig         DashboardVolumeName = "dashboard-config"
-	kibanaServer            DashboardVolumeName = "kibana-server"
+	CustomConfig            DashboardVolumeName = "dashboard-custom-config"
+	OperatorGeneratedConfig DashboardVolumeName = "dashboard-temp-config"
+	DashboardConfig         DashboardVolumeName = "dashboard-config"
+	KibanaServer            DashboardVolumeName = "kibana-server"
 	DatabaseClient          DashboardVolumeName = "database-client"
 )
