@@ -20729,6 +20729,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchNode(ref common.Refer
 							Format: "",
 						},
 					},
+					"heapSizePercentage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HeapSizePercentage specifies both the initial heap allocation (-Xms) percentage and the maximum heap allocation (-Xmx) percentage. Node level values have higher precedence than global values.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"storage": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Storage to specify how storage shall be used.",
@@ -21008,6 +21015,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchSpec(ref common.Refer
 						SchemaProps: spec.SchemaProps{
 							Description: "KernelSettings contains the additional kernel settings.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KernelSettings"),
+						},
+					},
+					"heapSizePercentage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HeapSizePercentage specifies both the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage. Elasticsearch bootstrap fails, if -Xms and -Xmx are not equal. Error: initial heap size [X] not equal to maximum heap size [Y]; this can cause resize pauses. It will be applied to all nodes. If the node level `heapSizePercentage` is specified,  this global value will be overwritten. It defaults to 50% of memory limit.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 				},
