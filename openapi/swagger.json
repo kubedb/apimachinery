@@ -30274,6 +30274,33 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoArbiterNode": {
+      "type": "object",
+      "required": [
+        "replicas"
+      ],
+      "properties": {
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "prefix": {
+          "description": "Prefix is the name prefix of this node.",
+          "type": "string"
+        },
+        "replicas": {
+          "description": "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDB": {
       "type": "object",
       "properties": {
@@ -30483,12 +30510,18 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBSpec": {
       "type": "object",
       "required": [
-        "version"
+        "version",
+        "arbiter"
       ],
       "properties": {
         "allowedSchemas": {
           "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
+        "arbiter": {
+          "description": "Mongo Arbiter component of mongodb. More info: https://docs.mongodb.com/manual/core/replica-set-arbiter/",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoArbiterNode"
         },
         "authSecret": {
           "description": "Database authentication secret",

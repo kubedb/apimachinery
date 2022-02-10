@@ -133,6 +133,10 @@ type MongoDBSpec struct {
 	// +kubebuilder:default={namespaces:{from: Same}}
 	// +optional
 	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty"`
+
+	// Mongo Arbiter component of mongodb.
+	// More info: https://docs.mongodb.com/manual/core/replica-set-arbiter/
+	Arbiter MongoArbiterNode `json:"arbiter"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter
@@ -247,6 +251,11 @@ type MongoDBConfigNode struct {
 
 type MongoDBMongosNode struct {
 	// MongoDB mongos node configs
+	MongoDBNode `json:",inline"`
+}
+
+type MongoArbiterNode struct {
+	// MongoDB arbiter node configs
 	MongoDBNode `json:",inline"`
 }
 
