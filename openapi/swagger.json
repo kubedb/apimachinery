@@ -31687,6 +31687,10 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.CoordinatorSpec"
         },
+        "disableAuth": {
+          "description": "If disable Auth true then don't create any auth secret",
+          "type": "boolean"
+        },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
           "type": "boolean"
