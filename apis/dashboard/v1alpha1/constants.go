@@ -48,9 +48,19 @@ const (
 	GlobalHost                                  = "0.0.0.0"
 	ElasticsearchDashboardPortServer            = "server"
 	ElasticsearchDashboardKibanaConfigDir       = "/usr/share/kibana/config"
-	ElasticsearchDashboardKibanaDataDir         = "/usr/share/kibana/data"
-	ElasticsearchDashboardKibanaTempConfigDir   = "/usr/share/kibana/temp-config"
-	ElasticsearchDashboardKibanaCustomConfigDir = "/usr/share/kibana/custom-config"
+	ElasticsearchDashboardKibanaTempConfigDir   = "/kibana/temp-config"
+	ElasticsearchDashboardKibanaCustomConfigDir = "/kibana/custom-config"
+	DashboardDeploymentAvailable                = "MinimumReplicasAvailable"
+	DashboardDeploymentNotAvailable             = "MinimumReplicasNotAvailable"
+	DashboardServiceReady                       = "ServiceAcceptingRequests"
+	DashboardServiceNotReady                    = "ServiceNotAcceptingRequests"
+	DashboardAcceptingConnectionRequest         = "DashboardAcceptingConnectionRequests"
+	DashboardNotAcceptingConnectionRequest      = "DashboardNotAcceptingConnectionRequests"
+	DashboardReadinessCheckSucceeded            = "DashboardReadinessCheckSucceeded"
+	DashboardReadinessCheckFailed               = "DashboardReadinessCheckFailed"
+	DashboardStateGreen                         = "ServerHealthGood"
+	DashboardStateYellow                        = "ServerHealthCritical"
+	DashboardStateRed                           = "ServerUnhealthy"
 )
 
 var (

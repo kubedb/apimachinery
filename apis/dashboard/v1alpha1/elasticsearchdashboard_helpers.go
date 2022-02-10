@@ -72,7 +72,7 @@ func (ed ElasticsearchDashboard) ResourcePlural() string {
 }
 
 // CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
-func (ed *ElasticsearchDashboard) CertificateName(alias ElasticsearchDashboardCertificateAlias) string {
+func (ed *ElasticsearchDashboard) CertificateName(alias ElasticsearchDashboardSecretAlias) string {
 	return meta_util.NameWithSuffix(ed.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
@@ -83,7 +83,7 @@ func (ed *ElasticsearchDashboard) Owner() *meta.OwnerReference {
 
 // returns the volume name for config Secret.
 
-func (ed ElasticsearchDashboard) GetCertVolumeName(alias ElasticsearchDashboardCertificateAlias) string {
+func (ed ElasticsearchDashboard) GetCertVolumeName(alias ElasticsearchDashboardSecretAlias) string {
 	return meta_util.NameWithSuffix(string(alias), "volume")
 }
 
@@ -94,7 +94,7 @@ func (ed ElasticsearchDashboard) AuthSecretName() string {
 	return meta_util.NameWithSuffix(ed.Name, "database-cred")
 }
 
-func (ed ElasticsearchDashboard) GetSecretName(alias ElasticsearchDashboardCertificateAlias) string {
+func (ed ElasticsearchDashboard) GetSecretName(alias ElasticsearchDashboardSecretAlias) string {
 	return meta_util.NameWithSuffix(ed.Name, string(alias))
 }
 
@@ -102,7 +102,7 @@ func (ed ElasticsearchDashboard) DatabaseClientSecretName() string {
 	return meta_util.NameWithSuffix(ed.Name, "database-client")
 }
 
-func (ed ElasticsearchDashboard) ClientCertificateCN(alias ElasticsearchDashboardCertificateAlias) string {
+func (ed ElasticsearchDashboard) ClientCertificateCN(alias ElasticsearchDashboardSecretAlias) string {
 	return fmt.Sprintf("%s-%s", ed.Name, string(alias))
 }
 
@@ -163,13 +163,13 @@ func (ed *ElasticsearchDashboard) GetServiceSelectors() map[string]string {
 // if configDir is "/usr/share/kibana/config",
 // mountPath will be, "/usr/share/kibana/config/certs/<alias>/filename".
 
-func (ed *ElasticsearchDashboard) CertSecretVolumeMountPath(configDir string, alias ElasticsearchDashboardCertificateAlias) string {
+func (ed *ElasticsearchDashboard) CertSecretVolumeMountPath(configDir string, alias ElasticsearchDashboardSecretAlias) string {
 	return filepath.Join(configDir, "certs", string(alias))
 }
 
 // returns a certificate file path  for a specific file using the certificate alias
 
-func (ed *ElasticsearchDashboard) CertificateFilePath(configDir string, alias ElasticsearchDashboardCertificateAlias, filename string) string {
+func (ed *ElasticsearchDashboard) CertificateFilePath(configDir string, alias ElasticsearchDashboardSecretAlias, filename string) string {
 	return filepath.Join(ed.CertSecretVolumeMountPath(configDir, alias), filename)
 }
 
@@ -200,7 +200,7 @@ func (ed *ElasticsearchDashboard) GetConnectionScheme() string {
 // GetCertSecretName returns the secret name for a certificate alias if any,
 // otherwise returns default certificate secret name for the given alias.
 
-func (ed *ElasticsearchDashboard) GetCertSecretName(alias ElasticsearchDashboardCertificateAlias) string {
+func (ed *ElasticsearchDashboard) GetCertSecretName(alias ElasticsearchDashboardSecretAlias) string {
 	if ed.Spec.TLS != nil {
 		name, ok := kmapi.GetCertificateSecretName(ed.Spec.TLS.Certificates, string(alias))
 		if ok {
@@ -210,7 +210,7 @@ func (ed *ElasticsearchDashboard) GetCertSecretName(alias ElasticsearchDashboard
 	return ed.CertificateName(alias)
 }
 
-func (ed *ElasticsearchDashboard) CertSecretExists(alias ElasticsearchDashboardCertificateAlias) bool {
+func (ed *ElasticsearchDashboard) CertSecretExists(alias ElasticsearchDashboardSecretAlias) bool {
 	if ed.Spec.TLS != nil {
 		_, ok := kmapi.GetCertificateSecretName(ed.Spec.TLS.Certificates, string(alias))
 		if ok {
