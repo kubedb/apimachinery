@@ -78,7 +78,7 @@ const (
 	StateRed    DashboardServerState = "red"
 )
 
-// +kubebuilder:validation:Enum=dashboard-custom-config,dashboard-temp-config,dashboard-config,kibana-server,database-client
+// +kubebuilder:validation:Enum=dashboard-custom-config;dashboard-temp-config;dashboard-config;kibana-server;database-client
 type DashboardVolumeName string
 
 const (
