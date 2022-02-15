@@ -45,10 +45,6 @@ func (c *FakeSchemaV1alpha1) PostgresDatabases(namespace string) v1alpha1.Postgr
 	return &FakePostgresDatabases{c, namespace}
 }
 
-func (c *FakeSchemaV1alpha1) RedisDatabases(namespace string) v1alpha1.RedisDatabaseInterface {
-	return &FakeRedisDatabases{c, namespace}
-}
-
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeSchemaV1alpha1) RESTClient() rest.Interface {
