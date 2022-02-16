@@ -20981,17 +20981,11 @@ func schema_apimachinery_apis_schema_v1alpha1_PostgresDatabaseConfiguration(ref 
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"dBName": {
+					"name": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
 							Type:    []string{"string"},
 							Format:  "",
-						},
-					},
-					"tablespace": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
 						},
 					},
 					"params": {
@@ -21008,7 +21002,7 @@ func schema_apimachinery_apis_schema_v1alpha1_PostgresDatabaseConfiguration(ref 
 						},
 					},
 				},
-				Required: []string{"dBName"},
+				Required: []string{"name"},
 			},
 		},
 		Dependencies: []string{

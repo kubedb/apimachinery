@@ -17,9 +17,13 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
+
+	kdm "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
+	kmeta "kmodules.xyz/client-go/meta"
 )
 
 func (_ PostgresDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -34,4 +38,70 @@ func (in *PostgresDatabase) GetInit() *InitSpec {
 
 func (in *PostgresDatabase) GetStatus() DatabaseStatus {
 	return in.Status
+}
+
+const (
+	PostgresUserPassword     string = "PGPASSWORD"
+	PostgresUser             string = "PGUSER"
+	PostgresPrefix           string = "postgresDatabase"
+	PostgresSuffix           string = "postgres"
+	PostgresSchemaKubeSystem string = "kube_system"
+)
+
+func GetPostgresSchemaFinalizerString() string {
+	return SchemeGroupVersion.Group
+}
+
+func GetPostgresInitVolumeNameForPod(pgSchema *PostgresDatabase) string {
+	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-vol")
+}
+func GetPostgresInitJobContainerName(pgSchema *PostgresDatabase) string {
+	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix)
+}
+
+func GetPostgresSchemaJobName(pgSchema *PostgresDatabase) string {
+	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-job")
+}
+
+func GetPostgresSchemaHostname(db *kdm.Postgres) string {
+	return fmt.Sprintf("%v.%v.svc", db.ServiceName(), db.Namespace)
+}
+
+func GetPostgresSchemaSecretEngineName(pgSchema *PostgresDatabase) string {
+	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-engine")
+}
+
+func GetPostgresSchemaRoleName(pgSchema *PostgresDatabase) string {
+	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-role")
+}
+
+func GetPostgresSchemaCreationStatements(pgSchema *PostgresDatabase) []string {
+	createRole := "CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}';"
+	grantRole := fmt.Sprintf("GRANT All PRIVILEGES ON DATABASE %s TO \"{{name}}\";", pgSchema.Spec.Database.Config.Name)
+	return []string{createRole, grantRole}
+}
+
+func GetPostgresSchemaRevocationStatements(pgSchema *PostgresDatabase) []string {
+	switchDatabase := fmt.Sprintf(`\c %s`, pgSchema.Spec.Database.Config.Name)
+	revokeRole := fmt.Sprintf("REVOKE All PRIVILEGES ON DATABASE %s FROM \"{{name}}\";", pgSchema.Spec.Database.Config.Name)
+	reassignOwned := "REASSIGN OWNED BY \"{{name}}\" TO POSTGRES;"
+	dropOwned := "DROP OWNED BY \"{{name}}\";"
+	dropRole := "DROP ROLE IF EXISTS \"{{name}}\";"
+	return []string{switchDatabase, reassignOwned, revokeRole, dropOwned, dropRole}
+}
+
+func GetPostgresSchemaRoleSecretAccessName(pgSchema *PostgresDatabase) string {
+	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-req")
+}
+
+func GetPostgresSchemaAppBinding(pgSchema *PostgresDatabase) string {
+	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-appbdng")
+}
+
+func GetPostgresSchemaRestoreSessionName(pgSchema *PostgresDatabase) string {
+	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-restore")
+}
+
+func GetPostgresSchemaSecretName(pgSchema *PostgresDatabase) string {
+	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-secret")
 }
