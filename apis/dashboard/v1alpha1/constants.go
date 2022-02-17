@@ -48,6 +48,7 @@ const (
 	GlobalHost                                  = "0.0.0.0"
 	ElasticsearchDashboardPortServer            = "server"
 	ElasticsearchDashboardKibanaConfigDir       = "/usr/share/kibana/config"
+	ElasticsearchDashboardConfigMergeCommand    = "/usr/local/bin/config-merger.sh"
 	ElasticsearchDashboardKibanaTempConfigDir   = "/kibana/temp-config"
 	ElasticsearchDashboardKibanaCustomConfigDir = "/kibana/custom-config"
 	DashboardDeploymentAvailable                = "MinimumReplicasAvailable"
@@ -61,6 +62,8 @@ const (
 	DashboardStateGreen                         = "ServerHealthGood"
 	DashboardStateYellow                        = "ServerHealthCritical"
 	DashboardStateRed                           = "ServerUnhealthy"
+	DBNotFound                                  = "DatabaseNotFound"
+	DBNotReady                                  = "DatabaseNotReady"
 )
 
 var (
