@@ -41,10 +41,8 @@ func (in *PostgresDatabase) GetStatus() DatabaseStatus {
 }
 
 const (
-	PostgresUserPassword     string = "PGPASSWORD"
-	PostgresUser             string = "PGUSER"
-	PostgresPrefix           string = "postgresDatabase"
-	PostgresSuffix           string = "postgres"
+	EnvPGPassword            string = "PGPASSWORD"
+	EnvPGUser                string = "PGUSER"
 	PostgresSchemaKubeSystem string = "kube_system"
 )
 
@@ -53,26 +51,26 @@ func GetPostgresSchemaFinalizerString() string {
 }
 
 func GetPostgresInitVolumeNameForPod(pgSchema *PostgresDatabase) string {
-	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-vol")
+	return kmeta.NameWithSuffix(pgSchema.Name, kdm.ResourceSingularPostgres+"-vol")
 }
 func GetPostgresInitJobContainerName(pgSchema *PostgresDatabase) string {
-	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix)
+	return kmeta.NameWithSuffix(pgSchema.Name, kdm.ResourceSingularPostgres)
 }
 
 func GetPostgresSchemaJobName(pgSchema *PostgresDatabase) string {
-	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-job")
+	return kmeta.NameWithSuffix(pgSchema.Name, kdm.ResourceSingularPostgres+"-job")
 }
 
-func GetPostgresSchemaHostname(db *kdm.Postgres) string {
+func GetPostgresHostName(db *kdm.Postgres) string {
 	return fmt.Sprintf("%v.%v.svc", db.ServiceName(), db.Namespace)
 }
 
 func GetPostgresSchemaSecretEngineName(pgSchema *PostgresDatabase) string {
-	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-engine")
+	return kmeta.NameWithSuffix(pgSchema.Name, kdm.ResourceSingularPostgres+"-engine")
 }
 
 func GetPostgresSchemaRoleName(pgSchema *PostgresDatabase) string {
-	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-role")
+	return kmeta.NameWithSuffix(pgSchema.Name, kdm.ResourceSingularPostgres+"-role")
 }
 
 func GetPostgresSchemaCreationStatements(pgSchema *PostgresDatabase) []string {
@@ -91,17 +89,17 @@ func GetPostgresSchemaRevocationStatements(pgSchema *PostgresDatabase) []string 
 }
 
 func GetPostgresSchemaRoleSecretAccessName(pgSchema *PostgresDatabase) string {
-	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-req")
+	return kmeta.NameWithSuffix(pgSchema.Name, kdm.ResourceSingularPostgres+"-req")
 }
 
 func GetPostgresSchemaAppBinding(pgSchema *PostgresDatabase) string {
-	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-appbdng")
+	return kmeta.NameWithSuffix(pgSchema.Name, kdm.ResourceSingularPostgres+"-appbdng")
 }
 
 func GetPostgresSchemaRestoreSessionName(pgSchema *PostgresDatabase) string {
-	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-restore")
+	return kmeta.NameWithSuffix(pgSchema.Name, kdm.ResourceSingularPostgres+"-restore")
 }
 
 func GetPostgresSchemaSecretName(pgSchema *PostgresDatabase) string {
-	return kmeta.NameWithSuffix(pgSchema.Name, PostgresSuffix+"-secret")
+	return kmeta.NameWithSuffix(pgSchema.Name, kdm.ResourceSingularPostgres+"-secret")
 }
