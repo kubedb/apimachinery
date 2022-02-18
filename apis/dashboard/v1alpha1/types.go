@@ -52,13 +52,19 @@ const (
 )
 
 // +kubebuilder:validation:Enum=ca;database-client;kibana-server;dashboard-config
-type ElasticsearchDashboardSecretAlias string
+type ElasticsearchDashboardCertificateAlias string
 
 const (
-	ElasticsearchDashboardCACert           ElasticsearchDashboardSecretAlias = "ca"
-	ElasticsearchDatabaseClient            ElasticsearchDashboardSecretAlias = "database-client"
-	ElasticsearchDashboardKibanaServerCert ElasticsearchDashboardSecretAlias = "kibana-server"
-	ElasticsearchDashboardConfig           ElasticsearchDashboardSecretAlias = "dashboard-config"
+	ElasticsearchDashboardCACert           ElasticsearchDashboardCertificateAlias = "ca"
+	ElasticsearchDatabaseClient            ElasticsearchDashboardCertificateAlias = "database-client"
+	ElasticsearchDashboardKibanaServerCert ElasticsearchDashboardCertificateAlias = "kibana-server"
+)
+
+// +kubebuilder:validation:Enum=dashboard-config
+type ElasticsearchDashboardConfigAlias string
+
+const (
+	ElasticsearchDashboardConfig ElasticsearchDashboardConfigAlias = "dashboard-config"
 )
 
 // +kubebuilder:validation:Enum=primary;stats
@@ -82,9 +88,9 @@ const (
 type DashboardVolumeName string
 
 const (
-	CustomConfig            DashboardVolumeName = "dashboard-custom-config"
-	OperatorGeneratedConfig DashboardVolumeName = "dashboard-temp-config"
-	DashboardConfig         DashboardVolumeName = "dashboard-config"
-	KibanaServer            DashboardVolumeName = "kibana-server"
-	DatabaseClient          DashboardVolumeName = "database-client"
+	DashboardVolumeCustomConfig            DashboardVolumeName = "dashboard-custom-config"
+	DashboardVolumeOperatorGeneratedConfig DashboardVolumeName = "dashboard-temp-config"
+	DashboardVolumeConfig                  DashboardVolumeName = "dashboard-config"
+	DashboardVolumeKibanaServer            DashboardVolumeName = "kibana-server"
+	DashboardVolumeDatabaseClient          DashboardVolumeName = "database-client"
 )
