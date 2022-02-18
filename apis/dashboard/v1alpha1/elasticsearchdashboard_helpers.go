@@ -210,8 +210,8 @@ func (ed *ElasticsearchDashboard) CertificateSecretName(alias ElasticsearchDashb
 	return ed.DefaultCertificateSecretName(alias)
 }
 
-func (ed ElasticsearchDashboard) DefaultConfigSecretName(alias ElasticsearchDashboardConfigAlias) string {
-	return meta_util.NameWithSuffix(ed.Name, string(alias))
+func (ed ElasticsearchDashboard) DefaultConfigSecretName() string {
+	return meta_util.NameWithSuffix(ed.Name, "config")
 }
 
 func (ed ElasticsearchDashboard) CustomConfigSecretName() string {
