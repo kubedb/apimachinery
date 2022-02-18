@@ -51,7 +51,7 @@ const (
 	StatusError   DashboardStatus = "Error"
 )
 
-// +kubebuilder:validation:Enum=ca;database-client;kibana-server;dashboard-config
+// +kubebuilder:validation:Enum=ca;database-client;kibana-server
 type ElasticsearchDashboardCertificateAlias string
 
 const (
@@ -60,12 +60,11 @@ const (
 	ElasticsearchDashboardKibanaServerCert ElasticsearchDashboardCertificateAlias = "kibana-server"
 )
 
-// +kubebuilder:validation:Enum=dashboard-config
+// +kubebuilder:validation:Enum=config
 type ElasticsearchDashboardConfigAlias string
 
 const (
-	ElasticsearchDashboardOperatorGeneratedConfig ElasticsearchDashboardConfigAlias = "config"
-	ElasticsearchDashboardUserConfig              ElasticsearchDashboardConfigAlias = "user-config"
+	ElasticsearchDashboardDefaultConfig ElasticsearchDashboardConfigAlias = "config"
 )
 
 // +kubebuilder:validation:Enum=primary;stats
