@@ -210,6 +210,14 @@ func (ed *ElasticsearchDashboard) GetCertSecretName(alias ElasticsearchDashboard
 	return ed.CertificateSecretName(alias)
 }
 
+func (ed ElasticsearchDashboard) GetDefaultConfigSecretName(alias ElasticsearchDashboardConfigAlias) string {
+	return meta_util.NameWithSuffix(ed.Name, string(alias))
+}
+
+func (ed ElasticsearchDashboard) GetCustomConfigSecretName() string {
+	return ed.Spec.ConfigSecret.Name
+}
+
 func (ed *ElasticsearchDashboard) CertSecretExists(alias ElasticsearchDashboardCertificateAlias) bool {
 	if ed.Spec.TLS != nil {
 		_, ok := kmapi.GetCertificateSecretName(ed.Spec.TLS.Certificates, string(alias))

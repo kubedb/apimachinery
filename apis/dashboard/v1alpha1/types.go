@@ -64,7 +64,8 @@ const (
 type ElasticsearchDashboardConfigAlias string
 
 const (
-	ElasticsearchDashboardConfig ElasticsearchDashboardConfigAlias = "dashboard-config"
+	ElasticsearchDashboardOperatorGeneratedConfig ElasticsearchDashboardConfigAlias = "config"
+	ElasticsearchDashboardUserConfig              ElasticsearchDashboardConfigAlias = "user-config"
 )
 
 // +kubebuilder:validation:Enum=primary;stats
