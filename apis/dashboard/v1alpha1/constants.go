@@ -42,7 +42,7 @@ const (
 
 	ElasticsearchDashboardPortServer            = "server"
 	ElasticsearchDashboardKibanaConfigDir       = "/usr/share/kibana/config"
-	ElasticsearchDashboardConfigMergeCommand    = "/usr/local/bin/config-merger.sh"
+	ElasticsearchDashboardConfigMergeCommand    = "/usr/local/bin/dashboard-config-merger.sh"
 	ElasticsearchDashboardKibanaTempConfigDir   = "/kibana/temp-config"
 	ElasticsearchDashboardKibanaCustomConfigDir = "/kibana/custom-config"
 
