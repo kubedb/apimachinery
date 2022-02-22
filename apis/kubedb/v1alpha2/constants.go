@@ -130,11 +130,13 @@ const (
 	NodeTypeMongos                = "mongos"
 	NodeTypeShard                 = "shard"
 	NodeTypeConfig                = "configsvr"
+	NodeTypeArbiter               = "arbiter"
 
 	MongoDBWorkDirectoryName = "workdir"
 	MongoDBWorkDirectoryPath = "/work-dir"
 
 	MongoDBCertDirectoryName = "certdir"
+	MongoDBCertDirectoryPath = "/var/run/mongodb/tls"
 
 	MongoDBDataDirectoryName = "datadir"
 	MongoDBDataDirectoryPath = "/data/db"
@@ -150,6 +152,9 @@ const (
 
 	MongoDBInitScriptDirectoryName = "init-scripts"
 	MongoDBInitScriptDirectoryPath = "/init-scripts"
+
+	MongoDBInitialDirectoryName = "initial-scripts"
+	MongoDBInitialDirectoryPath = "/docker-entrypoint-initdb.d"
 
 	MongoDBClientCertDirectoryName = "client-cert"
 	MongoDBClientCertDirectoryPath = "/client-cert"

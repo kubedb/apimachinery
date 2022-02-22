@@ -30530,7 +30530,6 @@
         },
         "arbiter": {
           "description": "Mongo Arbiter component of mongodb. More info: https://docs.mongodb.com/manual/core/replica-set-arbiter/",
-          "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoArbiterNode"
         },
         "authSecret": {

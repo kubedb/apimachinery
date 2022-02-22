@@ -136,7 +136,7 @@ type MongoDBSpec struct {
 
 	// Mongo Arbiter component of mongodb.
 	// More info: https://docs.mongodb.com/manual/core/replica-set-arbiter/
-	Arbiter MongoArbiterNode `json:"arbiter"`
+	Arbiter *MongoArbiterNode `json:"arbiter"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter

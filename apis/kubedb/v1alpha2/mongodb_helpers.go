@@ -126,6 +126,14 @@ func (m MongoDB) ConfigSvrRepSetName() string {
 	return repSetName
 }
 
+func (m MongoDB) ArbiterNodeName() string {
+	if m.Spec.Arbiter == nil {
+		return ""
+	}
+	arbiterName := fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeArbiter)
+	return m.Spec.Arbiter.Prefix + arbiterName
+}
+
 func (m MongoDB) OffshootSelectors() map[string]string {
 	return map[string]string{
 		meta_util.NameLabelKey:      m.ResourceFQN(),

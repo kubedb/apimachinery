@@ -22556,7 +22556,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoDBSpec(ref common.ReferenceCa
 					"arbiter": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Mongo Arbiter component of mongodb. More info: https://docs.mongodb.com/manual/core/replica-set-arbiter/",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoArbiterNode"),
 						},
 					},

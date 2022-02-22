@@ -1309,7 +1309,11 @@ func (in *MongoDBSpec) DeepCopyInto(out *MongoDBSpec) {
 		*out = new(AllowedConsumers)
 		(*in).DeepCopyInto(*out)
 	}
-	in.Arbiter.DeepCopyInto(&out.Arbiter)
+	if in.Arbiter != nil {
+		in, out := &in.Arbiter, &out.Arbiter
+		*out = new(MongoArbiterNode)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
