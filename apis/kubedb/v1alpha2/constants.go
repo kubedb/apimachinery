@@ -136,7 +136,6 @@ const (
 	MongoDBWorkDirectoryPath = "/work-dir"
 
 	MongoDBCertDirectoryName = "certdir"
-	MongoDBCertDirectoryPath = "/var/run/mongodb/tls"
 
 	MongoDBDataDirectoryName = "datadir"
 	MongoDBDataDirectoryPath = "/data/db"
@@ -153,7 +152,7 @@ const (
 	MongoDBInitScriptDirectoryName = "init-scripts"
 	MongoDBInitScriptDirectoryPath = "/init-scripts"
 
-	MongoDBInitialDirectoryName = "initial-scripts"
+	MongoDBInitialDirectoryName = "initial-script"
 	MongoDBInitialDirectoryPath = "/docker-entrypoint-initdb.d"
 
 	MongoDBClientCertDirectoryName = "client-cert"

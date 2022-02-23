@@ -53,11 +53,24 @@ const (
 	MongoClientFileName = "client.pem"
 	MongoCertDirectory  = "/var/run/mongodb/tls"
 
-	MongoDBShardLabelKey  = "mongodb.kubedb.com/node.shard"
-	MongoDBConfigLabelKey = "mongodb.kubedb.com/node.config"
-	MongoDBMongosLabelKey = "mongodb.kubedb.com/node.mongos"
+	MongoDBShardLabelKey   = "mongodb.kubedb.com/node.shard"
+	MongoDBConfigLabelKey  = "mongodb.kubedb.com/node.config"
+	MongoDBMongosLabelKey  = "mongodb.kubedb.com/node.mongos"
+	MongoDBArbiterLabelKey = "mongodb.kubedb.com/node.arbiter"
 
 	MongoDBShardAffinityTemplateVar = "SHARD_INDEX"
+)
+
+type MongoShellScriptName string
+
+const (
+	ScriptNameCommon     MongoShellScriptName = "common.sh"
+	ScriptNameInstall    MongoShellScriptName = "install.sh"
+	ScriptNameMongos     MongoShellScriptName = "mongos.sh"
+	ScriptNameShard      MongoShellScriptName = "sharding.sh"
+	ScriptNameConfig     MongoShellScriptName = "configdb.sh"
+	ScriptNameReplicaset MongoShellScriptName = "replicaset.sh"
+	ScriptNameArbiter    MongoShellScriptName = "arbiter.sh"
 )
 
 func (m MongoDB) OffshootName() string {
@@ -160,6 +173,12 @@ func (m MongoDB) MongosSelectors() map[string]string {
 	})
 }
 
+func (m MongoDB) ArbiterSelectors() map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
+		MongoDBArbiterLabelKey: m.ArbiterNodeName(),
+	})
+}
+
 func (m MongoDB) OffshootLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
@@ -192,6 +211,10 @@ func (m MongoDB) ConfigSvrLabels() map[string]string {
 
 func (m MongoDB) MongosLabels() map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.MongosSelectors())
+}
+
+func (m MongoDB) ArbiterLabels() map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ArbiterSelectors())
 }
 
 func (m MongoDB) ResourceFQN() string {
