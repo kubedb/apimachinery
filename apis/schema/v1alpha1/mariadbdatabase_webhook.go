@@ -169,7 +169,7 @@ func (in *MariaDBDatabase) validateInitailizationSchema() *field.Error {
 func (in *MariaDBDatabase) validateMariaDBDatabaseConfig() *field.Error {
 	path := field.NewPath("spec").Child("database.config").Child("name")
 	name := in.Spec.Database.Config.Name
-	if name == "sys" {
+	if name == SYSDatabase {
 		return field.Invalid(path, in.Name, `cannot use "sys" as the database name`)
 	}
 	if name == "performance_schema" {
