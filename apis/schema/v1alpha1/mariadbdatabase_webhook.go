@@ -54,6 +54,9 @@ func (r *MariaDBDatabase) Default() {
 			}
 		}
 	}
+	if r.Spec.Database.Config.CharacterSet == "utf8" {
+		r.Spec.Database.Config.CharacterSet = "utf8mb3"
+	}
 	if r.Spec.Database.Config.CharacterSet == "" {
 		r.Spec.Database.Config.CharacterSet = "utf8mb4"
 	}
@@ -111,7 +114,7 @@ func ValidateMariaDBDatabaseUpdate(newobj *MariaDBDatabase, oldobj *MariaDBDatab
 		}
 	}
 	if newobj.Spec.Init != nil && oldobj.Spec.Init != nil {
-		if !gocmp.Equal(newobj.Spec.Init, oldobj.Spec.Init) {
+		if !gocmp.Equal(newobj.Spec.Init.Script, oldobj.Spec.Init.Script) || !gocmp.Equal(newobj.Spec.Init.Snapshot, oldobj.Spec.Init.Snapshot) {
 			allErrs = append(allErrs, field.Invalid(field.NewPath("spec.init"), newobj.Name, "cannot change init"))
 		}
 	}
