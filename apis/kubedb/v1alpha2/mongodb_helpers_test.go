@@ -102,7 +102,6 @@ func TestMongoDB_HostAddress(t *testing.T) {
 
 	repsetDSN := mongodb.HostAddress()
 	t.Log(repsetDSN)
-
 }
 
 func TestMongoDB_ShardDSN(t *testing.T) {
