@@ -139,12 +139,19 @@ func (m MongoDB) ConfigSvrRepSetName() string {
 	return repSetName
 }
 
-func (m MongoDB) ArbiterNodeName() string {
+func (m MongoDB) ArbiterCommonNodeName() string {
 	if m.Spec.Arbiter == nil {
 		return ""
 	}
 	arbiterName := fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeArbiter)
 	return m.Spec.Arbiter.Prefix + arbiterName
+}
+
+func (m MongoDB) ArbiterNodeName(nodeNum int32) string {
+	if m.Spec.ShardTopology == nil {
+		return ""
+	}
+	return fmt.Sprintf("%v%v", m.ArbiterCommonNodeName(), nodeNum)
 }
 
 func (m MongoDB) OffshootSelectors() map[string]string {
@@ -173,9 +180,15 @@ func (m MongoDB) MongosSelectors() map[string]string {
 	})
 }
 
-func (m MongoDB) ArbiterSelectors() map[string]string {
+func (m MongoDB) ArbiterCommonSelectors() map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
-		MongoDBArbiterLabelKey: m.ArbiterNodeName(),
+		MongoDBArbiterLabelKey: m.ArbiterCommonNodeName(),
+	})
+}
+
+func (m MongoDB) ArbiterSelectors(nodeNum int32) map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
+		MongoDBArbiterLabelKey: m.ArbiterNodeName(nodeNum),
 	})
 }
 
@@ -213,8 +226,12 @@ func (m MongoDB) MongosLabels() map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.MongosSelectors())
 }
 
-func (m MongoDB) ArbiterLabels() map[string]string {
-	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ArbiterSelectors())
+func (m MongoDB) ArbiterCommonLabels() map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ArbiterCommonSelectors())
+}
+
+func (m MongoDB) ArbiterLabels(nodeNum int32) map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ArbiterSelectors(nodeNum))
 }
 
 func (m MongoDB) ResourceFQN() string {

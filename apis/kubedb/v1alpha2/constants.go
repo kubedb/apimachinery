@@ -131,6 +131,7 @@ const (
 	NodeTypeShard                 = "shard"
 	NodeTypeConfig                = "configsvr"
 	NodeTypeArbiter               = "arbiter"
+	NodeTypeReplica               = "replica"
 
 	MongoDBWorkDirectoryName = "workdir"
 	MongoDBWorkDirectoryPath = "/work-dir"
