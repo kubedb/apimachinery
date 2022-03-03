@@ -137,6 +137,7 @@ type MongoDBSpec struct {
 	// Mongo Arbiter component of mongodb.
 	// More info: https://docs.mongodb.com/manual/core/replica-set-arbiter/
 	// +optional
+	// +nullable
 	Arbiter *MongoArbiterNode `json:"arbiter"`
 }
 
