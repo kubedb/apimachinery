@@ -22560,7 +22560,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoDBSpec(ref common.ReferenceCa
 						},
 					},
 				},
-				Required: []string{"version", "arbiter"},
+				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{

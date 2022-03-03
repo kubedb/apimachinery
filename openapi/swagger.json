@@ -30520,8 +30520,7 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBSpec": {
       "type": "object",
       "required": [
-        "version",
-        "arbiter"
+        "version"
       ],
       "properties": {
         "allowedSchemas": {

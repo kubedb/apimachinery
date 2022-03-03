@@ -757,7 +757,13 @@ func (m *MongoDB) CertificateName(alias MongoDBCertificateAlias, stsName string)
 			panic(fmt.Sprintf("StatefulSet name required to compute %s certificate name for MongoDB %s/%s", alias, m.Namespace, m.Name))
 		}
 		return meta_util.NameWithSuffix(stsName, fmt.Sprintf("%s-cert", string(alias)))
+	} else if m.Spec.ReplicaSet != nil && alias == MongoDBServerCert {
+		if stsName == "" {
+			return meta_util.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias))) // for general replica
+		}
+		return meta_util.NameWithSuffix(stsName, fmt.Sprintf("%s-cert", string(alias))) // for arbiter
 	}
+	// for standAlone server-cert. And for client-cert & matrix-exporter-cert of all type of replica & shard, stsName is not needed.
 	return meta_util.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 

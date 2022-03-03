@@ -8809,7 +8809,6 @@ spec:
               version:
                 type: string
             required:
-            - arbiter
             - version
             type: object
           status:
