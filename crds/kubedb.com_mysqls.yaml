@@ -4387,6 +4387,7 @@ spec:
                     - GroupReplication
                     - InnoDBCluster
                     - ReadReplica
+                    - SemiSync
                     type: string
                   readReplica:
                     properties:

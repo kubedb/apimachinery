@@ -31,13 +31,14 @@ const (
 	ResourcePluralMySQL   = "mysqls"
 )
 
-// +kubebuilder:validation:Enum=GroupReplication;InnoDBCluster;ReadReplica
+// +kubebuilder:validation:Enum=GroupReplication;InnoDBCluster;ReadReplica;SemiSync
 type MySQLMode string
 
 const (
 	MySQLModeGroupReplication MySQLMode = "GroupReplication"
 	MySQLModeInnoDBCluster    MySQLMode = "InnoDBCluster"
 	MySQLModeReadReplica      MySQLMode = "ReadReplica"
+	MySQLModeSemiSync         MySQLMode = "SemiSync"
 )
 
 // +kubebuilder:validation:Enum=Single-Primary
@@ -180,6 +181,7 @@ type MySQLTopology struct {
 	// and it will take reference of  appbinding of the source
 	// +optional
 	ReadReplica *MySQLReadReplicaSpec `json:"readReplica,omitempty"`
+	//SemiSync *SemiSyncSpec
 }
 
 type MySQLGroupSpec struct {
