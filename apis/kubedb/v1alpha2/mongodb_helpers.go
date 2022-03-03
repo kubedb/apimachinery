@@ -506,17 +506,18 @@ func (m *MongoDB) SetTLSDefaults() {
 
 	defaultServerOrg := []string{KubeDBOrganization}
 	defaultServerOrgUnit := []string{string(MongoDBServerCert)}
-	if m.Spec.ShardTopology != nil {
-		_, cert := kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MongoDBServerCert))
-		if cert != nil && cert.Subject != nil {
-			if cert.Subject.Organizations != nil {
-				defaultServerOrg = cert.Subject.Organizations
-			}
-			if cert.Subject.OrganizationalUnits != nil {
-				defaultServerOrgUnit = cert.Subject.OrganizationalUnits
-			}
-		}
 
+	_, cert := kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MongoDBServerCert))
+	if cert != nil && cert.Subject != nil {
+		if cert.Subject.Organizations != nil {
+			defaultServerOrg = cert.Subject.Organizations
+		}
+		if cert.Subject.OrganizationalUnits != nil {
+			defaultServerOrgUnit = cert.Subject.OrganizationalUnits
+		}
+	}
+
+	if m.Spec.ShardTopology != nil || (m.Spec.ReplicaSet != nil && m.Spec.Arbiter != nil) {
 		m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
 			Alias:      string(MongoDBServerCert),
 			SecretName: "",
@@ -525,20 +526,9 @@ func (m *MongoDB) SetTLSDefaults() {
 				OrganizationalUnits: defaultServerOrgUnit,
 			},
 		})
-
 		// reset secret name to empty string, since multiple secrets will be created for each StatefulSet.
 		m.Spec.TLS.Certificates = kmapi.SetSecretNameForCertificate(m.Spec.TLS.Certificates, string(MongoDBServerCert), "")
 	} else {
-		_, cert := kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MongoDBServerCert))
-		if cert != nil && cert.Subject != nil {
-			if cert.Subject.Organizations != nil {
-				defaultServerOrg = cert.Subject.Organizations
-			}
-			if cert.Subject.OrganizationalUnits != nil {
-				defaultServerOrgUnit = cert.Subject.OrganizationalUnits
-			}
-		}
-
 		m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
 			Alias:      string(MongoDBServerCert),
 			SecretName: m.CertificateName(MongoDBServerCert, ""),
@@ -549,9 +539,10 @@ func (m *MongoDB) SetTLSDefaults() {
 		})
 	}
 
+	// Client-cert
 	defaultClientOrg := []string{KubeDBOrganization}
 	defaultClientOrgUnit := []string{string(MongoDBClientCert)}
-	_, cert := kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MongoDBClientCert))
+	_, cert = kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MongoDBClientCert))
 	if cert != nil && cert.Subject != nil {
 		if cert.Subject.Organizations != nil {
 			defaultClientOrg = cert.Subject.Organizations
@@ -569,6 +560,7 @@ func (m *MongoDB) SetTLSDefaults() {
 		},
 	})
 
+	// Metrics-exporter-cert
 	defaultExporterOrg := []string{KubeDBOrganization}
 	defaultExporterOrgUnit := []string{string(MongoDBMetricsExporterCert)}
 	_, cert = kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MongoDBMetricsExporterCert))
@@ -763,7 +755,7 @@ func (m *MongoDB) CertificateName(alias MongoDBCertificateAlias, stsName string)
 		}
 		return meta_util.NameWithSuffix(stsName, fmt.Sprintf("%s-cert", string(alias))) // for arbiter
 	}
-	// for standAlone server-cert. And for client-cert & matrix-exporter-cert of all type of replica & shard, stsName is not needed.
+	// for standAlone server-cert. And for client-cert & metrics-exporter-cert of all type of replica & shard, stsName is not needed.
 	return meta_util.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
