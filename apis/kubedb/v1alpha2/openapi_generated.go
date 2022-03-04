@@ -22005,21 +22005,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoArbiterNode(ref common.Refere
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"replicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"prefix": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Prefix is the name prefix of this node.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"configSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -22034,7 +22019,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoArbiterNode(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"replicas"},
 			},
 		},
 		Dependencies: []string{
@@ -22134,12 +22118,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoDBConfigNode(ref common.Refer
 							Ref:         ref("k8s.io/api/core/v1.EmptyDirVolumeSource"),
 						},
 					},
+					"arbiter": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoArbiterNode"),
+						},
+					},
 				},
 				Required: []string{"replicas"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoArbiterNode"},
 	}
 }
 
@@ -22352,12 +22341,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoDBShardNode(ref common.Refere
 							Ref:         ref("k8s.io/api/core/v1.EmptyDirVolumeSource"),
 						},
 					},
+					"arbiter": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoArbiterNode"),
+						},
+					},
 				},
 				Required: []string{"shards", "replicas"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoArbiterNode"},
 	}
 }
 

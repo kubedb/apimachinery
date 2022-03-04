@@ -139,19 +139,25 @@ func (m MongoDB) ConfigSvrRepSetName() string {
 	return repSetName
 }
 
-func (m MongoDB) ArbiterCommonNodeName() string {
+func (m MongoDB) ArbiterNodeName() string {
 	if m.Spec.Arbiter == nil {
 		return ""
 	}
-	arbiterName := fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeArbiter)
-	return m.Spec.Arbiter.Prefix + arbiterName
+	return fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeArbiter)
 }
 
-func (m MongoDB) ArbiterNodeName(nodeNum int32) string {
+func (m MongoDB) ArbiterShardNodeName(nodeNum int32) string {
 	if m.Spec.ShardTopology == nil {
 		return ""
 	}
-	return fmt.Sprintf("%v%v", m.ArbiterCommonNodeName(), nodeNum)
+	return fmt.Sprintf("%v-%v", m.ShardNodeName(nodeNum), NodeTypeArbiter)
+}
+
+func (m MongoDB) ArbiterConfigNodeName() string {
+	if m.Spec.ShardTopology == nil {
+		return ""
+	}
+	return fmt.Sprintf("%v-%v", m.ConfigSvrNodeName(), NodeTypeArbiter)
 }
 
 func (m MongoDB) OffshootSelectors() map[string]string {
@@ -180,15 +186,21 @@ func (m MongoDB) MongosSelectors() map[string]string {
 	})
 }
 
-func (m MongoDB) ArbiterCommonSelectors() map[string]string {
+func (m MongoDB) ArbiterSelectors() map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
-		MongoDBArbiterLabelKey: m.ArbiterCommonNodeName(),
+		MongoDBArbiterLabelKey: m.ArbiterNodeName(),
 	})
 }
 
-func (m MongoDB) ArbiterSelectors(nodeNum int32) map[string]string {
+func (m MongoDB) ArbiterShardSelectors(nodeNum int32) map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
-		MongoDBArbiterLabelKey: m.ArbiterNodeName(nodeNum),
+		MongoDBArbiterLabelKey: m.ArbiterShardNodeName(nodeNum),
+	})
+}
+
+func (m MongoDB) ArbiterConfigSelectors() map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
+		MongoDBArbiterLabelKey: m.ArbiterConfigNodeName(),
 	})
 }
 
@@ -227,11 +239,15 @@ func (m MongoDB) MongosLabels() map[string]string {
 }
 
 func (m MongoDB) ArbiterCommonLabels() map[string]string {
-	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ArbiterCommonSelectors())
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ArbiterSelectors())
 }
 
-func (m MongoDB) ArbiterLabels(nodeNum int32) map[string]string {
-	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ArbiterSelectors(nodeNum))
+func (m MongoDB) ArbiterShardLabels(nodeNum int32) map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ArbiterShardSelectors(nodeNum))
+}
+
+func (m MongoDB) ArbiterConfigLabels() map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ArbiterConfigSelectors())
 }
 
 func (m MongoDB) ResourceFQN() string {
