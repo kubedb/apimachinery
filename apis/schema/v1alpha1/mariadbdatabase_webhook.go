@@ -54,9 +54,6 @@ func (r *MariaDBDatabase) Default() {
 			}
 		}
 	}
-	if r.Spec.Database.Config.CharacterSet == "utf8" {
-		r.Spec.Database.Config.CharacterSet = "utf8mb3"
-	}
 	if r.Spec.Database.Config.CharacterSet == "" {
 		r.Spec.Database.Config.CharacterSet = "utf8mb4"
 	}
@@ -136,6 +133,7 @@ func (r *MariaDBDatabase) ValidateDelete() error {
 	}
 	return nil
 }
+
 func (in *MariaDBDatabase) ValidateMariaDBDatabase() error {
 	var allErrs field.ErrorList
 	if err := in.validateInitailizationSchema(); err != nil {
