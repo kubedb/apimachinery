@@ -30336,9 +30336,6 @@
         "replicas"
       ],
       "properties": {
-        "arbiter": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoArbiterNode"
-        },
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"

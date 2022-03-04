@@ -253,10 +253,6 @@ type MongoDBConfigNode struct {
 
 	// EphemeralStorage spec to specify the configuration of ephemeral storage type.
 	EphemeralStorage *core.EmptyDirVolumeSource `json:"ephemeralStorage,omitempty"`
-
-	// +optional
-	// +nullable
-	Arbiter *MongoArbiterNode `json:"arbiter"`
 }
 
 type MongoDBMongosNode struct {

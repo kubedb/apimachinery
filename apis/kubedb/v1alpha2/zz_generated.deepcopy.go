@@ -1091,11 +1091,6 @@ func (in *MongoDBConfigNode) DeepCopyInto(out *MongoDBConfigNode) {
 		*out = new(corev1.EmptyDirVolumeSource)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Arbiter != nil {
-		in, out := &in.Arbiter, &out.Arbiter
-		*out = new(MongoArbiterNode)
-		(*in).DeepCopyInto(*out)
-	}
 	return
 }
 
