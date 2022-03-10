@@ -21571,34 +21571,29 @@ func schema_apimachinery_apis_ui_v1alpha1_MongoDBConnectionsInfo(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"currentConnections": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"totalConnections": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"availableConnections": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"activeConnections": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
-				Required: []string{"currentConnections", "totalConnections", "availableConnections", "activeConnections"},
 			},
 		},
 	}
@@ -21612,34 +21607,29 @@ func schema_apimachinery_apis_ui_v1alpha1_MongoDBDatabaseStats(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"totalCollections": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"dataSize": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 					"totalIndexes": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"indexSize": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 				},
-				Required: []string{"totalCollections", "dataSize", "totalIndexes", "indexSize"},
 			},
 		},
 	}
@@ -21986,13 +21976,11 @@ func schema_apimachinery_apis_ui_v1alpha1_MongoDBReplicaSetInfo(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"numberOfReplicas": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
-				Required: []string{"numberOfReplicas"},
 			},
 		},
 	}
@@ -22123,23 +22111,20 @@ func schema_apimachinery_apis_ui_v1alpha1_MongoDBShardsInfo(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"numberOfShards": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"replicasPerShards": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"numberOfChunks": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"balancerEnabled": {
@@ -22155,7 +22140,6 @@ func schema_apimachinery_apis_ui_v1alpha1_MongoDBShardsInfo(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"numberOfShards", "replicasPerShards", "numberOfChunks"},
 			},
 		},
 	}
