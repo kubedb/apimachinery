@@ -25022,8 +25022,9 @@ func schema_apimachinery_apis_ui_v1alpha1_RedisInsightSpec(ref common.ReferenceC
 					},
 					"evictionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
 						},
 					},
 					"maxClients": {
@@ -25087,7 +25088,7 @@ func schema_apimachinery_apis_ui_v1alpha1_RedisInsightSpec(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"version", "status", "mode"},
+				Required: []string{"version", "status", "mode", "evictionPolicy"},
 			},
 		},
 	}
@@ -25230,9 +25231,8 @@ func schema_apimachinery_apis_ui_v1alpha1_RedisQuerySpec(ref common.ReferenceCal
 					},
 					"execTimeMicroSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 					"args": {
@@ -25250,7 +25250,7 @@ func schema_apimachinery_apis_ui_v1alpha1_RedisQuerySpec(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"queryId", "queryTimestamp", "execTimeMicroSeconds", "args"},
+				Required: []string{"queryId", "queryTimestamp", "args"},
 			},
 		},
 		Dependencies: []string{
