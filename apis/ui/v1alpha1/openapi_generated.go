@@ -21949,9 +21949,8 @@ func schema_apimachinery_apis_ui_v1alpha1_MongoDBQuerySpec(ref common.ReferenceC
 					},
 					"count": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 					"avgExecutionTimeMilliSeconds": {
@@ -21973,7 +21972,7 @@ func schema_apimachinery_apis_ui_v1alpha1_MongoDBQuerySpec(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"operation", "databaseName", "collectionName", "command", "count"},
+				Required: []string{"operation", "databaseName", "collectionName", "command"},
 			},
 		},
 	}
