@@ -21151,23 +21151,20 @@ func schema_apimachinery_apis_ui_v1alpha1_MariaDBInsightSpec(ref common.Referenc
 					},
 					"maxConnections": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"maxUsedConnections": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"questions": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"longQueryTimeThresholdSeconds": {
@@ -21219,7 +21216,7 @@ func schema_apimachinery_apis_ui_v1alpha1_MariaDBInsightSpec(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"version", "status", "mode", "maxConnections", "maxUsedConnections", "questions"},
+				Required: []string{"version", "status", "mode"},
 			},
 		},
 	}
@@ -21376,16 +21373,14 @@ func schema_apimachinery_apis_ui_v1alpha1_MariaDBQuerySpec(ref common.ReferenceC
 					},
 					"rowsSent": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 					"rowsExamined": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 					"db": {
@@ -21432,7 +21427,7 @@ func schema_apimachinery_apis_ui_v1alpha1_MariaDBQuerySpec(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"startTime", "userHost", "queryTimeMilliSeconds", "lockTimeMilliSeconds", "rowsSent", "rowsExamined", "db"},
+				Required: []string{"startTime", "userHost", "queryTimeMilliSeconds", "lockTimeMilliSeconds", "db"},
 			},
 		},
 		Dependencies: []string{
