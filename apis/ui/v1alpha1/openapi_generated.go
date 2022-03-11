@@ -24110,20 +24110,17 @@ func schema_apimachinery_apis_ui_v1alpha1_PostgresConnectionInfo(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"maxConnections": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 					"activeConnections": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 				},
-				Required: []string{"maxConnections", "activeConnections"},
 			},
 		},
 	}
@@ -24277,7 +24274,7 @@ func schema_apimachinery_apis_ui_v1alpha1_PostgresInsightSpec(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"version", "status", "mode"},
+				Required: []string{"version", "status", "mode", "replicationStatus"},
 			},
 		},
 		Dependencies: []string{
@@ -24431,37 +24428,32 @@ func schema_apimachinery_apis_ui_v1alpha1_PostgresQuerySpec(ref common.Reference
 					},
 					"calls": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 					"rows": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 					"totalTimeMilliSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"number"},
-							Format:  "double",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"minTimeMilliSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"number"},
-							Format:  "double",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"maxTimeMilliSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"number"},
-							Format:  "double",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"sharedBlksHit": {
@@ -24549,7 +24541,7 @@ func schema_apimachinery_apis_ui_v1alpha1_PostgresQuerySpec(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"userOID", "databaseOID", "query", "calls", "rows", "totalTimeMilliSeconds", "minTimeMilliSeconds", "maxTimeMilliSeconds"},
+				Required: []string{"userOID", "databaseOID", "query"},
 			},
 		},
 	}
@@ -24820,13 +24812,12 @@ func schema_apimachinery_apis_ui_v1alpha1_PostgresVacuumInfo(ref common.Referenc
 					},
 					"activeVacuumProcess": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 				},
-				Required: []string{"autoVacuum", "activeVacuumProcess"},
+				Required: []string{"autoVacuum"},
 			},
 		},
 	}
