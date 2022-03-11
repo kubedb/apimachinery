@@ -38,20 +38,20 @@ type ElasticsearchInsightSpec struct {
 }
 
 type ElasticsearchClusterHealth struct {
-	ActivePrimaryShards               int32  `json:"activePrimaryShards,omitempty"`
-	ActiveShards                      int32  `json:"activeShards,omitempty"`
-	ActiveShardsPercentAsNumber       int32  `json:"activeShardsPercentAsNumber,omitempty"`
+	ActivePrimaryShards               *int32  `json:"activePrimaryShards,omitempty"`
+	ActiveShards                      *int32  `json:"activeShards,omitempty"`
+	ActiveShardsPercentAsNumber       *int32  `json:"activeShardsPercentAsNumber,omitempty"`
 	ClusterName                       string `json:"clusterName,omitempty"`
-	DelayedUnassignedShards           int32  `json:"delayedUnassignedShards,omitempty"`
-	InitializingShards                int32  `json:"initializingShards,omitempty"`
-	NumberOfDataNodes                 int32  `json:"numberOfDataNodes,omitempty"`
-	NumberOfInFlightFetch             int32  `json:"numberOfInFlightFetch,omitempty"`
-	NumberOfNodes                     int32  `json:"numberOfNodes,omitempty"`
-	NumberOfPendingTasks              int32  `json:"numberOfPendingTasks,omitempty"`
-	RelocatingShards                  int32  `json:"relocatingShards,omitempty"`
+	DelayedUnassignedShards           *int32  `json:"delayedUnassignedShards,omitempty"`
+	InitializingShards                *int32  `json:"initializingShards,omitempty"`
+	NumberOfDataNodes                 *int32  `json:"numberOfDataNodes,omitempty"`
+	NumberOfInFlightFetch             *int32  `json:"numberOfInFlightFetch,omitempty"`
+	NumberOfNodes                     *int32  `json:"numberOfNodes,omitempty"`
+	NumberOfPendingTasks              *int32  `json:"numberOfPendingTasks,omitempty"`
+	RelocatingShards                  *int32  `json:"relocatingShards,omitempty"`
 	ClusterStatus                     string `json:"clusterStatus,omitempty"`
-	UnassignedShards                  int32  `json:"unassignedShards,omitempty"`
-	TaskMaxWaitingInQueueMilliSeconds int32  `json:"taskMaxWaitingInQueueMilliSeconds,omitempty"`
+	UnassignedShards                  *int32  `json:"unassignedShards,omitempty"`
+	TaskMaxWaitingInQueueMilliSeconds *int32  `json:"taskMaxWaitingInQueueMilliSeconds,omitempty"`
 }
 
 // ElasticsearchInsight is the Schema for the elasticsearchinsights API
