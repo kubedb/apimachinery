@@ -20303,20 +20303,20 @@ func schema_apimachinery_apis_ui_v1alpha1_ElasticsearchClusterHealth(ref common.
 				Properties: map[string]spec.Schema{
 					"activePrimaryShards": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"activeShards": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"activeShardsPercentAsNumber": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"clusterName": {
@@ -20327,44 +20327,44 @@ func schema_apimachinery_apis_ui_v1alpha1_ElasticsearchClusterHealth(ref common.
 					},
 					"delayedUnassignedShards": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"initializingShards": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"numberOfDataNodes": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"numberOfInFlightFetch": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"numberOfNodes": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"numberOfPendingTasks": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"relocatingShards": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"clusterStatus": {
@@ -20375,14 +20375,14 @@ func schema_apimachinery_apis_ui_v1alpha1_ElasticsearchClusterHealth(ref common.
 					},
 					"unassignedShards": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"taskMaxWaitingInQueueMilliSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 				},
@@ -20399,27 +20399,23 @@ func schema_apimachinery_apis_ui_v1alpha1_ElasticsearchIndexSpec(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"indexName": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"primaryStoreSizeBytes": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"totalStoreSizeBytes": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"indexName", "primaryStoreSizeBytes", "totalStoreSizeBytes"},
 			},
 		},
 	}
@@ -20549,20 +20545,20 @@ func schema_apimachinery_apis_ui_v1alpha1_ElasticsearchInsightSpec(ref common.Re
 					},
 					"activePrimaryShards": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"activeShards": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"activeShardsPercentAsNumber": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"clusterName": {
@@ -20573,44 +20569,44 @@ func schema_apimachinery_apis_ui_v1alpha1_ElasticsearchInsightSpec(ref common.Re
 					},
 					"delayedUnassignedShards": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"initializingShards": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"numberOfDataNodes": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"numberOfInFlightFetch": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"numberOfNodes": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"numberOfPendingTasks": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"relocatingShards": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"clusterStatus": {
@@ -20621,14 +20617,14 @@ func schema_apimachinery_apis_ui_v1alpha1_ElasticsearchInsightSpec(ref common.Re
 					},
 					"unassignedShards": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 					"taskMaxWaitingInQueueMilliSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type:   []string{"number"},
+							Format: "double",
 						},
 					},
 				},
