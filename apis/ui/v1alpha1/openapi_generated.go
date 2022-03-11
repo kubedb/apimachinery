@@ -22264,23 +22264,20 @@ func schema_apimachinery_apis_ui_v1alpha1_MySQLInsightSpec(ref common.ReferenceC
 					},
 					"maxConnections": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"maxUsedConnections": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"questions": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"longQueryTimeThresholdSeconds": {
@@ -22332,7 +22329,7 @@ func schema_apimachinery_apis_ui_v1alpha1_MySQLInsightSpec(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"version", "status", "mode", "maxConnections", "maxUsedConnections", "questions"},
+				Required: []string{"version", "status", "mode"},
 			},
 		},
 	}
@@ -22489,16 +22486,14 @@ func schema_apimachinery_apis_ui_v1alpha1_MySQLQuerySpec(ref common.ReferenceCal
 					},
 					"rowsSent": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 					"rowsExamined": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int64",
+							Type:   []string{"integer"},
+							Format: "int64",
 						},
 					},
 					"db": {
@@ -22539,7 +22534,7 @@ func schema_apimachinery_apis_ui_v1alpha1_MySQLQuerySpec(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"startTime", "userHost", "queryTimeMilliSeconds", "lockTimeMilliSeconds", "rowsSent", "rowsExamined", "db"},
+				Required: []string{"startTime", "userHost", "queryTimeMilliSeconds", "lockTimeMilliSeconds", "db"},
 			},
 		},
 		Dependencies: []string{
