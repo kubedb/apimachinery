@@ -85,7 +85,6 @@ func TestNamespaceValidator_Admit(t *testing.T) {
 			}
 		})
 	}
-
 }
 
 var cases = []struct {
@@ -97,7 +96,8 @@ var cases = []struct {
 	heatUp    []runtime.Object
 	result    bool
 }{
-	{"Create Namespace",
+	{
+		"Create Namespace",
 		requestKind,
 		"demo",
 		admission.Create,
@@ -105,7 +105,8 @@ var cases = []struct {
 		nil,
 		true,
 	},
-	{"Delete Namespace containing db with terminationPolicy DoNotTerminate",
+	{
+		"Delete Namespace containing db with terminationPolicy DoNotTerminate",
 		requestKind,
 		"demo",
 		admission.Delete,
@@ -113,7 +114,8 @@ var cases = []struct {
 		[]runtime.Object{setTerminationPolicy(sampleDatabase(), api.TerminationPolicyDoNotTerminate)},
 		false,
 	},
-	{"Delete Namespace containing db with terminationPolicy Pause",
+	{
+		"Delete Namespace containing db with terminationPolicy Pause",
 		requestKind,
 		"demo",
 		admission.Delete,
@@ -121,7 +123,8 @@ var cases = []struct {
 		[]runtime.Object{setTerminationPolicy(sampleDatabase(), api.TerminationPolicyHalt)},
 		false,
 	},
-	{"Delete Namespace containing db with terminationPolicy Delete",
+	{
+		"Delete Namespace containing db with terminationPolicy Delete",
 		requestKind,
 		"demo",
 		admission.Delete,
@@ -129,7 +132,8 @@ var cases = []struct {
 		[]runtime.Object{setTerminationPolicy(sampleDatabase(), api.TerminationPolicyDelete)},
 		true,
 	},
-	{"Delete Namespace containing db with terminationPolicy WipeOut",
+	{
+		"Delete Namespace containing db with terminationPolicy WipeOut",
 		requestKind,
 		"demo",
 		admission.Delete,
@@ -137,7 +141,8 @@ var cases = []struct {
 		[]runtime.Object{setTerminationPolicy(sampleDatabase(), api.TerminationPolicyWipeOut)},
 		true,
 	},
-	{"Delete Namespace containing db with NO terminationPolicy",
+	{
+		"Delete Namespace containing db with NO terminationPolicy",
 		requestKind,
 		"demo",
 		admission.Delete,

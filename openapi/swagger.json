@@ -32669,6 +32669,9 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfigurationSpec": {
       "type": "object",
       "properties": {
+        "arbiter": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
+        },
         "configServer": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
         },
@@ -32893,6 +32896,9 @@
       "description": "MongoDBVerticalScalingSpec is the spec for mongodb vertical scaling",
       "type": "object",
       "properties": {
+        "arbiter": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "configServer": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },

@@ -27,8 +27,10 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
-var lastTransactionTime = metav1.Now()
-var lastTransactionTimePlusOne = metav1.NewTime(lastTransactionTime.Add(1 * time.Minute))
+var (
+	lastTransactionTime        = metav1.Now()
+	lastTransactionTimePlusOne = metav1.NewTime(lastTransactionTime.Add(1 * time.Minute))
+)
 
 func TestPhaseForCondition(t *testing.T) {
 	testCases := []struct {
