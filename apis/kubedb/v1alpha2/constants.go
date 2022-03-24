@@ -132,6 +132,7 @@ const (
 	NodeTypeConfig                = "configsvr"
 	NodeTypeArbiter               = "arbiter"
 	NodeTypeReplica               = "replica"
+	NodeTypeStandalone            = "standalone"
 
 	MongoDBWorkDirectoryName = "workdir"
 	MongoDBWorkDirectoryPath = "/work-dir"
