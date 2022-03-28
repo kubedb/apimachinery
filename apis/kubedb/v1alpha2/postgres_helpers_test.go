@@ -22,76 +22,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 )
 
-func TestRound(t *testing.T) {
-	type args struct {
-		val     float64
-		roundOn float64
-		places  int
-	}
-	tests := []struct {
-		name       string
-		args       args
-		wantNewVal float64
-	}{
-		{
-			name: "1st test",
-			args: args{
-				val:     1.666,
-				roundOn: .4,
-				places:  2,
-			},
-			wantNewVal: 1.67,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if gotNewVal := Round(tt.args.val, tt.args.roundOn, tt.args.places); gotNewVal != tt.wantNewVal {
-				t.Errorf("Round() = %v, want %v", gotNewVal, tt.wantNewVal)
-			}
-		})
-	}
-}
-
-func TestConvertBytesInMB(t *testing.T) {
-	type args struct {
-		value int64
-	}
-	tests := []struct {
-		name string
-		args args
-		want string
-	}{
-		{
-			name: "1st",
-			args: args{
-				value: 0,
-			},
-			want: "0B",
-		},
-		{
-			name: "2nd",
-			args: args{
-				value: 1,
-			},
-			want: "1B",
-		},
-		{
-			name: "3rd",
-			args: args{
-				value: 10245,
-			},
-			want: "10KB",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := ConvertBytesInMB(tt.args.value); got != tt.want {
-				t.Errorf("ConvertBytesInMB() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestGetSharedBufferSizeForPostgres(t *testing.T) {
 	type args struct {
 		resource *resource.Quantity
@@ -107,28 +37,29 @@ func TestGetSharedBufferSizeForPostgres(t *testing.T) {
 				// 10GB
 				resource: resource.NewQuantity(int64(1024*1024*1024*10), resource.DecimalSI),
 			},
-			want: "2.5GB",
+			want: "2684354560B",
 		},
 		{
 			name: "2nd",
 			args: args{
+				// 1GB
 				resource: resource.NewQuantity(int64(1024*1024*1024), resource.DecimalSI),
 			},
-			want: "256MB",
+			want: "268435456B",
 		},
 		{
 			name: "3rd",
 			args: args{
 				resource: resource.NewQuantity(int64(1024*1024), resource.DecimalSI),
 			},
-			want: "128MB",
+			want: "262144B",
 		},
 		{
 			name: "4th",
 			args: args{
 				resource: nil,
 			},
-			want: "128MB",
+			want: "131072B",
 		},
 	}
 	for _, tt := range tests {
