@@ -4411,6 +4411,13 @@ spec:
                     required:
                     - sourceRef
                     type: object
+                  semiSync:
+                    properties:
+                      semiSyncMasterWaitFoSlaveCount:
+                        type: integer
+                    required:
+                    - semiSyncMasterWaitFoSlaveCount
+                    type: object
                 type: object
               useAddressType:
                 default: DNS

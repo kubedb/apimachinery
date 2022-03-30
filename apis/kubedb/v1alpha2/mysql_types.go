@@ -182,6 +182,10 @@ type MySQLTopology struct {
 	// +optional
 	ReadReplica *MySQLReadReplicaSpec `json:"readReplica,omitempty"`
 	//SemiSync *SemiSyncSpec
+	SemiSync *SemiSyncSpec `json:"semiSync,omitempty"`
+}
+type SemiSyncSpec struct {
+	SemiSyncMasterWaitFoSlaveCount *int `json:"semiSyncMasterWaitFoSlaveCount"`
 }
 
 type MySQLGroupSpec struct {
