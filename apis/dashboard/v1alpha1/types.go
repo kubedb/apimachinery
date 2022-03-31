@@ -56,7 +56,7 @@ type ElasticsearchDashboardCertificateAlias string
 
 const (
 	ElasticsearchDashboardCACert     ElasticsearchDashboardCertificateAlias = "ca"
-	ElasticsearchDatabaseClient      ElasticsearchDashboardCertificateAlias = "database-client"
+	ElasticsearchDatabaseClientCert  ElasticsearchDashboardCertificateAlias = "database-client"
 	ElasticsearchDashboardServerCert ElasticsearchDashboardCertificateAlias = "server"
 )
 
