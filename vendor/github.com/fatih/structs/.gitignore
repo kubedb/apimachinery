@@ -21,18 +21,3 @@ _testmain.go
 
 *.exe
 *.test
-<<<<<<< HEAD:vendor/github.com/fatih/structs/.gitignore
-=======
-*.prof
-.idea/
-dist/
-**/junit.xml
-**/.env
-.vscode/
-coverage.txt
-
-/bin
-/.go
-
-apiserver.local.config/**
->>>>>>> rebased:vendor/kmodules.xyz/resource-metrics/.gitignore

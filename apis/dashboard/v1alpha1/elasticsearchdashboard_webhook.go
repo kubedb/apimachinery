@@ -18,8 +18,8 @@ package v1alpha1
 
 import (
 	"fmt"
-	"kubedb.dev/apimachinery/apis"
 
+	"kubedb.dev/apimachinery/apis"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
