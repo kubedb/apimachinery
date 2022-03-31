@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+<<<<<<< HEAD:vendor/stash.appscode.dev/apimachinery/apis/stash/v1beta1/function_helpers.go
 package v1beta1
 
 import (
@@ -25,3 +26,12 @@ import (
 func (_ Function) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralFunction))
 }
+=======
+// Package v1alpha1 is the v1alpha1 version of the API.
+
+// +k8s:deepcopy-gen=package,register
+// +k8s:openapi-gen=true
+// +k8s:defaulter-gen=TypeMeta
+// +groupName=ui.stash.appscode.com
+package v1alpha1
+>>>>>>> rebased:vendor/stash.appscode.dev/apimachinery/apis/ui/v1alpha1/doc.go

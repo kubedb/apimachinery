@@ -21,6 +21,11 @@ _testmain.go
 
 *.exe
 *.test
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD:vendor/github.com/fatih/structs/.gitignore
+=======
+>>>>>>> rebased
 *.prof
 .idea/
 dist/
@@ -33,3 +38,7 @@ coverage.txt
 /.go
 
 apiserver.local.config/**
+<<<<<<< HEAD
+=======
+>>>>>>> rebased:vendor/kmodules.xyz/resource-metrics/.gitignore
+>>>>>>> rebased
