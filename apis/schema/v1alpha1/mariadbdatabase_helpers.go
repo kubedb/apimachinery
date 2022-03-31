@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/crds"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -25,7 +26,7 @@ import (
 )
 
 const (
-	MariaDBSuffix string = "mariadb"
+	MariaDBSuffix string = dbapi.ResourceSingularMariaDB
 )
 
 func (_ MariaDBDatabase) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
