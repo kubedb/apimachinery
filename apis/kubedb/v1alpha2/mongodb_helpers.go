@@ -287,6 +287,10 @@ func (m MongoDB) Hosts() []string {
 		for i := 0; i < int(pointer.Int32(m.Spec.Replicas)); i++ {
 			hosts[i] = fmt.Sprintf("%v-%d.%v.%v.svc", m.Name, i, m.GoverningServiceName(m.OffshootName()), m.Namespace)
 		}
+		if m.Spec.Arbiter != nil {
+			s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.ArbiterNodeName(), m.GoverningServiceName(m.ArbiterNodeName()), m.Namespace, MongoDBDatabasePort)
+			hosts = append(hosts, s)
+		}
 	}
 	return hosts
 }
@@ -307,6 +311,10 @@ func (m MongoDB) ShardHosts(nodeNum int32) []string {
 	hosts := make([]string, m.Spec.ShardTopology.Shard.Replicas)
 	for i := 0; i < int(m.Spec.ShardTopology.Shard.Replicas); i++ {
 		hosts[i] = fmt.Sprintf("%v-%d.%v.%v.svc:%v", m.ShardNodeName(nodeNum), i, m.GoverningServiceName(m.ShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
+	}
+	if m.Spec.ShardTopology.Shard.Arbiter != nil {
+		s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.ArbiterShardNodeName(nodeNum), m.GoverningServiceName(m.ArbiterShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
+		hosts = append(hosts, s)
 	}
 	return hosts
 }
