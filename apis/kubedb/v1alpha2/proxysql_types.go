@@ -102,6 +102,7 @@ type ProxySQLCertificateAlias string
 
 const (
 	ProxySQLServerCert          ProxySQLCertificateAlias = "server"
+	ProxySQLClientCert          ProxySQLCertificateAlias = "client"
 	ProxySQLArchiverCert        ProxySQLCertificateAlias = "archiver"
 	ProxySQLMetricsExporterCert ProxySQLCertificateAlias = "metrics-exporter"
 )

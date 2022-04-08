@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
+	kmapi "kmodules.xyz/client-go/api/v1"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -186,4 +187,22 @@ func (p *ProxySQL) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, 
 	// Desire number of statefulSets
 	expectedItems := 1
 	return checkReplicas(lister.StatefulSets(p.Namespace), labels.SelectorFromSet(p.OffshootLabels()), expectedItems)
+}
+
+
+// GetCertSecretName returns the secret name for a certificate alias if any,
+// otherwise returns default certificate secret name for the given alias.
+func (m *ProxySQL) GetCertSecretName(alias ProxySQLCertificateAlias) string {
+	if m.Spec.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(m.Spec.TLS.Certificates, string(alias))
+		if ok {
+			return name
+		}
+	}
+	return m.CertificateName(alias)
+}
+
+// CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
+func (m *ProxySQL) CertificateName(alias ProxySQLCertificateAlias) string {
+	return meta_util.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
