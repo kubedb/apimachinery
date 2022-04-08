@@ -53,10 +53,9 @@ const (
 	MongoClientFileName = "client.pem"
 	MongoCertDirectory  = "/var/run/mongodb/tls"
 
-	MongoDBShardLabelKey   = "mongodb.kubedb.com/node.shard"
-	MongoDBConfigLabelKey  = "mongodb.kubedb.com/node.config"
-	MongoDBMongosLabelKey  = "mongodb.kubedb.com/node.mongos"
-	MongoDBArbiterLabelKey = "mongodb.kubedb.com/node.arbiter"
+	MongoDBShardLabelKey  = "mongodb.kubedb.com/node.shard"
+	MongoDBConfigLabelKey = "mongodb.kubedb.com/node.config"
+	MongoDBMongosLabelKey = "mongodb.kubedb.com/node.mongos"
 
 	MongoDBShardAffinityTemplateVar = "SHARD_INDEX"
 )
@@ -140,14 +139,14 @@ func (m MongoDB) ConfigSvrRepSetName() string {
 }
 
 func (m MongoDB) ArbiterNodeName() string {
-	if m.Spec.Arbiter == nil {
+	if m.Spec.ReplicaSet == nil || m.Spec.Arbiter == nil {
 		return ""
 	}
 	return fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeArbiter)
 }
 
 func (m MongoDB) ArbiterShardNodeName(nodeNum int32) string {
-	if m.Spec.ShardTopology == nil {
+	if m.Spec.ShardTopology == nil || m.Spec.Arbiter == nil {
 		return ""
 	}
 	return fmt.Sprintf("%v-%v", m.ShardNodeName(nodeNum), NodeTypeArbiter)
@@ -180,15 +179,11 @@ func (m MongoDB) MongosSelectors() map[string]string {
 }
 
 func (m MongoDB) ArbiterSelectors() map[string]string {
-	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
-		MongoDBArbiterLabelKey: m.ArbiterNodeName(),
-	})
+	return m.OffshootSelectors()
 }
 
 func (m MongoDB) ArbiterShardSelectors(nodeNum int32) map[string]string {
-	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
-		MongoDBArbiterLabelKey: m.ArbiterShardNodeName(nodeNum),
-	})
+	return m.ShardSelectors(nodeNum)
 }
 
 func (m MongoDB) OffshootLabels() map[string]string {
@@ -281,14 +276,14 @@ func (m MongoDB) HostAddress() string {
 }
 
 func (m MongoDB) Hosts() []string {
-	hosts := []string{fmt.Sprintf("%v-0.%v.%v.svc", m.Name, m.GoverningServiceName(m.OffshootName()), m.Namespace)}
+	hosts := []string{fmt.Sprintf("%v-0.%v.%v.svc:%v", m.Name, m.GoverningServiceName(m.OffshootName()), m.Namespace, MongoDBDatabasePort)}
 	if m.Spec.ReplicaSet != nil {
 		hosts = make([]string, *m.Spec.Replicas)
 		for i := 0; i < int(pointer.Int32(m.Spec.Replicas)); i++ {
-			hosts[i] = fmt.Sprintf("%v-%d.%v.%v.svc", m.Name, i, m.GoverningServiceName(m.OffshootName()), m.Namespace)
+			hosts[i] = fmt.Sprintf("%v-%d.%v.%v.svc:%v", m.Name, i, m.GoverningServiceName(m.OffshootName()), m.Namespace, MongoDBDatabasePort)
 		}
 		if m.Spec.Arbiter != nil {
-			s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.ArbiterNodeName(), m.GoverningServiceName(m.ArbiterNodeName()), m.Namespace, MongoDBDatabasePort)
+			s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.ArbiterNodeName(), m.GoverningServiceName(m.OffshootName()), m.Namespace, MongoDBDatabasePort)
 			hosts = append(hosts, s)
 		}
 	}
@@ -313,7 +308,7 @@ func (m MongoDB) ShardHosts(nodeNum int32) []string {
 		hosts[i] = fmt.Sprintf("%v-%d.%v.%v.svc:%v", m.ShardNodeName(nodeNum), i, m.GoverningServiceName(m.ShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
 	}
 	if m.Spec.Arbiter != nil {
-		s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.ArbiterShardNodeName(nodeNum), m.GoverningServiceName(m.ArbiterShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
+		s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.ArbiterShardNodeName(nodeNum), m.GoverningServiceName(m.ShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
 		hosts = append(hosts, s)
 	}
 	return hosts
