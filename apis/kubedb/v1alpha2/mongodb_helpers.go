@@ -312,7 +312,7 @@ func (m MongoDB) ShardHosts(nodeNum int32) []string {
 	for i := 0; i < int(m.Spec.ShardTopology.Shard.Replicas); i++ {
 		hosts[i] = fmt.Sprintf("%v-%d.%v.%v.svc:%v", m.ShardNodeName(nodeNum), i, m.GoverningServiceName(m.ShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
 	}
-	if m.Spec.ShardTopology.Shard.Arbiter != nil {
+	if m.Spec.Arbiter != nil {
 		s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.ArbiterShardNodeName(nodeNum), m.GoverningServiceName(m.ArbiterShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
 		hosts = append(hosts, s)
 	}
