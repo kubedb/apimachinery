@@ -18,7 +18,6 @@ package v1alpha2
 
 import (
 	"fmt"
-	kmapi "kmodules.xyz/client-go/api/v1"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -27,6 +26,7 @@ import (
 	"gomodules.xyz/pointer"
 	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
@@ -188,7 +188,6 @@ func (p *ProxySQL) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, 
 	expectedItems := 1
 	return checkReplicas(lister.StatefulSets(p.Namespace), labels.SelectorFromSet(p.OffshootLabels()), expectedItems)
 }
-
 
 // GetCertSecretName returns the secret name for a certificate alias if any,
 // otherwise returns default certificate secret name for the given alias.
