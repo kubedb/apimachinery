@@ -431,6 +431,9 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		apis.SetDefaultResourceLimits(&m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Resources, DefaultResources)
 		apis.SetDefaultResourceLimits(&m.Spec.ShardTopology.Shard.PodTemplate.Spec.Resources, DefaultResources)
 		apis.SetDefaultResourceLimits(&m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.Resources, DefaultResources)
+		if m.Spec.Arbiter != nil {
+			apis.SetDefaultResourceLimits(&m.Spec.Arbiter.PodTemplate.Spec.Resources, DefaultResources)
+		}
 
 		if m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle == nil {
 			m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle = new(core.Lifecycle)
@@ -460,11 +463,18 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		m.setDefaultProbes(&m.Spec.ShardTopology.Shard.PodTemplate, mgVersion)
 		m.setDefaultProbes(&m.Spec.ShardTopology.ConfigServer.PodTemplate, mgVersion)
 		m.setDefaultProbes(&m.Spec.ShardTopology.Mongos.PodTemplate, mgVersion)
+		if m.Spec.Arbiter != nil {
+			m.setDefaultProbes(&m.Spec.Arbiter.PodTemplate, mgVersion, true)
+		}
 
 		// set default affinity (PodAntiAffinity)
 		shardLabels := m.OffshootSelectors()
 		shardLabels[MongoDBShardLabelKey] = m.ShardNodeTemplate()
 		m.setDefaultAffinity(&m.Spec.ShardTopology.Shard.PodTemplate, shardLabels, topology)
+		if m.Spec.Arbiter != nil {
+			// the labels are same as the shard
+			m.setDefaultAffinity(&m.Spec.Arbiter.PodTemplate, shardLabels, topology)
+		}
 
 		configServerLabels := m.OffshootSelectors()
 		configServerLabels[MongoDBConfigLabelKey] = m.ConfigSvrNodeName()
@@ -491,6 +501,12 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		m.setDefaultAffinity(m.Spec.PodTemplate, m.OffshootSelectors(), topology)
 
 		apis.SetDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, DefaultResources)
+
+		if m.Spec.Arbiter != nil {
+			m.setDefaultProbes(&m.Spec.Arbiter.PodTemplate, mgVersion, true)
+			m.setDefaultAffinity(&m.Spec.Arbiter.PodTemplate, m.ArbiterSelectors(), topology)
+			apis.SetDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, DefaultResources)
+		}
 	}
 
 	m.SetTLSDefaults()
@@ -584,7 +600,7 @@ func (m *MongoDB) SetTLSDefaults() {
 	})
 }
 
-func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion) []string {
+func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) []string {
 	var sslArgs string
 	if m.Spec.SSLMode == SSLModeRequireSSL {
 		sslArgs = fmt.Sprintf("--tls --tlsCAFile=%v/%v --tlsCertificateKeyFile=%v/%v",
@@ -603,21 +619,25 @@ func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion) []string {
 		}
 	}
 
+	var authArgs string
+	if len(isArbiter) == 0 { // not arbiter
+		authArgs = "--username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin"
+	}
 	return []string{
 		"bash",
 		"-c",
-		fmt.Sprintf(`set -x; if [[ $(mongo admin --host=localhost %v --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin --quiet --eval "db.adminCommand('ping').ok" ) -eq "1" ]]; then 
+		fmt.Sprintf(`set -x; if [[ $(mongo admin --host=localhost %v %v --quiet --eval "db.adminCommand('ping').ok" ) -eq "1" ]]; then 
           exit 0
         fi
-        exit 1`, sslArgs),
+        exit 1`, sslArgs, authArgs),
 	}
 }
 
-func (m *MongoDB) GetDefaultLivenessProbeSpec(mgVersion *v1alpha1.MongoDBVersion) *core.Probe {
+func (m *MongoDB) GetDefaultLivenessProbeSpec(mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) *core.Probe {
 	return &core.Probe{
 		Handler: core.Handler{
 			Exec: &core.ExecAction{
-				Command: m.getCmdForProbes(mgVersion),
+				Command: m.getCmdForProbes(mgVersion, isArbiter...),
 			},
 		},
 		FailureThreshold: 3,
@@ -627,11 +647,11 @@ func (m *MongoDB) GetDefaultLivenessProbeSpec(mgVersion *v1alpha1.MongoDBVersion
 	}
 }
 
-func (m *MongoDB) GetDefaultReadinessProbeSpec(mgVersion *v1alpha1.MongoDBVersion) *core.Probe {
+func (m *MongoDB) GetDefaultReadinessProbeSpec(mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) *core.Probe {
 	return &core.Probe{
 		Handler: core.Handler{
 			Exec: &core.ExecAction{
-				Command: m.getCmdForProbes(mgVersion),
+				Command: m.getCmdForProbes(mgVersion, isArbiter...),
 			},
 		},
 		FailureThreshold: 3,
@@ -645,16 +665,16 @@ func (m *MongoDB) GetDefaultReadinessProbeSpec(mgVersion *v1alpha1.MongoDBVersio
 // In operator, check if the value of probe fields is "{}".
 // For "{}", ignore readinessprobe or livenessprobe in statefulset.
 // ref: https://github.com/helm/charts/blob/345ba987722350ffde56ec34d2928c0b383940aa/stable/mongodb/templates/deployment-standalone.yaml#L93
-func (m *MongoDB) setDefaultProbes(podTemplate *ofst.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion) {
+func (m *MongoDB) setDefaultProbes(podTemplate *ofst.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) {
 	if podTemplate == nil {
 		return
 	}
 
 	if podTemplate.Spec.LivenessProbe == nil {
-		podTemplate.Spec.LivenessProbe = m.GetDefaultLivenessProbeSpec(mgVersion)
+		podTemplate.Spec.LivenessProbe = m.GetDefaultLivenessProbeSpec(mgVersion, isArbiter...)
 	}
 	if podTemplate.Spec.ReadinessProbe == nil {
-		podTemplate.Spec.ReadinessProbe = m.GetDefaultReadinessProbeSpec(mgVersion)
+		podTemplate.Spec.ReadinessProbe = m.GetDefaultReadinessProbeSpec(mgVersion, isArbiter...)
 	}
 }
 
