@@ -168,6 +168,7 @@ func (p *ProxySQL) SetDefaults() {
 	}
 
 	p.Spec.Monitor.SetDefaults()
+	p.SetTLSDefaults()
 	apis.SetDefaultResourceLimits(&p.Spec.PodTemplate.Spec.Resources, DefaultResources)
 }
 
