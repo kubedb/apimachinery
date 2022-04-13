@@ -56,6 +56,7 @@ const (
 	MongoDBShardLabelKey  = "mongodb.kubedb.com/node.shard"
 	MongoDBConfigLabelKey = "mongodb.kubedb.com/node.config"
 	MongoDBMongosLabelKey = "mongodb.kubedb.com/node.mongos"
+	MongoDBTypeLabelKey   = "mongodb.kubedb.com/node.type"
 
 	MongoDBShardAffinityTemplateVar = "SHARD_INDEX"
 )
@@ -160,9 +161,21 @@ func (m MongoDB) OffshootSelectors() map[string]string {
 	}
 }
 
+func (m MongoDB) OffshootSelectorsWhenArbiter() map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
+		MongoDBTypeLabelKey: NodeTypeReplica,
+	})
+}
+
 func (m MongoDB) ShardSelectors(nodeNum int32) map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
 		MongoDBShardLabelKey: m.ShardNodeName(nodeNum),
+	})
+}
+
+func (m MongoDB) ShardSelectorsWhenArbiter(nodeNum int32) map[string]string {
+	return meta_util.OverwriteKeys(m.ShardSelectors(nodeNum), map[string]string{
+		MongoDBTypeLabelKey: NodeTypeShard,
 	})
 }
 
@@ -179,15 +192,23 @@ func (m MongoDB) MongosSelectors() map[string]string {
 }
 
 func (m MongoDB) ArbiterSelectors() map[string]string {
-	return m.OffshootSelectors()
+	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
+		MongoDBTypeLabelKey: NodeTypeArbiter,
+	})
 }
 
 func (m MongoDB) ArbiterShardSelectors(nodeNum int32) map[string]string {
-	return m.ShardSelectors(nodeNum)
+	return meta_util.OverwriteKeys(m.ShardSelectors(nodeNum), map[string]string{
+		MongoDBTypeLabelKey: NodeTypeArbiter,
+	})
 }
 
 func (m MongoDB) OffshootLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), nil)
+}
+
+func (m MongoDB) OffshootLabelsWhenArbiter() map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.OffshootSelectorsWhenArbiter())
 }
 
 func (m MongoDB) PodLabels(podTemplateLabels map[string]string, extraLabels ...map[string]string) map[string]string {
@@ -212,6 +233,10 @@ func (m MongoDB) ShardLabels(nodeNum int32) map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ShardSelectors(nodeNum))
 }
 
+func (m MongoDB) ShardLabelsWhenArbiter(nodeNum int32) map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ShardSelectorsWhenArbiter(nodeNum))
+}
+
 func (m MongoDB) ConfigSvrLabels() map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ConfigSvrSelectors())
 }
@@ -226,6 +251,17 @@ func (m MongoDB) ArbiterLabels() map[string]string {
 
 func (m MongoDB) ArbiterShardLabels(nodeNum int32) map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ArbiterShardSelectors(nodeNum))
+}
+
+func (m MongoDB) GetCorrespondingReplicaStsName(arbStsName string) string {
+	if !strings.HasSuffix(arbStsName, "-"+NodeTypeArbiter) {
+		panic(fmt.Sprintf("%s does not have -%s as suffix", arbStsName, NodeTypeArbiter))
+	}
+	return arbStsName[:strings.LastIndex(arbStsName, "-")]
+}
+
+func (m MongoDB) GetCorrespondingArbiterStsName(replStsName string) string {
+	return replStsName + "-" + NodeTypeArbiter
 }
 
 func (m MongoDB) ResourceFQN() string {
