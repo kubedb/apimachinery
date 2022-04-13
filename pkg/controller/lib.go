@@ -56,6 +56,30 @@ func (c *Controller) CreateStatefulSetPodDisruptionBudget(sts *apps.StatefulSet)
 	return err
 }
 
+func (c *Controller) CreateStatefulSetPDBWithCustomLabelSelectors(sts *apps.StatefulSet, labels map[string]string, selectors map[string]string) error {
+	owner := metav1.NewControllerRef(sts, apps.SchemeGroupVersion.WithKind("StatefulSet"))
+
+	m := metav1.ObjectMeta{
+		Name:      sts.Name,
+		Namespace: sts.Namespace,
+	}
+	_, _, err := policy_util.CreateOrPatchPodDisruptionBudget(context.TODO(), c.Client, m,
+		func(in *policyv1beta1.PodDisruptionBudget) *policyv1beta1.PodDisruptionBudget {
+			in.Labels = labels
+			core_util.EnsureOwnerReference(&in.ObjectMeta, owner)
+			in.Spec.Selector = &metav1.LabelSelector{
+				MatchLabels: selectors,
+			}
+
+			maxUnavailable := int32(math.Max(1, math.Floor((float64(*sts.Spec.Replicas)-1.0)/2.0)))
+			in.Spec.MaxUnavailable = &intstr.IntOrString{IntVal: maxUnavailable}
+
+			in.Spec.MinAvailable = nil
+			return in
+		}, metav1.PatchOptions{})
+	return err
+}
+
 func (c *Controller) CreateDeploymentPodDisruptionBudget(deployment *apps.Deployment) error {
 	owner := metav1.NewControllerRef(deployment, apps.SchemeGroupVersion.WithKind("Deployment"))
 

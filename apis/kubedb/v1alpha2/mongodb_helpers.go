@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis"
@@ -262,6 +263,26 @@ func (m MongoDB) GetCorrespondingReplicaStsName(arbStsName string) string {
 
 func (m MongoDB) GetCorrespondingArbiterStsName(replStsName string) string {
 	return replStsName + "-" + NodeTypeArbiter
+}
+
+func (m MongoDB) GetShardNumber(shardName string) int {
+	// this will return 123 from shardName dbname-shard123
+	last := -1
+	for i := len(shardName) - 1; i >= 0; i-- {
+		if shardName[i] >= '0' && shardName[i] <= '9' {
+			continue
+		}
+		last = i
+		break
+	}
+	if last == len(shardName)-1 {
+		panic(fmt.Sprintf("invalid shard name %s ", shardName))
+	}
+	shardNumber, err := strconv.Atoi(shardName[last+1:])
+	if err != nil {
+		return 0
+	}
+	return shardNumber
 }
 
 func (m MongoDB) ResourceFQN() string {
