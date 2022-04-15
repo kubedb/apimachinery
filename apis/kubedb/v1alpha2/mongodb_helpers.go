@@ -457,6 +457,17 @@ func (m MongoDB) StatsServiceLabels() map[string]string {
 	return m.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
+// StorageType = Durable
+// storageEngine = wiredTiger
+// TerminationPolicy = Delete
+// SSLMode = disabled
+// clusterAuthMode = keyFile if sslMode is disabled or allowSSL.  & x509 otherwise
+//
+// podTemplate.Spec.ServiceAccountName = DB_NAME
+// set mongos lifecycle command, to shut down the db before stopping
+// it sets default ReadinessProbe, livelinessProbe, affinity & ResourceLimits
+// then set TLSDefaults & monitor Defaults
+
 func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core_util.Topology) {
 	if m == nil {
 		return
@@ -561,8 +572,8 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 
 		if m.Spec.Arbiter != nil {
 			m.setDefaultProbes(&m.Spec.Arbiter.PodTemplate, mgVersion, true)
-			m.setDefaultAffinity(&m.Spec.Arbiter.PodTemplate, m.ArbiterSelectors(), topology)
-			apis.SetDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, DefaultResources)
+			m.setDefaultAffinity(&m.Spec.Arbiter.PodTemplate, m.OffshootSelectors(), topology)
+			apis.SetDefaultResourceLimits(&m.Spec.Arbiter.PodTemplate.Spec.Resources, DefaultResources)
 		}
 	}
 
