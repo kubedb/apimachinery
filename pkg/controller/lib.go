@@ -33,8 +33,9 @@ import (
 )
 
 // SyncStatefulSetPodDisruptionBudget syncs the PDB with the current state of the statefulSet.
-// If the maxUnavailable input is missing, it defaults to (replicas-1)/2.
-func (c *Controller) SyncStatefulSetPodDisruptionBudget(sts *apps.StatefulSet, maxUnavailable *intstr.IntOrString) error {
+// The maxUnavailable is calculated based statefulSet replica count, maxUnavailable = (replicas-1)/2.
+// Also cleanup the PDB, when replica count is 1 or less.
+func (c *Controller) SyncStatefulSetPodDisruptionBudget(sts *apps.StatefulSet) error {
 	if sts == nil {
 		return nil
 	}
@@ -49,10 +50,8 @@ func (c *Controller) SyncStatefulSetPodDisruptionBudget(sts *apps.StatefulSet, m
 			return err
 		}
 	} else {
-		if maxUnavailable == nil {
-			r := int32(math.Max(1, math.Floor((float64(*sts.Spec.Replicas)-1.0)/2.0)))
-			maxUnavailable = &intstr.IntOrString{IntVal: r}
-		}
+		r := int32(math.Max(1, math.Floor((float64(*sts.Spec.Replicas)-1.0)/2.0)))
+		maxUnavailable := &intstr.IntOrString{IntVal: r}
 
 		owner := metav1.NewControllerRef(sts, apps.SchemeGroupVersion.WithKind("StatefulSet"))
 		_, _, err := policy_util.CreateOrPatchPodDisruptionBudget(context.TODO(), c.Client, pdbRef,
