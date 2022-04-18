@@ -1278,8 +1278,8 @@ kmodules.xyz/objectstore-api v0.0.0-20220317220441-f1d593d0a778 h1:1biCLf6zjBzg9
 kmodules.xyz/objectstore-api v0.0.0-20220317220441-f1d593d0a778/go.mod h1:rJ3QmHvS0CCJAhhdbXh+O2nlEY5gEmgYdpo3vA4nAm4=
 kmodules.xyz/offshoot-api v0.0.0-20210829122105-6f4d481b0c61/go.mod h1:3LECbAL3FgbyK80NP3V3Pmiuo/a3hFWg/PR6SPFhTns=
 kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf/go.mod h1:sJYyxf84ZvbVz4SivxMgSelGRYn19wOLUtObiEncCxk=
-kmodules.xyz/offshoot-api v0.0.0-20220323112402-3b0fd2ea77d6 h1:cFZhSDx8Po4orPTkoTY89O70kMrJXdzntqrzzEv6aDo=
-kmodules.xyz/offshoot-api v0.0.0-20220323112402-3b0fd2ea77d6/go.mod h1:9i9RrFY0BtU9jSm70nxhWlLdl9TSZ8pxTnfyPUicq90=
+kmodules.xyz/offshoot-api v0.0.0-20220418173619-64f14f87ed5b h1:0pA8okDAXWJ4JILORWy165QZ5rhm6tnXiDOYzH9lmFw=
+kmodules.xyz/offshoot-api v0.0.0-20220418173619-64f14f87ed5b/go.mod h1:9i9RrFY0BtU9jSm70nxhWlLdl9TSZ8pxTnfyPUicq90=
 kmodules.xyz/openshift v0.0.0-20210618001443-f2507caa512f/go.mod h1:8E5ckbd1KMNmR4hc7ScvmQnGfx1ULUUp+UTmoDdxRkc=
 kmodules.xyz/prober v0.0.0-20210618020259-5836fb959027 h1:rtSPsruEkoBOLcbJkxMQjnPafpv8/vJnfWlTIj9yRBg=
 kmodules.xyz/prober v0.0.0-20210618020259-5836fb959027/go.mod h1:H4NcvS1RQxeXtQONALbU6r9OT3Xa7cMhfamX/k9t9wo=

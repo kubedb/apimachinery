@@ -458,6 +458,17 @@ message PodSpec {
   // More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   // +optional
   optional k8s.io.api.core.v1.SecurityContext containerSecurityContext = 23;
+
+  // TopologySpreadConstraints describes how a group of pods ought to spread across topology
+  // domains. Scheduler will schedule pods in a way which abides by the constraints.
+  // All topologySpreadConstraints are ANDed.
+  // +optional
+  // +patchMergeKey=topologyKey
+  // +patchStrategy=merge
+  // +listType=map
+  // +listMapKey=topologyKey
+  // +listMapKey=whenUnsatisfiable
+  repeated k8s.io.api.core.v1.TopologySpreadConstraint topologySpreadConstraints = 24;
 }
 
 // PodTemplateSpec describes the data a pod should have when created from a template
