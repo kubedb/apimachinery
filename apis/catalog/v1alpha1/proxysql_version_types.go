@@ -49,7 +49,7 @@ type ProxySQLVersionSpec struct {
 	// Version
 	Version string `json:"version"`
 	// Proxysql Image
-	Proxysql ProxySQLVersionProxysql `json:"proxysql"`
+	DB ProxySQLVersionProxysql `json:"db"`
 	// Exporter Image
 	Exporter ProxySQLVersionExporter `json:"exporter"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.

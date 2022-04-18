@@ -43,6 +43,13 @@ spec:
             type: object
           spec:
             properties:
+              db:
+                properties:
+                  image:
+                    type: string
+                required:
+                - image
+                type: object
               deprecated:
                 type: boolean
               exporter:
@@ -59,19 +66,12 @@ spec:
                 required:
                 - databasePolicyName
                 type: object
-              proxysql:
-                properties:
-                  image:
-                    type: string
-                required:
-                - image
-                type: object
               version:
                 type: string
             required:
+            - db
             - exporter
             - podSecurityPolicies
-            - proxysql
             - version
             type: object
         type: object
