@@ -310,10 +310,13 @@ func (m MongoDB) ServiceName() string {
 }
 
 // Governing Service Name. Here, name parameter is either
-// OffshootName, ShardNodeName or ConfigSvrNodeName
+// OffshootName, ShardNodeName, ConfigSvrNodeName or ArbiterNodeName
 func (m MongoDB) GoverningServiceName(name string) string {
 	if name == "" {
 		panic(fmt.Sprintf("StatefulSet name is missing for MongoDB %s/%s", m.Namespace, m.Name))
+	}
+	if strings.HasSuffix(name, "-"+NodeTypeArbiter) {
+		name = m.GetCorrespondingReplicaStsName(name)
 	}
 	return name + "-pods"
 }
