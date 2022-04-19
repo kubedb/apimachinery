@@ -96,24 +96,32 @@ func (c *Controller) CreateStatefulSetPodDisruptionBudget(sts *apps.StatefulSet)
 	return err
 }
 
-func (c *Controller) CreateStatefulSetPDBWithCustomLabelSelectors(sts *apps.StatefulSet, labels map[string]string, selectors map[string]string) error {
-	owner := metav1.NewControllerRef(sts, apps.SchemeGroupVersion.WithKind("StatefulSet"))
-
-	m := metav1.ObjectMeta{
+// SyncStatefulSetPDBWithCustomLabelSelectors is used only to resolve MongoDB Arbiter-related issues.
+// Use SyncStatefulSetPodDisruptionBudget for all other dbs, & all other cases.
+func (c *Controller) SyncStatefulSetPDBWithCustomLabelSelectors(sts *apps.StatefulSet, labels map[string]string, selectors map[string]string) error {
+	if sts == nil {
+		return nil
+	}
+	pdbRef := metav1.ObjectMeta{
 		Name:      sts.Name,
 		Namespace: sts.Namespace,
 	}
-	_, _, err := policy_util.CreateOrPatchPodDisruptionBudget(context.TODO(), c.Client, m,
+	// As SyncStatefulSetPDBWithCustomLabelSelectors will only be called if db.Spec.Arbiter != nil, we are sure that,
+	// even tough sts.Spec.Replicas <= 1, there is an arbiter-pod selected by this pdb.  So, DO NOT delete this pdb
+	// Also, look the change inside math.Floor, which has been made as actual replicaCount is sts.Spec.Replicas + 1 arbiter
+
+	r := int32(math.Max(1, math.Floor(float64(*sts.Spec.Replicas)/2.0)))
+	maxUnavailable := &intstr.IntOrString{IntVal: r}
+
+	owner := metav1.NewControllerRef(sts, apps.SchemeGroupVersion.WithKind("StatefulSet"))
+	_, _, err := policy_util.CreateOrPatchPodDisruptionBudget(context.TODO(), c.Client, pdbRef,
 		func(in *policyv1beta1.PodDisruptionBudget) *policyv1beta1.PodDisruptionBudget {
 			in.Labels = labels
 			core_util.EnsureOwnerReference(&in.ObjectMeta, owner)
 			in.Spec.Selector = &metav1.LabelSelector{
 				MatchLabels: selectors,
 			}
-
-			maxUnavailable := int32(math.Max(1, math.Floor((float64(*sts.Spec.Replicas)-1.0)/2.0)))
-			in.Spec.MaxUnavailable = &intstr.IntOrString{IntVal: maxUnavailable}
-
+			in.Spec.MaxUnavailable = maxUnavailable
 			in.Spec.MinAvailable = nil
 			return in
 		}, metav1.PatchOptions{})
