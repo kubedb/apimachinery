@@ -22282,6 +22282,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBCustomConfigurationSpec(ref co
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBCustomConfiguration"),
 						},
 					},
+					"arbiter": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBCustomConfiguration"),
+						},
+					},
 				},
 			},
 		},
@@ -22651,6 +22656,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBVerticalScalingSpec(ref common
 						},
 					},
 					"shard": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"arbiter": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
