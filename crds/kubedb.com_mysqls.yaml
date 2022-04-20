@@ -4413,10 +4413,15 @@ spec:
                     type: object
                   semiSync:
                     properties:
-                      semiSyncMasterWaitFoSlaveCount:
+                      errantTransactionRecoveryPolicy:
+                        default: PseudoTransaction
+                        type: string
+                      semiSyncMasterTimeout:
+                        default: 86400
                         type: integer
-                    required:
-                    - semiSyncMasterWaitFoSlaveCount
+                      semiSyncMasterWaitFoSlaveCount:
+                        default: 1
+                        type: integer
                     type: object
                 type: object
               useAddressType:

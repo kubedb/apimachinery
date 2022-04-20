@@ -181,11 +181,25 @@ type MySQLTopology struct {
 	// and it will take reference of  appbinding of the source
 	// +optional
 	ReadReplica *MySQLReadReplicaSpec `json:"readReplica,omitempty"`
-	//SemiSync *SemiSyncSpec
+	// SemiSync *SemiSyncSpec
 	SemiSync *SemiSyncSpec `json:"semiSync,omitempty"`
 }
+type ErrantTransactionRecoveryPolicy string
+
+const (
+	ErrantTransactionRecoveryPolicyClone             ErrantTransactionRecoveryPolicy = "Clone"
+	ErrantTransactionRecoveryPolicyPseudoTransaction ErrantTransactionRecoveryPolicy = "PseudoTransaction"
+)
+
 type SemiSyncSpec struct {
-	SemiSyncMasterWaitFoSlaveCount *int `json:"semiSyncMasterWaitFoSlaveCount"`
+	// count of slave to wait for before commit
+	// +kubebuilder:default=1
+	SemiSyncMasterWaitFoSlaveCount *int `json:"semiSyncMasterWaitFoSlaveCount,omitempty"`
+	// +kubebuilder:default=86400
+	SemiSyncMasterTimeout *int `json:"semiSyncMasterTimeout,omitempty"`
+	// recovery method if the slave has any errant transaction
+	// +kubebuilder:default=PseudoTransaction
+	ErrantTransactionRecoveryPolicy *ErrantTransactionRecoveryPolicy `json:"errantTransactionRecoveryPolicy,omitempty"`
 }
 
 type MySQLGroupSpec struct {

@@ -25110,12 +25110,25 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SemiSyncSpec(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"semiSyncMasterWaitFoSlaveCount": {
 						SchemaProps: spec.SchemaProps{
+							Description: "count of slave to wait for before commit",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"semiSyncMasterTimeout": {
+						SchemaProps: spec.SchemaProps{
 							Type:   []string{"integer"},
 							Format: "int32",
 						},
 					},
+					"errantTransactionRecoveryPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "recovery method if the slave has any errant transaction",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
-				Required: []string{"semiSyncMasterWaitFoSlaveCount"},
 			},
 		},
 	}

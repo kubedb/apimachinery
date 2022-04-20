@@ -2688,6 +2688,16 @@ func (in *SemiSyncSpec) DeepCopyInto(out *SemiSyncSpec) {
 		*out = new(int)
 		**out = **in
 	}
+	if in.SemiSyncMasterTimeout != nil {
+		in, out := &in.SemiSyncMasterTimeout, &out.SemiSyncMasterTimeout
+		*out = new(int)
+		**out = **in
+	}
+	if in.ErrantTransactionRecoveryPolicy != nil {
+		in, out := &in.ErrantTransactionRecoveryPolicy, &out.ErrantTransactionRecoveryPolicy
+		*out = new(ErrantTransactionRecoveryPolicy)
+		**out = **in
+	}
 	return
 }
 
