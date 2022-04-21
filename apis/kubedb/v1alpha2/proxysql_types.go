@@ -114,9 +114,6 @@ type ProxySQLBackendSpec struct {
 
 	// Number of backend servers.
 	Replicas *int32 `json:"replicas,omitempty"`
-
-	// type of the connection between backend server and proxysql
-	RequireSSL bool `json:"requireSSL"`
 }
 
 type ProxySQLStatus struct {
