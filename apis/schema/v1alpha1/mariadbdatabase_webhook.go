@@ -142,12 +142,6 @@ func (in *MariaDBDatabase) ValidateMariaDBDatabase() error {
 	if err := in.validateMariaDBDatabaseConfig(); err != nil {
 		allErrs = append(allErrs, err)
 	}
-	if err := in.validateMariaDBDatabaseNamespace(); err != nil {
-		allErrs = append(allErrs, err)
-	}
-	if err := in.validateMariaDBDatabaseName(); err != nil {
-		allErrs = append(allErrs, err)
-	}
 	if len(allErrs) == 0 {
 		return nil
 	}
@@ -187,37 +181,6 @@ func (in *MariaDBDatabase) validateMariaDBDatabaseConfig() *field.Error {
 	}
 	if name == DatabaseNameConfig {
 		return field.Invalid(path, in.Name, `cannot use "config" as the database name`)
-	}
-	return nil
-}
-
-func (in *MariaDBDatabase) validateMariaDBDatabaseNamespace() *field.Error {
-	path := field.NewPath("metadata").Child("namespace")
-	ns := in.ObjectMeta.Namespace
-	if ns == "cert-manager" {
-		return field.Invalid(path, in.Name, `cannot use namespace "cert-manager" to create schema manager`)
-	}
-	if ns == "kube-system" {
-		return field.Invalid(path, in.Name, `cannot use namespace "kube-system" to create schema manager`)
-	}
-	if ns == "kubedb-system" {
-		return field.Invalid(path, in.Name, `cannot use namespace "kubedb-system" to create schema manager`)
-	}
-	if ns == "kubedb" {
-		return field.Invalid(path, in.Name, `cannot use namespace "kubedb" to create schema manager`)
-	}
-	if ns == "kubevault" {
-		return field.Invalid(path, in.Name, `cannot use namespace "kubevault" to create schema manager`)
-	}
-	if ns == "local-path-storage" {
-		return field.Invalid(path, in.Name, `cannot use namespace "local-path-storage" to create schema manager`)
-	}
-	return nil
-}
-
-func (in *MariaDBDatabase) validateMariaDBDatabaseName() *field.Error {
-	if len(in.ObjectMeta.Name) > 45 {
-		return field.Invalid(field.NewPath("metadata").Child("name"), in.Name, "must be no more than 45 characters")
 	}
 	return nil
 }
