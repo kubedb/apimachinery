@@ -29042,16 +29042,11 @@
       "type": "object",
       "required": [
         "version",
-        "db",
+        "proxysql",
         "exporter",
         "podSecurityPolicies"
       ],
       "properties": {
-        "db": {
-          "description": "Proxysql Image",
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ProxySQLVersionProxysql"
-        },
         "deprecated": {
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
           "type": "boolean"
@@ -29065,6 +29060,11 @@
           "description": "PSP names",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ProxySQLVersionPodSecurityPolicy"
+        },
+        "proxysql": {
+          "description": "Proxysql Image",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ProxySQLVersionProxysql"
         },
         "version": {
           "description": "Version",

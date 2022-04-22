@@ -22983,7 +22983,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionSpec(ref common.Re
 							Format:      "",
 						},
 					},
-					"db": {
+					"proxysql": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Proxysql Image",
 							Default:     map[string]interface{}{},
@@ -23012,7 +23012,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionSpec(ref common.Re
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "podSecurityPolicies"},
+				Required: []string{"version", "proxysql", "exporter", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
