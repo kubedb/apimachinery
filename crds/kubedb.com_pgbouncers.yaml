@@ -55,6 +55,15 @@ spec:
                       type: string
                     type: array
                   authType:
+                    enum:
+                    - md5
+                    - scram
+                    - cert
+                    - plain
+                    - trust
+                    - any
+                    - hba
+                    - pam
                     type: string
                   authUser:
                     type: string
@@ -1850,6 +1859,21 @@ spec:
                   - alias
                   type: object
                 type: array
+              sslMode:
+                enum:
+                - disable
+                - allow
+                - prefer
+                - require
+                - verify-ca
+                - verify-full
+                type: string
+              terminationPolicy:
+                enum:
+                - Delete
+                - WipeOut
+                - DoNotTerminate
+                type: string
               tls:
                 properties:
                   certificates:
