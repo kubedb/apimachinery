@@ -22369,7 +22369,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionExporter(ref comm
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PostgresVersionExporter is the image for the Postgres exporter",
+				Description: "PgBouncerVersionExporter is the image for the PgBouncer exporter",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"image": {
@@ -22390,7 +22390,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionInitContainer(ref
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerVersionInitContainer is the Postgres init container image",
+				Description: "PgBouncerVersionInitContainer is the PgBouncer init container image",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"image": {

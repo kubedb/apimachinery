@@ -62,7 +62,7 @@ type PgBouncerVersionSpec struct {
 	Deprecated bool `json:"deprecated,omitempty"`
 }
 
-// PgBouncerVersionInitContainer is the Postgres init container image
+// PgBouncerVersionInitContainer is the PgBouncer init container image
 type PgBouncerVersionInitContainer struct {
 	Image string `json:"image"`
 }
@@ -72,7 +72,7 @@ type PgBouncerVersionDatabase struct {
 	Image string `json:"image"`
 }
 
-// PostgresVersionExporter is the image for the Postgres exporter
+// PgBouncerVersionExporter is the image for the PgBouncer exporter
 type PgBouncerVersionExporter struct {
 	Image string `json:"image"`
 }
