@@ -200,6 +200,7 @@ const (
 	MySQLTLSConfigPreferred  = "preferred"
 
 	MySQLRouterContainerName           = "mysql-router"
+	MySQLCoordinatorContainerName      = "mysql-coordinator"
 	MySQLRouterInitScriptDirectoryName = "init-scripts"
 	MySQLRouterInitScriptDirectoryPath = "/scripts"
 	MySQLRouterConfigDirectoryName     = "router-config-secret"
