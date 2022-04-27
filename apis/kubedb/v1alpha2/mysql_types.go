@@ -181,7 +181,7 @@ type MySQLTopology struct {
 	// and it will take reference of  appbinding of the source
 	// +optional
 	ReadReplica *MySQLReadReplicaSpec `json:"readReplica,omitempty"`
-	// SemiSync *SemiSyncSpec
+	// +optional
 	SemiSync *SemiSyncSpec `json:"semiSync,omitempty"`
 }
 type ErrantTransactionRecoveryPolicy string
