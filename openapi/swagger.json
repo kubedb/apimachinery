@@ -30907,7 +30907,6 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplicaSpec"
         },
         "semiSync": {
-          "description": "SemiSync *SemiSyncSpec",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SemiSyncSpec"
         }
       }

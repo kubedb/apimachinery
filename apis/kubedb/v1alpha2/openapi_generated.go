@@ -23127,8 +23127,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLTopology(ref common.Reference
 					},
 					"semiSync": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SemiSync *SemiSyncSpec",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SemiSyncSpec"),
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SemiSyncSpec"),
 						},
 					},
 				},
