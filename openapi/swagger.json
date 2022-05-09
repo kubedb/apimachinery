@@ -29729,7 +29729,7 @@
       }
     },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchUserSpec": {
-      "description": "Specifies the security plugin internal user structure. Both 'json' and 'yaml' tags are used in structure metadata. The `json` tags (camel case) are used while taking input from users. The `yaml` tags (snake case) are used by the operator to generate internal_users.yml file.",
+      "description": "ElasticsearchUserSpec specifies the security plugin internal user structure. Both 'json' and 'yaml' tags are used in structure metadata. The `json` tags (camel case) are used while taking input from users. The `yaml` tags (snake case) are used by the operator to generate internal_users.yml file. For Elastic-Stack built-in users, there is no yaml files, instead the operator is responsible for creating/syncing the users. For the fields that are only used by operator, the metadata yaml tag is kept empty (\"-\") so that they do not interrupt in other distributions YAML generation.",
       "type": "object",
       "properties": {
         "attributes": {
@@ -29752,9 +29752,25 @@
           "description": "Specifies the description of the user",
           "type": "string"
         },
+        "email": {
+          "description": "Specifies the email of the user. Only applicable for xpack authplugin",
+          "type": "string"
+        },
+        "full_name": {
+          "description": "Specifies The full name of the user Only applicable for xpack authplugin",
+          "type": "string"
+        },
         "hidden": {
           "description": "Specifies the hidden status. Resources that have this set to true are not returned by the REST API and not visible in Kibana. Default to \"false\".",
           "type": "boolean"
+        },
+        "metadata": {
+          "description": "Specifies Arbitrary metadata that you want to associate with the user Only applicable for xpack authplugin",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
         },
         "opendistroSecurityRoles": {
           "description": "Specifies a list of opendistro security plugin roles assigned to this user.",
@@ -29767,6 +29783,14 @@
         "reserved": {
           "description": "Specifies the reserved status. Resources that have this set to true can’t be changed using the REST API or Kibana. Default to \"false\".",
           "type": "boolean"
+        },
+        "roles": {
+          "description": "A set of roles the user has. The roles determine the user’s access permissions. To create a user without any roles, specify an empty list: [] Only applicable for xpack authplugin",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
         },
         "searchGuardRoles": {
           "description": "Specifies a list of searchguard security plugin roles assigned to this user.",
