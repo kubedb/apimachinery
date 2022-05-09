@@ -236,10 +236,13 @@ const (
 	ElasticsearchInternalUserMetricsExporter      ElasticsearchInternalUser = "metrics_exporter"
 )
 
-// Specifies the security plugin internal user structure.
+// ElasticsearchUserSpec specifies the security plugin internal user structure.
 // Both 'json' and 'yaml' tags are used in structure metadata.
 // The `json` tags (camel case) are used while taking input from users.
 // The `yaml` tags (snake case) are used by the operator to generate internal_users.yml file.
+// For Elastic-Stack built-in users, there is no yaml files, instead the operator is responsible for
+// creating/syncing the users. For the fields that are only used by operator,
+// the metadata yaml tag is kept empty ("-") so that they do not interrupt in other distributions YAML generation.
 type ElasticsearchUserSpec struct {
 	// Specifies the hash of the password.
 	// +optional
