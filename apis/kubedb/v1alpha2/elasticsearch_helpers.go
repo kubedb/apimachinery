@@ -806,6 +806,9 @@ func (e *Elasticsearch) SetTLSDefaults(esVersion *catalog.ElasticsearchVersion) 
 		})
 	}
 
+	// remove archiverCert from old spec if exists
+	tlsConfig.Certificates = kmapi.RemoveCertificate(tlsConfig.Certificates, string(ElasticsearchArchiverCert))
+
 	for id := range tlsConfig.Certificates {
 		// Force overwrite the private key encoding type to PKCS#8
 		tlsConfig.Certificates[id].PrivateKey = &kmapi.CertificatePrivateKey{

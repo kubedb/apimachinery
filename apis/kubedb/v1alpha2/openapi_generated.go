@@ -21150,7 +21150,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchUserSpec(ref common.R
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Specifies the security plugin internal user structure. Both 'json' and 'yaml' tags are used in structure metadata. The `json` tags (camel case) are used while taking input from users. The `yaml` tags (snake case) are used by the operator to generate internal_users.yml file.",
+				Description: "ElasticsearchUserSpec specifies the security plugin internal user structure. Both 'json' and 'yaml' tags are used in structure metadata. The `json` tags (camel case) are used while taking input from users. The `yaml` tags (snake case) are used by the operator to generate internal_users.yml file. For Elastic-Stack built-in users, there is no yaml files, instead the operator is responsible for creating/syncing the users. For the fields that are only used by operator, the metadata yaml tag is kept empty (\"-\") so that they do not interrupt in other distributions YAML generation.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"full_name": {
