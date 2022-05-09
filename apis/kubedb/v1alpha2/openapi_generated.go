@@ -21153,6 +21153,51 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchUserSpec(ref common.R
 				Description: "Specifies the security plugin internal user structure. Both 'json' and 'yaml' tags are used in structure metadata. The `json` tags (camel case) are used while taking input from users. The `yaml` tags (snake case) are used by the operator to generate internal_users.yml file.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"full_name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies The full name of the user Only applicable for xpack authplugin",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies Arbitrary metadata that you want to associate with the user Only applicable for xpack authplugin",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"email": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the email of the user. Only applicable for xpack authplugin",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"roles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A set of roles the user has. The roles determine the user’s access permissions. To create a user without any roles, specify an empty list: [] Only applicable for xpack authplugin",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 					"secretName": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the k8s secret name that holds the user credentials. Default to \"<resource-name>-<username>-cred\".",

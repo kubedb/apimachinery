@@ -345,20 +345,24 @@ const (
 	DatabasePaused = "Paused"
 	// used for Databases that are halted
 	DatabaseHalted = "Halted"
+	// used for Databases whose internal user credentials are synced
+	InternalUsersSynced = "InternalUsersSynced"
 
 	// Condition reasons
-	DataRestoreStartedByExternalInitializer = "DataRestoreStartedByExternalInitializer"
-	DatabaseSuccessfullyRestored            = "SuccessfullyDataRestored"
-	FailedToRestoreData                     = "FailedToRestoreData"
-	AllReplicasAreReady                     = "AllReplicasReady"
-	SomeReplicasAreNotReady                 = "SomeReplicasNotReady"
-	DatabaseAcceptingConnectionRequest      = "DatabaseAcceptingConnectionRequest"
-	DatabaseNotAcceptingConnectionRequest   = "DatabaseNotAcceptingConnectionRequest"
-	ReadinessCheckSucceeded                 = "ReadinessCheckSucceeded"
-	ReadinessCheckFailed                    = "ReadinessCheckFailed"
-	DatabaseProvisioningStartedSuccessfully = "DatabaseProvisioningStartedSuccessfully"
-	DatabaseSuccessfullyProvisioned         = "DatabaseSuccessfullyProvisioned"
-	DatabaseHaltedSuccessfully              = "DatabaseHaltedSuccessfully"
+	DataRestoreStartedByExternalInitializer    = "DataRestoreStartedByExternalInitializer"
+	DatabaseSuccessfullyRestored               = "SuccessfullyDataRestored"
+	FailedToRestoreData                        = "FailedToRestoreData"
+	AllReplicasAreReady                        = "AllReplicasReady"
+	SomeReplicasAreNotReady                    = "SomeReplicasNotReady"
+	DatabaseAcceptingConnectionRequest         = "DatabaseAcceptingConnectionRequest"
+	DatabaseNotAcceptingConnectionRequest      = "DatabaseNotAcceptingConnectionRequest"
+	ReadinessCheckSucceeded                    = "ReadinessCheckSucceeded"
+	ReadinessCheckFailed                       = "ReadinessCheckFailed"
+	DatabaseProvisioningStartedSuccessfully    = "DatabaseProvisioningStartedSuccessfully"
+	DatabaseSuccessfullyProvisioned            = "DatabaseSuccessfullyProvisioned"
+	DatabaseHaltedSuccessfully                 = "DatabaseHaltedSuccessfully"
+	InternalUsersCredentialSyncFailed          = "InternalUsersCredentialsSyncFailed"
+	InternalUsersCredentialsSyncedSuccessfully = "InternalUsersCredentialsSyncedSuccessfully"
 )
 
 // Resource kind related constants

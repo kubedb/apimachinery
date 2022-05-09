@@ -206,7 +206,7 @@ type ElasticsearchNode struct {
 	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=ca;transport;http;admin;archiver;metrics-exporter
+// +kubebuilder:validation:Enum=ca;transport;http;admin;client;metrics-exporter
 type ElasticsearchCertificateAlias string
 
 const (
@@ -214,21 +214,26 @@ const (
 	ElasticsearchTransportCert       ElasticsearchCertificateAlias = "transport"
 	ElasticsearchHTTPCert            ElasticsearchCertificateAlias = "http"
 	ElasticsearchAdminCert           ElasticsearchCertificateAlias = "admin"
-	ElasticsearchArchiverCert        ElasticsearchCertificateAlias = "archiver"
+	ElasticsearchClientCert          ElasticsearchCertificateAlias = "client"
 	ElasticsearchMetricsExporterCert ElasticsearchCertificateAlias = "metrics-exporter"
 )
 
 type ElasticsearchInternalUser string
 
 const (
-	ElasticsearchInternalUserElastic         ElasticsearchInternalUser = "elastic"
-	ElasticsearchInternalUserAdmin           ElasticsearchInternalUser = "admin"
-	ElasticsearchInternalUserKibanaserver    ElasticsearchInternalUser = "kibanaserver"
-	ElasticsearchInternalUserKibanaro        ElasticsearchInternalUser = "kibanaro"
-	ElasticsearchInternalUserLogstash        ElasticsearchInternalUser = "logstash"
-	ElasticsearchInternalUserReadall         ElasticsearchInternalUser = "readall"
-	ElasticsearchInternalUserSnapshotrestore ElasticsearchInternalUser = "snapshotrestore"
-	ElasticsearchInternalUserMetricsExporter ElasticsearchInternalUser = "metrics_exporter"
+	ElasticsearchInternalUserElastic              ElasticsearchInternalUser = "elastic"
+	ElasticsearchInternalUserAdmin                ElasticsearchInternalUser = "admin"
+	ElasticsearchInternalUserKibanaserver         ElasticsearchInternalUser = "kibanaserver"
+	ElasticsearchInternalUserKibanaSystem         ElasticsearchInternalUser = "kibana_system"
+	ElasticsearchInternalUserLogstashSystem       ElasticsearchInternalUser = "logstash_system"
+	ElasticsearchInternalUserBeatsSystem          ElasticsearchInternalUser = "beats_system"
+	ElasticsearchInternalUserApmSystem            ElasticsearchInternalUser = "apm_system"
+	ElasticsearchInternalUserRemoteMonitoringUser ElasticsearchInternalUser = "remote_monitoring_user"
+	ElasticsearchInternalUserKibanaro             ElasticsearchInternalUser = "kibanaro"
+	ElasticsearchInternalUserLogstash             ElasticsearchInternalUser = "logstash"
+	ElasticsearchInternalUserReadall              ElasticsearchInternalUser = "readall"
+	ElasticsearchInternalUserSnapshotrestore      ElasticsearchInternalUser = "snapshotrestore"
+	ElasticsearchInternalUserMetricsExporter      ElasticsearchInternalUser = "metrics_exporter"
 )
 
 // Specifies the security plugin internal user structure.
@@ -239,6 +244,23 @@ type ElasticsearchUserSpec struct {
 	// Specifies the hash of the password.
 	// +optional
 	Hash string `json:"-" yaml:"hash,omitempty"`
+
+	// Specifies The full name of the user
+	// Only applicable for xpack authplugin
+	FullName string `json:"full_name,omitempty" yaml:"-"`
+
+	// Specifies Arbitrary metadata that you want to associate with the user
+	// Only applicable for xpack authplugin
+	Metadata map[string]string `json:"metadata,omitempty" yaml:"-"`
+
+	// Specifies the email of the user.
+	// Only applicable for xpack authplugin
+	Email string `json:"email,omitempty" yaml:"-"`
+
+	// A set of roles the user has. The roles determine the user’s access permissions.
+	// To create a user without any roles, specify an empty list: []
+	// Only applicable for xpack authplugin
+	Roles []string `json:"roles,omitempty" yaml:"-"`
 
 	// Specifies the k8s secret name that holds the user credentials.
 	// Default to "<resource-name>-<username>-cred".
