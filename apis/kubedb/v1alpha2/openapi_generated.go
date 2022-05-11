@@ -435,6 +435,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdList":                       schema_apimachinery_apis_kubedb_v1alpha2_EtcdList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_EtcdSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdStatus":                     schema_apimachinery_apis_kubedb_v1alpha2_EtcdStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec":                schema_apimachinery_apis_kubedb_v1alpha2_HealthCheckSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KernelSettings":                 schema_apimachinery_apis_kubedb_v1alpha2_KernelSettings(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MariaDB":                        schema_apimachinery_apis_kubedb_v1alpha2_MariaDB(ref),
@@ -21852,6 +21853,47 @@ func schema_apimachinery_apis_kubedb_v1alpha2_EtcdStatus(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_HealthCheckSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HealthCheckSpec defines attributes of the health check",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"periodSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "How often (in seconds) to perform the health check. Default to 10 seconds. Minimum value is 1.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"timeoutSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of seconds after which the probe times out. Defaults to 10 second. Minimum value is 1. It should be less than the periodSeconds.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"failureThreshold": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Minimum consecutive failures for the health check to be considered failed after having succeeded. Defaults to 1. Minimum value is 1.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"disableWriteCheck": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Whether to disable write check on database. Defaults to false.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

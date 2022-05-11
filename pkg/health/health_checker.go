@@ -5,8 +5,9 @@ import (
 	"sync"
 	"time"
 
-	"k8s.io/klog/v2"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
+	"k8s.io/klog/v2"
 )
 
 type HealthChecker struct {
