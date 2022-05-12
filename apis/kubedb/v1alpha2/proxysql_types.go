@@ -147,3 +147,12 @@ type ProxySQLList struct {
 	// Items is a list of ProxySQL TPR objects
 	Items []ProxySQL `json:"items,omitempty"`
 }
+
+const (
+	ProxySQLBackendSSLMountPath  = "/var/lib/certs"
+	ProxySQLFrontendSSLMountPath = "/var/lib/frontend"
+	ProxySQLClusterAdmin = "cluster"
+	ProxySQLClusterPasswordField = "cluster_password"
+	TLSValueCustom     = "custom"
+	TLSValueSkipVerify = "skip-verify"
+)
