@@ -217,7 +217,7 @@ func (m *ProxySQL) CertificateName(alias ProxySQLCertificateAlias) string {
 }
 
 // IsCluster returns boolean true if the proxysql is in cluster mode, otherwise false
-func (m *ProxySQL)IsCluster() bool {
+func (m *ProxySQL) IsCluster() bool {
 	r := m.Spec.Replicas
 	return *r > 1
 }

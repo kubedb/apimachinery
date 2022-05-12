@@ -151,8 +151,8 @@ type ProxySQLList struct {
 const (
 	ProxySQLBackendSSLMountPath  = "/var/lib/certs"
 	ProxySQLFrontendSSLMountPath = "/var/lib/frontend"
-	ProxySQLClusterAdmin = "cluster"
+	ProxySQLClusterAdmin         = "cluster"
 	ProxySQLClusterPasswordField = "cluster_password"
-	TLSValueCustom     = "custom"
-	TLSValueSkipVerify = "skip-verify"
+	TLSValueCustom               = "custom"
+	TLSValueSkipVerify           = "skip-verify"
 )
