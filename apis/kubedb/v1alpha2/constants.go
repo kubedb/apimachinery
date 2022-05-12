@@ -286,6 +286,13 @@ const (
 	ProxySQLAdminPortName          = "admin"
 	ProxySQLDataMountPath          = "/var/lib/proxysql"
 	ProxySQLCustomConfigMountPath  = "/etc/custom-config"
+
+	ProxySQLBackendSSLMountPath  = "/var/lib/certs"
+	ProxySQLFrontendSSLMountPath = "/var/lib/frontend"
+	ProxySQLClusterAdmin         = "cluster"
+	ProxySQLClusterPasswordField = "cluster_password"
+	ProxySQLTLSConfigCustom      = "custom"
+	ProxySQLTLSConfigSkipVerify  = "skip-verify"
 	// =========================== Redis Constants ============================
 	RedisConfigKey = "redis.conf" // RedisConfigKey is going to create for the customize redis configuration
 	// DefaultConfigKey is going to create for the default redis configuration
