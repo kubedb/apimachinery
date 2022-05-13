@@ -4415,13 +4415,19 @@ spec:
                     properties:
                       errantTransactionRecoveryPolicy:
                         default: PseudoTransaction
+                        enum:
+                        - Clone
+                        - PseudoTransaction
                         type: string
-                      semiSyncMasterTimeout:
-                        default: 86400
-                        type: integer
-                      semiSyncMasterWaitFoSlaveCount:
+                      sourceTimeout:
+                        default: 24h
+                        type: string
+                      sourceWaitForReplicaCount:
                         default: 1
+                        minimum: 1
                         type: integer
+                    required:
+                    - errantTransactionRecoveryPolicy
                     type: object
                 type: object
               useAddressType:

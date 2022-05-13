@@ -184,6 +184,9 @@ type MySQLTopology struct {
 	// +optional
 	SemiSync *SemiSyncSpec `json:"semiSync,omitempty"`
 }
+
+// +kubebuilder:validation:Enum= Clone;PseudoTransaction
+
 type ErrantTransactionRecoveryPolicy string
 
 const (
@@ -194,12 +197,13 @@ const (
 type SemiSyncSpec struct {
 	// count of slave to wait for before commit
 	// +kubebuilder:default=1
-	SemiSyncMasterWaitFoSlaveCount *int `json:"semiSyncMasterWaitFoSlaveCount,omitempty"`
-	// +kubebuilder:default=86400
-	SemiSyncMasterTimeout *int `json:"semiSyncMasterTimeout,omitempty"`
+	//+kubebuilder:validation:Minimum=1
+	SourceWaitForReplicaCount int `json:"sourceWaitForReplicaCount,omitempty"`
+	// +kubebuilder:default="24h"
+	SourceTimeout metav1.Duration `json:"sourceTimeout,omitempty"`
 	// recovery method if the slave has any errant transaction
 	// +kubebuilder:default=PseudoTransaction
-	ErrantTransactionRecoveryPolicy *ErrantTransactionRecoveryPolicy `json:"errantTransactionRecoveryPolicy,omitempty"`
+	ErrantTransactionRecoveryPolicy *ErrantTransactionRecoveryPolicy `json:"errantTransactionRecoveryPolicy"`
 }
 
 type MySQLGroupSpec struct {

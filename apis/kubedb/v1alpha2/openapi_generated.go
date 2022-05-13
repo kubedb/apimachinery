@@ -25107,17 +25107,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SemiSyncSpec(ref common.ReferenceC
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"semiSyncMasterWaitFoSlaveCount": {
+					"sourceWaitForReplicaCount": {
 						SchemaProps: spec.SchemaProps{
 							Description: "count of slave to wait for before commit",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
-					"semiSyncMasterTimeout": {
+					"sourceTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"errantTransactionRecoveryPolicy": {
@@ -25128,8 +25128,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SemiSyncSpec(ref common.ReferenceC
 						},
 					},
 				},
+				Required: []string{"errantTransactionRecoveryPolicy"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 

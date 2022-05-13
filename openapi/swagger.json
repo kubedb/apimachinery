@@ -31964,16 +31964,19 @@
     },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SemiSyncSpec": {
       "type": "object",
+      "required": [
+        "errantTransactionRecoveryPolicy"
+      ],
       "properties": {
         "errantTransactionRecoveryPolicy": {
           "description": "recovery method if the slave has any errant transaction",
           "type": "string"
         },
-        "semiSyncMasterTimeout": {
-          "type": "integer",
-          "format": "int32"
+        "sourceTimeout": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
-        "semiSyncMasterWaitFoSlaveCount": {
+        "sourceWaitForReplicaCount": {
           "description": "count of slave to wait for before commit",
           "type": "integer",
           "format": "int32"
