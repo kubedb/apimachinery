@@ -30905,6 +30905,9 @@
         "readReplica": {
           "description": "ReadReplica implies that the instance will be a MySQL Read Only Replica and it will take reference of  appbinding of the source",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplicaSpec"
+        },
+        "semiSync": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SemiSyncSpec"
         }
       }
     },
@@ -31956,6 +31959,27 @@
         "vsphereVolume": {
           "description": "VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
           "$ref": "#/definitions/io.k8s.api.core.v1.VsphereVirtualDiskVolumeSource"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SemiSyncSpec": {
+      "type": "object",
+      "required": [
+        "errantTransactionRecoveryPolicy"
+      ],
+      "properties": {
+        "errantTransactionRecoveryPolicy": {
+          "description": "recovery method if the slave has any errant transaction",
+          "type": "string"
+        },
+        "sourceTimeout": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "sourceWaitForReplicaCount": {
+          "description": "count of slave to wait for before commit",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
