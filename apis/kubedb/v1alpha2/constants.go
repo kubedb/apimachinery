@@ -260,6 +260,9 @@ const (
 	PostgresCoordinatorClientPort     = 2379
 	PostgresCoordinatorClientPortName = "coordinatclient"
 
+	RaftMetricsExporterPort     = 23790
+	RaftMetricsExporterPortName = "raft-metrics"
+
 	PostgresRunScriptMountPath  = "/run_scripts"
 	PostgresRunScriptVolumeName = "scripts"
 
