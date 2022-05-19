@@ -46,6 +46,10 @@ type Interface interface {
 	ProxySQLAutoscalers() ProxySQLAutoscalerInformer
 	// RedisAutoscalers returns a RedisAutoscalerInformer.
 	RedisAutoscalers() RedisAutoscalerInformer
+	// VerticalPodAutopilots returns a VerticalPodAutopilotInformer.
+	VerticalPodAutopilots() VerticalPodAutopilotInformer
+	// VerticalPodAutopilotCheckpoints returns a VerticalPodAutopilotCheckpointInformer.
+	VerticalPodAutopilotCheckpoints() VerticalPodAutopilotCheckpointInformer
 }
 
 type version struct {
@@ -112,4 +116,14 @@ func (v *version) ProxySQLAutoscalers() ProxySQLAutoscalerInformer {
 // RedisAutoscalers returns a RedisAutoscalerInformer.
 func (v *version) RedisAutoscalers() RedisAutoscalerInformer {
 	return &redisAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// VerticalPodAutopilots returns a VerticalPodAutopilotInformer.
+func (v *version) VerticalPodAutopilots() VerticalPodAutopilotInformer {
+	return &verticalPodAutopilotInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// VerticalPodAutopilotCheckpoints returns a VerticalPodAutopilotCheckpointInformer.
+func (v *version) VerticalPodAutopilotCheckpoints() VerticalPodAutopilotCheckpointInformer {
+	return &verticalPodAutopilotCheckpointInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

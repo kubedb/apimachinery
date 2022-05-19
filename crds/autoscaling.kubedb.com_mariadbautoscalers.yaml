@@ -39,6 +39,9 @@ spec:
                   mariadb:
                     properties:
                       containerControlledValues:
+                        enum:
+                        - RequestsAndLimits
+                        - RequestsOnly
                         type: string
                       controlledResources:
                         items:

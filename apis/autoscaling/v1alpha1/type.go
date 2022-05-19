@@ -30,6 +30,7 @@ const (
 )
 
 // ContainerControlledValues controls which resource value should be autoscaled.
+// +kubebuilder:validation:Enum=RequestsAndLimits;RequestsOnly
 type ContainerControlledValues string
 
 const (

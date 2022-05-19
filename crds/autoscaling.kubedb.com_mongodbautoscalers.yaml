@@ -37,6 +37,9 @@ spec:
                   configServer:
                     properties:
                       containerControlledValues:
+                        enum:
+                        - RequestsAndLimits
+                        - RequestsOnly
                         type: string
                       controlledResources:
                         items:
@@ -74,6 +77,9 @@ spec:
                   mongos:
                     properties:
                       containerControlledValues:
+                        enum:
+                        - RequestsAndLimits
+                        - RequestsOnly
                         type: string
                       controlledResources:
                         items:
@@ -109,6 +115,9 @@ spec:
                   replicaSet:
                     properties:
                       containerControlledValues:
+                        enum:
+                        - RequestsAndLimits
+                        - RequestsOnly
                         type: string
                       controlledResources:
                         items:
@@ -144,6 +153,9 @@ spec:
                   shard:
                     properties:
                       containerControlledValues:
+                        enum:
+                        - RequestsAndLimits
+                        - RequestsOnly
                         type: string
                       controlledResources:
                         items:
@@ -179,6 +191,9 @@ spec:
                   standalone:
                     properties:
                       containerControlledValues:
+                        enum:
+                        - RequestsAndLimits
+                        - RequestsOnly
                         type: string
                       controlledResources:
                         items:
