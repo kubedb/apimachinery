@@ -356,6 +356,8 @@ const (
 	DatabasePaused = "Paused"
 	// used for Databases that are halted
 	DatabaseHalted = "Halted"
+	// used for pausing health check of a Database
+	DatabaseHealthCheckPaused = "HealthCheckPaused"
 	// used for Databases whose internal user credentials are synced
 	InternalUsersSynced = "InternalUsersSynced"
 
