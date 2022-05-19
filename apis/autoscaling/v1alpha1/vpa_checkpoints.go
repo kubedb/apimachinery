@@ -79,7 +79,7 @@ type VerticalPodAutopilotCheckpointStatus struct {
 
 	// Timestamp of the last sample from the histograms.
 	// +nullable
-	LastSampleStart metav1.Time `json:"lastSampleStart,omitempty""`
+	LastSampleStart metav1.Time `json:"lastSampleStart,omitempty"`
 
 	// Total number of samples in the histograms.
 	TotalSamplesCount int `json:"totalSamplesCount,omitempty"`
