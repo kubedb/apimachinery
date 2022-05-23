@@ -21,8 +21,8 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 const (
 	ResourceCodeVerticalPodAutopilotCheckpoint     = "vpacheckpoint "
 	ResourceKindVerticalPodAutopilotCheckpoint     = "VerticalPodAutopilotCheckpoint"
-	ResourceSingularVerticalPodAutopilotCheckpoint = "verticalpodsutopilotcheckpoint"
-	ResourcePluralVerticalPodAutopilotCheckpoint   = "verticalpodsutopilotcheckpoints"
+	ResourceSingularVerticalPodAutopilotCheckpoint = "verticalpodautopilotcheckpoint"
+	ResourcePluralVerticalPodAutopilotCheckpoint   = "verticalpodautopilotcheckpoints"
 )
 
 // +genclient

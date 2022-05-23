@@ -25,8 +25,8 @@ import (
 const (
 	ResourceCodeVerticalPodAutopilot     = "vpa"
 	ResourceKindVerticalPodAutopilot     = "VerticalPodAutopilot"
-	ResourceSingularVerticalPodAutopilot = "verticalpodsutopilot"
-	ResourcePluralVerticalPodAutopilot   = "verticalpodsutopilots"
+	ResourceSingularVerticalPodAutopilot = "verticalpodautopilot"
+	ResourcePluralVerticalPodAutopilot   = "verticalpodautopilots"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
