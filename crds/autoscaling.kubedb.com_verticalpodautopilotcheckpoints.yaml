@@ -49,7 +49,7 @@ spec:
                       - index
                       - weight
                       type: object
-                    type: object
+                    type: array
                     x-kubernetes-preserve-unknown-fields: true
                   referenceTimestamp:
                     format: date-time
@@ -85,7 +85,7 @@ spec:
                       - index
                       - weight
                       type: object
-                    type: object
+                    type: array
                     x-kubernetes-preserve-unknown-fields: true
                   referenceTimestamp:
                     format: date-time

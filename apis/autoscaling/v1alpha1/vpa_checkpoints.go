@@ -104,7 +104,6 @@ type HistogramCheckpoint struct {
 	ReferenceTimestamp metav1.Time `json:"referenceTimestamp,omitempty"`
 
 	// Map from bucket index to bucket weight.
-	// +kubebuilder:validation:Type=object
 	// +kubebuilder:validation:XPreserveUnknownFields
 	BucketWeights []BucketWeight `json:"bucketWeights,omitempty"`
 
