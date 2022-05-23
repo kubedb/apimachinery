@@ -20,7 +20,7 @@ import (
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis"
-	"kubedb.dev/apimachinery/apis/catalog"
+	"kubedb.dev/apimachinery/apis/autoscaling"
 	"kubedb.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -33,7 +33,7 @@ func (_ PerconaXtraDBAutoscaler) CustomResourceDefinition() *apiextensions.Custo
 var _ apis.ResourceInfo = &PerconaXtraDBAutoscaler{}
 
 func (p PerconaXtraDBAutoscaler) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", ResourcePluralPerconaXtraDBAutoscaler, catalog.GroupName)
+	return fmt.Sprintf("%s.%s", ResourcePluralPerconaXtraDBAutoscaler, autoscaling.GroupName)
 }
 
 func (p PerconaXtraDBAutoscaler) ResourceShortCode() string {

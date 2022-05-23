@@ -22,6 +22,13 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const (
+	ResourceCodeVerticalPodAutopilot     = "vpa"
+	ResourceKindVerticalPodAutopilot     = "VerticalPodAutopilot"
+	ResourceSingularVerticalPodAutopilot = "verticalpodsutopilot"
+	ResourcePluralVerticalPodAutopilot   = "verticalpodsutopilots"
+)
+
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // VerticalPodAutopilotList is a list of VerticalPodAutopilot objects.

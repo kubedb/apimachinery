@@ -20,7 +20,7 @@ import (
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis"
-	"kubedb.dev/apimachinery/apis/catalog"
+	"kubedb.dev/apimachinery/apis/autoscaling"
 	"kubedb.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -33,7 +33,7 @@ func (_ ProxySQLAutoscaler) CustomResourceDefinition() *apiextensions.CustomReso
 var _ apis.ResourceInfo = &ProxySQLAutoscaler{}
 
 func (p ProxySQLAutoscaler) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", ResourcePluralProxySQLAutoscaler, catalog.GroupName)
+	return fmt.Sprintf("%s.%s", ResourcePluralProxySQLAutoscaler, autoscaling.GroupName)
 }
 
 func (p ProxySQLAutoscaler) ResourceShortCode() string {

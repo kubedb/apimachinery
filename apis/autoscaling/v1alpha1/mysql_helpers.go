@@ -20,7 +20,7 @@ import (
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis"
-	"kubedb.dev/apimachinery/apis/catalog"
+	"kubedb.dev/apimachinery/apis/autoscaling"
 	"kubedb.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -33,7 +33,7 @@ func (_ MySQLAutoscaler) CustomResourceDefinition() *apiextensions.CustomResourc
 var _ apis.ResourceInfo = &MySQLAutoscaler{}
 
 func (m MySQLAutoscaler) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", ResourcePluralMySQLAutoscaler, catalog.GroupName)
+	return fmt.Sprintf("%s.%s", ResourcePluralMySQLAutoscaler, autoscaling.GroupName)
 }
 
 func (m MySQLAutoscaler) ResourceShortCode() string {

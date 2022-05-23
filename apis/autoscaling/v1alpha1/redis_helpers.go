@@ -20,7 +20,7 @@ import (
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis"
-	"kubedb.dev/apimachinery/apis/catalog"
+	"kubedb.dev/apimachinery/apis/autoscaling"
 	"kubedb.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -33,7 +33,7 @@ func (_ RedisAutoscaler) CustomResourceDefinition() *apiextensions.CustomResourc
 var _ apis.ResourceInfo = &RedisAutoscaler{}
 
 func (r RedisAutoscaler) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", ResourcePluralRedisAutoscaler, catalog.GroupName)
+	return fmt.Sprintf("%s.%s", ResourcePluralRedisAutoscaler, autoscaling.GroupName)
 }
 
 func (r RedisAutoscaler) ResourceShortCode() string {
