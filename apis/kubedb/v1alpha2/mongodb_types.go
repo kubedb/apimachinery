@@ -51,6 +51,10 @@ type MongoDB struct {
 }
 
 type MongoDBSpec struct {
+	// AutoOps contains configuration of automatic ops-request-recommendation generation
+	// +optional
+	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
 	// Version of MongoDB to be deployed.
 	Version string `json:"version"`
 
