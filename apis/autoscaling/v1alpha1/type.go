@@ -75,26 +75,40 @@ type ComputeAutoscalerSpec struct {
 	// +optional
 	ContainerControlledValues *ContainerControlledValues `json:"containerControlledValues,omitempty"`
 
-	// Specifies the minimum resource difference in percentage
-	// The default is 10%.
+	// Specifies the minimum resource difference in percentage. The default is 10%.
+	// If the difference between current & recommended resource is less than ResourceDiffPercentage,
+	// Autoscaler Operator will ignore the updating.
 	// +optional
 	ResourceDiffPercentage int32 `json:"resourceDiffPercentage,omitempty"`
 
-	// Specifies the minimum pod life time
-	// The default is 12h.
+	// Specifies the minimum pod life time. The default is 12h.
+	// If the resource Request is inside the recommended range & there is no quickOOM (out-of-memory),
+	// we can still update the pod, if that pod's lifeTime is greater than this threshold.
 	// +optional
 	PodLifeTimeThreshold metav1.Duration `json:"podLifeTimeThreshold,omitempty"`
 
-	// Specifies the percentage of the Memory that will be passed as inMemorySizeGB
-	// The default is 70%.
-	// +optional
-	InMemoryScalingThreshold int32 `json:"inMemoryScalingThreshold,omitempty"`
+	// For InMemory storageType, if db uses more than UsageThreshold percentage of the total memory() ,
+	// `inMemorySizeGB` should be increased by ScalingThreshold percent
+	UsageThreshold int32 `json:"usageThreshold,omitempty"`
+
+	// For InMemory storageType, if db uses more than UsageThreshold percentage
+	// of the total memory() `inMemorySizeGB` should be increased by ScalingThreshold percent
+	ScalingThreshold int32 `json:"scalingThreshold,omitempty"`
 }
 
 type StorageAutoscalerSpec struct {
-	// Whether compute autoscaler is enabled. The default is Off".
-	Trigger          AutoscalerTrigger           `json:"trigger,omitempty"`
-	UsageThreshold   int32                       `json:"usageThreshold,omitempty"`
-	ScalingThreshold int32                       `json:"scalingThreshold,omitempty"`
-	ExpansionMode    *opsapi.VolumeExpansionMode `json:"expansionMode,omitempty"`
+	// Whether storage autoscaler is enabled. The default is Off".
+	Trigger AutoscalerTrigger `json:"trigger,omitempty"`
+
+	// If PVC usage percentage is less than the UsageThreshold,
+	// we don't need to scale it. The Default is 80%
+	UsageThreshold int32 `json:"usageThreshold,omitempty"`
+
+	// If PVC usage percentage >= UsageThreshold,
+	// we need to scale that by ScalingThreshold percentage. The Default is 50%
+	ScalingThreshold int32 `json:"scalingThreshold,omitempty"`
+
+	// ExpansionMode can be `Online` or `Offline`
+	// Default VolumeExpansionMode is `Online`
+	ExpansionMode *opsapi.VolumeExpansionMode `json:"expansionMode,omitempty"`
 }

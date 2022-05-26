@@ -20460,21 +20460,28 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ComputeAutoscalerSpec(ref com
 					},
 					"resourceDiffPercentage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the minimum resource difference in percentage The default is 10%.",
+							Description: "Specifies the minimum resource difference in percentage. The default is 10%. If the difference between current & recommended resource is less than ResourceDiffPercentage, Autoscaler Operator will ignore the updating.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"podLifeTimeThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the minimum pod life time The default is 12h.",
+							Description: "Specifies the minimum pod life time. The default is 12h. If the resource Request is inside the recommended range & there is no quickOOM (out-of-memory), we can still update the pod, if that pod's lifeTime is greater than this threshold.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
-					"inMemoryScalingThreshold": {
+					"usageThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the percentage of the Memory that will be passed as inMemorySizeGB The default is 70%.",
+							Description: "For InMemory storageType, if db uses more than UsageThreshold percentage of the total memory() , `inMemorySizeGB` should be increased by ScalingThreshold percent",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"scalingThreshold": {
+						SchemaProps: spec.SchemaProps{
+							Description: "For InMemory storageType, if db uses more than UsageThreshold percentage of the total memory() `inMemorySizeGB` should be increased by ScalingThreshold percent",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -24261,27 +24268,30 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_StorageAutoscalerSpec(ref com
 				Properties: map[string]spec.Schema{
 					"trigger": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Whether compute autoscaler is enabled. The default is Off\".",
+							Description: "Whether storage autoscaler is enabled. The default is Off\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"usageThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "If PVC usage percentage is less than the UsageThreshold, we don't need to scale it. The Default is 80%",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"scalingThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "If PVC usage percentage >= UsageThreshold, we need to scale that by ScalingThreshold percentage. The Default is 50%",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"expansionMode": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "ExpansionMode can be `Online` or `Offline` Default VolumeExpansionMode is `Online`",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
