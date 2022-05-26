@@ -405,4 +405,16 @@ var (
 			core.ResourceMemory: resource.MustParse("256Mi"),
 		},
 	}
+
+	// DefaultResourcesElasticSearch must be used for elasticsearch to avoid
+	// pods OOMKILLED issue while Upgrading from V7 to V8
+	DefaultResourcesElasticSearch = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".500"),
+			core.ResourceMemory: resource.MustParse("1.5Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("1.5Gi"),
+		},
+	}
 )
