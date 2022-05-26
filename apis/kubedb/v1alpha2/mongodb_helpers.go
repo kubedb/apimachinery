@@ -581,7 +581,20 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 	}
 
 	m.SetTLSDefaults()
+	m.SetHealthCheckerDefaults()
 	m.Spec.Monitor.SetDefaults()
+}
+
+func (m *MongoDB) SetHealthCheckerDefaults() {
+	if m.Spec.HealthCheck.PeriodSeconds == nil {
+		m.Spec.HealthCheck.PeriodSeconds = pointer.Int32P(10)
+	}
+	if m.Spec.HealthCheck.TimeoutSeconds == nil {
+		m.Spec.HealthCheck.TimeoutSeconds = pointer.Int32P(10)
+	}
+	if m.Spec.HealthCheck.FailureThreshold == nil {
+		m.Spec.HealthCheck.FailureThreshold = pointer.Int32P(1)
+	}
 }
 
 func (m *MongoDB) SetTLSDefaults() {

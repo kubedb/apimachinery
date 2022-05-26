@@ -1362,6 +1362,7 @@ func (in *MongoDBSpec) DeepCopyInto(out *MongoDBSpec) {
 		*out = new(MongoArbiterNode)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthCheck.DeepCopyInto(&out.HealthCheck)
 	return
 }
 

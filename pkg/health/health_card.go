@@ -23,30 +23,33 @@ type HealthCard struct {
 	totalFailure int32
 	threshold    int32
 	clientCount  int32
+	key          string
 }
 
-func newHealthCard(threshold int32) *HealthCard {
+func newHealthCard(key string, threshold int32) *HealthCard {
 	return &HealthCard{
 		threshold: threshold,
+		key:       key,
 	}
+}
+
+// SetThreshold sets the current failure threshold.
+// Call this function on the start of each health check.
+func (hcf *HealthCard) SetThreshold(threshold int32) {
+	hcf.threshold = threshold
 }
 
 // HasFailed returns true or false based on the threshold.
 // Update the health check condition if this function returns true.
-func (hcf *HealthCard) HasFailed() bool {
-	klog.V(5).Infof("failure = %s, total = %d", hcf.lastFailure, hcf.totalFailure)
-	return hcf.totalFailure >= hcf.threshold
-}
-
-// Register is used to register a specific failure.
-// Call this method with specific label when an error is received in the health check.
-func (hcf *HealthCard) Register(label HealthCheckFailureLabel) {
+func (hcf *HealthCard) HasFailed(label HealthCheckFailureLabel, err error) bool {
 	if hcf.lastFailure == label {
 		hcf.totalFailure++
 	} else {
 		hcf.totalFailure = 1
 	}
 	hcf.lastFailure = label
+	klog.V(5).InfoS("Health check failed for database", "Key", hcf.key, "FailureType", hcf.lastFailure, "Error", err.Error(), "TotalFailure", hcf.totalFailure)
+	return hcf.totalFailure >= hcf.threshold
 }
 
 // Clear is used to reset the error counter.

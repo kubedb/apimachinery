@@ -30129,6 +30129,31 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec": {
+      "description": "HealthCheckSpec defines attributes of the health check",
+      "type": "object",
+      "properties": {
+        "disableWriteCheck": {
+          "description": "Whether to disable write check on database. Defaults to false.",
+          "type": "boolean"
+        },
+        "failureThreshold": {
+          "description": "Minimum consecutive failures for the health check to be considered failed after having succeeded. Defaults to 1. Minimum value is 1.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "periodSeconds": {
+          "description": "How often (in seconds) to perform the health check. Default to 10 seconds. Minimum value is 1.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "timeoutSeconds": {
+          "description": "Number of seconds after which the probe times out. Defaults to 10 second. Minimum value is 1. It should be less than the periodSeconds.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec": {
       "type": "object",
       "properties": {
@@ -30740,6 +30765,10 @@
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
           "type": "boolean"
+        },
+        "healthCheck": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
         },
         "init": {
           "description": "Init is used to initialize database",

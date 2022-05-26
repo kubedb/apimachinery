@@ -27,44 +27,64 @@ import (
 )
 
 type HealthChecker struct {
-	ctxCancels map[string]context.CancelFunc
-	mux        sync.Mutex
+	healthCheckerMap map[string]healthCheckerData
+	mux              sync.Mutex
+}
+
+type healthCheckerData struct {
+	cancel            context.CancelFunc
+	ticker            *time.Ticker
+	lastPeriodSeconds int32
 }
 
 func NewHealthChecker() *HealthChecker {
 	return &HealthChecker{
-		ctxCancels: make(map[string]context.CancelFunc),
-		mux:        sync.Mutex{},
+		healthCheckerMap: make(map[string]healthCheckerData),
+		mux:              sync.Mutex{},
 	}
 }
 
 // Start creates a health check go routine.
 // Call this method after successful creation of all the replicas of a database.
-func (hc *HealthChecker) Start(key string, healthCheckSpec dbapi.HealthCheckSpec, fn func(context.Context, string, *HealthCard)) {
+func (hc *HealthChecker) Start(key string, healthCheckSpec dbapi.HealthCheckSpec, fn func(string, *HealthCard)) {
+	if healthCheckSpec.PeriodSeconds == nil || healthCheckSpec.TimeoutSeconds == nil || healthCheckSpec.FailureThreshold == nil {
+		klog.Errorf("spec.healthCheck values are nil, can't start health check.")
+		return
+	}
+
 	if !hc.keyExists(key) {
 		ctx := context.Background()
 		ctx, cancel := context.WithCancel(ctx)
-		hc.setCancel(key, cancel)
 		ticker := time.NewTicker(time.Duration(*healthCheckSpec.PeriodSeconds) * time.Second)
-		healthCheckStore := newHealthCard(*healthCheckSpec.FailureThreshold)
+		healthCheckStore := newHealthCard(key, *healthCheckSpec.FailureThreshold)
+		hc.set(key, healthCheckerData{
+			cancel:            cancel,
+			ticker:            ticker,
+			lastPeriodSeconds: *healthCheckSpec.PeriodSeconds,
+		})
 		go func() {
 			for {
 				select {
 				case <-ctx.Done():
-					hc.deleteCancel(key)
+					hc.delete(key)
 					cancel()
 					ticker.Stop()
 					klog.Infoln("Health check stopped for key " + key)
 					return
 				case <-ticker.C:
-					ctx, cancel := context.WithTimeout(ctx, time.Duration(*healthCheckSpec.TimeoutSeconds)*time.Second)
 					klog.V(5).Infoln("Health check running for key " + key)
-					fn(ctx, key, healthCheckStore)
+					fn(key, healthCheckStore)
 					klog.V(5).Infof("Debug client count = %d\n", healthCheckStore.GetClientCount())
-					cancel()
 				}
 			}
 		}()
+	} else {
+		data := hc.get(key)
+		if data.lastPeriodSeconds != *healthCheckSpec.PeriodSeconds {
+			data.ticker.Reset(time.Duration(*healthCheckSpec.PeriodSeconds) * time.Second)
+			data.lastPeriodSeconds = *healthCheckSpec.PeriodSeconds
+			hc.set(key, data)
+		}
 	}
 }
 
@@ -72,32 +92,32 @@ func (hc *HealthChecker) Start(key string, healthCheckSpec dbapi.HealthCheckSpec
 // Call this method when the database is deleted or halted.
 func (hc *HealthChecker) Stop(key string) {
 	if hc.keyExists(key) {
-		hc.getCancel(key)()
-		hc.deleteCancel(key)
+		hc.get(key).cancel()
+		hc.delete(key)
 	}
 }
 
 func (hc *HealthChecker) keyExists(key string) bool {
 	hc.mux.Lock()
 	defer hc.mux.Unlock()
-	_, ok := hc.ctxCancels[key]
+	_, ok := hc.healthCheckerMap[key]
 	return ok
 }
 
-func (hc *HealthChecker) getCancel(key string) context.CancelFunc {
+func (hc *HealthChecker) get(key string) healthCheckerData {
 	hc.mux.Lock()
 	defer hc.mux.Unlock()
-	return hc.ctxCancels[key]
+	return hc.healthCheckerMap[key]
 }
 
-func (hc *HealthChecker) setCancel(key string, cancel context.CancelFunc) {
+func (hc *HealthChecker) set(key string, data healthCheckerData) {
 	hc.mux.Lock()
 	defer hc.mux.Unlock()
-	hc.ctxCancels[key] = cancel
+	hc.healthCheckerMap[key] = data
 }
 
-func (hc *HealthChecker) deleteCancel(key string) {
+func (hc *HealthChecker) delete(key string) {
 	hc.mux.Lock()
 	defer hc.mux.Unlock()
-	delete(hc.ctxCancels, key)
+	delete(hc.healthCheckerMap, key)
 }
