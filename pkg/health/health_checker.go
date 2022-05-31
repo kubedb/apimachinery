@@ -48,7 +48,12 @@ func NewHealthChecker() *HealthChecker {
 // Call this method after successful creation of all the replicas of a database.
 func (hc *HealthChecker) Start(key string, healthCheckSpec dbapi.HealthCheckSpec, fn func(string, *HealthCard)) {
 	if healthCheckSpec.PeriodSeconds == nil || healthCheckSpec.TimeoutSeconds == nil || healthCheckSpec.FailureThreshold == nil {
-		klog.Errorf("spec.healthCheck values are nil, can't start health check.")
+		klog.Errorf("spec.healthCheck values are nil, can't start or modify health check.")
+		return
+	}
+
+	if *healthCheckSpec.PeriodSeconds <= 0 {
+		klog.Errorf("spec.healthCheck.PeriodSeconds can't be less than 1, can't start or modify health check.")
 		return
 	}
 
