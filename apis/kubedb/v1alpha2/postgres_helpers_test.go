@@ -37,7 +37,7 @@ func TestGetSharedBufferSizeForPostgres(t *testing.T) {
 				// 10GB
 				resource: resource.NewQuantity(int64(1024*1024*1024*10), resource.DecimalSI),
 			},
-			want: "2684354560B",
+			want: "2560MB",
 		},
 		{
 			name: "2nd",

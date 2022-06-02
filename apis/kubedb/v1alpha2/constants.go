@@ -279,6 +279,8 @@ const (
 	// this is useful when we have set a node as primary and you don't want other node rather then this node to become primary.
 	PostgresPgCoordinatorStatusResumeNonTransferable = "NonTransferableResume"
 
+	SharedBuffersGbAsByte = 1024 * 1024 * 1024
+	SharedBuffersMbAsByte = 1024 * 1024
 	// =========================== ProxySQL Constants ============================
 	LabelProxySQLName        = ProxySQLKey + "/name"
 	LabelProxySQLLoadBalance = ProxySQLKey + "/load-balance"
