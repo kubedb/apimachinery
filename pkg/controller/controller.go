@@ -22,7 +22,7 @@ import (
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 	kubedbinformers "kubedb.dev/apimachinery/client/informers/externalversions"
 
-	cmInformers "github.com/jetstack/cert-manager/pkg/client/informers/externalversions"
+	cmInformers "github.com/cert-manager/cert-manager/pkg/client/informers/externalversions"
 	auditlib "go.bytebuilders.dev/audit/lib"
 	crd_cs "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	externalInformers "k8s.io/apiextensions-apiserver/pkg/client/informers/externalversions"

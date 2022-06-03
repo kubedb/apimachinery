@@ -118,7 +118,7 @@ func (c *FakeMemcachedOpsRequests) UpdateStatus(ctx context.Context, memcachedOp
 // Delete takes name of the memcachedOpsRequest and deletes it. Returns an error if one occurs.
 func (c *FakeMemcachedOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(memcachedopsrequestsResource, c.ns, name), &v1alpha1.MemcachedOpsRequest{})
+		Invokes(testing.NewDeleteActionWithOptions(memcachedopsrequestsResource, c.ns, name, opts), &v1alpha1.MemcachedOpsRequest{})
 
 	return err
 }

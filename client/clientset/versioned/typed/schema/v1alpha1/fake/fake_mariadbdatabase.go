@@ -118,7 +118,7 @@ func (c *FakeMariaDBDatabases) UpdateStatus(ctx context.Context, mariaDBDatabase
 // Delete takes name of the mariaDBDatabase and deletes it. Returns an error if one occurs.
 func (c *FakeMariaDBDatabases) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(mariadbdatabasesResource, c.ns, name), &v1alpha1.MariaDBDatabase{})
+		Invokes(testing.NewDeleteActionWithOptions(mariadbdatabasesResource, c.ns, name, opts), &v1alpha1.MariaDBDatabase{})
 
 	return err
 }

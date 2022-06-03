@@ -100,7 +100,7 @@ func (c *FakePerconaXtraDBVersions) Update(ctx context.Context, perconaXtraDBVer
 // Delete takes name of the perconaXtraDBVersion and deletes it. Returns an error if one occurs.
 func (c *FakePerconaXtraDBVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(perconaxtradbversionsResource, name), &v1alpha1.PerconaXtraDBVersion{})
+		Invokes(testing.NewRootDeleteActionWithOptions(perconaxtradbversionsResource, name, opts), &v1alpha1.PerconaXtraDBVersion{})
 	return err
 }
 

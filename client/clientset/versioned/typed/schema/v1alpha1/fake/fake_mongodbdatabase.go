@@ -118,7 +118,7 @@ func (c *FakeMongoDBDatabases) UpdateStatus(ctx context.Context, mongoDBDatabase
 // Delete takes name of the mongoDBDatabase and deletes it. Returns an error if one occurs.
 func (c *FakeMongoDBDatabases) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(mongodbdatabasesResource, c.ns, name), &v1alpha1.MongoDBDatabase{})
+		Invokes(testing.NewDeleteActionWithOptions(mongodbdatabasesResource, c.ns, name, opts), &v1alpha1.MongoDBDatabase{})
 
 	return err
 }

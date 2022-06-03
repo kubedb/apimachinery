@@ -118,7 +118,7 @@ func (c *FakeMySQLOpsRequests) UpdateStatus(ctx context.Context, mySQLOpsRequest
 // Delete takes name of the mySQLOpsRequest and deletes it. Returns an error if one occurs.
 func (c *FakeMySQLOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(mysqlopsrequestsResource, c.ns, name), &v1alpha1.MySQLOpsRequest{})
+		Invokes(testing.NewDeleteActionWithOptions(mysqlopsrequestsResource, c.ns, name, opts), &v1alpha1.MySQLOpsRequest{})
 
 	return err
 }

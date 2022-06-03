@@ -100,7 +100,7 @@ func (c *FakePostgresVersions) Update(ctx context.Context, postgresVersion *v1al
 // Delete takes name of the postgresVersion and deletes it. Returns an error if one occurs.
 func (c *FakePostgresVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(postgresversionsResource, name), &v1alpha1.PostgresVersion{})
+		Invokes(testing.NewRootDeleteActionWithOptions(postgresversionsResource, name, opts), &v1alpha1.PostgresVersion{})
 	return err
 }
 

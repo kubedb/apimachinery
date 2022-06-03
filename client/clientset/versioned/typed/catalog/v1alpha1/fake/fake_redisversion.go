@@ -100,7 +100,7 @@ func (c *FakeRedisVersions) Update(ctx context.Context, redisVersion *v1alpha1.R
 // Delete takes name of the redisVersion and deletes it. Returns an error if one occurs.
 func (c *FakeRedisVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(redisversionsResource, name), &v1alpha1.RedisVersion{})
+		Invokes(testing.NewRootDeleteActionWithOptions(redisversionsResource, name, opts), &v1alpha1.RedisVersion{})
 	return err
 }
 

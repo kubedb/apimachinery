@@ -118,7 +118,7 @@ func (c *FakePostgresAutoscalers) UpdateStatus(ctx context.Context, postgresAuto
 // Delete takes name of the postgresAutoscaler and deletes it. Returns an error if one occurs.
 func (c *FakePostgresAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(postgresautoscalersResource, c.ns, name), &v1alpha1.PostgresAutoscaler{})
+		Invokes(testing.NewDeleteActionWithOptions(postgresautoscalersResource, c.ns, name, opts), &v1alpha1.PostgresAutoscaler{})
 
 	return err
 }

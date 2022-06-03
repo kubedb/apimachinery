@@ -100,7 +100,7 @@ func (c *FakeMemcachedVersions) Update(ctx context.Context, memcachedVersion *v1
 // Delete takes name of the memcachedVersion and deletes it. Returns an error if one occurs.
 func (c *FakeMemcachedVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(memcachedversionsResource, name), &v1alpha1.MemcachedVersion{})
+		Invokes(testing.NewRootDeleteActionWithOptions(memcachedversionsResource, name, opts), &v1alpha1.MemcachedVersion{})
 	return err
 }
 

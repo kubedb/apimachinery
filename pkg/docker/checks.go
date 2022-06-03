@@ -38,7 +38,7 @@ type RegistrySecret struct {
 }
 
 func CheckDockerImageVersion(repository, reference string) error {
-	if ioutil.IsFileExists(dockerConfigPath) {
+	if ioutil.PathExists(dockerConfigPath) {
 		registrySecret := make(map[string]RegistrySecret)
 		if err := ioutil.ReadFileAs(dockerConfigPath, &registrySecret); err != nil {
 			return err

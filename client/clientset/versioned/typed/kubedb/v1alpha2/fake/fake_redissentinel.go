@@ -118,7 +118,7 @@ func (c *FakeRedisSentinels) UpdateStatus(ctx context.Context, redisSentinel *v1
 // Delete takes name of the redisSentinel and deletes it. Returns an error if one occurs.
 func (c *FakeRedisSentinels) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(redissentinelsResource, c.ns, name), &v1alpha2.RedisSentinel{})
+		Invokes(testing.NewDeleteActionWithOptions(redissentinelsResource, c.ns, name, opts), &v1alpha2.RedisSentinel{})
 
 	return err
 }

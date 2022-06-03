@@ -118,7 +118,7 @@ func (c *FakeElasticsearchDashboards) UpdateStatus(ctx context.Context, elastics
 // Delete takes name of the elasticsearchDashboard and deletes it. Returns an error if one occurs.
 func (c *FakeElasticsearchDashboards) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(elasticsearchdashboardsResource, c.ns, name), &v1alpha1.ElasticsearchDashboard{})
+		Invokes(testing.NewDeleteActionWithOptions(elasticsearchdashboardsResource, c.ns, name, opts), &v1alpha1.ElasticsearchDashboard{})
 
 	return err
 }

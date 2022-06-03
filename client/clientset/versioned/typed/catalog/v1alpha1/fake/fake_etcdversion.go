@@ -100,7 +100,7 @@ func (c *FakeEtcdVersions) Update(ctx context.Context, etcdVersion *v1alpha1.Etc
 // Delete takes name of the etcdVersion and deletes it. Returns an error if one occurs.
 func (c *FakeEtcdVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(etcdversionsResource, name), &v1alpha1.EtcdVersion{})
+		Invokes(testing.NewRootDeleteActionWithOptions(etcdversionsResource, name, opts), &v1alpha1.EtcdVersion{})
 	return err
 }
 

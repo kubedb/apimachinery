@@ -118,7 +118,7 @@ func (c *FakeRedisAutoscalers) UpdateStatus(ctx context.Context, redisAutoscaler
 // Delete takes name of the redisAutoscaler and deletes it. Returns an error if one occurs.
 func (c *FakeRedisAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(redisautoscalersResource, c.ns, name), &v1alpha1.RedisAutoscaler{})
+		Invokes(testing.NewDeleteActionWithOptions(redisautoscalersResource, c.ns, name, opts), &v1alpha1.RedisAutoscaler{})
 
 	return err
 }

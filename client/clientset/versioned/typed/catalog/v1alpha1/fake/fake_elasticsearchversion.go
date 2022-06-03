@@ -100,7 +100,7 @@ func (c *FakeElasticsearchVersions) Update(ctx context.Context, elasticsearchVer
 // Delete takes name of the elasticsearchVersion and deletes it. Returns an error if one occurs.
 func (c *FakeElasticsearchVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(elasticsearchversionsResource, name), &v1alpha1.ElasticsearchVersion{})
+		Invokes(testing.NewRootDeleteActionWithOptions(elasticsearchversionsResource, name, opts), &v1alpha1.ElasticsearchVersion{})
 	return err
 }
 

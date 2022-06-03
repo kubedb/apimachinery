@@ -118,7 +118,7 @@ func (c *FakePgBouncerOpsRequests) UpdateStatus(ctx context.Context, pgBouncerOp
 // Delete takes name of the pgBouncerOpsRequest and deletes it. Returns an error if one occurs.
 func (c *FakePgBouncerOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(pgbounceropsrequestsResource, c.ns, name), &v1alpha1.PgBouncerOpsRequest{})
+		Invokes(testing.NewDeleteActionWithOptions(pgbounceropsrequestsResource, c.ns, name, opts), &v1alpha1.PgBouncerOpsRequest{})
 
 	return err
 }
