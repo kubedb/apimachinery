@@ -1,3 +1,19 @@
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package factory
 
 import (
@@ -9,6 +25,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
+	aggscheme "k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset/scheme"
 	crscheme "kmodules.xyz/custom-resources/client/clientset/versioned/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
@@ -28,6 +45,18 @@ func NewUncachedClient(cfg *rest.Config) (client.Client, error) {
 	if err := kubedbscheme.AddToScheme(scheme); err != nil {
 		return nil, err
 	}
+	// crd
+	if err := crdscheme.AddToScheme(scheme); err != nil {
+		return nil, err
+	}
+	// apiservices
+	if err := aggscheme.AddToScheme(scheme); err != nil {
+		return nil, err
+	}
+	// appbinding
+	if err := crscheme.AddToScheme(scheme); err != nil {
+		return nil, err
+	}
 	// cert-manager
 	if err := cmscheme.AddToScheme(scheme); err != nil {
 		return nil, err
@@ -36,20 +65,8 @@ func NewUncachedClient(cfg *rest.Config) (client.Client, error) {
 	if err := stashscheme.AddToScheme(scheme); err != nil {
 		return nil, err
 	}
-	// crd
-	if err := crdscheme.AddToScheme(scheme); err != nil {
-		return nil, err
-	}
 	// prometheus
 	if err := promscheme.AddToScheme(scheme); err != nil {
-		return nil, err
-	}
-	// appcatalog
-	if err := crscheme.AddToScheme(scheme); err != nil {
-		return nil, err
-	}
-	// https://github.com/kmodules/custom-resources/blob/master/apis/appcatalog/install/install.go
-	if err := kubedbscheme.AddToScheme(scheme); err != nil {
 		return nil, err
 	}
 
