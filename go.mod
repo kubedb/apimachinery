@@ -16,6 +16,7 @@ require (
 	github.com/iancoleman/orderedmap v0.2.0
 	github.com/json-iterator/go v1.1.12
 	github.com/pkg/errors v0.9.1
+	github.com/prometheus-operator/prometheus-operator/pkg/client v0.57.0
 	go.bytebuilders.dev/audit v0.0.21
 	gomodules.xyz/encoding v0.0.5
 	gomodules.xyz/pointer v0.1.0
@@ -117,6 +118,7 @@ require (
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.0.3-0.20220114050600-8b9d41f48198 // indirect
+	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.57.0 // indirect
 	github.com/prometheus/client_golang v1.12.2 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.34.0 // indirect
