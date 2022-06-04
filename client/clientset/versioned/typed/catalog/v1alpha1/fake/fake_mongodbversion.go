@@ -100,7 +100,7 @@ func (c *FakeMongoDBVersions) Update(ctx context.Context, mongoDBVersion *v1alph
 // Delete takes name of the mongoDBVersion and deletes it. Returns an error if one occurs.
 func (c *FakeMongoDBVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(mongodbversionsResource, name), &v1alpha1.MongoDBVersion{})
+		Invokes(testing.NewRootDeleteActionWithOptions(mongodbversionsResource, name, opts), &v1alpha1.MongoDBVersion{})
 	return err
 }
 

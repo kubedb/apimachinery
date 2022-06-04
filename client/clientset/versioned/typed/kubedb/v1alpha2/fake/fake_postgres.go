@@ -118,7 +118,7 @@ func (c *FakePostgreses) UpdateStatus(ctx context.Context, postgres *v1alpha2.Po
 // Delete takes name of the postgres and deletes it. Returns an error if one occurs.
 func (c *FakePostgreses) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(postgresesResource, c.ns, name), &v1alpha2.Postgres{})
+		Invokes(testing.NewDeleteActionWithOptions(postgresesResource, c.ns, name, opts), &v1alpha2.Postgres{})
 
 	return err
 }

@@ -118,7 +118,7 @@ func (c *FakePgBouncerAutoscalers) UpdateStatus(ctx context.Context, pgBouncerAu
 // Delete takes name of the pgBouncerAutoscaler and deletes it. Returns an error if one occurs.
 func (c *FakePgBouncerAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(pgbouncerautoscalersResource, c.ns, name), &v1alpha1.PgBouncerAutoscaler{})
+		Invokes(testing.NewDeleteActionWithOptions(pgbouncerautoscalersResource, c.ns, name, opts), &v1alpha1.PgBouncerAutoscaler{})
 
 	return err
 }

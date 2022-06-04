@@ -118,7 +118,7 @@ func (c *FakeEtcds) UpdateStatus(ctx context.Context, etcd *v1alpha2.Etcd, opts 
 // Delete takes name of the etcd and deletes it. Returns an error if one occurs.
 func (c *FakeEtcds) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(etcdsResource, c.ns, name), &v1alpha2.Etcd{})
+		Invokes(testing.NewDeleteActionWithOptions(etcdsResource, c.ns, name, opts), &v1alpha2.Etcd{})
 
 	return err
 }

@@ -118,7 +118,7 @@ func (c *FakeProxySQLs) UpdateStatus(ctx context.Context, proxySQL *v1alpha2.Pro
 // Delete takes name of the proxySQL and deletes it. Returns an error if one occurs.
 func (c *FakeProxySQLs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(proxysqlsResource, c.ns, name), &v1alpha2.ProxySQL{})
+		Invokes(testing.NewDeleteActionWithOptions(proxysqlsResource, c.ns, name, opts), &v1alpha2.ProxySQL{})
 
 	return err
 }

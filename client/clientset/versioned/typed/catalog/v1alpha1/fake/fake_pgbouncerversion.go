@@ -100,7 +100,7 @@ func (c *FakePgBouncerVersions) Update(ctx context.Context, pgBouncerVersion *v1
 // Delete takes name of the pgBouncerVersion and deletes it. Returns an error if one occurs.
 func (c *FakePgBouncerVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(pgbouncerversionsResource, name), &v1alpha1.PgBouncerVersion{})
+		Invokes(testing.NewRootDeleteActionWithOptions(pgbouncerversionsResource, name, opts), &v1alpha1.PgBouncerVersion{})
 	return err
 }
 

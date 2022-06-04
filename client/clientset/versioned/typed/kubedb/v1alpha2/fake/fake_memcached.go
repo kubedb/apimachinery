@@ -118,7 +118,7 @@ func (c *FakeMemcacheds) UpdateStatus(ctx context.Context, memcached *v1alpha2.M
 // Delete takes name of the memcached and deletes it. Returns an error if one occurs.
 func (c *FakeMemcacheds) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(memcachedsResource, c.ns, name), &v1alpha2.Memcached{})
+		Invokes(testing.NewDeleteActionWithOptions(memcachedsResource, c.ns, name, opts), &v1alpha2.Memcached{})
 
 	return err
 }

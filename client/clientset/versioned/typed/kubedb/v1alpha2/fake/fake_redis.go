@@ -118,7 +118,7 @@ func (c *FakeRedises) UpdateStatus(ctx context.Context, redis *v1alpha2.Redis, o
 // Delete takes name of the redis and deletes it. Returns an error if one occurs.
 func (c *FakeRedises) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(redisesResource, c.ns, name), &v1alpha2.Redis{})
+		Invokes(testing.NewDeleteActionWithOptions(redisesResource, c.ns, name, opts), &v1alpha2.Redis{})
 
 	return err
 }

@@ -118,7 +118,7 @@ func (c *FakePerconaXtraDBs) UpdateStatus(ctx context.Context, perconaXtraDB *v1
 // Delete takes name of the perconaXtraDB and deletes it. Returns an error if one occurs.
 func (c *FakePerconaXtraDBs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(perconaxtradbsResource, c.ns, name), &v1alpha2.PerconaXtraDB{})
+		Invokes(testing.NewDeleteActionWithOptions(perconaxtradbsResource, c.ns, name, opts), &v1alpha2.PerconaXtraDB{})
 
 	return err
 }

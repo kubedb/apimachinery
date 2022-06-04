@@ -118,7 +118,7 @@ func (c *FakeMongoDBOpsRequests) UpdateStatus(ctx context.Context, mongoDBOpsReq
 // Delete takes name of the mongoDBOpsRequest and deletes it. Returns an error if one occurs.
 func (c *FakeMongoDBOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(mongodbopsrequestsResource, c.ns, name), &v1alpha1.MongoDBOpsRequest{})
+		Invokes(testing.NewDeleteActionWithOptions(mongodbopsrequestsResource, c.ns, name, opts), &v1alpha1.MongoDBOpsRequest{})
 
 	return err
 }

@@ -62,6 +62,10 @@ type RestoreSessionSpec struct {
 	// +optional
 	// Deprecated. Use rules section inside `target`.
 	Rules []Rule `json:"rules,omitempty"`
+	// TimeOut specifies the maximum duration of restore. RestoreSession will be considered Failed
+	// if restore does not complete within this time limit. By default, Stash don't set any timeout for restore.
+	// +optional
+	TimeOut string `json:"timeOut,omitempty"`
 }
 
 type RestoreTargetSpec struct {
@@ -148,6 +152,10 @@ type RestoreSessionStatus struct {
 	// Conditions shows current restore condition of the RestoreSession.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+	// SessionDeadline specifies the deadline of restore process. RestoreSession will be
+	// considered Failed if restore does not complete within this deadline
+	// +optional
+	SessionDeadline metav1.Time `json:"sessionDeadline,omitempty"`
 }
 
 type HostRestoreStats struct {
@@ -164,3 +172,65 @@ type HostRestoreStats struct {
 	// +optional
 	Error string `json:"error,omitempty"`
 }
+
+// ========================= Condition Types ===================
+const (
+	// RestoreTargetFound indicates whether the restore target was found
+	RestoreTargetFound = "RestoreTargetFound"
+
+	// StashInitContainerInjected indicates whether stash init-container was injected into the targeted workload
+	// This condition is applicable only for sidecar model
+	StashInitContainerInjected = "StashInitContainerInjected"
+
+	// RestoreJobCreated indicates whether the restore job was created
+	RestoreJobCreated = "RestoreJobCreated"
+
+	// RestoreCompleted condition indicates whether the restore process has been completed or not.
+	// This condition is particularly helpful when the restore addon require some additional operations to perform
+	// before marking the RestoreSession Succeeded/Failed.
+	RestoreCompleted = "RestoreCompleted"
+
+	// RestoreExecutorEnsured condition indicates whether the restore job / init-container was ensured or not.
+	RestoreExecutorEnsured = "RestoreExecutorEnsured"
+
+	// MetricsPushed whether the metrics for this backup session were pushed or not
+	MetricsPushed = "MetricsPushed"
+
+	// PreRestoreHookExecutionSucceeded indicates whether the preRestore hook was executed successfully or not
+	PreRestoreHookExecutionSucceeded = "PreRestoreHookExecutionSucceeded"
+
+	// PostRestoreHookExecutionSucceeded indicates whether the postRestore hook was executed successfully or not
+	PostRestoreHookExecutionSucceeded = "PostRestoreHookExecutionSucceeded"
+)
+
+// ======================== Condition Reasons ===================
+const (
+	// InitContainerInjectionSucceeded indicates that the condition transitioned to this state because stash init-container
+	// was injected successfully into the targeted workload
+	InitContainerInjectionSucceeded = "InitContainerInjectionSucceeded"
+	// InitContainerInjectionFailed indicates that the condition transitioned to this state because operator was unable
+	// to inject stash init-container into the targeted workload
+	InitContainerInjectionFailed = "InitContainerInjectionFailed"
+
+	// RestoreJobCreationSucceeded indicates that the condition transitioned to this state because restore job was created successfully
+	RestoreJobCreationSucceeded = "RestoreJobCreationSucceeded"
+	// RestoreJobCreationFailed indicates that the condition transitioned to this state because operator was unable to create restore job
+	RestoreJobCreationFailed = "RestoreJobCreationFailed"
+
+	// SuccessfullyPushedMetrics indicates that the condition transitioned to this state because the metrics was successfully pushed to the pushgateway
+	SuccessfullyPushedMetrics = "SuccessfullyPushedMetrics"
+	// FailedToPushMetrics indicates that the condition transitioned to this state because the Stash was unable to push the metrics to the pushgateway
+	FailedToPushMetrics = "FailedToPushMetrics"
+
+	SuccessfullyEnsuredRestoreExecutor = "SuccessfullyEnsuredRestoreExecutor"
+	FailedToEnsureRestoreExecutor      = "FailedToEnsureRestoreExecutor"
+
+	SuccessfullyExecutedPreRestoreHook = "SuccessfullyExecutedPreRestoreHook"
+	FailedToExecutePreRestoreHook      = "FailedToExecutePreRestoreHook"
+
+	SuccessfullyExecutedPostRestoreHook = "SuccessfullyExecutedPostRestoreHook"
+	FailedToExecutePostRestoreHook      = "FailedToExecutePostRestoreHook"
+
+	PostRestoreTasksExecuted    = "PostRestoreTasksExecuted"
+	PostRestoreTasksNotExecuted = "PostRestoreTasksNotExecuted"
+)

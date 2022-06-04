@@ -100,7 +100,7 @@ func (c *FakeMariaDBVersions) Update(ctx context.Context, mariaDBVersion *v1alph
 // Delete takes name of the mariaDBVersion and deletes it. Returns an error if one occurs.
 func (c *FakeMariaDBVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(mariadbversionsResource, name), &v1alpha1.MariaDBVersion{})
+		Invokes(testing.NewRootDeleteActionWithOptions(mariadbversionsResource, name, opts), &v1alpha1.MariaDBVersion{})
 	return err
 }
 

@@ -28,12 +28,12 @@ import (
 	opsinstall "kubedb.dev/apimachinery/apis/ops/install"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"github.com/go-openapi/spec"
 	gort "gomodules.xyz/runtime"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/klog/v2"
 	"k8s.io/kube-openapi/pkg/common"
+	"k8s.io/kube-openapi/pkg/validation/spec"
 	"kmodules.xyz/client-go/openapi"
 )
 
