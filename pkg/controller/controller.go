@@ -39,6 +39,7 @@ import (
 	"kmodules.xyz/client-go/tools/queue"
 	appcat_cs "kmodules.xyz/custom-resources/client/clientset/versioned"
 	appcat_in "kmodules.xyz/custom-resources/client/informers/externalversions"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	scs "stash.appscode.dev/apimachinery/client/clientset/versioned"
 	stashinformer "stash.appscode.dev/apimachinery/client/informers/externalversions"
 	lister "stash.appscode.dev/apimachinery/client/listers/stash/v1beta1"
@@ -46,6 +47,8 @@ import (
 
 type Controller struct {
 	ClientConfig *rest.Config
+	// KubeBuilder Client
+	KBClient client.Client
 	// Kubernetes client
 	Client kubernetes.Interface
 	// CRD Client
