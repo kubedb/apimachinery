@@ -359,6 +359,16 @@ func GetSharedBufferSizeForPostgres(resource *resource.Quantity) string {
 		ret = minSharedBuffer
 	}
 
+	// check If the ret value need to convert into MB
+	// why need this? -> PostgreSQL officially stores shared_buffers as an int32 that's why if the value is greater than 2147483648B.
+	// It's going to through and error that the value is going to cross the limit.
+
 	sharedBuffer := fmt.Sprintf("%sB", strconv.FormatInt(ret, 10))
+	if ret > SharedBuffersGbAsByte {
+		// convert the ret as MB devide by SharedBuffersMbAsByte
+		ret /= SharedBuffersMbAsByte
+		sharedBuffer = fmt.Sprintf("%sMB", strconv.FormatInt(ret, 10))
+	}
+
 	return sharedBuffer
 }
