@@ -105,19 +105,3 @@ type RedisAutoscalerListerExpansion interface{}
 // RedisAutoscalerNamespaceListerExpansion allows custom methods to be added to
 // RedisAutoscalerNamespaceLister.
 type RedisAutoscalerNamespaceListerExpansion interface{}
-
-// VerticalPodAutopilotListerExpansion allows custom methods to be added to
-// VerticalPodAutopilotLister.
-type VerticalPodAutopilotListerExpansion interface{}
-
-// VerticalPodAutopilotNamespaceListerExpansion allows custom methods to be added to
-// VerticalPodAutopilotNamespaceLister.
-type VerticalPodAutopilotNamespaceListerExpansion interface{}
-
-// VerticalPodAutopilotCheckpointListerExpansion allows custom methods to be added to
-// VerticalPodAutopilotCheckpointLister.
-type VerticalPodAutopilotCheckpointListerExpansion interface{}
-
-// VerticalPodAutopilotCheckpointNamespaceListerExpansion allows custom methods to be added to
-// VerticalPodAutopilotCheckpointNamespaceLister.
-type VerticalPodAutopilotCheckpointNamespaceListerExpansion interface{}

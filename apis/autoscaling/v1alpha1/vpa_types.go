@@ -22,52 +22,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const (
-	ResourceCodeVerticalPodAutopilot     = "vpa"
-	ResourceKindVerticalPodAutopilot     = "VerticalPodAutopilot"
-	ResourceSingularVerticalPodAutopilot = "verticalpodautopilot"
-	ResourcePluralVerticalPodAutopilot   = "verticalpodautopilots"
-)
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// VerticalPodAutopilotList is a list of VerticalPodAutopilot objects.
-type VerticalPodAutopilotList struct {
-	metav1.TypeMeta `json:",inline"`
-	// metadata is the standard list metadata.
-	// +optional
-	metav1.ListMeta `json:"metadata"`
-
-	// items is the list of vertical pod autopilot objects.
-	Items []VerticalPodAutopilot `json:"items"`
-}
-
-// +genclient
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:storageversion
-// +kubebuilder:resource:shortName=vpa
-// +kubebuilder:printcolumn:name="Mode",type="string",JSONPath=".spec.updatePolicy.updateMode"
-// +kubebuilder:printcolumn:name="CPU",type="string",JSONPath=".status.recommendation.containerRecommendations[0].target.cpu"
-// +kubebuilder:printcolumn:name="Mem",type="string",JSONPath=".status.recommendation.containerRecommendations[0].target.memory"
-// +kubebuilder:printcolumn:name="Provided",type="string",JSONPath=".status.conditions[?(@.type=='RecommendationProvided')].status"
-// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-
-// VerticalPodAutopilot is the configuration for a vertical pod
-// autopilot, which automatically manages pod resources based on historical and
-// real time resource utilization.
-type VerticalPodAutopilot struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	// Specification of the behavior of the autopilot.
-	// More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status.
-	Spec VerticalPodAutopilotSpec `json:"spec"`
-
-	// Current information about the autopilot.
-	// +optional
-	Status VerticalPodAutopilotStatus `json:"status,omitempty"`
-}
-
 // VerticalPodAutopilotRecommenderSelector points to a specific Vertical Pod autopilot recommender.
 // In the future it might pass parameters to the recommender.
 type VerticalPodAutopilotRecommenderSelector struct {
@@ -75,8 +29,11 @@ type VerticalPodAutopilotRecommenderSelector struct {
 	Name string `json:"name"`
 }
 
-// VerticalPodAutopilotSpec is the specification of the behavior of the autopilot.
-type VerticalPodAutopilotSpec struct {
+// VPASpec is the specification of the behavior of the autopilot.
+type VPASpec struct {
+	// The name of the verticalPodAutoscaler
+	// usually this will be the corresponding statefulset name
+	VPAName string `json:"vpaName,omitempty" `
 	// TargetRef points to the controller managing the set of pods for the
 	// autopilot to control - e.g. Deployment, StatefulSet. VerticalPodAutopilot
 	// can be targeted at controller implementing scale subresource (the pod set is
@@ -169,25 +126,6 @@ type ContainerResourcePolicy struct {
 	// Whether autopilot is enabled for the container. The default is "Auto".
 	// +optional
 	Mode *ContainerScalingMode `json:"mode,omitempty"`
-	// Specifies the minimal amount of resources that will be recommended
-	// for the container. The default is no minimum.
-	// +optional
-	MinAllowed v1.ResourceList `json:"minAllowed,omitempty"`
-	// Specifies the maximum amount of resources that will be recommended
-	// for the container. The default is no maximum.
-	// +optional
-	MaxAllowed v1.ResourceList `json:"maxAllowed,omitempty"`
-
-	// Specifies the type of recommendations that will be computed
-	// (and possibly applied) by VPA.
-	// If not specified, the default of [ResourceCPU, ResourceMemory] will be used.
-	// +optional
-	ControlledResources *[]v1.ResourceName `json:"controlledResources,omitempty"`
-
-	// Specifies which resource values should be controlled.
-	// The default is "RequestsAndLimits".
-	// +optional
-	ControlledValues *ContainerControlledValues `json:"controlledValues,omitempty"`
 }
 
 const (
@@ -208,8 +146,8 @@ const (
 	ContainerScalingModeOff ContainerScalingMode = "Off"
 )
 
-// VerticalPodAutopilotStatus describes the runtime state of the autopilot.
-type VerticalPodAutopilotStatus struct {
+// VPAStatus describes the runtime state of the autopilot.
+type VPAStatus struct {
 	// The most recently computed amount of resources recommended by the
 	// autopilot for the controlled pods.
 	// +optional

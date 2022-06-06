@@ -91,6 +91,15 @@ type MongoDBAutoscalerStatus struct {
 	// +patchMergeKey=type
 	// +patchStrategy=merge
 	Conditions []kmapi.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+
+	// This field is equivalent to this one:
+	// https://github.com/kubernetes/autoscaler/blob/273e35b88cb50c5aac383c5eceb88fb337cb31b6/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1/types.go#L218-L230
+	VPAs []VPAStatus `json:"vpas,omitempty"`
+
+	// Checkpoints hold all the Checkpoint those are associated
+	// with this Autoscaler object. Equivalent to :
+	// https://github.com/kubernetes/autoscaler/blob/273e35b88cb50c5aac383c5eceb88fb337cb31b6/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1/types.go#L354-L378
+	Checkpoints []Checkpoint `json:"checkpoints,omitempty"`
 }
 
 // MongoDBAutoscalerConditionType are the valid conditions of

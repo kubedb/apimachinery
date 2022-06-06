@@ -94,6 +94,10 @@ type ComputeAutoscalerSpec struct {
 	// For InMemory storageType, if db uses more than UsageThreshold percentage
 	// of the total memory() `inMemorySizeGB` should be increased by ScalingThreshold percent
 	ScalingThreshold int32 `json:"scalingThreshold,omitempty"`
+
+	// VPAs hold all the VerticalPodAutoscaler specs those are associated
+	// with its parent 'nodeType'
+	VPAs []VPASpec `json:"vpas,omitempty"`
 }
 
 type StorageAutoscalerSpec struct {

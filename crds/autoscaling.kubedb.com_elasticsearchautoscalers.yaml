@@ -76,6 +76,64 @@ spec:
                       usageThreshold:
                         format: int32
                         type: integer
+                      vpas:
+                        items:
+                          properties:
+                            recommenders:
+                              items:
+                                properties:
+                                  name:
+                                    type: string
+                                required:
+                                - name
+                                type: object
+                              type: array
+                            resourcePolicy:
+                              properties:
+                                containerPolicies:
+                                  items:
+                                    properties:
+                                      containerName:
+                                        type: string
+                                      mode:
+                                        enum:
+                                        - Auto
+                                        - "Off"
+                                        type: string
+                                    type: object
+                                  type: array
+                              type: object
+                            targetRef:
+                              properties:
+                                apiVersion:
+                                  type: string
+                                kind:
+                                  type: string
+                                name:
+                                  type: string
+                              required:
+                              - kind
+                              - name
+                              type: object
+                            updatePolicy:
+                              properties:
+                                minReplicas:
+                                  format: int32
+                                  type: integer
+                                updateMode:
+                                  enum:
+                                  - "Off"
+                                  - Initial
+                                  - Recreate
+                                  - Auto
+                                  type: string
+                              type: object
+                            vpaName:
+                              type: string
+                          required:
+                          - targetRef
+                          type: object
+                        type: array
                     type: object
                   topology:
                     properties:
@@ -119,6 +177,64 @@ spec:
                           usageThreshold:
                             format: int32
                             type: integer
+                          vpas:
+                            items:
+                              properties:
+                                recommenders:
+                                  items:
+                                    properties:
+                                      name:
+                                        type: string
+                                    required:
+                                    - name
+                                    type: object
+                                  type: array
+                                resourcePolicy:
+                                  properties:
+                                    containerPolicies:
+                                      items:
+                                        properties:
+                                          containerName:
+                                            type: string
+                                          mode:
+                                            enum:
+                                            - Auto
+                                            - "Off"
+                                            type: string
+                                        type: object
+                                      type: array
+                                  type: object
+                                targetRef:
+                                  properties:
+                                    apiVersion:
+                                      type: string
+                                    kind:
+                                      type: string
+                                    name:
+                                      type: string
+                                  required:
+                                  - kind
+                                  - name
+                                  type: object
+                                updatePolicy:
+                                  properties:
+                                    minReplicas:
+                                      format: int32
+                                      type: integer
+                                    updateMode:
+                                      enum:
+                                      - "Off"
+                                      - Initial
+                                      - Recreate
+                                      - Auto
+                                      type: string
+                                  type: object
+                                vpaName:
+                                  type: string
+                              required:
+                              - targetRef
+                              type: object
+                            type: array
                         type: object
                       ingest:
                         properties:
@@ -160,6 +276,64 @@ spec:
                           usageThreshold:
                             format: int32
                             type: integer
+                          vpas:
+                            items:
+                              properties:
+                                recommenders:
+                                  items:
+                                    properties:
+                                      name:
+                                        type: string
+                                    required:
+                                    - name
+                                    type: object
+                                  type: array
+                                resourcePolicy:
+                                  properties:
+                                    containerPolicies:
+                                      items:
+                                        properties:
+                                          containerName:
+                                            type: string
+                                          mode:
+                                            enum:
+                                            - Auto
+                                            - "Off"
+                                            type: string
+                                        type: object
+                                      type: array
+                                  type: object
+                                targetRef:
+                                  properties:
+                                    apiVersion:
+                                      type: string
+                                    kind:
+                                      type: string
+                                    name:
+                                      type: string
+                                  required:
+                                  - kind
+                                  - name
+                                  type: object
+                                updatePolicy:
+                                  properties:
+                                    minReplicas:
+                                      format: int32
+                                      type: integer
+                                    updateMode:
+                                      enum:
+                                      - "Off"
+                                      - Initial
+                                      - Recreate
+                                      - Auto
+                                      type: string
+                                  type: object
+                                vpaName:
+                                  type: string
+                              required:
+                              - targetRef
+                              type: object
+                            type: array
                         type: object
                       master:
                         properties:
@@ -201,6 +375,64 @@ spec:
                           usageThreshold:
                             format: int32
                             type: integer
+                          vpas:
+                            items:
+                              properties:
+                                recommenders:
+                                  items:
+                                    properties:
+                                      name:
+                                        type: string
+                                    required:
+                                    - name
+                                    type: object
+                                  type: array
+                                resourcePolicy:
+                                  properties:
+                                    containerPolicies:
+                                      items:
+                                        properties:
+                                          containerName:
+                                            type: string
+                                          mode:
+                                            enum:
+                                            - Auto
+                                            - "Off"
+                                            type: string
+                                        type: object
+                                      type: array
+                                  type: object
+                                targetRef:
+                                  properties:
+                                    apiVersion:
+                                      type: string
+                                    kind:
+                                      type: string
+                                    name:
+                                      type: string
+                                  required:
+                                  - kind
+                                  - name
+                                  type: object
+                                updatePolicy:
+                                  properties:
+                                    minReplicas:
+                                      format: int32
+                                      type: integer
+                                    updateMode:
+                                      enum:
+                                      - "Off"
+                                      - Initial
+                                      - Recreate
+                                      - Auto
+                                      type: string
+                                  type: object
+                                vpaName:
+                                  type: string
+                              required:
+                              - targetRef
+                              type: object
+                            type: array
                         type: object
                     type: object
                 type: object
@@ -284,6 +516,82 @@ spec:
             type: object
           status:
             properties:
+              checkpoints:
+                items:
+                  properties:
+                    cpuHistogram:
+                      properties:
+                        bucketWeights:
+                          items:
+                            properties:
+                              index:
+                                type: integer
+                              weight:
+                                format: int32
+                                type: integer
+                            required:
+                            - index
+                            - weight
+                            type: object
+                          type: array
+                          x-kubernetes-preserve-unknown-fields: true
+                        referenceTimestamp:
+                          format: date-time
+                          nullable: true
+                          type: string
+                        totalWeight:
+                          format: double
+                          type: number
+                      type: object
+                    firstSampleStart:
+                      format: date-time
+                      nullable: true
+                      type: string
+                    lastSampleStart:
+                      format: date-time
+                      nullable: true
+                      type: string
+                    lastUpdateTime:
+                      format: date-time
+                      nullable: true
+                      type: string
+                    memoryHistogram:
+                      properties:
+                        bucketWeights:
+                          items:
+                            properties:
+                              index:
+                                type: integer
+                              weight:
+                                format: int32
+                                type: integer
+                            required:
+                            - index
+                            - weight
+                            type: object
+                          type: array
+                          x-kubernetes-preserve-unknown-fields: true
+                        referenceTimestamp:
+                          format: date-time
+                          nullable: true
+                          type: string
+                        totalWeight:
+                          format: double
+                          type: number
+                      type: object
+                    ref:
+                      properties:
+                        containerName:
+                          type: string
+                        vpaObjectName:
+                          type: string
+                      type: object
+                    totalSamplesCount:
+                      type: integer
+                    version:
+                      type: string
+                  type: object
+                type: array
               conditions:
                 items:
                   properties:
@@ -312,6 +620,74 @@ spec:
               observedGeneration:
                 format: int64
                 type: integer
+              vpas:
+                items:
+                  properties:
+                    conditions:
+                      items:
+                        properties:
+                          lastTransitionTime:
+                            format: date-time
+                            type: string
+                          message:
+                            type: string
+                          reason:
+                            type: string
+                          status:
+                            type: string
+                          type:
+                            type: string
+                        required:
+                        - status
+                        - type
+                        type: object
+                      type: array
+                    recommendation:
+                      properties:
+                        containerRecommendations:
+                          items:
+                            properties:
+                              containerName:
+                                type: string
+                              lowerBound:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                type: object
+                              target:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                type: object
+                              uncappedTarget:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                type: object
+                              upperBound:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                type: object
+                            required:
+                            - target
+                            type: object
+                          type: array
+                      type: object
+                  type: object
+                type: array
             type: object
         type: object
     served: true

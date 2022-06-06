@@ -18,46 +18,8 @@ package v1alpha1
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-const (
-	ResourceCodeVerticalPodAutopilotCheckpoint     = "vpacheckpoint "
-	ResourceKindVerticalPodAutopilotCheckpoint     = "VerticalPodAutopilotCheckpoint"
-	ResourceSingularVerticalPodAutopilotCheckpoint = "verticalpodautopilotcheckpoint"
-	ResourcePluralVerticalPodAutopilotCheckpoint   = "verticalpodautopilotcheckpoints"
-)
-
-// +genclient
-// +genclient:noStatus
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:storageversion
-// +kubebuilder:resource:shortName=vpacheckpoint
-
-// VerticalPodAutopilotCheckpoint is the checkpoint of the internal state of VPA that
-// is used for recovery after recommender's restart.
-type VerticalPodAutopilotCheckpoint struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	// Specification of the checkpoint.
-	// More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status.
-	// +optional
-	Spec VerticalPodAutopilotCheckpointSpec `json:"spec,omitempty"`
-
-	// Data of the checkpoint.
-	// +optional
-	Status VerticalPodAutopilotCheckpointStatus `json:"status,omitempty"`
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// VerticalPodAutopilotCheckpointList is a list of VerticalPodAutopilotCheckpoint objects.
-type VerticalPodAutopilotCheckpointList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
-	Items           []VerticalPodAutopilotCheckpoint `json:"items"`
-}
-
-// VerticalPodAutopilotCheckpointSpec is the specification of the checkpoint object.
-type VerticalPodAutopilotCheckpointSpec struct {
+// CheckpointReference is the metedata of the checkpoint.
+type CheckpointReference struct {
 	// Name of the VPA object that stored VerticalPodAutopilotCheckpoint object.
 	VPAObjectName string `json:"vpaObjectName,omitempty"`
 
@@ -65,8 +27,11 @@ type VerticalPodAutopilotCheckpointSpec struct {
 	ContainerName string `json:"containerName,omitempty"`
 }
 
-// VerticalPodAutopilotCheckpointStatus contains data of the checkpoint.
-type VerticalPodAutopilotCheckpointStatus struct {
+// Checkpoint contains data of the checkpoint.
+type Checkpoint struct {
+	// Metedata of the checkpoint
+	// It is used for the identification
+	Ref CheckpointReference `json:"ref,omitempty"`
 	// The time when the status was last refreshed.
 	// +nullable
 	LastUpdateTime metav1.Time `json:"lastUpdateTime,omitempty"`
