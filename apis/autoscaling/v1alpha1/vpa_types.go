@@ -33,6 +33,7 @@ type VerticalPodAutopilotRecommenderSelector struct {
 type VPASpec struct {
 	// The name of the verticalPodAutoscaler
 	// usually this will be the corresponding statefulset name
+	// This field will help us to get the corresponding vpaStatus. As `VPAName` is the only common field between them
 	VPAName string `json:"vpaName,omitempty" `
 	// TargetRef points to the controller managing the set of pods for the
 	// autopilot to control - e.g. Deployment, StatefulSet. VerticalPodAutopilot
@@ -148,6 +149,10 @@ const (
 
 // VPAStatus describes the runtime state of the autopilot.
 type VPAStatus struct {
+	// The name of the VerticalPodAutoscaler.
+	// This field will help us to get the corresponding vpaSpec. As `VPAName` is the only common field between them
+	VPAName string `json:"vpaName,omitempty"`
+
 	// The most recently computed amount of resources recommended by the
 	// autopilot for the controlled pods.
 	// +optional

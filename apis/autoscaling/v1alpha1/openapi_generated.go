@@ -24447,7 +24447,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_VPASpec(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"vpaName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The name of the verticalPodAutoscaler usually this will be the corresponding statefulset name",
+							Description: "The name of the verticalPodAutoscaler usually this will be the corresponding statefulset name This field will help us to get the corresponding vpaStatus. As `VPAName` is the only common field between them",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -24499,6 +24499,13 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref common.Referenc
 				Description: "VPAStatus describes the runtime state of the autopilot.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"vpaName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The name of the VerticalPodAutoscaler. This field will help us to get the corresponding vpaSpec. As `VPAName` is the only common field between them",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"recommendation": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The most recently computed amount of resources recommended by the autopilot for the controlled pods.",
