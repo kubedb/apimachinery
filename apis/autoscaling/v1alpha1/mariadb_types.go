@@ -23,7 +23,7 @@ import (
 )
 
 const (
-	ResourceCodeMariaDBAutoscaler     = "mdautoscaler"
+	ResourceCodeMariaDBAutoscaler     = "mdscaler"
 	ResourceKindMariaDBAutoscaler     = "MariaDBAutoscaler"
 	ResourceSingularMariaDBAutoscaler = "mariadbautoscaler"
 	ResourcePluralMariaDBAutoscaler   = "mariadbautoscalers"
@@ -38,7 +38,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=mariadbautoscalers,singular=mariadbautoscaler,shortName=mdautoscaler,categories={datastore,kubedb,appscode}
+// +kubebuilder:resource:path=mariadbautoscalers,singular=mariadbautoscaler,shortName=mdscaler,categories={datastore,kubedb,appscode}
 // +kubebuilder:subresource:status
 type MariaDBAutoscaler struct {
 	metav1.TypeMeta `json:",inline"`

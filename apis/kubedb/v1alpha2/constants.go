@@ -102,6 +102,17 @@ const (
 	ElasticsearchJavaOptsEnv                     = "ES_JAVA_OPTS"
 	ElasticsearchOpenSearchJavaOptsEnv           = "OPENSEARCH_JAVA_OPTS"
 
+	// NodeTypes
+	NodeTypeMaster  = "master"
+	NodeTypeData    = "data"
+	NodeTypeIngest  = "ingest"
+	NodeTypeGeneral = "node"
+	NodeTypeHot     = "dataHot"
+	NodeTypeWarm    = "dataWarm"
+	NodeTypeCold    = "dataCold"
+	NodeTypeFrozen  = "dataFrozen"
+	NodeTypeContent = "dataContent"
+
 	// Ref:
 	//	- https://www.elastic.co/guide/en/elasticsearch/reference/7.6/heap-size.html#heap-size
 	//	- no more than 50% of your physical RAM

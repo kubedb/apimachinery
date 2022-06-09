@@ -16,7 +16,7 @@ spec:
     listKind: MariaDBAutoscalerList
     plural: mariadbautoscalers
     shortNames:
-    - mdautoscaler
+    - mdscaler
     singular: mariadbautoscaler
   scope: Namespaced
   versions:

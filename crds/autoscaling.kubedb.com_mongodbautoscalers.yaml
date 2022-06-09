@@ -16,7 +16,7 @@ spec:
     listKind: MongoDBAutoscalerList
     plural: mongodbautoscalers
     shortNames:
-    - mgautoscaler
+    - mgscaler
     singular: mongodbautoscaler
   scope: Namespaced
   versions:
