@@ -33830,7 +33830,14 @@
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for ProxySQL horizontal scaling",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "member": {
+          "description": "Number of nodes/members of the group",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLOpsRequest": {
       "type": "object",
@@ -33901,7 +33908,7 @@
       "description": "ProxySQLOpsRequestSpec is the spec for ProxySQLOpsRequest",
       "type": "object",
       "required": [
-        "databaseRef",
+        "proxyRef",
         "type"
       ],
       "properties": {
@@ -33909,18 +33916,22 @@
           "description": "Specifies information necessary for custom configuration of ProxySQL",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLCustomConfigurationSpec"
         },
-        "databaseRef": {
-          "description": "Specifies the ProxySQL reference",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
-        },
         "horizontalScaling": {
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLHorizontalScalingSpec"
         },
+        "proxyRef": {
+          "description": "Specifies the ProxySQL reference",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
         "restart": {
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "timeout": {
+          "description": "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "tls": {
           "description": "Specifies information necessary for configuring TLS",

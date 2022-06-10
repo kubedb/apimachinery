@@ -44,15 +44,21 @@ spec:
             properties:
               configuration:
                 type: object
-              databaseRef:
+              horizontalScaling:
+                properties:
+                  member:
+                    format: int32
+                    type: integer
+                type: object
+              proxyRef:
                 properties:
                   name:
                     type: string
                 type: object
-              horizontalScaling:
-                type: object
               restart:
                 type: object
+              timeout:
+                type: string
               tls:
                 properties:
                   certificates:
@@ -183,7 +189,7 @@ spec:
               volumeExpansion:
                 type: object
             required:
-            - databaseRef
+            - proxyRef
             - type
             type: object
           status:

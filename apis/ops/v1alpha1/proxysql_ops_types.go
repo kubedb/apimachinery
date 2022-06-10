@@ -50,7 +50,7 @@ type ProxySQLOpsRequest struct {
 // ProxySQLOpsRequestSpec is the spec for ProxySQLOpsRequest
 type ProxySQLOpsRequestSpec struct {
 	// Specifies the ProxySQL reference
-	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
+	ProxyRef core.LocalObjectReference `json:"proxyRef"`
 	// Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.
 	Type OpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading ProxySQL
@@ -67,6 +67,8 @@ type ProxySQLOpsRequestSpec struct {
 	TLS *TLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
+	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
+	Timeout *metav1.Duration `json:"timeout,omitempty"`
 }
 
 // ProxySQLReplicaReadinessCriteria is the criteria for checking readiness of a ProxySQL pod
@@ -80,7 +82,10 @@ type ProxySQLUpgradeSpec struct {
 }
 
 // HorizontalScaling is the spec for ProxySQL horizontal scaling
-type ProxySQLHorizontalScalingSpec struct{}
+type ProxySQLHorizontalScalingSpec struct {
+	// Number of nodes/members of the group
+	Member *int32 `json:"member,omitempty"`
+}
 
 // ProxySQLVerticalScalingSpec is the spec for ProxySQL vertical scaling
 type ProxySQLVerticalScalingSpec struct {

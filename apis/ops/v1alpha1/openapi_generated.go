@@ -24651,6 +24651,15 @@ func schema_apimachinery_apis_ops_v1alpha1_ProxySQLHorizontalScalingSpec(ref com
 			SchemaProps: spec.SchemaProps{
 				Description: "HorizontalScaling is the spec for ProxySQL horizontal scaling",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"member": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of nodes/members of the group",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -24758,7 +24767,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ProxySQLOpsRequestSpec(ref common.Ref
 				Description: "ProxySQLOpsRequestSpec is the spec for ProxySQLOpsRequest",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"databaseRef": {
+					"proxyRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the ProxySQL reference",
 							Default:     map[string]interface{}{},
@@ -24815,12 +24824,18 @@ func schema_apimachinery_apis_ops_v1alpha1_ProxySQLOpsRequestSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
 				},
-				Required: []string{"databaseRef", "type"},
+				Required: []string{"proxyRef", "type"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
