@@ -406,8 +406,8 @@ var (
 		},
 	}
 
-	// DefaultResourcesElasticSearch must be used for elasticsearch to avoid
-	// pods OOMKILLED issue while Upgrading from V7 to V8
+	// DefaultResourcesElasticSearch must be used for elasticsearch
+	// to avoid OOMKILLED while deploying ES V8
 	DefaultResourcesElasticSearch = core.ResourceRequirements{
 		Requests: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse(".500"),
