@@ -1618,6 +1618,8 @@ spec:
                 type: object
               restart:
                 type: object
+              timeout:
+                type: string
               tls:
                 properties:
                   certificates:
@@ -1802,6 +1804,12 @@ spec:
                 type: object
               volumeExpansion:
                 properties:
+                  mode:
+                    default: Online
+                    enum:
+                    - Offline
+                    - Online
+                    type: string
                   redis:
                     anyOf:
                     - type: integer
