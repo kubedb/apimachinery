@@ -405,4 +405,16 @@ var (
 			core.ResourceMemory: resource.MustParse("256Mi"),
 		},
 	}
+
+	// DefaultResourcesElasticSearch must be used for elasticsearch
+	// to avoid OOMKILLED while deploying ES V8
+	DefaultResourcesElasticSearch = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".500"),
+			core.ResourceMemory: resource.MustParse("1.5Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("1.5Gi"),
+		},
+	}
 )
