@@ -139,6 +139,9 @@ type MongoDBSpec struct {
 	// +optional
 	// +nullable
 	Arbiter *MongoArbiterNode `json:"arbiter"`
+
+	// +optional
+	HealthCheck HealthCheckSpec `json:"healthCheck"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter
