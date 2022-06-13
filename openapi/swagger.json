@@ -34204,6 +34204,9 @@
       "description": "RedisVolumeExpansionSpec is the spec for Redis volume expansion",
       "type": "object",
       "properties": {
+        "mode": {
+          "type": "string"
+        },
         "redis": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }

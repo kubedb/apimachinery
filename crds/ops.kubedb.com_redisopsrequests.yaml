@@ -1804,6 +1804,11 @@ spec:
                 type: object
               volumeExpansion:
                 properties:
+                  mode:
+                    enum:
+                    - Offline
+                    - Online
+                    type: string
                   redis:
                     anyOf:
                     - type: integer
