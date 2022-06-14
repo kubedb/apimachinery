@@ -55,3 +55,13 @@ func (r RedisAutoscaler) ResourcePlural() string {
 func (r RedisAutoscaler) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &RedisAutoscaler{}
+
+func (e *RedisAutoscaler) GetStatus() AutoscalerStatus {
+	return e.Status
+}
+
+func (e *RedisAutoscaler) SetStatus(s AutoscalerStatus) {
+	e.Status = s
+}

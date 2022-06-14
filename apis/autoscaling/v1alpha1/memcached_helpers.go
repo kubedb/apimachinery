@@ -55,3 +55,13 @@ func (m MemcachedAutoscaler) ResourcePlural() string {
 func (m MemcachedAutoscaler) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &MariaDBAutoscaler{}
+
+func (e *MemcachedAutoscaler) GetStatus() AutoscalerStatus {
+	return e.Status
+}
+
+func (e *MemcachedAutoscaler) SetStatus(s AutoscalerStatus) {
+	e.Status = s
+}

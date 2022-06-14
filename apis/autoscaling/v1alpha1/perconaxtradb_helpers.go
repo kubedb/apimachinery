@@ -55,3 +55,13 @@ func (p PerconaXtraDBAutoscaler) ResourcePlural() string {
 func (p PerconaXtraDBAutoscaler) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &PerconaXtraDBAutoscaler{}
+
+func (e *PerconaXtraDBAutoscaler) GetStatus() AutoscalerStatus {
+	return e.Status
+}
+
+func (e *PerconaXtraDBAutoscaler) SetStatus(s AutoscalerStatus) {
+	e.Status = s
+}

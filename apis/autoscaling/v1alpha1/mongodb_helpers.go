@@ -55,3 +55,13 @@ func (m MongoDBAutoscaler) ResourcePlural() string {
 func (m MongoDBAutoscaler) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &MongoDBAutoscaler{}
+
+func (e *MongoDBAutoscaler) GetStatus() AutoscalerStatus {
+	return e.Status
+}
+
+func (e *MongoDBAutoscaler) SetStatus(s AutoscalerStatus) {
+	e.Status = s
+}

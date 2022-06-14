@@ -55,3 +55,13 @@ func (e EtcdAutoscaler) ResourcePlural() string {
 func (e EtcdAutoscaler) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &EtcdAutoscaler{}
+
+func (e *EtcdAutoscaler) GetStatus() AutoscalerStatus {
+	return e.Status
+}
+
+func (e *EtcdAutoscaler) SetStatus(s AutoscalerStatus) {
+	e.Status = s
+}

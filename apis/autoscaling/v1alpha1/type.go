@@ -145,3 +145,8 @@ type AutoscalerStatus struct {
 	// +optional
 	Checkpoints []Checkpoint `json:"checkpoints,omitempty"`
 }
+
+type StatusAccessor interface {
+	GetStatus() AutoscalerStatus
+	SetStatus(_ AutoscalerStatus)
+}
