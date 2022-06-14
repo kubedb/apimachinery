@@ -51,3 +51,13 @@ func (p ProxySQLAutoscaler) ResourceSingular() string {
 func (p ProxySQLAutoscaler) ResourcePlural() string {
 	return ResourcePluralProxySQLAutoscaler
 }
+
+var _ StatusAccessor = &ProxySQLAutoscaler{}
+
+func (e *ProxySQLAutoscaler) GetStatus() AutoscalerStatus {
+	return e.Status
+}
+
+func (e *ProxySQLAutoscaler) SetStatus(s AutoscalerStatus) {
+	e.Status = s
+}

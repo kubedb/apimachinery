@@ -55,3 +55,13 @@ func (m MySQLAutoscaler) ResourcePlural() string {
 func (m MySQLAutoscaler) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &MySQLAutoscaler{}
+
+func (e *MySQLAutoscaler) GetStatus() AutoscalerStatus {
+	return e.Status
+}
+
+func (e *MySQLAutoscaler) SetStatus(s AutoscalerStatus) {
+	e.Status = s
+}

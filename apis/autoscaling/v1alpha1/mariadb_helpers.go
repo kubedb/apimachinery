@@ -55,3 +55,13 @@ func (m MariaDBAutoscaler) ResourcePlural() string {
 func (m MariaDBAutoscaler) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &MariaDBAutoscaler{}
+
+func (e *MariaDBAutoscaler) GetStatus() AutoscalerStatus {
+	return e.Status
+}
+
+func (e *MariaDBAutoscaler) SetStatus(s AutoscalerStatus) {
+	e.Status = s
+}

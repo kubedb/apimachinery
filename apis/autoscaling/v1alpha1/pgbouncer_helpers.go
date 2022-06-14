@@ -55,3 +55,13 @@ func (p PgBouncerAutoscaler) ResourcePlural() string {
 func (p PgBouncerAutoscaler) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &PgBouncerAutoscaler{}
+
+func (e *PgBouncerAutoscaler) GetStatus() AutoscalerStatus {
+	return e.Status
+}
+
+func (e *PgBouncerAutoscaler) SetStatus(s AutoscalerStatus) {
+	e.Status = s
+}

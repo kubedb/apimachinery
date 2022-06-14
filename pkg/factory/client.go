@@ -79,3 +79,11 @@ func NewUncachedClient(cfg *rest.Config) (client.Client, error) {
 		//},
 	})
 }
+
+func MustUncachedClient(cfg *rest.Config) client.Client {
+	c, err := NewUncachedClient(cfg)
+	if err != nil {
+		panic(err)
+	}
+	return c
+}

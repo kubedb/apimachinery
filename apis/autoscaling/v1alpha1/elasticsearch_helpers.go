@@ -55,3 +55,13 @@ func (e ElasticsearchAutoscaler) ResourcePlural() string {
 func (e ElasticsearchAutoscaler) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &ElasticsearchAutoscaler{}
+
+func (e *ElasticsearchAutoscaler) GetStatus() AutoscalerStatus {
+	return e.Status
+}
+
+func (e *ElasticsearchAutoscaler) SetStatus(s AutoscalerStatus) {
+	e.Status = s
+}

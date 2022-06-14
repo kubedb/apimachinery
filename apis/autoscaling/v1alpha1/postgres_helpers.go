@@ -55,3 +55,13 @@ func (p PostgresAutoscaler) ResourcePlural() string {
 func (p PostgresAutoscaler) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &PostgresAutoscaler{}
+
+func (e *PostgresAutoscaler) GetStatus() AutoscalerStatus {
+	return e.Status
+}
+
+func (e *PostgresAutoscaler) SetStatus(s AutoscalerStatus) {
+	e.Status = s
+}
