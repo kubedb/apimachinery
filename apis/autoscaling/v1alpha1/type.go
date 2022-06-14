@@ -21,6 +21,7 @@ import (
 
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 // List of possible condition types for a autoscaler
@@ -89,14 +90,17 @@ type ComputeAutoscalerSpec struct {
 
 	// For InMemory storageType, if db uses more than UsageThreshold percentage of the total memory() ,
 	// `inMemorySizeGB` should be increased by ScalingThreshold percent
+	// +optional
 	UsageThreshold int32 `json:"usageThreshold,omitempty"`
 
 	// For InMemory storageType, if db uses more than UsageThreshold percentage
 	// of the total memory() `inMemorySizeGB` should be increased by ScalingThreshold percent
+	// +optional
 	ScalingThreshold int32 `json:"scalingThreshold,omitempty"`
 
 	// VPAs hold all the VerticalPodAutoscaler specs those are associated
 	// with its parent 'nodeType'
+	// +optional
 	VPAs []VPASpec `json:"vpas,omitempty"`
 }
 
@@ -115,4 +119,29 @@ type StorageAutoscalerSpec struct {
 	// ExpansionMode can be `Online` or `Offline`
 	// Default VolumeExpansionMode is `Online`
 	ExpansionMode *opsapi.VolumeExpansionMode `json:"expansionMode,omitempty"`
+}
+
+// AutoscalerStatus describes the runtime state of the autoscaler.
+type AutoscalerStatus struct {
+	// observedGeneration is the most recent generation observed by this autoscaler.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
+
+	// Conditions is the set of conditions required for this autoscaler to scale its target,
+	// and indicates whether or not those conditions are met.
+	// +optional
+	// +patchMergeKey=type
+	// +patchStrategy=merge
+	Conditions []kmapi.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+
+	// This field is equivalent to this one:
+	// https://github.com/kubernetes/autoscaler/blob/273e35b88cb50c5aac383c5eceb88fb337cb31b6/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1/types.go#L218-L230
+	// +optional
+	VPAs []VPAStatus `json:"vpas,omitempty"`
+
+	// Checkpoints hold all the Checkpoint those are associated
+	// with this Autoscaler object. Equivalent to :
+	// https://github.com/kubernetes/autoscaler/blob/273e35b88cb50c5aac383c5eceb88fb337cb31b6/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1/types.go#L354-L378
+	// +optional
+	Checkpoints []Checkpoint `json:"checkpoints,omitempty"`
 }

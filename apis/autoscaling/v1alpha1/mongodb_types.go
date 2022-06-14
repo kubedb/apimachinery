@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 const (
@@ -52,7 +51,7 @@ type MongoDBAutoscaler struct {
 
 	// Current information about the autoscaler.
 	// +optional
-	Status MongoDBAutoscalerStatus `json:"status,omitempty"`
+	Status AutoscalerStatus `json:"status,omitempty"`
 }
 
 // MongoDBAutoscalerSpec is the specification of the behavior of the autoscaler.
@@ -78,42 +77,6 @@ type MongoDBStorageAutoscalerSpec struct {
 	ConfigServer *StorageAutoscalerSpec `json:"configServer,omitempty"`
 	Shard        *StorageAutoscalerSpec `json:"shard,omitempty"`
 }
-
-// MongoDBAutoscalerStatus describes the runtime state of the autoscaler.
-type MongoDBAutoscalerStatus struct {
-	// observedGeneration is the most recent generation observed by this autoscaler.
-	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
-
-	// Conditions is the set of conditions required for this autoscaler to scale its target,
-	// and indicates whether or not those conditions are met.
-	// +optional
-	// +patchMergeKey=type
-	// +patchStrategy=merge
-	Conditions []kmapi.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
-
-	// This field is equivalent to this one:
-	// https://github.com/kubernetes/autoscaler/blob/273e35b88cb50c5aac383c5eceb88fb337cb31b6/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1/types.go#L218-L230
-	VPAs []VPAStatus `json:"vpas,omitempty"`
-
-	// Checkpoints hold all the Checkpoint those are associated
-	// with this Autoscaler object. Equivalent to :
-	// https://github.com/kubernetes/autoscaler/blob/273e35b88cb50c5aac383c5eceb88fb337cb31b6/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1/types.go#L354-L378
-	Checkpoints []Checkpoint `json:"checkpoints,omitempty"`
-}
-
-// MongoDBAutoscalerConditionType are the valid conditions of
-// a MongoDBAutoscaler.
-type MongoDBAutoscalerConditionType string
-
-var (
-	// ConfigDeprecated indicates that this VPA configuration is deprecated
-	// and will stop being supported soon.
-	MongoDBAutoscalerConfigDeprecated MongoDBAutoscalerConditionType = "ConfigDeprecated"
-	// ConfigUnsupported indicates that this VPA configuration is unsupported
-	// and recommendations will not be provided for it.
-	MongoDBAutoscalerConfigUnsupported MongoDBAutoscalerConditionType = "ConfigUnsupported"
-)
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // MongoDBAutoscalerList is a list of MongoDBAutoscaler objects.
