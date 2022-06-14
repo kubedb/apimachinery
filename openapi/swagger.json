@@ -30456,11 +30456,6 @@
         "version"
       ],
       "properties": {
-        "autoOps": {
-          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
-        },
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
