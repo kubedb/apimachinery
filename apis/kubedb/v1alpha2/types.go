@@ -164,3 +164,10 @@ type HealthCheckSpec struct {
 	// +kubebuilder:default:=false
 	DisableWriteCheck bool `json:"disableWriteCheck,omitempty"`
 }
+
+// AutoOpsSpec defines the specifications of automatic ops-request recommendation generation
+type AutoOpsSpec struct {
+	// Disabled specifies whether the ops-request recommendation generation will be disabled or not.
+	// +optional
+	Disabled bool `json:"disabled,omitempty"`
+}

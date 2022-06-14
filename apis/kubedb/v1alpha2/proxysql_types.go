@@ -59,6 +59,10 @@ type ProxySQL struct {
 }
 
 type ProxySQLSpec struct {
+	// AutoOps contains configuration of automatic ops-request-recommendation generation
+	// +optional
+	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
 	// Version of ProxySQL to be deployed.
 	Version string `json:"version"`
 

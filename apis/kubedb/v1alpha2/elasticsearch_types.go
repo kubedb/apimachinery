@@ -52,6 +52,10 @@ type Elasticsearch struct {
 }
 
 type ElasticsearchSpec struct {
+	// AutoOps contains configuration of automatic ops-request-recommendation generation
+	// +optional
+	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
 	// Version of Elasticsearch to be deployed.
 	Version string `json:"version"`
 

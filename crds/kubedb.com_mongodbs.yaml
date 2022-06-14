@@ -1674,6 +1674,11 @@ spec:
                   name:
                     type: string
                 type: object
+              autoOps:
+                properties:
+                  disabled:
+                    type: boolean
+                type: object
               clusterAuthMode:
                 enum:
                 - keyFile

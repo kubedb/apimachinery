@@ -29451,6 +29451,16 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec": {
+      "description": "AutoOpsSpec defines the specifications of automatic ops-request recommendation generation",
+      "type": "object",
+      "properties": {
+        "disabled": {
+          "description": "Disabled specifies whether the ops-request recommendation generation will be disabled or not.",
+          "type": "boolean"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConnectionPoolConfig": {
       "type": "object",
       "properties": {
@@ -29777,6 +29787,11 @@
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "autoOps": {
+          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
         },
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -30265,6 +30280,11 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "autoOps": {
+          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
+        },
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -30745,6 +30765,11 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "autoOps": {
+          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
+        },
         "clusterAuthMode": {
           "description": "ClusterAuthMode for replicaset or sharding. (default will be x509 if sslmode is not `disabled`.) See available ClusterAuthMode: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-clusterauthmode",
           "type": "string"
@@ -30993,6 +31018,11 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "autoOps": {
+          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
+        },
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -31211,6 +31241,11 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "autoOps": {
+          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
+        },
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -31360,6 +31395,11 @@
         "version"
       ],
       "properties": {
+        "autoOps": {
+          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
+        },
         "connectionPool": {
           "description": "ConnectionPoolConfig defines Connection pool configuration.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConnectionPoolConfig"
@@ -31560,6 +31600,11 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "autoOps": {
+          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
+        },
         "clientAuthMode": {
           "description": "ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])",
           "type": "string"
@@ -31756,6 +31801,11 @@
           "description": "ProxySQL secret containing username and password for root user and proxysql user",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "autoOps": {
+          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
+        },
         "backend": {
           "description": "Backend specifies the information about backend MySQL/Percona-XtraDB/MariaDB servers",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLBackendSpec"
@@ -31940,6 +31990,11 @@
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "autoOps": {
+          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
         },
         "cluster": {
           "description": "Redis cluster configuration for running redis servers in cluster mode. Required if Mode is set to \"Cluster\"",
