@@ -292,6 +292,13 @@ func (in *PodRuntimeSettings) DeepCopyInto(out *PodRuntimeSettings) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.TopologySpreadConstraints != nil {
+		in, out := &in.TopologySpreadConstraints, &out.TopologySpreadConstraints
+		*out = make([]corev1.TopologySpreadConstraint, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 

@@ -69,6 +69,10 @@ type MySQL struct {
 }
 
 type MySQLSpec struct {
+	// AutoOps contains configuration of automatic ops-request-recommendation generation
+	// +optional
+	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
 	// Version of MySQL to be deployed.
 	Version string `json:"version"`
 

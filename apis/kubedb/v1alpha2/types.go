@@ -36,7 +36,7 @@ type ScriptSourceSpec struct {
 	core.VolumeSource `json:",inline,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Provisioning;DataRestoring;Ready;Critical;NotReady;Halted
+// +kubebuilder:validation:Enum=Provisioning;DataRestoring;Ready;Critical;NotReady;Halted;Unknown
 type DatabasePhase string
 
 const (
@@ -52,6 +52,8 @@ const (
 	DatabasePhaseNotReady DatabasePhase = "NotReady"
 	// used for Databases that are halted
 	DatabasePhaseHalted DatabasePhase = "Halted"
+	// used for Databases for which Phase can't be calculated
+	DatabasePhaseUnknown DatabasePhase = "Unknown"
 )
 
 // +kubebuilder:validation:Enum=Durable;Ephemeral
@@ -136,4 +138,36 @@ type CoordinatorSpec struct {
 	// More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 	// +optional
 	SecurityContext *core.SecurityContext `json:"securityContext,omitempty"`
+}
+
+// HealthCheckSpec defines attributes of the health check
+type HealthCheckSpec struct {
+	// How often (in seconds) to perform the health check.
+	// Default to 10 seconds. Minimum value is 1.
+	// +optional
+	// +kubebuilder:default:=10
+	PeriodSeconds *int32 `json:"periodSeconds,omitempty"`
+	// Number of seconds after which the probe times out.
+	// Defaults to 10 second. Minimum value is 1.
+	// It should be less than the periodSeconds.
+	// +optional
+	// +kubebuilder:default:=10
+	TimeoutSeconds *int32 `json:"timeoutSeconds,omitempty"`
+	// Minimum consecutive failures for the health check to be considered failed after having succeeded.
+	// Defaults to 1. Minimum value is 1.
+	// +optional
+	// +kubebuilder:default:=1
+	FailureThreshold *int32 `json:"failureThreshold,omitempty"`
+	// Whether to disable write check on database.
+	// Defaults to false.
+	// +optional
+	// +kubebuilder:default:=false
+	DisableWriteCheck bool `json:"disableWriteCheck,omitempty"`
+}
+
+// AutoOpsSpec defines the specifications of automatic ops-request recommendation generation
+type AutoOpsSpec struct {
+	// Disabled specifies whether the ops-request recommendation generation will be disabled or not.
+	// +optional
+	Disabled bool `json:"disabled,omitempty"`
 }

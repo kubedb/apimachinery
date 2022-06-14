@@ -44,6 +44,10 @@ type RedisSentinel struct {
 }
 
 type RedisSentinelSpec struct {
+	// AutoOps contains configuration of automatic ops-request-recommendation generation
+	// +optional
+	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
 	// Version of Postgres to be deployed.
 	Version string `json:"version"`
 

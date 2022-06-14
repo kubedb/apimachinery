@@ -117,6 +117,11 @@ spec:
                   name:
                     type: string
                 type: object
+              autoOps:
+                properties:
+                  disabled:
+                    type: boolean
+                type: object
               cluster:
                 properties:
                   master:
@@ -207,6 +212,8 @@ spec:
                             type: string
                           gmsaCredentialSpecName:
                             type: string
+                          hostProcess:
+                            type: boolean
                           runAsUserName:
                             type: string
                         type: object
@@ -432,6 +439,18 @@ spec:
                                       type: string
                                     type: array
                                   dataSource:
+                                    properties:
+                                      apiGroup:
+                                        type: string
+                                      kind:
+                                        type: string
+                                      name:
+                                        type: string
+                                    required:
+                                    - kind
+                                    - name
+                                    type: object
+                                  dataSourceRef:
                                     properties:
                                       apiGroup:
                                         type: string
@@ -1060,6 +1079,8 @@ spec:
                                     type: string
                                   gmsaCredentialSpecName:
                                     type: string
+                                  hostProcess:
+                                    type: boolean
                                   runAsUserName:
                                     type: string
                                 type: object
@@ -1515,6 +1536,8 @@ spec:
                                 type: string
                               gmsaCredentialSpecName:
                                 type: string
+                              hostProcess:
+                                type: boolean
                               runAsUserName:
                                 type: string
                             type: object
@@ -1825,6 +1848,16 @@ spec:
                                 failureThreshold:
                                   format: int32
                                   type: integer
+                                grpc:
+                                  properties:
+                                    port:
+                                      format: int32
+                                      type: integer
+                                    service:
+                                      type: string
+                                  required:
+                                  - port
+                                  type: object
                                 httpGet:
                                   properties:
                                     host:
@@ -1919,6 +1952,16 @@ spec:
                                 failureThreshold:
                                   format: int32
                                   type: integer
+                                grpc:
+                                  properties:
+                                    port:
+                                      format: int32
+                                      type: integer
+                                    service:
+                                      type: string
+                                  required:
+                                  - port
+                                  type: object
                                 httpGet:
                                   properties:
                                     host:
@@ -2049,6 +2092,8 @@ spec:
                                       type: string
                                     gmsaCredentialSpecName:
                                       type: string
+                                    hostProcess:
+                                      type: boolean
                                     runAsUserName:
                                       type: string
                                   type: object
@@ -2065,6 +2110,16 @@ spec:
                                 failureThreshold:
                                   format: int32
                                   type: integer
+                                grpc:
+                                  properties:
+                                    port:
+                                      format: int32
+                                      type: integer
+                                    service:
+                                      type: string
+                                  required:
+                                  - port
+                                  type: object
                                 httpGet:
                                   properties:
                                     host:
@@ -2284,6 +2339,16 @@ spec:
                           failureThreshold:
                             format: int32
                             type: integer
+                          grpc:
+                            properties:
+                              port:
+                                format: int32
+                                type: integer
+                              service:
+                                type: string
+                            required:
+                            - port
+                            type: object
                           httpGet:
                             properties:
                               host:
@@ -2361,6 +2426,16 @@ spec:
                           failureThreshold:
                             format: int32
                             type: integer
+                          grpc:
+                            properties:
+                              port:
+                                format: int32
+                                type: integer
+                              service:
+                                type: string
+                            required:
+                            - port
+                            type: object
                           httpGet:
                             properties:
                               host:
@@ -2496,6 +2571,8 @@ spec:
                                 type: string
                               gmsaCredentialSpecName:
                                 type: string
+                              hostProcess:
+                                type: boolean
                               runAsUserName:
                                 type: string
                             type: object
@@ -2547,6 +2624,9 @@ spec:
                                   type: object
                               type: object
                             maxSkew:
+                              format: int32
+                              type: integer
+                            minDomains:
                               format: int32
                               type: integer
                             topologyKey:
@@ -2652,6 +2732,18 @@ spec:
                       type: string
                     type: array
                   dataSource:
+                    properties:
+                      apiGroup:
+                        type: string
+                      kind:
+                        type: string
+                      name:
+                        type: string
+                    required:
+                    - kind
+                    - name
+                    type: object
+                  dataSourceRef:
                     properties:
                       apiGroup:
                         type: string
@@ -2866,6 +2958,7 @@ spec:
                 - Critical
                 - NotReady
                 - Halted
+                - Unknown
                 type: string
             type: object
         type: object

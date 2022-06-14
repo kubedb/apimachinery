@@ -118,7 +118,7 @@ func (c *FakeEtcdOpsRequests) UpdateStatus(ctx context.Context, etcdOpsRequest *
 // Delete takes name of the etcdOpsRequest and deletes it. Returns an error if one occurs.
 func (c *FakeEtcdOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(etcdopsrequestsResource, c.ns, name), &v1alpha1.EtcdOpsRequest{})
+		Invokes(testing.NewDeleteActionWithOptions(etcdopsrequestsResource, c.ns, name, opts), &v1alpha1.EtcdOpsRequest{})
 
 	return err
 }

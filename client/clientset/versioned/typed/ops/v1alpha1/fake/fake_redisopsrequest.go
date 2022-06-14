@@ -118,7 +118,7 @@ func (c *FakeRedisOpsRequests) UpdateStatus(ctx context.Context, redisOpsRequest
 // Delete takes name of the redisOpsRequest and deletes it. Returns an error if one occurs.
 func (c *FakeRedisOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(redisopsrequestsResource, c.ns, name), &v1alpha1.RedisOpsRequest{})
+		Invokes(testing.NewDeleteActionWithOptions(redisopsrequestsResource, c.ns, name, opts), &v1alpha1.RedisOpsRequest{})
 
 	return err
 }

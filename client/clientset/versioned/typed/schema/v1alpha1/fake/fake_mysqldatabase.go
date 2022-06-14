@@ -118,7 +118,7 @@ func (c *FakeMySQLDatabases) UpdateStatus(ctx context.Context, mySQLDatabase *v1
 // Delete takes name of the mySQLDatabase and deletes it. Returns an error if one occurs.
 func (c *FakeMySQLDatabases) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(mysqldatabasesResource, c.ns, name), &v1alpha1.MySQLDatabase{})
+		Invokes(testing.NewDeleteActionWithOptions(mysqldatabasesResource, c.ns, name, opts), &v1alpha1.MySQLDatabase{})
 
 	return err
 }

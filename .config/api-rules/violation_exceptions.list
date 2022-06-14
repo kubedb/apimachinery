@@ -32,10 +32,8 @@ API rule violation: list_type_missing,k8s.io/api/core/v1,EphemeralContainerCommo
 API rule violation: list_type_missing,k8s.io/api/core/v1,EphemeralContainerCommon,Command
 API rule violation: list_type_missing,k8s.io/api/core/v1,EphemeralContainerCommon,Env
 API rule violation: list_type_missing,k8s.io/api/core/v1,EphemeralContainerCommon,EnvFrom
-API rule violation: list_type_missing,k8s.io/api/core/v1,EphemeralContainerCommon,Ports
 API rule violation: list_type_missing,k8s.io/api/core/v1,EphemeralContainerCommon,VolumeDevices
 API rule violation: list_type_missing,k8s.io/api/core/v1,EphemeralContainerCommon,VolumeMounts
-API rule violation: list_type_missing,k8s.io/api/core/v1,EphemeralContainers,EphemeralContainers
 API rule violation: list_type_missing,k8s.io/api/core/v1,ExecAction,Command
 API rule violation: list_type_missing,k8s.io/api/core/v1,FCVolumeSource,TargetWWNs
 API rule violation: list_type_missing,k8s.io/api/core/v1,FCVolumeSource,WWIDs
@@ -103,7 +101,6 @@ API rule violation: list_type_missing,k8s.io/api/core/v1,ServiceAccount,ImagePul
 API rule violation: list_type_missing,k8s.io/api/core/v1,ServiceAccount,Secrets
 API rule violation: list_type_missing,k8s.io/api/core/v1,ServiceSpec,ExternalIPs
 API rule violation: list_type_missing,k8s.io/api/core/v1,ServiceSpec,LoadBalancerSourceRanges
-API rule violation: list_type_missing,k8s.io/api/core/v1,ServiceSpec,TopologyKeys
 API rule violation: list_type_missing,k8s.io/api/core/v1,TopologySelectorLabelRequirement,Values
 API rule violation: list_type_missing,k8s.io/api/core/v1,TopologySelectorTerm,MatchLabelExpressions
 API rule violation: list_type_missing,k8s.io/api/rbac/v1,AggregationRule,ClusterRoleSelectors
@@ -227,6 +224,7 @@ API rule violation: names_match,k8s.io/apimachinery/pkg/apis/meta/v1,Duration,Du
 API rule violation: names_match,k8s.io/apimachinery/pkg/apis/meta/v1,InternalEvent,Object
 API rule violation: names_match,k8s.io/apimachinery/pkg/apis/meta/v1,InternalEvent,Type
 API rule violation: names_match,k8s.io/apimachinery/pkg/apis/meta/v1,MicroTime,Time
+API rule violation: names_match,k8s.io/apimachinery/pkg/apis/meta/v1,ObjectMeta,ZZZ_DeprecatedClusterName
 API rule violation: names_match,k8s.io/apimachinery/pkg/apis/meta/v1,StatusCause,Type
 API rule violation: names_match,k8s.io/apimachinery/pkg/apis/meta/v1,Time,Time
 API rule violation: names_match,k8s.io/apimachinery/pkg/runtime,Unknown,ContentEncoding

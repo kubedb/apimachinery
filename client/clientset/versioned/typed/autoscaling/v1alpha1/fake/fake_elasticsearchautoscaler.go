@@ -118,7 +118,7 @@ func (c *FakeElasticsearchAutoscalers) UpdateStatus(ctx context.Context, elastic
 // Delete takes name of the elasticsearchAutoscaler and deletes it. Returns an error if one occurs.
 func (c *FakeElasticsearchAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(elasticsearchautoscalersResource, c.ns, name), &v1alpha1.ElasticsearchAutoscaler{})
+		Invokes(testing.NewDeleteActionWithOptions(elasticsearchautoscalersResource, c.ns, name, opts), &v1alpha1.ElasticsearchAutoscaler{})
 
 	return err
 }

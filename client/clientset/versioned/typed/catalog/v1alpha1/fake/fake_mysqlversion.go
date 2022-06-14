@@ -100,7 +100,7 @@ func (c *FakeMySQLVersions) Update(ctx context.Context, mySQLVersion *v1alpha1.M
 // Delete takes name of the mySQLVersion and deletes it. Returns an error if one occurs.
 func (c *FakeMySQLVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(mysqlversionsResource, name), &v1alpha1.MySQLVersion{})
+		Invokes(testing.NewRootDeleteActionWithOptions(mysqlversionsResource, name, opts), &v1alpha1.MySQLVersion{})
 	return err
 }
 

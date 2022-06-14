@@ -87,6 +87,10 @@ type BackupBatchSpec struct {
 	// +kubebuilder:default=Parallel
 	// +optional
 	ExecutionOrder ExecutionOrder `json:"executionOrder,omitempty"`
+	// TimeOut specifies the maximum duration of backup. BackupBatch will be considered Failed
+	// if backup does not complete within this time limit. By default, Stash don't set any timeout for backup.
+	// +optional
+	TimeOut string `json:"timeOut,omitempty"`
 }
 
 type BackupBatchStatus struct {
@@ -120,3 +124,25 @@ type BackupBatchList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []BackupBatch `json:"items,omitempty"`
 }
+
+// =============================== Condition Types =============================
+const (
+	// GlobalPreBackupHookSucceeded indicates whether the global PreBackupHook was executed successfully or not
+	GlobalPreBackupHookSucceeded = "GlobalPreBackupHookSucceeded"
+
+	// GlobalPostBackupHookSucceeded indicates whether the global PostBackupHook was executed successfully or not
+	GlobalPostBackupHookSucceeded = "GlobalPostBackupHookSucceeded"
+)
+
+// ============================== Condition Reasons ===========================
+const (
+	// GlobalPreBackupHookExecutedSuccessfully indicates that the condition transitioned to this state because the global PreBackupHook was executed successfully
+	GlobalPreBackupHookExecutedSuccessfully = "GlobalPreBackupHookExecutedSuccessfully"
+	// GlobalPreBackupHookExecutionFailed indicates that the condition transitioned to this state because the Stash was unable to execute global PreBackupHook
+	GlobalPreBackupHookExecutionFailed = "GlobalPreBackupHookExecutionFailed"
+
+	// GlobalPostBackupHookExecutedSuccessfully indicates that the condition transitioned to this state because the global PostBackupHook was executed successfully
+	GlobalPostBackupHookExecutedSuccessfully = "GlobalPostBackupHookExecutedSuccessfully"
+	// GlobalPostBackupHookExecutionFailed indicates that the condition transitioned to this state because the Stash was unable to execute global PostBackupHook
+	GlobalPostBackupHookExecutionFailed = "GlobalPostBackupHookExecutionFailed"
+)

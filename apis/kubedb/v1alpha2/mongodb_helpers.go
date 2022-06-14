@@ -510,7 +510,7 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 			m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle = new(core.Lifecycle)
 		}
 
-		m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle.PreStop = &core.Handler{
+		m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle.PreStop = &core.LifecycleHandler{
 			Exec: &core.ExecAction{
 				Command: []string{
 					"bash",
@@ -581,7 +581,20 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 	}
 
 	m.SetTLSDefaults()
+	m.SetHealthCheckerDefaults()
 	m.Spec.Monitor.SetDefaults()
+}
+
+func (m *MongoDB) SetHealthCheckerDefaults() {
+	if m.Spec.HealthCheck.PeriodSeconds == nil {
+		m.Spec.HealthCheck.PeriodSeconds = pointer.Int32P(10)
+	}
+	if m.Spec.HealthCheck.TimeoutSeconds == nil {
+		m.Spec.HealthCheck.TimeoutSeconds = pointer.Int32P(10)
+	}
+	if m.Spec.HealthCheck.FailureThreshold == nil {
+		m.Spec.HealthCheck.FailureThreshold = pointer.Int32P(1)
+	}
 }
 
 func (m *MongoDB) SetTLSDefaults() {
@@ -706,7 +719,7 @@ func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion, isArbiter 
 
 func (m *MongoDB) GetDefaultLivenessProbeSpec(mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) *core.Probe {
 	return &core.Probe{
-		Handler: core.Handler{
+		ProbeHandler: core.ProbeHandler{
 			Exec: &core.ExecAction{
 				Command: m.getCmdForProbes(mgVersion, isArbiter...),
 			},
@@ -720,7 +733,7 @@ func (m *MongoDB) GetDefaultLivenessProbeSpec(mgVersion *v1alpha1.MongoDBVersion
 
 func (m *MongoDB) GetDefaultReadinessProbeSpec(mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) *core.Probe {
 	return &core.Probe{
-		Handler: core.Handler{
+		ProbeHandler: core.ProbeHandler{
 			Exec: &core.ExecAction{
 				Command: m.getCmdForProbes(mgVersion, isArbiter...),
 			},

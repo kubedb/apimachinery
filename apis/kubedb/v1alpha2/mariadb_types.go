@@ -51,6 +51,10 @@ type MariaDB struct {
 }
 
 type MariaDBSpec struct {
+	// AutoOps contains configuration of automatic ops-request-recommendation generation
+	// +optional
+	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
 	// Version of MariaDB to be deployed.
 	Version string `json:"version"`
 

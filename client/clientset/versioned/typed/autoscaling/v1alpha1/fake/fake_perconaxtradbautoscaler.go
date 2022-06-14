@@ -118,7 +118,7 @@ func (c *FakePerconaXtraDBAutoscalers) UpdateStatus(ctx context.Context, percona
 // Delete takes name of the perconaXtraDBAutoscaler and deletes it. Returns an error if one occurs.
 func (c *FakePerconaXtraDBAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(perconaxtradbautoscalersResource, c.ns, name), &v1alpha1.PerconaXtraDBAutoscaler{})
+		Invokes(testing.NewDeleteActionWithOptions(perconaxtradbautoscalersResource, c.ns, name, opts), &v1alpha1.PerconaXtraDBAutoscaler{})
 
 	return err
 }

@@ -271,6 +271,9 @@ const (
 	PostgresCoordinatorClientPort     = 2379
 	PostgresCoordinatorClientPortName = "coordinatclient"
 
+	RaftMetricsExporterPort     = 23790
+	RaftMetricsExporterPortName = "raft-metrics"
+
 	PostgresRunScriptMountPath  = "/run_scripts"
 	PostgresRunScriptVolumeName = "scripts"
 
@@ -287,6 +290,8 @@ const (
 	// this is useful when we have set a node as primary and you don't want other node rather then this node to become primary.
 	PostgresPgCoordinatorStatusResumeNonTransferable = "NonTransferableResume"
 
+	SharedBuffersGbAsByte = 1024 * 1024 * 1024
+	SharedBuffersMbAsByte = 1024 * 1024
 	// =========================== ProxySQL Constants ============================
 	LabelProxySQLName        = ProxySQLKey + "/name"
 	LabelProxySQLLoadBalance = ProxySQLKey + "/load-balance"
@@ -364,6 +369,8 @@ const (
 	DatabasePaused = "Paused"
 	// used for Databases that are halted
 	DatabaseHalted = "Halted"
+	// used for pausing health check of a Database
+	DatabaseHealthCheckPaused = "HealthCheckPaused"
 	// used for Databases whose internal user credentials are synced
 	InternalUsersSynced = "InternalUsersSynced"
 
@@ -407,6 +414,18 @@ var (
 		},
 		Limits: core.ResourceList{
 			core.ResourceMemory: resource.MustParse("256Mi"),
+		},
+	}
+
+	// DefaultResourcesElasticSearch must be used for elasticsearch
+	// to avoid OOMKILLED while deploying ES V8
+	DefaultResourcesElasticSearch = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".500"),
+			core.ResourceMemory: resource.MustParse("1.5Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("1.5Gi"),
 		},
 	}
 )

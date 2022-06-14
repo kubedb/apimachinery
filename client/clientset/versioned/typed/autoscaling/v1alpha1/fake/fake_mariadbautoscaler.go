@@ -118,7 +118,7 @@ func (c *FakeMariaDBAutoscalers) UpdateStatus(ctx context.Context, mariaDBAutosc
 // Delete takes name of the mariaDBAutoscaler and deletes it. Returns an error if one occurs.
 func (c *FakeMariaDBAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(mariadbautoscalersResource, c.ns, name), &v1alpha1.MariaDBAutoscaler{})
+		Invokes(testing.NewDeleteActionWithOptions(mariadbautoscalersResource, c.ns, name, opts), &v1alpha1.MariaDBAutoscaler{})
 
 	return err
 }

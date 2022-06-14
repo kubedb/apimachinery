@@ -118,7 +118,7 @@ func (c *FakeProxySQLOpsRequests) UpdateStatus(ctx context.Context, proxySQLOpsR
 // Delete takes name of the proxySQLOpsRequest and deletes it. Returns an error if one occurs.
 func (c *FakeProxySQLOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(proxysqlopsrequestsResource, c.ns, name), &v1alpha1.ProxySQLOpsRequest{})
+		Invokes(testing.NewDeleteActionWithOptions(proxysqlopsrequestsResource, c.ns, name, opts), &v1alpha1.ProxySQLOpsRequest{})
 
 	return err
 }
