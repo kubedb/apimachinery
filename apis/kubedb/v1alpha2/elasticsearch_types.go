@@ -373,6 +373,7 @@ type ElasticsearchList struct {
 type ElasticsearchNodeRoleType string
 
 const (
+	ElasticsearchNodeRoleTypeCombined            ElasticsearchNodeRoleType = "combined"
 	ElasticsearchNodeRoleTypeMaster              ElasticsearchNodeRoleType = "master"
 	ElasticsearchNodeRoleTypeData                ElasticsearchNodeRoleType = "data"
 	ElasticsearchNodeRoleTypeDataContent         ElasticsearchNodeRoleType = "data-content"
