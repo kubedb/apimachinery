@@ -418,11 +418,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                                 schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                                 schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                                         schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus":                           schema_apimachinery_apis_autoscaling_v1alpha1_AutoscalerStatus(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.BucketWeight":                               schema_apimachinery_apis_autoscaling_v1alpha1_BucketWeight(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.Checkpoint":                                 schema_apimachinery_apis_autoscaling_v1alpha1_Checkpoint(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.CheckpointReference":                        schema_apimachinery_apis_autoscaling_v1alpha1_CheckpointReference(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec":                      schema_apimachinery_apis_autoscaling_v1alpha1_ComputeAutoscalerSpec(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ContainerResourcePolicy":                    schema_apimachinery_apis_autoscaling_v1alpha1_ContainerResourcePolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchAutoscaler":                    schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchAutoscalerList":                schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchAutoscalerSpec":                schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchAutoscalerStatus":              schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchAutoscalerStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchComputeAutoscalerSpec":         schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchComputeAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchComputeTopologyAutoscalerSpec": schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchComputeTopologyAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchStorageAutoscalerSpec":         schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchStorageAutoscalerSpec(ref),
@@ -431,71 +435,70 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.EtcdAutoscalerBehavior":                     schema_apimachinery_apis_autoscaling_v1alpha1_EtcdAutoscalerBehavior(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.EtcdAutoscalerList":                         schema_apimachinery_apis_autoscaling_v1alpha1_EtcdAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.EtcdAutoscalerSpec":                         schema_apimachinery_apis_autoscaling_v1alpha1_EtcdAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.EtcdAutoscalerStatus":                       schema_apimachinery_apis_autoscaling_v1alpha1_EtcdAutoscalerStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.EtcdScalingPolicy":                          schema_apimachinery_apis_autoscaling_v1alpha1_EtcdScalingPolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.EtcdScalingRules":                           schema_apimachinery_apis_autoscaling_v1alpha1_EtcdScalingRules(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HistogramCheckpoint":                        schema_apimachinery_apis_autoscaling_v1alpha1_HistogramCheckpoint(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MariaDBAutoscaler":                          schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MariaDBAutoscalerList":                      schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MariaDBAutoscalerSpec":                      schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MariaDBAutoscalerStatus":                    schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBAutoscalerStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MariaDBComputeAutoscalerSpec":               schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBComputeAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MariaDBStorageAutoscalerSpec":               schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBStorageAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedAutoscaler":                        schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedAutoscalerBehavior":                schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedAutoscalerBehavior(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedAutoscalerList":                    schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedAutoscalerSpec":                    schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedAutoscalerStatus":                  schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedAutoscalerStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedScalingPolicy":                     schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedScalingPolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedScalingRules":                      schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedScalingRules(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBAutoscaler":                          schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBAutoscalerList":                      schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBAutoscalerSpec":                      schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBAutoscalerStatus":                    schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBAutoscalerStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBComputeAutoscalerSpec":               schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBComputeAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBStorageAutoscalerSpec":               schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBStorageAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLAutoscaler":                            schema_apimachinery_apis_autoscaling_v1alpha1_MySQLAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLAutoscalerBehavior":                    schema_apimachinery_apis_autoscaling_v1alpha1_MySQLAutoscalerBehavior(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLAutoscalerList":                        schema_apimachinery_apis_autoscaling_v1alpha1_MySQLAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLAutoscalerSpec":                        schema_apimachinery_apis_autoscaling_v1alpha1_MySQLAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLAutoscalerStatus":                      schema_apimachinery_apis_autoscaling_v1alpha1_MySQLAutoscalerStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLScalingPolicy":                         schema_apimachinery_apis_autoscaling_v1alpha1_MySQLScalingPolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLScalingRules":                          schema_apimachinery_apis_autoscaling_v1alpha1_MySQLScalingRules(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscaler":                    schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerBehavior":            schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerBehavior(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerList":                schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerSpec":                schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerStatus":              schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBScalingPolicy":                 schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBScalingPolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBScalingRules":                  schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBScalingRules(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerAutoscaler":                        schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerAutoscalerBehavior":                schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscalerBehavior(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerAutoscalerList":                    schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerAutoscalerSpec":                    schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerAutoscalerStatus":                  schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscalerStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerScalingPolicy":                     schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerScalingPolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerScalingRules":                      schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerScalingRules(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodResourcePolicy":                          schema_apimachinery_apis_autoscaling_v1alpha1_PodResourcePolicy(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodUpdatePolicy":                            schema_apimachinery_apis_autoscaling_v1alpha1_PodUpdatePolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PostgresAutoscaler":                         schema_apimachinery_apis_autoscaling_v1alpha1_PostgresAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PostgresAutoscalerBehavior":                 schema_apimachinery_apis_autoscaling_v1alpha1_PostgresAutoscalerBehavior(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PostgresAutoscalerList":                     schema_apimachinery_apis_autoscaling_v1alpha1_PostgresAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PostgresAutoscalerSpec":                     schema_apimachinery_apis_autoscaling_v1alpha1_PostgresAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PostgresAutoscalerStatus":                   schema_apimachinery_apis_autoscaling_v1alpha1_PostgresAutoscalerStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PostgresScalingPolicy":                      schema_apimachinery_apis_autoscaling_v1alpha1_PostgresScalingPolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PostgresScalingRules":                       schema_apimachinery_apis_autoscaling_v1alpha1_PostgresScalingRules(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ProxySQLAutoscaler":                         schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ProxySQLAutoscalerBehavior":                 schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLAutoscalerBehavior(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ProxySQLAutoscalerList":                     schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ProxySQLAutoscalerSpec":                     schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ProxySQLAutoscalerStatus":                   schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLAutoscalerStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ProxySQLScalingPolicy":                      schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLScalingPolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ProxySQLScalingRules":                       schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLScalingRules(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RecommendedContainerResources":              schema_apimachinery_apis_autoscaling_v1alpha1_RecommendedContainerResources(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RecommendedPodResources":                    schema_apimachinery_apis_autoscaling_v1alpha1_RecommendedPodResources(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisAutoscaler":                            schema_apimachinery_apis_autoscaling_v1alpha1_RedisAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisAutoscalerBehavior":                    schema_apimachinery_apis_autoscaling_v1alpha1_RedisAutoscalerBehavior(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisAutoscalerList":                        schema_apimachinery_apis_autoscaling_v1alpha1_RedisAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisAutoscalerSpec":                        schema_apimachinery_apis_autoscaling_v1alpha1_RedisAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisAutoscalerStatus":                      schema_apimachinery_apis_autoscaling_v1alpha1_RedisAutoscalerStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisScalingPolicy":                         schema_apimachinery_apis_autoscaling_v1alpha1_RedisScalingPolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisScalingRules":                          schema_apimachinery_apis_autoscaling_v1alpha1_RedisScalingRules(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec":                      schema_apimachinery_apis_autoscaling_v1alpha1_StorageAutoscalerSpec(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPASpec":                                    schema_apimachinery_apis_autoscaling_v1alpha1_VPASpec(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPAStatus":                                  schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotCondition":              schema_apimachinery_apis_autoscaling_v1alpha1_VerticalPodAutopilotCondition(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotRecommenderSelector":    schema_apimachinery_apis_autoscaling_v1alpha1_VerticalPodAutopilotRecommenderSelector(ref),
 	}
 }
 
@@ -20667,6 +20670,201 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 	}
 }
 
+func schema_apimachinery_apis_autoscaling_v1alpha1_AutoscalerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AutoscalerStatus describes the runtime state of the autoscaler.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"vpas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This field is equivalent to this one: https://github.com/kubernetes/autoscaler/blob/273e35b88cb50c5aac383c5eceb88fb337cb31b6/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1/types.go#L218-L230",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPAStatus"),
+									},
+								},
+							},
+						},
+					},
+					"checkpoints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Checkpoints hold all the Checkpoint those are associated with this Autoscaler object. Equivalent to : https://github.com/kubernetes/autoscaler/blob/273e35b88cb50c5aac383c5eceb88fb337cb31b6/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1/types.go#L354-L378",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.Checkpoint"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.Checkpoint", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPAStatus"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_BucketWeight(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"index": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"weight": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int64",
+						},
+					},
+				},
+				Required: []string{"index", "weight"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_Checkpoint(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Checkpoint contains data of the checkpoint.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ref": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Metedata of the checkpoint It is used for the identification",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.CheckpointReference"),
+						},
+					},
+					"lastUpdateTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The time when the status was last refreshed.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version of the format of the stored data.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"cpuHistogram": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Checkpoint of histogram for consumption of CPU.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HistogramCheckpoint"),
+						},
+					},
+					"memoryHistogram": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Checkpoint of histogram for consumption of memory.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HistogramCheckpoint"),
+						},
+					},
+					"firstSampleStart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timestamp of the fist sample from the histograms.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"lastSampleStart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timestamp of the last sample from the histograms.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"totalSamplesCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Total number of samples in the histograms.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.CheckpointReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HistogramCheckpoint"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_CheckpointReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CheckpointReference is the metedata of the checkpoint.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vpaObjectName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the VPA object that stored VerticalPodAutopilotCheckpoint object.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"containerName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the checkpointed container.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_autoscaling_v1alpha1_ComputeAutoscalerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -20739,29 +20937,77 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ComputeAutoscalerSpec(ref com
 					},
 					"resourceDiffPercentage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the minimum resource difference in percentage The default is 10%.",
+							Description: "Specifies the minimum resource difference in percentage. The default is 10%. If the difference between current & recommended resource is less than ResourceDiffPercentage, Autoscaler Operator will ignore the updating.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"podLifeTimeThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the minimum pod life time The default is 12h.",
+							Description: "Specifies the minimum pod life time. The default is 12h. If the resource Request is inside the recommended range & there is no quickOOM (out-of-memory), we can still update the pod, if that pod's lifeTime is greater than this threshold.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
-					"inMemoryScalingThreshold": {
+					"usageThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the percentage of the Memory that will be passed as inMemorySizeGB The default is 70%.",
+							Description: "For InMemory storageType, if db uses more than UsageThreshold percentage of the total memory() , `inMemorySizeGB` should be increased by ScalingThreshold percent",
 							Type:        []string{"integer"},
 							Format:      "int32",
+						},
+					},
+					"scalingThreshold": {
+						SchemaProps: spec.SchemaProps{
+							Description: "For InMemory storageType, if db uses more than UsageThreshold percentage of the total memory() `inMemorySizeGB` should be increased by ScalingThreshold percent",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"vpas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VPAs hold all the VerticalPodAutoscaler specs those are associated with its parent 'nodeType'",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPASpec"),
+									},
+								},
+							},
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPASpec"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_ContainerResourcePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ContainerResourcePolicy controls how autopilot computes the recommended resources for a specific container.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"containerName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the container or DefaultContainerResourcePolicy, in which case the policy is used by the containers that don't have their own policy specified.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Whether autopilot is enabled for the container. The default is \"Auto\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -20803,14 +21049,14 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchAutoscaler(ref c
 						SchemaProps: spec.SchemaProps{
 							Description: "status is the current information about the autoscaler.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchAutoscalerStatus"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchAutoscalerStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchAutoscalerSpec"},
 	}
 }
 
@@ -20893,48 +21139,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchAutoscalerSpec(r
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchStorageAutoscalerSpec"},
-	}
-}
-
-func schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchAutoscalerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchAutoscalerStatus describes the runtime state of the autoscaler.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"conditions": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "Conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition"},
 	}
 }
 
@@ -21088,14 +21292,14 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_EtcdAutoscaler(ref common.Ref
 						SchemaProps: spec.SchemaProps{
 							Description: "status is the current information about the autoscaler.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.EtcdAutoscalerStatus"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.EtcdAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.EtcdAutoscalerStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.EtcdAutoscalerSpec"},
 	}
 }
 
@@ -21235,79 +21439,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_EtcdAutoscalerSpec(ref common
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_EtcdAutoscalerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "EtcdAutoscalerStatus describes the current status of a horizontal pod autoscaler.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"lastScaleTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastScaleTime is the last time the EtcdAutoscaler scaled the number of pods, used by the autoscaler to control how often the number of pods is changed.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"currentReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentReplicas is current number of replicas of pods managed by this autoscaler, as last seen by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"desiredReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "desiredReplicas is the desired number of replicas of pods managed by this autoscaler, as last calculated by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"currentMetrics": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentMetrics is the last read state of the metrics used by this autoscaler.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/autoscaling/v2beta2.MetricStatus"),
-									},
-								},
-							},
-						},
-					},
-					"conditions": {
-						SchemaProps: spec.SchemaProps{
-							Description: "conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"currentReplicas", "desiredReplicas", "conditions"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/autoscaling/v2beta2.MetricStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition"},
-	}
-}
-
 func schema_apimachinery_apis_autoscaling_v1alpha1_EtcdScalingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21389,6 +21520,49 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_EtcdScalingRules(ref common.R
 	}
 }
 
+func schema_apimachinery_apis_autoscaling_v1alpha1_HistogramCheckpoint(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HistogramCheckpoint contains data needed to reconstruct the histogram.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"referenceTimestamp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Reference timestamp for samples collected within this histogram.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"bucketWeights": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Map from bucket index to bucket weight.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.BucketWeight"),
+									},
+								},
+							},
+						},
+					},
+					"totalWeight": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Sum of samples to be used as denominator for weights from BucketWeights.",
+							Type:        []string{"number"},
+							Format:      "double",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.BucketWeight"},
+	}
+}
+
 func schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBAutoscaler(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21427,7 +21601,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBAutoscaler(ref common.
 						SchemaProps: spec.SchemaProps{
 							Description: "Current information about the autoscaler.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MariaDBAutoscalerStatus"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
 						},
 					},
 				},
@@ -21435,7 +21609,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBAutoscaler(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MariaDBAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MariaDBAutoscalerStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MariaDBAutoscalerSpec"},
 	}
 }
 
@@ -21521,48 +21695,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBAutoscalerSpec(ref com
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBAutoscalerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MariaDBAutoscalerStatus describes the runtime state of the autoscaler.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"conditions": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "Conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition"},
-	}
-}
-
 func schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBComputeAutoscalerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21645,14 +21777,14 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedAutoscaler(ref commo
 						SchemaProps: spec.SchemaProps{
 							Description: "status is the current information about the autoscaler.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedAutoscalerStatus"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedAutoscalerStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedAutoscalerSpec"},
 	}
 }
 
@@ -21792,79 +21924,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedAutoscalerSpec(ref c
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedAutoscalerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MemcachedAutoscalerStatus describes the current status of a horizontal pod autoscaler.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"lastScaleTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastScaleTime is the last time the MemcachedAutoscaler scaled the number of pods, used by the autoscaler to control how often the number of pods is changed.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"currentReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentReplicas is current number of replicas of pods managed by this autoscaler, as last seen by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"desiredReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "desiredReplicas is the desired number of replicas of pods managed by this autoscaler, as last calculated by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"currentMetrics": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentMetrics is the last read state of the metrics used by this autoscaler.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/autoscaling/v2beta2.MetricStatus"),
-									},
-								},
-							},
-						},
-					},
-					"conditions": {
-						SchemaProps: spec.SchemaProps{
-							Description: "conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"currentReplicas", "desiredReplicas", "conditions"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/autoscaling/v2beta2.MetricStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition"},
-	}
-}
-
 func schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedScalingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21984,7 +22043,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBAutoscaler(ref common.
 						SchemaProps: spec.SchemaProps{
 							Description: "Current information about the autoscaler.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBAutoscalerStatus"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
 						},
 					},
 				},
@@ -21992,7 +22051,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBAutoscaler(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBAutoscalerStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBAutoscalerSpec"},
 	}
 }
 
@@ -22075,48 +22134,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBAutoscalerSpec(ref com
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBStorageAutoscalerSpec"},
-	}
-}
-
-func schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBAutoscalerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MongoDBAutoscalerStatus describes the runtime state of the autoscaler.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"conditions": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "Conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition"},
 	}
 }
 
@@ -22237,14 +22254,14 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MySQLAutoscaler(ref common.Re
 						SchemaProps: spec.SchemaProps{
 							Description: "status is the current information about the autoscaler.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLAutoscalerStatus"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLAutoscalerStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLAutoscalerSpec"},
 	}
 }
 
@@ -22384,79 +22401,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MySQLAutoscalerSpec(ref commo
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_MySQLAutoscalerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MySQLAutoscalerStatus describes the current status of a horizontal pod autoscaler.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"lastScaleTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastScaleTime is the last time the MySQLAutoscaler scaled the number of pods, used by the autoscaler to control how often the number of pods is changed.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"currentReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentReplicas is current number of replicas of pods managed by this autoscaler, as last seen by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"desiredReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "desiredReplicas is the desired number of replicas of pods managed by this autoscaler, as last calculated by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"currentMetrics": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentMetrics is the last read state of the metrics used by this autoscaler.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/autoscaling/v2beta2.MetricStatus"),
-									},
-								},
-							},
-						},
-					},
-					"conditions": {
-						SchemaProps: spec.SchemaProps{
-							Description: "conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"currentReplicas", "desiredReplicas", "conditions"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/autoscaling/v2beta2.MetricStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition"},
-	}
-}
-
 func schema_apimachinery_apis_autoscaling_v1alpha1_MySQLScalingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22576,14 +22520,14 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscaler(ref c
 						SchemaProps: spec.SchemaProps{
 							Description: "status is the current information about the autoscaler.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerStatus"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerSpec"},
 	}
 }
 
@@ -22723,79 +22667,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerSpec(r
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBAutoscalerStatus describes the current status of a horizontal pod autoscaler.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"lastScaleTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastScaleTime is the last time the PerconaXtraDBAutoscaler scaled the number of pods, used by the autoscaler to control how often the number of pods is changed.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"currentReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentReplicas is current number of replicas of pods managed by this autoscaler, as last seen by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"desiredReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "desiredReplicas is the desired number of replicas of pods managed by this autoscaler, as last calculated by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"currentMetrics": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentMetrics is the last read state of the metrics used by this autoscaler.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/autoscaling/v2beta2.MetricStatus"),
-									},
-								},
-							},
-						},
-					},
-					"conditions": {
-						SchemaProps: spec.SchemaProps{
-							Description: "conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"currentReplicas", "desiredReplicas", "conditions"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/autoscaling/v2beta2.MetricStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition"},
-	}
-}
-
 func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBScalingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22915,14 +22786,14 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscaler(ref commo
 						SchemaProps: spec.SchemaProps{
 							Description: "status is the current information about the autoscaler.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerAutoscalerStatus"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerAutoscalerStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerAutoscalerSpec"},
 	}
 }
 
@@ -23062,79 +22933,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscalerSpec(ref c
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscalerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerAutoscalerStatus describes the current status of a horizontal pod autoscaler.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"lastScaleTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastScaleTime is the last time the PgBouncerAutoscaler scaled the number of pods, used by the autoscaler to control how often the number of pods is changed.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"currentReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentReplicas is current number of replicas of pods managed by this autoscaler, as last seen by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"desiredReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "desiredReplicas is the desired number of replicas of pods managed by this autoscaler, as last calculated by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"currentMetrics": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentMetrics is the last read state of the metrics used by this autoscaler.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/autoscaling/v2beta2.MetricStatus"),
-									},
-								},
-							},
-						},
-					},
-					"conditions": {
-						SchemaProps: spec.SchemaProps{
-							Description: "conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"currentReplicas", "desiredReplicas", "conditions"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/autoscaling/v2beta2.MetricStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition"},
-	}
-}
-
 func schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerScalingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23216,6 +23014,68 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerScalingRules(ref com
 	}
 }
 
+func schema_apimachinery_apis_autoscaling_v1alpha1_PodResourcePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PodResourcePolicy controls how autopilot computes the recommended resources for containers belonging to the pod. There can be at most one entry for every named container and optionally a single wildcard entry with `containerName` = '*', which handles all containers that don't have individual policies.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"containerPolicies": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-patch-merge-key": "containerName",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Per-container resource policies.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ContainerResourcePolicy"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ContainerResourcePolicy"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_PodUpdatePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PodUpdatePolicy describes the rules on how changes are applied to the pods.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"updateMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Controls when autopilot applies changes to the pod resources. The default is 'Auto'.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"minReplicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Minimal number of replicas which need to be alive for Updater to attempt pod eviction (pending other checks like PDB). Only positive values are allowed. Overrides global '--min-replicas' flag.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_autoscaling_v1alpha1_PostgresAutoscaler(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23254,14 +23114,14 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PostgresAutoscaler(ref common
 						SchemaProps: spec.SchemaProps{
 							Description: "status is the current information about the autoscaler.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PostgresAutoscalerStatus"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PostgresAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PostgresAutoscalerStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PostgresAutoscalerSpec"},
 	}
 }
 
@@ -23401,79 +23261,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PostgresAutoscalerSpec(ref co
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_PostgresAutoscalerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PostgresAutoscalerStatus describes the current status of a horizontal pod autoscaler.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"lastScaleTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastScaleTime is the last time the PostgresAutoscaler scaled the number of pods, used by the autoscaler to control how often the number of pods is changed.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"currentReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentReplicas is current number of replicas of pods managed by this autoscaler, as last seen by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"desiredReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "desiredReplicas is the desired number of replicas of pods managed by this autoscaler, as last calculated by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"currentMetrics": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentMetrics is the last read state of the metrics used by this autoscaler.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/autoscaling/v2beta2.MetricStatus"),
-									},
-								},
-							},
-						},
-					},
-					"conditions": {
-						SchemaProps: spec.SchemaProps{
-							Description: "conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"currentReplicas", "desiredReplicas", "conditions"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/autoscaling/v2beta2.MetricStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition"},
-	}
-}
-
 func schema_apimachinery_apis_autoscaling_v1alpha1_PostgresScalingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23593,14 +23380,14 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLAutoscaler(ref common
 						SchemaProps: spec.SchemaProps{
 							Description: "status is the current information about the autoscaler.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ProxySQLAutoscalerStatus"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ProxySQLAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ProxySQLAutoscalerStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ProxySQLAutoscalerSpec"},
 	}
 }
 
@@ -23740,79 +23527,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLAutoscalerSpec(ref co
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLAutoscalerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLAutoscalerStatus describes the current status of a horizontal pod autoscaler.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"lastScaleTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastScaleTime is the last time the ProxySQLAutoscaler scaled the number of pods, used by the autoscaler to control how often the number of pods is changed.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"currentReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentReplicas is current number of replicas of pods managed by this autoscaler, as last seen by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"desiredReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "desiredReplicas is the desired number of replicas of pods managed by this autoscaler, as last calculated by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"currentMetrics": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentMetrics is the last read state of the metrics used by this autoscaler.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/autoscaling/v2beta2.MetricStatus"),
-									},
-								},
-							},
-						},
-					},
-					"conditions": {
-						SchemaProps: spec.SchemaProps{
-							Description: "conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"currentReplicas", "desiredReplicas", "conditions"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/autoscaling/v2beta2.MetricStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition"},
-	}
-}
-
 func schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLScalingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23894,6 +23608,118 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLScalingRules(ref comm
 	}
 }
 
+func schema_apimachinery_apis_autoscaling_v1alpha1_RecommendedContainerResources(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RecommendedContainerResources is the recommendation of resources computed by autopilot for a specific container. Respects the container resource policy if present in the spec. In particular the recommendation is not produced for containers with `ContainerScalingMode` set to 'Off'.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"containerName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the container.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Recommended amount of resources. Observes ContainerResourcePolicy.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+									},
+								},
+							},
+						},
+					},
+					"lowerBound": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Minimum recommended amount of resources. Observes ContainerResourcePolicy. This amount is not guaranteed to be sufficient for the application to operate in a stable way, however running with less resources is likely to have significant impact on performance/availability.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+									},
+								},
+							},
+						},
+					},
+					"upperBound": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Maximum recommended amount of resources. Observes ContainerResourcePolicy. Any resources allocated beyond this value are likely wasted. This value may be larger than the maximum amount of application is actually capable of consuming.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+									},
+								},
+							},
+						},
+					},
+					"uncappedTarget": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The most recent recommended resources target computed by the autopilot for the controlled pods, based only on actual resource usage, not taking into account the ContainerResourcePolicy. May differ from the Recommendation if the actual resource usage causes the target to violate the ContainerResourcePolicy (lower than MinAllowed or higher that MaxAllowed). Used only as status indication, will not affect actual resource assignment.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"target"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_RecommendedPodResources(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RecommendedPodResources is the recommendation of resources computed by autopilot. It contains a recommendation for each container in the pod (except for those with `ContainerScalingMode` set to 'Off').",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"containerRecommendations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resources recommended by the autopilot for each container.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RecommendedContainerResources"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RecommendedContainerResources"},
+	}
+}
+
 func schema_apimachinery_apis_autoscaling_v1alpha1_RedisAutoscaler(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23932,14 +23758,14 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_RedisAutoscaler(ref common.Re
 						SchemaProps: spec.SchemaProps{
 							Description: "status is the current information about the autoscaler.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisAutoscalerStatus"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisAutoscalerStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisAutoscalerSpec"},
 	}
 }
 
@@ -24079,79 +23905,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_RedisAutoscalerSpec(ref commo
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_RedisAutoscalerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RedisAutoscalerStatus describes the current status of a horizontal pod autoscaler.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"lastScaleTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastScaleTime is the last time the RedisAutoscaler scaled the number of pods, used by the autoscaler to control how often the number of pods is changed.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"currentReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentReplicas is current number of replicas of pods managed by this autoscaler, as last seen by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"desiredReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "desiredReplicas is the desired number of replicas of pods managed by this autoscaler, as last calculated by the autoscaler.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"currentMetrics": {
-						SchemaProps: spec.SchemaProps{
-							Description: "currentMetrics is the last read state of the metrics used by this autoscaler.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/autoscaling/v2beta2.MetricStatus"),
-									},
-								},
-							},
-						},
-					},
-					"conditions": {
-						SchemaProps: spec.SchemaProps{
-							Description: "conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"currentReplicas", "desiredReplicas", "conditions"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/autoscaling/v2beta2.MetricStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition"},
-	}
-}
-
 func schema_apimachinery_apis_autoscaling_v1alpha1_RedisScalingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24241,30 +23994,210 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_StorageAutoscalerSpec(ref com
 				Properties: map[string]spec.Schema{
 					"trigger": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Whether compute autoscaler is enabled. The default is Off\".",
+							Description: "Whether storage autoscaler is enabled. The default is Off\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"usageThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "If PVC usage percentage is less than the UsageThreshold, we don't need to scale it. The Default is 80%",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"scalingThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "If PVC usage percentage >= UsageThreshold, we need to scale that by ScalingThreshold percentage. The Default is 50%",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"expansionMode": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "ExpansionMode can be `Online` or `Offline` Default VolumeExpansionMode is `Online`",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_VPASpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VPASpec is the specification of the behavior of the autopilot.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vpaName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The name of the verticalPodAutoscaler usually this will be the corresponding statefulset name This field will help us to get the corresponding vpaStatus. As `VPAName` is the only common field between them",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"targetRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TargetRef points to the controller managing the set of pods for the autopilot to control - e.g. Deployment, StatefulSet. VerticalPodAutopilot can be targeted at controller implementing scale subresource (the pod set is retrieved from the controller's ScaleStatus) or some well known controllers (e.g. for DaemonSet the pod set is read from the controller's spec). If VerticalPodAutopilot cannot use specified target it will report ConfigUnsupported condition. Note that VerticalPodAutopilot does not require full implementation of scale subresource - it will not use it to modify the replica count. The only thing retrieved is a label selector matching pods grouped by the target resource.",
+							Ref:         ref("k8s.io/api/autoscaling/v1.CrossVersionObjectReference"),
+						},
+					},
+					"updatePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Describes the rules on how changes are applied to the pods. If not specified, all fields in the `PodUpdatePolicy` are set to their default values.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodUpdatePolicy"),
+						},
+					},
+					"resourcePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Controls how the autopilot computes recommended resources. The resource policy may be used to set constraints on the recommendations for individual containers. If not specified, the autopilot computes recommended resources for all containers in the pod, without additional constraints.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodResourcePolicy"),
+						},
+					},
+					"recommenders": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Recommender responsible for generating recommendation for this object. List should be empty (then the default recommender will generate the recommendation) or contain exactly one recommender.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotRecommenderSelector"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"targetRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/autoscaling/v1.CrossVersionObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodResourcePolicy", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodUpdatePolicy", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotRecommenderSelector"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VPAStatus describes the runtime state of the autopilot.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vpaName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The name of the VerticalPodAutoscaler. This field will help us to get the corresponding vpaSpec. As `VPAName` is the only common field between them",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"recommendation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The most recently computed amount of resources recommended by the autopilot for the controlled pods.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RecommendedPodResources"),
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions is the set of conditions required for this autopilot to scale its target, and indicates whether or not those conditions are met.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotCondition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RecommendedPodResources", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotCondition"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_VerticalPodAutopilotCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VerticalPodAutopilotCondition describes the state of a VerticalPodAutopilot at a certain point.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type describes the current condition",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status is the status of the condition (True, False, Unknown)",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastTransitionTime is the last time the condition transitioned from one status to another",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"reason": {
+						SchemaProps: spec.SchemaProps{
+							Description: "reason is the reason for the condition's last transition.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "message is a human-readable explanation containing details about the transition",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type", "status"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_VerticalPodAutopilotRecommenderSelector(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VerticalPodAutopilotRecommenderSelector points to a specific Vertical Pod autopilot recommender. In the future it might pass parameters to the recommender.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the recommender responsible for generating recommendation for this object.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
 			},
 		},
 	}

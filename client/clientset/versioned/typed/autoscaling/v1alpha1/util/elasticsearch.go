@@ -107,7 +107,7 @@ func UpdateElasticsearchAutoscalerStatus(
 	ctx context.Context,
 	c cs.AutoscalingV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.ElasticsearchAutoscalerStatus) (types.UID, *api.ElasticsearchAutoscalerStatus),
+	transform func(*api.AutoscalerStatus) (types.UID, *api.AutoscalerStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.ElasticsearchAutoscaler, err error) {
 	apply := func(x *api.ElasticsearchAutoscaler) *api.ElasticsearchAutoscaler {

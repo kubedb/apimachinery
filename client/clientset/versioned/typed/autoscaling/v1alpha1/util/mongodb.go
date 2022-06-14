@@ -107,7 +107,7 @@ func UpdateMongoDBAutoscalerStatus(
 	ctx context.Context,
 	c ascs.AutoscalingV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*asapi.MongoDBAutoscalerStatus) (types.UID, *asapi.MongoDBAutoscalerStatus),
+	transform func(*asapi.AutoscalerStatus) (types.UID, *asapi.AutoscalerStatus),
 	opts metav1.UpdateOptions,
 ) (result *asapi.MongoDBAutoscaler, err error) {
 	apply := func(x *asapi.MongoDBAutoscaler) *asapi.MongoDBAutoscaler {

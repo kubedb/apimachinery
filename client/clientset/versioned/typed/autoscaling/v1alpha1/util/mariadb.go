@@ -107,7 +107,7 @@ func UpdateMariaDBAutoscalerStatus(
 	ctx context.Context,
 	c cs.AutoscalingV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.MariaDBAutoscalerStatus) (types.UID, *api.MariaDBAutoscalerStatus),
+	transform func(*api.AutoscalerStatus) (types.UID, *api.AutoscalerStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.MariaDBAutoscaler, err error) {
 	apply := func(x *api.MariaDBAutoscaler) *api.MariaDBAutoscaler {

@@ -20,7 +20,7 @@ import (
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis"
-	"kubedb.dev/apimachinery/apis/catalog"
+	"kubedb.dev/apimachinery/apis/autoscaling"
 	"kubedb.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -33,7 +33,7 @@ func (_ EtcdAutoscaler) CustomResourceDefinition() *apiextensions.CustomResource
 var _ apis.ResourceInfo = &EtcdAutoscaler{}
 
 func (e EtcdAutoscaler) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", ResourcePluralEtcdAutoscaler, catalog.GroupName)
+	return fmt.Sprintf("%s.%s", ResourcePluralEtcdAutoscaler, autoscaling.GroupName)
 }
 
 func (e EtcdAutoscaler) ResourceShortCode() string {
