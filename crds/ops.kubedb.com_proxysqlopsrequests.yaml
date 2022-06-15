@@ -43,6 +43,53 @@ spec:
           spec:
             properties:
               configuration:
+                properties:
+                  adminVariables:
+                    properties:
+                      configRef:
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                    required:
+                    - configRef
+                    type: object
+                  mysqlQueryRules:
+                    properties:
+                      configRef:
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                      reqType:
+                        type: string
+                    required:
+                    - configRef
+                    - reqType
+                    type: object
+                  mysqlUsers:
+                    properties:
+                      configRef:
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                      reqType:
+                        type: string
+                    required:
+                    - configRef
+                    - reqType
+                    type: object
+                  mysqlVariables:
+                    properties:
+                      configRef:
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                    required:
+                    - configRef
+                    type: object
                 type: object
               horizontalScaling:
                 properties:

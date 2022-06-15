@@ -418,6 +418,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                         schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                         schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                                 schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.AdminVariables":                             schema_apimachinery_apis_ops_v1alpha1_AdminVariables(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ConfigNode":                                 schema_apimachinery_apis_ops_v1alpha1_ConfigNode(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchCustomConfiguration":           schema_apimachinery_apis_ops_v1alpha1_ElasticsearchCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchCustomConfigurationSpec":       schema_apimachinery_apis_ops_v1alpha1_ElasticsearchCustomConfigurationSpec(ref),
@@ -484,9 +485,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLOpsRequestList":                        schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLOpsRequestSpec":                        schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLOpsRequestStatus":                      schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestStatus(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLQueryRules":                            schema_apimachinery_apis_ops_v1alpha1_MySQLQueryRules(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLReplicaReadinessCriteria":              schema_apimachinery_apis_ops_v1alpha1_MySQLReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLTLSSpec":                               schema_apimachinery_apis_ops_v1alpha1_MySQLTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUpgradeSpec":                           schema_apimachinery_apis_ops_v1alpha1_MySQLUpgradeSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUsers":                                 schema_apimachinery_apis_ops_v1alpha1_MySQLUsers(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVariables":                             schema_apimachinery_apis_ops_v1alpha1_MySQLVariables(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVerticalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_MySQLVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVolumeExpansionSpec":                   schema_apimachinery_apis_ops_v1alpha1_MySQLVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBCustomConfiguration":           schema_apimachinery_apis_ops_v1alpha1_PerconaXtraDBCustomConfiguration(ref),
@@ -20717,6 +20721,27 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_AdminVariables(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configRef": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+				Required: []string{"configRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_ConfigNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23332,6 +23357,34 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestStatus(ref common.Refe
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_MySQLQueryRules(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configRef": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"reqType": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"configRef", "reqType"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_MySQLReplicaReadinessCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23421,6 +23474,55 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLUpgradeSpec(ref common.Reference
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLReplicaReadinessCriteria"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MySQLUsers(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configRef": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"reqType": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"configRef", "reqType"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MySQLVariables(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configRef": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+				Required: []string{"configRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -24640,8 +24742,32 @@ func schema_apimachinery_apis_ops_v1alpha1_ProxySQLCustomConfigurationSpec(ref c
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mysqlUsers": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUsers"),
+						},
+					},
+					"mysqlQueryRules": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLQueryRules"),
+						},
+					},
+					"adminVariables": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AdminVariables"),
+						},
+					},
+					"mysqlVariables": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVariables"),
+						},
+					},
+				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.AdminVariables", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLQueryRules", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUsers", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVariables"},
 	}
 }
 

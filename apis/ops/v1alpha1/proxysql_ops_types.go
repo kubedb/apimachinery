@@ -95,8 +95,6 @@ type ProxySQLVerticalScalingSpec struct {
 // ProxySQLVolumeExpansionSpec is the spec for ProxySQL volume expansion
 type ProxySQLVolumeExpansionSpec struct{}
 
-type ProxySQLCustomConfigurationSpec struct{}
-
 type ProxySQLCustomConfiguration struct {
 	ConfigMap *core.LocalObjectReference `json:"configMap,omitempty"`
 	Data      map[string]string          `json:"data,omitempty"`
@@ -124,3 +122,36 @@ type ProxySQLOpsRequestList struct {
 	// Items is a list of ProxySQLOpsRequest CRD objects
 	Items []ProxySQLOpsRequest `json:"items,omitempty"`
 }
+
+type ProxySQLCustomConfigurationSpec struct {
+	MySQLUsers      *MySQLUsers      `json:"mysqlUsers,omitempty"`
+	MySQLQueryRules *MySQLQueryRules `json:"mysqlQueryRules,omitempty"`
+	AdminVariables  *AdminVariables  `json:"adminVariables,omitempty"`
+	MySQLVariables  *MySQLVariables  `json:"mysqlVariables,omitempty"`
+}
+
+type MySQLUsers struct {
+	ConfigReference core.LocalObjectReference `json:"configRef"`
+	RequestType     OperationType             `json:"reqType"`
+}
+
+type MySQLQueryRules struct {
+	ConfigReference core.LocalObjectReference `json:"configRef"`
+	RequestType     OperationType             `json:"reqType"`
+}
+
+type AdminVariables struct {
+	ConfigReference core.LocalObjectReference `json:"configRef"`
+}
+
+type MySQLVariables struct {
+	ConfigReference core.LocalObjectReference `json:"configRef"`
+}
+
+type OperationType string
+
+const (
+	Add    OperationType = "add"
+	Delete OperationType = "delete"
+	Update OperationType = "update"
+)

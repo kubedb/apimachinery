@@ -32166,6 +32166,18 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.AdminVariables": {
+      "type": "object",
+      "required": [
+        "configRef"
+      ],
+      "properties": {
+        "configRef": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ConfigNode": {
       "description": "ConfigNode is the spec for mongodb ConfigServer",
       "type": "object",
@@ -33353,6 +33365,23 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLQueryRules": {
+      "type": "object",
+      "required": [
+        "configRef",
+        "reqType"
+      ],
+      "properties": {
+        "configRef": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "reqType": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLReplicaReadinessCriteria": {
       "description": "MySQLReplicaReadinessCriteria is the criteria for checking readiness of a MySQL pod after updating, horizontal scaling etc.",
       "type": "object"
@@ -33395,6 +33424,35 @@
         "targetVersion": {
           "description": "Specifies the target version name from catalog",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUsers": {
+      "type": "object",
+      "required": [
+        "configRef",
+        "reqType"
+      ],
+      "properties": {
+        "configRef": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "reqType": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVariables": {
+      "type": "object",
+      "required": [
+        "configRef"
+      ],
+      "properties": {
+        "configRef": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         }
       }
     },
@@ -33826,7 +33884,21 @@
       }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLCustomConfigurationSpec": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "adminVariables": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AdminVariables"
+        },
+        "mysqlQueryRules": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLQueryRules"
+        },
+        "mysqlUsers": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUsers"
+        },
+        "mysqlVariables": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVariables"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for ProxySQL horizontal scaling",
