@@ -365,6 +365,7 @@ const (
 
 	// Condition reasons
 	DataRestoreStartedByExternalInitializer    = "DataRestoreStartedByExternalInitializer"
+	DataRestoreInterrupted                     = "DataRestoreInterrupted"
 	DatabaseSuccessfullyRestored               = "SuccessfullyDataRestored"
 	FailedToRestoreData                        = "FailedToRestoreData"
 	AllReplicasAreReady                        = "AllReplicasReady"

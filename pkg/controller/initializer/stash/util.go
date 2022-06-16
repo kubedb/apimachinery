@@ -94,6 +94,42 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 	return ri, nil
 }
 
+func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
+	if ri == nil {
+		return fmt.Errorf("invalid restore information. it must not be nil")
+	}
+	// If the target could not be identified properly, we can't process further.
+	if ri.target == nil {
+		return fmt.Errorf("couldn't identify the restore target from invoker: %s/%s/%s", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name)
+	}
+
+	// If the RestoreSession is deleted before succeeding,
+	// Update the DB's "DataRestored" condition to "False".
+	// If already "False", no need to update the reason.
+	if ri.phase != v1beta1.RestoreSucceeded {
+		_, dbCond, err := ri.do.GetCondition(api.DatabaseDataRestored)
+		if err != nil {
+			return fmt.Errorf("failed to get condition with %s", err.Error())
+		}
+		if dbCond == nil {
+			dbCond = &kmapi.Condition{
+				Type: api.DatabaseDataRestored,
+			}
+		}
+		if dbCond.Status != core.ConditionFalse {
+			dbCond.Status = core.ConditionFalse
+			dbCond.Reason = api.DataRestoreInterrupted
+			dbCond.Reason = fmt.Sprintf("Data initializer %s %s/%s is deleted",
+				ri.invoker.Kind,
+				ri.do.Namespace,
+				ri.invoker.Name,
+			)
+		}
+		return ri.do.SetCondition(*dbCond)
+	}
+	return nil
+}
+
 func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 	if ri == nil {
 		return fmt.Errorf("invalid restore information. it must not be nil")
