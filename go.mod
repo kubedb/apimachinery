@@ -22,13 +22,14 @@ require (
 	gomodules.xyz/runtime v0.3.0
 	gomodules.xyz/stow v0.2.4
 	gomodules.xyz/x v0.0.14
-	k8s.io/api v0.24.1
+	k8s.io/api v0.24.2
 	k8s.io/apiextensions-apiserver v0.24.1
-	k8s.io/apimachinery v0.24.1
-	k8s.io/client-go v0.24.1
+	k8s.io/apimachinery v0.24.2
+	k8s.io/client-go v0.24.2
 	k8s.io/klog/v2 v2.60.1
 	k8s.io/kube-aggregator v0.24.1
 	k8s.io/kube-openapi v0.0.0-20220413171646-5e7f5fdc6da6
+	k8s.io/metrics v0.24.2
 	kmodules.xyz/client-go v0.24.0
 	kmodules.xyz/crd-schema-fuzz v0.24.1
 	kmodules.xyz/custom-resources v0.24.0

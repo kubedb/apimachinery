@@ -870,7 +870,7 @@ gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.0
 ## explicit
 gopkg.in/yaml.v3
-# k8s.io/api v0.24.1
+# k8s.io/api v0.24.2
 ## explicit; go 1.16
 k8s.io/api/admission/v1
 k8s.io/api/admission/v1beta1
@@ -938,7 +938,7 @@ k8s.io/apiextensions-apiserver/pkg/client/informers/externalversions/apiextensio
 k8s.io/apiextensions-apiserver/pkg/client/informers/externalversions/internalinterfaces
 k8s.io/apiextensions-apiserver/pkg/client/listers/apiextensions/v1
 k8s.io/apiextensions-apiserver/pkg/client/listers/apiextensions/v1beta1
-# k8s.io/apimachinery v0.24.1
+# k8s.io/apimachinery v0.24.2
 ## explicit; go 1.16
 k8s.io/apimachinery/pkg/api/apitesting
 k8s.io/apimachinery/pkg/api/apitesting/fuzzer
@@ -1124,7 +1124,7 @@ k8s.io/apiserver/plugin/pkg/audit/truncate
 k8s.io/apiserver/plugin/pkg/audit/webhook
 k8s.io/apiserver/plugin/pkg/authenticator/token/webhook
 k8s.io/apiserver/plugin/pkg/authorizer/webhook
-# k8s.io/client-go v0.24.1
+# k8s.io/client-go v0.24.2
 ## explicit; go 1.16
 k8s.io/client-go/applyconfigurations/admissionregistration/v1
 k8s.io/client-go/applyconfigurations/admissionregistration/v1beta1
@@ -1401,6 +1401,12 @@ k8s.io/kube-openapi/pkg/spec3
 k8s.io/kube-openapi/pkg/util
 k8s.io/kube-openapi/pkg/util/proto
 k8s.io/kube-openapi/pkg/validation/spec
+# k8s.io/metrics v0.24.2
+## explicit; go 1.16
+k8s.io/metrics/pkg/apis/metrics
+k8s.io/metrics/pkg/apis/metrics/v1alpha1
+k8s.io/metrics/pkg/apis/metrics/v1beta1
+k8s.io/metrics/pkg/client/clientset/versioned/scheme
 # k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9
 ## explicit; go 1.12
 k8s.io/utils/buffer
