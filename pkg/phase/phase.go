@@ -98,7 +98,17 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 	// 2. if condition["DataRestored"] = false, the phase should be "NotReady".
 	//		if the status is "true", the phase should depend on the rest of checks.
 	if kmapi.IsConditionTrue(conditions, api.DatabaseDataRestoreStarted) {
-		return api.DatabasePhaseDataRestoring
+		// TODO:
+		// 		- remove these conditions.
+		//		- It is here for backward compatibility.
+		//		- Just return "Restoring" in future.
+		if kmapi.HasCondition(conditions, api.DatabaseDataRestored) {
+			if kmapi.IsConditionFalse(conditions, api.DatabaseDataRestored) {
+				return api.DatabasePhaseNotReady
+			}
+		} else {
+			return api.DatabasePhaseDataRestoring
+		}
 	}
 	if kmapi.IsConditionFalse(conditions, api.DatabaseDataRestored) {
 		return api.DatabasePhaseNotReady
