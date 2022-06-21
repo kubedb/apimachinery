@@ -29,45 +29,6 @@ type VerticalPodAutopilotRecommenderSelector struct {
 	Name string `json:"name"`
 }
 
-// VPASpec is the specification of the behavior of the autopilot.
-type VPASpec struct {
-	// The name of the verticalPodAutoscaler
-	// usually this will be the corresponding statefulset name
-	// This field will help us to get the corresponding vpaStatus. As `VPAName` is the only common field between them
-	VPAName string `json:"vpaName,omitempty" `
-	// TargetRef points to the controller managing the set of pods for the
-	// autopilot to control - e.g. Deployment, StatefulSet. VerticalPodAutopilot
-	// can be targeted at controller implementing scale subresource (the pod set is
-	// retrieved from the controller's ScaleStatus) or some well known controllers
-	// (e.g. for DaemonSet the pod set is read from the controller's spec).
-	// If VerticalPodAutopilot cannot use specified target it will report
-	// ConfigUnsupported condition.
-	// Note that VerticalPodAutopilot does not require full implementation
-	// of scale subresource - it will not use it to modify the replica count.
-	// The only thing retrieved is a label selector matching pods grouped by
-	// the target resource.
-	TargetRef *autoscaling.CrossVersionObjectReference `json:"targetRef" `
-
-	// Describes the rules on how changes are applied to the pods.
-	// If not specified, all fields in the `PodUpdatePolicy` are set to their
-	// default values.
-	// +optional
-	UpdatePolicy *PodUpdatePolicy `json:"updatePolicy,omitempty" `
-
-	// Controls how the autopilot computes recommended resources.
-	// The resource policy may be used to set constraints on the recommendations
-	// for individual containers. If not specified, the autopilot computes recommended
-	// resources for all containers in the pod, without additional constraints.
-	// +optional
-	ResourcePolicy *PodResourcePolicy `json:"resourcePolicy,omitempty"`
-
-	// Recommender responsible for generating recommendation for this object.
-	// List should be empty (then the default recommender will generate the
-	// recommendation) or contain exactly one recommender.
-	// +optional
-	Recommenders []*VerticalPodAutopilotRecommenderSelector `json:"recommenders,omitempty"`
-}
-
 // PodUpdatePolicy describes the rules on how changes are applied to the pods.
 type PodUpdatePolicy struct {
 	// Controls when autopilot applies changes to the pod resources.
@@ -150,8 +111,40 @@ const (
 // VPAStatus describes the runtime state of the autopilot.
 type VPAStatus struct {
 	// The name of the VerticalPodAutoscaler.
-	// This field will help us to get the corresponding vpaSpec. As `VPAName` is the only common field between them
+	// This field will help us to get the corresponding vpa.
 	VPAName string `json:"vpaName,omitempty"`
+
+	// TargetRef points to the controller managing the set of pods for the
+	// autopilot to control - e.g. Deployment, StatefulSet. VerticalPodAutopilot
+	// can be targeted at controller implementing scale subresource (the pod set is
+	// retrieved from the controller's ScaleStatus) or some well known controllers
+	// (e.g. for DaemonSet the pod set is read from the controller's spec).
+	// If VerticalPodAutopilot cannot use specified target it will report
+	// ConfigUnsupported condition.
+	// Note that VerticalPodAutopilot does not require full implementation
+	// of scale subresource - it will not use it to modify the replica count.
+	// The only thing retrieved is a label selector matching pods grouped by
+	// the target resource.
+	TargetRef *autoscaling.CrossVersionObjectReference `json:"targetRef" `
+
+	// Describes the rules on how changes are applied to the pods.
+	// If not specified, all fields in the `PodUpdatePolicy` are set to their
+	// default values.
+	// +optional
+	UpdatePolicy *PodUpdatePolicy `json:"updatePolicy,omitempty" `
+
+	// Controls how the autopilot computes recommended resources.
+	// The resource policy may be used to set constraints on the recommendations
+	// for individual containers. If not specified, the autopilot computes recommended
+	// resources for all containers in the pod, without additional constraints.
+	// +optional
+	ResourcePolicy *PodResourcePolicy `json:"resourcePolicy,omitempty"`
+
+	// Recommender responsible for generating recommendation for this object.
+	// List should be empty (then the default recommender will generate the
+	// recommendation) or contain exactly one recommender.
+	// +optional
+	Recommenders []*VerticalPodAutopilotRecommenderSelector `json:"recommenders,omitempty"`
 
 	// The most recently computed amount of resources recommended by the
 	// autopilot for the controlled pods.

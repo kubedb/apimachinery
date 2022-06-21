@@ -495,7 +495,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisScalingPolicy":                         schema_apimachinery_apis_autoscaling_v1alpha1_RedisScalingPolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisScalingRules":                          schema_apimachinery_apis_autoscaling_v1alpha1_RedisScalingRules(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec":                      schema_apimachinery_apis_autoscaling_v1alpha1_StorageAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPASpec":                                    schema_apimachinery_apis_autoscaling_v1alpha1_VPASpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPAStatus":                                  schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotCondition":              schema_apimachinery_apis_autoscaling_v1alpha1_VerticalPodAutopilotCondition(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotRecommenderSelector":    schema_apimachinery_apis_autoscaling_v1alpha1_VerticalPodAutopilotRecommenderSelector(ref),
@@ -20962,25 +20961,11 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ComputeAutoscalerSpec(ref com
 							Format:      "int32",
 						},
 					},
-					"vpas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "VPAs hold all the VerticalPodAutoscaler specs those are associated with its parent 'nodeType'",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPASpec"),
-									},
-								},
-							},
-						},
-					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPASpec"},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -24026,16 +24011,16 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_StorageAutoscalerSpec(ref com
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_VPASpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "VPASpec is the specification of the behavior of the autopilot.",
+				Description: "VPAStatus describes the runtime state of the autopilot.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"vpaName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The name of the verticalPodAutoscaler usually this will be the corresponding statefulset name This field will help us to get the corresponding vpaStatus. As `VPAName` is the only common field between them",
+							Description: "The name of the VerticalPodAutoscaler. This field will help us to get the corresponding vpa.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -24071,29 +24056,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_VPASpec(ref common.ReferenceC
 							},
 						},
 					},
-				},
-				Required: []string{"targetRef"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/autoscaling/v1.CrossVersionObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodResourcePolicy", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodUpdatePolicy", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotRecommenderSelector"},
-	}
-}
-
-func schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "VPAStatus describes the runtime state of the autopilot.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"vpaName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The name of the VerticalPodAutoscaler. This field will help us to get the corresponding vpaSpec. As `VPAName` is the only common field between them",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"recommendation": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The most recently computed amount of resources recommended by the autopilot for the controlled pods.",
@@ -24121,10 +24083,11 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref common.Referenc
 						},
 					},
 				},
+				Required: []string{"targetRef"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RecommendedPodResources", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotCondition"},
+			"k8s.io/api/autoscaling/v1.CrossVersionObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodResourcePolicy", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodUpdatePolicy", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RecommendedPodResources", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotCondition", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotRecommenderSelector"},
 	}
 }
 

@@ -76,64 +76,6 @@ spec:
                       usageThreshold:
                         format: int32
                         type: integer
-                      vpas:
-                        items:
-                          properties:
-                            recommenders:
-                              items:
-                                properties:
-                                  name:
-                                    type: string
-                                required:
-                                - name
-                                type: object
-                              type: array
-                            resourcePolicy:
-                              properties:
-                                containerPolicies:
-                                  items:
-                                    properties:
-                                      containerName:
-                                        type: string
-                                      mode:
-                                        enum:
-                                        - Auto
-                                        - "Off"
-                                        type: string
-                                    type: object
-                                  type: array
-                              type: object
-                            targetRef:
-                              properties:
-                                apiVersion:
-                                  type: string
-                                kind:
-                                  type: string
-                                name:
-                                  type: string
-                              required:
-                              - kind
-                              - name
-                              type: object
-                            updatePolicy:
-                              properties:
-                                minReplicas:
-                                  format: int32
-                                  type: integer
-                                updateMode:
-                                  enum:
-                                  - "Off"
-                                  - Initial
-                                  - Recreate
-                                  - Auto
-                                  type: string
-                              type: object
-                            vpaName:
-                              type: string
-                          required:
-                          - targetRef
-                          type: object
-                        type: array
                     type: object
                 type: object
               databaseRef:
@@ -335,8 +277,59 @@ spec:
                             type: object
                           type: array
                       type: object
+                    recommenders:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      type: array
+                    resourcePolicy:
+                      properties:
+                        containerPolicies:
+                          items:
+                            properties:
+                              containerName:
+                                type: string
+                              mode:
+                                enum:
+                                - Auto
+                                - "Off"
+                                type: string
+                            type: object
+                          type: array
+                      type: object
+                    targetRef:
+                      properties:
+                        apiVersion:
+                          type: string
+                        kind:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                      - kind
+                      - name
+                      type: object
+                    updatePolicy:
+                      properties:
+                        minReplicas:
+                          format: int32
+                          type: integer
+                        updateMode:
+                          enum:
+                          - "Off"
+                          - Initial
+                          - Recreate
+                          - Auto
+                          type: string
+                      type: object
                     vpaName:
                       type: string
+                  required:
+                  - targetRef
                   type: object
                 type: array
             type: object

@@ -97,11 +97,6 @@ type ComputeAutoscalerSpec struct {
 	// of the total memory() `inMemorySizeGB` should be increased by ScalingThreshold percent
 	// +optional
 	ScalingThreshold int32 `json:"scalingThreshold,omitempty"`
-
-	// VPAs hold all the VerticalPodAutoscaler specs those are associated
-	// with its parent 'nodeType'
-	// +optional
-	VPAs []VPASpec `json:"vpas,omitempty"`
 }
 
 type StorageAutoscalerSpec struct {
