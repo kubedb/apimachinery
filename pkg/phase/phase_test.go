@@ -160,11 +160,6 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: core.ConditionTrue,
 				},
 				{
-					Type:               api.DatabaseDataRestoreStarted,
-					Status:             core.ConditionTrue,
-					LastTransitionTime: lastTransactionTime,
-				},
-				{
 					Type:               api.DatabaseDataRestored,
 					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
@@ -186,11 +181,6 @@ func TestPhaseForCondition(t *testing.T) {
 				{
 					Type:   api.DatabaseAcceptingConnection,
 					Status: core.ConditionTrue,
-				},
-				{
-					Type:               api.DatabaseDataRestoreStarted,
-					Status:             core.ConditionTrue,
-					LastTransitionTime: lastTransactionTime,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
@@ -272,11 +262,6 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: core.ConditionTrue,
 				},
 				{
-					Type:               api.DatabaseDataRestoreStarted,
-					Status:             core.ConditionTrue,
-					LastTransitionTime: lastTransactionTime,
-				},
-				{
 					Type:               api.DatabaseDataRestored,
 					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
@@ -306,11 +291,6 @@ func TestPhaseForCondition(t *testing.T) {
 				{
 					Type:   api.DatabaseAcceptingConnection,
 					Status: core.ConditionTrue,
-				},
-				{
-					Type:               api.DatabaseDataRestoreStarted,
-					Status:             core.ConditionTrue,
-					LastTransitionTime: lastTransactionTime,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
@@ -344,11 +324,6 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: core.ConditionFalse,
 				},
 				{
-					Type:               api.DatabaseDataRestoreStarted,
-					Status:             core.ConditionTrue,
-					LastTransitionTime: lastTransactionTime,
-				},
-				{
 					Type:               api.DatabaseDataRestored,
 					Status:             core.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
@@ -378,11 +353,6 @@ func TestPhaseForCondition(t *testing.T) {
 				{
 					Type:   api.DatabaseAcceptingConnection,
 					Status: core.ConditionTrue,
-				},
-				{
-					Type:               api.DatabaseDataRestoreStarted,
-					Status:             core.ConditionTrue,
-					LastTransitionTime: lastTransactionTime,
 				},
 				{
 					Type:               api.DatabaseDataRestored,

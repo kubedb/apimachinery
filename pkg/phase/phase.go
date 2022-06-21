@@ -93,36 +93,15 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 
 	// =================================== Handling "DataRestoreStarted" and "DataRestored" conditions  ==================================================
 	// For data restoring, there could be the following scenarios:
-	// 1. Data cond["DataRestoreStarted"] = nil and cond["DataRestored"] = nil. In this case, phase will depend on the other conditions.
-	// 2. Data cond["DataRestoreStarted"] = true but cond["DataRestored"] = nil. In this case, phase should be "DataRestoring".
-	// 3. Data cond["DataRestoreStarted"] = true but cond["DataRestored"] = false. In this case, there could be following scenarios:
-	// 		a. Data cond["DataRestoreStarted"].LastTransitionTime > cond["DataRestored"].LastTransitionTime. In this case phase should be "DataRestoring".
-	// 		b. Data cond["DataRestoreStarted"].LastTransitionTime <= cond["DataRestored"].LastTransitionTime. In this case phase should be "NotReady".
-	// 4. Data cond["DataRestoreStarted"] = true but cond["DataRestored"] = true. In this case, there could be the following scenarios:
-	// 		a. Data cond["DataRestoreStarted"].LastTransitionTime > cond["DataRestored"].LastTransitionTime. In this case phase should be "DataRestoring".
-	// 		b. Data cond["DataRestoreStarted"].LastTransitionTime <= cond["DataRestored"].LastTransitionTime. In this case, phase will depend on the other conditions.
-	if kmapi.HasCondition(conditions, api.DatabaseDataRestoreStarted) {
-		// scenario 2
-		if kmapi.IsConditionTrue(conditions, api.DatabaseDataRestoreStarted) && !kmapi.HasCondition(conditions, api.DatabaseDataRestored) {
-			// When the database is restoring, no other conditions does matter. So, just return the phase.
-			return api.DatabasePhaseDataRestoring
-		}
-		// scenario 3
-		if kmapi.IsConditionTrue(conditions, api.DatabaseDataRestoreStarted) && !kmapi.IsConditionTrue(conditions, api.DatabaseDataRestored) {
-			res := compareLastTransactionTime(conditions, api.DatabaseDataRestoreStarted, api.DatabaseDataRestored)
-			if res <= 0 {
-				// Database has failed to restore. User should not connect to the database. So, the database phase should be "NotReady"
-				return api.DatabasePhaseNotReady
-			}
-			return api.DatabasePhaseDataRestoring
-		}
-		// scenario 4
-		if kmapi.IsConditionTrue(conditions, api.DatabaseDataRestoreStarted) && kmapi.IsConditionTrue(conditions, api.DatabaseDataRestored) {
-			res := compareLastTransactionTime(conditions, api.DatabaseDataRestoreStarted, api.DatabaseDataRestored)
-			if res == 1 {
-				return api.DatabasePhaseDataRestoring
-			}
-		}
+	// 1. if condition["DataRestoreStarted"] = true, the phase should be "Restoring".
+	//		And there will be no "false" status for "DataRestoreStarted" type.
+	// 2. if condition["DataRestored"] = false, the phase should be "NotReady".
+	//		if the status is "true", the phase should depend on the rest of checks.
+	if kmapi.IsConditionTrue(conditions, api.DatabaseDataRestoreStarted) {
+		return api.DatabasePhaseDataRestoring
+	}
+	if kmapi.IsConditionFalse(conditions, api.DatabaseDataRestored) {
+		return api.DatabasePhaseNotReady
 	}
 
 	// ================================= Handling "AcceptingConnection" condition ==========================

@@ -61,9 +61,8 @@ func (c *Controller) processRestoreSession(key string) error {
 		}
 		if rs.DeletionTimestamp != nil {
 			return c.handleTerminateEvent(ri)
-		} else {
-			return c.handleRestoreInvokerEvent(ri)
 		}
+		return c.handleRestoreInvokerEvent(ri)
 	}
 	return nil
 }
