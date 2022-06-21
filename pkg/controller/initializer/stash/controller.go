@@ -23,6 +23,7 @@ import (
 
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/rest"
 	"k8s.io/klog/v2"
 	dmcond "kmodules.xyz/client-go/dynamic/conditions"
@@ -51,10 +52,11 @@ func NewController(
 }
 
 type restoreInfo struct {
-	invoker core.TypedLocalObjectReference
-	target  *v1beta1.RestoreTarget
-	phase   v1beta1.RestorePhase
-	do      dmcond.DynamicOptions
+	invoker    core.TypedLocalObjectReference
+	target     *v1beta1.RestoreTarget
+	phase      v1beta1.RestorePhase
+	do         dmcond.DynamicOptions
+	invokerUID types.UID
 }
 
 func Configure(cfg *rest.Config, s *amc.StashInitializer, resyncPeriod time.Duration) error {

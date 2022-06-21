@@ -59,6 +59,9 @@ func (c *Controller) processRestoreSession(key string) error {
 			klog.Errorln("failed to extract restore invoker info. Reason: ", err)
 			return err
 		}
+		if rs.DeletionTimestamp != nil {
+			return c.handleTerminateEvent(ri)
+		}
 		return c.handleRestoreInvokerEvent(ri)
 	}
 	return nil
