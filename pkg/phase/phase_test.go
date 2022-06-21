@@ -191,62 +191,6 @@ func TestPhaseForCondition(t *testing.T) {
 			expectedPhase: api.DatabasePhaseNotReady,
 		},
 		{
-			name: "2nd restore: not completed yet (previous one succeeded)",
-			conditions: []kmapi.Condition{
-				{
-					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
-				},
-				{
-					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionTrue,
-				},
-				{
-					Type:   api.DatabaseAcceptingConnection,
-					Status: core.ConditionTrue,
-				},
-				{
-					Type:               api.DatabaseDataRestoreStarted,
-					Status:             core.ConditionTrue,
-					LastTransitionTime: lastTransactionTimePlusOne,
-				},
-				{
-					Type:               api.DatabaseDataRestored,
-					Status:             core.ConditionTrue,
-					LastTransitionTime: lastTransactionTime,
-				},
-			},
-			expectedPhase: api.DatabasePhaseDataRestoring,
-		},
-		{
-			name: "2nd restore: not completed yet (previous one failed)",
-			conditions: []kmapi.Condition{
-				{
-					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
-				},
-				{
-					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionTrue,
-				},
-				{
-					Type:   api.DatabaseAcceptingConnection,
-					Status: core.ConditionTrue,
-				},
-				{
-					Type:               api.DatabaseDataRestoreStarted,
-					Status:             core.ConditionTrue,
-					LastTransitionTime: lastTransactionTimePlusOne,
-				},
-				{
-					Type:               api.DatabaseDataRestored,
-					Status:             core.ConditionFalse,
-					LastTransitionTime: lastTransactionTime,
-				},
-			},
-			expectedPhase: api.DatabasePhaseDataRestoring,
-		},
-		{
 			name: "Database is not ready",
 			conditions: []kmapi.Condition{
 				{
