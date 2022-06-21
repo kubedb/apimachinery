@@ -26,6 +26,7 @@ import (
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	aggscheme "k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset/scheme"
+	metricsscheme "k8s.io/metrics/pkg/client/clientset/versioned/scheme"
 	crscheme "kmodules.xyz/custom-resources/client/clientset/versioned/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
@@ -51,6 +52,10 @@ func NewUncachedClient(cfg *rest.Config) (client.Client, error) {
 	}
 	// apiservices
 	if err := aggscheme.AddToScheme(scheme); err != nil {
+		return nil, err
+	}
+	// metrics
+	if err := metricsscheme.AddToScheme(scheme); err != nil {
 		return nil, err
 	}
 	// appbinding
