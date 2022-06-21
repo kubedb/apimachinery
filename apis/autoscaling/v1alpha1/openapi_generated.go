@@ -24025,37 +24025,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref common.Referenc
 							Format:      "",
 						},
 					},
-					"targetRef": {
-						SchemaProps: spec.SchemaProps{
-							Description: "TargetRef points to the controller managing the set of pods for the autopilot to control - e.g. Deployment, StatefulSet. VerticalPodAutopilot can be targeted at controller implementing scale subresource (the pod set is retrieved from the controller's ScaleStatus) or some well known controllers (e.g. for DaemonSet the pod set is read from the controller's spec). If VerticalPodAutopilot cannot use specified target it will report ConfigUnsupported condition. Note that VerticalPodAutopilot does not require full implementation of scale subresource - it will not use it to modify the replica count. The only thing retrieved is a label selector matching pods grouped by the target resource.",
-							Ref:         ref("k8s.io/api/autoscaling/v1.CrossVersionObjectReference"),
-						},
-					},
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Describes the rules on how changes are applied to the pods. If not specified, all fields in the `PodUpdatePolicy` are set to their default values.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodUpdatePolicy"),
-						},
-					},
-					"resourcePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Controls how the autopilot computes recommended resources. The resource policy may be used to set constraints on the recommendations for individual containers. If not specified, the autopilot computes recommended resources for all containers in the pod, without additional constraints.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodResourcePolicy"),
-						},
-					},
-					"recommenders": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Recommender responsible for generating recommendation for this object. List should be empty (then the default recommender will generate the recommendation) or contain exactly one recommender.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotRecommenderSelector"),
-									},
-								},
-							},
-						},
-					},
 					"recommendation": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The most recently computed amount of resources recommended by the autopilot for the controlled pods.",
@@ -24083,11 +24052,10 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"targetRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/autoscaling/v1.CrossVersionObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodResourcePolicy", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodUpdatePolicy", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RecommendedPodResources", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotCondition", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotRecommenderSelector"},
+			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RecommendedPodResources", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotCondition"},
 	}
 }
 
