@@ -24693,7 +24693,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref common.ReferenceC
 					"initConfig": {
 						SchemaProps: spec.SchemaProps{
 							Description: "InitConfiguration contains information with which the proxysql will bootstrap (only 4 fields are configurable)",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLConfiguration"),
 						},
 					},

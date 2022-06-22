@@ -2337,7 +2337,11 @@ func (in *ProxySQLList) DeepCopyObject() runtime.Object {
 func (in *ProxySQLSpec) DeepCopyInto(out *ProxySQLSpec) {
 	*out = *in
 	out.AutoOps = in.AutoOps
-	in.InitConfiguration.DeepCopyInto(&out.InitConfiguration)
+	if in.InitConfiguration != nil {
+		in, out := &in.InitConfiguration, &out.InitConfiguration
+		*out = new(ProxySQLConfiguration)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Replicas != nil {
 		in, out := &in.Replicas, &out.Replicas
 		*out = new(int32)

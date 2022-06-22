@@ -31910,7 +31910,6 @@
         },
         "initConfig": {
           "description": "InitConfiguration contains information with which the proxysql will bootstrap (only 4 fields are configurable)",
-          "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLConfiguration"
         },
         "mode": {

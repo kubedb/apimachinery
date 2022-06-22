@@ -71,7 +71,7 @@ type ProxySQLSpec struct {
 	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
 
 	// InitConfiguration contains information with which the proxysql will bootstrap (only 4 fields are configurable)
-	InitConfiguration ProxySQLConfiguration `json:"initConfig,omitempty"`
+	InitConfiguration *ProxySQLConfiguration `json:"initConfig,omitempty"`
 
 	// Version of ProxySQL to be deployed.
 	Version string `json:"version"`
