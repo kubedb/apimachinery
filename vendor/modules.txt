@@ -364,7 +364,7 @@ github.com/google/go-containerregistry/pkg/v1/remote/transport
 github.com/google/go-containerregistry/pkg/v1/stream
 github.com/google/go-containerregistry/pkg/v1/tarball
 github.com/google/go-containerregistry/pkg/v1/types
-# github.com/google/go-containerregistry/pkg/authn/k8schain v0.0.0-20220616035112-623023e6c244
+# github.com/google/go-containerregistry/pkg/authn/k8schain v0.0.0-20220618143108-2a21d4fae654
 ## explicit; go 1.17
 github.com/google/go-containerregistry/pkg/authn/k8schain
 # github.com/google/go-containerregistry/pkg/authn/kubernetes v0.0.0-20220523143934-b17c48b086b7
@@ -1421,8 +1421,8 @@ k8s.io/utils/path
 k8s.io/utils/pointer
 k8s.io/utils/strings/slices
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.24.0
-## explicit; go 1.17
+# kmodules.xyz/client-go v0.24.4
+## explicit; go 1.18
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
 kmodules.xyz/client-go/apiextensions

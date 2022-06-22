@@ -68,6 +68,7 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 		ri.phase = inv.Status.Phase
 		// database information
 		ri.do.Namespace = inv.Namespace
+		ri.invokerUID = inv.UID
 	case *v1beta1.RestoreBatch:
 		// invoker information
 		ri.invoker.Kind = inv.Kind
@@ -83,6 +84,7 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 		ri.phase = getTargetPhase(inv.Status, ri.target)
 		// database information
 		ri.do.Namespace = inv.Namespace
+		ri.invokerUID = inv.UID
 	default:
 		return ri, fmt.Errorf("unknown restore invoker type")
 	}
@@ -94,66 +96,119 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 	return ri, nil
 }
 
-func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
+func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
 	if ri == nil {
 		return fmt.Errorf("invalid restore information. it must not be nil")
 	}
-
-	// Restore process has started, add "DataRestoreStarted" condition to the respective database CR
-	err := ri.do.SetCondition(kmapi.Condition{
-		Type:    api.DatabaseDataRestoreStarted,
-		Status:  core.ConditionTrue,
-		Reason:  api.DataRestoreStartedByExternalInitializer,
-		Message: fmt.Sprintf("Data restore started by initializer: %s/%s/%s.", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name),
-	})
-	if err != nil {
-		return err
-	}
-
-	// Just log and return if the restore process hasn't completed yet.
-	if ri.phase != v1beta1.RestoreSucceeded && ri.phase != v1beta1.RestoreFailed && ri.phase != v1beta1.RestorePhaseUnknown {
-		klog.Infof("restore process hasn't completed yet. Current restore phase: %s", ri.phase)
-		return nil
-	}
-
 	// If the target could not be identified properly, we can't process further.
 	if ri.target == nil {
 		return fmt.Errorf("couldn't identify the restore target from invoker: %s/%s/%s", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name)
 	}
 
+	// If the RestoreSession is deleted before completion,
+	// Set the DB's "DataRestored" condition status to "False".
+	// If already "False", no need to update the reason and message.
+	// Also remove the "DataRestoreStarted" condition, if any exists.
+	if !isDataRestoreCompleted(ri) {
+		_, conditions, err := ri.do.ReadConditions()
+		if err != nil {
+			return fmt.Errorf("failed to read conditions with %s", err.Error())
+		}
+		_, dbCond := kmapi.GetCondition(conditions, api.DatabaseDataRestored)
+		if dbCond == nil {
+			dbCond = &kmapi.Condition{
+				Type: api.DatabaseDataRestored,
+			}
+		}
+		if dbCond.Status != core.ConditionFalse {
+			dbCond.Status = core.ConditionFalse
+			dbCond.Reason = api.DataRestoreInterrupted
+			dbCond.Message = fmt.Sprintf("Data initializer %s %s/%s with UID %s has been deleted",
+				ri.invoker.Kind,
+				ri.do.Namespace,
+				ri.invoker.Name,
+				ri.invokerUID,
+			)
+		}
+
+		conditions = kmapi.RemoveCondition(conditions, api.DatabaseDataRestoreStarted)
+		conditions = kmapi.SetCondition(conditions, *dbCond)
+		return ri.do.UpdateConditions(conditions)
+	}
+	return nil
+}
+
+func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
+	if ri == nil {
+		return fmt.Errorf("invalid restore information. it must not be nil")
+	}
+	// If the target could not be identified properly, we can't process further.
+	if ri.target == nil {
+		return fmt.Errorf("couldn't identify the restore target from invoker: %s/%s/%s", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name)
+	}
+
+	// If restore is successful or failed,
+	// Remove: condition.Type="DataRestoreStarted"
+	// Add: condition.Type="DataRestored" --> true/false
+	if isDataRestoreCompleted(ri) {
+		dbCond := kmapi.Condition{
+			Type: api.DatabaseDataRestored,
+		}
+		if ri.phase == v1beta1.RestoreSucceeded {
+			dbCond.Status = core.ConditionTrue
+			dbCond.Reason = api.DatabaseSuccessfullyRestored
+			dbCond.Message = fmt.Sprintf("Successfully restored data by initializer %s %s/%s with UID %s",
+				ri.invoker.Kind,
+				ri.do.Namespace,
+				ri.invoker.Name,
+				ri.invokerUID,
+			)
+		} else {
+			dbCond.Status = core.ConditionFalse
+			dbCond.Reason = api.FailedToRestoreData
+			dbCond.Message = fmt.Sprintf("Failed to restore data by initializer %s %s/%s with UID %s."+
+				"\nRun 'kubectl describe %s %s -n %s' for more details.",
+				ri.invoker.Kind,
+				ri.do.Namespace,
+				ri.invoker.Name,
+				ri.invokerUID,
+				strings.ToLower(ri.invoker.Kind),
+				ri.invoker.Name,
+				ri.do.Namespace,
+			)
+		}
+
+		_, conditions, err := ri.do.ReadConditions()
+		if err != nil {
+			return fmt.Errorf("failed to read conditions with %s", err.Error())
+		}
+		conditions = kmapi.RemoveCondition(conditions, api.DatabaseDataRestoreStarted)
+		conditions = kmapi.SetCondition(conditions, dbCond)
+		err = ri.do.UpdateConditions(conditions)
+		if err != nil {
+			return fmt.Errorf("failed to update conditions with %s", err.Error())
+		}
+
+		// Write data restore completion event to the respective database CR
+		return c.writeRestoreCompletionEvent(ri.do, dbCond)
+	}
+
+	// Restore process has started
+	// Add: "DataRestoreStarted" condition to the respective database CR.
+	// Remove: "DataRestored" condition, if any.
 	dbCond := kmapi.Condition{
-		Type: api.DatabaseDataRestored,
+		Type:    api.DatabaseDataRestoreStarted,
+		Status:  core.ConditionTrue,
+		Reason:  api.DataRestoreStartedByExternalInitializer,
+		Message: fmt.Sprintf("Data restore started by initializer: %s/%s/%s with UID %s.", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name, ri.invokerUID),
 	}
-
-	if ri.phase == v1beta1.RestoreSucceeded {
-		dbCond.Status = core.ConditionTrue
-		dbCond.Reason = api.DatabaseSuccessfullyRestored
-		dbCond.Message = fmt.Sprintf("Successfully restored data by initializer %s %s/%s",
-			ri.invoker.Kind,
-			ri.do.Namespace,
-			ri.invoker.Name,
-		)
-	} else {
-		dbCond.Status = core.ConditionFalse
-		dbCond.Reason = api.FailedToRestoreData
-		dbCond.Message = fmt.Sprintf("Failed to restore data by initializer %s %s/%s."+
-			"\nRun 'kubectl describe %s %s -n %s' for more details.",
-			ri.invoker.Kind,
-			ri.do.Namespace,
-			ri.invoker.Name,
-			strings.ToLower(ri.invoker.Kind),
-			ri.invoker.Name,
-			ri.do.Namespace,
-		)
-	}
-
-	// Add "DatabaseInitialized" dmcond to the respective database CR
-	err = ri.do.SetCondition(dbCond)
+	_, conditions, err := ri.do.ReadConditions()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read conditions with %s", err.Error())
 	}
-	// Write data restore completion event to the respective database CR
-	return c.writeRestoreCompletionEvent(ri.do, dbCond)
+	conditions = kmapi.RemoveCondition(conditions, api.DatabaseDataRestored)
+	conditions = kmapi.SetCondition(conditions, dbCond)
+	return ri.do.UpdateConditions(conditions)
 }
 
 func (c *Controller) identifyTarget(members []v1beta1.RestoreTargetSpec, namespace string) (*v1beta1.RestoreTarget, error) {
@@ -287,4 +342,10 @@ func (c *Controller) writeRestoreCompletionEvent(do dmcond.DynamicOptions, cond 
 	// create event
 	c.Recorder.Eventf(ref, eventType, cond.Reason, cond.Message)
 	return nil
+}
+
+func isDataRestoreCompleted(ri *restoreInfo) bool {
+	return ri.phase == v1beta1.RestoreSucceeded ||
+		ri.phase == v1beta1.RestoreFailed ||
+		ri.phase == v1beta1.RestorePhaseUnknown
 }

@@ -59,6 +59,9 @@ func (c Controller) processRestoreBatch(key string) error {
 			klog.Errorln("failed to extract restore invoker info. Reason: ", err)
 			return err
 		}
+		if rb.DeletionTimestamp != nil {
+			return c.handleTerminateEvent(ri)
+		}
 		return c.handleRestoreInvokerEvent(ri)
 	}
 	return nil

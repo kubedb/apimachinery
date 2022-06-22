@@ -10,7 +10,7 @@ require (
 	github.com/evanphx/json-patch v4.12.0+incompatible
 	github.com/google/go-cmp v0.5.8
 	github.com/google/go-containerregistry v0.9.0
-	github.com/google/go-containerregistry/pkg/authn/k8schain v0.0.0-20220616035112-623023e6c244
+	github.com/google/go-containerregistry/pkg/authn/k8schain v0.0.0-20220618143108-2a21d4fae654
 	github.com/google/gofuzz v1.2.0
 	github.com/iancoleman/orderedmap v0.2.0
 	github.com/json-iterator/go v1.1.12
@@ -30,7 +30,7 @@ require (
 	k8s.io/kube-aggregator v0.24.1
 	k8s.io/kube-openapi v0.0.0-20220413171646-5e7f5fdc6da6
 	k8s.io/metrics v0.24.1
-	kmodules.xyz/client-go v0.24.0
+	kmodules.xyz/client-go v0.24.4
 	kmodules.xyz/crd-schema-fuzz v0.24.1
 	kmodules.xyz/custom-resources v0.24.0
 	kmodules.xyz/monitoring-agent-api v0.24.0
