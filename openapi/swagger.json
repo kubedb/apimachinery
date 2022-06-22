@@ -27806,48 +27806,6 @@
     }
   },
   "definitions": {
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.Allowlist": {
-      "type": "object",
-      "properties": {
-        "groupReplication": {
-          "description": "List of all accepted versions for upgrade request of a GroupReplication cluster. empty indicates all accepted",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        },
-        "standalone": {
-          "description": "List of all accepted versions for upgrade request of a Standalone server. empty indicates all accepted",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.Denylist": {
-      "type": "object",
-      "properties": {
-        "groupReplication": {
-          "description": "List of all rejected versions for upgrade request of a GroupReplication cluster",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        },
-        "standalone": {
-          "description": "List of all rejected versions for upgrade request of a Standalone server",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchDashboardVersionDatabase": {
       "description": "ElasticsearchDashboardVersionDatabase is the Elasticsearch Dashboard image",
       "type": "object",
@@ -28071,6 +28029,11 @@
           "description": "Stash defines backup and restore task definitions.",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
+        },
+        "upgradeConstraints": {
+          "description": "upgrade constraints",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints"
         },
         "version": {
           "description": "Version",
@@ -28500,6 +28463,11 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
+        "upgradeConstraints": {
+          "description": "upgrade constraints",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints"
+        },
         "version": {
           "description": "Version",
           "type": "string",
@@ -28513,12 +28481,12 @@
         "allowlist": {
           "description": "List of all accepted versions for uprade request",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Allowlist"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionAllowlist"
         },
         "denylist": {
           "description": "List of all rejected versions for uprade request",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.Denylist"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionDenylist"
         }
       }
     },
@@ -28550,6 +28518,27 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionAllowlist": {
+      "type": "object",
+      "properties": {
+        "groupReplication": {
+          "description": "List of all accepted versions for upgrade request of a GroupReplication cluster. empty indicates all accepted",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "standalone": {
+          "description": "List of all accepted versions for upgrade request of a Standalone server. empty indicates all accepted",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionCoordinator": {
       "description": "MySQLVersionCoordinator is the image for coordinator",
       "type": "object",
@@ -28573,6 +28562,27 @@
         "image": {
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionDenylist": {
+      "type": "object",
+      "properties": {
+        "groupReplication": {
+          "description": "List of all rejected versions for upgrade request of a GroupReplication cluster",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "standalone": {
+          "description": "List of all rejected versions for upgrade request of a Standalone server",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
         }
       }
     },
@@ -28682,8 +28692,7 @@
         "db",
         "exporter",
         "initContainer",
-        "podSecurityPolicies",
-        "upgradeConstraints"
+        "podSecurityPolicies"
       ],
       "properties": {
         "coordinator": {
@@ -28903,6 +28912,11 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
+        "upgradeConstraints": {
+          "description": "upgrade constraints",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints"
+        },
         "version": {
           "description": "Version",
           "type": "string",
@@ -29104,6 +29118,11 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
+        "upgradeConstraints": {
+          "description": "upgrade constraints",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints"
+        },
         "version": {
           "description": "Version",
           "type": "string",
@@ -29239,6 +29258,11 @@
           "description": "Proxysql Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ProxySQLVersionProxysql"
+        },
+        "upgradeConstraints": {
+          "description": "upgrade constraints",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints"
         },
         "version": {
           "description": "Version",
@@ -29417,6 +29441,11 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
+        "upgradeConstraints": {
+          "description": "upgrade constraints",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints"
+        },
         "version": {
           "description": "Version",
           "type": "string",
@@ -29434,6 +29463,28 @@
         "image": {
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints": {
+      "description": "UpgradeConstraints specifies the constraints that need to be considered during version upgrade",
+      "type": "object",
+      "properties": {
+        "allowlist": {
+          "description": "List of all accepted versions for upgrade request",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "denylist": {
+          "description": "List of all rejected versions for upgrade request",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
         }
       }
     },

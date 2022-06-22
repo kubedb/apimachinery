@@ -418,8 +418,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                             schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                             schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                                     schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Allowlist":                                  schema_apimachinery_apis_catalog_v1alpha1_Allowlist(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Denylist":                                   schema_apimachinery_apis_catalog_v1alpha1_Denylist(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase":      schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchDashboardVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext":               schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchSecurityContext(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersion":                       schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersion(ref),
@@ -458,8 +456,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionSpec":                         schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLUpgradeConstraints":                    schema_apimachinery_apis_catalog_v1alpha1_MySQLUpgradeConstraints(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersion":                               schema_apimachinery_apis_catalog_v1alpha1_MySQLVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionAllowlist":                      schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionAllowlist(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionCoordinator":                    schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionCoordinator(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDatabase":                       schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionDatabase(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDenylist":                       schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionDenylist(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionExporter":                       schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionExporter(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionInitContainer":                  schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionList":                           schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionList(ref),
@@ -504,6 +504,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionPodSecurityPolicy":              schema_apimachinery_apis_catalog_v1alpha1_RedisVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionSpec":                           schema_apimachinery_apis_catalog_v1alpha1_RedisVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector":                    schema_apimachinery_apis_catalog_v1alpha1_ReplicationModeDetector(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints":                         schema_apimachinery_apis_catalog_v1alpha1_UpgradeConstraints(ref),
 	}
 }
 
@@ -20675,90 +20676,6 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_Allowlist(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"standalone": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of all accepted versions for upgrade request of a Standalone server. empty indicates all accepted",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"groupReplication": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of all accepted versions for upgrade request of a GroupReplication cluster. empty indicates all accepted",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_Denylist(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"standalone": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of all rejected versions for upgrade request of a Standalone server",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"groupReplication": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of all rejected versions for upgrade request of a GroupReplication cluster",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchDashboardVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21101,12 +21018,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref comm
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext"),
 						},
 					},
+					"upgradeConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "upgrade constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"),
+						},
+					},
 				},
 				Required: []string{"version", "authPlugin", "db", "exporter", "initContainer", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDashboardInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionPodSecurityPolicy"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDashboardInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"},
 	}
 }
 
@@ -21551,12 +21475,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionSpec(ref common.Ref
 							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
 						},
 					},
+					"upgradeConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "upgrade constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionPodSecurityPolicy"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"},
 	}
 }
 
@@ -22008,12 +21939,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionSpec(ref common.Ref
 							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
 						},
 					},
+					"upgradeConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "upgrade constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies", "replicationModeDetector"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"},
 	}
 }
 
@@ -22027,21 +21965,21 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLUpgradeConstraints(ref commo
 						SchemaProps: spec.SchemaProps{
 							Description: "List of all accepted versions for uprade request",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.Allowlist"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionAllowlist"),
 						},
 					},
 					"denylist": {
 						SchemaProps: spec.SchemaProps{
 							Description: "List of all rejected versions for uprade request",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.Denylist"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDenylist"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Allowlist", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.Denylist"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionAllowlist", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDenylist"},
 	}
 }
 
@@ -22085,6 +22023,48 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersion(ref common.Reference
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionAllowlist(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"standalone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of all accepted versions for upgrade request of a Standalone server. empty indicates all accepted",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"groupReplication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of all accepted versions for upgrade request of a GroupReplication cluster. empty indicates all accepted",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22122,6 +22102,48 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionDatabase(ref common.R
 					},
 				},
 				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionDenylist(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"standalone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of all rejected versions for upgrade request of a Standalone server",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"groupReplication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of all rejected versions for upgrade request of a GroupReplication cluster",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -22380,7 +22402,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies", "upgradeConstraints"},
+				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
@@ -22618,12 +22640,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionSpec(ref comm
 							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
 						},
 					},
+					"upgradeConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "upgrade constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionPodSecurityPolicy"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"},
 	}
 }
 
@@ -22822,12 +22851,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionSpec(ref common.R
 							Format:      "",
 						},
 					},
+					"upgradeConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "upgrade constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"),
+						},
+					},
 				},
 				Required: []string{"version", "pgBouncer", "exporter"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionInitContainer"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"},
 	}
 }
 
@@ -23130,12 +23166,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext"),
 						},
 					},
+					"upgradeConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "upgrade constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "exporter", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionPodSecurityPolicy"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"},
 	}
 }
 
@@ -23334,12 +23377,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionPodSecurityPolicy"),
 						},
 					},
+					"upgradeConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "upgrade constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"),
+						},
+					},
 				},
 				Required: []string{"version", "proxysql", "exporter", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionProxysql"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionProxysql", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"},
 	}
 }
 
@@ -23601,12 +23651,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionSpec(ref common.Refer
 							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
 						},
 					},
+					"upgradeConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "upgrade constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "exporter", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionPodSecurityPolicy"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"},
 	}
 }
 
@@ -23626,6 +23683,49 @@ func schema_apimachinery_apis_catalog_v1alpha1_ReplicationModeDetector(ref commo
 					},
 				},
 				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_UpgradeConstraints(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UpgradeConstraints specifies the constraints that need to be considered during version upgrade",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"allowlist": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of all accepted versions for upgrade request",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"denylist": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of all rejected versions for upgrade request",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 		},
 	}
