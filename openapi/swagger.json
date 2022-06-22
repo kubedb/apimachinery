@@ -28479,12 +28479,12 @@
       "type": "object",
       "properties": {
         "allowlist": {
-          "description": "List of all accepted versions for uprade request",
+          "description": "List of all accepted versions for upgrade request",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionAllowlist"
         },
         "denylist": {
-          "description": "List of all rejected versions for uprade request",
+          "description": "List of all rejected versions for upgrade request",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionDenylist"
         }
@@ -29471,7 +29471,7 @@
       "type": "object",
       "properties": {
         "allowlist": {
-          "description": "List of all accepted versions for upgrade request",
+          "description": "List of all accepted versions for upgrade request. An empty list indicates all versions are accepted except the denylist.",
           "type": "array",
           "items": {
             "type": "string",
@@ -29479,7 +29479,7 @@
           }
         },
         "denylist": {
-          "description": "List of all rejected versions for upgrade request",
+          "description": "List of all rejected versions for upgrade request. An empty list indicates no version is rejected.",
           "type": "array",
           "items": {
             "type": "string",

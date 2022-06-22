@@ -21963,14 +21963,14 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLUpgradeConstraints(ref commo
 				Properties: map[string]spec.Schema{
 					"allowlist": {
 						SchemaProps: spec.SchemaProps{
-							Description: "List of all accepted versions for uprade request",
+							Description: "List of all accepted versions for upgrade request",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionAllowlist"),
 						},
 					},
 					"denylist": {
 						SchemaProps: spec.SchemaProps{
-							Description: "List of all rejected versions for uprade request",
+							Description: "List of all rejected versions for upgrade request",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDenylist"),
 						},
@@ -23697,7 +23697,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_UpgradeConstraints(ref common.Ref
 				Properties: map[string]spec.Schema{
 					"allowlist": {
 						SchemaProps: spec.SchemaProps{
-							Description: "List of all accepted versions for upgrade request",
+							Description: "List of all accepted versions for upgrade request. An empty list indicates all versions are accepted except the denylist.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -23712,7 +23712,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_UpgradeConstraints(ref common.Ref
 					},
 					"denylist": {
 						SchemaProps: spec.SchemaProps{
-							Description: "List of all rejected versions for upgrade request",
+							Description: "List of all rejected versions for upgrade request. An empty list indicates no version is rejected.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

@@ -121,9 +121,9 @@ type MySQLVersionPodSecurityPolicy struct {
 }
 
 type MySQLUpgradeConstraints struct {
-	// List of all accepted versions for uprade request
+	// List of all accepted versions for upgrade request
 	Allowlist MySQLVersionAllowlist `json:"allowlist,omitempty"`
-	// List of all rejected versions for uprade request
+	// List of all rejected versions for upgrade request
 	Denylist MySQLVersionDenylist `json:"denylist,omitempty"`
 }
 
