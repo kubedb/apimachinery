@@ -58,10 +58,20 @@ type ProxySQL struct {
 	Status            ProxySQLStatus `json:"status,omitempty"`
 }
 
+type ProxySQLConfiguration struct {
+	MySQLUsers      []map[string]string `json:"mysqlUsers,omitempty"`
+	MySQLQueryRules []map[string]string `json:"mysqlQueryRules,omitempty"`
+	MySQLVariables  map[string]string   `json:"mysqlVariables,omitempty"`
+	AdminVariables  map[string]string   `json:"adminVariables,omitempty"`
+}
+
 type ProxySQLSpec struct {
 	// AutoOps contains configuration of automatic ops-request-recommendation generation
 	// +optional
 	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
+	// InitConfiguration contains information with which the proxysql will bootstrap (only 4 fields are configurable)
+	InitConfiguration ProxySQLConfiguration `json:"initConfig,omitempty"`
 
 	// Version of ProxySQL to be deployed.
 	Version string `json:"version"`

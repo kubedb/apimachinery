@@ -81,6 +81,29 @@ spec:
                   name:
                     type: string
                 type: object
+              initConfig:
+                properties:
+                  adminVariables:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  mysqlQueryRules:
+                    items:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    type: array
+                  mysqlUsers:
+                    items:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    type: array
+                  mysqlVariables:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
               mode:
                 enum:
                 - Galera

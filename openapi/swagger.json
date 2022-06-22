@@ -31814,6 +31814,45 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLConfiguration": {
+      "type": "object",
+      "properties": {
+        "adminVariables": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "mysqlQueryRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        },
+        "mysqlUsers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        },
+        "mysqlVariables": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLList": {
       "type": "object",
       "properties": {
@@ -31868,6 +31907,11 @@
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for proxysql (i.e custom-proxysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "initConfig": {
+          "description": "InitConfiguration contains information with which the proxysql will bootstrap (only 4 fields are configurable)",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLConfiguration"
         },
         "mode": {
           "description": "Mode specifies the type of MySQL/Percona-XtraDB/MariaDB cluster for which proxysql will be configured. It must be either \"Galera\" or \"GroupReplication\"",
