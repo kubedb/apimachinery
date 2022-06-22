@@ -495,7 +495,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisScalingPolicy":                         schema_apimachinery_apis_autoscaling_v1alpha1_RedisScalingPolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisScalingRules":                          schema_apimachinery_apis_autoscaling_v1alpha1_RedisScalingRules(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec":                      schema_apimachinery_apis_autoscaling_v1alpha1_StorageAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPASpec":                                    schema_apimachinery_apis_autoscaling_v1alpha1_VPASpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPAStatus":                                  schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotCondition":              schema_apimachinery_apis_autoscaling_v1alpha1_VerticalPodAutopilotCondition(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotRecommenderSelector":    schema_apimachinery_apis_autoscaling_v1alpha1_VerticalPodAutopilotRecommenderSelector(ref),
@@ -20962,25 +20961,11 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ComputeAutoscalerSpec(ref com
 							Format:      "int32",
 						},
 					},
-					"vpas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "VPAs hold all the VerticalPodAutoscaler specs those are associated with its parent 'nodeType'",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPASpec"),
-									},
-								},
-							},
-						},
-					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPASpec"},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -24026,60 +24011,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_StorageAutoscalerSpec(ref com
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_VPASpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "VPASpec is the specification of the behavior of the autopilot.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"vpaName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The name of the verticalPodAutoscaler usually this will be the corresponding statefulset name This field will help us to get the corresponding vpaStatus. As `VPAName` is the only common field between them",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"targetRef": {
-						SchemaProps: spec.SchemaProps{
-							Description: "TargetRef points to the controller managing the set of pods for the autopilot to control - e.g. Deployment, StatefulSet. VerticalPodAutopilot can be targeted at controller implementing scale subresource (the pod set is retrieved from the controller's ScaleStatus) or some well known controllers (e.g. for DaemonSet the pod set is read from the controller's spec). If VerticalPodAutopilot cannot use specified target it will report ConfigUnsupported condition. Note that VerticalPodAutopilot does not require full implementation of scale subresource - it will not use it to modify the replica count. The only thing retrieved is a label selector matching pods grouped by the target resource.",
-							Ref:         ref("k8s.io/api/autoscaling/v1.CrossVersionObjectReference"),
-						},
-					},
-					"updatePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Describes the rules on how changes are applied to the pods. If not specified, all fields in the `PodUpdatePolicy` are set to their default values.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodUpdatePolicy"),
-						},
-					},
-					"resourcePolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Controls how the autopilot computes recommended resources. The resource policy may be used to set constraints on the recommendations for individual containers. If not specified, the autopilot computes recommended resources for all containers in the pod, without additional constraints.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodResourcePolicy"),
-						},
-					},
-					"recommenders": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Recommender responsible for generating recommendation for this object. List should be empty (then the default recommender will generate the recommendation) or contain exactly one recommender.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotRecommenderSelector"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"targetRef"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/autoscaling/v1.CrossVersionObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodResourcePolicy", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PodUpdatePolicy", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VerticalPodAutopilotRecommenderSelector"},
-	}
-}
-
 func schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24089,7 +24020,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"vpaName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The name of the VerticalPodAutoscaler. This field will help us to get the corresponding vpaSpec. As `VPAName` is the only common field between them",
+							Description: "The name of the VerticalPodAutoscaler. This field will help us to get the corresponding vpa.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
