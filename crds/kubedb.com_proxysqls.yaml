@@ -84,25 +84,29 @@ spec:
               initConfig:
                 properties:
                   adminVariables:
-                    additionalProperties:
-                      type: string
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   mysqlQueryRules:
-                    items:
-                      additionalProperties:
-                        type: string
-                      type: object
-                    type: array
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   mysqlUsers:
                     items:
-                      additionalProperties:
-                        type: string
+                      properties:
+                        info:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        secretRef:
+                          properties:
+                            name:
+                              type: string
+                          type: object
+                      required:
+                      - secretRef
                       type: object
                     type: array
                   mysqlVariables:
-                    additionalProperties:
-                      type: string
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                 type: object
               mode:
                 enum:

@@ -62,13 +62,13 @@ type ProxySQL struct {
 type MySQLUser struct {
 	// +optional
 	// +kubebuilder:pruning:PreserveUnknownFields
-	Info *runtime.RawExtension `json:"info,omitempty"`
+	Info      *runtime.RawExtension      `json:"info,omitempty"`
 	SecretRef *core.LocalObjectReference `json:"secretRef"`
 }
 
 type ProxySQLConfiguration struct {
 	// +optional
-	MySQLUsers      []MySQLUser `json:"mysqlUsers,omitempty"`
+	MySQLUsers []MySQLUser `json:"mysqlUsers,omitempty"`
 
 	// +optional
 	// +kubebuilder:pruning:PreserveUnknownFields
@@ -76,11 +76,11 @@ type ProxySQLConfiguration struct {
 
 	// +optional
 	// +kubebuilder:pruning:PreserveUnknownFields
-	MySQLVariables  *runtime.RawExtension   `json:"mysqlVariables,omitempty"`
+	MySQLVariables *runtime.RawExtension `json:"mysqlVariables,omitempty"`
 
 	// +optional
 	// +kubebuilder:pruning:PreserveUnknownFields
-	AdminVariables  *runtime.RawExtension   `json:"adminVariables,omitempty"`
+	AdminVariables *runtime.RawExtension `json:"adminVariables,omitempty"`
 }
 
 type ProxySQLSpec struct {

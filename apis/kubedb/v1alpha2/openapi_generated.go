@@ -468,6 +468,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_MySQLSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLStatus":                    schema_apimachinery_apis_kubedb_v1alpha2_MySQLStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLTopology":                  schema_apimachinery_apis_kubedb_v1alpha2_MySQLTopology(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLUser":                      schema_apimachinery_apis_kubedb_v1alpha2_MySQLUser(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec":       schema_apimachinery_apis_kubedb_v1alpha2_NamedServiceTemplateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PerconaXtraDB":                  schema_apimachinery_apis_kubedb_v1alpha2_PerconaXtraDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PerconaXtraDBList":              schema_apimachinery_apis_kubedb_v1alpha2_PerconaXtraDBList(ref),
@@ -23565,6 +23566,31 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLTopology(ref common.Reference
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_MySQLUser(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"info": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+					"secretRef": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+				Required: []string{"secretRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_NamedServiceTemplateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24555,17 +24581,8 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLConfiguration(ref common.R
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Type: []string{"object"},
-										AdditionalProperties: &spec.SchemaOrBool{
-											Allows: true,
-											Schema: &spec.Schema{
-												SchemaProps: spec.SchemaProps{
-													Default: "",
-													Type:    []string{"string"},
-													Format:  "",
-												},
-											},
-										},
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLUser"),
 									},
 								},
 							},
@@ -24573,59 +24590,24 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLConfiguration(ref common.R
 					},
 					"mysqlQueryRules": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type: []string{"object"},
-										AdditionalProperties: &spec.SchemaOrBool{
-											Allows: true,
-											Schema: &spec.Schema{
-												SchemaProps: spec.SchemaProps{
-													Default: "",
-													Type:    []string{"string"},
-													Format:  "",
-												},
-											},
-										},
-									},
-								},
-							},
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
 					"mysqlVariables": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
 					"adminVariables": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/runtime.RawExtension", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLUser"},
 	}
 }
 

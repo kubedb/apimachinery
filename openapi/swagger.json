@@ -31199,6 +31199,20 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLUser": {
+      "type": "object",
+      "required": [
+        "secretRef"
+      ],
+      "properties": {
+        "info": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
+        "secretRef": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec": {
       "type": "object",
       "required": [
@@ -31818,38 +31832,20 @@
       "type": "object",
       "properties": {
         "adminVariables": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "default": ""
-          }
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "mysqlQueryRules": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "default": ""
-            }
-          }
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "mysqlUsers": {
           "type": "array",
           "items": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "default": ""
-            }
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLUser"
           }
         },
         "mysqlVariables": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "default": ""
-          }
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
     },
