@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
@@ -58,11 +59,28 @@ type ProxySQL struct {
 	Status            ProxySQLStatus `json:"status,omitempty"`
 }
 
+type MySQLUser struct {
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	Info *runtime.RawExtension `json:"info,omitempty"`
+	SecretRef *core.LocalObjectReference `json:"secretRef"`
+}
+
 type ProxySQLConfiguration struct {
-	MySQLUsers      []map[string]string `json:"mysqlUsers,omitempty"`
-	MySQLQueryRules []map[string]string `json:"mysqlQueryRules,omitempty"`
-	MySQLVariables  map[string]string   `json:"mysqlVariables,omitempty"`
-	AdminVariables  map[string]string   `json:"adminVariables,omitempty"`
+	// +optional
+	MySQLUsers      []MySQLUser `json:"mysqlUsers,omitempty"`
+
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	MySQLQueryRules *runtime.RawExtension `json:"mysqlQueryRules,omitempty"`
+
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	MySQLVariables  *runtime.RawExtension   `json:"mysqlVariables,omitempty"`
+
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	AdminVariables  *runtime.RawExtension   `json:"adminVariables,omitempty"`
 }
 
 type ProxySQLSpec struct {
