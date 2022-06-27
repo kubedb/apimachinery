@@ -32017,6 +32017,10 @@
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
           "type": "boolean"
         },
+        "healthCheck": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
+        },
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
