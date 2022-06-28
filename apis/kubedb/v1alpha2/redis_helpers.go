@@ -223,8 +223,8 @@ func (r *Redis) SetDefaults(topology *core_util.Topology) {
 	r.setDefaultAffinity(&r.Spec.PodTemplate, labels, topology)
 
 	r.Spec.Monitor.SetDefaults()
-
 	r.SetTLSDefaults()
+	r.SetHealthCheckerDefaults()
 	apis.SetDefaultResourceLimits(&r.Spec.PodTemplate.Spec.Resources, DefaultResources)
 }
 
