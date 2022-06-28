@@ -60,10 +60,43 @@ type ProxySQL struct {
 }
 
 type MySQLUser struct {
+	Username string `json:"username"`
+
 	// +optional
-	// +kubebuilder:pruning:PreserveUnknownFields
-	Info      *runtime.RawExtension      `json:"info,omitempty"`
-	SecretRef *core.LocalObjectReference `json:"secretRef"`
+	Active *int `json:"active,omitempty"`
+
+	// +optional
+	UseSsl int `json:"use_ssl,omitempty"`
+
+	// +optional
+	DefaultHostgroup int `json:"default_hostgroup,omitempty"`
+
+	// +optional
+	DefaultSchema string `json:"default_schema,omitempty"`
+
+	// +optional
+	SchemaLocked int `json:"schema_locked,omitempty"`
+
+	// +optional
+	TransactionPersistent *int `json:"transaction_persistent,omitempty"`
+
+	// +optional
+	FastForward int `json:"fast_forward,omitempty"`
+
+	// +optional
+	Backend *int `json:"backend,omitempty"`
+
+	// +optional
+	Frontend *int `json:"frontend,omitempty"`
+
+	// +optional
+	MaxConnections *int32 `json:"max_connections,omitempty"`
+
+	// +optional
+	Attributes string `json:"attributes,omitempty"`
+
+	// +optional
+	Comment string `json:"comment,omitempty"`
 }
 
 type ProxySQLConfiguration struct {
@@ -88,6 +121,11 @@ type ProxySQLSpec struct {
 	// +optional
 	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
 
+	// +optional
+	// SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the ProxySQL server
+	SyncUsers bool `json:"syncUsers,omitempty"`
+
+	// +optional
 	// InitConfiguration contains information with which the proxysql will bootstrap (only 4 fields are configurable)
 	InitConfiguration *ProxySQLConfiguration `json:"initConfig,omitempty"`
 

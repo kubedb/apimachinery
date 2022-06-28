@@ -31202,14 +31202,57 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLUser": {
       "type": "object",
       "required": [
-        "secretRef"
+        "username"
       ],
       "properties": {
-        "info": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        "active": {
+          "type": "integer",
+          "format": "int32"
         },
-        "secretRef": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        "attributes": {
+          "type": "string"
+        },
+        "backend": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "default_hostgroup": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "default_schema": {
+          "type": "string"
+        },
+        "fast_forward": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "frontend": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "max_connections": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "schema_locked": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "transaction_persistent": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "use_ssl": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "username": {
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -31941,6 +31984,10 @@
         "storageType": {
           "description": "StorageType can be durable (default) or ephemeral",
           "type": "string"
+        },
+        "syncUsers": {
+          "description": "SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the ProxySQL server",
+          "type": "boolean"
         },
         "terminationPolicy": {
           "description": "TerminationPolicy controls the delete operation for database",

@@ -92,16 +92,35 @@ spec:
                   mysqlUsers:
                     items:
                       properties:
-                        info:
-                          type: object
-                          x-kubernetes-preserve-unknown-fields: true
-                        secretRef:
-                          properties:
-                            name:
-                              type: string
-                          type: object
+                        active:
+                          type: integer
+                        attributes:
+                          type: string
+                        backend:
+                          type: integer
+                        comment:
+                          type: string
+                        default_hostgroup:
+                          type: integer
+                        default_schema:
+                          type: string
+                        fast_forward:
+                          type: integer
+                        frontend:
+                          type: integer
+                        max_connections:
+                          format: int32
+                          type: integer
+                        schema_locked:
+                          type: integer
+                        transaction_persistent:
+                          type: integer
+                        use_ssl:
+                          type: integer
+                        username:
+                          type: string
                       required:
-                      - secretRef
+                      - username
                       type: object
                     type: array
                   mysqlVariables:
@@ -1986,6 +2005,8 @@ spec:
                 - Durable
                 - Ephemeral
                 type: string
+              syncUsers:
+                type: boolean
               terminationPolicy:
                 enum:
                 - Halt
