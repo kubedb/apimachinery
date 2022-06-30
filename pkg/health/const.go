@@ -23,4 +23,8 @@ const (
 	HealthCheckPingFailure    HealthCheckFailureLabel = "PingFailure"
 	HealthCheckWriteFailure   HealthCheckFailureLabel = "WriteFailure"
 	HealthCheckPrimaryFailure HealthCheckFailureLabel = "PrimaryFailure"
+
+	// Redis Constants
+	HealthCheckClusterSlotFailure   HealthCheckFailureLabel = "ClusterSlotFailure"
+	HealthCheckNodesNotReadyFailure HealthCheckFailureLabel = "NodesNotReadyFailure"
 )
