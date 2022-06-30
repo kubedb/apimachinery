@@ -66,7 +66,7 @@ type MySQLUser struct {
 	Active *int `json:"active,omitempty"`
 
 	// +optional
-	UseSsl int `json:"use_ssl,omitempty"`
+	UseSSL int `json:"use_ssl,omitempty"`
 
 	// +optional
 	DefaultHostgroup int `json:"default_hostgroup,omitempty"`
@@ -105,7 +105,7 @@ type ProxySQLConfiguration struct {
 
 	// +optional
 	// +kubebuilder:pruning:PreserveUnknownFields
-	MySQLQueryRules *runtime.RawExtension `json:"mysqlQueryRules,omitempty"`
+	MySQLQueryRules []*runtime.RawExtension `json:"mysqlQueryRules,omitempty"`
 
 	// +optional
 	// +kubebuilder:pruning:PreserveUnknownFields
@@ -122,11 +122,12 @@ type ProxySQLSpec struct {
 	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
 
 	// +optional
-	// SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the ProxySQL server
+	// SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the
+	// ProxySQL server . Password changes are also synced in proxysql when it is enabled.
 	SyncUsers bool `json:"syncUsers,omitempty"`
 
 	// +optional
-	// InitConfiguration contains information with which the proxysql will bootstrap (only 4 fields are configurable)
+	// InitConfiguration contains information with which the proxysql will bootstrap (only 4 tables are configurable)
 	InitConfiguration *ProxySQLConfiguration `json:"initConfig,omitempty"`
 
 	// Version of ProxySQL to be deployed.
