@@ -24657,7 +24657,14 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLConfiguration(ref common.R
 					},
 					"mysqlQueryRules": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+									},
+								},
+							},
 						},
 					},
 					"mysqlVariables": {
@@ -24741,14 +24748,14 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref common.ReferenceC
 					},
 					"syncUsers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the ProxySQL server",
+							Description: "SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the ProxySQL server . Password changes are also synced in proxysql when it is enabled.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"initConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InitConfiguration contains information with which the proxysql will bootstrap (only 4 fields are configurable)",
+							Description: "InitConfiguration contains information with which the proxysql will bootstrap (only 4 tables are configurable)",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLConfiguration"),
 						},
 					},

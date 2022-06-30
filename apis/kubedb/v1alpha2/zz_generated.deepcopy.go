@@ -2297,8 +2297,14 @@ func (in *ProxySQLConfiguration) DeepCopyInto(out *ProxySQLConfiguration) {
 	}
 	if in.MySQLQueryRules != nil {
 		in, out := &in.MySQLQueryRules, &out.MySQLQueryRules
-		*out = new(runtime.RawExtension)
-		(*in).DeepCopyInto(*out)
+		*out = make([]*runtime.RawExtension, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(runtime.RawExtension)
+				(*in).DeepCopyInto(*out)
+			}
+		}
 	}
 	if in.MySQLVariables != nil {
 		in, out := &in.MySQLVariables, &out.MySQLVariables

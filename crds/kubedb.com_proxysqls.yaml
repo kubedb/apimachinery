@@ -87,7 +87,9 @@ spec:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                   mysqlQueryRules:
-                    type: object
+                    items:
+                      type: object
+                    type: array
                     x-kubernetes-preserve-unknown-fields: true
                   mysqlUsers:
                     items:

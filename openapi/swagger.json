@@ -31878,7 +31878,10 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "mysqlQueryRules": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+          }
         },
         "mysqlUsers": {
           "type": "array",
@@ -31948,7 +31951,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "initConfig": {
-          "description": "InitConfiguration contains information with which the proxysql will bootstrap (only 4 fields are configurable)",
+          "description": "InitConfiguration contains information with which the proxysql will bootstrap (only 4 tables are configurable)",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLConfiguration"
         },
         "mode": {
@@ -31986,7 +31989,7 @@
           "type": "string"
         },
         "syncUsers": {
-          "description": "SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the ProxySQL server",
+          "description": "SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the ProxySQL server . Password changes are also synced in proxysql when it is enabled.",
           "type": "boolean"
         },
         "terminationPolicy": {
