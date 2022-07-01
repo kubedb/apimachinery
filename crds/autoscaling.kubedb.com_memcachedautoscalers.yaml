@@ -467,10 +467,10 @@ spec:
                 type: integer
               phase:
                 enum:
-                - Pending
                 - InProgress
                 - Current
                 - Terminating
+                - Failed
                 type: string
               vpas:
                 items:

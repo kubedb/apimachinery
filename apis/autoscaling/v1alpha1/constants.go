@@ -57,3 +57,15 @@ const (
 	Failure          = "Failure"
 	CreateOpsRequest = "CreateOpsRequest"
 )
+
+const (
+	// AutoscalerPhaseInProgress is used when autoscaler is waiting for the initialization
+	// if referred db is not found, It will also be in InProgress
+	AutoscalerPhaseInProgress AutoscalerPhase = "InProgress"
+	// AutoscalerPhaseCurrent is used as long as autoscaler is running properly
+	AutoscalerPhaseCurrent AutoscalerPhase = "Current"
+	// AutoscalerPhaseTerminating is used when an autoscaler object is being terminated
+	AutoscalerPhaseTerminating AutoscalerPhase = "Terminating"
+	// AutoscalerPhaseFailed is used when some unexpected error occurred
+	AutoscalerPhaseFailed AutoscalerPhase = "Failed"
+)
