@@ -10,7 +10,7 @@ require (
 	github.com/evanphx/json-patch v4.12.0+incompatible
 	github.com/google/go-cmp v0.5.8
 	github.com/google/go-containerregistry v0.9.0
-	github.com/google/go-containerregistry/pkg/authn/k8schain v0.0.0-20220621175343-0c40ec8ad222
+	github.com/google/go-containerregistry/pkg/authn/k8schain v0.0.0-20220629212250-86f0c4a3a9d3
 	github.com/google/gofuzz v1.2.0
 	github.com/iancoleman/orderedmap v0.2.0
 	github.com/json-iterator/go v1.1.12
@@ -39,7 +39,7 @@ require (
 	kmodules.xyz/webhook-runtime v0.24.0
 	sigs.k8s.io/controller-runtime v0.12.1
 	sigs.k8s.io/yaml v1.3.0
-	stash.appscode.dev/apimachinery v0.20.2-0.20220603211838-fe59f49badc1
+	stash.appscode.dev/apimachinery v0.21.0
 )
 
 require (
