@@ -465,6 +465,13 @@ spec:
               observedGeneration:
                 format: int64
                 type: integer
+              phase:
+                enum:
+                - Pending
+                - InProgress
+                - Current
+                - Terminating
+                type: string
               vpas:
                 items:
                   properties:

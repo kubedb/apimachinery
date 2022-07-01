@@ -20676,6 +20676,13 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_AutoscalerStatus(ref common.R
 				Description: "AutoscalerStatus describes the runtime state of the autoscaler.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the autoscaler",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"observedGeneration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "observedGeneration is the most recent generation observed by this autoscaler.",
