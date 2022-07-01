@@ -44,9 +44,10 @@ var _ webhook.Defaulter = &MongoDBAutoscaler{}
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (in *MongoDBAutoscaler) Default() {
 	mongoLog.Info("defaulting", "name", in.Name)
+	in.setDefaults()
 }
 
-func (in *MongoDBAutoscaler) SetDefaults(db *dbapi.MongoDB) {
+func (in *MongoDBAutoscaler) setDefaults() {
 	if in.Spec.Storage != nil {
 		setDefaultStorageValues(in.Spec.Storage.Standalone)
 		setDefaultStorageValues(in.Spec.Storage.ReplicaSet)
@@ -56,14 +57,19 @@ func (in *MongoDBAutoscaler) SetDefaults(db *dbapi.MongoDB) {
 
 	if in.Spec.Compute != nil {
 		setDefaultComputeValues(in.Spec.Compute.Standalone)
-		setInMemoryDefaults(in.Spec.Compute.Standalone, db.Spec.StorageEngine)
 		setDefaultComputeValues(in.Spec.Compute.ReplicaSet)
-		setInMemoryDefaults(in.Spec.Compute.ReplicaSet, db.Spec.StorageEngine)
 		setDefaultComputeValues(in.Spec.Compute.Shard)
-		setInMemoryDefaults(in.Spec.Compute.Shard, db.Spec.StorageEngine)
 		setDefaultComputeValues(in.Spec.Compute.ConfigServer)
-		setInMemoryDefaults(in.Spec.Compute.ConfigServer, db.Spec.StorageEngine)
 		setDefaultComputeValues(in.Spec.Compute.Mongos)
+	}
+}
+
+func (in *MongoDBAutoscaler) SetDefaults(db *dbapi.MongoDB) {
+	if in.Spec.Compute != nil {
+		setInMemoryDefaults(in.Spec.Compute.Standalone, db.Spec.StorageEngine)
+		setInMemoryDefaults(in.Spec.Compute.ReplicaSet, db.Spec.StorageEngine)
+		setInMemoryDefaults(in.Spec.Compute.Shard, db.Spec.StorageEngine)
+		setInMemoryDefaults(in.Spec.Compute.ConfigServer, db.Spec.StorageEngine)
 		setInMemoryDefaults(in.Spec.Compute.Mongos, db.Spec.StorageEngine)
 	}
 }

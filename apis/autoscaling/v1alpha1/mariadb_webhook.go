@@ -19,8 +19,6 @@ package v1alpha1
 import (
 	"errors"
 
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -44,9 +42,10 @@ var _ webhook.Defaulter = &MariaDBAutoscaler{}
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (in *MariaDBAutoscaler) Default() {
 	mariaLog.Info("defaulting", "name", in.Name)
+	in.setDefaults()
 }
 
-func (in *MariaDBAutoscaler) SetDefaults(db *dbapi.MariaDB) {
+func (in *MariaDBAutoscaler) setDefaults() {
 	if in.Spec.Storage != nil {
 		setDefaultStorageValues(in.Spec.Storage.MariaDB)
 	}

@@ -44,10 +44,10 @@ var _ webhook.Defaulter = &ElasticsearchAutoscaler{}
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (in *ElasticsearchAutoscaler) Default() {
 	esLog.Info("defaulting", "name", in.Name)
-	in.SetDefaults()
+	in.setDefaults()
 }
 
-func (in *ElasticsearchAutoscaler) SetDefaults() {
+func (in *ElasticsearchAutoscaler) setDefaults() {
 	if in.Spec.Storage != nil {
 		setDefaultStorageValues(in.Spec.Storage.Node)
 		if in.Spec.Storage.Topology != nil {
