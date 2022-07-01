@@ -93,14 +93,29 @@ func (in *ElasticsearchAutoscaler) validate() error {
 }
 
 func (in *ElasticsearchAutoscaler) ValidateFields(es *dbapi.Elasticsearch) error {
-	cm := in.Spec.Compute
-	if es.Spec.Topology != nil {
-		if cm.Node != nil {
-			return errors.New("Spec.Compute.Node is invalid for elastic-search topology")
+	if in.Spec.Compute != nil {
+		cm := in.Spec.Compute
+		if es.Spec.Topology != nil {
+			if cm.Node != nil {
+				return errors.New("Spec.Compute.Node is invalid for elastic-search topology")
+			}
+		} else {
+			if cm.Topology != nil {
+				return errors.New("Spec.Compute.Topology is invalid for basic elastic search structure")
+			}
 		}
-	} else {
-		if cm.Topology != nil {
-			return errors.New("Spec.Compute.Topology is invalid for basic elastic search structure")
+	}
+
+	if in.Spec.Storage != nil {
+		st := in.Spec.Storage
+		if es.Spec.Topology != nil {
+			if st.Node != nil {
+				return errors.New("Spec.Storage.Node is invalid for elastic-search topology")
+			}
+		} else {
+			if st.Topology != nil {
+				return errors.New("Spec.Storage.Topology is invalid for basic elastic search structure")
+			}
 		}
 	}
 	return nil
