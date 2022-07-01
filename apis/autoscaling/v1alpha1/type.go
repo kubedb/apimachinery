@@ -24,33 +24,12 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
-// List of possible condition types for a autoscaler
-const (
-	Failure          = "Failure"
-	CreateOpsRequest = "CreateOpsRequest"
-)
-
 // ContainerControlledValues controls which resource value should be autoscaled.
 // +kubebuilder:validation:Enum=RequestsAndLimits;RequestsOnly
 type ContainerControlledValues string
 
-const (
-	// ContainerControlledValuesRequestsAndLimits means resource request and limits
-	// are scaled automatically. The limit is scaled proportionally to the request.
-	ContainerControlledValuesRequestsAndLimits ContainerControlledValues = "RequestsAndLimits"
-	// ContainerControlledValuesRequestsOnly means only requested resource is autoscaled.
-	ContainerControlledValuesRequestsOnly ContainerControlledValues = "RequestsOnly"
-)
-
 // AutoscalerTrigger controls if autoscaler is enabled.
 type AutoscalerTrigger string
-
-const (
-	// AutoscalerTriggerOn means the autoscaler is enabled.
-	AutoscalerTriggerOn AutoscalerTrigger = "On"
-	// AutoscalerTriggerOff means the autoscaler is disabled.
-	AutoscalerTriggerOff AutoscalerTrigger = "Off"
-)
 
 type ComputeAutoscalerSpec struct {
 	// Whether compute autoscaler is enabled. The default is Off".
