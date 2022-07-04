@@ -24,7 +24,14 @@ const (
 	HealthCheckWriteFailure   HealthCheckFailureLabel = "WriteFailure"
 	HealthCheckPrimaryFailure HealthCheckFailureLabel = "PrimaryFailure"
 
+	// MariaDB Constants
+	HealthCheckClusterFailure HealthCheckFailureLabel = "ClusterFailure"
+
 	// Redis Constants
 	HealthCheckClusterSlotFailure   HealthCheckFailureLabel = "ClusterSlotFailure"
 	HealthCheckNodesNotReadyFailure HealthCheckFailureLabel = "NodesNotReadyFailure"
+
+	// Write Check Constants
+	KubeDBSystemDatabase  = "kubedb_system"
+	KubeDBWriteCheckTable = "kubedb_write_check"
 )
