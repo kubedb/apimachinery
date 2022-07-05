@@ -10,7 +10,7 @@ require (
 	github.com/evanphx/json-patch v4.12.0+incompatible
 	github.com/google/go-cmp v0.5.8
 	github.com/google/go-containerregistry v0.9.0
-	github.com/google/go-containerregistry/pkg/authn/k8schain v0.0.0-20220629212250-86f0c4a3a9d3
+	github.com/google/go-containerregistry/pkg/authn/k8schain v0.0.0-20220630175030-4d7b65b04609
 	github.com/google/gofuzz v1.2.0
 	github.com/iancoleman/orderedmap v0.2.0
 	github.com/json-iterator/go v1.1.12
