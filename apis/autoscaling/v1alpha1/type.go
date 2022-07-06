@@ -97,6 +97,10 @@ type StorageAutoscalerSpec struct {
 
 // AutoscalerStatus describes the runtime state of the autoscaler.
 type AutoscalerStatus struct {
+	// Specifies the current phase of the autoscaler
+	// +optional
+	Phase AutoscalerPhase `json:"phase,omitempty"`
+
 	// observedGeneration is the most recent generation observed by this autoscaler.
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
@@ -119,6 +123,9 @@ type AutoscalerStatus struct {
 	// +optional
 	Checkpoints []Checkpoint `json:"checkpoints,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=InProgress;Current;Terminating;Failed
+type AutoscalerPhase string
 
 type StatusAccessor interface {
 	GetStatus() AutoscalerStatus

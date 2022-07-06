@@ -102,39 +102,73 @@ func (in *MongoDBAutoscaler) validate() error {
 }
 
 func (in *MongoDBAutoscaler) ValidateFields(mg *dbapi.MongoDB) error {
-	cm := in.Spec.Compute
-	if mg.Spec.ShardTopology != nil {
-		if cm.ReplicaSet != nil {
-			return errors.New("Spec.Compute.ReplicaSet is invalid for sharded mongoDB")
+	if in.Spec.Compute != nil {
+		cm := in.Spec.Compute
+		if mg.Spec.ShardTopology != nil {
+			if cm.ReplicaSet != nil {
+				return errors.New("Spec.Compute.ReplicaSet is invalid for sharded mongoDB")
+			}
+			if cm.Standalone != nil {
+				return errors.New("Spec.Compute.Standalone is invalid for sharded mongoDB")
+			}
+		} else if mg.Spec.ReplicaSet != nil {
+			if cm.Standalone != nil {
+				return errors.New("Spec.Compute.Standalone is invalid for replicaSet mongoDB")
+			}
+			if cm.Shard != nil {
+				return errors.New("Spec.Compute.Shard is invalid for replicaSet mongoDB")
+			}
+			if cm.ConfigServer != nil {
+				return errors.New("Spec.Compute.ConfigServer is invalid for replicaSet mongoDB")
+			}
+			if cm.Mongos != nil {
+				return errors.New("Spec.Compute.Mongos is invalid for replicaSet mongoDB")
+			}
+		} else {
+			if cm.ReplicaSet != nil {
+				return errors.New("Spec.Compute.Replicaset is invalid for Standalone mongoDB")
+			}
+			if cm.Shard != nil {
+				return errors.New("Spec.Compute.Shard is invalid for Standalone mongoDB")
+			}
+			if cm.ConfigServer != nil {
+				return errors.New("Spec.Compute.ConfigServer is invalid for Standalone mongoDB")
+			}
+			if cm.Mongos != nil {
+				return errors.New("Spec.Compute.Mongos is invalid for Standalone mongoDB")
+			}
 		}
-		if cm.Standalone != nil {
-			return errors.New("Spec.Compute.Standalone is invalid for sharded mongoDB")
-		}
-	} else if mg.Spec.ReplicaSet != nil {
-		if cm.Standalone != nil {
-			return errors.New("Spec.Compute.Standalone is invalid for replicaSet mongoDB")
-		}
-		if cm.Shard != nil {
-			return errors.New("Spec.Compute.Shard is invalid for replicaSet mongoDB")
-		}
-		if cm.ConfigServer != nil {
-			return errors.New("Spec.Compute.ConfigServer is invalid for replicaSet mongoDB")
-		}
-		if cm.Mongos != nil {
-			return errors.New("Spec.Compute.Mongos is invalid for replicaSet mongoDB")
-		}
-	} else {
-		if cm.ReplicaSet != nil {
-			return errors.New("Spec.Compute.Replicaset is invalid for Standalone mongoDB")
-		}
-		if cm.Shard != nil {
-			return errors.New("Spec.Compute.Shard is invalid for Standalone mongoDB")
-		}
-		if cm.ConfigServer != nil {
-			return errors.New("Spec.Compute.ConfigServer is invalid for Standalone mongoDB")
-		}
-		if cm.Mongos != nil {
-			return errors.New("Spec.Compute.Mongos is invalid for Standalone mongoDB")
+	}
+
+	if in.Spec.Storage != nil {
+		st := in.Spec.Storage
+		if mg.Spec.ShardTopology != nil {
+			if st.ReplicaSet != nil {
+				return errors.New("Spec.Storage.ReplicaSet is invalid for sharded mongoDB")
+			}
+			if st.Standalone != nil {
+				return errors.New("Spec.Storage.Standalone is invalid for sharded mongoDB")
+			}
+		} else if mg.Spec.ReplicaSet != nil {
+			if st.Standalone != nil {
+				return errors.New("Spec.Storage.Standalone is invalid for replicaSet mongoDB")
+			}
+			if st.Shard != nil {
+				return errors.New("Spec.Storage.Shard is invalid for replicaSet mongoDB")
+			}
+			if st.ConfigServer != nil {
+				return errors.New("Spec.Storage.ConfigServer is invalid for replicaSet mongoDB")
+			}
+		} else {
+			if st.ReplicaSet != nil {
+				return errors.New("Spec.Storage.Replicaset is invalid for Standalone mongoDB")
+			}
+			if st.Shard != nil {
+				return errors.New("Spec.Storage.Shard is invalid for Standalone mongoDB")
+			}
+			if st.ConfigServer != nil {
+				return errors.New("Spec.Storage.ConfigServer is invalid for Standalone mongoDB")
+			}
 		}
 	}
 	return nil
