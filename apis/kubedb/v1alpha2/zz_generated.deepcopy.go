@@ -1629,6 +1629,7 @@ func (in *MySQLSpec) DeepCopyInto(out *MySQLSpec) {
 		*out = new(AllowedConsumers)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthCheck.DeepCopyInto(&out.HealthCheck)
 	return
 }
 
