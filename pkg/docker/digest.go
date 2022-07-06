@@ -29,6 +29,7 @@ import (
 	"github.com/google/go-containerregistry/pkg/authn/k8schain"
 	"github.com/google/go-containerregistry/pkg/crane"
 	"github.com/google/go-containerregistry/pkg/v1/google"
+	v "gomodules.xyz/x/version"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -42,6 +43,11 @@ func ImageWithDigest(kc kubernetes.Interface, image string, k8sOpts *k8schain.Op
 	image, err := ImageWithoutDigest(image)
 	if err != nil {
 		return "", err
+	}
+	//	In dev mode, Version field is empty ("").
+	//	Skip adding digest value in dev mode.
+	if v.Version.Version == "" {
+		return image, nil
 	}
 
 	keyChain, err := CreateKeyChain(context.TODO(), kc, k8sOpts)
