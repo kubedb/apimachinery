@@ -33,8 +33,9 @@ import (
 )
 
 var (
-	amazonKeychain = authn.NewKeychainFromHelper(ecr.NewECRHelper(ecr.WithLogger(ioutil.Discard)))
-	azureKeychain  = authn.NewKeychainFromHelper(credhelper.NewACRCredentialsHelper())
+	SkipImageDigest string
+	amazonKeychain  = authn.NewKeychainFromHelper(ecr.NewECRHelper(ecr.WithLogger(ioutil.Discard)))
+	azureKeychain   = authn.NewKeychainFromHelper(credhelper.NewACRCredentialsHelper())
 )
 
 func ImageWithDigest(kc kubernetes.Interface, image string, k8sOpts *k8schain.Options) (string, error) {
@@ -42,6 +43,9 @@ func ImageWithDigest(kc kubernetes.Interface, image string, k8sOpts *k8schain.Op
 	image, err := ImageWithoutDigest(image)
 	if err != nil {
 		return "", err
+	}
+	if SkipImageDigest == "true" {
+		return image, nil
 	}
 
 	keyChain, err := CreateKeyChain(context.TODO(), kc, k8sOpts)
