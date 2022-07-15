@@ -2685,6 +2685,7 @@ func (in *RedisSpec) DeepCopyInto(out *RedisSpec) {
 		*out = new(AllowedConsumers)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthCheck.DeepCopyInto(&out.HealthCheck)
 	return
 }
 

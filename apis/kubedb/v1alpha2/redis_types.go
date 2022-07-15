@@ -135,6 +135,9 @@ type RedisSpec struct {
 	// +kubebuilder:default={namespaces:{from: Same}}
 	// +optional
 	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty"`
+
+	// +optional
+	HealthCheck HealthCheckSpec `json:"healthCheck,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter
