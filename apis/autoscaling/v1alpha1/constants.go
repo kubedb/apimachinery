@@ -59,8 +59,8 @@ const (
 )
 
 const (
-	ApplyOptionsIfReady = "ApplyIfReady"
-	ApplyOptionsAlways  = "ApplyAlways"
+	ApplyOptionsIfReady ApplyOptions = "ApplyIfReady"
+	ApplyOptionsAlways  ApplyOptions = "ApplyAlways"
 )
 
 const (
