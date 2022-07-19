@@ -205,7 +205,7 @@ const (
 	TempIniFilesPath = "/tmp/kubedb-custom-ini-files"
 )
 
-// +kubebuilder:validation:Enum=Pending;Progressing;Successful;WaitingForApproval;Failed;Approved;Denied
+// +kubebuilder:validation:Enum=Pending;Progressing;Successful;WaitingForApproval;Failed;Approved;Denied;Skipped
 type OpsRequestPhase string
 
 const (
@@ -215,10 +215,15 @@ const (
 	OpsRequestPhaseProgressing OpsRequestPhase = "Progressing"
 	// used for ops requests that are executed successfully
 	OpsRequestPhaseSuccessful OpsRequestPhase = "Successful"
-	// used for ops requests that are waiting for approval
-	OpsRequestPhaseWaitingForApproval OpsRequestPhase = "WaitingForApproval"
 	// used for ops requests that are failed
 	OpsRequestPhaseFailed OpsRequestPhase = "Failed"
+	// used for ops requests that are skipped
+	OpsRequestPhaseSkipped OpsRequestPhase = "Skipped"
+
+	// Approval-related Phases
+
+	// used for ops requests that are waiting for approval
+	OpsRequestPhaseWaitingForApproval OpsRequestPhase = "WaitingForApproval"
 	// used for ops requests that are approved
 	OpsRequestApproved OpsRequestPhase = "Approved"
 	// used for ops requests that are denied

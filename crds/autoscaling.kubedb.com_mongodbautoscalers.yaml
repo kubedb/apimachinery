@@ -53,6 +53,15 @@ spec:
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
                         type: object
+                      memoryStorage:
+                        properties:
+                          scalingThresholdPercentage:
+                            format: int32
+                            type: integer
+                          usageThresholdPercentage:
+                            format: int32
+                            type: integer
+                        type: object
                       minAllowed:
                         additionalProperties:
                           anyOf:
@@ -66,14 +75,8 @@ spec:
                       resourceDiffPercentage:
                         format: int32
                         type: integer
-                      scalingThreshold:
-                        format: int32
-                        type: integer
                       trigger:
                         type: string
-                      usageThreshold:
-                        format: int32
-                        type: integer
                     type: object
                   disableScaleDown:
                     type: boolean
@@ -96,6 +99,15 @@ spec:
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
                         type: object
+                      memoryStorage:
+                        properties:
+                          scalingThresholdPercentage:
+                            format: int32
+                            type: integer
+                          usageThresholdPercentage:
+                            format: int32
+                            type: integer
+                        type: object
                       minAllowed:
                         additionalProperties:
                           anyOf:
@@ -109,14 +121,8 @@ spec:
                       resourceDiffPercentage:
                         format: int32
                         type: integer
-                      scalingThreshold:
-                        format: int32
-                        type: integer
                       trigger:
                         type: string
-                      usageThreshold:
-                        format: int32
-                        type: integer
                     type: object
                   replicaSet:
                     properties:
@@ -137,6 +143,15 @@ spec:
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
                         type: object
+                      memoryStorage:
+                        properties:
+                          scalingThresholdPercentage:
+                            format: int32
+                            type: integer
+                          usageThresholdPercentage:
+                            format: int32
+                            type: integer
+                        type: object
                       minAllowed:
                         additionalProperties:
                           anyOf:
@@ -150,14 +165,8 @@ spec:
                       resourceDiffPercentage:
                         format: int32
                         type: integer
-                      scalingThreshold:
-                        format: int32
-                        type: integer
                       trigger:
                         type: string
-                      usageThreshold:
-                        format: int32
-                        type: integer
                     type: object
                   shard:
                     properties:
@@ -178,6 +187,15 @@ spec:
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
                         type: object
+                      memoryStorage:
+                        properties:
+                          scalingThresholdPercentage:
+                            format: int32
+                            type: integer
+                          usageThresholdPercentage:
+                            format: int32
+                            type: integer
+                        type: object
                       minAllowed:
                         additionalProperties:
                           anyOf:
@@ -191,14 +209,8 @@ spec:
                       resourceDiffPercentage:
                         format: int32
                         type: integer
-                      scalingThreshold:
-                        format: int32
-                        type: integer
                       trigger:
                         type: string
-                      usageThreshold:
-                        format: int32
-                        type: integer
                     type: object
                   standalone:
                     properties:
@@ -219,6 +231,15 @@ spec:
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
                         type: object
+                      memoryStorage:
+                        properties:
+                          scalingThresholdPercentage:
+                            format: int32
+                            type: integer
+                          usageThresholdPercentage:
+                            format: int32
+                            type: integer
+                        type: object
                       minAllowed:
                         additionalProperties:
                           anyOf:
@@ -232,19 +253,35 @@ spec:
                       resourceDiffPercentage:
                         format: int32
                         type: integer
-                      scalingThreshold:
-                        format: int32
-                        type: integer
                       trigger:
                         type: string
-                      usageThreshold:
-                        format: int32
-                        type: integer
                     type: object
                 type: object
               databaseRef:
                 properties:
                   name:
+                    type: string
+                type: object
+              opsReqOptions:
+                properties:
+                  applyOptions:
+                    enum:
+                    - ApplyIfReady
+                    - ApplyAlways
+                    type: string
+                  readinessCriteria:
+                    properties:
+                      objectsCountDiffPercentage:
+                        format: int32
+                        maximum: 100
+                        minimum: 0
+                        type: integer
+                      oplogMaxLagSeconds:
+                        format: int32
+                        minimum: 0
+                        type: integer
+                    type: object
+                  timeout:
                     type: string
                 type: object
               storage:

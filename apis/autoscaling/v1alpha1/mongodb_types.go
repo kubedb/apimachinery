@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -58,6 +60,9 @@ type MongoDBAutoscaler struct {
 type MongoDBAutoscalerSpec struct {
 	DatabaseRef *core.LocalObjectReference `json:"databaseRef"`
 
+	// This field will be used to control the behaviour of ops-manager
+	OpsReqOptions *MongoDBOpsRequestOptions `json:"opsReqOptions,omitempty"`
+
 	Compute *MongoDBComputeAutoscalerSpec `json:"compute,omitempty"`
 	Storage *MongoDBStorageAutoscalerSpec `json:"storage,omitempty"`
 }
@@ -76,6 +81,18 @@ type MongoDBStorageAutoscalerSpec struct {
 	ReplicaSet   *StorageAutoscalerSpec `json:"replicaSet,omitempty"`
 	ConfigServer *StorageAutoscalerSpec `json:"configServer,omitempty"`
 	Shard        *StorageAutoscalerSpec `json:"shard,omitempty"`
+}
+
+type MongoDBOpsRequestOptions struct {
+	// Specifies the Readiness Criteria
+	ReadinessCriteria *opsapi.MongoDBReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`
+
+	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
+	Timeout *metav1.Duration `json:"timeout,omitempty"`
+
+	// ApplyOptions is to control the creation of OpsRequest.
+	// Default is `ApplyIfReady`
+	ApplyOptions *ApplyOptions `json:"applyOptions,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

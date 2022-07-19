@@ -67,15 +67,22 @@ type ComputeAutoscalerSpec struct {
 	// +optional
 	PodLifeTimeThreshold metav1.Duration `json:"podLifeTimeThreshold,omitempty"`
 
-	// For InMemory storageType, if db uses more than UsageThreshold percentage of the total memory() ,
-	// `inMemorySizeGB` should be increased by ScalingThreshold percent
-	// +optional
-	UsageThreshold int32 `json:"usageThreshold,omitempty"`
+	// Specifies the dbStorage scaling when db data is stored in Memory
+	MemoryStorage *ComputeMemoryStorageSpec `json:"memoryStorage,omitempty"`
+}
 
-	// For InMemory storageType, if db uses more than UsageThreshold percentage
-	// of the total memory() `inMemorySizeGB` should be increased by ScalingThreshold percent
+type ComputeMemoryStorageSpec struct {
+	// For InMemory storageType, if db uses more than UsageThresholdPercentage of the total memory() ,
+	// `inMemorySizeGB` should be increased by ScalingThreshold percent
+	// Default is 70%
 	// +optional
-	ScalingThreshold int32 `json:"scalingThreshold,omitempty"`
+	UsageThresholdPercentage int32 `json:"usageThresholdPercentage,omitempty"`
+
+	// For InMemory storageType, if db uses more than UsageThresholdPercentage
+	// of the total memory() `inMemorySizeGB` should be increased by ScalingThreshold percent
+	// Default is 50%
+	// +optional
+	ScalingThresholdPercentage int32 `json:"scalingThresholdPercentage,omitempty"`
 }
 
 type StorageAutoscalerSpec struct {
@@ -123,6 +130,9 @@ type AutoscalerStatus struct {
 	// +optional
 	Checkpoints []Checkpoint `json:"checkpoints,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=ApplyIfReady;ApplyAlways
+type ApplyOptions string
 
 // +kubebuilder:validation:Enum=InProgress;Current;Terminating;Failed
 type AutoscalerPhase string
