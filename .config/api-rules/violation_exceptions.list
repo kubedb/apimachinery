@@ -169,6 +169,8 @@ API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,E
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,ImagePullSecrets
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,InitContainers
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,Tolerations
+API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,VolumeMounts
+API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,Volumes
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,ExternalIPs
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,LoadBalancerSourceRanges
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,Ports
