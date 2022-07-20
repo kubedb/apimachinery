@@ -136,6 +136,9 @@ type PostgresSpec struct {
 	// +kubebuilder:default={namespaces:{from: Same}}
 	// +optional
 	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty"`
+
+	// +optional
+	HealthCheck HealthCheckSpec `json:"healthCheck"`
 }
 
 // PostgreLeaderElectionConfig contains essential attributes of leader election.

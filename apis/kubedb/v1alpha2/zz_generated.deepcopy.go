@@ -2208,6 +2208,7 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		*out = new(AllowedConsumers)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthCheck.DeepCopyInto(&out.HealthCheck)
 	return
 }
 
