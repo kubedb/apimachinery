@@ -243,6 +243,18 @@ func (p *PerconaXtraDB) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, la
 	}
 }
 
+func (p *PerconaXtraDB) SetHealthCheckerDefaults() {
+	if p.Spec.HealthCheck.PeriodSeconds == nil {
+		p.Spec.HealthCheck.PeriodSeconds = pointer.Int32P(10)
+	}
+	if p.Spec.HealthCheck.TimeoutSeconds == nil {
+		p.Spec.HealthCheck.TimeoutSeconds = pointer.Int32P(10)
+	}
+	if p.Spec.HealthCheck.FailureThreshold == nil {
+		p.Spec.HealthCheck.FailureThreshold = pointer.Int32P(1)
+	}
+}
+
 func (p *PerconaXtraDB) SetTLSDefaults() {
 	if p.Spec.TLS == nil || p.Spec.TLS.IssuerRef == nil {
 		return

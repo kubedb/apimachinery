@@ -118,6 +118,9 @@ type PerconaXtraDBSpec struct {
 	// +optional
 	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty"`
 
+	// +optional
+	HealthCheck HealthCheckSpec `json:"healthCheck"`
+
 	// SystemUserSecrets contains the system user credentials
 	// +optional
 	SystemUserSecrets *SystemUserSecretsSpec `json:"systemUserSecrets,omitempty"`

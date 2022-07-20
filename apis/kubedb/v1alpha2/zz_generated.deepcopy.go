@@ -1878,6 +1878,7 @@ func (in *PerconaXtraDBSpec) DeepCopyInto(out *PerconaXtraDBSpec) {
 		*out = new(AllowedConsumers)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthCheck.DeepCopyInto(&out.HealthCheck)
 	if in.SystemUserSecrets != nil {
 		in, out := &in.SystemUserSecrets, &out.SystemUserSecrets
 		*out = new(SystemUserSecretsSpec)
