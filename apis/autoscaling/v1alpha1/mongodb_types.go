@@ -90,9 +90,9 @@ type MongoDBOpsRequestOptions struct {
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
-	// ApplyOptions is to control the creation of OpsRequest.
+	// ApplyOptions is to control the execution of OpsRequest depending on the database state.
 	// Default is `ApplyIfReady`
-	ApplyOptions *ApplyOptions `json:"applyOptions,omitempty"`
+	ApplyOptions *opsapi.ApplyOptions `json:"applyOptions,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

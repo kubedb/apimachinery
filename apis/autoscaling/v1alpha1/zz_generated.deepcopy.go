@@ -1056,7 +1056,7 @@ func (in *MongoDBOpsRequestOptions) DeepCopyInto(out *MongoDBOpsRequestOptions) 
 	}
 	if in.ApplyOptions != nil {
 		in, out := &in.ApplyOptions, &out.ApplyOptions
-		*out = new(ApplyOptions)
+		*out = new(opsv1alpha1.ApplyOptions)
 		**out = **in
 	}
 	return

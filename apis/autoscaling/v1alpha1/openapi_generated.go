@@ -22220,7 +22220,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBOpsRequestOptions(ref 
 					},
 					"applyOptions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ApplyOptions is to control the creation of OpsRequest. Default is `ApplyIfReady`",
+							Description: "ApplyOptions is to control the execution of OpsRequest depending on the database state. Default is `ApplyIfReady`",
 							Type:        []string{"string"},
 							Format:      "",
 						},

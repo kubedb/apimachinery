@@ -281,3 +281,7 @@ type TLSSpec struct {
 	// +optional
 	Remove bool `json:"remove,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=ApplyIfReady;ApplyAlways
+// +kubebuilder:default:="ApplyIfReady"
+type ApplyOptions string

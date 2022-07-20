@@ -59,11 +59,6 @@ const (
 )
 
 const (
-	ApplyOptionsIfReady ApplyOptions = "ApplyIfReady"
-	ApplyOptionsAlways  ApplyOptions = "ApplyAlways"
-)
-
-const (
 	// AutoscalerPhaseInProgress is used when autoscaler is waiting for the initialization
 	// if referred db is not found, It will also be in InProgress
 	AutoscalerPhaseInProgress AutoscalerPhase = "InProgress"

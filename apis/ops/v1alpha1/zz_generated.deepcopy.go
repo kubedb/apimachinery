@@ -1641,6 +1641,11 @@ func (in *MongoDBOpsRequestSpec) DeepCopyInto(out *MongoDBOpsRequestSpec) {
 		*out = new(metav1.Duration)
 		**out = **in
 	}
+	if in.ApplyOptions != nil {
+		in, out := &in.ApplyOptions, &out.ApplyOptions
+		*out = new(ApplyOptions)
+		**out = **in
+	}
 	return
 }
 

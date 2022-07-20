@@ -131,9 +131,6 @@ type AutoscalerStatus struct {
 	Checkpoints []Checkpoint `json:"checkpoints,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=ApplyIfReady;ApplyAlways
-type ApplyOptions string
-
 // +kubebuilder:validation:Enum=InProgress;Current;Terminating;Failed
 type AutoscalerPhase string
 

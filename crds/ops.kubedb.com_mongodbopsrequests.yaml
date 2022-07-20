@@ -42,6 +42,11 @@ spec:
             type: object
           spec:
             properties:
+              applyOptions:
+                enum:
+                - ApplyIfReady
+                - ApplyAlways
+                type: string
               configuration:
                 properties:
                   arbiter:
