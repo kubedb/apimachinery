@@ -81,6 +81,7 @@ const (
 	ElasticsearchCustomConfigDir                 = "/elasticsearch/custom-config"
 	ElasticsearchDataDir                         = "/usr/share/elasticsearch/data"
 	ElasticsearchOpenSearchDataDir               = "/usr/share/opensearch/data"
+	ElasticsearchTempDir                         = "/tmp"
 	ElasticsearchOpendistroSecurityConfigDir     = "/usr/share/elasticsearch/plugins/opendistro_security/securityconfig"
 	ElasticsearchOpenSearchSecurityConfigDir     = "/usr/share/opensearch/plugins/opensearch-security/securityconfig"
 	ElasticsearchSearchGuardSecurityConfigDir    = "/usr/share/elasticsearch/plugins/search-guard-%v/sgconfig"
@@ -107,6 +108,7 @@ const (
 	ElasticsearchVolumeSecureSettings            = "secure-settings"
 	ElasticsearchVolumeCustomConfig              = "custom-config"
 	ElasticsearchVolumeData                      = "data"
+	ElasticsearchVolumeTemp                      = "temp"
 
 	// Ref:
 	//	- https://www.elastic.co/guide/en/elasticsearch/reference/7.6/heap-size.html#heap-size
