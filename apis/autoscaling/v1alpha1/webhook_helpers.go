@@ -66,8 +66,12 @@ func setDefaultComputeValues(computeSpec *ComputeAutoscalerSpec) {
 }
 
 func setInMemoryDefaults(computeSpec *ComputeAutoscalerSpec, storageEngine dbapi.StorageEngine) {
-	if computeSpec == nil || storageEngine != dbapi.StorageEngineInMemory || computeSpec.MemoryStorage == nil {
+	if computeSpec == nil || storageEngine != dbapi.StorageEngineInMemory {
 		return
+	}
+	if computeSpec.MemoryStorage == nil {
+		// assigning a dummy pointer to set the defaults
+		computeSpec.MemoryStorage = &ComputeMemoryStorageSpec{}
 	}
 	if computeSpec.MemoryStorage.UsageThresholdPercentage == 0 {
 		computeSpec.MemoryStorage.UsageThresholdPercentage = DefaultInmemoryUsageThreshold
