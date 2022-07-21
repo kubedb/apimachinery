@@ -62,6 +62,8 @@ type PgBouncerVersionSpec struct {
 	Deprecated bool `json:"deprecated,omitempty"`
 	// upgrade constraints
 	UpgradeConstraints UpgradeConstraints `json:"upgradeConstraints,omitempty"`
+	// PSP names
+	PodSecurityPolicies PgBouncerVersionPodSecurityPolicy `json:"podSecurityPolicies"`
 }
 
 // PgBouncerVersionInitContainer is the PgBouncer init container image
@@ -77,6 +79,11 @@ type PgBouncerVersionDatabase struct {
 // PgBouncerVersionExporter is the image for the PgBouncer exporter
 type PgBouncerVersionExporter struct {
 	Image string `json:"image"`
+}
+
+// PgBouncerVersionPodSecurityPolicy is the Elasticsearch pod security policies
+type PgBouncerVersionPodSecurityPolicy struct {
+	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
