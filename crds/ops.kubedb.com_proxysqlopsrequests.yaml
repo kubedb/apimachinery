@@ -45,12 +45,8 @@ spec:
               configuration:
                 properties:
                   adminVariables:
-                    properties:
-                      adminVariables:
-                        type: object
-                    required:
-                    - adminVariables
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   mysqlQueryRules:
                     properties:
                       reqType:
@@ -59,6 +55,7 @@ spec:
                         items:
                           type: object
                         type: array
+                        x-kubernetes-preserve-unknown-fields: true
                     required:
                     - reqType
                     - rules
@@ -106,12 +103,8 @@ spec:
                     - users
                     type: object
                   mysqlVariables:
-                    properties:
-                      mysqlVariables:
-                        type: object
-                    required:
-                    - mysqlVariables
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                 type: object
               horizontalScaling:
                 properties:

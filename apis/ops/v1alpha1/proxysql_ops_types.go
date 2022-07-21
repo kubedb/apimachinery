@@ -122,15 +122,26 @@ type ProxySQLOpsRequestStatus struct {
 type ProxySQLOpsRequestList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
+
+	//+optional
 	// Items is a list of ProxySQLOpsRequest CRD objects
 	Items []ProxySQLOpsRequest `json:"items,omitempty"`
 }
 
 type ProxySQLCustomConfigurationSpec struct {
-	MySQLUsers      *MySQLUsers      `json:"mysqlUsers,omitempty"`
+	//+optional
+	MySQLUsers *MySQLUsers `json:"mysqlUsers,omitempty"`
+
+	//+optional
 	MySQLQueryRules *MySQLQueryRules `json:"mysqlQueryRules,omitempty"`
-	AdminVariables  *AdminVariables  `json:"adminVariables,omitempty"`
-	MySQLVariables  *MySQLVariables  `json:"mysqlVariables,omitempty"`
+
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	AdminVariables *runtime.RawExtension `json:"adminVariables,omitempty"`
+
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	MySQLVariables *runtime.RawExtension `json:"mysqlVariables,omitempty"`
 }
 
 type MySQLUsers struct {
@@ -139,16 +150,9 @@ type MySQLUsers struct {
 }
 
 type MySQLQueryRules struct {
+	// +kubebuilder:pruning:PreserveUnknownFields
 	Rules       []*runtime.RawExtension `json:"rules"`
 	RequestType OperationType           `json:"reqType"`
-}
-
-type AdminVariables struct {
-	AdminVariables *runtime.RawExtension `json:"adminVariables"`
-}
-
-type MySQLVariables struct {
-	MySQLVariables *runtime.RawExtension `json:"mysqlVariables"`
 }
 
 type OperationType string

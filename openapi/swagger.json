@@ -32398,17 +32398,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.AdminVariables": {
-      "type": "object",
-      "required": [
-        "adminVariables"
-      ],
-      "properties": {
-        "adminVariables": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ConfigNode": {
       "description": "ConfigNode is the spec for mongodb ConfigServer",
       "type": "object",
@@ -33680,17 +33669,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVariables": {
-      "type": "object",
-      "required": [
-        "mysqlVariables"
-      ],
-      "properties": {
-        "mysqlVariables": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVerticalScalingSpec": {
       "type": "object",
       "properties": {
@@ -34122,7 +34100,7 @@
       "type": "object",
       "properties": {
         "adminVariables": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AdminVariables"
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "mysqlQueryRules": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLQueryRules"
@@ -34131,7 +34109,7 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUsers"
         },
         "mysqlVariables": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVariables"
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
     },
