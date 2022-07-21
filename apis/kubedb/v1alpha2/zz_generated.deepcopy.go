@@ -2586,6 +2586,7 @@ func (in *RedisSentinelSpec) DeepCopyInto(out *RedisSentinelSpec) {
 		*out = new(apiv1.AgentSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthCheck.DeepCopyInto(&out.HealthCheck)
 	return
 }
 
