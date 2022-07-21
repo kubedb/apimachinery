@@ -101,6 +101,12 @@ const (
 	ElasticsearchOpendistroInternalUserFileName  = "internal_users.yml"
 	ElasticsearchJavaOptsEnv                     = "ES_JAVA_OPTS"
 	ElasticsearchOpenSearchJavaOptsEnv           = "OPENSEARCH_JAVA_OPTS"
+	ElasticsearchVolumeConfig                    = "esconfig"
+	ElasticsearchVolumeTempConfig                = "temp-config"
+	ElasticsearchVolumeSecurityConfig            = "security-config"
+	ElasticsearchVolumeSecureSettings            = "secure-settings"
+	ElasticsearchVolumeCustomConfig              = "custom-config"
+	ElasticsearchVolumeData                      = "data"
 
 	// Ref:
 	//	- https://www.elastic.co/guide/en/elasticsearch/reference/7.6/heap-size.html#heap-size
