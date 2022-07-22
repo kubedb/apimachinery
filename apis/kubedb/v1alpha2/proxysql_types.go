@@ -137,12 +137,6 @@ type ProxySQLSpec struct {
 	// TODO: If replicas > 1, proxysql will be clustered
 	Replicas *int32 `json:"replicas,omitempty"`
 
-	// StorageType can be durable (default) or ephemeral
-	StorageType StorageType `json:"storageType,omitempty"`
-
-	// Storage spec to specify how storage shall be used.
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
-
 	// Mode specifies the type of MySQL/Percona-XtraDB/MariaDB cluster for which proxysql
 	// will be configured. It must be either "Galera" or "GroupReplication"
 	Mode *LoadBalanceMode `json:"mode,omitempty"`

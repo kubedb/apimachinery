@@ -31980,14 +31980,6 @@
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
           }
         },
-        "storage": {
-          "description": "Storage spec to specify how storage shall be used.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
-        },
-        "storageType": {
-          "description": "StorageType can be durable (default) or ephemeral",
-          "type": "string"
-        },
         "syncUsers": {
           "description": "SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the ProxySQL server . Password changes are also synced in proxysql when it is enabled.",
           "type": "boolean"

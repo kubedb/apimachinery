@@ -2376,11 +2376,6 @@ func (in *ProxySQLSpec) DeepCopyInto(out *ProxySQLSpec) {
 		*out = new(int32)
 		**out = **in
 	}
-	if in.Storage != nil {
-		in, out := &in.Storage, &out.Storage
-		*out = new(corev1.PersistentVolumeClaimSpec)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.Mode != nil {
 		in, out := &in.Mode, &out.Mode
 		*out = new(LoadBalanceMode)
