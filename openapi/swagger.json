@@ -28992,6 +28992,9 @@
         "image"
       ],
       "properties": {
+        "baseCodename": {
+          "type": "string"
+        },
         "image": {
           "type": "string",
           "default": ""
