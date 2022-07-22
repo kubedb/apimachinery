@@ -158,7 +158,7 @@ type MySQLQueryRules struct {
 type OperationType string
 
 const (
-	Add    OperationType = "add"
-	Delete OperationType = "delete"
-	Update OperationType = "update"
+	ProxySQLConfigurationAdd    OperationType = "add"
+	ProxySQLConfigurationDelete OperationType = "delete"
+	ProxySQLConfigurationUpdate OperationType = "update"
 )
