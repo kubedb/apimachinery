@@ -90,6 +90,9 @@ type RedisSentinelSpec struct {
 	// TerminationPolicy controls the delete operation for database
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
+
+	// +optional
+	HealthCheck HealthCheckSpec `json:"healthCheck,omitempty"`
 }
 
 type RedisSentinelStatus struct {

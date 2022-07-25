@@ -468,6 +468,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_MySQLSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLStatus":                    schema_apimachinery_apis_kubedb_v1alpha2_MySQLStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLTopology":                  schema_apimachinery_apis_kubedb_v1alpha2_MySQLTopology(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLUser":                      schema_apimachinery_apis_kubedb_v1alpha2_MySQLUser(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec":       schema_apimachinery_apis_kubedb_v1alpha2_NamedServiceTemplateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PerconaXtraDB":                  schema_apimachinery_apis_kubedb_v1alpha2_PerconaXtraDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PerconaXtraDBList":              schema_apimachinery_apis_kubedb_v1alpha2_PerconaXtraDBList(ref),
@@ -484,6 +485,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresStatus":                 schema_apimachinery_apis_kubedb_v1alpha2_PostgresStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQL":                       schema_apimachinery_apis_kubedb_v1alpha2_ProxySQL(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLBackendSpec":            schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLBackendSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLConfiguration":          schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLList":                   schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLSpec":                   schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLStatus":                 schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLStatus(ref),
@@ -22213,12 +22215,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MariaDBSpec(ref common.ReferenceCa
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers"),
 						},
 					},
+					"healthCheck": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
 
@@ -23558,6 +23566,98 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLTopology(ref common.Reference
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_MySQLUser(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"username": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"active": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"use_ssl": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"default_hostgroup": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"default_schema": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"schema_locked": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"transaction_persistent": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"fast_forward": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"backend": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"frontend": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"max_connections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"attributes": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"comment": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"username"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_NamedServiceTemplateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24536,6 +24636,55 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLBackendSpec(ref common.Ref
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mysqlUsers": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLUser"),
+									},
+								},
+							},
+						},
+					},
+					"mysqlQueryRules": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+									},
+								},
+							},
+						},
+					},
+					"mysqlVariables": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+					"adminVariables": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/runtime.RawExtension", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLUser"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24597,6 +24746,19 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref common.ReferenceC
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec"),
 						},
 					},
+					"syncUsers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the ProxySQL server . Password changes are also synced in proxysql when it is enabled.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"initConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InitConfiguration contains information with which the proxysql will bootstrap (only 4 tables are configurable)",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLConfiguration"),
+						},
+					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Version of ProxySQL to be deployed.",
@@ -24610,19 +24772,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref common.ReferenceC
 							Description: "Number of instances to deploy for ProxySQL. Currently we support only replicas = 1.",
 							Type:        []string{"integer"},
 							Format:      "int32",
-						},
-					},
-					"storageType": {
-						SchemaProps: spec.SchemaProps{
-							Description: "StorageType can be durable (default) or ephemeral",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"storage": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Storage spec to specify how storage shall be used.",
-							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 						},
 					},
 					"mode": {
@@ -24695,7 +24844,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLBackendSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLBackendSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLConfiguration"},
 	}
 }
 
@@ -25122,12 +25271,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RedisSentinelSpec(ref common.Refer
 							Format:      "",
 						},
 					},
+					"healthCheck": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
 
