@@ -88,6 +88,27 @@ func ValidateMonitorSpec(agent *mona.AgentSpec) error {
 	return fmt.Errorf(`invalid 'Agent' in '%+v'`, agent)
 }
 
+func IsStorageTypeCompatibleWithSpec(storageType api.StorageType, storage *core.PersistentVolumeClaimSpec, ephemeralStorage *core.EmptyDirVolumeSource) error {
+	if storageType == api.StorageTypeEphemeral && storage != nil {
+		return fmt.Errorf("'spec.storage' is not supported for Ephemeral storage type, use 'spec.ephemeralStorage' to configure Ephemeral storage type")
+	}
+	if storageType == api.StorageTypeDurable && ephemeralStorage != nil {
+		return fmt.Errorf("'spec.ephemeralStorage' is not supported for Durable storage type, use 'spec.storage' to configure Durable storage type")
+	}
+
+	return nil
+}
+
+func CheckSecretsExist(client kubernetes.Interface, secNames []string, namespace string) error {
+	for _, sec := range secNames {
+		_, err := client.CoreV1().Secrets(namespace).Get(context.TODO(), sec, metav1.GetOptions{})
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func ValidateEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resourceType string) error {
 	for _, env := range envs {
 		present, _ := arrays.Contains(forbiddenEnvs, env.Name)
@@ -104,6 +125,21 @@ func ValidateInternalUsers(users map[string]api.ElasticsearchUserSpec, allowedIn
 		if !present {
 			return fmt.Errorf("Internal user %s is forbidden to use in %s spec", user, resourceType)
 		}
+	}
+	return nil
+}
+
+func ValidateHealth(health *api.HealthCheckSpec) error {
+	if health.PeriodSeconds != nil && *health.PeriodSeconds <= 0 {
+		return fmt.Errorf(`spec.healthCheck.periodSeconds: can not be less than 1`)
+	}
+
+	if health.TimeoutSeconds != nil && *health.TimeoutSeconds <= 0 {
+		return fmt.Errorf(`spec.healthCheck.timeoutSeconds: can not be less than 1`)
+	}
+
+	if health.FailureThreshold != nil && *health.FailureThreshold <= 0 {
+		return fmt.Errorf(`spec.healthCheck.failureThreshold: can not be less than 1`)
 	}
 	return nil
 }
