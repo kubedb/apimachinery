@@ -28992,9 +28992,6 @@
         "image"
       ],
       "properties": {
-        "baseOS": {
-          "type": "string"
-        },
         "image": {
           "type": "string",
           "default": ""
@@ -29008,6 +29005,9 @@
         "image"
       ],
       "properties": {
+        "baseOS": {
+          "type": "string"
+        },
         "image": {
           "type": "string",
           "default": ""

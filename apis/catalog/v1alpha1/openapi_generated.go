@@ -22977,12 +22977,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionCoordinator(ref co
 							Format:  "",
 						},
 					},
-					"baseOS": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
 				},
 				Required: []string{"image"},
 			},
@@ -23002,6 +22996,12 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionDatabase(ref commo
 							Default: "",
 							Type:    []string{"string"},
 							Format:  "",
+						},
+					},
+					"baseOS": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
