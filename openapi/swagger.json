@@ -28992,7 +28992,7 @@
         "image"
       ],
       "properties": {
-        "baseCodename": {
+        "baseOS": {
           "type": "string"
         },
         "image": {

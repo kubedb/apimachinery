@@ -57,7 +57,7 @@ spec:
                 type: object
               db:
                 properties:
-                  baseCodename:
+                  baseOS:
                     type: string
                   image:
                     type: string

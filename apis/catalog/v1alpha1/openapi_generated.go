@@ -22977,7 +22977,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionCoordinator(ref co
 							Format:  "",
 						},
 					},
-					"baseCodename": {
+					"baseOS": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
 							Format: "",
