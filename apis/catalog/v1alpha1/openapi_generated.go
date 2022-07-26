@@ -22998,6 +22998,12 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionDatabase(ref commo
 							Format:  "",
 						},
 					},
+					"baseOS": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 				},
 				Required: []string{"image"},
 			},
