@@ -25,6 +25,9 @@ const (
 	HealthCheckReadFailure    HealthCheckFailureLabel = "ReadFailure"
 	HealthCheckPrimaryFailure HealthCheckFailureLabel = "PrimaryFailure"
 
+	// replica
+	HealthCheckReplicaFailure HealthCheckFailureLabel = "ReplicaFailure"
+
 	// MariaDB Constants
 	HealthCheckClusterFailure HealthCheckFailureLabel = "ClusterFailure"
 
