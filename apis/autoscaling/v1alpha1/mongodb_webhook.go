@@ -20,6 +20,7 @@ import (
 	"errors"
 
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -48,6 +49,8 @@ func (in *MongoDBAutoscaler) Default() {
 }
 
 func (in *MongoDBAutoscaler) setDefaults() {
+	in.setOpsReqOptsDefaults()
+
 	if in.Spec.Storage != nil {
 		setDefaultStorageValues(in.Spec.Storage.Standalone)
 		setDefaultStorageValues(in.Spec.Storage.ReplicaSet)
@@ -61,6 +64,17 @@ func (in *MongoDBAutoscaler) setDefaults() {
 		setDefaultComputeValues(in.Spec.Compute.Shard)
 		setDefaultComputeValues(in.Spec.Compute.ConfigServer)
 		setDefaultComputeValues(in.Spec.Compute.Mongos)
+	}
+}
+
+func (in *MongoDBAutoscaler) setOpsReqOptsDefaults() {
+	if in.Spec.OpsRequestOptions == nil {
+		in.Spec.OpsRequestOptions = &MongoDBOpsRequestOptions{}
+	}
+	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
+	if in.Spec.OpsRequestOptions.Apply == "" {
+		in.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
 	}
 }
 

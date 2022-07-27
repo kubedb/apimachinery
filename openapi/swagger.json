@@ -33302,6 +33302,10 @@
         "type"
       ],
       "properties": {
+        "apply": {
+          "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+          "type": "string"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of MongoDB",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfigurationSpec"

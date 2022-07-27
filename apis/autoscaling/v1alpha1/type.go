@@ -67,15 +67,22 @@ type ComputeAutoscalerSpec struct {
 	// +optional
 	PodLifeTimeThreshold metav1.Duration `json:"podLifeTimeThreshold,omitempty"`
 
-	// For InMemory storageType, if db uses more than UsageThreshold percentage of the total memory() ,
-	// `inMemorySizeGB` should be increased by ScalingThreshold percent
-	// +optional
-	UsageThreshold int32 `json:"usageThreshold,omitempty"`
+	// Specifies the dbStorage scaling when db data is stored in Memory
+	InMemoryStorage *ComputeInMemoryStorageSpec `json:"inMemoryStorage,omitempty"`
+}
 
-	// For InMemory storageType, if db uses more than UsageThreshold percentage
-	// of the total memory() `inMemorySizeGB` should be increased by ScalingThreshold percent
+type ComputeInMemoryStorageSpec struct {
+	// For InMemory storageType, if db uses more than UsageThresholdPercentage of the total memory() ,
+	// memoryStorage should be increased by ScalingThreshold percent
+	// Default is 70%
 	// +optional
-	ScalingThreshold int32 `json:"scalingThreshold,omitempty"`
+	UsageThresholdPercentage int32 `json:"usageThresholdPercentage,omitempty"`
+
+	// For InMemory storageType, if db uses more than UsageThresholdPercentage
+	// of the total memory() memoryStorage should be increased by ScalingFactor percent
+	// Default is 50%
+	// +optional
+	ScalingFactorPercentage int32 `json:"scalingFactorPercentage,omitempty"`
 }
 
 type StorageAutoscalerSpec struct {
