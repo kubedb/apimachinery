@@ -130,9 +130,9 @@ type PerconaXtraDBSpec struct {
 type PerconaXtraDBCertificateAlias string
 
 const (
-	PerconaXtraDBServerCert          PerconaXtraDBCertificateAlias = "server"
-	PerconaXtraDBClientCert          PerconaXtraDBCertificateAlias = "client"
-	PerconaXtraDBMetricsExporterCert PerconaXtraDBCertificateAlias = "metrics-exporter"
+	PerconaXtraDBServerCert   PerconaXtraDBCertificateAlias = "server"
+	PerconaXtraDBClientCert   PerconaXtraDBCertificateAlias = "client"
+	PerconaXtraDBExporterCert PerconaXtraDBCertificateAlias = "metrics-exporter"
 )
 
 type PerconaXtraDBStatus struct {
