@@ -134,16 +134,6 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 		return api.DatabasePhaseCritical
 	}
 
-	// Skip if database read operation is not possible
-	if kmapi.IsConditionFalse(conditions, api.DatabaseReadAccess) {
-		return api.DatabasePhaseNotReady
-	}
-
-	// skip if database write operation is not possible yet
-	if kmapi.IsConditionFalse(conditions, api.DatabaseWriteAccess) {
-		return api.DatabasePhaseCritical
-	}
-
 	// Ready, if the database is provisioned and readinessProbe passed.
 	if kmapi.IsConditionTrue(conditions, api.DatabaseReady) && kmapi.IsConditionTrue(conditions, api.DatabaseProvisioned) {
 		return api.DatabasePhaseReady
