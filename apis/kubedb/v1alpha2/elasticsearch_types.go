@@ -170,6 +170,9 @@ type ElasticsearchSpec struct {
 	// +optional
 	// +kubebuilder:default:=50
 	HeapSizePercentage *int32 `json:"heapSizePercentage,omitempty"`
+
+	// +optional
+	HealthCheck HealthCheckSpec `json:"healthCheck"`
 }
 
 type ElasticsearchClusterTopology struct {

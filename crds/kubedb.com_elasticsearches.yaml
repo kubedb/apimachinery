@@ -69,6 +69,24 @@ spec:
                 type: boolean
               halted:
                 type: boolean
+              healthCheck:
+                properties:
+                  disableWriteCheck:
+                    default: false
+                    type: boolean
+                  failureThreshold:
+                    default: 1
+                    format: int32
+                    type: integer
+                  periodSeconds:
+                    default: 10
+                    format: int32
+                    type: integer
+                  timeoutSeconds:
+                    default: 10
+                    format: int32
+                    type: integer
+                type: object
               heapSizePercentage:
                 default: 50
                 format: int32
