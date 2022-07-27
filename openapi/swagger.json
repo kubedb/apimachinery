@@ -33734,6 +33734,9 @@
       "description": "MySQLVolumeExpansionSpec is the spec for MySQL volume expansion",
       "type": "object",
       "properties": {
+        "mode": {
+          "type": "string"
+        },
         "mysql": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }

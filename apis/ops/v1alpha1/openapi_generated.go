@@ -23536,6 +23536,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLVolumeExpansionSpec(ref common.R
 							Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 				},
 			},
 		},
