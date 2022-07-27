@@ -85,7 +85,8 @@ type PostgresVersionInitContainer struct {
 
 // PostgresVersionDatabase is the Postgres Database image
 type PostgresVersionDatabase struct {
-	Image string `json:"image"`
+	Image  string `json:"image"`
+	BaseOS string `json:"baseOS,omitempty"`
 }
 
 // PostgresVersionCoordinator is the Postgres leader elector image
