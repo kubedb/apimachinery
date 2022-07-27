@@ -255,6 +255,12 @@ spec:
                 type: object
               volumeExpansion:
                 properties:
+                  mode:
+                    default: Online
+                    enum:
+                    - Offline
+                    - Online
+                    type: string
                   mysql:
                     anyOf:
                     - type: integer

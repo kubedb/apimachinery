@@ -171,3 +171,13 @@ type AutoOpsSpec struct {
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 }
+
+type SystemUserSecretsSpec struct {
+	// ReplicationUserSecret contains replication system user credentials
+	// +optional
+	ReplicationUserSecret *core.LocalObjectReference `json:"replicationUserSecret,omitempty"`
+
+	// MonitorUserSecret contains monitor system user credentials
+	// +optional
+	MonitorUserSecret *core.LocalObjectReference `json:"monitorUserSecret,omitempty"`
+}

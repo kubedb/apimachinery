@@ -28787,6 +28787,19 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PerconaXtraDBVersionCoordinator": {
+      "description": "PerconaXtraDBVersionCoordinator is the PerconaXtraDB Coordinator image",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PerconaXtraDBVersionDatabase": {
       "description": "PerconaXtraDBVersionDatabase is the perconaxtradb image",
       "type": "object",
@@ -28883,6 +28896,11 @@
         "podSecurityPolicies"
       ],
       "properties": {
+        "coordinator": {
+          "description": "Coordinator Image",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PerconaXtraDBVersionCoordinator"
+        },
         "db": {
           "description": "Database Image",
           "default": {},
@@ -28987,6 +29005,9 @@
         "image"
       ],
       "properties": {
+        "baseOS": {
+          "type": "string"
+        },
         "image": {
           "type": "string",
           "default": ""
@@ -31066,7 +31087,7 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
         },
         "allowedSchemas": {
-          "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+          "description": "AllowedSchemas defines the types of database schemas that may refer to a database instance and the trusted namespaces where those schema resources may be present.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
         },
         "authSecret": {
@@ -31090,6 +31111,11 @@
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
           "type": "boolean"
+        },
+        "healthCheck": {
+          "description": "HealthCheckSpec defines attributes of the health check",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
         },
         "init": {
           "description": "Init is used to initialize database",
@@ -31349,8 +31375,12 @@
         "version"
       ],
       "properties": {
+        "allowedSchemas": {
+          "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
         "authSecret": {
-          "description": "Database authentication secret",
+          "description": "AuthSecret specifies database authentication secret",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "autoOps": {
@@ -31362,9 +31392,18 @@
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e custom-mysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "coordinator": {
+          "description": "Coordinator defines attributes of the coordinator container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.CoordinatorSpec"
+        },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
           "type": "boolean"
+        },
+        "healthCheck": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
         },
         "init": {
           "description": "Init is used to initialize database",
@@ -31380,9 +31419,13 @@
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
         "replicas": {
-          "description": "Number of instances to deploy for PerconaXtraDB. Replicas: 1\t\t--\u003e\t\tDeploy standalone PerconaXtraDB Replicas: \u003e 1\t--\u003e\t\tDeploy PerconaXtraDB cluster with specified number of masters",
+          "description": "Replicas defines the number of instances to deploy for PerconaXtraDB.",
           "type": "integer",
           "format": "int32"
+        },
+        "requireSSL": {
+          "description": "Indicates that the database server need to be encrypted connections(ssl)",
+          "type": "boolean"
         },
         "serviceTemplates": {
           "description": "ServiceTemplates is an optional configuration for services used to expose database",
@@ -31400,12 +31443,16 @@
           "description": "StorageType can be durable (default) or ephemeral",
           "type": "string"
         },
+        "systemUserSecrets": {
+          "description": "SystemUserSecrets contains the system user credentials",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SystemUserSecretsSpec"
+        },
         "terminationPolicy": {
           "description": "TerminationPolicy controls the delete operation for database",
           "type": "string"
         },
         "tls": {
-          "description": "TLS contains tls configurations for client and server.",
+          "description": "TLS contains tls configurations",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TLSConfig"
         },
         "version": {
@@ -32376,6 +32423,19 @@
           "description": "count of slave to wait for before commit",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SystemUserSecretsSpec": {
+      "type": "object",
+      "properties": {
+        "monitorUserSecret": {
+          "description": "MonitorUserSecret contains monitor system user credentials",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "replicationUserSecret": {
+          "description": "ReplicationUserSecret contains replication system user credentials",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         }
       }
     },
@@ -33683,6 +33743,9 @@
       "description": "MySQLVolumeExpansionSpec is the spec for MySQL volume expansion",
       "type": "object",
       "properties": {
+        "mode": {
+          "type": "string"
+        },
         "mysql": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
