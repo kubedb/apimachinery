@@ -56,8 +56,3 @@ const (
 	FailedToIssueCertificates              = "FailedToIssueCertificates"
 	SuccessfullyReconfiguredTLS            = "SuccessfullyReconfiguredTLS"
 )
-
-const (
-	ApplyOptionsIfReady ApplyOptions = "ApplyIfReady"
-	ApplyOptionsAlways  ApplyOptions = "ApplyAlways"
-)

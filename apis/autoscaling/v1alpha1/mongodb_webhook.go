@@ -68,16 +68,13 @@ func (in *MongoDBAutoscaler) setDefaults() {
 }
 
 func (in *MongoDBAutoscaler) setOpsReqOptsDefaults() {
-	if in.Spec.OpsReqOptions == nil {
-		in.Spec.OpsReqOptions = &MongoDBOpsRequestOptions{}
+	if in.Spec.OpsRequestOptions == nil {
+		in.Spec.OpsRequestOptions = &MongoDBOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
-	if in.Spec.OpsReqOptions.ApplyOptions == nil {
-		in.Spec.OpsReqOptions.ApplyOptions = func() *opsapi.ApplyOptions {
-			ready := opsapi.ApplyOptionsIfReady
-			return &ready
-		}()
+	if in.Spec.OpsRequestOptions.ApplyOption == "" {
+		in.Spec.OpsRequestOptions.ApplyOption = opsapi.ApplyOptionIfReady
 	}
 }
 

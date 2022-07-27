@@ -45,6 +45,15 @@ spec:
                         items:
                           type: string
                         type: array
+                      inMemoryStorage:
+                        properties:
+                          scalingFactorPercentage:
+                            format: int32
+                            type: integer
+                          usageThresholdPercentage:
+                            format: int32
+                            type: integer
+                        type: object
                       maxAllowed:
                         additionalProperties:
                           anyOf:
@@ -52,15 +61,6 @@ spec:
                           - type: string
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        type: object
-                      memoryStorage:
-                        properties:
-                          scalingThresholdPercentage:
-                            format: int32
-                            type: integer
-                          usageThresholdPercentage:
-                            format: int32
-                            type: integer
                         type: object
                       minAllowed:
                         additionalProperties:
@@ -91,6 +91,15 @@ spec:
                         items:
                           type: string
                         type: array
+                      inMemoryStorage:
+                        properties:
+                          scalingFactorPercentage:
+                            format: int32
+                            type: integer
+                          usageThresholdPercentage:
+                            format: int32
+                            type: integer
+                        type: object
                       maxAllowed:
                         additionalProperties:
                           anyOf:
@@ -98,15 +107,6 @@ spec:
                           - type: string
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        type: object
-                      memoryStorage:
-                        properties:
-                          scalingThresholdPercentage:
-                            format: int32
-                            type: integer
-                          usageThresholdPercentage:
-                            format: int32
-                            type: integer
                         type: object
                       minAllowed:
                         additionalProperties:
@@ -135,6 +135,15 @@ spec:
                         items:
                           type: string
                         type: array
+                      inMemoryStorage:
+                        properties:
+                          scalingFactorPercentage:
+                            format: int32
+                            type: integer
+                          usageThresholdPercentage:
+                            format: int32
+                            type: integer
+                        type: object
                       maxAllowed:
                         additionalProperties:
                           anyOf:
@@ -142,15 +151,6 @@ spec:
                           - type: string
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        type: object
-                      memoryStorage:
-                        properties:
-                          scalingThresholdPercentage:
-                            format: int32
-                            type: integer
-                          usageThresholdPercentage:
-                            format: int32
-                            type: integer
                         type: object
                       minAllowed:
                         additionalProperties:
@@ -179,6 +179,15 @@ spec:
                         items:
                           type: string
                         type: array
+                      inMemoryStorage:
+                        properties:
+                          scalingFactorPercentage:
+                            format: int32
+                            type: integer
+                          usageThresholdPercentage:
+                            format: int32
+                            type: integer
+                        type: object
                       maxAllowed:
                         additionalProperties:
                           anyOf:
@@ -186,15 +195,6 @@ spec:
                           - type: string
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        type: object
-                      memoryStorage:
-                        properties:
-                          scalingThresholdPercentage:
-                            format: int32
-                            type: integer
-                          usageThresholdPercentage:
-                            format: int32
-                            type: integer
                         type: object
                       minAllowed:
                         additionalProperties:
@@ -223,6 +223,15 @@ spec:
                         items:
                           type: string
                         type: array
+                      inMemoryStorage:
+                        properties:
+                          scalingFactorPercentage:
+                            format: int32
+                            type: integer
+                          usageThresholdPercentage:
+                            format: int32
+                            type: integer
+                        type: object
                       maxAllowed:
                         additionalProperties:
                           anyOf:
@@ -230,15 +239,6 @@ spec:
                           - type: string
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        type: object
-                      memoryStorage:
-                        properties:
-                          scalingThresholdPercentage:
-                            format: int32
-                            type: integer
-                          usageThresholdPercentage:
-                            format: int32
-                            type: integer
                         type: object
                       minAllowed:
                         additionalProperties:
@@ -262,12 +262,12 @@ spec:
                   name:
                     type: string
                 type: object
-              opsReqOptions:
+              opsRequestOptions:
                 properties:
-                  applyOptions:
+                  applyOption:
                     enum:
-                    - ApplyIfReady
-                    - ApplyAlways
+                    - IfReady
+                    - Always
                     type: string
                   readinessCriteria:
                     properties:

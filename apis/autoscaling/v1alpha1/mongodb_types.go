@@ -61,7 +61,7 @@ type MongoDBAutoscalerSpec struct {
 	DatabaseRef *core.LocalObjectReference `json:"databaseRef"`
 
 	// This field will be used to control the behaviour of ops-manager
-	OpsReqOptions *MongoDBOpsRequestOptions `json:"opsReqOptions,omitempty"`
+	OpsRequestOptions *MongoDBOpsRequestOptions `json:"opsRequestOptions,omitempty"`
 
 	Compute *MongoDBComputeAutoscalerSpec `json:"compute,omitempty"`
 	Storage *MongoDBStorageAutoscalerSpec `json:"storage,omitempty"`
@@ -90,9 +90,9 @@ type MongoDBOpsRequestOptions struct {
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
-	// ApplyOptions is to control the execution of OpsRequest depending on the database state.
-	// Default is `ApplyIfReady`
-	ApplyOptions *opsapi.ApplyOptions `json:"applyOptions,omitempty"`
+	// ApplyOption is to control the execution of OpsRequest depending on the database state.
+	// Default is `IfReady`
+	ApplyOption opsapi.ApplyOption `json:"applyOption,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

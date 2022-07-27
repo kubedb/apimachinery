@@ -22833,9 +22833,9 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBOpsRequestSpec(ref common.Refe
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
-					"applyOptions": {
+					"applyOption": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ApplyOptions is to control the execution of OpsRequest depending on the database state. Default is `ApplyIfReady`",
+							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state. Default is `IfReady`",
 							Type:        []string{"string"},
 							Format:      "",
 						},

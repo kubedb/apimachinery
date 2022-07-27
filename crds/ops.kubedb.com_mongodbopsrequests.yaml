@@ -42,10 +42,10 @@ spec:
             type: object
           spec:
             properties:
-              applyOptions:
+              applyOption:
                 enum:
-                - ApplyIfReady
-                - ApplyAlways
+                - IfReady
+                - Always
                 type: string
               configuration:
                 properties:
