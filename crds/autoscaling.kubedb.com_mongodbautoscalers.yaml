@@ -264,7 +264,8 @@ spec:
                 type: object
               opsRequestOptions:
                 properties:
-                  applyOption:
+                  apply:
+                    default: IfReady
                     enum:
                     - IfReady
                     - Always

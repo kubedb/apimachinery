@@ -77,8 +77,8 @@ type MongoDBOpsRequestSpec struct {
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
-	// Default is `IfReady`
-	ApplyOption ApplyOption `json:"applyOption,omitempty"`
+	// +kubebuilder:default:="IfReady"
+	Apply ApplyOption `json:"apply,omitempty"`
 }
 
 // MongoDBReplicaReadinessCriteria is the criteria for checking readiness of a MongoDB pod

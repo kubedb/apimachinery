@@ -33242,8 +33242,8 @@
         "type"
       ],
       "properties": {
-        "applyOption": {
-          "description": "ApplyOption is to control the execution of OpsRequest depending on the database state. Default is `IfReady`",
+        "apply": {
+          "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
           "type": "string"
         },
         "configuration": {

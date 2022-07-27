@@ -42,7 +42,8 @@ spec:
             type: object
           spec:
             properties:
-              applyOption:
+              apply:
+                default: IfReady
                 enum:
                 - IfReady
                 - Always

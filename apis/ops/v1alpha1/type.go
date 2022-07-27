@@ -283,7 +283,6 @@ type TLSSpec struct {
 }
 
 // +kubebuilder:validation:Enum=IfReady;Always
-// +kubebuilder:default:="IfReady"
 type ApplyOption string
 
 const (
