@@ -20978,14 +20978,14 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ComputeInMemoryStorageSpec(re
 				Properties: map[string]spec.Schema{
 					"usageThresholdPercentage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "For InMemory storageType, if db uses more than UsageThresholdPercentage of the total memory() , `inMemorySizeGB` should be increased by ScalingThreshold percent Default is 70%",
+							Description: "For InMemory storageType, if db uses more than UsageThresholdPercentage of the total memory() , memoryStorage should be increased by ScalingThreshold percent Default is 70%",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"scalingFactorPercentage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "For InMemory storageType, if db uses more than UsageThresholdPercentage of the total memory() `inMemorySizeGB` should be increased by ScalingFactor percent Default is 50%",
+							Description: "For InMemory storageType, if db uses more than UsageThresholdPercentage of the total memory() memoryStorage should be increased by ScalingFactor percent Default is 50%",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
