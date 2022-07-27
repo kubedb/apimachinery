@@ -27,8 +27,8 @@ const (
 	// request is within the [MinRecommended...MaxRecommended] range.
 	DefaultPodLifeTimeThreshold = time.Hour * 12
 
-	DefaultInmemoryUsageThreshold   = 70
-	DefaultInmemoryScalingThreshold = 50
+	DefaultInMemoryStorageUsageThresholdPercentage = 70
+	DefaultInMemoryStorageScalingFactorPercentage  = 50
 )
 
 // Storage Autoscaler

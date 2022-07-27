@@ -73,13 +73,13 @@ type ComputeAutoscalerSpec struct {
 
 type ComputeInMemoryStorageSpec struct {
 	// For InMemory storageType, if db uses more than UsageThresholdPercentage of the total memory() ,
-	// `inMemorySizeGB` should be increased by ScalingThreshold percent
+	// memoryStorage should be increased by ScalingThreshold percent
 	// Default is 70%
 	// +optional
 	UsageThresholdPercentage int32 `json:"usageThresholdPercentage,omitempty"`
 
 	// For InMemory storageType, if db uses more than UsageThresholdPercentage
-	// of the total memory() `inMemorySizeGB` should be increased by ScalingFactor percent
+	// of the total memory() memoryStorage should be increased by ScalingFactor percent
 	// Default is 50%
 	// +optional
 	ScalingFactorPercentage int32 `json:"scalingFactorPercentage,omitempty"`
