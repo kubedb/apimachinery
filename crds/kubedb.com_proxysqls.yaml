@@ -81,6 +81,24 @@ spec:
                   name:
                     type: string
                 type: object
+              healthCheck:
+                properties:
+                  disableWriteCheck:
+                    default: false
+                    type: boolean
+                  failureThreshold:
+                    default: 1
+                    format: int32
+                    type: integer
+                  periodSeconds:
+                    default: 10
+                    format: int32
+                    type: integer
+                  timeoutSeconds:
+                    default: 10
+                    format: int32
+                    type: integer
+                type: object
               initConfig:
                 properties:
                   adminVariables:

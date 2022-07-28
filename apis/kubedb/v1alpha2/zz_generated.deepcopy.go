@@ -2429,6 +2429,7 @@ func (in *ProxySQLSpec) DeepCopyInto(out *ProxySQLSpec) {
 		*out = new(clientgoapiv1.TLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthCheck.DeepCopyInto(&out.HealthCheck)
 	return
 }
 

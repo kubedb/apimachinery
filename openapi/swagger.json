@@ -32005,6 +32005,10 @@
           "description": "ConfigSecret is an optional field to provide custom configuration file for proxysql (i.e custom-proxysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "healthCheck": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
+        },
         "initConfig": {
           "description": "InitConfiguration contains information with which the proxysql will bootstrap (only 4 tables are configurable)",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLConfiguration"
