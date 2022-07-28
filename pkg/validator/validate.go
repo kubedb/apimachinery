@@ -143,3 +143,27 @@ func ValidateHealth(health *api.HealthCheckSpec) error {
 	}
 	return nil
 }
+
+func ValidateVolumes(userGivenVolumes []core.Volume, reservedVolumeNames []string) error {
+	for _, v := range reservedVolumeNames {
+		for _, cv := range userGivenVolumes {
+			if cv.Name == v {
+				return errors.New("Cannot use a reserve volume name: " + v)
+			}
+		}
+	}
+	return nil
+}
+
+func ValidateMountPaths(userGivenMounts []core.VolumeMount, reservedMountPaths []string) error {
+	for _, given := range userGivenMounts {
+		gPath := strings.TrimSuffix(strings.TrimPrefix(given.MountPath, "/"), "/")
+		for _, our := range reservedMountPaths {
+			oPath := strings.TrimSuffix(strings.TrimPrefix(our, "/"), "/")
+			if strings.HasPrefix(gPath, oPath) {
+				return errors.New("Cannot use mountPath " + given.MountPath + " because of reservedMountPaths path " + our)
+			}
+		}
+	}
+	return nil
+}
