@@ -136,6 +136,24 @@ spec:
                   - databaseRef
                   type: object
                 type: array
+              healthCheck:
+                properties:
+                  disableWriteCheck:
+                    default: false
+                    type: boolean
+                  failureThreshold:
+                    default: 1
+                    format: int32
+                    type: integer
+                  periodSeconds:
+                    default: 10
+                    format: int32
+                    type: integer
+                  timeoutSeconds:
+                    default: 10
+                    format: int32
+                    type: integer
+                type: object
               monitor:
                 properties:
                   agent:

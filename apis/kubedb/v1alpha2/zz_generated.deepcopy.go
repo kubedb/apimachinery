@@ -2027,6 +2027,7 @@ func (in *PgBouncerSpec) DeepCopyInto(out *PgBouncerSpec) {
 		*out = new(clientgoapiv1.TLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthCheck.DeepCopyInto(&out.HealthCheck)
 	return
 }
 
