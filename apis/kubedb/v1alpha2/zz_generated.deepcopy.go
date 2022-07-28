@@ -492,6 +492,7 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 		*out = new(int32)
 		**out = **in
 	}
+	in.HealthCheck.DeepCopyInto(&out.HealthCheck)
 	return
 }
 
@@ -2208,6 +2209,7 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		*out = new(AllowedConsumers)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthCheck.DeepCopyInto(&out.HealthCheck)
 	return
 }
 
@@ -2427,6 +2429,7 @@ func (in *ProxySQLSpec) DeepCopyInto(out *ProxySQLSpec) {
 		*out = new(clientgoapiv1.TLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthCheck.DeepCopyInto(&out.HealthCheck)
 	return
 }
 

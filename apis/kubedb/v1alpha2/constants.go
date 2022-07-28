@@ -373,6 +373,10 @@ const (
 	DatabaseHealthCheckPaused = "HealthCheckPaused"
 	// used for Databases whose internal user credentials are synced
 	InternalUsersSynced = "InternalUsersSynced"
+	// user for databases that have read access
+	DatabaseReadAccess = "DatabaseReadAccess"
+	// user for databases that have write access
+	DatabaseWriteAccess = "DatabaseWriteAccess"
 
 	// Condition reasons
 	DataRestoreStartedByExternalInitializer    = "DataRestoreStartedByExternalInitializer"
@@ -388,6 +392,10 @@ const (
 	DatabaseProvisioningStartedSuccessfully    = "DatabaseProvisioningStartedSuccessfully"
 	DatabaseSuccessfullyProvisioned            = "DatabaseSuccessfullyProvisioned"
 	DatabaseHaltedSuccessfully                 = "DatabaseHaltedSuccessfully"
+	DatabaseReadAccessCheckSucceeded           = "DatabaseReadAccessCheckSucceeded"
+	DatabaseWriteAccessCheckSucceeded          = "DatabaseWriteAccessCheckSucceeded"
+	DatabaseReadAccessCheckFailed              = "DatabaseReadAccessCheckFailed"
+	DatabaseWriteAccessCheckFailed             = "DatabaseReadAccessCheckFailed"
 	InternalUsersCredentialSyncFailed          = "InternalUsersCredentialsSyncFailed"
 	InternalUsersCredentialsSyncedSuccessfully = "InternalUsersCredentialsSyncedSuccessfully"
 )
