@@ -31575,6 +31575,10 @@
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Databases"
           }
         },
+        "healthCheck": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
+        },
         "monitor": {
           "description": "Monitor is used monitor database instance.",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
