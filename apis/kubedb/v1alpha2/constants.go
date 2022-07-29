@@ -318,12 +318,20 @@ const (
 	RedisDatabasePortName       = "db"
 	RedisPrimaryServicePortName = "primary"
 	RedisDatabasePort           = 6379
+	RedisSentinelPort           = 26379
 	RedisGossipPortName         = "gossip"
 	RedisGossipPort             = 16379
 	RedisSentinelPortName       = "sentinel"
-	RedisScriptVolumeName       = "script-vol"
-	RedisScriptVolumePath       = "/scripts"
-	RedisSentinelPort           = 26379
+
+	RedisScriptVolumeName      = "script-vol"
+	RedisScriptVolumePath      = "/scripts"
+	RedisDataVolumeName        = "data"
+	RedisDataVolumePath        = "/data"
+	RedisTLSVolumeName         = "tls-volume"
+	RedisExporterTLSVolumeName = "exporter-tls-volume"
+	RedisTLSVolumePath         = "/certs"
+	RedisConfigVolumeName      = "redis-config"
+	RedisConfigVolumePath      = "/usr/local/etc/redis/"
 
 	RedisKeyFileSecretSuffix = "key"
 	RedisPEMSecretSuffix     = "pem"
