@@ -54,6 +54,8 @@ const (
 	DBTLSVolume         = "tls-volume"
 	DBExporterTLSVolume = "exporter-tls-volume"
 
+	CACert = "ca.crt"
+
 	// =========================== Database key Constants ============================
 	PostgresKey      = ResourceSingularPostgres + "." + kubedb.GroupName
 	ElasticsearchKey = ResourceSingularElasticsearch + "." + kubedb.GroupName
@@ -214,32 +216,40 @@ const (
 	MySQLComponentRouter = "router"
 
 	// =========================== PerconaXtraDB Constants ============================
-	PerconaXtraDBClusterRecommendedVersion    = "5.7"
-	PerconaXtraDBMaxClusterNameLength         = 32
-	PerconaXtraDBStandaloneReplicas           = 1
-	PerconaXtraDBDefaultClusterSize           = 3
-	PerconaXtraDBDataMountPath                = "/var/lib/mysql"
-	PerconaXtraDBDataLostFoundPath            = PerconaXtraDBDataMountPath + "lost+found"
-	PerconaXtraDBInitDBVolumeName             = "initial-script"
-	PerconaXtraDBInitDBMountPath              = "/docker-entrypoint-initdb.d"
-	PerconaXtraDBCustomConfigMountPath        = "/etc/percona-server.conf.d/"
-	PerconaXtraDBClusterCustomConfigMountPath = "/etc/mysql/custom.conf.d/"
-	PerconaXtraDBCustomConfigVolumeName       = "custom-config"
-	PerconaXtraDBTLSConfigCustom              = "custom"
-	PerconaXtraDBInitContainerName            = "px-init"
-	PerconaXtraDBCoordinatorContainerName     = "px-coordinator"
-	PerconaXtraDBRunScriptVolumeName          = "run-script"
-	PerconaXtraDBRunScriptVolumeMountPath     = "/run-script"
-	PerconaXtraDBInitScriptVolumeName         = "init-scripts"
-	PerconaXtraDBInitScriptVolumeMountPath    = "/scripts"
-	PerconaXtraDBContainerName                = ResourceSingularPerconaXtraDB
+	PerconaXtraDBClusterRecommendedVersion     = "5.7"
+	PerconaXtraDBMaxClusterNameLength          = 32
+	PerconaXtraDBStandaloneReplicas            = 1
+	PerconaXtraDBDefaultClusterSize            = 3
+	PerconaXtraDBDataMountPath                 = "/var/lib/mysql"
+	PerconaXtraDBDataLostFoundPath             = PerconaXtraDBDataMountPath + "/lost+found"
+	PerconaXtraDBInitDBVolumeName              = "initial-script"
+	PerconaXtraDBInitDBMountPath               = "/docker-entrypoint-initdb.d"
+	PerconaXtraDBCustomConfigMountPath         = "/etc/percona-server.conf.d/"
+	PerconaXtraDBClusterCustomConfigMountPath  = "/etc/mysql/custom.conf.d/"
+	PerconaXtraDBCustomConfigVolumeName        = "custom-config"
+	PerconaXtraDBTLSConfigCustom               = "custom"
+	PerconaXtraDBInitContainerName             = "px-init"
+	PerconaXtraDBCoordinatorContainerName      = "px-coordinator"
+	PerconaXtraDBRunScriptVolumeName           = "run-script"
+	PerconaXtraDBRunScriptVolumeMountPath      = "/run-script"
+	PerconaXtraDBInitScriptVolumeName          = "init-scripts"
+	PerconaXtraDBInitScriptVolumeMountPath     = "/scripts"
+	PerconaXtraDBContainerName                 = ResourceSingularPerconaXtraDB
+	PerconaXtraDBCertMountPath                 = "/etc/mysql/certs"
+	PerconaXtraDBExporterConfigFileName        = "exporter.cnf"
+	PerconaXtraDBGaleraClusterPrimaryComponent = "Primary"
+	PerconaXtraDBServerTLSVolumeName           = "tls-server-config"
+	PerconaXtraDBClientTLSVolumeName           = "tls-client-config"
+	PerconaXtraDBExporterTLSVolumeName         = "tls-metrics-exporter-config"
+	PerconaXtraDBMetricsExporterTLSVolumeName  = "metrics-exporter-config"
+	PerconaXtraDBMetricsExporterConfigPath     = "/etc/mysql/config/exporter"
 
 	// =========================== MariaDB Constants ============================
 	MariaDBMaxClusterNameLength         = 32
 	MariaDBStandaloneReplicas           = 1
 	MariaDBDefaultClusterSize           = 3
 	MariaDBDataMountPath                = "/var/lib/mysql"
-	MariaDBDataLostFoundPath            = MariaDBDataMountPath + "lost+found"
+	MariaDBDataLostFoundPath            = MariaDBDataMountPath + "/lost+found"
 	MariaDBInitDBVolumeName             = "initial-script"
 	MariaDBInitDBMountPath              = "/docker-entrypoint-initdb.d"
 	MariaDBCustomConfigMountPath        = "/etc/mysql/conf.d/"

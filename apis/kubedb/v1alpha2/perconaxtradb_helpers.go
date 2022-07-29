@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -257,7 +258,7 @@ func (p *PerconaXtraDB) SetTLSDefaults() {
 	}
 	p.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(p.Spec.TLS.Certificates, string(PerconaXtraDBServerCert), p.CertificateName(PerconaXtraDBServerCert))
 	p.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(p.Spec.TLS.Certificates, string(PerconaXtraDBClientCert), p.CertificateName(PerconaXtraDBClientCert))
-	p.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(p.Spec.TLS.Certificates, string(PerconaXtraDBMetricsExporterCert), p.CertificateName(PerconaXtraDBMetricsExporterCert))
+	p.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(p.Spec.TLS.Certificates, string(PerconaXtraDBExporterCert), p.CertificateName(PerconaXtraDBExporterCert))
 }
 
 // CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
@@ -306,4 +307,12 @@ func (p *PerconaXtraDB) ReplicasAreReady(lister appslister.StatefulSetLister) (b
 	// Desire number of statefulSets
 	expectedItems := 1
 	return checkReplicas(lister.StatefulSets(p.Namespace), labels.SelectorFromSet(p.OffshootLabels()), expectedItems)
+}
+
+func (p *PerconaXtraDB) CertMountPath(alias PerconaXtraDBCertificateAlias) string {
+	return filepath.Join(PerconaXtraDBCertMountPath, string(alias))
+}
+
+func (p *PerconaXtraDB) CertFilePath(certAlias PerconaXtraDBCertificateAlias, certFileName string) string {
+	return filepath.Join(p.CertMountPath(certAlias), certFileName)
 }
