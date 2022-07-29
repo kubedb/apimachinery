@@ -237,8 +237,8 @@ const (
 	MySQLInitialScriptVolumeName = "initial-script"
 	MySQLInitialScriptMountPath  = "/docker-entrypoint-initdb.d"
 
-	MySQLInitScriptVolumeName  = "init-scripts"
-	MySQLInitScriptVolumeMount = "/scripts"
+	MySQLInitScriptVolumeName      = "init-scripts"
+	MySQLInitScriptVolumeMountPath = "/scripts"
 
 	MySQLCustomConfigVolumeName = "custom-config"
 	MySQLCustomConfigMountPath  = "/etc/mysql/conf.d"
