@@ -144,9 +144,9 @@ func ValidateHealth(health *api.HealthCheckSpec) error {
 	return nil
 }
 
-func ValidateVolumes(userGivenVolumes []core.Volume, reservedVolumeNames []string) error {
+func ValidateVolumes(volumes []core.Volume, reservedVolumeNames []string) error {
 	for _, rv := range reservedVolumeNames {
-		for _, ugv := range userGivenVolumes {
+		for _, ugv := range volumes {
 			if ugv.Name == rv {
 				return errors.New("Cannot use a reserve volume name: " + rv)
 			}
@@ -155,16 +155,16 @@ func ValidateVolumes(userGivenVolumes []core.Volume, reservedVolumeNames []strin
 	return nil
 }
 
-func ValidateMountPaths(userGivenMounts []core.VolumeMount, reservedMountPaths []string) error {
+func ValidateMountPaths(volumeMounts []core.VolumeMount, reservedMountPaths []string) error {
 	trimPrefixSuffix := func(s string) string {
 		return strings.TrimSuffix(strings.TrimPrefix(s, "/"), "/") + "/"
 	}
-	for _, given := range userGivenMounts {
-		givenPath := trimPrefixSuffix(given.MountPath)
+	for _, vm := range volumeMounts {
+		givenPath := trimPrefixSuffix(vm.MountPath)
 		for _, our := range reservedMountPaths {
 			ourPath := trimPrefixSuffix(our)
 			if strings.HasPrefix(givenPath, ourPath) {
-				return errors.New("Cannot use mountPath " + given.MountPath + " because of reservedMountPaths path " + our)
+				return errors.New("Cannot use mountPath " + vm.MountPath + " because of reservedMountPaths path " + our)
 			}
 		}
 	}
