@@ -209,8 +209,12 @@ const (
 	MySQLTLSConfigFalse      = "false"
 	MySQLTLSConfigPreferred  = "preferred"
 
-	MySQLRouterContainerName           = "mysql-router"
-	MySQLCoordinatorContainerName      = "mysql-coordinator"
+	MySQLContainerName            = "mysql"
+	MySQLRouterContainerName      = "mysql-router"
+	MySQLRouterInitContainerName  = "mysql-router-init"
+	MySQLCoordinatorContainerName = "mysql-coordinator"
+	MySQLInitContainerName        = "mysql-init"
+
 	MySQLRouterInitScriptDirectoryName = "init-scripts"
 	MySQLRouterInitScriptDirectoryPath = "/scripts"
 	MySQLRouterConfigDirectoryName     = "router-config-secret"
@@ -222,6 +226,31 @@ const (
 	MySQLComponentKey    = MySQLKey + "/component"
 	MySQLComponentDB     = "database"
 	MySQLComponentRouter = "router"
+
+	// mysql volume and volume Mounts
+	MySQLTemporaryVolumeName      = "tmp"
+	MySQLTemporaryVolumeMountPath = "/tmp"
+
+	MySQLDataVolumeName      = "data"
+	MySQLDataVolumeMountPath = "/var/lib/mysql"
+
+	MySQLInitialScriptVolumeName = "initial-script"
+	MySQLInitialScriptMountPath  = "/docker-entrypoint-initdb.d"
+
+	MySQLInitScriptVolumeName  = "init-scripts"
+	MySQLInitScriptVolumeMount = "/scripts"
+
+	MySQLCustomConfigVolumeName = "custom-config"
+	MySQLCustomConfigMountPath  = "/etc/mysql/conf.d"
+
+	MySQLTLSVolumeName      = "tls-volume"
+	MySQLTLSVolumeMountPath = "/etc/mysql/certs"
+
+	MySQLExporterTLSVolumeName      = "exporter-tls-volume"
+	MySQLExporterTLSVolumeMountPath = "/etc/mysql/certs"
+
+	MySQLSourceCAVolumeName      = "source-ca"
+	MySQLSourceCAVolumeMountPath = "/etc/mysql/server/certs"
 
 	// =========================== PerconaXtraDB Constants ============================
 	PerconaXtraDBClusterRecommendedVersion     = "5.7"
