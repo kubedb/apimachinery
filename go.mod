@@ -35,7 +35,7 @@ require (
 	kmodules.xyz/custom-resources v0.24.0
 	kmodules.xyz/monitoring-agent-api v0.24.0
 	kmodules.xyz/objectstore-api v0.24.0
-	kmodules.xyz/offshoot-api v0.24.2-0.20220727205020-40998648d0f6
+	kmodules.xyz/offshoot-api v0.24.2
 	kmodules.xyz/webhook-runtime v0.24.0
 	sigs.k8s.io/controller-runtime v0.12.1
 	sigs.k8s.io/yaml v1.3.0
