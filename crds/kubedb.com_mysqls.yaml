@@ -2646,6 +2646,9 @@ spec:
                         type: string
                       shareProcessNamespace:
                         type: boolean
+                      terminationGracePeriodSeconds:
+                        format: int64
+                        type: integer
                       tolerations:
                         items:
                           properties:
@@ -5197,6 +5200,9 @@ spec:
                                     type: string
                                   shareProcessNamespace:
                                     type: boolean
+                                  terminationGracePeriodSeconds:
+                                    format: int64
+                                    type: integer
                                   tolerations:
                                     items:
                                       properties:
