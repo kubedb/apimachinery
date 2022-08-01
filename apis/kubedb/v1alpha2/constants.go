@@ -286,26 +286,36 @@ const (
 	PerconaXtraDBExporterTLSVolumeName         = "tls-metrics-exporter-config"
 	PerconaXtraDBMetricsExporterTLSVolumeName  = "metrics-exporter-config"
 	PerconaXtraDBMetricsExporterConfigPath     = "/etc/mysql/config/exporter"
+	PerconaXtraDBDataVolumeName                = "data"
 
 	// =========================== MariaDB Constants ============================
-	MariaDBMaxClusterNameLength         = 32
-	MariaDBStandaloneReplicas           = 1
-	MariaDBDefaultClusterSize           = 3
-	MariaDBDataMountPath                = "/var/lib/mysql"
-	MariaDBDataLostFoundPath            = MariaDBDataMountPath + "/lost+found"
-	MariaDBInitDBVolumeName             = "initial-script"
-	MariaDBInitDBMountPath              = "/docker-entrypoint-initdb.d"
-	MariaDBCustomConfigMountPath        = "/etc/mysql/conf.d/"
-	MariaDBClusterCustomConfigMountPath = "/etc/mysql/custom.conf.d/"
-	MariaDBCustomConfigVolumeName       = "custom-config"
-	MariaDBTLSConfigCustom              = "custom"
-	MariaDBInitContainerName            = "mariadb-init"
-	MariaDBCoordinatorContainerName     = "md-coordinator"
-	MariaDBRunScriptVolumeName          = "run-script"
-	MariaDBRunScriptVolumeMountPath     = "/run-script"
-	MariaDBInitScriptVolumeName         = "init-scripts"
-	MariaDBInitScriptVolumeMountPath    = "/scripts"
-	MariaDBContainerName                = ResourceSingularMariaDB
+	MariaDBMaxClusterNameLength          = 32
+	MariaDBStandaloneReplicas            = 1
+	MariaDBDefaultClusterSize            = 3
+	MariaDBDataMountPath                 = "/var/lib/mysql"
+	MariaDBDataLostFoundPath             = MariaDBDataMountPath + "/lost+found"
+	MariaDBInitDBVolumeName              = "initial-script"
+	MariaDBInitDBMountPath               = "/docker-entrypoint-initdb.d"
+	MariaDBCustomConfigMountPath         = "/etc/mysql/conf.d/"
+	MariaDBClusterCustomConfigMountPath  = "/etc/mysql/custom.conf.d/"
+	MariaDBCustomConfigVolumeName        = "custom-config"
+	MariaDBTLSConfigCustom               = "custom"
+	MariaDBInitContainerName             = "mariadb-init"
+	MariaDBCoordinatorContainerName      = "md-coordinator"
+	MariaDBRunScriptVolumeName           = "run-script"
+	MariaDBRunScriptVolumeMountPath      = "/run-script"
+	MariaDBInitScriptVolumeName          = "init-scripts"
+	MariaDBInitScriptVolumeMountPath     = "/scripts"
+	MariaDBContainerName                 = ResourceSingularMariaDB
+	MariaDBCertMountPath                 = "/etc/mysql/certs"
+	MariaDBExporterConfigFileName        = "exporter.cnf"
+	MariaDBGaleraClusterPrimaryComponent = "Primary"
+	MariaDBServerTLSVolumeName           = "tls-server-config"
+	MariaDBClientTLSVolumeName           = "tls-client-config"
+	MariaDBExporterTLSVolumeName         = "tls-metrics-exporter-config"
+	MariaDBMetricsExporterTLSVolumeName  = "metrics-exporter-config"
+	MariaDBMetricsExporterConfigPath     = "/etc/mysql/config/exporter"
+	MariaDBDataVolumeName                = "data"
 
 	// =========================== PostgreSQL Constants ============================
 	PostgresDatabasePortName         = "db"

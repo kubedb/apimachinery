@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -262,7 +263,7 @@ func (m *MariaDB) SetTLSDefaults() {
 	}
 	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MariaDBServerCert), m.CertificateName(MariaDBServerCert))
 	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MariaDBClientCert), m.CertificateName(MariaDBClientCert))
-	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MariaDBMetricsExporterCert), m.CertificateName(MariaDBMetricsExporterCert))
+	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MariaDBExporterCert), m.CertificateName(MariaDBExporterCert))
 }
 
 func (m *MariaDBSpec) GetPersistentSecrets() []string {
@@ -306,4 +307,12 @@ func (m *MariaDB) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, s
 
 func (m *MariaDB) InlineConfigSecretName() string {
 	return meta_util.NameWithSuffix(m.Name, "inline")
+}
+
+func (m *MariaDB) CertMountPath(alias MariaDBCertificateAlias) string {
+	return filepath.Join(PerconaXtraDBCertMountPath, string(alias))
+}
+
+func (m *MariaDB) CertFilePath(certAlias MariaDBCertificateAlias, certFileName string) string {
+	return filepath.Join(m.CertMountPath(certAlias), certFileName)
 }
