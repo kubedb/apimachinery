@@ -194,8 +194,13 @@ const (
 	MySQLDatabasePort                      = 3306
 	MySQLRouterReadWritePort               = 6446
 	MySQLRouterReadOnlyPort                = 6447
-	MySQLGroupComPort                      = 33060
-	MySQLMaxGroupMembers                   = 9
+
+	MySQLCoordinatorClientPort = 2379
+	MySQLCoordinatorPort       = 2380
+	MySQLCoordinatorStatus     = "Coordinator/Status"
+
+	MySQLGroupComPort    = 33060
+	MySQLMaxGroupMembers = 9
 	// The recommended MySQL server version for group replication (GR)
 	MySQLGRRecommendedVersion = "8.0.23"
 	MySQLDefaultGroupSize     = 3
@@ -228,6 +233,7 @@ const (
 	MySQLComponentRouter = "router"
 
 	// mysql volume and volume Mounts
+
 	MySQLVolumeNameTemp      = "tmp"
 	MySQLVolumeMountPathTemp = "/tmp"
 
