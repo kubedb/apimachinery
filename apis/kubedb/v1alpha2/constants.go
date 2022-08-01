@@ -194,8 +194,13 @@ const (
 	MySQLDatabasePort                      = 3306
 	MySQLRouterReadWritePort               = 6446
 	MySQLRouterReadOnlyPort                = 6447
-	MySQLGroupComPort                      = 33060
-	MySQLMaxGroupMembers                   = 9
+
+	MySQLCoordinatorClientPort = 2379
+	MySQLCoordinatorPort       = 2380
+	MySQLCoordinatorStatus     = "Coordinator/Status"
+
+	MySQLGroupComPort    = 33060
+	MySQLMaxGroupMembers = 9
 	// The recommended MySQL server version for group replication (GR)
 	MySQLGRRecommendedVersion = "8.0.23"
 	MySQLDefaultGroupSize     = 3
@@ -209,8 +214,12 @@ const (
 	MySQLTLSConfigFalse      = "false"
 	MySQLTLSConfigPreferred  = "preferred"
 
-	MySQLRouterContainerName           = "mysql-router"
-	MySQLCoordinatorContainerName      = "mysql-coordinator"
+	MySQLContainerName            = "mysql"
+	MySQLRouterContainerName      = "mysql-router"
+	MySQLRouterInitContainerName  = "mysql-router-init"
+	MySQLCoordinatorContainerName = "mysql-coordinator"
+	MySQLInitContainerName        = "mysql-init"
+
 	MySQLRouterInitScriptDirectoryName = "init-scripts"
 	MySQLRouterInitScriptDirectoryPath = "/scripts"
 	MySQLRouterConfigDirectoryName     = "router-config-secret"
@@ -222,6 +231,32 @@ const (
 	MySQLComponentKey    = MySQLKey + "/component"
 	MySQLComponentDB     = "database"
 	MySQLComponentRouter = "router"
+
+	// mysql volume and volume Mounts
+
+	MySQLVolumeNameTemp      = "tmp"
+	MySQLVolumeMountPathTemp = "/tmp"
+
+	MySQLVolumeNameData      = "data"
+	MySQLVolumeMountPathData = "/var/lib/mysql"
+
+	MySQLVolumeNameInitialScript      = "initial-script"
+	MySQLVolumeMountPathInitialScript = "/docker-entrypoint-initdb.d"
+
+	MySQLVolumeNameInitScript      = "init-scripts"
+	MySQLVolumeMountPathInitScript = "/scripts"
+
+	MySQLVolumeNameCustomConfig      = "custom-config"
+	MySQLVolumeMountPathCustomConfig = "/etc/mysql/conf.d"
+
+	MySQLVolumeNameTLS      = "tls-volume"
+	MySQLVolumeMountPathTLS = "/etc/mysql/certs"
+
+	MySQLVolumeNameExporterTLS      = "exporter-tls-volume"
+	MySQLVolumeMountPathExporterTLS = "/etc/mysql/certs"
+
+	MySQLVolumeNameSourceCA      = "source-ca"
+	MySQLVolumeMountPathSourceCA = "/etc/mysql/server/certs"
 
 	// =========================== PerconaXtraDB Constants ============================
 	PerconaXtraDBClusterRecommendedVersion     = "5.7"
