@@ -126,9 +126,9 @@ type MariaDBSpec struct {
 type MariaDBCertificateAlias string
 
 const (
-	MariaDBServerCert          MariaDBCertificateAlias = "server"
-	MariaDBClientCert          MariaDBCertificateAlias = "client"
-	MariaDBMetricsExporterCert MariaDBCertificateAlias = "metrics-exporter"
+	MariaDBServerCert   MariaDBCertificateAlias = "server"
+	MariaDBClientCert   MariaDBCertificateAlias = "client"
+	MariaDBExporterCert MariaDBCertificateAlias = "metrics-exporter"
 )
 
 type MariaDBStatus struct {
