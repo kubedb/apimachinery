@@ -72,6 +72,7 @@ const (
 	ScriptNameConfig     MongoShellScriptName = "configdb.sh"
 	ScriptNameReplicaset MongoShellScriptName = "replicaset.sh"
 	ScriptNameArbiter    MongoShellScriptName = "arbiter.sh"
+	ScriptNameAHidden    MongoShellScriptName = "hidden.sh"
 )
 
 func (m MongoDB) OffshootName() string {
@@ -147,11 +148,25 @@ func (m MongoDB) ArbiterNodeName() string {
 	return fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeArbiter)
 }
 
+func (m MongoDB) HiddenNodeName() string {
+	if m.Spec.ReplicaSet == nil || m.Spec.Hidden == nil {
+		return ""
+	}
+	return fmt.Sprintf("%v-%v", m.OffshootName(), NodeTypeHidden)
+}
+
 func (m MongoDB) ArbiterShardNodeName(nodeNum int32) string {
 	if m.Spec.ShardTopology == nil || m.Spec.Arbiter == nil {
 		return ""
 	}
 	return fmt.Sprintf("%v-%v", m.ShardNodeName(nodeNum), NodeTypeArbiter)
+}
+
+func (m MongoDB) HiddenShardNodeName(nodeNum int32) string {
+	if m.Spec.ShardTopology == nil || m.Spec.Hidden == nil {
+		return ""
+	}
+	return fmt.Sprintf("%v-%v", m.ShardNodeName(nodeNum), NodeTypeHidden)
 }
 
 func (m MongoDB) OffshootSelectors() map[string]string {
@@ -168,6 +183,12 @@ func (m MongoDB) OffshootSelectorsWhenArbiter() map[string]string {
 	})
 }
 
+func (m MongoDB) OffshootSelectorsWhenHidden() map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
+		MongoDBTypeLabelKey: NodeTypeHidden,
+	})
+}
+
 func (m MongoDB) ShardSelectors(nodeNum int32) map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
 		MongoDBShardLabelKey: m.ShardNodeName(nodeNum),
@@ -175,6 +196,12 @@ func (m MongoDB) ShardSelectors(nodeNum int32) map[string]string {
 }
 
 func (m MongoDB) ShardSelectorsWhenArbiter(nodeNum int32) map[string]string {
+	return meta_util.OverwriteKeys(m.ShardSelectors(nodeNum), map[string]string{
+		MongoDBTypeLabelKey: NodeTypeShard,
+	})
+}
+
+func (m MongoDB) ShardSelectorsWhenHidden(nodeNum int32) map[string]string {
 	return meta_util.OverwriteKeys(m.ShardSelectors(nodeNum), map[string]string{
 		MongoDBTypeLabelKey: NodeTypeShard,
 	})
@@ -198,9 +225,21 @@ func (m MongoDB) ArbiterSelectors() map[string]string {
 	})
 }
 
+func (m MongoDB) HiddenNodeSelectors() map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
+		MongoDBTypeLabelKey: NodeTypeHidden,
+	})
+}
+
 func (m MongoDB) ArbiterShardSelectors(nodeNum int32) map[string]string {
 	return meta_util.OverwriteKeys(m.ShardSelectors(nodeNum), map[string]string{
 		MongoDBTypeLabelKey: NodeTypeArbiter,
+	})
+}
+
+func (m MongoDB) HiddenNodeShardSelectors(nodeNum int32) map[string]string {
+	return meta_util.OverwriteKeys(m.ShardSelectors(nodeNum), map[string]string{
+		MongoDBTypeLabelKey: NodeTypeHidden,
 	})
 }
 
@@ -210,6 +249,10 @@ func (m MongoDB) OffshootLabels() map[string]string {
 
 func (m MongoDB) OffshootLabelsWhenArbiter() map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.OffshootSelectorsWhenArbiter())
+}
+
+func (m MongoDB) OffshootLabelsWhenHidden() map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.OffshootSelectorsWhenHidden())
 }
 
 func (m MongoDB) PodLabels(podTemplateLabels map[string]string, extraLabels ...map[string]string) map[string]string {
@@ -238,6 +281,10 @@ func (m MongoDB) ShardLabelsWhenArbiter(nodeNum int32) map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ShardSelectorsWhenArbiter(nodeNum))
 }
 
+func (m MongoDB) ShardLabelsWhenHidden(nodeNum int32) map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ShardSelectorsWhenHidden(nodeNum))
+}
+
 func (m MongoDB) ConfigSvrLabels() map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ConfigSvrSelectors())
 }
@@ -250,8 +297,16 @@ func (m MongoDB) ArbiterLabels() map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ArbiterSelectors())
 }
 
+func (m MongoDB) HiddenNodeLabels() map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.HiddenNodeSelectors())
+}
+
 func (m MongoDB) ArbiterShardLabels(nodeNum int32) map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ArbiterShardSelectors(nodeNum))
+}
+
+func (m MongoDB) HiddenNodeShardLabels(nodeNum int32) map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.HiddenNodeShardSelectors(nodeNum))
 }
 
 func (m MongoDB) GetCorrespondingReplicaStsName(arbStsName string) string {
@@ -261,8 +316,19 @@ func (m MongoDB) GetCorrespondingReplicaStsName(arbStsName string) string {
 	return arbStsName[:strings.LastIndex(arbStsName, "-")]
 }
 
+func (m MongoDB) GetCorrespondingReplicaStsNameFromHidden(hiddenStsName string) string {
+	if !strings.HasSuffix(hiddenStsName, "-"+NodeTypeHidden) {
+		panic(fmt.Sprintf("%s does not have -%s as suffix", hiddenStsName, NodeTypeHidden))
+	}
+	return hiddenStsName[:strings.LastIndex(hiddenStsName, "-")]
+}
+
 func (m MongoDB) GetCorrespondingArbiterStsName(replStsName string) string {
 	return replStsName + "-" + NodeTypeArbiter
+}
+
+func (m MongoDB) GetCorrespondingHiddenStsName(replStsName string) string {
+	return replStsName + "-" + NodeTypeHidden
 }
 
 func (m MongoDB) GetShardNumber(shardName string) int {
@@ -310,13 +376,16 @@ func (m MongoDB) ServiceName() string {
 }
 
 // Governing Service Name. Here, name parameter is either
-// OffshootName, ShardNodeName, ConfigSvrNodeName or ArbiterNodeName
+// OffshootName, ShardNodeName, ConfigSvrNodeName , ArbiterNodeName or HiddenNodeName
 func (m MongoDB) GoverningServiceName(name string) string {
 	if name == "" {
 		panic(fmt.Sprintf("StatefulSet name is missing for MongoDB %s/%s", m.Namespace, m.Name))
 	}
 	if strings.HasSuffix(name, "-"+NodeTypeArbiter) {
 		name = m.GetCorrespondingReplicaStsName(name)
+	}
+	if strings.HasSuffix(name, "-"+NodeTypeHidden) {
+		name = m.GetCorrespondingReplicaStsNameFromHidden(name)
 	}
 	return name + "-pods"
 }
@@ -346,6 +415,10 @@ func (m MongoDB) Hosts() []string {
 			s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.ArbiterNodeName(), m.GoverningServiceName(m.OffshootName()), m.Namespace, MongoDBDatabasePort)
 			hosts = append(hosts, s)
 		}
+		if m.Spec.Hidden != nil {
+			s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.HiddenNodeName(), m.GoverningServiceName(m.OffshootName()), m.Namespace, MongoDBDatabasePort)
+			hosts = append(hosts, s)
+		}
 	}
 	return hosts
 }
@@ -369,6 +442,10 @@ func (m MongoDB) ShardHosts(nodeNum int32) []string {
 	}
 	if m.Spec.Arbiter != nil {
 		s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.ArbiterShardNodeName(nodeNum), m.GoverningServiceName(m.ShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
+		hosts = append(hosts, s)
+	}
+	if m.Spec.Hidden != nil {
+		s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.HiddenShardNodeName(nodeNum), m.GoverningServiceName(m.ShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
 		hosts = append(hosts, s)
 	}
 	return hosts
@@ -532,6 +609,9 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		if m.Spec.Arbiter != nil {
 			apis.SetDefaultResourceLimits(&m.Spec.Arbiter.PodTemplate.Spec.Resources, DefaultResources)
 		}
+		if m.Spec.Hidden != nil {
+			apis.SetDefaultResourceLimits(&m.Spec.Hidden.PodTemplate.Spec.Resources, DefaultResources)
+		}
 
 		if m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle == nil {
 			m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle = new(core.Lifecycle)
@@ -564,6 +644,9 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		if m.Spec.Arbiter != nil {
 			m.setDefaultProbes(&m.Spec.Arbiter.PodTemplate, mgVersion, true)
 		}
+		if m.Spec.Hidden != nil {
+			m.setDefaultProbes(&m.Spec.Hidden.PodTemplate, mgVersion)
+		}
 
 		// set default affinity (PodAntiAffinity)
 		shardLabels := m.OffshootSelectors()
@@ -572,6 +655,9 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		if m.Spec.Arbiter != nil {
 			// the labels are same as the shard
 			m.setDefaultAffinity(&m.Spec.Arbiter.PodTemplate, shardLabels, topology)
+		}
+		if m.Spec.Hidden != nil {
+			m.setDefaultAffinity(&m.Spec.Hidden.PodTemplate, shardLabels, topology)
 		}
 
 		configServerLabels := m.OffshootSelectors()
@@ -604,6 +690,11 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 			m.setDefaultProbes(&m.Spec.Arbiter.PodTemplate, mgVersion, true)
 			m.setDefaultAffinity(&m.Spec.Arbiter.PodTemplate, m.OffshootSelectors(), topology)
 			apis.SetDefaultResourceLimits(&m.Spec.Arbiter.PodTemplate.Spec.Resources, DefaultResources)
+		}
+		if m.Spec.Hidden != nil {
+			m.setDefaultProbes(&m.Spec.Hidden.PodTemplate, mgVersion)
+			m.setDefaultAffinity(&m.Spec.Hidden.PodTemplate, m.OffshootSelectors(), topology)
+			apis.SetDefaultResourceLimits(&m.Spec.Hidden.PodTemplate.Spec.Resources, DefaultResources)
 		}
 	}
 

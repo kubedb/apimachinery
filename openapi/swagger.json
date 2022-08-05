@@ -30878,6 +30878,10 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
         },
+        "hidden": {
+          "description": "Hidden component of mongodb which is invisible to client applications More info: https://www.mongodb.com/docs/manual/core/replica-set-hidden-member/",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoHiddenNode"
+        },
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
@@ -30965,6 +30969,33 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoHiddenNode": {
+      "type": "object",
+      "properties": {
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "ephemeralStorage": {
+          "description": "EphemeralStorage spec to specify the configuration of ephemeral storage type.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.EmptyDirVolumeSource"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "replicas": {
+          "description": "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "storage": {
+          "description": "Storage to specify how storage shall be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
         }
       }
     },

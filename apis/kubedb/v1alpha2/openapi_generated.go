@@ -459,6 +459,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBShardingTopology":        schema_apimachinery_apis_kubedb_v1alpha2_MongoDBShardingTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBSpec":                    schema_apimachinery_apis_kubedb_v1alpha2_MongoDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBStatus":                  schema_apimachinery_apis_kubedb_v1alpha2_MongoDBStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoHiddenNode":                schema_apimachinery_apis_kubedb_v1alpha2_MongoHiddenNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQL":                          schema_apimachinery_apis_kubedb_v1alpha2_MySQL(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLGroupSpec":                 schema_apimachinery_apis_kubedb_v1alpha2_MySQLGroupSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLInnoDBClusterSpec":         schema_apimachinery_apis_kubedb_v1alpha2_MySQLInnoDBClusterSpec(ref),
@@ -23130,6 +23131,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoDBSpec(ref common.ReferenceCa
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoArbiterNode"),
 						},
 					},
+					"hidden": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Hidden component of mongodb which is invisible to client applications More info: https://www.mongodb.com/docs/manual/core/replica-set-hidden-member/",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoHiddenNode"),
+						},
+					},
 					"healthChecker": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
@@ -23142,7 +23149,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoDBSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoArbiterNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBReplicaSet", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBShardingTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoArbiterNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBReplicaSet", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBShardingTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoHiddenNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
 
@@ -23185,6 +23192,52 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoDBStatus(ref common.Reference
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MongoHiddenNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"ephemeralStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EphemeralStorage spec to specify the configuration of ephemeral storage type.",
+							Ref:         ref("k8s.io/api/core/v1.EmptyDirVolumeSource"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
 	}
 }
 
