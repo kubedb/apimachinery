@@ -32655,6 +32655,10 @@
         "type"
       ],
       "properties": {
+        "apply": {
+          "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+          "type": "string"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of Elasticsearch",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchCustomConfigurationSpec"
@@ -32927,6 +32931,10 @@
         "type"
       ],
       "properties": {
+        "apply": {
+          "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+          "type": "string"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of Etcd",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdCustomConfigurationSpec"
@@ -33098,6 +33106,10 @@
         "type"
       ],
       "properties": {
+        "apply": {
+          "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+          "type": "string"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of Memcached",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedCustomConfigurationSpec"
@@ -33599,6 +33611,10 @@
         "type"
       ],
       "properties": {
+        "apply": {
+          "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+          "type": "string"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of MySQL",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfigurationSpec"
@@ -33855,6 +33871,10 @@
         "type"
       ],
       "properties": {
+        "apply": {
+          "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+          "type": "string"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of PerconaXtraDB",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBCustomConfigurationSpec"
@@ -34043,6 +34063,10 @@
         "type"
       ],
       "properties": {
+        "apply": {
+          "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+          "type": "string"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of Postgres",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresCustomConfigurationSpec"
@@ -34280,6 +34304,10 @@
         "type"
       ],
       "properties": {
+        "apply": {
+          "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+          "type": "string"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of ProxySQL",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLCustomConfigurationSpec"
@@ -34482,6 +34510,10 @@
         "type"
       ],
       "properties": {
+        "apply": {
+          "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+          "type": "string"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of Redis",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisCustomConfigurationSpec"

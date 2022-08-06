@@ -68,6 +68,9 @@ type PgBouncerOpsRequestSpec struct {
 	TLS *TLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
+	// ApplyOption is to control the execution of OpsRequest depending on the database state.
+	// +kubebuilder:default="IfReady"
+	Apply ApplyOption `json:"apply,omitempty"`
 }
 
 // PgBouncerReplicaReadinessCriteria is the criteria for checking readiness of a PgBouncer pod
