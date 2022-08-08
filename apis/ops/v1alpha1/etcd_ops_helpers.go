@@ -55,3 +55,13 @@ func (e EtcdOpsRequest) ResourcePlural() string {
 func (e EtcdOpsRequest) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &EtcdOpsRequest{}
+
+func (e *EtcdOpsRequest) GetStatus() OpsRequestStatus {
+	return e.Status
+}
+
+func (e *EtcdOpsRequest) SetStatus(s OpsRequestStatus) {
+	e.Status = s
+}

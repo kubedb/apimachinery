@@ -55,3 +55,13 @@ func (p PgBouncerOpsRequest) ResourcePlural() string {
 func (p PgBouncerOpsRequest) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &PgBouncerOpsRequest{}
+
+func (e *PgBouncerOpsRequest) GetStatus() OpsRequestStatus {
+	return e.Status
+}
+
+func (e *PgBouncerOpsRequest) SetStatus(s OpsRequestStatus) {
+	e.Status = s
+}

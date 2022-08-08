@@ -51,3 +51,13 @@ func (p ProxySQLOpsRequest) ResourceSingular() string {
 func (p ProxySQLOpsRequest) ResourcePlural() string {
 	return ResourcePluralProxySQLOpsRequest
 }
+
+var _ StatusAccessor = &ProxySQLOpsRequest{}
+
+func (e *ProxySQLOpsRequest) GetStatus() OpsRequestStatus {
+	return e.Status
+}
+
+func (e *ProxySQLOpsRequest) SetStatus(s OpsRequestStatus) {
+	e.Status = s
+}

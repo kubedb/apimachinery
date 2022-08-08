@@ -55,3 +55,13 @@ func (m MemcachedOpsRequest) ResourcePlural() string {
 func (m MemcachedOpsRequest) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &MemcachedOpsRequest{}
+
+func (e *MemcachedOpsRequest) GetStatus() OpsRequestStatus {
+	return e.Status
+}
+
+func (e *MemcachedOpsRequest) SetStatus(s OpsRequestStatus) {
+	e.Status = s
+}

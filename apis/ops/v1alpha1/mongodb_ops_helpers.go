@@ -55,3 +55,13 @@ func (m MongoDBOpsRequest) ResourcePlural() string {
 func (m MongoDBOpsRequest) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &MongoDBOpsRequest{}
+
+func (e *MongoDBOpsRequest) GetStatus() OpsRequestStatus {
+	return e.Status
+}
+
+func (e *MongoDBOpsRequest) SetStatus(s OpsRequestStatus) {
+	e.Status = s
+}

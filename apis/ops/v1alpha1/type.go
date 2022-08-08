@@ -205,6 +205,19 @@ const (
 	TempIniFilesPath = "/tmp/kubedb-custom-ini-files"
 )
 
+type OpsRequestStatus struct {
+	// Specifies the current phase of the ops request
+	// +optional
+	Phase OpsRequestPhase `json:"phase,omitempty"`
+	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
+	// resource's generation, which is updated on mutation by the API Server.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
+	// Conditions applied to the request, such as approval or denial.
+	// +optional
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+}
+
 // +kubebuilder:validation:Enum=Pending;Progressing;Successful;WaitingForApproval;Failed;Approved;Denied;Skipped
 type OpsRequestPhase string
 
@@ -289,3 +302,8 @@ const (
 	ApplyOptionIfReady ApplyOption = "IfReady"
 	ApplyOptionAlways  ApplyOption = "Always"
 )
+
+type StatusAccessor interface {
+	GetStatus() OpsRequestStatus
+	SetStatus(_ OpsRequestStatus)
+}

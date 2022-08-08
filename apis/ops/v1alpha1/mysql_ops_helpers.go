@@ -57,6 +57,16 @@ func (m MySQLOpsRequest) ValidateSpecs() error {
 	return nil
 }
 
+var _ StatusAccessor = &MySQLOpsRequest{}
+
+func (e *MySQLOpsRequest) GetStatus() OpsRequestStatus {
+	return e.Status
+}
+
+func (e *MySQLOpsRequest) SetStatus(s OpsRequestStatus) {
+	e.Status = s
+}
+
 func (m MySQLOpsRequest) GetKey() string {
 	return m.Namespace + "/" + m.Name
 }

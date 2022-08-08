@@ -55,3 +55,13 @@ func (r RedisOpsRequest) ResourcePlural() string {
 func (r RedisOpsRequest) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &RedisOpsRequest{}
+
+func (e *RedisOpsRequest) GetStatus() OpsRequestStatus {
+	return e.Status
+}
+
+func (e *RedisOpsRequest) SetStatus(s OpsRequestStatus) {
+	e.Status = s
+}

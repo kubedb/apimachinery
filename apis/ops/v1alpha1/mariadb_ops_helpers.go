@@ -76,3 +76,13 @@ func (m MariaDBOpsRequest) OffshootLabels() map[string]string {
 	out := m.OffshootSelectors()
 	return meta_util.FilterKeys(GenericKey, out, m.Labels)
 }
+
+var _ StatusAccessor = &MariaDBOpsRequest{}
+
+func (e *MariaDBOpsRequest) GetStatus() OpsRequestStatus {
+	return e.Status
+}
+
+func (e *MariaDBOpsRequest) SetStatus(s OpsRequestStatus) {
+	e.Status = s
+}

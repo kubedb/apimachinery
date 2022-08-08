@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 const (
@@ -44,8 +43,8 @@ const (
 type PerconaXtraDBOpsRequest struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              PerconaXtraDBOpsRequestSpec   `json:"spec,omitempty"`
-	Status            PerconaXtraDBOpsRequestStatus `json:"status,omitempty"`
+	Spec              PerconaXtraDBOpsRequestSpec `json:"spec,omitempty"`
+	Status            OpsRequestStatus            `json:"status,omitempty"`
 }
 
 // PerconaXtraDBOpsRequestSpec is the spec for PerconaXtraDBOpsRequest
@@ -100,18 +99,6 @@ type PerconaXtraDBCustomConfiguration struct {
 	ConfigMap *core.LocalObjectReference `json:"configMap,omitempty"`
 	Data      map[string]string          `json:"data,omitempty"`
 	Remove    bool                       `json:"remove,omitempty"`
-}
-
-// PerconaXtraDBOpsRequestStatus is the status for PerconaXtraDBOpsRequest
-type PerconaXtraDBOpsRequestStatus struct {
-	Phase OpsRequestPhase `json:"phase,omitempty"`
-	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
-	// resource's generation, which is updated on mutation by the API Server.
-	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
-	// Conditions applied to the request, such as approval or denial.
-	// +optional
-	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

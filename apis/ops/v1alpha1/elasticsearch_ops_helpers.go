@@ -55,3 +55,13 @@ func (e ElasticsearchOpsRequest) ResourcePlural() string {
 func (e ElasticsearchOpsRequest) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &ElasticsearchOpsRequest{}
+
+func (e *ElasticsearchOpsRequest) GetStatus() OpsRequestStatus {
+	return e.Status
+}
+
+func (e *ElasticsearchOpsRequest) SetStatus(s OpsRequestStatus) {
+	e.Status = s
+}

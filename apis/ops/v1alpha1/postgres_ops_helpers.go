@@ -55,3 +55,13 @@ func (p PostgresOpsRequest) ResourcePlural() string {
 func (p PostgresOpsRequest) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &PostgresOpsRequest{}
+
+func (e *PostgresOpsRequest) GetStatus() OpsRequestStatus {
+	return e.Status
+}
+
+func (e *PostgresOpsRequest) SetStatus(s OpsRequestStatus) {
+	e.Status = s
+}

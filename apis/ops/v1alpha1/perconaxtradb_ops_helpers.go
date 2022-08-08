@@ -55,3 +55,13 @@ func (p PerconaXtraDBOpsRequest) ResourcePlural() string {
 func (p PerconaXtraDBOpsRequest) ValidateSpecs() error {
 	return nil
 }
+
+var _ StatusAccessor = &PerconaXtraDBOpsRequest{}
+
+func (e *PerconaXtraDBOpsRequest) GetStatus() OpsRequestStatus {
+	return e.Status
+}
+
+func (e *PerconaXtraDBOpsRequest) SetStatus(s OpsRequestStatus) {
+	e.Status = s
+}

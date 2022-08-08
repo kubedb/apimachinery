@@ -32603,7 +32603,7 @@
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchOpsRequestStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.OpsRequestStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -32700,29 +32700,6 @@
         "volumeExpansion": {
           "description": "Specifies information necessary for volume expansion",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVolumeExpansionSpec"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchOpsRequestStatus": {
-      "description": "ElasticsearchOpsRequestStatus is the status for ElasticsearchOpsRequest",
-      "type": "object",
-      "properties": {
-        "conditions": {
-          "description": "Conditions applied to the request, such as approval or denial.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
-          }
-        },
-        "observedGeneration": {
-          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "phase": {
-          "description": "Specifies the current phase of the ops request",
-          "type": "string"
         }
       }
     },
@@ -32879,7 +32856,7 @@
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdOpsRequestStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.OpsRequestStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -32975,28 +32952,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdOpsRequestStatus": {
-      "description": "EtcdOpsRequestStatus is the status for EtcdOpsRequest",
-      "type": "object",
-      "properties": {
-        "conditions": {
-          "description": "Conditions applied to the request, such as approval or denial.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
-          }
-        },
-        "observedGeneration": {
-          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "phase": {
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdReplicaReadinessCriteria": {
       "description": "EtcdReplicaReadinessCriteria is the criteria for checking readiness of a Etcd pod after updating, horizontal scaling etc.",
       "type": "object"
@@ -33054,7 +33009,7 @@
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedOpsRequestStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.OpsRequestStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -33147,28 +33102,6 @@
         "volumeExpansion": {
           "description": "Specifies information necessary for volume expansion",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedVolumeExpansionSpec"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedOpsRequestStatus": {
-      "description": "MemcachedOpsRequestStatus is the status for MemcachedOpsRequest",
-      "type": "object",
-      "properties": {
-        "conditions": {
-          "description": "Conditions applied to the request, such as approval or denial.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
-          }
-        },
-        "observedGeneration": {
-          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "phase": {
-          "type": "string"
         }
       }
     },
@@ -33286,7 +33219,7 @@
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBOpsRequestStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.OpsRequestStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -33391,28 +33324,6 @@
         "volumeExpansion": {
           "description": "Specifies information necessary for volume expansion",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBVolumeExpansionSpec"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBOpsRequestStatus": {
-      "description": "MongoDBOpsRequestStatus is the status for MongoDBOpsRequest",
-      "type": "object",
-      "properties": {
-        "conditions": {
-          "description": "Conditions applied to the request, such as approval or denial.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
-          }
-        },
-        "observedGeneration": {
-          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "phase": {
-          "type": "string"
         }
       }
     },
@@ -33559,7 +33470,7 @@
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLOpsRequestStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.OpsRequestStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -33656,28 +33567,6 @@
         "volumeExpansion": {
           "description": "Specifies information necessary for volume expansion",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVolumeExpansionSpec"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLOpsRequestStatus": {
-      "description": "MySQLOpsRequestStatus is the status for MySQLOpsRequest",
-      "type": "object",
-      "properties": {
-        "conditions": {
-          "description": "Conditions applied to the request, such as approval or denial.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
-          }
-        },
-        "observedGeneration": {
-          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "phase": {
-          "type": "string"
         }
       }
     },
@@ -33791,6 +33680,28 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.OpsRequestStatus": {
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "Conditions applied to the request, such as approval or denial.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          }
+        },
+        "observedGeneration": {
+          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "phase": {
+          "description": "Specifies the current phase of the ops request",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBCustomConfigurationSpec": {
       "type": "object"
     },
@@ -33819,7 +33730,7 @@
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBOpsRequestStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.OpsRequestStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -33915,28 +33826,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBOpsRequestStatus": {
-      "description": "PerconaXtraDBOpsRequestStatus is the status for PerconaXtraDBOpsRequest",
-      "type": "object",
-      "properties": {
-        "conditions": {
-          "description": "Conditions applied to the request, such as approval or denial.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
-          }
-        },
-        "observedGeneration": {
-          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "phase": {
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBReplicaReadinessCriteria": {
       "description": "PerconaXtraDBReplicaReadinessCriteria is the criteria for checking readiness of a PerconaXtraDB pod after updating, horizontal scaling etc.",
       "type": "object"
@@ -34011,7 +33900,7 @@
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresOpsRequestStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.OpsRequestStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -34108,28 +33997,6 @@
         "volumeExpansion": {
           "description": "Specifies information necessary for volume expansion",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresVolumeExpansionSpec"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresOpsRequestStatus": {
-      "description": "PostgresOpsRequestStatus is the status for PostgresOpsRequest",
-      "type": "object",
-      "properties": {
-        "conditions": {
-          "description": "Conditions applied to the request, such as approval or denial.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
-          }
-        },
-        "observedGeneration": {
-          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "phase": {
-          "type": "string"
         }
       }
     },
@@ -34252,7 +34119,7 @@
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLOpsRequestStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.OpsRequestStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -34352,28 +34219,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLOpsRequestStatus": {
-      "description": "ProxySQLOpsRequestStatus is the status for ProxySQLOpsRequest",
-      "type": "object",
-      "properties": {
-        "conditions": {
-          "description": "Conditions applied to the request, such as approval or denial.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
-          }
-        },
-        "observedGeneration": {
-          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "phase": {
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReplicaReadinessCriteria": {
       "description": "ProxySQLReplicaReadinessCriteria is the criteria for checking readiness of a ProxySQL pod after updating, horizontal scaling etc.",
       "type": "object"
@@ -34458,7 +34303,7 @@
         },
         "status": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisOpsRequestStatus"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.OpsRequestStatus"
         }
       },
       "x-kubernetes-group-version-kind": [
@@ -34555,28 +34400,6 @@
         "volumeExpansion": {
           "description": "Specifies information necessary for volume expansion",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisVolumeExpansionSpec"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisOpsRequestStatus": {
-      "description": "RedisOpsRequestStatus is the status for RedisOpsRequest",
-      "type": "object",
-      "properties": {
-        "conditions": {
-          "description": "Conditions applied to the request, such as approval or denial.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
-          }
-        },
-        "observedGeneration": {
-          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "phase": {
-          "type": "string"
         }
       }
     },

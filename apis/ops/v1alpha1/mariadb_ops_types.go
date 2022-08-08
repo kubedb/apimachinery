@@ -20,7 +20,6 @@ import (
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 const (
@@ -45,8 +44,8 @@ const (
 type MariaDBOpsRequest struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              MariaDBOpsRequestSpec   `json:"spec,omitempty"`
-	Status            MariaDBOpsRequestStatus `json:"status,omitempty"`
+	Spec              MariaDBOpsRequestSpec `json:"spec,omitempty"`
+	Status            OpsRequestStatus      `json:"status,omitempty"`
 }
 
 // MariaDBOpsRequestSpec is the spec for MariaDBOpsRequest
@@ -136,18 +135,6 @@ type MariaDBTLSSpec struct {
 	// Indicates that the database server need to be encrypted connections(ssl)
 	// +optional
 	RequireSSL *bool `json:"requireSSL,omitempty"`
-}
-
-// MariaDBOpsRequestStatus is the status for MariaDBOpsRequest
-type MariaDBOpsRequestStatus struct {
-	Phase OpsRequestPhase `json:"phase,omitempty"`
-	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
-	// resource's generation, which is updated on mutation by the API Server.
-	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
-	// Conditions applied to the request, such as approval or denial.
-	// +optional
-	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
