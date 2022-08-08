@@ -85,7 +85,7 @@ func UpdateMariaDBOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.MariaDBOpsRequestStatus) (types.UID, *api.MariaDBOpsRequestStatus),
+	transform func(*api.OpsRequestStatus) (types.UID, *api.OpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.MariaDBOpsRequest, err error) {
 	apply := func(x *api.MariaDBOpsRequest) *api.MariaDBOpsRequest {

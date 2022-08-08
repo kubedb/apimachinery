@@ -106,7 +106,7 @@ func UpdateMemcachedOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.MemcachedOpsRequestStatus) (types.UID, *api.MemcachedOpsRequestStatus),
+	transform func(*api.OpsRequestStatus) (types.UID, *api.OpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.MemcachedOpsRequest, err error) {
 	apply := func(x *api.MemcachedOpsRequest) *api.MemcachedOpsRequest {

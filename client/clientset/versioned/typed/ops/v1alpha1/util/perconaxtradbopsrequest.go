@@ -106,7 +106,7 @@ func UpdatePerconaXtraDBOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.PerconaXtraDBOpsRequestStatus) (types.UID, *api.PerconaXtraDBOpsRequestStatus),
+	transform func(*api.OpsRequestStatus) (types.UID, *api.OpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.PerconaXtraDBOpsRequest, err error) {
 	apply := func(x *api.PerconaXtraDBOpsRequest) *api.PerconaXtraDBOpsRequest {

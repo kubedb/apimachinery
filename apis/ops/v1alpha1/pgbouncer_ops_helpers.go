@@ -23,6 +23,7 @@ import (
 	"kubedb.dev/apimachinery/apis/ops"
 	"kubedb.dev/apimachinery/crds"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"kmodules.xyz/client-go/apiextensions"
 )
 
@@ -56,7 +57,19 @@ func (p PgBouncerOpsRequest) ValidateSpecs() error {
 	return nil
 }
 
-var _ StatusAccessor = &PgBouncerOpsRequest{}
+var _ Accessor = &PgBouncerOpsRequest{}
+
+func (e *PgBouncerOpsRequest) GetObjectMeta() metav1.ObjectMeta {
+	return e.ObjectMeta
+}
+
+func (e *PgBouncerOpsRequest) GetRequestType() OpsRequestType {
+	return e.Spec.Type
+}
+
+func (e *PgBouncerOpsRequest) GetDBRefName() string {
+	return e.Spec.DatabaseRef.Name
+}
 
 func (e *PgBouncerOpsRequest) GetStatus() OpsRequestStatus {
 	return e.Status

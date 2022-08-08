@@ -23,6 +23,7 @@ import (
 	"kubedb.dev/apimachinery/apis/ops"
 	"kubedb.dev/apimachinery/crds"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"kmodules.xyz/client-go/apiextensions"
 )
 
@@ -56,7 +57,19 @@ func (e ElasticsearchOpsRequest) ValidateSpecs() error {
 	return nil
 }
 
-var _ StatusAccessor = &ElasticsearchOpsRequest{}
+var _ Accessor = &ElasticsearchOpsRequest{}
+
+func (e *ElasticsearchOpsRequest) GetObjectMeta() metav1.ObjectMeta {
+	return e.ObjectMeta
+}
+
+func (e *ElasticsearchOpsRequest) GetRequestType() OpsRequestType {
+	return e.Spec.Type
+}
+
+func (e *ElasticsearchOpsRequest) GetDBRefName() string {
+	return e.Spec.DatabaseRef.Name
+}
 
 func (e *ElasticsearchOpsRequest) GetStatus() OpsRequestStatus {
 	return e.Status

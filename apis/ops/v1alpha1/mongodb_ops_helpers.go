@@ -23,6 +23,7 @@ import (
 	"kubedb.dev/apimachinery/apis/ops"
 	"kubedb.dev/apimachinery/crds"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"kmodules.xyz/client-go/apiextensions"
 )
 
@@ -56,7 +57,19 @@ func (m MongoDBOpsRequest) ValidateSpecs() error {
 	return nil
 }
 
-var _ StatusAccessor = &MongoDBOpsRequest{}
+var _ Accessor = &MongoDBOpsRequest{}
+
+func (e *MongoDBOpsRequest) GetObjectMeta() metav1.ObjectMeta {
+	return e.ObjectMeta
+}
+
+func (e *MongoDBOpsRequest) GetRequestType() OpsRequestType {
+	return e.Spec.Type
+}
+
+func (e *MongoDBOpsRequest) GetDBRefName() string {
+	return e.Spec.DatabaseRef.Name
+}
 
 func (e *MongoDBOpsRequest) GetStatus() OpsRequestStatus {
 	return e.Status

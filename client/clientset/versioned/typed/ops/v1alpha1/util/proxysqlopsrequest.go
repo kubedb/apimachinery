@@ -106,7 +106,7 @@ func UpdateProxySQLOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.ProxySQLOpsRequestStatus) (types.UID, *api.ProxySQLOpsRequestStatus),
+	transform func(*api.OpsRequestStatus) (types.UID, *api.OpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.ProxySQLOpsRequest, err error) {
 	apply := func(x *api.ProxySQLOpsRequest) *api.ProxySQLOpsRequest {

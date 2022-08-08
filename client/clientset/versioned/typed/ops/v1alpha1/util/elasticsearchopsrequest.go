@@ -106,7 +106,7 @@ func UpdateElasticsearchOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.ElasticsearchOpsRequestStatus) (types.UID, *api.ElasticsearchOpsRequestStatus),
+	transform func(status *api.OpsRequestStatus) (types.UID, *api.OpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.ElasticsearchOpsRequest, err error) {
 	apply := func(x *api.ElasticsearchOpsRequest) *api.ElasticsearchOpsRequest {

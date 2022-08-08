@@ -23,6 +23,7 @@ import (
 	"kubedb.dev/apimachinery/apis/ops"
 	"kubedb.dev/apimachinery/crds"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 )
@@ -57,7 +58,19 @@ func (m MySQLOpsRequest) ValidateSpecs() error {
 	return nil
 }
 
-var _ StatusAccessor = &MySQLOpsRequest{}
+var _ Accessor = &MySQLOpsRequest{}
+
+func (e *MySQLOpsRequest) GetObjectMeta() metav1.ObjectMeta {
+	return e.ObjectMeta
+}
+
+func (e *MySQLOpsRequest) GetRequestType() OpsRequestType {
+	return e.Spec.Type
+}
+
+func (e *MySQLOpsRequest) GetDBRefName() string {
+	return e.Spec.DatabaseRef.Name
+}
 
 func (e *MySQLOpsRequest) GetStatus() OpsRequestStatus {
 	return e.Status

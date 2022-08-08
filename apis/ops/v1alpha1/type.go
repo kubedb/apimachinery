@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
@@ -303,7 +304,10 @@ const (
 	ApplyOptionAlways  ApplyOption = "Always"
 )
 
-type StatusAccessor interface {
+type Accessor interface {
+	GetObjectMeta() metav1.ObjectMeta
+	GetRequestType() OpsRequestType
+	GetDBRefName() string
 	GetStatus() OpsRequestStatus
 	SetStatus(_ OpsRequestStatus)
 }
