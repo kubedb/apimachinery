@@ -106,7 +106,7 @@ func UpdateMySQLOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.MySQLOpsRequestStatus) (types.UID, *api.MySQLOpsRequestStatus),
+	transform func(*api.OpsRequestStatus) (types.UID, *api.OpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.MySQLOpsRequest, err error) {
 	apply := func(x *api.MySQLOpsRequest) *api.MySQLOpsRequest {
