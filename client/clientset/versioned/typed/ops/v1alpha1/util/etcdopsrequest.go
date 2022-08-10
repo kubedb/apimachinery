@@ -106,7 +106,7 @@ func UpdateEtcdOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.EtcdOpsRequestStatus) (types.UID, *api.EtcdOpsRequestStatus),
+	transform func(*api.OpsRequestStatus) (types.UID, *api.OpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.EtcdOpsRequest, err error) {
 	apply := func(x *api.EtcdOpsRequest) *api.EtcdOpsRequest {

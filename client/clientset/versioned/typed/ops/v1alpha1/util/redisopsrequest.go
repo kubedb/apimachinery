@@ -106,7 +106,7 @@ func UpdateRedisOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.RedisOpsRequestStatus) (types.UID, *api.RedisOpsRequestStatus),
+	transform func(*api.OpsRequestStatus) (types.UID, *api.OpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.RedisOpsRequest, err error) {
 	apply := func(x *api.RedisOpsRequest) *api.RedisOpsRequest {

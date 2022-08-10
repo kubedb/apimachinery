@@ -106,7 +106,7 @@ func UpdatePostgresOpsRequestStatus(
 	ctx context.Context,
 	c cs.OpsV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.PostgresOpsRequestStatus) (types.UID, *api.PostgresOpsRequestStatus),
+	transform func(*api.OpsRequestStatus) (types.UID, *api.OpsRequestStatus),
 	opts metav1.UpdateOptions,
 ) (result *api.PostgresOpsRequest, err error) {
 	apply := func(x *api.PostgresOpsRequest) *api.PostgresOpsRequest {
