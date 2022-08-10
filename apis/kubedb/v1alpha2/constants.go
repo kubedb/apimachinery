@@ -410,6 +410,10 @@ const (
 	RedisConfigVolumeName      = "redis-config"
 	RedisConfigVolumePath      = "/usr/local/etc/redis/"
 
+	RedisNodeFlagMaster = "master"
+	RedisNodeFlagNoAddr = "noaddr"
+	RedisNodeFlagSlave  = "slave"
+
 	RedisKeyFileSecretSuffix = "key"
 	RedisPEMSecretSuffix     = "pem"
 	RedisRootUsername        = "root"

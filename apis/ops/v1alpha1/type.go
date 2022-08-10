@@ -151,15 +151,17 @@ const (
 	ReconfigureSecurityAdmin           = "ReconfigureSecurityAdmin"
 
 	// Redis Constants
-	PatchedSecret           = "patchedSecret"
-	ConfigKeyRedis          = "redis.conf"
-	RedisTLSArg             = "--tls-port 6379"
-	DBReady                 = "DBReady"
-	RestartedPods           = "RestartedPods"
-	ScaleUpReplicas         = "ScaleUpReplicas"
-	ScaleDownReplicas       = "ScaleDownReplicas"
-	UpdateRedisImage        = "UpdateRedisImage"
-	RestartPodWithResources = "RestartedPodsWithResources"
+	PatchedSecret                        = "patchedSecret"
+	ConfigKeyRedis                       = "redis.conf"
+	RedisTLSArg                          = "--tls-port 6379"
+	DBReady                              = "DBReady"
+	RestartedPods                        = "RestartedPods"
+	ScaleUpReplicas                      = "ScaleUpReplicas"
+	ScaleDownReplicas                    = "ScaleDownReplicas"
+	ScaleUpRedisReplicasInSentinelMode   = "ScaleUpRedisReplicasInSentinelMode"
+	ScaleDownRedisReplicasInSentinelMode = "ScaleDownRedisReplicasInSentinelMode"
+	UpdateRedisImage                     = "UpdateRedisImage"
+	RestartPodWithResources              = "RestartedPodsWithResources"
 
 	// Stash Constants
 	PauseBackupConfiguration  = "PauseBackupConfiguration"
