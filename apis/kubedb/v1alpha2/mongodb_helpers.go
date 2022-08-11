@@ -177,15 +177,9 @@ func (m MongoDB) OffshootSelectors() map[string]string {
 	}
 }
 
-func (m MongoDB) OffshootSelectorsWhenArbiter() map[string]string {
+func (m MongoDB) OffshootSelectorsWhenOthers() map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
 		MongoDBTypeLabelKey: NodeTypeReplica,
-	})
-}
-
-func (m MongoDB) OffshootSelectorsWhenHidden() map[string]string {
-	return meta_util.OverwriteKeys(m.OffshootSelectors(), map[string]string{
-		MongoDBTypeLabelKey: NodeTypeHidden,
 	})
 }
 
@@ -195,13 +189,7 @@ func (m MongoDB) ShardSelectors(nodeNum int32) map[string]string {
 	})
 }
 
-func (m MongoDB) ShardSelectorsWhenArbiter(nodeNum int32) map[string]string {
-	return meta_util.OverwriteKeys(m.ShardSelectors(nodeNum), map[string]string{
-		MongoDBTypeLabelKey: NodeTypeShard,
-	})
-}
-
-func (m MongoDB) ShardSelectorsWhenHidden(nodeNum int32) map[string]string {
+func (m MongoDB) ShardSelectorsWhenOthers(nodeNum int32) map[string]string {
 	return meta_util.OverwriteKeys(m.ShardSelectors(nodeNum), map[string]string{
 		MongoDBTypeLabelKey: NodeTypeShard,
 	})
@@ -247,12 +235,8 @@ func (m MongoDB) OffshootLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
 
-func (m MongoDB) OffshootLabelsWhenArbiter() map[string]string {
-	return meta_util.OverwriteKeys(m.OffshootLabels(), m.OffshootSelectorsWhenArbiter())
-}
-
-func (m MongoDB) OffshootLabelsWhenHidden() map[string]string {
-	return meta_util.OverwriteKeys(m.OffshootLabels(), m.OffshootSelectorsWhenHidden())
+func (m MongoDB) OffshootLabelsWhenOthers() map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.OffshootSelectorsWhenOthers())
 }
 
 func (m MongoDB) PodLabels(podTemplateLabels map[string]string, extraLabels ...map[string]string) map[string]string {
@@ -277,12 +261,8 @@ func (m MongoDB) ShardLabels(nodeNum int32) map[string]string {
 	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ShardSelectors(nodeNum))
 }
 
-func (m MongoDB) ShardLabelsWhenArbiter(nodeNum int32) map[string]string {
-	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ShardSelectorsWhenArbiter(nodeNum))
-}
-
-func (m MongoDB) ShardLabelsWhenHidden(nodeNum int32) map[string]string {
-	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ShardSelectorsWhenHidden(nodeNum))
+func (m MongoDB) ShardLabelsWhenOthers(nodeNum int32) map[string]string {
+	return meta_util.OverwriteKeys(m.OffshootLabels(), m.ShardSelectorsWhenOthers(nodeNum))
 }
 
 func (m MongoDB) ConfigSvrLabels() map[string]string {
@@ -404,13 +384,17 @@ func (m MongoDB) HostAddress() string {
 	return m.ServiceName()
 }
 
-func (m MongoDB) Hosts() []string {
-	hosts := []string{fmt.Sprintf("%v-0.%v.%v.svc:%v", m.Name, m.GoverningServiceName(m.OffshootName()), m.Namespace, MongoDBDatabasePort)}
+func (m MongoDB) HostAddressOnlyCoreMembers() string {
 	if m.Spec.ReplicaSet != nil {
-		hosts = make([]string, *m.Spec.Replicas)
-		for i := 0; i < int(pointer.Int32(m.Spec.Replicas)); i++ {
-			hosts[i] = fmt.Sprintf("%v-%d.%v.%v.svc:%v", m.Name, i, m.GoverningServiceName(m.OffshootName()), m.Namespace, MongoDBDatabasePort)
-		}
+		return fmt.Sprintf("%v/", m.RepSetName()) + strings.Join(m.HostsOnlyCoreMembers(), ",")
+	}
+
+	return m.ServiceName()
+}
+
+func (m MongoDB) Hosts() []string {
+	hosts := m.HostsOnlyCoreMembers()
+	if m.Spec.ReplicaSet != nil {
 		if m.Spec.Arbiter != nil {
 			s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.ArbiterNodeName(), m.GoverningServiceName(m.OffshootName()), m.Namespace, MongoDBDatabasePort)
 			hosts = append(hosts, s)
@@ -425,6 +409,17 @@ func (m MongoDB) Hosts() []string {
 	return hosts
 }
 
+func (m MongoDB) HostsOnlyCoreMembers() []string {
+	hosts := []string{fmt.Sprintf("%v-0.%v.%v.svc:%v", m.Name, m.GoverningServiceName(m.OffshootName()), m.Namespace, MongoDBDatabasePort)}
+	if m.Spec.ReplicaSet != nil {
+		hosts = make([]string, *m.Spec.Replicas)
+		for i := 0; i < int(pointer.Int32(m.Spec.Replicas)); i++ {
+			hosts[i] = fmt.Sprintf("%v-%d.%v.%v.svc:%v", m.Name, i, m.GoverningServiceName(m.OffshootName()), m.Namespace, MongoDBDatabasePort)
+		}
+	}
+	return hosts
+}
+
 // ShardDSN = <shardReplName>/<host1:port>,<host2:port>,<host3:port>
 //// Here, host1 = <pod-name>.<governing-serviceName>.svc
 func (m MongoDB) ShardDSN(nodeNum int32) string {
@@ -434,14 +429,18 @@ func (m MongoDB) ShardDSN(nodeNum int32) string {
 	return fmt.Sprintf("%v/", m.ShardRepSetName(nodeNum)) + strings.Join(m.ShardHosts(nodeNum), ",")
 }
 
+func (m MongoDB) ShardDSNOnlyCoreMembers(nodeNum int32) string {
+	if m.Spec.ShardTopology == nil {
+		return ""
+	}
+	return fmt.Sprintf("%v/", m.ShardRepSetName(nodeNum)) + strings.Join(m.ShardHostsOnlyCoreMembers(nodeNum), ",")
+}
+
 func (m MongoDB) ShardHosts(nodeNum int32) []string {
 	if m.Spec.ShardTopology == nil {
 		return []string{}
 	}
-	hosts := make([]string, m.Spec.ShardTopology.Shard.Replicas)
-	for i := 0; i < int(m.Spec.ShardTopology.Shard.Replicas); i++ {
-		hosts[i] = fmt.Sprintf("%v-%d.%v.%v.svc:%v", m.ShardNodeName(nodeNum), i, m.GoverningServiceName(m.ShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
-	}
+	hosts := m.ShardHostsOnlyCoreMembers(nodeNum)
 	if m.Spec.Arbiter != nil {
 		s := fmt.Sprintf("%v-0.%v.%v.svc:%v", m.ArbiterShardNodeName(nodeNum), m.GoverningServiceName(m.ShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
 		hosts = append(hosts, s)
@@ -451,6 +450,17 @@ func (m MongoDB) ShardHosts(nodeNum int32) []string {
 			s := fmt.Sprintf("%v-%v.%v.%v.svc:%v", m.HiddenShardNodeName(nodeNum), i, m.GoverningServiceName(m.ShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
 			hosts = append(hosts, s)
 		}
+	}
+	return hosts
+}
+
+func (m MongoDB) ShardHostsOnlyCoreMembers(nodeNum int32) []string {
+	if m.Spec.ShardTopology == nil {
+		return []string{}
+	}
+	hosts := make([]string, m.Spec.ShardTopology.Shard.Replicas)
+	for i := 0; i < int(m.Spec.ShardTopology.Shard.Replicas); i++ {
+		hosts[i] = fmt.Sprintf("%v-%d.%v.%v.svc:%v", m.ShardNodeName(nodeNum), i, m.GoverningServiceName(m.ShardNodeName(nodeNum)), m.Namespace, MongoDBDatabasePort)
 	}
 	return hosts
 }
