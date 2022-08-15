@@ -156,6 +156,8 @@ const (
 	RedisTLSArg                          = "--tls-port 6379"
 	DBReady                              = "DBReady"
 	RestartedPods                        = "RestartedPods"
+	ScaleUpSentinel                      = "ScaleUpSentinel"
+	ScaleDownSentinel                    = "ScaleDownSentinel"
 	ScaleUpReplicas                      = "ScaleUpReplicas"
 	ScaleDownReplicas                    = "ScaleDownReplicas"
 	ScaleUpRedisReplicasInSentinelMode   = "ScaleUpRedisReplicasInSentinelMode"
