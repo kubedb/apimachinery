@@ -33012,6 +33012,15 @@
       "description": "EtcdVolumeExpansionSpec is the spec for Etcd volume expansion",
       "type": "object"
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.HiddenNode": {
+      "type": "object",
+      "properties": {
+        "replicas": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedCustomConfigurationSpec": {
       "type": "object"
     },
@@ -33196,6 +33205,9 @@
         "configServer": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
         },
+        "hidden": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
+        },
         "mongos": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
         },
@@ -33216,6 +33228,9 @@
       "properties": {
         "configServer": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ConfigNode"
+        },
+        "hidden": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.HiddenNode"
         },
         "mongos": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongosNode"
@@ -33411,6 +33426,9 @@
         "exporter": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
+        "hidden": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "mongos": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
@@ -33430,6 +33448,9 @@
       "type": "object",
       "properties": {
         "configServer": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "hidden": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "mode": {

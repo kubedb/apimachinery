@@ -441,6 +441,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdUpgradeSpec":                            schema_apimachinery_apis_ops_v1alpha1_EtcdUpgradeSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVerticalScalingSpec":                    schema_apimachinery_apis_ops_v1alpha1_EtcdVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVolumeExpansionSpec":                    schema_apimachinery_apis_ops_v1alpha1_EtcdVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HiddenNode":                                 schema_apimachinery_apis_ops_v1alpha1_HiddenNode(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBCustomConfiguration":                 schema_apimachinery_apis_ops_v1alpha1_MariaDBCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBCustomConfigurationSpec":             schema_apimachinery_apis_ops_v1alpha1_MariaDBCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBHorizontalScalingSpec":               schema_apimachinery_apis_ops_v1alpha1_MariaDBHorizontalScalingSpec(ref),
@@ -21695,6 +21696,24 @@ func schema_apimachinery_apis_ops_v1alpha1_EtcdVolumeExpansionSpec(ref common.Re
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_HiddenNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_MariaDBCustomConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22508,6 +22527,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBCustomConfigurationSpec(ref co
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBCustomConfiguration"),
 						},
 					},
+					"hidden": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBCustomConfiguration"),
+						},
+					},
 				},
 			},
 		},
@@ -22538,6 +22562,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBHorizontalScalingSpec(ref comm
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MongosNode"),
 						},
 					},
+					"hidden": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.HiddenNode"),
+						},
+					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"integer"},
@@ -22548,7 +22577,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBHorizontalScalingSpec(ref comm
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ConfigNode", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBShardNode", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongosNode"},
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ConfigNode", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HiddenNode", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBShardNode", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongosNode"},
 	}
 }
 
@@ -22851,6 +22880,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBVerticalScalingSpec(ref common
 							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
 					},
+					"hidden": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
 					"exporter": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
@@ -22898,6 +22932,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBVolumeExpansionSpec(ref common
 						},
 					},
 					"shard": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"hidden": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
