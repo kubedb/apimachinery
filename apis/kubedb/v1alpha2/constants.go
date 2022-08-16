@@ -240,8 +240,8 @@ const (
 	MySQLVolumeNameData      = "data"
 	MySQLVolumeMountPathData = "/var/lib/mysql"
 
-	MySQLVolumeNameInitialScript      = "initial-script"
-	MySQLVolumeMountPathInitialScript = "/docker-entrypoint-initdb.d"
+	MySQLVolumeNameUserInitScript      = "initial-script"
+	MySQLVolumeMountPathUserInitScript = "/docker-entrypoint-initdb.d"
 
 	MySQLVolumeNameInitScript      = "init-scripts"
 	MySQLVolumeMountPathInitScript = "/scripts"
