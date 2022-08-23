@@ -40,6 +40,7 @@ const (
 	ScalingDown                  = "ScalingDown"
 	ScalingUp                    = "ScalingUp"
 	Successful                   = "Successful"
+	Running                      = "Running"
 	Updating                     = "Updating"
 	Upgrading                    = "Upgrading"
 	UpgradeVersion               = "UpgradeVersion"
