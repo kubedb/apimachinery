@@ -287,6 +287,7 @@ const (
 	PerconaXtraDBMetricsExporterTLSVolumeName  = "metrics-exporter-config"
 	PerconaXtraDBMetricsExporterConfigPath     = "/etc/mysql/config/exporter"
 	PerconaXtraDBDataVolumeName                = "data"
+	PerconaXtraDBMySQLUserGroupID              = 1001
 
 	// =========================== MariaDB Constants ============================
 	MariaDBMaxClusterNameLength          = 32
