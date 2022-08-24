@@ -70,6 +70,8 @@ const (
 	UpdateShardImage            = "UpdateShardImage"
 	UpdateStatefulSetResources  = "UpdateStatefulSetResources"
 	UpdateShardResources        = "UpdateShardResources"
+	UpdateArbiterResources      = "UpdateArbiterResources"
+	UpdateHiddenResources       = "UpdateHiddenResources"
 	ScaleDownShard              = "ScaleDownShard"
 	ScaleUpShard                = "ScaleUpShard"
 	ScaleDownHidden             = "ScaleDownHidden"
