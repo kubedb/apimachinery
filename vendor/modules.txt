@@ -1421,7 +1421,7 @@ k8s.io/utils/path
 k8s.io/utils/pointer
 k8s.io/utils/strings/slices
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.24.6
+# kmodules.xyz/client-go v0.24.8
 ## explicit; go 1.18
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -1433,7 +1433,7 @@ kmodules.xyz/client-go/discovery
 kmodules.xyz/client-go/dynamic/conditions
 kmodules.xyz/client-go/meta
 kmodules.xyz/client-go/openapi
-kmodules.xyz/client-go/policy/v1beta1
+kmodules.xyz/client-go/policy/v1
 kmodules.xyz/client-go/tools/clusterid
 kmodules.xyz/client-go/tools/queue
 # kmodules.xyz/crd-schema-fuzz v0.24.1
