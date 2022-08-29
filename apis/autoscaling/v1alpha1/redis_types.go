@@ -71,16 +71,13 @@ type RedisAutoscalerSpec struct {
 
 type RedisComputeAutoscalerSpec struct {
 	Standalone *ComputeAutoscalerSpec `json:"standalone,omitempty"`
-	Master     *ComputeAutoscalerSpec `json:"master,omitempty"`
-	Replicas   *ComputeAutoscalerSpec `json:"replicas,omitempty"`
+	Cluster    *ComputeAutoscalerSpec `json:"cluster,omitempty"`
 	Sentinel   *ComputeAutoscalerSpec `json:"sentinel,omitempty"`
 }
 
 type RedisStorageAutoscalerSpec struct {
 	Standalone *StorageAutoscalerSpec `json:"standalone,omitempty"`
-	Master     *StorageAutoscalerSpec `json:"master,omitempty"`
-	Replicas   *StorageAutoscalerSpec `json:"replicas,omitempty"`
-	Sentinel   *StorageAutoscalerSpec `json:"sentinel,omitempty"`
+	Cluster    *StorageAutoscalerSpec `json:"cluster,omitempty"`
 }
 
 type RedisOpsRequestOptions struct {
