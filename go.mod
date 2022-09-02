@@ -30,7 +30,7 @@ require (
 	k8s.io/kube-aggregator v0.24.1
 	k8s.io/kube-openapi v0.0.0-20220413171646-5e7f5fdc6da6
 	k8s.io/metrics v0.24.1
-	kmodules.xyz/client-go v0.24.8
+	kmodules.xyz/client-go v0.24.10
 	kmodules.xyz/crd-schema-fuzz v0.24.1
 	kmodules.xyz/custom-resources v0.24.0
 	kmodules.xyz/monitoring-agent-api v0.24.0
