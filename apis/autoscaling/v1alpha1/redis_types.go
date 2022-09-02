@@ -30,9 +30,9 @@ const (
 	ResourcePluralRedisAutoscaler   = "redisautoscalers"
 )
 
-// RedisAutoscaler is the configuration for a horizontal pod
-// autoscaler, which automatically manages the replica count of any resource
-// implementing the scale subresource based on the metrics specified.
+// RedisAutoscaler is the configuration for a redis database
+// autoscaler, which automatically manages pod resources based on historical and
+// real time resource utilization.
 
 // +genclient
 // +k8s:openapi-gen=true
@@ -72,7 +72,6 @@ type RedisAutoscalerSpec struct {
 type RedisComputeAutoscalerSpec struct {
 	Standalone *ComputeAutoscalerSpec `json:"standalone,omitempty"`
 	Cluster    *ComputeAutoscalerSpec `json:"cluster,omitempty"`
-	Sentinel   *ComputeAutoscalerSpec `json:"sentinel,omitempty"`
 }
 
 type RedisStorageAutoscalerSpec struct {

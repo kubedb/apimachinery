@@ -2169,11 +2169,6 @@ func (in *RedisComputeAutoscalerSpec) DeepCopyInto(out *RedisComputeAutoscalerSp
 		*out = new(ComputeAutoscalerSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Sentinel != nil {
-		in, out := &in.Sentinel, &out.Sentinel
-		*out = new(ComputeAutoscalerSpec)
-		(*in).DeepCopyInto(*out)
-	}
 	return
 }
 

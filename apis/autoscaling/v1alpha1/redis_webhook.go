@@ -59,7 +59,6 @@ func (in *RedisAutoscaler) setDefaults() {
 	if in.Spec.Compute != nil {
 		setDefaultComputeValues(in.Spec.Compute.Standalone)
 		setDefaultComputeValues(in.Spec.Compute.Cluster)
-		setDefaultComputeValues(in.Spec.Compute.Sentinel)
 	}
 }
 
@@ -108,9 +107,6 @@ func (in *RedisAutoscaler) ValidateFields(rd *dbapi.Redis) error {
 	if in.Spec.Compute != nil {
 		cm := in.Spec.Compute
 		if rd.Spec.Mode == dbapi.RedisModeCluster {
-			if cm.Sentinel != nil {
-				return errors.New("Spec.Compute.Sentinel is invalid for clustered redis")
-			}
 			if cm.Standalone != nil {
 				return errors.New("Spec.Compute.Standalone is invalid for clustered redis")
 			}
@@ -122,9 +118,6 @@ func (in *RedisAutoscaler) ValidateFields(rd *dbapi.Redis) error {
 				return errors.New("Spec.Compute.Cluster is invalid for redis sentinel")
 			}
 		} else if rd.Spec.Mode == dbapi.RedisModeStandalone {
-			if cm.Sentinel != nil {
-				return errors.New("Spec.Compute.Sentinel is invalid for standalone redis")
-			}
 			if cm.Cluster != nil {
 				return errors.New("Spec.Compute.Cluster is invalid for standalone redis")
 			}
