@@ -159,6 +159,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().ProxySQLOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("redisopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().RedisOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("redissentinelopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().RedisSentinelOpsRequests().Informer()}, nil
 
 		// Group=schema.kubedb.com, Version=v1alpha1
 	case schemav1alpha1.SchemeGroupVersion.WithResource("mariadbdatabases"):
