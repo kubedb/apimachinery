@@ -27,9 +27,10 @@ import (
 	policy "k8s.io/api/policy/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	core_util "kmodules.xyz/client-go/core/v1"
-	policy_util "kmodules.xyz/client-go/policy/v1"
+	policy_util "kmodules.xyz/client-go/policy"
 )
 
 // SyncStatefulSetPodDisruptionBudget syncs the PDB with the current state of the statefulSet.
@@ -42,7 +43,10 @@ func (c *Controller) SyncStatefulSetPodDisruptionBudget(sts *apps.StatefulSet) e
 	// CleanUp PDB for statefulSet with replica 1
 	if *sts.Spec.Replicas <= 1 {
 		// pdb name & namespace is same as the corresponding statefulSet's name & namespace.
-		err := c.Client.PolicyV1().PodDisruptionBudgets(sts.Namespace).Delete(context.TODO(), sts.Name, metav1.DeleteOptions{})
+		err := policy_util.DeletePodDisruptionBudget(context.TODO(), c.Client, types.NamespacedName{
+			Namespace: sts.Namespace,
+			Name:      sts.Name,
+		})
 		if !kerr.IsNotFound(err) {
 			return err
 		}

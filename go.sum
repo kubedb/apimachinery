@@ -1790,8 +1790,8 @@ k8s.io/utils v0.0.0-20210930125809-cb0fa318a74b/go.mod h1:jPW/WVKK9YHAvNhRxK0md/
 k8s.io/utils v0.0.0-20211116205334-6203023598ed/go.mod h1:jPW/WVKK9YHAvNhRxK0md/EJ228hCsBRufyofKtW8HA=
 k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9 h1:HNSDgDCrr/6Ly3WEGKZftiE7IY19Vz2GdbOCyI4qqhc=
 k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9/go.mod h1:jPW/WVKK9YHAvNhRxK0md/EJ228hCsBRufyofKtW8HA=
-kmodules.xyz/client-go v0.24.8 h1:oCU1mYwb+0jw0j1IBcuu2qQmTYfamqXsuvyYFjSKcYU=
-kmodules.xyz/client-go v0.24.8/go.mod h1:wTV6xDTJT8PYnHg33tg1ofVWvIXAboQGH+OKUCJwja0=
+kmodules.xyz/client-go v0.24.10 h1:zSR0Je87JNflmIWr2Jv/2HKLmCsvSfYlVzOn8HtgpNM=
+kmodules.xyz/client-go v0.24.10/go.mod h1:wTV6xDTJT8PYnHg33tg1ofVWvIXAboQGH+OKUCJwja0=
 kmodules.xyz/crd-schema-fuzz v0.24.1 h1:DGYhkkYCb39OGr23yPsXuOJVMQtCnjWbkNYSG3P7vzk=
 kmodules.xyz/crd-schema-fuzz v0.24.1/go.mod h1:i3m5JNBm5J12ygQszbcqLcQ+q0ogWJrAQQySOgiWzc8=
 kmodules.xyz/custom-resources v0.24.0 h1:OWQHB2oFh5q+RjeVfwrsJTZ3NbcclBtghETvq3lGhP8=
