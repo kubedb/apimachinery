@@ -46,6 +46,8 @@ type Interface interface {
 	ProxySQLAutoscalers() ProxySQLAutoscalerInformer
 	// RedisAutoscalers returns a RedisAutoscalerInformer.
 	RedisAutoscalers() RedisAutoscalerInformer
+	// RedisSentinelAutoscalers returns a RedisSentinelAutoscalerInformer.
+	RedisSentinelAutoscalers() RedisSentinelAutoscalerInformer
 }
 
 type version struct {
@@ -112,4 +114,9 @@ func (v *version) ProxySQLAutoscalers() ProxySQLAutoscalerInformer {
 // RedisAutoscalers returns a RedisAutoscalerInformer.
 func (v *version) RedisAutoscalers() RedisAutoscalerInformer {
 	return &redisAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// RedisSentinelAutoscalers returns a RedisSentinelAutoscalerInformer.
+func (v *version) RedisSentinelAutoscalers() RedisSentinelAutoscalerInformer {
+	return &redisSentinelAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
