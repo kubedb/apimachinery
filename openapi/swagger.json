@@ -33838,28 +33838,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBOpsRequestStatus": {
-      "description": "PerconaXtraDBOpsRequestStatus is the status for PerconaXtraDBOpsRequest",
-      "type": "object",
-      "properties": {
-        "conditions": {
-          "description": "Conditions applied to the request, such as approval or denial.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
-          }
-        },
-        "observedGeneration": {
-          "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "phase": {
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBTLSSpec": {
       "type": "object",
       "properties": {

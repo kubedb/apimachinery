@@ -465,11 +465,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLScalingPolicy":                         schema_apimachinery_apis_autoscaling_v1alpha1_MySQLScalingPolicy(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLScalingRules":                          schema_apimachinery_apis_autoscaling_v1alpha1_MySQLScalingRules(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscaler":                    schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscaler(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerBehavior":            schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerBehavior(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerList":                schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerSpec":                schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBScalingPolicy":                 schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBScalingPolicy(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBScalingRules":                  schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBScalingRules(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBComputeAutoscalerSpec":         schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBComputeAutoscalerSpec(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBStorageAutoscalerSpec":         schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBStorageAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerAutoscaler":                        schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerAutoscalerBehavior":                schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscalerBehavior(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerAutoscalerList":                    schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscalerList(ref),
@@ -22661,26 +22660,27 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscaler(ref c
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "metadata is the standard object metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Description: "Standard object metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "spec is the specification for the behaviour of the autoscaler. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.",
+							Description: "Specification of the behavior of the autoscaler. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "status is the current information about the autoscaler.",
+							Description: "Current information about the autoscaler.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
 						},
 					},
 				},
+				Required: []string{"spec"},
 			},
 		},
 		Dependencies: []string{
@@ -22688,38 +22688,11 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscaler(ref c
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerBehavior(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBAutoscalerBehavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively).",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"scaleUp": {
-						SchemaProps: spec.SchemaProps{
-							Description: "scaleUp is scaling policy for scaling Up. If not set, the default value is the higher of:\n  * increase no more than 4 pods per 60 seconds\n  * double the number of pods per 60 seconds\nNo stabilization is used.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBScalingRules"),
-						},
-					},
-					"scaleDown": {
-						SchemaProps: spec.SchemaProps{
-							Description: "scaleDown is scaling policy for scaling Down. If not set, the default value is to allow to scale down to minReplicas pods, with a 300 second stabilization window (i.e., the highest recommendation for the last 300sec is used).",
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBScalingRules"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBScalingRules"},
-	}
-}
-
 func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBAutoscalerList is a list of horizontal pod autoscaler objects.",
+				Description: "PerconaXtraDBAutoscalerList is a list of PerconaXtraDBAutoscaler objects.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -22745,7 +22718,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerList(r
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "items is the list of horizontal pod autoscaler objects.",
+							Description: "items is the list of perconaxtradb autoscaler objects.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -22770,138 +22743,74 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerSpec(r
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBAutoscalerSpec describes the desired functionality of the PerconaXtraDBAutoscaler.",
+				Description: "PerconaXtraDBAutoscalerSpec  is the specification of the behavior of the autoscaler.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"scaleTargetRef": {
+					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "scaleTargetRef points to the target resource to scale, and is used to the pods for which metrics should be collected, as well as to actually change the replica count.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"minReplicas": {
+					"compute": {
 						SchemaProps: spec.SchemaProps{
-							Description: "minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the alpha feature gate HPAScaleToZero is enabled and at least one Object or External metric is configured.  Scaling is active as long as at least one metric value is available.",
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBComputeAutoscalerSpec"),
 						},
 					},
-					"maxReplicas": {
+					"storage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up. It cannot be less that minReplicas.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"metrics": {
-						SchemaProps: spec.SchemaProps{
-							Description: "metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used).  The desired replica count is calculated multiplying the ratio between the target value and the current value by the current number of pods.  Ergo, metrics used must decrease as the pod count is increased, and vice-versa.  See the individual metric source types for more information about how each type of metric must respond. If not set, the default metric will be set to 80% average CPU utilization.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/autoscaling/v2beta2.MetricSpec"),
-									},
-								},
-							},
-						},
-					},
-					"behavior": {
-						SchemaProps: spec.SchemaProps{
-							Description: "behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). If not set, the default PerconaXtraDBScalingRules for scale up and scale down are used.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerBehavior"),
+							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBStorageAutoscalerSpec"),
 						},
 					},
 				},
-				Required: []string{"scaleTargetRef", "maxReplicas"},
+				Required: []string{"databaseRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/autoscaling/v2beta2.MetricSpec", "k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerBehavior"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBStorageAutoscalerSpec"},
 	}
 }
 
-func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBScalingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBComputeAutoscalerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBScalingPolicy is a single policy which must hold true for a specified past interval.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"type": {
+					"perconaxtradb": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is used to specify the scaling policy.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
+							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
 						},
 					},
-					"value": {
+					"disableScaleDown": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Value contains the amount of change which is permitted by the policy. It must be greater than zero",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"periodSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PeriodSeconds specifies the window of time for which the policy should hold true. PeriodSeconds must be greater than zero and less than or equal to 1800 (30 min).",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-				},
-				Required: []string{"type", "value", "periodSeconds"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBScalingRules(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBScalingRules configures the scaling behavior for one direction. These Rules are applied after calculating DesiredReplicas from metrics for the HPA. They can limit the scaling velocity by specifying scaling policies. They can prevent flapping by specifying the stabilization window, so that the number of replicas is not set instantly, instead, the safest value from the stabilization window is chosen.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"stabilizationWindowSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Description: "StabilizationWindowSeconds is the number of seconds for which past recommendations should be considered while scaling up or scaling down. StabilizationWindowSeconds must be greater than or equal to zero and less than or equal to 3600 (one hour). If not set, use the default values: - For scale up: 0 (i.e. no stabilization is done). - For scale down: 300 (i.e. the stabilization window is 300 seconds long).",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"selectPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "selectPolicy is used to specify which policy should be used. If not set, the default value MaxPolicySelect is used.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"policies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "policies is a list of potential scaling polices which can be used during scaling. At least one policy must be specified, otherwise the PerconaXtraDBScalingRules will be discarded as invalid",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBScalingPolicy"),
-									},
-								},
-							},
+							Type:   []string{"boolean"},
+							Format: "",
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBScalingPolicy"},
+			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBStorageAutoscalerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"perconaxtradb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"},
 	}
 }
 

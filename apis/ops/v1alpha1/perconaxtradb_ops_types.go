@@ -71,6 +71,9 @@ type PerconaXtraDBOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	// ApplyOption is to control the execution of OpsRequest depending on the database state.
+	// +kubebuilder:default="IfReady"
+	Apply ApplyOption `json:"apply,omitempty"`
 }
 
 type PerconaXtraDBUpgradeSpec struct {
@@ -121,12 +124,7 @@ type PerconaXtraDBCustomConfigurationSpec struct {
 	ApplyConfig map[string]string `json:"applyConfig,omitempty"`
 }
 
-type PerconaXtraDBCustomConfiguration struct {
-	ConfigMap *core.LocalObjectReference `json:"configMap,omitempty"`
-	Data      map[string]string          `json:"data,omitempty"`
-	Remove    bool                       `json:"remove,omitempty"`
-}
-
+// PerconaXtraDBTLSSpec specifies information necessary for configuring TLS
 type PerconaXtraDBTLSSpec struct {
 	TLSSpec `json:",inline,omitempty"`
 
