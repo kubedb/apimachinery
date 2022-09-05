@@ -24,12 +24,13 @@ import (
 	_ "gomodules.xyz/stow/google"
 	_ "gomodules.xyz/stow/s3"
 	apps "k8s.io/api/apps/v1"
-	policyv1beta1 "k8s.io/api/policy/v1beta1"
+	policy "k8s.io/api/policy/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	core_util "kmodules.xyz/client-go/core/v1"
-	policy_util "kmodules.xyz/client-go/policy/v1beta1"
+	policy_util "kmodules.xyz/client-go/policy"
 )
 
 // SyncStatefulSetPodDisruptionBudget syncs the PDB with the current state of the statefulSet.
@@ -42,7 +43,10 @@ func (c *Controller) SyncStatefulSetPodDisruptionBudget(sts *apps.StatefulSet) e
 	// CleanUp PDB for statefulSet with replica 1
 	if *sts.Spec.Replicas <= 1 {
 		// pdb name & namespace is same as the corresponding statefulSet's name & namespace.
-		err := c.Client.PolicyV1beta1().PodDisruptionBudgets(sts.Namespace).Delete(context.TODO(), sts.Name, metav1.DeleteOptions{})
+		err := policy_util.DeletePodDisruptionBudget(context.TODO(), c.Client, types.NamespacedName{
+			Namespace: sts.Namespace,
+			Name:      sts.Name,
+		})
 		if !kerr.IsNotFound(err) {
 			return err
 		}
@@ -60,7 +64,7 @@ func (c *Controller) CreateStatefulSetPodDisruptionBudget(sts *apps.StatefulSet)
 		Namespace: sts.Namespace,
 	}
 	_, _, err := policy_util.CreateOrPatchPodDisruptionBudget(context.TODO(), c.Client, m,
-		func(in *policyv1beta1.PodDisruptionBudget) *policyv1beta1.PodDisruptionBudget {
+		func(in *policy.PodDisruptionBudget) *policy.PodDisruptionBudget {
 			in.Labels = sts.Labels
 			core_util.EnsureOwnerReference(&in.ObjectMeta, owner)
 
@@ -91,7 +95,7 @@ func (c *Controller) SyncStatefulSetPDBWithCustomLabelSelectors(sts *apps.Statef
 
 	owner := metav1.NewControllerRef(sts, apps.SchemeGroupVersion.WithKind("StatefulSet"))
 	_, _, err := policy_util.CreateOrPatchPodDisruptionBudget(context.TODO(), c.Client, pdbRef,
-		func(in *policyv1beta1.PodDisruptionBudget) *policyv1beta1.PodDisruptionBudget {
+		func(in *policy.PodDisruptionBudget) *policy.PodDisruptionBudget {
 			in.Labels = labels
 			core_util.EnsureOwnerReference(&in.ObjectMeta, owner)
 			in.Spec.Selector = &metav1.LabelSelector{
@@ -113,7 +117,7 @@ func (c *Controller) CreateDeploymentPodDisruptionBudget(deployment *apps.Deploy
 	}
 
 	_, _, err := policy_util.CreateOrPatchPodDisruptionBudget(context.TODO(), c.Client, m,
-		func(in *policyv1beta1.PodDisruptionBudget) *policyv1beta1.PodDisruptionBudget {
+		func(in *policy.PodDisruptionBudget) *policy.PodDisruptionBudget {
 			in.Labels = deployment.Labels
 			core_util.EnsureOwnerReference(&in.ObjectMeta, owner)
 

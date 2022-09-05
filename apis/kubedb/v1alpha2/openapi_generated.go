@@ -367,9 +367,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/client-go/api/v1.CertificateSpec":                               schema_kmodulesxyz_client_go_api_v1_CertificateSpec(ref),
 		"kmodules.xyz/client-go/api/v1.ClusterMetadata":                               schema_kmodulesxyz_client_go_api_v1_ClusterMetadata(ref),
 		"kmodules.xyz/client-go/api/v1.Condition":                                     schema_kmodulesxyz_client_go_api_v1_Condition(ref),
+		"kmodules.xyz/client-go/api/v1.HealthCheckSpec":                               schema_kmodulesxyz_client_go_api_v1_HealthCheckSpec(ref),
 		"kmodules.xyz/client-go/api/v1.ObjectID":                                      schema_kmodulesxyz_client_go_api_v1_ObjectID(ref),
 		"kmodules.xyz/client-go/api/v1.ObjectInfo":                                    schema_kmodulesxyz_client_go_api_v1_ObjectInfo(ref),
 		"kmodules.xyz/client-go/api/v1.ObjectReference":                               schema_kmodulesxyz_client_go_api_v1_ObjectReference(ref),
+		"kmodules.xyz/client-go/api/v1.ReadonlyHealthCheckSpec":                       schema_kmodulesxyz_client_go_api_v1_ReadonlyHealthCheckSpec(ref),
 		"kmodules.xyz/client-go/api/v1.ResourceID":                                    schema_kmodulesxyz_client_go_api_v1_ResourceID(ref),
 		"kmodules.xyz/client-go/api/v1.TLSConfig":                                     schema_kmodulesxyz_client_go_api_v1_TLSConfig(ref),
 		"kmodules.xyz/client-go/api/v1.TimeOfDay":                                     schema_kmodulesxyz_client_go_api_v1_TimeOfDay(ref),
@@ -436,7 +438,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdList":                       schema_apimachinery_apis_kubedb_v1alpha2_EtcdList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_EtcdSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdStatus":                     schema_apimachinery_apis_kubedb_v1alpha2_EtcdStatus(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec":                schema_apimachinery_apis_kubedb_v1alpha2_HealthCheckSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KernelSettings":                 schema_apimachinery_apis_kubedb_v1alpha2_KernelSettings(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MariaDB":                        schema_apimachinery_apis_kubedb_v1alpha2_MariaDB(ref),
@@ -18141,6 +18142,47 @@ func schema_kmodulesxyz_client_go_api_v1_Condition(ref common.ReferenceCallback)
 	}
 }
 
+func schema_kmodulesxyz_client_go_api_v1_HealthCheckSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HealthCheckSpec defines attributes of the health check",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"periodSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "How often (in seconds) to perform the health check. Default to 10 seconds. Minimum value is 1.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"timeoutSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of seconds after which the probe times out. Defaults to 10 second. Minimum value is 1. It should be less than the periodSeconds.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"failureThreshold": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Minimum consecutive failures for the health check to be considered failed after having succeeded. Defaults to 1. Minimum value is 1.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"disableWriteCheck": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Whether to disable write check on database. Defaults to false.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_kmodulesxyz_client_go_api_v1_ObjectID(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18228,6 +18270,40 @@ func schema_kmodulesxyz_client_go_api_v1_ObjectReference(ref common.ReferenceCal
 					},
 				},
 				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_client_go_api_v1_ReadonlyHealthCheckSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ReadonlyHealthCheckSpec defines attributes of the health check using only read-only checks",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"periodSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "How often (in seconds) to perform the health check. Default to 10 seconds. Minimum value is 1.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"timeoutSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of seconds after which the probe times out. Defaults to 10 second. Minimum value is 1. It should be less than the periodSeconds.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"failureThreshold": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Minimum consecutive failures for the health check to be considered failed after having succeeded. Defaults to 1. Minimum value is 1.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -21503,7 +21579,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchSpec(ref common.Refer
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
 				},
@@ -21511,7 +21587,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ElasticsearchRoleMapSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KernelSettings", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ElasticsearchRoleMapSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KernelSettings", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
 
@@ -21942,47 +22018,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_EtcdStatus(ref common.ReferenceCal
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_HealthCheckSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "HealthCheckSpec defines attributes of the health check",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"periodSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Description: "How often (in seconds) to perform the health check. Default to 10 seconds. Minimum value is 1.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"timeoutSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Number of seconds after which the probe times out. Defaults to 10 second. Minimum value is 1. It should be less than the periodSeconds.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"failureThreshold": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Minimum consecutive failures for the health check to be considered failed after having succeeded. Defaults to 1. Minimum value is 1.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"disableWriteCheck": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Whether to disable write check on database. Defaults to false.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22275,7 +22310,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MariaDBSpec(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
 				},
@@ -22283,7 +22318,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MariaDBSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
 
@@ -23141,7 +23176,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoDBSpec(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
 				},
@@ -23149,7 +23184,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoDBSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoArbiterNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBReplicaSet", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBShardingTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoHiddenNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoArbiterNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBReplicaSet", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBShardingTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoHiddenNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
 
@@ -23585,7 +23620,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLSpec(ref common.ReferenceCall
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
 				},
@@ -23593,7 +23628,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
 
@@ -24036,7 +24071,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PerconaXtraDBSpec(ref common.Refer
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
 					"systemUserSecrets": {
@@ -24050,7 +24085,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PerconaXtraDBSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SystemUserSecretsSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SystemUserSecretsSpec"},
 	}
 }
 
@@ -24295,7 +24330,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgBouncerSpec(ref common.Reference
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
 				},
@@ -24303,7 +24338,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgBouncerSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConnectionPoolConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Databases", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConnectionPoolConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Databases", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
 
@@ -24673,7 +24708,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresSpec(ref common.ReferenceC
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
 				},
@@ -24681,7 +24716,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgreLeaderElectionConfig"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgreLeaderElectionConfig"},
 	}
 }
 
@@ -25007,7 +25042,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref common.ReferenceC
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
 				},
@@ -25015,7 +25050,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLBackendSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLConfiguration"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLBackendSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLConfiguration"},
 	}
 }
 
@@ -25446,7 +25481,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RedisSentinelSpec(ref common.Refer
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
 				},
@@ -25454,7 +25489,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RedisSentinelSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
 
@@ -25648,7 +25683,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RedisSpec(ref common.ReferenceCall
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec"),
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
 				},
@@ -25656,7 +25691,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RedisSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HealthCheckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisSentinelRef"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisSentinelRef"},
 	}
 }
 

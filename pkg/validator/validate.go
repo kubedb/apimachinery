@@ -29,6 +29,7 @@ import (
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
@@ -129,7 +130,7 @@ func ValidateInternalUsers(users map[string]api.ElasticsearchUserSpec, allowedIn
 	return nil
 }
 
-func ValidateHealth(health *api.HealthCheckSpec) error {
+func ValidateHealth(health *kmapi.HealthCheckSpec) error {
 	if health.PeriodSeconds != nil && *health.PeriodSeconds <= 0 {
 		return fmt.Errorf(`spec.healthCheck.periodSeconds: can not be less than 1`)
 	}

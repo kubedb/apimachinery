@@ -29884,7 +29884,7 @@
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.HealthCheckSpec"
         },
         "heapSizePercentage": {
           "description": "HeapSizePercentage specifies both the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage. Elasticsearch bootstrap fails, if -Xms and -Xmx are not equal. Error: initial heap size [X] not equal to maximum heap size [Y]; this can cause resize pauses. It will be applied to all nodes. If the node level `heapSizePercentage` is specified,  this global value will be overwritten. It defaults to 50% of memory limit.",
@@ -30221,31 +30221,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec": {
-      "description": "HealthCheckSpec defines attributes of the health check",
-      "type": "object",
-      "properties": {
-        "disableWriteCheck": {
-          "description": "Whether to disable write check on database. Defaults to false.",
-          "type": "boolean"
-        },
-        "failureThreshold": {
-          "description": "Minimum consecutive failures for the health check to be considered failed after having succeeded. Defaults to 1. Minimum value is 1.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "periodSeconds": {
-          "description": "How often (in seconds) to perform the health check. Default to 10 seconds. Minimum value is 1.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "timeoutSeconds": {
-          "description": "Number of seconds after which the probe times out. Defaults to 10 second. Minimum value is 1. It should be less than the periodSeconds.",
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec": {
       "type": "object",
       "properties": {
@@ -30378,7 +30353,7 @@
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.HealthCheckSpec"
         },
         "init": {
           "description": "Init is used to initialize database",
@@ -30876,7 +30851,7 @@
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.HealthCheckSpec"
         },
         "hidden": {
           "description": "Hidden component of mongodb which is invisible to client applications More info: https://www.mongodb.com/docs/manual/core/replica-set-hidden-member/",
@@ -31153,7 +31128,7 @@
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.HealthCheckSpec"
         },
         "init": {
           "description": "Init is used to initialize database",
@@ -31442,7 +31417,7 @@
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.HealthCheckSpec"
         },
         "init": {
           "description": "Init is used to initialize database",
@@ -31613,7 +31588,7 @@
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.HealthCheckSpec"
         },
         "monitor": {
           "description": "Monitor is used monitor database instance.",
@@ -31832,7 +31807,7 @@
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.HealthCheckSpec"
         },
         "init": {
           "description": "Init is used to initialize database",
@@ -32049,7 +32024,7 @@
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.HealthCheckSpec"
         },
         "initConfig": {
           "description": "InitConfiguration contains information with which the proxysql will bootstrap (only 4 tables are configurable)",
@@ -32257,7 +32232,7 @@
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.HealthCheckSpec"
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.HealthCheckSpec"
         },
         "init": {
           "description": "Init is used to initialize database",
@@ -37965,6 +37940,31 @@
           "description": "Type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important.",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "xyz.kmodules.client-go.api.v1.HealthCheckSpec": {
+      "description": "HealthCheckSpec defines attributes of the health check",
+      "type": "object",
+      "properties": {
+        "disableWriteCheck": {
+          "description": "Whether to disable write check on database. Defaults to false.",
+          "type": "boolean"
+        },
+        "failureThreshold": {
+          "description": "Minimum consecutive failures for the health check to be considered failed after having succeeded. Defaults to 1. Minimum value is 1.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "periodSeconds": {
+          "description": "How often (in seconds) to perform the health check. Default to 10 seconds. Minimum value is 1.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "timeoutSeconds": {
+          "description": "Number of seconds after which the probe times out. Defaults to 10 second. Minimum value is 1. It should be less than the periodSeconds.",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
