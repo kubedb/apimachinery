@@ -16,7 +16,7 @@ spec:
     listKind: RedisSentinelAutoscalerList
     plural: redissentinelautoscalers
     shortNames:
-    - rdsentinelscaler
+    - rdsscaler
     singular: redissentinelautoscaler
   scope: Namespaced
   versions:

@@ -24,7 +24,7 @@ import (
 )
 
 const (
-	ResourceCodeRedisSentinelAutoscaler     = "rdsentinelscaler"
+	ResourceCodeRedisSentinelAutoscaler     = "rdsscaler"
 	ResourceKindRedisSentinelAutoscaler     = "RedisSentinelAutoscaler"
 	ResourceSingularRedisSentinelAutoscaler = "redissentinelautoscaler"
 	ResourcePluralRedisSentinelAutoscaler   = "redissentinelautoscalers"
@@ -39,7 +39,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=redissentinelautoscalers,singular=redissentinelautoscaler,shortName=rdsentinelscaler,categories={datastore,kubedb,appscode}
+// +kubebuilder:resource:path=redissentinelautoscalers,singular=redissentinelautoscaler,shortName=rdsscaler,categories={datastore,kubedb,appscode}
 // +kubebuilder:subresource:status
 type RedisSentinelAutoscaler struct {
 	metav1.TypeMeta `json:",inline"`

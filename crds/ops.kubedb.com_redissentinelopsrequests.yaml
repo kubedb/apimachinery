@@ -16,7 +16,7 @@ spec:
     listKind: RedisSentinelOpsRequestList
     plural: redissentinelopsrequests
     shortNames:
-    - rdsentinelops
+    - rdsops
     singular: redissentinelopsrequest
   scope: Namespaced
   versions:
