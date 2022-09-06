@@ -54,11 +54,13 @@ func (in *RedisAutoscaler) setDefaults() {
 	if in.Spec.Storage != nil {
 		setDefaultStorageValues(in.Spec.Storage.Standalone)
 		setDefaultStorageValues(in.Spec.Storage.Cluster)
+		setDefaultStorageValues(in.Spec.Storage.Sentinel)
 	}
 
 	if in.Spec.Compute != nil {
 		setDefaultComputeValues(in.Spec.Compute.Standalone)
 		setDefaultComputeValues(in.Spec.Compute.Cluster)
+		setDefaultComputeValues(in.Spec.Compute.Sentinel)
 	}
 }
 
@@ -110,6 +112,9 @@ func (in *RedisAutoscaler) ValidateFields(rd *dbapi.Redis) error {
 			if cm.Standalone != nil {
 				return errors.New("Spec.Compute.Standalone is invalid for clustered redis")
 			}
+			if cm.Sentinel != nil {
+				return errors.New("Spec.Compute.Sentinel is invalid for clustered redis")
+			}
 		} else if rd.Spec.Mode == dbapi.RedisModeSentinel {
 			if cm.Standalone != nil {
 				return errors.New("Spec.Compute.Standalone is invalid for redis sentinel")
@@ -121,6 +126,10 @@ func (in *RedisAutoscaler) ValidateFields(rd *dbapi.Redis) error {
 			if cm.Cluster != nil {
 				return errors.New("Spec.Compute.Cluster is invalid for standalone redis")
 			}
+			if cm.Cluster != nil {
+				return errors.New("Spec.Compute.Sentinel is invalid for standalone redis")
+			}
+
 		}
 	}
 
@@ -129,6 +138,9 @@ func (in *RedisAutoscaler) ValidateFields(rd *dbapi.Redis) error {
 		if rd.Spec.Mode == dbapi.RedisModeCluster {
 			if st.Standalone != nil {
 				return errors.New("Spec.Storage.Standalone is invalid for clustered redis")
+			}
+			if st.Sentinel != nil {
+				return errors.New("Spec.Storage.Sentinel is invalid for clustered redis")
 			}
 		} else if rd.Spec.Mode == dbapi.RedisModeSentinel {
 			if st.Standalone != nil {
@@ -140,6 +152,9 @@ func (in *RedisAutoscaler) ValidateFields(rd *dbapi.Redis) error {
 		} else if rd.Spec.Mode == dbapi.RedisModeStandalone {
 			if st.Cluster != nil {
 				return errors.New("Spec.Storage.Cluster is invalid for standalone redis")
+			}
+			if st.Sentinel != nil {
+				return errors.New("Spec.Storage.Sentinel is invalid for standalone redis")
 			}
 		}
 	}

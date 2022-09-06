@@ -2169,6 +2169,11 @@ func (in *RedisComputeAutoscalerSpec) DeepCopyInto(out *RedisComputeAutoscalerSp
 		*out = new(ComputeAutoscalerSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Sentinel != nil {
+		in, out := &in.Sentinel, &out.Sentinel
+		*out = new(ComputeAutoscalerSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -2213,6 +2218,11 @@ func (in *RedisStorageAutoscalerSpec) DeepCopyInto(out *RedisStorageAutoscalerSp
 	}
 	if in.Cluster != nil {
 		in, out := &in.Cluster, &out.Cluster
+		*out = new(StorageAutoscalerSpec)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Sentinel != nil {
+		in, out := &in.Sentinel, &out.Sentinel
 		*out = new(StorageAutoscalerSpec)
 		(*in).DeepCopyInto(*out)
 	}
