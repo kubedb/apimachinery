@@ -21300,12 +21300,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchComputeAutoscale
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ElasticsearchComputeTopologyAutoscalerSpec"),
 						},
 					},
-					"disableScaleDown": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
 				},
 			},
 		},
@@ -21848,12 +21842,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBComputeAutoscalerSpec(
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
 						},
 					},
-					"disableScaleDown": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
 				},
 			},
 		},
@@ -22314,12 +22302,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBComputeAutoscalerSpec(
 					"mongos": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
-						},
-					},
-					"disableScaleDown": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
 						},
 					},
 				},
