@@ -63,8 +63,7 @@ type PerconaXtraDBAutoscalerSpec struct {
 }
 
 type PerconaXtraDBComputeAutoscalerSpec struct {
-	PerconaXtraDB    *ComputeAutoscalerSpec `json:"perconaxtradb,omitempty"`
-	DisableScaleDown bool                   `json:"disableScaleDown,omitempty"`
+	PerconaXtraDB *ComputeAutoscalerSpec `json:"perconaxtradb,omitempty"`
 }
 
 type PerconaXtraDBStorageAutoscalerSpec struct {

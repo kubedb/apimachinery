@@ -33839,6 +33839,7 @@
       }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBTLSSpec": {
+      "description": "PerconaXtraDBTLSSpec specifies information necessary for configuring TLS",
       "type": "object",
       "properties": {
         "certificates": {

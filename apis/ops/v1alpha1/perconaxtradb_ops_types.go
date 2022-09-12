@@ -20,7 +20,6 @@ import (
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 const (
@@ -131,18 +130,6 @@ type PerconaXtraDBTLSSpec struct {
 	// Indicates that the database server need to be encrypted connections(ssl)
 	// +optional
 	RequireSSL *bool `json:"requireSSL,omitempty"`
-}
-
-// PerconaXtraDBOpsRequestStatus is the status for PerconaXtraDBOpsRequest
-type PerconaXtraDBOpsRequestStatus struct {
-	Phase OpsRequestPhase `json:"phase,omitempty"`
-	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
-	// resource's generation, which is updated on mutation by the API Server.
-	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
-	// Conditions applied to the request, such as approval or denial.
-	// +optional
-	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
