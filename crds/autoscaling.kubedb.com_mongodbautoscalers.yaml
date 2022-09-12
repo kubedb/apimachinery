@@ -78,8 +78,6 @@ spec:
                       trigger:
                         type: string
                     type: object
-                  disableScaleDown:
-                    type: boolean
                   mongos:
                     properties:
                       containerControlledValues:
