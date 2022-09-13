@@ -46,6 +46,8 @@ type Interface interface {
 	ProxySQLOpsRequests() ProxySQLOpsRequestInformer
 	// RedisOpsRequests returns a RedisOpsRequestInformer.
 	RedisOpsRequests() RedisOpsRequestInformer
+	// RedisSentinelOpsRequests returns a RedisSentinelOpsRequestInformer.
+	RedisSentinelOpsRequests() RedisSentinelOpsRequestInformer
 }
 
 type version struct {
@@ -112,4 +114,9 @@ func (v *version) ProxySQLOpsRequests() ProxySQLOpsRequestInformer {
 // RedisOpsRequests returns a RedisOpsRequestInformer.
 func (v *version) RedisOpsRequests() RedisOpsRequestInformer {
 	return &redisOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// RedisSentinelOpsRequests returns a RedisSentinelOpsRequestInformer.
+func (v *version) RedisSentinelOpsRequests() RedisSentinelOpsRequestInformer {
+	return &redisSentinelOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
