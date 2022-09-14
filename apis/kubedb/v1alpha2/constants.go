@@ -141,6 +141,7 @@ const (
 	NodeTypeShard                 = "shard"
 	NodeTypeConfig                = "configsvr"
 	NodeTypeArbiter               = "arbiter"
+	NodeTypeHidden                = "hidden"
 	NodeTypeReplica               = "replica"
 	NodeTypeStandalone            = "standalone"
 

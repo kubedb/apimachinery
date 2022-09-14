@@ -30853,6 +30853,10 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.HealthCheckSpec"
         },
+        "hidden": {
+          "description": "Hidden component of mongodb which is invisible to client applications More info: https://www.mongodb.com/docs/manual/core/replica-set-hidden-member/",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoHiddenNode"
+        },
         "init": {
           "description": "Init is used to initialize database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
@@ -30940,6 +30944,35 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoHiddenNode": {
+      "type": "object",
+      "required": [
+        "replicas",
+        "storage"
+      ],
+      "properties": {
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "podTemplate": {
+          "description": "PodTemplate is an optional configuration for pods used to expose database",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "replicas": {
+          "description": "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "storage": {
+          "description": "Storage to specify how storage shall be used.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
         }
       }
     },
@@ -32956,6 +32989,15 @@
       "description": "EtcdVolumeExpansionSpec is the spec for Etcd volume expansion",
       "type": "object"
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.HiddenNode": {
+      "type": "object",
+      "properties": {
+        "replicas": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedCustomConfigurationSpec": {
       "type": "object"
     },
@@ -33140,6 +33182,9 @@
         "configServer": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
         },
+        "hidden": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
+        },
         "mongos": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
         },
@@ -33160,6 +33205,9 @@
       "properties": {
         "configServer": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ConfigNode"
+        },
+        "hidden": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.HiddenNode"
         },
         "mongos": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongosNode"
@@ -33355,6 +33403,9 @@
         "exporter": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
+        "hidden": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "mongos": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
@@ -33374,6 +33425,9 @@
       "type": "object",
       "properties": {
         "configServer": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "hidden": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "mode": {
