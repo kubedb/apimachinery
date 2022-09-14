@@ -148,7 +148,7 @@ type MongoDBSpec struct {
 	// More info: https://www.mongodb.com/docs/manual/core/replica-set-hidden-member/
 	// +optional
 	// +nullable
-	Hidden *MongoHiddenNode `json:"hidden"`
+	Hidden *MongoHiddenNode `json:"hidden,omitempty"`
 
 	// HealthChecker defines attributes of the health checker
 	// +optional
