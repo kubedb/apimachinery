@@ -1403,21 +1403,7 @@ func (in *MongoHiddenNode) DeepCopyInto(out *MongoHiddenNode) {
 		**out = **in
 	}
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
-	if in.Replicas != nil {
-		in, out := &in.Replicas, &out.Replicas
-		*out = new(int32)
-		**out = **in
-	}
-	if in.Storage != nil {
-		in, out := &in.Storage, &out.Storage
-		*out = new(corev1.PersistentVolumeClaimSpec)
-		(*in).DeepCopyInto(*out)
-	}
-	if in.EphemeralStorage != nil {
-		in, out := &in.EphemeralStorage, &out.EphemeralStorage
-		*out = new(corev1.EmptyDirVolumeSource)
-		(*in).DeepCopyInto(*out)
-	}
+	in.Storage.DeepCopyInto(&out.Storage)
 	return
 }
 

@@ -292,13 +292,10 @@ type MongoHiddenNode struct {
 
 	// Replicas represents number of replicas of this specific node.
 	// If current node has replicaset enabled, then replicas is the amount of replicaset nodes.
-	Replicas *int32 `json:"replicas,omitempty"`
+	Replicas int32 `json:"replicas"`
 
 	// Storage to specify how storage shall be used.
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
-
-	// EphemeralStorage spec to specify the configuration of ephemeral storage type.
-	EphemeralStorage *core.EmptyDirVolumeSource `json:"ephemeralStorage,omitempty"`
+	Storage core.PersistentVolumeClaimSpec `json:"storage"`
 }
 
 type MongoDBNode struct {

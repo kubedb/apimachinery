@@ -30949,14 +30949,14 @@
     },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoHiddenNode": {
       "type": "object",
+      "required": [
+        "replicas",
+        "storage"
+      ],
       "properties": {
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
-        },
-        "ephemeralStorage": {
-          "description": "EphemeralStorage spec to specify the configuration of ephemeral storage type.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.EmptyDirVolumeSource"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",
@@ -30966,10 +30966,12 @@
         "replicas": {
           "description": "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "default": 0
         },
         "storage": {
           "description": "Storage to specify how storage shall be used.",
+          "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
         }
       }

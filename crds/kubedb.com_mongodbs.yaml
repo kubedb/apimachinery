@@ -2536,17 +2536,6 @@ spec:
                       name:
                         type: string
                     type: object
-                  ephemeralStorage:
-                    properties:
-                      medium:
-                        type: string
-                      sizeLimit:
-                        anyOf:
-                        - type: integer
-                        - type: string
-                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                        x-kubernetes-int-or-string: true
-                    type: object
                   podTemplate:
                     properties:
                       controller:
@@ -4897,6 +4886,9 @@ spec:
                       volumeName:
                         type: string
                     type: object
+                required:
+                - replicas
+                - storage
                 type: object
               init:
                 properties:

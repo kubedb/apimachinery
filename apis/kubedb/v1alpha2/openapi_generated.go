@@ -23252,6 +23252,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoHiddenNode(ref common.Referen
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Replicas represents number of replicas of this specific node. If current node has replicaset enabled, then replicas is the amount of replicaset nodes.",
+							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -23259,20 +23260,16 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoHiddenNode(ref common.Referen
 					"storage": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Storage to specify how storage shall be used.",
+							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 						},
 					},
-					"ephemeralStorage": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EphemeralStorage spec to specify the configuration of ephemeral storage type.",
-							Ref:         ref("k8s.io/api/core/v1.EmptyDirVolumeSource"),
-						},
-					},
 				},
+				Required: []string{"replicas", "storage"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
 	}
 }
 
