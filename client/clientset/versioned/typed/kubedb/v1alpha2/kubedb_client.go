@@ -39,8 +39,10 @@ type KubedbV1alpha2Interface interface {
 	PgBouncersGetter
 	PostgresesGetter
 	ProxySQLsGetter
+	PublishersGetter
 	RedisesGetter
 	RedisSentinelsGetter
+	SubscribersGetter
 }
 
 // KubedbV1alpha2Client is used to interact with features provided by the kubedb.com group.
@@ -88,12 +90,20 @@ func (c *KubedbV1alpha2Client) ProxySQLs(namespace string) ProxySQLInterface {
 	return newProxySQLs(c, namespace)
 }
 
+func (c *KubedbV1alpha2Client) Publishers(namespace string) PublisherInterface {
+	return newPublishers(c, namespace)
+}
+
 func (c *KubedbV1alpha2Client) Redises(namespace string) RedisInterface {
 	return newRedises(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) RedisSentinels(namespace string) RedisSentinelInterface {
 	return newRedisSentinels(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Subscribers(namespace string) SubscriberInterface {
+	return newSubscribers(c, namespace)
 }
 
 // NewForConfig creates a new KubedbV1alpha2Client for the given config.

@@ -74,10 +74,14 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PostgresList{},
 		&ProxySQL{},
 		&ProxySQLList{},
+		&Publisher{},
+		&PublisherList{},
 		&Redis{},
 		&RedisList{},
 		&RedisSentinel{},
 		&RedisSentinelList{},
+		&Subscriber{},
+		&SubscriberList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

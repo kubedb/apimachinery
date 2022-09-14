@@ -69,12 +69,20 @@ func (c *FakeKubedbV1alpha2) ProxySQLs(namespace string) v1alpha2.ProxySQLInterf
 	return &FakeProxySQLs{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) Publishers(namespace string) v1alpha2.PublisherInterface {
+	return &FakePublishers{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Redises(namespace string) v1alpha2.RedisInterface {
 	return &FakeRedises{c, namespace}
 }
 
 func (c *FakeKubedbV1alpha2) RedisSentinels(namespace string) v1alpha2.RedisSentinelInterface {
 	return &FakeRedisSentinels{c, namespace}
+}
+
+func (c *FakeKubedbV1alpha2) Subscribers(namespace string) v1alpha2.SubscriberInterface {
+	return &FakeSubscribers{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

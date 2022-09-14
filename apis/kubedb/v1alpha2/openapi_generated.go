@@ -421,6 +421,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers":               schema_apimachinery_apis_kubedb_v1alpha2_AllowedConsumers(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedSubscribers":             schema_apimachinery_apis_kubedb_v1alpha2_AllowedSubscribers(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec":                    schema_apimachinery_apis_kubedb_v1alpha2_AutoOpsSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConnectionPoolConfig":           schema_apimachinery_apis_kubedb_v1alpha2_ConnectionPoolConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConsumerNamespaces":             schema_apimachinery_apis_kubedb_v1alpha2_ConsumerNamespaces(ref),
@@ -438,8 +439,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdList":                       schema_apimachinery_apis_kubedb_v1alpha2_EtcdList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_EtcdSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdStatus":                     schema_apimachinery_apis_kubedb_v1alpha2_EtcdStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ExternalPublisherInfo":          schema_apimachinery_apis_kubedb_v1alpha2_ExternalPublisherInfo(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KernelSettings":                 schema_apimachinery_apis_kubedb_v1alpha2_KernelSettings(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ManagedPublisherInfo":           schema_apimachinery_apis_kubedb_v1alpha2_ManagedPublisherInfo(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MariaDB":                        schema_apimachinery_apis_kubedb_v1alpha2_MariaDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MariaDBList":                    schema_apimachinery_apis_kubedb_v1alpha2_MariaDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MariaDBSpec":                    schema_apimachinery_apis_kubedb_v1alpha2_MariaDBSpec(ref),
@@ -490,6 +493,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLList":                   schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLSpec":                   schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLStatus":                 schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Publisher":                      schema_apimachinery_apis_kubedb_v1alpha2_Publisher(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherInfo":                  schema_apimachinery_apis_kubedb_v1alpha2_PublisherInfo(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherList":                  schema_apimachinery_apis_kubedb_v1alpha2_PublisherList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherParameters":            schema_apimachinery_apis_kubedb_v1alpha2_PublisherParameters(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherSpec":                  schema_apimachinery_apis_kubedb_v1alpha2_PublisherSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherStatus":                schema_apimachinery_apis_kubedb_v1alpha2_PublisherStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RecoveryTarget":                 schema_apimachinery_apis_kubedb_v1alpha2_RecoveryTarget(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Redis":                          schema_apimachinery_apis_kubedb_v1alpha2_Redis(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisClusterSpec":               schema_apimachinery_apis_kubedb_v1alpha2_RedisClusterSpec(ref),
@@ -503,6 +512,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisStatus":                    schema_apimachinery_apis_kubedb_v1alpha2_RedisStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ScriptSourceSpec":               schema_apimachinery_apis_kubedb_v1alpha2_ScriptSourceSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SemiSyncSpec":                   schema_apimachinery_apis_kubedb_v1alpha2_SemiSyncSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Subscriber":                     schema_apimachinery_apis_kubedb_v1alpha2_Subscriber(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberList":                 schema_apimachinery_apis_kubedb_v1alpha2_SubscriberList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberNamespaces":           schema_apimachinery_apis_kubedb_v1alpha2_SubscriberNamespaces(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberParameters":           schema_apimachinery_apis_kubedb_v1alpha2_SubscriberParameters(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberSpec":                 schema_apimachinery_apis_kubedb_v1alpha2_SubscriberSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberStatus":               schema_apimachinery_apis_kubedb_v1alpha2_SubscriberStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SystemUserSecretsSpec":          schema_apimachinery_apis_kubedb_v1alpha2_SystemUserSecretsSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.TLSPolicy":                      schema_apimachinery_apis_kubedb_v1alpha2_TLSPolicy(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchApp":               schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchApp(ref),
@@ -20849,6 +20864,33 @@ func schema_apimachinery_apis_kubedb_v1alpha2_AllowedConsumers(ref common.Refere
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_AllowedSubscribers(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AllowedSubscribers defines which consumers may refer to a database instance.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"namespaces": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespaces indicates namespaces from which Subscribers may be attached to",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberNamespaces"),
+						},
+					},
+					"selector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Selector specifies a selector for consumers that are allowed to bind to this database instance.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberNamespaces"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_AutoOpsSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22017,6 +22059,50 @@ func schema_apimachinery_apis_kubedb_v1alpha2_EtcdStatus(ref common.ReferenceCal
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_ExternalPublisherInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"serverRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServerRef specifies the database appbinding reference in any namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"databaseName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseName is the name of the target database inside a Postgres instance.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"publications": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"serverRef", "databaseName", "publications"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22082,6 +22168,42 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KernelSettings(ref common.Referenc
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.Sysctl"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_ManagedPublisherInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"refs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "publication crd ref",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"refs"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -25043,6 +25165,304 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLStatus(ref common.Referenc
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_Publisher(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Publisher is the Schema for the publishers API",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_PublisherInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"managed": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ManagedPublisherInfo"),
+						},
+					},
+					"external": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ExternalPublisherInfo"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ExternalPublisherInfo", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ManagedPublisherInfo"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_PublisherList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PublisherList contains a list of Publisher",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Publisher"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Publisher"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_PublisherParameters(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"operations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Publish parameters determines which DML operations will be published by the new publication to the subscribers. The allowed operations are insert, update, delete, and truncate. The default is to publish all actions, and so the default value for this option is 'insert, update, delete, truncate'.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"publishViaPartitionRoot": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PublishViaPartitionRoot parameter determines whether changes in a partitioned table (or on its partitions) contained in the publication will be published using the identity and schema of the partitioned table rather than that of the individual partitions that are actually changed; the latter is the default. Enabling this allows the changes to be replicated into a non-partitioned table or a partitioned table consisting of a different set of partitions.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_PublisherSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PublisherSpec defines the desired state of Publisher",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the publisher",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"serverRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServerRef specifies the database appbinding reference in any namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"databaseName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseName is the name of the target database inside a Postgres instance.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"publishAllTables": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PublishAllTables is the option to publish all tables in the database",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"tables": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Tables is the list of table to publish",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"parameters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Parameters to set while creating publisher",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherParameters"),
+						},
+					},
+					"allowedSubscribers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AllowedSubscribers defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedSubscribers"),
+						},
+					},
+					"disable": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy controls the delete operation for database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "serverRef", "databaseName"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedSubscribers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherParameters"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_PublisherStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PublisherStatus defines the observed state of Publisher",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions applied to the database, such as approval or denial.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"subscribers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database authentication secret",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition", "kmodules.xyz/client-go/api/v1.ObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_RecoveryTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -25909,6 +26329,303 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SemiSyncSpec(ref common.ReferenceC
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_Subscriber(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Subscriber is the Schema for the subscribers API",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_SubscriberList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SubscriberList contains a list of Subscriber",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Subscriber"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Subscriber"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_SubscriberNamespaces(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SubscriberNamespaces indicate which namespaces Subscribers should be selected from.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"from": {
+						SchemaProps: spec.SchemaProps{
+							Description: "From indicates where Subscribers will be selected for the database instance. Possible values are: * All: Subscribers in all namespaces. * Selector: Subscribers in namespaces selected by the selector * Same: Only Subscribers in the same namespace",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"selector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Selector must be specified when From is set to \"Selector\". In that case, only Subscribers in Namespaces matching this Selector will be selected by the database instance. This field is ignored for other values of \"From\".",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_SubscriberParameters(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tableCreationPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"copyData": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"createSlot": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"slotName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"synchronousCommit": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"connect": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"streaming": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"binary": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_SubscriberSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SubscriberSpec defines the desired state of Subscriber",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the publisher",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"serverRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServerRef specifies the database appbinding reference in any namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"databaseName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseName is the name of the target database inside a Postgres instance.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"parameters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Parameters to set while creating subscriber",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberParameters"),
+						},
+					},
+					"publisher": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherInfo"),
+						},
+					},
+					"disable": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy controls the delete operation for database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "serverRef", "databaseName", "publisher"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PublisherInfo", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SubscriberParameters"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_SubscriberStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SubscriberStatus defines the observed state of Subscriber",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions applied to the database, such as approval or denial.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition"},
 	}
 }
 

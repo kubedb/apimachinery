@@ -38,6 +38,10 @@ type PostgresExpansion interface{}
 
 type ProxySQLExpansion interface{}
 
+type PublisherExpansion interface{}
+
 type RedisExpansion interface{}
 
 type RedisSentinelExpansion interface{}
+
+type SubscriberExpansion interface{}
