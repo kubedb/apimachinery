@@ -142,7 +142,7 @@ type MongoDBSpec struct {
 	// More info: https://docs.mongodb.com/manual/core/replica-set-arbiter/
 	// +optional
 	// +nullable
-	Arbiter *MongoArbiterNode `json:"arbiter"`
+	Arbiter *MongoArbiterNode `json:"arbiter,omitempty"`
 
 	// Hidden component of mongodb which is invisible to client applications
 	// More info: https://www.mongodb.com/docs/manual/core/replica-set-hidden-member/
