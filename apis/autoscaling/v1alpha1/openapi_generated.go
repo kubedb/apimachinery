@@ -496,6 +496,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisAutoscalerSpec":                        schema_apimachinery_apis_autoscaling_v1alpha1_RedisAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisComputeAutoscalerSpec":                 schema_apimachinery_apis_autoscaling_v1alpha1_RedisComputeAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisOpsRequestOptions":                     schema_apimachinery_apis_autoscaling_v1alpha1_RedisOpsRequestOptions(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelAutoscaler":                    schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelAutoscaler(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelAutoscalerList":                schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelAutoscalerList(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelAutoscalerSpec":                schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelAutoscalerSpec(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelComputeAutoscalerSpec":         schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelComputeAutoscalerSpec(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelOpsRequestOptions":             schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelOpsRequestOptions(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelStorageAutoscalerSpec":         schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelStorageAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisStorageAutoscalerSpec":                 schema_apimachinery_apis_autoscaling_v1alpha1_RedisStorageAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec":                      schema_apimachinery_apis_autoscaling_v1alpha1_StorageAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPAStatus":                                  schema_apimachinery_apis_autoscaling_v1alpha1_VPAStatus(ref),
@@ -23912,6 +23918,208 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_RedisOpsRequestOptions(ref co
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelAutoscaler(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec is the specification for the behaviour of the autoscaler. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelAutoscalerSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status is the current information about the autoscaler.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelAutoscalerSpec"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelAutoscalerList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RedisSentinelAutoscalerList is a list of horizontal pod autoscaler objects.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is the list of horizontal pod autoscaler objects.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelAutoscaler"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelAutoscaler"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelAutoscalerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RedisSentinelAutoscalerSpec is the specification of the behavior of the autoscaler.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"opsRequestOptions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This field will be used to control the behaviour of ops-manager",
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelOpsRequestOptions"),
+						},
+					},
+					"compute": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelComputeAutoscalerSpec"),
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelStorageAutoscalerSpec"),
+						},
+					},
+				},
+				Required: []string{"databaseRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelOpsRequestOptions", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.RedisSentinelStorageAutoscalerSpec"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelComputeAutoscalerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"sentinel": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelOpsRequestOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"apply": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelStorageAutoscalerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"sentinel": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"},
 	}
 }
 
