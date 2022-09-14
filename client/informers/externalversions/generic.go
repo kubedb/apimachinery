@@ -26,6 +26,7 @@ import (
 	dashboardv1alpha1 "kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	postgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
 	schemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
 
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -163,6 +164,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().RedisOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("redissentinelopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().RedisSentinelOpsRequests().Informer()}, nil
+
+		// Group=postgres.kubedb.com, Version=v1alpha1
+	case postgresv1alpha1.SchemeGroupVersion.WithResource("publishers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Postgres().V1alpha1().Publishers().Informer()}, nil
+	case postgresv1alpha1.SchemeGroupVersion.WithResource("subscribers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Postgres().V1alpha1().Subscribers().Informer()}, nil
 
 		// Group=schema.kubedb.com, Version=v1alpha1
 	case schemav1alpha1.SchemeGroupVersion.WithResource("mariadbdatabases"):
