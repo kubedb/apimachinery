@@ -14,17 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+package v1alpha1
 
 import (
-	"kubedb.dev/apimachinery/apis/kubedb"
+	"kubedb.dev/apimachinery/apis/postgres"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-var SchemeGroupVersion = schema.GroupVersion{Group: kubedb.GroupName, Version: "v1alpha2"}
+var SchemeGroupVersion = schema.GroupVersion{Group: postgres.GroupName, Version: "v1alpha1"}
 
 var (
 	// TODO: move SchemeBuilder with zz_generated.deepcopy.go to k8s.io/api.
@@ -54,30 +54,10 @@ func Resource(resource string) schema.GroupResource {
 // Adds the list of known types to api.Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
-		&Elasticsearch{},
-		&ElasticsearchList{},
-		&Etcd{},
-		&EtcdList{},
-		&MariaDB{},
-		&MariaDBList{},
-		&Memcached{},
-		&MemcachedList{},
-		&MongoDB{},
-		&MongoDBList{},
-		&MySQL{},
-		&MySQLList{},
-		&PerconaXtraDB{},
-		&PerconaXtraDBList{},
-		&PgBouncer{},
-		&PgBouncerList{},
-		&Postgres{},
-		&PostgresList{},
-		&ProxySQL{},
-		&ProxySQLList{},
-		&Redis{},
-		&RedisList{},
-		&RedisSentinel{},
-		&RedisSentinelList{},
+		&Publisher{},
+		&PublisherList{},
+		&Subscriber{},
+		&SubscriberList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

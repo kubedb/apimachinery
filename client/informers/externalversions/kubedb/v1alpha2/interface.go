@@ -44,14 +44,10 @@ type Interface interface {
 	Postgreses() PostgresInformer
 	// ProxySQLs returns a ProxySQLInformer.
 	ProxySQLs() ProxySQLInformer
-	// Publishers returns a PublisherInformer.
-	Publishers() PublisherInformer
 	// Redises returns a RedisInformer.
 	Redises() RedisInformer
 	// RedisSentinels returns a RedisSentinelInformer.
 	RedisSentinels() RedisSentinelInformer
-	// Subscribers returns a SubscriberInformer.
-	Subscribers() SubscriberInformer
 }
 
 type version struct {
@@ -115,11 +111,6 @@ func (v *version) ProxySQLs() ProxySQLInformer {
 	return &proxySQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// Publishers returns a PublisherInformer.
-func (v *version) Publishers() PublisherInformer {
-	return &publisherInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
 // Redises returns a RedisInformer.
 func (v *version) Redises() RedisInformer {
 	return &redisInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -128,9 +119,4 @@ func (v *version) Redises() RedisInformer {
 // RedisSentinels returns a RedisSentinelInformer.
 func (v *version) RedisSentinels() RedisSentinelInformer {
 	return &redisSentinelInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// Subscribers returns a SubscriberInformer.
-func (v *version) Subscribers() SubscriberInformer {
-	return &subscriberInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

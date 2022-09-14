@@ -4,9 +4,9 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: subscribers.kubedb.com
+  name: subscribers.postgres.kubedb.com
 spec:
-  group: kubedb.com
+  group: postgres.kubedb.com
   names:
     categories:
     - datastore
@@ -28,7 +28,7 @@ spec:
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
-    name: v1alpha2
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         properties:

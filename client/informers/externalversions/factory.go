@@ -30,6 +30,7 @@ import (
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
 	kubedb "kubedb.dev/apimachinery/client/informers/externalversions/kubedb"
 	ops "kubedb.dev/apimachinery/client/informers/externalversions/ops"
+	postgres "kubedb.dev/apimachinery/client/informers/externalversions/postgres"
 	externalversionsschema "kubedb.dev/apimachinery/client/informers/externalversions/schema"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -183,6 +184,7 @@ type SharedInformerFactory interface {
 	Dashboard() dashboard.Interface
 	Kubedb() kubedb.Interface
 	Ops() ops.Interface
+	Postgres() postgres.Interface
 	Schema() externalversionsschema.Interface
 }
 
@@ -204,6 +206,10 @@ func (f *sharedInformerFactory) Kubedb() kubedb.Interface {
 
 func (f *sharedInformerFactory) Ops() ops.Interface {
 	return ops.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Postgres() postgres.Interface {
+	return postgres.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) Schema() externalversionsschema.Interface {

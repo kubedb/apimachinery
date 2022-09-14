@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+package v1alpha1
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -36,6 +36,21 @@ const (
 	DeletionPolicyDelete DeletionPolicy = "Delete"
 	// Pauses database into a DormantDatabase
 	DeletionPolicyRetain DeletionPolicy = "Retain"
+)
+
+// FromNamespaces specifies namespace from which Consumers may be attached to a
+// database instance.
+//
+// +kubebuilder:validation:Enum=All;Selector;Same
+type FromNamespaces string
+
+const (
+	// Consumers in all namespaces may be attached to the database instance.
+	NamespacesFromAll FromNamespaces = "All"
+	// Only Consumers in namespaces selected by the selector may be attached to the database instance.
+	NamespacesFromSelector FromNamespaces = "Selector"
+	// Only Consumers in the same namespace as the database instance may be attached to it.
+	NamespacesFromSame FromNamespaces = "Same"
 )
 
 // AllowedSubscribers defines which consumers may refer to a database instance.

@@ -21,7 +21,7 @@ package fake
 import (
 	"context"
 
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	v1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
@@ -33,29 +33,29 @@ import (
 
 // FakePublishers implements PublisherInterface
 type FakePublishers struct {
-	Fake *FakeKubedbV1alpha2
+	Fake *FakePostgresV1alpha1
 	ns   string
 }
 
-var publishersResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1alpha2", Resource: "publishers"}
+var publishersResource = schema.GroupVersionResource{Group: "postgres.kubedb.com", Version: "v1alpha1", Resource: "publishers"}
 
-var publishersKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "v1alpha2", Kind: "Publisher"}
+var publishersKind = schema.GroupVersionKind{Group: "postgres.kubedb.com", Version: "v1alpha1", Kind: "Publisher"}
 
 // Get takes name of the publisher, and returns the corresponding publisher object, and an error if there is any.
-func (c *FakePublishers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Publisher, err error) {
+func (c *FakePublishers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Publisher, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(publishersResource, c.ns, name), &v1alpha2.Publisher{})
+		Invokes(testing.NewGetAction(publishersResource, c.ns, name), &v1alpha1.Publisher{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha2.Publisher), err
+	return obj.(*v1alpha1.Publisher), err
 }
 
 // List takes label and field selectors, and returns the list of Publishers that match those selectors.
-func (c *FakePublishers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.PublisherList, err error) {
+func (c *FakePublishers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PublisherList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(publishersResource, publishersKind, c.ns, opts), &v1alpha2.PublisherList{})
+		Invokes(testing.NewListAction(publishersResource, publishersKind, c.ns, opts), &v1alpha1.PublisherList{})
 
 	if obj == nil {
 		return nil, err
@@ -65,8 +65,8 @@ func (c *FakePublishers) List(ctx context.Context, opts v1.ListOptions) (result 
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &v1alpha2.PublisherList{ListMeta: obj.(*v1alpha2.PublisherList).ListMeta}
-	for _, item := range obj.(*v1alpha2.PublisherList).Items {
+	list := &v1alpha1.PublisherList{ListMeta: obj.(*v1alpha1.PublisherList).ListMeta}
+	for _, item := range obj.(*v1alpha1.PublisherList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -82,43 +82,43 @@ func (c *FakePublishers) Watch(ctx context.Context, opts v1.ListOptions) (watch.
 }
 
 // Create takes the representation of a publisher and creates it.  Returns the server's representation of the publisher, and an error, if there is any.
-func (c *FakePublishers) Create(ctx context.Context, publisher *v1alpha2.Publisher, opts v1.CreateOptions) (result *v1alpha2.Publisher, err error) {
+func (c *FakePublishers) Create(ctx context.Context, publisher *v1alpha1.Publisher, opts v1.CreateOptions) (result *v1alpha1.Publisher, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(publishersResource, c.ns, publisher), &v1alpha2.Publisher{})
+		Invokes(testing.NewCreateAction(publishersResource, c.ns, publisher), &v1alpha1.Publisher{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha2.Publisher), err
+	return obj.(*v1alpha1.Publisher), err
 }
 
 // Update takes the representation of a publisher and updates it. Returns the server's representation of the publisher, and an error, if there is any.
-func (c *FakePublishers) Update(ctx context.Context, publisher *v1alpha2.Publisher, opts v1.UpdateOptions) (result *v1alpha2.Publisher, err error) {
+func (c *FakePublishers) Update(ctx context.Context, publisher *v1alpha1.Publisher, opts v1.UpdateOptions) (result *v1alpha1.Publisher, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(publishersResource, c.ns, publisher), &v1alpha2.Publisher{})
+		Invokes(testing.NewUpdateAction(publishersResource, c.ns, publisher), &v1alpha1.Publisher{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha2.Publisher), err
+	return obj.(*v1alpha1.Publisher), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePublishers) UpdateStatus(ctx context.Context, publisher *v1alpha2.Publisher, opts v1.UpdateOptions) (*v1alpha2.Publisher, error) {
+func (c *FakePublishers) UpdateStatus(ctx context.Context, publisher *v1alpha1.Publisher, opts v1.UpdateOptions) (*v1alpha1.Publisher, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(publishersResource, "status", c.ns, publisher), &v1alpha2.Publisher{})
+		Invokes(testing.NewUpdateSubresourceAction(publishersResource, "status", c.ns, publisher), &v1alpha1.Publisher{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha2.Publisher), err
+	return obj.(*v1alpha1.Publisher), err
 }
 
 // Delete takes name of the publisher and deletes it. Returns an error if one occurs.
 func (c *FakePublishers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(publishersResource, c.ns, name, opts), &v1alpha2.Publisher{})
+		Invokes(testing.NewDeleteActionWithOptions(publishersResource, c.ns, name, opts), &v1alpha1.Publisher{})
 
 	return err
 }
@@ -127,17 +127,17 @@ func (c *FakePublishers) Delete(ctx context.Context, name string, opts v1.Delete
 func (c *FakePublishers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(publishersResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &v1alpha2.PublisherList{})
+	_, err := c.Fake.Invokes(action, &v1alpha1.PublisherList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched publisher.
-func (c *FakePublishers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.Publisher, err error) {
+func (c *FakePublishers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Publisher, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(publishersResource, c.ns, name, pt, data, subresources...), &v1alpha2.Publisher{})
+		Invokes(testing.NewPatchSubresourceAction(publishersResource, c.ns, name, pt, data, subresources...), &v1alpha1.Publisher{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha2.Publisher), err
+	return obj.(*v1alpha1.Publisher), err
 }

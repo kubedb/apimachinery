@@ -98,14 +98,6 @@ type ProxySQLListerExpansion interface{}
 // ProxySQLNamespaceLister.
 type ProxySQLNamespaceListerExpansion interface{}
 
-// PublisherListerExpansion allows custom methods to be added to
-// PublisherLister.
-type PublisherListerExpansion interface{}
-
-// PublisherNamespaceListerExpansion allows custom methods to be added to
-// PublisherNamespaceLister.
-type PublisherNamespaceListerExpansion interface{}
-
 // RedisListerExpansion allows custom methods to be added to
 // RedisLister.
 type RedisListerExpansion interface{}
@@ -121,11 +113,3 @@ type RedisSentinelListerExpansion interface{}
 // RedisSentinelNamespaceListerExpansion allows custom methods to be added to
 // RedisSentinelNamespaceLister.
 type RedisSentinelNamespaceListerExpansion interface{}
-
-// SubscriberListerExpansion allows custom methods to be added to
-// SubscriberLister.
-type SubscriberListerExpansion interface{}
-
-// SubscriberNamespaceListerExpansion allows custom methods to be added to
-// SubscriberNamespaceLister.
-type SubscriberNamespaceListerExpansion interface{}
