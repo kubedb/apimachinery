@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: perconaxtradbautoscalers.autoscaling.kubedb.com
+  name: redissentinelautoscalers.autoscaling.kubedb.com
 spec:
   group: autoscaling.kubedb.com
   names:
@@ -12,12 +12,12 @@ spec:
     - datastore
     - kubedb
     - appscode
-    kind: PerconaXtraDBAutoscaler
-    listKind: PerconaXtraDBAutoscalerList
-    plural: perconaxtradbautoscalers
+    kind: RedisSentinelAutoscaler
+    listKind: RedisSentinelAutoscalerList
+    plural: redissentinelautoscalers
     shortNames:
-    - pxcscaler
-    singular: perconaxtradbautoscaler
+    - rdsscaler
+    singular: redissentinelautoscaler
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -34,7 +34,7 @@ spec:
             properties:
               compute:
                 properties:
-                  perconaxtradb:
+                  sentinel:
                     properties:
                       containerControlledValues:
                         enum:
@@ -84,9 +84,20 @@ spec:
                   name:
                     type: string
                 type: object
+              opsRequestOptions:
+                properties:
+                  apply:
+                    default: IfReady
+                    enum:
+                    - IfReady
+                    - Always
+                    type: string
+                  timeout:
+                    type: string
+                type: object
               storage:
                 properties:
-                  perconaxtradb:
+                  sentinel:
                     properties:
                       expansionMode:
                         enum:
@@ -290,8 +301,6 @@ spec:
                   type: object
                 type: array
             type: object
-        required:
-        - spec
         type: object
     served: true
     storage: true

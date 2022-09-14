@@ -27,53 +27,53 @@ import (
 )
 
 // log is for logging in this package.
-var mariaLog = logf.Log.WithName("mariadb-autoscaler")
+var pxLog = logf.Log.WithName("perconaxtradb-autoscaler")
 
-func (in *MariaDBAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
+func (in *PerconaXtraDBAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
 	return builder.WebhookManagedBy(mgr).
 		For(in).
 		Complete()
 }
 
-// +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-mariadbautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=mariadbautoscaler,verbs=create;update,versions=v1alpha1,name=mmariadbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
+// +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-perconaxtradbautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=perconaxtradbautoscaler,verbs=create;update,versions=v1alpha1,name=mperconaxtradbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &MariaDBAutoscaler{}
+var _ webhook.Defaulter = &PerconaXtraDBAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MariaDBAutoscaler) Default() {
-	mariaLog.Info("defaulting", "name", in.Name)
+func (in *PerconaXtraDBAutoscaler) Default() {
+	pxLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
 }
 
-func (in *MariaDBAutoscaler) setDefaults() {
+func (in *PerconaXtraDBAutoscaler) setDefaults() {
 	if in.Spec.Storage != nil {
-		setDefaultStorageValues(in.Spec.Storage.MariaDB)
+		setDefaultStorageValues(in.Spec.Storage.PerconaXtraDB)
 	}
 	if in.Spec.Compute != nil {
-		setDefaultComputeValues(in.Spec.Compute.MariaDB)
+		setDefaultComputeValues(in.Spec.Compute.PerconaXtraDB)
 	}
 }
 
-// +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mariadbautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mariadbautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vmariadbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
+// +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-perconaxtradbautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=perconaxtradbautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vperconaxtradbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &MariaDBAutoscaler{}
+var _ webhook.Validator = &PerconaXtraDBAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MariaDBAutoscaler) ValidateCreate() error {
-	mariaLog.Info("validate create", "name", in.Name)
+func (in *PerconaXtraDBAutoscaler) ValidateCreate() error {
+	pxLog.Info("validate create", "name", in.Name)
 	return in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MariaDBAutoscaler) ValidateUpdate(old runtime.Object) error {
+func (in *PerconaXtraDBAutoscaler) ValidateUpdate(old runtime.Object) error {
 	return in.validate()
 }
 
-func (_ MariaDBAutoscaler) ValidateDelete() error {
+func (_ PerconaXtraDBAutoscaler) ValidateDelete() error {
 	return nil
 }
 
-func (in *MariaDBAutoscaler) validate() error {
+func (in *PerconaXtraDBAutoscaler) validate() error {
 	if in.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}

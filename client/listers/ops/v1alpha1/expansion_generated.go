@@ -105,3 +105,11 @@ type RedisOpsRequestListerExpansion interface{}
 // RedisOpsRequestNamespaceListerExpansion allows custom methods to be added to
 // RedisOpsRequestNamespaceLister.
 type RedisOpsRequestNamespaceListerExpansion interface{}
+
+// RedisSentinelOpsRequestListerExpansion allows custom methods to be added to
+// RedisSentinelOpsRequestLister.
+type RedisSentinelOpsRequestListerExpansion interface{}
+
+// RedisSentinelOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// RedisSentinelOpsRequestNamespaceLister.
+type RedisSentinelOpsRequestNamespaceListerExpansion interface{}

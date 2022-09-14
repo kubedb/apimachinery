@@ -24,13 +24,13 @@ import (
 )
 
 const (
-	ResourceCodeRedisAutoscaler     = "rdscaler"
-	ResourceKindRedisAutoscaler     = "RedisAutoscaler"
-	ResourceSingularRedisAutoscaler = "redisautoscaler"
-	ResourcePluralRedisAutoscaler   = "redisautoscalers"
+	ResourceCodeRedisSentinelAutoscaler     = "rdsscaler"
+	ResourceKindRedisSentinelAutoscaler     = "RedisSentinelAutoscaler"
+	ResourceSingularRedisSentinelAutoscaler = "redissentinelautoscaler"
+	ResourcePluralRedisSentinelAutoscaler   = "redissentinelautoscalers"
 )
 
-// RedisAutoscaler is the configuration for a redis database
+// RedisSentinelAutoscaler is the configuration for a redisSentinel database
 // autoscaler, which automatically manages pod resources based on historical and
 // real time resource utilization.
 
@@ -39,9 +39,9 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=redisautoscalers,singular=redisautoscaler,shortName=rdscaler,categories={datastore,kubedb,appscode}
+// +kubebuilder:resource:path=redissentinelautoscalers,singular=redissentinelautoscaler,shortName=rdsscaler,categories={datastore,kubedb,appscode}
 // +kubebuilder:subresource:status
-type RedisAutoscaler struct {
+type RedisSentinelAutoscaler struct {
 	metav1.TypeMeta `json:",inline"`
 	// metadata is the standard object metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
@@ -51,37 +51,33 @@ type RedisAutoscaler struct {
 	// spec is the specification for the behaviour of the autoscaler.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
 	// +optional
-	Spec RedisAutoscalerSpec `json:"spec,omitempty"`
+	Spec RedisSentinelAutoscalerSpec `json:"spec,omitempty"`
 
 	// status is the current information about the autoscaler.
 	// +optional
 	Status AutoscalerStatus `json:"status,omitempty"`
 }
 
-// RedisAutoscalerSpec is the specification of the behavior of the autoscaler.
-type RedisAutoscalerSpec struct {
+// RedisSentinelAutoscalerSpec is the specification of the behavior of the autoscaler.
+type RedisSentinelAutoscalerSpec struct {
 	DatabaseRef *core.LocalObjectReference `json:"databaseRef"`
 
 	// This field will be used to control the behaviour of ops-manager
-	OpsRequestOptions *RedisOpsRequestOptions `json:"opsRequestOptions,omitempty"`
+	OpsRequestOptions *RedisSentinelOpsRequestOptions `json:"opsRequestOptions,omitempty"`
 
-	Compute *RedisComputeAutoscalerSpec `json:"compute,omitempty"`
-	Storage *RedisStorageAutoscalerSpec `json:"storage,omitempty"`
+	Compute *RedisSentinelComputeAutoscalerSpec `json:"compute,omitempty"`
+	Storage *RedisSentinelStorageAutoscalerSpec `json:"storage,omitempty"`
 }
 
-type RedisComputeAutoscalerSpec struct {
-	Standalone *ComputeAutoscalerSpec `json:"standalone,omitempty"`
-	Cluster    *ComputeAutoscalerSpec `json:"cluster,omitempty"`
-	Sentinel   *ComputeAutoscalerSpec `json:"sentinel,omitempty"`
+type RedisSentinelComputeAutoscalerSpec struct {
+	Sentinel *ComputeAutoscalerSpec `json:"sentinel,omitempty"`
 }
 
-type RedisStorageAutoscalerSpec struct {
-	Standalone *StorageAutoscalerSpec `json:"standalone,omitempty"`
-	Cluster    *StorageAutoscalerSpec `json:"cluster,omitempty"`
-	Sentinel   *StorageAutoscalerSpec `json:"sentinel,omitempty"`
+type RedisSentinelStorageAutoscalerSpec struct {
+	Sentinel *StorageAutoscalerSpec `json:"sentinel,omitempty"`
 }
 
-type RedisOpsRequestOptions struct {
+type RedisSentinelOpsRequestOptions struct {
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
@@ -92,13 +88,13 @@ type RedisOpsRequestOptions struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// RedisAutoscalerList is a list of horizontal pod autoscaler objects.
-type RedisAutoscalerList struct {
+// RedisSentinelAutoscalerList is a list of horizontal pod autoscaler objects.
+type RedisSentinelAutoscalerList struct {
 	metav1.TypeMeta `json:",inline"`
 	// metadata is the standard list metadata.
 	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 
 	// items is the list of horizontal pod autoscaler objects.
-	Items []RedisAutoscaler `json:"items"`
+	Items []RedisSentinelAutoscaler `json:"items"`
 }
