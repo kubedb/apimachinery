@@ -239,6 +239,7 @@ spec:
                 - Reconfigure
                 - ReconfigureTLS
                 - Reprovision
+                - ReplaceSentinel
                 type: string
               upgrade:
                 properties:

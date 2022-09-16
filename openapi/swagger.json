@@ -35122,13 +35122,17 @@
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
         },
+        "sentinel": {
+          "description": "Specifies information necessary for replacing sentinel instances",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisSentinelSpec"
+        },
         "timeout": {
           "description": "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "tls": {
           "description": "Specifies information necessary for configuring TLS",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisTLSSpec"
         },
         "type": {
           "description": "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
@@ -35152,6 +35156,63 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisReplicaReadinessCriteria": {
       "description": "RedisReplicaReadinessCriteria is the criteria for checking readiness of a Redis pod after updating, horizontal scaling etc.",
       "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisSentinelRef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the refereed sentinel",
+          "type": "string"
+        },
+        "namespace": {
+          "description": "Namespace where refereed sentinel has been deployed",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisSentinelSpec": {
+      "type": "object",
+      "required": [
+        "ref"
+      ],
+      "properties": {
+        "ref": {
+          "description": "Sentinel Ref for new Sentinel which will replace the old sentinel",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisSentinelRef"
+        },
+        "removeUnusedSentinel": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisTLSSpec": {
+      "type": "object",
+      "properties": {
+        "certificates": {
+          "description": "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.CertificateSpec"
+          }
+        },
+        "issuerRef": {
+          "description": "IssuerRef is a reference to a Certificate Issuer.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+        },
+        "remove": {
+          "description": "Remove tells operator to remove TLS configuration",
+          "type": "boolean"
+        },
+        "rotateCertificates": {
+          "description": "RotateCertificates tells operator to initiate certificate rotation",
+          "type": "boolean"
+        },
+        "sentinel": {
+          "description": "This field is only needed in Redis Sentinel Mode when we add or remove TLS. In Redis Sentinel Mode, both redis instances and sentinel instances either have TLS or don't have TLS. So when want to add TLS to Redis in Sentinel Mode, current sentinel instances don't have TLS enabled, so we need to give a new Sentinel Reference which has TLS enabled and which will monitor the Redis instances when we add TLS to it",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisSentinelSpec"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisUpgradeSpec": {
       "type": "object",
