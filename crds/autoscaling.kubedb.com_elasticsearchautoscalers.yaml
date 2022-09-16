@@ -219,6 +219,19 @@ spec:
                   name:
                     type: string
                 type: object
+              opsRequestOptions:
+                properties:
+                  apply:
+                    default: IfReady
+                    enum:
+                    - IfReady
+                    - Always
+                    type: string
+                  readinessCriteria:
+                    type: object
+                  timeout:
+                    type: string
+                type: object
               storage:
                 properties:
                   node:
