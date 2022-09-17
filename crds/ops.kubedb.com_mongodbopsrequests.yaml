@@ -61,6 +61,7 @@ spec:
                           name:
                             type: string
                         type: object
+                        x-kubernetes-map-type: atomic
                       inlineConfig:
                         type: string
                       removeCustomConfig:
@@ -77,6 +78,7 @@ spec:
                           name:
                             type: string
                         type: object
+                        x-kubernetes-map-type: atomic
                       inlineConfig:
                         type: string
                       removeCustomConfig:
@@ -93,6 +95,7 @@ spec:
                           name:
                             type: string
                         type: object
+                        x-kubernetes-map-type: atomic
                       inlineConfig:
                         type: string
                       removeCustomConfig:
@@ -109,6 +112,7 @@ spec:
                           name:
                             type: string
                         type: object
+                        x-kubernetes-map-type: atomic
                       inlineConfig:
                         type: string
                       removeCustomConfig:
@@ -125,6 +129,7 @@ spec:
                           name:
                             type: string
                         type: object
+                        x-kubernetes-map-type: atomic
                       inlineConfig:
                         type: string
                       removeCustomConfig:
@@ -141,6 +146,7 @@ spec:
                           name:
                             type: string
                         type: object
+                        x-kubernetes-map-type: atomic
                       inlineConfig:
                         type: string
                       removeCustomConfig:
@@ -157,6 +163,7 @@ spec:
                           name:
                             type: string
                         type: object
+                        x-kubernetes-map-type: atomic
                       inlineConfig:
                         type: string
                       removeCustomConfig:
@@ -168,6 +175,7 @@ spec:
                   name:
                     type: string
                 type: object
+                x-kubernetes-map-type: atomic
               horizontalScaling:
                 properties:
                   configServer:
@@ -252,6 +260,7 @@ spec:
                           - kind
                           - name
                           type: object
+                          x-kubernetes-map-type: atomic
                         privateKey:
                           properties:
                             encoding:
@@ -317,6 +326,7 @@ spec:
                     - kind
                     - name
                     type: object
+                    x-kubernetes-map-type: atomic
                   remove:
                     type: boolean
                   rotateCertificates:

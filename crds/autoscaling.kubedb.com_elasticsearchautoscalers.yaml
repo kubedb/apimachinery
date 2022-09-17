@@ -219,6 +219,7 @@ spec:
                   name:
                     type: string
                 type: object
+                x-kubernetes-map-type: atomic
               storage:
                 properties:
                   node:
