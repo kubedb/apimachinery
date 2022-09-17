@@ -107,6 +107,7 @@ spec:
                             name:
                               type: string
                           type: object
+                          x-kubernetes-map-type: atomic
                         type: array
                     required:
                     - refs
@@ -117,6 +118,7 @@ spec:
                   name:
                     type: string
                 type: object
+                x-kubernetes-map-type: atomic
             required:
             - databaseName
             - name

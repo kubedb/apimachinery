@@ -17,6 +17,7 @@ import (
 //   - Labels
 //   - Annotations
 //   - Finalizers
+//
 // ref: https://github.com/kubernetes-sigs/controller-tools/commit/adfbf775195bf1c2366286684cc77a97b04a8cb9
 func SafeFuzzerFuncs(funcs ...fuzzer.FuzzerFuncs) fuzzer.FuzzerFuncs {
 	return func(codecs serializer.CodecFactory) []interface{} {
@@ -57,7 +58,6 @@ func SafeFuzzerFuncs(funcs ...fuzzer.FuzzerFuncs) fuzzer.FuzzerFuncs {
 			j.DeletionTimestamp = nil
 			j.DeletionGracePeriodSeconds = nil
 			j.OwnerReferences = nil
-			j.ZZZ_DeprecatedClusterName = ""
 			j.ManagedFields = nil
 		})
 		return result
