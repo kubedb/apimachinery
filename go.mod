@@ -30,7 +30,7 @@ require (
 	k8s.io/kube-aggregator v0.25.1
 	k8s.io/kube-openapi v0.0.0-20220803164354-a70c9af30aea
 	k8s.io/metrics v0.25.1
-	kmodules.xyz/client-go v0.25.4
+	kmodules.xyz/client-go v0.25.6
 	kmodules.xyz/crd-schema-fuzz v0.25.0
 	kmodules.xyz/custom-resources v0.25.0
 	kmodules.xyz/monitoring-agent-api v0.25.0
@@ -41,6 +41,8 @@ require (
 	sigs.k8s.io/yaml v1.3.0
 	stash.appscode.dev/apimachinery v0.22.1-0.20220918134206-55dff33147a0
 )
+
+require kmodules.xyz/apiversion v0.2.0 // indirect
 
 require (
 	cloud.google.com/go v0.99.0 // indirect
