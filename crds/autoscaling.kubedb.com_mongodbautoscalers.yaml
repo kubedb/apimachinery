@@ -260,6 +260,7 @@ spec:
                   name:
                     type: string
                 type: object
+                x-kubernetes-map-type: atomic
               opsRequestOptions:
                 properties:
                   apply:
