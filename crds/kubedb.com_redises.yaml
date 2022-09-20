@@ -115,8 +115,6 @@ spec:
                     x-kubernetes-map-type: atomic
                 type: object
               authSecret:
-                default:
-                  kind: Secret
                 properties:
                   apiGroup:
                     type: string

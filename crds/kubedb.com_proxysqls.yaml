@@ -49,8 +49,6 @@ spec:
           spec:
             properties:
               authSecret:
-                default:
-                  kind: Secret
                 properties:
                   apiGroup:
                     type: string

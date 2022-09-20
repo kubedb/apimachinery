@@ -145,7 +145,6 @@ type ProxySQLSpec struct {
 	Backend *ProxySQLBackendSpec `json:"backend,omitempty"`
 
 	// ProxySQL secret containing username and password for root user and proxysql user
-	// +kubebuilder:default={kind:Secret}
 	// +optional
 	AuthSecret *core.TypedLocalObjectReference `json:"authSecret,omitempty"`
 

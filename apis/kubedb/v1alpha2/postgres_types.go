@@ -72,7 +72,6 @@ type PostgresSpec struct {
 	LeaderElection *PostgreLeaderElectionConfig `json:"leaderElection,omitempty"`
 
 	// Database authentication secret
-	// +kubebuilder:default={kind:Secret}
 	// +optional
 	AuthSecret *core.TypedLocalObjectReference `json:"authSecret,omitempty"`
 
