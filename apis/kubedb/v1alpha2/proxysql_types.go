@@ -145,7 +145,9 @@ type ProxySQLSpec struct {
 	Backend *ProxySQLBackendSpec `json:"backend,omitempty"`
 
 	// ProxySQL secret containing username and password for root user and proxysql user
-	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty"`
+	// +kubebuilder:default={kind:Secret}
+	// +optional
+	AuthSecret *core.TypedLocalObjectReference `json:"authSecret,omitempty"`
 
 	// Monitor is used monitor proxysql instance
 	// +optional
@@ -207,6 +209,8 @@ type ProxySQLStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+	// +optional
+	AuthSecret *Age `json:"authSecret,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
