@@ -19,7 +19,7 @@ package docker
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"strings"
 
 	"github.com/awslabs/amazon-ecr-credential-helper/ecr-login"
@@ -34,7 +34,7 @@ import (
 
 var (
 	SkipImageDigest string
-	amazonKeychain  = authn.NewKeychainFromHelper(ecr.NewECRHelper(ecr.WithLogger(ioutil.Discard)))
+	amazonKeychain  = authn.NewKeychainFromHelper(ecr.NewECRHelper(ecr.WithLogger(io.Discard)))
 	azureKeychain   = authn.NewKeychainFromHelper(credhelper.NewACRCredentialsHelper())
 )
 

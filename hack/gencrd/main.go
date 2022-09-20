@@ -17,7 +17,6 @@ limitations under the License.
 package main
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -112,7 +111,7 @@ func generateSwaggerJson() {
 	if err != nil {
 		klog.Fatal(err)
 	}
-	err = ioutil.WriteFile(filename, []byte(apispec), 0o644)
+	err = os.WriteFile(filename, []byte(apispec), 0o644)
 	if err != nil {
 		klog.Fatal(err)
 	}
