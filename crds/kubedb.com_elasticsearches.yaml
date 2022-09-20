@@ -49,9 +49,18 @@ spec:
           spec:
             properties:
               authSecret:
+                default:
+                  kind: Secret
                 properties:
+                  apiGroup:
+                    type: string
+                  kind:
+                    type: string
                   name:
                     type: string
+                required:
+                - kind
+                - name
                 type: object
                 x-kubernetes-map-type: atomic
               autoOps:
@@ -4966,6 +4975,12 @@ spec:
             type: object
           status:
             properties:
+              authSecret:
+                properties:
+                  lastUpdateTimestamp:
+                    format: date-time
+                    type: string
+                type: object
               conditions:
                 items:
                   properties:

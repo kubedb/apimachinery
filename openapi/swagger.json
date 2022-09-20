@@ -30118,6 +30118,16 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age": {
+      "type": "object",
+      "properties": {
+        "lastUpdateTimestamp": {
+          "description": "Populated by Provisioner when authSecret is created or Ops Manager when authSecret is updated.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers": {
       "description": "AllowedConsumers defines which consumers may refer to a database instance.",
       "type": "object",
@@ -30467,7 +30477,7 @@
       "properties": {
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -30584,6 +30594,9 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchStatus": {
       "type": "object",
       "properties": {
+        "authSecret": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age"
+        },
         "conditions": {
           "description": "Conditions applied to the database, such as approval or denial.",
           "type": "array",
@@ -30753,7 +30766,7 @@
       "properties": {
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -30811,6 +30824,9 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.EtcdStatus": {
       "type": "object",
       "properties": {
+        "authSecret": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age"
+        },
         "conditions": {
           "description": "Conditions applied to the database, such as approval or denial.",
           "type": "array",
@@ -30939,7 +30955,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -31020,6 +31036,9 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MariaDBStatus": {
       "type": "object",
       "properties": {
+        "authSecret": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age"
+        },
         "conditions": {
           "description": "Conditions applied to the database, such as approval or denial.",
           "type": "array",
@@ -31429,7 +31448,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -31537,6 +31556,9 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoDBStatus": {
       "type": "object",
       "properties": {
+        "authSecret": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age"
+        },
         "conditions": {
           "description": "Conditions applied to the database, such as approval or denial.",
           "type": "array",
@@ -31716,7 +31738,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -31806,6 +31828,9 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLStatus": {
       "type": "object",
       "properties": {
+        "authSecret": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age"
+        },
         "conditions": {
           "description": "Conditions applied to the database, such as approval or denial.",
           "type": "array",
@@ -32004,8 +32029,8 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
         },
         "authSecret": {
-          "description": "AuthSecret specifies database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "description": "Database authentication secret",
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -32090,6 +32115,9 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PerconaXtraDBStatus": {
       "type": "object",
       "properties": {
+        "authSecret": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age"
+        },
         "conditions": {
           "description": "Conditions applied to the database, such as approval or denial.",
           "type": "array",
@@ -32387,7 +32415,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -32488,6 +32516,9 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresStatus": {
       "type": "object",
       "properties": {
+        "authSecret": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age"
+        },
         "conditions": {
           "description": "Conditions applied to the database, such as approval or denial.",
           "type": "array",
@@ -32617,7 +32648,7 @@
       "properties": {
         "authSecret": {
           "description": "ProxySQL secret containing username and password for root user and proxysql user",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -32689,6 +32720,9 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLStatus": {
       "type": "object",
       "properties": {
+        "authSecret": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age"
+        },
         "conditions": {
           "description": "Conditions applied to the database, such as approval or denial.",
           "type": "array",
@@ -32812,7 +32846,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -32904,6 +32938,9 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisStatus": {
       "type": "object",
       "properties": {
+        "authSecret": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age"
+        },
         "conditions": {
           "description": "Conditions applied to the database, such as approval or denial.",
           "type": "array",

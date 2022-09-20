@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
@@ -155,4 +156,9 @@ type SystemUserSecretsSpec struct {
 	// MonitorUserSecret contains monitor system user credentials
 	// +optional
 	MonitorUserSecret *core.LocalObjectReference `json:"monitorUserSecret,omitempty"`
+}
+
+type Age struct {
+	// Populated by Provisioner when authSecret is created or Ops Manager when authSecret is updated.
+	LastUpdateTimestamp metav1.Time `json:"lastUpdateTimestamp,omitempty"`
 }
