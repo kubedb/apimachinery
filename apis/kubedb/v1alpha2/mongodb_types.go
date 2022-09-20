@@ -77,7 +77,6 @@ type MongoDBSpec struct {
 	EphemeralStorage *core.EmptyDirVolumeSource `json:"ephemeralStorage,omitempty"`
 
 	// Database authentication secret
-	// +kubebuilder:default={kind:Secret}
 	// +optional
 	AuthSecret *core.TypedLocalObjectReference `json:"authSecret,omitempty"`
 

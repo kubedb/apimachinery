@@ -2443,8 +2443,6 @@ spec:
                     type: object
                 type: object
               authSecret:
-                default:
-                  kind: Secret
                 properties:
                   apiGroup:
                     type: string

@@ -76,7 +76,6 @@ type ElasticsearchSpec struct {
 	DisableSecurity bool `json:"disableSecurity,omitempty"`
 
 	// Database authentication secret
-	// +kubebuilder:default={kind:Secret}
 	// +optional
 	AuthSecret *core.TypedLocalObjectReference `json:"authSecret,omitempty"`
 

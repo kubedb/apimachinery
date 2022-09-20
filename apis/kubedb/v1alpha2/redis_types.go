@@ -86,7 +86,6 @@ type RedisSpec struct {
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
 	// Database authentication secret
-	// +kubebuilder:default={kind:Secret}
 	// +optional
 	AuthSecret *core.TypedLocalObjectReference `json:"authSecret,omitempty"`
 
