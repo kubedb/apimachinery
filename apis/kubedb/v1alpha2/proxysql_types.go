@@ -146,7 +146,7 @@ type ProxySQLSpec struct {
 
 	// ProxySQL secret containing username and password for root user and proxysql user
 	// +optional
-	AuthSecret *core.TypedLocalObjectReference `json:"authSecret,omitempty"`
+	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
 	// Monitor is used monitor proxysql instance
 	// +optional

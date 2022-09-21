@@ -69,7 +69,7 @@ type PerconaXtraDBSpec struct {
 
 	// Database authentication secret
 	// +optional
-	AuthSecret *core.TypedLocalObjectReference `json:"authSecret,omitempty"`
+	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
 	// Init is used to initialize database
 	// +optional

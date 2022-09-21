@@ -74,7 +74,7 @@ type RedisSentinelSpec struct {
 
 	// Database authentication secret
 	// +optional
-	AuthSecret *core.TypedLocalObjectReference `json:"authSecret,omitempty"`
+	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
 	// If disable Auth true then don't create any auth secret
 	// +optional
