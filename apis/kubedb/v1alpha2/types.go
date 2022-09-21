@@ -151,11 +151,16 @@ type AutoOpsSpec struct {
 type SystemUserSecretsSpec struct {
 	// ReplicationUserSecret contains replication system user credentials
 	// +optional
-	ReplicationUserSecret *core.LocalObjectReference `json:"replicationUserSecret,omitempty"`
+	ReplicationUserSecret *SecretReference `json:"replicationUserSecret,omitempty"`
 
 	// MonitorUserSecret contains monitor system user credentials
 	// +optional
-	MonitorUserSecret *core.LocalObjectReference `json:"monitorUserSecret,omitempty"`
+	MonitorUserSecret *SecretReference `json:"monitorUserSecret,omitempty"`
+}
+
+type SecretReference struct {
+	core.LocalObjectReference `json:",inline,omitempty"`
+	ExternallyManaged         bool `json:"externallyManaged,omitempty"`
 }
 
 type Age struct {

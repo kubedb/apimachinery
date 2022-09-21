@@ -30477,7 +30477,7 @@
       "properties": {
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -30766,7 +30766,7 @@
       "properties": {
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         },
         "halted": {
           "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -30955,7 +30955,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -31448,7 +31448,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -31738,7 +31738,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -32030,7 +32030,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -32415,7 +32415,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -32648,7 +32648,7 @@
       "properties": {
         "authSecret": {
           "description": "ProxySQL secret containing username and password for root user and proxysql user",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -32846,7 +32846,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -33084,6 +33084,18 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference": {
+      "type": "object",
+      "properties": {
+        "externallyManaged": {
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SemiSyncSpec": {
       "type": "object",
       "required": [
@@ -33109,11 +33121,11 @@
       "properties": {
         "monitorUserSecret": {
           "description": "MonitorUserSecret contains monitor system user credentials",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         },
         "replicationUserSecret": {
           "description": "ReplicationUserSecret contains replication system user credentials",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         }
       }
     },

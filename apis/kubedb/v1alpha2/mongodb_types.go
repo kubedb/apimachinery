@@ -78,7 +78,7 @@ type MongoDBSpec struct {
 
 	// Database authentication secret
 	// +optional
-	AuthSecret *core.TypedLocalObjectReference `json:"authSecret,omitempty"`
+	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
 	// ClusterAuthMode for replicaset or sharding. (default will be x509 if sslmode is not `disabled`.)
 	// See available ClusterAuthMode: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-clusterauthmode

@@ -77,7 +77,7 @@ type ElasticsearchSpec struct {
 
 	// Database authentication secret
 	// +optional
-	AuthSecret *core.TypedLocalObjectReference `json:"authSecret,omitempty"`
+	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`

@@ -50,15 +50,10 @@ spec:
             properties:
               authSecret:
                 properties:
-                  apiGroup:
-                    type: string
-                  kind:
-                    type: string
+                  externallyManaged:
+                    type: boolean
                   name:
                     type: string
-                required:
-                - kind
-                - name
                 type: object
                 x-kubernetes-map-type: atomic
               halted:

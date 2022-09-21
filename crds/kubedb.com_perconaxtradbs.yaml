@@ -116,15 +116,10 @@ spec:
                 type: object
               authSecret:
                 properties:
-                  apiGroup:
-                    type: string
-                  kind:
-                    type: string
+                  externallyManaged:
+                    type: boolean
                   name:
                     type: string
-                required:
-                - kind
-                - name
                 type: object
                 x-kubernetes-map-type: atomic
               autoOps:
@@ -3618,12 +3613,16 @@ spec:
                 properties:
                   monitorUserSecret:
                     properties:
+                      externallyManaged:
+                        type: boolean
                       name:
                         type: string
                     type: object
                     x-kubernetes-map-type: atomic
                   replicationUserSecret:
                     properties:
+                      externallyManaged:
+                        type: boolean
                       name:
                         type: string
                     type: object
