@@ -39,7 +39,7 @@ require (
 	kmodules.xyz/webhook-runtime v0.25.0
 	sigs.k8s.io/controller-runtime v0.13.0
 	sigs.k8s.io/yaml v1.3.0
-	stash.appscode.dev/apimachinery v0.22.1-0.20220918134206-55dff33147a0
+	stash.appscode.dev/apimachinery v0.23.0
 )
 
 require kmodules.xyz/apiversion v0.2.0 // indirect
