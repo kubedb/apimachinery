@@ -110,8 +110,11 @@ func (p PerconaXtraDB) PeerName(idx int) string {
 	return fmt.Sprintf("%s-%d.%s.%s", p.OffshootName(), idx, p.GoverningServiceName(), p.Namespace)
 }
 
-func (p PerconaXtraDB) GetAuthSecretName() string {
-	return p.Spec.AuthSecret.Name
+func (p *PerconaXtraDB) GetAuthSecretName() string {
+	if p.Spec.AuthSecret != nil && p.Spec.AuthSecret.Name != "" {
+		return p.Spec.AuthSecret.Name
+	}
+	return fmt.Sprintf("%s-auth", p.OffshootName())
 }
 
 func (p PerconaXtraDB) ClusterName() string {

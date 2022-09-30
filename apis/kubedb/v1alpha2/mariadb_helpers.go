@@ -114,8 +114,11 @@ func (m MariaDB) PeerName(idx int) string {
 	return fmt.Sprintf("%s-%d.%s.%s", m.OffshootName(), idx, m.GoverningServiceName(), m.Namespace)
 }
 
-func (m MariaDB) GetAuthSecretName() string {
-	return m.Spec.AuthSecret.Name
+func (m *MariaDB) GetAuthSecretName() string {
+	if m.Spec.AuthSecret != nil && m.Spec.AuthSecret.Name != "" {
+		return m.Spec.AuthSecret.Name
+	}
+	return fmt.Sprintf("%s-auth", m.OffshootName())
 }
 
 func (m MariaDB) ClusterName() string {

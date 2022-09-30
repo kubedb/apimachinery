@@ -181,3 +181,10 @@ func (e *Etcd) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, stri
 	expectedItems := 1
 	return checkReplicas(lister.StatefulSets(e.Namespace), labels.SelectorFromSet(e.OffshootLabels()), expectedItems)
 }
+
+func (e *Etcd) GetAuthSecretName() string {
+	if e.Spec.AuthSecret != nil && e.Spec.AuthSecret.Name != "" {
+		return e.Spec.AuthSecret.Name
+	}
+	return fmt.Sprintf("%s-auth", e.OffshootName())
+}

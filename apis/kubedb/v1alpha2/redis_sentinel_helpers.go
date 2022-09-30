@@ -279,3 +279,10 @@ func (rs *RedisSentinel) ReplicasAreReady(lister appslister.StatefulSetLister) (
 	expectedItems := 1
 	return checkReplicas(lister.StatefulSets(rs.Namespace), labels.SelectorFromSet(rs.OffshootLabels()), expectedItems)
 }
+
+func (rs *RedisSentinel) GetAuthSecretName() string {
+	if rs.Spec.AuthSecret != nil && rs.Spec.AuthSecret.Name != "" {
+		return rs.Spec.AuthSecret.Name
+	}
+	return fmt.Sprintf("%s-auth", rs.OffshootName())
+}

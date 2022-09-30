@@ -949,3 +949,10 @@ func (esTopology *ElasticsearchClusterTopology) ToMap() map[ElasticsearchNodeRol
 	}
 	return topology
 }
+
+func (e *Elasticsearch) GetAuthSecretName() string {
+	if e.Spec.AuthSecret != nil && e.Spec.AuthSecret.Name != "" {
+		return e.Spec.AuthSecret.Name
+	}
+	return fmt.Sprintf("%s-auth", e.OffshootName())
+}

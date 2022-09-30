@@ -234,3 +234,10 @@ func (m *ProxySQL) IsCluster() bool {
 	r := m.Spec.Replicas
 	return *r > 1
 }
+
+func (m *ProxySQL) GetAuthSecretName() string {
+	if m.Spec.AuthSecret != nil && m.Spec.AuthSecret.Name != "" {
+		return m.Spec.AuthSecret.Name
+	}
+	return fmt.Sprintf("%s-auth", m.OffshootName())
+}

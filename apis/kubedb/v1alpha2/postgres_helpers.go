@@ -385,3 +385,10 @@ func (m *Postgres) SetHealthCheckerDefaults() {
 		m.Spec.HealthChecker.FailureThreshold = pointer.Int32P(1)
 	}
 }
+
+func (p *Postgres) GetAuthSecretName() string {
+	if p.Spec.AuthSecret != nil && p.Spec.AuthSecret.Name != "" {
+		return p.Spec.AuthSecret.Name
+	}
+	return fmt.Sprintf("%s-auth", p.OffshootName())
+}

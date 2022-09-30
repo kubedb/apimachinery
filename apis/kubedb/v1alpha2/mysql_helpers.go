@@ -157,11 +157,11 @@ func (m MySQL) PeerName(idx int) string {
 	return fmt.Sprintf("%s-%d.%s.%s", m.OffshootName(), idx, m.GoverningServiceName(), m.Namespace)
 }
 
-func (m MySQL) GetAuthSecretName() string {
-	if m.Spec.AuthSecret != nil {
+func (m *MySQL) GetAuthSecretName() string {
+	if m.Spec.AuthSecret != nil && m.Spec.AuthSecret.Name != "" {
 		return m.Spec.AuthSecret.Name
 	}
-	return meta_util.NameWithSuffix(m.Name, "auth")
+	return fmt.Sprintf("%s-auth", m.OffshootName())
 }
 
 type mysqlApp struct {

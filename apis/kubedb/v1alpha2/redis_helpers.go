@@ -332,3 +332,10 @@ func (r *Redis) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, str
 	}
 	return checkReplicas(lister.StatefulSets(r.Namespace), labels.SelectorFromSet(r.OffshootLabels()), expectedItems)
 }
+
+func (r *redisApp) GetAuthSecretName() string {
+	if r.Spec.AuthSecret != nil && r.Spec.AuthSecret.Name != "" {
+		return r.Spec.AuthSecret.Name
+	}
+	return fmt.Sprintf("%s-auth", r.OffshootName())
+}

@@ -1029,3 +1029,10 @@ func (m *MongoDB) ConfigSecretName(nodeType string) string {
 	}
 	return m.Name + nodeType + "-config"
 }
+
+func (m *MongoDB) GetAuthSecretName() string {
+	if m.Spec.AuthSecret != nil && m.Spec.AuthSecret.Name != "" {
+		return m.Spec.AuthSecret.Name
+	}
+	return fmt.Sprintf("%s-auth", m.OffshootName())
+}
