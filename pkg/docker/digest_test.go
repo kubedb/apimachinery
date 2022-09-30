@@ -71,3 +71,38 @@ func TestImageWithoutDigest(t *testing.T) {
 		})
 	}
 }
+
+func Test_probablyInsecureRegistry(t *testing.T) {
+	tests := []struct {
+		name string
+		want bool
+	}{
+		{
+			name: "reg.mycompany/postgres:14.1",
+			want: true,
+		},
+		{
+			name: "192.168.0.100/postgres:14.1",
+			want: true,
+		},
+		{
+			name: "localhost/postgres:14.1",
+			want: false,
+		},
+		{
+			name: "postgres:14.1",
+			want: false,
+		},
+		{
+			name: "reg.mycompany.com/postgres:14.1",
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := probablyInsecureRegistry(tt.name); got != tt.want {
+				t.Errorf("probablyInsecureRegistry() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

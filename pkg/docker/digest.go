@@ -18,6 +18,7 @@ package docker
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"io"
 	"strings"
@@ -29,6 +30,8 @@ import (
 	"github.com/google/go-containerregistry/pkg/authn/k8schain"
 	"github.com/google/go-containerregistry/pkg/crane"
 	"github.com/google/go-containerregistry/pkg/v1/google"
+	"github.com/google/go-containerregistry/pkg/v1/remote"
+	"golang.org/x/net/publicsuffix"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -53,7 +56,7 @@ func ImageWithDigest(kc kubernetes.Interface, image string, k8sOpts *k8schain.Op
 		return "", err
 	}
 
-	digest, err := crane.Digest(image, crane.WithAuthFromKeychain(keyChain))
+	digest, err := crane.Digest(image, crane.WithAuthFromKeychain(keyChain), WithTLSSkipVerify(image))
 	if err != nil {
 		return "", err
 	}
@@ -88,4 +91,23 @@ func ImageWithoutDigest(image string) (string, error) {
 		return "", fmt.Errorf("invalid image: %s", image)
 	}
 	return image, nil
+}
+
+func WithTLSSkipVerify(s string) crane.Option {
+	// xref: https://github.com/google/go-containerregistry/pull/1054
+	rt := remote.DefaultTransport.Clone()
+	rt.TLSClientConfig = &tls.Config{
+		InsecureSkipVerify: probablyInsecureRegistry(s), //nolint: gosec
+	}
+	return crane.WithTransport(rt)
+}
+
+func probablyInsecureRegistry(s string) bool {
+	parts := strings.Split(s, "/")
+	if len(parts) > 1 && strings.ContainsRune(parts[0], '.') {
+		if _, icann := publicsuffix.PublicSuffix(parts[0]); !icann {
+			return true
+		}
+	}
+	return false
 }
