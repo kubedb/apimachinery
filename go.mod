@@ -17,6 +17,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.59.1
 	go.bytebuilders.dev/audit v0.0.23
+	golang.org/x/net v0.0.0-20220909164309-bea034e7d591
 	gomodules.xyz/encoding v0.0.7
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.3.0
@@ -39,7 +40,7 @@ require (
 	kmodules.xyz/webhook-runtime v0.25.0
 	sigs.k8s.io/controller-runtime v0.13.0
 	sigs.k8s.io/yaml v1.3.0
-	stash.appscode.dev/apimachinery v0.22.1-0.20220918134206-55dff33147a0
+	stash.appscode.dev/apimachinery v0.23.0
 )
 
 require kmodules.xyz/apiversion v0.2.0 // indirect
@@ -163,7 +164,6 @@ require (
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
-	golang.org/x/net v0.0.0-20220909164309-bea034e7d591 // indirect
 	golang.org/x/oauth2 v0.0.0-20220822191816-0ebed06d0094 // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
 	golang.org/x/sys v0.0.0-20220906135438-9e1f76180b77 // indirect
