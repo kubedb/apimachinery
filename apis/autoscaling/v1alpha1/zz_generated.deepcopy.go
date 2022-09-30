@@ -1090,6 +1090,16 @@ func (in *MongoDBComputeAutoscalerSpec) DeepCopyInto(out *MongoDBComputeAutoscal
 		*out = new(ComputeAutoscalerSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Arbiter != nil {
+		in, out := &in.Arbiter, &out.Arbiter
+		*out = new(ComputeAutoscalerSpec)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Hidden != nil {
+		in, out := &in.Hidden, &out.Hidden
+		*out = new(ComputeAutoscalerSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -1149,6 +1159,11 @@ func (in *MongoDBStorageAutoscalerSpec) DeepCopyInto(out *MongoDBStorageAutoscal
 	}
 	if in.Shard != nil {
 		in, out := &in.Shard, &out.Shard
+		*out = new(StorageAutoscalerSpec)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Hidden != nil {
+		in, out := &in.Hidden, &out.Hidden
 		*out = new(StorageAutoscalerSpec)
 		(*in).DeepCopyInto(*out)
 	}
