@@ -32570,20 +32570,6 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLBackendSpec": {
-      "type": "object",
-      "properties": {
-        "ref": {
-          "description": "Ref lets one to locate the typed referenced object (in our case, it is the MySQL/Percona-XtraDB/ProxySQL object) inside the same namespace.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
-        },
-        "replicas": {
-          "description": "Number of backend servers.",
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLConfiguration": {
       "type": "object",
       "properties": {
@@ -32656,8 +32642,8 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
         },
         "backend": {
-          "description": "Backend specifies the information about backend MySQL/Percona-XtraDB/MariaDB servers",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLBackendSpec"
+          "description": "Backend refers to the AppBinding of the backend MySQL/MariaDB/Percona-XtraDB server",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for proxysql (i.e custom-proxysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",

@@ -33,7 +33,7 @@ require (
 	k8s.io/metrics v0.25.1
 	kmodules.xyz/client-go v0.25.6
 	kmodules.xyz/crd-schema-fuzz v0.25.0
-	kmodules.xyz/custom-resources v0.25.0
+	kmodules.xyz/custom-resources v0.25.1
 	kmodules.xyz/monitoring-agent-api v0.25.0
 	kmodules.xyz/objectstore-api v0.25.0
 	kmodules.xyz/offshoot-api v0.25.0
@@ -42,8 +42,6 @@ require (
 	sigs.k8s.io/yaml v1.3.0
 	stash.appscode.dev/apimachinery v0.23.0
 )
-
-require kmodules.xyz/apiversion v0.2.0 // indirect
 
 require (
 	cloud.google.com/go v0.99.0 // indirect
@@ -186,6 +184,7 @@ require (
 	k8s.io/apiserver v0.25.1 // indirect
 	k8s.io/component-base v0.25.1 // indirect
 	k8s.io/utils v0.0.0-20220823124924-e9cbc92d1a73 // indirect
+	kmodules.xyz/apiversion v0.2.0 // indirect
 	kmodules.xyz/prober v0.25.0 // indirect
 	kmodules.xyz/resource-metadata v0.12.5 // indirect
 	kmodules.xyz/resource-metrics v0.25.0 // indirect
