@@ -66,6 +66,7 @@ func ImageWithDigest(kc kubernetes.Interface, image string, k8sOpts *k8schain.Op
 
 // CreateKeyChain a multi keychain based in input arguments
 func CreateKeyChain(ctx context.Context, client kubernetes.Interface, k8sOpts *k8schain.Options) (authn.Keychain, error) {
+	// xref: https://github.com/google/k8s-digester/blob/v0.1.9/pkg/keychain/keychain.go#L42-L64
 	if k8sOpts != nil {
 		kChain, err := k8schain.New(ctx, client, *k8sOpts)
 		if err != nil {
