@@ -164,14 +164,15 @@ const (
 	RedisTLSArg                          = "--tls-port 6379"
 	DBReady                              = "DBReady"
 	RestartedPods                        = "RestartedPods"
-	ScaleUpSentinel                      = "ScaleUpSentinel"
-	ScaleDownSentinel                    = "ScaleDownSentinel"
 	ScaleUpReplicas                      = "ScaleUpReplicas"
 	ScaleDownReplicas                    = "ScaleDownReplicas"
-	ScaleUpRedisReplicasInSentinelMode   = "ScaleUpRedisReplicasInSentinelMode"
-	ScaleDownRedisReplicasInSentinelMode = "ScaleDownRedisReplicasInSentinelMode"
+	ScaleUpSentinel                      = "ScaleUpSentinel"
+	ScaleDownSentinel                    = "ScaleDownSentinel"
 	UpdateRedisImage                     = "UpdateRedisImage"
 	RestartPodWithResources              = "RestartedPodsWithResources"
+	ReplaceSentinel                      = "ReplaceSentinel"
+	ScaleUpRedisReplicasInSentinelMode   = "ScaleUpRedisReplicasInSentinelMode"
+	ScaleDownRedisReplicasInSentinelMode = "ScaleDownRedisReplicasInSentinelMode"
 
 	// Stash Constants
 	PauseBackupConfiguration  = "PauseBackupConfiguration"
@@ -256,7 +257,7 @@ const (
 	OpsRequestDenied OpsRequestPhase = "Denied"
 )
 
-// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;Reprovision
+// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;Reprovision;ReplaceSentinel
 type OpsRequestType string
 
 const (
@@ -279,6 +280,9 @@ const (
 	// used for Reprovision operation
 	OpsRequestTypeReprovision OpsRequestType = "Reprovision"
 )
+
+// used for Replace Redis Sentinel monitoring
+const OpsRequestTypeReplaceSentinel OpsRequestType = "ReplaceSentinel"
 
 // +kubebuilder:validation:Enum=Offline;Online
 type VolumeExpansionMode string
