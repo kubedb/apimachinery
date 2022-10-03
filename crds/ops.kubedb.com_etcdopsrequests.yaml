@@ -167,7 +167,6 @@ spec:
                 type: object
               type:
                 enum:
-                - Upgrade
                 - UpdateVersion
                 - HorizontalScaling
                 - VerticalScaling
@@ -175,8 +174,6 @@ spec:
                 - Restart
                 - Reconfigure
                 - ReconfigureTLS
-                - Reprovision
-                - ReplaceSentinel
                 type: string
               upgrade:
                 properties:

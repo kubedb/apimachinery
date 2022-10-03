@@ -34958,10 +34958,6 @@
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLVerticalScalingSpec"
-        },
-        "volumeExpansion": {
-          "description": "Specifies information necessary for volume expansion",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLVolumeExpansionSpec"
         }
       }
     },
@@ -34989,10 +34985,6 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReplicaReadinessCriteria"
         }
       }
-    },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLVolumeExpansionSpec": {
-      "description": "ProxySQLVolumeExpansionSpec is the spec for ProxySQL volume expansion",
-      "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisCustomConfigurationSpec": {
       "type": "object",

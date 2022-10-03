@@ -54,7 +54,7 @@ type RedisOpsRequestSpec struct {
 	// Specifies the Redis reference
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.
-	Type OpsRequestType `json:"type"`
+	Type RedisOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading Redis
 	Upgrade *RedisUpgradeSpec `json:"upgrade,omitempty"`
 	// Specifies information necessary for horizontal scaling
@@ -77,6 +77,28 @@ type RedisOpsRequestSpec struct {
 	// +kubebuilder:default="IfReady"
 	Apply ApplyOption `json:"apply,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;ReplaceSentinel
+type RedisOpsRequestType string
+
+const (
+	// used for UpdateVersion operation
+	RedisOpsRequestTypeUpdateVersion RedisOpsRequestType = "UpdateVersion"
+	// used for HorizontalScaling operation
+	RedisOpsRequestTypeHorizontalScaling RedisOpsRequestType = "HorizontalScaling"
+	// used for VerticalScaling operation
+	RedisOpsRequestTypeVerticalScaling RedisOpsRequestType = "VerticalScaling"
+	// used for VolumeExpansion operation
+	RedisOpsRequestTypeVolumeExpansion RedisOpsRequestType = "VolumeExpansion"
+	// used for Restart operation
+	RedisOpsRequestTypeRestart RedisOpsRequestType = "Restart"
+	// used for Reconfigure operation
+	RedisOpsRequestTypeReconfigure RedisOpsRequestType = "Reconfigure"
+	// used for ReconfigureTLS operation
+	RedisOpsRequestTypeReconfigureTLSs RedisOpsRequestType = "ReconfigureTLS"
+	// used for Replace Redis Sentinel monitoring
+	RedisOpsRequestTypeReplaceSentinel RedisOpsRequestType = "ReplaceSentinel"
+)
 
 type RedisTLSSpec struct {
 	*TLSSpec `json:",inline"`
