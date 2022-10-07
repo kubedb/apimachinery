@@ -257,33 +257,6 @@ const (
 	OpsRequestDenied OpsRequestPhase = "Denied"
 )
 
-// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;Reprovision;ReplaceSentinel
-type OpsRequestType string
-
-const (
-	// Deprecated. Use UpdateVersion
-	OpsRequestTypeUpgrade OpsRequestType = "Upgrade"
-	// used for UpdateVersion operation
-	OpsRequestTypeUpdateVersion OpsRequestType = "UpdateVersion"
-	// used for HorizontalScaling operation
-	OpsRequestTypeHorizontalScaling OpsRequestType = "HorizontalScaling"
-	// used for VerticalScaling operation
-	OpsRequestTypeVerticalScaling OpsRequestType = "VerticalScaling"
-	// used for VolumeExpansion operation
-	OpsRequestTypeVolumeExpansion OpsRequestType = "VolumeExpansion"
-	// used for Restart operation
-	OpsRequestTypeRestart OpsRequestType = "Restart"
-	// used for Reconfigure operation
-	OpsRequestTypeReconfigure OpsRequestType = "Reconfigure"
-	// used for ReconfigureTLS operation
-	OpsRequestTypeReconfigureTLSs OpsRequestType = "ReconfigureTLS"
-	// used for Reprovision operation
-	OpsRequestTypeReprovision OpsRequestType = "Reprovision"
-)
-
-// used for Replace Redis Sentinel monitoring
-const OpsRequestTypeReplaceSentinel OpsRequestType = "ReplaceSentinel"
-
 // +kubebuilder:validation:Enum=Offline;Online
 type VolumeExpansionMode string
 
@@ -322,7 +295,7 @@ const (
 
 type Accessor interface {
 	GetObjectMeta() metav1.ObjectMeta
-	GetRequestType() OpsRequestType
+	GetRequestType() string
 	GetDBRefName() string
 	GetStatus() OpsRequestStatus
 	SetStatus(_ OpsRequestStatus)
