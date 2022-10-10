@@ -118,14 +118,18 @@ func (p PerconaXtraDB) GetAuthSecretName() string {
 }
 
 func (p PerconaXtraDB) GetReplicationSecretName() string {
-	if p.Spec.SystemUserSecrets != nil && p.Spec.SystemUserSecrets.ReplicationUserSecret != nil && p.Spec.SystemUserSecrets.ReplicationUserSecret.Name != "" {
+	if p.Spec.SystemUserSecrets != nil &&
+		p.Spec.SystemUserSecrets.ReplicationUserSecret != nil &&
+		p.Spec.SystemUserSecrets.ReplicationUserSecret.Name != "" {
 		return p.Spec.SystemUserSecrets.ReplicationUserSecret.Name
 	}
 	return meta_util.NameWithSuffix(p.OffshootName(), "replication")
 }
 
 func (p PerconaXtraDB) GetMonitorSecretName() string {
-	if p.Spec.SystemUserSecrets != nil && p.Spec.SystemUserSecrets.MonitorUserSecret != nil && p.Spec.SystemUserSecrets.MonitorUserSecret.Name != "" {
+	if p.Spec.SystemUserSecrets != nil &&
+		p.Spec.SystemUserSecrets.MonitorUserSecret != nil &&
+		p.Spec.SystemUserSecrets.MonitorUserSecret.Name != "" {
 		return p.Spec.SystemUserSecrets.MonitorUserSecret.Name
 	}
 	return meta_util.NameWithSuffix(p.OffshootName(), "monitor")
