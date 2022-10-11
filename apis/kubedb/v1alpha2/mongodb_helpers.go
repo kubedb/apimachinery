@@ -359,6 +359,13 @@ func (m MongoDB) GetAuthSecretName() string {
 	return meta_util.NameWithSuffix(m.OffshootName(), "auth")
 }
 
+func (m MongoDB) GetKeyfileSecretName() string {
+	if m.Spec.KeyFileSecret != nil && m.Spec.KeyFileSecret.Name != "" {
+		return m.Spec.KeyFileSecret.Name
+	}
+	return meta_util.NameWithSuffix(m.OffshootName(), "key")
+}
+
 func (m MongoDB) ServiceName() string {
 	return m.OffshootName()
 }
@@ -648,7 +655,9 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 				Command: []string{
 					"bash",
 					"-c",
-					"mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD --quiet --eval \"db.adminCommand({ shutdown: 1 })\" || true",
+					fmt.Sprintf(
+						`%s admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD --quiet --eval "db.adminCommand({ shutdown: 1 })" || true`,
+						m.GetEntryCommand(mgVersion)),
 				},
 			},
 		}
@@ -828,6 +837,18 @@ func (m *MongoDB) SetTLSDefaults() {
 	})
 }
 
+func (m *MongoDB) isLatestVersion(mgVersion *v1alpha1.MongoDBVersion) bool {
+	v, _ := semver.NewVersion(mgVersion.Spec.Version)
+	return v.Major() >= 6
+}
+
+func (m *MongoDB) GetEntryCommand(mgVersion *v1alpha1.MongoDBVersion) string {
+	if m.isLatestVersion(mgVersion) {
+		return "mongosh"
+	}
+	return "mongo"
+}
+
 func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) []string {
 	var sslArgs string
 	if m.Spec.SSLMode == SSLModeRequireSSL {
@@ -854,14 +875,22 @@ func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion, isArbiter 
 	return []string{
 		"bash",
 		"-c",
-		fmt.Sprintf(`set -x; if [[ $(mongo admin --host=localhost %v %v --quiet --eval "db.adminCommand('ping').ok" ) -eq "1" ]]; then 
+		fmt.Sprintf(`set -x; if [[ $(%s admin --host=localhost %v %v --quiet --eval "db.adminCommand('ping').ok" ) -eq "1" ]]; then 
           exit 0
         fi
-        exit 1`, sslArgs, authArgs),
+        exit 1`, m.GetEntryCommand(mgVersion), sslArgs, authArgs),
 	}
 }
 
 func (m *MongoDB) GetDefaultLivenessProbeSpec(mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) *core.Probe {
+	var (
+		period  int32 = 10
+		timeout int32 = 5
+	)
+	if m.isLatestVersion(mgVersion) {
+		period = 20
+		timeout = 10
+	}
 	return &core.Probe{
 		ProbeHandler: core.ProbeHandler{
 			Exec: &core.ExecAction{
@@ -869,13 +898,21 @@ func (m *MongoDB) GetDefaultLivenessProbeSpec(mgVersion *v1alpha1.MongoDBVersion
 			},
 		},
 		FailureThreshold: 3,
-		PeriodSeconds:    10,
+		PeriodSeconds:    period,
 		SuccessThreshold: 1,
-		TimeoutSeconds:   5,
+		TimeoutSeconds:   timeout,
 	}
 }
 
 func (m *MongoDB) GetDefaultReadinessProbeSpec(mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) *core.Probe {
+	var (
+		period  int32 = 10
+		timeout int32 = 1
+	)
+	if m.isLatestVersion(mgVersion) {
+		period = 20
+		timeout = 10
+	}
 	return &core.Probe{
 		ProbeHandler: core.ProbeHandler{
 			Exec: &core.ExecAction{
@@ -883,9 +920,9 @@ func (m *MongoDB) GetDefaultReadinessProbeSpec(mgVersion *v1alpha1.MongoDBVersio
 			},
 		},
 		FailureThreshold: 3,
-		PeriodSeconds:    10,
+		PeriodSeconds:    period,
 		SuccessThreshold: 1,
-		TimeoutSeconds:   5,
+		TimeoutSeconds:   timeout,
 	}
 }
 
