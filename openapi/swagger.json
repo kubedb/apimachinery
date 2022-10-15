@@ -29866,7 +29866,6 @@
       "required": [
         "version",
         "proxysql",
-        "exporter",
         "podSecurityPolicies"
       ],
       "properties": {
@@ -29876,7 +29875,6 @@
         },
         "exporter": {
           "description": "Exporter Image",
-          "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ProxySQLVersionExporter"
         },
         "podSecurityPolicies": {
