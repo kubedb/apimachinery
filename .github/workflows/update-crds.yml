@@ -4,12 +4,12 @@ on:
   push:
     branches:
       - master
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
+
 jobs:
   build:
     name: Build
@@ -41,6 +41,7 @@ jobs:
           INSTALLER_REPOSITORY: ${{ secrets.INSTALLER_REPOSITORY }}
         run: |
           url="https://${GITHUB_USER}:${GITHUB_TOKEN}@${INSTALLER_REPOSITORY}.git"
+          set -x
           cd $RUNNER_WORKSPACE
           git clone $url
           cd $(basename $INSTALLER_REPOSITORY)
@@ -54,5 +55,7 @@ jobs:
           INSTALLER_REPOSITORY: ${{ secrets.INSTALLER_REPOSITORY }}
         run: |
           export INSTALLER_ROOT=$RUNNER_WORKSPACE/$(basename $INSTALLER_REPOSITORY)
-          $INSTALLER_ROOT/hack/scripts/import-crds.sh $(pwd)/crds
-          $INSTALLER_ROOT/hack/scripts/open-pr.sh
+          crd_dir=$(pwd)/crds
+          cd $INSTALLER_ROOT
+          ./hack/scripts/import-crds.sh $crd_dir
+          ./hack/scripts/open-pr.sh
