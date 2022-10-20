@@ -45,21 +45,21 @@ func TestGetSharedBufferSizeForPostgres(t *testing.T) {
 				// 1GB
 				resource: resource.NewQuantity(int64(1024*1024*1024), resource.DecimalSI),
 			},
-			want: "268435456B",
+			want: "262144kB",
 		},
 		{
 			name: "3rd",
 			args: args{
 				resource: resource.NewQuantity(int64(1024*1024), resource.DecimalSI),
 			},
-			want: "262144B",
+			want: "256kB",
 		},
 		{
 			name: "4th",
 			args: args{
 				resource: nil,
 			},
-			want: "131072B",
+			want: "128kB",
 		},
 	}
 	for _, tt := range tests {
