@@ -373,6 +373,10 @@ const (
 
 	SharedBuffersGbAsByte = 1024 * 1024 * 1024
 	SharedBuffersMbAsByte = 1024 * 1024
+
+	SharedBuffersGbAsKiloByte = 1024 * 1024
+	SharedBuffersMbAsKiloByte = 1024
+
 	// =========================== ProxySQL Constants ============================
 	LabelProxySQLName        = ProxySQLKey + "/name"
 	LabelProxySQLLoadBalance = ProxySQLKey + "/load-balance"
