@@ -208,6 +208,7 @@ const (
 	MySQLRootUserName         = "MYSQL_ROOT_USERNAME"
 	MySQLRootPassword         = "MYSQL_ROOT_PASSWORD"
 	MySQLName                 = "MYSQL_NAME"
+	MySQLRootUser             = "root"
 
 	MySQLTLSConfigCustom     = "custom"
 	MySQLTLSConfigSkipVerify = "skip-verify"
@@ -328,6 +329,7 @@ const (
 	PostgresPodStandby               = "standby"
 	EnvPostgresUser                  = "POSTGRES_USER"
 	EnvPostgresPassword              = "POSTGRES_PASSWORD"
+	PostgresRootUser                 = "postgres"
 	PostgresCoordinatorContainerName = "pg-coordinator"
 	PostgresCoordinatorPort          = 2380
 	PostgresCoordinatorPortName      = "coordinator"
@@ -389,6 +391,11 @@ const (
 	ProxySQLClusterPasswordField = "cluster_password"
 	ProxySQLTLSConfigCustom      = "custom"
 	ProxySQLTLSConfigSkipVerify  = "skip-verify"
+
+	ProxySQLMonitorUsername = "proxysql"
+	ProxySQLAuthUsername    = "cluster"
+	ProxySQLConfigSecretKey = "proxysql.cnf"
+
 	// =========================== Redis Constants ============================
 	RedisConfigKey = "redis.conf" // RedisConfigKey is going to create for the customize redis configuration
 	// DefaultConfigKey is going to create for the default redis configuration
