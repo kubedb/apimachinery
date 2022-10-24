@@ -110,7 +110,7 @@ type ProxySQLHorizontalScalingSpec struct {
 
 // ProxySQLVerticalScalingSpec is the spec for ProxySQL vertical scaling
 type ProxySQLVerticalScalingSpec struct {
-	ReadinessCriteria *ProxySQLReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`
+	ProxySQL *core.ResourceRequirements `json:"proxysql,omitempty"`
 }
 
 type ProxySQLCustomConfiguration struct {

@@ -34979,8 +34979,8 @@
       "description": "ProxySQLVerticalScalingSpec is the spec for ProxySQL vertical scaling",
       "type": "object",
       "properties": {
-        "readinessCriteria": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReplicaReadinessCriteria"
+        "proxysql": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       }
     },
