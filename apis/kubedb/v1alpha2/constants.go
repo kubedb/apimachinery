@@ -381,6 +381,7 @@ const (
 	LabelProxySQLName        = ProxySQLKey + "/name"
 	LabelProxySQLLoadBalance = ProxySQLKey + "/load-balance"
 
+	ProxySQLContainerName          = ResourceSingularProxySQL
 	ProxySQLDatabasePort           = 6033
 	ProxySQLDatabasePortName       = "db"
 	ProxySQLPrimaryServicePortName = "db"
