@@ -90,8 +90,8 @@ func (_ ProxySQLAutoscaler) ValidateDelete() error {
 }
 
 func (in *ProxySQLAutoscaler) validate() error {
-	if in.Spec.DatabaseRef == nil {
-		return errors.New("databaseRef can't be empty")
+	if in.Spec.ProxyRef == nil {
+		return errors.New("proxyRef can't be empty")
 	}
 	return nil
 }
