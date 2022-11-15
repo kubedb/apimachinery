@@ -60,7 +60,7 @@ type ProxySQLAutoscaler struct {
 
 // ProxySQLAutoscalerSpec is the specification of the behavior of the autoscaler.
 type ProxySQLAutoscalerSpec struct {
-	DatabaseRef *core.LocalObjectReference `json:"databaseRef"`
+	ProxyRef *core.LocalObjectReference `json:"proxyRef"`
 
 	// This field will be used to control the behaviour of ops-manager
 	OpsRequestOptions *ProxySQLOpsRequestOptions `json:"opsRequestOptions,omitempty"`

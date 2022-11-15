@@ -23577,7 +23577,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLAutoscalerSpec(ref co
 				Description: "ProxySQLAutoscalerSpec is the specification of the behavior of the autoscaler.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"databaseRef": {
+					"proxyRef": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
@@ -23594,7 +23594,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLAutoscalerSpec(ref co
 						},
 					},
 				},
-				Required: []string{"databaseRef"},
+				Required: []string{"proxyRef"},
 			},
 		},
 		Dependencies: []string{
