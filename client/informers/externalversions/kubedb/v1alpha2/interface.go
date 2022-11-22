@@ -28,6 +28,8 @@ type Interface interface {
 	Elasticsearches() ElasticsearchInformer
 	// Etcds returns a EtcdInformer.
 	Etcds() EtcdInformer
+	// Kafkas returns a KafkaInformer.
+	Kafkas() KafkaInformer
 	// MariaDBs returns a MariaDBInformer.
 	MariaDBs() MariaDBInformer
 	// Memcacheds returns a MemcachedInformer.
@@ -69,6 +71,11 @@ func (v *version) Elasticsearches() ElasticsearchInformer {
 // Etcds returns a EtcdInformer.
 func (v *version) Etcds() EtcdInformer {
 	return &etcdInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Kafkas returns a KafkaInformer.
+func (v *version) Kafkas() KafkaInformer {
+	return &kafkaInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MariaDBs returns a MariaDBInformer.

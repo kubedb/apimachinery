@@ -34,6 +34,14 @@ type EtcdListerExpansion interface{}
 // EtcdNamespaceLister.
 type EtcdNamespaceListerExpansion interface{}
 
+// KafkaListerExpansion allows custom methods to be added to
+// KafkaLister.
+type KafkaListerExpansion interface{}
+
+// KafkaNamespaceListerExpansion allows custom methods to be added to
+// KafkaNamespaceLister.
+type KafkaNamespaceListerExpansion interface{}
+
 // MariaDBListerExpansion allows custom methods to be added to
 // MariaDBLister.
 type MariaDBListerExpansion interface{}
