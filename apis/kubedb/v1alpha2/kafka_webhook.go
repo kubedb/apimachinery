@@ -48,11 +48,11 @@ var _ webhook.Defaulter = &Kafka{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (k *Kafka) Default() {
-	kafkalog.Info("default", "name", k.Name)
-	// TODO(user): fill in your defaulting logic.
 	if k == nil {
 		return
 	}
+	kafkalog.Info("default", "name", k.Name)
+	// TODO(user): fill in your defaulting logic.
 	k.SetDefaults()
 }
 

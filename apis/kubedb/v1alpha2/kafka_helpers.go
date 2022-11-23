@@ -170,7 +170,7 @@ func (k *Kafka) DefaultUserCredSecretName(username string) string {
 }
 
 func (k *Kafka) DefaultKeystoreCredSecretName() string {
-	return meta_util.NameWithSuffix(k.Name, strings.ReplaceAll(fmt.Sprintf("keystore-cred"), "_", "-"))
+	return meta_util.NameWithSuffix(k.Name, strings.ReplaceAll("keystore-cred", "_", "-"))
 }
 
 // CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
@@ -209,7 +209,7 @@ func (k *Kafka) CertSecretVolumeMountPath(configDir string, cert string) string 
 }
 
 func (k *Kafka) PVCName(alias string) string {
-	return meta_util.NameWithSuffix(k.Name, fmt.Sprintf("%s", alias))
+	return meta_util.NameWithSuffix(k.Name, alias)
 }
 
 func (k *Kafka) SetDefaults() {
