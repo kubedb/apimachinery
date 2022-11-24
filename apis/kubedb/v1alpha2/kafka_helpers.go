@@ -18,17 +18,17 @@ package v1alpha2
 
 import (
 	"fmt"
-	"kmodules.xyz/client-go/apiextensions"
-	"kubedb.dev/apimachinery/crds"
 	"path/filepath"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	"kubedb.dev/apimachinery/crds"
 
 	"gomodules.xyz/pointer"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 )
 
