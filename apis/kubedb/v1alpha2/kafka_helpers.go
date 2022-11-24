@@ -18,6 +18,8 @@ package v1alpha2
 
 import (
 	"fmt"
+	"kmodules.xyz/client-go/apiextensions"
+	"kubedb.dev/apimachinery/crds"
 	"path/filepath"
 	"strings"
 
@@ -29,6 +31,10 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 )
+
+func (k *Kafka) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralKafka))
+}
 
 func (k *Kafka) ResourceShortCode() string {
 	return ResourceCodeKafka
