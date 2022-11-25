@@ -74,10 +74,12 @@ type RedisSentinelOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;Restart;Reconfigure;ReconfigureTLS
+// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;Restart;Reconfigure;ReconfigureTLS
 type RedisSentinelOpsRequestType string
 
 const (
+	// Deprecated. Use UpdateVersion
+	RedisSentinelOpsRequestTypeUpgrade RedisSentinelOpsRequestType = "Upgrade"
 	// used for UpdateVersion operation
 	RedisSentinelOpsRequestTypeUpdateVersion RedisSentinelOpsRequestType = "UpdateVersion"
 	// used for HorizontalScaling operation

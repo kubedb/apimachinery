@@ -78,10 +78,12 @@ type RedisOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;ReplaceSentinel
+// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;ReplaceSentinel
 type RedisOpsRequestType string
 
 const (
+	// Deprecated. Use UpdateVersion
+	RedisOpsRequestTypeUpgrade RedisOpsRequestType = "Upgrade"
 	// used for UpdateVersion operation
 	RedisOpsRequestTypeUpdateVersion RedisOpsRequestType = "UpdateVersion"
 	// used for HorizontalScaling operation
