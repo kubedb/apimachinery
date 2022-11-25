@@ -218,6 +218,18 @@ func (k *Kafka) PVCName(alias string) string {
 	return meta_util.NameWithSuffix(k.Name, alias)
 }
 
+func (k *Kafka) SetHealthCheckerDefaults() {
+	if k.Spec.HealthChecker.PeriodSeconds == nil {
+		k.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
+	}
+	if k.Spec.HealthChecker.TimeoutSeconds == nil {
+		k.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)
+	}
+	if k.Spec.HealthChecker.FailureThreshold == nil {
+		k.Spec.HealthChecker.FailureThreshold = pointer.Int32P(1)
+	}
+}
+
 func (k *Kafka) SetDefaults() {
 	if k.Spec.TerminationPolicy == "" {
 		k.Spec.TerminationPolicy = TerminationPolicyDelete

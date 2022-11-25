@@ -920,6 +920,7 @@ func (in *KafkaSpec) DeepCopyInto(out *KafkaSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
 	return
 }
 
