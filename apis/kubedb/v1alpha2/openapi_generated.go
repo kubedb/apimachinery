@@ -24542,6 +24542,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgreLeaderElectionConfig(ref co
 							Format:      "int32",
 						},
 					},
+					"transferLeadershipInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TransferLeadershipInterval retry interval for transfer leadership to the healthiest node",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"transferLeadershipTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TransferLeadershipTimeout retry timeout for transfer leadership to the healthiest node",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
 				},
 			},
 		},

@@ -32334,6 +32334,14 @@
           "description": "RetryPeriod is the duration in second the LeaderElector clients should wait between tries of actions. Normally, LeaseDuration / 3. Default 2 Deprecated",
           "type": "integer",
           "format": "int32"
+        },
+        "transferLeadershipInterval": {
+          "description": "TransferLeadershipInterval retry interval for transfer leadership to the healthiest node",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "transferLeadershipTimeout": {
+          "description": "TransferLeadershipTimeout retry timeout for transfer leadership to the healthiest node",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         }
       }
     },

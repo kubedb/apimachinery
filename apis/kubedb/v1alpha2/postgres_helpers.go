@@ -201,6 +201,12 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topolog
 			// we have set this default to 67108864. if the difference between primary and replica is more then this,
 			// the replica node is going to manually sync itself.
 			MaximumLagBeforeFailover: 64 * 1024 * 1024,
+
+			// we have set this default to 1s
+			TransferLeadershipInterval: metav1.Duration{Duration: 1 * time.Second},
+
+			// we have set this default to 120s
+			TransferLeadershipTimeout: metav1.Duration{Duration: 120 * time.Second},
 		}
 	}
 	apis.SetDefaultResourceLimits(&p.Spec.Coordinator.Resources, CoordinatorDefaultResources)
