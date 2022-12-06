@@ -129,13 +129,13 @@ func (k *Kafka) ValidateCreate() error {
 				err.Error()))
 		}
 
-	}
-
-	// number of replicas can not be 0 or less
-	if *k.Spec.Replicas <= 0 {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			k.Name,
-			"number of replicas can not be less be 0 or less"))
+	} else {
+		// number of replicas can not be 0 or less
+		if *k.Spec.Replicas <= 0 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
+				k.Name,
+				"number of replicas can not be less be 0 or less"))
+		}
 	}
 
 	if len(allErr) == 0 {
