@@ -93,6 +93,19 @@ func (k *Kafka) ValidateCreate() error {
 				k.Name,
 				"doesn't support spec.podTemplate.spec.resources when spec.topology is set"))
 		}
+
+		if *k.Spec.Topology.Controller.Replicas <= 0 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("controller").Child("replicas"),
+				k.Name,
+				"number of replicas can not be less be 0 or less"))
+		}
+
+		if *k.Spec.Topology.Broker.Replicas <= 0 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("broker").Child("replicas"),
+				k.Name,
+				"number of replicas can not be less be 0 or less"))
+		}
+
 		// validate that multiple nodes don't have same suffixes
 		err := validateNodeSuffix(k.Spec.Topology)
 		if err != nil {
@@ -116,6 +129,13 @@ func (k *Kafka) ValidateCreate() error {
 				err.Error()))
 		}
 
+	}
+
+	// number of replicas can not be 0 or less
+	if *k.Spec.Replicas <= 0 {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
+			k.Name,
+			"number of replicas can not be less be 0 or less"))
 	}
 
 	if len(allErr) == 0 {

@@ -30,13 +30,14 @@ const (
 	ResourcePluralKafka   = "kafkas"
 )
 
-// +kubebuilder:validation:Enum=Provisioning;Ready;NotReady
+// +kubebuilder:validation:Enum=Provisioning;Ready;NotReady;Critical
 type KafkaPhase string
 
 const (
 	KafkaPhaseProvisioning KafkaPhase = "Provisioning"
 	KafkaPhaseReady        KafkaPhase = "Ready"
 	KafkaPhaseNotReady     KafkaPhase = "NotReady"
+	KafkaPhaseCritical     KafkaPhase = "Critical"
 )
 
 // +kubebuilder:validation:Enum=controller;broker;combined
@@ -124,7 +125,7 @@ type KafkaSpec struct {
 
 	// HealthChecker defines attributes of the health checker
 	// +optional
-	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 1}
+	// +kubebuilder:default={periodSeconds: 20, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 }
 

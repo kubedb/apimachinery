@@ -52,8 +52,8 @@ spec:
                 type: boolean
               healthChecker:
                 default:
-                  failureThreshold: 1
-                  periodSeconds: 10
+                  failureThreshold: 3
+                  periodSeconds: 20
                   timeoutSeconds: 10
                 properties:
                   disableWriteCheck:
@@ -2926,6 +2926,7 @@ spec:
                 - Provisioning
                 - Ready
                 - NotReady
+                - Critical
                 type: string
             type: object
         type: object

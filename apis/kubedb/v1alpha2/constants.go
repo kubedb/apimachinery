@@ -513,6 +513,7 @@ const (
 	KafkaInternalPortName         = "internal"
 	KafkaBrokerClientPortName     = "broker-client"
 	KafkaControllerClientPortName = "controller-client"
+	KafkaHealthTopicName          = "kafka-health"
 	KafkaRESTPort                 = 9092
 	KafkaControllerRESTPort       = 9093
 	KafkaInternalRESTPort         = 29092
