@@ -79,9 +79,13 @@ type PgBouncerSpec struct {
 	// +optional
 	ConnectionPool *ConnectionPoolConfig `json:"connectionPool,omitempty"`
 
-	// UserListSecretRef is a secret with a list of PgBouncer user and passwords.
+	// Database authentication secret
 	// +optional
-	UserListSecretRef *core.LocalObjectReference `json:"userListSecretRef,omitempty"`
+	AuthSecret *SecretReference `json:"authSecret,omitempty"`
+
+	// ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf).
+	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
+	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
 	// Monitor is used monitor database instance.
 	// +optional
@@ -160,19 +164,19 @@ type ConnectionPoolConfig struct {
 	// and how often aggregated statistics are written to the log.
 	// +optional
 	StatsPeriodSeconds *int64 `json:"statsPeriodSeconds,omitempty"`
-	// AdminUsers specifies an array of users who can act as PgBouncer administrators.
-	// +optional
-	AdminUsers []string `json:"adminUsers,omitempty"`
 	// AuthType specifies how to authenticate users. Default: md5 (md5+plain text).
 	// +optional
 	AuthType PgBouncerClientAuthMode `json:"authType,omitempty"`
-	// AuthUser looks up any user not specified in auth_file from pg_shadow. Default: not set.
-	// +optional
-	AuthUser string `json:"authUser,omitempty"`
 	// IgnoreStartupParameters specifies comma-separated startup parameters that
 	// pgbouncer knows are handled by admin and it can ignore them.
 	// +optional
 	IgnoreStartupParameters string `json:"ignoreStartupParameters,omitempty"`
+	// AdminUsers specifies an array of users who can act as PgBouncer administrators.
+	// +optional
+	// AdminUsers []string `json:"adminUsers,omitempty"`
+	// AuthUser looks up any user not specified in auth_file from pg_shadow. Default: not set.
+	// +optional
+	// AuthUser string `json:"authUser,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -30153,20 +30153,8 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConnectionPoolConfig": {
       "type": "object",
       "properties": {
-        "adminUsers": {
-          "description": "AdminUsers specifies an array of users who can act as PgBouncer administrators.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        },
         "authType": {
           "description": "AuthType specifies how to authenticate users. Default: md5 (md5+plain text).",
-          "type": "string"
-        },
-        "authUser": {
-          "description": "AuthUser looks up any user not specified in auth_file from pg_shadow. Default: not set.",
           "type": "string"
         },
         "defaultPoolSize": {
@@ -32205,10 +32193,18 @@
         "version"
       ],
       "properties": {
+        "authSecret": {
+          "description": "Database authentication secret",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
+        },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
+        },
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "connectionPool": {
           "description": "ConnectionPoolConfig defines Connection pool configuration.",
@@ -32260,10 +32256,6 @@
         "tls": {
           "description": "TLS contains tls configurations for client and server.",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TLSConfig"
-        },
-        "userListSecretRef": {
-          "description": "UserListSecretRef is a secret with a list of PgBouncer user and passwords.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "version": {
           "description": "Version of PgBouncer to be deployed.",

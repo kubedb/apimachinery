@@ -138,11 +138,6 @@ func (in *ConnectionPoolConfig) DeepCopyInto(out *ConnectionPoolConfig) {
 		*out = new(int64)
 		**out = **in
 	}
-	if in.AdminUsers != nil {
-		in, out := &in.AdminUsers, &out.AdminUsers
-		*out = make([]string, len(*in))
-		copy(*out, *in)
-	}
 	return
 }
 
@@ -2269,8 +2264,13 @@ func (in *PgBouncerSpec) DeepCopyInto(out *PgBouncerSpec) {
 		*out = new(ConnectionPoolConfig)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.UserListSecretRef != nil {
-		in, out := &in.UserListSecretRef, &out.UserListSecretRef
+	if in.AuthSecret != nil {
+		in, out := &in.AuthSecret, &out.AuthSecret
+		*out = new(SecretReference)
+		**out = **in
+	}
+	if in.ConfigSecret != nil {
+		in, out := &in.ConfigSecret, &out.ConfigSecret
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}

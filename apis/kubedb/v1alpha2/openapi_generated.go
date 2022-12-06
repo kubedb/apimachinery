@@ -21151,31 +21151,9 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ConnectionPoolConfig(ref common.Re
 							Format:      "int64",
 						},
 					},
-					"adminUsers": {
-						SchemaProps: spec.SchemaProps{
-							Description: "AdminUsers specifies an array of users who can act as PgBouncer administrators.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
 					"authType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "AuthType specifies how to authenticate users. Default: md5 (md5+plain text).",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"authUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "AuthUser looks up any user not specified in auth_file from pg_shadow. Default: not set.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -24867,9 +24845,15 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgBouncerSpec(ref common.Reference
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConnectionPoolConfig"),
 						},
 					},
-					"userListSecretRef": {
+					"authSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserListSecretRef is a secret with a list of PgBouncer user and passwords.",
+							Description: "Database authentication secret",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
@@ -24911,7 +24895,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgBouncerSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConnectionPoolConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Databases", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConnectionPoolConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Databases", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 

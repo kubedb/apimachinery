@@ -48,17 +48,27 @@ spec:
             type: object
           spec:
             properties:
+              authSecret:
+                properties:
+                  externallyManaged:
+                    type: boolean
+                  name:
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               autoOps:
                 properties:
                   disabled:
                     type: boolean
                 type: object
+              configSecret:
+                properties:
+                  name:
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               connectionPool:
                 properties:
-                  adminUsers:
-                    items:
-                      type: string
-                    type: array
                   authType:
                     enum:
                     - md5
@@ -69,8 +79,6 @@ spec:
                     - any
                     - hba
                     - pam
-                    type: string
-                  authUser:
                     type: string
                   defaultPoolSize:
                     format: int64
@@ -2837,12 +2845,6 @@ spec:
                     type: object
                     x-kubernetes-map-type: atomic
                 type: object
-              userListSecretRef:
-                properties:
-                  name:
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
               version:
                 type: string
             required:
