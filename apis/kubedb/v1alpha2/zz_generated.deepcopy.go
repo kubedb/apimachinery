@@ -2112,8 +2112,16 @@ func (in *PgBouncerStatus) DeepCopy() *PgBouncerStatus {
 func (in *PostgreLeaderElectionConfig) DeepCopyInto(out *PostgreLeaderElectionConfig) {
 	*out = *in
 	out.Period = in.Period
-	out.TransferLeadershipInterval = in.TransferLeadershipInterval
-	out.TransferLeadershipTimeout = in.TransferLeadershipTimeout
+	if in.TransferLeadershipInterval != nil {
+		in, out := &in.TransferLeadershipInterval, &out.TransferLeadershipInterval
+		*out = new(v1.Duration)
+		**out = **in
+	}
+	if in.TransferLeadershipTimeout != nil {
+		in, out := &in.TransferLeadershipTimeout, &out.TransferLeadershipTimeout
+		*out = new(v1.Duration)
+		**out = **in
+	}
 	return
 }
 
@@ -2210,7 +2218,7 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 	if in.LeaderElection != nil {
 		in, out := &in.LeaderElection, &out.LeaderElection
 		*out = new(PostgreLeaderElectionConfig)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
