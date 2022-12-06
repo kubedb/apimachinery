@@ -203,6 +203,12 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topolog
 			MaximumLagBeforeFailover: 64 * 1024 * 1024,
 		}
 	}
+	if p.Spec.LeaderElection.TransferLeadershipInterval == nil {
+		p.Spec.LeaderElection.TransferLeadershipInterval = &metav1.Duration{Duration: 1 * time.Second}
+	}
+	if p.Spec.LeaderElection.TransferLeadershipTimeout == nil {
+		p.Spec.LeaderElection.TransferLeadershipTimeout = &metav1.Duration{Duration: 120 * time.Second}
+	}
 	apis.SetDefaultResourceLimits(&p.Spec.Coordinator.Resources, CoordinatorDefaultResources)
 
 	if p.Spec.PodTemplate.Spec.ServiceAccountName == "" {
