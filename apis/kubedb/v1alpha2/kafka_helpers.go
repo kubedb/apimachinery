@@ -260,13 +260,23 @@ func (k *Kafka) SetDefaults() {
 			}
 			apis.SetDefaultResourceLimits(&k.Spec.Topology.Broker.Resources, DefaultResources)
 		}
-
 	} else {
 		apis.SetDefaultResourceLimits(&k.Spec.PodTemplate.Spec.Resources, DefaultResources)
 		if k.Spec.Replicas == nil {
 			k.Spec.Replicas = pointer.Int32P(1)
 		}
 	}
+	if k.Spec.EnableSSL {
+		k.SetTLSDefaults()
+	}
+	k.SetHealthCheckerDefaults()
+}
+func (k *Kafka) SetTLSDefaults() {
+	if k.Spec.TLS == nil || k.Spec.TLS.IssuerRef == nil {
+		return
+	}
+	k.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(k.Spec.TLS.Certificates, string(KafkaServerCert), k.CertificateName(KafkaServerCert))
+	k.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(k.Spec.TLS.Certificates, string(KafkaClientCert), k.CertificateName(KafkaClientCert))
 }
 
 // ToMap returns ClusterTopology in a Map
