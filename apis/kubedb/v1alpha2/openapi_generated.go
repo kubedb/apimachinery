@@ -22190,7 +22190,8 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaClusterTopology(ref common.Re
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "KafkaClusterTopology defines kafka topology node specs for controller node and broker node dedicated controller nodes contains metadata for brokers and broker nodes contains data both nodes must be configured in topology mode",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"controller": {
 						SchemaProps: spec.SchemaProps{

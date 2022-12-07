@@ -30,44 +30,26 @@ const (
 	ResourcePluralKafka   = "kafkas"
 )
 
-// +kubebuilder:validation:Enum=Provisioning;Ready;NotReady;Critical
-type KafkaPhase string
+// Kafka is the Schema for the kafkas API
 
-const (
-	KafkaPhaseProvisioning KafkaPhase = "Provisioning"
-	KafkaPhaseReady        KafkaPhase = "Ready"
-	KafkaPhaseNotReady     KafkaPhase = "NotReady"
-	KafkaPhaseCritical     KafkaPhase = "Critical"
-)
+// +genclient
+// +k8s:openapi-gen=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// +kubebuilder:validation:Enum=controller;broker;combined
-type KafkaNodeRoleType string
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:shortName=kf,scope=Namespaced
+// +kubebuilder:subresource:scale:specpath=.spec.replicas,statuspath=.status.replicas
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+type Kafka struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-const (
-	KafkaNodeRoleController KafkaNodeRoleType = "controller"
-	KafkaNodeRoleBroker     KafkaNodeRoleType = "broker"
-	KafkaNodeRoleCombined   KafkaNodeRoleType = "combined"
-)
-
-// +kubebuilder:validation:Enum=BROKER;CONTROLLER;INTERNAL
-type KafkaListenerType string
-
-const (
-	KafkaListenerBroker     KafkaListenerType = "BROKER"
-	KafkaListenerController KafkaListenerType = "CONTROLLER"
-	KafkaListenerInternal   KafkaListenerType = "INTERNAL"
-)
-
-// +kubebuilder:validation:Enum=ca;transport;http;client;server
-type KafkaCertificateAlias string
-
-const (
-	KafkaCACert        KafkaCertificateAlias = "ca"
-	KafkaTransportCert KafkaCertificateAlias = "transport"
-	KafkaHTTPCert      KafkaCertificateAlias = "http"
-	KafkaClientCert    KafkaCertificateAlias = "client"
-	KafkaServerCert    KafkaCertificateAlias = "server"
-)
+	Spec   KafkaSpec   `json:"spec,omitempty"`
+	Status KafkaStatus `json:"status,omitempty"`
+}
 
 // KafkaSpec defines the desired state of Kafka
 type KafkaSpec struct {
@@ -129,6 +111,9 @@ type KafkaSpec struct {
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 }
 
+// KafkaClusterTopology defines kafka topology node specs for controller node and broker node
+// dedicated controller nodes contains metadata for brokers and broker nodes contains data
+// both nodes must be configured in topology mode
 type KafkaClusterTopology struct {
 	Controller *KafkaNode `json:"controller,omitempty"`
 	Broker     *KafkaNode `json:"broker,omitempty"`
@@ -165,26 +150,44 @@ type KafkaStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
-// Kafka is the Schema for the kafkas API
+// +kubebuilder:validation:Enum=Provisioning;Ready;NotReady;Critical
+type KafkaPhase string
 
-// +genclient
-// +k8s:openapi-gen=true
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+const (
+	KafkaPhaseProvisioning KafkaPhase = "Provisioning"
+	KafkaPhaseReady        KafkaPhase = "Ready"
+	KafkaPhaseNotReady     KafkaPhase = "NotReady"
+	KafkaPhaseCritical     KafkaPhase = "Critical"
+)
 
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
-// +kubebuilder:resource:shortName=kf,scope=Namespaced
-// +kubebuilder:subresource:scale:specpath=.spec.replicas,statuspath=.status.replicas
-// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
-// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
-// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-type Kafka struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+// +kubebuilder:validation:Enum=controller;broker;combined
+type KafkaNodeRoleType string
 
-	Spec   KafkaSpec   `json:"spec,omitempty"`
-	Status KafkaStatus `json:"status,omitempty"`
-}
+const (
+	KafkaNodeRoleController KafkaNodeRoleType = "controller"
+	KafkaNodeRoleBroker     KafkaNodeRoleType = "broker"
+	KafkaNodeRoleCombined   KafkaNodeRoleType = "combined"
+)
+
+// +kubebuilder:validation:Enum=BROKER;CONTROLLER;INTERNAL
+type KafkaListenerType string
+
+const (
+	KafkaListenerBroker     KafkaListenerType = "BROKER"
+	KafkaListenerController KafkaListenerType = "CONTROLLER"
+	KafkaListenerInternal   KafkaListenerType = "INTERNAL"
+)
+
+// +kubebuilder:validation:Enum=ca;transport;http;client;server
+type KafkaCertificateAlias string
+
+const (
+	KafkaCACert        KafkaCertificateAlias = "ca"
+	KafkaTransportCert KafkaCertificateAlias = "transport"
+	KafkaHTTPCert      KafkaCertificateAlias = "http"
+	KafkaClientCert    KafkaCertificateAlias = "client"
+	KafkaServerCert    KafkaCertificateAlias = "server"
+)
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
