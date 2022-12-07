@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	"path/filepath"
 	"strings"
 
@@ -279,4 +280,28 @@ func (kfTopology *KafkaClusterTopology) ToMap() map[KafkaNodeRoleType]KafkaNode 
 		topology[KafkaNodeRoleBroker] = *kfTopology.Broker
 	}
 	return topology
+}
+
+type KafkaApp struct {
+	*Kafka
+}
+
+func (r KafkaApp) Name() string {
+	return r.Kafka.Name
+}
+
+func (r KafkaApp) Type() appcat.AppType {
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularKafka))
+}
+
+func (k *Kafka) AppBindingMeta() appcat.AppBindingMeta {
+	return &KafkaApp{k}
+}
+
+func (k *Kafka) GetConnectionScheme() string {
+	scheme := "http"
+	if k.Spec.EnableSSL {
+		scheme = "https"
+	}
+	return scheme
 }
