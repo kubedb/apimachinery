@@ -441,6 +441,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdStatus":                     schema_apimachinery_apis_kubedb_v1alpha2_EtcdStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Kafka":                          schema_apimachinery_apis_kubedb_v1alpha2_Kafka(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaApp":                       schema_apimachinery_apis_kubedb_v1alpha2_KafkaApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaClusterTopology":           schema_apimachinery_apis_kubedb_v1alpha2_KafkaClusterTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaList":                      schema_apimachinery_apis_kubedb_v1alpha2_KafkaList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaNode":                      schema_apimachinery_apis_kubedb_v1alpha2_KafkaNode(ref),
@@ -22183,6 +22184,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Kafka(ref common.ReferenceCallback
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_KafkaApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Kafka": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Kafka"),
+						},
+					},
+				},
+				Required: []string{"Kafka"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Kafka"},
 	}
 }
 

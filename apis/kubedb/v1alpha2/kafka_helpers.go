@@ -18,7 +18,6 @@ package v1alpha2
 
 import (
 	"fmt"
-	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	"path/filepath"
 	"strings"
 
@@ -31,6 +30,7 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 )
 
 func (k *Kafka) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
