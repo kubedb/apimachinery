@@ -30163,7 +30163,7 @@
           "format": "int64"
         },
         "ignoreStartupParameters": {
-          "description": "IgnoreStartupParameters specifies comma-separated startup parameters that pgbouncer knows are handled by admin and it can ignore them.",
+          "description": "IgnoreStartupParameters specifies comma-separated startup parameters that pgbouncer knows are handled by admin and it can ignore them. Default: empty",
           "type": "string"
         },
         "maxClientConnections": {
@@ -30172,12 +30172,12 @@
           "format": "int64"
         },
         "maxDBConnections": {
-          "description": "MaxDBConnections is the maximum number of connections allowed per-database. Default: unlimited.",
+          "description": "MaxDBConnections is the maximum number of connections allowed per-database. Default: 0 (unlimited).",
           "type": "integer",
           "format": "int64"
         },
         "maxUserConnections": {
-          "description": "MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.",
+          "description": "MaxUserConnections is the maximum number of users allowed per-database. Default: 0 (unlimited).",
           "type": "integer",
           "format": "int64"
         },
@@ -30206,7 +30206,7 @@
           "format": "int64"
         },
         "statsPeriodSeconds": {
-          "description": "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log.",
+          "description": "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log. Default: 60",
           "type": "integer",
           "format": "int64"
         }

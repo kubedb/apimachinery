@@ -174,19 +174,15 @@ func (p *PgBouncer) SetDefaults() {
 		p.Spec.TerminationPolicy = PgBouncerTerminationPolicyDelete
 	}
 
+	p.setConnectionPoolConfigDefaults()
+
 	if p.Spec.TLS != nil {
 		if p.Spec.SSLMode == "" {
 			p.Spec.SSLMode = PgBouncerSSLModeVerifyFull
 		}
-		if p.Spec.ConnectionPool.AuthType == "" {
-			p.Spec.ConnectionPool.AuthType = PgBouncerClientAuthModeMD5
-		}
 	} else {
 		if p.Spec.SSLMode == "" {
 			p.Spec.SSLMode = PgBouncerSSLModeDisable
-		}
-		if p.Spec.ConnectionPool.AuthType == "" {
-			p.Spec.ConnectionPool.AuthType = PgBouncerClientAuthModeMD5
 		}
 	}
 
@@ -250,5 +246,47 @@ func (p *PgBouncer) SetHealthCheckerDefaults() {
 	}
 	if p.Spec.HealthChecker.FailureThreshold == nil {
 		p.Spec.HealthChecker.FailureThreshold = pointer.Int32P(1)
+	}
+}
+
+func (p *PgBouncer) setConnectionPoolConfigDefaults() {
+	if p.Spec.ConnectionPool == nil {
+		p.Spec.ConnectionPool = &ConnectionPoolConfig{}
+	}
+	if p.Spec.ConnectionPool.Port == nil {
+		p.Spec.ConnectionPool.Port = pointer.Int32P(5432)
+	}
+	if p.Spec.ConnectionPool.PoolMode == "" {
+		p.Spec.ConnectionPool.PoolMode = "session"
+	}
+	if p.Spec.ConnectionPool.MaxClientConnections == nil {
+		p.Spec.ConnectionPool.MaxClientConnections = pointer.Int64P(100)
+	}
+	if p.Spec.ConnectionPool.DefaultPoolSize == nil {
+		p.Spec.ConnectionPool.DefaultPoolSize = pointer.Int64P(20)
+	}
+	if p.Spec.ConnectionPool.MinPoolSize == nil {
+		p.Spec.ConnectionPool.MinPoolSize = pointer.Int64P(0)
+	}
+	if p.Spec.ConnectionPool.ReservePoolSize == nil {
+		p.Spec.ConnectionPool.ReservePoolSize = pointer.Int64P(0)
+	}
+	if p.Spec.ConnectionPool.ReservePoolTimeoutSeconds == nil {
+		p.Spec.ConnectionPool.ReservePoolTimeoutSeconds = pointer.Int64P(5)
+	}
+	if p.Spec.ConnectionPool.MaxDBConnections == nil {
+		p.Spec.ConnectionPool.MaxDBConnections = pointer.Int64P(0)
+	}
+	if p.Spec.ConnectionPool.MaxUserConnections == nil {
+		p.Spec.ConnectionPool.MaxUserConnections = pointer.Int64P(0)
+	}
+	if p.Spec.ConnectionPool.StatsPeriodSeconds == nil {
+		p.Spec.ConnectionPool.StatsPeriodSeconds = pointer.Int64P(60)
+	}
+	if p.Spec.ConnectionPool.AuthType == "" {
+		p.Spec.ConnectionPool.AuthType = PgBouncerClientAuthModeMD5
+	}
+	if p.Spec.ConnectionPool.IgnoreStartupParameters == "" {
+		p.Spec.ConnectionPool.IgnoreStartupParameters = "empty"
 	}
 }

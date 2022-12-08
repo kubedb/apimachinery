@@ -21132,21 +21132,21 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ConnectionPoolConfig(ref common.Re
 					},
 					"maxDBConnections": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxDBConnections is the maximum number of connections allowed per-database. Default: unlimited.",
+							Description: "MaxDBConnections is the maximum number of connections allowed per-database. Default: 0 (unlimited).",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"maxUserConnections": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.",
+							Description: "MaxUserConnections is the maximum number of users allowed per-database. Default: 0 (unlimited).",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"statsPeriodSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log.",
+							Description: "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log. Default: 60",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -21160,7 +21160,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ConnectionPoolConfig(ref common.Re
 					},
 					"ignoreStartupParameters": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IgnoreStartupParameters specifies comma-separated startup parameters that pgbouncer knows are handled by admin and it can ignore them.",
+							Description: "IgnoreStartupParameters specifies comma-separated startup parameters that pgbouncer knows are handled by admin and it can ignore them. Default: empty",
 							Type:        []string{"string"},
 							Format:      "",
 						},
