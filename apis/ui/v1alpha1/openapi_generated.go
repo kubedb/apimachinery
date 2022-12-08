@@ -25762,76 +25762,69 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLQuerySpec(ref common.Reference
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"startTime": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"userHost": {
+					"digestText": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
 							Type:    []string{"string"},
 							Format:  "",
 						},
 					},
-					"queryTimeMilliSeconds": {
+					"schemaName": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
 							Type:    []string{"string"},
 							Format:  "",
 						},
 					},
-					"lockTimeMilliSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"rowsSent": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"rowsExamined": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"lastInsertId": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"insertId": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"serverId": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"sqlText": {
+					"username": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
 							Format: "",
 						},
 					},
-					"threadId": {
+					"host_group": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"countStar": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"firstSeen": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"lastSeen": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"sumTime": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"minTime": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"maxTime": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"averageTime": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"integer"},
 							Format: "int64",
@@ -25843,12 +25836,16 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLQuerySpec(ref common.Reference
 							Format: "int64",
 						},
 					},
+					"rowsSent": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
 				},
-				Required: []string{"startTime", "userHost", "queryTimeMilliSeconds", "lockTimeMilliSeconds", "db"},
+				Required: []string{"digestText", "schemaName", "countStar", "sumTime", "minTime", "maxTime", "averageTime"},
 			},
 		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 

@@ -351,3 +351,4 @@ API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesSt
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsTranslogStats,TotalSize
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsWarmerStats,TotalTime
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsWarmerStats,TotalTimeInMillis
+API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLQuerySpec,HostGroup

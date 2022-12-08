@@ -29,46 +29,50 @@ spec:
               queries:
                 items:
                   properties:
-                    db:
-                      type: string
-                    insertId:
+                    averageTime:
                       format: int64
                       type: integer
-                    lastInsertId:
+                    countStar:
                       format: int64
                       type: integer
-                    lockTimeMilliSeconds:
+                    digestText:
                       type: string
-                    queryTimeMilliSeconds:
-                      type: string
+                    firstSeen:
+                      format: int64
+                      type: integer
+                    host_group:
+                      format: int64
+                      type: integer
+                    lastSeen:
+                      format: int64
+                      type: integer
+                    maxTime:
+                      format: int64
+                      type: integer
+                    minTime:
+                      format: int64
+                      type: integer
                     rowsAffected:
-                      format: int64
-                      type: integer
-                    rowsExamined:
                       format: int64
                       type: integer
                     rowsSent:
                       format: int64
                       type: integer
-                    serverId:
+                    schemaName:
+                      type: string
+                    sumTime:
                       format: int64
                       type: integer
-                    sqlText:
-                      type: string
-                    startTime:
-                      format: date-time
-                      type: string
-                    threadId:
-                      format: int64
-                      type: integer
-                    userHost:
+                    username:
                       type: string
                   required:
-                  - db
-                  - lockTimeMilliSeconds
-                  - queryTimeMilliSeconds
-                  - startTime
-                  - userHost
+                  - averageTime
+                  - countStar
+                  - digestText
+                  - maxTime
+                  - minTime
+                  - schemaName
+                  - sumTime
                   type: object
                 type: array
             required:

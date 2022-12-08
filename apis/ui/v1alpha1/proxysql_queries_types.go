@@ -32,19 +32,19 @@ type ProxySQLQueriesSpec struct {
 }
 
 type ProxySQLQuerySpec struct {
-	StartTime             *metav1.Time `json:"startTime"`
-	UserHost              string       `json:"userHost"`
-	QueryTimeMilliSeconds string       `json:"queryTimeMilliSeconds"`
-	LockTimeMilliSeconds  string       `json:"lockTimeMilliSeconds"`
-	RowsSent              *int64       `json:"rowsSent,omitempty"`
-	RowsExamined          *int64       `json:"rowsExamined,omitempty"`
-	DB                    string       `json:"db"`
-	LastInsertId          *int64       `json:"lastInsertId,omitempty"`
-	InsertId              *int64       `json:"insertId,omitempty"`
-	ServerId              *int64       `json:"serverId,omitempty"`
-	SQLText               string       `json:"sqlText,omitempty"`
-	ThreadId              *int64       `json:"threadId,omitempty"`
-	RowsAffected          *int64       `json:"rowsAffected,omitempty"`
+	DigestText   string `json:"digestText"`
+	SchemaName   string `json:"schemaName"`
+	Username     string `json:"username,omitempty"`
+	HostGroup    *int64 `json:"host_group,omitempty"`
+	CountStar    *int64 `json:"countStar"`
+	FirstSeen    *int64 `json:"firstSeen,omitempty"`
+	LastSeen     *int64 `json:"lastSeen,omitempty"`
+	SumTime      *int64 `json:"sumTime"`
+	MinTime      *int64 `json:"minTime"`
+	MaxTime      *int64 `json:"maxTime"`
+	AverageTime  *int64 `json:"averageTime"`
+	RowsAffected *int64 `json:"rowsAffected,omitempty"`
+	RowsSent     *int64 `json:"rowsSent,omitempty"`
 }
 
 // ProxySQLQueries is the Schema for the proxysqlslowqueries API
