@@ -124,11 +124,6 @@ type Databases struct {
 	DatabaseRef appcat.AppReference `json:"databaseRef"`
 	// DatabaseName is the name of the target database inside a Postgres instance.
 	DatabaseName string `json:"databaseName"`
-	// AuthSecretRef points to a secret that contains the credentials
-	// (username and password) of an existing user of this database.
-	// It is used to bind a single user to this specific database connection.
-	// +optional
-	AuthSecretRef *core.LocalObjectReference `json:"authSecretRef,omitempty"`
 }
 
 type ConnectionPoolConfig struct {

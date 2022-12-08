@@ -203,11 +203,6 @@ func (in *CoordinatorSpec) DeepCopy() *CoordinatorSpec {
 func (in *Databases) DeepCopyInto(out *Databases) {
 	*out = *in
 	in.DatabaseRef.DeepCopyInto(&out.DatabaseRef)
-	if in.AuthSecretRef != nil {
-		in, out := &in.AuthSecretRef, &out.AuthSecretRef
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
 	return
 }
 

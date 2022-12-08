@@ -21256,18 +21256,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Databases(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
-					"authSecretRef": {
-						SchemaProps: spec.SchemaProps{
-							Description: "AuthSecretRef points to a secret that contains the credentials (username and password) of an existing user of this database. It is used to bind a single user to this specific database connection.",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
 				},
 				Required: []string{"alias", "databaseRef", "databaseName"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
 	}
 }
 

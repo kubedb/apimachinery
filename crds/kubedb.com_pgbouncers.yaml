@@ -117,12 +117,6 @@ spec:
                   properties:
                     alias:
                       type: string
-                    authSecretRef:
-                      properties:
-                        name:
-                          type: string
-                      type: object
-                      x-kubernetes-map-type: atomic
                     databaseName:
                       type: string
                     databaseRef:
