@@ -75,11 +75,11 @@ func (k *Kafka) GoverningServiceName() string {
 }
 
 func (k *Kafka) GoverningServiceNameController() string {
-	return meta_util.NameWithSuffix(k.ServiceName(), "controller")
+	return meta_util.NameWithSuffix(k.ServiceName(), KafkaNodeRolesController)
 }
 
 func (k *Kafka) GoverningServiceNameBroker() string {
-	return meta_util.NameWithSuffix(k.ServiceName(), "broker")
+	return meta_util.NameWithSuffix(k.ServiceName(), KafkaNodeRolesBrokers)
 }
 
 func (k *Kafka) StandbyServiceName() string {
@@ -202,13 +202,13 @@ func (k *Kafka) GetCertSecretName(alias KafkaCertificateAlias) string {
 	return k.CertificateName(alias)
 }
 
-// returns the volume name for certificate secret.
+// returns the CertSecretVolumeName
 // Values will be like: client-certs, server-certs etc.
 func (k *Kafka) CertSecretVolumeName(alias KafkaCertificateAlias) string {
 	return string(alias) + "-certs"
 }
 
-// returns the mountPath for certificate secrets.
+// returns CertSecretVolumeMountPath
 // if configDir is "/opt/kafka/config",
 // mountPath will be, "/opt/kafka/config/<alias>".
 func (k *Kafka) CertSecretVolumeMountPath(configDir string, cert string) string {
@@ -271,6 +271,7 @@ func (k *Kafka) SetDefaults() {
 	}
 	k.SetHealthCheckerDefaults()
 }
+
 func (k *Kafka) SetTLSDefaults() {
 	if k.Spec.TLS == nil || k.Spec.TLS.IssuerRef == nil {
 		return

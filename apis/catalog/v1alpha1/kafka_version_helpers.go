@@ -57,8 +57,7 @@ func (r KafkaVersion) ValidateSpecs() error {
 		r.Spec.DB.Image == "" {
 		return fmt.Errorf(`atleast one of the following specs is not set for kafkaVersion "%v":
 							spec.version,
-							spec.db.image,
-							spec.exporter.image.`, r.Name)
+							spec.db.image`, r.Name)
 	}
 	return nil
 }

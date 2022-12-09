@@ -40,8 +40,6 @@ func (k *Kafka) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-// TODO(user): EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-
 //+kubebuilder:webhook:path=/mutate-kafka-kubedb-com-v1alpha1-kafka,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=kafkas,verbs=create,versions=v1alpha1,name=mkafka.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Defaulter = &Kafka{}
@@ -52,11 +50,9 @@ func (k *Kafka) Default() {
 		return
 	}
 	kafkalog.Info("default", "name", k.Name)
-	// TODO(user): fill in your defaulting logic.
 	k.SetDefaults()
 }
 
-// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-kafka-kubedb-com-v1alpha1-kafka,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=kafkas,verbs=create;update,versions=v1alpha1,name=vkafka.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Validator = &Kafka{}
@@ -64,6 +60,31 @@ var _ webhook.Validator = &Kafka{}
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (k *Kafka) ValidateCreate() error {
 	kafkalog.Info("validate create", "name", k.Name)
+	err := k.ValidateCreateOrUpdate()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
+func (k *Kafka) ValidateUpdate(old runtime.Object) error {
+	err := k.ValidateCreateOrUpdate()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// ValidateDelete implements webhook.Validator so a webhook will be registered for the type
+func (k *Kafka) ValidateDelete() error {
+	kafkalog.Info("validate delete", "name", k.Name)
+
+	// TODO(user): fill in your validation logic upon object deletion.
+	return nil
+}
+
+func (k *Kafka) ValidateCreateOrUpdate() error {
 	var allErr field.ErrorList
 	// TODO(user): fill in your validation logic upon object creation.
 	if k.Spec.Topology != nil {
@@ -103,7 +124,7 @@ func (k *Kafka) ValidateCreate() error {
 		if *k.Spec.Topology.Broker.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("broker").Child("replicas"),
 				k.Name,
-				"number of replicas can not be less be 0 or less"))
+				"number of replicas can not be 0 or less"))
 		}
 
 		// validate that multiple nodes don't have same suffixes
@@ -131,10 +152,10 @@ func (k *Kafka) ValidateCreate() error {
 
 	} else {
 		// number of replicas can not be 0 or less
-		if *k.Spec.Replicas <= 0 {
+		if k.Spec.Replicas != nil && *k.Spec.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 				k.Name,
-				"number of replicas can not be less be 0 or less"))
+				"number of replicas can not be 0 or less"))
 		}
 	}
 
@@ -142,19 +163,6 @@ func (k *Kafka) ValidateCreate() error {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, k.Name, allErr)
-}
-
-// ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *Kafka) ValidateUpdate(old runtime.Object) error {
-	// TODO(user): fill in your validation logic upon object update.
-	return nil
-}
-
-// ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (k *Kafka) ValidateDelete() error {
-	kafkalog.Info("validate delete", "name", k.Name)
-
-	// TODO(user): fill in your validation logic upon object deletion.
 	return nil
 }
 
@@ -190,7 +198,8 @@ func validateVolumes(db *Kafka) error {
 	if db.Spec.PodTemplate.Spec.Volumes == nil {
 		return nil
 	}
-	rsv := reservedVolumes
+	rsv := make([]string, len(reservedVolumes))
+	copy(rsv, reservedVolumes)
 	if db.Spec.TLS != nil && db.Spec.TLS.Certificates != nil {
 		for _, c := range db.Spec.TLS.Certificates {
 			rsv = append(rsv, db.CertSecretVolumeName(KafkaCertificateAlias(c.Alias)))

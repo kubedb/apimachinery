@@ -30,7 +30,7 @@ const (
 	ResourcePluralKafka   = "kafkas"
 )
 
-// Kafka is the Schema for the kafkas API
+// Kafka is the Schema for the kafka API
 
 // +genclient
 // +k8s:openapi-gen=true
@@ -39,8 +39,8 @@ const (
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:shortName=kf,scope=Namespaced
-// +kubebuilder:subresource:scale:specpath=.spec.replicas,statuspath=.status.replicas
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
+// +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type Kafka struct {
@@ -53,9 +53,6 @@ type Kafka struct {
 
 // KafkaSpec defines the desired state of Kafka
 type KafkaSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// Version of Kafka to be deployed.
 	Version string `json:"version"`
 
@@ -63,7 +60,7 @@ type KafkaSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
-	// Elasticsearch topology for node specification
+	// Kafka topology for node specification
 	// +optional
 	Topology *KafkaClusterTopology `json:"topology,omitempty"`
 
@@ -87,7 +84,7 @@ type KafkaSpec struct {
 
 	// Keystore encryption secret
 	// +optional
-	KeystoreCredSecret *SecretReference `json:"keystoreSecret,omitempty"`
+	KeystoreCredSecret *SecretReference `json:"keystoreCredSecret,omitempty"`
 
 	// TLS contains tls configurations
 	// +optional
@@ -123,8 +120,11 @@ type KafkaNode struct {
 	// Replicas represents number of replica for this specific type of node
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
+
+	// suffix to append with node name
 	// +optional
 	Suffix string `json:"suffix,omitempty"`
+
 	// Storage to specify how storage shall be used.
 	// +optional
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
@@ -135,9 +135,6 @@ type KafkaNode struct {
 
 // KafkaStatus defines the observed state of Kafka
 type KafkaStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// Specifies the current phase of the database
 	// +optional
 	Phase KafkaPhase `json:"phase,omitempty"`

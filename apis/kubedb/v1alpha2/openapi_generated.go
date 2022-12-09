@@ -22296,8 +22296,9 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaNode(ref common.ReferenceCall
 					},
 					"suffix": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "suffix to append with node name",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"storage": {
@@ -22345,7 +22346,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref common.ReferenceCall
 					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Elasticsearch topology for node specification",
+							Description: "Kafka topology for node specification",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaClusterTopology"),
 						},
 					},
@@ -22382,7 +22383,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref common.ReferenceCall
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
-					"keystoreSecret": {
+					"keystoreCredSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Keystore encryption secret",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),

@@ -508,22 +508,21 @@ const (
 )
 
 const (
-	KafkaRESTPortName             = "http"
-	KafkaControllerPortName       = "controller"
-	KafkaInternalPortName         = "internal"
-	KafkaBrokerClientPortName     = "broker-client"
-	KafkaControllerClientPortName = "controller-client"
-	KafkaHealthTopicName          = "kafka-health"
-	KafkaRESTPort                 = 9092
-	KafkaControllerRESTPort       = 9093
-	KafkaInternalRESTPort         = 29092
+	KafkaPortNameREST                 = "http"
+	KafkaPortNameController           = "controller"
+	KafkaPortNameInternal             = "internal"
+	KafkaTopicNameHealth              = "kafka-health"
+	KafkaTopicDeletionThresholdOffset = 10
+	KafkaRESTPort                     = 9092
+	KafkaControllerRESTPort           = 9093
+	KafkaInternalRESTPort             = 29092
 
 	KafkaContainerName       = "kafka"
 	KafkaUserAdmin           = "admin"
 	KafkaNodeRoleSet         = "set"
-	KafkaCombinedNodeRoles   = "controller,broker"
-	KafkaControllerNodeRoles = "controller"
-	KafkaBrokerNodeRoles     = "broker"
+	KafkaNodeRolesCombined   = "controller,broker"
+	KafkaNodeRolesController = "controller"
+	KafkaNodeRolesBrokers    = "broker"
 
 	KafkaBrokerListener     = "KafkaBrokerListener"
 	KafkaControllerListener = "KafkaControllerListener"
