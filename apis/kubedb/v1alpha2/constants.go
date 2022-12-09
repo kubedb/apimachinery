@@ -510,6 +510,8 @@ const (
 const (
 	KafkaPortNameREST                 = "http"
 	KafkaPortNameController           = "controller"
+	KafkaBrokerClientPortName         = "broker"
+	KafkaControllerClientPortName     = "controller"
 	KafkaPortNameInternal             = "internal"
 	KafkaTopicNameHealth              = "kafka-health"
 	KafkaTopicDeletionThresholdOffset = 10
