@@ -183,6 +183,7 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,M
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBSchemaOverviewSpec,Collections
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MySQLQueriesSpec,Queries
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PodInsight,QueryTypeInsight
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PostgresInsightSpec,ReplicationStatus
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PostgresQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PostgresSettingsSpec,Settings
@@ -353,3 +354,4 @@ API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesSt
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsTranslogStats,TotalSize
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsWarmerStats,TotalTime
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsWarmerStats,TotalTimeInMillis
+API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,PodInsight,QueryTypeInsight

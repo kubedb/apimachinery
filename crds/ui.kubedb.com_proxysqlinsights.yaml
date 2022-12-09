@@ -35,49 +35,44 @@ spec:
               podInsights:
                 items:
                   properties:
-                    insights:
-                      properties:
-                        abortedClientConnections:
-                          format: int32
-                          type: integer
-                        abortedServerConnections:
-                          format: int32
-                          type: integer
-                        connectedClientConnections:
-                          format: int32
-                          type: integer
-                        connectedServerConnections:
-                          format: int32
-                          type: integer
-                        createdClientConnections:
-                          format: int32
-                          type: integer
-                        createdServerConnections:
-                          format: int32
-                          type: integer
-                        queryInsight:
-                          properties:
-                            hits:
-                              format: int64
-                              type: integer
-                            ruleId:
-                              format: int64
-                              type: integer
-                          required:
-                          - hits
-                          - ruleId
-                          type: object
-                        questions:
-                          format: int32
-                          type: integer
-                        slowQueries:
-                          format: int32
-                          type: integer
-                      type: object
-                    podName:
-                      type: string
-                  required:
-                  - podName
+                    abortedClientConnections:
+                      format: int32
+                      type: integer
+                    abortedServerConnections:
+                      format: int32
+                      type: integer
+                    connectedClientConnections:
+                      format: int32
+                      type: integer
+                    connectedServerConnections:
+                      format: int32
+                      type: integer
+                    createdClientConnections:
+                      format: int32
+                      type: integer
+                    createdServerConnections:
+                      format: int32
+                      type: integer
+                    queryInsight:
+                      items:
+                        properties:
+                          hits:
+                            format: int64
+                            type: integer
+                          ruleId:
+                            format: int64
+                            type: integer
+                        required:
+                        - hits
+                        - ruleId
+                        type: object
+                      type: array
+                    questions:
+                      format: int32
+                      type: integer
+                    slowQueries:
+                      format: int32
+                      type: integer
                   type: object
                 type: array
               status:

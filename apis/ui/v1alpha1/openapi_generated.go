@@ -495,7 +495,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PGSetting":                          schema_apimachinery_apis_ui_v1alpha1_PGSetting(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PRXSetting":                         schema_apimachinery_apis_ui_v1alpha1_PRXSetting(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsight":                         schema_apimachinery_apis_ui_v1alpha1_PodInsight(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsightSpec":                     schema_apimachinery_apis_ui_v1alpha1_PodInsightSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsights":                        schema_apimachinery_apis_ui_v1alpha1_PodInsights(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresConnectionInfo":             schema_apimachinery_apis_ui_v1alpha1_PostgresConnectionInfo(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresInsight":                    schema_apimachinery_apis_ui_v1alpha1_PostgresInsight(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresInsightList":                schema_apimachinery_apis_ui_v1alpha1_PostgresInsightList(ref),
@@ -24733,33 +24733,6 @@ func schema_apimachinery_apis_ui_v1alpha1_PodInsight(ref common.ReferenceCallbac
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"podName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"insights": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsightSpec"),
-						},
-					},
-				},
-				Required: []string{"podName"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsightSpec"},
-	}
-}
-
-func schema_apimachinery_apis_ui_v1alpha1_PodInsightSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
 					"questions": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"integer"},
@@ -24810,8 +24783,15 @@ func schema_apimachinery_apis_ui_v1alpha1_PodInsightSpec(ref common.ReferenceCal
 					},
 					"queryInsight": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.RuleExecution"),
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.RuleExecution"),
+									},
+								},
+							},
 						},
 					},
 				},
@@ -24819,6 +24799,33 @@ func schema_apimachinery_apis_ui_v1alpha1_PodInsightSpec(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/ui/v1alpha1.RuleExecution"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_PodInsights(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"podName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"insights": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsight"),
+						},
+					},
+				},
+				Required: []string{"podName"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsight"},
 	}
 }
 
