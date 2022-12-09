@@ -494,6 +494,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.NodesStatsWarmerStats":              schema_apimachinery_apis_ui_v1alpha1_NodesStatsWarmerStats(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PGSetting":                          schema_apimachinery_apis_ui_v1alpha1_PGSetting(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PRXSetting":                         schema_apimachinery_apis_ui_v1alpha1_PRXSetting(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsight":                         schema_apimachinery_apis_ui_v1alpha1_PodInsight(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsightSpec":                     schema_apimachinery_apis_ui_v1alpha1_PodInsightSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresConnectionInfo":             schema_apimachinery_apis_ui_v1alpha1_PostgresConnectionInfo(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresInsight":                    schema_apimachinery_apis_ui_v1alpha1_PostgresInsight(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PostgresInsightList":                schema_apimachinery_apis_ui_v1alpha1_PostgresInsightList(ref),
@@ -519,6 +521,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.ProxySQLSettings":                   schema_apimachinery_apis_ui_v1alpha1_ProxySQLSettings(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.ProxySQLSettingsList":               schema_apimachinery_apis_ui_v1alpha1_ProxySQLSettingsList(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.ProxySQLSettingsSpec":               schema_apimachinery_apis_ui_v1alpha1_ProxySQLSettingsSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.ProxySQLSlowQuerySpec":              schema_apimachinery_apis_ui_v1alpha1_ProxySQLSlowQuerySpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.RedisDatabaseSpec":                  schema_apimachinery_apis_ui_v1alpha1_RedisDatabaseSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.RedisInsight":                       schema_apimachinery_apis_ui_v1alpha1_RedisInsight(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.RedisInsightList":                   schema_apimachinery_apis_ui_v1alpha1_RedisInsightList(ref),
@@ -530,6 +533,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.RedisSchemaOverview":                schema_apimachinery_apis_ui_v1alpha1_RedisSchemaOverview(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.RedisSchemaOverviewList":            schema_apimachinery_apis_ui_v1alpha1_RedisSchemaOverviewList(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.RedisSchemaOverviewSpec":            schema_apimachinery_apis_ui_v1alpha1_RedisSchemaOverviewSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.RuleExecution":                      schema_apimachinery_apis_ui_v1alpha1_RuleExecution(ref),
 	}
 }
 
@@ -24723,6 +24727,101 @@ func schema_apimachinery_apis_ui_v1alpha1_PRXSetting(ref common.ReferenceCallbac
 	}
 }
 
+func schema_apimachinery_apis_ui_v1alpha1_PodInsight(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"podName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"insights": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsightSpec"),
+						},
+					},
+				},
+				Required: []string{"podName"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsightSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_PodInsightSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"questions": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"slowQueries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"abortedClientConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"connectedClientConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"createdClientConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"abortedServerConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"connectedServerConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"createdServerConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"queryInsight": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.RuleExecution"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.RuleExecution"},
+	}
+}
+
 func schema_apimachinery_apis_ui_v1alpha1_PostgresConnectionInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -25559,83 +25658,37 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLInsightSpec(ref common.Referen
 							Format:  "",
 						},
 					},
-					"mode": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
 					"maxConnections": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"integer"},
 							Format: "int32",
 						},
 					},
-					"maxUsedConnections": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"questions": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"longQueryTimeThresholdSeconds": {
+					"longQueryTimeThreshold": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"number"},
 							Format: "double",
 						},
 					},
-					"numberOfSlowQueries": {
+					"podInsights": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"abortedClients": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"abortedConnections": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"threadsCached": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"threadsConnected": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"threadsCreated": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"threadsRunning": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsight"),
+									},
+								},
+							},
 						},
 					},
 				},
-				Required: []string{"version", "status", "mode"},
+				Required: []string{"version", "status"},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsight"},
 	}
 }
 
@@ -25762,90 +25815,32 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLQuerySpec(ref common.Reference
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"digestText": {
+					"podName": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
 							Type:    []string{"string"},
 							Format:  "",
 						},
 					},
-					"schemaName": {
+					"slowQueries": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"username": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"host_group": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"countStar": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"firstSeen": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"lastSeen": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"sumTime": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"minTime": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"maxTime": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"averageTime": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"rowsAffected": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"rowsSent": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.ProxySQLSlowQuerySpec"),
+									},
+								},
+							},
 						},
 					},
 				},
-				Required: []string{"digestText", "schemaName", "countStar", "sumTime", "minTime", "maxTime", "averageTime"},
+				Required: []string{"podName"},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.ProxySQLSlowQuerySpec"},
 	}
 }
 
@@ -25963,6 +25958,99 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLSettingsSpec(ref common.Refere
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/ui/v1alpha1.PGSetting"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_ProxySQLSlowQuerySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"digestText": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"schemaName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"username": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"hostGroup": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"countStar": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"firstSeen": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"lastSeen": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"sumTime": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"minTime": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"maxTime": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"averageTime": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"rowsAffected": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"rowsSent": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+				},
+				Required: []string{"digestText", "schemaName", "countStar", "sumTime", "minTime", "maxTime", "averageTime"},
+			},
+		},
 	}
 }
 
@@ -26480,5 +26568,30 @@ func schema_apimachinery_apis_ui_v1alpha1_RedisSchemaOverviewSpec(ref common.Ref
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/ui/v1alpha1.RedisDatabaseSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_RuleExecution(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ruleId": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"hits": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+				},
+				Required: []string{"ruleId", "hits"},
+			},
+		},
 	}
 }

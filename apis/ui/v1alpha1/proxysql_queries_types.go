@@ -31,11 +31,11 @@ type ProxySQLQueriesSpec struct {
 	Queries []ProxySQLQuerySpec `json:"queries"`
 }
 
-type ProxySQLQuerySpec struct {
+type ProxySQLSlowQuerySpec struct {
 	DigestText   string `json:"digestText"`
 	SchemaName   string `json:"schemaName"`
 	Username     string `json:"username,omitempty"`
-	HostGroup    *int64 `json:"host_group,omitempty"`
+	HostGroup    *int64 `json:"hostGroup,omitempty"`
 	CountStar    *int64 `json:"countStar"`
 	FirstSeen    *int64 `json:"firstSeen,omitempty"`
 	LastSeen     *int64 `json:"lastSeen,omitempty"`
@@ -45,6 +45,11 @@ type ProxySQLQuerySpec struct {
 	AverageTime  *int64 `json:"averageTime"`
 	RowsAffected *int64 `json:"rowsAffected,omitempty"`
 	RowsSent     *int64 `json:"rowsSent,omitempty"`
+}
+
+type ProxySQLQuerySpec struct {
+	PodName     string                  `json:"podName"`
+	SlowQueries []ProxySQLSlowQuerySpec `json:"slowQueries,omitempty"`
 }
 
 // ProxySQLQueries is the Schema for the proxysqlslowqueries API

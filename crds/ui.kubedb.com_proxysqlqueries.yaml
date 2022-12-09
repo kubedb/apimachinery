@@ -29,50 +29,59 @@ spec:
               queries:
                 items:
                   properties:
-                    averageTime:
-                      format: int64
-                      type: integer
-                    countStar:
-                      format: int64
-                      type: integer
-                    digestText:
+                    podName:
                       type: string
-                    firstSeen:
-                      format: int64
-                      type: integer
-                    host_group:
-                      format: int64
-                      type: integer
-                    lastSeen:
-                      format: int64
-                      type: integer
-                    maxTime:
-                      format: int64
-                      type: integer
-                    minTime:
-                      format: int64
-                      type: integer
-                    rowsAffected:
-                      format: int64
-                      type: integer
-                    rowsSent:
-                      format: int64
-                      type: integer
-                    schemaName:
-                      type: string
-                    sumTime:
-                      format: int64
-                      type: integer
-                    username:
-                      type: string
+                    slowQueries:
+                      items:
+                        properties:
+                          averageTime:
+                            format: int64
+                            type: integer
+                          countStar:
+                            format: int64
+                            type: integer
+                          digestText:
+                            type: string
+                          firstSeen:
+                            format: int64
+                            type: integer
+                          hostGroup:
+                            format: int64
+                            type: integer
+                          lastSeen:
+                            format: int64
+                            type: integer
+                          maxTime:
+                            format: int64
+                            type: integer
+                          minTime:
+                            format: int64
+                            type: integer
+                          rowsAffected:
+                            format: int64
+                            type: integer
+                          rowsSent:
+                            format: int64
+                            type: integer
+                          schemaName:
+                            type: string
+                          sumTime:
+                            format: int64
+                            type: integer
+                          username:
+                            type: string
+                        required:
+                        - averageTime
+                        - countStar
+                        - digestText
+                        - maxTime
+                        - minTime
+                        - schemaName
+                        - sumTime
+                        type: object
+                      type: array
                   required:
-                  - averageTime
-                  - countStar
-                  - digestText
-                  - maxTime
-                  - minTime
-                  - schemaName
-                  - sumTime
+                  - podName
                   type: object
                 type: array
             required:

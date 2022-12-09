@@ -25,22 +25,35 @@ const (
 	ResourceProxySQLInsights    = "proxysqlinsights"
 )
 
+type RuleExecution struct {
+	RuleId *int64 `json:"ruleId"`
+	Hits   *int64 `json:"hits"`
+}
+
+type PodInsightSpec struct {
+	Questions                  *int32        `json:"questions,omitempty"`
+	SlowQueries                *int32        `json:"slowQueries,omitempty"`
+	AbortedClientConnections   *int32        `json:"abortedClientConnections,omitempty"`
+	ConnectedClientConnections *int32        `json:"connectedClientConnections,omitempty"`
+	CreatedClientConnections   *int32        `json:"createdClientConnections,omitempty"`
+	AbortedServerConnections   *int32        `json:"abortedServerConnections,omitempty"`
+	ConnectedServerConnections *int32        `json:"connectedServerConnections,omitempty"`
+	CreatedServerConnections   *int32        `json:"createdServerConnections,omitempty"`
+	QueryInsight               RuleExecution `json:"queryInsight,omitempty"`
+}
+
+type PodInsight struct {
+	PodName  string          `json:"podName"`
+	Insights *PodInsightSpec `json:"insights,omitempty"`
+}
+
 // ProxySQLInsightSpec defines the desired state of ProxySQLInsight
 type ProxySQLInsightSpec struct {
-	Version                       string   `json:"version"`
-	Status                        string   `json:"status"`
-	Mode                          string   `json:"mode"`
-	MaxConnections                *int32   `json:"maxConnections,omitempty"`
-	MaxUsedConnections            *int32   `json:"maxUsedConnections,omitempty"`
-	Questions                     *int32   `json:"questions,omitempty"`
-	LongQueryTimeThresholdSeconds *float64 `json:"longQueryTimeThresholdSeconds,omitempty"`
-	NumberOfSlowQueries           *int32   `json:"numberOfSlowQueries,omitempty"`
-	AbortedClients                *int32   `json:"abortedClients,omitempty"`
-	AbortedConnections            *int32   `json:"abortedConnections,omitempty"`
-	ThreadsCached                 *int32   `json:"threadsCached,omitempty"`
-	ThreadsConnected              *int32   `json:"threadsConnected,omitempty"`
-	ThreadsCreated                *int32   `json:"threadsCreated,omitempty"`
-	ThreadsRunning                *int32   `json:"threadsRunning,omitempty"`
+	Version                string       `json:"version"`
+	Status                 string       `json:"status"`
+	MaxConnections         *int32       `json:"maxConnections,omitempty"`
+	LongQueryTimeThreshold *float64     `json:"longQueryTimeThreshold,omitempty"`
+	PodInsights            []PodInsight `json:"podInsights,omitempty"`
 }
 
 // ProxySQLInsight is the Schema for the proxysqlinsights API

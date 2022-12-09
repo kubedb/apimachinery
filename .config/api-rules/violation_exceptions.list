@@ -186,7 +186,9 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,M
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PostgresInsightSpec,ReplicationStatus
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PostgresQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PostgresSettingsSpec,Settings
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLInsightSpec,PodInsights
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLQueriesSpec,Queries
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLQuerySpec,SlowQueries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLSettingsSpec,Settings
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,RedisQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,RedisQuerySpec,Args
@@ -351,4 +353,3 @@ API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesSt
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsTranslogStats,TotalSize
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsWarmerStats,TotalTime
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsWarmerStats,TotalTimeInMillis
-API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLQuerySpec,HostGroup

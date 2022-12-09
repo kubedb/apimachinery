@@ -26,47 +26,65 @@ spec:
             type: object
           spec:
             properties:
-              abortedClients:
-                format: int32
-                type: integer
-              abortedConnections:
-                format: int32
-                type: integer
-              longQueryTimeThresholdSeconds:
+              longQueryTimeThreshold:
                 format: double
                 type: number
               maxConnections:
                 format: int32
                 type: integer
-              maxUsedConnections:
-                format: int32
-                type: integer
-              mode:
-                type: string
-              numberOfSlowQueries:
-                format: int32
-                type: integer
-              questions:
-                format: int32
-                type: integer
+              podInsights:
+                items:
+                  properties:
+                    insights:
+                      properties:
+                        abortedClientConnections:
+                          format: int32
+                          type: integer
+                        abortedServerConnections:
+                          format: int32
+                          type: integer
+                        connectedClientConnections:
+                          format: int32
+                          type: integer
+                        connectedServerConnections:
+                          format: int32
+                          type: integer
+                        createdClientConnections:
+                          format: int32
+                          type: integer
+                        createdServerConnections:
+                          format: int32
+                          type: integer
+                        queryInsight:
+                          properties:
+                            hits:
+                              format: int64
+                              type: integer
+                            ruleId:
+                              format: int64
+                              type: integer
+                          required:
+                          - hits
+                          - ruleId
+                          type: object
+                        questions:
+                          format: int32
+                          type: integer
+                        slowQueries:
+                          format: int32
+                          type: integer
+                      type: object
+                    podName:
+                      type: string
+                  required:
+                  - podName
+                  type: object
+                type: array
               status:
                 type: string
-              threadsCached:
-                format: int32
-                type: integer
-              threadsConnected:
-                format: int32
-                type: integer
-              threadsCreated:
-                format: int32
-                type: integer
-              threadsRunning:
-                format: int32
-                type: integer
               version:
                 type: string
             required:
-            - mode
             - status
             - version
             type: object
