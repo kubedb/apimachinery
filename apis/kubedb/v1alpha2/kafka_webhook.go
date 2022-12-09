@@ -163,7 +163,6 @@ func (k *Kafka) ValidateCreateOrUpdate() error {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, k.Name, allErr)
-	return nil
 }
 
 func validateNodeSuffix(topology *KafkaClusterTopology) error {
