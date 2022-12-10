@@ -31,6 +31,7 @@ type RuleExecution struct {
 }
 
 type PodInsight struct {
+	PodName                    string          `json:"podName"`
 	Questions                  *int32          `json:"questions,omitempty"`
 	SlowQueries                *int32          `json:"slowQueries,omitempty"`
 	AbortedClientConnections   *int32          `json:"abortedClientConnections,omitempty"`
@@ -42,10 +43,10 @@ type PodInsight struct {
 	QueryTypeInsight           []RuleExecution `json:"queryInsight,omitempty"`
 }
 
-type PodInsights struct {
-	PodName  string      `json:"podName"`
-	Insights *PodInsight `json:"insights,omitempty"`
-}
+//type PodInsights struct {
+//	PodName  string      `json:"podName"`
+//	Insights *PodInsight `json:"insights,omitempty"`
+//}
 
 // ProxySQLInsightSpec defines the desired state of ProxySQLInsight
 type ProxySQLInsightSpec struct {

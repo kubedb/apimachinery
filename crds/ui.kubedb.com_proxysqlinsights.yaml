@@ -53,6 +53,8 @@ spec:
                     createdServerConnections:
                       format: int32
                       type: integer
+                    podName:
+                      type: string
                     queryInsight:
                       items:
                         properties:
@@ -73,6 +75,8 @@ spec:
                     slowQueries:
                       format: int32
                       type: integer
+                  required:
+                  - podName
                   type: object
                 type: array
               status:
