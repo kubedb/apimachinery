@@ -83,7 +83,7 @@ func (k *Kafka) GoverningServiceNameBroker() string {
 }
 
 func (k *Kafka) StandbyServiceName() string {
-	return meta_util.NameWithPrefix(k.ServiceName(), "standby")
+	return meta_util.NameWithPrefix(k.ServiceName(), KafkaStandbyServiceSuffix)
 }
 
 func (k *Kafka) offshootLabels(selector, override map[string]string) map[string]string {

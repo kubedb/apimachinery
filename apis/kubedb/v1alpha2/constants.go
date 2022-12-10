@@ -514,17 +514,18 @@ const (
 	KafkaControllerClientPortName     = "controller"
 	KafkaPortNameInternal             = "internal"
 	KafkaTopicNameHealth              = "kafka-health"
-	KafkaTopicDeletionThresholdOffset = 10
+	KafkaTopicDeletionThresholdOffset = 1000
 	KafkaRESTPort                     = 9092
 	KafkaControllerRESTPort           = 9093
 	KafkaInternalRESTPort             = 29092
 
-	KafkaContainerName       = "kafka"
-	KafkaUserAdmin           = "admin"
-	KafkaNodeRoleSet         = "set"
-	KafkaNodeRolesCombined   = "controller,broker"
-	KafkaNodeRolesController = "controller"
-	KafkaNodeRolesBrokers    = "broker"
+	KafkaContainerName        = "kafka"
+	KafkaUserAdmin            = "admin"
+	KafkaNodeRoleSet          = "set"
+	KafkaNodeRolesCombined    = "controller,broker"
+	KafkaNodeRolesController  = "controller"
+	KafkaNodeRolesBrokers     = "broker"
+	KafkaStandbyServiceSuffix = "standby"
 
 	KafkaBrokerListener     = "KafkaBrokerListener"
 	KafkaControllerListener = "KafkaControllerListener"
@@ -546,7 +547,7 @@ const (
 	KafkaControllerListenersName     = "controller.listener.names"
 	KafkaInterBrokerListener         = "inter.broker.listener.name"
 	KafkaNodeRole                    = "process.roles"
-	ClusterID                        = "cluster.id"
+	KafkaClusterID                   = "cluster.id"
 	KafkaDataDirName                 = "log.dirs"
 	KafkaMetadataDirName             = "metadata.log.dir"
 	KafkaKeystorePasswordKey         = "keystore_password"

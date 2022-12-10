@@ -21,7 +21,6 @@ import (
 
 	errors2 "github.com/pkg/errors"
 	"gomodules.xyz/pointer"
-	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -60,20 +59,13 @@ var _ webhook.Validator = &Kafka{}
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (k *Kafka) ValidateCreate() error {
 	kafkalog.Info("validate create", "name", k.Name)
-	err := k.ValidateCreateOrUpdate()
-	if err != nil {
-		return err
-	}
-	return nil
+	return k.ValidateCreateOrUpdate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (k *Kafka) ValidateUpdate(old runtime.Object) error {
-	err := k.ValidateCreateOrUpdate()
-	if err != nil {
-		return err
-	}
-	return nil
+	kafkalog.Info("validate update", "name", k.Name)
+	return k.ValidateCreateOrUpdate()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -142,14 +134,6 @@ func (k *Kafka) ValidateCreateOrUpdate() error {
 				k.Name,
 				err.Error()))
 		}
-
-		err = validateVolumes(k)
-		if err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
-				k.Name,
-				err.Error()))
-		}
-
 	} else {
 		// number of replicas can not be 0 or less
 		if k.Spec.Replicas != nil && *k.Spec.Replicas <= 0 {
@@ -159,10 +143,57 @@ func (k *Kafka) ValidateCreateOrUpdate() error {
 		}
 	}
 
+	err := validateVersion(k)
+	if err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
+			k.Name,
+			err.Error()))
+	}
+
+	err = validateVolumes(k)
+	if err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
+			k.Name,
+			err.Error()))
+	}
+
+	err = validateVolumesMountPaths(k)
+	if err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumeMounts"),
+			k.Name,
+			err.Error()))
+	}
+
+	if k.Spec.StorageType == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+			k.Name,
+			"StorageType can not be empty"))
+	} else {
+		if k.Spec.StorageType != StorageTypeDurable || k.Spec.StorageType != StorageTypeEphemeral {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+				k.Name,
+				"StorageType should be either durable or ephemeral"))
+		}
+	}
+
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, k.Name, allErr)
+}
+
+var availableVersions = []string{
+	"3.3.0",
+}
+
+func validateVersion(db *Kafka) error {
+	version := db.Spec.Version
+	for _, v := range availableVersions {
+		if v == version {
+			return nil
+		}
+	}
+	return errors.New("version not supported")
 }
 
 func validateNodeSuffix(topology *KafkaClusterTopology) error {
@@ -204,14 +235,35 @@ func validateVolumes(db *Kafka) error {
 			rsv = append(rsv, db.CertSecretVolumeName(KafkaCertificateAlias(c.Alias)))
 		}
 	}
-	return ValidateVolumes(db.Spec.PodTemplate.Spec.Volumes, rsv)
-}
-
-func ValidateVolumes(volumes []core.Volume, reservedVolumeNames []string) error {
-	for _, rv := range reservedVolumeNames {
+	volumes := db.Spec.PodTemplate.Spec.Volumes
+	for _, rv := range rsv {
 		for _, ugv := range volumes {
 			if ugv.Name == rv {
 				return errors.New("Cannot use a reserve volume name: " + rv)
+			}
+		}
+	}
+	return nil
+}
+
+var reservedVolumeMountPaths = []string{
+	KafkaConfigDir,
+	KafkaTempConfigDir,
+	KafkaDataDir,
+	KafkaMetaDataDir,
+	KafkaCertDir,
+}
+
+func validateVolumesMountPaths(db *Kafka) error {
+	if db.Spec.PodTemplate.Spec.VolumeMounts == nil {
+		return nil
+	}
+	rPaths := reservedVolumeMountPaths
+	volumeMountPaths := db.Spec.PodTemplate.Spec.VolumeMounts
+	for _, rvm := range rPaths {
+		for _, ugv := range volumeMountPaths {
+			if ugv.Name == rvm {
+				return errors.New("Cannot use a reserve volume name: " + rvm)
 			}
 		}
 	}
