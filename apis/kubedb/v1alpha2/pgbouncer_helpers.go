@@ -102,7 +102,14 @@ func (p PgBouncer) GoverningServiceName() string {
 }
 
 func (p PgBouncer) GetAuthSecretName() string {
+	if p.Spec.AuthSecret != nil && p.Spec.AuthSecret.Name != "" {
+		return p.Spec.AuthSecret.Name
+	}
 	return meta_util.NameWithSuffix(p.OffshootName(), "auth")
+}
+
+func (p PgBouncer) GetBackendSecretName() string {
+	return meta_util.NameWithSuffix(p.OffshootName(), "backend")
 }
 
 func (p PgBouncer) ConfigSecretName() string {
@@ -214,6 +221,7 @@ func (p *PgBouncer) GetPersistentSecrets() []string {
 	}
 	var secrets []string
 	secrets = append(secrets, p.GetAuthSecretName())
+	secrets = append(secrets, p.GetBackendSecretName())
 	secrets = append(secrets, p.ConfigSecretName())
 
 	return secrets
@@ -257,7 +265,7 @@ func (p *PgBouncer) setConnectionPoolConfigDefaults() {
 		p.Spec.ConnectionPool.Port = pointer.Int32P(5432)
 	}
 	if p.Spec.ConnectionPool.PoolMode == "" {
-		p.Spec.ConnectionPool.PoolMode = "session"
+		p.Spec.ConnectionPool.PoolMode = PgBouncerDefaultPoolMode
 	}
 	if p.Spec.ConnectionPool.MaxClientConnections == nil {
 		p.Spec.ConnectionPool.MaxClientConnections = pointer.Int64P(100)
@@ -287,6 +295,6 @@ func (p *PgBouncer) setConnectionPoolConfigDefaults() {
 		p.Spec.ConnectionPool.AuthType = PgBouncerClientAuthModeMD5
 	}
 	if p.Spec.ConnectionPool.IgnoreStartupParameters == "" {
-		p.Spec.ConnectionPool.IgnoreStartupParameters = "empty"
+		p.Spec.ConnectionPool.IgnoreStartupParameters = PgBouncerDefaultIgnoreStartupParameters
 	}
 }

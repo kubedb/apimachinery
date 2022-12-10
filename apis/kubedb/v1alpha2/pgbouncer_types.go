@@ -236,7 +236,8 @@ const (
 )
 
 // PgBouncerClientAuthMode represents the ClientAuthMode of PgBouncer clusters ( replicaset )
-// +kubebuilder:validation:Enum=md5;scram;cert;plain;trust;any;hba;pam
+// We are allowing md5, scram, cert as ClientAuthMode
+// +kubebuilder:validation:Enum=md5;scram;cert;
 type PgBouncerClientAuthMode string
 
 const (
@@ -256,27 +257,6 @@ const (
 	// When server is config with this auth method. Client can't connect with pgbouncer server with password. They need
 	// to Send the client cert and client key certificate for authentication.
 	PgBouncerClientAuthModeCert PgBouncerClientAuthMode = "cert"
-
-	// ClientAuthModePlain sent the clear-text password over the wire. (Deprecated).
-	PgBouncerClientAuthModePlain PgBouncerClientAuthMode = "plain"
-
-	// ClientAuthModeTrust represents no authentication. The user name must still exist in auth_file
-	PgBouncerClientAuthModeTrust PgBouncerClientAuthMode = "trust"
-
-	// ClientAuthModeAny acts like the trust method, but the user name given is ignored.
-	// Requires that all databases are configured to log in as a specific user.
-	// Additionally, the console database allows any user to log in as admin.
-	PgBouncerClientAuthModeAny PgBouncerClientAuthMode = "any"
-
-	// ClientAuthModeHba uses auth_hba_file to load the actual authentication type.
-	// This allows different authentication methods for different access paths,
-	// for example: connections over Unix socket use the peer auth method, connections over TCP must use TLS.
-	PgBouncerClientAuthModeHba PgBouncerClientAuthMode = "hba"
-
-	// ClientAuthModePam uses to authenticate users, auth_file is ignored.
-	// This method is not compatible with databases using the auth_user option.
-	// The service name reported to PAM is “pgbouncer”. pam is not supported in the HBA configuration file.
-	PgBouncerClientAuthModePam PgBouncerClientAuthMode = "pam"
 )
 
 // +kubebuilder:validation:Enum=Delete;WipeOut;DoNotTerminate
