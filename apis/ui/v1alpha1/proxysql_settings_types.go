@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 const (
@@ -28,16 +29,50 @@ const (
 
 // ProxySQLSettingsSpec defines the desired state of ProxySQLSettings
 type ProxySQLSettingsSpec struct {
-	Settings []PGSetting `json:"settings"`
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	MySQLQueryRules []*runtime.RawExtension `json:"mysql_query_rules,omitempty"`
+
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	MySQLVariables *runtime.RawExtension `json:"mysql_variables,omitempty"`
+
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	AdminVariables *runtime.RawExtension `json:"admin_variables,omitempty"`
+
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	MySQLServers []*runtime.RawExtension `json:"mysql_servers,omitempty"`
+
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	ProxySQLServers []*runtime.RawExtension `json:"proxysql_servers,omitempty"`
 }
 
-type PRXSetting struct {
-	Name         string `json:"name"`
-	CurrentValue string `json:"currentValue"`
-	DefaultValue string `json:"defaultValue"`
-	Unit         string `json:"unit,omitempty"`
-	Source       string `json:"source,omitempty"`
-}
+//type PRXSetting struct {
+//	Name         string `json:"name"`
+//	CurrentValue string `json:"currentValue"`
+//	DefaultValue string `json:"defaultValue"`
+//	Unit         string `json:"unit,omitempty"`
+//	Source       string `json:"source,omitempty"`
+//}
+//
+//type MySQLServers struct {
+//	HostgroupID    *int64 `json:"hostgroupID"`
+//	HostName       string `json:"hostName"`
+//	Port           *int64 `json:"port"`
+//	Status         string `json:"status"`
+//	MaxConnections *int64 `json:"maxConnections"`
+//	Weight         *int64 `json:"weight,omitempty"`
+//	UseSSL         *int32 `json:"useSSL"`
+//}
+//
+//type ProxySQLServers struct {
+//	HostName string `json:"hostName"`
+//	Port     *int64 `json:"port"`
+//	Weight   *int64 `json:"weight"`
+//}
 
 // ProxySQLSettings is the Schema for the ProxySQLSettingss API
 

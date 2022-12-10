@@ -26,27 +26,30 @@ spec:
             type: object
           spec:
             properties:
-              settings:
+              admin_variables:
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+              mysql_query_rules:
                 items:
-                  properties:
-                    currentValue:
-                      type: string
-                    defaultValue:
-                      type: string
-                    name:
-                      type: string
-                    source:
-                      type: string
-                    unit:
-                      type: string
-                  required:
-                  - currentValue
-                  - defaultValue
-                  - name
                   type: object
+                  x-kubernetes-preserve-unknown-fields: true
                 type: array
-            required:
-            - settings
+                x-kubernetes-preserve-unknown-fields: true
+              mysql_servers:
+                items:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+                type: array
+                x-kubernetes-preserve-unknown-fields: true
+              mysql_variables:
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+              proxysql_servers:
+                items:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+                type: array
+                x-kubernetes-preserve-unknown-fields: true
             type: object
         type: object
     served: true
