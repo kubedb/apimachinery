@@ -169,7 +169,7 @@ func (k *Kafka) ValidateCreateOrUpdate() error {
 			k.Name,
 			"StorageType can not be empty"))
 	} else {
-		if k.Spec.StorageType != StorageTypeDurable || k.Spec.StorageType != StorageTypeEphemeral {
+		if k.Spec.StorageType != StorageTypeDurable && k.Spec.StorageType != StorageTypeEphemeral {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 				k.Name,
 				"StorageType should be either durable or ephemeral"))
