@@ -26,6 +26,10 @@ type ElasticsearchVersionListerExpansion interface{}
 // EtcdVersionLister.
 type EtcdVersionListerExpansion interface{}
 
+// KafkaVersionListerExpansion allows custom methods to be added to
+// KafkaVersionLister.
+type KafkaVersionListerExpansion interface{}
+
 // MariaDBVersionListerExpansion allows custom methods to be added to
 // MariaDBVersionLister.
 type MariaDBVersionListerExpansion interface{}

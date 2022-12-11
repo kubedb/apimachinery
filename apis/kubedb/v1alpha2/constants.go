@@ -507,6 +507,86 @@ const (
 	InternalUsersCredentialsSyncedSuccessfully = "InternalUsersCredentialsSyncedSuccessfully"
 )
 
+const (
+	KafkaPortNameREST                 = "http"
+	KafkaPortNameController           = "controller"
+	KafkaBrokerClientPortName         = "broker"
+	KafkaControllerClientPortName     = "controller"
+	KafkaPortNameInternal             = "internal"
+	KafkaTopicNameHealth              = "kafka-health"
+	KafkaTopicDeletionThresholdOffset = 1000
+	KafkaRESTPort                     = 9092
+	KafkaControllerRESTPort           = 9093
+	KafkaInternalRESTPort             = 29092
+
+	KafkaContainerName        = "kafka"
+	KafkaUserAdmin            = "admin"
+	KafkaNodeRoleSet          = "set"
+	KafkaNodeRolesCombined    = "controller,broker"
+	KafkaNodeRolesController  = "controller"
+	KafkaNodeRolesBrokers     = "broker"
+	KafkaStandbyServiceSuffix = "standby"
+
+	KafkaBrokerListener     = "KafkaBrokerListener"
+	KafkaControllerListener = "KafkaControllerListener"
+
+	KafkaDataDir                  = "/var/log/kafka"
+	KafkaMetaDataDir              = "/var/log/kafka/metadata"
+	KafkaCertDir                  = "/var/private/ssl"
+	KafkaConfigDir                = "/opt/kafka/config/kafkaconfig"
+	KafkaTempConfigDir            = "/opt/kafka/config/temp-config"
+	KafkaConfigFileName           = "config.properties"
+	KafkaSSLPropertiesFileName    = "ssl.properties"
+	KafkaClientAuthConfigFileName = "clientauth.properties"
+
+	KafkaListeners                   = "listeners"
+	KafkaAdvertisedListeners         = "advertised.listeners"
+	KafkaListenerSecurityProtocolMap = "listener.security.protocol.map"
+	KafkaControllerNodeCount         = "controller.count"
+	KafkaControllerQuorumVoters      = "controller.quorum.voters"
+	KafkaControllerListenersName     = "controller.listener.names"
+	KafkaInterBrokerListener         = "inter.broker.listener.name"
+	KafkaNodeRole                    = "process.roles"
+	KafkaClusterID                   = "cluster.id"
+	KafkaDataDirName                 = "log.dirs"
+	KafkaMetadataDirName             = "metadata.log.dir"
+	KafkaKeystorePasswordKey         = "keystore_password"
+	KafkaTruststorePasswordKey       = "truststore_password"
+	KafkaServerKeystoreKey           = "server.keystore.jks"
+	KafkaServerTruststoreKey         = "server.truststore.jks"
+	KafkaSecurityProtocol            = "security.protocol"
+	KafkaGracefulShutdownTimeout     = "task.shutdown.graceful.timeout.ms"
+
+	KafkaEndpointVerifyAlgo  = "ssl.endpoint.identification.algorithm"
+	KafkaKeystoreLocation    = "ssl.keystore.location"
+	KafkaTruststoreLocation  = "ssl.truststore.location"
+	KafkaKeystorePassword    = "ssl.keystore.password"
+	KafkaTruststorePassword  = "ssl.truststore.password"
+	KafkaKeyPassword         = "ssl.key.password"
+	KafkaKeystoreDefaultPass = "changeit"
+
+	KafkaEnabledSASLMechanisms       = "sasl.enabled.mechanisms"
+	KafkaSASLMechanism               = "sasl.mechanism"
+	KafkaMechanismControllerProtocol = "sasl.mechanism.controller.protocol"
+	KafkaSASLInterBrokerProtocol     = "sasl.mechanism.inter.broker.protocol"
+	KafkaSASLPLAINConfigKey          = "listener.name.SASL_PLAINTEXT.plain.sasl.jaas.config"
+	KafkaSASLSSLConfigKey            = "listener.name.SASL_SSL.plain.sasl.jaas.config"
+	KafkaSASLJAASConfig              = "sasl.jaas.config"
+	KafkaServiceName                 = "serviceName"
+	KafkaSASLPlainMechanism          = "PLAIN"
+
+	KafkaVolumeData       = "data"
+	KafkaVolumeConfig     = "kafkaconfig"
+	KafkaVolumeTempConfig = "temp-config"
+
+	EnvKafkaUser     = "KAFKA_USER"
+	EnvKafkaPassword = "KAFKA_PASSWORD"
+
+	KafkaListenerPLAINTEXTProtocol = "PLAINTEXT"
+	KafkaListenerSASLProtocol      = "SASL_PLAINTEXT"
+	KafkaListenerSASLSSLProtocol   = "SASL_SSL"
+)
+
 // Resource kind related constants
 const (
 	ResourceKindStatefulSet = "StatefulSet"

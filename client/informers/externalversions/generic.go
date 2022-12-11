@@ -90,6 +90,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().ElasticsearchVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("etcdversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().EtcdVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("kafkaversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().KafkaVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("mariadbversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().MariaDBVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("memcachedversions"):
@@ -118,6 +120,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Elasticsearches().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("etcds"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Etcds().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("kafkas"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Kafkas().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("mariadbs"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().MariaDBs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("memcacheds"):
