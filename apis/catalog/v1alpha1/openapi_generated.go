@@ -21580,7 +21580,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "db", "podSecurityPolicies"},
+				Required: []string{"version", "db"},
 			},
 		},
 		Dependencies: []string{
