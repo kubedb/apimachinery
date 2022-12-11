@@ -50,30 +50,6 @@ type ProxySQLSettingsSpec struct {
 	ProxySQLServers []*runtime.RawExtension `json:"proxysql_servers,omitempty"`
 }
 
-//type PRXSetting struct {
-//	Name         string `json:"name"`
-//	CurrentValue string `json:"currentValue"`
-//	DefaultValue string `json:"defaultValue"`
-//	Unit         string `json:"unit,omitempty"`
-//	Source       string `json:"source,omitempty"`
-//}
-//
-//type MySQLServers struct {
-//	HostgroupID    *int64 `json:"hostgroupID"`
-//	HostName       string `json:"hostName"`
-//	Port           *int64 `json:"port"`
-//	Status         string `json:"status"`
-//	MaxConnections *int64 `json:"maxConnections"`
-//	Weight         *int64 `json:"weight,omitempty"`
-//	UseSSL         *int32 `json:"useSSL"`
-//}
-//
-//type ProxySQLServers struct {
-//	HostName string `json:"hostName"`
-//	Port     *int64 `json:"port"`
-//	Weight   *int64 `json:"weight"`
-//}
-
 // ProxySQLSettings is the Schema for the ProxySQLSettingss API
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
