@@ -43,6 +43,13 @@ type DeploymentParameters struct {
 
 // ChartRepoRef references to a single version of a Chart
 type ChartRepoRef struct {
+	Name      string                     `json:"name"`
+	Version   string                     `json:"version"`
+	SourceRef kmapi.TypedObjectReference `json:"sourceRef"`
+}
+
+// ExpandedChartRepoRef references to a single version of a Chart
+type ExpandedChartRepoRef struct {
 	// +optional
 	URL     string `json:"url,omitempty"`
 	Name    string `json:"name"`
@@ -69,11 +76,38 @@ type ResourceQuery struct {
 }
 
 type UIParameters struct {
-	Options *ChartRepoRef `json:"options,omitempty"`
-	Editor  *ChartRepoRef `json:"editor,omitempty"`
+	Options *ExpandedChartRepoRef `json:"options,omitempty"`
+	Editor  *ExpandedChartRepoRef `json:"editor,omitempty"`
+	// +optional
+	Actions []*ActionGroup `json:"actions,omitempty"`
 	// app.kubernetes.io/instance label must be updated at these paths when refilling metadata
 	// +optional
 	InstanceLabelPaths []string `json:"instanceLabelPaths,omitempty"`
+}
+
+type UIParameterTemplate struct {
+	Options *ExpandedChartRepoRef `json:"options,omitempty"`
+	Editor  *ExpandedChartRepoRef `json:"editor,omitempty"`
+	// +optional
+	Actions []*ActionTemplateGroup `json:"actions,omitempty"`
+	// app.kubernetes.io/instance label must be updated at these paths when refilling metadata
+	// +optional
+	InstanceLabelPaths []string `json:"instanceLabelPaths,omitempty"`
+}
+
+type ActionGroup struct {
+	ActionInfo `json:",inline,omitempty"`
+	Items      []Action `json:"items"`
+}
+
+type Action struct {
+	ActionInfo `json:",inline,omitempty"`
+	// +optional
+	Icons       []ImageSpec           `json:"icons,omitempty"`
+	OperationID string                `json:"operationId"`
+	Flow        string                `json:"flow"`
+	Disabled    bool                  `json:"disabled"`
+	Editor      *ExpandedChartRepoRef `json:"editor,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=Source;Target
@@ -106,4 +140,24 @@ type Dashboard struct {
 type If struct {
 	Condition string           `json:"condition,omitempty"`
 	Connected *ResourceLocator `json:"connected,omitempty"`
+}
+
+type ActionTemplateGroup struct {
+	ActionInfo `json:",inline,omitempty"`
+	Items      []ActionTemplate `json:"items"`
+}
+
+type ActionTemplate struct {
+	ActionInfo `json:",inline,omitempty"`
+	// +optional
+	Icons            []ImageSpec           `json:"icons,omitempty"`
+	OperationID      string                `json:"operationId"`
+	Flow             string                `json:"flow"`
+	DisabledTemplate string                `json:"disabledTemplate,omitempty"`
+	Editor           *ExpandedChartRepoRef `json:"editor,omitempty"`
+}
+
+type ActionInfo struct {
+	Name        string `json:"name,omitempty"`
+	Description string `json:"description,omitempty"`
 }

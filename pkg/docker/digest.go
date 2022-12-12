@@ -21,6 +21,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"io"
+	"net/http"
 	"strings"
 
 	"github.com/awslabs/amazon-ecr-credential-helper/ecr-login"
@@ -96,7 +97,7 @@ func ImageWithoutDigest(image string) (string, error) {
 
 func WithTLSSkipVerify(s string) crane.Option {
 	// xref: https://github.com/google/go-containerregistry/pull/1054
-	rt := remote.DefaultTransport.Clone()
+	rt := remote.DefaultTransport.(*http.Transport).Clone()
 	rt.TLSClientConfig = &tls.Config{
 		InsecureSkipVerify: probablyInsecureRegistry(s), //nolint: gosec
 	}
