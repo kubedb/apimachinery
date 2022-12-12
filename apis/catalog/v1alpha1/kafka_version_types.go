@@ -58,6 +58,7 @@ type KafkaVersionSpec struct {
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
 	// PSP names
+	// +optional
 	PodSecurityPolicies KafkaVersionPodSecurityPolicy `json:"podSecurityPolicies"`
 	// Stash defines backup and restore task definitions.
 	// +optional
