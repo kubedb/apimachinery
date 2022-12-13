@@ -24683,7 +24683,8 @@ func schema_apimachinery_apis_ui_v1alpha1_PodInsight(ref common.ReferenceCallbac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "PodInsight gives us insight about the connection status and query traffics of individual pods",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"podName": {
 						SchemaProps: spec.SchemaProps{
@@ -25487,7 +25488,8 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLInsight(ref common.ReferenceCa
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ProxySQLInsight is the Schema for the proxysqlinsights API",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -25533,7 +25535,8 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLInsightList(ref common.Referen
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ProxySQLInsightList contains a list of ProxySQLInsight",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -25636,7 +25639,8 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLQueries(ref common.ReferenceCa
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ProxySQLQueries is the Schema for the proxysqlslowqueries API",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -25676,7 +25680,8 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLQueriesList(ref common.Referen
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ProxySQLQueriesList contains a list of ProxySQLQueries",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -25753,7 +25758,8 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLQuerySpec(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ProxySQLQuerySpec displays the slow queries on each individual pod",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"podName": {
 						SchemaProps: spec.SchemaProps{
@@ -25788,7 +25794,8 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLSettings(ref common.ReferenceC
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ProxySQLSettings is the Schema for the ProxySQLSettingss API",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -25828,7 +25835,8 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLSettingsList(ref common.Refere
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ProxySQLSettingsList contains a list of ProxySQLSettings",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -25937,7 +25945,8 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLSlowQuerySpec(ref common.Refer
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ProxySQLSlowQuerySpec explains each individual slow queries with necessary details",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"digestText": {
 						SchemaProps: spec.SchemaProps{
@@ -25973,38 +25982,38 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLSlowQuerySpec(ref common.Refer
 					},
 					"firstSeen": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Timestamp"),
 						},
 					},
 					"lastSeen": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Timestamp"),
 						},
 					},
 					"sumTime": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Default: 0,
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"minTime": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Default: 0,
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"maxTime": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Default: 0,
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"averageTime": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Default: 0,
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"rowsAffected": {
@@ -26023,6 +26032,8 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLSlowQuerySpec(ref common.Refer
 				Required: []string{"digestText", "schemaName", "countStar", "sumTime", "minTime", "maxTime", "averageTime"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.Timestamp"},
 	}
 }
 
@@ -26547,12 +26558,25 @@ func schema_apimachinery_apis_ui_v1alpha1_RuleExecution(ref common.ReferenceCall
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "RuleExecution gives us insight about the types of executed queries, based on the mysql_query_rules tables. To see the digest for corresponding ruleId , please refer to proxysqlsettings api.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"ruleId": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"integer"},
 							Format: "int64",
+						},
+					},
+					"digest": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"pattern": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"hits": {

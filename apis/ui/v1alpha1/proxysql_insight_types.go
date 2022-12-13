@@ -25,11 +25,16 @@ const (
 	ResourceProxySQLInsights    = "proxysqlinsights"
 )
 
+// RuleExecution gives us insight about the types of executed queries, based on the mysql_query_rules tables.
+// To see the digest for corresponding ruleId , please refer to proxysqlsettings api.
 type RuleExecution struct {
-	RuleId *int64 `json:"ruleId"`
-	Hits   *int64 `json:"hits"`
+	RuleId  *int64 `json:"ruleId"`
+	Digest  string `json:"digest,omitempty"`
+	Pattern string `json:"pattern,omitempty"`
+	Hits    *int64 `json:"hits"`
 }
 
+// PodInsight gives us insight about the connection status and query traffics of individual pods
 type PodInsight struct {
 	PodName                    string          `json:"podName"`
 	Questions                  *int32          `json:"questions,omitempty"`
@@ -43,11 +48,6 @@ type PodInsight struct {
 	QueryTypeInsight           []RuleExecution `json:"queryInsight,omitempty"`
 }
 
-//type PodInsights struct {
-//	PodName  string      `json:"podName"`
-//	Insights *PodInsight `json:"insights,omitempty"`
-//}
-
 // ProxySQLInsightSpec defines the desired state of ProxySQLInsight
 type ProxySQLInsightSpec struct {
 	Version                string       `json:"version"`
@@ -58,7 +58,6 @@ type ProxySQLInsightSpec struct {
 }
 
 // ProxySQLInsight is the Schema for the proxysqlinsights API
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ProxySQLInsight struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -69,7 +68,6 @@ type ProxySQLInsight struct {
 }
 
 // ProxySQLInsightList contains a list of ProxySQLInsight
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ProxySQLInsightList struct {
 	metav1.TypeMeta `json:",inline"`

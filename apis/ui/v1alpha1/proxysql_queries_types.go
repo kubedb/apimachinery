@@ -31,29 +31,30 @@ type ProxySQLQueriesSpec struct {
 	Queries []ProxySQLQuerySpec `json:"queries"`
 }
 
+// ProxySQLSlowQuerySpec explains each individual slow queries with necessary details
 type ProxySQLSlowQuerySpec struct {
-	DigestText   string `json:"digestText"`
-	SchemaName   string `json:"schemaName"`
-	Username     string `json:"username,omitempty"`
-	HostGroup    *int64 `json:"hostGroup,omitempty"`
-	CountStar    *int64 `json:"countStar"`
-	FirstSeen    *int64 `json:"firstSeen,omitempty"`
-	LastSeen     *int64 `json:"lastSeen,omitempty"`
-	SumTime      *int64 `json:"sumTime"`
-	MinTime      *int64 `json:"minTime"`
-	MaxTime      *int64 `json:"maxTime"`
-	AverageTime  *int64 `json:"averageTime"`
-	RowsAffected *int64 `json:"rowsAffected,omitempty"`
-	RowsSent     *int64 `json:"rowsSent,omitempty"`
+	DigestText   string           `json:"digestText"`
+	SchemaName   string           `json:"schemaName"`
+	Username     string           `json:"username,omitempty"`
+	HostGroup    *int64           `json:"hostGroup,omitempty"`
+	CountStar    *int64           `json:"countStar"`
+	FirstSeen    metav1.Timestamp `json:"firstSeen,omitempty"`
+	LastSeen     metav1.Timestamp `json:"lastSeen,omitempty"`
+	SumTime      metav1.Duration  `json:"sumTime"`
+	MinTime      metav1.Duration  `json:"minTime"`
+	MaxTime      metav1.Duration  `json:"maxTime"`
+	AverageTime  metav1.Duration  `json:"averageTime"`
+	RowsAffected *int64           `json:"rowsAffected,omitempty"`
+	RowsSent     *int64           `json:"rowsSent,omitempty"`
 }
 
+// ProxySQLQuerySpec displays the slow queries on each individual pod
 type ProxySQLQuerySpec struct {
 	PodName     string                  `json:"podName"`
 	SlowQueries []ProxySQLSlowQuerySpec `json:"slowQueries,omitempty"`
 }
 
 // ProxySQLQueries is the Schema for the proxysqlslowqueries API
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ProxySQLQueries struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -63,7 +64,6 @@ type ProxySQLQueries struct {
 }
 
 // ProxySQLQueriesList contains a list of ProxySQLQueries
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ProxySQLQueriesList struct {
 	metav1.TypeMeta `json:",inline"`

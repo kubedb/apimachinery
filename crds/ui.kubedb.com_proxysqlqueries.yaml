@@ -35,28 +35,43 @@ spec:
                       items:
                         properties:
                           averageTime:
-                            format: int64
-                            type: integer
+                            type: string
                           countStar:
                             format: int64
                             type: integer
                           digestText:
                             type: string
                           firstSeen:
-                            format: int64
-                            type: integer
+                            properties:
+                              nanos:
+                                format: int32
+                                type: integer
+                              seconds:
+                                format: int64
+                                type: integer
+                            required:
+                            - nanos
+                            - seconds
+                            type: object
                           hostGroup:
                             format: int64
                             type: integer
                           lastSeen:
-                            format: int64
-                            type: integer
+                            properties:
+                              nanos:
+                                format: int32
+                                type: integer
+                              seconds:
+                                format: int64
+                                type: integer
+                            required:
+                            - nanos
+                            - seconds
+                            type: object
                           maxTime:
-                            format: int64
-                            type: integer
+                            type: string
                           minTime:
-                            format: int64
-                            type: integer
+                            type: string
                           rowsAffected:
                             format: int64
                             type: integer
@@ -66,8 +81,7 @@ spec:
                           schemaName:
                             type: string
                           sumTime:
-                            format: int64
-                            type: integer
+                            type: string
                           username:
                             type: string
                         required:

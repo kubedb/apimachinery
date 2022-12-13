@@ -3026,36 +3026,12 @@ func (in *ProxySQLSlowQuerySpec) DeepCopyInto(out *ProxySQLSlowQuerySpec) {
 		*out = new(int64)
 		**out = **in
 	}
-	if in.FirstSeen != nil {
-		in, out := &in.FirstSeen, &out.FirstSeen
-		*out = new(int64)
-		**out = **in
-	}
-	if in.LastSeen != nil {
-		in, out := &in.LastSeen, &out.LastSeen
-		*out = new(int64)
-		**out = **in
-	}
-	if in.SumTime != nil {
-		in, out := &in.SumTime, &out.SumTime
-		*out = new(int64)
-		**out = **in
-	}
-	if in.MinTime != nil {
-		in, out := &in.MinTime, &out.MinTime
-		*out = new(int64)
-		**out = **in
-	}
-	if in.MaxTime != nil {
-		in, out := &in.MaxTime, &out.MaxTime
-		*out = new(int64)
-		**out = **in
-	}
-	if in.AverageTime != nil {
-		in, out := &in.AverageTime, &out.AverageTime
-		*out = new(int64)
-		**out = **in
-	}
+	out.FirstSeen = in.FirstSeen
+	out.LastSeen = in.LastSeen
+	out.SumTime = in.SumTime
+	out.MinTime = in.MinTime
+	out.MaxTime = in.MaxTime
+	out.AverageTime = in.AverageTime
 	if in.RowsAffected != nil {
 		in, out := &in.RowsAffected, &out.RowsAffected
 		*out = new(int64)

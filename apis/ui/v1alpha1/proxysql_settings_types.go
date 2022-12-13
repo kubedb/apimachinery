@@ -51,7 +51,6 @@ type ProxySQLSettingsSpec struct {
 }
 
 // ProxySQLSettings is the Schema for the ProxySQLSettingss API
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ProxySQLSettings struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -61,7 +60,6 @@ type ProxySQLSettings struct {
 }
 
 // ProxySQLSettingsList contains a list of ProxySQLSettings
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ProxySQLSettingsList struct {
 	metav1.TypeMeta `json:",inline"`
