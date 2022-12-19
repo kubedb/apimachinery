@@ -57,13 +57,9 @@ spec:
                     queryInsight:
                       items:
                         properties:
-                          digest:
-                            type: string
                           hits:
                             format: int64
                             type: integer
-                          pattern:
-                            type: string
                           ruleId:
                             format: int64
                             type: integer

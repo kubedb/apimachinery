@@ -28,10 +28,8 @@ const (
 // RuleExecution gives us insight about the types of executed queries, based on the mysql_query_rules tables.
 // To see the digest for corresponding ruleId , please refer to proxysqlsettings api.
 type RuleExecution struct {
-	RuleId  *int64 `json:"ruleId"`
-	Digest  string `json:"digest,omitempty"`
-	Pattern string `json:"pattern,omitempty"`
-	Hits    *int64 `json:"hits"`
+	RuleId *int64 `json:"ruleId"`
+	Hits   *int64 `json:"hits"`
 }
 
 // PodInsight gives us insight about the connection status and query traffics of individual pods

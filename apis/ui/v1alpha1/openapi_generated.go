@@ -26560,18 +26560,6 @@ func schema_apimachinery_apis_ui_v1alpha1_RuleExecution(ref common.ReferenceCall
 							Format: "int64",
 						},
 					},
-					"digest": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"pattern": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
 					"hits": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"integer"},
