@@ -50,11 +50,11 @@ type PodInsight struct {
 
 // ProxySQLInsightSpec defines the desired state of ProxySQLInsight
 type ProxySQLInsightSpec struct {
-	Version                string       `json:"version"`
-	Status                 string       `json:"status"`
-	MaxConnections         *int32       `json:"maxConnections,omitempty"`
-	LongQueryTimeThreshold *float64     `json:"longQueryTimeThreshold,omitempty"`
-	PodInsights            []PodInsight `json:"podInsights,omitempty"`
+	Version                string           `json:"version"`
+	Status                 string           `json:"status"`
+	MaxConnections         *int32           `json:"maxConnections,omitempty"`
+	LongQueryTimeThreshold *metav1.Duration `json:"longQueryTimeThreshold,omitempty"`
+	PodInsights            []PodInsight     `json:"podInsights,omitempty"`
 }
 
 // ProxySQLInsight is the Schema for the proxysqlinsights API

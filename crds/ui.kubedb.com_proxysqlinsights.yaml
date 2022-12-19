@@ -27,8 +27,7 @@ spec:
           spec:
             properties:
               longQueryTimeThreshold:
-                format: double
-                type: number
+                type: string
               maxConnections:
                 format: int32
                 type: integer

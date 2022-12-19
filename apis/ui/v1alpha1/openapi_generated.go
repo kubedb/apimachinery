@@ -25609,8 +25609,7 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLInsightSpec(ref common.Referen
 					},
 					"longQueryTimeThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"number"},
-							Format: "double",
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"podInsights": {
@@ -25631,7 +25630,7 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLInsightSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsight"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ui/v1alpha1.PodInsight"},
 	}
 }
 
@@ -25982,38 +25981,32 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLSlowQuerySpec(ref common.Refer
 					},
 					"firstSeen": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"lastSeen": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"sumTime": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"minTime": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"maxTime": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"averageTime": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"rowsAffected": {

@@ -22,6 +22,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -2765,7 +2766,7 @@ func (in *ProxySQLInsightSpec) DeepCopyInto(out *ProxySQLInsightSpec) {
 	}
 	if in.LongQueryTimeThreshold != nil {
 		in, out := &in.LongQueryTimeThreshold, &out.LongQueryTimeThreshold
-		*out = new(float64)
+		*out = new(v1.Duration)
 		**out = **in
 	}
 	if in.PodInsights != nil {
@@ -3026,12 +3027,34 @@ func (in *ProxySQLSlowQuerySpec) DeepCopyInto(out *ProxySQLSlowQuerySpec) {
 		*out = new(int64)
 		**out = **in
 	}
-	in.FirstSeen.DeepCopyInto(&out.FirstSeen)
-	in.LastSeen.DeepCopyInto(&out.LastSeen)
-	out.SumTime = in.SumTime
-	out.MinTime = in.MinTime
-	out.MaxTime = in.MaxTime
-	out.AverageTime = in.AverageTime
+	if in.FirstSeen != nil {
+		in, out := &in.FirstSeen, &out.FirstSeen
+		*out = (*in).DeepCopy()
+	}
+	if in.LastSeen != nil {
+		in, out := &in.LastSeen, &out.LastSeen
+		*out = (*in).DeepCopy()
+	}
+	if in.SumTime != nil {
+		in, out := &in.SumTime, &out.SumTime
+		*out = new(v1.Duration)
+		**out = **in
+	}
+	if in.MinTime != nil {
+		in, out := &in.MinTime, &out.MinTime
+		*out = new(v1.Duration)
+		**out = **in
+	}
+	if in.MaxTime != nil {
+		in, out := &in.MaxTime, &out.MaxTime
+		*out = new(v1.Duration)
+		**out = **in
+	}
+	if in.AverageTime != nil {
+		in, out := &in.AverageTime, &out.AverageTime
+		*out = new(v1.Duration)
+		**out = **in
+	}
 	if in.RowsAffected != nil {
 		in, out := &in.RowsAffected, &out.RowsAffected
 		*out = new(int64)
