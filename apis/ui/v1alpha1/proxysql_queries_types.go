@@ -33,19 +33,19 @@ type ProxySQLQueriesSpec struct {
 
 // ProxySQLSlowQuerySpec explains each individual slow queries with necessary details
 type ProxySQLSlowQuerySpec struct {
-	DigestText   string           `json:"digestText"`
-	SchemaName   string           `json:"schemaName"`
-	Username     string           `json:"username,omitempty"`
-	HostGroup    *int64           `json:"hostGroup,omitempty"`
-	CountStar    *int64           `json:"countStar"`
-	FirstSeen    metav1.Timestamp `json:"firstSeen,omitempty"`
-	LastSeen     metav1.Timestamp `json:"lastSeen,omitempty"`
-	SumTime      metav1.Duration  `json:"sumTime"`
-	MinTime      metav1.Duration  `json:"minTime"`
-	MaxTime      metav1.Duration  `json:"maxTime"`
-	AverageTime  metav1.Duration  `json:"averageTime"`
-	RowsAffected *int64           `json:"rowsAffected,omitempty"`
-	RowsSent     *int64           `json:"rowsSent,omitempty"`
+	DigestText   string          `json:"digestText"`
+	SchemaName   string          `json:"schemaName"`
+	Username     string          `json:"username,omitempty"`
+	HostGroup    *int64          `json:"hostGroup,omitempty"`
+	CountStar    *int64          `json:"countStar"`
+	FirstSeen    metav1.Time     `json:"firstSeen,omitempty"`
+	LastSeen     metav1.Time     `json:"lastSeen,omitempty"`
+	SumTime      metav1.Duration `json:"sumTime"`
+	MinTime      metav1.Duration `json:"minTime"`
+	MaxTime      metav1.Duration `json:"maxTime"`
+	AverageTime  metav1.Duration `json:"averageTime"`
+	RowsAffected *int64          `json:"rowsAffected,omitempty"`
+	RowsSent     *int64          `json:"rowsSent,omitempty"`
 }
 
 // ProxySQLQuerySpec displays the slow queries on each individual pod

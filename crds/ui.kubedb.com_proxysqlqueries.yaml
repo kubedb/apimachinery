@@ -42,32 +42,14 @@ spec:
                           digestText:
                             type: string
                           firstSeen:
-                            properties:
-                              nanos:
-                                format: int32
-                                type: integer
-                              seconds:
-                                format: int64
-                                type: integer
-                            required:
-                            - nanos
-                            - seconds
-                            type: object
+                            format: date-time
+                            type: string
                           hostGroup:
                             format: int64
                             type: integer
                           lastSeen:
-                            properties:
-                              nanos:
-                                format: int32
-                                type: integer
-                              seconds:
-                                format: int64
-                                type: integer
-                            required:
-                            - nanos
-                            - seconds
-                            type: object
+                            format: date-time
+                            type: string
                           maxTime:
                             type: string
                           minTime:

@@ -3026,8 +3026,8 @@ func (in *ProxySQLSlowQuerySpec) DeepCopyInto(out *ProxySQLSlowQuerySpec) {
 		*out = new(int64)
 		**out = **in
 	}
-	out.FirstSeen = in.FirstSeen
-	out.LastSeen = in.LastSeen
+	in.FirstSeen.DeepCopyInto(&out.FirstSeen)
+	in.LastSeen.DeepCopyInto(&out.LastSeen)
 	out.SumTime = in.SumTime
 	out.MinTime = in.MinTime
 	out.MaxTime = in.MaxTime
