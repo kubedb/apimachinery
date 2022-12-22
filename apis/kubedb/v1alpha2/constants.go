@@ -434,7 +434,7 @@ const (
 
 	RedisKeyFileSecretSuffix = "key"
 	RedisPEMSecretSuffix     = "pem"
-	RedisRootUsername        = "root"
+	RedisRootUsername        = "default"
 	EnvRedisUser             = "USERNAME"
 	EnvRedisPassword         = "REDISCLI_AUTH"
 
