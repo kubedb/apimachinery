@@ -30153,20 +30153,8 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConnectionPoolConfig": {
       "type": "object",
       "properties": {
-        "adminUsers": {
-          "description": "AdminUsers specifies an array of users who can act as PgBouncer administrators.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        },
         "authType": {
           "description": "AuthType specifies how to authenticate users. Default: md5 (md5+plain text).",
-          "type": "string"
-        },
-        "authUser": {
-          "description": "AuthUser looks up any user not specified in auth_file from pg_shadow. Default: not set.",
           "type": "string"
         },
         "defaultPoolSize": {
@@ -30175,7 +30163,7 @@
           "format": "int64"
         },
         "ignoreStartupParameters": {
-          "description": "IgnoreStartupParameters specifies comma-separated startup parameters that pgbouncer knows are handled by admin and it can ignore them.",
+          "description": "IgnoreStartupParameters specifies comma-separated startup parameters that pgbouncer knows are handled by admin and it can ignore them. Default: empty",
           "type": "string"
         },
         "maxClientConnections": {
@@ -30184,12 +30172,12 @@
           "format": "int64"
         },
         "maxDBConnections": {
-          "description": "MaxDBConnections is the maximum number of connections allowed per-database. Default: unlimited.",
+          "description": "MaxDBConnections is the maximum number of connections allowed per-database. Default: 0 (unlimited).",
           "type": "integer",
           "format": "int64"
         },
         "maxUserConnections": {
-          "description": "MaxUserConnections is the maximum number of users allowed per-database. Default: unlimited.",
+          "description": "MaxUserConnections is the maximum number of users allowed per-database. Default: 0 (unlimited).",
           "type": "integer",
           "format": "int64"
         },
@@ -30218,7 +30206,7 @@
           "format": "int64"
         },
         "statsPeriodSeconds": {
-          "description": "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log.",
+          "description": "StatsPeriodSeconds sets how often the averages shown in various SHOW commands are updated and how often aggregated statistics are written to the log. Default: 60",
           "type": "integer",
           "format": "int64"
         }
@@ -30265,10 +30253,6 @@
           "description": "Alias to uniquely identify a target database running inside a specific Postgres instance.",
           "type": "string",
           "default": ""
-        },
-        "authSecretRef": {
-          "description": "AuthSecretRef points to a secret that contains the credentials (username and password) of an existing user of this database. It is used to bind a single user to this specific database connection.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "databaseName": {
           "description": "DatabaseName is the name of the target database inside a Postgres instance.",
@@ -32205,10 +32189,18 @@
         "version"
       ],
       "properties": {
+        "authSecret": {
+          "description": "Database authentication secret",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
+        },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
+        },
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for database (i.e mongod.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "connectionPool": {
           "description": "ConnectionPoolConfig defines Connection pool configuration.",
@@ -32260,10 +32252,6 @@
         "tls": {
           "description": "TLS contains tls configurations for client and server.",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TLSConfig"
-        },
-        "userListSecretRef": {
-          "description": "UserListSecretRef is a secret with a list of PgBouncer user and passwords.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "version": {
           "description": "Version of PgBouncer to be deployed.",
