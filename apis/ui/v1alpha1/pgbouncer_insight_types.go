@@ -1,3 +1,19 @@
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package v1alpha1
 
 import (
@@ -21,19 +37,32 @@ type PgBouncerInsightSpec struct {
 }
 
 type PgBouncerPodInsight struct {
-	PodName           string `json:"podName"`
-	Databases         *int32 `json:"databases,omitempty"`
-	Users             *int32 `json:"users,omitempty"`
-	Pools             *int32 `json:"pools,omitempty"`
-	FreeClients       *int32 `json:"freeClients,omitempty"`
-	UsedClients       *int32 `json:"usedClients,omitempty"`
-	LoginClient       *int32 `json:"loginClient,omitempty"`
-	FreeServers       *int32 `json:"freeServers,omitempty"`
-	UsedServers       *int32 `json:"usedServers,omitempty"`
-	TotalQueryCount   *int32 `json:"totalQueryCount,omitempty"`
+	// PodName represents the name of the pod
+	PodName string `json:"podName"`
+	// Databases represents the number of databases
+	Databases *int32 `json:"databases,omitempty"`
+	// Users represents the number of users
+	Users *int32 `json:"users,omitempty"`
+	// Pools represents the number of pools
+	Pools *int32 `json:"pools,omitempty"`
+	// FreeClients represents the number of free clients
+	FreeClients *int32 `json:"freeClients,omitempty"`
+	// UsedClients represents the number of used clients
+	UsedClients *int32 `json:"usedClients,omitempty"`
+	// LoginClients represents the number of clients in the login state
+	LoginClients *int32 `json:"loginClients,omitempty"`
+	// FreeServers represents the number of free servers
+	FreeServers *int32 `json:"freeServers,omitempty"`
+	// UsedServers represents the number of used servers
+	UsedServers *int32 `json:"usedServers,omitempty"`
+	// TotalQueryCount represents the total number of query counts
+	TotalQueryCount *int32 `json:"totalQueryCount,omitempty"`
+	// AverageQueryCount represents the average number of query counts
 	AverageQueryCount *int32 `json:"averageQueryCount,omitempty"`
-	TotalQueryTime    *int32 `json:"totalQueryTime,omitempty"`
-	AverageQueryTime  *int32 `json:"averageQueryTime,omitempty"`
+	// TotalQueryTime represents the total time spent for the queries
+	TotalQueryTime *int32 `json:"totalQueryTime,omitempty"`
+	// AverageQueryTime represents the average time spent for a single query
+	AverageQueryTime *int32 `json:"averageQueryTime,omitempty"`
 }
 
 // PgBouncerInsight is the Schema for the pgbouncerinsights API

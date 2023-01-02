@@ -47,7 +47,7 @@ spec:
                     freeServers:
                       format: int32
                       type: integer
-                    loginClient:
+                    loginClients:
                       format: int32
                       type: integer
                     podName:
