@@ -495,12 +495,16 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.NodesStatsStoreStats":               schema_apimachinery_apis_ui_v1alpha1_NodesStatsStoreStats(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.NodesStatsTranslogStats":            schema_apimachinery_apis_ui_v1alpha1_NodesStatsTranslogStats(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.NodesStatsWarmerStats":              schema_apimachinery_apis_ui_v1alpha1_NodesStatsWarmerStats(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PBPools":                            schema_apimachinery_apis_ui_v1alpha1_PBPools(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PBSetting":                          schema_apimachinery_apis_ui_v1alpha1_PBSetting(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PGSetting":                          schema_apimachinery_apis_ui_v1alpha1_PGSetting(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerInsight":                   schema_apimachinery_apis_ui_v1alpha1_PgBouncerInsight(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerInsightList":               schema_apimachinery_apis_ui_v1alpha1_PgBouncerInsightList(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerInsightSpec":               schema_apimachinery_apis_ui_v1alpha1_PgBouncerInsightSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerPodInsight":                schema_apimachinery_apis_ui_v1alpha1_PgBouncerPodInsight(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerPools":                     schema_apimachinery_apis_ui_v1alpha1_PgBouncerPools(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerPoolsList":                 schema_apimachinery_apis_ui_v1alpha1_PgBouncerPoolsList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerPoolsSpec":                 schema_apimachinery_apis_ui_v1alpha1_PgBouncerPoolsSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerSettings":                  schema_apimachinery_apis_ui_v1alpha1_PgBouncerSettings(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerSettingsList":              schema_apimachinery_apis_ui_v1alpha1_PgBouncerSettingsList(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerSettingsSpec":              schema_apimachinery_apis_ui_v1alpha1_PgBouncerSettingsSpec(ref),
@@ -24775,6 +24779,119 @@ func schema_apimachinery_apis_ui_v1alpha1_NodesStatsWarmerStats(ref common.Refer
 	}
 }
 
+func schema_apimachinery_apis_ui_v1alpha1_PBPools(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"podName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"database": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"user": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"clientConnectionsActive": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"clientConnectionsWaiting": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"clientsActiveCancelReq": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"clientsWaitingCancelReq": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"serverConnectionsActive": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"serversActiveCancel": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"serversBeingCanceled": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"serversIdle": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"serversUsed": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"serversTested": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"serversLogin": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"maxWait": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"podName", "database", "user", "clientConnectionsActive", "clientConnectionsWaiting", "clientsActiveCancelReq", "clientsWaitingCancelReq", "serverConnectionsActive", "serversActiveCancel", "serversBeingCanceled", "serversIdle", "serversUsed", "serversTested", "serversLogin", "maxWait", "mode"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ui_v1alpha1_PBSetting(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -25114,6 +25231,122 @@ func schema_apimachinery_apis_ui_v1alpha1_PgBouncerPodInsight(ref common.Referen
 				Required: []string{"podName"},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_PgBouncerPools(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerPoolsSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerPoolsSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_PgBouncerPoolsList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerPools"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.PgBouncerPools"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_PgBouncerPoolsSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"pools": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.PBPools"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"pools"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.PBPools"},
 	}
 }
 
