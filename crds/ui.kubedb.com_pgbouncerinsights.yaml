@@ -35,7 +35,7 @@ spec:
                     averageQueryCount:
                       format: int32
                       type: integer
-                    averageQueryTime:
+                    averageQueryTimeMS:
                       format: int32
                       type: integer
                     databases:
@@ -58,7 +58,7 @@ spec:
                     totalQueryCount:
                       format: int32
                       type: integer
-                    totalQueryTime:
+                    totalQueryTimeMS:
                       format: int32
                       type: integer
                     usedClients:

@@ -39,7 +39,6 @@ type PBSetting struct {
 }
 
 // PgBouncerSettings is the Schema for the PgBouncerSettingss API
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type PgBouncerSettings struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -49,7 +48,6 @@ type PgBouncerSettings struct {
 }
 
 // PgBouncerSettingsList contains a list of PgBouncerSettings
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type PgBouncerSettingsList struct {
 	metav1.TypeMeta `json:",inline"`

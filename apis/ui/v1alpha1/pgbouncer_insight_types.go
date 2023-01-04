@@ -60,9 +60,9 @@ type PgBouncerPodInsight struct {
 	// AverageQueryCount represents the average number of query counts
 	AverageQueryCount *int32 `json:"averageQueryCount,omitempty"`
 	// TotalQueryTime represents the total time spent for the queries
-	TotalQueryTime *int32 `json:"totalQueryTime,omitempty"`
+	TotalQueryTimeMS *int32 `json:"totalQueryTimeMS,omitempty"`
 	// AverageQueryTime represents the average time spent for a single query
-	AverageQueryTime *int32 `json:"averageQueryTime,omitempty"`
+	AverageQueryTimeMS *int32 `json:"averageQueryTimeMS,omitempty"`
 }
 
 // PgBouncerInsight is the Schema for the pgbouncerinsights API

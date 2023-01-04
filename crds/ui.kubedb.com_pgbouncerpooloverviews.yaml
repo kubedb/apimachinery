@@ -4,14 +4,14 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: pgbouncerpools.ui.kubedb.com
+  name: pgbouncerpooloverviews.ui.kubedb.com
 spec:
   group: ui.kubedb.com
   names:
-    kind: PgBouncerPools
-    listKind: PgBouncerPoolsList
-    plural: pgbouncerpools
-    singular: pgbouncerpools
+    kind: PgBouncerPoolOverview
+    listKind: PgBouncerPoolOverviewList
+    plural: pgbouncerpooloverviews
+    singular: pgbouncerpooloverview
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -29,65 +29,53 @@ spec:
               pools:
                 items:
                   properties:
-                    clientConnectionsActive:
+                    activeClientConnections:
                       format: int32
                       type: integer
-                    clientConnectionsWaiting:
+                    activeQueryCancellationRequest:
                       format: int32
                       type: integer
-                    clientsActiveCancelReq:
+                    activeServerConnections:
                       format: int32
                       type: integer
-                    clientsWaitingCancelReq:
+                    activeServersCancelRequest:
                       format: int32
                       type: integer
                     database:
                       type: string
-                    maxWait:
+                    idleServers:
+                      format: int32
+                      type: integer
+                    maxWaitMS:
                       type: string
                     mode:
                       type: string
                     podName:
                       type: string
-                    serverConnectionsActive:
-                      format: int32
-                      type: integer
-                    serversActiveCancel:
-                      format: int32
-                      type: integer
                     serversBeingCanceled:
                       format: int32
                       type: integer
-                    serversIdle:
+                    serversInLogin:
                       format: int32
                       type: integer
-                    serversLogin:
+                    testedServers:
                       format: int32
                       type: integer
-                    serversTested:
-                      format: int32
-                      type: integer
-                    serversUsed:
+                    usedServers:
                       format: int32
                       type: integer
                     user:
                       type: string
+                    waitingClientConnections:
+                      format: int32
+                      type: integer
+                    waitingQueryCancellationRequest:
+                      format: int32
+                      type: integer
                   required:
-                  - clientConnectionsActive
-                  - clientConnectionsWaiting
-                  - clientsActiveCancelReq
-                  - clientsWaitingCancelReq
                   - database
-                  - maxWait
                   - mode
                   - podName
-                  - serverConnectionsActive
-                  - serversActiveCancel
-                  - serversBeingCanceled
-                  - serversIdle
-                  - serversLogin
-                  - serversTested
-                  - serversUsed
                   - user
                   type: object
                 type: array
