@@ -31012,6 +31012,10 @@
           "description": "Version of MariaDB to be deployed.",
           "type": "string",
           "default": ""
+        },
+        "wsrepSSTMethod": {
+          "description": "WsrepSSTMethod is used to define the STATE-SNAPSHOT-TRANSFER method to be used in the Galera cluster default value : mariabackup",
+          "type": "string"
         }
       }
     },
