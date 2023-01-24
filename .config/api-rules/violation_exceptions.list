@@ -147,7 +147,7 @@ API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,CertificateS
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,ImageInfo,Lineages
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,Lineage,Chain
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,Lineage,Containers
-API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,PullSecrets,Refs
+API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,PullCredentials,SecretRefs
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,TLSConfig,Certificates
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,X509Subject,Countries
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,X509Subject,Localities
