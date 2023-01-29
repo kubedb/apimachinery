@@ -187,6 +187,10 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,M
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBSchemaOverviewSpec,Collections
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MySQLQueriesSpec,Queries
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PgBouncerInsightSpec,PodInsights
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PgBouncerPoolOverviewSpec,Pools
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PgBouncerServerOverviewSpec,Servers
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PgBouncerSettingsSpec,Settings
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PodInsight,QueryTypeInsight
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PostgresInsightSpec,ReplicationStatus
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PostgresQueriesSpec,Queries
