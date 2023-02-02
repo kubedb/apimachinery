@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	"path/filepath"
 	"strings"
 
@@ -127,6 +128,42 @@ func (k *Kafka) ControllerServiceLabels() map[string]string {
 
 func (k *Kafka) BrokerServiceLabels() map[string]string {
 	return meta_util.OverwriteKeys(k.offshootLabels(k.OffshootLabels(), k.BrokerNodeSelectors()))
+}
+
+type kafkaStatsService struct {
+	*Kafka
+}
+
+func (ks kafkaStatsService) GetNamespace() string {
+	return ks.Kafka.GetNamespace()
+}
+
+func (ks kafkaStatsService) ServiceName() string {
+	return ks.OffshootName() + "-stats"
+}
+
+func (ks kafkaStatsService) ServiceMonitorName() string {
+	return ks.ServiceName()
+}
+
+func (ks kafkaStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return ks.OffshootLabels()
+}
+
+func (ks kafkaStatsService) Path() string {
+	return DefaultStatsPath
+}
+
+func (ks kafkaStatsService) Scheme() string {
+	return ""
+}
+
+func (k *Kafka) StatsService() mona.StatsAccessor {
+	return &kafkaStatsService{k}
+}
+
+func (k *Kafka) StatsServiceLabels() map[string]string {
+	return k.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (k *Kafka) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
