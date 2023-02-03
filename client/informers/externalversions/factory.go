@@ -24,6 +24,7 @@ import (
 	time "time"
 
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
+	archiver "kubedb.dev/apimachinery/client/informers/externalversions/archiver"
 	autoscaling "kubedb.dev/apimachinery/client/informers/externalversions/autoscaling"
 	catalog "kubedb.dev/apimachinery/client/informers/externalversions/catalog"
 	dashboard "kubedb.dev/apimachinery/client/informers/externalversions/dashboard"
@@ -179,6 +180,7 @@ type SharedInformerFactory interface {
 	ForResource(resource schema.GroupVersionResource) (GenericInformer, error)
 	WaitForCacheSync(stopCh <-chan struct{}) map[reflect.Type]bool
 
+	Archiver() archiver.Interface
 	Autoscaling() autoscaling.Interface
 	Catalog() catalog.Interface
 	Dashboard() dashboard.Interface
@@ -186,6 +188,10 @@ type SharedInformerFactory interface {
 	Ops() ops.Interface
 	Postgres() postgres.Interface
 	Schema() externalversionsschema.Interface
+}
+
+func (f *sharedInformerFactory) Archiver() archiver.Interface {
+	return archiver.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) Autoscaling() autoscaling.Interface {

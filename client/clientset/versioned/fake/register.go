@@ -19,6 +19,7 @@ limitations under the License.
 package fake
 
 import (
+	archiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	configv1alpha1 "kubedb.dev/apimachinery/apis/config/v1alpha1"
@@ -41,6 +42,7 @@ var scheme = runtime.NewScheme()
 var codecs = serializer.NewCodecFactory(scheme)
 
 var localSchemeBuilder = runtime.SchemeBuilder{
+	archiverv1alpha1.AddToScheme,
 	autoscalingv1alpha1.AddToScheme,
 	catalogv1alpha1.AddToScheme,
 	configv1alpha1.AddToScheme,

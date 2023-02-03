@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
@@ -30,6 +31,8 @@ type InitSpec struct {
 	// Wait for initial DataRestore condition
 	WaitForInitialRestore bool              `json:"waitForInitialRestore,omitempty"`
 	Script                *ScriptSourceSpec `json:"script,omitempty"`
+
+	Archiver *ArchiverRecovery `json:"archiver,omitempty"`
 }
 
 type ScriptSourceSpec struct {
@@ -166,4 +169,17 @@ type SecretReference struct {
 type Age struct {
 	// Populated by Provisioner when authSecret is created or Ops Manager when authSecret is updated.
 	LastUpdateTimestamp metav1.Time `json:"lastUpdateTimestamp,omitempty"`
+}
+
+type Archiver struct {
+	// Pause is used to stop the archiver backup for the database
+	// +optional
+	Pause bool `json:"pause,omitempty"`
+	// Ref is the name and namespace reference to the Archiver CR
+	Ref kmapi.ObjectReference `json:"ref"`
+}
+
+type ArchiverRecovery struct {
+	RecoveryTimestamp metav1.Time           `json:"recoveryTimestamp"`
+	Repository        kmapi.ObjectReference `json:"repository"`
 }

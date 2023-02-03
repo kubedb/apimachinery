@@ -30,3 +30,16 @@ type UpdateConstraints struct {
 	// An empty list indicates no version is rejected.
 	Denylist []string `json:"denylist,omitempty"`
 }
+
+type ArchiverSpec struct {
+	Walg           WalgSpec           `json:"walg"`
+	CSISnapshotter CSISnapshotterSpec `json:"CSISnapshotter"`
+}
+
+type WalgSpec struct {
+	Image string `json:"image"`
+}
+
+type CSISnapshotterSpec struct {
+	AddonName string `json:"addonName"`
+}

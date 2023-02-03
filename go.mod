@@ -10,6 +10,7 @@ require (
 	github.com/google/gofuzz v1.2.0
 	github.com/iancoleman/orderedmap v0.2.0
 	github.com/json-iterator/go v1.1.12
+	github.com/kubernetes-csi/external-snapshotter/client/v6 v6.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.59.1
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.59.1
@@ -38,6 +39,7 @@ require (
 	sigs.k8s.io/controller-runtime v0.13.1
 	sigs.k8s.io/yaml v1.3.0
 	stash.appscode.dev/apimachinery v0.30.0
+	stash.appscode.dev/kubestash v0.0.0-20230119070744-e2e69cbd4cb5
 )
 
 require (
@@ -54,7 +56,7 @@ require (
 	github.com/Masterminds/sprig/v3 v3.2.2 // indirect
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
 	github.com/PuerkitoBio/purell v1.2.0 // indirect
-	github.com/aws/aws-sdk-go v1.44.100 // indirect
+	github.com/aws/aws-sdk-go v1.44.149 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
