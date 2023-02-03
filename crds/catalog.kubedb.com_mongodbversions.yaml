@@ -50,7 +50,7 @@ spec:
             properties:
               archiver:
                 properties:
-                  CSISnapshotter:
+                  csiSnapshotter:
                     properties:
                       addonName:
                         type: string
@@ -65,7 +65,7 @@ spec:
                     - image
                     type: object
                 required:
-                - CSISnapshotter
+                - csiSnapshotter
                 - walg
                 type: object
               db:

@@ -33,7 +33,7 @@ type UpdateConstraints struct {
 
 type ArchiverSpec struct {
 	Walg           WalgSpec           `json:"walg"`
-	CSISnapshotter CSISnapshotterSpec `json:"CSISnapshotter"`
+	CSISnapshotter CSISnapshotterSpec `json:"csiSnapshotter"`
 }
 
 type WalgSpec struct {

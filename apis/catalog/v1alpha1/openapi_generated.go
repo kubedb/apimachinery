@@ -21462,14 +21462,14 @@ func schema_apimachinery_apis_catalog_v1alpha1_ArchiverSpec(ref common.Reference
 							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.WalgSpec"),
 						},
 					},
-					"CSISnapshotter": {
+					"csiSnapshotter": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
 							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.CSISnapshotterSpec"),
 						},
 					},
 				},
-				Required: []string{"walg", "CSISnapshotter"},
+				Required: []string{"walg", "csiSnapshotter"},
 			},
 		},
 		Dependencies: []string{
