@@ -216,7 +216,7 @@ func (p *PgBouncer) CertificateName(alias PgBouncerCertificateAlias) string {
 
 // GetPersistentSecrets returns auth secret and config secret of a pgbouncer object
 func (p *PgBouncer) GetPersistentSecrets() []string {
-	if p != nil {
+	if p == nil {
 		return nil
 	}
 	var secrets []string
