@@ -24,6 +24,7 @@ import (
 	"kubedb.dev/apimachinery/crds"
 
 	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -193,20 +194,22 @@ func (p *PgBouncer) SetDefaults() {
 		}
 	}
 
+	p.SetSecurityContext()
+
 	p.Spec.Monitor.SetDefaults()
 	apis.SetDefaultResourceLimits(&p.Spec.PodTemplate.Spec.Resources, DefaultResources)
 }
 
-func (p *PgBouncer) SetTLSDefaults(IssuerType PgBouncerIssuerType) {
+func (p *PgBouncer) SetTLSDefaults(issuerType IssuerType) {
 	if p.Spec.TLS == nil || p.Spec.TLS.IssuerRef == nil {
 		return
 	}
 
-	if IssuerType == PgBouncerIssuerTypeACME {
+	if issuerType == IssuerTypeACME {
 		p.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(p.Spec.TLS.Certificates, string(PgBouncerServerCert), p.CertificateName(PgBouncerServerCert))
 		p.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(p.Spec.TLS.Certificates, string(PgBouncerClientCert), p.CertificateName(PgBouncerServerCert))
 		p.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(p.Spec.TLS.Certificates, string(PgBouncerMetricsExporterCert), p.CertificateName(PgBouncerServerCert))
-	} else if IssuerType == PgBouncerIssuerTypeSelfSigned {
+	} else if issuerType == IssuerTypeSelfSigned {
 		p.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(p.Spec.TLS.Certificates, string(PgBouncerServerCert), p.CertificateName(PgBouncerServerCert))
 		p.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(p.Spec.TLS.Certificates, string(PgBouncerClientCert), p.CertificateName(PgBouncerClientCert))
 		p.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(p.Spec.TLS.Certificates, string(PgBouncerMetricsExporterCert), p.CertificateName(PgBouncerMetricsExporterCert))
@@ -301,4 +304,39 @@ func (p *PgBouncer) setConnectionPoolConfigDefaults() {
 	if p.Spec.ConnectionPool.IgnoreStartupParameters == "" {
 		p.Spec.ConnectionPool.IgnoreStartupParameters = PgBouncerDefaultIgnoreStartupParameters
 	}
+}
+
+func (p *PgBouncer) SetSecurityContext() {
+	if p.Spec.PodTemplate.Spec.ContainerSecurityContext == nil {
+		p.Spec.PodTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{
+			RunAsUser:  pointer.Int64P(70),
+			RunAsGroup: pointer.Int64P(70),
+		}
+	} else {
+		if p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser == nil {
+			p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser = pointer.Int64P(70)
+		}
+		if p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup == nil {
+			p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser
+		}
+	}
+
+	if p.Spec.PodTemplate.Spec.SecurityContext == nil {
+		p.Spec.PodTemplate.Spec.SecurityContext = &core.PodSecurityContext{
+			RunAsUser:  p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser,
+			RunAsGroup: p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup,
+		}
+	} else {
+		if p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser == nil {
+			p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser
+		}
+		if p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup == nil {
+			p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup
+		}
+	}
+
+	// Need to set FSGroup equal to  p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup.
+	// So that /var/pv directory have the group permission for the RunAsGroup user GID.
+	// Otherwise, We will get write permission denied.
+	p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup
 }

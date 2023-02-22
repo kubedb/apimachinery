@@ -191,16 +191,16 @@ func (p *ProxySQL) SetHealthCheckerDefaults() {
 	}
 }
 
-func (m *ProxySQL) SetTLSDefaults(IssuerType ProxySQLIssuerType) {
+func (m *ProxySQL) SetTLSDefaults(issuerType IssuerType) {
 	if m.Spec.TLS == nil || m.Spec.TLS.IssuerRef == nil {
 		return
 	}
-	if IssuerType == ProxySQLIssuerTypeACME {
+	if issuerType == IssuerTypeACME {
 		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(ProxySQLServerCert), m.CertificateName(ProxySQLServerCert))
 		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(ProxySQLClientCert), m.CertificateName(ProxySQLServerCert))
 		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(ProxySQLMetricsExporterCert), m.CertificateName(ProxySQLServerCert))
 
-	} else if IssuerType == ProxySQLIssuerTypeSelfSigned {
+	} else if issuerType == IssuerTypeSelfSigned {
 		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(ProxySQLServerCert), m.CertificateName(ProxySQLServerCert))
 		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(ProxySQLClientCert), m.CertificateName(ProxySQLClientCert))
 		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(ProxySQLMetricsExporterCert), m.CertificateName(ProxySQLMetricsExporterCert))

@@ -187,14 +187,6 @@ const (
 	ProxySQLMetricsExporterCert ProxySQLCertificateAlias = "metrics-exporter"
 )
 
-// +kubebuilder:validation:Enum=acme;self-signed
-type ProxySQLIssuerType string
-
-const (
-	ProxySQLIssuerTypeACME       ProxySQLIssuerType = "acme"
-	ProxySQLIssuerTypeSelfSigned ProxySQLIssuerType = "self-signed"
-)
-
 type ProxySQLStatus struct {
 	// Specifies the current phase of the database
 	// +optional
