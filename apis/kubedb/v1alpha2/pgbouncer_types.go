@@ -270,3 +270,11 @@ const (
 	// Rejects attempt to delete database using ValidationWebhook.
 	PgBouncerTerminationPolicyDoNotTerminate PgBouncerTerminationPolicy = "DoNotTerminate"
 )
+
+// +kubebuilder:validation:Enum=acme;self-signed
+type PgBouncerIssuerType string
+
+const (
+	PgBouncerIssuerTypeACME       PgBouncerIssuerType = "acme"
+	PgBouncerIssuerTypeSelfSigned PgBouncerIssuerType = "self-signed"
+)
