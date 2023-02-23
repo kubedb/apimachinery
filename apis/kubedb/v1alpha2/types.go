@@ -167,11 +167,3 @@ type Age struct {
 	// Populated by Provisioner when authSecret is created or Ops Manager when authSecret is updated.
 	LastUpdateTimestamp metav1.Time `json:"lastUpdateTimestamp,omitempty"`
 }
-
-// +kubebuilder:validation:Enum=acme;self-signed
-type IssuerType string
-
-const (
-	IssuerTypeACME       IssuerType = "acme"
-	IssuerTypeSelfSigned IssuerType = "self-signed"
-)
