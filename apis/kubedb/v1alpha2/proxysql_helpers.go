@@ -175,7 +175,6 @@ func (p *ProxySQL) SetDefaults() {
 	}
 
 	p.Spec.Monitor.SetDefaults()
-	p.SetTLSDefaults()
 	p.SetHealthCheckerDefaults()
 	apis.SetDefaultResourceLimits(&p.Spec.PodTemplate.Spec.Resources, DefaultResources)
 }
@@ -192,13 +191,16 @@ func (p *ProxySQL) SetHealthCheckerDefaults() {
 	}
 }
 
-func (m *ProxySQL) SetTLSDefaults() {
+func (m *ProxySQL) SetTLSDefaults(usesAcme bool) {
 	if m.Spec.TLS == nil || m.Spec.TLS.IssuerRef == nil {
 		return
 	}
+
 	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(ProxySQLServerCert), m.CertificateName(ProxySQLServerCert))
-	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(ProxySQLClientCert), m.CertificateName(ProxySQLClientCert))
-	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(ProxySQLMetricsExporterCert), m.CertificateName(ProxySQLMetricsExporterCert))
+	if !usesAcme {
+		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(ProxySQLClientCert), m.CertificateName(ProxySQLClientCert))
+		m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(ProxySQLMetricsExporterCert), m.CertificateName(ProxySQLMetricsExporterCert))
+	}
 }
 
 func (p *ProxySQLSpec) GetPersistentSecrets() []string {
