@@ -174,7 +174,7 @@ func (p PgBouncer) ReplicasServiceName() string {
 	return fmt.Sprintf("%v-replicas", p.Name)
 }
 
-func (p *PgBouncer) SetDefaults(pgBouncerVersion *catalog.PgBouncerVersion) {
+func (p *PgBouncer) SetDefaults(pgBouncerVersion *catalog.PgBouncerVersion, usesAcme bool) {
 	if p == nil {
 		return
 	}
@@ -196,6 +196,9 @@ func (p *PgBouncer) SetDefaults(pgBouncerVersion *catalog.PgBouncerVersion) {
 	}
 
 	p.SetSecurityContext(pgBouncerVersion)
+	if p.Spec.TLS != nil {
+		p.SetTLSDefaults(usesAcme)
+	}
 
 	p.Spec.Monitor.SetDefaults()
 	apis.SetDefaultResourceLimits(&p.Spec.PodTemplate.Spec.Resources, DefaultResources)
