@@ -161,7 +161,7 @@ func (p ProxySQL) StatsServiceLabels() map[string]string {
 	return p.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
-func (p *ProxySQL) SetDefaults() {
+func (p *ProxySQL) SetDefaults(usesAcme bool) {
 	if p == nil {
 		return
 	}
@@ -175,6 +175,7 @@ func (p *ProxySQL) SetDefaults() {
 	}
 
 	p.Spec.Monitor.SetDefaults()
+	p.SetTLSDefaults(usesAcme)
 	p.SetHealthCheckerDefaults()
 	apis.SetDefaultResourceLimits(&p.Spec.PodTemplate.Spec.Resources, DefaultResources)
 }
