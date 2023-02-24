@@ -18,7 +18,6 @@ package v1alpha2
 
 import (
 	"fmt"
-	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	"path/filepath"
 	"strings"
 
@@ -32,6 +31,7 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
 func (k *Kafka) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
