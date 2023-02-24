@@ -20,6 +20,7 @@ import (
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
@@ -173,7 +174,7 @@ func (p PgBouncer) ReplicasServiceName() string {
 	return fmt.Sprintf("%v-replicas", p.Name)
 }
 
-func (p *PgBouncer) SetDefaults() {
+func (p *PgBouncer) SetDefaults(pgBouncerVersion *catalog.PgBouncerVersion) {
 	if p == nil {
 		return
 	}
@@ -194,7 +195,7 @@ func (p *PgBouncer) SetDefaults() {
 		}
 	}
 
-	p.SetSecurityContext()
+	p.SetSecurityContext(pgBouncerVersion)
 
 	p.Spec.Monitor.SetDefaults()
 	apis.SetDefaultResourceLimits(&p.Spec.PodTemplate.Spec.Resources, DefaultResources)
@@ -302,15 +303,16 @@ func (p *PgBouncer) setConnectionPoolConfigDefaults() {
 	}
 }
 
-func (p *PgBouncer) SetSecurityContext() {
+func (p *PgBouncer) SetSecurityContext(pgBouncerVersion *catalog.PgBouncerVersion) {
 	if p.Spec.PodTemplate.Spec.ContainerSecurityContext == nil {
 		p.Spec.PodTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{
-			RunAsUser:  pointer.Int64P(70),
-			RunAsGroup: pointer.Int64P(70),
+			RunAsUser:  pgBouncerVersion.Spec.SecurityContext.RunAsUser,
+			RunAsGroup: pgBouncerVersion.Spec.SecurityContext.RunAsUser,
+			Privileged: pointer.BoolP(false),
 		}
 	} else {
 		if p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser == nil {
-			p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser = pointer.Int64P(70)
+			p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser = pgBouncerVersion.Spec.SecurityContext.RunAsUser
 		}
 		if p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup == nil {
 			p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser
