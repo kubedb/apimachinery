@@ -23194,7 +23194,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerSecurityContext(ref comm
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerSecurityContext is the additional features for the Postgres",
+				Description: "PgBouncerSecurityContext is the additional features for the PgBouncer",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"runAsUser": {
@@ -23407,9 +23407,9 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionSpec(ref common.R
 					},
 					"securityContext": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for postgres DB container",
+							Description: "SecurityContext is for the additional config for pgbouncer DB container",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerSecurityContext"),
 						},
 					},
 					"upgradeConstraints": {
@@ -23424,7 +23424,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpgradeConstraints"},
 	}
 }
 

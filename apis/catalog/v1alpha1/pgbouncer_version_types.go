@@ -58,9 +58,9 @@ type PgBouncerVersionSpec struct {
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
-	// SecurityContext is for the additional config for postgres DB container
+	// SecurityContext is for the additional config for pgbouncer DB container
 	// +optional
-	SecurityContext PostgresSecurityContext `json:"securityContext"`
+	SecurityContext PgBouncerSecurityContext `json:"securityContext"`
 	// upgrade constraints
 	UpgradeConstraints UpgradeConstraints `json:"upgradeConstraints,omitempty"`
 }
@@ -90,7 +90,7 @@ type PgBouncerVersionList struct {
 	Items []PgBouncerVersion `json:"items,omitempty"`
 }
 
-// PgBouncerSecurityContext is the additional features for the Postgres
+// PgBouncerSecurityContext is the additional features for the PgBouncer
 type PgBouncerSecurityContext struct {
 	// RunAsUser is default UID for the DB container. It is by default 70 for postgres user.
 	RunAsUser *int64 `json:"runAsUser,omitempty"`
