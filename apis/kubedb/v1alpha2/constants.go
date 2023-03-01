@@ -584,6 +584,7 @@ const (
 
 	EnvKafkaUser     = "KAFKA_USER"
 	EnvKafkaPassword = "KAFKA_PASSWORD"
+	EnvKafkaExporter = "JMX_EXPORTER_PORT"
 
 	KafkaListenerPLAINTEXTProtocol = "PLAINTEXT"
 	KafkaListenerSASLProtocol      = "SASL_PLAINTEXT"
