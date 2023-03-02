@@ -27,6 +27,7 @@ import (
 	"kubedb.dev/apimachinery/crds"
 
 	"github.com/Masterminds/semver/v3"
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -575,6 +576,10 @@ func (m mongoDBStatsService) Path() string {
 
 func (m mongoDBStatsService) Scheme() string {
 	return ""
+}
+
+func (m mongoDBStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
 }
 
 func (m MongoDB) StatsService() mona.StatsAccessor {
