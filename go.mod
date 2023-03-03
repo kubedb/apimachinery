@@ -11,6 +11,7 @@ require (
 	github.com/iancoleman/orderedmap v0.2.0
 	github.com/json-iterator/go v1.1.12
 	github.com/pkg/errors v0.9.1
+	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.59.1
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.59.1
 	go.bytebuilders.dev/audit v0.0.26
 	gomodules.xyz/encoding v0.0.7
@@ -26,10 +27,10 @@ require (
 	k8s.io/kube-aggregator v0.25.1
 	k8s.io/kube-openapi v0.0.0-20221012153701-172d655c2280
 	k8s.io/metrics v0.25.1
-	kmodules.xyz/client-go v0.25.16
+	kmodules.xyz/client-go v0.25.18
 	kmodules.xyz/crd-schema-fuzz v0.25.0
 	kmodules.xyz/custom-resources v0.25.1
-	kmodules.xyz/monitoring-agent-api v0.25.0
+	kmodules.xyz/monitoring-agent-api v0.25.1
 	kmodules.xyz/objectstore-api v0.25.1-0.20221104003322-f0289b5b6ca2
 	kmodules.xyz/offshoot-api v0.25.0
 	kmodules.xyz/webhook-runtime v0.25.0
@@ -97,7 +98,6 @@ require (
 	github.com/nats-io/nats.go v1.22.1 // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
-	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.59.1 // indirect
 	github.com/prometheus/client_golang v1.13.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
@@ -132,7 +132,7 @@ require (
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/crypto v0.6.0 // indirect
 	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/oauth2 v0.1.0 // indirect
+	golang.org/x/oauth2 v0.5.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/term v0.5.0 // indirect
