@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"path/filepath"
 	"strings"
 
@@ -132,6 +133,10 @@ func (k *Kafka) BrokerServiceLabels() map[string]string {
 
 type kafkaStatsService struct {
 	*Kafka
+}
+
+func (ks kafkaStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
 }
 
 func (ks kafkaStatsService) GetNamespace() string {
