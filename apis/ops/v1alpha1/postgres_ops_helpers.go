@@ -63,8 +63,19 @@ func (e *PostgresOpsRequest) GetObjectMeta() metav1.ObjectMeta {
 	return e.ObjectMeta
 }
 
-func (e *PostgresOpsRequest) GetRequestType() string {
+func (e PostgresOpsRequest) GetRequestType() string {
+	switch e.Spec.Type {
+	case PostgresOpsRequestTypeUpgrade:
+		return string(PostgresOpsRequestTypeUpdateVersion)
+	}
 	return string(e.Spec.Type)
+}
+
+func (e PostgresOpsRequest) GetUpdateVersionSpec() *PostgresUpdateVersionSpec {
+	if e.Spec.UpdateVersion != nil {
+		return e.Spec.UpdateVersion
+	}
+	return e.Spec.Upgrade
 }
 
 func (e *PostgresOpsRequest) GetDBRefName() string {

@@ -68,7 +68,10 @@ type PostgresOpsRequestSpec struct {
 	// Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.
 	Type PostgresOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading Postgres
-	Upgrade *PostgresUpgradeSpec `json:"upgrade,omitempty"`
+	UpdateVersion *PostgresUpdateVersionSpec `json:"updateVersion,omitempty"`
+	// Specifies information necessary for upgrading Postgres
+	// Deprecated: use UpdateVersion
+	Upgrade *PostgresUpdateVersionSpec `json:"upgrade,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *PostgresHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
@@ -110,7 +113,7 @@ const (
 	PostgresOpsRequestTypeReconfigureTLSs PostgresOpsRequestType = "ReconfigureTLS"
 )
 
-type PostgresUpgradeSpec struct {
+type PostgresUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty"`
 }

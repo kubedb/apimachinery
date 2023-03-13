@@ -520,7 +520,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresOpsRequestList":                     schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresOpsRequestSpec":                     schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresTLSSpec":                            schema_apimachinery_apis_ops_v1alpha1_PostgresTLSSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpgradeSpec":                        schema_apimachinery_apis_ops_v1alpha1_PostgresUpgradeSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpdateVersionSpec":                  schema_apimachinery_apis_ops_v1alpha1_PostgresUpgradeSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec":                schema_apimachinery_apis_ops_v1alpha1_PostgresVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec":                schema_apimachinery_apis_ops_v1alpha1_PostgresVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLCustomConfiguration":                schema_apimachinery_apis_ops_v1alpha1_ProxySQLCustomConfiguration(ref),
@@ -24662,7 +24662,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref common.Ref
 					"upgrade": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for upgrading Postgres",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpgradeSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpdateVersionSpec"),
 						},
 					},
 					"horizontalScaling": {
@@ -24719,7 +24719,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
