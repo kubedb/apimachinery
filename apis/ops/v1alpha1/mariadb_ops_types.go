@@ -55,7 +55,10 @@ type MariaDBOpsRequestSpec struct {
 	// Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.
 	Type MariaDBOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading MariaDB
-	Upgrade *MariaDBUpgradeSpec `json:"upgrade,omitempty"`
+	UpdateVersion *MariaDBUpdateVersionSpec `json:"updateVersion,omitempty"`
+	// Specifies information necessary for upgrading MariaDB
+	// Deprecated: use UpdateVersion
+	Upgrade *MariaDBUpdateVersionSpec `json:"upgrade,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *MariaDBHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
@@ -100,7 +103,7 @@ const (
 // MariaDBReplicaReadinessCriteria is the criteria for checking readiness of an MariaDB database
 type MariaDBReplicaReadinessCriteria struct{}
 
-type MariaDBUpgradeSpec struct {
+type MariaDBUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty"`
 }

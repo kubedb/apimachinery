@@ -57,7 +57,7 @@ type ProxySQLOpsRequestSpec struct {
 	// Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.
 	Type ProxySQLOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading ProxySQL
-	Upgrade *ProxySQLUpgradeSpec `json:"upgrade,omitempty"`
+	UpdateVersion *ProxySQLUpdateVersionSpec `json:"updateVersion,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *ProxySQLHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
@@ -97,7 +97,7 @@ const (
 // after updating, horizontal scaling etc.
 type ProxySQLReplicaReadinessCriteria struct{}
 
-type ProxySQLUpgradeSpec struct {
+type ProxySQLUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion     string                            `json:"targetVersion,omitempty"`
 	ReadinessCriteria *ProxySQLReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`

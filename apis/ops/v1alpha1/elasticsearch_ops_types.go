@@ -55,7 +55,10 @@ type ElasticsearchOpsRequestSpec struct {
 	// Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.
 	Type ElasticsearchOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading Elasticsearch
-	Upgrade *ElasticsearchUpgradeSpec `json:"upgrade,omitempty"`
+	UpdateVersion *ElasticsearchUpdateVersionSpec `json:"updateVersion,omitempty"`
+	// Specifies information necessary for upgrading Elasticsearch
+	// Deprecated: use UpdateVersion
+	Upgrade *ElasticsearchUpdateVersionSpec `json:"upgrade,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *ElasticsearchHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
@@ -100,7 +103,7 @@ const (
 // ElasticsearchReplicaReadinessCriteria is the criteria for checking readiness of an Elasticsearch database
 type ElasticsearchReplicaReadinessCriteria struct{}
 
-type ElasticsearchUpgradeSpec struct {
+type ElasticsearchUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty"`
 }

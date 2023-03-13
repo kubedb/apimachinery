@@ -55,7 +55,10 @@ type PerconaXtraDBOpsRequestSpec struct {
 	// Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.
 	Type PerconaXtraDBOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading PerconaXtraDB
-	Upgrade *PerconaXtraDBUpgradeSpec `json:"upgrade,omitempty"`
+	UpdateVersion *PerconaXtraDBUpdateVersionSpec `json:"updateVersion,omitempty"`
+	// Specifies information necessary for upgrading PerconaXtraDB
+	// Deprecated: use UpdateVersion
+	Upgrade *PerconaXtraDBUpdateVersionSpec `json:"upgrade,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *PerconaXtraDBHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
@@ -100,7 +103,7 @@ const (
 // PerconaXtraDBReplicaReadinessCriteria is the criteria for checking readiness of an PerconaXtraDB database
 type PerconaXtraDBReplicaReadinessCriteria struct{}
 
-type PerconaXtraDBUpgradeSpec struct {
+type PerconaXtraDBUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty"`
 }

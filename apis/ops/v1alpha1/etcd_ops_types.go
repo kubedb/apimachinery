@@ -54,7 +54,7 @@ type EtcdOpsRequestSpec struct {
 	// Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.
 	Type EtcdOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading Etcd
-	Upgrade *EtcdUpgradeSpec `json:"upgrade,omitempty"`
+	UpdateVersion *EtcdUpdateVersionSpec `json:"updateVersion,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *EtcdHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
@@ -96,7 +96,7 @@ const (
 // after updating, horizontal scaling etc.
 type EtcdReplicaReadinessCriteria struct{}
 
-type EtcdUpgradeSpec struct {
+type EtcdUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion     string                        `json:"targetVersion,omitempty"`
 	ReadinessCriteria *EtcdReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`

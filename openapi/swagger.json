@@ -33339,9 +33339,13 @@
           "type": "string",
           "default": ""
         },
-        "upgrade": {
+        "updateVersion": {
           "description": "Specifies information necessary for upgrading Elasticsearch",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchUpgradeSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchUpdateVersionSpec"
+        },
+        "upgrade": {
+          "description": "Specifies information necessary for upgrading Elasticsearch Deprecated: use UpdateVersion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchUpdateVersionSpec"
         },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
@@ -33353,7 +33357,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchUpgradeSpec": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchUpdateVersionSpec": {
       "type": "object",
       "properties": {
         "targetVersion": {
@@ -33588,9 +33592,9 @@
           "type": "string",
           "default": ""
         },
-        "upgrade": {
+        "updateVersion": {
           "description": "Specifies information necessary for upgrading Etcd",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdUpgradeSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdUpdateVersionSpec"
         },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
@@ -33606,7 +33610,7 @@
       "description": "EtcdReplicaReadinessCriteria is the criteria for checking readiness of a Etcd pod after updating, horizontal scaling etc.",
       "type": "object"
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdUpgradeSpec": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdUpdateVersionSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {
@@ -33750,9 +33754,13 @@
           "type": "string",
           "default": ""
         },
-        "upgrade": {
+        "updateVersion": {
           "description": "Specifies information necessary for upgrading Memcached",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedUpgradeSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedUpdateVersionSpec"
+        },
+        "upgrade": {
+          "description": "Specifies information necessary for upgrading Memcached Deprecated: use UpdateVersion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedUpdateVersionSpec"
         },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
@@ -33768,7 +33776,7 @@
       "description": "MemcachedReplicaReadinessCriteria is the criteria for checking readiness of a Memcached pod after updating, horizontal scaling etc.",
       "type": "object"
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedUpgradeSpec": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedUpdateVersionSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {
@@ -33978,9 +33986,13 @@
           "type": "string",
           "default": ""
         },
+        "updateVersion": {
+          "description": "Specifies information necessary for upgrading MongoDB",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBUpdateVersionSpec"
+        },
         "upgrade": {
-          "description": "Specifies information necessary for upgrading mongodb",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBUpgradeSpec"
+          "description": "Specifies information necessary for upgrading MongoDB Deprecated: use UpdateVersion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBUpdateVersionSpec"
         },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
@@ -34020,7 +34032,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBUpgradeSpec": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBUpdateVersionSpec": {
       "type": "object",
       "properties": {
         "targetVersion": {
@@ -34227,9 +34239,13 @@
           "type": "string",
           "default": ""
         },
-        "upgrade": {
+        "updateVersion": {
           "description": "Specifies information necessary for upgrading MySQL",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUpgradeSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUpdateVersionSpec"
+        },
+        "upgrade": {
+          "description": "Specifies information necessary for upgrading MySQL Deprecated: use UpdateVersion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUpdateVersionSpec"
         },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
@@ -34293,7 +34309,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUpgradeSpec": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUpdateVersionSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {
@@ -34520,9 +34536,13 @@
           "type": "string",
           "default": ""
         },
-        "upgrade": {
+        "updateVersion": {
           "description": "Specifies information necessary for upgrading PerconaXtraDB",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBUpgradeSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBUpdateVersionSpec"
+        },
+        "upgrade": {
+          "description": "Specifies information necessary for upgrading PerconaXtraDB Deprecated: use UpdateVersion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBUpdateVersionSpec"
         },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
@@ -34564,7 +34584,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBUpgradeSpec": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBUpdateVersionSpec": {
       "type": "object",
       "properties": {
         "targetVersion": {
@@ -34738,9 +34758,13 @@
           "type": "string",
           "default": ""
         },
-        "upgrade": {
+        "updateVersion": {
           "description": "Specifies information necessary for upgrading Postgres",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresUpgradeSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresUpdateVersionSpec"
+        },
+        "upgrade": {
+          "description": "Specifies information necessary for upgrading Postgres Deprecated: use UpdateVersion",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresUpdateVersionSpec"
         },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
@@ -34785,7 +34809,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresUpgradeSpec": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresUpdateVersionSpec": {
       "type": "object",
       "properties": {
         "targetVersion": {
@@ -34957,9 +34981,9 @@
           "type": "string",
           "default": ""
         },
-        "upgrade": {
+        "updateVersion": {
           "description": "Specifies information necessary for upgrading ProxySQL",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLUpgradeSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLUpdateVersionSpec"
         },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
@@ -34971,7 +34995,7 @@
       "description": "ProxySQLReplicaReadinessCriteria is the criteria for checking readiness of a ProxySQL pod after updating, horizontal scaling etc.",
       "type": "object"
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLUpgradeSpec": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLUpdateVersionSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {
@@ -35137,9 +35161,9 @@
           "type": "string",
           "default": ""
         },
-        "upgrade": {
+        "updateVersion": {
           "description": "Specifies information necessary for upgrading Redis",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisUpgradeSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisUpdateVersionSpec"
         },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
@@ -35212,7 +35236,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisUpgradeSpec": {
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisUpdateVersionSpec": {
       "type": "object",
       "properties": {
         "readinessCriteria": {

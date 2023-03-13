@@ -56,7 +56,7 @@ type RedisOpsRequestSpec struct {
 	// Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.
 	Type RedisOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading Redis
-	Upgrade *RedisUpgradeSpec `json:"upgrade,omitempty"`
+	UpdateVersion *RedisUpdateVersionSpec `json:"updateVersion,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *RedisHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
@@ -129,7 +129,7 @@ type RedisSentinelRef struct {
 // after updating, horizontal scaling etc.
 type RedisReplicaReadinessCriteria struct{}
 
-type RedisUpgradeSpec struct {
+type RedisUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion     string                         `json:"targetVersion,omitempty"`
 	ReadinessCriteria *RedisReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`

@@ -55,7 +55,10 @@ type MySQLOpsRequestSpec struct {
 	// Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.
 	Type MySQLOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading MySQL
-	Upgrade *MySQLUpgradeSpec `json:"upgrade,omitempty"`
+	UpdateVersion *MySQLUpdateVersionSpec `json:"updateVersion,omitempty"`
+	// Specifies information necessary for upgrading MySQL
+	// Deprecated: use UpdateVersion
+	Upgrade *MySQLUpdateVersionSpec `json:"upgrade,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *MySQLHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
@@ -101,7 +104,7 @@ const (
 // after updating, horizontal scaling etc.
 type MySQLReplicaReadinessCriteria struct{}
 
-type MySQLUpgradeSpec struct {
+type MySQLUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion     string                         `json:"targetVersion,omitempty"`
 	ReadinessCriteria *MySQLReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`
