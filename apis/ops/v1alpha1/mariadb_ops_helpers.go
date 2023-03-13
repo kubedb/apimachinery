@@ -84,8 +84,19 @@ func (e *MariaDBOpsRequest) GetObjectMeta() metav1.ObjectMeta {
 	return e.ObjectMeta
 }
 
-func (e *MariaDBOpsRequest) GetRequestType() string {
+func (e MariaDBOpsRequest) GetRequestType() string {
+	switch e.Spec.Type {
+	case MariaDBOpsRequestTypeUpgrade:
+		return string(MariaDBOpsRequestTypeUpdateVersion)
+	}
 	return string(e.Spec.Type)
+}
+
+func (e MariaDBOpsRequest) GetUpdateVersionSpec() *MariaDBUpdateVersionSpec {
+	if e.Spec.UpdateVersion != nil {
+		return e.Spec.UpdateVersion
+	}
+	return e.Spec.Upgrade
 }
 
 func (e *MariaDBOpsRequest) GetDBRefName() string {

@@ -64,8 +64,19 @@ func (e *MySQLOpsRequest) GetObjectMeta() metav1.ObjectMeta {
 	return e.ObjectMeta
 }
 
-func (e *MySQLOpsRequest) GetRequestType() string {
+func (e MySQLOpsRequest) GetRequestType() string {
+	switch e.Spec.Type {
+	case MySQLOpsRequestTypeUpgrade:
+		return string(MySQLOpsRequestTypeUpdateVersion)
+	}
 	return string(e.Spec.Type)
+}
+
+func (e MySQLOpsRequest) GetUpdateVersionSpec() *MySQLUpdateVersionSpec {
+	if e.Spec.UpdateVersion != nil {
+		return e.Spec.UpdateVersion
+	}
+	return e.Spec.Upgrade
 }
 
 func (e *MySQLOpsRequest) GetDBRefName() string {

@@ -54,7 +54,7 @@ type PgBouncerOpsRequestSpec struct {
 	// Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.
 	Type PgBouncerOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading PgBouncer
-	Upgrade *PgBouncerUpgradeSpec `json:"upgrade,omitempty"`
+	UpdateVersion *PgBouncerUpdateVersionSpec `json:"UpdateVersion,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *PgBouncerHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
@@ -92,7 +92,7 @@ const (
 // after updating, horizontal scaling etc.
 type PgBouncerReplicaReadinessCriteria struct{}
 
-type PgBouncerUpgradeSpec struct {
+type PgBouncerUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion     string                             `json:"targetVersion,omitempty"`
 	ReadinessCriteria *PgBouncerReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`

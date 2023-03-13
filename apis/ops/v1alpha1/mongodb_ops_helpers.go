@@ -63,8 +63,19 @@ func (e *MongoDBOpsRequest) GetObjectMeta() metav1.ObjectMeta {
 	return e.ObjectMeta
 }
 
-func (e *MongoDBOpsRequest) GetRequestType() string {
+func (e MongoDBOpsRequest) GetRequestType() string {
+	switch e.Spec.Type {
+	case MongoDBOpsRequestTypeUpgrade:
+		return string(MongoDBOpsRequestTypeUpdateVersion)
+	}
 	return string(e.Spec.Type)
+}
+
+func (e MongoDBOpsRequest) GetUpdateVersionSpec() *MongoDBUpdateVersionSpec {
+	if e.Spec.UpdateVersion != nil {
+		return e.Spec.UpdateVersion
+	}
+	return e.Spec.Upgrade
 }
 
 func (e *MongoDBOpsRequest) GetDBRefName() string {
