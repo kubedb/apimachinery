@@ -63,12 +63,12 @@ func (e *ElasticsearchOpsRequest) GetObjectMeta() metav1.ObjectMeta {
 	return e.ObjectMeta
 }
 
-func (e ElasticsearchOpsRequest) GetRequestType() string {
+func (e ElasticsearchOpsRequest) GetRequestType() any {
 	switch e.Spec.Type {
 	case ElasticsearchOpsRequestTypeUpgrade:
-		return string(PostgresOpsRequestTypeUpdateVersion)
+		return ElasticsearchOpsRequestTypeUpdateVersion
 	}
-	return string(e.Spec.Type)
+	return e.Spec.Type
 }
 
 func (e ElasticsearchOpsRequest) GetUpdateVersionSpec() *ElasticsearchUpdateVersionSpec {

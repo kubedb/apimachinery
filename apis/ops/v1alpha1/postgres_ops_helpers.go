@@ -27,7 +27,7 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (_ PostgresOpsRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (p PostgresOpsRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralPostgresOpsRequest))
 }
 
@@ -59,33 +59,33 @@ func (p PostgresOpsRequest) ValidateSpecs() error {
 
 var _ Accessor = &PostgresOpsRequest{}
 
-func (e *PostgresOpsRequest) GetObjectMeta() metav1.ObjectMeta {
-	return e.ObjectMeta
+func (p *PostgresOpsRequest) GetObjectMeta() metav1.ObjectMeta {
+	return p.ObjectMeta
 }
 
-func (e PostgresOpsRequest) GetRequestType() string {
-	switch e.Spec.Type {
+func (p PostgresOpsRequest) GetRequestType() any {
+	switch p.Spec.Type {
 	case PostgresOpsRequestTypeUpgrade:
-		return string(PostgresOpsRequestTypeUpdateVersion)
+		return PostgresOpsRequestTypeUpdateVersion
 	}
-	return string(e.Spec.Type)
+	return p.Spec.Type
 }
 
-func (e PostgresOpsRequest) GetUpdateVersionSpec() *PostgresUpdateVersionSpec {
-	if e.Spec.UpdateVersion != nil {
-		return e.Spec.UpdateVersion
+func (p PostgresOpsRequest) GetUpdateVersionSpec() *PostgresUpdateVersionSpec {
+	if p.Spec.UpdateVersion != nil {
+		return p.Spec.UpdateVersion
 	}
-	return e.Spec.Upgrade
+	return p.Spec.Upgrade
 }
 
-func (e *PostgresOpsRequest) GetDBRefName() string {
-	return e.Spec.DatabaseRef.Name
+func (p *PostgresOpsRequest) GetDBRefName() string {
+	return p.Spec.DatabaseRef.Name
 }
 
-func (e *PostgresOpsRequest) GetStatus() OpsRequestStatus {
-	return e.Status
+func (p *PostgresOpsRequest) GetStatus() OpsRequestStatus {
+	return p.Status
 }
 
-func (e *PostgresOpsRequest) SetStatus(s OpsRequestStatus) {
-	e.Status = s
+func (p *PostgresOpsRequest) SetStatus(s OpsRequestStatus) {
+	p.Status = s
 }
