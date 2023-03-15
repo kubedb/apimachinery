@@ -13,3 +13,7 @@ func GetFinalizer() string {
 func (_ MongoDBArchiver) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource("MongoDBArchiver"))
 }
+
+func (_ PostgresArchiver) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource("PostgresArchiver"))
+}

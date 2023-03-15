@@ -12,7 +12,6 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/kubernetes-csi/external-snapshotter/client/v6 v6.1.0
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.59.1
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.59.1
 	go.bytebuilders.dev/audit v0.0.27
 	gomodules.xyz/encoding v0.0.7
@@ -35,7 +34,7 @@ require (
 	kmodules.xyz/objectstore-api v0.25.1
 	kmodules.xyz/offshoot-api v0.25.4
 	kmodules.xyz/webhook-runtime v0.25.0
-	kubeops.dev/sidekick v0.0.2-0.20230113102427-9848f83b2f0f
+	kubeops.dev/sidekick v0.0.2-0.20230304025549-a99a1477617d
 	sigs.k8s.io/controller-runtime v0.13.1
 	sigs.k8s.io/yaml v1.3.0
 	stash.appscode.dev/apimachinery v0.30.0

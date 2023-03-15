@@ -25,3 +25,11 @@ type MongoDBArchiverListerExpansion interface{}
 // MongoDBArchiverNamespaceListerExpansion allows custom methods to be added to
 // MongoDBArchiverNamespaceLister.
 type MongoDBArchiverNamespaceListerExpansion interface{}
+
+// PostgresArchiverListerExpansion allows custom methods to be added to
+// PostgresArchiverLister.
+type PostgresArchiverListerExpansion interface{}
+
+// PostgresArchiverNamespaceListerExpansion allows custom methods to be added to
+// PostgresArchiverNamespaceLister.
+type PostgresArchiverNamespaceListerExpansion interface{}

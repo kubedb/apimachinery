@@ -63,6 +63,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	// Group=archiver.kubedb.com, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithResource("mongodbarchivers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().MongoDBArchivers().Informer()}, nil
+	case v1alpha1.SchemeGroupVersion.WithResource("postgresarchivers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().PostgresArchivers().Informer()}, nil
 
 		// Group=autoscaling.kubedb.com, Version=v1alpha1
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("elasticsearchautoscalers"):

@@ -432,6 +432,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MongoDBArchiverList":          schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverList(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MongoDBArchiverSpec":          schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverSpec(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MongoDBArchiverStatus":        schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverStatus(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiver":             schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiver(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverList":         schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverList(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverSpec":         schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverStatus":       schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverStatus(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions":             schema_apimachinery_apis_archiver_v1alpha1_SchedulerOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions":             schema_apimachinery_apis_archiver_v1alpha1_WalBackupOptions(ref),
 	}
@@ -21224,6 +21228,189 @@ func schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverStatus(ref common
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "MongoDBArchiverStatus defines the observed state of MongoDBArchiver",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the archiver",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"databaseRefs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the information of all the database managed by this DB",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiver(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverStatus"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiver"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiver"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PostgresArchiverSpec defines the desired state of PostgresArchiver",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databases": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers"),
+						},
+					},
+					"pause": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"retentionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"fullBackup": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions"),
+						},
+					},
+					"walBackup": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions"),
+						},
+					},
+					"backupStorage": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage"),
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"databases"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PostgresArchiverStatus defines the observed state of PostgresArchiver",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"phase": {

@@ -48,6 +48,26 @@ spec:
             type: object
           spec:
             properties:
+              archiver:
+                properties:
+                  CSISnapshotter:
+                    properties:
+                      addonName:
+                        type: string
+                    required:
+                    - addonName
+                    type: object
+                  walg:
+                    properties:
+                      image:
+                        type: string
+                    required:
+                    - image
+                    type: object
+                required:
+                - CSISnapshotter
+                - walg
+                type: object
               coordinator:
                 properties:
                   image:

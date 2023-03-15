@@ -33,6 +33,10 @@ func (c *FakeArchiverV1alpha1) MongoDBArchivers(namespace string) v1alpha1.Mongo
 	return &FakeMongoDBArchivers{c, namespace}
 }
 
+func (c *FakeArchiverV1alpha1) PostgresArchivers(namespace string) v1alpha1.PostgresArchiverInterface {
+	return &FakePostgresArchivers{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeArchiverV1alpha1) RESTClient() rest.Interface {
