@@ -27,7 +27,7 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (_ PgBouncerOpsRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (p PgBouncerOpsRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralPgBouncerOpsRequest))
 }
 
@@ -59,26 +59,26 @@ func (p PgBouncerOpsRequest) ValidateSpecs() error {
 
 var _ Accessor = &PgBouncerOpsRequest{}
 
-func (e *PgBouncerOpsRequest) GetObjectMeta() metav1.ObjectMeta {
-	return e.ObjectMeta
+func (p *PgBouncerOpsRequest) GetObjectMeta() metav1.ObjectMeta {
+	return p.ObjectMeta
 }
 
-func (e PgBouncerOpsRequest) GetRequestType() string {
-	return string(e.Spec.Type)
+func (p PgBouncerOpsRequest) GetRequestType() any {
+	return p.Spec.Type
 }
 
-func (e PgBouncerOpsRequest) GetUpdateVersionSpec() *PgBouncerUpdateVersionSpec {
-	return e.Spec.UpdateVersion
+func (p PgBouncerOpsRequest) GetUpdateVersionSpec() *PgBouncerUpdateVersionSpec {
+	return p.Spec.UpdateVersion
 }
 
-func (e *PgBouncerOpsRequest) GetDBRefName() string {
-	return e.Spec.ServerRef.Name
+func (p *PgBouncerOpsRequest) GetDBRefName() string {
+	return p.Spec.ServerRef.Name
 }
 
-func (e *PgBouncerOpsRequest) GetStatus() OpsRequestStatus {
-	return e.Status
+func (p *PgBouncerOpsRequest) GetStatus() OpsRequestStatus {
+	return p.Status
 }
 
-func (e *PgBouncerOpsRequest) SetStatus(s OpsRequestStatus) {
-	e.Status = s
+func (p *PgBouncerOpsRequest) SetStatus(s OpsRequestStatus) {
+	p.Status = s
 }
