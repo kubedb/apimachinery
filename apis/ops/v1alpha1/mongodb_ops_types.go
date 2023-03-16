@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+//go:generate go-enum --mustparse --names --values
 package v1alpha1
 
 import (
@@ -84,28 +85,8 @@ type MongoDBOpsRequestSpec struct {
 }
 
 // +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;Reprovision
+// ENUM(Upgrade, UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, Reprovision)
 type MongoDBOpsRequestType string
-
-const (
-	// Deprecated. Use UpdateVersion
-	MongoDBOpsRequestTypeUpgrade MongoDBOpsRequestType = "Upgrade"
-	// used for UpdateVersion operation
-	MongoDBOpsRequestTypeUpdateVersion MongoDBOpsRequestType = "UpdateVersion"
-	// used for HorizontalScaling operation
-	MongoDBOpsRequestTypeHorizontalScaling MongoDBOpsRequestType = "HorizontalScaling"
-	// used for VerticalScaling operation
-	MongoDBOpsRequestTypeVerticalScaling MongoDBOpsRequestType = "VerticalScaling"
-	// used for VolumeExpansion operation
-	MongoDBOpsRequestTypeVolumeExpansion MongoDBOpsRequestType = "VolumeExpansion"
-	// used for Restart operation
-	MongoDBOpsRequestTypeRestart MongoDBOpsRequestType = "Restart"
-	// used for Reconfigure operation
-	MongoDBOpsRequestTypeReconfigure MongoDBOpsRequestType = "Reconfigure"
-	// used for ReconfigureTLS operation
-	MongoDBOpsRequestTypeReconfigureTLSs MongoDBOpsRequestType = "ReconfigureTLS"
-	// used for Reprovision operation
-	MongoDBOpsRequestTypeReprovision MongoDBOpsRequestType = "Reprovision"
-)
 
 // MongoDBReplicaReadinessCriteria is the criteria for checking readiness of a MongoDB pod
 // after restarting the pod

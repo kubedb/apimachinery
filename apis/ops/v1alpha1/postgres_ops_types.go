@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+//go:generate go-enum --mustparse --names --values
 package v1alpha1
 
 import (
@@ -92,26 +93,8 @@ type PostgresOpsRequestSpec struct {
 }
 
 // +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
+// ENUM(Upgrade, UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
 type PostgresOpsRequestType string
-
-const (
-	// Deprecated. Use UpdateVersion
-	PostgresOpsRequestTypeUpgrade PostgresOpsRequestType = "Upgrade"
-	// used for UpdateVersion operation
-	PostgresOpsRequestTypeUpdateVersion PostgresOpsRequestType = "UpdateVersion"
-	// used for HorizontalScaling operation
-	PostgresOpsRequestTypeHorizontalScaling PostgresOpsRequestType = "HorizontalScaling"
-	// used for VerticalScaling operation
-	PostgresOpsRequestTypeVerticalScaling PostgresOpsRequestType = "VerticalScaling"
-	// used for VolumeExpansion operation
-	PostgresOpsRequestTypeVolumeExpansion PostgresOpsRequestType = "VolumeExpansion"
-	// used for Restart operation
-	PostgresOpsRequestTypeRestart PostgresOpsRequestType = "Restart"
-	// used for Reconfigure operation
-	PostgresOpsRequestTypeReconfigure PostgresOpsRequestType = "Reconfigure"
-	// used for ReconfigureTLS operation
-	PostgresOpsRequestTypeReconfigureTLSs PostgresOpsRequestType = "ReconfigureTLS"
-)
 
 type PostgresUpdateVersionSpec struct {
 	// Specifies the target version name from catalog

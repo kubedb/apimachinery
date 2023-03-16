@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+//go:generate go-enum --mustparse --names --values
 package v1alpha1
 
 import (
@@ -79,26 +80,8 @@ type ElasticsearchOpsRequestSpec struct {
 }
 
 // +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
+// ENUM(Upgrade, UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
 type ElasticsearchOpsRequestType string
-
-const (
-	// Deprecated. Use UpdateVersion
-	ElasticsearchOpsRequestTypeUpgrade ElasticsearchOpsRequestType = "Upgrade"
-	// used for UpdateVersion operation
-	ElasticsearchOpsRequestTypeUpdateVersion ElasticsearchOpsRequestType = "UpdateVersion"
-	// used for HorizontalScaling operation
-	ElasticsearchOpsRequestTypeHorizontalScaling ElasticsearchOpsRequestType = "HorizontalScaling"
-	// used for VerticalScaling operation
-	ElasticsearchOpsRequestTypeVerticalScaling ElasticsearchOpsRequestType = "VerticalScaling"
-	// used for VolumeExpansion operation
-	ElasticsearchOpsRequestTypeVolumeExpansion ElasticsearchOpsRequestType = "VolumeExpansion"
-	// used for Restart operation
-	ElasticsearchOpsRequestTypeRestart ElasticsearchOpsRequestType = "Restart"
-	// used for Reconfigure operation
-	ElasticsearchOpsRequestTypeReconfigure ElasticsearchOpsRequestType = "Reconfigure"
-	// used for ReconfigureTLS operation
-	ElasticsearchOpsRequestTypeReconfigureTLSs ElasticsearchOpsRequestType = "ReconfigureTLS"
-)
 
 // ElasticsearchReplicaReadinessCriteria is the criteria for checking readiness of an Elasticsearch database
 type ElasticsearchReplicaReadinessCriteria struct{}
