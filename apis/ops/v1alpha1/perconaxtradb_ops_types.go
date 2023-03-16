@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+//go:generate go-enum --mustparse --names --values
 package v1alpha1
 
 import (
@@ -79,26 +80,8 @@ type PerconaXtraDBOpsRequestSpec struct {
 }
 
 // +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
+// ENUM(Upgrade, UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
 type PerconaXtraDBOpsRequestType string
-
-const (
-	// Deprecated. Use UpdateVersion
-	PerconaXtraDBOpsRequestTypeUpgrade PerconaXtraDBOpsRequestType = "Upgrade"
-	// used for UpdateVersion operation
-	PerconaXtraDBOpsRequestTypeUpdateVersion PerconaXtraDBOpsRequestType = "UpdateVersion"
-	// used for HorizontalScaling operation
-	PerconaXtraDBOpsRequestTypeHorizontalScaling PerconaXtraDBOpsRequestType = "HorizontalScaling"
-	// used for VerticalScaling operation
-	PerconaXtraDBOpsRequestTypeVerticalScaling PerconaXtraDBOpsRequestType = "VerticalScaling"
-	// used for VolumeExpansion operation
-	PerconaXtraDBOpsRequestTypeVolumeExpansion PerconaXtraDBOpsRequestType = "VolumeExpansion"
-	// used for Restart operation
-	PerconaXtraDBOpsRequestTypeRestart PerconaXtraDBOpsRequestType = "Restart"
-	// used for Reconfigure operation
-	PerconaXtraDBOpsRequestTypeReconfigure PerconaXtraDBOpsRequestType = "Reconfigure"
-	// used for ReconfigureTLS operation
-	PerconaXtraDBOpsRequestTypeReconfigureTLSs PerconaXtraDBOpsRequestType = "ReconfigureTLS"
-)
 
 // PerconaXtraDBReplicaReadinessCriteria is the criteria for checking readiness of an PerconaXtraDB database
 type PerconaXtraDBReplicaReadinessCriteria struct{}

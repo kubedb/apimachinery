@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+//go:generate go-enum --mustparse --names --values
 package v1alpha1
 
 import (
@@ -79,26 +80,8 @@ type RedisOpsRequestSpec struct {
 }
 
 // +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;ReplaceSentinel
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, ReplaceSentinel)
 type RedisOpsRequestType string
-
-const (
-	// used for UpdateVersion operation
-	RedisOpsRequestTypeUpdateVersion RedisOpsRequestType = "UpdateVersion"
-	// used for HorizontalScaling operation
-	RedisOpsRequestTypeHorizontalScaling RedisOpsRequestType = "HorizontalScaling"
-	// used for VerticalScaling operation
-	RedisOpsRequestTypeVerticalScaling RedisOpsRequestType = "VerticalScaling"
-	// used for VolumeExpansion operation
-	RedisOpsRequestTypeVolumeExpansion RedisOpsRequestType = "VolumeExpansion"
-	// used for Restart operation
-	RedisOpsRequestTypeRestart RedisOpsRequestType = "Restart"
-	// used for Reconfigure operation
-	RedisOpsRequestTypeReconfigure RedisOpsRequestType = "Reconfigure"
-	// used for ReconfigureTLS operation
-	RedisOpsRequestTypeReconfigureTLSs RedisOpsRequestType = "ReconfigureTLS"
-	// used for Replace Redis Sentinel monitoring
-	RedisOpsRequestTypeReplaceSentinel RedisOpsRequestType = "ReplaceSentinel"
-)
 
 type RedisTLSSpec struct {
 	*TLSSpec `json:",inline"`

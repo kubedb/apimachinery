@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+//go:generate go-enum --mustparse --names --values
 package v1alpha1
 
 import (
@@ -73,24 +74,8 @@ type EtcdOpsRequestSpec struct {
 }
 
 // +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
 type EtcdOpsRequestType string
-
-const (
-	// used for UpdateVersion operation
-	EtcdOpsRequestTypeUpdateVersion EtcdOpsRequestType = "UpdateVersion"
-	// used for HorizontalScaling operation
-	EtcdOpsRequestTypeHorizontalScaling EtcdOpsRequestType = "HorizontalScaling"
-	// used for VerticalScaling operation
-	EtcdOpsRequestTypeVerticalScaling EtcdOpsRequestType = "VerticalScaling"
-	// used for VolumeExpansion operation
-	EtcdOpsRequestTypeVolumeExpansion EtcdOpsRequestType = "VolumeExpansion"
-	// used for Restart operation
-	EtcdOpsRequestTypeRestart EtcdOpsRequestType = "Restart"
-	// used for Reconfigure operation
-	EtcdOpsRequestTypeReconfigure EtcdOpsRequestType = "Reconfigure"
-	// used for ReconfigureTLS operation
-	EtcdOpsRequestTypeReconfigureTLSs EtcdOpsRequestType = "ReconfigureTLS"
-)
 
 // EtcdReplicaReadinessCriteria is the criteria for checking readiness of a Etcd pod
 // after updating, horizontal scaling etc.

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+//go:generate go-enum --mustparse --names --values
 package v1alpha1
 
 import (
@@ -71,22 +72,8 @@ type PgBouncerOpsRequestSpec struct {
 }
 
 // +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;Restart;Reconfigure;ReconfigureTLS
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, Restart, Reconfigure, ReconfigureTLS)
 type PgBouncerOpsRequestType string
-
-const (
-	// used for UpdateVersion operation
-	PgBouncerOpsRequestTypeUpdateVersion PgBouncerOpsRequestType = "UpdateVersion"
-	// used for HorizontalScaling operation
-	PgBouncerOpsRequestTypeHorizontalScaling PgBouncerOpsRequestType = "HorizontalScaling"
-	// used for VerticalScaling operation
-	PgBouncerOpsRequestTypeVerticalScaling PgBouncerOpsRequestType = "VerticalScaling"
-	// used for Restart operation
-	PgBouncerOpsRequestTypeRestart PgBouncerOpsRequestType = "Restart"
-	// used for Reconfigure operation
-	PgBouncerOpsRequestTypeReconfigure PgBouncerOpsRequestType = "Reconfigure"
-	// used for ReconfigureTLS operation
-	PgBouncerOpsRequestTypeReconfigureTLSs PgBouncerOpsRequestType = "ReconfigureTLS"
-)
 
 // PgBouncerReplicaReadinessCriteria is the criteria for checking readiness of a PgBouncer pod
 // after updating, horizontal scaling etc.

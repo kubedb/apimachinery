@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+//go:generate go-enum --mustparse --names --values
 package v1alpha1
 
 import (
@@ -79,26 +80,8 @@ type MySQLOpsRequestSpec struct {
 }
 
 // +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
+// ENUM(Upgrade, UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
 type MySQLOpsRequestType string
-
-const (
-	// Deprecated. Use UpdateVersion
-	MySQLOpsRequestTypeUpgrade MySQLOpsRequestType = "Upgrade"
-	// used for UpdateVersion operation
-	MySQLOpsRequestTypeUpdateVersion MySQLOpsRequestType = "UpdateVersion"
-	// used for HorizontalScaling operation
-	MySQLOpsRequestTypeHorizontalScaling MySQLOpsRequestType = "HorizontalScaling"
-	// used for VerticalScaling operation
-	MySQLOpsRequestTypeVerticalScaling MySQLOpsRequestType = "VerticalScaling"
-	// used for VolumeExpansion operation
-	MySQLOpsRequestTypeVolumeExpansion MySQLOpsRequestType = "VolumeExpansion"
-	// used for Restart operation
-	MySQLOpsRequestTypeRestart MySQLOpsRequestType = "Restart"
-	// used for Reconfigure operation
-	MySQLOpsRequestTypeReconfigure MySQLOpsRequestType = "Reconfigure"
-	// used for ReconfigureTLS operation
-	MySQLOpsRequestTypeReconfigureTLSs MySQLOpsRequestType = "ReconfigureTLS"
-)
 
 // MySQLReplicaReadinessCriteria is the criteria for checking readiness of a MySQL pod
 // after updating, horizontal scaling etc.
