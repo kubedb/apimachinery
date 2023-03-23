@@ -18,7 +18,6 @@ package v1alpha2
 
 import (
 	"fmt"
-	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"path/filepath"
 	"strings"
 
@@ -26,6 +25,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
