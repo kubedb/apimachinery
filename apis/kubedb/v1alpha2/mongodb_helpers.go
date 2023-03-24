@@ -359,13 +359,6 @@ func (m MongoDB) GetAuthSecretName() string {
 	return meta_util.NameWithSuffix(m.OffshootName(), "auth")
 }
 
-func (m MongoDB) GetKeyfileSecretName() string {
-	if m.Spec.KeyFileSecret != nil && m.Spec.KeyFileSecret.Name != "" {
-		return m.Spec.KeyFileSecret.Name
-	}
-	return meta_util.NameWithSuffix(m.OffshootName(), "key")
-}
-
 func (m MongoDB) ServiceName() string {
 	return m.OffshootName()
 }
@@ -646,22 +639,6 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 			apis.SetDefaultResourceLimits(&m.Spec.Hidden.PodTemplate.Spec.Resources, DefaultResources)
 		}
 
-		if m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle == nil {
-			m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle = new(core.Lifecycle)
-		}
-
-		m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle.PreStop = &core.LifecycleHandler{
-			Exec: &core.ExecAction{
-				Command: []string{
-					"bash",
-					"-c",
-					fmt.Sprintf(
-						`%s admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD --quiet --eval "db.adminCommand({ shutdown: 1 })" || true`,
-						m.GetEntryCommand(mgVersion)),
-				},
-			},
-		}
-
 		if m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName == "" {
 			m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 		}
@@ -883,14 +860,6 @@ func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion, isArbiter 
 }
 
 func (m *MongoDB) GetDefaultLivenessProbeSpec(mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) *core.Probe {
-	var (
-		period  int32 = 10
-		timeout int32 = 5
-	)
-	if m.isLatestVersion(mgVersion) {
-		period = 20
-		timeout = 10
-	}
 	return &core.Probe{
 		ProbeHandler: core.ProbeHandler{
 			Exec: &core.ExecAction{
@@ -898,21 +867,13 @@ func (m *MongoDB) GetDefaultLivenessProbeSpec(mgVersion *v1alpha1.MongoDBVersion
 			},
 		},
 		FailureThreshold: 3,
-		PeriodSeconds:    period,
+		PeriodSeconds:    10,
 		SuccessThreshold: 1,
-		TimeoutSeconds:   timeout,
+		TimeoutSeconds:   5,
 	}
 }
 
 func (m *MongoDB) GetDefaultReadinessProbeSpec(mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) *core.Probe {
-	var (
-		period  int32 = 10
-		timeout int32 = 1
-	)
-	if m.isLatestVersion(mgVersion) {
-		period = 20
-		timeout = 10
-	}
 	return &core.Probe{
 		ProbeHandler: core.ProbeHandler{
 			Exec: &core.ExecAction{
@@ -920,9 +881,9 @@ func (m *MongoDB) GetDefaultReadinessProbeSpec(mgVersion *v1alpha1.MongoDBVersio
 			},
 		},
 		FailureThreshold: 3,
-		PeriodSeconds:    period,
+		PeriodSeconds:    10,
 		SuccessThreshold: 1,
-		TimeoutSeconds:   timeout,
+		TimeoutSeconds:   5,
 	}
 }
 
