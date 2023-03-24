@@ -260,7 +260,7 @@ gen-crd-protos-ui-v1alpha1:
 			--packages=+sigs.k8s.io/controller-runtime/pkg/scheme,-k8s.io/api/core/v1,-k8s.io/api/apps/v1,-k8s.io/api/autoscaling/v2beta2,-kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,-kmodules.xyz/monitoring-agent-api/api/v1,-kmodules.xyz/objectstore-api/api/v1,-kmodules.xyz/offshoot-api/api/v1,-kmodules.xyz/client-go/api/v1,kubedb.dev/apimachinery/apis/ui/v1alpha1,kubedb.dev/apimachinery/apis/kubedb/v1alpha2
 
 .PHONY: gen-enum
-gen-enum:
+gen-enum: $(BUILD_DIRS)
 	@docker run                                                 \
 	    -i                                                      \
 	    --rm                                                    \
