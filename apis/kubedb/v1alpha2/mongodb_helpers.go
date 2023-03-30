@@ -639,20 +639,6 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 			apis.SetDefaultResourceLimits(&m.Spec.Hidden.PodTemplate.Spec.Resources, DefaultResources)
 		}
 
-		if m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle == nil {
-			m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle = new(core.Lifecycle)
-		}
-
-		m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Lifecycle.PreStop = &core.LifecycleHandler{
-			Exec: &core.ExecAction{
-				Command: []string{
-					"bash",
-					"-c",
-					"mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD --quiet --eval \"db.adminCommand({ shutdown: 1 })\" || true",
-				},
-			},
-		}
-
 		if m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName == "" {
 			m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 		}
@@ -828,6 +814,18 @@ func (m *MongoDB) SetTLSDefaults() {
 	})
 }
 
+func (m *MongoDB) isVersion6OrLater(mgVersion *v1alpha1.MongoDBVersion) bool {
+	v, _ := semver.NewVersion(mgVersion.Spec.Version)
+	return v.Major() >= 6
+}
+
+func (m *MongoDB) GetEntryCommand(mgVersion *v1alpha1.MongoDBVersion) string {
+	if m.isVersion6OrLater(mgVersion) {
+		return "mongosh"
+	}
+	return "mongo"
+}
+
 func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) []string {
 	var sslArgs string
 	if m.Spec.SSLMode == SSLModeRequireSSL {
@@ -854,10 +852,10 @@ func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion, isArbiter 
 	return []string{
 		"bash",
 		"-c",
-		fmt.Sprintf(`set -x; if [[ $(mongo admin --host=localhost %v %v --quiet --eval "db.adminCommand('ping').ok" ) -eq "1" ]]; then 
+		fmt.Sprintf(`set -x; if [[ $(%s admin --host=localhost %v %v --quiet --eval "db.adminCommand('ping').ok" ) -eq "1" ]]; then 
           exit 0
         fi
-        exit 1`, sslArgs, authArgs),
+        exit 1`, m.GetEntryCommand(mgVersion), sslArgs, authArgs),
 	}
 }
 
