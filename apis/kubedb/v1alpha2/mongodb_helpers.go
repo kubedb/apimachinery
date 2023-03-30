@@ -814,13 +814,13 @@ func (m *MongoDB) SetTLSDefaults() {
 	})
 }
 
-func (m *MongoDB) isLatestVersion(mgVersion *v1alpha1.MongoDBVersion) bool {
+func (m *MongoDB) isVersion6OrLater(mgVersion *v1alpha1.MongoDBVersion) bool {
 	v, _ := semver.NewVersion(mgVersion.Spec.Version)
 	return v.Major() >= 6
 }
 
 func (m *MongoDB) GetEntryCommand(mgVersion *v1alpha1.MongoDBVersion) string {
-	if m.isLatestVersion(mgVersion) {
+	if m.isVersion6OrLater(mgVersion) {
 		return "mongosh"
 	}
 	return "mongo"

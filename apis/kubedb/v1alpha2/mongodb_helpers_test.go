@@ -41,6 +41,15 @@ var testTopology = &core_util.Topology{
 	LabelInstanceType: core.LabelInstanceType,
 }
 
+var mongodbVersion = v1alpha1.MongoDBVersion{
+	ObjectMeta: metav1.ObjectMeta{
+		Name: "3.6-v2",
+	},
+	Spec: v1alpha1.MongoDBVersionSpec{
+		Version: "3.6.0",
+	},
+}
+
 func TestMongoDB_HostAddress(t *testing.T) {
 	mongodb := &MongoDB{
 		ObjectMeta: metav1.ObjectMeta{
@@ -89,7 +98,7 @@ func TestMongoDB_HostAddress(t *testing.T) {
 		},
 	}
 
-	mongodb.SetDefaults(&v1alpha1.MongoDBVersion{}, testTopology)
+	mongodb.SetDefaults(&mongodbVersion, testTopology)
 
 	shardDSN := mongodb.HostAddress()
 	t.Log(shardDSN)
@@ -155,7 +164,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 	shardDSN := mongodb.ShardDSN(0)
 	t.Log(shardDSN)
 
-	mongodb.SetDefaults(&v1alpha1.MongoDBVersion{}, testTopology)
+	mongodb.SetDefaults(&mongodbVersion, testTopology)
 }
 
 func TestMongoDB_ConfigSvrDSN(t *testing.T) {
@@ -229,5 +238,5 @@ func TestMongoDB_SetDefaults(t *testing.T) {
 		},
 	}
 
-	mongodb.SetDefaults(&v1alpha1.MongoDBVersion{}, testTopology)
+	mongodb.SetDefaults(&mongodbVersion, testTopology)
 }
