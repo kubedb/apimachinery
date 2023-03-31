@@ -28639,10 +28639,10 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
-        "upgradeConstraints": {
-          "description": "upgrade constraints",
+        "updateConstraints": {
+          "description": "update constraints",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpdateConstraints"
         },
         "version": {
           "description": "Version",
@@ -29072,10 +29072,10 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
-        "upgradeConstraints": {
-          "description": "upgrade constraints",
+        "updateConstraints": {
+          "description": "update constraints",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpdateConstraints"
         },
         "version": {
           "description": "Version",
@@ -29084,7 +29084,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLUpgradeConstraints": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLUpdateConstraints": {
       "type": "object",
       "properties": {
         "allowlist": {
@@ -29356,10 +29356,10 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
-        "upgradeConstraints": {
-          "description": "upgrade constraints",
+        "updateConstraints": {
+          "description": "update constraints",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLUpgradeConstraints"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLUpdateConstraints"
         },
         "version": {
           "description": "Version",
@@ -29539,10 +29539,10 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
-        "upgradeConstraints": {
-          "description": "upgrade constraints",
+        "updateConstraints": {
+          "description": "update constraints",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpdateConstraints"
         },
         "version": {
           "description": "Version",
@@ -29748,10 +29748,10 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
-        "upgradeConstraints": {
-          "description": "upgrade constraints",
+        "updateConstraints": {
+          "description": "update constraints",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpdateConstraints"
         },
         "version": {
           "description": "Version",
@@ -29887,10 +29887,10 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ProxySQLVersionProxysql"
         },
-        "upgradeConstraints": {
-          "description": "upgrade constraints",
+        "updateConstraints": {
+          "description": "update constraints",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpdateConstraints"
         },
         "version": {
           "description": "Version",
@@ -30069,10 +30069,10 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
-        "upgradeConstraints": {
-          "description": "upgrade constraints",
+        "updateConstraints": {
+          "description": "update constraints",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpdateConstraints"
         },
         "version": {
           "description": "Version",
@@ -30094,8 +30094,8 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpgradeConstraints": {
-      "description": "UpgradeConstraints specifies the constraints that need to be considered during version upgrade",
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpdateConstraints": {
+      "description": "UpdateConstraints specifies the constraints that need to be considered during version upgrade",
       "type": "object",
       "properties": {
         "allowlist": {
