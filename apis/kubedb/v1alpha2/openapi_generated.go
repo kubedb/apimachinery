@@ -22773,7 +22773,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MariaDBSpec(ref common.ReferenceCa
 					},
 					"wsrepSSTMethod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "WsrepSSTMethod is used to define the STATE-SNAPSHOT-TRANSFER method to be used in the Galera cluster default value : mariabackup",
+							Description: "WsrepSSTMethod is used to define the STATE-SNAPSHOT-TRANSFER method to be used in the Galera cluster default value : rsync",
 							Type:        []string{"string"},
 							Format:      "",
 						},
