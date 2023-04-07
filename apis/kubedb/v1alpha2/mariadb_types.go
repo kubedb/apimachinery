@@ -73,6 +73,7 @@ type MariaDBSpec struct {
 
 	// WsrepSSTMethod is used to define the STATE-SNAPSHOT-TRANSFER method to be used in the Galera cluster
 	// default value : rsync
+	// +kubebuilder:default:=rsync
 	// +optional
 	WsrepSSTMethod GaleraWsrepSSTMethod `json:"wsrepSSTMethod,omitempty"`
 
