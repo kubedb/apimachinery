@@ -37504,136 +37504,6 @@
       },
       "x-kubernetes-map-type": "atomic"
     },
-    "io.k8s.api.core.v1.Volume": {
-      "description": "Volume represents a named volume in a pod that may be accessed by any container in the pod.",
-      "type": "object",
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "awsElasticBlockStore": {
-          "description": "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
-          "$ref": "#/definitions/io.k8s.api.core.v1.AWSElasticBlockStoreVolumeSource"
-        },
-        "azureDisk": {
-          "description": "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.AzureDiskVolumeSource"
-        },
-        "azureFile": {
-          "description": "azureFile represents an Azure File Service mount on the host and bind mount to the pod.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.AzureFileVolumeSource"
-        },
-        "cephfs": {
-          "description": "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime",
-          "$ref": "#/definitions/io.k8s.api.core.v1.CephFSVolumeSource"
-        },
-        "cinder": {
-          "description": "cinder represents a cinder volume attached and mounted on kubelets host machine. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
-          "$ref": "#/definitions/io.k8s.api.core.v1.CinderVolumeSource"
-        },
-        "configMap": {
-          "description": "configMap represents a configMap that should populate this volume",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ConfigMapVolumeSource"
-        },
-        "csi": {
-          "description": "csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers (Beta feature).",
-          "$ref": "#/definitions/io.k8s.api.core.v1.CSIVolumeSource"
-        },
-        "downwardAPI": {
-          "description": "downwardAPI represents downward API about the pod that should populate this volume",
-          "$ref": "#/definitions/io.k8s.api.core.v1.DownwardAPIVolumeSource"
-        },
-        "emptyDir": {
-          "description": "emptyDir represents a temporary directory that shares a pod's lifetime. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir",
-          "$ref": "#/definitions/io.k8s.api.core.v1.EmptyDirVolumeSource"
-        },
-        "ephemeral": {
-          "description": "ephemeral represents a volume that is handled by a cluster storage driver. The volume's lifecycle is tied to the pod that defines it - it will be created before the pod starts, and deleted when the pod is removed.\n\nUse this if: a) the volume is only needed while the pod runs, b) features of normal volumes like restoring from snapshot or capacity\n   tracking are needed,\nc) the storage driver is specified through a storage class, and d) the storage driver supports dynamic volume provisioning through\n   a PersistentVolumeClaim (see EphemeralVolumeSource for more\n   information on the connection between this volume type\n   and PersistentVolumeClaim).\n\nUse PersistentVolumeClaim or one of the vendor-specific APIs for volumes that persist for longer than the lifecycle of an individual pod.\n\nUse CSI for light-weight local ephemeral volumes if the CSI driver is meant to be used that way - see the documentation of the driver for more information.\n\nA pod can use both types of ephemeral volumes and persistent volumes at the same time.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.EphemeralVolumeSource"
-        },
-        "fc": {
-          "description": "fc represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.FCVolumeSource"
-        },
-        "flexVolume": {
-          "description": "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.FlexVolumeSource"
-        },
-        "flocker": {
-          "description": "flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running",
-          "$ref": "#/definitions/io.k8s.api.core.v1.FlockerVolumeSource"
-        },
-        "gcePersistentDisk": {
-          "description": "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
-          "$ref": "#/definitions/io.k8s.api.core.v1.GCEPersistentDiskVolumeSource"
-        },
-        "gitRepo": {
-          "description": "gitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.GitRepoVolumeSource"
-        },
-        "glusterfs": {
-          "description": "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
-          "$ref": "#/definitions/io.k8s.api.core.v1.GlusterfsVolumeSource"
-        },
-        "hostPath": {
-          "description": "hostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath",
-          "$ref": "#/definitions/io.k8s.api.core.v1.HostPathVolumeSource"
-        },
-        "iscsi": {
-          "description": "iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://examples.k8s.io/volumes/iscsi/README.md",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ISCSIVolumeSource"
-        },
-        "name": {
-          "description": "name of the volume. Must be a DNS_LABEL and unique within the pod. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string",
-          "default": ""
-        },
-        "nfs": {
-          "description": "nfs represents an NFS mount on the host that shares a pod's lifetime More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs",
-          "$ref": "#/definitions/io.k8s.api.core.v1.NFSVolumeSource"
-        },
-        "persistentVolumeClaim": {
-          "description": "persistentVolumeClaimVolumeSource represents a reference to a PersistentVolumeClaim in the same namespace. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimVolumeSource"
-        },
-        "photonPersistentDisk": {
-          "description": "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PhotonPersistentDiskVolumeSource"
-        },
-        "portworxVolume": {
-          "description": "portworxVolume represents a portworx volume attached and mounted on kubelets host machine",
-          "$ref": "#/definitions/io.k8s.api.core.v1.PortworxVolumeSource"
-        },
-        "projected": {
-          "description": "projected items for all in one resources secrets, configmaps, and downward API",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ProjectedVolumeSource"
-        },
-        "quobyte": {
-          "description": "quobyte represents a Quobyte mount on the host that shares a pod's lifetime",
-          "$ref": "#/definitions/io.k8s.api.core.v1.QuobyteVolumeSource"
-        },
-        "rbd": {
-          "description": "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/rbd/README.md",
-          "$ref": "#/definitions/io.k8s.api.core.v1.RBDVolumeSource"
-        },
-        "scaleIO": {
-          "description": "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ScaleIOVolumeSource"
-        },
-        "secret": {
-          "description": "secret represents a secret that should populate this volume. More info: https://kubernetes.io/docs/concepts/storage/volumes#secret",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
-        },
-        "storageos": {
-          "description": "storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.StorageOSVolumeSource"
-        },
-        "vsphereVolume": {
-          "description": "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
-          "$ref": "#/definitions/io.k8s.api.core.v1.VsphereVirtualDiskVolumeSource"
-        }
-      }
-    },
     "io.k8s.api.core.v1.VolumeDevice": {
       "description": "volumeDevice describes a mapping of a raw block device within a container.",
       "type": "object",
@@ -39034,6 +38904,16 @@
         }
       }
     },
+    "xyz.kmodules.offshoot-api.api.v1.EphemeralVolumeSource": {
+      "description": "Represents an ephemeral volume that is handled by a normal storage driver.",
+      "type": "object",
+      "properties": {
+        "volumeClaimTemplate": {
+          "description": "Will be used to create a stand-alone PVC to provision the volume. The pod in which this EphemeralVolumeSource is embedded will be the owner of the PVC, i.e. the PVC will be deleted together with the pod.  The name of the PVC will be `\u003cpod name\u003e-\u003cvolume name\u003e` where `\u003cvolume name\u003e` is the name from the `PodSpec.Volumes` array entry. Pod validation will reject the pod if the concatenated name is not valid for a PVC (for example, too long).\n\nAn existing PVC with that name that is not owned by the pod will *not* be used for the pod to avoid using an unrelated volume by mistake. Starting the pod is then blocked until the unrelated PVC is removed. If such a pre-created PVC is meant to be used by the pod, the PVC has to updated with an owner reference to the pod once the pod exists. Normally this should not be necessary, but it may be useful when manually reconstructing a broken cluster.\n\nThis field is read-only and no changes will be made by Kubernetes to the PVC after it has been created.\n\nRequired, must not be nil.",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PersistentVolumeClaimTemplate"
+        }
+      }
+    },
     "xyz.kmodules.offshoot-api.api.v1.ObjectMeta": {
       "description": "ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.",
       "type": "object",
@@ -39053,6 +38933,69 @@
             "type": "string",
             "default": ""
           }
+        }
+      }
+    },
+    "xyz.kmodules.offshoot-api.api.v1.PartialObjectMeta": {
+      "description": "ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "generateName": {
+          "description": "GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.\n\nIf this field is specified and the generated name exists, the server will NOT return a 409 - instead, it will either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not be found in the time allotted, and the client should retry (optionally after the time indicated in the Retry-After header).\n\nApplied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#idempotency",
+          "type": "string"
+        },
+        "labels": {
+          "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "name": {
+          "description": "Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names",
+          "type": "string"
+        },
+        "namespace": {
+          "description": "Namespace defines the space within each name must be unique. An empty namespace is equivalent to the \"default\" namespace, but \"default\" is the canonical representation. Not all objects are required to be scoped to a namespace - the value of this field for those objects will be empty.\n\nMust be a DNS_LABEL. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/namespaces",
+          "type": "string"
+        },
+        "ownerReferences": {
+          "description": "List of objects depended by this object. If ALL objects in the list have been deleted, this object will be garbage collected. If this object is managed by a controller, then an entry in this list will point to this controller, with the controller field set to true. There cannot be more than one managing controller.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.OwnerReference"
+          },
+          "x-kubernetes-patch-merge-key": "uid",
+          "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
+    "xyz.kmodules.offshoot-api.api.v1.PersistentVolumeClaimTemplate": {
+      "description": "PersistentVolumeClaimTemplate is used to produce PersistentVolumeClaim objects as part of an EphemeralVolumeSource.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "metadata": {
+          "description": "May contain labels and annotations that will be copied into the PVC when creating it. No other fields are allowed and will be rejected during validation.",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PartialObjectMeta"
+        },
+        "spec": {
+          "description": "The specification for the PersistentVolumeClaim. The entire content is copied unchanged into the PVC that gets created from this template. The same fields as in a PersistentVolumeClaim are also valid here.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
         }
       }
     },
@@ -39089,6 +39032,10 @@
             "None"
           ]
         },
+        "enableServiceLinks": {
+          "description": "EnableServiceLinks indicates whether information about services should be injected into pod's environment variables, matching the syntax of Docker links. Optional: Defaults to true.",
+          "type": "boolean"
+        },
         "env": {
           "description": "List of environment variables to set in the container. Cannot be updated.",
           "type": "array",
@@ -39110,12 +39057,14 @@
           "type": "boolean"
         },
         "imagePullSecrets": {
-          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use.",
+          "description": "ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use. More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod",
           "type": "array",
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
-          }
+          },
+          "x-kubernetes-patch-merge-key": "name",
+          "x-kubernetes-patch-strategy": "merge"
         },
         "initContainers": {
           "description": "List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, or Liveness probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
@@ -39141,7 +39090,8 @@
           "additionalProperties": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-map-type": "atomic"
         },
         "priority": {
           "description": "The priority value. Various system components use this field to find the priority of the pod. When Priority Admission Controller is enabled, it prevents users from setting this field. The admission controller populates this field from PriorityClassName. The higher the value, the higher the priority.",
@@ -39160,6 +39110,10 @@
           "description": "Compute Resources required by the sidecar container.",
           "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "runtimeClassName": {
+          "description": "RuntimeClassName refers to a RuntimeClass object in the node.k8s.io group, which should be used to run this pod.  If no RuntimeClass resource matches the named class, the pod will not be run. If unset or empty, the \"legacy\" RuntimeClass will be used, which is an implicit class with an empty definition that uses the default runtime handler. More info: https://git.k8s.io/enhancements/keps/sig-node/585-runtime-class",
+          "type": "string"
         },
         "schedulerName": {
           "description": "If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.",
@@ -39220,7 +39174,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/io.k8s.api.core.v1.Volume"
+            "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.Volume"
           },
           "x-kubernetes-patch-merge-key": "name",
           "x-kubernetes-patch-strategy": "merge,retainKeys"
@@ -39336,6 +39290,132 @@
             "LoadBalancer",
             "NodePort"
           ]
+        }
+      }
+    },
+    "xyz.kmodules.offshoot-api.api.v1.Volume": {
+      "description": "Volume represents a named volume in a pod that may be accessed by any container in the pod.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "awsElasticBlockStore": {
+          "description": "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
+          "$ref": "#/definitions/io.k8s.api.core.v1.AWSElasticBlockStoreVolumeSource"
+        },
+        "azureDisk": {
+          "description": "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.AzureDiskVolumeSource"
+        },
+        "azureFile": {
+          "description": "azureFile represents an Azure File Service mount on the host and bind mount to the pod.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.AzureFileVolumeSource"
+        },
+        "cephfs": {
+          "description": "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime",
+          "$ref": "#/definitions/io.k8s.api.core.v1.CephFSVolumeSource"
+        },
+        "cinder": {
+          "description": "cinder represents a cinder volume attached and mounted on kubelets host machine. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
+          "$ref": "#/definitions/io.k8s.api.core.v1.CinderVolumeSource"
+        },
+        "configMap": {
+          "description": "configMap represents a configMap that should populate this volume",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ConfigMapVolumeSource"
+        },
+        "csi": {
+          "description": "csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers (Beta feature).",
+          "$ref": "#/definitions/io.k8s.api.core.v1.CSIVolumeSource"
+        },
+        "downwardAPI": {
+          "description": "downwardAPI represents downward API about the pod that should populate this volume",
+          "$ref": "#/definitions/io.k8s.api.core.v1.DownwardAPIVolumeSource"
+        },
+        "emptyDir": {
+          "description": "emptyDir represents a temporary directory that shares a pod's lifetime. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir",
+          "$ref": "#/definitions/io.k8s.api.core.v1.EmptyDirVolumeSource"
+        },
+        "ephemeral": {
+          "description": "ephemeral represents a volume that is handled by a cluster storage driver. The volume's lifecycle is tied to the pod that defines it - it will be created before the pod starts, and deleted when the pod is removed.\n\nUse this if: a) the volume is only needed while the pod runs, b) features of normal volumes like restoring from snapshot or capacity\n   tracking are needed,\nc) the storage driver is specified through a storage class, and d) the storage driver supports dynamic volume provisioning through\n   a PersistentVolumeClaim (see EphemeralVolumeSource for more\n   information on the connection between this volume type\n   and PersistentVolumeClaim).\n\nUse PersistentVolumeClaim or one of the vendor-specific APIs for volumes that persist for longer than the lifecycle of an individual pod.\n\nUse CSI for light-weight local ephemeral volumes if the CSI driver is meant to be used that way - see the documentation of the driver for more information.\n\nA pod can use both types of ephemeral volumes and persistent volumes at the same time.",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.EphemeralVolumeSource"
+        },
+        "fc": {
+          "description": "fc represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.FCVolumeSource"
+        },
+        "flexVolume": {
+          "description": "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.FlexVolumeSource"
+        },
+        "flocker": {
+          "description": "flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running",
+          "$ref": "#/definitions/io.k8s.api.core.v1.FlockerVolumeSource"
+        },
+        "gcePersistentDisk": {
+          "description": "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
+          "$ref": "#/definitions/io.k8s.api.core.v1.GCEPersistentDiskVolumeSource"
+        },
+        "glusterfs": {
+          "description": "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
+          "$ref": "#/definitions/io.k8s.api.core.v1.GlusterfsVolumeSource"
+        },
+        "hostPath": {
+          "description": "hostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath",
+          "$ref": "#/definitions/io.k8s.api.core.v1.HostPathVolumeSource"
+        },
+        "iscsi": {
+          "description": "iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://examples.k8s.io/volumes/iscsi/README.md",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ISCSIVolumeSource"
+        },
+        "name": {
+          "description": "name of the volume. Must be a DNS_LABEL and unique within the pod. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
+        },
+        "nfs": {
+          "description": "nfs represents an NFS mount on the host that shares a pod's lifetime More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs",
+          "$ref": "#/definitions/io.k8s.api.core.v1.NFSVolumeSource"
+        },
+        "persistentVolumeClaim": {
+          "description": "persistentVolumeClaimVolumeSource represents a reference to a PersistentVolumeClaim in the same namespace. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimVolumeSource"
+        },
+        "photonPersistentDisk": {
+          "description": "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PhotonPersistentDiskVolumeSource"
+        },
+        "portworxVolume": {
+          "description": "portworxVolume represents a portworx volume attached and mounted on kubelets host machine",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PortworxVolumeSource"
+        },
+        "projected": {
+          "description": "projected items for all in one resources secrets, configmaps, and downward API",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ProjectedVolumeSource"
+        },
+        "quobyte": {
+          "description": "quobyte represents a Quobyte mount on the host that shares a pod's lifetime",
+          "$ref": "#/definitions/io.k8s.api.core.v1.QuobyteVolumeSource"
+        },
+        "rbd": {
+          "description": "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/rbd/README.md",
+          "$ref": "#/definitions/io.k8s.api.core.v1.RBDVolumeSource"
+        },
+        "scaleIO": {
+          "description": "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ScaleIOVolumeSource"
+        },
+        "secret": {
+          "description": "secret represents a secret that should populate this volume. More info: https://kubernetes.io/docs/concepts/storage/volumes#secret",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
+        },
+        "storageos": {
+          "description": "storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.StorageOSVolumeSource"
+        },
+        "vsphereVolume": {
+          "description": "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
+          "$ref": "#/definitions/io.k8s.api.core.v1.VsphereVirtualDiskVolumeSource"
         }
       }
     }

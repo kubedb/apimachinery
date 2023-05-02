@@ -32,7 +32,7 @@ require (
 	kmodules.xyz/custom-resources v0.25.1
 	kmodules.xyz/monitoring-agent-api v0.25.1
 	kmodules.xyz/objectstore-api v0.25.1-0.20221104003322-f0289b5b6ca2
-	kmodules.xyz/offshoot-api v0.25.0
+	kmodules.xyz/offshoot-api v0.25.3
 	kmodules.xyz/webhook-runtime v0.25.0
 	kubeops.dev/sidekick v0.0.2-0.20230113102427-9848f83b2f0f
 	sigs.k8s.io/controller-runtime v0.13.1
