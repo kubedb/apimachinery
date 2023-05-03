@@ -252,6 +252,8 @@ API rule violation: names_match,k8s.io/apimachinery/pkg/util/intstr,IntOrString,
 API rule violation: names_match,kmodules.xyz/client-go/api/v1,CertificateSpec,URIs
 API rule violation: names_match,kmodules.xyz/client-go/api/v1,TimeOfDay,Time
 API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,ContainerRuntimeSettings,IONice
+API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,VolumeSource,CephFS
+API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,VolumeSource,StorageOS
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBCollectionSpec,TotalSize
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsCompletionFields,SizeBytes
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsCompletionFields,TotalSize
