@@ -5,7 +5,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
-	stashcoreapi "stash.appscode.dev/kubestash/apis/core/v1alpha1"
+	stashcoreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
 )
 
 //type DatabasesSelector struct {

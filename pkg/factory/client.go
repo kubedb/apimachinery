@@ -31,11 +31,11 @@ import (
 	metricsscheme "k8s.io/metrics/pkg/client/clientset/versioned/scheme"
 	crscheme "kmodules.xyz/custom-resources/client/clientset/versioned/scheme"
 	sidekickapi "kubeops.dev/sidekick/apis/apps/v1alpha1"
+	stashcoreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
+	stashstorageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
 	stashscheme "stash.appscode.dev/apimachinery/client/clientset/versioned/scheme"
-	stashcoreapi "stash.appscode.dev/kubestash/apis/core/v1alpha1"
-	stashstorageapi "stash.appscode.dev/kubestash/apis/storage/v1alpha1"
 )
 
 func NewUncachedClient(cfg *rest.Config) (client.Client, error) {

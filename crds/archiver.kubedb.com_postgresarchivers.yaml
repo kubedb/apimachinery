@@ -2376,10 +2376,8 @@ spec:
                                               additionalProperties:
                                                 type: string
                                               type: object
-                                            finalizers:
-                                              items:
-                                                type: string
-                                              type: array
+                                            generateName:
+                                              type: string
                                             labels:
                                               additionalProperties:
                                                 type: string
@@ -2388,6 +2386,29 @@ spec:
                                               type: string
                                             namespace:
                                               type: string
+                                            ownerReferences:
+                                              items:
+                                                properties:
+                                                  apiVersion:
+                                                    type: string
+                                                  blockOwnerDeletion:
+                                                    type: boolean
+                                                  controller:
+                                                    type: boolean
+                                                  kind:
+                                                    type: string
+                                                  name:
+                                                    type: string
+                                                  uid:
+                                                    type: string
+                                                required:
+                                                - apiVersion
+                                                - kind
+                                                - name
+                                                - uid
+                                                type: object
+                                                x-kubernetes-map-type: atomic
+                                              type: array
                                           type: object
                                         spec:
                                           properties:
@@ -2534,17 +2555,6 @@ spec:
                                       type: boolean
                                   required:
                                   - pdName
-                                  type: object
-                                gitRepo:
-                                  properties:
-                                    directory:
-                                      type: string
-                                    repository:
-                                      type: string
-                                    revision:
-                                      type: string
-                                  required:
-                                  - repository
                                   type: object
                                 glusterfs:
                                   properties:
@@ -4728,10 +4738,8 @@ spec:
                                                       additionalProperties:
                                                         type: string
                                                       type: object
-                                                    finalizers:
-                                                      items:
-                                                        type: string
-                                                      type: array
+                                                    generateName:
+                                                      type: string
                                                     labels:
                                                       additionalProperties:
                                                         type: string
@@ -4740,6 +4748,29 @@ spec:
                                                       type: string
                                                     namespace:
                                                       type: string
+                                                    ownerReferences:
+                                                      items:
+                                                        properties:
+                                                          apiVersion:
+                                                            type: string
+                                                          blockOwnerDeletion:
+                                                            type: boolean
+                                                          controller:
+                                                            type: boolean
+                                                          kind:
+                                                            type: string
+                                                          name:
+                                                            type: string
+                                                          uid:
+                                                            type: string
+                                                        required:
+                                                        - apiVersion
+                                                        - kind
+                                                        - name
+                                                        - uid
+                                                        type: object
+                                                        x-kubernetes-map-type: atomic
+                                                      type: array
                                                   type: object
                                                 spec:
                                                   properties:
@@ -4886,17 +4917,6 @@ spec:
                                               type: boolean
                                           required:
                                           - pdName
-                                          type: object
-                                        gitRepo:
-                                          properties:
-                                            directory:
-                                              type: string
-                                            repository:
-                                              type: string
-                                            revision:
-                                              type: string
-                                          required:
-                                          - repository
                                           type: object
                                         glusterfs:
                                           properties:

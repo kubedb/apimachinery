@@ -1394,8 +1394,10 @@ kmodules.xyz/resource-metrics v0.25.0 h1:wj3npVZZQr+Yysg/XdGn4LdT5kQizWeO0zq7QlS
 kmodules.xyz/resource-metrics v0.25.0/go.mod h1:4a49npnu73c9LGDWHWQsPWoXWXU9rpCcknoH1+HHesI=
 kmodules.xyz/webhook-runtime v0.25.0 h1:NKNgu0C1I8kUovQ+SVozs/q7cjq8zgpSjLfJf9CxUtk=
 kmodules.xyz/webhook-runtime v0.25.0/go.mod h1:gK2iIF0oCeQVVqH4L5nFjcguyhMPBhHMhiV5Fgb6EE0=
-kubeops.dev/sidekick v0.0.2-0.20230113102427-9848f83b2f0f h1:V1NpsZCaCZETsPggWcyfRophrEX9wneX9O0YTdxo1zk=
-kubeops.dev/sidekick v0.0.2-0.20230113102427-9848f83b2f0f/go.mod h1:zGERHv4iKTsAcfVfaCTbSBXtI+rGcV+9BQoTr/hY3zc=
+kubeops.dev/sidekick v0.0.2-0.20230304025549-a99a1477617d h1:GyzQ+TKXF4AcvzvPBtE7pSO287LDkQKMnbPRcQRbbuM=
+kubeops.dev/sidekick v0.0.2-0.20230304025549-a99a1477617d/go.mod h1:VFxqlzv+lciGg561XYBzSgTmlQGM6+ao5Xrv8yCH460=
+kubestash.dev/apimachinery v0.1.1-0.20230503090520-8c620a027344 h1:ZljxC/+xsbgRcW0n1C/4DbZ5SGCFEKn2ZdoTXMU1uqs=
+kubestash.dev/apimachinery v0.1.1-0.20230503090520-8c620a027344/go.mod h1:li4zD4cOAN58QulzDy3zlfaLIp6Z2dr32Wc3PgcQpL0=
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=
 rsc.io/quote/v3 v3.1.0/go.mod h1:yEA65RcK8LyAZtP9Kv3t0HmxON59tX3rD+tICJqUlj0=
 rsc.io/sampler v1.3.0/go.mod h1:T1hPZKmBbMNahiBKFy5HrXp6adAjACjK9JXDnKaTXpA=
