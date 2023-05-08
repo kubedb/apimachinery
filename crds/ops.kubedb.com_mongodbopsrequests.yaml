@@ -363,7 +363,6 @@ spec:
                 - Reconfigure
                 - ReconfigureTLS
                 - Reprovision
-                - Backup
                 type: string
               updateVersion:
                 properties:

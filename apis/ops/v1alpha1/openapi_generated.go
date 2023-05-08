@@ -427,6 +427,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                                 schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.Volume":                                              schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref),
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                        schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ArchiverOptions":                            schema_apimachinery_apis_ops_v1alpha1_ArchiverOptions(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ConfigNode":                                 schema_apimachinery_apis_ops_v1alpha1_ConfigNode(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchCustomConfiguration":           schema_apimachinery_apis_ops_v1alpha1_ElasticsearchCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchCustomConfigurationSpec":       schema_apimachinery_apis_ops_v1alpha1_ElasticsearchCustomConfigurationSpec(ref),
@@ -21486,6 +21487,34 @@ func schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref common.ReferenceCal
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_ArchiverOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"operation": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"ref": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+				},
+				Required: []string{"operation", "ref"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_ConfigNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23521,6 +23550,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBOpsRequestSpec(ref common.Refe
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.Reprovision"),
 						},
 					},
+					"archiver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for setting up Archiver for database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ArchiverOptions"),
+						},
+					},
 					"readinessCriteria": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the Readiness Criteria",
@@ -23545,7 +23580,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBOpsRequestSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBReplicaReadinessCriteria", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Reprovision", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ArchiverOptions", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBReplicaReadinessCriteria", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Reprovision", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 

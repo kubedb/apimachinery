@@ -65,8 +65,7 @@ func (x EtcdOpsRequestType) String() string {
 	return string(x)
 }
 
-// IsValid provides a quick way to determine if the typed value is
-// part of the allowed enumerated values
+// String implements the Stringer interface.
 func (x EtcdOpsRequestType) IsValid() bool {
 	_, err := ParseEtcdOpsRequestType(string(x))
 	return err == nil
