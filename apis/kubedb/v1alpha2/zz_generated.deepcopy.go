@@ -923,6 +923,11 @@ func (in *KafkaSpec) DeepCopyInto(out *KafkaSpec) {
 		*out = new(clientgoapiv1.TLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ConfigSecret != nil {
+		in, out := &in.ConfigSecret, &out.ConfigSecret
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	if in.ServiceTemplates != nil {
 		in, out := &in.ServiceTemplates, &out.ServiceTemplates

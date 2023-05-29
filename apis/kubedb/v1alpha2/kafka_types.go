@@ -91,6 +91,10 @@ type KafkaSpec struct {
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 
+	// ConfigSecret is an optional field to provide custom configuration file for database (i.e config.properties).
+	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
+	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
+
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
