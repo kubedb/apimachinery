@@ -118,9 +118,9 @@ type KafkaSpec struct {
 }
 
 type KafkaConfigSecret struct {
-	BrokerConfig     *core.LocalObjectReference
-	ControllerConfig *core.LocalObjectReference
-	*core.LocalObjectReference
+	BrokerConfig               *core.LocalObjectReference `json:"brokerConfig,omitempty"`
+	ControllerConfig           *core.LocalObjectReference `json:"controllerConfig,omitempty"`
+	*core.LocalObjectReference `json:",omitempty"`
 }
 
 // KafkaClusterTopology defines kafka topology node specs for controller node and broker node

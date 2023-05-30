@@ -51,6 +51,18 @@ spec:
                 x-kubernetes-map-type: atomic
               configSecret:
                 properties:
+                  brokerConfig:
+                    properties:
+                      name:
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  controllerConfig:
+                    properties:
+                      name:
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
                   name:
                     type: string
                 type: object
