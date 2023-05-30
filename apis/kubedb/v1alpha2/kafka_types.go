@@ -83,6 +83,10 @@ type KafkaSpec struct {
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
+	// ConfigSecret is an optional field to provide custom configuration file for database (i.e config.properties).
+	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
+	ConfigSecret KafkaConfigSecret `json:"configSecret,omitempty"`
+
 	// Keystore encryption secret
 	// +optional
 	KeystoreCredSecret *SecretReference `json:"keystoreCredSecret,omitempty"`
@@ -90,10 +94,6 @@ type KafkaSpec struct {
 	// TLS contains tls configurations
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
-
-	// ConfigSecret is an optional field to provide custom configuration file for database (i.e config.properties).
-	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
-	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
@@ -115,6 +115,12 @@ type KafkaSpec struct {
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
+}
+
+type KafkaConfigSecret struct {
+	BrokerConfig     *core.LocalObjectReference
+	ControllerConfig *core.LocalObjectReference
+	*core.LocalObjectReference
 }
 
 // KafkaClusterTopology defines kafka topology node specs for controller node and broker node
