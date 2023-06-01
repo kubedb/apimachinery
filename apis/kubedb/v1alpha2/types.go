@@ -180,6 +180,21 @@ type Archiver struct {
 }
 
 type ArchiverRecovery struct {
-	RecoveryTimestamp metav1.Time           `json:"recoveryTimestamp"`
-	Repository        kmapi.ObjectReference `json:"repository"`
+	RecoveryTimestamp metav1.Time `json:"recoveryTimestamp"`
+	// +optional
+	ManifestBackup *ManifestBackupOptions `json:"manifestBackup,omitempty"`
+	// +optional
+	FullBackup *FullBackupOptions `json:"fullBackup,omitempty"`
+}
+
+type ManifestBackupOptions struct {
+	// +optional
+	EncryptionSecret *kmapi.ObjectReference `json:"encryptionSecret,omitempty"`
+	// +optional
+	Repository *kmapi.ObjectReference `json:"repository,omitempty"`
+}
+
+type FullBackupOptions struct {
+	// +optional
+	Repository *kmapi.ObjectReference `json:"repository,omitempty"`
 }

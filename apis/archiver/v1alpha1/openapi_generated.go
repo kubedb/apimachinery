@@ -432,6 +432,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.CSISnapshotterOptions":        schema_apimachinery_apis_archiver_v1alpha1_CSISnapshotterOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions":            schema_apimachinery_apis_archiver_v1alpha1_FullBackupOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference":       schema_apimachinery_apis_archiver_v1alpha1_GenericSecretReference(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions":        schema_apimachinery_apis_archiver_v1alpha1_ManifestBackupOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MongoDBArchiver":              schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiver(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MongoDBArchiverList":          schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverList(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MongoDBArchiverSpec":          schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverSpec(ref),
@@ -21531,6 +21532,56 @@ func schema_apimachinery_apis_archiver_v1alpha1_GenericSecretReference(ref commo
 	}
 }
 
+func schema_apimachinery_apis_archiver_v1alpha1_ManifestBackupOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"scheduler": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions"),
+						},
+					},
+					"containerRuntimeSettings": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings"),
+						},
+					},
+					"jobTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+					"retryConfig": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"),
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"sessionHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions", "kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"},
+	}
+}
+
 func schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiver(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21658,6 +21709,11 @@ func schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverSpec(ref common.R
 							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions"),
 						},
 					},
+					"manifestBackup": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
+						},
+					},
 					"backupStorage": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage"),
@@ -21674,7 +21730,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers"},
 	}
 }
 

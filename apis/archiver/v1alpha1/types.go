@@ -39,6 +39,23 @@ type FullBackupOptions struct {
 	SessionHistoryLimit int32 `json:"sessionHistoryLimit,omitempty"`
 }
 
+type ManifestBackupOptions struct {
+	// +optional
+	EncryptionSecret *v1.ObjectReference `json:"encryptionSecret"`
+	// +optional
+	Scheduler *SchedulerOptions `json:"scheduler,omitempty"`
+	// +optional
+	ContainerRuntimeSettings *ofst.ContainerRuntimeSettings `json:"containerRuntimeSettings,omitempty"`
+	// +optional
+	JobTemplate *ofst.PodTemplateSpec `json:"jobTemplate,omitempty"`
+	// +optional
+	RetryConfig *stashcoreapi.RetryConfig `json:"retryConfig,omitempty"`
+	// +optional
+	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	// +optional
+	SessionHistoryLimit int32 `json:"sessionHistoryLimit,omitempty"`
+}
+
 type WalBackupOptions struct {
 	// +optional
 	RuntimeSettings *ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`

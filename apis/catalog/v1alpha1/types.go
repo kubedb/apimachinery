@@ -34,6 +34,7 @@ type UpdateConstraints struct {
 type ArchiverSpec struct {
 	Walg           WalgSpec           `json:"walg"`
 	CSISnapshotter CSISnapshotterSpec `json:"csiSnapshotter"`
+	Manifest       ManifestSpec       `json:"manifest"`
 }
 
 type WalgSpec struct {
@@ -41,5 +42,9 @@ type WalgSpec struct {
 }
 
 type CSISnapshotterSpec struct {
+	AddonName string `json:"addonName"`
+}
+
+type ManifestSpec struct {
 	AddonName string `json:"addonName"`
 }

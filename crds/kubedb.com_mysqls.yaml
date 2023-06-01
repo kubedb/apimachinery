@@ -309,21 +309,44 @@ spec:
                 properties:
                   archiver:
                     properties:
+                      fullBackup:
+                        properties:
+                          repository:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
+                        type: object
+                      manifestBackup:
+                        properties:
+                          encryptionSecret:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
+                          repository:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
+                        type: object
                       recoveryTimestamp:
                         format: date-time
                         type: string
-                      repository:
-                        properties:
-                          name:
-                            type: string
-                          namespace:
-                            type: string
-                        required:
-                        - name
-                        type: object
                     required:
                     - recoveryTimestamp
-                    - repository
                     type: object
                   initialized:
                     type: boolean

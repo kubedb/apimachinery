@@ -57,6 +57,13 @@ spec:
                     required:
                     - addonName
                     type: object
+                  manifest:
+                    properties:
+                      addonName:
+                        type: string
+                    required:
+                    - addonName
+                    type: object
                   walg:
                     properties:
                       image:
@@ -66,6 +73,7 @@ spec:
                     type: object
                 required:
                 - csiSnapshotter
+                - manifest
                 - walg
                 type: object
               coordinator:
