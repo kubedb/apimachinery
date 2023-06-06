@@ -113,6 +113,10 @@ type KafkaSpec struct {
 	// +kubebuilder:default={periodSeconds: 20, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 
+	// CruiseControl is used to re-balance Kafka cluster
+	// +optional
+	CruiseControl KafkaCruiseControl `json:"cruiseControl"`
+
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
@@ -156,6 +160,32 @@ type KafkaStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+}
+
+type KafkaCruiseControl struct {
+	// To enable cruise-control
+	// +optional
+	Enabled bool `json:"enabled,omitempty"`
+
+	// Configuration for cruise-control
+	// +optional
+	Config *SecretReference `json:"config,omitempty"`
+
+	// Replicas represents number of replica for this specific type of node
+	// +optional
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// Suffix to append with node name
+	// +optional
+	Suffix string `json:"suffix,omitempty"`
+
+	// Storage to specify how storage shall be used.
+	// +optional
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+
+	// Compute Resources required by the sidecar container.
+	// +optional
+	Resources core.ResourceRequirements `json:"resources,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=Provisioning;Ready;NotReady;Critical
