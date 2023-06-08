@@ -539,6 +539,7 @@ const (
 	KafkaCertDir                  = "/var/private/ssl"
 	KafkaConfigDir                = "/opt/kafka/config/kafkaconfig"
 	KafkaTempConfigDir            = "/opt/kafka/config/temp-config"
+	KafkaCustomConfigDir          = "/opt/kafka/config/custom-config"
 	KafkaConfigFileName           = "config.properties"
 	KafkaSSLPropertiesFileName    = "ssl.properties"
 	KafkaClientAuthConfigFileName = "clientauth.properties"
@@ -579,9 +580,10 @@ const (
 	KafkaServiceName                 = "serviceName"
 	KafkaSASLPlainMechanism          = "PLAIN"
 
-	KafkaVolumeData       = "data"
-	KafkaVolumeConfig     = "kafkaconfig"
-	KafkaVolumeTempConfig = "temp-config"
+	KafkaVolumeData         = "data"
+	KafkaVolumeConfig       = "kafkaconfig"
+	KafkaVolumeTempConfig   = "temp-config"
+	KafkaVolumeCustomConfig = "custom-config"
 
 	EnvKafkaUser     = "KAFKA_USER"
 	EnvKafkaPassword = "KAFKA_PASSWORD"

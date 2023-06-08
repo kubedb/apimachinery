@@ -85,7 +85,8 @@ type KafkaSpec struct {
 
 	// ConfigSecret is an optional field to provide custom configuration file for database (i.e config.properties).
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
-	ConfigSecret KafkaConfigSecret `json:"configSecret,omitempty"`
+	// +optional
+	ConfigSecret *KafkaConfigSecret `json:"configSecret,omitempty"`
 
 	// Keystore encryption secret
 	// +optional
