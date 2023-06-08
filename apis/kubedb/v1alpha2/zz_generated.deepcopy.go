@@ -944,7 +944,11 @@ func (in *KafkaSpec) DeepCopyInto(out *KafkaSpec) {
 		*out = new(SecretReference)
 		**out = **in
 	}
-	in.ConfigSecret.DeepCopyInto(&out.ConfigSecret)
+	if in.ConfigSecret != nil {
+		in, out := &in.ConfigSecret, &out.ConfigSecret
+		*out = new(KafkaConfigSecret)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.KeystoreCredSecret != nil {
 		in, out := &in.KeystoreCredSecret, &out.KeystoreCredSecret
 		*out = new(SecretReference)
