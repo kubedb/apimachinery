@@ -32656,10 +32656,6 @@
           "description": "InitConfiguration contains information with which the proxysql will bootstrap (only 4 tables are configurable)",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ProxySQLConfiguration"
         },
-        "mode": {
-          "description": "Mode specifies the type of MySQL/Percona-XtraDB/MariaDB cluster for which proxysql will be configured. It must be either \"Galera\" or \"GroupReplication\"",
-          "type": "string"
-        },
         "monitor": {
           "description": "Monitor is used monitor proxysql instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
