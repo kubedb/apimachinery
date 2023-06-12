@@ -244,7 +244,7 @@ func (k *Kafka) GetCertSecretName(alias KafkaCertificateAlias) string {
 	return k.CertificateName(alias)
 }
 
-func (k *Kafka) GetCustomConfigSecretName(nodeRole string) string {
+func (k *Kafka) GetCustomConfigSecretName(nodeRole KafkaNodeRoleType) string {
 	if nodeRole == KafkaNodeRolesBrokers {
 		if k.Spec.ConfigSecret.BrokerConfig == nil {
 			return ""
