@@ -244,6 +244,25 @@ func (k *Kafka) GetCertSecretName(alias KafkaCertificateAlias) string {
 	return k.CertificateName(alias)
 }
 
+func (k *Kafka) GetCustomConfigSecretName(nodeRole string) string {
+	if nodeRole == KafkaNodeRolesBrokers {
+		if k.Spec.ConfigSecret.BrokerConfig == nil {
+			return ""
+		}
+		return k.Spec.ConfigSecret.BrokerConfig.Name
+	} else if nodeRole == KafkaNodeRolesController {
+		if k.Spec.ConfigSecret.ControllerConfig == nil {
+			return ""
+		}
+		return k.Spec.ConfigSecret.ControllerConfig.Name
+	} else {
+		if k.Spec.ConfigSecret.LocalObjectReference == nil {
+			return ""
+		}
+		return k.Spec.ConfigSecret.Name
+	}
+}
+
 // returns the CertSecretVolumeName
 // Values will be like: client-certs, server-certs etc.
 func (k *Kafka) CertSecretVolumeName(alias KafkaCertificateAlias) string {
