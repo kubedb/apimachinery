@@ -21897,6 +21897,11 @@ func schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref common.
 							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions"),
 						},
 					},
+					"manifestBackup": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
+						},
+					},
 					"backupStorage": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage"),
@@ -21913,7 +21918,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers"},
 	}
 }
 

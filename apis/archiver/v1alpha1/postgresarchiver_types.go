@@ -50,6 +50,8 @@ type PostgresArchiverSpec struct {
 	// +optional
 	WalBackup *WalBackupOptions `json:"walBackup"`
 	// +optional
+	ManifestBackup *ManifestBackupOptions `json:"manifestBackup"`
+	// +optional
 	BackupStorage *BackupStorage `json:"backupStorage"`
 	// +optional
 	DeletionPolicy *DeletionPolicy `json:"deletionPolicy"`
