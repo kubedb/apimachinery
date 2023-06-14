@@ -23,6 +23,12 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
+const (
+	ResourceKindPostgresArchiver     = "PostgresArchiver"
+	ResourceSingularPostgresArchiver = "postgresarchiver"
+	ResourcePluralPostgresArchiver   = "postgresarchivers"
+)
+
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

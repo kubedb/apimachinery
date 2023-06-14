@@ -27,9 +27,9 @@ func GetFinalizer() string {
 }
 
 func (_ MongoDBArchiver) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource("MongoDBArchiver"))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMongoDBArchiver))
 }
 
 func (_ PostgresArchiver) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource("PostgresArchiver"))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralPostgresArchiver))
 }
