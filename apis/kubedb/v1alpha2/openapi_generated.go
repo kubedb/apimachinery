@@ -450,7 +450,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Kafka":                          schema_apimachinery_apis_kubedb_v1alpha2_Kafka(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaApp":                       schema_apimachinery_apis_kubedb_v1alpha2_KafkaApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaClusterTopology":           schema_apimachinery_apis_kubedb_v1alpha2_KafkaClusterTopology(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaConfigSecret":              schema_apimachinery_apis_kubedb_v1alpha2_KafkaConfigSecret(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaList":                      schema_apimachinery_apis_kubedb_v1alpha2_KafkaList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaNode":                      schema_apimachinery_apis_kubedb_v1alpha2_KafkaNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref),
@@ -22795,30 +22794,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaClusterTopology(ref common.Re
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_KafkaConfigSecret(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"brokerConfig": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"controllerConfig": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_KafkaList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22973,7 +22948,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref common.ReferenceCall
 					"configSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ConfigSecret is an optional field to provide custom configuration file for database (i.e config.properties). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaConfigSecret"),
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"keystoreCredSecret": {
@@ -23034,7 +23009,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaConfigSecret", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 

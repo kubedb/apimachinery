@@ -157,11 +157,6 @@ func (k *Kafka) ValidateCreateOrUpdate() error {
 			err.Error()))
 	}
 
-	Err := validateCustomConfig(k)
-	if Err != nil {
-		allErr = append(allErr, Err...)
-	}
-
 	err = validateVolumes(k)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
@@ -208,33 +203,6 @@ func validateVersion(db *Kafka) error {
 		}
 	}
 	return errors.New("version not supported")
-}
-
-func validateCustomConfig(db *Kafka) field.ErrorList {
-	var Err field.ErrorList
-	if db.Spec.ConfigSecret == nil {
-		return nil
-	}
-	if db.Spec.Topology == nil {
-		if db.Spec.ConfigSecret.BrokerConfig != nil {
-			Err = append(Err, field.Invalid(field.NewPath("spec").Child("configSecret").Child("brokerConfig"),
-				db.Name,
-				"doesn't support spec.configSecret.brokerConfig when spec.topology is not set "))
-		}
-		if db.Spec.ConfigSecret.ControllerConfig != nil {
-			Err = append(Err, field.Invalid(field.NewPath("spec").Child("configSecret").Child("controllerConfig"),
-				db.Name,
-				"doesn't support spec.configSecret.controllerConfig when spec.topology is not set "))
-		}
-	} else {
-		if db.Spec.ConfigSecret.LocalObjectReference != nil {
-			Err = append(Err, field.Invalid(field.NewPath("spec").Child("configSecret"),
-				db.Name,
-				"doesn't support spec.configSecret.name when spec.topology is set"))
-		}
-	}
-
-	return Err
 }
 
 func validateNodeSuffix(topology *KafkaClusterTopology) error {
