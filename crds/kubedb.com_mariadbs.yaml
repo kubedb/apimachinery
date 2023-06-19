@@ -243,7 +243,7 @@ spec:
                 properties:
                   archiver:
                     properties:
-                      fullBackup:
+                      fullDBRestore:
                         properties:
                           repository:
                             properties:
@@ -255,7 +255,7 @@ spec:
                             - name
                             type: object
                         type: object
-                      manifestBackup:
+                      manifestRestore:
                         properties:
                           encryptionSecret:
                             properties:

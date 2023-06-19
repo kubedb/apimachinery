@@ -21741,13 +21741,6 @@ func schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverStatus(ref common
 				Description: "MongoDBArchiverStatus defines the observed state of MongoDBArchiver",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"phase": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the current phase of the archiver",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"databaseRefs": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the information of all the database managed by this DB",
@@ -21929,13 +21922,6 @@ func schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverStatus(ref commo
 				Description: "PostgresArchiverStatus defines the observed state of PostgresArchiver",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"phase": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the current phase of the archiver",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"databaseRefs": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the information of all the database managed by this DB",

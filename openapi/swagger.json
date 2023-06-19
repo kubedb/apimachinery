@@ -28417,15 +28417,10 @@
   "definitions": {
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ArchiverSpec": {
       "type": "object",
-      "required": [
-        "walg",
-        "csiSnapshotter",
-        "manifest"
-      ],
       "properties": {
-        "csiSnapshotter": {
+        "fullBackup": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.CSISnapshotterSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.FullBackupSpec"
         },
         "manifest": {
           "default": {},
@@ -28804,6 +28799,15 @@
           "description": "Version",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.FullBackupSpec": {
+      "type": "object",
+      "properties": {
+        "csiSnapshotter": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.CSISnapshotterSpec"
         }
       }
     },
@@ -30229,11 +30233,11 @@
         "recoveryTimestamp"
       ],
       "properties": {
-        "fullBackup": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.FullBackupOptions"
+        "fullDBRestore": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.FullDBRestoreOptions"
         },
-        "manifestBackup": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ManifestBackupOptions"
+        "manifestRestore": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ManifestRestoreOptions"
         },
         "recoveryTimestamp": {
           "default": {},
@@ -30929,7 +30933,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.FullBackupOptions": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.FullDBRestoreOptions": {
       "type": "object",
       "properties": {
         "repository": {
@@ -30973,7 +30977,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ManifestBackupOptions": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ManifestRestoreOptions": {
       "type": "object",
       "properties": {
         "encryptionSecret": {

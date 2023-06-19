@@ -65,9 +65,6 @@ type PostgresArchiverSpec struct {
 
 // PostgresArchiverStatus defines the observed state of PostgresArchiver
 type PostgresArchiverStatus struct {
-	// Specifies the current phase of the archiver
-	// +optional
-	Phase ArchiverPhase `json:"phase,omitempty"`
 	// Specifies the information of all the database managed by this DB
 	// +optional
 	DatabaseRefs []ArchiverDatabaseRef `json:"databaseRefs,omitempty"`

@@ -24,11 +24,6 @@ import (
 	stashcoreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
 )
 
-//type DatabasesSelector struct {
-//	Selector   *metav1.LabelSelector
-//	Namespaces dbapi.ConsumerNamespaces
-//}
-
 // +kubebuilder:validation:Enum=CSISnapshotter
 type BackupDriver string
 
@@ -38,6 +33,7 @@ const (
 )
 
 type FullBackupOptions struct {
+	// +kubebuilder:default:=CSISnapshotter
 	Driver BackupDriver `json:"driver"`
 	// +optional
 	CSISnapshotter *CSISnapshotterOptions `json:"csiSnapshotter,omitempty"`
@@ -97,8 +93,6 @@ const (
 	DeletionPolicyDelete DeletionPolicy = "Delete"
 	// Deletes everything including the backup data
 	DeletionPolicyWipeOut DeletionPolicy = "WipeOut"
-	// Rejects attempt to delete archiver using ValidationWebhook
-	DeletionPolicyDoNotDelete DeletionPolicy = "DoNotDelete"
 )
 
 type SchedulerOptions struct {
@@ -112,13 +106,6 @@ type SchedulerOptions struct {
 	// +optional
 	FailedJobsHistoryLimit *int32 `json:"failedJobsHistoryLimit,omitempty"`
 }
-
-// +kubebuilder:validation:Enum=Current
-type ArchiverPhase string
-
-const (
-	ArchiverPhaseCurrent ArchiverPhase = "Current"
-)
 
 type ArchiverDatabaseRef struct {
 	Name      string `json:"name,omitempty"`

@@ -50,12 +50,15 @@ spec:
             properties:
               archiver:
                 properties:
-                  csiSnapshotter:
+                  fullBackup:
                     properties:
-                      addonName:
-                        type: string
-                    required:
-                    - addonName
+                      csiSnapshotter:
+                        properties:
+                          addonName:
+                            type: string
+                        required:
+                        - addonName
+                        type: object
                     type: object
                   manifest:
                     properties:
@@ -71,10 +74,6 @@ spec:
                     required:
                     - image
                     type: object
-                required:
-                - csiSnapshotter
-                - manifest
-                - walg
                 type: object
               db:
                 properties:

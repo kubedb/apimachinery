@@ -40,7 +40,6 @@ require (
 	sigs.k8s.io/controller-runtime v0.13.1
 	sigs.k8s.io/yaml v1.3.0
 	stash.appscode.dev/apimachinery v0.30.0
-	stash.appscode.dev/kubestash v0.0.0-20230119070744-e2e69cbd4cb5
 )
 
 require (

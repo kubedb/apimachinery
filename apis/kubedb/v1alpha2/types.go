@@ -182,19 +182,19 @@ type Archiver struct {
 type ArchiverRecovery struct {
 	RecoveryTimestamp metav1.Time `json:"recoveryTimestamp"`
 	// +optional
-	ManifestBackup *ManifestBackupOptions `json:"manifestBackup,omitempty"`
+	ManifestRestore *ManifestRestoreOptions `json:"manifestRestore,omitempty"`
 	// +optional
-	FullBackup *FullBackupOptions `json:"fullBackup,omitempty"`
+	FullDBRestore *FullDBRestoreOptions `json:"fullDBRestore,omitempty"`
 }
 
-type ManifestBackupOptions struct {
+type ManifestRestoreOptions struct {
 	// +optional
 	EncryptionSecret *kmapi.ObjectReference `json:"encryptionSecret,omitempty"`
 	// +optional
 	Repository *kmapi.ObjectReference `json:"repository,omitempty"`
 }
 
-type FullBackupOptions struct {
+type FullDBRestoreOptions struct {
 	// +optional
 	Repository *kmapi.ObjectReference `json:"repository,omitempty"`
 }

@@ -1478,12 +1478,6 @@ stash.appscode.dev/apimachinery/client/listers/stash/v1alpha1
 stash.appscode.dev/apimachinery/client/listers/stash/v1beta1
 stash.appscode.dev/apimachinery/crds
 stash.appscode.dev/apimachinery/pkg/invoker
-# stash.appscode.dev/kubestash v0.0.0-20230119070744-e2e69cbd4cb5
-## explicit; go 1.18
-stash.appscode.dev/kubestash/apis
-stash.appscode.dev/kubestash/apis/core/v1alpha1
-stash.appscode.dev/kubestash/apis/storage/v1alpha1
-stash.appscode.dev/kubestash/crds
 # github.com/imdario/mergo => github.com/imdario/mergo v0.3.6
 # k8s.io/apiserver => github.com/kmodules/apiserver v0.25.2-0.20220917044909-4ac5fceca518
 # go.opencensus.io => go.opencensus.io v0.23.0

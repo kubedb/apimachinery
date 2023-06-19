@@ -32,13 +32,17 @@ type UpdateConstraints struct {
 }
 
 type ArchiverSpec struct {
-	Walg           WalgSpec           `json:"walg"`
-	CSISnapshotter CSISnapshotterSpec `json:"csiSnapshotter"`
-	Manifest       ManifestSpec       `json:"manifest"`
+	Walg       WalgSpec       `json:"walg,omitempty"`
+	FullBackup FullBackupSpec `json:"fullBackup,omitempty"`
+	Manifest   ManifestSpec   `json:"manifest,omitempty"`
 }
 
 type WalgSpec struct {
 	Image string `json:"image"`
+}
+
+type FullBackupSpec struct {
+	CSISnapshotter CSISnapshotterSpec `json:"csiSnapshotter,omitempty"`
 }
 
 type CSISnapshotterSpec struct {

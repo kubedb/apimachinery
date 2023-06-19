@@ -1424,5 +1424,3 @@ sigs.k8s.io/yaml v1.3.0 h1:a2VclLzOGrwOHDiV8EfBGhvjHvP46CtW5j6POvhYGGo=
 sigs.k8s.io/yaml v1.3.0/go.mod h1:GeOyir5tyXNByN85N/dRIT9es5UQNerPYEKK56eTBm8=
 stash.appscode.dev/apimachinery v0.30.0 h1:imc3OuXaCI8B9ImB1e4QtDYhZCc2VyiXQHW5gheKG/s=
 stash.appscode.dev/apimachinery v0.30.0/go.mod h1:xEWpZn0wmhP0Acpq7cpebNbMXwIui8Crh4dpuE9FHSQ=
-stash.appscode.dev/kubestash v0.0.0-20230119070744-e2e69cbd4cb5 h1:KOMIGFBlUcRayrPeKRVwi4lyCV7MGVO0/jD4vdw2uzA=
-stash.appscode.dev/kubestash v0.0.0-20230119070744-e2e69cbd4cb5/go.mod h1:tziq0oKF4Ej4Bo9o+g9AbQXVCZ8T0WEvCVpVrbQb+Pg=

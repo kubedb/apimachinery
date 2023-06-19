@@ -573,6 +573,7 @@ spec:
                     - volumeSnapshotClassName
                     type: object
                   driver:
+                    default: CSISnapshotter
                     enum:
                     - CSISnapshotter
                     type: string
@@ -11506,10 +11507,6 @@ spec:
                       type: string
                   type: object
                 type: array
-              phase:
-                enum:
-                - Current
-                type: string
             type: object
         type: object
     served: true
