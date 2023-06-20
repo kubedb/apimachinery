@@ -913,6 +913,11 @@ func (in *KafkaSpec) DeepCopyInto(out *KafkaSpec) {
 		*out = new(SecretReference)
 		**out = **in
 	}
+	if in.ConfigSecret != nil {
+		in, out := &in.ConfigSecret, &out.ConfigSecret
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	if in.KeystoreCredSecret != nil {
 		in, out := &in.KeystoreCredSecret, &out.KeystoreCredSecret
 		*out = new(SecretReference)
