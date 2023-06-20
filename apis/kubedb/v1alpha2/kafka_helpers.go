@@ -39,6 +39,10 @@ func (k *Kafka) CustomResourceDefinition() *apiextensions.CustomResourceDefiniti
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralKafka))
 }
 
+func (k *Kafka) AsOwner() *meta.OwnerReference {
+	return meta.NewControllerRef(k, SchemeGroupVersion.WithKind(ResourceKindKafka))
+}
+
 func (k *Kafka) ResourceShortCode() string {
 	return ResourceCodeKafka
 }
