@@ -22674,7 +22674,7 @@ func schema_apimachinery_apis_ops_v1alpha1_KafkaOpsRequestSpec(ref common.Refere
 					},
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the ops request type: Upgrade, HorizontalScaling, VerticalScaling etc.",
+							Description: "Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
