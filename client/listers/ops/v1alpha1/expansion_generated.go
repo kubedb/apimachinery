@@ -34,6 +34,14 @@ type EtcdOpsRequestListerExpansion interface{}
 // EtcdOpsRequestNamespaceLister.
 type EtcdOpsRequestNamespaceListerExpansion interface{}
 
+// KafkaOpsRequestListerExpansion allows custom methods to be added to
+// KafkaOpsRequestLister.
+type KafkaOpsRequestListerExpansion interface{}
+
+// KafkaOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// KafkaOpsRequestNamespaceLister.
+type KafkaOpsRequestNamespaceListerExpansion interface{}
+
 // MariaDBOpsRequestListerExpansion allows custom methods to be added to
 // MariaDBOpsRequestLister.
 type MariaDBOpsRequestListerExpansion interface{}
