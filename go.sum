@@ -567,6 +567,7 @@ github.com/onsi/gomega v1.17.0/go.mod h1:HnhC7FXeEQY45zxNK3PPoIUhzk/80Xly9PcubAl
 github.com/onsi/gomega v1.19.0/go.mod h1:LY+I3pBVzYsTBU1AnDwOSxaYi9WoWiqgwooUqq9yPro=
 github.com/onsi/gomega v1.20.1/go.mod h1:DtrZpjmvpn2mPm4YWQa0/ALMDj9v4YxLgojwPeREyVo=
 github.com/onsi/gomega v1.24.0 h1:+0glovB9Jd6z3VR+ScSwQqXVTIfJcGA9UBM8yzQxhqg=
+github.com/onsi/gomega v1.24.0/go.mod h1:Z/NWtiqwBrwUt4/2loMmHL63EDLnYHmVbuBpDr2vQAg=
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
@@ -1368,8 +1369,8 @@ k8s.io/utils v0.0.0-20221012122500-cfd413dd9e85 h1:cTdVh7LYu82xeClmfzGtgyspNh6Ux
 k8s.io/utils v0.0.0-20221012122500-cfd413dd9e85/go.mod h1:OLgZIPagt7ERELqWJFomSt595RzquPNLL48iOWgYOg0=
 kmodules.xyz/apiversion v0.2.0 h1:vAQYqZFm4xu4pbB1cAdHbFEPES6EQkcR4wc06xdTOWk=
 kmodules.xyz/apiversion v0.2.0/go.mod h1:oPX8g8LvlPdPX3Yc5YvCzJHQnw3YF/X4/jdW0b1am80=
-kmodules.xyz/client-go v0.25.23 h1:qz5XJYHLVZUowqfRXEJD7JQ4iaLLzQ1O1zPMmsdrkJw=
-kmodules.xyz/client-go v0.25.23/go.mod h1:wbdzLEoDYiCPI6dTW0mIAGNwkwFV4lC5BN1FJxiDsbw=
+kmodules.xyz/client-go v0.25.27-0.20230718074206-a78b13d99735 h1:5L5Gh6v4SIKWZvbByPj7uE79IMZfn6zclEVWFIFjylw=
+kmodules.xyz/client-go v0.25.27-0.20230718074206-a78b13d99735/go.mod h1:PYfJtJs+AhgfkJNIeUObU4SqAkY85ARTlXxC+2gAsgo=
 kmodules.xyz/crd-schema-fuzz v0.25.0 h1:c5ZxNRqJak1bkGhECmyrKpzKGThFMB4088Kynyvngbc=
 kmodules.xyz/crd-schema-fuzz v0.25.0/go.mod h1:VigFz19GwCxMGhb3YjCtlSXmfXb0J/g9du1So6rvqsk=
 kmodules.xyz/custom-resources v0.25.2 h1:+PJgUZvbbSgyNT7EX9gUZ3PIzY2LAW03TDW8cevvXqo=
@@ -1414,5 +1415,5 @@ sigs.k8s.io/yaml v1.1.0/go.mod h1:UJmg0vDUVViEyp3mgSv9WPwZCDxu4rQW1olrI1uml+o=
 sigs.k8s.io/yaml v1.2.0/go.mod h1:yfXDCHCao9+ENCvLSE62v9VSji2MKu5jeNfTrofGhJc=
 sigs.k8s.io/yaml v1.3.0 h1:a2VclLzOGrwOHDiV8EfBGhvjHvP46CtW5j6POvhYGGo=
 sigs.k8s.io/yaml v1.3.0/go.mod h1:GeOyir5tyXNByN85N/dRIT9es5UQNerPYEKK56eTBm8=
-stash.appscode.dev/apimachinery v0.30.0 h1:imc3OuXaCI8B9ImB1e4QtDYhZCc2VyiXQHW5gheKG/s=
-stash.appscode.dev/apimachinery v0.30.0/go.mod h1:xEWpZn0wmhP0Acpq7cpebNbMXwIui8Crh4dpuE9FHSQ=
+stash.appscode.dev/apimachinery v0.30.1-0.20230718090003-f65932b7df87 h1:+4bErp0cItU06ODy3RfdnJqmUfwy2Bfo8Nd3Zs86q8g=
+stash.appscode.dev/apimachinery v0.30.1-0.20230718090003-f65932b7df87/go.mod h1:Yx8VEJB+U3ibUWormB/1Nbx2Lo03Evoe7bURXDSOmsc=

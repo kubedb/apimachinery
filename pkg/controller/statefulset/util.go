@@ -23,7 +23,6 @@ import (
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	apps "k8s.io/api/apps/v1"
-	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -204,10 +203,10 @@ func (c *Controller) ensureReadyReplicasCond(dbInfo *databaseInfo) error {
 	}
 
 	if dbInfo.replicasReady {
-		dbCond.Status = core.ConditionTrue
+		dbCond.Status = metav1.ConditionTrue
 		dbCond.Reason = api.AllReplicasAreReady
 	} else {
-		dbCond.Status = core.ConditionFalse
+		dbCond.Status = metav1.ConditionFalse
 		dbCond.Reason = api.SomeReplicasAreNotReady
 	}
 

@@ -35,6 +35,7 @@ import (
 	"k8s.io/client-go/tools/reference"
 	"k8s.io/klog/v2"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	cutil "kmodules.xyz/client-go/conditions"
 	core_util "kmodules.xyz/client-go/core/v1"
 	"kmodules.xyz/client-go/discovery"
 	dmcond "kmodules.xyz/client-go/dynamic/conditions"
@@ -114,14 +115,14 @@ func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
 		if err != nil {
 			return fmt.Errorf("failed to read conditions with %s", err.Error())
 		}
-		_, dbCond := kmapi.GetCondition(conditions, api.DatabaseDataRestored)
+		_, dbCond := cutil.GetCondition(conditions, api.DatabaseDataRestored)
 		if dbCond == nil {
 			dbCond = &kmapi.Condition{
 				Type: api.DatabaseDataRestored,
 			}
 		}
-		if dbCond.Status != core.ConditionFalse {
-			dbCond.Status = core.ConditionFalse
+		if dbCond.Status != metav1.ConditionFalse {
+			dbCond.Status = metav1.ConditionFalse
 			dbCond.Reason = api.DataRestoreInterrupted
 			dbCond.Message = fmt.Sprintf("Data initializer %s %s/%s with UID %s has been deleted",
 				ri.invoker.Kind,
@@ -131,8 +132,8 @@ func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
 			)
 		}
 
-		conditions = kmapi.RemoveCondition(conditions, api.DatabaseDataRestoreStarted)
-		conditions = kmapi.SetCondition(conditions, *dbCond)
+		conditions = cutil.RemoveCondition(conditions, api.DatabaseDataRestoreStarted)
+		conditions = cutil.SetCondition(conditions, *dbCond)
 		return ri.do.UpdateConditions(conditions)
 	}
 	return nil
@@ -155,7 +156,7 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 			Type: api.DatabaseDataRestored,
 		}
 		if ri.phase == v1beta1.RestoreSucceeded {
-			dbCond.Status = core.ConditionTrue
+			dbCond.Status = metav1.ConditionTrue
 			dbCond.Reason = api.DatabaseSuccessfullyRestored
 			dbCond.Message = fmt.Sprintf("Successfully restored data by initializer %s %s/%s with UID %s",
 				ri.invoker.Kind,
@@ -164,7 +165,7 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 				ri.invokerUID,
 			)
 		} else {
-			dbCond.Status = core.ConditionFalse
+			dbCond.Status = metav1.ConditionFalse
 			dbCond.Reason = api.FailedToRestoreData
 			dbCond.Message = fmt.Sprintf("Failed to restore data by initializer %s %s/%s with UID %s."+
 				"\nRun 'kubectl describe %s %s -n %s' for more details.",
@@ -182,8 +183,8 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 		if err != nil {
 			return fmt.Errorf("failed to read conditions with %s", err.Error())
 		}
-		conditions = kmapi.RemoveCondition(conditions, api.DatabaseDataRestoreStarted)
-		conditions = kmapi.SetCondition(conditions, dbCond)
+		conditions = cutil.RemoveCondition(conditions, api.DatabaseDataRestoreStarted)
+		conditions = cutil.SetCondition(conditions, dbCond)
 		err = ri.do.UpdateConditions(conditions)
 		if err != nil {
 			return fmt.Errorf("failed to update conditions with %s", err.Error())
@@ -198,7 +199,7 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 	// Remove: "DataRestored" condition, if any.
 	dbCond := kmapi.Condition{
 		Type:    api.DatabaseDataRestoreStarted,
-		Status:  core.ConditionTrue,
+		Status:  metav1.ConditionTrue,
 		Reason:  api.DataRestoreStartedByExternalInitializer,
 		Message: fmt.Sprintf("Data restore started by initializer: %s/%s/%s with UID %s.", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name, ri.invokerUID),
 	}
@@ -206,8 +207,8 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 	if err != nil {
 		return fmt.Errorf("failed to read conditions with %s", err.Error())
 	}
-	conditions = kmapi.RemoveCondition(conditions, api.DatabaseDataRestored)
-	conditions = kmapi.SetCondition(conditions, dbCond)
+	conditions = cutil.RemoveCondition(conditions, api.DatabaseDataRestored)
+	conditions = cutil.SetCondition(conditions, dbCond)
 	return ri.do.UpdateConditions(conditions)
 }
 
@@ -336,7 +337,7 @@ func (c *Controller) writeRestoreCompletionEvent(do dmcond.DynamicOptions, cond 
 	}
 
 	eventType := core.EventTypeNormal
-	if cond.Status != core.ConditionTrue {
+	if cond.Status != metav1.ConditionTrue {
 		eventType = core.EventTypeWarning
 	}
 	// create event
