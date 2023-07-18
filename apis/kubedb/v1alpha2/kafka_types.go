@@ -115,7 +115,7 @@ type KafkaSpec struct {
 
 	// CruiseControl is used to re-balance Kafka cluster
 	// +optional
-	CruiseControl *KafkaCruiseControl `json:"cruiseControl"`
+	CruiseControl *KafkaCruiseControl `json:"cruiseControl,omitempty"`
 
 	// Monitor is used monitor database instance
 	// +optional
