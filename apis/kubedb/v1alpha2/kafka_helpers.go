@@ -366,3 +366,7 @@ func (k *Kafka) GetConnectionScheme() string {
 	}
 	return scheme
 }
+
+func (k *Kafka) GetCruiseControlClientID() string {
+	return meta_util.NameWithSuffix(k.Name, "cruise-control")
+}
