@@ -514,6 +514,7 @@ const (
 const (
 	KafkaPortNameREST                 = "http"
 	KafkaPortNameController           = "controller"
+	KafkaPortNameCruiseControl        = "cruise-control"
 	KafkaBrokerClientPortName         = "broker"
 	KafkaControllerClientPortName     = "controller"
 	KafkaPortNameInternal             = "internal"
@@ -522,14 +523,16 @@ const (
 	KafkaRESTPort                     = 9092
 	KafkaControllerRESTPort           = 9093
 	KafkaInternalRESTPort             = 29092
+	KafkaCruiseControlRESTPort        = 9090
 
-	KafkaContainerName        = "kafka"
-	KafkaUserAdmin            = "admin"
-	KafkaNodeRoleSet          = "set"
-	KafkaNodeRolesCombined    = "controller,broker"
-	KafkaNodeRolesController  = "controller"
-	KafkaNodeRolesBrokers     = "broker"
-	KafkaStandbyServiceSuffix = "standby"
+	KafkaContainerName          = "kafka"
+	KafkaUserAdmin              = "admin"
+	KafkaNodeRoleSet            = "set"
+	KafkaNodeRolesCombined      = "controller,broker"
+	KafkaNodeRolesController    = "controller"
+	KafkaNodeRolesBrokers       = "broker"
+	KafkaNodeRolesCruiseControl = "cruise-control"
+	KafkaStandbyServiceSuffix   = "standby"
 
 	KafkaBrokerListener     = "KafkaBrokerListener"
 	KafkaControllerListener = "KafkaControllerListener"
