@@ -222,6 +222,10 @@ func (k *Kafka) ConfigSecretName(role KafkaNodeRoleType) string {
 	return meta_util.NameWithSuffix(k.OffshootName(), "config")
 }
 
+func (k *Kafka) CruiseControlConfigSecretName() string {
+	return meta_util.NameWithSuffix(k.OffshootName(), "cruise-control-config")
+}
+
 func (k *Kafka) DefaultUserCredSecretName(username string) string {
 	return meta_util.NameWithSuffix(k.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", username), "_", "-"))
 }
