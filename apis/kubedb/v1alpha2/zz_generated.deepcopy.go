@@ -849,6 +849,7 @@ func (in *KafkaCruiseControl) DeepCopyInto(out *KafkaCruiseControl) {
 		(*in).DeepCopyInto(*out)
 	}
 	in.Resources.DeepCopyInto(&out.Resources)
+	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	return
 }
 
