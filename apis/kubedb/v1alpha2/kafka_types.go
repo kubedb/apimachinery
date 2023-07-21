@@ -163,10 +163,6 @@ type KafkaStatus struct {
 }
 
 type KafkaCruiseControl struct {
-	// To enable cruise-control
-	// +optional
-	Enabled bool `json:"enabled,omitempty"`
-
 	// Configuration for cruise-control
 	// +optional
 	Config *SecretReference `json:"config,omitempty"`
@@ -179,10 +175,6 @@ type KafkaCruiseControl struct {
 	// +optional
 	Suffix string `json:"suffix,omitempty"`
 
-	// Storage to specify how storage shall be used.
-	// +optional
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
-
 	// Compute Resources required by the sidecar container.
 	// +optional
 	Resources core.ResourceRequirements `json:"resources,omitempty"`
@@ -190,6 +182,15 @@ type KafkaCruiseControl struct {
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+
+	// PodTemplate is an optional configuration for pods used to expose database
+	// +optional
+	BrokerCapacity *KafkaBrokerCapacity `json:"brokerCapacity,omitempty"`
+}
+
+type KafkaBrokerCapacity struct {
+	InBoundNetwork  string `json:"inBoundNetwork,omitempty"`
+	OutBoundNetwork string `json:"outBoundNetwork,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=Provisioning;Ready;NotReady;Critical

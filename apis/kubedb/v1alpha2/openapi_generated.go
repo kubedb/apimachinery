@@ -449,6 +449,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Kafka":                          schema_apimachinery_apis_kubedb_v1alpha2_Kafka(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaApp":                       schema_apimachinery_apis_kubedb_v1alpha2_KafkaApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaBrokerCapacity":            schema_apimachinery_apis_kubedb_v1alpha2_KafkaBrokerCapacity(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaClusterTopology":           schema_apimachinery_apis_kubedb_v1alpha2_KafkaClusterTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaCruiseControl":             schema_apimachinery_apis_kubedb_v1alpha2_KafkaCruiseControl(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaList":                      schema_apimachinery_apis_kubedb_v1alpha2_KafkaList(ref),
@@ -22776,6 +22777,30 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaApp(ref common.ReferenceCallb
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_KafkaBrokerCapacity(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"inBoundNetwork": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"outBoundNetwork": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_KafkaClusterTopology(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22807,13 +22832,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaCruiseControl(ref common.Refe
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"enabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "To enable cruise-control",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"config": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Configuration for cruise-control",
@@ -22834,12 +22852,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaCruiseControl(ref common.Refe
 							Format:      "",
 						},
 					},
-					"storage": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Storage to specify how storage shall be used.",
-							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
-						},
-					},
 					"resources": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Compute Resources required by the sidecar container.",
@@ -22854,11 +22866,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaCruiseControl(ref common.Refe
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
 						},
 					},
+					"brokerCapacity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaBrokerCapacity"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.ResourceRequirements", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaBrokerCapacity", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
