@@ -37,7 +37,7 @@ require (
 	kubeops.dev/sidekick v0.0.2-0.20230113102427-9848f83b2f0f
 	sigs.k8s.io/controller-runtime v0.13.1
 	sigs.k8s.io/yaml v1.3.0
-	stash.appscode.dev/apimachinery v0.30.1-0.20230718090003-f65932b7df87
+	stash.appscode.dev/apimachinery v0.30.1-0.20230722164128-56274c743ef0
 )
 
 require (
