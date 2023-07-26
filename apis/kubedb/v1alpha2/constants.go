@@ -554,6 +554,7 @@ const (
 	KafkaCruiseControlBrokerSetConfigFileName = "brokerSets.json"
 	KafkaCruiseControlClusterConfigFileName   = "clusterConfigs.json"
 	KafkaCruiseControlLog4jConfigFileName     = "log4j.properties"
+	KafkaCruiseControlUIConfigFileName        = "config.csv"
 
 	KafkaListeners                   = "listeners"
 	KafkaAdvertisedListeners         = "advertised.listeners"
