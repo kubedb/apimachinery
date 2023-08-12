@@ -64,7 +64,7 @@ spec:
                       outBoundNetwork:
                         type: string
                     type: object
-                  config:
+                  configSecret:
                     properties:
                       externallyManaged:
                         type: boolean

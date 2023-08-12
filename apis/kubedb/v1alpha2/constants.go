@@ -524,6 +524,8 @@ const (
 	KafkaControllerRESTPort           = 9093
 	KafkaInternalRESTPort             = 29092
 	KafkaCruiseControlRESTPort        = 9090
+	KafkaCCDefaultInNetwork           = 500000
+	KafkaCCDefaultOutNetwork          = 500000
 
 	KafkaContainerName          = "kafka"
 	KafkaUserAdmin              = "admin"
@@ -607,10 +609,25 @@ const (
 	KafkaSASLPlainMechanism          = "PLAIN"
 
 	KafkaCCMetricSamplerClass            = "metric.sampler.class"
-	KafkaCCKubernetesMode                = "cruise.control.metrics.reporter.kubernetes.mode"
 	KafkaCCCapacityConfig                = "capacity.config.file"
-	KafkaCCTwoStepVarificationEnabled    = "two.step.verification.enabled"
+	KafkaCCTwoStepVerificationEnabled    = "two.step.verification.enabled"
 	KafkaCCBrokerFailureDetectionEnabled = "kafka.broker.failure.detection.enable"
+	KafkaOffSetTopicReplica              = "offsets.topic.replication.factor"
+	KafkaTransactionStateLogReplica      = "transaction.state.log.replication.factor"
+	KafkaTransactionSateLogMinISR        = "transaction.state.log.min.isr"
+	KafkaLogCleanerMinLagSec             = "log.cleaner.min.compaction.lag.ms"
+	KafkaLogCleanerBackoffMS             = "log.cleaner.backoff.ms"
+	KafkaListenerNameRackRaft            = "listener.name.internal.rack-raft.enabled"
+
+	KafkaCCKubernetesMode                 = "cruise.control.metrics.reporter.kubernetes.mode"
+	KafkaCCBootstrapServers               = "cruise.control.metrics.reporter.bootstrap.servers"
+	KafkaCCMetricTopicAutoCreate          = "cruise.control.metrics.topic.auto.create"
+	KafkaCCMetricTopicNumPartition        = "cruise.control.metrics.topic.num.partitions"
+	KafkaCCMetricTopicReplica             = "cruise.control.metrics.topic.replication.factor"
+	KafkaCCMetricReporterSecurityProtocol = "cruise.control.metrics.reporter.security.protocol"
+	KafkaCCMetricReporterSaslMechanism    = "cruise.control.metrics.reporter.sasl.mechanism"
+	KafkaCCSampleLoadingThreadsNum        = "num.sample.loading.threads"
+	KafkaCCMinSamplesPerBrokerWindow      = "min.samples.per.broker.metrics.window"
 
 	KafkaVolumeData         = "data"
 	KafkaVolumeConfig       = "kafkaconfig"
@@ -626,6 +643,8 @@ const (
 
 	KafkaCCMetricsSampler         = "com.linkedin.kafka.cruisecontrol.monitor.sampling.CruiseControlMetricsReporterSampler"
 	KafkaAdminTopicConfigProvider = "com.linkedin.kafka.cruisecontrol.config.KafkaAdminTopicConfigProvider"
+	KafkaCCMetricReporter         = "com.linkedin.kafka.cruisecontrol.metricsreporter.CruiseControlMetricsReporter"
+	KafkaJMXMetricReporter        = "org.apache.kafka.common.metrics.JmxReporter"
 )
 
 // Resource kind related constants

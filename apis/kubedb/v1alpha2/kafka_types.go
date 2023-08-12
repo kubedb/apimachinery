@@ -165,7 +165,7 @@ type KafkaStatus struct {
 type KafkaCruiseControl struct {
 	// Configuration for cruise-control
 	// +optional
-	Config *SecretReference `json:"config,omitempty"`
+	ConfigSecret *SecretReference `json:"configSecret,omitempty"`
 
 	// Replicas represents number of replica for this specific type of node
 	// +optional
