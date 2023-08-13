@@ -545,6 +545,8 @@ const (
 	KafkaConfigDir                            = "/opt/kafka/config/kafkaconfig"
 	KafkaTempConfigDir                        = "/opt/kafka/config/temp-config"
 	KafkaCustomConfigDir                      = "/opt/kafka/config/custom-config"
+	KafkaCCTempConfigDir                      = "/opt/cruise-control/temp-config"
+	KafkaCCCustomConfigDir                    = "/opt/cruise-control/custom-config"
 	KafkaCapacityConfigPath                   = "config/capacity.json"
 	KafkaConfigFileName                       = "config.properties"
 	KafkaServerCustomConfigFileName           = "server.properties"
