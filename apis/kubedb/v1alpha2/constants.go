@@ -525,6 +525,7 @@ const (
 	KafkaControllerRESTPort            = 9093
 	KafkaInternalRESTPort              = 29092
 	KafkaCruiseControlRESTPort         = 9090
+	KafkaCruiseControlListenerPort     = 9094
 	KafkaCCDefaultInNetwork            = 500000
 	KafkaCCDefaultOutNetwork           = 500000
 
