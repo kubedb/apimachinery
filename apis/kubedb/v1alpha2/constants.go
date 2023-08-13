@@ -512,20 +512,21 @@ const (
 )
 
 const (
-	KafkaPortNameREST                 = "http"
-	KafkaPortNameController           = "controller"
-	KafkaPortNameCruiseControl        = "cruise-control"
-	KafkaBrokerClientPortName         = "broker"
-	KafkaControllerClientPortName     = "controller"
-	KafkaPortNameInternal             = "internal"
-	KafkaTopicNameHealth              = "kafka-health"
-	KafkaTopicDeletionThresholdOffset = 1000
-	KafkaRESTPort                     = 9092
-	KafkaControllerRESTPort           = 9093
-	KafkaInternalRESTPort             = 29092
-	KafkaCruiseControlRESTPort        = 9090
-	KafkaCCDefaultInNetwork           = 500000
-	KafkaCCDefaultOutNetwork          = 500000
+	KafkaPortNameREST                  = "http"
+	KafkaPortNameController            = "controller"
+	KafkaPortNameCruiseControlListener = "cruise-control-listener"
+	KafkaPortNameCruiseControlREST     = "cruise-control"
+	KafkaBrokerClientPortName          = "broker"
+	KafkaControllerClientPortName      = "controller"
+	KafkaPortNameInternal              = "internal"
+	KafkaTopicNameHealth               = "kafka-health"
+	KafkaTopicDeletionThresholdOffset  = 1000
+	KafkaRESTPort                      = 9092
+	KafkaControllerRESTPort            = 9093
+	KafkaInternalRESTPort              = 29092
+	KafkaCruiseControlRESTPort         = 9090
+	KafkaCCDefaultInNetwork            = 500000
+	KafkaCCDefaultOutNetwork           = 500000
 
 	KafkaContainerName          = "kafka"
 	KafkaUserAdmin              = "admin"
