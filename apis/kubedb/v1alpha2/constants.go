@@ -514,8 +514,8 @@ const (
 const (
 	KafkaPortNameREST                  = "http"
 	KafkaPortNameController            = "controller"
-	KafkaPortNameCruiseControlListener = "cruise-control-listener"
-	KafkaPortNameCruiseControlREST     = "cruise-control"
+	KafkaPortNameCruiseControlListener = "cc-listener"
+	KafkaPortNameCruiseControlREST     = "cc-rest"
 	KafkaBrokerClientPortName          = "broker"
 	KafkaControllerClientPortName      = "controller"
 	KafkaPortNameInternal              = "internal"
