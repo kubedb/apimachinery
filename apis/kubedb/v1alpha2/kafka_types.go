@@ -212,13 +212,14 @@ const (
 	KafkaNodeRoleCombined   KafkaNodeRoleType = "combined"
 )
 
-// +kubebuilder:validation:Enum=BROKER;CONTROLLER;INTERNAL
+// +kubebuilder:validation:Enum=BROKER;CONTROLLER;INTERNAL;CC
 type KafkaListenerType string
 
 const (
 	KafkaListenerBroker     KafkaListenerType = "BROKER"
 	KafkaListenerController KafkaListenerType = "CONTROLLER"
 	KafkaListenerInternal   KafkaListenerType = "INTERNAL"
+	KafkaListenerCC         KafkaListenerType = "CC"
 )
 
 // +kubebuilder:validation:Enum=ca;transport;http;client;server
