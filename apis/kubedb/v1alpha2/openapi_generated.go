@@ -449,7 +449,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Kafka":                          schema_apimachinery_apis_kubedb_v1alpha2_Kafka(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaApp":                       schema_apimachinery_apis_kubedb_v1alpha2_KafkaApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaBrokerCapacity":            schema_apimachinery_apis_kubedb_v1alpha2_KafkaBrokerCapacity(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaClusterTopology":           schema_apimachinery_apis_kubedb_v1alpha2_KafkaClusterTopology(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaCruiseControl":             schema_apimachinery_apis_kubedb_v1alpha2_KafkaCruiseControl(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaList":                      schema_apimachinery_apis_kubedb_v1alpha2_KafkaList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaNode":                      schema_apimachinery_apis_kubedb_v1alpha2_KafkaNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref),
@@ -22775,6 +22777,30 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaApp(ref common.ReferenceCallb
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_KafkaBrokerCapacity(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"inBoundNetwork": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"outBoundNetwork": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_KafkaClusterTopology(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22797,6 +22823,60 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaClusterTopology(ref common.Re
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaNode"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_KafkaCruiseControl(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configuration for cruise-control",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas represents number of replica for this specific type of node",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"suffix": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Suffix to append with node name",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Compute Resources required by the sidecar container.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+					"brokerCapacity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaBrokerCapacity"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaBrokerCapacity", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -23004,6 +23084,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref common.ReferenceCall
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
+					"cruiseControl": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CruiseControl is used to re-balance Kafka cluster",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaCruiseControl"),
+						},
+					},
 					"monitor": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Monitor is used monitor database instance",
@@ -23015,7 +23101,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaCruiseControl", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
