@@ -35,6 +35,12 @@ type InitSpec struct {
 type ScriptSourceSpec struct {
 	ScriptPath        string `json:"scriptPath,omitempty"`
 	core.VolumeSource `json:",inline,omitempty"`
+	Git               *GitRepo `json:"git,omitempty"`
+}
+type GitRepo struct {
+	Name      string           `json:"name"`
+	GitSecret *SecretReference `json:"gitSecret,omitempty"`
+	Args      []string         `json:"args,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=Provisioning;DataRestoring;Ready;Critical;NotReady;Halted;Unknown

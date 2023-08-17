@@ -459,6 +459,25 @@ spec:
                         required:
                         - pdName
                         type: object
+                      git:
+                        properties:
+                          args:
+                            items:
+                              type: string
+                            type: array
+                          gitSecret:
+                            properties:
+                              externallyManaged:
+                                type: boolean
+                              name:
+                                type: string
+                            type: object
+                            x-kubernetes-map-type: atomic
+                          name:
+                            type: string
+                        required:
+                        - name
+                        type: object
                       gitRepo:
                         properties:
                           directory:
