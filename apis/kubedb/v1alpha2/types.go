@@ -49,7 +49,7 @@ type GitRepo struct {
 	// More info: https://kubernetes.io/docs/concepts/policy/security-context/
 	// More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 	// +optional
-	SecurityContext *core.SecurityContext `json:"containerSecurityContext,omitempty"`
+	SecurityContext *core.SecurityContext `json:"securityContext,omitempty"`
 	// Compute Resources required by the sidecar container.
 	// +optional
 	Resources core.ResourceRequirements `json:"resources,omitempty"`
