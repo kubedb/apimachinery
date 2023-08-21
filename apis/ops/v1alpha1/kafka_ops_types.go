@@ -43,7 +43,7 @@ const (
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type KafkaOpsRequest struct {
-	metav1.TypeMeta   `json:",omitempty"`
+	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	Spec              KafkaOpsRequestSpec `json:"spec,omitempty"`
 	Status            OpsRequestStatus    `json:"status,omitempty"`

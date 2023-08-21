@@ -27,39 +27,39 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (_ KafkaOpsRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (_ *KafkaOpsRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralKafkaOpsRequest))
 }
 
 var _ apis.ResourceInfo = &KafkaOpsRequest{}
 
-func (k KafkaOpsRequest) ResourceFQN() string {
+func (k *KafkaOpsRequest) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", ResourcePluralKafkaOpsRequest, ops.GroupName)
 }
 
-func (k KafkaOpsRequest) ResourceShortCode() string {
+func (k *KafkaOpsRequest) ResourceShortCode() string {
 	return ResourceCodeKafkaOpsRequest
 }
 
-func (k KafkaOpsRequest) ResourceKind() string {
+func (k *KafkaOpsRequest) ResourceKind() string {
 	return ResourceKindKafkaOpsRequest
 }
 
-func (k KafkaOpsRequest) ResourceSingular() string {
+func (k *KafkaOpsRequest) ResourceSingular() string {
 	return ResourceSingularKafkaOpsRequest
 }
 
-func (k KafkaOpsRequest) ResourcePlural() string {
+func (k *KafkaOpsRequest) ResourcePlural() string {
 	return ResourcePluralKafkaOpsRequest
 }
 
-func (k KafkaOpsRequest) ValidateSpecs() error {
+func (k *KafkaOpsRequest) ValidateSpecs() error {
 	return nil
 }
 
 var _ Accessor = &KafkaOpsRequest{}
 
-func (k KafkaOpsRequest) GetRequestType() any {
+func (k *KafkaOpsRequest) GetRequestType() any {
 	return k.Spec.Type
 }
 
@@ -67,7 +67,7 @@ func (k *KafkaOpsRequest) GetObjectMeta() metav1.ObjectMeta {
 	return k.ObjectMeta
 }
 
-func (k KafkaOpsRequest) GetUpdateVersionSpec() *KafkaUpdateVersionSpec {
+func (k *KafkaOpsRequest) GetUpdateVersionSpec() *KafkaUpdateVersionSpec {
 	return k.Spec.UpdateVersion
 }
 
