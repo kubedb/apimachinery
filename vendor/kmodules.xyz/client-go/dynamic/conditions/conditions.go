@@ -22,6 +22,7 @@ import (
 	"time"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"kmodules.xyz/client-go/conditions"
 
 	"github.com/mitchellh/mapstructure"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -40,32 +41,32 @@ type DynamicOptions struct {
 }
 
 func (do *DynamicOptions) HasCondition(condType string) (bool, error) {
-	_, conditions, err := do.ReadConditions()
+	_, conds, err := do.ReadConditions()
 	if err != nil {
 		return false, err
 	}
-	return kmapi.HasCondition(conditions, condType), nil
+	return conditions.HasCondition(conds, condType), nil
 }
 
 func (do *DynamicOptions) GetCondition(condType string) (int, *kmapi.Condition, error) {
-	_, conditions, err := do.ReadConditions()
+	_, conds, err := do.ReadConditions()
 	if err != nil {
 		return -1, nil, err
 	}
-	idx, cond := kmapi.GetCondition(conditions, condType)
+	idx, cond := conditions.GetCondition(conds, condType)
 	return idx, cond, nil
 }
 
 func (do *DynamicOptions) SetCondition(newCond kmapi.Condition) error {
-	res, conditions, err := do.ReadConditions()
+	res, conds, err := do.ReadConditions()
 	if err != nil {
 		return err
 	}
-	conditions = kmapi.SetCondition(conditions, newCond)
+	conds = conditions.SetCondition(conds, newCond)
 
-	unstrConds := make([]interface{}, len(conditions))
-	for i := range conditions {
-		cond, err := runtime.DefaultUnstructuredConverter.ToUnstructured(&conditions[i])
+	unstrConds := make([]interface{}, len(conds))
+	for i := range conds {
+		cond, err := runtime.DefaultUnstructuredConverter.ToUnstructured(&conds[i])
 		if err != nil {
 			return err
 		}
@@ -80,15 +81,15 @@ func (do *DynamicOptions) SetCondition(newCond kmapi.Condition) error {
 }
 
 func (do *DynamicOptions) RemoveCondition(condType string) error {
-	res, conditions, err := do.ReadConditions()
+	res, conds, err := do.ReadConditions()
 	if err != nil {
 		return err
 	}
-	conditions = kmapi.RemoveCondition(conditions, condType)
+	conds = conditions.RemoveCondition(conds, condType)
 
-	unstrConds := make([]interface{}, len(conditions))
-	for i := range conditions {
-		cond, err := runtime.DefaultUnstructuredConverter.ToUnstructured(&conditions[i])
+	unstrConds := make([]interface{}, len(conds))
+	for i := range conds {
+		cond, err := runtime.DefaultUnstructuredConverter.ToUnstructured(&conds[i])
 		if err != nil {
 			return err
 		}
@@ -103,11 +104,11 @@ func (do *DynamicOptions) RemoveCondition(condType string) error {
 }
 
 func (do *DynamicOptions) IsConditionTrue(condType string) (bool, error) {
-	_, conditions, err := do.ReadConditions()
+	_, conds, err := do.ReadConditions()
 	if err != nil {
 		return false, err
 	}
-	return kmapi.IsConditionTrue(conditions, condType), nil
+	return conditions.IsConditionTrue(conds, condType), nil
 }
 
 func (do *DynamicOptions) ReadConditions() (*unstructured.Unstructured, []kmapi.Condition, error) {

@@ -60,6 +60,7 @@ spec:
                   be kept.
                 properties:
                   last:
+                    default: 1
                     description: Last specifies how many last failed Snapshots should
                       be kept. By default, Stash will keep only the last 1 failed
                       Snapshot.

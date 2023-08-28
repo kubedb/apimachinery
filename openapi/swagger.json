@@ -28811,6 +28811,19 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer": {
+      "description": "GitSyncer is the image for the kubernetes/git-sync https://github.com/kubernetes/git-sync",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestSpec": {
       "type": "object",
       "required": [
@@ -29380,6 +29393,10 @@
           "description": "Exporter Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionExporter"
+        },
+        "gitSyncer": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer"
         },
         "initContainer": {
           "description": "Init container Image",
@@ -30938,6 +30955,43 @@
       "properties": {
         "repository": {
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.GitRepo": {
+      "type": "object",
+      "required": [
+        "args"
+      ],
+      "properties": {
+        "args": {
+          "description": "https://github.com/kubernetes/git-sync/tree/master",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "authSecret": {
+          "description": "Authentication secret for git repository",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "env": {
+          "description": "List of environment variables to set in the container. Cannot be updated.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.EnvVar"
+          }
+        },
+        "resources": {
+          "description": "Compute Resources required by the sidecar container.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "securityContext": {
+          "description": "Security options the pod should run with. More info: https://kubernetes.io/docs/concepts/policy/security-context/ More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecurityContext"
         }
       }
     },
@@ -33133,6 +33187,9 @@
         "gcePersistentDisk": {
           "description": "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
           "$ref": "#/definitions/io.k8s.api.core.v1.GCEPersistentDiskVolumeSource"
+        },
+        "git": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.GitRepo"
         },
         "gitRepo": {
           "description": "gitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
@@ -38739,24 +38796,22 @@
       }
     },
     "xyz.kmodules.client-go.api.v1.Condition": {
+      "description": "Condition defines an observation of a object operational state.",
       "type": "object",
       "required": [
         "type",
         "status",
-        "lastTransitionTime",
-        "reason",
-        "message"
+        "lastTransitionTime"
       ],
       "properties": {
         "lastTransitionTime": {
-          "description": "Last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.",
+          "description": "Last time the condition transitioned from one status to another. This should be when the underlying condition changed. If that is not known, then using the time when the API field changed is acceptable.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
-          "description": "A human readable message indicating details about the transition. This field may be empty.",
-          "type": "string",
-          "default": ""
+          "description": "A human-readable message indicating details about the transition. This field may be empty.",
+          "type": "string"
         },
         "observedGeneration": {
           "description": "If set, this represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.condition[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.",
@@ -38764,9 +38819,12 @@
           "format": "int64"
         },
         "reason": {
-          "description": "The reason for the condition's last transition in CamelCase. The specific API may choose whether or not this field is considered a guaranteed API. This field may not be empty.",
-          "type": "string",
-          "default": ""
+          "description": "The reason for the condition's last transition in CamelCase. The specific API may choose whether this field is considered a guaranteed API. This field may not be empty.",
+          "type": "string"
+        },
+        "severity": {
+          "description": "Severity provides an explicit classification of Reason code, so the users or machines can immediately understand the current situation and act accordingly. The Severity field MUST be set only when Status=False.",
+          "type": "string"
         },
         "status": {
           "description": "Status of the condition, one of True, False, Unknown.",
@@ -38774,7 +38832,7 @@
           "default": ""
         },
         "type": {
-          "description": "Type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important.",
+          "description": "Type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary util can be useful (see .node.status.util), the ability to deconflict is important.",
           "type": "string",
           "default": ""
         }

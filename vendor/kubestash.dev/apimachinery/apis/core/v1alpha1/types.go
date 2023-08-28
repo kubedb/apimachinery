@@ -55,7 +55,7 @@ type TaskReference struct {
 	// Params specifies parameters for the task. You must provide the parameter in the Addon desired structure.
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +optional
-	Params map[string]*runtime.RawExtension `json:"params,omitempty"`
+	Params *runtime.RawExtension `json:"params,omitempty"`
 
 	// TargetVolumes specifies which volumes from the target should be mounted in the backup/restore job/container.
 	// +optional
@@ -64,7 +64,7 @@ type TaskReference struct {
 	// AddonVolumes lets you overwrite the volume sources used in the VolumeTemplate section of Addon.
 	// Make sure that name of your volume matches with the name of the volume you want to overwrite.
 	// +optional
-	AddonVolumes []apis.VolumeSource `json:"addonVolumes,omitempty"`
+	AddonVolumes []AddonVolumeInfo `json:"addonVolumes,omitempty"`
 }
 
 // TargetVolumeInfo specifies the volumes and their mounts of the targeted application that should
@@ -75,6 +75,18 @@ type TargetVolumeInfo struct {
 
 	// VolumeMounts specifies the mount for the volumes specified in `Volumes` section
 	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
+
+	// VolumeClaimTemplates specifies a template for the PersistentVolumeClaims that will be created for each Pod in a StatefulSet.
+	VolumeClaimTemplates []ofst.PersistentVolumeClaim `json:"volumeClaimTemplates,omitempty"`
+}
+
+// AddonVolumeInfo specifies the name and the source of volume
+type AddonVolumeInfo struct {
+	// Name specifies the name of the volume
+	Name string `json:"name,omitempty"`
+
+	// Source specifies the source of this volume.
+	Source *apis.VolumeSource `json:"source,omitempty"`
 }
 
 // HookInfo specifies the information about the backup/restore hooks
@@ -102,14 +114,14 @@ type HookInfo struct {
 	// If the hook execution does not finish within this time period, KubeStash will consider this hook execution as failure.
 	// Then, it will be re-tried according to MaxRetry policy.
 	// +optional
-	Timeout *int32 `json:"timeout,omitempty"`
+	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
 	// ExecutionPolicy specifies when to execute the hook.
 	// Valid values are:
 	// - "Always": Stash will execute this hook no matter the backup/restore failed. This is the default execution policy.
 	// - "OnSuccess": Stash will execute this hook only if the backup/restore has succeeded.
 	// - "OnFailure": Stash will execute this hook only if the backup/restore has failed.
-	// +kubebuilder:validation:default=Always
+	// +kubebuilder:default=Always
 	// +optional
 	ExecutionPolicy HookExecutionPolicy `json:"executionPolicy,omitempty"`
 
@@ -120,17 +132,28 @@ type HookInfo struct {
 	// Volumes indicates the list of volumes of targeted application that should be mounted on the hook executor.
 	// Use this field only for `Function` type hook executor.
 	// +optional
-	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
+	Volumes []ofst.Volume `json:"volumes,omitempty"`
 
 	// VolumeMounts specifies the mount for the volumes specified in `Volumes` section
 	// Use this field only for `Function` type hook executor.
 	// +optional
-	Volumes []ofst.Volume `json:"volumes,omitempty"`
+	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
 
 	// RuntimeSettings specifies runtime configurations for the hook executor Job.
 	// Use this field only for `Function` type hook executor.
 	// +optional
 	RuntimeSettings *ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
+}
+
+// HookStatus represents the status of the hooks
+type HookStatus struct {
+	// PreHooks represents the pre-restore hook execution status
+	// +optional
+	PreHooks []HookExecutionStatus `json:"preHooks,omitempty"`
+
+	// PostHooks represents the post-restore hook execution status
+	// +optional
+	PostHooks []HookExecutionStatus `json:"postHooks,omitempty"`
 }
 
 // HookExecutionPolicy specifies when to execute the hook.
@@ -154,19 +177,20 @@ type HookExecutionStatus struct {
 }
 
 // HookExecutionPhase specifies the state of the hook execution
-// +kubebuilder:validation:Enum=Succeeded;Failed
+// +kubebuilder:validation:Enum=Succeeded;Failed;Pending
 type HookExecutionPhase string
 
 const (
 	HookExecutionSucceeded HookExecutionPhase = "Succeeded"
 	HookExecutionFailed    HookExecutionPhase = "Failed"
+	HookExecutionPending   HookExecutionPhase = "Pending"
 )
 
 // ResourceFoundStatus specifies whether a resource was found or not
 type ResourceFoundStatus struct {
 	kmapi.TypedObjectReference `json:",inline"`
 	// Found indicates whether the resource was found or not
-	Found bool `json:"found,omitempty"`
+	Found *bool `json:"found,omitempty"`
 }
 
 // FailurePolicy specifies what to do if a backup/restore fails
@@ -182,7 +206,7 @@ const (
 type RetryConfig struct {
 	// MaxRetry specifies the maximum number of times Stash should retry the backup/restore process.
 	// By default, Stash will retry only 1 time.
-	// +kubebuilder:validation:default=1
+	// +kubebuilder:default=1
 	// +kubebuilder:validation:Minimum=1
 	MaxRetry int32 `json:"maxRetry,omitempty"`
 
@@ -195,4 +219,9 @@ type RetryConfig struct {
 const (
 	TypeDeadlineExceeded                 = "DeadlineExceeded"
 	ReasonFailedToCompleteWithinDeadline = "FailedToCompleteWithinDeadline"
+
+	// TypeMetricsPushed indicates whether Metrics are pushed or not
+	TypeMetricsPushed               = "MetricsPushed"
+	ReasonSuccessfullyPushedMetrics = "SuccessfullyPushedMetrics"
+	ReasonFailedToPushMetrics       = "FailedToPushMetrics"
 )

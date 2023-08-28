@@ -17,8 +17,17 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
+	"fmt"
+	core "k8s.io/api/core/v1"
+	kerr "k8s.io/apimachinery/pkg/api/errors"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	kmapi "kmodules.xyz/client-go/api/v1"
+	"kubestash.dev/apimachinery/apis"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )
@@ -42,7 +51,9 @@ var _ webhook.Defaulter = &BackupBlueprint{}
 func (r *BackupBlueprint) Default() {
 	backupblueprintlog.Info("default", "name", r.Name)
 
-	// TODO(user): fill in your defaulting logic.
+	if r.Spec.UsagePolicy == nil {
+		r.setDefaultUsagePolicy()
+	}
 }
 
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
@@ -54,16 +65,24 @@ var _ webhook.Validator = &BackupBlueprint{}
 func (r *BackupBlueprint) ValidateCreate() error {
 	backupblueprintlog.Info("validate create", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object creation.
-	return nil
+	c, err := getNewRuntimeClient()
+	if err != nil {
+		return fmt.Errorf("failed to set Kubernetes client, Reason: %w", err)
+	}
+
+	return r.validateBackendsAgainstUsagePolicy(context.Background(), c)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *BackupBlueprint) ValidateUpdate(old runtime.Object) error {
 	backupblueprintlog.Info("validate update", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object update.
-	return nil
+	c, err := getNewRuntimeClient()
+	if err != nil {
+		return fmt.Errorf("failed to set Kubernetes client, Reason: %w", err)
+	}
+
+	return r.validateBackendsAgainstUsagePolicy(context.Background(), c)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -72,4 +91,57 @@ func (r *BackupBlueprint) ValidateDelete() error {
 
 	// TODO(user): fill in your validation logic upon object deletion.
 	return nil
+}
+
+func (r *BackupBlueprint) setDefaultUsagePolicy() {
+	fromSameNamespace := apis.NamespacesFromSame
+	r.Spec.UsagePolicy = &apis.UsagePolicy{
+		AllowedNamespaces: apis.AllowedNamespaces{
+			From: &fromSameNamespace,
+		},
+	}
+}
+
+func (r *BackupBlueprint) validateBackendsAgainstUsagePolicy(ctx context.Context, c client.Client) error {
+	if r.Spec.BackupConfigurationTemplate == nil {
+		return fmt.Errorf("backupConfigurationTemplate can not be empty")
+	}
+
+	for _, backend := range r.Spec.BackupConfigurationTemplate.Backends {
+		bs, err := r.getBackupStorage(ctx, c, backend.StorageRef)
+		if err != nil {
+			if kerr.IsNotFound(err) {
+				continue
+			}
+			return err
+		}
+
+		ns := &core.Namespace{ObjectMeta: v1.ObjectMeta{Name: r.Namespace}}
+		if err := c.Get(ctx, client.ObjectKeyFromObject(ns), ns); err != nil {
+			return err
+		}
+
+		if !bs.UsageAllowed(ns) {
+			return fmt.Errorf("namespace %q is not allowed to refer BackupStorage %s/%s. Please, check the `usagePolicy` of the BackupStorage", r.Namespace, bs.Name, bs.Namespace)
+		}
+	}
+	return nil
+}
+
+func (r *BackupBlueprint) getBackupStorage(ctx context.Context, c client.Client, ref kmapi.TypedObjectReference) (*storageapi.BackupStorage, error) {
+	bs := &storageapi.BackupStorage{
+		ObjectMeta: v1.ObjectMeta{
+			Name:      ref.Name,
+			Namespace: ref.Namespace,
+		},
+	}
+
+	if bs.Namespace == "" {
+		bs.Namespace = r.Namespace
+	}
+
+	if err := c.Get(ctx, client.ObjectKeyFromObject(bs), bs); err != nil {
+		return nil, err
+	}
+	return bs, nil
 }

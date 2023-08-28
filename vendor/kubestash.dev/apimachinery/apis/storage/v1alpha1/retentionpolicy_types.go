@@ -116,7 +116,7 @@ type SuccessfulSnapshotsKeepPolicy struct {
 type FailedSnapshotsKeepPolicy struct {
 	// Last specifies how many last failed Snapshots should be kept.
 	// By default, Stash will keep only the last 1 failed Snapshot.
-	// +kubebuilder:validation:default=1
+	// +kubebuilder:default=1
 	// +optional
 	Last *int32 `json:"last,omitempty"`
 }

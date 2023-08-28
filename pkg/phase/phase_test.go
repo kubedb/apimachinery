@@ -22,7 +22,6 @@ import (
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
@@ -48,7 +47,7 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseProvisioning,
@@ -58,11 +57,11 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionFalse,
+					Status: metav1.ConditionFalse,
 				},
 			},
 			expectedPhase: api.DatabasePhaseProvisioning,
@@ -72,11 +71,11 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseProvisioning,
@@ -86,19 +85,19 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: core.ConditionFalse,
+					Status: metav1.ConditionFalse,
 				},
 				{
 					Type:   api.DatabaseProvisioned,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseNotReady,
@@ -108,15 +107,15 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseProvisioning,
@@ -126,19 +125,19 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestoreStarted,
-					Status:             core.ConditionTrue,
+					Status:             metav1.ConditionTrue,
 					LastTransitionTime: lastTransactionTime,
 				},
 			},
@@ -149,19 +148,19 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             core.ConditionTrue,
+					Status:             metav1.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 			},
@@ -172,19 +171,19 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             core.ConditionFalse,
+					Status:             metav1.ConditionFalse,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 			},
@@ -195,28 +194,28 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             core.ConditionTrue,
+					Status:             metav1.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
 					Type:   api.DatabaseProvisioned,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReady,
-					Status: core.ConditionFalse,
+					Status: metav1.ConditionFalse,
 				},
 			},
 			expectedPhase: api.DatabasePhaseCritical,
@@ -226,28 +225,28 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             core.ConditionTrue,
+					Status:             metav1.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
 					Type:   api.DatabaseProvisioned,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseReady,
@@ -257,28 +256,28 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: core.ConditionFalse,
+					Status: metav1.ConditionFalse,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             core.ConditionTrue,
+					Status:             metav1.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
 					Type:   api.DatabaseProvisioned,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseNotReady,
@@ -288,32 +287,32 @@ func TestPhaseForCondition(t *testing.T) {
 			conditions: []kmapi.Condition{
 				{
 					Type:   api.DatabaseProvisioningStarted,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseReplicaReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseAcceptingConnection,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:               api.DatabaseDataRestored,
-					Status:             core.ConditionTrue,
+					Status:             metav1.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
 					Type:   api.DatabaseReady,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabaseProvisioned,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 				{
 					Type:   api.DatabasePaused,
-					Status: core.ConditionTrue,
+					Status: metav1.ConditionTrue,
 				},
 			},
 			expectedPhase: api.DatabasePhaseReady,

@@ -39,6 +39,8 @@ const (
 	ConfigSecretYaml = "configSecretYaml"
 	ConfigSecretName = "configSecretName"
 
+	IssuerRefName = "issuerRefName"
+
 	SnapshotName = "snapshotName"
 
 	Namespace      = "namespace"
@@ -51,15 +53,10 @@ const (
 	TargetMountPath = "targetMountPath"
 	TargetPaths     = "targetPaths"
 
-	// default true
-	// false when TmpDir.DisableCaching is true in backupConfig/restoreSession
+	// EnableCache is false when TmpDir.DisableCaching is true in backupConfig/restoreSession
+	// default is true
 	EnableCache    = "enableCache"
 	InterimDataDir = "interimDataDir"
-
-	KubeStashVolumePrefix = "/kubestash-volumes"
-	DefaultMountPath      = KubeStashVolumePrefix + "/data"
-	InterimDataDirPath    = KubeStashVolumePrefix + "/interim-data"
-	TmpDirMountPath       = KubeStashVolumePrefix + "/tmp"
 
 	LicenseApiService = "licenseApiService"
 )

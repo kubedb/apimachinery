@@ -2169,6 +2169,7 @@ spec:
                           You can use comma to separate multiple labels (i.e. "app=my-app,env=prod")
                         type: string
                       strategy:
+                        default: ExecuteOnOne
                         description: 'Strategy specifies what should be the behavior
                           when multiple pods are selected Valid values are: - "ExecuteOnOne":
                           Execute hook on only one of the selected pods. This is default

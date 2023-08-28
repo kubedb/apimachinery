@@ -65,7 +65,7 @@ type MongoDBArchiverSpec struct {
 
 // MongoDBArchiverStatus defines the observed state of MongoDBArchiver
 type MongoDBArchiverStatus struct {
-	// Specifies the information of all the database managed by this DB
+	// Specifies the information of all the databases managed by this archiver
 	// +optional
 	DatabaseRefs []ArchiverDatabaseRef `json:"databaseRefs,omitempty"`
 }

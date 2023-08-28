@@ -95,16 +95,18 @@ spec:
                 description: Conditions represents list of conditions regarding this
                   BackupSession
                 items:
+                  description: Condition defines an observation of a object operational
+                    state.
                   properties:
                     lastTransitionTime:
                       description: Last time the condition transitioned from one status
-                        to another. This should be when the underlying condition changed.  If
-                        that is not known, then using the time when the API field
+                        to another. This should be when the underlying condition changed.
+                        If that is not known, then using the time when the API field
                         changed is acceptable.
                       format: date-time
                       type: string
                     message:
-                      description: A human readable message indicating details about
+                      description: A human-readable message indicating details about
                         the transition. This field may be empty.
                       type: string
                     observedGeneration:
@@ -117,9 +119,14 @@ spec:
                       type: integer
                     reason:
                       description: The reason for the condition's last transition
-                        in CamelCase. The specific API may choose whether or not this
-                        field is considered a guaranteed API. This field may not be
-                        empty.
+                        in CamelCase. The specific API may choose whether this field
+                        is considered a guaranteed API. This field may not be empty.
+                      type: string
+                    severity:
+                      description: Severity provides an explicit classification of
+                        Reason code, so the users or machines can immediately understand
+                        the current situation and act accordingly. The Severity field
+                        MUST be set only when Status=False.
                       type: string
                     status:
                       description: Status of the condition, one of True, False, Unknown.
@@ -127,14 +134,11 @@ spec:
                     type:
                       description: Type of condition in CamelCase or in foo.example.com/CamelCase.
                         Many .condition.type values are consistent across resources
-                        like Available, but because arbitrary conditions can be useful
-                        (see .node.status.conditions), the ability to deconflict is
-                        important.
+                        like Available, but because arbitrary util can be useful (see
+                        .node.status.util), the ability to deconflict is important.
                       type: string
                   required:
                   - lastTransitionTime
-                  - message
-                  - reason
                   - status
                   - type
                   type: object
@@ -144,23 +148,49 @@ spec:
                   backup process
                 type: string
               hooks:
-                description: Hooks specifies the hook execution status
-                items:
-                  description: HookExecutionStatus represents the state of the hook
-                    execution
-                  properties:
-                    name:
-                      description: Name indicates the name of the hook whose status
-                        is being shown here.
-                      type: string
-                    phase:
-                      description: Phase represents the hook execution phase
-                      enum:
-                      - Succeeded
-                      - Failed
-                      type: string
-                  type: object
-                type: array
+                description: Hooks represents the hook execution status
+                properties:
+                  postHooks:
+                    description: PostHooks represents the post-restore hook execution
+                      status
+                    items:
+                      description: HookExecutionStatus represents the state of the
+                        hook execution
+                      properties:
+                        name:
+                          description: Name indicates the name of the hook whose status
+                            is being shown here.
+                          type: string
+                        phase:
+                          description: Phase represents the hook execution phase
+                          enum:
+                          - Succeeded
+                          - Failed
+                          - Pending
+                          type: string
+                      type: object
+                    type: array
+                  preHooks:
+                    description: PreHooks represents the pre-restore hook execution
+                      status
+                    items:
+                      description: HookExecutionStatus represents the state of the
+                        hook execution
+                      properties:
+                        name:
+                          description: Name indicates the name of the hook whose status
+                            is being shown here.
+                          type: string
+                        phase:
+                          description: Phase represents the hook execution phase
+                          enum:
+                          - Succeeded
+                          - Failed
+                          - Pending
+                          type: string
+                      type: object
+                    type: array
+                type: object
               nextRetry:
                 description: NextRetry specifies the time when Stash should retry
                   the current failed backup. This field will exist only if the `retryConfig`

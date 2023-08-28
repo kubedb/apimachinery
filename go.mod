@@ -28,7 +28,7 @@ require (
 	k8s.io/kube-aggregator v0.25.1
 	k8s.io/kube-openapi v0.0.0-20221012153701-172d655c2280
 	k8s.io/metrics v0.25.1
-	kmodules.xyz/client-go v0.25.23
+	kmodules.xyz/client-go v0.25.30
 	kmodules.xyz/crd-schema-fuzz v0.25.0
 	kmodules.xyz/custom-resources v0.25.2
 	kmodules.xyz/monitoring-agent-api v0.25.1
@@ -36,10 +36,10 @@ require (
 	kmodules.xyz/offshoot-api v0.25.4
 	kmodules.xyz/webhook-runtime v0.25.0
 	kubeops.dev/sidekick v0.0.2-0.20230304025549-a99a1477617d
-	kubestash.dev/apimachinery v0.1.1-0.20230503090520-8c620a027344
+	kubestash.dev/apimachinery v0.1.1-0.20230823061616-55275ca5f58d
 	sigs.k8s.io/controller-runtime v0.13.1
 	sigs.k8s.io/yaml v1.3.0
-	stash.appscode.dev/apimachinery v0.30.0
+	stash.appscode.dev/apimachinery v0.31.0
 )
 
 require (
@@ -103,6 +103,7 @@ require (
 	github.com/nats-io/nats.go v1.22.1 // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
+	github.com/onsi/gomega v1.24.0 // indirect
 	github.com/prometheus/client_golang v1.13.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
@@ -143,7 +144,8 @@ require (
 	golang.org/x/term v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
-	gomodules.xyz/jsonpatch/v2 v2.3.0 // indirect
+	gomodules.xyz/envsubst v0.2.0 // indirect
+	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	gomodules.xyz/mergo v0.3.13 // indirect
 	gomodules.xyz/sets v0.2.1 // indirect
 	gomodules.xyz/sync v0.1.0 // indirect

@@ -24,8 +24,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/klog/v2"
-	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	cutil "kmodules.xyz/client-go/conditions"
+	"kmodules.xyz/client-go/meta"
 )
 
 func (_ BackupStorage) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -33,9 +34,13 @@ func (_ BackupStorage) CustomResourceDefinition() *apiextensions.CustomResourceD
 }
 
 func (b *BackupStorage) CalculatePhase() BackupStoragePhase {
-	if kmapi.IsConditionTrue(b.Status.Conditions, TypeBackendInitialized) &&
-		kmapi.IsConditionTrue(b.Status.Conditions, TypeRepositorySynced) {
-		return BackupStorageReady
+	if cutil.IsConditionTrue(b.Status.Conditions, TypeBackendInitialized) {
+		if !cutil.HasCondition(b.Status.Conditions, TypeBackendSecretFound) {
+			return BackupStorageReady
+		}
+		if cutil.IsConditionTrue(b.Status.Conditions, TypeBackendSecretFound) {
+			return BackupStorageReady
+		}
 	}
 	return BackupStorageNotReady
 }
@@ -47,8 +52,8 @@ func (b *BackupStorage) UsageAllowed(srcNamespace *core.Namespace) bool {
 	return b.isNamespaceAllowed(srcNamespace)
 }
 
-func (r *BackupStorage) isNamespaceAllowed(srcNamespace *core.Namespace) bool {
-	allowedNamespaces := r.Spec.UsagePolicy.AllowedNamespaces
+func (b *BackupStorage) isNamespaceAllowed(srcNamespace *core.Namespace) bool {
+	allowedNamespaces := b.Spec.UsagePolicy.AllowedNamespaces
 
 	if allowedNamespaces.From == nil {
 		return false
@@ -59,7 +64,7 @@ func (r *BackupStorage) isNamespaceAllowed(srcNamespace *core.Namespace) bool {
 	}
 
 	if *allowedNamespaces.From == apis.NamespacesFromSame {
-		return r.Namespace == srcNamespace.Name
+		return b.Namespace == srcNamespace.Name
 	}
 
 	return selectorMatches(allowedNamespaces.Selector, srcNamespace.Labels)
@@ -72,4 +77,17 @@ func selectorMatches(ls *metav1.LabelSelector, srcLabels map[string]string) bool
 		return false
 	}
 	return selector.Matches(labels.Set(srcLabels))
+}
+
+func (b *BackupStorage) OffshootLabels() map[string]string {
+	newLabels := make(map[string]string)
+	newLabels[meta.ManagedByLabelKey] = apis.KubeStashKey
+	newLabels[apis.KubeStashInvokerKind] = ResourceKindBackupStorage
+	newLabels[apis.KubeStashInvokerName] = b.Name
+	newLabels[apis.KubeStashInvokerNamespace] = b.Namespace
+	return apis.UpsertLabels(b.Labels, newLabels)
+}
+
+func (b *BackupStorage) LocalProvider() bool {
+	return b.Spec.Storage.Provider == ProviderLocal
 }

@@ -52,3 +52,9 @@ type CSISnapshotterSpec struct {
 type ManifestSpec struct {
 	AddonName string `json:"addonName"`
 }
+
+// GitSyncer is the image for the kubernetes/git-sync
+// https://github.com/kubernetes/git-sync
+type GitSyncer struct {
+	Image string `json:"image"`
+}

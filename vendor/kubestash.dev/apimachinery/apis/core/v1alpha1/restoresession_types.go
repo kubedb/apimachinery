@@ -109,6 +109,10 @@ type KubeDBManifestOptions struct {
 	// ConfigSecretName specifies new name of the ConfigSecret yaml after restore
 	// +optional
 	ConfigSecretName string `json:"configSecretName,omitempty"`
+
+	// IssuerRefName specifies new name of the IssuerRef after restore
+	// +optional
+	IssuerRefName string `json:"issuerRefName,omitempty"`
 }
 
 // RestoreDataSource specifies the information about the data that will be restored
@@ -171,7 +175,7 @@ type RestoreSessionStatus struct {
 	// +optional
 	TargetFound *bool `json:"targetFound,omitempty"`
 
-	// Duration specify total time taken to complete the restore process
+	// Duration specifies the total time taken to complete the restore process
 	// +optional
 	Duration string `json:"duration,omitempty"`
 
@@ -180,13 +184,18 @@ type RestoreSessionStatus struct {
 	// +optional
 	Deadline *metav1.Time `json:"deadline,omitempty"`
 
+	// TotalComponents represents the number of total components for this RestoreSession
+	// +optional
+	TotalComponents int32 `json:"totalComponents,omitempty"`
+
 	// Components represents the individual component restore status
 	// +optional
-	Components []ComponentRestoreStatus `json:"components,omitempty"`
+	// +mapType=granular
+	Components map[string]ComponentRestoreStatus `json:"components,omitempty"`
 
 	// Hooks represents the hook execution status
 	// +optional
-	Hooks []HookExecutionStatus `json:"hooks,omitempty"`
+	Hooks HookStatus `json:"hooks,omitempty"`
 
 	// Dependencies specifies whether the objects required by this RestoreSession exist or not
 	// +optional
@@ -201,7 +210,7 @@ type RestoreSessionStatus struct {
 }
 
 // RestorePhase represents the current state of the restore process
-// +kubebuilder:validation:Enum=Pending;Running;Failed;Succeeded
+// +kubebuilder:validation:Enum=Pending;Running;Failed;Succeeded;Invalid
 type RestorePhase string
 
 const (
@@ -209,18 +218,16 @@ const (
 	RestoreRunning   RestorePhase = "Running"
 	RestoreFailed    RestorePhase = "Failed"
 	RestoreSucceeded RestorePhase = "Succeeded"
+	RestoreInvalid   RestorePhase = "Invalid"
 )
 
 // ComponentRestoreStatus represents the restore status of individual components
 type ComponentRestoreStatus struct {
-	// Name indicate to the name of the component
-	Name string `json:"name,omitempty"`
-
 	// Phase represents the restore phase of the component
 	// +optional
 	Phase RestorePhase `json:"phase,omitempty"`
 
-	// Duration specify total time taken to complete the restore process for this component
+	// Duration specifies the total time taken to complete the restore process for this component
 	// +optional
 	Duration string `json:"duration,omitempty"`
 
