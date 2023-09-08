@@ -31736,19 +31736,6 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplicaSpec": {
-      "type": "object",
-      "required": [
-        "sourceRef"
-      ],
-      "properties": {
-        "sourceRef": {
-          "description": "SourceRef specifies the  source object",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.api.core.v1.ObjectReference"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLRouterSpec": {
       "type": "object",
       "properties": {
@@ -31905,9 +31892,9 @@
           "description": "If set to - \"GroupReplication\", GroupSpec is required and MySQL servers will start  a replication group",
           "type": "string"
         },
-        "readReplica": {
-          "description": "ReadReplica implies that the instance will be a MySQL Read Only Replica and it will take reference of  appbinding of the source",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MySQLReadReplicaSpec"
+        "remoteReplica": {
+          "description": "RemoteReplica implies that the instance will be a MySQL Read Only Replica and it will take reference of  appbinding of the source",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RemoteReplicaSpec"
         },
         "semiSync": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SemiSyncSpec"
@@ -32508,6 +32495,9 @@
           "description": "Leader election configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgreLeaderElectionConfig"
         },
+        "mode": {
+          "type": "string"
+        },
         "monitor": {
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
@@ -32516,6 +32506,10 @@
           "description": "PodTemplate is an optional configuration for pods used to expose database",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "remoteReplica": {
+          "description": "RemoteReplica implies that the instance will be a MySQL Read Only Replica, and it will take reference of  appbinding of the source",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RemoteReplicaSpec"
         },
         "replicas": {
           "description": "Number of instances to deploy for a Postgres database.",
@@ -32991,6 +32985,19 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RemoteReplicaSpec": {
+      "type": "object",
+      "required": [
+        "sourceRef"
+      ],
+      "properties": {
+        "sourceRef": {
+          "description": "SourceRef specifies the  source object",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.ObjectReference"
         }
       }
     },

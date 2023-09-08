@@ -483,7 +483,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLGroupSpec":                 schema_apimachinery_apis_kubedb_v1alpha2_MySQLGroupSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLInnoDBClusterSpec":         schema_apimachinery_apis_kubedb_v1alpha2_MySQLInnoDBClusterSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLList":                      schema_apimachinery_apis_kubedb_v1alpha2_MySQLList(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLReadReplicaSpec":           schema_apimachinery_apis_kubedb_v1alpha2_MySQLReadReplicaSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLRouterSpec":                schema_apimachinery_apis_kubedb_v1alpha2_MySQLRouterSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_MySQLSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLStatus":                    schema_apimachinery_apis_kubedb_v1alpha2_MySQLStatus(ref),
@@ -519,6 +518,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisSentinelStatus":            schema_apimachinery_apis_kubedb_v1alpha2_RedisSentinelStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_RedisSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisStatus":                    schema_apimachinery_apis_kubedb_v1alpha2_RedisStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RemoteReplicaSpec":              schema_apimachinery_apis_kubedb_v1alpha2_RemoteReplicaSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ScriptSourceSpec":               schema_apimachinery_apis_kubedb_v1alpha2_ScriptSourceSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference":                schema_apimachinery_apis_kubedb_v1alpha2_SecretReference(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SemiSyncSpec":                   schema_apimachinery_apis_kubedb_v1alpha2_SemiSyncSpec(ref),
@@ -24597,28 +24597,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLList(ref common.ReferenceCall
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_MySQLReadReplicaSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"sourceRef": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SourceRef specifies the  source object",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
-						},
-					},
-				},
-				Required: []string{"sourceRef"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_MySQLRouterSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24879,10 +24857,10 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLTopology(ref common.Reference
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLInnoDBClusterSpec"),
 						},
 					},
-					"readReplica": {
+					"remoteReplica": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ReadReplica implies that the instance will be a MySQL Read Only Replica and it will take reference of  appbinding of the source",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLReadReplicaSpec"),
+							Description: "RemoteReplica implies that the instance will be a MySQL Read Only Replica and it will take reference of  appbinding of the source",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RemoteReplicaSpec"),
 						},
 					},
 					"semiSync": {
@@ -24894,7 +24872,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLTopology(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLGroupSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLInnoDBClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLReadReplicaSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SemiSyncSpec"},
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLGroupSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLInnoDBClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RemoteReplicaSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SemiSyncSpec"},
 	}
 }
 
@@ -25789,6 +25767,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresSpec(ref common.ReferenceC
 							Format:      "",
 						},
 					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"remoteReplica": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RemoteReplica implies that the instance will be a MySQL Read Only Replica, and it will take reference of  appbinding of the source",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RemoteReplicaSpec"),
+						},
+					},
 					"leaderElection": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Leader election configuration",
@@ -25919,7 +25909,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgreLeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgreLeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RemoteReplicaSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -26923,6 +26913,28 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RedisStatus(ref common.ReferenceCa
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Age"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_RemoteReplicaSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"sourceRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SourceRef specifies the  source object",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
+						},
+					},
+				},
+				Required: []string{"sourceRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
