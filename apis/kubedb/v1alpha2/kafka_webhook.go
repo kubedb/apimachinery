@@ -18,12 +18,9 @@ package v1alpha2
 
 import (
 	"errors"
-	"fmt"
 
 	errors2 "github.com/pkg/errors"
 	"gomodules.xyz/pointer"
-	"gomodules.xyz/x/arrays"
-	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -84,11 +81,6 @@ func (k *Kafka) ValidateDelete() error {
 		return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, k.Name, allErr)
 	}
 	return nil
-}
-
-var forbiddenEnvVars = []string{
-	EnvKafkaUser,
-	EnvKafkaPassword,
 }
 
 func (k *Kafka) ValidateCreateOrUpdate() error {
@@ -191,13 +183,6 @@ func (k *Kafka) ValidateCreateOrUpdate() error {
 		}
 	}
 
-	err = validateEnvVar(k.Spec.PodTemplate.Spec.Env, forbiddenEnvVars)
-	if err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("env"),
-			k.Name,
-			err.Error()))
-	}
-
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -220,16 +205,6 @@ func validateVersion(db *Kafka) error {
 		}
 	}
 	return errors.New("version not supported")
-}
-
-func validateEnvVar(envs []core.EnvVar, forbiddenEnvs []string) error {
-	for _, env := range envs {
-		present, _ := arrays.Contains(forbiddenEnvs, env.Name)
-		if present {
-			return fmt.Errorf("environment variable %s is forbidden to use in Kafka spec", env.Name)
-		}
-	}
-	return nil
 }
 
 func validateNodeSuffix(topology *KafkaClusterTopology) error {
