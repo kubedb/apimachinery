@@ -53,10 +53,6 @@ func (k *KafkaOpsRequest) ResourcePlural() string {
 	return ResourcePluralKafkaOpsRequest
 }
 
-func (k *KafkaOpsRequest) ValidateSpecs() error {
-	return nil
-}
-
 var _ Accessor = &KafkaOpsRequest{}
 
 func (k *KafkaOpsRequest) GetRequestType() any {

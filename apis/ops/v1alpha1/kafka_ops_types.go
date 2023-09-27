@@ -110,8 +110,6 @@ type KafkaHorizontalScalingTopologySpec struct {
 type KafkaVerticalScalingSpec struct {
 	// Resource spec for combined nodes
 	Node *core.ResourceRequirements `json:"node,omitempty"`
-	// Resource spec for exporter sidecar
-	Exporter *core.ResourceRequirements `json:"exporter,omitempty"`
 	// Specifies the resource spec for cluster in topology mode
 	Topology *KafkaVerticalScalingTopologySpec `json:"topology,omitempty"`
 }
