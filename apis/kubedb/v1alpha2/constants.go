@@ -522,6 +522,7 @@ const (
 	KafkaPortNameExternal              = "external"
 	KafkaTopicNameHealth               = "kafka-health"
 	KafkaTopicDeletionThresholdOffset  = 1000
+	KafkaControllerMaxID               = 1000
 	KafkaRESTPort                      = 9092
 	KafkaControllerRESTPort            = 9093
 	KafkaInternalRESTPort              = 29092
