@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"kubestash.dev/apimachinery/apis"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -76,9 +77,14 @@ type BackupStorageSpec struct {
 	// The valid values are:
 	// "Delete": This will delete the respective Repository and Snapshot CRs from the cluster but keep the backed up data in the remote backend. This is the default behavior.
 	// "WipeOut": This will delete the respective Repository and Snapshot CRs as well as the backed up data from the backend.
-	// +kubebuilder:validation:default=Delete
+	// +kubebuilder:default=Delete
 	// +optional
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
+
+	// RuntimeSettings allow to specify Resources, NodeSelector, Affinity, Toleration, ReadinessProbe etc.
+	// for the storage initializer/cleaner job.
+	// +optional
+	RuntimeSettings ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
 }
 
 // BackupStorageStatus defines the observed state of BackupStorage
@@ -133,9 +139,9 @@ const (
 	ReasonBackendInitializationSucceeded = "BackendInitializationSucceeded"
 	ReasonBackendInitializationFailed    = "BackendInitializationFailed"
 
-	TypeRepositorySynced          = "RepositorySynced"
-	ReasonRepositorySyncSucceeded = "RepositorySyncSucceeded"
-	ReasonRepositorySyncFailed    = "RepositorySyncFailed"
+	TypeBackendSecretFound          = "BackendSecretFound"
+	ReasonBackendSecretNotAvailable = "BackendSecretNotAvailable"
+	ReasonBackendSecretAvailable    = "BackendSecretAvailable"
 )
 
 //+kubebuilder:object:root=true

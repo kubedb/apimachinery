@@ -63,6 +63,7 @@ spec:
                       - enum:
                         - Restic
                         - WalG
+                        - VolumeSnapshotter
                       description: 'Driver specifies the underlying tool that will
                         be used to upload the data to the backend storage. Valid values
                         are: - "Restic": The underlying tool is [restic](https://restic.net/).
@@ -166,6 +167,10 @@ spec:
                         - name
                         type: object
                       type: array
+                    singleton:
+                      description: Singleton specifies whether this task will be executed
+                        on a single job or across multiple jobs.
+                      type: boolean
                     volumeMounts:
                       description: VolumeMounts specifies the mount path of the volumes
                         specified in the VolumeTemplate section. These volumes will
@@ -2363,6 +2368,7 @@ spec:
                       - enum:
                         - Restic
                         - WalG
+                        - VolumeSnapshotter
                       description: 'Driver specifies the underlying tool that will
                         be used to upload the data to the backend storage. Valid values
                         are: - "Restic": The underlying tool is [restic](https://restic.net/).
@@ -2466,6 +2472,10 @@ spec:
                         - name
                         type: object
                       type: array
+                    singleton:
+                      description: Singleton specifies whether this task will be executed
+                        on a single job or across multiple jobs.
+                      type: boolean
                     volumeMounts:
                       description: VolumeMounts specifies the mount path of the volumes
                         specified in the VolumeTemplate section. These volumes will

@@ -11332,6 +11332,10 @@ spec:
                             additionalProperties:
                               type: string
                             type: object
+                          podLabels:
+                            additionalProperties:
+                              type: string
+                            type: object
                           priority:
                             format: int32
                             type: integer

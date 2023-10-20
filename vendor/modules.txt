@@ -147,6 +147,9 @@ github.com/coreos/go-semver/semver
 ## explicit; go 1.12
 github.com/coreos/go-systemd/v22/daemon
 github.com/coreos/go-systemd/v22/journal
+# github.com/cyphar/filepath-securejoin v0.2.3
+## explicit; go 1.13
+github.com/cyphar/filepath-securejoin
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
@@ -610,6 +613,11 @@ golang.org/x/time/rate
 ## explicit; go 1.17
 gomodules.xyz/encoding/json
 gomodules.xyz/encoding/json/types
+# gomodules.xyz/envsubst v0.2.0
+## explicit; go 1.19
+gomodules.xyz/envsubst
+gomodules.xyz/envsubst/parse
+gomodules.xyz/envsubst/path
 # gomodules.xyz/jsonpatch/v2 v2.4.0
 ## explicit; go 1.20
 gomodules.xyz/jsonpatch/v2
@@ -637,6 +645,7 @@ gomodules.xyz/sync
 # gomodules.xyz/x v0.0.15
 ## explicit; go 1.18
 gomodules.xyz/x/arrays
+gomodules.xyz/x/filepath
 gomodules.xyz/x/version
 # google.golang.org/api v0.103.0
 ## explicit; go 1.19
@@ -1390,7 +1399,7 @@ kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/objectstore-api v0.25.1
 ## explicit; go 1.18
 kmodules.xyz/objectstore-api/api/v1
-# kmodules.xyz/offshoot-api v0.25.4
+# kmodules.xyz/offshoot-api v0.25.5-0.20231004063620-dff8fb030d57
 ## explicit; go 1.18
 kmodules.xyz/offshoot-api/api/v1
 # kmodules.xyz/prober v0.25.0
@@ -1416,8 +1425,8 @@ kmodules.xyz/webhook-runtime/admission/v1
 ## explicit; go 1.18
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
-# kubestash.dev/apimachinery v0.1.0
-## explicit; go 1.18
+# kubestash.dev/apimachinery v0.1.1-0.20231019194941-410b43b0d492
+## explicit; go 1.20
 kubestash.dev/apimachinery/apis
 kubestash.dev/apimachinery/apis/core/v1alpha1
 kubestash.dev/apimachinery/apis/storage/v1alpha1

@@ -189,6 +189,8 @@ github.com/cpuguy83/go-md2man/v2 v2.0.2/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46t
 github.com/creack/pty v1.1.7/go.mod h1:lj5s0c3V2DBrqTV7llrYr5NG6My20zk30Fl46Y7DoTY=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/creack/pty v1.1.11/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
+github.com/cyphar/filepath-securejoin v0.2.3 h1:YX6ebbZCZP7VkM3scTTokDgBL2TY741X51MTk3ycuNI=
+github.com/cyphar/filepath-securejoin v0.2.3/go.mod h1:aPGpWjXOXUn2NCNjFvBE6aRxGGx79pTxQpKOJNYHHl4=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -1139,6 +1141,8 @@ golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1/go.mod h1:I/5z698sn9Ka8T
 golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 h1:H2TDz8ibqkAF6YGhCdN3jS9O0/s90v0rJh3X/OLHEUk=
 gomodules.xyz/encoding v0.0.7 h1:Y4PaflVS+vkYgkw6FwyF1S0ab4Y1BAdOqB3Uwjcx8qI=
 gomodules.xyz/encoding v0.0.7/go.mod h1:blYJWy456Bzxj3L2G7G5WV1l5rFXl6uYXrmeFqxxqk8=
+gomodules.xyz/envsubst v0.2.0 h1:piG4OcpUa/Mu7LxSo+2Ye8JH7pXXWM2XuCD8Ic7Hdwc=
+gomodules.xyz/envsubst v0.2.0/go.mod h1:eB1KRKtXx6RSpl+WYxE8gFE7DhNJCoorHzSij7X3AQo=
 gomodules.xyz/jsonpatch/v2 v2.2.0/go.mod h1:WXp+iVDkoLQqPudfQ9GBlwB2eZ5DKOnjQZCYdOS8GPY=
 gomodules.xyz/jsonpatch/v2 v2.4.0 h1:Ci3iUJyx9UeRx7CeFN8ARgGbkESwJK+KB9lLcWxY/Zw=
 gomodules.xyz/jsonpatch/v2 v2.4.0/go.mod h1:AH3dM2RI6uoBZxn3LVrfvJ3E0/9dG4cSrbuBJT4moAY=
@@ -1421,8 +1425,8 @@ kmodules.xyz/monitoring-agent-api v0.25.5 h1:7ULBfJkRy+ROJuNclB2IzFHqesblFihtVo9
 kmodules.xyz/monitoring-agent-api v0.25.5/go.mod h1:TNJ2Bek2PC07MWU7VXFlfKFwN4IYvLzBEFwl/9XN8lc=
 kmodules.xyz/objectstore-api v0.25.1 h1:lYQlxk+edgZYakhq+OoRBXTbHbZTGKhatGZWnKixgEQ=
 kmodules.xyz/objectstore-api v0.25.1/go.mod h1:6wBtktN7/EXyE429OTCB9nwEe+d0ADaoCtm6+IZnJso=
-kmodules.xyz/offshoot-api v0.25.4 h1:IjJNvkphcdYUG8XO/pBwXpuP8W+jxAWJZ3yH8vgI/as=
-kmodules.xyz/offshoot-api v0.25.4/go.mod h1:PUk4EuJFhhyQykCflHj7EgXcljGIqs9vi0IN0RpxtY4=
+kmodules.xyz/offshoot-api v0.25.5-0.20231004063620-dff8fb030d57 h1:4ld/ujZum5JX6cfYrW1yQErAl1AONEfJa8TDyRpnHuU=
+kmodules.xyz/offshoot-api v0.25.5-0.20231004063620-dff8fb030d57/go.mod h1:PUk4EuJFhhyQykCflHj7EgXcljGIqs9vi0IN0RpxtY4=
 kmodules.xyz/prober v0.25.0 h1:R5uRLHJEvEtEoogj+vaTAob0Btph6+PX5IlS6hPh8PA=
 kmodules.xyz/prober v0.25.0/go.mod h1:z4RTnjaajNQa/vPltsiOnO3xI716I/ziD2ac2Exm+1M=
 kmodules.xyz/resource-metadata v0.15.0 h1:6aXWkHWYQH4RGYiT2gpV0Qva/9HFJUTtw7k5xaNGavM=
@@ -1433,8 +1437,8 @@ kmodules.xyz/webhook-runtime v0.25.0 h1:NKNgu0C1I8kUovQ+SVozs/q7cjq8zgpSjLfJf9Cx
 kmodules.xyz/webhook-runtime v0.25.0/go.mod h1:gK2iIF0oCeQVVqH4L5nFjcguyhMPBhHMhiV5Fgb6EE0=
 kubeops.dev/sidekick v0.0.2-0.20230113102427-9848f83b2f0f h1:V1NpsZCaCZETsPggWcyfRophrEX9wneX9O0YTdxo1zk=
 kubeops.dev/sidekick v0.0.2-0.20230113102427-9848f83b2f0f/go.mod h1:zGERHv4iKTsAcfVfaCTbSBXtI+rGcV+9BQoTr/hY3zc=
-kubestash.dev/apimachinery v0.1.0 h1:HIS1vtAfZUn4Y9BcHZhNpFfFt5cgWFA7Mw3REwKpolU=
-kubestash.dev/apimachinery v0.1.0/go.mod h1:li4zD4cOAN58QulzDy3zlfaLIp6Z2dr32Wc3PgcQpL0=
+kubestash.dev/apimachinery v0.1.1-0.20231019194941-410b43b0d492 h1:NHLq4wa82eUHuuMTEgAOHJJcJIVRre4tvqhwRYhyYJ0=
+kubestash.dev/apimachinery v0.1.1-0.20231019194941-410b43b0d492/go.mod h1:TBN95XMI/LYDcmRf3kb/lXbfsOx0E0ZKRZDyQKyzAUE=
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=
 rsc.io/quote/v3 v3.1.0/go.mod h1:yEA65RcK8LyAZtP9Kv3t0HmxON59tX3rD+tICJqUlj0=
 rsc.io/sampler v1.3.0/go.mod h1:T1hPZKmBbMNahiBKFy5HrXp6adAjACjK9JXDnKaTXpA=

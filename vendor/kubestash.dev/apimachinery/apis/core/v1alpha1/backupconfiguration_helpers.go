@@ -21,6 +21,7 @@ import (
 
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	cutil "kmodules.xyz/client-go/conditions"
 )
 
 func (_ BackupConfiguration) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -28,7 +29,7 @@ func (_ BackupConfiguration) CustomResourceDefinition() *apiextensions.CustomRes
 }
 
 func (b *BackupConfiguration) CalculatePhase() BackupInvokerPhase {
-	if kmapi.IsConditionFalse(b.Status.Conditions, TypeValidationPassed) {
+	if cutil.IsConditionFalse(b.Status.Conditions, TypeValidationPassed) {
 		return BackupInvokerInvalid
 	}
 
@@ -61,7 +62,7 @@ func (b *BackupConfiguration) sessionsReady() bool {
 	}
 
 	for _, status := range b.Status.Sessions {
-		if !kmapi.IsConditionTrue(status.Conditions, TypeSchedulerEnsured) {
+		if !cutil.IsConditionTrue(status.Conditions, TypeSchedulerEnsured) {
 			return false
 		}
 	}

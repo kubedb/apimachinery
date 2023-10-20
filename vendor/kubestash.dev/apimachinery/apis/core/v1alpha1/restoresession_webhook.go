@@ -17,8 +17,14 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
+	"fmt"
+	core "k8s.io/api/core/v1"
+	kerr "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )
@@ -43,16 +49,40 @@ var _ webhook.Validator = &RestoreSession{}
 func (r *RestoreSession) ValidateCreate() error {
 	restoresessionlog.Info("validate create", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object creation.
-	return nil
+	c, err := getNewRuntimeClient()
+	if err != nil {
+		return fmt.Errorf("failed to set Kubernetes client, Reason: %w", err)
+	}
+
+	if err := r.checkIfSnapshotIsEmpty(); err != nil {
+		return err
+	}
+
+	if err := r.checkIfRepoIsEmptyForLatestSnapshot(); err != nil {
+		return err
+	}
+
+	return r.validateHookTemplatesAgainstUsagePolicy(context.Background(), c)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *RestoreSession) ValidateUpdate(old runtime.Object) error {
 	restoresessionlog.Info("validate update", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object update.
-	return nil
+	c, err := getNewRuntimeClient()
+	if err != nil {
+		return fmt.Errorf("failed to set Kubernetes client, Reason: %w", err)
+	}
+
+	if err := r.checkIfSnapshotIsEmpty(); err != nil {
+		return err
+	}
+
+	if err := r.checkIfRepoIsEmptyForLatestSnapshot(); err != nil {
+		return err
+	}
+
+	return r.validateHookTemplatesAgainstUsagePolicy(context.Background(), c)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -61,4 +91,66 @@ func (r *RestoreSession) ValidateDelete() error {
 
 	// TODO(user): fill in your validation logic upon object deletion.
 	return nil
+}
+
+func (r *RestoreSession) checkIfSnapshotIsEmpty() error {
+	if r.Spec.DataSource.Snapshot == "" {
+		return fmt.Errorf("snapshot can not be empty")
+	}
+	return nil
+}
+
+func (r *RestoreSession) checkIfRepoIsEmptyForLatestSnapshot() error {
+	if r.Spec.DataSource.Snapshot == "latest" &&
+		r.Spec.DataSource.Repository == "" {
+		return fmt.Errorf("repository can not be empty for latest snapshot")
+	}
+	return nil
+}
+
+func (r *RestoreSession) validateHookTemplatesAgainstUsagePolicy(ctx context.Context, c client.Client) error {
+	hookTemplates := r.getHookTemplates()
+	for _, ht := range hookTemplates {
+		err := c.Get(ctx, client.ObjectKeyFromObject(&ht), &ht)
+		if err != nil {
+			if kerr.IsNotFound(err) {
+				continue
+			}
+			return err
+		}
+
+		ns := &core.Namespace{ObjectMeta: metav1.ObjectMeta{Name: r.Namespace}}
+		if err := c.Get(ctx, client.ObjectKeyFromObject(ns), ns); err != nil {
+			return err
+		}
+
+		if !ht.UsageAllowed(ns) {
+			return fmt.Errorf("namespace %q is not allowed to refer HookTemplate %s/%s. Please, check the `usagePolicy` of the HookTemplate", r.Namespace, ht.Name, ht.Namespace)
+		}
+	}
+	return nil
+}
+
+func (r *RestoreSession) getHookTemplates() []HookTemplate {
+	var hookTemplates []HookTemplate
+	if r.Spec.Hooks != nil {
+		hookTemplates = append(hookTemplates, r.getHookTemplatesFromHookInfo(r.Spec.Hooks.PreRestore)...)
+		hookTemplates = append(hookTemplates, r.getHookTemplatesFromHookInfo(r.Spec.Hooks.PostRestore)...)
+	}
+	return hookTemplates
+}
+
+func (r *RestoreSession) getHookTemplatesFromHookInfo(hooks []HookInfo) []HookTemplate {
+	var hookTemplates []HookTemplate
+	for _, hook := range hooks {
+		if hook.HookTemplate != nil {
+			hookTemplates = append(hookTemplates, HookTemplate{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      hook.HookTemplate.Name,
+					Namespace: hook.HookTemplate.Namespace,
+				},
+			})
+		}
+	}
+	return hookTemplates
 }

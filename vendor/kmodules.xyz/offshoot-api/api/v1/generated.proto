@@ -246,6 +246,10 @@ message PersistentVolumeClaimTemplate {
 }
 
 message PodRuntimeSettings {
+  // PodLabels are the labels that will be attached with the respective Pod
+  // +optional
+  map<string, string> podLabels = 18;
+
   // PodAnnotations are the annotations that will be attached with the respective Pod
   // +optional
   map<string, string> podAnnotations = 1;

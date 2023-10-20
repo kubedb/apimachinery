@@ -24,42 +24,16 @@ const (
 	InvokerKind = "invokerKind"
 	InvokerName = "invokerName"
 
-	RestoreNamespace  = "restoreNamespace"
-	RestoreTargetKind = "targetKind"
-
-	MongoYaml   = "mongoYaml"
-	MongoDBName = "mongoDBName"
-
-	PostgresYaml = "pgYaml"
-	PostgresName = "pgName"
-
-	AuthSecretYaml = "authSecretYaml"
-	AuthSecretName = "authSecretName"
-
-	ConfigSecretYaml = "configSecretYaml"
-	ConfigSecretName = "configSecretName"
-
-	SnapshotName = "snapshotName"
+	Snapshot = "snapshot"
 
 	Namespace      = "namespace"
 	BackupSession  = "backupSession"
 	RestoreSession = "restoreSession"
 
-	TargetName      = "targetName"
-	TargetKind      = "targetKind"
-	TargetNamespace = "targetNamespace"
-	TargetMountPath = "targetMountPath"
-	TargetPaths     = "targetPaths"
-
-	// default true
-	// false when TmpDir.DisableCaching is true in backupConfig/restoreSession
+	// EnableCache is false when TmpDir.DisableCaching is true in backupConfig/restoreSession
+	// default is true
 	EnableCache    = "enableCache"
 	InterimDataDir = "interimDataDir"
-
-	KubeStashVolumePrefix = "/kubestash-volumes"
-	DefaultMountPath      = KubeStashVolumePrefix + "/data"
-	InterimDataDirPath    = KubeStashVolumePrefix + "/interim-data"
-	TmpDirMountPath       = KubeStashVolumePrefix + "/tmp"
 
 	LicenseApiService = "licenseApiService"
 )

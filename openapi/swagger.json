@@ -14,7 +14,7 @@
     "version": "v0"
   },
   "paths": {
-    "/apis/": {
+    "/apis": {
       "get": {
         "description": "get available API versions",
         "consumes": [
@@ -44,7 +44,7 @@
         }
       }
     },
-    "/apis/catalog.kubedb.com/": {
+    "/apis/catalog.kubedb.com": {
       "get": {
         "description": "get information of a group",
         "consumes": [
@@ -74,7 +74,7 @@
         }
       }
     },
-    "/apis/catalog.kubedb.com/v1alpha1/": {
+    "/apis/catalog.kubedb.com/v1alpha1": {
       "get": {
         "description": "get available resources",
         "consumes": [
@@ -7313,7 +7313,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/": {
+    "/apis/kubedb.com": {
       "get": {
         "description": "get information of a group",
         "consumes": [
@@ -7343,7 +7343,7 @@
         }
       }
     },
-    "/apis/kubedb.com/v1alpha2/": {
+    "/apis/kubedb.com/v1alpha2": {
       "get": {
         "description": "get available resources",
         "consumes": [
@@ -18912,7 +18912,7 @@
         }
       ]
     },
-    "/apis/ops.kubedb.com/": {
+    "/apis/ops.kubedb.com": {
       "get": {
         "description": "get information of a group",
         "consumes": [
@@ -18942,7 +18942,7 @@
         }
       }
     },
-    "/apis/ops.kubedb.com/v1alpha1/": {
+    "/apis/ops.kubedb.com/v1alpha1": {
       "get": {
         "description": "get available resources",
         "consumes": [

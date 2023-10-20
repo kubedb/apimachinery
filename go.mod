@@ -33,10 +33,10 @@ require (
 	kmodules.xyz/custom-resources v0.25.2
 	kmodules.xyz/monitoring-agent-api v0.25.5
 	kmodules.xyz/objectstore-api v0.25.1
-	kmodules.xyz/offshoot-api v0.25.4
+	kmodules.xyz/offshoot-api v0.25.5-0.20231004063620-dff8fb030d57
 	kmodules.xyz/webhook-runtime v0.25.0
 	kubeops.dev/sidekick v0.0.2-0.20230113102427-9848f83b2f0f
-	kubestash.dev/apimachinery v0.1.0
+	kubestash.dev/apimachinery v0.1.1-0.20231019194941-410b43b0d492
 	sigs.k8s.io/controller-runtime v0.13.1
 	sigs.k8s.io/yaml v1.3.0
 	stash.appscode.dev/apimachinery v0.32.0
@@ -63,6 +63,7 @@ require (
 	github.com/cloudevents/sdk-go/v2 v2.11.0 // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
+	github.com/cyphar/filepath-securejoin v0.2.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.10.1 // indirect
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
@@ -144,6 +145,7 @@ require (
 	golang.org/x/term v0.12.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
+	gomodules.xyz/envsubst v0.2.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	gomodules.xyz/mergo v0.3.13 // indirect
 	gomodules.xyz/sets v0.2.1 // indirect

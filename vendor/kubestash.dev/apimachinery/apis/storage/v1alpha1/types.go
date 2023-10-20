@@ -124,6 +124,9 @@ type GCSSpec struct {
 }
 
 type AzureSpec struct {
+	// StorageAccount specifies the name of the Azure Storage Account
+	StorageAccount string `json:"storageAccount,omitempty"`
+
 	// Container specifies the name of the Azure Blob container that will be used as storage backend.
 	Container string `json:"container,omitempty"`
 
