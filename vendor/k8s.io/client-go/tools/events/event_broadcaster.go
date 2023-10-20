@@ -56,11 +56,9 @@ var defaultSleepDuration = 10 * time.Second
 
 // TODO: validate impact of copying and investigate hashing
 type eventKey struct {
-	eventType           string
 	action              string
 	reason              string
 	reportingController string
-	reportingInstance   string
 	regarding           corev1.ObjectReference
 	related             corev1.ObjectReference
 }
@@ -183,24 +181,22 @@ func (e *eventBroadcasterImpl) recordToSink(event *eventsv1.Event, clock clock.C
 					return nil
 				}
 				isomorphicEvent.Series = &eventsv1.EventSeries{
-					Count:            2,
+					Count:            1,
 					LastObservedTime: metav1.MicroTime{Time: clock.Now()},
 				}
-				// Make a copy of the Event to make sure that recording it
-				// doesn't mess with the object stored in cache.
-				return isomorphicEvent.DeepCopy()
+				return isomorphicEvent
 			}
 			e.eventCache[eventKey] = eventCopy
-			// Make a copy of the Event to make sure that recording it doesn't
-			// mess with the object stored in cache.
-			return eventCopy.DeepCopy()
+			return eventCopy
 		}()
 		if evToRecord != nil {
-			// TODO: Add a metric counting the number of recording attempts
-			e.attemptRecording(evToRecord)
-			// We don't want the new recorded Event to be reflected in the
-			// client's cache because server-side mutations could mess with the
-			// aggregation mechanism used by the client.
+			recordedEvent := e.attemptRecording(evToRecord)
+			if recordedEvent != nil {
+				recordedEventKey := getKey(recordedEvent)
+				e.mu.Lock()
+				defer e.mu.Unlock()
+				e.eventCache[recordedEventKey] = recordedEvent
+			}
 		}
 	}()
 }
@@ -252,14 +248,6 @@ func recordEvent(sink EventSink, event *eventsv1.Event) (*eventsv1.Event, bool) 
 		return nil, false
 	case *errors.StatusError:
 		if errors.IsAlreadyExists(err) {
-			// If we tried to create an Event from an EventSerie, it means that
-			// the original Patch request failed because the Event we were
-			// trying to patch didn't exist. If the creation failed because the
-			// Event now exists, it is safe to retry.  This occurs when a new
-			// Event is emitted twice in a very short period of time.
-			if isEventSeries {
-				return nil, true
-			}
 			klog.V(5).Infof("Server rejected event '%#v': '%v' (will not retry!)", event, err)
 		} else {
 			klog.Errorf("Server rejected event '%#v': '%v' (will not retry!)", event, err)
@@ -291,11 +279,9 @@ func createPatchBytesForSeries(event *eventsv1.Event) ([]byte, error) {
 
 func getKey(event *eventsv1.Event) eventKey {
 	key := eventKey{
-		eventType:           event.Type,
 		action:              event.Action,
 		reason:              event.Reason,
 		reportingController: event.ReportingController,
-		reportingInstance:   event.ReportingInstance,
 		regarding:           event.Regarding,
 	}
 	if event.Related != nil {
@@ -306,9 +292,8 @@ func getKey(event *eventsv1.Event) eventKey {
 
 // StartStructuredLogging starts sending events received from this EventBroadcaster to the structured logging function.
 // The return value can be ignored or used to stop recording, if desired.
-// TODO: this function should also return an error.
 func (e *eventBroadcasterImpl) StartStructuredLogging(verbosity klog.Level) func() {
-	stopWatcher, err := e.StartEventWatcher(
+	return e.StartEventWatcher(
 		func(obj runtime.Object) {
 			event, ok := obj.(*eventsv1.Event)
 			if !ok {
@@ -317,20 +302,19 @@ func (e *eventBroadcasterImpl) StartStructuredLogging(verbosity klog.Level) func
 			}
 			klog.V(verbosity).InfoS("Event occurred", "object", klog.KRef(event.Regarding.Namespace, event.Regarding.Name), "kind", event.Regarding.Kind, "apiVersion", event.Regarding.APIVersion, "type", event.Type, "reason", event.Reason, "action", event.Action, "note", event.Note)
 		})
-	if err != nil {
-		klog.Errorf("failed to start event watcher: '%v'", err)
-		return func() {}
-	}
-	return stopWatcher
 }
 
 // StartEventWatcher starts sending events received from this EventBroadcaster to the given event handler function.
 // The return value is used to stop recording
-func (e *eventBroadcasterImpl) StartEventWatcher(eventHandler func(event runtime.Object)) (func(), error) {
+func (e *eventBroadcasterImpl) StartEventWatcher(eventHandler func(event runtime.Object)) func() {
 	watcher, err := e.Watch()
 	if err != nil {
 		klog.Errorf("Unable start event watcher: '%v' (will not retry!)", err)
-		return nil, err
+		// TODO: Rewrite the function signature to return an error, for
+		// now just return a no-op function
+		return func() {
+			klog.Error("The event watcher failed to start")
+		}
 	}
 	go func() {
 		defer utilruntime.HandleCrash()
@@ -342,10 +326,10 @@ func (e *eventBroadcasterImpl) StartEventWatcher(eventHandler func(event runtime
 			eventHandler(watchEvent.Object)
 		}
 	}()
-	return watcher.Stop, nil
+	return watcher.Stop
 }
 
-func (e *eventBroadcasterImpl) startRecordingEvents(stopCh <-chan struct{}) error {
+func (e *eventBroadcasterImpl) startRecordingEvents(stopCh <-chan struct{}) {
 	eventHandler := func(obj runtime.Object) {
 		event, ok := obj.(*eventsv1.Event)
 		if !ok {
@@ -354,26 +338,18 @@ func (e *eventBroadcasterImpl) startRecordingEvents(stopCh <-chan struct{}) erro
 		}
 		e.recordToSink(event, clock.RealClock{})
 	}
-	stopWatcher, err := e.StartEventWatcher(eventHandler)
-	if err != nil {
-		return err
-	}
+	stopWatcher := e.StartEventWatcher(eventHandler)
 	go func() {
 		<-stopCh
 		stopWatcher()
 	}()
-	return nil
 }
 
 // StartRecordingToSink starts sending events received from the specified eventBroadcaster to the given sink.
 func (e *eventBroadcasterImpl) StartRecordingToSink(stopCh <-chan struct{}) {
 	go wait.Until(e.refreshExistingEventSeries, refreshTime, stopCh)
 	go wait.Until(e.finishSeries, finishTime, stopCh)
-	err := e.startRecordingEvents(stopCh)
-	if err != nil {
-		klog.Errorf("unexpected type, expected eventsv1.Event")
-		return
-	}
+	e.startRecordingEvents(stopCh)
 }
 
 type eventBroadcasterAdapterImpl struct {
