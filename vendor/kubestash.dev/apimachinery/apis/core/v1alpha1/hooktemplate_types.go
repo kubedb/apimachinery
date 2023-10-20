@@ -61,7 +61,7 @@ type HookTemplateSpec struct {
 
 	// Params defines a list of parameters that is used by the HookTemplate to execute its logic.
 	// +optional
-	Params []apis.ParameterDefinition `json:"params,omitempty"`
+	Params *[]apis.ParameterDefinition `json:"params,omitempty"`
 
 	// Action specifies the operation that is performed by this HookTemplate
 	// Valid values are:
@@ -135,7 +135,7 @@ type PodHookExecutorSpec struct {
 	// Valid values are:
 	// - "ExecuteOnOne": Execute hook on only one of the selected pods. This is default behavior
 	// - "ExecuteOnAll": Execute hook on all the selected pods.
-	// +kubebuilder:default=ExecuteOnOne
+	// +kubebuilder:validation:default=ExecuteOnOne
 	Strategy PodHookExecutionStrategy `json:"strategy,omitempty"`
 }
 

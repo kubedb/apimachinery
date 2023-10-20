@@ -71,7 +71,7 @@ type RepositorySpec struct {
 	// The valid values are:
 	// "Delete": This will delete the respective Snapshot CRs from the cluster but keep the backed up data in the remote backend. This is the default behavior.
 	// "WipeOut": This will delete the respective Snapshot CRs as well as the backed up data from the backend.
-	// +kubebuilder:default=Delete
+	// +kubebuilder:validation:default=Delete
 	// +optional
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 
@@ -148,9 +148,13 @@ type SnapshotInfo struct {
 }
 
 const (
-	TypeRepositoryInitialized               = "RepositoryInitialized"
-	ReasonRepositoryInitializationSucceeded = "RepositoryInitializationSucceeded"
-	ReasonRepositoryInitializationFailed    = "RepositoryInitializationFailed"
+	TypeRepositoryInitialized               = "BackendInitialized"
+	ReasonRepositoryInitializationSucceeded = "BackendInitializationSucceeded"
+	ReasonRepositoryInitializationFailed    = "BackendInitializationFailed"
+
+	TypeSnapshotsSynced          = "SnapshotsSynced"
+	ReasonSnapshotsSyncSucceeded = "SnapshotsSyncSucceeded"
+	ReasonSnapshotsSyncFailed    = "SnapshotsSyncFailed"
 )
 
 //+kubebuilder:object:root=true

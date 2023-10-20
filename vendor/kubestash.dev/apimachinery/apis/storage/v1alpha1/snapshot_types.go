@@ -92,7 +92,7 @@ type SnapshotSpec struct {
 	// The valid values are:
 	// - "Delete": This will delete just the Snapshot CR from the cluster but keep the backed up data in the remote backend. This is the default behavior.
 	// - "WipeOut": This will delete the Snapshot CR as well as the backed up data from the backend.
-	// +kubebuilder:default=Delete
+	// +kubebuilder:validation:default=Delete
 	// +optional
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 
@@ -100,6 +100,10 @@ type SnapshotSpec struct {
 	// Stash will not process any further event for the Snapshot.
 	// +optional
 	Paused bool `json:"paused,omitempty"`
+
+	// Components represents the backup information of the individual components of this Snapshot
+	// +optional
+	Components []Component `json:"components,omitempty"`
 }
 
 // SnapshotStatus defines the observed state of Snapshot
@@ -131,15 +135,6 @@ type SnapshotStatus struct {
 	// Conditions represents list of conditions regarding this Snapshot
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
-
-	// TotalComponents represents the number of total components for this Snapshot
-	// +optional
-	TotalComponents int32 `json:"totalComponents,omitempty"`
-
-	// Components represents the backup information of the individual components of this Snapshot
-	// +optional
-	// +mapType=granular
-	Components map[string]Component `json:"components,omitempty"`
 }
 
 // SnapshotPhase represent the overall progress of this Snapshot
@@ -165,6 +160,9 @@ const (
 
 // Component represents the backup information of individual components
 type Component struct {
+	// Name specifies the name of the component
+	Name string `json:"name,omitempty"`
+
 	// Path specifies the path inside the Repository where the backed up data for this component has been stored.
 	// This path is relative to Repository path.
 	Path string `json:"path,omitempty"`
@@ -173,28 +171,12 @@ type Component struct {
 	// +optional
 	Phase ComponentPhase `json:"phase,omitempty"`
 
-	// Size represents the size of the restic repository for this component
-	// +optional
-	Size string `json:"size,omitempty"`
-
-	// Duration specifies the total time taken to complete the backup process for this component
-	// +optional
-	Duration string `json:"duration,omitempty"`
-
-	// Integrity represents the result of the restic repository integrity check for this component
-	// +optional
-	Integrity *bool `json:"integrity,omitempty"`
-
-	// Error specifies the reason in case of backup failure for the component
-	// +optional
-	Error string `json:"error,omitempty"`
-
 	// Driver specifies the name of the tool that has been used to upload the underlying backed up data
 	Driver apis.Driver `json:"driver,omitempty"`
 
 	// ResticStats specifies the "Restic" driver specific information
 	// +optional
-	ResticStats []ResticStats `json:"resticStats,omitempty"`
+	ResticStats *ResticStats `json:"resticStats,omitempty"`
 
 	// VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
 	// +optional
@@ -224,18 +206,18 @@ type ResticStats struct {
 	// +optional
 	Uploaded string `json:"uploaded,omitempty"`
 
-	// HostPath represents the backup path for which restic snapshot is taken.
-	// +optional
-	HostPath string `json:"hostPath,omitempty"`
-
 	// Size represents the restic snapshot size
 	// +optional
 	Size string `json:"size,omitempty"`
+
+	// Integrity represents the result of restic integrity check for this snapshot.
+	// +optional
+	Integrity *bool `json:"integrity,omitempty"`
 }
 
 // VolumeSnapshotterStats specifies the "VolumeSnapshotter" driver specific information
 type VolumeSnapshotterStats struct {
-	VolumeSnapshotName string `json:"volumeSnapshotName,omitempty"`
+	VolumeSnapshotName string `json:"volumeSnapshotName"`
 }
 
 // WalSegment specifies the "WalG" driver specific information
@@ -245,9 +227,9 @@ type WalSegment struct {
 }
 
 const (
-	TypeSnapshotMetadataUploaded               = "SnapshotMetadataUploaded"
-	ReasonFailedToUploadSnapshotMetadata       = "FailedToUploadSnapshotMetadata"
-	ReasonSuccessfullyUploadedSnapshotMetadata = "SuccessfullyUploadedSnapshotMetadata"
+	TypeBackendMetadataWritten               = "BackendMetadataWritten"
+	ReasonFailedToWriteBackendMetadata       = "FailedToWriteBackendMetadata"
+	ReasonSuccessfullyWrittenBackendMetadata = "SuccessfullyWrittenBackendMetadata "
 
 	TypeRecentSnapshotListUpdated               = "RecentSnapshotListUpdated"
 	ReasonFailedToUpdateRecentSnapshotList      = "FailedToUpdateRecentSnapshotList"

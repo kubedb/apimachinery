@@ -76,7 +76,7 @@ type BackupStorageSpec struct {
 	// The valid values are:
 	// "Delete": This will delete the respective Repository and Snapshot CRs from the cluster but keep the backed up data in the remote backend. This is the default behavior.
 	// "WipeOut": This will delete the respective Repository and Snapshot CRs as well as the backed up data from the backend.
-	// +kubebuilder:default=Delete
+	// +kubebuilder:validation:default=Delete
 	// +optional
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 }
@@ -133,9 +133,9 @@ const (
 	ReasonBackendInitializationSucceeded = "BackendInitializationSucceeded"
 	ReasonBackendInitializationFailed    = "BackendInitializationFailed"
 
-	TypeBackendSecretFound          = "BackendSecretFound"
-	ReasonBackendSecretNotAvailable = "BackendSecretNotAvailable"
-	ReasonBackendSecretAvailable    = "BackendSecretAvailable"
+	TypeRepositorySynced          = "RepositorySynced"
+	ReasonRepositorySyncSucceeded = "RepositorySyncSucceeded"
+	ReasonRepositorySyncFailed    = "RepositorySyncFailed"
 )
 
 //+kubebuilder:object:root=true

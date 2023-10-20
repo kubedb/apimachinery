@@ -18,18 +18,14 @@ package v1alpha1
 
 import (
 	"fmt"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	kmapi "kmodules.xyz/client-go/api/v1"
-	"kubestash.dev/apimachinery/apis"
 	"time"
 
-	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
+	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"kubestash.dev/apimachinery/crds"
 
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
-	cutil "kmodules.xyz/client-go/conditions"
 	"kmodules.xyz/client-go/meta"
-	meta_util "kmodules.xyz/client-go/meta"
 )
 
 func (_ BackupSession) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -40,31 +36,17 @@ func (b *BackupSession) IsRunning() bool {
 	return b.Status.Phase == BackupSessionRunning
 }
 
-func (b *BackupSession) IsCompleted() bool {
-	phase := b.Status.Phase
-
-	return phase == BackupSessionSucceeded ||
-		phase == BackupSessionFailed ||
-		phase == BackupSessionSkipped
-}
-
 func (b *BackupSession) CalculatePhase() BackupSessionPhase {
-	if cutil.IsConditionFalse(b.Status.Conditions, TypeMetricsPushed) {
-		return BackupSessionFailed
-	}
-
-	if cutil.IsConditionTrue(b.Status.Conditions, TypeBackupSkipped) {
+	if kmapi.IsConditionTrue(b.Status.Conditions, TypeBackupSkipped) {
 		return BackupSessionSkipped
 	}
 
-	if cutil.IsConditionTrue(b.Status.Conditions, TypeMetricsPushed) &&
-		(b.failedToEnsurebackupExecutor() ||
-			b.failedToEnsureSnapshots() ||
-			b.failedToExecutePreBackupHooks() ||
-			b.failedToExecutePostBackupHooks() ||
-			b.failedToApplyRetentionPolicy() ||
-			b.verificationsFailed() ||
-			b.sessionHistoryCleanupFailed()) {
+	if b.failedToEnsurebackupExecutor() ||
+		b.failedToEnsureSnapshots() ||
+		b.failedToExecuteHooks() ||
+		b.failedToApplyRetentionPolicy() ||
+		b.verificationsFailed() ||
+		b.sessionHistoryCleanupFailed() {
 		return BackupSessionFailed
 	}
 
@@ -77,32 +59,36 @@ func (b *BackupSession) CalculatePhase() BackupSessionPhase {
 }
 
 func (b *BackupSession) sessionHistoryCleanupFailed() bool {
-	return cutil.IsConditionFalse(b.Status.Conditions, TypeSessionHistoryCleaned)
+	return kmapi.IsConditionFalse(b.Status.Conditions, TypeSessionHistoryCleaned)
 }
 
 func (b *BackupSession) failedToEnsureSnapshots() bool {
-	return cutil.IsConditionFalse(b.Status.Conditions, TypeSnapshotsEnsured)
+	return !kmapi.HasCondition(b.Status.Conditions, TypeSnapshotsEnsured) ||
+		kmapi.IsConditionFalse(b.Status.Conditions, TypeSnapshotsEnsured)
 }
 
 func (b *BackupSession) failedToEnsurebackupExecutor() bool {
-	return cutil.IsConditionFalse(b.Status.Conditions, TypeBackupExecutorEnsured)
+	return !kmapi.HasCondition(b.Status.Conditions, TypeBackupExecutorEnsured) ||
+		kmapi.IsConditionFalse(b.Status.Conditions, TypeBackupExecutorEnsured)
 }
 
 func (b *BackupSession) FinalStepExecuted() bool {
-	return cutil.HasCondition(b.Status.Conditions, TypeMetricsPushed)
-}
-
-func (b *BackupSession) failedToExecutePreBackupHooks() bool {
-	return cutil.IsConditionFalse(b.Status.Conditions, TypePreBackupHooksExecutionSucceeded)
-}
-
-func (b *BackupSession) failedToExecutePostBackupHooks() bool {
-	return cutil.IsConditionFalse(b.Status.Conditions, TypePostBackupHooksExecutionSucceeded)
+	return kmapi.HasCondition(b.Status.Conditions, TypeSessionHistoryCleaned)
 }
 
 func (b *BackupSession) failedToApplyRetentionPolicy() bool {
 	for _, status := range b.Status.RetentionPolicies {
 		if status.Phase == RetentionPolicyFailedToApply {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (b *BackupSession) failedToExecuteHooks() bool {
+	for _, h := range b.Status.Hooks {
+		if h.Phase == HookExecutionFailed {
 			return true
 		}
 	}
@@ -131,13 +117,13 @@ func (b *BackupSession) calculateBackupSessionPhaseFromSnapshots() BackupSession
 	succeeded := 0
 
 	for _, s := range status {
-		if s.Phase == storageapi.SnapshotFailed {
+		if s.Phase == v1alpha1.SnapshotFailed {
 			failed++
 		}
-		if s.Phase == storageapi.SnapshotPending {
+		if s.Phase == v1alpha1.SnapshotPending {
 			pending++
 		}
-		if s.Phase == storageapi.SnapshotSucceeded {
+		if s.Phase == v1alpha1.SnapshotSucceeded {
 			succeeded++
 		}
 	}
@@ -159,86 +145,4 @@ func (b *BackupSession) calculateBackupSessionPhaseFromSnapshots() BackupSession
 
 func GenerateBackupSessionName(invokerName, sessionName string) string {
 	return meta.ValidNameWithPrefixNSuffix(invokerName, sessionName, fmt.Sprintf("%d", time.Now().Unix()))
-}
-
-func (b *BackupSession) OffshootLabels() map[string]string {
-	newLabels := make(map[string]string)
-	newLabels[meta_util.ManagedByLabelKey] = apis.KubeStashKey
-	newLabels[apis.KubeStashInvokerName] = b.Name
-	newLabels[apis.KubeStashInvokerNamespace] = b.Namespace
-
-	return apis.UpsertLabels(b.Labels, newLabels)
-}
-
-func (b *BackupSession) GetSummary(targetRef *kmapi.TypedObjectReference) *Summary {
-	errMsg := b.getFailureMessage()
-	phase := BackupSessionSucceeded
-	if errMsg != "" {
-		phase = BackupSessionFailed
-	}
-
-	return &Summary{
-		Name:      b.Name,
-		Namespace: b.Namespace,
-
-		Invoker: &kmapi.TypedObjectReference{
-			APIGroup:  GroupVersion.Group,
-			Kind:      b.Spec.Invoker.Kind,
-			Name:      b.Spec.Invoker.Name,
-			Namespace: b.Namespace,
-		},
-
-		Target: targetRef,
-
-		Status: TargetStatus{
-			Phase:    string(phase),
-			Duration: b.Status.Duration,
-			Error:    errMsg,
-		},
-	}
-}
-
-func (b *BackupSession) getFailureMessage() string {
-	failureFound, reason := b.checkFailureInConditions()
-	if failureFound {
-		return reason
-	}
-	failureFound, reason = b.checkFailureInSnapshots()
-	if failureFound {
-		return reason
-	}
-	failureFound, reason = b.checkFailureInRetentionPolicy()
-	if failureFound {
-		return reason
-	}
-
-	return ""
-}
-
-func (b *BackupSession) checkFailureInConditions() (bool, string) {
-	for _, condition := range b.Status.Conditions {
-		if condition.Status == metav1.ConditionFalse {
-			return true, condition.Message
-		}
-	}
-
-	return false, ""
-}
-
-func (b *BackupSession) checkFailureInSnapshots() (bool, string) {
-	for _, snapStatus := range b.Status.Snapshots {
-		if snapStatus.Phase == storageapi.SnapshotFailed {
-			return true, "one or more snapshots are failed"
-		}
-	}
-	return false, ""
-}
-
-func (b *BackupSession) checkFailureInRetentionPolicy() (bool, string) {
-	for _, retention := range b.Status.RetentionPolicies {
-		if retention.Phase == RetentionPolicyFailedToApply {
-			return true, "one or more retention policies are failed to apply"
-		}
-	}
-	return false, ""
 }

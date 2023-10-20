@@ -63,11 +63,7 @@ func (b *BackupConfiguration) ValidateCreate() error {
 	if err := b.validateRepositories(context.Background(), c); err != nil {
 		return err
 	}
-	if err := b.validateBackendsAgainstUsagePolicy(context.Background(), c); err != nil {
-		return err
-	}
-
-	return b.validateHookTemplatesAgainstUsagePolicy(context.Background(), c)
+	return b.validateBackendsAgainstUsagePolicy(context.Background(), c)
 }
 
 func getNewRuntimeClient() (client.Client, error) {
@@ -78,7 +74,6 @@ func getNewRuntimeClient() (client.Client, error) {
 	scheme := runtime.NewScheme()
 	utilruntime.Must(storageapi.AddToScheme(scheme))
 	utilruntime.Must(core.AddToScheme(scheme))
-	utilruntime.Must(AddToScheme(scheme))
 
 	mapper, err := apiutil.NewDynamicRESTMapper(config)
 	if err != nil {
@@ -109,7 +104,7 @@ func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, 
 				return fmt.Errorf("backend %q for repository %q doesn't match with any of the given backends", repo.Backend, repo.Name)
 			}
 
-			existingRepo, err := b.getRepository(ctx, c, repo.Name)
+			existingRepo, err := b.getRepo(ctx, c, repo.Name)
 			if err != nil {
 				if kerr.IsNotFound(err) {
 					continue
@@ -117,11 +112,11 @@ func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, 
 				return err
 			}
 
-			if !targetMatched(&existingRepo.Spec.AppRef, b.Spec.Target) {
+			if !Matched(&existingRepo.Spec.AppRef, b.Spec.Target) {
 				return fmt.Errorf("repository '%q' already exists in the cluster with a different target reference. Please, choose a different repository name", repo.Name)
 			}
 
-			if !targetMatched(b.GetStorageRef(repo.Backend), &existingRepo.Spec.StorageRef) {
+			if !Matched(b.GetStorageRef(repo.Backend), &existingRepo.Spec.StorageRef) {
 				return fmt.Errorf("repository '%q' already exists in the cluster with a different storage reference. Please, choose a different repository name", repo.Name)
 			}
 
@@ -130,7 +125,7 @@ func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, 
 	return nil
 }
 
-func targetMatched(t1, t2 *kmapi.TypedObjectReference) bool {
+func Matched(t1, t2 *kmapi.TypedObjectReference) bool {
 	return t1.APIGroup == t2.APIGroup &&
 		t1.Kind == t2.Kind &&
 		t1.Namespace == t2.Namespace &&
@@ -160,7 +155,7 @@ func (b *BackupConfiguration) backendMatched(repo RepositoryInfo) bool {
 	return false
 }
 
-func (b *BackupConfiguration) getRepository(ctx context.Context, c client.Client, name string) (*storageapi.Repository, error) {
+func (b *BackupConfiguration) getRepo(ctx context.Context, c client.Client, name string) (*storageapi.Repository, error) {
 	repo := &storageapi.Repository{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      name,
@@ -214,55 +209,6 @@ func (b *BackupConfiguration) getBackupStorage(ctx context.Context, c client.Cli
 	return bs, nil
 }
 
-func (b *BackupConfiguration) validateHookTemplatesAgainstUsagePolicy(ctx context.Context, c client.Client) error {
-	hookTemplates := b.getHookTemplates()
-	for _, ht := range hookTemplates {
-		err := c.Get(ctx, client.ObjectKeyFromObject(&ht), &ht)
-		if err != nil {
-			if kerr.IsNotFound(err) {
-				continue
-			}
-			return err
-		}
-
-		ns := &core.Namespace{ObjectMeta: v1.ObjectMeta{Name: b.Namespace}}
-		if err := c.Get(ctx, client.ObjectKeyFromObject(ns), ns); err != nil {
-			return err
-		}
-
-		if !ht.UsageAllowed(ns) {
-			return fmt.Errorf("namespace %q is not allowed to refer HookTemplate %s/%s. Please, check the `usagePolicy` of the HookTemplate", b.Namespace, ht.Name, ht.Namespace)
-		}
-	}
-	return nil
-}
-
-func (b *BackupConfiguration) getHookTemplates() []HookTemplate {
-	var hookTemplates []HookTemplate
-	for _, session := range b.Spec.Sessions {
-		if session.Hooks != nil {
-			hookTemplates = append(hookTemplates, b.getHookTemplatesFromHookInfo(session.Hooks.PreBackup)...)
-			hookTemplates = append(hookTemplates, b.getHookTemplatesFromHookInfo(session.Hooks.PostBackup)...)
-		}
-	}
-	return hookTemplates
-}
-
-func (b *BackupConfiguration) getHookTemplatesFromHookInfo(hooks []HookInfo) []HookTemplate {
-	var hookTemplates []HookTemplate
-	for _, hook := range hooks {
-		if hook.HookTemplate != nil {
-			hookTemplates = append(hookTemplates, HookTemplate{
-				ObjectMeta: v1.ObjectMeta{
-					Name:      hook.HookTemplate.Name,
-					Namespace: hook.HookTemplate.Namespace,
-				},
-			})
-		}
-	}
-	return hookTemplates
-}
-
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) error {
 	backupconfigurationlog.Info("validate update", apis.KeyName, b.Name)
@@ -274,10 +220,7 @@ func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) error {
 	if err := b.validateRepositories(context.Background(), c); err != nil {
 		return err
 	}
-	if err := b.validateBackendsAgainstUsagePolicy(context.Background(), c); err != nil {
-		return err
-	}
-	return b.validateHookTemplatesAgainstUsagePolicy(context.Background(), c)
+	return b.validateBackendsAgainstUsagePolicy(context.Background(), c)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type

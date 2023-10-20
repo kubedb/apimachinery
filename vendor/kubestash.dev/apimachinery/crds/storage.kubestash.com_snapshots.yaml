@@ -90,8 +90,83 @@ spec:
                 description: BackupSession represents the name of the respective BackupSession
                   which is responsible for this Snapshot.
                 type: string
+              components:
+                description: Components represents the backup information of the individual
+                  components of this Snapshot
+                items:
+                  description: Component represents the backup information of individual
+                    components
+                  properties:
+                    driver:
+                      description: Driver specifies the name of the tool that has
+                        been used to upload the underlying backed up data
+                      enum:
+                      - Restic
+                      - WalG
+                      - VolumeSnapshotter
+                      type: string
+                    name:
+                      description: Name specifies the name of the component
+                      type: string
+                    path:
+                      description: Path specifies the path inside the Repository where
+                        the backed up data for this component has been stored. This
+                        path is relative to Repository path.
+                      type: string
+                    phase:
+                      description: Phase represents the backup phase of the component
+                      enum:
+                      - Pending
+                      - Running
+                      - Succeeded
+                      - Failed
+                      type: string
+                    resticStats:
+                      description: ResticStats specifies the "Restic" driver specific
+                        information
+                      properties:
+                        id:
+                          description: Id represents the restic snapshot id
+                          type: string
+                        integrity:
+                          description: Integrity represents the result of restic integrity
+                            check for this snapshot.
+                          type: boolean
+                        size:
+                          description: Size represents the restic snapshot size
+                          type: string
+                        uploaded:
+                          description: Uploaded specifies the amount of data that
+                            has been uploaded in the restic snapshot.
+                          type: string
+                      type: object
+                    volumeSnapshotterStats:
+                      description: VolumeSnapshotterStats specifies the "VolumeSnapshotter"
+                        driver specific information
+                      properties:
+                        volumeSnapshotName:
+                          type: string
+                      required:
+                      - volumeSnapshotName
+                      type: object
+                    walSegments:
+                      description: WalSegments specifies a list of wall segment for
+                        individual component
+                      items:
+                        description: WalSegment specifies the "WalG" driver specific
+                          information
+                        properties:
+                          end:
+                            format: date-time
+                            type: string
+                          start:
+                            format: date-time
+                            type: string
+                        type: object
+                      type: array
+                  type: object
+                type: array
               deletionPolicy:
-                default: Delete
                 description: 'DeletionPolicy specifies what to do when you delete
                   a Snapshot CR. The valid values are: - "Delete": This will delete
                   just the Snapshot CR from the cluster but keep the backed up data
@@ -132,114 +207,20 @@ spec:
           status:
             description: SnapshotStatus defines the observed state of Snapshot
             properties:
-              components:
-                additionalProperties:
-                  description: Component represents the backup information of individual
-                    components
-                  properties:
-                    driver:
-                      description: Driver specifies the name of the tool that has
-                        been used to upload the underlying backed up data
-                      enum:
-                      - Restic
-                      - WalG
-                      - VolumeSnapshotter
-                      type: string
-                    duration:
-                      description: Duration specifies the total time taken to complete
-                        the backup process for this component
-                      type: string
-                    error:
-                      description: Error specifies the reason in case of backup failure
-                        for the component
-                      type: string
-                    integrity:
-                      description: Integrity represents the result of the restic repository
-                        integrity check for this component
-                      type: boolean
-                    path:
-                      description: Path specifies the path inside the Repository where
-                        the backed up data for this component has been stored. This
-                        path is relative to Repository path.
-                      type: string
-                    phase:
-                      description: Phase represents the backup phase of the component
-                      enum:
-                      - Pending
-                      - Running
-                      - Succeeded
-                      - Failed
-                      type: string
-                    resticStats:
-                      description: ResticStats specifies the "Restic" driver specific
-                        information
-                      items:
-                        description: ResticStats specifies the "Restic" driver specific
-                          information
-                        properties:
-                          hostPath:
-                            description: HostPath represents the backup path for which
-                              restic snapshot is taken.
-                            type: string
-                          id:
-                            description: Id represents the restic snapshot id
-                            type: string
-                          size:
-                            description: Size represents the restic snapshot size
-                            type: string
-                          uploaded:
-                            description: Uploaded specifies the amount of data that
-                              has been uploaded in the restic snapshot.
-                            type: string
-                        type: object
-                      type: array
-                    size:
-                      description: Size represents the size of the restic repository
-                        for this component
-                      type: string
-                    volumeSnapshotterStats:
-                      description: VolumeSnapshotterStats specifies the "VolumeSnapshotter"
-                        driver specific information
-                      properties:
-                        volumeSnapshotName:
-                          type: string
-                      type: object
-                    walSegments:
-                      description: WalSegments specifies a list of wall segment for
-                        individual component
-                      items:
-                        description: WalSegment specifies the "WalG" driver specific
-                          information
-                        properties:
-                          end:
-                            format: date-time
-                            type: string
-                          start:
-                            format: date-time
-                            type: string
-                        type: object
-                      type: array
-                  type: object
-                description: Components represents the backup information of the individual
-                  components of this Snapshot
-                type: object
-                x-kubernetes-map-type: granular
               conditions:
                 description: Conditions represents list of conditions regarding this
                   Snapshot
                 items:
-                  description: Condition defines an observation of a object operational
-                    state.
                   properties:
                     lastTransitionTime:
                       description: Last time the condition transitioned from one status
-                        to another. This should be when the underlying condition changed.
-                        If that is not known, then using the time when the API field
+                        to another. This should be when the underlying condition changed.  If
+                        that is not known, then using the time when the API field
                         changed is acceptable.
                       format: date-time
                       type: string
                     message:
-                      description: A human-readable message indicating details about
+                      description: A human readable message indicating details about
                         the transition. This field may be empty.
                       type: string
                     observedGeneration:
@@ -252,14 +233,9 @@ spec:
                       type: integer
                     reason:
                       description: The reason for the condition's last transition
-                        in CamelCase. The specific API may choose whether this field
-                        is considered a guaranteed API. This field may not be empty.
-                      type: string
-                    severity:
-                      description: Severity provides an explicit classification of
-                        Reason code, so the users or machines can immediately understand
-                        the current situation and act accordingly. The Severity field
-                        MUST be set only when Status=False.
+                        in CamelCase. The specific API may choose whether or not this
+                        field is considered a guaranteed API. This field may not be
+                        empty.
                       type: string
                     status:
                       description: Status of the condition, one of True, False, Unknown.
@@ -267,11 +243,14 @@ spec:
                     type:
                       description: Type of condition in CamelCase or in foo.example.com/CamelCase.
                         Many .condition.type values are consistent across resources
-                        like Available, but because arbitrary util can be useful (see
-                        .node.status.util), the ability to deconflict is important.
+                        like Available, but because arbitrary conditions can be useful
+                        (see .node.status.conditions), the ability to deconflict is
+                        important.
                       type: string
                   required:
                   - lastTransitionTime
+                  - message
+                  - reason
                   - status
                   - type
                   type: object
@@ -301,11 +280,6 @@ spec:
                   was taken.
                 format: date-time
                 type: string
-              totalComponents:
-                description: TotalComponents represents the number of total components
-                  for this Snapshot
-                format: int32
-                type: integer
               verificationStatus:
                 description: VerificationStatus specifies whether this Snapshot has
                   been verified or not

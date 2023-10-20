@@ -17,12 +17,10 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"kubestash.dev/apimachinery/apis"
 	"kubestash.dev/apimachinery/crds"
 
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
-	cutil "kmodules.xyz/client-go/conditions"
-	"kmodules.xyz/client-go/meta"
 )
 
 func (_ Repository) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -30,17 +28,9 @@ func (_ Repository) CustomResourceDefinition() *apiextensions.CustomResourceDefi
 }
 
 func (r *Repository) CalculatePhase() RepositoryPhase {
-	if cutil.IsConditionTrue(r.Status.Conditions, TypeRepositoryInitialized) {
+	if kmapi.IsConditionTrue(r.Status.Conditions, TypeRepositoryInitialized) &&
+		kmapi.IsConditionTrue(r.Status.Conditions, TypeSnapshotsSynced) {
 		return RepositoryReady
 	}
 	return RepositoryNotReady
-}
-
-func (r *Repository) OffshootLabels() map[string]string {
-	newLabels := make(map[string]string)
-	newLabels[meta.ManagedByLabelKey] = apis.KubeStashKey
-	newLabels[apis.KubeStashInvokerKind] = ResourceKindRepository
-	newLabels[apis.KubeStashInvokerName] = r.Name
-	newLabels[apis.KubeStashInvokerNamespace] = r.Namespace
-	return apis.UpsertLabels(r.Labels, newLabels)
 }

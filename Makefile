@@ -136,7 +136,7 @@ gen-conversion:
 		$(CODE_GENERATOR_IMAGE)                          \
 		/go/bin/conversion-gen --go-header-file ./hack/license/go.txt \
 			--input-dirs $(GO_PKG)/$(REPO)/apis/kubedb/v1alpha1 \
-			--extra-peer-dirs "kmodules.xyz/monitoring-agent-api/api/v1alpha1" \
+			--extra-peer-dirs "kmodules.xyz/monitoring-agent-api/api/v1" \
 			-O zz_generated.conversion
 
 # Generate openapi schema
