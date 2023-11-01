@@ -67,6 +67,10 @@ func (m *MongoDBOpsRequest) GetDBRefName() string {
 	return m.Spec.DatabaseRef.Name
 }
 
+func (m *MongoDBOpsRequest) GetRequestType() any {
+	return m.Spec.Type
+}
+
 func (m *MongoDBOpsRequest) GetStatus() OpsRequestStatus {
 	return m.Status
 }

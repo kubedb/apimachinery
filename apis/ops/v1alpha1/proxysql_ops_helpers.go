@@ -63,6 +63,10 @@ func (p *ProxySQLOpsRequest) GetDBRefName() string {
 	return p.Spec.ProxyRef.Name
 }
 
+func (p *ProxySQLOpsRequest) GetRequestType() any {
+	return p.Spec.Type
+}
+
 func (p *ProxySQLOpsRequest) GetStatus() OpsRequestStatus {
 	return p.Status
 }
