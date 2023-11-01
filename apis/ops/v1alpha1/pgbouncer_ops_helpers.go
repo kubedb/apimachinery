@@ -63,14 +63,6 @@ func (p *PgBouncerOpsRequest) GetObjectMeta() metav1.ObjectMeta {
 	return p.ObjectMeta
 }
 
-func (p PgBouncerOpsRequest) GetRequestType() any {
-	return p.Spec.Type
-}
-
-func (p PgBouncerOpsRequest) GetUpdateVersionSpec() *PgBouncerUpdateVersionSpec {
-	return p.Spec.UpdateVersion
-}
-
 func (p *PgBouncerOpsRequest) GetDBRefName() string {
 	return p.Spec.ServerRef.Name
 }
