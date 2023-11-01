@@ -55,16 +55,8 @@ func (k *KafkaOpsRequest) ResourcePlural() string {
 
 var _ Accessor = &KafkaOpsRequest{}
 
-func (k *KafkaOpsRequest) GetRequestType() any {
-	return k.Spec.Type
-}
-
 func (k *KafkaOpsRequest) GetObjectMeta() metav1.ObjectMeta {
 	return k.ObjectMeta
-}
-
-func (k *KafkaOpsRequest) GetUpdateVersionSpec() *KafkaUpdateVersionSpec {
-	return k.Spec.UpdateVersion
 }
 
 func (k *KafkaOpsRequest) GetDBRefName() string {

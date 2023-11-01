@@ -63,14 +63,6 @@ func (r *RedisOpsRequest) GetObjectMeta() metav1.ObjectMeta {
 	return r.ObjectMeta
 }
 
-func (r RedisOpsRequest) GetRequestType() any {
-	return r.Spec.Type
-}
-
-func (r RedisOpsRequest) GetUpdateVersionSpec() *RedisUpdateVersionSpec {
-	return r.Spec.UpdateVersion
-}
-
 func (r *RedisOpsRequest) GetDBRefName() string {
 	return r.Spec.DatabaseRef.Name
 }

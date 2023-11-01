@@ -63,21 +63,6 @@ func (p *PerconaXtraDBOpsRequest) GetObjectMeta() metav1.ObjectMeta {
 	return p.ObjectMeta
 }
 
-func (p PerconaXtraDBOpsRequest) GetRequestType() any {
-	switch p.Spec.Type {
-	case PerconaXtraDBOpsRequestTypeUpgrade:
-		return PerconaXtraDBOpsRequestTypeUpdateVersion
-	}
-	return p.Spec.Type
-}
-
-func (p PerconaXtraDBOpsRequest) GetUpdateVersionSpec() *PerconaXtraDBUpdateVersionSpec {
-	if p.Spec.UpdateVersion != nil {
-		return p.Spec.UpdateVersion
-	}
-	return p.Spec.Upgrade
-}
-
 func (p *PerconaXtraDBOpsRequest) GetDBRefName() string {
 	return p.Spec.DatabaseRef.Name
 }
