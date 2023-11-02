@@ -67,6 +67,10 @@ func (p *PerconaXtraDBOpsRequest) GetDBRefName() string {
 	return p.Spec.DatabaseRef.Name
 }
 
+func (p *PerconaXtraDBOpsRequest) GetRequestType() any {
+	return p.Spec.Type
+}
+
 func (p *PerconaXtraDBOpsRequest) GetStatus() OpsRequestStatus {
 	return p.Status
 }

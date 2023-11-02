@@ -33403,10 +33403,6 @@
           "description": "Specifies information necessary for upgrading Elasticsearch",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchUpdateVersionSpec"
         },
-        "upgrade": {
-          "description": "Specifies information necessary for upgrading Elasticsearch Deprecated: use UpdateVersion",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchUpdateVersionSpec"
-        },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVerticalScalingSpec"
@@ -33818,10 +33814,6 @@
           "description": "Specifies information necessary for upgrading Memcached",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedUpdateVersionSpec"
         },
-        "upgrade": {
-          "description": "Specifies information necessary for upgrading Memcached Deprecated: use UpdateVersion",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedUpdateVersionSpec"
-        },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedVerticalScalingSpec"
@@ -34048,10 +34040,6 @@
         },
         "updateVersion": {
           "description": "Specifies information necessary for upgrading MongoDB",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBUpdateVersionSpec"
-        },
-        "upgrade": {
-          "description": "Specifies information necessary for upgrading MongoDB Deprecated: use UpdateVersion",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBUpdateVersionSpec"
         },
         "verticalScaling": {
@@ -34301,10 +34289,6 @@
         },
         "updateVersion": {
           "description": "Specifies information necessary for upgrading MySQL",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUpdateVersionSpec"
-        },
-        "upgrade": {
-          "description": "Specifies information necessary for upgrading MySQL Deprecated: use UpdateVersion",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUpdateVersionSpec"
         },
         "verticalScaling": {
@@ -34600,10 +34584,6 @@
           "description": "Specifies information necessary for upgrading PerconaXtraDB",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBUpdateVersionSpec"
         },
-        "upgrade": {
-          "description": "Specifies information necessary for upgrading PerconaXtraDB Deprecated: use UpdateVersion",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBUpdateVersionSpec"
-        },
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBVerticalScalingSpec"
@@ -34820,10 +34800,6 @@
         },
         "updateVersion": {
           "description": "Specifies information necessary for upgrading Postgres",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresUpdateVersionSpec"
-        },
-        "upgrade": {
-          "description": "Specifies information necessary for upgrading Postgres Deprecated: use UpdateVersion",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresUpdateVersionSpec"
         },
         "verticalScaling": {

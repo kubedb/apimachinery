@@ -67,6 +67,10 @@ func (e *EtcdOpsRequest) GetDBRefName() string {
 	return e.Spec.DatabaseRef.Name
 }
 
+func (e *EtcdOpsRequest) GetRequestType() any {
+	return e.Spec.Type
+}
+
 func (e *EtcdOpsRequest) GetStatus() OpsRequestStatus {
 	return e.Status
 }
