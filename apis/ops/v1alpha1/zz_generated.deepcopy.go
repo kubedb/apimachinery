@@ -291,11 +291,6 @@ func (in *ElasticsearchOpsRequestSpec) DeepCopyInto(out *ElasticsearchOpsRequest
 		*out = new(ElasticsearchUpdateVersionSpec)
 		**out = **in
 	}
-	if in.Upgrade != nil {
-		in, out := &in.Upgrade, &out.Upgrade
-		*out = new(ElasticsearchUpdateVersionSpec)
-		**out = **in
-	}
 	if in.HorizontalScaling != nil {
 		in, out := &in.HorizontalScaling, &out.HorizontalScaling
 		*out = new(ElasticsearchHorizontalScalingSpec)
@@ -1329,11 +1324,6 @@ func (in *MariaDBOpsRequestSpec) DeepCopyInto(out *MariaDBOpsRequestSpec) {
 		*out = new(MariaDBUpdateVersionSpec)
 		**out = **in
 	}
-	if in.Upgrade != nil {
-		in, out := &in.Upgrade, &out.Upgrade
-		*out = new(MariaDBUpdateVersionSpec)
-		**out = **in
-	}
 	if in.HorizontalScaling != nil {
 		in, out := &in.HorizontalScaling, &out.HorizontalScaling
 		*out = new(MariaDBHorizontalScalingSpec)
@@ -1620,11 +1610,6 @@ func (in *MemcachedOpsRequestSpec) DeepCopyInto(out *MemcachedOpsRequestSpec) {
 	out.DatabaseRef = in.DatabaseRef
 	if in.UpdateVersion != nil {
 		in, out := &in.UpdateVersion, &out.UpdateVersion
-		*out = new(MemcachedUpdateVersionSpec)
-		(*in).DeepCopyInto(*out)
-	}
-	if in.Upgrade != nil {
-		in, out := &in.Upgrade, &out.Upgrade
 		*out = new(MemcachedUpdateVersionSpec)
 		(*in).DeepCopyInto(*out)
 	}
@@ -1932,11 +1917,6 @@ func (in *MongoDBOpsRequestSpec) DeepCopyInto(out *MongoDBOpsRequestSpec) {
 	out.DatabaseRef = in.DatabaseRef
 	if in.UpdateVersion != nil {
 		in, out := &in.UpdateVersion, &out.UpdateVersion
-		*out = new(MongoDBUpdateVersionSpec)
-		**out = **in
-	}
-	if in.Upgrade != nil {
-		in, out := &in.Upgrade, &out.Upgrade
 		*out = new(MongoDBUpdateVersionSpec)
 		**out = **in
 	}
@@ -2283,11 +2263,6 @@ func (in *MySQLOpsRequestSpec) DeepCopyInto(out *MySQLOpsRequestSpec) {
 	out.DatabaseRef = in.DatabaseRef
 	if in.UpdateVersion != nil {
 		in, out := &in.UpdateVersion, &out.UpdateVersion
-		*out = new(MySQLUpdateVersionSpec)
-		(*in).DeepCopyInto(*out)
-	}
-	if in.Upgrade != nil {
-		in, out := &in.Upgrade, &out.Upgrade
 		*out = new(MySQLUpdateVersionSpec)
 		(*in).DeepCopyInto(*out)
 	}
@@ -2644,11 +2619,6 @@ func (in *PerconaXtraDBOpsRequestSpec) DeepCopyInto(out *PerconaXtraDBOpsRequest
 	out.DatabaseRef = in.DatabaseRef
 	if in.UpdateVersion != nil {
 		in, out := &in.UpdateVersion, &out.UpdateVersion
-		*out = new(PerconaXtraDBUpdateVersionSpec)
-		**out = **in
-	}
-	if in.Upgrade != nil {
-		in, out := &in.Upgrade, &out.Upgrade
 		*out = new(PerconaXtraDBUpdateVersionSpec)
 		**out = **in
 	}
@@ -3184,11 +3154,6 @@ func (in *PostgresOpsRequestSpec) DeepCopyInto(out *PostgresOpsRequestSpec) {
 	out.DatabaseRef = in.DatabaseRef
 	if in.UpdateVersion != nil {
 		in, out := &in.UpdateVersion, &out.UpdateVersion
-		*out = new(PostgresUpdateVersionSpec)
-		**out = **in
-	}
-	if in.Upgrade != nil {
-		in, out := &in.Upgrade, &out.Upgrade
 		*out = new(PostgresUpdateVersionSpec)
 		**out = **in
 	}
