@@ -73,6 +73,8 @@ type MongoDBVersionSpec struct {
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
+	// +optional
+	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
 }
 
 // MongoDBVersionDatabase is the MongoDB Database image
