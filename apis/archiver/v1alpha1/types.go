@@ -21,6 +21,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
+	"kubestash.dev/apimachinery/apis"
 	stashcoreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
 )
 
@@ -33,8 +34,8 @@ const (
 )
 
 type FullBackupOptions struct {
-	// +kubebuilder:default:=CSISnapshotter
-	Driver BackupDriver `json:"driver"`
+	// +kubebuilder:default:=VolumeSnapshotter
+	Driver apis.Driver `json:"driver"`
 	// +optional
 	CSISnapshotter *CSISnapshotterOptions `json:"csiSnapshotter,omitempty"`
 	// +optional
@@ -80,9 +81,9 @@ type CSISnapshotterOptions struct {
 }
 
 type BackupStorage struct {
-	Ref *v1.TypedObjectReference `json:"ref,omitempty"`
+	Ref *v1.ObjectReference `json:"ref,omitempty"`
 	// +optional
-	Prefix string `json:"prefix,omitempty"`
+	Path string `json:"prefix,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=Delete;WipeOut;DoNotDelete

@@ -50,22 +50,64 @@ spec:
             properties:
               archiver:
                 properties:
-                  fullBackup:
+                  addon:
                     properties:
-                      csiSnapshotter:
-                        properties:
-                          addonName:
-                            type: string
-                        required:
-                        - addonName
-                        type: object
-                    type: object
-                  manifest:
-                    properties:
-                      addonName:
+                      name:
                         type: string
+                      tasks:
+                        properties:
+                          fullBackup:
+                            items:
+                              properties:
+                                driver:
+                                  enum:
+                                  - Restic
+                                  - WalG
+                                  - VolumeSnapshotter
+                                  type: string
+                                name:
+                                  type: string
+                              required:
+                              - driver
+                              - name
+                              type: object
+                            type: array
+                          manifestBackup:
+                            properties:
+                              driver:
+                                enum:
+                                - Restic
+                                - WalG
+                                - VolumeSnapshotter
+                                type: string
+                              name:
+                                type: string
+                            required:
+                            - driver
+                            - name
+                            type: object
+                          manifestRestore:
+                            properties:
+                              driver:
+                                enum:
+                                - Restic
+                                - WalG
+                                - VolumeSnapshotter
+                                type: string
+                              name:
+                                type: string
+                            required:
+                            - driver
+                            - name
+                            type: object
+                        required:
+                        - fullBackup
+                        - manifestBackup
+                        - manifestRestore
+                        type: object
                     required:
-                    - addonName
+                    - name
+                    - tasks
                     type: object
                   walg:
                     properties:

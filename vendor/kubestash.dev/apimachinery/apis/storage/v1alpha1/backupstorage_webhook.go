@@ -17,8 +17,16 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
+	"fmt"
 	"k8s.io/apimachinery/pkg/runtime"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	restclient "k8s.io/client-go/rest"
+	"kubestash.dev/apimachinery/apis"
+	"reflect"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )
@@ -42,7 +50,9 @@ var _ webhook.Defaulter = &BackupStorage{}
 func (r *BackupStorage) Default() {
 	backupstoragelog.Info("default", "name", r.Name)
 
-	// TODO(user): fill in your defaulting logic.
+	if r.Spec.UsagePolicy == nil {
+		r.setDefaultUsagePolicy()
+	}
 }
 
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
@@ -54,7 +64,21 @@ var _ webhook.Validator = &BackupStorage{}
 func (r *BackupStorage) ValidateCreate() error {
 	backupstoragelog.Info("validate create", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object creation.
+	c, err := getNewRuntimeClient()
+	if err != nil {
+		return fmt.Errorf("failed to set Kubernetes client. Reason: %w", err)
+	}
+
+	if r.Spec.Default {
+		if err := r.validateSingleDefaultBackupStorageInSameNamespace(context.Background(), c); err != nil {
+			return err
+		}
+	}
+
+	if err = r.validateUniqueDirectory(context.Background(), c); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -62,7 +86,25 @@ func (r *BackupStorage) ValidateCreate() error {
 func (r *BackupStorage) ValidateUpdate(old runtime.Object) error {
 	backupstoragelog.Info("validate update", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object update.
+	c, err := getNewRuntimeClient()
+	if err != nil {
+		return fmt.Errorf("failed to set Kubernetes client. Reason: %w", err)
+	}
+
+	if r.Spec.Default {
+		if err = r.validateSingleDefaultBackupStorageInSameNamespace(context.Background(), c); err != nil {
+			return err
+		}
+	}
+
+	if err = r.validateUpdateStorage(old.(*BackupStorage)); err != nil {
+		return err
+	}
+
+	if err = r.validateUniqueDirectory(context.Background(), c); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -72,4 +114,128 @@ func (r *BackupStorage) ValidateDelete() error {
 
 	// TODO(user): fill in your validation logic upon object deletion.
 	return nil
+}
+
+func (r *BackupStorage) setDefaultUsagePolicy() {
+	fromSameNamespace := apis.NamespacesFromSame
+	r.Spec.UsagePolicy = &apis.UsagePolicy{
+		AllowedNamespaces: apis.AllowedNamespaces{
+			From: &fromSameNamespace,
+		},
+	}
+}
+
+func (r *BackupStorage) validateSingleDefaultBackupStorageInSameNamespace(ctx context.Context, c client.Client) error {
+	bsList := BackupStorageList{}
+	if err := c.List(ctx, &bsList, client.InNamespace(r.Namespace)); err != nil {
+		return err
+	}
+
+	for _, bs := range bsList.Items {
+		if !r.isSameBackupStorage(bs) &&
+			bs.Spec.Default {
+			return fmt.Errorf("multiple default BackupStorages are not allowed within the same namespace")
+		}
+	}
+
+	return nil
+}
+
+func (r *BackupStorage) isSameBackupStorage(bs BackupStorage) bool {
+	if r.Namespace == bs.Namespace &&
+		r.Name == bs.Name {
+		return true
+	}
+	return false
+}
+
+func (r *BackupStorage) validateUpdateStorage(old *BackupStorage) error {
+	if !reflect.DeepEqual(old.Spec.Storage, r.Spec.Storage) &&
+		len(r.Status.Repositories) != 0 {
+		return fmt.Errorf("BackupStorage is currently in use and cannot be modified")
+	}
+	return nil
+}
+
+func (r *BackupStorage) validateUniqueDirectory(ctx context.Context, c client.Client) error {
+	bsList := BackupStorageList{}
+	if err := c.List(ctx, &bsList); err != nil {
+		return err
+	}
+
+	for _, bs := range bsList.Items {
+		if !r.isSameBackupStorage(bs) &&
+			r.isPointToSameDir(bs) {
+			return fmt.Errorf("no two BackupStorage should point to the same directory of the same bucket")
+		}
+	}
+
+	return nil
+}
+
+func (r *BackupStorage) isPointToSameDir(bs BackupStorage) bool {
+	if r.Spec.Storage.Provider != bs.Spec.Storage.Provider {
+		return false
+	}
+
+	switch r.Spec.Storage.Provider {
+	case ProviderS3:
+		if r.Spec.Storage.S3.Bucket == bs.Spec.Storage.S3.Bucket &&
+			r.Spec.Storage.S3.Region == bs.Spec.Storage.S3.Region &&
+			r.Spec.Storage.S3.Prefix == bs.Spec.Storage.S3.Prefix {
+			return true
+		}
+		return false
+	case ProviderGCS:
+		if r.Spec.Storage.GCS.Bucket == bs.Spec.Storage.GCS.Bucket &&
+			r.Spec.Storage.GCS.Prefix == bs.Spec.Storage.GCS.Prefix {
+			return true
+		}
+		return false
+	case ProviderAzure:
+		if r.Spec.Storage.Azure.StorageAccount == bs.Spec.Storage.Azure.StorageAccount &&
+			r.Spec.Storage.Azure.Container == bs.Spec.Storage.Azure.Container &&
+			r.Spec.Storage.Azure.Prefix == bs.Spec.Storage.Azure.Prefix {
+			return true
+		}
+		return false
+	case ProviderB2:
+		if r.Spec.Storage.B2.Bucket == bs.Spec.Storage.B2.Bucket &&
+			r.Spec.Storage.B2.Prefix == bs.Spec.Storage.B2.Prefix {
+			return true
+		}
+		return false
+	case ProviderSwift:
+		// TODO: check for account
+		if r.Spec.Storage.Swift.Container == bs.Spec.Storage.Swift.Container &&
+			r.Spec.Storage.Swift.Prefix == bs.Spec.Storage.Swift.Prefix {
+			return true
+		}
+		return false
+	default:
+		return false
+	}
+}
+
+func getNewRuntimeClient() (client.Client, error) {
+	config, err := restclient.InClusterConfig()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get Kubernetes config. Reason: %w", err)
+	}
+	scheme := runtime.NewScheme()
+	utilruntime.Must(AddToScheme(scheme))
+
+	mapper, err := apiutil.NewDynamicRESTMapper(config)
+	if err != nil {
+		return nil, err
+	}
+
+	return client.New(config, client.Options{
+		Scheme: scheme,
+		Mapper: mapper,
+		Opts: client.WarningHandlerOptions{
+			SuppressWarnings:   false,
+			AllowDuplicateLogs: false,
+		},
+	})
 }

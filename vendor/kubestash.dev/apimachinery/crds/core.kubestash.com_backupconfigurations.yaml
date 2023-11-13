@@ -91,14 +91,10 @@ spec:
                       type: object
                     storageRef:
                       description: StorageRef refers to the CR that holds the information
-                        of a  storage. You can refer to the BackupStorage CR of a
-                        different namespace as long as it is allowed by the `usagePolicy`
-                        of the BackupStorage.`
+                        of a storage. You can refer to the BackupStorage CR of a different
+                        namespace as long as it is allowed by the `usagePolicy` of
+                        the BackupStorage.`
                       properties:
-                        apiGroup:
-                          type: string
-                        kind:
-                          type: string
                         name:
                           description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                           type: string
@@ -29878,10 +29874,6 @@ spec:
                         ref:
                           description: Ref indicates to the BackupStorage object.
                           properties:
-                            apiGroup:
-                              type: string
-                            kind:
-                              type: string
                             name:
                               description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                               type: string

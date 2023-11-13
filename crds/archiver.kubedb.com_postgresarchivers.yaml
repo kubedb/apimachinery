@@ -38,10 +38,6 @@ spec:
                     type: string
                   ref:
                     properties:
-                      apiGroup:
-                        type: string
-                      kind:
-                        type: string
                       name:
                         type: string
                       namespace:
@@ -573,9 +569,11 @@ spec:
                     - volumeSnapshotClassName
                     type: object
                   driver:
-                    default: CSISnapshotter
+                    default: VolumeSnapshotter
                     enum:
-                    - CSISnapshotter
+                    - Restic
+                    - WalG
+                    - VolumeSnapshotter
                     type: string
                   jobTemplate:
                     properties:

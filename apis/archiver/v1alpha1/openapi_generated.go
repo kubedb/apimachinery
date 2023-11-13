@@ -21940,7 +21940,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_BackupStorage(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"ref": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
 					"prefix": {
@@ -21953,7 +21953,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_BackupStorage(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.TypedObjectReference"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference"},
 	}
 }
 

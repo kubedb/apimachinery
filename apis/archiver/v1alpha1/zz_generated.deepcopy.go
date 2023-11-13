@@ -52,7 +52,7 @@ func (in *BackupStorage) DeepCopyInto(out *BackupStorage) {
 	*out = *in
 	if in.Ref != nil {
 		in, out := &in.Ref, &out.Ref
-		*out = new(v1.TypedObjectReference)
+		*out = new(v1.ObjectReference)
 		**out = **in
 	}
 	return

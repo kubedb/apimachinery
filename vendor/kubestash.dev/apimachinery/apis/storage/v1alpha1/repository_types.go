@@ -61,7 +61,7 @@ type RepositorySpec struct {
 	// StorageRef refers to the BackupStorage CR which contain the backend information where the backed
 	// up data will be stored. The BackupStorage could be in a different namespace. However, the Repository
 	// namespace must be allowed to use the BackupStorage.
-	StorageRef kmapi.TypedObjectReference `json:"storageRef,omitempty"`
+	StorageRef kmapi.ObjectReference `json:"storageRef,omitempty"`
 
 	// Path represents the directory inside the BackupStorage where this Repository is storing its data
 	// This path is relative to the path of BackupStorage.
@@ -115,6 +115,10 @@ type RepositoryStatus struct {
 	// Conditions represents list of conditions regarding this Repository
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+
+	// ComponentPaths represents list of component paths in this Repository
+	// +optional
+	ComponentPaths []string `json:"componentPaths,omitempty"`
 }
 
 // RepositoryPhase specifies the current state of the Repository

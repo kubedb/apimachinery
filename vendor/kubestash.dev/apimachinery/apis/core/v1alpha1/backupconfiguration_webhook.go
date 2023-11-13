@@ -117,17 +117,21 @@ func (b *BackupConfiguration) validateRepositoryReferences(ctx context.Context, 
 				return err
 			}
 
-			if !targetMatched(&existingRepo.Spec.AppRef, b.Spec.Target) {
+			if !targetMatched(&existingRepo.Spec.AppRef, b.GetTargetRef()) {
 				return fmt.Errorf("repository '%q' already exists in the cluster with a different target reference. Please, choose a different repository name", repo.Name)
 			}
 
-			if !targetMatched(b.GetStorageRef(repo.Backend), &existingRepo.Spec.StorageRef) {
+			if !storageRefMatched(b.GetStorageRef(repo.Backend), &existingRepo.Spec.StorageRef) {
 				return fmt.Errorf("repository '%q' already exists in the cluster with a different storage reference. Please, choose a different repository name", repo.Name)
 			}
 
 		}
 	}
 	return nil
+}
+
+func storageRefMatched(b1, b2 *kmapi.ObjectReference) bool {
+	return b1.Name == b2.Name && b1.Namespace == b2.Namespace
 }
 
 func targetMatched(t1, t2 *kmapi.TypedObjectReference) bool {
@@ -196,7 +200,7 @@ func (b *BackupConfiguration) validateBackendsAgainstUsagePolicy(ctx context.Con
 	return nil
 }
 
-func (b *BackupConfiguration) getBackupStorage(ctx context.Context, c client.Client, ref kmapi.TypedObjectReference) (*storageapi.BackupStorage, error) {
+func (b *BackupConfiguration) getBackupStorage(ctx context.Context, c client.Client, ref kmapi.ObjectReference) (*storageapi.BackupStorage, error) {
 	bs := &storageapi.BackupStorage{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      ref.Name,

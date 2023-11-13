@@ -54,11 +54,7 @@ func (r *RestoreSession) ValidateCreate() error {
 		return fmt.Errorf("failed to set Kubernetes client, Reason: %w", err)
 	}
 
-	if err := r.checkIfSnapshotIsEmpty(); err != nil {
-		return err
-	}
-
-	if err := r.checkIfRepoIsEmptyForLatestSnapshot(); err != nil {
+	if err := r.ValidateDataSource(); err != nil {
 		return err
 	}
 
@@ -74,11 +70,7 @@ func (r *RestoreSession) ValidateUpdate(old runtime.Object) error {
 		return fmt.Errorf("failed to set Kubernetes client, Reason: %w", err)
 	}
 
-	if err := r.checkIfSnapshotIsEmpty(); err != nil {
-		return err
-	}
-
-	if err := r.checkIfRepoIsEmptyForLatestSnapshot(); err != nil {
+	if err := r.ValidateDataSource(); err != nil {
 		return err
 	}
 
@@ -90,6 +82,39 @@ func (r *RestoreSession) ValidateDelete() error {
 	restoresessionlog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.
+	return nil
+}
+
+func (r *RestoreSession) ValidateDataSource() error {
+	if r.Spec.DataSource.PITR != nil {
+		if err := r.checkIfTargetTimeIsNil(); err != nil {
+			return err
+		}
+		if err := r.checkIfRepoIsEmptyForTargetTime(); err != nil {
+			return err
+		}
+	} else {
+		if err := r.checkIfSnapshotIsEmpty(); err != nil {
+			return err
+		}
+		if err := r.checkIfRepoIsEmptyForLatestSnapshot(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (r *RestoreSession) checkIfTargetTimeIsNil() error {
+	if r.Spec.DataSource.PITR.TargetTime == nil {
+		return fmt.Errorf("targetTime can not be empty for the Point-In-Time Recovery (PITR) feature")
+	}
+	return nil
+}
+
+func (r *RestoreSession) checkIfRepoIsEmptyForTargetTime() error {
+	if r.Spec.DataSource.Repository == "" {
+		return fmt.Errorf("repository can not be empty for the Point-In-Time Recovery (PITR) feature")
+	}
 	return nil
 }
 

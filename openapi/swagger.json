@@ -28415,32 +28415,58 @@
     }
   },
   "definitions": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonSpec": {
+      "type": "object",
+      "required": [
+        "name",
+        "tasks"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": ""
+        },
+        "tasks": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonTasks"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonTasks": {
+      "type": "object",
+      "required": [
+        "fullBackup",
+        "manifestBackup",
+        "manifestRestore"
+      ],
+      "properties": {
+        "fullBackup": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.TaskRef"
+          }
+        },
+        "manifestBackup": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.TaskRef"
+        },
+        "manifestRestore": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.TaskRef"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ArchiverSpec": {
       "type": "object",
       "properties": {
-        "fullBackup": {
+        "addon": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.FullBackupSpec"
-        },
-        "manifest": {
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonSpec"
         },
         "walg": {
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.WalgSpec"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.CSISnapshotterSpec": {
-      "type": "object",
-      "required": [
-        "addonName"
-      ],
-      "properties": {
-        "addonName": {
-          "type": "string",
-          "default": ""
         }
       }
     },
@@ -28802,15 +28828,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.FullBackupSpec": {
-      "type": "object",
-      "properties": {
-        "csiSnapshotter": {
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.CSISnapshotterSpec"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer": {
       "description": "GitSyncer is the image for the kubernetes/git-sync https://github.com/kubernetes/git-sync",
       "type": "object",
@@ -28819,18 +28836,6 @@
       ],
       "properties": {
         "image": {
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestSpec": {
-      "type": "object",
-      "required": [
-        "addonName"
-      ],
-      "properties": {
-        "addonName": {
           "type": "string",
           "default": ""
         }
@@ -30164,6 +30169,23 @@
       ],
       "properties": {
         "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.TaskRef": {
+      "type": "object",
+      "required": [
+        "name",
+        "driver"
+      ],
+      "properties": {
+        "driver": {
+          "type": "string",
+          "default": ""
+        },
+        "name": {
           "type": "string",
           "default": ""
         }

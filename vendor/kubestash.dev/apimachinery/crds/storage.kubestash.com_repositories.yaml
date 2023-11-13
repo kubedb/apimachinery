@@ -133,10 +133,6 @@ spec:
                   The BackupStorage could be in a different namespace. However, the
                   Repository namespace must be allowed to use the BackupStorage.
                 properties:
-                  apiGroup:
-                    type: string
-                  kind:
-                    type: string
                   name:
                     description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                     type: string
@@ -150,6 +146,12 @@ spec:
           status:
             description: RepositoryStatus defines the observed state of Repository
             properties:
+              componentPaths:
+                description: ComponentPaths represents list of component paths in
+                  this Repository
+                items:
+                  type: string
+                type: array
               conditions:
                 description: Conditions represents list of conditions regarding this
                   Repository

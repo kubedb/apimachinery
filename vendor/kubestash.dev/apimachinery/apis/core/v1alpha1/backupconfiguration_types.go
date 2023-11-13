@@ -80,10 +80,10 @@ type BackendReference struct {
 	// Name provides an identifier for this storage.
 	Name string `json:"name,omitempty"`
 
-	// StorageRef refers to the CR that holds the information of a  storage.
+	// StorageRef refers to the CR that holds the information of a storage.
 	// You can refer to the BackupStorage CR of a different namespace as long as it is allowed
 	// by the `usagePolicy` of the BackupStorage.`
-	StorageRef kmapi.TypedObjectReference `json:"storageRef,omitempty"`
+	StorageRef kmapi.ObjectReference `json:"storageRef,omitempty"`
 
 	// RetentionPolicy refers to a RetentionPolicy CRs which defines how to cleanup the old Snapshots.
 	// This field is optional. If you don't provide this field, Stash will use the default RetentionPolicy for
@@ -397,7 +397,7 @@ type BackendStatus struct {
 
 type StorageStatus struct {
 	// Ref indicates to the BackupStorage object.
-	Ref kmapi.TypedObjectReference `json:"ref,omitempty"`
+	Ref kmapi.ObjectReference `json:"ref,omitempty"`
 
 	// Phase indicates the current phase of the respective BackupStorage.
 	// +optional
