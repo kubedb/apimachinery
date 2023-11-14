@@ -390,6 +390,8 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		return
 	}
 
+	fmt.Println("-----------------------------------------entered to set defaults")
+
 	if e.Spec.StorageType == "" {
 		e.Spec.StorageType = StorageTypeDurable
 	}
