@@ -582,6 +582,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 				Add: []core.Capability{"IPC_LOCK", "SYS_RESOURCE"},
 			},
 		}
+	} else {
+		if e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsNonRoot == pointer.BoolP(true) {
+			e.Spec.KernelSettings.Privileged = false
+		}
 	}
 
 	// Add default Elasticsearch UID
