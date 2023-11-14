@@ -576,6 +576,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 	}
 
 	if e.Spec.PodTemplate.Spec.ContainerSecurityContext == nil {
+		fmt.Println("----------------------container security context is nil")
 		e.Spec.PodTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{
 			Privileged: pointer.BoolP(false),
 			Capabilities: &core.Capabilities{
