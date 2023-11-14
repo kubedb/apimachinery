@@ -28674,6 +28674,10 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionExporter"
         },
+        "gitSyncer": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer"
+        },
         "initContainer": {
           "description": "Init container Image",
           "default": {},
@@ -28815,6 +28819,10 @@
           "description": "Exporter Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.EtcdVersionExporter"
+        },
+        "gitSyncer": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer"
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
@@ -29103,6 +29111,7 @@
       ],
       "properties": {
         "archiver": {
+          "description": "Archiver defines the walg \u0026 stash-addon related specifications",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ArchiverSpec"
         },
@@ -29123,6 +29132,10 @@
           "description": "Exporter Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionExporter"
+        },
+        "gitSyncer": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer"
         },
         "initContainer": {
           "description": "Init container Image",
@@ -29600,6 +29613,10 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PerconaXtraDBVersionExporter"
         },
+        "gitSyncer": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer"
+        },
         "initContainer": {
           "description": "Init container Image",
           "default": {},
@@ -29782,6 +29799,7 @@
       ],
       "properties": {
         "archiver": {
+          "description": "Archiver defines the walg \u0026 stash-addon related specifications",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ArchiverSpec"
         },
@@ -29807,6 +29825,10 @@
           "description": "Exporter Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionExporter"
+        },
+        "gitSyncer": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer"
         },
         "initContainer": {
           "description": "init container image",
@@ -30133,6 +30155,10 @@
           "description": "Exporter Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionExporter"
+        },
+        "gitSyncer": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer"
         },
         "initContainer": {
           "description": "init container image",
