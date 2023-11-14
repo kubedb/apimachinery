@@ -583,7 +583,9 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			},
 		}
 	} else {
+		fmt.Println("--------------------------conbtainer seurtiy context provided")
 		if e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsNonRoot == pointer.BoolP(true) {
+			fmt.Println("-------------------------run as non root set to true")
 			e.Spec.KernelSettings.Privileged = false
 		}
 	}
