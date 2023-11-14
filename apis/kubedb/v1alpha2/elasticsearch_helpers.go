@@ -587,7 +587,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		}
 	} else {
 		fmt.Println("--------------------------conbtainer seurtiy context provided ", *e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsNonRoot)
-		if e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsNonRoot == pointer.BoolP(true) {
+		if *e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsNonRoot == true {
 			fmt.Println("-------------------------run as non root set to true ")
 			e.Spec.KernelSettings.Privileged = false
 		}
