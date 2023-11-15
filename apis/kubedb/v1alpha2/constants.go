@@ -322,20 +322,20 @@ const (
 	MariaDBDataVolumeName                = "data"
 
 	// =========================== PostgreSQL Constants ============================
-	PostgresDatabasePortName         = "db"
-	PostgresPrimaryServicePortName   = "primary"
-	PostgresStandbyServicePortName   = "standby"
-	PostgresDatabasePort             = 5432
-	PostgresPodPrimary               = "primary"
-	PostgresPodStandby               = "standby"
-	EnvPostgresUser                  = "POSTGRES_USER"
-	EnvPostgresPassword              = "POSTGRES_PASSWORD"
-	PostgresRootUser                 = "postgres"
-	PostgresCoordinatorContainerName = "pg-coordinator"
-	PostgresCoordinatorPort          = 2380
-	PostgresCoordinatorPortName      = "coordinator"
-	PostgresContainerName            = ResourceSingularPostgres
-
+	PostgresDatabasePortName          = "db"
+	PostgresPrimaryServicePortName    = "primary"
+	PostgresStandbyServicePortName    = "standby"
+	PostgresDatabasePort              = 5432
+	PostgresPodPrimary                = "primary"
+	PostgresPodStandby                = "standby"
+	EnvPostgresUser                   = "POSTGRES_USER"
+	EnvPostgresPassword               = "POSTGRES_PASSWORD"
+	PostgresRootUser                  = "postgres"
+	PostgresCoordinatorContainerName  = "pg-coordinator"
+	PostgresCoordinatorPort           = 2380
+	PostgresCoordinatorPortName       = "coordinator"
+	PostgresContainerName             = ResourceSingularPostgres
+	PostgresInitContainerName         = "postgres-init-container"
 	PostgresCoordinatorClientPort     = 2379
 	PostgresCoordinatorClientPortName = "coordinatclient"
 
