@@ -31,7 +31,7 @@ require (
 	kmodules.xyz/client-go v0.25.41-0.20231109105455-59549ee68009
 	kmodules.xyz/crd-schema-fuzz v0.25.0
 	kmodules.xyz/custom-resources v0.25.2
-	kmodules.xyz/monitoring-agent-api v0.25.6-0.20231110045141-1198ab298d6e
+	kmodules.xyz/monitoring-agent-api v0.25.6-0.20231115084406-11f976c5f2ac
 	kmodules.xyz/objectstore-api v0.25.1
 	kmodules.xyz/offshoot-api v0.25.5-0.20231004063620-dff8fb030d57
 	kmodules.xyz/webhook-runtime v0.25.0
