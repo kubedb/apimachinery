@@ -83,7 +83,7 @@ type CSISnapshotterOptions struct {
 type BackupStorage struct {
 	Ref *v1.ObjectReference `json:"ref,omitempty"`
 	// +optional
-	Path string `json:"prefix,omitempty"`
+	SubDir string `json:"subDir,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=Delete;WipeOut;DoNotDelete

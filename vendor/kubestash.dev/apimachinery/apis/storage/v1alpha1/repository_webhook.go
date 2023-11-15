@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -51,7 +52,11 @@ func (r *Repository) ValidateCreate() error {
 func (r *Repository) ValidateUpdate(old runtime.Object) error {
 	repositorylog.Info("validate update", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object update.
+	oldRepo := old.(*Repository)
+	if oldRepo.Spec.Path != r.Spec.Path {
+		return fmt.Errorf("repository path can not be updated")
+	}
+
 	return nil
 }
 

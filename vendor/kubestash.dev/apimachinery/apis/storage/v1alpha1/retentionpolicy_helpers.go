@@ -18,6 +18,8 @@ package v1alpha1
 
 import (
 	"errors"
+	core "k8s.io/api/core/v1"
+	"kubestash.dev/apimachinery/apis"
 	"strconv"
 	"strings"
 	"unicode"
@@ -29,6 +31,24 @@ import (
 
 func (_ RetentionPolicy) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(GroupVersion.WithResource(ResourcePluralRetentionPolicy))
+}
+
+func (r RetentionPolicy) UsageAllowed(srcNamespace *core.Namespace) bool {
+	allowedNamespaces := r.Spec.UsagePolicy.AllowedNamespaces
+
+	if allowedNamespaces.From == nil {
+		return false
+	}
+
+	if *allowedNamespaces.From == apis.NamespacesFromAll {
+		return true
+	}
+
+	if *allowedNamespaces.From == apis.NamespacesFromSame {
+		return r.Namespace == srcNamespace.Name
+	}
+
+	return selectorMatches(allowedNamespaces.Selector, srcNamespace.Labels)
 }
 
 func (r RetentionPeriod) ToMinutes() (int, error) {

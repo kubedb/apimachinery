@@ -46,13 +46,6 @@ func (b *BackupStorage) CalculatePhase() BackupStoragePhase {
 }
 
 func (b *BackupStorage) UsageAllowed(srcNamespace *core.Namespace) bool {
-	if b.Spec.UsagePolicy == nil {
-		return b.Namespace == srcNamespace.Name
-	}
-	return b.isNamespaceAllowed(srcNamespace)
-}
-
-func (b *BackupStorage) isNamespaceAllowed(srcNamespace *core.Namespace) bool {
 	allowedNamespaces := b.Spec.UsagePolicy.AllowedNamespaces
 
 	if allowedNamespaces.From == nil {

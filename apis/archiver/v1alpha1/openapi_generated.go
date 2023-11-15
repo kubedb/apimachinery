@@ -21943,7 +21943,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_BackupStorage(ref common.Referen
 							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
-					"prefix": {
+					"subDir": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
 							Format: "",

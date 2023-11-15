@@ -128,7 +128,7 @@ func (r *BackupBlueprint) validateBackendsAgainstUsagePolicy(ctx context.Context
 	return nil
 }
 
-func (r *BackupBlueprint) getBackupStorage(ctx context.Context, c client.Client, ref kmapi.ObjectReference) (*storageapi.BackupStorage, error) {
+func (r *BackupBlueprint) getBackupStorage(ctx context.Context, c client.Client, ref *kmapi.ObjectReference) (*storageapi.BackupStorage, error) {
 	bs := &storageapi.BackupStorage{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      ref.Name,

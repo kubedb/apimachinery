@@ -16,8 +16,6 @@ limitations under the License.
 
 package v1alpha1
 
-import "kubestash.dev/apimachinery/apis"
-
 // ReplicationModeDetector is the image for the MySQL replication mode detector
 type ReplicationModeDetector struct {
 	Image string `json:"image"`
@@ -43,19 +41,22 @@ type WalgSpec struct {
 }
 
 type AddonSpec struct {
-	Name  string     `json:"name"`
-	Tasks AddonTasks `json:"tasks"`
+	Name  string     `json:"name,omitempty"`
+	Tasks AddonTasks `json:"tasks,omitempty"`
 }
 
 type AddonTasks struct {
-	FullBackup      []TaskRef `json:"fullBackup"`
-	ManifestBackup  TaskRef   `json:"manifestBackup"`
-	ManifestRestore TaskRef   `json:"manifestRestore"`
+	Backup  BackupTasks  `json:"backup,omitempty"`
+	Restore RestoreTasks `json:"restore,omitempty"`
 }
 
-type TaskRef struct {
-	Name   string      `json:"name"`
-	Driver apis.Driver `json:"driver"`
+type BackupTasks struct {
+	VolumeSnapshot string `json:"volumeSnapshot,omitempty"`
+	ManifestBackup string `json:"manifestBackup,omitempty"`
+}
+
+type RestoreTasks struct {
+	ManifestRestore string `json:"manifestRestore,omitempty"`
 }
 
 // GitSyncer is the image for the kubernetes/git-sync

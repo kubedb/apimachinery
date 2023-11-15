@@ -28417,14 +28417,9 @@
   "definitions": {
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonSpec": {
       "type": "object",
-      "required": [
-        "name",
-        "tasks"
-      ],
       "properties": {
         "name": {
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "tasks": {
           "default": {},
@@ -28434,26 +28429,14 @@
     },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonTasks": {
       "type": "object",
-      "required": [
-        "fullBackup",
-        "manifestBackup",
-        "manifestRestore"
-      ],
       "properties": {
-        "fullBackup": {
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.TaskRef"
-          }
-        },
-        "manifestBackup": {
+        "backup": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.TaskRef"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.BackupTasks"
         },
-        "manifestRestore": {
+        "restore": {
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.TaskRef"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RestoreTasks"
         }
       }
     },
@@ -28467,6 +28450,17 @@
         "walg": {
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.WalgSpec"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.BackupTasks": {
+      "type": "object",
+      "properties": {
+        "manifestBackup": {
+          "type": "string"
+        },
+        "volumeSnapshot": {
+          "type": "string"
         }
       }
     },
@@ -30200,20 +30194,11 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.TaskRef": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RestoreTasks": {
       "type": "object",
-      "required": [
-        "name",
-        "driver"
-      ],
       "properties": {
-        "driver": {
-          "type": "string",
-          "default": ""
-        },
-        "name": {
-          "type": "string",
-          "default": ""
+        "manifestRestore": {
+          "type": "string"
         }
       }
     },

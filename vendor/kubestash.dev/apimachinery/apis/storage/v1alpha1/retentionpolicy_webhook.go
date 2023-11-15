@@ -17,8 +17,13 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
+	"fmt"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/utils/pointer"
+	"kubestash.dev/apimachinery/apis"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )
@@ -42,7 +47,28 @@ var _ webhook.Defaulter = &RetentionPolicy{}
 func (r *RetentionPolicy) Default() {
 	retentionpolicylog.Info("default", "name", r.Name)
 
-	// TODO(user): fill in your defaulting logic.
+	if r.Spec.UsagePolicy == nil {
+		r.setDefaultUsagePolicy()
+	}
+
+	if r.Spec.FailedSnapshots == nil {
+		r.setDefaultFailedSnapshots()
+	}
+}
+
+func (r *RetentionPolicy) setDefaultUsagePolicy() {
+	fromSameNamespace := apis.NamespacesFromSame
+	r.Spec.UsagePolicy = &apis.UsagePolicy{
+		AllowedNamespaces: apis.AllowedNamespaces{
+			From: &fromSameNamespace,
+		},
+	}
+}
+
+func (r *RetentionPolicy) setDefaultFailedSnapshots() {
+	r.Spec.FailedSnapshots = &FailedSnapshotsKeepPolicy{
+		Last: pointer.Int32(1),
+	}
 }
 
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
@@ -54,16 +80,80 @@ var _ webhook.Validator = &RetentionPolicy{}
 func (r *RetentionPolicy) ValidateCreate() error {
 	retentionpolicylog.Info("validate create", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object creation.
-	return nil
+	c, err := getNewRuntimeClient()
+	if err != nil {
+		return fmt.Errorf("failed to set Kubernetes client. Reason: %w", err)
+	}
+
+	if err := r.validateMaxRetentionPeriodFormat(); err != nil {
+		return err
+	}
+
+	if err := r.validateProvidedPolicy(); err != nil {
+		return err
+	}
+	return r.validateSingleDefaultRetentionPolicyInSameNamespace(context.Background(), c)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *RetentionPolicy) ValidateUpdate(old runtime.Object) error {
 	retentionpolicylog.Info("validate update", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object update.
+	c, err := getNewRuntimeClient()
+	if err != nil {
+		return fmt.Errorf("failed to set Kubernetes client. Reason: %w", err)
+	}
+
+	if err := r.validateMaxRetentionPeriodFormat(); err != nil {
+		return err
+	}
+
+	if err := r.validateProvidedPolicy(); err != nil {
+		return err
+	}
+	return r.validateSingleDefaultRetentionPolicyInSameNamespace(context.Background(), c)
+}
+
+func (r *RetentionPolicy) validateMaxRetentionPeriodFormat() error {
+	if r.Spec.MaxRetentionPeriod != "" {
+		_, err := ParseDuration(string(r.Spec.MaxRetentionPeriod))
+		if err != nil {
+			return err
+		}
+	}
 	return nil
+}
+
+func (r *RetentionPolicy) validateProvidedPolicy() error {
+	if r.Spec.MaxRetentionPeriod == "" &&
+		r.Spec.SuccessfulSnapshots == nil {
+		return fmt.Errorf("one of maxRetentionPeriod and successfulSnapshots policy must be provided")
+	}
+	return nil
+}
+
+func (r *RetentionPolicy) validateSingleDefaultRetentionPolicyInSameNamespace(ctx context.Context, c client.Client) error {
+	rpList := RetentionPolicyList{}
+	if err := c.List(ctx, &rpList, client.InNamespace(r.Namespace)); err != nil {
+		return err
+	}
+
+	for _, rp := range rpList.Items {
+		if !r.isSameRetentionPolicy(rp) &&
+			rp.Spec.Default {
+			return fmt.Errorf("multiple default RetentionPolicies are not allowed within the same namespace")
+		}
+	}
+
+	return nil
+}
+
+func (r *RetentionPolicy) isSameRetentionPolicy(rp RetentionPolicy) bool {
+	if r.Namespace == rp.Namespace &&
+		r.Name == rp.Name {
+		return true
+	}
+	return false
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type

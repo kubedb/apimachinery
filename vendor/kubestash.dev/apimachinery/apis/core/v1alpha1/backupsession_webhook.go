@@ -17,7 +17,9 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
 	"k8s.io/apimachinery/pkg/runtime"
+	"reflect"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -51,7 +53,11 @@ func (r *BackupSession) ValidateCreate() error {
 func (r *BackupSession) ValidateUpdate(old runtime.Object) error {
 	backupsessionlog.Info("validate update", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object update.
+	oldBS := old.(*BackupSession)
+	if !reflect.DeepEqual(oldBS.Spec, r.Spec) {
+		return fmt.Errorf("spec can not be updated")
+	}
+
 	return nil
 }
 

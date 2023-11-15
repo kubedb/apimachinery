@@ -56,58 +56,19 @@ spec:
                         type: string
                       tasks:
                         properties:
-                          fullBackup:
-                            items:
-                              properties:
-                                driver:
-                                  enum:
-                                  - Restic
-                                  - WalG
-                                  - VolumeSnapshotter
-                                  type: string
-                                name:
-                                  type: string
-                              required:
-                              - driver
-                              - name
-                              type: object
-                            type: array
-                          manifestBackup:
+                          backup:
                             properties:
-                              driver:
-                                enum:
-                                - Restic
-                                - WalG
-                                - VolumeSnapshotter
+                              manifestBackup:
                                 type: string
-                              name:
+                              volumeSnapshot:
                                 type: string
-                            required:
-                            - driver
-                            - name
                             type: object
-                          manifestRestore:
+                          restore:
                             properties:
-                              driver:
-                                enum:
-                                - Restic
-                                - WalG
-                                - VolumeSnapshotter
+                              manifestRestore:
                                 type: string
-                              name:
-                                type: string
-                            required:
-                            - driver
-                            - name
                             type: object
-                        required:
-                        - fullBackup
-                        - manifestBackup
-                        - manifestRestore
                         type: object
-                    required:
-                    - name
-                    - tasks
                     type: object
                   walg:
                     properties:

@@ -88,7 +88,7 @@ func (b *BackupConfiguration) backendsReady() bool {
 func (b *BackupConfiguration) GetStorageRef(backend string) *kmapi.ObjectReference {
 	for _, b := range b.Spec.Backends {
 		if b.Name == backend {
-			return &b.StorageRef
+			return b.StorageRef
 		}
 	}
 	return nil

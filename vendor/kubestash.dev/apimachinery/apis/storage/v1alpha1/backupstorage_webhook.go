@@ -75,11 +75,7 @@ func (r *BackupStorage) ValidateCreate() error {
 		}
 	}
 
-	if err = r.validateUniqueDirectory(context.Background(), c); err != nil {
-		return err
-	}
-
-	return nil
+	return r.validateUniqueDirectory(context.Background(), c)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -101,11 +97,7 @@ func (r *BackupStorage) ValidateUpdate(old runtime.Object) error {
 		return err
 	}
 
-	if err = r.validateUniqueDirectory(context.Background(), c); err != nil {
-		return err
-	}
-
-	return nil
+	return r.validateUniqueDirectory(context.Background(), c)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
