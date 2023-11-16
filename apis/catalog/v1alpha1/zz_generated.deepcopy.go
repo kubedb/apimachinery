@@ -230,6 +230,7 @@ func (in *ElasticsearchVersionSpec) DeepCopyInto(out *ElasticsearchVersionSpec) 
 	in.Stash.DeepCopyInto(&out.Stash)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
+	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -341,6 +342,7 @@ func (in *EtcdVersionSpec) DeepCopyInto(out *EtcdVersionSpec) {
 	out.DB = in.DB
 	out.Exporter = in.Exporter
 	in.Stash.DeepCopyInto(&out.Stash)
+	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -633,6 +635,7 @@ func (in *MariaDBVersionSpec) DeepCopyInto(out *MariaDBVersionSpec) {
 	out.PodSecurityPolicies = in.PodSecurityPolicies
 	in.Stash.DeepCopyInto(&out.Stash)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
+	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -907,6 +910,7 @@ func (in *MongoDBVersionSpec) DeepCopyInto(out *MongoDBVersionSpec) {
 	out.ReplicationModeDetector = in.ReplicationModeDetector
 	in.Stash.DeepCopyInto(&out.Stash)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
+	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -1339,6 +1343,7 @@ func (in *PerconaXtraDBVersionSpec) DeepCopyInto(out *PerconaXtraDBVersionSpec) 
 	out.PodSecurityPolicies = in.PodSecurityPolicies
 	in.Stash.DeepCopyInto(&out.Stash)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
+	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -1673,6 +1678,7 @@ func (in *PostgresVersionSpec) DeepCopyInto(out *PostgresVersionSpec) {
 	in.Stash.DeepCopyInto(&out.Stash)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
+	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -1968,6 +1974,7 @@ func (in *RedisVersionSpec) DeepCopyInto(out *RedisVersionSpec) {
 	out.PodSecurityPolicies = in.PodSecurityPolicies
 	in.Stash.DeepCopyInto(&out.Stash)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
+	out.GitSyncer = in.GitSyncer
 	return
 }
 

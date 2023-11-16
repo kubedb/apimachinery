@@ -691,3 +691,11 @@ var (
 		},
 	}
 )
+
+const (
+	InitFromGit          = "init-from-git"
+	InitFromGitMountPath = "/git"
+	GitSecretVolume      = "git-secret"
+	GitSecretMountPath   = "/etc/git-secret"
+	GitSyncContainerName = "git-sync"
+)
