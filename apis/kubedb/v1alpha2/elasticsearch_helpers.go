@@ -565,44 +565,70 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 
 	// set default kernel settings
 	// -	Ref: https://www.elastic.co/guide/en/elasticsearch/reference/7.9/vm-max-map-count.html
-	if e.Spec.KernelSettings == nil {
-		e.Spec.KernelSettings = &KernelSettings{
-			Privileged: true,
-			Sysctls: []core.Sysctl{
-				{
-					Name:  "vm.max_map_count",
-					Value: "262144",
-				},
-			},
-		}
-	}
+	//if e.Spec.KernelSettings == nil {
+	//	e.Spec.KernelSettings = &KernelSettings{
+	//		Privileged: true,
+	//		Sysctls: []core.Sysctl{
+	//			{
+	//				Name:  "vm.max_map_count",
+	//				Value: "262144",
+	//			},
+	//		},
+	//	}
+	//}
+	//
+	//if e.Spec.PodTemplate.Spec.ContainerSecurityContext == nil {
+	//	e.Spec.PodTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{
+	//		Privileged: pointer.BoolP(false),
+	//		Capabilities: &core.Capabilities{
+	//			Add: []core.Capability{"IPC_LOCK", "SYS_RESOURCE"},
+	//		},
+	//	}
+	//}
+	//
+	// // Add default Elasticsearch UID
+	//if e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser == nil &&
+	//	esVersion.Spec.SecurityContext.RunAsUser != nil {
+	//	e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser = esVersion.Spec.SecurityContext.RunAsUser
+	//}
 
-	if e.Spec.PodTemplate.Spec.ContainerSecurityContext == nil {
-		fmt.Println("----------------------container security context is nil")
-		e.Spec.PodTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{
-			Privileged: pointer.BoolP(false),
-			Capabilities: &core.Capabilities{
-				Add: []core.Capability{"IPC_LOCK", "SYS_RESOURCE"},
-			},
-		}
-	} else {
-		fmt.Println("--------------------------conbtainer seurtiy context provided ", *e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsNonRoot)
-		if *e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsNonRoot == true {
-			fmt.Println("-------------------------run as non root set to true ")
-			e.Spec.KernelSettings.Privileged = false
-		}
-	}
-
-	// Add default Elasticsearch UID
-	if e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser == nil &&
-		esVersion.Spec.SecurityContext.RunAsUser != nil {
-		e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser = esVersion.Spec.SecurityContext.RunAsUser
-	}
-
+	e.setDefaultContainerSecurityContext()
 	e.setDefaultAffinity(&e.Spec.PodTemplate, e.OffshootSelectors(), topology)
 	e.SetTLSDefaults(esVersion)
 	e.setDefaultInternalUsersAndRoleMappings(esVersion)
 	e.Spec.Monitor.SetDefaults()
+}
+
+// setDefaultContainerSecurityContext
+func (e *Elasticsearch) setDefaultContainerSecurityContext() error {
+	containerSecurityContext := &core.SecurityContext{}
+	if e.Spec.PodTemplate.Spec.ContainerSecurityContext != nil {
+		containerSecurityContext = e.Spec.PodTemplate.Spec.ContainerSecurityContext
+	}
+	containerSecurityContext.AllowPrivilegeEscalation = pointer.BoolP(false)
+	containerSecurityContext.RunAsNonRoot = pointer.BoolP(true)
+	if containerSecurityContext.RunAsUser == nil {
+		containerSecurityContext.RunAsUser = pointer.Int64P(1000)
+	}
+	if containerSecurityContext.RunAsGroup == nil {
+		containerSecurityContext.RunAsGroup = pointer.Int64P(1000)
+	}
+	capabilities := &core.Capabilities{}
+	if containerSecurityContext.Capabilities != nil {
+		capabilities = containerSecurityContext.Capabilities
+	}
+	capabilities.Drop = []core.Capability{"ALL"}
+	containerSecurityContext.Capabilities = capabilities
+	seccomProfile := &core.SeccompProfile{}
+	if containerSecurityContext.SeccompProfile != nil {
+		seccomProfile = containerSecurityContext.SeccompProfile
+	}
+	seccomProfile.Type = core.SeccompProfileTypeRuntimeDefault
+
+	containerSecurityContext.SeccompProfile = seccomProfile
+	e.Spec.PodTemplate.Spec.ContainerSecurityContext = containerSecurityContext
+
+	return nil
 }
 
 // setDefaultAffinity
