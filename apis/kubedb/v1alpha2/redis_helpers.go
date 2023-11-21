@@ -227,7 +227,7 @@ func (r *Redis) SetDefaults(topology *core_util.Topology) {
 	if r.Spec.TerminationPolicy == "" {
 		r.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
-
+	r.setDefaultContainerSecurityContext(&r.Spec.PodTemplate)
 	if r.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		r.Spec.PodTemplate.Spec.ServiceAccountName = r.OffshootName()
 	}
@@ -239,6 +239,10 @@ func (r *Redis) SetDefaults(topology *core_util.Topology) {
 	r.setDefaultAffinity(&r.Spec.PodTemplate, labels, topology)
 
 	r.Spec.Monitor.SetDefaults()
+	// If prometheus enabled, & RunAsUser not set. set the default 999
+	if r.Spec.Monitor != nil && r.Spec.Monitor.Prometheus != nil && r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+		r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = pointer.Int64P(999)
+	}
 	r.SetTLSDefaults()
 	r.SetHealthCheckerDefaults()
 	apis.SetDefaultResourceLimits(&r.Spec.PodTemplate.Spec.Resources, DefaultResources)
@@ -313,6 +317,38 @@ func (r *Redis) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map
 				},
 			},
 		},
+	}
+}
+
+func (r *Redis) setDefaultContainerSecurityContext(podTemplate *ofst.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
+	}
+	if podTemplate.Spec.ContainerSecurityContext == nil {
+		podTemplate.Spec.ContainerSecurityContext = &corev1.SecurityContext{}
+	}
+	r.assignDefaultContainerSecurityContext(podTemplate.Spec.ContainerSecurityContext)
+}
+
+func (r *Redis) assignDefaultContainerSecurityContext(sc *corev1.SecurityContext) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &corev1.Capabilities{
+			Drop: []corev1.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = pointer.Int64P(999)
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = &corev1.SeccompProfile{
+			Type: corev1.SeccompProfileTypeRuntimeDefault,
+		}
 	}
 }
 
