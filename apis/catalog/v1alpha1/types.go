@@ -46,16 +46,8 @@ type AddonSpec struct {
 }
 
 type AddonTasks struct {
-	Backup  BackupTasks  `json:"backup,omitempty"`
-	Restore RestoreTasks `json:"restore,omitempty"`
-}
-
-type BackupTasks struct {
-	VolumeSnapshot string `json:"volumeSnapshot,omitempty"`
-	ManifestBackup string `json:"manifestBackup,omitempty"`
-}
-
-type RestoreTasks struct {
+	VolumeSnapshot  string `json:"volumeSnapshot,omitempty"`
+	ManifestBackup  string `json:"manifestBackup,omitempty"`
 	ManifestRestore string `json:"manifestRestore,omitempty"`
 }
 

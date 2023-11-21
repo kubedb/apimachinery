@@ -28430,13 +28430,14 @@
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonTasks": {
       "type": "object",
       "properties": {
-        "backup": {
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.BackupTasks"
+        "manifestBackup": {
+          "type": "string"
         },
-        "restore": {
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RestoreTasks"
+        "manifestRestore": {
+          "type": "string"
+        },
+        "volumeSnapshot": {
+          "type": "string"
         }
       }
     },
@@ -28450,17 +28451,6 @@
         "walg": {
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.WalgSpec"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.BackupTasks": {
-      "type": "object",
-      "properties": {
-        "manifestBackup": {
-          "type": "string"
-        },
-        "volumeSnapshot": {
-          "type": "string"
         }
       }
     },
@@ -30191,14 +30181,6 @@
         "image": {
           "type": "string",
           "default": ""
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RestoreTasks": {
-      "type": "object",
-      "properties": {
-        "manifestRestore": {
-          "type": "string"
         }
       }
     },

@@ -56,18 +56,12 @@ spec:
                         type: string
                       tasks:
                         properties:
-                          backup:
-                            properties:
-                              manifestBackup:
-                                type: string
-                              volumeSnapshot:
-                                type: string
-                            type: object
-                          restore:
-                            properties:
-                              manifestRestore:
-                                type: string
-                            type: object
+                          manifestBackup:
+                            type: string
+                          manifestRestore:
+                            type: string
+                          volumeSnapshot:
+                            type: string
                         type: object
                     type: object
                   walg:

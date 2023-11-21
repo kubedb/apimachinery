@@ -445,7 +445,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AddonSpec":                                  schema_apimachinery_apis_catalog_v1alpha1_AddonSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AddonTasks":                                 schema_apimachinery_apis_catalog_v1alpha1_AddonTasks(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec":                               schema_apimachinery_apis_catalog_v1alpha1_ArchiverSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.BackupTasks":                                schema_apimachinery_apis_catalog_v1alpha1_BackupTasks(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CruiseControlVersionDatabase":               schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase":      schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchDashboardVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext":               schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchSecurityContext(ref),
@@ -541,7 +540,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionPodSecurityPolicy":              schema_apimachinery_apis_catalog_v1alpha1_RedisVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionSpec":                           schema_apimachinery_apis_catalog_v1alpha1_RedisVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector":                    schema_apimachinery_apis_catalog_v1alpha1_ReplicationModeDetector(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RestoreTasks":                               schema_apimachinery_apis_catalog_v1alpha1_RestoreTasks(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints":                          schema_apimachinery_apis_catalog_v1alpha1_UpdateConstraints(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.WalgSpec":                                   schema_apimachinery_apis_catalog_v1alpha1_WalgSpec(ref),
 	}
@@ -22026,23 +22024,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_AddonTasks(ref common.ReferenceCa
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"backup": {
+					"volumeSnapshot": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.BackupTasks"),
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
-					"restore": {
+					"manifestBackup": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RestoreTasks"),
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"manifestRestore": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
 			},
 		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.BackupTasks", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RestoreTasks"},
 	}
 }
 
@@ -22069,30 +22071,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_ArchiverSpec(ref common.Reference
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.WalgSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_BackupTasks(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"volumeSnapshot": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"manifestBackup": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
-			},
-		},
 	}
 }
 
@@ -25464,24 +25442,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_ReplicationModeDetector(ref commo
 					},
 				},
 				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RestoreTasks(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"manifestRestore": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
 			},
 		},
 	}
