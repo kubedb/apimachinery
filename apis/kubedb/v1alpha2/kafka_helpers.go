@@ -80,14 +80,6 @@ func (k *Kafka) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(k.ServiceName(), "pods")
 }
 
-func (k *Kafka) GoverningServiceNameController() string {
-	return meta_util.NameWithSuffix(k.ServiceName(), KafkaNodeRolesController)
-}
-
-func (k *Kafka) GoverningServiceNameBroker() string {
-	return meta_util.NameWithSuffix(k.ServiceName(), KafkaNodeRolesBrokers)
-}
-
 func (k *Kafka) GoverningServiceNameCruiseControl() string {
 	return meta_util.NameWithSuffix(k.ServiceName(), KafkaNodeRolesCruiseControl)
 }
