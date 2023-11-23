@@ -385,6 +385,61 @@ func (e Elasticsearch) StatsServiceLabels() map[string]string {
 	return e.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
+func setDefaultContainerSecurityContext(containerSecurityContext *core.SecurityContext) {
+	if containerSecurityContext.AllowPrivilegeEscalation == nil {
+		containerSecurityContext.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if containerSecurityContext.RunAsNonRoot == nil {
+		containerSecurityContext.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if containerSecurityContext.RunAsUser == nil {
+		containerSecurityContext.RunAsUser = pointer.Int64P(1000)
+	}
+	if containerSecurityContext.RunAsGroup == nil {
+		containerSecurityContext.RunAsGroup = pointer.Int64P(1000)
+	}
+	capabilities := &core.Capabilities{}
+	if containerSecurityContext.Capabilities != nil {
+		capabilities = containerSecurityContext.Capabilities
+	}
+	if len(capabilities.Drop) == 0 {
+		capabilities.Drop = []core.Capability{"ALL"}
+	}
+	containerSecurityContext.Capabilities = capabilities
+	seccomProfile := &core.SeccompProfile{}
+	if containerSecurityContext.SeccompProfile != nil {
+		seccomProfile = containerSecurityContext.SeccompProfile
+	}
+	if seccomProfile.Type == "" {
+		seccomProfile.Type = core.SeccompProfileTypeRuntimeDefault
+	}
+	containerSecurityContext.SeccompProfile = seccomProfile
+}
+
+func (e *Elasticsearch) setDefaultContainerSecurityContextForMonitor() {
+	containerSecurityContext := &core.SecurityContext{}
+	if e.Spec.Monitor != nil && e.Spec.Monitor.Agent.Vendor() == mona.VendorPrometheus {
+		if e.Spec.Monitor.Prometheus == nil {
+			setDefaultContainerSecurityContext(containerSecurityContext)
+			e.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+			e.Spec.Monitor.Prometheus.Exporter.SecurityContext = containerSecurityContext
+			return
+		}
+		containerSecurityContext = e.Spec.Monitor.Prometheus.Exporter.SecurityContext
+		setDefaultContainerSecurityContext(containerSecurityContext)
+		e.Spec.Monitor.Prometheus.Exporter.SecurityContext = containerSecurityContext
+	}
+}
+
+func (e *Elasticsearch) setDefaultContainerSecurityContextForPodTemplate() {
+	containerSecurityContext := &core.SecurityContext{}
+	if e.Spec.PodTemplate.Spec.ContainerSecurityContext != nil {
+		containerSecurityContext = e.Spec.PodTemplate.Spec.ContainerSecurityContext
+	}
+	setDefaultContainerSecurityContext(containerSecurityContext)
+	e.Spec.PodTemplate.Spec.ContainerSecurityContext = containerSecurityContext
+}
+
 func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, topology *core_util.Topology) {
 	if e == nil {
 		return
@@ -561,35 +616,8 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		}
 	}
 
-	// set default kernel settings
-	// -	Ref: https://www.elastic.co/guide/en/elasticsearch/reference/7.9/vm-max-map-count.html
-	if e.Spec.KernelSettings == nil {
-		e.Spec.KernelSettings = &KernelSettings{
-			Privileged: true,
-			Sysctls: []core.Sysctl{
-				{
-					Name:  "vm.max_map_count",
-					Value: "262144",
-				},
-			},
-		}
-	}
-
-	if e.Spec.PodTemplate.Spec.ContainerSecurityContext == nil {
-		e.Spec.PodTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{
-			Privileged: pointer.BoolP(false),
-			Capabilities: &core.Capabilities{
-				Add: []core.Capability{"IPC_LOCK", "SYS_RESOURCE"},
-			},
-		}
-	}
-
-	// Add default Elasticsearch UID
-	if e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser == nil &&
-		esVersion.Spec.SecurityContext.RunAsUser != nil {
-		e.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser = esVersion.Spec.SecurityContext.RunAsUser
-	}
-
+	e.setDefaultContainerSecurityContextForPodTemplate()
+	e.setDefaultContainerSecurityContextForMonitor()
 	e.setDefaultAffinity(&e.Spec.PodTemplate, e.OffshootSelectors(), topology)
 	e.SetTLSDefaults(esVersion)
 	e.setDefaultInternalUsersAndRoleMappings(esVersion)

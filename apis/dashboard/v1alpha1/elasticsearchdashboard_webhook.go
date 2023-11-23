@@ -23,7 +23,9 @@ import (
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
+	"github.com/pkg/errors"
 	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -70,6 +72,42 @@ func (ed *ElasticsearchDashboard) SetupWebhookWithManager(mgr manager.Manager) e
 
 var _ webhook.Defaulter = &ElasticsearchDashboard{}
 
+func (ed *ElasticsearchDashboard) setDefaultContainerSecurityContext() {
+	containerSecurityContext := &core.SecurityContext{}
+	if ed.Spec.PodTemplate.Spec.ContainerSecurityContext != nil {
+		containerSecurityContext = ed.Spec.PodTemplate.Spec.ContainerSecurityContext
+	}
+	if containerSecurityContext.AllowPrivilegeEscalation == nil {
+		containerSecurityContext.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if containerSecurityContext.RunAsNonRoot == nil {
+		containerSecurityContext.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if containerSecurityContext.RunAsUser == nil {
+		containerSecurityContext.RunAsUser = pointer.Int64P(1000)
+	}
+	if containerSecurityContext.RunAsGroup == nil {
+		containerSecurityContext.RunAsGroup = pointer.Int64P(1000)
+	}
+	capabilities := &core.Capabilities{}
+	if containerSecurityContext.Capabilities != nil {
+		capabilities = containerSecurityContext.Capabilities
+	}
+	if len(capabilities.Drop) == 0 {
+		capabilities.Drop = []core.Capability{"ALL"}
+	}
+	containerSecurityContext.Capabilities = capabilities
+	seccomProfile := &core.SeccompProfile{}
+	if containerSecurityContext.SeccompProfile != nil {
+		seccomProfile = containerSecurityContext.SeccompProfile
+	}
+	if seccomProfile.Type == "" {
+		seccomProfile.Type = core.SeccompProfileTypeRuntimeDefault
+	}
+	containerSecurityContext.SeccompProfile = seccomProfile
+	ed.Spec.PodTemplate.Spec.ContainerSecurityContext = containerSecurityContext
+}
+
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (ed *ElasticsearchDashboard) Default() {
 	if ed.Spec.Replicas == nil {
@@ -84,6 +122,8 @@ func (ed *ElasticsearchDashboard) Default() {
 		ed.Spec.TerminationPolicy = api.TerminationPolicyWipeOut
 		edLog.Info(".Spec.TerminationPolicy have been set to TerminationPolicyWipeOut")
 	}
+
+	ed.setDefaultContainerSecurityContext()
 
 	if ed.Spec.EnableSSL {
 		if ed.Spec.TLS == nil {
@@ -144,6 +184,55 @@ func (ed *ElasticsearchDashboard) ValidateDelete() error {
 		ed.Name, allErr)
 }
 
+func validateContainerCapabilities(ed *ElasticsearchDashboard) error {
+	capabilities := ed.Spec.PodTemplate.Spec.ContainerSecurityContext.Capabilities
+	if len(capabilities.Add) > 0 {
+		return errors.Errorf("Can't add user provided capabilities")
+	}
+
+	if len(capabilities.Drop) != 1 {
+		return errors.Errorf("Can't drop more than one capability")
+	}
+
+	if capabilities.Drop[0] != "ALL" {
+		return errors.Errorf("Have to drop all capabilities")
+	}
+	return nil
+}
+
+func validateContainerUserAndGroup(ed *ElasticsearchDashboard) error {
+	if ed.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup != nil && *ed.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup != 1000 {
+		return errors.Errorf("elasticsearch should run as a group elasticsearch (ID=1000)")
+	}
+
+	if ed.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser != nil && *ed.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser != 1000 {
+		return errors.Errorf("elasticsearch should run as a user elasticsearch (ID=1000)")
+	}
+
+	return nil
+}
+
+func validateAllowedPriviledgeEscalation(ed *ElasticsearchDashboard) error {
+	if ed.Spec.PodTemplate.Spec.ContainerSecurityContext.AllowPrivilegeEscalation != nil && *ed.Spec.PodTemplate.Spec.ContainerSecurityContext.AllowPrivilegeEscalation {
+		return errors.Errorf("AllowedPrivilegeEscalation can't be true")
+	}
+	return nil
+}
+
+func validateRunAsNonRoot(ed *ElasticsearchDashboard) error {
+	if ed.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsNonRoot != nil && !*ed.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsNonRoot {
+		return errors.Errorf("RunAsNonRoot can't be false")
+	}
+	return nil
+}
+
+func validateSeccomprofile(ed *ElasticsearchDashboard) error {
+	if ed.Spec.PodTemplate.Spec.ContainerSecurityContext.SeccompProfile.Type != "" && ed.Spec.PodTemplate.Spec.ContainerSecurityContext.SeccompProfile.Type != core.SeccompProfileTypeRuntimeDefault {
+		return errors.Errorf("Seccomprofile type must be RuntimeDefault")
+	}
+	return nil
+}
+
 func (ed *ElasticsearchDashboard) Validate() error {
 	var allErr field.ErrorList
 
@@ -170,6 +259,31 @@ func (ed *ElasticsearchDashboard) Validate() error {
 
 	if len(allErr) == 0 {
 		return nil
+	}
+
+	err := validateContainerUserAndGroup(ed)
+	if err != nil {
+		return err
+	}
+
+	err = validateContainerCapabilities(ed)
+	if err != nil {
+		return err
+	}
+
+	err = validateAllowedPriviledgeEscalation(ed)
+	if err != nil {
+		return nil
+	}
+
+	err = validateRunAsNonRoot(ed)
+	if err != nil {
+		return err
+	}
+
+	err = validateSeccomprofile(ed)
+	if err != nil {
+		return err
 	}
 
 	return apierrors.NewInvalid(schema.GroupKind{Group: "dashboard.kubedb.com", Kind: "ElasticsearchDashboard"}, ed.Name, allErr)
