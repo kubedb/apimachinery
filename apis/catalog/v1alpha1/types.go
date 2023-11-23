@@ -46,9 +46,21 @@ type AddonSpec struct {
 }
 
 type AddonTasks struct {
-	VolumeSnapshot  string `json:"volumeSnapshot,omitempty"`
-	ManifestBackup  string `json:"manifestBackup,omitempty"`
-	ManifestRestore string `json:"manifestRestore,omitempty"`
+	VolumeSnapshot  VolumeSnapshot  `json:"volumeSnapshot,omitempty"`
+	ManifestBackup  ManifestBackup  `json:"manifestBackup,omitempty"`
+	ManifestRestore ManifestRestore `json:"manifestRestore,omitempty"`
+}
+
+type VolumeSnapshot struct {
+	Name string `json:"name"`
+}
+
+type ManifestBackup struct {
+	Name string `json:"name"`
+}
+
+type ManifestRestore struct {
+	Name string `json:"name"`
 }
 
 // GitSyncer is the image for the kubernetes/git-sync

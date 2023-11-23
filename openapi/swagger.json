@@ -28431,13 +28431,16 @@
       "type": "object",
       "properties": {
         "manifestBackup": {
-          "type": "string"
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestBackup"
         },
         "manifestRestore": {
-          "type": "string"
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestRestore"
         },
         "volumeSnapshot": {
-          "type": "string"
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.VolumeSnapshot"
         }
       }
     },
@@ -28828,6 +28831,30 @@
       ],
       "properties": {
         "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestBackup": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestRestore": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
           "type": "string",
           "default": ""
         }
@@ -30203,6 +30230,18 @@
             "type": "string",
             "default": ""
           }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.VolumeSnapshot": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": ""
         }
       }
     },
