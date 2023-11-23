@@ -189,6 +189,7 @@ func (rs *RedisSentinel) SetDefaults(topology *core_util.Topology) {
 		rs.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
 
+	rs.setDefaultContainerSecurityContext(&rs.Spec.PodTemplate)
 	if rs.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		rs.Spec.PodTemplate.Spec.ServiceAccountName = rs.OffshootName()
 	}
@@ -196,6 +197,10 @@ func (rs *RedisSentinel) SetDefaults(topology *core_util.Topology) {
 	rs.setDefaultAffinity(&rs.Spec.PodTemplate, rs.OffshootSelectors(), topology)
 
 	rs.Spec.Monitor.SetDefaults()
+	// If prometheus enabled, & RunAsUser not set. set the default 999
+	if rs.Spec.Monitor != nil && rs.Spec.Monitor.Prometheus != nil && rs.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+		rs.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = pointer.Int64P(999)
+	}
 	rs.SetTLSDefaults()
 	rs.SetHealthCheckerDefaults()
 	apis.SetDefaultResourceLimits(&rs.Spec.PodTemplate.Spec.Resources, DefaultResources)
@@ -270,6 +275,38 @@ func (rs *RedisSentinel) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, l
 				},
 			},
 		},
+	}
+}
+
+func (rs *RedisSentinel) setDefaultContainerSecurityContext(podTemplate *ofst.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
+	}
+	if podTemplate.Spec.ContainerSecurityContext == nil {
+		podTemplate.Spec.ContainerSecurityContext = &corev1.SecurityContext{}
+	}
+	rs.assignDefaultContainerSecurityContext(podTemplate.Spec.ContainerSecurityContext)
+}
+
+func (rs *RedisSentinel) assignDefaultContainerSecurityContext(sc *corev1.SecurityContext) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &corev1.Capabilities{
+			Drop: []corev1.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = pointer.Int64P(999)
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = &corev1.SeccompProfile{
+			Type: corev1.SeccompProfileTypeRuntimeDefault,
+		}
 	}
 }
 
