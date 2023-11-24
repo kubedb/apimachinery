@@ -18,12 +18,11 @@ package v1alpha1
 
 import (
 	"fmt"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+
 	"kubedb.dev/apimachinery/apis"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
-	"github.com/pkg/errors"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -31,6 +30,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -178,55 +178,6 @@ func (ed *ElasticsearchDashboard) ValidateDelete() error {
 	return apierrors.NewInvalid(
 		schema.GroupKind{Group: "dashboard.kubedb.com", Kind: "ElasticsearchDashboard"},
 		ed.Name, allErr)
-}
-
-func validateContainerCapabilities(ed *ElasticsearchDashboard) error {
-	capabilities := ed.Spec.PodTemplate.Spec.ContainerSecurityContext.Capabilities
-	if len(capabilities.Add) > 0 {
-		return errors.Errorf("Can't add user provided capabilities")
-	}
-
-	if len(capabilities.Drop) != 1 {
-		return errors.Errorf("Can't drop more than one capability")
-	}
-
-	if capabilities.Drop[0] != "ALL" {
-		return errors.Errorf("Have to drop all capabilities")
-	}
-	return nil
-}
-
-func validateContainerUserAndGroup(ed *ElasticsearchDashboard) error {
-	if ed.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup != nil && *ed.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup != 1000 {
-		return errors.Errorf("elasticsearch should run as a group elasticsearch (ID=1000)")
-	}
-
-	if ed.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser != nil && *ed.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser != 1000 {
-		return errors.Errorf("elasticsearch should run as a user elasticsearch (ID=1000)")
-	}
-
-	return nil
-}
-
-func validateAllowedPriviledgeEscalation(ed *ElasticsearchDashboard) error {
-	if ed.Spec.PodTemplate.Spec.ContainerSecurityContext.AllowPrivilegeEscalation != nil && *ed.Spec.PodTemplate.Spec.ContainerSecurityContext.AllowPrivilegeEscalation {
-		return errors.Errorf("AllowedPrivilegeEscalation can't be true")
-	}
-	return nil
-}
-
-func validateRunAsNonRoot(ed *ElasticsearchDashboard) error {
-	if ed.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsNonRoot != nil && !*ed.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsNonRoot {
-		return errors.Errorf("RunAsNonRoot can't be false")
-	}
-	return nil
-}
-
-func validateSeccomprofile(ed *ElasticsearchDashboard) error {
-	if ed.Spec.PodTemplate.Spec.ContainerSecurityContext.SeccompProfile.Type != "" && ed.Spec.PodTemplate.Spec.ContainerSecurityContext.SeccompProfile.Type != core.SeccompProfileTypeRuntimeDefault {
-		return errors.Errorf("Seccomprofile type must be RuntimeDefault")
-	}
-	return nil
 }
 
 func (ed *ElasticsearchDashboard) Validate() error {

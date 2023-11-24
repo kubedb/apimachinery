@@ -593,6 +593,33 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		}
 	}
 
+	// set default kernel settings
+	// -	Ref: https://www.elastic.co/guide/en/elasticsearch/reference/7.9/vm-max-map-count.html
+	// if kernelSettings defaults is enabled systls-init container will be injected with the default vm_map_count settings
+	// if not init container will not be injected and default values will not be set
+	if e.Spec.KernelSettings != nil && !e.Spec.KernelSettings.DisableDefaults {
+		e.Spec.KernelSettings.Privileged = true
+		vmMapCountNotSet := true
+		if len(e.Spec.KernelSettings.Sysctls) != 0 {
+			for i := 0; i < len(e.Spec.KernelSettings.Sysctls); i++ {
+				if e.Spec.KernelSettings.Sysctls[i].Name == "vm.max_map_count" {
+					vmMapCountNotSet = false
+					break
+				}
+			}
+		}
+		if vmMapCountNotSet {
+			e.Spec.KernelSettings.Sysctls = append(e.Spec.KernelSettings.Sysctls, core.Sysctl{
+				Name:  "vm.max_map_count",
+				Value: "262144",
+			})
+		}
+	} else {
+		e.Spec.KernelSettings = &KernelSettings{
+			DisableDefaults: true,
+		}
+	}
+
 	e.setDefaultAffinity(&e.Spec.PodTemplate, e.OffshootSelectors(), topology)
 	e.setContainerSecurityContextDefaults(&e.Spec.PodTemplate)
 	e.setDefaultInternalUsersAndRoleMappings(esVersion)

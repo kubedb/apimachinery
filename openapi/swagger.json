@@ -30925,6 +30925,10 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.KernelSettings": {
       "type": "object",
       "properties": {
+        "disableDefaults": {
+          "description": "DisableDefaults can be set to false to avoid defaulting via mutator",
+          "type": "boolean"
+        },
         "privileged": {
           "description": "Privileged specifies the status whether the init container requires privileged access to perform the following commands.",
           "type": "boolean"
