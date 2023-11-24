@@ -1018,6 +1018,8 @@ spec:
                 type: object
               kernelSettings:
                 properties:
+                  disableDefaults:
+                    type: boolean
                   privileged:
                     type: boolean
                   sysctls:

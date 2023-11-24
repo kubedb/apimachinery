@@ -143,6 +143,8 @@ type NamedServiceTemplateSpec struct {
 }
 
 type KernelSettings struct {
+	// DisableDefaults can be set to false to avoid defaulting via mutator
+	DisableDefaults bool `json:"disableDefaults,omitempty"`
 	// Privileged specifies the status whether the init container
 	// requires privileged access to perform the following commands.
 	// +optional

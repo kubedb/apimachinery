@@ -18,7 +18,7 @@ package v1alpha1
 
 import (
 	"fmt"
-
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"kubedb.dev/apimachinery/apis"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
@@ -72,40 +72,36 @@ func (ed *ElasticsearchDashboard) SetupWebhookWithManager(mgr manager.Manager) e
 
 var _ webhook.Defaulter = &ElasticsearchDashboard{}
 
-func (ed *ElasticsearchDashboard) setDefaultContainerSecurityContext() {
-	containerSecurityContext := &core.SecurityContext{}
-	if ed.Spec.PodTemplate.Spec.ContainerSecurityContext != nil {
-		containerSecurityContext = ed.Spec.PodTemplate.Spec.ContainerSecurityContext
+func (ed *ElasticsearchDashboard) setDefaultContainerSecurityContext(podTemplate *ofst.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
 	}
-	if containerSecurityContext.AllowPrivilegeEscalation == nil {
-		containerSecurityContext.AllowPrivilegeEscalation = pointer.BoolP(false)
+	if podTemplate.Spec.ContainerSecurityContext == nil {
+		podTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{}
 	}
-	if containerSecurityContext.RunAsNonRoot == nil {
-		containerSecurityContext.RunAsNonRoot = pointer.BoolP(true)
+	ed.assignDefaultContainerSecurityContext(podTemplate.Spec.ContainerSecurityContext)
+}
+
+func (ed *ElasticsearchDashboard) assignDefaultContainerSecurityContext(sc *core.SecurityContext) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
-	if containerSecurityContext.RunAsUser == nil {
-		containerSecurityContext.RunAsUser = pointer.Int64P(1000)
+	if sc.Capabilities == nil {
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
 	}
-	if containerSecurityContext.RunAsGroup == nil {
-		containerSecurityContext.RunAsGroup = pointer.Int64P(1000)
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
 	}
-	capabilities := &core.Capabilities{}
-	if containerSecurityContext.Capabilities != nil {
-		capabilities = containerSecurityContext.Capabilities
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = pointer.Int64P(1000)
 	}
-	if len(capabilities.Drop) == 0 {
-		capabilities.Drop = []core.Capability{"ALL"}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = &core.SeccompProfile{
+			Type: core.SeccompProfileTypeRuntimeDefault,
+		}
 	}
-	containerSecurityContext.Capabilities = capabilities
-	seccomProfile := &core.SeccompProfile{}
-	if containerSecurityContext.SeccompProfile != nil {
-		seccomProfile = containerSecurityContext.SeccompProfile
-	}
-	if seccomProfile.Type == "" {
-		seccomProfile.Type = core.SeccompProfileTypeRuntimeDefault
-	}
-	containerSecurityContext.SeccompProfile = seccomProfile
-	ed.Spec.PodTemplate.Spec.ContainerSecurityContext = containerSecurityContext
 }
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
@@ -123,7 +119,7 @@ func (ed *ElasticsearchDashboard) Default() {
 		edLog.Info(".Spec.TerminationPolicy have been set to TerminationPolicyWipeOut")
 	}
 
-	ed.setDefaultContainerSecurityContext()
+	ed.setDefaultContainerSecurityContext(&ed.Spec.PodTemplate)
 
 	if ed.Spec.EnableSSL {
 		if ed.Spec.TLS == nil {
@@ -259,31 +255,6 @@ func (ed *ElasticsearchDashboard) Validate() error {
 
 	if len(allErr) == 0 {
 		return nil
-	}
-
-	err := validateContainerUserAndGroup(ed)
-	if err != nil {
-		return err
-	}
-
-	err = validateContainerCapabilities(ed)
-	if err != nil {
-		return err
-	}
-
-	err = validateAllowedPriviledgeEscalation(ed)
-	if err != nil {
-		return nil
-	}
-
-	err = validateRunAsNonRoot(ed)
-	if err != nil {
-		return err
-	}
-
-	err = validateSeccomprofile(ed)
-	if err != nil {
-		return err
 	}
 
 	return apierrors.NewInvalid(schema.GroupKind{Group: "dashboard.kubedb.com", Kind: "ElasticsearchDashboard"}, ed.Name, allErr)
