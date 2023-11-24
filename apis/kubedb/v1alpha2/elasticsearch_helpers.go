@@ -623,8 +623,15 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 	e.setDefaultAffinity(&e.Spec.PodTemplate, e.OffshootSelectors(), topology)
 	e.setContainerSecurityContextDefaults(&e.Spec.PodTemplate)
 	e.setDefaultInternalUsersAndRoleMappings(esVersion)
+	e.SetMetricsExporterDefaults()
 	e.SetTLSDefaults(esVersion)
+}
+
+func (e *Elasticsearch) SetMetricsExporterDefaults() {
 	e.Spec.Monitor.SetDefaults()
+	if e.Spec.Monitor != nil && e.Spec.Monitor.Prometheus != nil && e.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+		e.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = pointer.Int64P(1000)
+	}
 }
 
 // setDefaultAffinity
