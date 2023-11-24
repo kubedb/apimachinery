@@ -53,6 +53,9 @@ spec:
                   addon:
                     properties:
                       name:
+                        enum:
+                        - mongodb-addon
+                        - postgres-addon
                         type: string
                       tasks:
                         properties:

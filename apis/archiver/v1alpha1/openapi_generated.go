@@ -444,7 +444,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                               schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef":          schema_apimachinery_apis_archiver_v1alpha1_ArchiverDatabaseRef(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage":                schema_apimachinery_apis_archiver_v1alpha1_BackupStorage(ref),
-		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.CSISnapshotterOptions":        schema_apimachinery_apis_archiver_v1alpha1_CSISnapshotterOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions":            schema_apimachinery_apis_archiver_v1alpha1_FullBackupOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference":       schema_apimachinery_apis_archiver_v1alpha1_GenericSecretReference(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions":        schema_apimachinery_apis_archiver_v1alpha1_ManifestBackupOptions(ref),
@@ -457,6 +456,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverSpec":         schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverStatus":       schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverStatus(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions":             schema_apimachinery_apis_archiver_v1alpha1_SchedulerOptions(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task":                         schema_apimachinery_apis_archiver_v1alpha1_Task(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions":             schema_apimachinery_apis_archiver_v1alpha1_WalBackupOptions(ref),
 	}
 }
@@ -21957,26 +21957,6 @@ func schema_apimachinery_apis_archiver_v1alpha1_BackupStorage(ref common.Referen
 	}
 }
 
-func schema_apimachinery_apis_archiver_v1alpha1_CSISnapshotterOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"volumeSnapshotClassName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"volumeSnapshotClassName"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_archiver_v1alpha1_FullBackupOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21990,9 +21970,9 @@ func schema_apimachinery_apis_archiver_v1alpha1_FullBackupOptions(ref common.Ref
 							Format:  "",
 						},
 					},
-					"csiSnapshotter": {
+					"task": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.CSISnapshotterOptions"),
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task"),
 						},
 					},
 					"scheduler": {
@@ -22031,7 +22011,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_FullBackupOptions(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.CSISnapshotterOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions", "kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task", "kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"},
 	}
 }
 
@@ -22224,44 +22204,52 @@ func schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverSpec(ref common.R
 				Properties: map[string]spec.Schema{
 					"databases": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers"),
+							Description: "Databases define which MongoDB databases are allowed to consume this archiver",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers"),
 						},
 					},
 					"pause": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
+							Description: "Pause defines if the backup process should be paused or not",
+							Type:        []string{"boolean"},
+							Format:      "",
 						},
 					},
 					"retentionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+							Description: "RetentionPolicy field is the RetentionPolicy of the backupConfiguration's backend",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
 					"fullBackup": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions"),
+							Description: "FullBackup defines the sessionConfig of the fullBackup This options will eventually go to the full-backup job's yaml",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions"),
 						},
 					},
 					"walBackup": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions"),
+							Description: "WalBackup defines the sessionConfig of the walBackup This options will eventually go to the sidekick specification",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions"),
 						},
 					},
 					"manifestBackup": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
+							Description: "ManifestBackup defines the sessionConfig of the manifestBackup This options will eventually go to the manifest-backup job's yaml",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
 						},
 					},
 					"backupStorage": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage"),
+							Description: "BackupStorage is the backend storageRef of the BackupConfiguration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage"),
 						},
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "DeletionPolicy defines the created repository's deletionPolicy",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -22405,44 +22393,52 @@ func schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref common.
 				Properties: map[string]spec.Schema{
 					"databases": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers"),
+							Description: "Databases define which Postgres databases are allowed to consume this archiver",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers"),
 						},
 					},
 					"pause": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
+							Description: "Pause defines if the backup process should be paused or not",
+							Type:        []string{"boolean"},
+							Format:      "",
 						},
 					},
 					"retentionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+							Description: "RetentionPolicy field is the RetentionPolicy of the backupConfiguration's backend",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
 					"fullBackup": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions"),
+							Description: "FullBackup defines the sessionConfig of the fullBackup This options will eventually go to the full-backup job's yaml",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions"),
 						},
 					},
 					"walBackup": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions"),
+							Description: "WalBackup defines the sessionConfig of the walBackup This options will eventually go to the sidekick specification",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions"),
 						},
 					},
 					"manifestBackup": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
+							Description: "ManifestBackup defines the sessionConfig of the manifestBackup This options will eventually go to the manifest-backup job's yaml",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
 						},
 					},
 					"backupStorage": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage"),
+							Description: "BackupStorage is the backend storageRef of the BackupConfiguration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage"),
 						},
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "DeletionPolicy defines the created repository's deletionPolicy",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -22526,6 +22522,26 @@ func schema_apimachinery_apis_archiver_v1alpha1_SchedulerOptions(ref common.Refe
 		},
 		Dependencies: []string{
 			"kubestash.dev/apimachinery/apis/core/v1alpha1.JobTemplate"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_Task(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"params": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+				},
+				Required: []string{"params"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 

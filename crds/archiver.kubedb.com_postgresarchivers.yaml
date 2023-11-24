@@ -561,13 +561,6 @@ spec:
                             type: object
                         type: object
                     type: object
-                  csiSnapshotter:
-                    properties:
-                      volumeSnapshotClassName:
-                        type: string
-                    required:
-                    - volumeSnapshotClassName
-                    type: object
                   driver:
                     default: VolumeSnapshotter
                     enum:
@@ -5291,6 +5284,14 @@ spec:
                   sessionHistoryLimit:
                     format: int32
                     type: integer
+                  task:
+                    properties:
+                      params:
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
+                    required:
+                    - params
+                    type: object
                   timeout:
                     type: string
                 required:

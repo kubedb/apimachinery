@@ -41,9 +41,12 @@ type WalgSpec struct {
 }
 
 type AddonSpec struct {
-	Name  string     `json:"name,omitempty"`
+	Name  AddonType  `json:"name,omitempty"`
 	Tasks AddonTasks `json:"tasks,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=mongodb-addon;postgres-addon
+type AddonType string
 
 type AddonTasks struct {
 	VolumeSnapshot  VolumeSnapshot  `json:"volumeSnapshot,omitempty"`

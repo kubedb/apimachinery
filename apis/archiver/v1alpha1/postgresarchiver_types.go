@@ -46,19 +46,30 @@ type PostgresArchiver struct {
 
 // PostgresArchiverSpec defines the desired state of PostgresArchiver
 type PostgresArchiverSpec struct {
+	// Databases define which Postgres databases are allowed to consume this archiver
 	Databases *dbapi.AllowedConsumers `json:"databases"`
+	// Pause defines if the backup process should be paused or not
 	// +optional
 	Pause bool `json:"pause,omitempty"`
+	// RetentionPolicy field is the RetentionPolicy of the backupConfiguration's backend
 	// +optional
 	RetentionPolicy *kmapi.ObjectReference `json:"retentionPolicy"`
+	// FullBackup defines the sessionConfig of the fullBackup
+	// This options will eventually go to the full-backup job's yaml
 	// +optional
 	FullBackup *FullBackupOptions `json:"fullBackup"`
+	// WalBackup defines the sessionConfig of the walBackup
+	// This options will eventually go to the sidekick specification
 	// +optional
 	WalBackup *WalBackupOptions `json:"walBackup"`
+	// ManifestBackup defines the sessionConfig of the manifestBackup
+	// This options will eventually go to the manifest-backup job's yaml
 	// +optional
 	ManifestBackup *ManifestBackupOptions `json:"manifestBackup"`
+	// BackupStorage is the backend storageRef of the BackupConfiguration
 	// +optional
 	BackupStorage *BackupStorage `json:"backupStorage"`
+	// DeletionPolicy defines the created repository's deletionPolicy
 	// +optional
 	DeletionPolicy *DeletionPolicy `json:"deletionPolicy"`
 }

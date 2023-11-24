@@ -19,25 +19,18 @@ package v1alpha1
 import (
 	batch "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	v1 "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"kubestash.dev/apimachinery/apis"
 	stashcoreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
 )
 
-// +kubebuilder:validation:Enum=CSISnapshotter
-type BackupDriver string
-
-const (
-	// Takes full backup using CSISnapshotter driver
-	BackupDriverCSISnapshotter BackupDriver = "CSISnapshotter"
-)
-
 type FullBackupOptions struct {
 	// +kubebuilder:default:=VolumeSnapshotter
 	Driver apis.Driver `json:"driver"`
 	// +optional
-	CSISnapshotter *CSISnapshotterOptions `json:"csiSnapshotter,omitempty"`
+	Task *Task `json:"task,omitempty"`
 	// +optional
 	Scheduler *SchedulerOptions `json:"scheduler,omitempty"`
 	// +optional
@@ -76,8 +69,8 @@ type WalBackupOptions struct {
 	ConfigSecret *GenericSecretReference `json:"configSecret,omitempty"`
 }
 
-type CSISnapshotterOptions struct {
-	VolumeSnapshotClassName string `json:"volumeSnapshotClassName"`
+type Task struct {
+	Params *runtime.RawExtension `json:"params"`
 }
 
 type BackupStorage struct {
