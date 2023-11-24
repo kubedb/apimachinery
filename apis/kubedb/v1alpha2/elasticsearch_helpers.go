@@ -385,59 +385,36 @@ func (e Elasticsearch) StatsServiceLabels() map[string]string {
 	return e.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
-func setDefaultContainerSecurityContext(containerSecurityContext *core.SecurityContext) {
-	if containerSecurityContext.AllowPrivilegeEscalation == nil {
-		containerSecurityContext.AllowPrivilegeEscalation = pointer.BoolP(false)
+func (e Elasticsearch) setContainerSecurityContextDefaults(podTemplate *ofst.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
 	}
-	if containerSecurityContext.RunAsNonRoot == nil {
-		containerSecurityContext.RunAsNonRoot = pointer.BoolP(true)
+	if podTemplate.Spec.ContainerSecurityContext == nil {
+		podTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{}
 	}
-	if containerSecurityContext.RunAsUser == nil {
-		containerSecurityContext.RunAsUser = pointer.Int64P(1000)
-	}
-	if containerSecurityContext.RunAsGroup == nil {
-		containerSecurityContext.RunAsGroup = pointer.Int64P(1000)
-	}
-	capabilities := &core.Capabilities{}
-	if containerSecurityContext.Capabilities != nil {
-		capabilities = containerSecurityContext.Capabilities
-	}
-	if len(capabilities.Drop) == 0 {
-		capabilities.Drop = []core.Capability{"ALL"}
-	}
-	containerSecurityContext.Capabilities = capabilities
-	seccomProfile := &core.SeccompProfile{}
-	if containerSecurityContext.SeccompProfile != nil {
-		seccomProfile = containerSecurityContext.SeccompProfile
-	}
-	if seccomProfile.Type == "" {
-		seccomProfile.Type = core.SeccompProfileTypeRuntimeDefault
-	}
-	containerSecurityContext.SeccompProfile = seccomProfile
+	e.assignDefaultContainerSecurityContext(podTemplate.Spec.ContainerSecurityContext)
 }
 
-func (e *Elasticsearch) setDefaultContainerSecurityContextForMonitor() {
-	containerSecurityContext := &core.SecurityContext{}
-	if e.Spec.Monitor != nil && e.Spec.Monitor.Agent.Vendor() == mona.VendorPrometheus {
-		if e.Spec.Monitor.Prometheus == nil {
-			setDefaultContainerSecurityContext(containerSecurityContext)
-			e.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
-			e.Spec.Monitor.Prometheus.Exporter.SecurityContext = containerSecurityContext
-			return
+func (e Elasticsearch) assignDefaultContainerSecurityContext(sc *core.SecurityContext) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
 		}
-		containerSecurityContext = e.Spec.Monitor.Prometheus.Exporter.SecurityContext
-		setDefaultContainerSecurityContext(containerSecurityContext)
-		e.Spec.Monitor.Prometheus.Exporter.SecurityContext = containerSecurityContext
 	}
-}
-
-func (e *Elasticsearch) setDefaultContainerSecurityContextForPodTemplate() {
-	containerSecurityContext := &core.SecurityContext{}
-	if e.Spec.PodTemplate.Spec.ContainerSecurityContext != nil {
-		containerSecurityContext = e.Spec.PodTemplate.Spec.ContainerSecurityContext
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
 	}
-	setDefaultContainerSecurityContext(containerSecurityContext)
-	e.Spec.PodTemplate.Spec.ContainerSecurityContext = containerSecurityContext
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = pointer.Int64P(1000)
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = &core.SeccompProfile{
+			Type: core.SeccompProfileTypeRuntimeDefault,
+		}
+	}
 }
 
 func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, topology *core_util.Topology) {
@@ -616,11 +593,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		}
 	}
 
-	e.setDefaultContainerSecurityContextForPodTemplate()
-	e.setDefaultContainerSecurityContextForMonitor()
 	e.setDefaultAffinity(&e.Spec.PodTemplate, e.OffshootSelectors(), topology)
-	e.SetTLSDefaults(esVersion)
+	e.setContainerSecurityContextDefaults(&e.Spec.PodTemplate)
 	e.setDefaultInternalUsersAndRoleMappings(esVersion)
+	e.SetTLSDefaults(esVersion)
 	e.Spec.Monitor.SetDefaults()
 }
 
