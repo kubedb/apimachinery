@@ -23735,6 +23735,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KernelSettings(ref common.Referenc
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"disableDefaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisableDefaults can be set to false to avoid defaulting via mutator",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"privileged": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Privileged specifies the status whether the init container requires privileged access to perform the following commands.",
