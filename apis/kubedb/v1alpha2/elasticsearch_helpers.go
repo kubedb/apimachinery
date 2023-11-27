@@ -598,7 +598,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 	// if kernelSettings defaults is enabled systls-init container will be injected with the default vm_map_count settings
 	// if not init container will not be injected and default values will not be set
 	if e.Spec.KernelSettings == nil {
-		e.Spec.KernelSettings.DisableDefaults = false
+		e.Spec.KernelSettings = &KernelSettings{}
 	}
 	if e.Spec.KernelSettings != nil && !e.Spec.KernelSettings.DisableDefaults {
 		e.Spec.KernelSettings.Privileged = true
