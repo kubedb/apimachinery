@@ -5743,15 +5743,6 @@ spec:
                             type: object
                         type: object
                     type: object
-                  encryptionSecret:
-                    properties:
-                      name:
-                        type: string
-                      namespace:
-                        type: string
-                    required:
-                    - name
-                    type: object
                   jobTemplate:
                     properties:
                       controller:

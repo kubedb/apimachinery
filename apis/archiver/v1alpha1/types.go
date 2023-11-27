@@ -20,7 +20,7 @@ import (
 	batch "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	v1 "kmodules.xyz/client-go/api/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"kubestash.dev/apimachinery/apis"
 	stashcoreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
@@ -47,8 +47,6 @@ type FullBackupOptions struct {
 
 type ManifestBackupOptions struct {
 	// +optional
-	EncryptionSecret *v1.ObjectReference `json:"encryptionSecret"`
-	// +optional
 	Scheduler *SchedulerOptions `json:"scheduler,omitempty"`
 	// +optional
 	ContainerRuntimeSettings *ofst.ContainerRuntimeSettings `json:"containerRuntimeSettings,omitempty"`
@@ -74,7 +72,7 @@ type Task struct {
 }
 
 type BackupStorage struct {
-	Ref *v1.ObjectReference `json:"ref,omitempty"`
+	Ref *kmapi.ObjectReference `json:"ref,omitempty"`
 	// +optional
 	SubDir string `json:"subDir,omitempty"`
 }

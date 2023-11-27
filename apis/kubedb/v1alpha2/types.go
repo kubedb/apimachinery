@@ -146,6 +146,8 @@ type NamedServiceTemplateSpec struct {
 }
 
 type KernelSettings struct {
+	// DisableDefaults can be set to false to avoid defaulting via mutator
+	DisableDefaults bool `json:"disableDefaults,omitempty"`
 	// Privileged specifies the status whether the init container
 	// requires privileged access to perform the following commands.
 	// +optional
@@ -208,19 +210,10 @@ type Archiver struct {
 type ArchiverRecovery struct {
 	RecoveryTimestamp metav1.Time `json:"recoveryTimestamp"`
 	// +optional
-	ManifestRestore *ManifestRestoreOptions `json:"manifestRestore,omitempty"`
-	// +optional
-	FullDBRestore *FullDBRestoreOptions `json:"fullDBRestore,omitempty"`
-}
-
-type ManifestRestoreOptions struct {
-	// +optional
 	EncryptionSecret *kmapi.ObjectReference `json:"encryptionSecret,omitempty"`
 	// +optional
-	Repository *kmapi.ObjectReference `json:"repository,omitempty"`
-}
+	ManifestRepository *kmapi.ObjectReference `json:"manifestRepository,omitempty"`
 
-type FullDBRestoreOptions struct {
-	// +optional
-	Repository *kmapi.ObjectReference `json:"repository,omitempty"`
+	// FullDBRepository means db restore + manifest restore
+	FullDBRepository *kmapi.ObjectReference `json:"fullDBRepository,omitempty"`
 }

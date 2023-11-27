@@ -22057,11 +22057,6 @@ func schema_apimachinery_apis_archiver_v1alpha1_ManifestBackupOptions(ref common
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"encryptionSecret": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
-						},
-					},
 					"scheduler": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions"),
@@ -22097,7 +22092,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_ManifestBackupOptions(ref common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions", "kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions", "kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"},
 	}
 }
 
@@ -22237,6 +22232,11 @@ func schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverSpec(ref common.R
 						SchemaProps: spec.SchemaProps{
 							Description: "ManifestBackup defines the sessionConfig of the manifestBackup This options will eventually go to the manifest-backup job's yaml",
 							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
+						},
+					},
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
 					"backupStorage": {

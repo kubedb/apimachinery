@@ -115,6 +115,15 @@ spec:
                 - WipeOut
                 - DoNotDelete
                 type: string
+              encryptionSecret:
+                properties:
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
               fullBackup:
                 properties:
                   containerRuntimeSettings:
@@ -5742,15 +5751,6 @@ spec:
                                 type: string
                             type: object
                         type: object
-                    type: object
-                  encryptionSecret:
-                    properties:
-                      name:
-                        type: string
-                      namespace:
-                        type: string
-                    required:
-                    - name
                     type: object
                   jobTemplate:
                     properties:

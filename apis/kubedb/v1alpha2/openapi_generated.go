@@ -463,7 +463,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdList":                       schema_apimachinery_apis_kubedb_v1alpha2_EtcdList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_EtcdSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdStatus":                     schema_apimachinery_apis_kubedb_v1alpha2_EtcdStatus(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FullDBRestoreOptions":           schema_apimachinery_apis_kubedb_v1alpha2_FullDBRestoreOptions(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.GitRepo":                        schema_apimachinery_apis_kubedb_v1alpha2_GitRepo(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Kafka":                          schema_apimachinery_apis_kubedb_v1alpha2_Kafka(ref),
@@ -476,7 +475,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaStatus":                    schema_apimachinery_apis_kubedb_v1alpha2_KafkaStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KernelSettings":                 schema_apimachinery_apis_kubedb_v1alpha2_KernelSettings(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ManifestRestoreOptions":         schema_apimachinery_apis_kubedb_v1alpha2_ManifestRestoreOptions(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MariaDB":                        schema_apimachinery_apis_kubedb_v1alpha2_MariaDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MariaDBList":                    schema_apimachinery_apis_kubedb_v1alpha2_MariaDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MariaDBSpec":                    schema_apimachinery_apis_kubedb_v1alpha2_MariaDBSpec(ref),
@@ -22107,14 +22105,20 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ArchiverRecovery(ref common.Refere
 							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
-					"manifestRestore": {
+					"encryptionSecret": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ManifestRestoreOptions"),
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
-					"fullDBRestore": {
+					"manifestRepository": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FullDBRestoreOptions"),
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"fullDBRepository": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FullDBRepository means db restore + manifest restore",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
 				},
@@ -22122,7 +22126,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ArchiverRecovery(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FullDBRestoreOptions", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ManifestRestoreOptions"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.ObjectReference"},
 	}
 }
 
@@ -23276,25 +23280,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_EtcdStatus(ref common.ReferenceCal
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_FullDBRestoreOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"repository": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_GitRepo(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23839,6 +23824,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KernelSettings(ref common.Referenc
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"disableDefaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisableDefaults can be set to false to avoid defaulting via mutator",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"privileged": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Privileged specifies the status whether the init container requires privileged access to perform the following commands.",
@@ -23865,30 +23857,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KernelSettings(ref common.Referenc
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.Sysctl"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_ManifestRestoreOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"encryptionSecret": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
-						},
-					},
-					"repository": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference"},
 	}
 }
 

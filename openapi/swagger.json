@@ -30304,11 +30304,15 @@
         "recoveryTimestamp"
       ],
       "properties": {
-        "fullDBRestore": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.FullDBRestoreOptions"
+        "encryptionSecret": {
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
         },
-        "manifestRestore": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ManifestRestoreOptions"
+        "fullDBRepository": {
+          "description": "FullDBRepository means db restore + manifest restore",
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
+        "manifestRepository": {
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
         },
         "recoveryTimestamp": {
           "default": {},
@@ -31004,14 +31008,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.FullDBRestoreOptions": {
-      "type": "object",
-      "properties": {
-        "repository": {
-          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.GitRepo": {
       "type": "object",
       "required": [
@@ -31071,6 +31067,10 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.KernelSettings": {
       "type": "object",
       "properties": {
+        "disableDefaults": {
+          "description": "DisableDefaults can be set to false to avoid defaulting via mutator",
+          "type": "boolean"
+        },
         "privileged": {
           "description": "Privileged specifies the status whether the init container requires privileged access to perform the following commands.",
           "type": "boolean"
@@ -31082,17 +31082,6 @@
             "default": {},
             "$ref": "#/definitions/io.k8s.api.core.v1.Sysctl"
           }
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ManifestRestoreOptions": {
-      "type": "object",
-      "properties": {
-        "encryptionSecret": {
-          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
-        },
-        "repository": {
-          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
         }
       }
     },
