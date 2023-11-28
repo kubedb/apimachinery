@@ -66,6 +66,8 @@ type PostgresArchiverSpec struct {
 	// This options will eventually go to the manifest-backup job's yaml
 	// +optional
 	ManifestBackup *ManifestBackupOptions `json:"manifestBackup"`
+	// +optional
+	EncryptionSecret *kmapi.ObjectReference `json:"encryptionSecret"`
 	// BackupStorage is the backend storageRef of the BackupConfiguration
 	// +optional
 	BackupStorage *BackupStorage `json:"backupStorage"`
