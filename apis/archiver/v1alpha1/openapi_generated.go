@@ -22224,7 +22224,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverSpec(ref common.R
 					},
 					"walBackup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "WalBackup defines the sessionConfig of the walBackup This options will eventually go to the sidekick specification",
+							Description: "WalBackup defines the config of the WalBackup",
 							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.WalBackupOptions"),
 						},
 					},

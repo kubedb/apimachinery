@@ -58,8 +58,7 @@ type MongoDBArchiverSpec struct {
 	// This options will eventually go to the full-backup job's yaml
 	// +optional
 	FullBackup *FullBackupOptions `json:"fullBackup"`
-	// WalBackup defines the sessionConfig of the walBackup
-	// This options will eventually go to the sidekick specification
+	// WalBackup defines the config of the WalBackup
 	// +optional
 	WalBackup *WalBackupOptions `json:"walBackup"`
 	// ManifestBackup defines the sessionConfig of the manifestBackup
