@@ -22428,6 +22428,11 @@ func schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref common.
 							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
 						},
 					},
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
 					"backupStorage": {
 						SchemaProps: spec.SchemaProps{
 							Description: "BackupStorage is the backend storageRef of the BackupConfiguration",

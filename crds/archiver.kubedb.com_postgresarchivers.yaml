@@ -115,6 +115,15 @@ spec:
                 - WipeOut
                 - DoNotDelete
                 type: string
+              encryptionSecret:
+                properties:
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
               fullBackup:
                 properties:
                   containerRuntimeSettings:
