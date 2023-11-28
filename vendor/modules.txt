@@ -1640,6 +1640,7 @@ kubeops.dev/sidekick/apis/apps/v1alpha1
 # kubestash.dev/apimachinery v0.3.1-0.20231231034418-cc46ddfd674a
 ## explicit; go 1.21.5
 kubestash.dev/apimachinery/apis
+kubestash.dev/apimachinery/apis/addons/v1alpha1
 kubestash.dev/apimachinery/apis/core/v1alpha1
 kubestash.dev/apimachinery/apis/storage/v1alpha1
 kubestash.dev/apimachinery/crds
