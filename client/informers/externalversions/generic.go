@@ -21,7 +21,8 @@ package externalversions
 import (
 	"fmt"
 
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dashboardv1alpha1 "kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -59,30 +60,36 @@ func (f *genericInformer) Lister() cache.GenericLister {
 // TODO extend this to unknown resources with a client pool
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
-	// Group=autoscaling.kubedb.com, Version=v1alpha1
-	case v1alpha1.SchemeGroupVersion.WithResource("elasticsearchautoscalers"):
+	// Group=archiver.kubedb.com, Version=v1alpha1
+	case v1alpha1.SchemeGroupVersion.WithResource("mongodbarchivers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().MongoDBArchivers().Informer()}, nil
+	case v1alpha1.SchemeGroupVersion.WithResource("postgresarchivers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().PostgresArchivers().Informer()}, nil
+
+		// Group=autoscaling.kubedb.com, Version=v1alpha1
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("elasticsearchautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().ElasticsearchAutoscalers().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("etcdautoscalers"):
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("etcdautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().EtcdAutoscalers().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("mariadbautoscalers"):
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("mariadbautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MariaDBAutoscalers().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("memcachedautoscalers"):
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("memcachedautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MemcachedAutoscalers().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("mongodbautoscalers"):
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("mongodbautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MongoDBAutoscalers().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("mysqlautoscalers"):
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("mysqlautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MySQLAutoscalers().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("perconaxtradbautoscalers"):
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("perconaxtradbautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().PerconaXtraDBAutoscalers().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("pgbouncerautoscalers"):
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("pgbouncerautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().PgBouncerAutoscalers().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("postgresautoscalers"):
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("postgresautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().PostgresAutoscalers().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("proxysqlautoscalers"):
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("proxysqlautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().ProxySQLAutoscalers().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("redisautoscalers"):
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("redisautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().RedisAutoscalers().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("redissentinelautoscalers"):
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("redissentinelautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().RedisSentinelAutoscalers().Informer()}, nil
 
 		// Group=catalog.kubedb.com, Version=v1alpha1

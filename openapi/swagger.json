@@ -14,7 +14,7 @@
     "version": "v0"
   },
   "paths": {
-    "/apis/": {
+    "/apis": {
       "get": {
         "description": "get available API versions",
         "consumes": [
@@ -44,7 +44,7 @@
         }
       }
     },
-    "/apis/catalog.kubedb.com/": {
+    "/apis/catalog.kubedb.com": {
       "get": {
         "description": "get information of a group",
         "consumes": [
@@ -74,7 +74,7 @@
         }
       }
     },
-    "/apis/catalog.kubedb.com/v1alpha1/": {
+    "/apis/catalog.kubedb.com/v1alpha1": {
       "get": {
         "description": "get available resources",
         "consumes": [
@@ -7313,7 +7313,7 @@
         }
       ]
     },
-    "/apis/kubedb.com/": {
+    "/apis/kubedb.com": {
       "get": {
         "description": "get information of a group",
         "consumes": [
@@ -7343,7 +7343,7 @@
         }
       }
     },
-    "/apis/kubedb.com/v1alpha2/": {
+    "/apis/kubedb.com/v1alpha2": {
       "get": {
         "description": "get available resources",
         "consumes": [
@@ -18912,7 +18912,7 @@
         }
       ]
     },
-    "/apis/ops.kubedb.com/": {
+    "/apis/ops.kubedb.com": {
       "get": {
         "description": "get information of a group",
         "consumes": [
@@ -18942,7 +18942,7 @@
         }
       }
     },
-    "/apis/ops.kubedb.com/v1alpha1/": {
+    "/apis/ops.kubedb.com/v1alpha1": {
       "get": {
         "description": "get available resources",
         "consumes": [
@@ -28415,6 +28415,48 @@
     }
   },
   "definitions": {
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonSpec": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "tasks": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonTasks"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonTasks": {
+      "type": "object",
+      "properties": {
+        "manifestBackup": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestBackup"
+        },
+        "manifestRestore": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestRestore"
+        },
+        "volumeSnapshot": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.VolumeSnapshot"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ArchiverSpec": {
+      "type": "object",
+      "properties": {
+        "addon": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonSpec"
+        },
+        "walg": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.WalgSpec"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchDashboardVersionDatabase": {
       "description": "ElasticsearchDashboardVersionDatabase is the Elasticsearch Dashboard image",
       "type": "object",
@@ -28794,6 +28836,30 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestBackup": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestRestore": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersion": {
       "type": "object",
       "properties": {
@@ -29055,6 +29121,11 @@
         "replicationModeDetector"
       ],
       "properties": {
+        "archiver": {
+          "description": "Archiver defines the walg \u0026 stash-addon related specifications",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ArchiverSpec"
+        },
         "db": {
           "description": "Database Image",
           "default": {},
@@ -29738,6 +29809,11 @@
         "podSecurityPolicies"
       ],
       "properties": {
+        "archiver": {
+          "description": "Archiver defines the walg \u0026 stash-addon related specifications",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ArchiverSpec"
+        },
         "coordinator": {
           "description": "Coordinator Image",
           "default": {},
@@ -30157,6 +30233,30 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.VolumeSnapshot": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.WalgSpec": {
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age": {
       "type": "object",
       "properties": {
@@ -30178,6 +30278,45 @@
         "selector": {
           "description": "Selector specifies a selector for consumers that are allowed to bind to this database instance.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Archiver": {
+      "type": "object",
+      "required": [
+        "ref"
+      ],
+      "properties": {
+        "pause": {
+          "description": "Pause is used to stop the archiver backup for the database",
+          "type": "boolean"
+        },
+        "ref": {
+          "description": "Ref is the name and namespace reference to the Archiver CR",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ArchiverRecovery": {
+      "type": "object",
+      "required": [
+        "recoveryTimestamp"
+      ],
+      "properties": {
+        "encryptionSecret": {
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
+        "fullDBRepository": {
+          "description": "FullDBRepository means db restore + manifest restore",
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
+        "manifestRepository": {
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
+        "recoveryTimestamp": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         }
       }
     },
@@ -30909,6 +31048,9 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec": {
       "type": "object",
       "properties": {
+        "archiver": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ArchiverRecovery"
+        },
         "initialized": {
           "description": "Initialized indicates that this database has been initialized. This will be set by the operator when status.conditions[\"Provisioned\"] is set to ensure that database is not mistakenly reset when recovered using disaster recovery tools.",
           "type": "boolean"
@@ -31513,6 +31655,10 @@
         "arbiter": {
           "description": "Mongo Arbiter component of mongodb. More info: https://docs.mongodb.com/manual/core/replica-set-arbiter/",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.MongoArbiterNode"
+        },
+        "archiver": {
+          "description": "Archiver controls database backup using Archiver CR",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Archiver"
         },
         "authSecret": {
           "description": "Database authentication secret",
@@ -32480,6 +32626,10 @@
           "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
         },
+        "archiver": {
+          "description": "Archiver controls database backup using Archiver CR",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Archiver"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
@@ -33209,6 +33359,23 @@
         },
         "operatorSecret": {
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ArchiverOptions": {
+      "type": "object",
+      "required": [
+        "operation",
+        "ref"
+      ],
+      "properties": {
+        "operation": {
+          "type": "string",
+          "default": ""
+        },
+        "ref": {
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
         }
       }
     },
@@ -34027,6 +34194,10 @@
         "apply": {
           "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
           "type": "string"
+        },
+        "archiver": {
+          "description": "Specifies information necessary for setting up Archiver for database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ArchiverOptions"
         },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of MongoDB",
@@ -38715,6 +38886,24 @@
           "description": "Number of seconds after which the probe times out. Defaults to 10 second. Minimum value is 1. It should be less than the periodSeconds.",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "xyz.kmodules.client-go.api.v1.ObjectReference": {
+      "description": "ObjectReference contains enough information to let you inspect or modify the referred object.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "description": "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+          "type": "string"
         }
       }
     },

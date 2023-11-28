@@ -29,6 +29,9 @@ type RuntimeSettings struct {
 }
 
 type PodRuntimeSettings struct {
+	// PodLabels are the labels that will be attached with the respective Pod
+	// +optional
+	PodLabels map[string]string `json:"podLabels,omitempty" protobuf:"bytes,18,rep,name=podLabels"`
 	// PodAnnotations are the annotations that will be attached with the respective Pod
 	// +optional
 	PodAnnotations map[string]string `json:"podAnnotations,omitempty" protobuf:"bytes,1,rep,name=podAnnotations"`

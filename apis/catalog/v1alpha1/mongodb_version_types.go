@@ -75,6 +75,8 @@ type MongoDBVersionSpec struct {
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 	// +optional
 	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
+	// Archiver defines the walg & stash-addon related specifications
+	Archiver ArchiverSpec `json:"archiver,omitempty"`
 }
 
 // MongoDBVersionDatabase is the MongoDB Database image
