@@ -53,9 +53,6 @@ import (
 
 func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 	ri := &restoreInfo{
-		invoker: core.TypedLocalObjectReference{
-			APIGroup: pointer.StringP(stash.GroupName),
-		},
 		do: dmcond.DynamicOptions{
 			Client: c.DynamicClient,
 		},
@@ -64,17 +61,19 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 	switch inv := inv.(type) {
 	case *v1beta1.RestoreSession:
 		// invoker information
+		ri.invoker.APIGroup = pointer.StringP(stash.GroupName)
 		ri.invoker.Kind = inv.Kind
 		ri.invoker.Name = inv.Name
 		// target information
 		ri.stashTarget = inv.Spec.Target
-		// stash status
+		// restore status
 		ri.stashPhase = inv.Status.Phase
 		// database information
 		ri.do.Namespace = inv.Namespace
 		ri.invokerUID = inv.UID
 	case *v1beta1.RestoreBatch:
 		// invoker information
+		ri.invoker.APIGroup = pointer.StringP(stash.GroupName)
 		ri.invoker.Kind = inv.Kind
 		ri.invoker.Name = inv.Name
 		// target information
@@ -83,7 +82,7 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 		if err != nil {
 			return ri, err
 		}
-		// stash status
+		// restore status
 		// RestoreBatch can have multiple targets. In this case, finding the appropriate target is necessary.
 		ri.stashPhase = getTargetPhase(inv.Status, ri.stashTarget)
 		// database information
@@ -91,17 +90,18 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 		ri.invokerUID = inv.UID
 	case *coreapi.RestoreSession:
 		// invoker information
+		ri.invoker.APIGroup = pointer.StringP(storageapi.GroupVersion.Group)
 		ri.invoker.Kind = inv.Kind
 		ri.invoker.Name = inv.Name
 		// target information
 		ri.kubeStashTarget = inv.Spec.Target
-		// stash status
+		// kubeStash status
 		ri.kubeStashPhase = inv.Status.Phase
 		// database information
 		ri.do.Namespace = inv.Namespace
 		ri.invokerUID = inv.UID
 	default:
-		return ri, fmt.Errorf("unknown stash invoker type")
+		return ri, fmt.Errorf("unknown restore invoker type")
 	}
 	// Now, extract the respective database group,version,resource
 	err = c.extractDatabaseInfo(ri)
@@ -113,11 +113,11 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 
 func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
 	if ri == nil {
-		return fmt.Errorf("invalid stash information. it must not be nil")
+		return fmt.Errorf("invalid restore information. it must not be nil")
 	}
 	// If the target could not be identified properly, we can't process further.
 	if ri.stashTarget == nil || ri.kubeStashTarget == nil {
-		return fmt.Errorf("couldn't identify the stash target from invoker: %s/%s/%s", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name)
+		return fmt.Errorf("couldn't identify the restore target from invoker: %s/%s/%s", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name)
 	}
 
 	// If the RestoreSession is deleted before completion,
@@ -155,14 +155,14 @@ func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
 
 func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 	if ri == nil {
-		return fmt.Errorf("invalid stash information. it must not be nil")
+		return fmt.Errorf("invalid restore information. it must not be nil")
 	}
 	// If the target could not be identified properly, we can't process further.
 	if ri.stashTarget == nil || ri.kubeStashTarget == nil {
-		return fmt.Errorf("couldn't identify the stash target from invoker: %s/%s/%s", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name)
+		return fmt.Errorf("couldn't identify the restore target from invoker: %s/%s/%s", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name)
 	}
 
-	// If stash is successful or failed,
+	// If restore is successful or failed,
 	// Remove: condition.Type="DataRestoreStarted"
 	// Add: condition.Type="DataRestored" --> true/false
 	if isDataRestoreCompleted(ri) {
@@ -181,7 +181,7 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 		} else {
 			dbCond.Status = metav1.ConditionFalse
 			dbCond.Reason = api.FailedToRestoreData
-			dbCond.Message = fmt.Sprintf("Failed to stash data by initializer %s %s/%s with UID %s."+
+			dbCond.Message = fmt.Sprintf("Failed to restore data by initializer %s %s/%s with UID %s."+
 				"\nRun 'kubectl describe %s %s -n %s' for more details.",
 				ri.invoker.Kind,
 				ri.do.Namespace,
@@ -204,7 +204,7 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 			return fmt.Errorf("failed to update conditions with %s", err.Error())
 		}
 
-		// Write data stash completion event to the respective database CR
+		// Write data restore completion event to the respective database CR
 		return c.writeRestoreCompletionEvent(ri.do, dbCond)
 	}
 
@@ -215,7 +215,7 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 		Type:    api.DatabaseDataRestoreStarted,
 		Status:  metav1.ConditionTrue,
 		Reason:  api.DataRestoreStartedByExternalInitializer,
-		Message: fmt.Sprintf("Data stash started by initializer: %s/%s/%s with UID %s.", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name, ri.invokerUID),
+		Message: fmt.Sprintf("Data restore started by initializer: %s/%s/%s with UID %s.", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name, ri.invokerUID),
 	}
 	_, conditions, err := ri.do.ReadConditions()
 	if err != nil {
@@ -304,7 +304,6 @@ func (c *Controller) waitUntilKubeStashInstalled(stopCh <-chan struct{}) error {
 			schema.GroupKind{Group: storageapi.GroupVersion.Group, Kind: storageapi.ResourceKindBackupStorage},
 			schema.GroupKind{Group: storageapi.GroupVersion.Group, Kind: storageapi.ResourceKindRepository},
 			schema.GroupKind{Group: storageapi.GroupVersion.Group, Kind: storageapi.ResourceKindSnapshot},
-			schema.GroupKind{Group: storageapi.GroupVersion.Group, Kind: storageapi.ResourceKindSnapshot},
 			schema.GroupKind{Group: coreapi.GroupVersion.Group, Kind: coreapi.ResourceKindBackupBatch},
 			schema.GroupKind{Group: coreapi.GroupVersion.Group, Kind: coreapi.ResourceKindBackupBlueprint},
 			schema.GroupKind{Group: coreapi.GroupVersion.Group, Kind: coreapi.ResourceKindBackupConfiguration},
@@ -325,34 +324,25 @@ func (c *Controller) extractDatabaseInfo(ri *restoreInfo) error {
 	}
 	var owner *metav1.OwnerReference
 
+	var target interface{}
 	if ri.stashTarget != nil {
-		if matched, err := targetOfGroupKind(ri.stashTarget.Ref, appcat.GroupName, ab.ResourceKindApp); err == nil && matched {
-			appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stashTarget.Ref.Name, metav1.GetOptions{})
-			if err != nil {
-				return err
-			}
-			owner = metav1.GetControllerOf(appBinding)
-		} else if matched, err := targetOfGroupKind(ri.stashTarget.Ref, apps.GroupName, sapis.KindStatefulSet); err == nil && matched {
-			sts, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stashTarget.Ref.Name, metav1.GetOptions{})
-			if err != nil {
-				return err
-			}
-			owner = metav1.GetControllerOf(sts)
-		}
+		target = ri.stashTarget.Ref
 	} else {
-		if matched, err := targetOfGroupKind(ri.kubeStashTarget, appcat.GroupName, ab.ResourceKindApp); err == nil && matched {
-			appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.kubeStashTarget.Name, metav1.GetOptions{})
-			if err != nil {
-				return err
-			}
-			owner = metav1.GetControllerOf(appBinding)
-		} else if matched, err := targetOfGroupKind(ri.kubeStashTarget, apps.GroupName, sapis.KindStatefulSet); err == nil && matched {
-			sts, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.kubeStashTarget.Name, metav1.GetOptions{})
-			if err != nil {
-				return err
-			}
-			owner = metav1.GetControllerOf(sts)
+		target = ri.kubeStashTarget
+	}
+
+	if matched, err := targetOfGroupKind(target, appcat.GroupName, ab.ResourceKindApp); err == nil && matched {
+		appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stashTarget.Ref.Name, metav1.GetOptions{})
+		if err != nil {
+			return err
 		}
+		owner = metav1.GetControllerOf(appBinding)
+	} else if matched, err := targetOfGroupKind(target, apps.GroupName, sapis.KindStatefulSet); err == nil && matched {
+		sts, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stashTarget.Ref.Name, metav1.GetOptions{})
+		if err != nil {
+			return err
+		}
+		owner = metav1.GetControllerOf(sts)
 	}
 
 	if owner == nil {
@@ -381,7 +371,7 @@ func targetOfGroupKind(inv interface{}, group, kind string) (bool, error) {
 	case kmapi.TypedObjectReference:
 		gvk = &schema.GroupVersionKind{Group: inv.APIGroup, Version: "", Kind: inv.Kind}
 	default:
-		return false, fmt.Errorf("invalid targetRef")
+		return false, fmt.Errorf("unknown restore target type")
 	}
 
 	return gvk.Group == group && gvk.Kind == kind, nil

@@ -56,7 +56,7 @@ func (c Controller) processRestoreBatch(key string) error {
 		rb.GetObjectKind().SetGroupVersionKind(v1beta1.SchemeGroupVersion.WithKind(v1beta1.ResourceKindRestoreBatch))
 		ri, err := c.extractRestoreInfo(rb)
 		if err != nil {
-			klog.Errorln("failed to extract stash invoker info. Reason: ", err)
+			klog.Errorln("failed to extract restore invoker info. Reason: ", err)
 			return err
 		}
 		if rb.DeletionTimestamp != nil {

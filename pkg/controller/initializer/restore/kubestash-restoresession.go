@@ -49,7 +49,7 @@ func (r *RestoreSessionReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 
 	ri, err := r.ctrl.extractRestoreInfo(rs)
 	if err != nil {
-		klog.Errorln("failed to extract stash invoker info. Reason: ", err)
+		klog.Errorln("failed to extract kubeStash invoker info. Reason: ", err)
 		return ctrl.Result{}, err
 	}
 	if rs.DeletionTimestamp != nil {

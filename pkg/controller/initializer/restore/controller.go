@@ -97,7 +97,7 @@ func (c *Controller) StartAfterStashInstalled(maxNumRequeues, numThreads int, se
 
 func (c *Controller) initWatcher(maxNumRequeues, numThreads int, selector metav1.LabelSelector) error {
 	klog.Infoln("Initializing stash watchers.....")
-	// only watch  the stash invokers that matches the selector
+	// only watch  the restore invokers that matches the selector
 	ls, err := metav1.LabelSelectorAsSelector(&selector)
 	if err != nil {
 		return err
@@ -144,7 +144,7 @@ func (c *Controller) StartAfterKubeStashInstalled(stopCh <-chan struct{}) {
 	if err := (&RestoreSessionReconciler{
 		ctrl: c,
 	}).SetupWithManager(c.manager); err != nil {
-		klog.Info(fmt.Errorf("unable to create BackupStorage controller. Reason: %w", err))
+		klog.Info(fmt.Errorf("unable to create RestoreSession controller. Reason: %w", err))
 		return
 	}
 }

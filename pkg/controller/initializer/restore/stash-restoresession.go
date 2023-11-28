@@ -56,7 +56,7 @@ func (c *Controller) processRestoreSession(key string) error {
 		rs.GetObjectKind().SetGroupVersionKind(v1beta1.SchemeGroupVersion.WithKind(v1beta1.ResourceKindRestoreSession))
 		ri, err := c.extractRestoreInfo(rs)
 		if err != nil {
-			klog.Errorln("failed to extract stash invoker info. Reason: ", err)
+			klog.Errorln("failed to extract restore invoker info. Reason: ", err)
 			return err
 		}
 		if rs.DeletionTimestamp != nil {
