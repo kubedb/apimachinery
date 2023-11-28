@@ -28,15 +28,15 @@ require (
 	k8s.io/kube-aggregator v0.25.1
 	k8s.io/kube-openapi v0.0.0-20221012153701-172d655c2280
 	k8s.io/metrics v0.25.1
-	kmodules.xyz/client-go v0.25.41-0.20231109105455-59549ee68009
+	kmodules.xyz/client-go v0.25.42
 	kmodules.xyz/crd-schema-fuzz v0.25.0
 	kmodules.xyz/custom-resources v0.25.2
 	kmodules.xyz/monitoring-agent-api v0.25.6-0.20231110045141-1198ab298d6e
 	kmodules.xyz/objectstore-api v0.25.1
-	kmodules.xyz/offshoot-api v0.25.5-0.20231004063620-dff8fb030d57
+	kmodules.xyz/offshoot-api v0.25.5
 	kmodules.xyz/webhook-runtime v0.25.0
-	kubeops.dev/sidekick v0.0.2-0.20230113102427-9848f83b2f0f
-	kubestash.dev/apimachinery v0.2.0-rc.0.0.20231114115833-0b99d5ce666e
+	kubeops.dev/sidekick v0.0.3
+	kubestash.dev/apimachinery v0.2.0-rc.1
 	sigs.k8s.io/controller-runtime v0.13.1
 	sigs.k8s.io/yaml v1.3.0
 	stash.appscode.dev/apimachinery v0.32.0
@@ -103,7 +103,7 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/nats-io/jwt/v2 v2.3.0 // indirect
 	github.com/nats-io/nats.go v1.28.0 // indirect
-	github.com/nats-io/nkeys v0.4.4 // indirect
+	github.com/nats-io/nkeys v0.4.6 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/onsi/gomega v1.27.6 // indirect
 	github.com/prometheus/client_golang v1.13.0 // indirect
@@ -118,8 +118,8 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/yudai/gojsondiff v1.0.0 // indirect
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
-	go.bytebuilders.dev/license-proxyserver v0.0.3 // indirect
-	go.bytebuilders.dev/license-verifier v0.13.3 // indirect
+	go.bytebuilders.dev/license-proxyserver v0.0.6 // indirect
+	go.bytebuilders.dev/license-verifier v0.13.4 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.4 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.4 // indirect
 	go.etcd.io/etcd/client/v3 v3.5.4 // indirect

@@ -335,7 +335,7 @@ github.com/nats-io/nats.go
 github.com/nats-io/nats.go/encoders/builtin
 github.com/nats-io/nats.go/internal/parser
 github.com/nats-io/nats.go/util
-# github.com/nats-io/nkeys v0.4.4
+# github.com/nats-io/nkeys v0.4.6
 ## explicit; go 1.19
 github.com/nats-io/nkeys
 # github.com/nats-io/nuid v1.0.1
@@ -414,14 +414,14 @@ github.com/yudai/golcs
 ## explicit; go 1.18
 go.bytebuilders.dev/audit/api/v1
 go.bytebuilders.dev/audit/lib
-# go.bytebuilders.dev/license-proxyserver v0.0.3
+# go.bytebuilders.dev/license-proxyserver v0.0.6
 ## explicit; go 1.18
 go.bytebuilders.dev/license-proxyserver/apis/proxyserver
 go.bytebuilders.dev/license-proxyserver/apis/proxyserver/v1alpha1
 go.bytebuilders.dev/license-proxyserver/client/clientset/versioned
 go.bytebuilders.dev/license-proxyserver/client/clientset/versioned/scheme
 go.bytebuilders.dev/license-proxyserver/client/clientset/versioned/typed/proxyserver/v1alpha1
-# go.bytebuilders.dev/license-verifier v0.13.3
+# go.bytebuilders.dev/license-verifier v0.13.4
 ## explicit; go 1.18
 go.bytebuilders.dev/license-verifier
 go.bytebuilders.dev/license-verifier/apis/licenses
@@ -1382,7 +1382,7 @@ k8s.io/utils/trace
 # kmodules.xyz/apiversion v0.2.0
 ## explicit; go 1.14
 kmodules.xyz/apiversion
-# kmodules.xyz/client-go v0.25.41-0.20231109105455-59549ee68009
+# kmodules.xyz/client-go v0.25.42
 ## explicit; go 1.18
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -1432,7 +1432,7 @@ kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/objectstore-api v0.25.1
 ## explicit; go 1.18
 kmodules.xyz/objectstore-api/api/v1
-# kmodules.xyz/offshoot-api v0.25.5-0.20231004063620-dff8fb030d57
+# kmodules.xyz/offshoot-api v0.25.5
 ## explicit; go 1.18
 kmodules.xyz/offshoot-api/api/v1
 # kmodules.xyz/prober v0.25.0
@@ -1454,11 +1454,11 @@ kmodules.xyz/resource-metrics/kubedb.com/v1alpha2
 # kmodules.xyz/webhook-runtime v0.25.0
 ## explicit; go 1.18
 kmodules.xyz/webhook-runtime/admission/v1
-# kubeops.dev/sidekick v0.0.2-0.20230113102427-9848f83b2f0f
+# kubeops.dev/sidekick v0.0.3
 ## explicit; go 1.18
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
-# kubestash.dev/apimachinery v0.2.0-rc.0.0.20231114115833-0b99d5ce666e
+# kubestash.dev/apimachinery v0.2.0-rc.1
 ## explicit; go 1.20
 kubestash.dev/apimachinery/apis
 kubestash.dev/apimachinery/apis/core/v1alpha1

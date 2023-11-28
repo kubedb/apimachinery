@@ -47,8 +47,9 @@ var (
 	ProductName string // This has been renamed to Features
 	ProductUID  string
 
-	ProdDomain = "byte.builders"
-	QADomain   = "appscode.ninja"
+	QADomain             = "appscode.ninja"
+	ProdDomain           = "appscode.com"
+	DeprecatedProdDomain = "byte.builders"
 
 	registrationAPIPath  = "api/v1/register"
 	LicenseIssuerAPIPath = "api/v1/license/issue"
@@ -143,8 +144,10 @@ func HostedEndpoint(u string) (bool, error) {
 
 func HostedDomain(d string) bool {
 	return d == ProdDomain ||
+		d == DeprecatedProdDomain ||
 		d == QADomain ||
 		strings.HasSuffix(d, "."+ProdDomain) ||
+		strings.HasSuffix(d, "."+DeprecatedProdDomain) ||
 		strings.HasSuffix(d, "."+QADomain)
 }
 

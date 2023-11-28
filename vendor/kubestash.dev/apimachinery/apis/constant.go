@@ -69,6 +69,15 @@ const (
 	KubeStashSessionName      = "kubestash.com/session-name"
 )
 
+// Keys for snapshots labels
+const (
+	KubeStashRepositoryName = "kubestash.com/repo-name"
+
+	KubeStashAppRefKind      = "kubestash.com/app-ref-kind"
+	KubeStashAppRefNamespace = "kubestash.com/app-ref-namespace"
+	KubeStashAppRefName      = "kubestash.com/app-ref-name"
+)
+
 // Keys for structure logging
 const (
 	KeyTargetKind      = "target_kind"
@@ -106,14 +115,24 @@ const (
 
 // Addon related
 const (
-	EnvDBVersion     = "DB_VERSION"
 	EnvComponentName = "COMPONENT_NAME"
 
-	ComponentPod        = "pod"
-	ComponentDeployment = "deployment"
-	ComponentPVC        = "pvc"
+	ComponentPod             = "pod"
+	ComponentDeployment      = "deployment"
+	ComponentPVC             = "pvc"
+	ComponentDump            = "dump"
+	ComponentManifests       = "manifests"
+	ComponentVolumeSnapshots = "volumesnapshots"
 
 	DirRepository = "repository"
+)
+
+// Interim Volume Related Constant
+const (
+	KeyDBVersion = "DB_VERSION"
+
+	KeyInterimVolume  = "INTERIM_VOLUME"
+	InterimVolumeName = "kubestash-interim-volume"
 )
 
 // PersistentVolumeClaim related
@@ -143,4 +162,9 @@ const (
 	KeyPopulatedFrom            = PopulatorKey + "/populated-from"
 	KeyAppName                  = PopulatorKey + "/app-name"
 	KubeStashPopulatorContainer = "kubestash-populator"
+)
+
+// Snapshot version related constants
+const (
+	SnapshotVersionV1 = "v1"
 )
