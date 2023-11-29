@@ -30,6 +30,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"kmodules.xyz/client-go/policy/secomp"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -98,9 +99,7 @@ func (ed *ElasticsearchDashboard) assignDefaultContainerSecurityContext(sc *core
 		sc.RunAsUser = pointer.Int64P(1000)
 	}
 	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &core.SeccompProfile{
-			Type: core.SeccompProfileTypeRuntimeDefault,
-		}
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
 }
 

@@ -32,6 +32,7 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
@@ -357,9 +358,7 @@ func (k *Kafka) assignDefaultContainerSecurityContext(sc *core.SecurityContext) 
 		sc.RunAsUser = pointer.Int64P(1001)
 	}
 	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &core.SeccompProfile{
-			Type: core.SeccompProfileTypeRuntimeDefault,
-		}
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
 }
 

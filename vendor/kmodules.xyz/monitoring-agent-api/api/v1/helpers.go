@@ -19,6 +19,8 @@ package v1
 import (
 	"fmt"
 
+	"kmodules.xyz/client-go/policy/secomp"
+
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 )
@@ -56,9 +58,7 @@ func (agent *AgentSpec) SetSecurityContextDefaults() {
 		sc.RunAsNonRoot = pointer.BoolP(true)
 	}
 	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &core.SeccompProfile{
-			Type: core.SeccompProfileTypeRuntimeDefault,
-		}
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
 	agent.Prometheus.Exporter.SecurityContext = sc
 }

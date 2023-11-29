@@ -33,6 +33,7 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
@@ -304,9 +305,7 @@ func (rs *RedisSentinel) assignDefaultContainerSecurityContext(sc *corev1.Securi
 		sc.RunAsUser = pointer.Int64P(999)
 	}
 	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &corev1.SeccompProfile{
-			Type: corev1.SeccompProfileTypeRuntimeDefault,
-		}
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
 }
 

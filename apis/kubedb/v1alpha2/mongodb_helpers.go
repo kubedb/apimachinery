@@ -37,6 +37,7 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
@@ -778,9 +779,7 @@ func (m *MongoDB) assignDefaultContainerSecurityContext(sc *core.SecurityContext
 		sc.RunAsGroup = pointer.Int64P(MongoDBUserID)
 	}
 	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &core.SeccompProfile{
-			Type: core.SeccompProfileTypeRuntimeDefault,
-		}
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
 }
 
