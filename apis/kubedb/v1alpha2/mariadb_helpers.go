@@ -197,6 +197,11 @@ func (m *MariaDB) SetDefaults(topology *core_util.Topology) {
 
 	if m.Spec.Replicas == nil {
 		m.Spec.Replicas = pointer.Int32P(1)
+	} else {
+		if m.Spec.Coordinator.SecurityContext == nil {
+			m.Spec.Coordinator.SecurityContext = &core.SecurityContext{}
+		}
+		m.assignDefaultContainerSecurityContext(m.Spec.Coordinator.SecurityContext)
 	}
 
 	if m.Spec.StorageType == "" {
@@ -210,11 +215,49 @@ func (m *MariaDB) SetDefaults(topology *core_util.Topology) {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
 
+	m.setDefaultContainerSecurityContext(&m.Spec.PodTemplate)
+
 	m.Spec.Monitor.SetDefaults()
 	m.setDefaultAffinity(&m.Spec.PodTemplate, m.OffshootSelectors(), topology)
 	m.SetTLSDefaults()
 	m.SetHealthCheckerDefaults()
 	apis.SetDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, DefaultResources)
+	// If prometheus enabled, & RunAsUser not set. set the default 999
+	if m.Spec.Monitor != nil && m.Spec.Monitor.Prometheus != nil && m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+		m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = pointer.Int64P(999)
+	}
+}
+
+func (m *MariaDB) setDefaultContainerSecurityContext(podTemplate *ofst.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
+	}
+	if podTemplate.Spec.ContainerSecurityContext == nil {
+		podTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{}
+	}
+	m.assignDefaultContainerSecurityContext(podTemplate.Spec.ContainerSecurityContext)
+}
+
+func (m *MariaDB) assignDefaultContainerSecurityContext(sc *core.SecurityContext) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = pointer.Int64P(999)
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = &core.SeccompProfile{
+			Type: core.SeccompProfileTypeRuntimeDefault,
+		}
+	}
 }
 
 // setDefaultAffinity
