@@ -1431,8 +1431,8 @@ kmodules.xyz/crd-schema-fuzz v0.25.0 h1:c5ZxNRqJak1bkGhECmyrKpzKGThFMB4088Kynyvn
 kmodules.xyz/crd-schema-fuzz v0.25.0/go.mod h1:VigFz19GwCxMGhb3YjCtlSXmfXb0J/g9du1So6rvqsk=
 kmodules.xyz/custom-resources v0.25.2 h1:+PJgUZvbbSgyNT7EX9gUZ3PIzY2LAW03TDW8cevvXqo=
 kmodules.xyz/custom-resources v0.25.2/go.mod h1:b9XjjKQMZ6KrLHXKqQz7YwV3M3BK8Hwi4KEwu5RadCo=
-kmodules.xyz/monitoring-agent-api v0.25.6-0.20231110045141-1198ab298d6e h1:CDVp3f587yIqoh2g9XnRX/In6QO8ZK6uw/fWdpYgOTU=
-kmodules.xyz/monitoring-agent-api v0.25.6-0.20231110045141-1198ab298d6e/go.mod h1:TNJ2Bek2PC07MWU7VXFlfKFwN4IYvLzBEFwl/9XN8lc=
+kmodules.xyz/monitoring-agent-api v0.25.6-0.20231115084406-11f976c5f2ac h1:vDjIIHhSkY9h0q2TNBqslQV88zM7IIz0Fxig06ExkJ8=
+kmodules.xyz/monitoring-agent-api v0.25.6-0.20231115084406-11f976c5f2ac/go.mod h1:+c6B4b9rwGF2FmqUJVSkuQfpsIIeNEQk0f76zQDI1F4=
 kmodules.xyz/objectstore-api v0.25.1 h1:lYQlxk+edgZYakhq+OoRBXTbHbZTGKhatGZWnKixgEQ=
 kmodules.xyz/objectstore-api v0.25.1/go.mod h1:6wBtktN7/EXyE429OTCB9nwEe+d0ADaoCtm6+IZnJso=
 kmodules.xyz/offshoot-api v0.25.5 h1:erUtTDj9iljikd9CvrCz0E32P5mgEqq1NYxy06lxrNo=
