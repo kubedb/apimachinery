@@ -38,14 +38,14 @@ import (
 )
 
 type Controller struct {
-	manager manager.Manager
+	manager *manager.Manager
 	*amc.Controller
 	*amc.StashInitializer
 	restrictToNamespace string
 }
 
 func NewController(
-	mgr manager.Manager,
+	mgr *manager.Manager,
 	ctrl *amc.Controller,
 	initializer *amc.StashInitializer,
 	restrictToNamespace string,
@@ -143,7 +143,7 @@ func (c *Controller) StartAfterKubeStashInstalled(stopCh <-chan struct{}) {
 	}
 	if err := (&RestoreSessionReconciler{
 		ctrl: c,
-	}).SetupWithManager(c.manager); err != nil {
+	}).SetupWithManager(*c.manager); err != nil {
 		klog.Info(fmt.Errorf("unable to create RestoreSession controller. Reason: %w", err))
 		return
 	}

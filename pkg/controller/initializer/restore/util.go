@@ -116,7 +116,7 @@ func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
 		return fmt.Errorf("invalid restore information. it must not be nil")
 	}
 	// If the target could not be identified properly, we can't process further.
-	if ri.stashTarget == nil || ri.kubeStashTarget == nil {
+	if ri.stashTarget == nil && ri.kubeStashTarget == nil {
 		return fmt.Errorf("couldn't identify the restore target from invoker: %s/%s/%s", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name)
 	}
 
@@ -158,7 +158,7 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 		return fmt.Errorf("invalid restore information. it must not be nil")
 	}
 	// If the target could not be identified properly, we can't process further.
-	if ri.stashTarget == nil || ri.kubeStashTarget == nil {
+	if ri.stashTarget == nil && ri.kubeStashTarget == nil {
 		return fmt.Errorf("couldn't identify the restore target from invoker: %s/%s/%s", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name)
 	}
 
@@ -319,30 +319,31 @@ func (c *Controller) extractDatabaseInfo(ri *restoreInfo) error {
 	if ri == nil {
 		return fmt.Errorf("invalid restoreInfo. It must not be nil")
 	}
-	if ri.stashTarget == nil || ri.kubeStashTarget == nil {
+	if ri.stashTarget == nil && ri.kubeStashTarget == nil {
 		return fmt.Errorf("invalid target. It must not be nil")
 	}
+
 	var owner *metav1.OwnerReference
-
-	var target interface{}
 	if ri.stashTarget != nil {
-		target = ri.stashTarget.Ref
+		if matched, err := targetOfGroupKind(ri.stashTarget.Ref, appcat.GroupName, ab.ResourceKindApp); err == nil && matched || ri.kubeStashTarget != nil {
+			appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stashTarget.Ref.Name, metav1.GetOptions{})
+			if err != nil {
+				return err
+			}
+			owner = metav1.GetControllerOf(appBinding)
+		} else if matched, err := targetOfGroupKind(ri.stashTarget.Ref, apps.GroupName, sapis.KindStatefulSet); err == nil && matched {
+			sts, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stashTarget.Ref.Name, metav1.GetOptions{})
+			if err != nil {
+				return err
+			}
+			owner = metav1.GetControllerOf(sts)
+		}
 	} else {
-		target = ri.kubeStashTarget
-	}
-
-	if matched, err := targetOfGroupKind(target, appcat.GroupName, ab.ResourceKindApp); err == nil && matched {
-		appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stashTarget.Ref.Name, metav1.GetOptions{})
+		appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.kubeStashTarget.Name, metav1.GetOptions{})
 		if err != nil {
 			return err
 		}
 		owner = metav1.GetControllerOf(appBinding)
-	} else if matched, err := targetOfGroupKind(target, apps.GroupName, sapis.KindStatefulSet); err == nil && matched {
-		sts, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stashTarget.Ref.Name, metav1.GetOptions{})
-		if err != nil {
-			return err
-		}
-		owner = metav1.GetControllerOf(sts)
 	}
 
 	if owner == nil {
@@ -359,22 +360,12 @@ func (c *Controller) extractDatabaseInfo(ri *restoreInfo) error {
 	return nil
 }
 
-func targetOfGroupKind(inv interface{}, group, kind string) (bool, error) {
-	var gvk *schema.GroupVersionKind
-	switch inv := inv.(type) {
-	case v1beta1.TargetRef:
-		gv, err := schema.ParseGroupVersion(inv.APIVersion)
-		if err != nil {
-			return false, nil
-		}
-		gvk = &schema.GroupVersionKind{Group: gv.Group, Version: gv.Version, Kind: inv.Kind}
-	case kmapi.TypedObjectReference:
-		gvk = &schema.GroupVersionKind{Group: inv.APIGroup, Version: "", Kind: inv.Kind}
-	default:
-		return false, fmt.Errorf("unknown restore target type")
+func targetOfGroupKind(target v1beta1.TargetRef, group, kind string) (bool, error) {
+	gv, err := schema.ParseGroupVersion(target.APIVersion)
+	if err != nil {
+		return false, err
 	}
-
-	return gvk.Group == group && gvk.Kind == kind, nil
+	return gv.Group == group && target.Kind == kind, nil
 }
 
 func (c *Controller) writeRestoreCompletionEvent(do dmcond.DynamicOptions, cond kmapi.Condition) error {
@@ -405,6 +396,7 @@ func isDataRestoreCompleted(ri *restoreInfo) bool {
 			ri.stashPhase == v1beta1.RestorePhaseUnknown
 	} else {
 		return ri.kubeStashPhase == coreapi.RestoreSucceeded ||
-			ri.kubeStashPhase == coreapi.RestoreFailed
+			ri.kubeStashPhase == coreapi.RestoreFailed ||
+			ri.kubeStashPhase == coreapi.RestorePhaseUnknown
 	}
 }
