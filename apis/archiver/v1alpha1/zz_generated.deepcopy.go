@@ -405,6 +405,11 @@ func (in *PostgresArchiverSpec) DeepCopyInto(out *PostgresArchiverSpec) {
 		*out = new(ManifestBackupOptions)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.EncryptionSecret != nil {
+		in, out := &in.EncryptionSecret, &out.EncryptionSecret
+		*out = new(v1.ObjectReference)
+		**out = **in
+	}
 	if in.BackupStorage != nil {
 		in, out := &in.BackupStorage, &out.BackupStorage
 		*out = new(BackupStorage)
