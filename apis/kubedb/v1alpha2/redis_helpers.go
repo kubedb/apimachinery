@@ -345,11 +345,6 @@ func (r *Redis) assignDefaultContainerSecurityContext(sc *corev1.SecurityContext
 	if sc.RunAsUser == nil {
 		sc.RunAsUser = pointer.Int64P(999)
 	}
-	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &corev1.SeccompProfile{
-			Type: corev1.SeccompProfileTypeRuntimeDefault,
-		}
-	}
 }
 
 func (r Redis) ShardNodeTemplate() string {

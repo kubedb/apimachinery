@@ -356,11 +356,6 @@ func (k *Kafka) assignDefaultContainerSecurityContext(sc *core.SecurityContext) 
 	if sc.RunAsUser == nil {
 		sc.RunAsUser = pointer.Int64P(1001)
 	}
-	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &core.SeccompProfile{
-			Type: core.SeccompProfileTypeRuntimeDefault,
-		}
-	}
 }
 
 func (k *Kafka) SetTLSDefaults() {

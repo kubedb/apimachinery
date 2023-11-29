@@ -97,11 +97,6 @@ func (ed *ElasticsearchDashboard) assignDefaultContainerSecurityContext(sc *core
 	if sc.RunAsUser == nil {
 		sc.RunAsUser = pointer.Int64P(1000)
 	}
-	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &core.SeccompProfile{
-			Type: core.SeccompProfileTypeRuntimeDefault,
-		}
-	}
 }
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type

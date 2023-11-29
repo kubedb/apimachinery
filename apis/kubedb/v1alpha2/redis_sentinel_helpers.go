@@ -303,11 +303,6 @@ func (rs *RedisSentinel) assignDefaultContainerSecurityContext(sc *corev1.Securi
 	if sc.RunAsUser == nil {
 		sc.RunAsUser = pointer.Int64P(999)
 	}
-	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &corev1.SeccompProfile{
-			Type: corev1.SeccompProfileTypeRuntimeDefault,
-		}
-	}
 }
 
 // CertificateName returns the default certificate name and/or certificate secret name for a certificate alias

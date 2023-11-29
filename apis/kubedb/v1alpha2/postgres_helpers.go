@@ -333,11 +333,6 @@ func (p *Postgres) assignDefaultContainerSecurityContext(sc *core.SecurityContex
 	if sc.RunAsGroup == nil {
 		sc.RunAsGroup = pgVersion.Spec.SecurityContext.RunAsUser
 	}
-	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &core.SeccompProfile{
-			Type: core.SeccompProfileTypeRuntimeDefault,
-		}
-	}
 }
 
 // setDefaultAffinity

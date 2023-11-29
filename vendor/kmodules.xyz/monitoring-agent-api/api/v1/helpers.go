@@ -55,11 +55,6 @@ func (agent *AgentSpec) SetSecurityContextDefaults() {
 	if sc.RunAsNonRoot == nil {
 		sc.RunAsNonRoot = pointer.BoolP(true)
 	}
-	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &core.SeccompProfile{
-			Type: core.SeccompProfileTypeRuntimeDefault,
-		}
-	}
 	agent.Prometheus.Exporter.SecurityContext = sc
 }
 

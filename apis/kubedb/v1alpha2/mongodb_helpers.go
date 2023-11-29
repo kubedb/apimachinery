@@ -777,11 +777,6 @@ func (m *MongoDB) assignDefaultContainerSecurityContext(sc *core.SecurityContext
 	if sc.RunAsGroup == nil {
 		sc.RunAsGroup = pointer.Int64P(MongoDBUserID)
 	}
-	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &core.SeccompProfile{
-			Type: core.SeccompProfileTypeRuntimeDefault,
-		}
-	}
 }
 
 func (m *MongoDB) SetHealthCheckerDefaults() {

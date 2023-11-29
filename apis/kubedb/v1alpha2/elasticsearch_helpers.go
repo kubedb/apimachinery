@@ -410,11 +410,6 @@ func (e Elasticsearch) assignDefaultContainerSecurityContext(sc *core.SecurityCo
 	if sc.RunAsUser == nil {
 		sc.RunAsUser = pointer.Int64P(1000)
 	}
-	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = &core.SeccompProfile{
-			Type: core.SeccompProfileTypeRuntimeDefault,
-		}
-	}
 }
 
 func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, topology *core_util.Topology) {
