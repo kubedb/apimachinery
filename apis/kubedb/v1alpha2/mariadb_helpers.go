@@ -236,6 +236,9 @@ func (m *MariaDB) setDefaultContainerSecurityContext(podTemplate *ofst.PodTempla
 	if podTemplate.Spec.ContainerSecurityContext == nil {
 		podTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{}
 	}
+	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+		podTemplate.Spec.SecurityContext.FSGroup = pointer.Int64P(999)
+	}
 	m.assignDefaultContainerSecurityContext(podTemplate.Spec.ContainerSecurityContext)
 }
 
