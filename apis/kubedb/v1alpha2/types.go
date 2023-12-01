@@ -17,11 +17,27 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"sync"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
+
+var (
+	mutex         sync.Mutex
+	DefaultClient client.Client
+)
+
+func SetDefaultClient(kc client.Client) {
+	if DefaultClient == nil {
+		mutex.Lock()
+		defer mutex.Unlock()
+		DefaultClient = kc
+	}
+}
 
 type InitSpec struct {
 	// Initialized indicates that this database has been initialized.
