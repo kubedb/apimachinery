@@ -28811,6 +28811,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer"
         },
+        "securityContext": {
+          "description": "SecurityContext is for the additional config for the DB container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.SecurityContext"
+        },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
           "default": {},
@@ -28989,6 +28994,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionPodSecurityPolicy"
         },
+        "securityContext": {
+          "description": "SecurityContext is for the additional config for the DB container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.SecurityContext"
+        },
         "version": {
           "description": "Version",
           "type": "string",
@@ -29162,6 +29172,11 @@
           "description": "ReplicationModeDetector Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ReplicationModeDetector"
+        },
+        "securityContext": {
+          "description": "SecurityContext is for the additional config for the DB container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.SecurityContext"
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
@@ -29451,6 +29466,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionRouterInitContainer"
         },
+        "securityContext": {
+          "description": "SecurityContext is for the additional config for the DB container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.SecurityContext"
+        },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
           "default": {},
@@ -29637,6 +29657,11 @@
           "description": "PSP names",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PerconaXtraDBVersionPodSecurityPolicy"
+        },
+        "securityContext": {
+          "description": "SecurityContext is for the additional config for the DB container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.SecurityContext"
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
@@ -30000,6 +30025,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ProxySQLVersionProxysql"
         },
+        "securityContext": {
+          "description": "SecurityContext is for the additional config for the DB container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.SecurityContext"
+        },
         "updateConstraints": {
           "description": "update constraints",
           "default": {},
@@ -30181,6 +30211,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionPodSecurityPolicy"
         },
+        "securityContext": {
+          "description": "SecurityContext is for the additional config for the DB container",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.SecurityContext"
+        },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
           "default": {},
@@ -30208,6 +30243,16 @@
         "image": {
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.SecurityContext": {
+      "description": "SecurityContext is for the additional config for the DB container",
+      "type": "object",
+      "properties": {
+        "runAsUser": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
