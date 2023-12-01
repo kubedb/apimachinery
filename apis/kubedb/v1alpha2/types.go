@@ -27,16 +27,14 @@ import (
 )
 
 var (
-	mutex         sync.Mutex
+	once          sync.Once
 	DefaultClient client.Client
 )
 
 func SetDefaultClient(kc client.Client) {
-	if DefaultClient == nil {
-		mutex.Lock()
-		defer mutex.Unlock()
+	once.Do(func() {
 		DefaultClient = kc
-	}
+	})
 }
 
 type InitSpec struct {
