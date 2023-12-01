@@ -1447,8 +1447,8 @@ kmodules.xyz/webhook-runtime v0.25.0 h1:NKNgu0C1I8kUovQ+SVozs/q7cjq8zgpSjLfJf9Cx
 kmodules.xyz/webhook-runtime v0.25.0/go.mod h1:gK2iIF0oCeQVVqH4L5nFjcguyhMPBhHMhiV5Fgb6EE0=
 kubeops.dev/sidekick v0.0.3 h1:xkIcgnOgBAblhDbsIWIJOIhAGZLzWieqPpm1VhGHTlU=
 kubeops.dev/sidekick v0.0.3/go.mod h1:h/f0nIKdRX/jrE7CbN0drhBBbEpFcAYViyVNE8dbDYM=
-kubestash.dev/apimachinery v0.2.0-rc.1 h1:K4Gmtw6cSQngFQMcBjnwOuqgKaRGXk9z9zR4bVLanpU=
-kubestash.dev/apimachinery v0.2.0-rc.1/go.mod h1:vlT+qYeOTh5GjzdKw9qhJlXxS+PvvVZivm+l7y+OUIs=
+kubestash.dev/apimachinery v0.2.0 h1:xu6Um9Z0gFgMbKzUHIJAsvh+izJ6Nl4LJPyK4SUnntE=
+kubestash.dev/apimachinery v0.2.0/go.mod h1:ouqYby7/IIHRJgadPc++tzh3vxtjIgk1pDzU0YRCCw4=
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=
 rsc.io/quote/v3 v3.1.0/go.mod h1:yEA65RcK8LyAZtP9Kv3t0HmxON59tX3rD+tICJqUlj0=
 rsc.io/sampler v1.3.0/go.mod h1:T1hPZKmBbMNahiBKFy5HrXp6adAjACjK9JXDnKaTXpA=
