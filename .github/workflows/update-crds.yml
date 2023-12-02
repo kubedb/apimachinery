@@ -55,7 +55,6 @@ jobs:
           INSTALLER_REPOSITORY: ${{ secrets.INSTALLER_REPOSITORY }}
         run: |
           export INSTALLER_ROOT=$RUNNER_WORKSPACE/$(basename $INSTALLER_REPOSITORY)
-          crd_dir=$(pwd)/crds
           cd $INSTALLER_ROOT
-          ./hack/scripts/import-crds.sh $crd_dir
+          ./hack/scripts/import-crds.sh ..
           ./hack/scripts/open-pr.sh
