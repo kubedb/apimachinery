@@ -30326,6 +30326,16 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ArbiterSpec": {
+      "type": "object",
+      "properties": {
+        "resources": {
+          "description": "Compute Resources required by the sidecar container.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Archiver": {
       "type": "object",
       "required": [
@@ -32670,6 +32680,10 @@
         "allowedSchemas": {
           "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
+        "arbiter": {
+          "description": "Arbiter controls spec for arbiter pods",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ArbiterSpec"
         },
         "archiver": {
           "description": "Archiver controls database backup using Archiver CR",
