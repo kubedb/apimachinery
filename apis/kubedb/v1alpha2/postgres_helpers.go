@@ -275,16 +275,10 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topolog
 func (p *Postgres) SetArbiterDefault() {
 	if p.Spec.Arbiter == nil {
 		p.Spec.Arbiter = &ArbiterSpec{
-			core.ResourceRequirements{
-				Requests: core.ResourceList{
-					core.ResourceStorage: resource.MustParse("2Gi"),
-				},
-				Limits: core.ResourceList{
-					core.ResourceStorage: resource.MustParse("2Gi"),
-				},
-			},
+			Resources: core.ResourceRequirements{},
 		}
 	}
+	apis.SetDefaultResourceLimits(&p.Spec.Arbiter.Resources, DefaultArbiterResources)
 }
 
 func (p *Postgres) setDefaultInitContainerSecurityContext(podTemplate *ofst.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {

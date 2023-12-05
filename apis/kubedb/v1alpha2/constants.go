@@ -676,6 +676,18 @@ var (
 			core.ResourceMemory: resource.MustParse("256Mi"),
 		},
 	}
+	DefaultArbiterResources = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceStorage: resource.MustParse("2Gi"),
+			// these are the default cpu & memory for a coordinator container
+			core.ResourceCPU:    resource.MustParse(".200"),
+			core.ResourceMemory: resource.MustParse("256Mi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceStorage: resource.MustParse("2Gi"),
+			core.ResourceMemory:  resource.MustParse("256Mi"),
+		},
+	}
 
 	// DefaultResourcesElasticSearch must be used for elasticsearch
 	// to avoid OOMKILLED while deploying ES V8
