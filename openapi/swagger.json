@@ -35116,6 +35116,9 @@
       "description": "PostgresVerticalScalingSpec is the spec for Postgres vertical scaling",
       "type": "object",
       "properties": {
+        "arbiter": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
         "coordinator": {
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
@@ -35131,6 +35134,9 @@
       "description": "PostgresVolumeExpansionSpec is the spec for Postgres volume expansion",
       "type": "object",
       "properties": {
+        "arbiter": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
         "mode": {
           "type": "string"
         },
