@@ -1008,6 +1008,7 @@ func (in *MariaDBVersionSpec) DeepCopyInto(out *MariaDBVersionSpec) {
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	out.GitSyncer = in.GitSyncer
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	out.Archiver = in.Archiver
 	return
 }
 

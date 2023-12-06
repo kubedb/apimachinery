@@ -29,6 +29,10 @@ type FakeArchiverV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeArchiverV1alpha1) MariaDBArchivers(namespace string) v1alpha1.MariaDBArchiverInterface {
+	return &FakeMariaDBArchivers{c, namespace}
+}
+
 func (c *FakeArchiverV1alpha1) MongoDBArchivers(namespace string) v1alpha1.MongoDBArchiverInterface {
 	return &FakeMongoDBArchivers{c, namespace}
 }

@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// MariaDBArchiverListerExpansion allows custom methods to be added to
+// MariaDBArchiverLister.
+type MariaDBArchiverListerExpansion interface{}
+
+// MariaDBArchiverNamespaceListerExpansion allows custom methods to be added to
+// MariaDBArchiverNamespaceLister.
+type MariaDBArchiverNamespaceListerExpansion interface{}
+
 // MongoDBArchiverListerExpansion allows custom methods to be added to
 // MongoDBArchiverLister.
 type MongoDBArchiverListerExpansion interface{}

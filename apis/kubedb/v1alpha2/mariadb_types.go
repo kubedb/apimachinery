@@ -81,7 +81,7 @@ type MariaDBSpec struct {
 	// +optional
 	Init *InitSpec `json:"init,omitempty"`
 
-	// Monitor is used monitor database instance
+	// Monitor is used to monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 

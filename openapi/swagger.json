@@ -23826,7 +23826,7 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
         },
         "monitor": {
-          "description": "Monitor is used monitor database instance",
+          "description": "Monitor is used to monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "podTemplate": {

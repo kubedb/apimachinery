@@ -25330,7 +25330,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MariaDBSpec(ref common.ReferenceCa
 					},
 					"monitor": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Monitor is used monitor database instance",
+							Description: "Monitor is used to monitor database instance",
 							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
 						},
 					},
