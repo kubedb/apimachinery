@@ -377,6 +377,9 @@ const (
 
 	SharedBuffersGbAsKiloByte = 1024 * 1024
 	SharedBuffersMbAsKiloByte = 1024
+	IPS_LOCK                  = "IPC_LOCK"
+	SYS_RESOURCE              = "SYS_RESOURCE"
+	DropCapabilityALL         = "ALL"
 
 	// =========================== ProxySQL Constants ============================
 	LabelProxySQLName                  = ProxySQLKey + "/name"
