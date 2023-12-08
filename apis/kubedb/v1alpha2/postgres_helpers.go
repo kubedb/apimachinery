@@ -261,7 +261,7 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topolog
 	// So that /var/pv directory have the group permission for the RunAsGroup user GID.
 	// Otherwise, We will get write permission denied.
 	p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup
-
+	p.SetArbiterDefault()
 	p.Spec.Monitor.SetDefaults()
 	p.SetTLSDefaults()
 	p.SetHealthCheckerDefaults()
@@ -270,6 +270,15 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topolog
 	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil && p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
 		p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = postgresVersion.Spec.SecurityContext.RunAsUser
 	}
+}
+
+func (p *Postgres) SetArbiterDefault() {
+	if p.Spec.Arbiter == nil {
+		p.Spec.Arbiter = &ArbiterSpec{
+			Resources: core.ResourceRequirements{},
+		}
+	}
+	apis.SetDefaultResourceLimits(&p.Spec.Arbiter.Resources, DefaultArbiter(false))
 }
 
 func (p *Postgres) setDefaultInitContainerSecurityContext(podTemplate *ofst.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
