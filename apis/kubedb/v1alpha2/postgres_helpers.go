@@ -334,6 +334,7 @@ func (p *Postgres) setDefaultContainerSecurityContext(podTemplate *ofst.PodTempl
 	p.setDefaultCapabilitiesForPostgres(podTemplate.Spec.ContainerSecurityContext)
 	p.assignDefaultContainerSecurityContext(podTemplate.Spec.ContainerSecurityContext, pgVersion)
 }
+
 func (p *Postgres) setDefaultCapabilitiesForPostgres(sc *core.SecurityContext) {
 	if sc.Capabilities == nil {
 		sc.Capabilities = &core.Capabilities{
@@ -361,6 +362,7 @@ func (p *Postgres) setDefaultCapabilitiesForPostgres(sc *core.SecurityContext) {
 		sc.Capabilities = newCapabilities
 	}
 }
+
 func (p *Postgres) assignDefaultContainerSecurityContext(sc *core.SecurityContext, pgVersion *catalog.PostgresVersion) {
 	if sc.AllowPrivilegeEscalation == nil {
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
