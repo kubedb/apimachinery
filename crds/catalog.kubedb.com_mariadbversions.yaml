@@ -53,6 +53,7 @@ spec:
                         enum:
                         - mongodb-addon
                         - postgres-addon
+                        - mariadb-addon
                         type: string
                       tasks:
                         properties:
