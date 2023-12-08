@@ -278,7 +278,7 @@ func (p *Postgres) SetArbiterDefault() {
 			Resources: core.ResourceRequirements{},
 		}
 	}
-	apis.SetDefaultResourceLimits(&p.Spec.Arbiter.Resources, DefaultArbiter)
+	apis.SetDefaultResourceLimits(&p.Spec.Arbiter.Resources, DefaultArbiter(false))
 }
 
 func (p *Postgres) setDefaultInitContainerSecurityContext(podTemplate *ofst.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
