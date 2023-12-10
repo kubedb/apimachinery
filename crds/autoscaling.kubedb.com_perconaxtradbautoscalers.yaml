@@ -78,6 +78,8 @@ spec:
                       trigger:
                         type: string
                     type: object
+                  targetTaintKey:
+                    type: string
                 type: object
               databaseRef:
                 properties:
@@ -221,6 +223,23 @@ spec:
                   - lastTransitionTime
                   - status
                   - type
+                  type: object
+                type: array
+              nodeGroups:
+                items:
+                  properties:
+                    capacity:
+                      additionalProperties:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
+                      type: object
+                    name:
+                      type: string
+                  required:
+                  - name
                   type: object
                 type: array
               observedGeneration:

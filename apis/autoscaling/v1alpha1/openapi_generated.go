@@ -488,6 +488,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLComputeAutoscalerSpec":                 schema_apimachinery_apis_autoscaling_v1alpha1_MySQLComputeAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLOpsRequestOptions":                     schema_apimachinery_apis_autoscaling_v1alpha1_MySQLOpsRequestOptions(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MySQLStorageAutoscalerSpec":                 schema_apimachinery_apis_autoscaling_v1alpha1_MySQLStorageAutoscalerSpec(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.NodeGroup":                                  schema_apimachinery_apis_autoscaling_v1alpha1_NodeGroup(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscaler":                    schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerList":                schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PerconaXtraDBAutoscalerSpec":                schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBAutoscalerSpec(ref),
@@ -22049,11 +22050,24 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_AutoscalerStatus(ref common.R
 							},
 						},
 					},
+					"nodeGroups": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.NodeGroup"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.Checkpoint", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPAStatus"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.Checkpoint", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.NodeGroup", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.VPAStatus"},
 	}
 }
 
@@ -22475,6 +22489,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchComputeAutoscale
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"targetTaintKey": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"node": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
@@ -23061,6 +23081,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBComputeAutoscalerSpec(
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"targetTaintKey": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"mariadb": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
@@ -23536,6 +23562,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBComputeAutoscalerSpec(
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"targetTaintKey": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"standalone": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
@@ -23794,6 +23826,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MySQLComputeAutoscalerSpec(re
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"targetTaintKey": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"mysql": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
@@ -23856,6 +23894,43 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MySQLStorageAutoscalerSpec(re
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_NodeGroup(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"capacity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Capacity represents the total resources of a node. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -24003,6 +24078,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBComputeAutoscale
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"targetTaintKey": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"perconaxtradb": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
@@ -24539,6 +24620,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PostgresComputeAutoscalerSpec
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"targetTaintKey": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"postgres": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
@@ -24736,6 +24823,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLComputeAutoscalerSpec
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"targetTaintKey": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"proxysql": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
@@ -25031,6 +25124,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_RedisComputeAutoscalerSpec(re
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"targetTaintKey": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"standalone": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),

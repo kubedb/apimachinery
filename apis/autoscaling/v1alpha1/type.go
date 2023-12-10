@@ -135,7 +135,7 @@ type AutoscalerStatus struct {
 }
 
 type NodeGroup struct {
-	Value string
+	Name string `json:"name"`
 	// Capacity represents the total resources of a node.
 	// More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity
 	// +optional
