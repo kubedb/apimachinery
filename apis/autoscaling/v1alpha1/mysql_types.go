@@ -70,6 +70,9 @@ type MySQLAutoscalerSpec struct {
 }
 
 type MySQLComputeAutoscalerSpec struct {
+	// +optional
+	TargetTaintKey string `json:"targetTaintKey,omitempty"`
+
 	MySQL *ComputeAutoscalerSpec `json:"mysql,omitempty"`
 }
 

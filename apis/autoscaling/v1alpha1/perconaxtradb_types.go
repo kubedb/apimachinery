@@ -68,6 +68,9 @@ type PerconaXtraDBAutoscalerSpec struct {
 }
 
 type PerconaXtraDBComputeAutoscalerSpec struct {
+	// +optional
+	TargetTaintKey string `json:"targetTaintKey,omitempty"`
+
 	PerconaXtraDB *ComputeAutoscalerSpec `json:"perconaxtradb,omitempty"`
 }
 

@@ -69,6 +69,9 @@ type ProxySQLAutoscalerSpec struct {
 }
 
 type ProxySQLComputeAutoscalerSpec struct {
+	// +optional
+	TargetTaintKey string `json:"targetTaintKey,omitempty"`
+
 	ProxySQL *ComputeAutoscalerSpec `json:"proxysql,omitempty"`
 }
 

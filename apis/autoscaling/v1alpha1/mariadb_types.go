@@ -68,6 +68,9 @@ type MariaDBAutoscalerSpec struct {
 }
 
 type MariaDBComputeAutoscalerSpec struct {
+	// +optional
+	TargetTaintKey string `json:"targetTaintKey,omitempty"`
+
 	MariaDB *ComputeAutoscalerSpec `json:"mariadb,omitempty"`
 }
 

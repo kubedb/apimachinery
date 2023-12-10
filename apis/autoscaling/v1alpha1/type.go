@@ -129,6 +129,17 @@ type AutoscalerStatus struct {
 	// https://github.com/kubernetes/autoscaler/blob/273e35b88cb50c5aac383c5eceb88fb337cb31b6/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1/types.go#L354-L378
 	// +optional
 	Checkpoints []Checkpoint `json:"checkpoints,omitempty"`
+
+	// +optional
+	TaintedNodeGroups []NodeGroup `json:"nodeGroups,omitempty"`
+}
+
+type NodeGroup struct {
+	Value string
+	// Capacity represents the total resources of a node.
+	// More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity
+	// +optional
+	Capacity core.ResourceList `json:"capacity,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=InProgress;Current;Terminating;Failed

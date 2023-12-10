@@ -68,6 +68,9 @@ type MongoDBAutoscalerSpec struct {
 }
 
 type MongoDBComputeAutoscalerSpec struct {
+	// +optional
+	TargetTaintKey string `json:"targetTaintKey,omitempty"`
+
 	Standalone   *ComputeAutoscalerSpec `json:"standalone,omitempty"`
 	ReplicaSet   *ComputeAutoscalerSpec `json:"replicaSet,omitempty"`
 	ConfigServer *ComputeAutoscalerSpec `json:"configServer,omitempty"`

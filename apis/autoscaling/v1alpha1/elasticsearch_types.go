@@ -70,6 +70,9 @@ type ElasticsearchAutoscalerSpec struct {
 }
 
 type ElasticsearchComputeAutoscalerSpec struct {
+	// +optional
+	TargetTaintKey string `json:"targetTaintKey,omitempty"`
+
 	Node     *ComputeAutoscalerSpec                      `json:"node,omitempty"`
 	Topology *ElasticsearchComputeTopologyAutoscalerSpec `json:"topology,omitempty"`
 }

@@ -70,6 +70,9 @@ type PostgresAutoscalerSpec struct {
 }
 
 type PostgresComputeAutoscalerSpec struct {
+	// +optional
+	TargetTaintKey string `json:"targetTaintKey,omitempty"`
+
 	Postgres *ComputeAutoscalerSpec `json:"postgres,omitempty"`
 }
 
