@@ -29132,7 +29132,7 @@
       ],
       "properties": {
         "archiver": {
-          "description": "Archiver defines the walg \u0026 stash-addon related specifications",
+          "description": "Archiver defines the walg \u0026 kube-stash-addon related specifications",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ArchiverSpec"
         },
@@ -29415,6 +29415,11 @@
         "podSecurityPolicies"
       ],
       "properties": {
+        "archiver": {
+          "description": "Archiver defines the walg \u0026 kube-stash-addon related specifications",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ArchiverSpec"
+        },
         "coordinator": {
           "description": "Coordinator Image",
           "default": {},
@@ -29835,7 +29840,7 @@
       ],
       "properties": {
         "archiver": {
-          "description": "Archiver defines the walg \u0026 stash-addon related specifications",
+          "description": "Archiver defines the walg \u0026 kube-stash-addon related specifications",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ArchiverSpec"
         },
@@ -32025,6 +32030,10 @@
         "allowedSchemas": {
           "description": "AllowedSchemas defines the types of database schemas that may refer to a database instance and the trusted namespaces where those schema resources may be present.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
+        },
+        "archiver": {
+          "description": "Archiver controls database backup using Archiver CR",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Archiver"
         },
         "authSecret": {
           "description": "Database authentication secret",
