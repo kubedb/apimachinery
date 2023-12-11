@@ -111,7 +111,7 @@ func (in *ElasticsearchAutoscaler) ValidateFields(es *dbapi.Elasticsearch) error
 		cm := in.Spec.Compute
 		if es.Spec.Topology != nil {
 			if cm.Node != nil {
-				return errors.New("Spec.Compute.Node is invalid for elastic-search topology")
+				return errors.New("Spec.Compute.PodResources is invalid for elastic-search topology")
 			}
 		} else {
 			if cm.Topology != nil {
@@ -124,7 +124,7 @@ func (in *ElasticsearchAutoscaler) ValidateFields(es *dbapi.Elasticsearch) error
 		st := in.Spec.Storage
 		if es.Spec.Topology != nil {
 			if st.Node != nil {
-				return errors.New("Spec.Storage.Node is invalid for elastic-search topology")
+				return errors.New("Spec.Storage.PodResources is invalid for elastic-search topology")
 			}
 		} else {
 			if st.Topology != nil {

@@ -175,7 +175,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"k8s.io/api/core/v1.NamespaceList":                                                     schema_k8sio_api_core_v1_NamespaceList(ref),
 		"k8s.io/api/core/v1.NamespaceSpec":                                                     schema_k8sio_api_core_v1_NamespaceSpec(ref),
 		"k8s.io/api/core/v1.NamespaceStatus":                                                   schema_k8sio_api_core_v1_NamespaceStatus(ref),
-		"k8s.io/api/core/v1.Node":                                                              schema_k8sio_api_core_v1_Node(ref),
+		"k8s.io/api/core/v1.PodResources":                                                      schema_k8sio_api_core_v1_Node(ref),
 		"k8s.io/api/core/v1.NodeAddress":                                                       schema_k8sio_api_core_v1_NodeAddress(ref),
 		"k8s.io/api/core/v1.NodeAffinity":                                                      schema_k8sio_api_core_v1_NodeAffinity(ref),
 		"k8s.io/api/core/v1.NodeCondition":                                                     schema_k8sio_api_core_v1_NodeCondition(ref),
@@ -3218,7 +3218,7 @@ func schema_k8sio_api_core_v1_AvoidPods(ref common.ReferenceCallback) common.Ope
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "AvoidPods describes pods that should avoid this node. This is the value for a Node annotation with key scheduler.alpha.kubernetes.io/preferAvoidPods and will eventually become a field of NodeStatus.",
+				Description: "AvoidPods describes pods that should avoid this node. This is the value for a PodResources annotation with key scheduler.alpha.kubernetes.io/preferAvoidPods and will eventually become a field of NodeStatus.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"preferAvoidPods": {
@@ -4207,7 +4207,7 @@ func schema_k8sio_api_core_v1_ConfigMapNodeConfigSource(ref common.ReferenceCall
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node. This API is deprecated since 1.22: https://git.k8s.io/enhancements/keps/sig-node/281-dynamic-kubelet-configuration",
+				Description: "ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the PodResources. This API is deprecated since 1.22: https://git.k8s.io/enhancements/keps/sig-node/281-dynamic-kubelet-configuration",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"namespace": {
@@ -4228,14 +4228,14 @@ func schema_k8sio_api_core_v1_ConfigMapNodeConfigSource(ref common.ReferenceCall
 					},
 					"uid": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UID is the metadata.UID of the referenced ConfigMap. This field is forbidden in Node.Spec, and required in Node.Status.",
+							Description: "UID is the metadata.UID of the referenced ConfigMap. This field is forbidden in PodResources.Spec, and required in PodResources.Status.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"resourceVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ResourceVersion is the metadata.ResourceVersion of the referenced ConfigMap. This field is forbidden in Node.Spec, and required in Node.Status.",
+							Description: "ResourceVersion is the metadata.ResourceVersion of the referenced ConfigMap. This field is forbidden in PodResources.Spec, and required in PodResources.Status.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -5094,7 +5094,7 @@ func schema_k8sio_api_core_v1_EndpointAddress(ref common.ReferenceCallback) comm
 					},
 					"nodeName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Optional: Node hosting this endpoint. This can be used to determine endpoints local to a node.",
+							Description: "Optional: PodResources hosting this endpoint. This can be used to determine endpoints local to a node.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -6186,7 +6186,7 @@ func schema_k8sio_api_core_v1_EventSource(ref common.ReferenceCallback) common.O
 					},
 					"host": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Node name on which the event is generated.",
+							Description: "PodResources name on which the event is generated.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -7747,7 +7747,7 @@ func schema_k8sio_api_core_v1_Node(ref common.ReferenceCallback) common.OpenAPID
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Node is a worker node in Kubernetes. Each node will have a unique identifier in the cache (i.e. in etcd).",
+				Description: "PodResources is a worker node in Kubernetes. Each node will have a unique identifier in the cache (i.e. in etcd).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -7802,7 +7802,7 @@ func schema_k8sio_api_core_v1_NodeAddress(ref common.ReferenceCallback) common.O
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Node address type, one of Hostname, ExternalIP or InternalIP.",
+							Description: "PodResources address type, one of Hostname, ExternalIP or InternalIP.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -7827,7 +7827,7 @@ func schema_k8sio_api_core_v1_NodeAffinity(ref common.ReferenceCallback) common.
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Node affinity is a group of node affinity scheduling rules.",
+				Description: "PodResources affinity is a group of node affinity scheduling rules.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"requiredDuringSchedulingIgnoredDuringExecution": {
@@ -7927,7 +7927,7 @@ func schema_k8sio_api_core_v1_NodeConfigSource(ref common.ReferenceCallback) com
 				Properties: map[string]spec.Schema{
 					"configMap": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConfigMap is a reference to a Node's ConfigMap",
+							Description: "ConfigMap is a reference to a PodResources's ConfigMap",
 							Ref:         ref("k8s.io/api/core/v1.ConfigMapNodeConfigSource"),
 						},
 					},
@@ -7943,12 +7943,12 @@ func schema_k8sio_api_core_v1_NodeConfigStatus(ref common.ReferenceCallback) com
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "NodeConfigStatus describes the status of the config assigned by Node.Spec.ConfigSource.",
+				Description: "NodeConfigStatus describes the status of the config assigned by PodResources.Spec.ConfigSource.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"assigned": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Assigned reports the checkpointed config the node will try to use. When Node.Spec.ConfigSource is updated, the node checkpoints the associated config payload to local disk, along with a record indicating intended config. The node refers to this record to choose its config checkpoint, and reports this record in Assigned. Assigned only updates in the status after the record has been checkpointed to disk. When the Kubelet is restarted, it tries to make the Assigned config the Active config by loading and validating the checkpointed payload identified by Assigned.",
+							Description: "Assigned reports the checkpointed config the node will try to use. When PodResources.Spec.ConfigSource is updated, the node checkpoints the associated config payload to local disk, along with a record indicating intended config. The node refers to this record to choose its config checkpoint, and reports this record in Assigned. Assigned only updates in the status after the record has been checkpointed to disk. When the Kubelet is restarted, it tries to make the Assigned config the Active config by loading and validating the checkpointed payload identified by Assigned.",
 							Ref:         ref("k8s.io/api/core/v1.NodeConfigSource"),
 						},
 					},
@@ -7983,7 +7983,7 @@ func schema_k8sio_api_core_v1_NodeDaemonEndpoints(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "NodeDaemonEndpoints lists ports opened by daemons running on the Node.",
+				Description: "NodeDaemonEndpoints lists ports opened by daemons running on the PodResources.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kubeletEndpoint": {
@@ -8037,7 +8037,7 @@ func schema_k8sio_api_core_v1_NodeList(ref common.ReferenceCallback) common.Open
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/core/v1.Node"),
+										Ref:     ref("k8s.io/api/core/v1.PodResources"),
 									},
 								},
 							},
@@ -8048,7 +8048,7 @@ func schema_k8sio_api_core_v1_NodeList(ref common.ReferenceCallback) common.Open
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Node", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+			"k8s.io/api/core/v1.PodResources", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -8056,7 +8056,7 @@ func schema_k8sio_api_core_v1_NodeProxyOptions(ref common.ReferenceCallback) com
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "NodeProxyOptions is the query options to a Node's proxy call.",
+				Description: "NodeProxyOptions is the query options to a PodResources's proxy call.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -8414,7 +8414,7 @@ func schema_k8sio_api_core_v1_NodeStatus(ref common.ReferenceCallback) common.Op
 					},
 					"daemonEndpoints": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Endpoints of daemons running on the Node.",
+							Description: "Endpoints of daemons running on the PodResources.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.NodeDaemonEndpoints"),
 						},
@@ -14110,7 +14110,7 @@ func schema_k8sio_api_core_v1_TopologySpreadConstraint(ref common.ReferenceCallb
 					},
 					"topologyKey": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TopologyKey is the key of node labels. Nodes that have a label with this key and identical values are considered to be in the same topology. We consider each <key, value> as a \"bucket\", and try to put balanced number of pods into each bucket. We define a domain as a particular instance of a topology. Also, we define an eligible domain as a domain whose nodes meet the requirements of nodeAffinityPolicy and nodeTaintsPolicy. e.g. If TopologyKey is \"kubernetes.io/hostname\", each Node is a domain of that topology. And, if TopologyKey is \"topology.kubernetes.io/zone\", each zone is a domain of that topology. It's a required field.",
+							Description: "TopologyKey is the key of node labels. Nodes that have a label with this key and identical values are considered to be in the same topology. We consider each <key, value> as a \"bucket\", and try to put balanced number of pods into each bucket. We define a domain as a particular instance of a topology. Also, we define an eligible domain as a domain whose nodes meet the requirements of nodeAffinityPolicy and nodeTaintsPolicy. e.g. If TopologyKey is \"kubernetes.io/hostname\", each PodResources is a domain of that topology. And, if TopologyKey is \"topology.kubernetes.io/zone\", each zone is a domain of that topology. It's a required field.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -22198,7 +22198,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingSpec(re
 					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Node topology specification",
+							Description: "PodResources topology specification",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingTopologySpec"),
 						},
 					},
@@ -23094,7 +23094,7 @@ func schema_apimachinery_apis_ops_v1alpha1_KafkaHorizontalScalingSpec(ref common
 					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Node topology specification",
+							Description: "PodResources topology specification",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaHorizontalScalingTopologySpec"),
 						},
 					},
@@ -23563,7 +23563,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBHorizontalScalingSpec(ref comm
 					},
 					"memberWeight": {
 						SchemaProps: spec.SchemaProps{
-							Description: "specifies the weight of the current member/Node",
+							Description: "specifies the weight of the current member/PodResources",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -25283,7 +25283,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PerconaXtraDBHorizontalScalingSpec(re
 					},
 					"memberWeight": {
 						SchemaProps: spec.SchemaProps{
-							Description: "specifies the weight of the current member/Node",
+							Description: "specifies the weight of the current member/PodResources",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
