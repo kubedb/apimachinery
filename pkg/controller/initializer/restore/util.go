@@ -325,7 +325,7 @@ func (c *Controller) extractDatabaseInfo(ri *restoreInfo) error {
 
 	var owner *metav1.OwnerReference
 	if ri.stashTarget != nil {
-		if matched, err := targetOfGroupKind(ri.stashTarget.Ref, appcat.GroupName, ab.ResourceKindApp); err == nil && matched || ri.kubeStashTarget != nil {
+		if matched, err := targetOfGroupKind(ri.stashTarget.Ref, appcat.GroupName, ab.ResourceKindApp); err == nil && matched {
 			appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stashTarget.Ref.Name, metav1.GetOptions{})
 			if err != nil {
 				return err
@@ -339,7 +339,7 @@ func (c *Controller) extractDatabaseInfo(ri *restoreInfo) error {
 			owner = metav1.GetControllerOf(sts)
 		}
 	} else {
-		appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.kubeStashTarget.Name, metav1.GetOptions{})
+		appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.kubeStashTarget.Namespace).Get(context.TODO(), ri.kubeStashTarget.Name, metav1.GetOptions{})
 		if err != nil {
 			return err
 		}

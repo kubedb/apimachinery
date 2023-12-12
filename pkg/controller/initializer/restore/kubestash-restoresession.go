@@ -19,11 +19,16 @@ package restore
 import (
 	"context"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
 	coreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
+	"sigs.k8s.io/controller-runtime/pkg/source"
 )
 
 // RestoreSessionReconciler reconciles a RestoreSession object
@@ -41,12 +46,6 @@ func (r *RestoreSessionReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
-	// Note that you also have to check the uid if you have a local controlled resource, which
-	// is dependent on the actual instance, to detect that a Job was recreated with the same name
-	rsDeepCopy := rs.DeepCopy()
-	rsDeepCopy.GetObjectKind().SetGroupVersionKind(
-		coreapi.GroupVersion.WithKind(coreapi.ResourceKindRestoreSession))
-
 	ri, err := r.ctrl.extractRestoreInfo(rs)
 	if err != nil {
 		klog.Errorln("failed to extract kubeStash invoker info. Reason: ", err)
@@ -59,9 +58,28 @@ func (r *RestoreSessionReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	return ctrl.Result{}, r.ctrl.handleRestoreInvokerEvent(ri)
 }
 
+func (r *RestoreSessionReconciler) filterReconcileWithSelector(selector metav1.LabelSelector) handler.EventHandler {
+	return handler.EnqueueRequestsFromMapFunc(func(obj client.Object) []reconcile.Request {
+		rsList := &coreapi.RestoreSessionList{}
+		if err := r.ctrl.KBClient.List(context.Background(), rsList, client.MatchingLabels(selector.MatchLabels)); err != nil {
+			return nil
+		}
+		var req []reconcile.Request
+		for _, rs := range rsList.Items {
+			req = append(req, reconcile.Request{
+				NamespacedName: types.NamespacedName{
+					Namespace: rs.Namespace,
+					Name:      rs.Name,
+				},
+			})
+		}
+		return req
+	})
+}
+
 // SetupWithManager sets up the controller with the Manager.
-func (r *RestoreSessionReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *RestoreSessionReconciler) SetupWithManager(mgr ctrl.Manager, selector metav1.LabelSelector) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&coreapi.RestoreSession{}).
+		Watches(&source.Kind{Type: &coreapi.RestoreSession{}}, r.filterReconcileWithSelector(selector)).
 		Complete(r)
 }
