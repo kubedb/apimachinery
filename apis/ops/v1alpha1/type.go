@@ -127,7 +127,9 @@ type ContainerResources struct {
 
 // PodResources is the spec for vertical scaling of pods
 type PodResources struct {
-	Topology *Topology `json:"topology,omitempty"`
+	// +optional
+	NodeSelectionPolicy nodemeta.NodeSelectionPolicy `json:"nodeSelectionPolicy,omitempty"`
+	Topology            *Topology                    `json:"topology,omitempty"`
 	// Compute Resources required by the sidecar container.
 	// +optional
 	Resources core.ResourceRequirements `json:"resources,omitempty"`
@@ -135,7 +137,6 @@ type PodResources struct {
 
 // Topology is the spec for placement of pods onto nodes
 type Topology struct {
-	SelectionPolicy nodemeta.TopologySelectionPolicy `json:"selectionPolicy"`
-	Key             string                           `json:"key"`
-	Value           string                           `json:"value"`
+	Key   string `json:"key"`
+	Value string `json:"value"`
 }

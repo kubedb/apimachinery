@@ -14717,7 +14717,7 @@ func schema_resource_metadata_apis_node_v1alpha1_NodeTopologySpec(ref common.Ref
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"topologySelectionPolicy": {
+					"nodeSelectionPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
 							Type:    []string{"string"},
@@ -14745,7 +14745,7 @@ func schema_resource_metadata_apis_node_v1alpha1_NodeTopologySpec(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"topologySelectionPolicy", "topologyKey"},
+				Required: []string{"nodeSelectionPolicy", "topologyKey"},
 			},
 		},
 		Dependencies: []string{

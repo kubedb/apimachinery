@@ -45,9 +45,9 @@ type NodeTopology struct {
 }
 
 type NodeTopologySpec struct {
-	TopologySelectionPolicy TopologySelectionPolicy `json:"topologySelectionPolicy"`
-	TopologyKey             string                  `json:"topologyKey"`
-	NodeGroups              []NodeGroup             `json:"nodeGroups,omitempty"`
+	NodeSelectionPolicy NodeSelectionPolicy `json:"nodeSelectionPolicy"`
+	TopologyKey         string              `json:"topologyKey"`
+	NodeGroups          []NodeGroup         `json:"nodeGroups,omitempty"`
 }
 
 type NodeGroup struct {
@@ -58,11 +58,11 @@ type NodeGroup struct {
 }
 
 // +kubebuilder:validation:Enum=LabelSelector;Taint
-type TopologySelectionPolicy string
+type NodeSelectionPolicy string
 
 const (
-	TopologySelectionPolicyLabelSelector TopologySelectionPolicy = "LabelSelector"
-	TopologySelectionPolicyTaint         TopologySelectionPolicy = "Taint"
+	NodeSelectionPolicyLabelSelector NodeSelectionPolicy = "LabelSelector"
+	NodeSelectionPolicyTaint         NodeSelectionPolicy = "Taint"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -59,16 +59,16 @@ spec:
                   - topologyValue
                   type: object
                 type: array
-              topologyKey:
-                type: string
-              topologySelectionPolicy:
+              nodeSelectionPolicy:
                 enum:
                 - LabelSelector
                 - Taint
                 type: string
+              topologyKey:
+                type: string
             required:
+            - nodeSelectionPolicy
             - topologyKey
-            - topologySelectionPolicy
             type: object
         type: object
     served: true

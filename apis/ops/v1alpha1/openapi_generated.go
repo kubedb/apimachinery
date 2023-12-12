@@ -25848,6 +25848,12 @@ func schema_apimachinery_apis_ops_v1alpha1_PodResources(ref common.ReferenceCall
 				Description: "PodResources is the spec for vertical scaling of pods",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"nodeSelectionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.Topology"),
@@ -27478,13 +27484,6 @@ func schema_apimachinery_apis_ops_v1alpha1_Topology(ref common.ReferenceCallback
 				Description: "Topology is the spec for placement of pods onto nodes",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"selectionPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
 					"key": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
@@ -27500,7 +27499,7 @@ func schema_apimachinery_apis_ops_v1alpha1_Topology(ref common.ReferenceCallback
 						},
 					},
 				},
-				Required: []string{"selectionPolicy", "key", "value"},
+				Required: []string{"key", "value"},
 			},
 		},
 	}

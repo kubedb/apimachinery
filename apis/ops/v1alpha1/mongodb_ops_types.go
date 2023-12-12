@@ -144,14 +144,6 @@ type MongoDBVerticalScalingSpec struct {
 	Coordinator  *ContainerResources `json:"coordinator,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=LabelSelector;Taint
-type TopologySelectionPolicy string
-
-const (
-	TopologySelectionPolicyLabelSelector TopologySelectionPolicy = "LabelSelector"
-	TopologySelectionPolicyTaint         TopologySelectionPolicy = "Taint"
-)
-
 // MongoDBVolumeExpansionSpec is the spec for mongodb volume expansion
 type MongoDBVolumeExpansionSpec struct {
 	// +kubebuilder:default="Online"

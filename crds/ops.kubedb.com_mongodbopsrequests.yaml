@@ -373,6 +373,11 @@ spec:
                 properties:
                   arbiter:
                     properties:
+                      nodeSelectionPolicy:
+                        enum:
+                        - LabelSelector
+                        - Taint
+                        type: string
                       resources:
                         properties:
                           limits:
@@ -396,21 +401,20 @@ spec:
                         properties:
                           key:
                             type: string
-                          selectionPolicy:
-                            enum:
-                            - LabelSelector
-                            - Taint
-                            type: string
                           value:
                             type: string
                         required:
                         - key
-                        - selectionPolicy
                         - value
                         type: object
                     type: object
                   configServer:
                     properties:
+                      nodeSelectionPolicy:
+                        enum:
+                        - LabelSelector
+                        - Taint
+                        type: string
                       resources:
                         properties:
                           limits:
@@ -434,16 +438,10 @@ spec:
                         properties:
                           key:
                             type: string
-                          selectionPolicy:
-                            enum:
-                            - LabelSelector
-                            - Taint
-                            type: string
                           value:
                             type: string
                         required:
                         - key
-                        - selectionPolicy
                         - value
                         type: object
                     type: object
@@ -493,6 +491,11 @@ spec:
                     type: object
                   hidden:
                     properties:
+                      nodeSelectionPolicy:
+                        enum:
+                        - LabelSelector
+                        - Taint
+                        type: string
                       resources:
                         properties:
                           limits:
@@ -516,21 +519,20 @@ spec:
                         properties:
                           key:
                             type: string
-                          selectionPolicy:
-                            enum:
-                            - LabelSelector
-                            - Taint
-                            type: string
                           value:
                             type: string
                         required:
                         - key
-                        - selectionPolicy
                         - value
                         type: object
                     type: object
                   mongos:
                     properties:
+                      nodeSelectionPolicy:
+                        enum:
+                        - LabelSelector
+                        - Taint
+                        type: string
                       resources:
                         properties:
                           limits:
@@ -554,21 +556,20 @@ spec:
                         properties:
                           key:
                             type: string
-                          selectionPolicy:
-                            enum:
-                            - LabelSelector
-                            - Taint
-                            type: string
                           value:
                             type: string
                         required:
                         - key
-                        - selectionPolicy
                         - value
                         type: object
                     type: object
                   replicaSet:
                     properties:
+                      nodeSelectionPolicy:
+                        enum:
+                        - LabelSelector
+                        - Taint
+                        type: string
                       resources:
                         properties:
                           limits:
@@ -592,21 +593,20 @@ spec:
                         properties:
                           key:
                             type: string
-                          selectionPolicy:
-                            enum:
-                            - LabelSelector
-                            - Taint
-                            type: string
                           value:
                             type: string
                         required:
                         - key
-                        - selectionPolicy
                         - value
                         type: object
                     type: object
                   shard:
                     properties:
+                      nodeSelectionPolicy:
+                        enum:
+                        - LabelSelector
+                        - Taint
+                        type: string
                       resources:
                         properties:
                           limits:
@@ -630,21 +630,20 @@ spec:
                         properties:
                           key:
                             type: string
-                          selectionPolicy:
-                            enum:
-                            - LabelSelector
-                            - Taint
-                            type: string
                           value:
                             type: string
                         required:
                         - key
-                        - selectionPolicy
                         - value
                         type: object
                     type: object
                   standalone:
                     properties:
+                      nodeSelectionPolicy:
+                        enum:
+                        - LabelSelector
+                        - Taint
+                        type: string
                       resources:
                         properties:
                           limits:
@@ -668,16 +667,10 @@ spec:
                         properties:
                           key:
                             type: string
-                          selectionPolicy:
-                            enum:
-                            - LabelSelector
-                            - Taint
-                            type: string
                           value:
                             type: string
                         required:
                         - key
-                        - selectionPolicy
                         - value
                         type: object
                     type: object

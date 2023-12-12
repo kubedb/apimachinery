@@ -2579,6 +2579,11 @@ spec:
                     type: object
                   redissentinel:
                     properties:
+                      nodeSelectionPolicy:
+                        enum:
+                        - LabelSelector
+                        - Taint
+                        type: string
                       resources:
                         properties:
                           limits:
@@ -2602,16 +2607,10 @@ spec:
                         properties:
                           key:
                             type: string
-                          selectionPolicy:
-                            enum:
-                            - LabelSelector
-                            - Taint
-                            type: string
                           value:
                             type: string
                         required:
                         - key
-                        - selectionPolicy
                         - value
                         type: object
                     type: object

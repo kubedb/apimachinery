@@ -34912,6 +34912,9 @@
       "description": "PodResources is the spec for vertical scaling of pods",
       "type": "object",
       "properties": {
+        "nodeSelectionPolicy": {
+          "type": "string"
+        },
         "resources": {
           "description": "Compute Resources required by the sidecar container.",
           "default": {},
@@ -35615,16 +35618,11 @@
       "description": "Topology is the spec for placement of pods onto nodes",
       "type": "object",
       "required": [
-        "selectionPolicy",
         "key",
         "value"
       ],
       "properties": {
         "key": {
-          "type": "string",
-          "default": ""
-        },
-        "selectionPolicy": {
           "type": "string",
           "default": ""
         },
