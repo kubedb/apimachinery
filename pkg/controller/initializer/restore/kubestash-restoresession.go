@@ -28,7 +28,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"sigs.k8s.io/controller-runtime/pkg/source"
 )
 
 // RestoreSessionReconciler reconciles a RestoreSession object
@@ -80,6 +79,6 @@ func (r *RestoreSessionReconciler) filterReconcileWithSelector(selector metav1.L
 // SetupWithManager sets up the controller with the Manager.
 func (r *RestoreSessionReconciler) SetupWithManager(mgr ctrl.Manager, selector metav1.LabelSelector) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		Watches(&source.Kind{Type: &coreapi.RestoreSession{}}, r.filterReconcileWithSelector(selector)).
+		For(&coreapi.RestoreSession{}).
 		Complete(r)
 }
