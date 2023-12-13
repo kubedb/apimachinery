@@ -33448,6 +33448,17 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources": {
+      "description": "ContainerResources is the spec for vertical scaling of containers",
+      "type": "object",
+      "properties": {
+        "resources": {
+          "description": "Compute Resources required by the sidecar container.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchCustomConfigurationSpec": {
       "description": "ElasticsearchCustomConfigurationSpec is the spec for Reconfiguring the Elasticsearch Settings",
       "type": "object",
@@ -33680,78 +33691,51 @@
       "description": "ElasticsearchVerticalScalingSpec is the spec for Elasticsearch vertical scaling",
       "type": "object",
       "properties": {
+        "coordinating": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
+        "data": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
+        "dataCold": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
+        "dataContent": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
+        "dataFrozen": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
+        "dataHot": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
+        "dataWarm": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
         "exporter": {
           "description": "Resource spec for exporter sidecar",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
+        },
+        "ingest": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
+        "master": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
+        "ml": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },
         "node": {
           "description": "Resource spec for combined nodes",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
-        "topology": {
-          "description": "Specifies the resource spec for cluster in topology mode",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVerticalScalingTopologySpec"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVerticalScalingTopologySpec": {
-      "description": "ElasticsearchVerticalScalingTopologySpec is the resource spec in the cluster topology mode",
-      "type": "object",
-      "properties": {
-        "coordinating": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
-        "data": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
-        "dataCold": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
-        "dataContent": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
-        "dataFrozen": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
-        "dataHot": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
-        "dataWarm": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
-        "ingest": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
-        "master": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-        },
-        "ml": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },
         "transform": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         }
       }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVolumeExpansionSpec": {
       "description": "ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion",
-      "type": "object",
-      "properties": {
-        "mode": {
-          "type": "string"
-        },
-        "node": {
-          "description": "volume specification for combined nodes",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
-        },
-        "topology": {
-          "description": "volume specification for nodes in cluster topology",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVolumeExpansionTopologySpec"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVolumeExpansionTopologySpec": {
-      "description": "ElasticsearchVolumeExpansionTopologySpec is the spec for Elasticsearch volume expansion in topology mode",
       "type": "object",
       "properties": {
         "coordinating": {
@@ -33785,6 +33769,13 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "ml": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "node": {
+          "description": "volume specification for combined nodes",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "transform": {
@@ -34352,31 +34343,31 @@
       "type": "object",
       "properties": {
         "arbiter": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },
         "configServer": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },
         "coordinator": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
         },
         "exporter": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
         },
         "hidden": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },
         "mongos": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },
         "replicaSet": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },
         "shard": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },
         "standalone": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         }
       }
     },
@@ -34647,13 +34638,13 @@
       "type": "object",
       "properties": {
         "coordinator": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
         },
         "exporter": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
         },
         "mysql": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         }
       }
     },
@@ -34725,7 +34716,7 @@
           "format": "int32"
         },
         "memberWeight": {
-          "description": "specifies the weight of the current member/Node",
+          "description": "specifies the weight of the current member/PodResources",
           "type": "integer",
           "format": "int32"
         }
@@ -34895,13 +34886,13 @@
       "type": "object",
       "properties": {
         "coordinator": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
         },
         "exporter": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
         },
         "perconaxtradb": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         }
       }
     },
@@ -34914,6 +34905,23 @@
         },
         "perconaxtradb": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources": {
+      "description": "PodResources is the spec for vertical scaling of pods",
+      "type": "object",
+      "properties": {
+        "nodeSelectionPolicy": {
+          "type": "string"
+        },
+        "resources": {
+          "description": "Compute Resources required by the sidecar container.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "topology": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.Topology"
         }
       }
     },
@@ -35117,16 +35125,16 @@
       "type": "object",
       "properties": {
         "arbiter": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },
         "coordinator": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
         },
         "exporter": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
         },
         "postgres": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         }
       }
     },
@@ -35312,7 +35320,7 @@
       "type": "object",
       "properties": {
         "proxysql": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         }
       }
     },
@@ -35553,13 +35561,13 @@
       "type": "object",
       "properties": {
         "coordinator": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
         },
         "exporter": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
         },
         "redis": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         }
       }
     },
@@ -35603,6 +35611,24 @@
         "rotateCertificates": {
           "description": "RotateCertificates tells operator to initiate certificate rotation",
           "type": "boolean"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.Topology": {
+      "description": "Topology is the spec for placement of pods onto nodes",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "default": ""
+        },
+        "value": {
+          "type": "string",
+          "default": ""
         }
       }
     },

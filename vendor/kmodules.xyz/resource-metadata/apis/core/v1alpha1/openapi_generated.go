@@ -314,6 +314,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.PodView":                           schema_resource_metadata_apis_core_v1alpha1_PodView(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.PodViewList":                       schema_resource_metadata_apis_core_v1alpha1_PodViewList(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.PodViewSpec":                       schema_resource_metadata_apis_core_v1alpha1_PodViewSpec(ref),
+		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.Project":                           schema_resource_metadata_apis_core_v1alpha1_Project(ref),
+		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ProjectList":                       schema_resource_metadata_apis_core_v1alpha1_ProjectList(ref),
+		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ProjectMonitoring":                 schema_resource_metadata_apis_core_v1alpha1_ProjectMonitoring(ref),
+		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ProjectSpec":                       schema_resource_metadata_apis_core_v1alpha1_ProjectSpec(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceSummary":                   schema_resource_metadata_apis_core_v1alpha1_ResourceSummary(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceSummaryList":               schema_resource_metadata_apis_core_v1alpha1_ResourceSummaryList(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceSummarySpec":               schema_resource_metadata_apis_core_v1alpha1_ResourceSummarySpec(ref),
@@ -324,15 +328,20 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/resource-metadata/apis/shared.ActionInfo":                               schema_kmodulesxyz_resource_metadata_apis_shared_ActionInfo(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.ActionTemplate":                           schema_kmodulesxyz_resource_metadata_apis_shared_ActionTemplate(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.ActionTemplateGroup":                      schema_kmodulesxyz_resource_metadata_apis_shared_ActionTemplateGroup(ref),
-		"kmodules.xyz/resource-metadata/apis/shared.ChartRepoRef":                             schema_kmodulesxyz_resource_metadata_apis_shared_ChartRepoRef(ref),
+		"kmodules.xyz/resource-metadata/apis/shared.BootstrapPresets":                         schema_kmodulesxyz_resource_metadata_apis_shared_BootstrapPresets(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.Dashboard":                                schema_kmodulesxyz_resource_metadata_apis_shared_Dashboard(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.DashboardVar":                             schema_kmodulesxyz_resource_metadata_apis_shared_DashboardVar(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.DeploymentParameters":                     schema_kmodulesxyz_resource_metadata_apis_shared_DeploymentParameters(ref),
-		"kmodules.xyz/resource-metadata/apis/shared.ExpandedChartRepoRef":                     schema_kmodulesxyz_resource_metadata_apis_shared_ExpandedChartRepoRef(ref),
+		"kmodules.xyz/resource-metadata/apis/shared.HelmInfo":                                 schema_kmodulesxyz_resource_metadata_apis_shared_HelmInfo(ref),
+		"kmodules.xyz/resource-metadata/apis/shared.HelmRelease":                              schema_kmodulesxyz_resource_metadata_apis_shared_HelmRelease(ref),
+		"kmodules.xyz/resource-metadata/apis/shared.HelmRepository":                           schema_kmodulesxyz_resource_metadata_apis_shared_HelmRepository(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.If":                                       schema_kmodulesxyz_resource_metadata_apis_shared_If(ref),
-		"kmodules.xyz/resource-metadata/apis/shared.ImageSpec":                                schema_kmodulesxyz_resource_metadata_apis_shared_ImageSpec(ref),
+		"kmodules.xyz/resource-metadata/apis/shared.ImageRegistrySpec":                        schema_kmodulesxyz_resource_metadata_apis_shared_ImageRegistrySpec(ref),
+		"kmodules.xyz/resource-metadata/apis/shared.RegistryInfo":                             schema_kmodulesxyz_resource_metadata_apis_shared_RegistryInfo(ref),
+		"kmodules.xyz/resource-metadata/apis/shared.RegistryProxies":                          schema_kmodulesxyz_resource_metadata_apis_shared_RegistryProxies(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.ResourceLocator":                          schema_kmodulesxyz_resource_metadata_apis_shared_ResourceLocator(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.ResourceQuery":                            schema_kmodulesxyz_resource_metadata_apis_shared_ResourceQuery(ref),
+		"kmodules.xyz/resource-metadata/apis/shared.SourceLocator":                            schema_kmodulesxyz_resource_metadata_apis_shared_SourceLocator(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.UIParameterTemplate":                      schema_kmodulesxyz_resource_metadata_apis_shared_UIParameterTemplate(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.UIParameters":                             schema_kmodulesxyz_resource_metadata_apis_shared_UIParameters(ref),
 	}
@@ -15673,6 +15682,196 @@ func schema_resource_metadata_apis_core_v1alpha1_PodViewSpec(ref common.Referenc
 	}
 }
 
+func schema_resource_metadata_apis_core_v1alpha1_Project(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Project is the Schema for the projects API",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/resource-metadata/apis/core/v1alpha1.ProjectSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.ProjectSpec"},
+	}
+}
+
+func schema_resource_metadata_apis_core_v1alpha1_ProjectList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ProjectList contains a list of Project",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/resource-metadata/apis/core/v1alpha1.Project"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.Project"},
+	}
+}
+
+func schema_resource_metadata_apis_core_v1alpha1_ProjectMonitoring(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"prometheusURL": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"grafanaURL": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"alertmanagerURL": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"prometheusRef": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"alertmanagerRef": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference"},
+	}
+}
+
+func schema_resource_metadata_apis_core_v1alpha1_ProjectSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ProjectSpec defines the desired state of Project",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"namespaces": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"namespaceSelector": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+					"monitoring": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/resource-metadata/apis/core/v1alpha1.ProjectMonitoring"),
+						},
+					},
+					"presets": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/resource-metadata/apis/shared.SourceLocator"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.ProjectMonitoring", "kmodules.xyz/resource-metadata/apis/shared.SourceLocator"},
+	}
+}
+
 func schema_resource_metadata_apis_core_v1alpha1_ResourceSummary(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -15925,7 +16124,7 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_Action(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/resource-metadata/apis/shared.ImageSpec"),
+										Ref:     ref("x-helm.dev/apimachinery/apis/shared.ImageSpec"),
 									},
 								},
 							},
@@ -15954,7 +16153,7 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_Action(ref common.Referenc
 					},
 					"editor": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/resource-metadata/apis/shared.ExpandedChartRepoRef"),
+							Ref: ref("x-helm.dev/apimachinery/apis/releases/v1alpha1.ChartSourceRef"),
 						},
 					},
 				},
@@ -15962,7 +16161,7 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_Action(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/resource-metadata/apis/shared.ExpandedChartRepoRef", "kmodules.xyz/resource-metadata/apis/shared.ImageSpec"},
+			"x-helm.dev/apimachinery/apis/releases/v1alpha1.ChartSourceRef", "x-helm.dev/apimachinery/apis/shared.ImageSpec"},
 	}
 }
 
@@ -16055,7 +16254,7 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_ActionTemplate(ref common.
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/resource-metadata/apis/shared.ImageSpec"),
+										Ref:     ref("x-helm.dev/apimachinery/apis/shared.ImageSpec"),
 									},
 								},
 							},
@@ -16083,15 +16282,22 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_ActionTemplate(ref common.
 					},
 					"editor": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/resource-metadata/apis/shared.ExpandedChartRepoRef"),
+							Ref: ref("x-helm.dev/apimachinery/apis/releases/v1alpha1.ChartSourceRef"),
+						},
+					},
+					"enforceQuota": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
 						},
 					},
 				},
-				Required: []string{"operationId", "flow"},
+				Required: []string{"operationId", "flow", "enforceQuota"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/resource-metadata/apis/shared.ExpandedChartRepoRef", "kmodules.xyz/resource-metadata/apis/shared.ImageSpec"},
+			"x-helm.dev/apimachinery/apis/releases/v1alpha1.ChartSourceRef", "x-helm.dev/apimachinery/apis/shared.ImageSpec"},
 	}
 }
 
@@ -16135,39 +16341,43 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_ActionTemplateGroup(ref co
 	}
 }
 
-func schema_kmodulesxyz_resource_metadata_apis_shared_ChartRepoRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kmodulesxyz_resource_metadata_apis_shared_BootstrapPresets(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ChartRepoRef references to a single version of a Chart",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"name": {
+					"offlineInstaller": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
+							Default: false,
+							Type:    []string{"boolean"},
 							Format:  "",
 						},
 					},
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"sourceRef": {
+					"image": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
+							Ref:     ref("kmodules.xyz/resource-metadata/apis/shared.ImageRegistrySpec"),
+						},
+					},
+					"registry": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/resource-metadata/apis/shared.RegistryInfo"),
+						},
+					},
+					"helm": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/resource-metadata/apis/shared.HelmInfo"),
 						},
 					},
 				},
-				Required: []string{"name", "version", "sourceRef"},
+				Required: []string{"image", "registry", "helm"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.TypedObjectReference"},
+			"kmodules.xyz/resource-metadata/apis/shared.HelmInfo", "kmodules.xyz/resource-metadata/apis/shared.ImageRegistrySpec", "kmodules.xyz/resource-metadata/apis/shared.RegistryInfo"},
 	}
 }
 
@@ -16276,34 +16486,68 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_DeploymentParameters(ref c
 					},
 					"chart": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/resource-metadata/apis/shared.ChartRepoRef"),
+							Ref: ref("x-helm.dev/apimachinery/apis/releases/v1alpha1.ChartSourceRef"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/resource-metadata/apis/shared.ChartRepoRef"},
+			"x-helm.dev/apimachinery/apis/releases/v1alpha1.ChartSourceRef"},
 	}
 }
 
-func schema_kmodulesxyz_resource_metadata_apis_shared_ExpandedChartRepoRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kmodulesxyz_resource_metadata_apis_shared_HelmInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ExpandedChartRepoRef references to a single version of a Chart",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"url": {
+					"repositories": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kmodules.xyz/resource-metadata/apis/shared.HelmRepository"),
+									},
+								},
+							},
 						},
 					},
-					"name": {
+					"releases": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kmodules.xyz/resource-metadata/apis/shared.HelmRelease"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"repositories", "releases"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/resource-metadata/apis/shared.HelmRelease", "kmodules.xyz/resource-metadata/apis/shared.HelmRepository"},
+	}
+}
+
+func schema_kmodulesxyz_resource_metadata_apis_shared_HelmRelease(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
 							Format:  "",
 						},
 					},
@@ -16314,10 +16558,73 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_ExpandedChartRepoRef(ref c
 							Format:  "",
 						},
 					},
+					"values": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
 				},
-				Required: []string{"name", "version"},
+				Required: []string{"enabled", "version"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
+	}
+}
+
+func schema_kmodulesxyz_resource_metadata_apis_shared_HelmRepository(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"url": {
+						SchemaProps: spec.SchemaProps{
+							Description: "URL of the Helm repository, a valid URL contains at least a protocol and host.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"secretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretRef specifies the Secret containing authentication credentials for the HelmRepository. For HTTP/S basic auth the secret must contain 'username' and 'password' fields. For TLS the secret must contain a 'certFile' and 'keyFile', and/or 'caFile' fields.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"interval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Interval at which to check the URL for updates.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The timeout of index downloading, defaults to 60s.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type of the HelmRepository. When this field is set to  \"oci\", the URL field value must be prefixed with \"oci://\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"provider": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Provider used for authentication, can be 'aws', 'azure', 'gcp' or 'generic'. This field is optional, and only taken into account if the .spec.type field is set to 'oci'. When not specified, defaults to 'generic'.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"url"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -16346,37 +16653,108 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_If(ref common.ReferenceCal
 	}
 }
 
-func schema_kmodulesxyz_resource_metadata_apis_shared_ImageSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_kmodulesxyz_resource_metadata_apis_shared_ImageRegistrySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ImageSpec contains information about an image used as an icon.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"src": {
+					"proxies": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The source for image represented as either an absolute URL to the image or a Data URL containing the image. Data URLs are defined in RFC 2397.",
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/resource-metadata/apis/shared.RegistryProxies"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/resource-metadata/apis/shared.RegistryProxies"},
+	}
+}
+
+func schema_kmodulesxyz_resource_metadata_apis_shared_RegistryInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"credentials": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_resource_metadata_apis_shared_RegistryProxies(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dockerHub": {
+						SchemaProps: spec.SchemaProps{
+							Description: "company/bin:1.23",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"size": {
+					"dockerLibrary": {
 						SchemaProps: spec.SchemaProps{
-							Description: "(optional) The size of the image in pixels (e.g., 25x25).",
+							Description: "alpine, nginx etc.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"type": {
+					"ghcr": {
 						SchemaProps: spec.SchemaProps{
-							Description: "(optional) The mine type of the image (e.g., \"image/png\").",
+							Description: "ghcr.io",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"quay": {
+						SchemaProps: spec.SchemaProps{
+							Description: "quay.io",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"kubernetes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "registry.k8s.io",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"appscode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "r.appscode.com",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"src"},
 			},
 		},
 	}
@@ -16441,6 +16819,32 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_ResourceQuery(ref common.R
 	}
 }
 
+func schema_kmodulesxyz_resource_metadata_apis_shared_SourceLocator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/client-go/api/v1.ResourceID"),
+						},
+					},
+					"ref": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.ResourceID"},
+	}
+}
+
 func schema_kmodulesxyz_resource_metadata_apis_shared_UIParameterTemplate(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -16449,12 +16853,19 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_UIParameterTemplate(ref co
 				Properties: map[string]spec.Schema{
 					"options": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/resource-metadata/apis/shared.ExpandedChartRepoRef"),
+							Ref: ref("x-helm.dev/apimachinery/apis/releases/v1alpha1.ChartSourceRef"),
 						},
 					},
 					"editor": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/resource-metadata/apis/shared.ExpandedChartRepoRef"),
+							Ref: ref("x-helm.dev/apimachinery/apis/releases/v1alpha1.ChartSourceRef"),
+						},
+					},
+					"enforceQuota": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
 						},
 					},
 					"actions": {
@@ -16485,10 +16896,11 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_UIParameterTemplate(ref co
 						},
 					},
 				},
+				Required: []string{"enforceQuota"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/resource-metadata/apis/shared.ActionTemplateGroup", "kmodules.xyz/resource-metadata/apis/shared.ExpandedChartRepoRef"},
+			"kmodules.xyz/resource-metadata/apis/shared.ActionTemplateGroup", "x-helm.dev/apimachinery/apis/releases/v1alpha1.ChartSourceRef"},
 	}
 }
 
@@ -16500,12 +16912,12 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_UIParameters(ref common.Re
 				Properties: map[string]spec.Schema{
 					"options": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/resource-metadata/apis/shared.ExpandedChartRepoRef"),
+							Ref: ref("x-helm.dev/apimachinery/apis/releases/v1alpha1.ChartSourceRef"),
 						},
 					},
 					"editor": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/resource-metadata/apis/shared.ExpandedChartRepoRef"),
+							Ref: ref("x-helm.dev/apimachinery/apis/releases/v1alpha1.ChartSourceRef"),
 						},
 					},
 					"actions": {
@@ -16539,6 +16951,6 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_UIParameters(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/resource-metadata/apis/shared.ActionGroup", "kmodules.xyz/resource-metadata/apis/shared.ExpandedChartRepoRef"},
+			"kmodules.xyz/resource-metadata/apis/shared.ActionGroup", "x-helm.dev/apimachinery/apis/releases/v1alpha1.ChartSourceRef"},
 	}
 }
