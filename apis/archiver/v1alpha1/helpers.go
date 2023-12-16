@@ -39,5 +39,5 @@ func (_ MySQLArchiver) CustomResourceDefinition() *apiextensions.CustomResourceD
 }
 
 func (_ MariaDBArchiver) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMongoDBArchiver))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMariaDBArchiver))
 }
