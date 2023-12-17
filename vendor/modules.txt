@@ -1517,7 +1517,7 @@ kmodules.xyz/offshoot-api/api/v1
 # kmodules.xyz/prober v0.25.0
 ## explicit; go 1.18
 kmodules.xyz/prober/api/v1
-# kmodules.xyz/resource-metadata v0.17.41-0.20231211231516-86083e326124
+# kmodules.xyz/resource-metadata v0.17.42
 ## explicit; go 1.18
 kmodules.xyz/resource-metadata/apis/core/v1alpha1
 kmodules.xyz/resource-metadata/apis/management

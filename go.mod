@@ -34,7 +34,7 @@ require (
 	kmodules.xyz/monitoring-agent-api v0.25.6
 	kmodules.xyz/objectstore-api v0.25.1
 	kmodules.xyz/offshoot-api v0.25.5
-	kmodules.xyz/resource-metadata v0.17.41-0.20231211231516-86083e326124
+	kmodules.xyz/resource-metadata v0.17.42
 	kmodules.xyz/webhook-runtime v0.25.0
 	kubeops.dev/sidekick v0.0.4
 	kubestash.dev/apimachinery v0.2.0
