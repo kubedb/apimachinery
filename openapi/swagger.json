@@ -30621,6 +30621,15 @@
           "description": "An eviction is allowed if at most \"maxUnavailable\" pods selected by \"selector\" are unavailable after the eviction, i.e. even in absence of the evicted pod. For example, one can prevent all voluntary evictions by specifying 0. This is a mutually exclusive setting with \"minAvailable\".",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
         },
+        "nodeSelector": {
+          "description": "NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-map-type": "atomic"
+        },
         "replicas": {
           "description": "Replicas represents number of replica for this specific type of node",
           "type": "integer",
@@ -30637,6 +30646,14 @@
         },
         "suffix": {
           "type": "string"
+        },
+        "tolerations": {
+          "description": "If specified, the pod's tolerations.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
         }
       }
     },
