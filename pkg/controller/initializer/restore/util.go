@@ -65,9 +65,9 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 		ri.invoker.Kind = inv.Kind
 		ri.invoker.Name = inv.Name
 		// target information
-		ri.stashTarget = inv.Spec.Target
+		ri.stash.target = inv.Spec.Target
 		// restore status
-		ri.stashPhase = inv.Status.Phase
+		ri.stash.phase = inv.Status.Phase
 		// database information
 		ri.do.Namespace = inv.Namespace
 		ri.invokerUID = inv.UID
@@ -78,13 +78,13 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 		ri.invoker.Name = inv.Name
 		// target information
 		// RestoreBatch can have multiple targets. In this case, only the database related target's phase does matter.
-		ri.stashTarget, err = c.identifyTarget(inv.Spec.Members, ri.do.Namespace)
+		ri.stash.target, err = c.identifyTarget(inv.Spec.Members, ri.do.Namespace)
 		if err != nil {
 			return ri, err
 		}
 		// restore status
 		// RestoreBatch can have multiple targets. In this case, finding the appropriate target is necessary.
-		ri.stashPhase = getTargetPhase(inv.Status, ri.stashTarget)
+		ri.stash.phase = getTargetPhase(inv.Status, ri.stash.target)
 		// database information
 		ri.do.Namespace = inv.Namespace
 		ri.invokerUID = inv.UID
@@ -94,9 +94,9 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 		ri.invoker.Kind = inv.Kind
 		ri.invoker.Name = inv.Name
 		// target information
-		ri.kubeStashTarget = inv.Spec.Target
+		ri.kubestash.target = inv.Spec.Target
 		// kubeStash status
-		ri.kubeStashPhase = inv.Status.Phase
+		ri.kubestash.phase = inv.Status.Phase
 		// database information
 		ri.do.Namespace = inv.Namespace
 		ri.invokerUID = inv.UID
@@ -116,7 +116,7 @@ func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
 		return fmt.Errorf("invalid restore information. it must not be nil")
 	}
 	// If the target could not be identified properly, we can't process further.
-	if ri.stashTarget == nil && ri.kubeStashTarget == nil {
+	if ri.stash.target == nil && ri.kubestash.target == nil {
 		return fmt.Errorf("couldn't identify the restore target from invoker: %s/%s/%s", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name)
 	}
 
@@ -158,7 +158,7 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 		return fmt.Errorf("invalid restore information. it must not be nil")
 	}
 	// If the target could not be identified properly, we can't process further.
-	if ri.stashTarget == nil && ri.kubeStashTarget == nil {
+	if ri.stash.target == nil && ri.kubestash.target == nil {
 		return fmt.Errorf("couldn't identify the restore target from invoker: %s/%s/%s", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name)
 	}
 
@@ -169,7 +169,7 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 		dbCond := kmapi.Condition{
 			Type: api.DatabaseDataRestored,
 		}
-		if (ri.stashTarget != nil && ri.stashPhase == v1beta1.RestoreSucceeded) || (ri.kubeStashTarget != nil && ri.kubeStashPhase == coreapi.RestoreSucceeded) {
+		if (ri.stash.target != nil && ri.stash.phase == v1beta1.RestoreSucceeded) || (ri.kubestash.target != nil && ri.kubestash.phase == coreapi.RestoreSucceeded) {
 			dbCond.Status = metav1.ConditionTrue
 			dbCond.Reason = api.DatabaseSuccessfullyRestored
 			dbCond.Message = fmt.Sprintf("Successfully restored data by initializer %s %s/%s with UID %s",
@@ -320,27 +320,27 @@ func (c *Controller) extractDatabaseInfo(ri *restoreInfo) error {
 	if ri == nil {
 		return fmt.Errorf("invalid restoreInfo. It must not be nil")
 	}
-	if ri.stashTarget == nil && ri.kubeStashTarget == nil {
+	if ri.stash.target == nil && ri.kubestash.target == nil {
 		return fmt.Errorf("invalid target. It must not be nil")
 	}
 
 	var owner *metav1.OwnerReference
-	if ri.stashTarget != nil {
-		if matched, err := targetOfGroupKind(ri.stashTarget.Ref, appcat.GroupName, ab.ResourceKindApp); err == nil && matched {
-			appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stashTarget.Ref.Name, metav1.GetOptions{})
+	if ri.stash.target != nil {
+		if matched, err := targetOfGroupKind(ri.stash.target.Ref, appcat.GroupName, ab.ResourceKindApp); err == nil && matched {
+			appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stash.target.Ref.Name, metav1.GetOptions{})
 			if err != nil {
 				return err
 			}
 			owner = metav1.GetControllerOf(appBinding)
-		} else if matched, err := targetOfGroupKind(ri.stashTarget.Ref, apps.GroupName, sapis.KindStatefulSet); err == nil && matched {
-			sts, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stashTarget.Ref.Name, metav1.GetOptions{})
+		} else if matched, err := targetOfGroupKind(ri.stash.target.Ref, apps.GroupName, sapis.KindStatefulSet); err == nil && matched {
+			sts, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.do.Namespace).Get(context.TODO(), ri.stash.target.Ref.Name, metav1.GetOptions{})
 			if err != nil {
 				return err
 			}
 			owner = metav1.GetControllerOf(sts)
 		}
 	} else {
-		appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.kubeStashTarget.Namespace).Get(context.TODO(), ri.kubeStashTarget.Name, metav1.GetOptions{})
+		appBinding, err := c.AppCatalogClient.AppcatalogV1alpha1().AppBindings(ri.kubestash.target.Namespace).Get(context.TODO(), ri.kubestash.target.Name, metav1.GetOptions{})
 		if err != nil {
 			return err
 		}
@@ -391,13 +391,13 @@ func (c *Controller) writeRestoreCompletionEvent(do dmcond.DynamicOptions, cond 
 }
 
 func isDataRestoreCompleted(ri *restoreInfo) bool {
-	if ri.stashTarget != nil {
-		return ri.stashPhase == v1beta1.RestoreSucceeded ||
-			ri.stashPhase == v1beta1.RestoreFailed ||
-			ri.stashPhase == v1beta1.RestorePhaseUnknown
+	if ri.stash.target != nil {
+		return ri.stash.phase == v1beta1.RestoreSucceeded ||
+			ri.stash.phase == v1beta1.RestoreFailed ||
+			ri.stash.phase == v1beta1.RestorePhaseUnknown
 	} else {
-		return ri.kubeStashPhase == coreapi.RestoreSucceeded ||
-			ri.kubeStashPhase == coreapi.RestoreFailed ||
-			ri.kubeStashPhase == coreapi.RestorePhaseUnknown
+		return ri.kubestash.phase == coreapi.RestoreSucceeded ||
+			ri.kubestash.phase == coreapi.RestoreFailed ||
+			ri.kubestash.phase == coreapi.RestorePhaseUnknown
 	}
 }

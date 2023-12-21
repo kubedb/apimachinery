@@ -59,13 +59,21 @@ func NewController(
 }
 
 type restoreInfo struct {
-	invoker         core.TypedLocalObjectReference
-	stashTarget     *v1beta1.RestoreTarget
-	kubeStashTarget *kmapi.TypedObjectReference
-	stashPhase      v1beta1.RestorePhase
-	kubeStashPhase  coreapi.RestorePhase
-	do              dmcond.DynamicOptions
-	invokerUID      types.UID
+	invoker    core.TypedLocalObjectReference
+	stash      *stashInfo
+	kubestash  *kubestashInfo
+	do         dmcond.DynamicOptions
+	invokerUID types.UID
+}
+
+type stashInfo struct {
+	target *v1beta1.RestoreTarget
+	phase  v1beta1.RestorePhase
+}
+
+type kubestashInfo struct {
+	target *kmapi.TypedObjectReference
+	phase  coreapi.RestorePhase
 }
 
 func Configure(cfg *rest.Config, s *amc.StashInitializer, resyncPeriod time.Duration) error {
@@ -77,7 +85,7 @@ func Configure(cfg *rest.Config, s *amc.StashInitializer, resyncPeriod time.Dura
 	return nil
 }
 
-func (c *Controller) StartAfterStashInstalled(maxNumRequeues, numThreads int, selector metav1.LabelSelector, stopCh <-chan struct{}) {
+func (c *Controller) StartAfterStashInstalled(stopCh <-chan struct{}, maxNumRequeues, numThreads int, selector metav1.LabelSelector) {
 	// Wait until Stash operator installed
 	if err := c.waitUntilStashInstalled(stopCh); err != nil {
 		klog.Errorln("error during waiting for RestoreSession crd. Reason: ", err)
