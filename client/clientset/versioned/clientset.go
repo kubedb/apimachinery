@@ -27,6 +27,7 @@ import (
 	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 	configv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/config/v1alpha1"
 	dashboardv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/dashboard/v1alpha1"
+	kafkav1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kafka/v1alpha1"
 	kubedbv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1"
 	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
@@ -46,6 +47,7 @@ type Interface interface {
 	CatalogV1alpha1() catalogv1alpha1.CatalogV1alpha1Interface
 	ConfigV1alpha1() configv1alpha1.ConfigV1alpha1Interface
 	DashboardV1alpha1() dashboardv1alpha1.DashboardV1alpha1Interface
+	KafkaV1alpha1() kafkav1alpha1.KafkaV1alpha1Interface
 	KubedbV1alpha1() kubedbv1alpha1.KubedbV1alpha1Interface
 	KubedbV1alpha2() kubedbv1alpha2.KubedbV1alpha2Interface
 	OpsV1alpha1() opsv1alpha1.OpsV1alpha1Interface
@@ -62,6 +64,7 @@ type Clientset struct {
 	catalogV1alpha1     *catalogv1alpha1.CatalogV1alpha1Client
 	configV1alpha1      *configv1alpha1.ConfigV1alpha1Client
 	dashboardV1alpha1   *dashboardv1alpha1.DashboardV1alpha1Client
+	kafkaV1alpha1       *kafkav1alpha1.KafkaV1alpha1Client
 	kubedbV1alpha1      *kubedbv1alpha1.KubedbV1alpha1Client
 	kubedbV1alpha2      *kubedbv1alpha2.KubedbV1alpha2Client
 	opsV1alpha1         *opsv1alpha1.OpsV1alpha1Client
@@ -93,6 +96,11 @@ func (c *Clientset) ConfigV1alpha1() configv1alpha1.ConfigV1alpha1Interface {
 // DashboardV1alpha1 retrieves the DashboardV1alpha1Client
 func (c *Clientset) DashboardV1alpha1() dashboardv1alpha1.DashboardV1alpha1Interface {
 	return c.dashboardV1alpha1
+}
+
+// KafkaV1alpha1 retrieves the KafkaV1alpha1Client
+func (c *Clientset) KafkaV1alpha1() kafkav1alpha1.KafkaV1alpha1Interface {
+	return c.kafkaV1alpha1
 }
 
 // KubedbV1alpha1 retrieves the KubedbV1alpha1Client
@@ -189,6 +197,10 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 	if err != nil {
 		return nil, err
 	}
+	cs.kafkaV1alpha1, err = kafkav1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	if err != nil {
+		return nil, err
+	}
 	cs.kubedbV1alpha1, err = kubedbv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
@@ -239,6 +251,7 @@ func New(c rest.Interface) *Clientset {
 	cs.catalogV1alpha1 = catalogv1alpha1.New(c)
 	cs.configV1alpha1 = configv1alpha1.New(c)
 	cs.dashboardV1alpha1 = dashboardv1alpha1.New(c)
+	cs.kafkaV1alpha1 = kafkav1alpha1.New(c)
 	cs.kubedbV1alpha1 = kubedbv1alpha1.New(c)
 	cs.kubedbV1alpha2 = kubedbv1alpha2.New(c)
 	cs.opsV1alpha1 = opsv1alpha1.New(c)
