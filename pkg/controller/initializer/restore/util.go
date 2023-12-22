@@ -70,8 +70,9 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 		ri.invokerUID = inv.UID
 
 		// stash information
-		if ri.stash, err = c.getStashInfo(inv); err != nil {
-			return ri, err
+		ri.stash = &stashInfo{
+			target: ri.stash.target,
+			phase:  ri.stash.phase,
 		}
 	case *v1beta1.RestoreBatch:
 		// invoker information
@@ -84,9 +85,16 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 		ri.invokerUID = inv.UID
 
 		// stash information
-		if ri.stash, err = c.getStashInfo(inv); err != nil {
-			return ri, err
+		// RestoreBatch can have multiple targets. In this case, only the database related target's phase does matter.
+		info := &stashInfo{}
+		if info.target, err = c.identifyTarget(inv.Spec.Members, ri.do.Namespace); err != nil {
+			return nil, err
 		}
+
+		// restore status
+		// RestoreBatch can have multiple targets. In this case, finding the appropriate target is necessary.
+		info.phase = getTargetPhase(inv.Status, info.target)
+		ri.stash = info
 	case *coreapi.RestoreSession:
 		// invoker information
 		ri.invoker.APIGroup = pointer.StringP(storageapi.GroupVersion.Group)
@@ -111,30 +119,6 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 		return nil, err
 	}
 	return ri, nil
-}
-
-func (c *Controller) getStashInfo(inv interface{}) (*stashInfo, error) {
-	var err error
-	info := &stashInfo{}
-	switch inv := inv.(type) {
-	case *v1beta1.RestoreSession:
-		info.target = inv.Spec.Target
-		info.phase = inv.Status.Phase
-	case *v1beta1.RestoreBatch:
-		// target information
-		// RestoreBatch can have multiple targets. In this case, only the database related target's phase does matter.
-		if info.target, err = c.identifyTarget(inv.Spec.Members, inv.Namespace); err != nil {
-			return info, err
-		}
-
-		// restore status
-		// RestoreBatch can have multiple targets. In this case, finding the appropriate target is necessary.
-		info.phase = getTargetPhase(inv.Status, info.target)
-	default:
-		return nil, fmt.Errorf("unknown restore invoker type")
-	}
-
-	return info, nil
 }
 
 func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
