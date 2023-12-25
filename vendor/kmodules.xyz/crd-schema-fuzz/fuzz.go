@@ -1,8 +1,9 @@
 package crdfuzz
 
 import (
-	"io/ioutil"
 	"math/rand"
+	"os"
+	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -57,7 +58,14 @@ func SchemaFuzzTestForObject(t *testing.T, scheme *runtime.Scheme, obj runtime.O
 			t.Fatalf("Failed to convert type to `runtime.Unstructured`: %v", err)
 			return
 		}
-		structuralpruning.Prune(pruned, schema, true)
+		unknownFieldPaths := structuralpruning.PruneWithOptions(obj, schema, true, structuralschema.UnknownFieldPathOptions{
+			TrackUnknownFieldPaths: true,
+			ParentPath:             nil,
+			UnknownFieldPaths:      nil,
+		})
+		if len(unknownFieldPaths) > 0 {
+			t.Fatalf("unknownFieldPaths: %s", strings.Join(unknownFieldPaths, ","))
+		}
 		if !cmp.Equal(unstructuredFuzzed, pruned, cmp.Transformer("ObjectMeta", func(m map[string]interface{}) map[string]interface{} {
 			if m["creationTimestamp"] == nil {
 				delete(m, "creationTimestamp")
@@ -128,7 +136,7 @@ func SchemaFuzzTestForCRDWithPath(t *testing.T, scheme *runtime.Scheme, path str
 	convertor := runtime.UnsafeObjectConvertor(internalScheme)
 	codec := versioning.NewCodec(serializer, serializer, convertor, internalScheme, internalScheme, internalScheme, runtime.InternalGroupVersioner, runtime.InternalGroupVersioner, internalScheme.Name())
 
-	data, err := ioutil.ReadFile(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		t.Fatalf("Failed to read CRD input file %q: %v", path, err)
 		return

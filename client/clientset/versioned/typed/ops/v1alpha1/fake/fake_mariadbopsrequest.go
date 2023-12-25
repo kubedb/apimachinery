@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakeMariaDBOpsRequests struct {
 	ns   string
 }
 
-var mariadbopsrequestsResource = schema.GroupVersionResource{Group: "ops.kubedb.com", Version: "v1alpha1", Resource: "mariadbopsrequests"}
+var mariadbopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("mariadbopsrequests")
 
-var mariadbopsrequestsKind = schema.GroupVersionKind{Group: "ops.kubedb.com", Version: "v1alpha1", Kind: "MariaDBOpsRequest"}
+var mariadbopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("MariaDBOpsRequest")
 
 // Get takes name of the mariaDBOpsRequest, and returns the corresponding mariaDBOpsRequest object, and an error if there is any.
 func (c *FakeMariaDBOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MariaDBOpsRequest, err error) {

@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakeElasticsearchAutoscalers struct {
 	ns   string
 }
 
-var elasticsearchautoscalersResource = schema.GroupVersionResource{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Resource: "elasticsearchautoscalers"}
+var elasticsearchautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("elasticsearchautoscalers")
 
-var elasticsearchautoscalersKind = schema.GroupVersionKind{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Kind: "ElasticsearchAutoscaler"}
+var elasticsearchautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("ElasticsearchAutoscaler")
 
 // Get takes name of the elasticsearchAutoscaler, and returns the corresponding elasticsearchAutoscaler object, and an error if there is any.
 func (c *FakeElasticsearchAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ElasticsearchAutoscaler, err error) {

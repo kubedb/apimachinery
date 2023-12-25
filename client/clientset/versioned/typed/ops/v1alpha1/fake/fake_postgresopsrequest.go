@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakePostgresOpsRequests struct {
 	ns   string
 }
 
-var postgresopsrequestsResource = schema.GroupVersionResource{Group: "ops.kubedb.com", Version: "v1alpha1", Resource: "postgresopsrequests"}
+var postgresopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("postgresopsrequests")
 
-var postgresopsrequestsKind = schema.GroupVersionKind{Group: "ops.kubedb.com", Version: "v1alpha1", Kind: "PostgresOpsRequest"}
+var postgresopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("PostgresOpsRequest")
 
 // Get takes name of the postgresOpsRequest, and returns the corresponding postgresOpsRequest object, and an error if there is any.
 func (c *FakePostgresOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PostgresOpsRequest, err error) {

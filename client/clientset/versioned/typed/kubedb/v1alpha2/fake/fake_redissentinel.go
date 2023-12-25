@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakeRedisSentinels struct {
 	ns   string
 }
 
-var redissentinelsResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1alpha2", Resource: "redissentinels"}
+var redissentinelsResource = v1alpha2.SchemeGroupVersion.WithResource("redissentinels")
 
-var redissentinelsKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "v1alpha2", Kind: "RedisSentinel"}
+var redissentinelsKind = v1alpha2.SchemeGroupVersion.WithKind("RedisSentinel")
 
 // Get takes name of the redisSentinel, and returns the corresponding redisSentinel object, and an error if there is any.
 func (c *FakeRedisSentinels) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.RedisSentinel, err error) {

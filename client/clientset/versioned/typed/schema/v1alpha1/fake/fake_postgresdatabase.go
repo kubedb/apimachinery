@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakePostgresDatabases struct {
 	ns   string
 }
 
-var postgresdatabasesResource = schema.GroupVersionResource{Group: "schema.kubedb.com", Version: "v1alpha1", Resource: "postgresdatabases"}
+var postgresdatabasesResource = v1alpha1.SchemeGroupVersion.WithResource("postgresdatabases")
 
-var postgresdatabasesKind = schema.GroupVersionKind{Group: "schema.kubedb.com", Version: "v1alpha1", Kind: "PostgresDatabase"}
+var postgresdatabasesKind = v1alpha1.SchemeGroupVersion.WithKind("PostgresDatabase")
 
 // Get takes name of the postgresDatabase, and returns the corresponding postgresDatabase object, and an error if there is any.
 func (c *FakePostgresDatabases) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PostgresDatabase, err error) {

@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -36,9 +35,9 @@ type FakePostgresVersions struct {
 	Fake *FakeCatalogV1alpha1
 }
 
-var postgresversionsResource = schema.GroupVersionResource{Group: "catalog.kubedb.com", Version: "v1alpha1", Resource: "postgresversions"}
+var postgresversionsResource = v1alpha1.SchemeGroupVersion.WithResource("postgresversions")
 
-var postgresversionsKind = schema.GroupVersionKind{Group: "catalog.kubedb.com", Version: "v1alpha1", Kind: "PostgresVersion"}
+var postgresversionsKind = v1alpha1.SchemeGroupVersion.WithKind("PostgresVersion")
 
 // Get takes name of the postgresVersion, and returns the corresponding postgresVersion object, and an error if there is any.
 func (c *FakePostgresVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PostgresVersion, err error) {

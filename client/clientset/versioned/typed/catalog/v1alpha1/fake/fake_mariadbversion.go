@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -36,9 +35,9 @@ type FakeMariaDBVersions struct {
 	Fake *FakeCatalogV1alpha1
 }
 
-var mariadbversionsResource = schema.GroupVersionResource{Group: "catalog.kubedb.com", Version: "v1alpha1", Resource: "mariadbversions"}
+var mariadbversionsResource = v1alpha1.SchemeGroupVersion.WithResource("mariadbversions")
 
-var mariadbversionsKind = schema.GroupVersionKind{Group: "catalog.kubedb.com", Version: "v1alpha1", Kind: "MariaDBVersion"}
+var mariadbversionsKind = v1alpha1.SchemeGroupVersion.WithKind("MariaDBVersion")
 
 // Get takes name of the mariaDBVersion, and returns the corresponding mariaDBVersion object, and an error if there is any.
 func (c *FakeMariaDBVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MariaDBVersion, err error) {
