@@ -1545,7 +1545,6 @@ kubeops.dev/sidekick/apis/apps/v1alpha1
 # kubestash.dev/apimachinery v0.2.0
 ## explicit; go 1.20
 kubestash.dev/apimachinery/apis
-kubestash.dev/apimachinery/apis/addons/v1alpha1
 kubestash.dev/apimachinery/apis/core/v1alpha1
 kubestash.dev/apimachinery/apis/storage/v1alpha1
 kubestash.dev/apimachinery/crds
