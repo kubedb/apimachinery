@@ -26,6 +26,8 @@ import (
 type Interface interface {
 	// MongoDBArchivers returns a MongoDBArchiverInformer.
 	MongoDBArchivers() MongoDBArchiverInformer
+	// MySQLArchivers returns a MySQLArchiverInformer.
+	MySQLArchivers() MySQLArchiverInformer
 	// PostgresArchivers returns a PostgresArchiverInformer.
 	PostgresArchivers() PostgresArchiverInformer
 }
@@ -44,6 +46,11 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // MongoDBArchivers returns a MongoDBArchiverInformer.
 func (v *version) MongoDBArchivers() MongoDBArchiverInformer {
 	return &mongoDBArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MySQLArchivers returns a MySQLArchiverInformer.
+func (v *version) MySQLArchivers() MySQLArchiverInformer {
+	return &mySQLArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PostgresArchivers returns a PostgresArchiverInformer.

@@ -33,6 +33,10 @@ func (c *FakeArchiverV1alpha1) MongoDBArchivers(namespace string) v1alpha1.Mongo
 	return &FakeMongoDBArchivers{c, namespace}
 }
 
+func (c *FakeArchiverV1alpha1) MySQLArchivers(namespace string) v1alpha1.MySQLArchiverInterface {
+	return &FakeMySQLArchivers{c, namespace}
+}
+
 func (c *FakeArchiverV1alpha1) PostgresArchivers(namespace string) v1alpha1.PostgresArchiverInterface {
 	return &FakePostgresArchivers{c, namespace}
 }
