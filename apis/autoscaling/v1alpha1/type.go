@@ -70,13 +70,13 @@ type ComputeAutoscalerSpec struct {
 	// +optional
 	ContainerControlledValues *ContainerControlledValues `json:"containerControlledValues,omitempty"`
 
-	// Specifies the minimum resource difference in percentage. The default is 10%.
+	// Specifies the minimum resource difference in percentage. The default is 50%.
 	// If the difference between current & recommended resource is less than ResourceDiffPercentage,
 	// Autoscaler Operator will ignore the updating.
 	// +optional
 	ResourceDiffPercentage int32 `json:"resourceDiffPercentage,omitempty"`
 
-	// Specifies the minimum pod life time. The default is 12h.
+	// Specifies the minimum pod life time. The default is 15m.
 	// If the resource Request is inside the recommended range & there is no quickOOM (out-of-memory),
 	// we can still update the pod, if that pod's lifeTime is greater than this threshold.
 	// +optional
