@@ -22253,14 +22253,14 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ComputeAutoscalerSpec(ref com
 					},
 					"resourceDiffPercentage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the minimum resource difference in percentage. The default is 10%. If the difference between current & recommended resource is less than ResourceDiffPercentage, Autoscaler Operator will ignore the updating.",
+							Description: "Specifies the minimum resource difference in percentage. The default is 50%. If the difference between current & recommended resource is less than ResourceDiffPercentage, Autoscaler Operator will ignore the updating.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"podLifeTimeThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the minimum pod life time. The default is 12h. If the resource Request is inside the recommended range & there is no quickOOM (out-of-memory), we can still update the pod, if that pod's lifeTime is greater than this threshold.",
+							Description: "Specifies the minimum pod life time. The default is 15m. If the resource Request is inside the recommended range & there is no quickOOM (out-of-memory), we can still update the pod, if that pod's lifeTime is greater than this threshold.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
