@@ -24,6 +24,21 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
+type NodeTopology struct {
+	// Name of the NodeTopology object
+	Name string `json:"name,omitempty"`
+	// ScaleUpDiffPercentage describes in which difference (between recommended resource and the capacity of the nodePool) the opsReq should be triggered while scaling up
+	// Defaults to 15
+	// +optional
+	// +kubebuilder:default=15
+	ScaleUpDiffPercentage *int32 `json:"scaleUpDiffPercentage"`
+	// ScaleDownDiffPercentage describes in which difference (between recommended resource and the capacity of the nodePool) the opsReq should be triggered while scaling down
+	// Defaults to 25
+	// +optional
+	// +kubebuilder:default=25
+	ScaleDownDiffPercentage *int32 `json:"scaleDownDiffPercentage"`
+}
+
 // ContainerControlledValues controls which resource value should be autoscaled.
 // +kubebuilder:validation:Enum=RequestsAndLimits;RequestsOnly
 type ContainerControlledValues string

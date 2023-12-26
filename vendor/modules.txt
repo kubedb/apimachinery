@@ -1517,10 +1517,10 @@ kmodules.xyz/offshoot-api/api/v1
 # kmodules.xyz/prober v0.25.0
 ## explicit; go 1.18
 kmodules.xyz/prober/api/v1
-# kmodules.xyz/resource-metadata v0.17.42
+# kmodules.xyz/resource-metadata v0.17.44
 ## explicit; go 1.18
 kmodules.xyz/resource-metadata/apis/core/v1alpha1
-kmodules.xyz/resource-metadata/apis/management
+kmodules.xyz/resource-metadata/apis/node
 kmodules.xyz/resource-metadata/apis/node/v1alpha1
 kmodules.xyz/resource-metadata/apis/shared
 kmodules.xyz/resource-metadata/crds
