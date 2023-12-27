@@ -1169,8 +1169,6 @@ golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8T
 golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 gomodules.xyz/encoding v0.0.7 h1:Y4PaflVS+vkYgkw6FwyF1S0ab4Y1BAdOqB3Uwjcx8qI=
 gomodules.xyz/encoding v0.0.7/go.mod h1:blYJWy456Bzxj3L2G7G5WV1l5rFXl6uYXrmeFqxxqk8=
-gomodules.xyz/envsubst v0.2.0 h1:piG4OcpUa/Mu7LxSo+2Ye8JH7pXXWM2XuCD8Ic7Hdwc=
-gomodules.xyz/envsubst v0.2.0/go.mod h1:eB1KRKtXx6RSpl+WYxE8gFE7DhNJCoorHzSij7X3AQo=
 gomodules.xyz/jsonpatch/v2 v2.2.0/go.mod h1:WXp+iVDkoLQqPudfQ9GBlwB2eZ5DKOnjQZCYdOS8GPY=
 gomodules.xyz/jsonpatch/v2 v2.4.0 h1:Ci3iUJyx9UeRx7CeFN8ARgGbkESwJK+KB9lLcWxY/Zw=
 gomodules.xyz/jsonpatch/v2 v2.4.0/go.mod h1:AH3dM2RI6uoBZxn3LVrfvJ3E0/9dG4cSrbuBJT4moAY=
@@ -1474,8 +1472,8 @@ kmodules.xyz/webhook-runtime v0.25.0 h1:NKNgu0C1I8kUovQ+SVozs/q7cjq8zgpSjLfJf9Cx
 kmodules.xyz/webhook-runtime v0.25.0/go.mod h1:gK2iIF0oCeQVVqH4L5nFjcguyhMPBhHMhiV5Fgb6EE0=
 kubeops.dev/sidekick v0.0.4 h1:fzHn4bbiOZjOmywgiy+5cpA2oNYjRSaxAo7wzCfGbXQ=
 kubeops.dev/sidekick v0.0.4/go.mod h1:tp6jv3bzvyHKT91t5GxfEhXHIIxPjBNsOMbf/+DRhrM=
-kubestash.dev/apimachinery v0.2.0 h1:xu6Um9Z0gFgMbKzUHIJAsvh+izJ6Nl4LJPyK4SUnntE=
-kubestash.dev/apimachinery v0.2.0/go.mod h1:ouqYby7/IIHRJgadPc++tzh3vxtjIgk1pDzU0YRCCw4=
+kubestash.dev/apimachinery v0.3.0 h1:0zkdiJeL3ONm4P53rJI9CQiTs8vF+OgOM1jbA+oM8RM=
+kubestash.dev/apimachinery v0.3.0/go.mod h1:mZlerbYdxPXYFJQfOrXFDHBPV8NzZkVF1qHUsP0/Q0s=
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=
 rsc.io/quote/v3 v3.1.0/go.mod h1:yEA65RcK8LyAZtP9Kv3t0HmxON59tX3rD+tICJqUlj0=
 rsc.io/sampler v1.3.0/go.mod h1:T1hPZKmBbMNahiBKFy5HrXp6adAjACjK9JXDnKaTXpA=
