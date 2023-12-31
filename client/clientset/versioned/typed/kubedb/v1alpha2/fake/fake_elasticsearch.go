@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakeElasticsearches struct {
 	ns   string
 }
 
-var elasticsearchesResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1alpha2", Resource: "elasticsearches"}
+var elasticsearchesResource = v1alpha2.SchemeGroupVersion.WithResource("elasticsearches")
 
-var elasticsearchesKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "v1alpha2", Kind: "Elasticsearch"}
+var elasticsearchesKind = v1alpha2.SchemeGroupVersion.WithKind("Elasticsearch")
 
 // Get takes name of the elasticsearch, and returns the corresponding elasticsearch object, and an error if there is any.
 func (c *FakeElasticsearches) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Elasticsearch, err error) {

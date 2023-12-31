@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakeProxySQLAutoscalers struct {
 	ns   string
 }
 
-var proxysqlautoscalersResource = schema.GroupVersionResource{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Resource: "proxysqlautoscalers"}
+var proxysqlautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("proxysqlautoscalers")
 
-var proxysqlautoscalersKind = schema.GroupVersionKind{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Kind: "ProxySQLAutoscaler"}
+var proxysqlautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("ProxySQLAutoscaler")
 
 // Get takes name of the proxySQLAutoscaler, and returns the corresponding proxySQLAutoscaler object, and an error if there is any.
 func (c *FakeProxySQLAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ProxySQLAutoscaler, err error) {

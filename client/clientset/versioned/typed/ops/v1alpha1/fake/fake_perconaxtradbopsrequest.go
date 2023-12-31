@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakePerconaXtraDBOpsRequests struct {
 	ns   string
 }
 
-var perconaxtradbopsrequestsResource = schema.GroupVersionResource{Group: "ops.kubedb.com", Version: "v1alpha1", Resource: "perconaxtradbopsrequests"}
+var perconaxtradbopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("perconaxtradbopsrequests")
 
-var perconaxtradbopsrequestsKind = schema.GroupVersionKind{Group: "ops.kubedb.com", Version: "v1alpha1", Kind: "PerconaXtraDBOpsRequest"}
+var perconaxtradbopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("PerconaXtraDBOpsRequest")
 
 // Get takes name of the perconaXtraDBOpsRequest, and returns the corresponding perconaXtraDBOpsRequest object, and an error if there is any.
 func (c *FakePerconaXtraDBOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PerconaXtraDBOpsRequest, err error) {

@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakeRedisAutoscalers struct {
 	ns   string
 }
 
-var redisautoscalersResource = schema.GroupVersionResource{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Resource: "redisautoscalers"}
+var redisautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("redisautoscalers")
 
-var redisautoscalersKind = schema.GroupVersionKind{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Kind: "RedisAutoscaler"}
+var redisautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("RedisAutoscaler")
 
 // Get takes name of the redisAutoscaler, and returns the corresponding redisAutoscaler object, and an error if there is any.
 func (c *FakeRedisAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.RedisAutoscaler, err error) {

@@ -293,7 +293,7 @@ func StorageResources(
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse storage %#v: %w", storage, err)
 	}
-	return fn(storage.Resources), nil
+	return fn(ToResourceRequirements(storage.Resources)), nil
 }
 
 type AppNode struct {
@@ -322,8 +322,15 @@ func AppNodeResources(
 		node.Replicas = pointer.Int64P(1)
 	}
 	rr := fn(node.PodTemplate.Spec.Resources)
-	sr := fn(node.Storage.Resources)
+	sr := fn(ToResourceRequirements(node.Storage.Resources))
 	rr[core.ResourceStorage] = *sr.Storage()
 
 	return rr, *node.Replicas, nil
+}
+
+func ToResourceRequirements(vrr core.VolumeResourceRequirements) core.ResourceRequirements {
+	return core.ResourceRequirements{
+		Limits:   vrr.Limits,
+		Requests: vrr.Requests,
+	}
 }

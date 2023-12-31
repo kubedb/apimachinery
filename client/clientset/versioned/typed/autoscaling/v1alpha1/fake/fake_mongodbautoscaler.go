@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakeMongoDBAutoscalers struct {
 	ns   string
 }
 
-var mongodbautoscalersResource = schema.GroupVersionResource{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Resource: "mongodbautoscalers"}
+var mongodbautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("mongodbautoscalers")
 
-var mongodbautoscalersKind = schema.GroupVersionKind{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Kind: "MongoDBAutoscaler"}
+var mongodbautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("MongoDBAutoscaler")
 
 // Get takes name of the mongoDBAutoscaler, and returns the corresponding mongoDBAutoscaler object, and an error if there is any.
 func (c *FakeMongoDBAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MongoDBAutoscaler, err error) {

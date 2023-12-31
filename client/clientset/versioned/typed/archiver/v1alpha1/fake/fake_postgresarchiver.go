@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakePostgresArchivers struct {
 	ns   string
 }
 
-var postgresarchiversResource = schema.GroupVersionResource{Group: "archiver.kubedb.com", Version: "v1alpha1", Resource: "postgresarchivers"}
+var postgresarchiversResource = v1alpha1.SchemeGroupVersion.WithResource("postgresarchivers")
 
-var postgresarchiversKind = schema.GroupVersionKind{Group: "archiver.kubedb.com", Version: "v1alpha1", Kind: "PostgresArchiver"}
+var postgresarchiversKind = v1alpha1.SchemeGroupVersion.WithKind("PostgresArchiver")
 
 // Get takes name of the postgresArchiver, and returns the corresponding postgresArchiver object, and an error if there is any.
 func (c *FakePostgresArchivers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PostgresArchiver, err error) {

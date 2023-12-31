@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakeProxySQLOpsRequests struct {
 	ns   string
 }
 
-var proxysqlopsrequestsResource = schema.GroupVersionResource{Group: "ops.kubedb.com", Version: "v1alpha1", Resource: "proxysqlopsrequests"}
+var proxysqlopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("proxysqlopsrequests")
 
-var proxysqlopsrequestsKind = schema.GroupVersionKind{Group: "ops.kubedb.com", Version: "v1alpha1", Kind: "ProxySQLOpsRequest"}
+var proxysqlopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("ProxySQLOpsRequest")
 
 // Get takes name of the proxySQLOpsRequest, and returns the corresponding proxySQLOpsRequest object, and an error if there is any.
 func (c *FakeProxySQLOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ProxySQLOpsRequest, err error) {

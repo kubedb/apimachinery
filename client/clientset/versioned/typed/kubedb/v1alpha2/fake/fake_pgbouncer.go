@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakePgBouncers struct {
 	ns   string
 }
 
-var pgbouncersResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1alpha2", Resource: "pgbouncers"}
+var pgbouncersResource = v1alpha2.SchemeGroupVersion.WithResource("pgbouncers")
 
-var pgbouncersKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "v1alpha2", Kind: "PgBouncer"}
+var pgbouncersKind = v1alpha2.SchemeGroupVersion.WithKind("PgBouncer")
 
 // Get takes name of the pgBouncer, and returns the corresponding pgBouncer object, and an error if there is any.
 func (c *FakePgBouncers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.PgBouncer, err error) {

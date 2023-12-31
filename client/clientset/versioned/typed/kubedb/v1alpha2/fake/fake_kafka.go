@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakeKafkas struct {
 	ns   string
 }
 
-var kafkasResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1alpha2", Resource: "kafkas"}
+var kafkasResource = v1alpha2.SchemeGroupVersion.WithResource("kafkas")
 
-var kafkasKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "v1alpha2", Kind: "Kafka"}
+var kafkasKind = v1alpha2.SchemeGroupVersion.WithKind("Kafka")
 
 // Get takes name of the kafka, and returns the corresponding kafka object, and an error if there is any.
 func (c *FakeKafkas) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Kafka, err error) {

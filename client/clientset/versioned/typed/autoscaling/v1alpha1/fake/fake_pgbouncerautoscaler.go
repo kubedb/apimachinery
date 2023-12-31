@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakePgBouncerAutoscalers struct {
 	ns   string
 }
 
-var pgbouncerautoscalersResource = schema.GroupVersionResource{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Resource: "pgbouncerautoscalers"}
+var pgbouncerautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("pgbouncerautoscalers")
 
-var pgbouncerautoscalersKind = schema.GroupVersionKind{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Kind: "PgBouncerAutoscaler"}
+var pgbouncerautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("PgBouncerAutoscaler")
 
 // Get takes name of the pgBouncerAutoscaler, and returns the corresponding pgBouncerAutoscaler object, and an error if there is any.
 func (c *FakePgBouncerAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PgBouncerAutoscaler, err error) {

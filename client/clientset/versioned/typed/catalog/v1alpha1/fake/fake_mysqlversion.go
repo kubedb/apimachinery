@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -36,9 +35,9 @@ type FakeMySQLVersions struct {
 	Fake *FakeCatalogV1alpha1
 }
 
-var mysqlversionsResource = schema.GroupVersionResource{Group: "catalog.kubedb.com", Version: "v1alpha1", Resource: "mysqlversions"}
+var mysqlversionsResource = v1alpha1.SchemeGroupVersion.WithResource("mysqlversions")
 
-var mysqlversionsKind = schema.GroupVersionKind{Group: "catalog.kubedb.com", Version: "v1alpha1", Kind: "MySQLVersion"}
+var mysqlversionsKind = v1alpha1.SchemeGroupVersion.WithKind("MySQLVersion")
 
 // Get takes name of the mySQLVersion, and returns the corresponding mySQLVersion object, and an error if there is any.
 func (c *FakeMySQLVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MySQLVersion, err error) {

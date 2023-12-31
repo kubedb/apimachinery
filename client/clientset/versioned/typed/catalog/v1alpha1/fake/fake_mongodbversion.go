@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -36,9 +35,9 @@ type FakeMongoDBVersions struct {
 	Fake *FakeCatalogV1alpha1
 }
 
-var mongodbversionsResource = schema.GroupVersionResource{Group: "catalog.kubedb.com", Version: "v1alpha1", Resource: "mongodbversions"}
+var mongodbversionsResource = v1alpha1.SchemeGroupVersion.WithResource("mongodbversions")
 
-var mongodbversionsKind = schema.GroupVersionKind{Group: "catalog.kubedb.com", Version: "v1alpha1", Kind: "MongoDBVersion"}
+var mongodbversionsKind = v1alpha1.SchemeGroupVersion.WithKind("MongoDBVersion")
 
 // Get takes name of the mongoDBVersion, and returns the corresponding mongoDBVersion object, and an error if there is any.
 func (c *FakeMongoDBVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MongoDBVersion, err error) {
