@@ -76,6 +76,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&RedisVersionList{},
 		&KafkaVersion{},
 		&KafkaVersionList{},
+		&PgpoolVersion{},
+		&PgpoolVersionList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

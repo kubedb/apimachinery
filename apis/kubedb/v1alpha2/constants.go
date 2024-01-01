@@ -459,6 +459,19 @@ const (
 	PgBouncerAdminUsername                  = "pgbouncer"
 	PgBouncerDefaultPoolMode                = "session"
 	PgBouncerDefaultIgnoreStartupParameters = "empty"
+
+	// =========================== Pgpool Constants ============================
+	EnvPostgresUsername               = "POSTGRES_USERNAME"
+	EnvPgpoolPcpUser                  = "PGPOOL_PCP_USER"
+	EnvPgpoolPcpPassword              = "PGPOOL_PCP_PASSWORD"
+	EnvPgpoolPasswordEncryptionMethod = "PGPOOL_PASSWORD_ENCRYPTION_METHOD"
+	EnvEnablePoolPasswd               = "PGPOOL_ENABLE_POOL_PASSWD"
+	EnvSkipPasswdEncryption           = "PGPOOL_SKIP_PASSWORD_ENCRYPTION"
+	ConfigSecretMountPath             = "/config"
+	ConfigVolumeName                  = "pgpool-config"
+	ContainerName                     = "pgpool"
+	PgpoolAuthUsername                = "pcp"
+	SyncPeriod                        = 10
 )
 
 // List of possible condition types for a KubeDB object
