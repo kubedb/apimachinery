@@ -19,10 +19,9 @@ limitations under the License.
 package fake
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
-
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
+	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 )
 
 type FakeCatalogV1alpha1 struct {
@@ -71,6 +70,10 @@ func (c *FakeCatalogV1alpha1) PerconaXtraDBVersions() v1alpha1.PerconaXtraDBVers
 
 func (c *FakeCatalogV1alpha1) PgBouncerVersions() v1alpha1.PgBouncerVersionInterface {
 	return &FakePgBouncerVersions{c}
+}
+
+func (c *FakeCatalogV1alpha1) PgpoolVersions() v1alpha1.PgpoolVersionInterface {
+	return &FakePgpoolVersions{c}
 }
 
 func (c *FakeCatalogV1alpha1) PostgresVersions() v1alpha1.PostgresVersionInterface {

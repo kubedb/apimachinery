@@ -40,6 +40,8 @@ type PerconaXtraDBVersionExpansion interface{}
 
 type PgBouncerVersionExpansion interface{}
 
+type PgpoolVersionExpansion interface{}
+
 type PostgresVersionExpansion interface{}
 
 type ProxySQLVersionExpansion interface{}

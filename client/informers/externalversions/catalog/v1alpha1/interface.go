@@ -46,6 +46,8 @@ type Interface interface {
 	PerconaXtraDBVersions() PerconaXtraDBVersionInformer
 	// PgBouncerVersions returns a PgBouncerVersionInformer.
 	PgBouncerVersions() PgBouncerVersionInformer
+	// PgpoolVersions returns a PgpoolVersionInformer.
+	PgpoolVersions() PgpoolVersionInformer
 	// PostgresVersions returns a PostgresVersionInformer.
 	PostgresVersions() PostgresVersionInformer
 	// ProxySQLVersions returns a ProxySQLVersionInformer.
@@ -120,6 +122,11 @@ func (v *version) PerconaXtraDBVersions() PerconaXtraDBVersionInformer {
 // PgBouncerVersions returns a PgBouncerVersionInformer.
 func (v *version) PgBouncerVersions() PgBouncerVersionInformer {
 	return &pgBouncerVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// PgpoolVersions returns a PgpoolVersionInformer.
+func (v *version) PgpoolVersions() PgpoolVersionInformer {
+	return &pgpoolVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // PostgresVersions returns a PostgresVersionInformer.

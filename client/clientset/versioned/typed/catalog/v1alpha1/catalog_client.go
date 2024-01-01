@@ -21,10 +21,9 @@ package v1alpha1
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type CatalogV1alpha1Interface interface {
@@ -40,6 +39,7 @@ type CatalogV1alpha1Interface interface {
 	MySQLVersionsGetter
 	PerconaXtraDBVersionsGetter
 	PgBouncerVersionsGetter
+	PgpoolVersionsGetter
 	PostgresVersionsGetter
 	ProxySQLVersionsGetter
 	RedisVersionsGetter
@@ -93,6 +93,10 @@ func (c *CatalogV1alpha1Client) PerconaXtraDBVersions() PerconaXtraDBVersionInte
 
 func (c *CatalogV1alpha1Client) PgBouncerVersions() PgBouncerVersionInterface {
 	return newPgBouncerVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) PgpoolVersions() PgpoolVersionInterface {
+	return newPgpoolVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) PostgresVersions() PostgresVersionInterface {
