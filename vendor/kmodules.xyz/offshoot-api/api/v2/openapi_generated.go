@@ -90,7 +90,7 @@ func schema_kmodulesxyz_offshoot_api_api_v2_PodSpec(ref common.ReferenceCallback
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "List of containers belonging to the pod. Containers cannot currently be added or removed. There must be at least one container in a Pod. Cannot be updated.",
+							Description: "List of sidecar containers belonging to the pod. Containers cannot currently be added or removed.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -356,8 +356,7 @@ func schema_kmodulesxyz_offshoot_api_api_v2_PodSpec(ref common.ReferenceCallback
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 									},
 								},
 							},
@@ -409,7 +408,6 @@ func schema_kmodulesxyz_offshoot_api_api_v2_PodSpec(ref common.ReferenceCallback
 						},
 					},
 				},
-				Required: []string{"containers"},
 			},
 		},
 		Dependencies: []string{

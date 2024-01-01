@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakeConnectors struct {
 	ns   string
 }
 
-var connectorsResource = schema.GroupVersionResource{Group: "kafka.kubedb.com", Version: "v1alpha1", Resource: "connectors"}
+var connectorsResource = v1alpha1.SchemeGroupVersion.WithResource("connectors")
 
-var connectorsKind = schema.GroupVersionKind{Group: "kafka.kubedb.com", Version: "v1alpha1", Kind: "Connector"}
+var connectorsKind = v1alpha1.SchemeGroupVersion.WithKind("Connector")
 
 // Get takes name of the connector, and returns the corresponding connector object, and an error if there is any.
 func (c *FakeConnectors) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Connector, err error) {

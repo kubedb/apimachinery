@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -37,9 +36,9 @@ type FakeConnectClusters struct {
 	ns   string
 }
 
-var connectclustersResource = schema.GroupVersionResource{Group: "kafka.kubedb.com", Version: "v1alpha1", Resource: "connectclusters"}
+var connectclustersResource = v1alpha1.SchemeGroupVersion.WithResource("connectclusters")
 
-var connectclustersKind = schema.GroupVersionKind{Group: "kafka.kubedb.com", Version: "v1alpha1", Kind: "ConnectCluster"}
+var connectclustersKind = v1alpha1.SchemeGroupVersion.WithKind("ConnectCluster")
 
 // Get takes name of the connectCluster, and returns the corresponding connectCluster object, and an error if there is any.
 func (c *FakeConnectClusters) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ConnectCluster, err error) {

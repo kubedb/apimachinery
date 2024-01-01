@@ -64,13 +64,11 @@ type PodSpec struct {
 	// +patchMergeKey=name
 	// +patchStrategy=merge
 	InitContainers []core.Container `json:"initContainers,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
-	// List of containers belonging to the pod.
+	// List of sidecar containers belonging to the pod.
 	// Containers cannot currently be added or removed.
-	// There must be at least one container in a Pod.
-	// Cannot be updated.
 	// +patchMergeKey=name
 	// +patchStrategy=merge
-	Containers []core.Container `json:"containers" patchStrategy:"merge" patchMergeKey:"name"`
+	Containers []core.Container `json:"containers,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 	// List of ephemeral containers run in this pod. Ephemeral containers may be run in an existing
 	// pod to perform user-initiated actions such as debugging. This list cannot be specified when
 	// creating a pod, and it cannot be modified by updating the pod spec. In order to add an
