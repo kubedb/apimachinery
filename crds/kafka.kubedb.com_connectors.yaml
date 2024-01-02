@@ -20,6 +20,9 @@ spec:
     - jsonPath: .apiVersion
       name: Type
       type: string
+    - jsonPath: .spec.connectClusterRef.name
+      name: ConnectCluster
+      type: string
     - jsonPath: .status.phase
       name: Status
       type: string
@@ -94,9 +97,11 @@ spec:
                 type: integer
               phase:
                 enum:
+                - Pending
                 - Running
                 - Paused
                 - Stopped
+                - Unknown
                 type: string
             type: object
         type: object

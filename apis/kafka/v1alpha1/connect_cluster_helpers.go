@@ -17,20 +17,30 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"fmt"
+	"strconv"
 	"strings"
 
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kafka"
 	"kubedb.dev/apimachinery/crds"
 
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
+	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 func (k *ConnectCluster) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -197,14 +207,145 @@ func (k *ConnectCluster) GetCertSecretName(alias ConnectClusterCertificateAlias)
 	return k.CertificateName(alias)
 }
 
-func (k *ConnectCluster) PVCName(alias string) string {
-	return meta_util.NameWithSuffix(k.Name, alias)
+func (k *ConnectCluster) SetHealthCheckerDefaults() {
+	if k.Spec.HealthChecker.PeriodSeconds == nil {
+		k.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(20)
+	}
+	if k.Spec.HealthChecker.TimeoutSeconds == nil {
+		k.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)
+	}
+	if k.Spec.HealthChecker.FailureThreshold == nil {
+		k.Spec.HealthChecker.FailureThreshold = pointer.Int32P(3)
+	}
 }
 
 func (k *ConnectCluster) SetDefaults() {
 	if k.Spec.TerminationPolicy == "" {
 		k.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
+
+	if k.Spec.Replicas == nil {
+		k.Spec.Replicas = pointer.Int32P(1)
+	}
+
+	var kfVersion catalog.KafkaVersion
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: k.Spec.Version}, &kfVersion)
+	if err != nil {
+		klog.Errorf("can't get the kafka version object %s for %s \n", err.Error(), k.Spec.Version)
+		return
+	}
+
+	k.setDefaultContainerSecurityContext(&kfVersion, &k.Spec.PodTemplate)
+	k.setDefaultInitContainerSecurityContext(&kfVersion, &k.Spec.PodTemplate)
+
+	k.Spec.Monitor.SetDefaults()
+	if k.Spec.Monitor != nil && k.Spec.Monitor.Prometheus != nil && k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+		k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = kfVersion.Spec.SecurityContext.RunAsUser
+	}
+
+	if k.Spec.EnableSSL {
+		k.SetTLSDefaults()
+	}
+	k.SetHealthCheckerDefaults()
+
+	k.SetDefaultEnvs()
+}
+
+func (k *ConnectCluster) SetDefaultEnvs() {
+	container := coreutil.GetContainerByName(k.Spec.PodTemplate.Spec.Containers, ConnectClusterContainerName)
+	if container != nil {
+		env := coreutil.GetEnvByName(container.Env, ConnectClusterModeEnv)
+		if env == nil {
+			if *k.Spec.Replicas == 1 {
+				container.Env = coreutil.UpsertEnvVars(container.Env, core.EnvVar{
+					Name:  ConnectClusterModeEnv,
+					Value: string(ConnectClusterNodeRoleStandalone),
+				})
+			} else {
+				container.Env = coreutil.UpsertEnvVars(container.Env, core.EnvVar{
+					Name:  ConnectClusterModeEnv,
+					Value: string(ConnectClusterNodeRoleDistributed),
+				})
+			}
+		}
+	}
+}
+
+func (k *ConnectCluster) setDefaultInitContainerSecurityContext(kfVersion *catalog.KafkaVersion, podTemplate *ofstv2.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
+	}
+	for i := range k.Spec.ConnectorPlugins {
+		// initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, name)
+		// TODO():
+		initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, "connector-"+strconv.Itoa(i))
+
+		if initContainer == nil {
+			initContainer = &core.Container{
+				Name: "connector-" + strconv.Itoa(i),
+			}
+			podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
+		}
+		if initContainer.SecurityContext == nil {
+			initContainer.SecurityContext = &core.SecurityContext{}
+		}
+		k.assignDefaultContainerSecurityContext(kfVersion, initContainer.SecurityContext)
+	}
+}
+
+func (k *ConnectCluster) setDefaultContainerSecurityContext(kfVersion *catalog.KafkaVersion, podTemplate *ofstv2.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
+	}
+	if podTemplate.Spec.SecurityContext == nil {
+		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
+	}
+	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+		podTemplate.Spec.SecurityContext.FSGroup = kfVersion.Spec.SecurityContext.RunAsUser
+	}
+
+	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, ConnectClusterContainerName)
+	if container == nil {
+		container = &core.Container{
+			Name: ConnectClusterContainerName,
+		}
+		podTemplate.Spec.Containers = append(podTemplate.Spec.Containers, *container)
+	}
+	if container.SecurityContext == nil {
+		container.SecurityContext = &core.SecurityContext{}
+	}
+	k.assignDefaultContainerSecurityContext(kfVersion, container.SecurityContext)
+}
+
+func (k *ConnectCluster) assignDefaultContainerSecurityContext(kfVersion *catalog.KafkaVersion, sc *core.SecurityContext) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = kfVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.RunAsGroup == nil {
+		sc.RunAsGroup = kfVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
+
+func (k *ConnectCluster) SetTLSDefaults() {
+	if k.Spec.TLS == nil || k.Spec.TLS.IssuerRef == nil {
+		return
+	}
+	k.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(k.Spec.TLS.Certificates, string(ConnectClusterServerCert), k.CertificateName(ConnectClusterServerCert))
+	k.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(k.Spec.TLS.Certificates, string(ConnectClusterClientCert), k.CertificateName(ConnectClusterClientCert))
 }
 
 type ConnectClusterApp struct {

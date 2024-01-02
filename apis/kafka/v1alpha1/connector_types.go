@@ -39,6 +39,7 @@ const (
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:shortName=kc,scope=Namespaced
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
+// +kubebuilder:printcolumn:name="ConnectCluster",type="string",JSONPath=".spec.connectClusterRef.name"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type Connector struct {
@@ -77,13 +78,15 @@ type ConnectorStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Running;Paused;Stopped
+// +kubebuilder:validation:Enum=Pending;Running;Paused;Stopped;Unknown
 type ConnectorPhase string
 
 const (
+	ConnectorPhasePending ConnectorPhase = "Pending"
 	ConnectorPhaseRunning ConnectorPhase = "Running"
 	ConnectorPhasePaused  ConnectorPhase = "Paused"
 	ConnectorPhaseStopped ConnectorPhase = "Stopped"
+	ConnectorPhaseUnknown ConnectorPhase = "Unknown"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

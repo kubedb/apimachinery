@@ -159,3 +159,11 @@ type ConnectClusterList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ConnectCluster `json:"items"`
 }
+
+// +kubebuilder:validation:Enum=statndalone;distributed
+type ConnectClusterNodeRoleType string
+
+const (
+	ConnectClusterNodeRoleStandalone  ConnectClusterNodeRoleType = "standalone"
+	ConnectClusterNodeRoleDistributed ConnectClusterNodeRoleType = "distributed"
+)
