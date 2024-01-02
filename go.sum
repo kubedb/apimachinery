@@ -1384,8 +1384,8 @@ kmodules.xyz/resource-metrics v0.29.0 h1:YBSVCbGdAugUqZK4igHu3fPhxvpYar4xejE6njr
 kmodules.xyz/resource-metrics v0.29.0/go.mod h1:OuG/QobZ7o8GFHl/u3lqaUR0fDZDegxtV8Vdh+MNBD4=
 kmodules.xyz/webhook-runtime v0.29.0 h1:6W3/MMcaCwLGbEggj6i5+WmOziwV3WwroWpfwe29rTU=
 kmodules.xyz/webhook-runtime v0.29.0/go.mod h1:/TBpnSdTISjjUh4euI3XhNlpFU937CfKYoWjDm39pUY=
-kubeops.dev/sidekick v0.0.5-0.20231225131722-1b7b3d4fc5bc h1:4iPXO/8xpo3H+BQyoPKfX+MmNfqw3U+wWalbAjUi7Uc=
-kubeops.dev/sidekick v0.0.5-0.20231225131722-1b7b3d4fc5bc/go.mod h1:9j1ho/lTWtI4NBj5Cy+xdc55MViBLumIfO9ZTRWQmHI=
+kubeops.dev/sidekick v0.0.5-0.20231225214445-a15c70833046 h1:X1ieV+IXqNesmFwSH6NEVF1J2wO0vplC4k6v3Vmq0d0=
+kubeops.dev/sidekick v0.0.5-0.20231225214445-a15c70833046/go.mod h1:XX6Vhw9EMmX9R8Y13AgaYDAsfeLZdTL8MzymTOAT0nY=
 kubestash.dev/apimachinery v0.3.1-0.20231231034418-cc46ddfd674a h1:zkRd7mpfFk2QtGKefGxZqpczy909KJCk4iPu9WOwCKU=
 kubestash.dev/apimachinery v0.3.1-0.20231231034418-cc46ddfd674a/go.mod h1:ImhcNxJIdObtmm1jPeOnvK9TrwS7bXqNa8I4Um/Vf1A=
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=
