@@ -25,3 +25,26 @@ const (
 	ComponentKafka   = "kafka"
 	DefaultStatsPath = "/metrics"
 )
+
+// ConnectCluster constants
+
+const (
+	ConnectClusterContainerName = "connect-cluster"
+	ConnectClusterModeEnv       = "CONNECT_CLUSTER_MODE"
+
+	ConnectClusterOperatorVolumeConfig  = "connect-operator-config"
+	ConnectClusterCustomVolumeConfig    = "connect-custom-config"
+	ConnectorPluginsVolumeName          = "connector-plugins"
+	ConnectClusterAuthSecretVolumeName  = "connect-cluster-auth"
+	ConnectClusterOffsetFileDirName     = "connect-stand-offset"
+	KafkaClientCertVolumeName           = "kafka-client-ssl"
+	ConnectClusterServerCertsVolumeName = "server-certs"
+
+	ConnectClusterOperatorConfigPath   = "/opt/kafka/config/connect-operator-config"
+	ConnectorPluginsVolumeDir          = "/opt/kafka/libs/connector-plugins"
+	ConnectClusterAuthSecretVolumePath = "/var/private/basic-auth"
+	ConnectClusterOffsetFileDir        = "/var/log/connect"
+	ConnectClusterCustomConfigPath     = "/opt/kafka/config/connect-custom-config"
+	KafkaClientCertDir                 = "/var/private/kafka-client-ssl"
+	ConnectClusterServerCertVolumeDir  = "/var/private/ssl"
+)
