@@ -18,7 +18,6 @@ package metrics
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -27,17 +26,15 @@ import (
 	"time"
 
 	restful "github.com/emicklei/go-restful/v3"
-
-	metainternalversion "k8s.io/apimachinery/pkg/apis/meta/internalversion"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/validation"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	utilsets "k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apiserver/pkg/audit"
 	"k8s.io/apiserver/pkg/authentication/user"
 	"k8s.io/apiserver/pkg/endpoints/request"
 	"k8s.io/apiserver/pkg/endpoints/responsewriter"
+	"k8s.io/apiserver/pkg/features"
+	utilfeature "k8s.io/apiserver/pkg/util/feature"
 	compbasemetrics "k8s.io/component-base/metrics"
 	"k8s.io/component-base/metrics/legacyregistry"
 )
@@ -65,8 +62,7 @@ const (
 var (
 	deprecatedRequestGauge = compbasemetrics.NewGaugeVec(
 		&compbasemetrics.GaugeOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "requested_deprecated_apis",
+			Name:           "apiserver_requested_deprecated_apis",
 			Help:           "Gauge of deprecated APIs that have been requested, broken out by API group, version, resource, subresource, and removed_release.",
 			StabilityLevel: compbasemetrics.STABLE,
 		},
@@ -77,8 +73,7 @@ var (
 	// the upstream library supports it.
 	requestCounter = compbasemetrics.NewCounterVec(
 		&compbasemetrics.CounterOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "request_total",
+			Name:           "apiserver_request_total",
 			Help:           "Counter of apiserver requests broken out for each verb, dry run value, group, version, resource, scope, component, and HTTP response code.",
 			StabilityLevel: compbasemetrics.STABLE,
 		},
@@ -86,8 +81,7 @@ var (
 	)
 	longRunningRequestsGauge = compbasemetrics.NewGaugeVec(
 		&compbasemetrics.GaugeOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "longrunning_requests",
+			Name:           "apiserver_longrunning_requests",
 			Help:           "Gauge of all active long-running apiserver requests broken out by verb, group, version, resource, scope and component. Not all requests are tracked this way.",
 			StabilityLevel: compbasemetrics.STABLE,
 		},
@@ -95,9 +89,8 @@ var (
 	)
 	requestLatencies = compbasemetrics.NewHistogramVec(
 		&compbasemetrics.HistogramOpts{
-			Subsystem: APIServerComponent,
-			Name:      "request_duration_seconds",
-			Help:      "Response latency distribution in seconds for each verb, dry run value, group, version, resource, subresource, scope and component.",
+			Name: "apiserver_request_duration_seconds",
+			Help: "Response latency distribution in seconds for each verb, dry run value, group, version, resource, subresource, scope and component.",
 			// This metric is used for verifying api call latencies SLO,
 			// as well as tracking regressions in this aspects.
 			// Thus we customize buckets significantly, to empower both usecases.
@@ -109,24 +102,8 @@ var (
 	)
 	requestSloLatencies = compbasemetrics.NewHistogramVec(
 		&compbasemetrics.HistogramOpts{
-			Subsystem: APIServerComponent,
-			Name:      "request_slo_duration_seconds",
-			Help:      "Response latency distribution (not counting webhook duration and priority & fairness queue wait times) in seconds for each verb, group, version, resource, subresource, scope and component.",
-			// This metric is supplementary to the requestLatencies metric.
-			// It measures request duration excluding webhooks as they are mostly
-			// dependant on user configuration.
-			Buckets: []float64{0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0, 1.25, 1.5, 2, 3,
-				4, 5, 6, 8, 10, 15, 20, 30, 45, 60},
-			StabilityLevel:    compbasemetrics.ALPHA,
-			DeprecatedVersion: "1.27.0",
-		},
-		[]string{"verb", "group", "version", "resource", "subresource", "scope", "component"},
-	)
-	requestSliLatencies = compbasemetrics.NewHistogramVec(
-		&compbasemetrics.HistogramOpts{
-			Subsystem: APIServerComponent,
-			Name:      "request_sli_duration_seconds",
-			Help:      "Response latency distribution (not counting webhook duration and priority & fairness queue wait times) in seconds for each verb, group, version, resource, subresource, scope and component.",
+			Name: "apiserver_request_slo_duration_seconds",
+			Help: "Response latency distribution (not counting webhook duration) in seconds for each verb, group, version, resource, subresource, scope and component.",
 			// This metric is supplementary to the requestLatencies metric.
 			// It measures request duration excluding webhooks as they are mostly
 			// dependant on user configuration.
@@ -139,7 +116,7 @@ var (
 	fieldValidationRequestLatencies = compbasemetrics.NewHistogramVec(
 		&compbasemetrics.HistogramOpts{
 			Name: "field_validation_request_duration_seconds",
-			Help: "Response latency distribution in seconds for each field validation value",
+			Help: "Response latency distribution in seconds for each field validation value and whether field validation is enabled or not",
 			// This metric is supplementary to the requestLatencies metric.
 			// It measures request durations for the various field validation
 			// values.
@@ -147,13 +124,12 @@ var (
 				4, 5, 6, 8, 10, 15, 20, 30, 45, 60},
 			StabilityLevel: compbasemetrics.ALPHA,
 		},
-		[]string{"field_validation"},
+		[]string{"field_validation", "enabled"},
 	)
 	responseSizes = compbasemetrics.NewHistogramVec(
 		&compbasemetrics.HistogramOpts{
-			Subsystem: APIServerComponent,
-			Name:      "response_sizes",
-			Help:      "Response size distribution in bytes for each group, version, verb, resource, subresource, scope and component.",
+			Name: "apiserver_response_sizes",
+			Help: "Response size distribution in bytes for each group, version, verb, resource, subresource, scope and component.",
 			// Use buckets ranging from 1000 bytes (1KB) to 10^9 bytes (1GB).
 			Buckets:        compbasemetrics.ExponentialBuckets(1000, 10.0, 7),
 			StabilityLevel: compbasemetrics.STABLE,
@@ -163,16 +139,14 @@ var (
 	// TLSHandshakeErrors is a number of requests dropped with 'TLS handshake error from' error
 	TLSHandshakeErrors = compbasemetrics.NewCounter(
 		&compbasemetrics.CounterOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "tls_handshake_errors_total",
+			Name:           "apiserver_tls_handshake_errors_total",
 			Help:           "Number of requests dropped with 'TLS handshake error from' error",
 			StabilityLevel: compbasemetrics.ALPHA,
 		},
 	)
 	WatchEvents = compbasemetrics.NewCounterVec(
 		&compbasemetrics.CounterOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "watch_events_total",
+			Name:           "apiserver_watch_events_total",
 			Help:           "Number of events sent in watch clients",
 			StabilityLevel: compbasemetrics.ALPHA,
 		},
@@ -180,8 +154,7 @@ var (
 	)
 	WatchEventsSizes = compbasemetrics.NewHistogramVec(
 		&compbasemetrics.HistogramOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "watch_events_sizes",
+			Name:           "apiserver_watch_events_sizes",
 			Help:           "Watch event size distribution in bytes",
 			Buckets:        compbasemetrics.ExponentialBuckets(1024, 2.0, 8), // 1K, 2K, 4K, 8K, ..., 128K.
 			StabilityLevel: compbasemetrics.ALPHA,
@@ -192,8 +165,7 @@ var (
 	// it reports maximal usage during the last second.
 	currentInflightRequests = compbasemetrics.NewGaugeVec(
 		&compbasemetrics.GaugeOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "current_inflight_requests",
+			Name:           "apiserver_current_inflight_requests",
 			Help:           "Maximal number of currently used inflight request limit of this apiserver per request kind in last second.",
 			StabilityLevel: compbasemetrics.STABLE,
 		},
@@ -201,8 +173,7 @@ var (
 	)
 	currentInqueueRequests = compbasemetrics.NewGaugeVec(
 		&compbasemetrics.GaugeOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "current_inqueue_requests",
+			Name:           "apiserver_current_inqueue_requests",
 			Help:           "Maximal number of queued requests in this apiserver per request kind in last second.",
 			StabilityLevel: compbasemetrics.ALPHA,
 		},
@@ -211,8 +182,7 @@ var (
 
 	requestTerminationsTotal = compbasemetrics.NewCounterVec(
 		&compbasemetrics.CounterOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "request_terminations_total",
+			Name:           "apiserver_request_terminations_total",
 			Help:           "Number of requests which apiserver terminated in self-defense.",
 			StabilityLevel: compbasemetrics.ALPHA,
 		},
@@ -221,8 +191,7 @@ var (
 
 	apiSelfRequestCounter = compbasemetrics.NewCounterVec(
 		&compbasemetrics.CounterOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "selfrequest_total",
+			Name:           "apiserver_selfrequest_total",
 			Help:           "Counter of apiserver self-requests broken out for each verb, API resource and subresource.",
 			StabilityLevel: compbasemetrics.ALPHA,
 		},
@@ -231,10 +200,9 @@ var (
 
 	requestFilterDuration = compbasemetrics.NewHistogramVec(
 		&compbasemetrics.HistogramOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "request_filter_duration_seconds",
+			Name:           "apiserver_request_filter_duration_seconds",
 			Help:           "Request filter latency distribution in seconds, for each filter type",
-			Buckets:        []float64{0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0, 5.0, 10.0, 15.0, 30.0},
+			Buckets:        []float64{0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0, 5.0},
 			StabilityLevel: compbasemetrics.ALPHA,
 		},
 		[]string{"filter"},
@@ -243,8 +211,7 @@ var (
 	// requestAbortsTotal is a number of aborted requests with http.ErrAbortHandler
 	requestAbortsTotal = compbasemetrics.NewCounterVec(
 		&compbasemetrics.CounterOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "request_aborts_total",
+			Name:           "apiserver_request_aborts_total",
 			Help:           "Number of requests which apiserver aborted possibly due to a timeout, for each group, version, verb, resource, subresource and scope",
 			StabilityLevel: compbasemetrics.ALPHA,
 		},
@@ -264,8 +231,7 @@ var (
 	//    within the wait threshold.
 	requestPostTimeoutTotal = compbasemetrics.NewCounterVec(
 		&compbasemetrics.CounterOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "request_post_timeout_total",
+			Name:           "apiserver_request_post_timeout_total",
 			Help:           "Tracks the activity of the request handlers after the associated requests have been timed out by the apiserver",
 			StabilityLevel: compbasemetrics.ALPHA,
 		},
@@ -274,8 +240,7 @@ var (
 
 	requestTimestampComparisonDuration = compbasemetrics.NewHistogramVec(
 		&compbasemetrics.HistogramOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "request_timestamp_comparison_time",
+			Name:           "apiserver_request_timestamp_comparison_time",
 			Help:           "Time taken for comparison of old vs new objects in UPDATE or PATCH requests",
 			Buckets:        []float64{0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0, 5.0},
 			StabilityLevel: compbasemetrics.ALPHA,
@@ -285,24 +250,12 @@ var (
 		[]string{"code_path"},
 	)
 
-	watchListLatencies = compbasemetrics.NewHistogramVec(
-		&compbasemetrics.HistogramOpts{
-			Subsystem:      APIServerComponent,
-			Name:           "watch_list_duration_seconds",
-			Help:           "Response latency distribution in seconds for watch list requests broken by group, version, resource and scope.",
-			Buckets:        []float64{0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0, 2, 4, 6, 8, 10, 15, 20, 30, 45, 60},
-			StabilityLevel: compbasemetrics.ALPHA,
-		},
-		[]string{"group", "version", "resource", "scope"},
-	)
-
 	metrics = []resettableCollector{
 		deprecatedRequestGauge,
 		requestCounter,
 		longRunningRequestsGauge,
 		requestLatencies,
 		requestSloLatencies,
-		requestSliLatencies,
 		fieldValidationRequestLatencies,
 		responseSizes,
 		TLSHandshakeErrors,
@@ -316,7 +269,6 @@ var (
 		requestAbortsTotal,
 		requestPostTimeoutTotal,
 		requestTimestampComparisonDuration,
-		watchListLatencies,
 	}
 
 	// these are the valid request methods which we report in our metrics. Any other request methods
@@ -336,14 +288,6 @@ var (
 		"UPDATE",
 		"WATCH",
 		"WATCHLIST")
-
-	// These are the valid connect requests which we report in our metrics.
-	validConnectRequests = utilsets.NewString(
-		"log",
-		"exec",
-		"portforward",
-		"attach",
-		"proxy")
 )
 
 const (
@@ -450,7 +394,7 @@ func RecordRequestAbort(req *http.Request, requestInfo *request.RequestInfo) {
 	}
 
 	scope := CleanScope(requestInfo)
-	reportedVerb := cleanVerb(CanonicalVerb(strings.ToUpper(req.Method), scope), "", req, requestInfo)
+	reportedVerb := cleanVerb(CanonicalVerb(strings.ToUpper(req.Method), scope), getVerbIfWatch(req), req)
 	resource := requestInfo.Resource
 	subresource := requestInfo.Subresource
 	group := requestInfo.APIGroup
@@ -471,7 +415,7 @@ func RecordDroppedRequest(req *http.Request, requestInfo *request.RequestInfo, c
 	// InstrumentRouteFunc which is registered in installer.go with predefined
 	// list of verbs (different than those translated to RequestInfo).
 	// However, we need to tweak it e.g. to differentiate GET from LIST.
-	reportedVerb := cleanVerb(CanonicalVerb(strings.ToUpper(req.Method), scope), "", req, requestInfo)
+	reportedVerb := cleanVerb(CanonicalVerb(strings.ToUpper(req.Method), scope), getVerbIfWatch(req), req)
 
 	if requestInfo.IsResourceRequest {
 		requestCounter.WithContext(req.Context()).WithLabelValues(reportedVerb, dryRun, requestInfo.APIGroup, requestInfo.APIVersion, requestInfo.Resource, requestInfo.Subresource, scope, component, codeToString(http.StatusTooManyRequests)).Inc()
@@ -494,7 +438,7 @@ func RecordRequestTermination(req *http.Request, requestInfo *request.RequestInf
 	// InstrumentRouteFunc which is registered in installer.go with predefined
 	// list of verbs (different than those translated to RequestInfo).
 	// However, we need to tweak it e.g. to differentiate GET from LIST.
-	reportedVerb := cleanVerb(CanonicalVerb(strings.ToUpper(req.Method), scope), "", req, requestInfo)
+	reportedVerb := cleanVerb(CanonicalVerb(strings.ToUpper(req.Method), scope), getVerbIfWatch(req), req)
 
 	if requestInfo.IsResourceRequest {
 		requestTerminationsTotal.WithContext(req.Context()).WithLabelValues(reportedVerb, requestInfo.APIGroup, requestInfo.APIVersion, requestInfo.Resource, requestInfo.Subresource, scope, component, codeToString(code)).Inc()
@@ -516,7 +460,7 @@ func RecordLongRunning(req *http.Request, requestInfo *request.RequestInfo, comp
 	// InstrumentRouteFunc which is registered in installer.go with predefined
 	// list of verbs (different than those translated to RequestInfo).
 	// However, we need to tweak it e.g. to differentiate GET from LIST.
-	reportedVerb := cleanVerb(CanonicalVerb(strings.ToUpper(req.Method), scope), "", req, requestInfo)
+	reportedVerb := cleanVerb(CanonicalVerb(strings.ToUpper(req.Method), scope), getVerbIfWatch(req), req)
 
 	if requestInfo.IsResourceRequest {
 		g = longRunningRequestsGauge.WithContext(req.Context()).WithLabelValues(reportedVerb, requestInfo.APIGroup, requestInfo.APIVersion, requestInfo.Resource, requestInfo.Subresource, scope, component)
@@ -528,30 +472,14 @@ func RecordLongRunning(req *http.Request, requestInfo *request.RequestInfo, comp
 	fn()
 }
 
-// RecordWatchListLatency simply records response latency for watch list requests.
-func RecordWatchListLatency(ctx context.Context, gvr schema.GroupVersionResource, metricsScope string) {
-	requestReceivedTimestamp, ok := request.ReceivedTimestampFrom(ctx)
-	if !ok {
-		utilruntime.HandleError(fmt.Errorf("unable to measure watchlist latency because no received ts found in the ctx, gvr: %s", gvr))
-		return
-	}
-	elapsedSeconds := time.Since(requestReceivedTimestamp).Seconds()
-
-	watchListLatencies.WithContext(ctx).WithLabelValues(gvr.Group, gvr.Version, gvr.Resource, metricsScope).Observe(elapsedSeconds)
-}
-
 // MonitorRequest handles standard transformations for client and the reported verb and then invokes Monitor to record
 // a request. verb must be uppercase to be backwards compatible with existing monitoring tooling.
 func MonitorRequest(req *http.Request, verb, group, version, resource, subresource, scope, component string, deprecated bool, removedRelease string, httpCode, respSize int, elapsed time.Duration) {
-	requestInfo, ok := request.RequestInfoFrom(req.Context())
-	if !ok || requestInfo == nil {
-		requestInfo = &request.RequestInfo{Verb: req.Method, Path: req.URL.Path}
-	}
 	// We don't use verb from <requestInfo>, as this may be propagated from
 	// InstrumentRouteFunc which is registered in installer.go with predefined
 	// list of verbs (different than those translated to RequestInfo).
 	// However, we need to tweak it e.g. to differentiate GET from LIST.
-	reportedVerb := cleanVerb(CanonicalVerb(strings.ToUpper(req.Method), scope), verb, req, requestInfo)
+	reportedVerb := cleanVerb(CanonicalVerb(strings.ToUpper(req.Method), scope), verb, req)
 
 	dryRun := cleanDryRun(req.URL)
 	elapsedSeconds := elapsed.Seconds()
@@ -570,12 +498,12 @@ func MonitorRequest(req *http.Request, verb, group, version, resource, subresour
 	}
 	requestLatencies.WithContext(req.Context()).WithLabelValues(reportedVerb, dryRun, group, version, resource, subresource, scope, component).Observe(elapsedSeconds)
 	fieldValidation := cleanFieldValidation(req.URL)
-	fieldValidationRequestLatencies.WithContext(req.Context()).WithLabelValues(fieldValidation)
+	fieldValidationEnabled := strconv.FormatBool(utilfeature.DefaultFeatureGate.Enabled(features.ServerSideFieldValidation))
+	fieldValidationRequestLatencies.WithContext(req.Context()).WithLabelValues(fieldValidation, fieldValidationEnabled)
 
 	if wd, ok := request.LatencyTrackersFrom(req.Context()); ok {
-		sliLatency := elapsedSeconds - (wd.MutatingWebhookTracker.GetLatency() + wd.ValidatingWebhookTracker.GetLatency() + wd.APFQueueWaitTracker.GetLatency()).Seconds()
-		requestSloLatencies.WithContext(req.Context()).WithLabelValues(reportedVerb, group, version, resource, subresource, scope, component).Observe(sliLatency)
-		requestSliLatencies.WithContext(req.Context()).WithLabelValues(reportedVerb, group, version, resource, subresource, scope, component).Observe(sliLatency)
+		sloLatency := elapsedSeconds - (wd.MutatingWebhookTracker.GetLatency() + wd.ValidatingWebhookTracker.GetLatency()).Seconds()
+		requestSloLatencies.WithContext(req.Context()).WithLabelValues(reportedVerb, group, version, resource, subresource, scope, component).Observe(sloLatency)
 	}
 	// We are only interested in response sizes of read requests.
 	if verb == "GET" || verb == "LIST" {
@@ -620,21 +548,6 @@ func InstrumentHandlerFunc(verb, group, version, resource, subresource, scope, c
 	}
 }
 
-// NormalizedVerb returns normalized verb
-func NormalizedVerb(req *http.Request) string {
-	verb := req.Method
-	requestInfo, ok := request.RequestInfoFrom(req.Context())
-	if ok {
-		// If we can find a requestInfo, we can get a scope, and then
-		// we can convert GETs to LISTs when needed.
-		scope := CleanScope(requestInfo)
-		verb = CanonicalVerb(strings.ToUpper(verb), scope)
-	}
-
-	// mark APPLY requests, WATCH requests and CONNECT requests correctly.
-	return CleanVerb(verb, req, requestInfo)
-}
-
 // CleanScope returns the scope of the request.
 func CleanScope(requestInfo *request.RequestInfo) string {
 	if requestInfo.Name != "" || requestInfo.Verb == "create" {
@@ -647,26 +560,6 @@ func CleanScope(requestInfo *request.RequestInfo) string {
 		return "cluster"
 	}
 	// this is the empty scope
-	return ""
-}
-
-// CleanListScope computes the request scope for metrics.
-//
-// Note that normally we would use CleanScope for computation.
-// But due to the same reasons mentioned in determineRequestNamespaceAndName we cannot.
-func CleanListScope(ctx context.Context, opts *metainternalversion.ListOptions) string {
-	namespace, name := determineRequestNamespaceAndName(ctx, opts)
-	if len(name) > 0 {
-		return "resource"
-	}
-	if len(namespace) > 0 {
-		return "namespace"
-	}
-	if requestInfo, ok := request.RequestInfoFrom(ctx); ok {
-		if requestInfo.IsResourceRequest {
-			return "cluster"
-		}
-	}
 	return ""
 }
 
@@ -685,8 +578,8 @@ func CanonicalVerb(verb string, scope string) string {
 }
 
 // CleanVerb returns a normalized verb, so that it is easy to tell WATCH from
-// LIST, APPLY from PATCH and CONNECT from others.
-func CleanVerb(verb string, request *http.Request, requestInfo *request.RequestInfo) string {
+// LIST and APPLY from PATCH.
+func CleanVerb(verb string, request *http.Request) string {
 	reportedVerb := verb
 	if suggestedVerb := getVerbIfWatch(request); suggestedVerb == "WATCH" {
 		reportedVerb = "WATCH"
@@ -695,49 +588,24 @@ func CleanVerb(verb string, request *http.Request, requestInfo *request.RequestI
 	if verb == "WATCHLIST" {
 		reportedVerb = "WATCH"
 	}
-	if verb == "PATCH" && request.Header.Get("Content-Type") == string(types.ApplyPatchType) {
+	if verb == "PATCH" && request.Header.Get("Content-Type") == string(types.ApplyPatchType) && utilfeature.DefaultFeatureGate.Enabled(features.ServerSideApply) {
 		reportedVerb = "APPLY"
-	}
-	if requestInfo != nil && requestInfo.IsResourceRequest && len(requestInfo.Subresource) > 0 && validConnectRequests.Has(requestInfo.Subresource) {
-		reportedVerb = "CONNECT"
 	}
 	return reportedVerb
 }
 
-// determineRequestNamespaceAndName computes name and namespace for the given requests
-//
-// note that the logic of this function was copy&pasted from cacher.go
-// after an unsuccessful attempt of moving it to RequestInfo
-//
-// see: https://github.com/kubernetes/kubernetes/pull/120520
-func determineRequestNamespaceAndName(ctx context.Context, opts *metainternalversion.ListOptions) (namespace, name string) {
-	if requestNamespace, ok := request.NamespaceFrom(ctx); ok && len(requestNamespace) > 0 {
-		namespace = requestNamespace
-	} else if opts != nil && opts.FieldSelector != nil {
-		if selectorNamespace, ok := opts.FieldSelector.RequiresExactMatch("metadata.namespace"); ok {
-			namespace = selectorNamespace
-		}
-	}
-	if requestInfo, ok := request.RequestInfoFrom(ctx); ok && requestInfo != nil && len(requestInfo.Name) > 0 {
-		name = requestInfo.Name
-	} else if opts != nil && opts.FieldSelector != nil {
-		if selectorName, ok := opts.FieldSelector.RequiresExactMatch("metadata.name"); ok {
-			name = selectorName
-		}
-	}
-	return
-}
-
 // cleanVerb additionally ensures that unknown verbs don't clog up the metrics.
-func cleanVerb(verb, suggestedVerb string, request *http.Request, requestInfo *request.RequestInfo) string {
+func cleanVerb(verb, suggestedVerb string, request *http.Request) string {
 	// CanonicalVerb (being an input for this function) doesn't handle correctly the
 	// deprecated path pattern for watch of:
 	//   GET /api/{version}/watch/{resource}
 	// We correct it manually based on the pass verb from the installer.
+	var reportedVerb string
 	if suggestedVerb == "WATCH" || suggestedVerb == "WATCHLIST" {
-		return "WATCH"
+		reportedVerb = "WATCH"
+	} else {
+		reportedVerb = CleanVerb(verb, request)
 	}
-	reportedVerb := CleanVerb(verb, request, requestInfo)
 	if validRequestMethods.Has(reportedVerb) {
 		return reportedVerb
 	}

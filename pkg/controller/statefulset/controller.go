@@ -68,7 +68,7 @@ func (c *Controller) InitStsWatcher() {
 	c.StsInformer = c.KubeInformerFactory.Apps().V1().StatefulSets().Informer()
 	c.StsQueue = queue.New(api.ResourceKindStatefulSet, c.MaxNumRequeues, c.NumThreads, c.processStatefulSet)
 	c.StsLister = c.KubeInformerFactory.Apps().V1().StatefulSets().Lister()
-	_, _ = c.StsInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
+	c.StsInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			if sts, ok := obj.(*apps.StatefulSet); ok {
 				if c.RestrictToNamespace != core.NamespaceAll {

@@ -125,12 +125,8 @@ func NewResourceMapper(mapper meta.RESTMapper) ResourceMapper {
 	return &resourcemapper{mapper: mapper, cache: map[schema.GroupVersionKind]*kmapi.ResourceID{}}
 }
 
-func NewDynamicResourceMapper(cfg *rest.Config) (ResourceMapper, error) {
-	hc, err := rest.HTTPClientFor(cfg)
-	if err != nil {
-		return nil, err
-	}
-	mapper, err := apiutil.NewDynamicRESTMapper(cfg, hc)
+func NewDynamicResourceMapper(cfg *rest.Config, opts ...apiutil.DynamicRESTMapperOption) (ResourceMapper, error) {
+	mapper, err := apiutil.NewDynamicRESTMapper(cfg, opts...)
 	if err != nil {
 		return nil, err
 	}

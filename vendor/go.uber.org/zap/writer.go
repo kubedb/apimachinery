@@ -48,27 +48,27 @@ import (
 // os.Stdout and os.Stderr. When specified without a scheme, relative file
 // paths also work.
 func Open(paths ...string) (zapcore.WriteSyncer, func(), error) {
-	writers, closeAll, err := open(paths)
+	writers, close, err := open(paths)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	writer := CombineWriteSyncers(writers...)
-	return writer, closeAll, nil
+	return writer, close, nil
 }
 
 func open(paths []string) ([]zapcore.WriteSyncer, func(), error) {
 	writers := make([]zapcore.WriteSyncer, 0, len(paths))
 	closers := make([]io.Closer, 0, len(paths))
-	closeAll := func() {
+	close := func() {
 		for _, c := range closers {
-			_ = c.Close()
+			c.Close()
 		}
 	}
 
 	var openErr error
 	for _, path := range paths {
-		sink, err := _sinkRegistry.newSink(path)
+		sink, err := newSink(path)
 		if err != nil {
 			openErr = multierr.Append(openErr, fmt.Errorf("open sink %q: %w", path, err))
 			continue
@@ -77,11 +77,11 @@ func open(paths []string) ([]zapcore.WriteSyncer, func(), error) {
 		closers = append(closers, sink)
 	}
 	if openErr != nil {
-		closeAll()
+		close()
 		return nil, nil, openErr
 	}
 
-	return writers, closeAll, nil
+	return writers, close, nil
 }
 
 // CombineWriteSyncers is a utility that combines multiple WriteSyncers into a

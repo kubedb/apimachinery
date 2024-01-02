@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakePostgresAutoscalers struct {
 	ns   string
 }
 
-var postgresautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("postgresautoscalers")
+var postgresautoscalersResource = schema.GroupVersionResource{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Resource: "postgresautoscalers"}
 
-var postgresautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("PostgresAutoscaler")
+var postgresautoscalersKind = schema.GroupVersionKind{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Kind: "PostgresAutoscaler"}
 
 // Get takes name of the postgresAutoscaler, and returns the corresponding postgresAutoscaler object, and an error if there is any.
 func (c *FakePostgresAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PostgresAutoscaler, err error) {

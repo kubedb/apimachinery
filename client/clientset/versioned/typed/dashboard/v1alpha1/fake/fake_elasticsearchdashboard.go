@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakeElasticsearchDashboards struct {
 	ns   string
 }
 
-var elasticsearchdashboardsResource = v1alpha1.SchemeGroupVersion.WithResource("elasticsearchdashboards")
+var elasticsearchdashboardsResource = schema.GroupVersionResource{Group: "dashboard.kubedb.com", Version: "v1alpha1", Resource: "elasticsearchdashboards"}
 
-var elasticsearchdashboardsKind = v1alpha1.SchemeGroupVersion.WithKind("ElasticsearchDashboard")
+var elasticsearchdashboardsKind = schema.GroupVersionKind{Group: "dashboard.kubedb.com", Version: "v1alpha1", Kind: "ElasticsearchDashboard"}
 
 // Get takes name of the elasticsearchDashboard, and returns the corresponding elasticsearchDashboard object, and an error if there is any.
 func (c *FakeElasticsearchDashboards) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ElasticsearchDashboard, err error) {

@@ -21,7 +21,7 @@ import (
 	"context"
 	"crypto/x509"
 	"fmt"
-	"os"
+	"io/ioutil"
 	"sync/atomic"
 	"time"
 
@@ -98,7 +98,7 @@ func (c *DynamicFileCAContent) AddListener(listener Listener) {
 
 // loadCABundle determines the next set of content for the file.
 func (c *DynamicFileCAContent) loadCABundle() error {
-	caBundle, err := os.ReadFile(c.filename)
+	caBundle, err := ioutil.ReadFile(c.filename)
 	if err != nil {
 		return err
 	}
@@ -204,7 +204,7 @@ func (c *DynamicFileCAContent) watchCAFile(stopCh <-chan struct{}) error {
 func (c *DynamicFileCAContent) handleWatchEvent(e fsnotify.Event, w *fsnotify.Watcher) error {
 	// This should be executed after restarting the watch (if applicable) to ensure no file event will be missing.
 	defer c.queue.Add(workItemKey)
-	if !e.Has(fsnotify.Remove) && !e.Has(fsnotify.Rename) {
+	if e.Op&(fsnotify.Remove|fsnotify.Rename) == 0 {
 		return nil
 	}
 	if err := w.Remove(c.filename); err != nil {

@@ -39,11 +39,7 @@ import (
 )
 
 func NewUncachedClient(cfg *rest.Config) (client.Client, error) {
-	hc, err := rest.HTTPClientFor(cfg)
-	if err != nil {
-		return nil, err
-	}
-	mapper, err := apiutil.NewDynamicRESTMapper(cfg, hc)
+	mapper, err := apiutil.NewDynamicRESTMapper(cfg)
 	if err != nil {
 		return nil, err
 	}

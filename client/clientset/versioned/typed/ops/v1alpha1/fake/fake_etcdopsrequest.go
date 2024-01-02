@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakeEtcdOpsRequests struct {
 	ns   string
 }
 
-var etcdopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("etcdopsrequests")
+var etcdopsrequestsResource = schema.GroupVersionResource{Group: "ops.kubedb.com", Version: "v1alpha1", Resource: "etcdopsrequests"}
 
-var etcdopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("EtcdOpsRequest")
+var etcdopsrequestsKind = schema.GroupVersionKind{Group: "ops.kubedb.com", Version: "v1alpha1", Kind: "EtcdOpsRequest"}
 
 // Get takes name of the etcdOpsRequest, and returns the corresponding etcdOpsRequest object, and an error if there is any.
 func (c *FakeEtcdOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.EtcdOpsRequest, err error) {

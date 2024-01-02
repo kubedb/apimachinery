@@ -51,14 +51,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
-// Informer - informer allows you interact with the underlying informer.
-type Informer interface {
-	// AddEventHandlerWithResyncPeriod adds an event handler to the shared informer using the
-	// specified resync period.  Events to a single handler are delivered sequentially, but there is
-	// no coordination between different handlers.
-	AddEventHandlerWithResyncPeriod(handler cache.ResourceEventHandler, resyncPeriod time.Duration) (cache.ResourceEventHandlerRegistration, error)
-}
-
 type EventCreator func(obj client.Object) (*api.Event, error)
 
 type EventPublisher struct {
@@ -165,12 +157,12 @@ func (p *EventPublisher) Publish(ev *api.Event, et api.EventType) error {
 	}
 }
 
-func (p *EventPublisher) ForGVK(informer Informer, gvk schema.GroupVersionKind) {
+func (p *EventPublisher) ForGVK(gvk schema.GroupVersionKind) cache.ResourceEventHandler {
 	if gvk.Version == "" || gvk.Kind == "" {
 		panic(fmt.Sprintf("incomplete GVK; %+v", gvk))
 	}
 
-	h := &ResourceEventPublisher{
+	return &ResourceEventPublisher{
 		p: p,
 		createEvent: func(obj client.Object) (*api.Event, error) {
 			r := obj.DeepCopyObject().(client.Object)
@@ -191,7 +183,6 @@ func (p *EventPublisher) ForGVK(informer Informer, gvk schema.GroupVersionKind) 
 			return ev, nil
 		},
 	}
-	_, _ = informer.AddEventHandlerWithResyncPeriod(h, 1*time.Hour)
 }
 
 type funcNodeLister func() ([]*core.Node, error)
@@ -238,7 +229,7 @@ func (p *EventPublisher) setupSiteInfoPublisher(cfg *rest.Config, kc kubernetes.
 		p.si.Product = new(auditorapi.ProductInfo)
 	}
 
-	_, err = nodeInformer.AddEventHandler(&ResourceEventPublisher{
+	nodeInformer.AddEventHandler(&ResourceEventPublisher{
 		p: p,
 		createEvent: func(_ client.Object) (*api.Event, error) {
 			cmeta, err := clusterid.ClusterMetadata(kc.CoreV1().Namespaces())
@@ -276,7 +267,7 @@ func (p *EventPublisher) setupSiteInfoPublisher(cfg *rest.Config, kc kubernetes.
 			return ev, nil
 		},
 	})
-	return err
+	return nil
 }
 
 func (p *EventPublisher) SetupWithManagerForKind(ctx context.Context, mgr manager.Manager, gvk schema.GroupVersionKind) error {
@@ -287,7 +278,7 @@ func (p *EventPublisher) SetupWithManagerForKind(ctx context.Context, mgr manage
 	if err != nil {
 		return err
 	}
-	p.ForGVK(i, gvk)
+	i.AddEventHandler(p.ForGVK(gvk))
 	return nil
 }
 
@@ -306,7 +297,7 @@ type ResourceEventPublisher struct {
 
 var _ cache.ResourceEventHandler = &ResourceEventPublisher{}
 
-func (p *ResourceEventPublisher) OnAdd(o interface{}, isInInitialList bool) {
+func (p *ResourceEventPublisher) OnAdd(o interface{}) {
 	obj, ok := o.(client.Object)
 	if !ok {
 		return
@@ -323,9 +314,24 @@ func (p *ResourceEventPublisher) OnAdd(o interface{}, isInInitialList bool) {
 	}
 }
 
-func (p *ResourceEventPublisher) OnUpdate(_, newObj interface{}) {
+func (p *ResourceEventPublisher) OnUpdate(oldObj, newObj interface{}) {
+	uOld, ok := oldObj.(client.Object)
+	if !ok {
+		return
+	}
 	uNew, ok := newObj.(client.Object)
 	if !ok {
+		return
+	}
+
+	if uOld.GetUID() == uNew.GetUID() && uOld.GetGeneration() == uNew.GetGeneration() {
+		if klog.V(8).Enabled() {
+			klog.V(8).InfoS("skipping update event",
+				"gvk", uNew.GetObjectKind().GroupVersionKind(),
+				"namespace", uNew.GetNamespace(),
+				"name", uNew.GetName(),
+			)
+		}
 		return
 	}
 

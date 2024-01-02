@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakeMySQLDatabases struct {
 	ns   string
 }
 
-var mysqldatabasesResource = v1alpha1.SchemeGroupVersion.WithResource("mysqldatabases")
+var mysqldatabasesResource = schema.GroupVersionResource{Group: "schema.kubedb.com", Version: "v1alpha1", Resource: "mysqldatabases"}
 
-var mysqldatabasesKind = v1alpha1.SchemeGroupVersion.WithKind("MySQLDatabase")
+var mysqldatabasesKind = schema.GroupVersionKind{Group: "schema.kubedb.com", Version: "v1alpha1", Kind: "MySQLDatabase"}
 
 // Get takes name of the mySQLDatabase, and returns the corresponding mySQLDatabase object, and an error if there is any.
 func (c *FakeMySQLDatabases) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MySQLDatabase, err error) {

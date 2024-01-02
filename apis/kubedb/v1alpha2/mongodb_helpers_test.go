@@ -68,7 +68,7 @@ func TestMongoDB_HostAddress(t *testing.T) {
 						Replicas: 3,
 					},
 					Storage: &core.PersistentVolumeClaimSpec{
-						Resources: core.VolumeResourceRequirements{
+						Resources: core.ResourceRequirements{
 							Requests: core.ResourceList{
 								core.ResourceStorage: resource.MustParse("1Gi"),
 							},
@@ -81,7 +81,7 @@ func TestMongoDB_HostAddress(t *testing.T) {
 						Replicas: 3,
 					},
 					Storage: &core.PersistentVolumeClaimSpec{
-						Resources: core.VolumeResourceRequirements{
+						Resources: core.ResourceRequirements{
 							Requests: core.ResourceList{
 								core.ResourceStorage: resource.MustParse("1Gi"),
 							},
@@ -131,7 +131,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 						Replicas: 3,
 					},
 					Storage: &core.PersistentVolumeClaimSpec{
-						Resources: core.VolumeResourceRequirements{
+						Resources: core.ResourceRequirements{
 							Requests: core.ResourceList{
 								core.ResourceStorage: resource.MustParse("1Gi"),
 							},
@@ -144,7 +144,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 						Replicas: 3,
 					},
 					Storage: &core.PersistentVolumeClaimSpec{
-						Resources: core.VolumeResourceRequirements{
+						Resources: core.ResourceRequirements{
 							Requests: core.ResourceList{
 								core.ResourceStorage: resource.MustParse("1Gi"),
 							},
@@ -185,7 +185,7 @@ func TestMongoDB_ConfigSvrDSN(t *testing.T) {
 						Replicas: 3,
 					},
 					Storage: &core.PersistentVolumeClaimSpec{
-						Resources: core.VolumeResourceRequirements{
+						Resources: core.ResourceRequirements{
 							Requests: core.ResourceList{
 								core.ResourceStorage: resource.MustParse("1Gi"),
 							},
@@ -198,7 +198,7 @@ func TestMongoDB_ConfigSvrDSN(t *testing.T) {
 						Replicas: 3,
 					},
 					Storage: &core.PersistentVolumeClaimSpec{
-						Resources: core.VolumeResourceRequirements{
+						Resources: core.ResourceRequirements{
 							Requests: core.ResourceList{
 								core.ResourceStorage: resource.MustParse("1Gi"),
 							},
@@ -228,7 +228,7 @@ func TestMongoDB_SetDefaults(t *testing.T) {
 		Spec: MongoDBSpec{
 			Version: "3.6-v2",
 			Storage: &core.PersistentVolumeClaimSpec{
-				Resources: core.VolumeResourceRequirements{
+				Resources: core.ResourceRequirements{
 					Requests: core.ResourceList{
 						core.ResourceStorage: resource.MustParse("1Gi"),
 					},

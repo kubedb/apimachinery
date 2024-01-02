@@ -26,7 +26,6 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
-	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
 // log is for logging in this package.
@@ -72,7 +71,7 @@ func (in *MySQLDatabase) Default() {
 var _ webhook.Validator = &MySQLDatabase{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MySQLDatabase) ValidateCreate() (admission.Warnings, error) {
+func (in *MySQLDatabase) ValidateCreate() error {
 	mysqldatabaselog.Info("validate create", "name", in.Name)
 	var allErrs field.ErrorList
 	//if in.Spec.Database.Config.ReadOnly == 1 { //todo handle this case if possible
@@ -82,16 +81,16 @@ func (in *MySQLDatabase) ValidateCreate() (admission.Warnings, error) {
 		allErrs = append(allErrs, field.Invalid(field.NewPath(""), in.Name, err.Error()))
 	}
 	if len(allErrs) == 0 {
-		return nil, nil
+		return nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "schema.kubedb.com", Kind: "MySQLDatabase"}, in.Name, allErrs)
+	return apierrors.NewInvalid(schema.GroupKind{Group: "schema.kubedb.com", Kind: "MySQLDatabase"}, in.Name, allErrs)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MySQLDatabase) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (in *MySQLDatabase) ValidateUpdate(old runtime.Object) error {
 	mysqldatabaselog.Info("validate update", "name", in.Name)
 	oldobj := old.(*MySQLDatabase)
-	return nil, ValidateMySQLDatabaseUpdate(in, oldobj)
+	return ValidateMySQLDatabaseUpdate(in, oldobj)
 }
 
 func ValidateMySQLDatabaseUpdate(newobj *MySQLDatabase, oldobj *MySQLDatabase) error {
@@ -137,15 +136,15 @@ func ValidateMySQLDatabaseUpdate(newobj *MySQLDatabase, oldobj *MySQLDatabase) e
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (in *MySQLDatabase) ValidateDelete() (admission.Warnings, error) {
+func (in *MySQLDatabase) ValidateDelete() error {
 	mysqldatabaselog.Info("validate delete", "name", in.Name)
 	if in.Spec.DeletionPolicy == DeletionPolicyDoNotDelete {
-		return nil, field.Invalid(field.NewPath("spec").Child("terminationPolicy"), in.Name, `cannot delete object when terminationPolicy is set to "DoNotDelete"`)
+		return field.Invalid(field.NewPath("spec").Child("terminationPolicy"), in.Name, `cannot delete object when terminationPolicy is set to "DoNotDelete"`)
 	}
 	if in.Spec.Database.Config.ReadOnly == 1 {
-		return nil, field.Invalid(field.NewPath("spec").Child("databaseConfig.readOnly"), in.Name, `schema manger cannot be deleted : database is read only enabled`)
+		return field.Invalid(field.NewPath("spec").Child("databaseConfig.readOnly"), in.Name, `schema manger cannot be deleted : database is read only enabled`)
 	}
-	return nil, nil
+	return nil
 }
 
 func (in *MySQLDatabase) ValidateMySQLDatabase() error {

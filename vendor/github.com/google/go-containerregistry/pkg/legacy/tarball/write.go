@@ -17,6 +17,8 @@ package tarball
 import (
 	"archive/tar"
 	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -61,9 +63,8 @@ func v1LayerID(layer v1.Layer, parentID string, rawConfig []byte) (string, error
 	if len(rawConfig) != 0 {
 		s = fmt.Sprintf("%s %s", s, string(rawConfig))
 	}
-
-	h, _, _ := v1.SHA256(strings.NewReader(s))
-	return h.Hex, nil
+	rawDigest := sha256.Sum256([]byte(s))
+	return hex.EncodeToString(rawDigest[:]), nil
 }
 
 // newTopV1Layer creates a new v1Layer for a layer other than the top layer in a v1 image tarball.
@@ -313,7 +314,10 @@ func MultiWrite(refToImage map[name.Reference]v1.Image, w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	return writeTarEntry(tf, "repositories", bytes.NewReader(reposBytes), int64(len(reposBytes)))
+	if err := writeTarEntry(tf, "repositories", bytes.NewReader(reposBytes), int64(len(reposBytes))); err != nil {
+		return err
+	}
+	return nil
 }
 
 func dedupRefToImage(refToImage map[name.Reference]v1.Image) ([]v1.Image, map[v1.Image][]string) {

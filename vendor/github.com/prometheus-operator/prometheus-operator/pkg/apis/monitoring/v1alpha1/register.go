@@ -49,10 +49,6 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
 		&AlertmanagerConfig{},
 		&AlertmanagerConfigList{},
-		&PrometheusAgent{},
-		&PrometheusAgentList{},
-		&ScrapeConfig{},
-		&ScrapeConfigList{},
 	)
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil

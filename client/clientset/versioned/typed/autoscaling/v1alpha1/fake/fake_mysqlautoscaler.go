@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakeMySQLAutoscalers struct {
 	ns   string
 }
 
-var mysqlautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("mysqlautoscalers")
+var mysqlautoscalersResource = schema.GroupVersionResource{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Resource: "mysqlautoscalers"}
 
-var mysqlautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("MySQLAutoscaler")
+var mysqlautoscalersKind = schema.GroupVersionKind{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Kind: "MySQLAutoscaler"}
 
 // Get takes name of the mySQLAutoscaler, and returns the corresponding mySQLAutoscaler object, and an error if there is any.
 func (c *FakeMySQLAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MySQLAutoscaler, err error) {

@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakePerconaXtraDBAutoscalers struct {
 	ns   string
 }
 
-var perconaxtradbautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("perconaxtradbautoscalers")
+var perconaxtradbautoscalersResource = schema.GroupVersionResource{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Resource: "perconaxtradbautoscalers"}
 
-var perconaxtradbautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("PerconaXtraDBAutoscaler")
+var perconaxtradbautoscalersKind = schema.GroupVersionKind{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Kind: "PerconaXtraDBAutoscaler"}
 
 // Get takes name of the perconaXtraDBAutoscaler, and returns the corresponding perconaXtraDBAutoscaler object, and an error if there is any.
 func (c *FakePerconaXtraDBAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PerconaXtraDBAutoscaler, err error) {

@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakeMemcachedAutoscalers struct {
 	ns   string
 }
 
-var memcachedautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("memcachedautoscalers")
+var memcachedautoscalersResource = schema.GroupVersionResource{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Resource: "memcachedautoscalers"}
 
-var memcachedautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("MemcachedAutoscaler")
+var memcachedautoscalersKind = schema.GroupVersionKind{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Kind: "MemcachedAutoscaler"}
 
 // Get takes name of the memcachedAutoscaler, and returns the corresponding memcachedAutoscaler object, and an error if there is any.
 func (c *FakeMemcachedAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MemcachedAutoscaler, err error) {

@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -34,9 +35,9 @@ type FakeKafkaVersions struct {
 	Fake *FakeCatalogV1alpha1
 }
 
-var kafkaversionsResource = v1alpha1.SchemeGroupVersion.WithResource("kafkaversions")
+var kafkaversionsResource = schema.GroupVersionResource{Group: "catalog.kubedb.com", Version: "v1alpha1", Resource: "kafkaversions"}
 
-var kafkaversionsKind = v1alpha1.SchemeGroupVersion.WithKind("KafkaVersion")
+var kafkaversionsKind = schema.GroupVersionKind{Group: "catalog.kubedb.com", Version: "v1alpha1", Kind: "KafkaVersion"}
 
 // Get takes name of the kafkaVersion, and returns the corresponding kafkaVersion object, and an error if there is any.
 func (c *FakeKafkaVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.KafkaVersion, err error) {

@@ -31,14 +31,13 @@ func convertRouteFrom(in *v1alpha1.Route) (*Route, error) {
 	}
 
 	out := &Route{
-		Receiver:            in.Receiver,
-		GroupBy:             in.GroupBy,
-		GroupWait:           in.GroupWait,
-		GroupInterval:       in.GroupInterval,
-		RepeatInterval:      in.RepeatInterval,
-		Matchers:            convertMatchersFrom(in.Matchers),
-		MuteTimeIntervals:   in.MuteTimeIntervals,
-		ActiveTimeIntervals: in.ActiveTimeIntervals,
+		Receiver:          in.Receiver,
+		GroupBy:           in.GroupBy,
+		GroupWait:         in.GroupWait,
+		GroupInterval:     in.GroupInterval,
+		RepeatInterval:    in.RepeatInterval,
+		Matchers:          convertMatchersFrom(in.Matchers),
+		MuteTimeIntervals: in.MuteTimeIntervals,
 	}
 
 	// Deserialize child routes to convert them to v1alpha1 and serialize back.
@@ -163,6 +162,7 @@ func convertKeyValuesFrom(in []v1alpha1.KeyValue) []KeyValue {
 	}
 
 	return out
+
 }
 
 func convertSecretKeySelectorFrom(in *v1.SecretKeySelector) *SecretKeySelector {
@@ -257,16 +257,6 @@ func convertPagerDutyConfigFrom(in v1alpha1.PagerDutyConfig) PagerDutyConfig {
 	}
 }
 
-func convertDiscordConfigFrom(in v1alpha1.DiscordConfig) DiscordConfig {
-	return DiscordConfig{
-		APIURL:       in.APIURL,
-		HTTPConfig:   convertHTTPConfigFrom(in.HTTPConfig),
-		Title:        in.Title,
-		Message:      in.Message,
-		SendResolved: in.SendResolved,
-	}
-}
-
 func convertSlackFieldsFrom(in []v1alpha1.SlackField) []SlackField {
 	out := make([]SlackField, len(in))
 
@@ -330,16 +320,6 @@ func convertSlackConfigFrom(in v1alpha1.SlackConfig) SlackConfig {
 		MrkdwnIn:     in.MrkdwnIn,
 		Actions:      convertSlackActionsFrom(in.Actions),
 		HTTPConfig:   convertHTTPConfigFrom(in.HTTPConfig),
-	}
-}
-
-func convertWebexConfigFrom(in v1alpha1.WebexConfig) WebexConfig {
-	return WebexConfig{
-		APIURL:       (*URL)(in.APIURL),
-		HTTPConfig:   convertHTTPConfigFrom(in.HTTPConfig),
-		Message:      in.Message,
-		RoomID:       in.RoomID,
-		SendResolved: in.SendResolved,
 	}
 }
 
@@ -407,14 +387,11 @@ func convertPushoverConfigFrom(in v1alpha1.PushoverConfig) PushoverConfig {
 	return PushoverConfig{
 		SendResolved: in.SendResolved,
 		UserKey:      convertSecretKeySelectorFrom(in.UserKey),
-		UserKeyFile:  in.UserKeyFile,
 		Token:        convertSecretKeySelectorFrom(in.Token),
-		TokenFile:    in.TokenFile,
 		Title:        in.Title,
 		Message:      in.Message,
 		URL:          in.URL,
 		URLTitle:     in.URLTitle,
-		Device:       in.Device,
 		Sound:        in.Sound,
 		Priority:     in.Priority,
 		Retry:        in.Retry,
@@ -444,22 +421,11 @@ func convertTelegramConfigFrom(in v1alpha1.TelegramConfig) TelegramConfig {
 		SendResolved:         in.SendResolved,
 		APIURL:               in.APIURL,
 		BotToken:             convertSecretKeySelectorFrom(in.BotToken),
-		BotTokenFile:         in.BotTokenFile,
 		ChatID:               in.ChatID,
 		Message:              in.Message,
 		DisableNotifications: in.DisableNotifications,
 		ParseMode:            in.ParseMode,
 		HTTPConfig:           convertHTTPConfigFrom(in.HTTPConfig),
-	}
-}
-
-func convertMSTeamsConfigFrom(in v1alpha1.MSTeamsConfig) MSTeamsConfig {
-	return MSTeamsConfig{
-		SendResolved: in.SendResolved,
-		WebhookURL:   in.WebhookURL,
-		Title:        in.Title,
-		Text:         in.Text,
-		HTTPConfig:   convertHTTPConfigFrom(in.HTTPConfig),
 	}
 }
 
@@ -488,24 +454,10 @@ func (dst *AlertmanagerConfig) ConvertFrom(srcRaw conversion.Hub) error {
 			)
 		}
 
-		for _, in := range in.DiscordConfigs {
-			out.DiscordConfigs = append(
-				out.DiscordConfigs,
-				convertDiscordConfigFrom(in),
-			)
-		}
-
 		for _, in := range in.SlackConfigs {
 			out.SlackConfigs = append(
 				out.SlackConfigs,
 				convertSlackConfigFrom(in),
-			)
-		}
-
-		for _, in := range in.WebexConfigs {
-			out.WebexConfigs = append(
-				out.WebexConfigs,
-				convertWebexConfigFrom(in),
 			)
 		}
 
@@ -558,13 +510,6 @@ func (dst *AlertmanagerConfig) ConvertFrom(srcRaw conversion.Hub) error {
 			)
 		}
 
-		for _, in := range in.MSTeamsConfigs {
-			out.MSTeamsConfigs = append(
-				out.MSTeamsConfigs,
-				convertMSTeamsConfigFrom(in),
-			)
-		}
-
 		dst.Spec.Receivers = append(dst.Spec.Receivers, out)
 	}
 
@@ -577,6 +522,7 @@ func (dst *AlertmanagerConfig) ConvertFrom(srcRaw conversion.Hub) error {
 				Equal:       in.Equal,
 			},
 		)
+
 	}
 
 	for _, in := range src.Spec.MuteTimeIntervals {

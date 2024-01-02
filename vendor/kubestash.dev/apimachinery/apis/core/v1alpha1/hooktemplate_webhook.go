@@ -23,7 +23,6 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
-	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 	"strings"
 )
 
@@ -57,49 +56,49 @@ func (r *HookTemplate) Default() {
 var _ webhook.Validator = &HookTemplate{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *HookTemplate) ValidateCreate() (admission.Warnings, error) {
+func (r *HookTemplate) ValidateCreate() error {
 	hooktemplatelog.Info("validate create", "name", r.Name)
 
 	if r.Spec.Executor == nil {
-		return nil, fmt.Errorf("executor can not be empty")
+		return fmt.Errorf("executor can not be empty")
 	}
 
 	if err := r.validateActionForNonFunctionExecutor(); err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := r.validateUsagePolicy(); err != nil {
-		return nil, err
+		return err
 	}
 
-	return nil, r.validateExecutorInfo()
+	return r.validateExecutorInfo()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *HookTemplate) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *HookTemplate) ValidateUpdate(old runtime.Object) error {
 	hooktemplatelog.Info("validate update", "name", r.Name)
 
 	if r.Spec.Executor == nil {
-		return nil, fmt.Errorf("executor field can not be empty")
+		return fmt.Errorf("executor field can not be empty")
 	}
 
 	if err := r.validateActionForNonFunctionExecutor(); err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := r.validateUsagePolicy(); err != nil {
-		return nil, err
+		return err
 	}
 
-	return nil, r.validateExecutorInfo()
+	return r.validateExecutorInfo()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *HookTemplate) ValidateDelete() (admission.Warnings, error) {
+func (r *HookTemplate) ValidateDelete() error {
 	hooktemplatelog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.
-	return nil, nil
+	return nil
 }
 
 func (r *HookTemplate) setDefaultUsagePolicy() {

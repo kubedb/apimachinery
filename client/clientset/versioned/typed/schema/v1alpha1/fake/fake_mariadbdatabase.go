@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakeMariaDBDatabases struct {
 	ns   string
 }
 
-var mariadbdatabasesResource = v1alpha1.SchemeGroupVersion.WithResource("mariadbdatabases")
+var mariadbdatabasesResource = schema.GroupVersionResource{Group: "schema.kubedb.com", Version: "v1alpha1", Resource: "mariadbdatabases"}
 
-var mariadbdatabasesKind = v1alpha1.SchemeGroupVersion.WithKind("MariaDBDatabase")
+var mariadbdatabasesKind = schema.GroupVersionKind{Group: "schema.kubedb.com", Version: "v1alpha1", Kind: "MariaDBDatabase"}
 
 // Get takes name of the mariaDBDatabase, and returns the corresponding mariaDBDatabase object, and an error if there is any.
 func (c *FakeMariaDBDatabases) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MariaDBDatabase, err error) {

@@ -22,7 +22,6 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
-	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
 // log is for logging in this package.
@@ -42,29 +41,29 @@ func (r *Repository) SetupWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.Validator = &Repository{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *Repository) ValidateCreate() (admission.Warnings, error) {
+func (r *Repository) ValidateCreate() error {
 	repositorylog.Info("validate create", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object creation.
-	return nil, nil
+	return nil
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *Repository) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *Repository) ValidateUpdate(old runtime.Object) error {
 	repositorylog.Info("validate update", "name", r.Name)
 
 	oldRepo := old.(*Repository)
 	if oldRepo.Spec.Path != r.Spec.Path {
-		return nil, fmt.Errorf("repository path can not be updated")
+		return fmt.Errorf("repository path can not be updated")
 	}
 
-	return nil, nil
+	return nil
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *Repository) ValidateDelete() (admission.Warnings, error) {
+func (r *Repository) ValidateDelete() error {
 	repositorylog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.
-	return nil, nil
+	return nil
 }

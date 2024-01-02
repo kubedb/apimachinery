@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakeMongoDBOpsRequests struct {
 	ns   string
 }
 
-var mongodbopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("mongodbopsrequests")
+var mongodbopsrequestsResource = schema.GroupVersionResource{Group: "ops.kubedb.com", Version: "v1alpha1", Resource: "mongodbopsrequests"}
 
-var mongodbopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("MongoDBOpsRequest")
+var mongodbopsrequestsKind = schema.GroupVersionKind{Group: "ops.kubedb.com", Version: "v1alpha1", Kind: "MongoDBOpsRequest"}
 
 // Get takes name of the mongoDBOpsRequest, and returns the corresponding mongoDBOpsRequest object, and an error if there is any.
 func (c *FakeMongoDBOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MongoDBOpsRequest, err error) {

@@ -24,23 +24,25 @@ import (
 	"fmt"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"go.uber.org/multierr"
 	"go.uber.org/zap/internal/bufferpool"
 	"go.uber.org/zap/internal/exit"
-	"go.uber.org/zap/internal/pool"
 )
 
-var _cePool = pool.New(func() *CheckedEntry {
-	// Pre-allocate some space for cores.
-	return &CheckedEntry{
-		cores: make([]Core, 4),
-	}
-})
+var (
+	_cePool = sync.Pool{New: func() interface{} {
+		// Pre-allocate some space for cores.
+		return &CheckedEntry{
+			cores: make([]Core, 4),
+		}
+	}}
+)
 
 func getCheckedEntry() *CheckedEntry {
-	ce := _cePool.Get()
+	ce := _cePool.Get().(*CheckedEntry)
 	ce.reset()
 	return ce
 }
@@ -242,7 +244,7 @@ func (ce *CheckedEntry) Write(fields ...Field) {
 			// CheckedEntry is being used after it was returned to the pool,
 			// the message may be an amalgamation from multiple call sites.
 			fmt.Fprintf(ce.ErrorOutput, "%v Unsafe CheckedEntry re-use near Entry %+v.\n", ce.Time, ce.Entry)
-			_ = ce.ErrorOutput.Sync() // ignore error
+			ce.ErrorOutput.Sync()
 		}
 		return
 	}
@@ -254,7 +256,7 @@ func (ce *CheckedEntry) Write(fields ...Field) {
 	}
 	if err != nil && ce.ErrorOutput != nil {
 		fmt.Fprintf(ce.ErrorOutput, "%v write error: %v\n", ce.Time, err)
-		_ = ce.ErrorOutput.Sync() // ignore error
+		ce.ErrorOutput.Sync()
 	}
 
 	hook := ce.after
@@ -279,8 +281,7 @@ func (ce *CheckedEntry) AddCore(ent Entry, core Core) *CheckedEntry {
 // Should sets this CheckedEntry's CheckWriteAction, which controls whether a
 // Core will panic or fatal after writing this log entry. Like AddCore, it's
 // safe to call on nil CheckedEntry references.
-//
-// Deprecated: Use [CheckedEntry.After] instead.
+// Deprecated: Use After(ent Entry, after CheckWriteHook) instead.
 func (ce *CheckedEntry) Should(ent Entry, should CheckWriteAction) *CheckedEntry {
 	return ce.After(ent, should)
 }

@@ -100,13 +100,13 @@ func (c *Controller) initWatcher(maxNumRequeues, numThreads int, selector metav1
 	c.RSInformer = c.restoreSessionInformer(tweakListOptions)
 	c.RSQueue = queue.New(v1beta1.ResourceKindRestoreSession, maxNumRequeues, numThreads, c.processRestoreSession)
 	c.RSLister = c.StashInformerFactory.Stash().V1beta1().RestoreSessions().Lister()
-	_, _ = c.RSInformer.AddEventHandler(queue.NewFilteredHandler(queue.NewChangeHandler(c.RSQueue.GetQueue(), c.restrictToNamespace), ls))
+	c.RSInformer.AddEventHandler(queue.NewFilteredHandler(queue.NewChangeHandler(c.RSQueue.GetQueue(), c.restrictToNamespace), ls))
 
 	// Initialize RestoreBatch Watcher
 	c.RBInformer = c.restoreBatchInformer(tweakListOptions)
 	c.RBQueue = queue.New(v1beta1.ResourceKindRestoreBatch, maxNumRequeues, numThreads, c.processRestoreBatch)
 	c.RBLister = c.StashInformerFactory.Stash().V1beta1().RestoreBatches().Lister()
-	_, _ = c.RBInformer.AddEventHandler(queue.NewFilteredHandler(queue.NewChangeHandler(c.RBQueue.GetQueue(), c.restrictToNamespace), ls))
+	c.RBInformer.AddEventHandler(queue.NewFilteredHandler(queue.NewChangeHandler(c.RBQueue.GetQueue(), c.restrictToNamespace), ls))
 	return nil
 }
 

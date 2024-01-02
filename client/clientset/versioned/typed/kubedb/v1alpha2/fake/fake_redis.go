@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakeRedises struct {
 	ns   string
 }
 
-var redisesResource = v1alpha2.SchemeGroupVersion.WithResource("redises")
+var redisesResource = schema.GroupVersionResource{Group: "kubedb.com", Version: "v1alpha2", Resource: "redises"}
 
-var redisesKind = v1alpha2.SchemeGroupVersion.WithKind("Redis")
+var redisesKind = schema.GroupVersionKind{Group: "kubedb.com", Version: "v1alpha2", Kind: "Redis"}
 
 // Get takes name of the redis, and returns the corresponding redis object, and an error if there is any.
 func (c *FakeRedises) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Redis, err error) {

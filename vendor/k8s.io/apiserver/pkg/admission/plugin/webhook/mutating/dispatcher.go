@@ -20,20 +20,19 @@ package mutating
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
 	jsonpatch "github.com/evanphx/json-patch"
-	"go.opentelemetry.io/otel/attribute"
+
+	apiequality "k8s.io/apimachinery/pkg/api/equality"
+	"k8s.io/klog/v2"
 
 	admissionv1 "k8s.io/api/admission/v1"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
-	apiequality "k8s.io/apimachinery/pkg/api/equality"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
 	utiljson "k8s.io/apimachinery/pkg/util/json"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -47,8 +46,7 @@ import (
 	endpointsrequest "k8s.io/apiserver/pkg/endpoints/request"
 	webhookutil "k8s.io/apiserver/pkg/util/webhook"
 	"k8s.io/apiserver/pkg/warning"
-	"k8s.io/component-base/tracing"
-	"k8s.io/klog/v2"
+	utiltrace "k8s.io/utils/trace"
 )
 
 const (
@@ -76,30 +74,6 @@ func newMutatingDispatcher(p *Plugin) func(cm *webhookutil.ClientManager) generi
 	}
 }
 
-var _ generic.VersionedAttributeAccessor = &versionedAttributeAccessor{}
-
-type versionedAttributeAccessor struct {
-	versionedAttr    *admission.VersionedAttributes
-	attr             admission.Attributes
-	objectInterfaces admission.ObjectInterfaces
-}
-
-func (v *versionedAttributeAccessor) VersionedAttribute(gvk schema.GroupVersionKind) (*admission.VersionedAttributes, error) {
-	if v.versionedAttr == nil {
-		// First call, create versioned attributes
-		var err error
-		if v.versionedAttr, err = admission.NewVersionedAttributes(v.attr, gvk, v.objectInterfaces); err != nil {
-			return nil, apierrors.NewInternalError(err)
-		}
-	} else {
-		// Subsequent call, convert existing versioned attributes to the requested version
-		if err := admission.ConvertVersionedAttributes(v.versionedAttr, gvk, v.objectInterfaces); err != nil {
-			return nil, apierrors.NewInternalError(err)
-		}
-	}
-	return v.versionedAttr, nil
-}
-
 var _ generic.Dispatcher = &mutatingDispatcher{}
 
 func (a *mutatingDispatcher) Dispatch(ctx context.Context, attr admission.Attributes, o admission.ObjectInterfaces, hooks []webhook.WebhookAccessor) error {
@@ -120,24 +94,19 @@ func (a *mutatingDispatcher) Dispatch(ctx context.Context, attr admission.Attrib
 	defer func() {
 		webhookReinvokeCtx.SetLastWebhookInvocationOutput(attr.GetObject())
 	}()
-	v := &versionedAttributeAccessor{
-		attr:             attr,
-		objectInterfaces: o,
-	}
+	var versionedAttr *generic.VersionedAttributes
 	for i, hook := range hooks {
 		attrForCheck := attr
-		if v.versionedAttr != nil {
-			attrForCheck = v.versionedAttr
+		if versionedAttr != nil {
+			attrForCheck = versionedAttr
 		}
-
-		invocation, statusErr := a.plugin.ShouldCallHook(ctx, hook, attrForCheck, o, v)
+		invocation, statusErr := a.plugin.ShouldCallHook(hook, attrForCheck, o)
 		if statusErr != nil {
 			return statusErr
 		}
 		if invocation == nil {
 			continue
 		}
-
 		hook, ok := invocation.Webhook.GetMutatingWebhook()
 		if !ok {
 			return fmt.Errorf("mutating webhook dispatch requires v1.MutatingWebhook, but got %T", hook)
@@ -151,9 +120,17 @@ func (a *mutatingDispatcher) Dispatch(ctx context.Context, attr admission.Attrib
 			continue
 		}
 
-		versionedAttr, err := v.VersionedAttribute(invocation.Kind)
-		if err != nil {
-			return apierrors.NewInternalError(err)
+		if versionedAttr == nil {
+			// First webhook, create versioned attributes
+			var err error
+			if versionedAttr, err = generic.NewVersionedAttributes(attr, invocation.Kind, o); err != nil {
+				return apierrors.NewInternalError(err)
+			}
+		} else {
+			// Subsequent webhook, convert existing versioned attributes to this webhook's version
+			if err := generic.ConvertVersionedAttributes(versionedAttr, invocation.Kind, o); err != nil {
+				return apierrors.NewInternalError(err)
+			}
 		}
 
 		t := time.Now()
@@ -171,10 +148,7 @@ func (a *mutatingDispatcher) Dispatch(ctx context.Context, attr admission.Attrib
 			case *webhookutil.ErrCallingWebhook:
 				if !ignoreClientCallFailures {
 					rejected = true
-					// Ignore context cancelled from webhook metrics
-					if !errors.Is(err.Reason, context.Canceled) {
-						admissionmetrics.Metrics.ObserveWebhookRejection(ctx, hook.Name, "admit", string(versionedAttr.Attributes.GetOperation()), admissionmetrics.WebhookRejectionCallingWebhookError, int(err.Status.ErrStatus.Code))
-					}
+					admissionmetrics.Metrics.ObserveWebhookRejection(ctx, hook.Name, "admit", string(versionedAttr.Attributes.GetOperation()), admissionmetrics.WebhookRejectionCallingWebhookError, int(err.Status.ErrStatus.Code))
 				}
 				admissionmetrics.Metrics.ObserveWebhook(ctx, hook.Name, time.Since(t), rejected, versionedAttr.Attributes, "admit", int(err.Status.ErrStatus.Code))
 			case *webhookutil.ErrWebhookRejection:
@@ -203,14 +177,10 @@ func (a *mutatingDispatcher) Dispatch(ctx context.Context, attr admission.Attrib
 
 		if callErr, ok := err.(*webhookutil.ErrCallingWebhook); ok {
 			if ignoreClientCallFailures {
-				// Ignore context cancelled from webhook metrics
-				if errors.Is(callErr.Reason, context.Canceled) {
-					klog.Warningf("Context canceled when calling webhook %v", hook.Name)
-				} else {
-					klog.Warningf("Failed calling webhook, failing open %v: %v", hook.Name, callErr)
-					admissionmetrics.Metrics.ObserveWebhookFailOpen(ctx, hook.Name, "admit")
-					annotator.addFailedOpenAnnotation()
-				}
+				klog.Warningf("Failed calling webhook, failing open %v: %v", hook.Name, callErr)
+				admissionmetrics.Metrics.ObserveWebhookFailOpen(ctx, hook.Name, "admit")
+				annotator.addFailedOpenAnnotation()
+
 				utilruntime.HandleError(callErr)
 
 				select {
@@ -232,8 +202,8 @@ func (a *mutatingDispatcher) Dispatch(ctx context.Context, attr admission.Attrib
 	}
 
 	// convert versionedAttr.VersionedObject to the internal version in the underlying admission.Attributes
-	if v.versionedAttr != nil && v.versionedAttr.VersionedObject != nil && v.versionedAttr.Dirty {
-		return o.GetObjectConvertor().Convert(v.versionedAttr.VersionedObject, v.versionedAttr.Attributes.GetObject(), nil)
+	if versionedAttr != nil && versionedAttr.VersionedObject != nil && versionedAttr.Dirty {
+		return o.GetObjectConvertor().Convert(versionedAttr.VersionedObject, versionedAttr.Attributes.GetObject(), nil)
 	}
 
 	return nil
@@ -241,7 +211,7 @@ func (a *mutatingDispatcher) Dispatch(ctx context.Context, attr admission.Attrib
 
 // note that callAttrMutatingHook updates attr
 
-func (a *mutatingDispatcher) callAttrMutatingHook(ctx context.Context, h *admissionregistrationv1.MutatingWebhook, invocation *generic.WebhookInvocation, attr *admission.VersionedAttributes, annotator *webhookAnnotator, o admission.ObjectInterfaces, round, idx int) (bool, error) {
+func (a *mutatingDispatcher) callAttrMutatingHook(ctx context.Context, h *admissionregistrationv1.MutatingWebhook, invocation *generic.WebhookInvocation, attr *generic.VersionedAttributes, annotator *webhookAnnotator, o admission.ObjectInterfaces, round, idx int) (bool, error) {
 	configurationName := invocation.Webhook.GetConfigurationName()
 	changed := false
 	defer func() { annotator.addMutationAnnotation(changed) }()
@@ -263,14 +233,14 @@ func (a *mutatingDispatcher) callAttrMutatingHook(ctx context.Context, h *admiss
 	if err != nil {
 		return false, &webhookutil.ErrCallingWebhook{WebhookName: h.Name, Reason: fmt.Errorf("could not get REST client: %w", err), Status: apierrors.NewBadRequest("error getting REST client")}
 	}
-	ctx, span := tracing.Start(ctx, "Call mutating webhook",
-		attribute.String("configuration", configurationName),
-		attribute.String("webhook", h.Name),
-		attribute.Stringer("resource", attr.GetResource()),
-		attribute.String("subresource", attr.GetSubresource()),
-		attribute.String("operation", string(attr.GetOperation())),
-		attribute.String("UID", string(uid)))
-	defer span.End(500 * time.Millisecond)
+	trace := utiltrace.New("Call mutating webhook",
+		utiltrace.Field{"configuration", configurationName},
+		utiltrace.Field{"webhook", h.Name},
+		utiltrace.Field{"resource", attr.GetResource()},
+		utiltrace.Field{"subresource", attr.GetSubresource()},
+		utiltrace.Field{"operation", attr.GetOperation()},
+		utiltrace.Field{"UID", uid})
+	defer trace.LogIfLong(500 * time.Millisecond)
 
 	// if the webhook has a specific timeout, wrap the context to apply it
 	if h.TimeoutSeconds != nil {
@@ -309,7 +279,7 @@ func (a *mutatingDispatcher) callAttrMutatingHook(ctx context.Context, h *admiss
 		}
 		return false, &webhookutil.ErrCallingWebhook{WebhookName: h.Name, Reason: fmt.Errorf("failed to call webhook: %w", err), Status: status}
 	}
-	span.AddEvent("Request completed")
+	trace.Step("Request completed")
 
 	result, err := webhookrequest.VerifyAdmissionResponse(uid, true, response)
 	if err != nil {
@@ -383,7 +353,7 @@ func (a *mutatingDispatcher) callAttrMutatingHook(ctx context.Context, h *admiss
 	}
 
 	changed = !apiequality.Semantic.DeepEqual(attr.VersionedObject, newVersionedObject)
-	span.AddEvent("Patch applied")
+	trace.Step("Patch applied")
 	annotator.addPatchAnnotation(patchObj, result.PatchType)
 	attr.Dirty = true
 	attr.VersionedObject = newVersionedObject
@@ -392,7 +362,7 @@ func (a *mutatingDispatcher) callAttrMutatingHook(ctx context.Context, h *admiss
 }
 
 type webhookAnnotator struct {
-	attr                    *admission.VersionedAttributes
+	attr                    *generic.VersionedAttributes
 	failedOpenAnnotationKey string
 	patchAnnotationKey      string
 	mutationAnnotationKey   string
@@ -400,7 +370,7 @@ type webhookAnnotator struct {
 	configuration           string
 }
 
-func newWebhookAnnotator(attr *admission.VersionedAttributes, round, idx int, webhook, configuration string) *webhookAnnotator {
+func newWebhookAnnotator(attr *generic.VersionedAttributes, round, idx int, webhook, configuration string) *webhookAnnotator {
 	return &webhookAnnotator{
 		attr:                    attr,
 		failedOpenAnnotationKey: fmt.Sprintf("%sround_%d_index_%d", MutationAuditAnnotationFailedOpenKeyPrefix, round, idx),

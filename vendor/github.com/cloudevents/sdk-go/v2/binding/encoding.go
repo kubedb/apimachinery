@@ -19,9 +19,6 @@ const (
 	EncodingEvent
 	// When the encoding is unknown (which means that the message is a non-event)
 	EncodingUnknown
-
-	// EncodingBatch is an instance of JSON Batched Events
-	EncodingBatch
 )
 
 func (e Encoding) String() string {
@@ -32,8 +29,6 @@ func (e Encoding) String() string {
 		return "structured"
 	case EncodingEvent:
 		return "event"
-	case EncodingBatch:
-		return "batch"
 	case EncodingUnknown:
 		return "unknown"
 	}

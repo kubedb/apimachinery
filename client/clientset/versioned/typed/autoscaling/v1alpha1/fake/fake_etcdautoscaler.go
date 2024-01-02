@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakeEtcdAutoscalers struct {
 	ns   string
 }
 
-var etcdautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("etcdautoscalers")
+var etcdautoscalersResource = schema.GroupVersionResource{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Resource: "etcdautoscalers"}
 
-var etcdautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("EtcdAutoscaler")
+var etcdautoscalersKind = schema.GroupVersionKind{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Kind: "EtcdAutoscaler"}
 
 // Get takes name of the etcdAutoscaler, and returns the corresponding etcdAutoscaler object, and an error if there is any.
 func (c *FakeEtcdAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.EtcdAutoscaler, err error) {

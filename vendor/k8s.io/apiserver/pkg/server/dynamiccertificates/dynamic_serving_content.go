@@ -20,7 +20,7 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
-	"os"
+	"io/ioutil"
 	"sync/atomic"
 	"time"
 
@@ -80,11 +80,11 @@ func (c *DynamicCertKeyPairContent) AddListener(listener Listener) {
 
 // loadCertKeyPair determines the next set of content for the file.
 func (c *DynamicCertKeyPairContent) loadCertKeyPair() error {
-	cert, err := os.ReadFile(c.certFile)
+	cert, err := ioutil.ReadFile(c.certFile)
 	if err != nil {
 		return err
 	}
-	key, err := os.ReadFile(c.keyFile)
+	key, err := ioutil.ReadFile(c.keyFile)
 	if err != nil {
 		return err
 	}
@@ -185,7 +185,7 @@ func (c *DynamicCertKeyPairContent) watchCertKeyFile(stopCh <-chan struct{}) err
 func (c *DynamicCertKeyPairContent) handleWatchEvent(e fsnotify.Event, w *fsnotify.Watcher) error {
 	// This should be executed after restarting the watch (if applicable) to ensure no file event will be missing.
 	defer c.queue.Add(workItemKey)
-	if !e.Has(fsnotify.Remove) && !e.Has(fsnotify.Rename) {
+	if e.Op&(fsnotify.Remove|fsnotify.Rename) == 0 {
 		return nil
 	}
 	if err := w.Remove(e.Name); err != nil {

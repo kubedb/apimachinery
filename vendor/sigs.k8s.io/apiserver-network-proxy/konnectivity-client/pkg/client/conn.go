@@ -20,11 +20,9 @@ import (
 	"errors"
 	"io"
 	"net"
-	"sync/atomic"
 	"time"
 
 	"k8s.io/klog/v2"
-
 	"sigs.k8s.io/apiserver-network-proxy/konnectivity-client/proto/client"
 )
 
@@ -32,31 +30,25 @@ import (
 // successful delivery of CLOSE_REQ.
 const CloseTimeout = 10 * time.Second
 
-var errConnTunnelClosed = errors.New("tunnel closed")
 var errConnCloseTimeout = errors.New("close timeout")
 
 // conn is an implementation of net.Conn, where the data is transported
 // over an established tunnel defined by a gRPC service ProxyService.
 type conn struct {
-	tunnel *grpcTunnel
-	// connID is set when a successful DIAL_RSP is received
-	connID int64
-	// random (dialID) is always initialized
-	random int64
-	readCh chan []byte
-	// On receiving CLOSE_RSP, closeCh will be sent any error message and closed.
+	stream  client.ProxyService_ProxyClient
+	connID  int64
+	random  int64
+	readCh  chan []byte
 	closeCh chan string
 	rdata   []byte
 
-	// closing is an atomic bool represented as a 0 or 1, and set to true when the connection is being closed.
-	// closing should only be accessed through atomic methods.
-	// TODO: switch this to an atomic.Bool once the client is exclusively buit with go1.19+
-	closing uint32
+	// closeTunnel is an optional callback to close the underlying grpc connection.
+	closeTunnel func()
 }
 
 var _ net.Conn = &conn{}
 
-// Write sends the data through the connection over proxy service
+// Write sends the data thru the connection over proxy service
 func (c *conn) Write(data []byte) (n int, err error) {
 	req := &client.Packet{
 		Type: client.PacketType_DATA,
@@ -70,7 +62,7 @@ func (c *conn) Write(data []byte) (n int, err error) {
 
 	klog.V(5).InfoS("[tracing] send req", "type", req.Type)
 
-	err = c.tunnel.Send(req)
+	err = c.stream.Send(req)
 	if err != nil {
 		return 0, err
 	}
@@ -123,23 +115,40 @@ func (c *conn) SetWriteDeadline(t time.Time) error {
 	return errors.New("not implemented")
 }
 
-// Close closes the connection, sends best-effort close signal to proxy
-// service, and frees resources.
+// Close closes the connection. It also sends CLOSE_REQ packet over
+// proxy service to notify remote to drop the connection.
 func (c *conn) Close() error {
-	old := atomic.SwapUint32(&c.closing, 1)
-	if old != 0 {
-		// prevent duplicate messages
-		return nil
+	klog.V(4).Infoln("closing connection")
+	if c.closeTunnel != nil {
+		defer c.closeTunnel()
 	}
-	klog.V(4).Infoln("closing connection", "dialID", c.random, "connectionID", c.connID)
 
-	defer c.tunnel.closeTunnel()
-
+	var req *client.Packet
 	if c.connID != 0 {
-		c.tunnel.sendCloseRequest(c.connID)
+		req = &client.Packet{
+			Type: client.PacketType_CLOSE_REQ,
+			Payload: &client.Packet_CloseRequest{
+				CloseRequest: &client.CloseRequest{
+					ConnectID: c.connID,
+				},
+			},
+		}
 	} else {
 		// Never received a DIAL response so no connection ID.
-		c.tunnel.sendDialClose(c.random)
+		req = &client.Packet{
+			Type: client.PacketType_DIAL_CLS,
+			Payload: &client.Packet_CloseDial{
+				CloseDial: &client.CloseDial{
+					Random: c.random,
+				},
+			},
+		}
+	}
+
+	klog.V(5).InfoS("[tracing] send req", "type", req.Type)
+
+	if err := c.stream.Send(req); err != nil {
+		return err
 	}
 
 	select {
@@ -148,8 +157,6 @@ func (c *conn) Close() error {
 			return errors.New(errMsg)
 		}
 		return nil
-	case <-c.tunnel.Done():
-		return errConnTunnelClosed
 	case <-time.After(CloseTimeout):
 	}
 

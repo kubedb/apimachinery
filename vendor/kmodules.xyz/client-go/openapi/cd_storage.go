@@ -18,7 +18,6 @@ package openapi
 
 import (
 	"context"
-	"strings"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -36,7 +35,6 @@ var (
 	_ rest.Creater                  = &CDStorage{}
 	_ rest.GracefulDeleter          = &CDStorage{}
 	_ rest.Storage                  = &CDStorage{}
-	_ rest.SingularNameProvider     = &CDStorage{}
 )
 
 func NewCDStorage(cfg ResourceInfo) *CDStorage {
@@ -45,10 +43,6 @@ func NewCDStorage(cfg ResourceInfo) *CDStorage {
 
 func (r *CDStorage) GroupVersionKind(containingGV schema.GroupVersion) schema.GroupVersionKind {
 	return r.cfg.gvk
-}
-
-func (r *CDStorage) GetSingularName() string {
-	return strings.ToLower(r.cfg.gvk.Kind)
 }
 
 func (r *CDStorage) NamespaceScoped() bool {

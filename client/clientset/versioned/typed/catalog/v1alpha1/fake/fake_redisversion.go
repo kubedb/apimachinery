@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -34,9 +35,9 @@ type FakeRedisVersions struct {
 	Fake *FakeCatalogV1alpha1
 }
 
-var redisversionsResource = v1alpha1.SchemeGroupVersion.WithResource("redisversions")
+var redisversionsResource = schema.GroupVersionResource{Group: "catalog.kubedb.com", Version: "v1alpha1", Resource: "redisversions"}
 
-var redisversionsKind = v1alpha1.SchemeGroupVersion.WithKind("RedisVersion")
+var redisversionsKind = schema.GroupVersionKind{Group: "catalog.kubedb.com", Version: "v1alpha1", Kind: "RedisVersion"}
 
 // Get takes name of the redisVersion, and returns the corresponding redisVersion object, and an error if there is any.
 func (c *FakeRedisVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.RedisVersion, err error) {

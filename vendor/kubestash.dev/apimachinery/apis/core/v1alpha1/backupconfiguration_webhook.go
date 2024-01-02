@@ -30,7 +30,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
-	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 	"sync"
 )
 
@@ -184,24 +183,24 @@ func (b *BackupConfiguration) getDefaultRetentionPolicy(ctx context.Context, c c
 var _ webhook.Validator = &BackupConfiguration{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (b *BackupConfiguration) ValidateCreate() (admission.Warnings, error) {
+func (b *BackupConfiguration) ValidateCreate() error {
 	backupconfigurationlog.Info("validate create", apis.KeyName, b.Name)
 
 	c := apis.GetRuntimeClient()
 
 	if err := b.validateBackends(); err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := b.validateSessions(context.Background(), c); err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := b.validateBackendsAgainstUsagePolicy(context.Background(), c); err != nil {
-		return nil, err
+		return err
 	}
 
-	return nil, b.validateHookTemplatesAgainstUsagePolicy(context.Background(), c)
+	return b.validateHookTemplatesAgainstUsagePolicy(context.Background(), c)
 }
 
 var (
@@ -622,28 +621,28 @@ func (b *BackupConfiguration) getHookTemplatesFromHookInfo(hooks []HookInfo) []H
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) error {
 	backupconfigurationlog.Info("validate update", apis.KeyName, b.Name)
 	c := apis.GetRuntimeClient()
 	if err := b.validateBackends(); err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := b.validateSessions(context.Background(), c); err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := b.validateBackendsAgainstUsagePolicy(context.Background(), c); err != nil {
-		return nil, err
+		return err
 	}
 
-	return nil, b.validateHookTemplatesAgainstUsagePolicy(context.Background(), c)
+	return b.validateHookTemplatesAgainstUsagePolicy(context.Background(), c)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (b *BackupConfiguration) ValidateDelete() (admission.Warnings, error) {
+func (b *BackupConfiguration) ValidateDelete() error {
 	backupconfigurationlog.Info("validate delete", apis.KeyName, b.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.
-	return nil, nil
+	return nil
 }

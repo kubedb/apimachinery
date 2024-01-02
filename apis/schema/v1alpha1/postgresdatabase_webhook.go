@@ -25,7 +25,6 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
-	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
 // log is for logging in this package.
@@ -51,28 +50,28 @@ func (r *PostgresDatabase) Default() {
 var _ webhook.Validator = &PostgresDatabase{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *PostgresDatabase) ValidateCreate() (admission.Warnings, error) {
+func (r *PostgresDatabase) ValidateCreate() error {
 	postgresdatabaselog.Info("validate create", "name", r.Name)
 	if r.Spec.Init != nil && r.Spec.Init.Initialized {
-		return nil, field.Invalid(field.NewPath("spec").Child("init").Child("initialized"), r.Spec.Init.Initialized, fmt.Sprintf(`can't set spec.init.initialized true while creating postgresSchema %s/%s`, r.Namespace, r.Name))
+		return field.Invalid(field.NewPath("spec").Child("init").Child("initialized"), r.Spec.Init.Initialized, fmt.Sprintf(`can't set spec.init.initialized true while creating postgresSchema %s/%s`, r.Namespace, r.Name))
 	}
-	return nil, r.ValidatePostgresDatabase()
+	return r.ValidatePostgresDatabase()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *PostgresDatabase) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *PostgresDatabase) ValidateUpdate(old runtime.Object) error {
 	postgresdatabaselog.Info("validate update", "name", r.Name)
 	oldobj := old.(*PostgresDatabase)
-	return nil, r.ValidatePostgresDatabaseUpdate(oldobj, r)
+	return r.ValidatePostgresDatabaseUpdate(oldobj, r)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *PostgresDatabase) ValidateDelete() (admission.Warnings, error) {
+func (r *PostgresDatabase) ValidateDelete() error {
 	postgresdatabaselog.Info("validate delete", "name", r.Name)
 	if r.Spec.DeletionPolicy == DeletionPolicyDoNotDelete {
-		return nil, field.Invalid(field.NewPath("spec").Child("deletionPolicy"), r.Spec.DeletionPolicy, fmt.Sprintf(`can't delete postgresSchema %s/%s when deletionPolicy is "DoNotDelete"`, r.Namespace, r.Name))
+		return field.Invalid(field.NewPath("spec").Child("deletionPolicy"), r.Spec.DeletionPolicy, fmt.Sprintf(`can't delete postgresSchema %s/%s when deletionPolicy is "DoNotDelete"`, r.Namespace, r.Name))
 	}
-	return nil, nil
+	return nil
 }
 
 func (r *PostgresDatabase) ValidateReadOnly() *field.Error {

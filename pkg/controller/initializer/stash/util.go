@@ -267,7 +267,7 @@ func getTargetPhase(status v1beta1.RestoreBatchStatus, target *v1beta1.RestoreTa
 // is present in the cluster or not. It wait until all the CRDs are found.
 func (c *Controller) waitUntilStashInstalled(stopCh <-chan struct{}) error {
 	klog.Infoln("Looking for the Stash operator.......")
-	return wait.PollUntilContextCancel(wait.ContextForChannel(stopCh), time.Second*10, true, func(ctx context.Context) (bool, error) {
+	return wait.PollImmediateUntil(time.Second*10, func() (bool, error) {
 		return discovery.ExistsGroupKinds(c.Client.Discovery(),
 			schema.GroupKind{Group: stash.GroupName, Kind: v1alpha1.ResourceKindRepository},
 			schema.GroupKind{Group: stash.GroupName, Kind: v1beta1.ResourceKindBackupConfiguration},
@@ -278,7 +278,7 @@ func (c *Controller) waitUntilStashInstalled(stopCh <-chan struct{}) error {
 			schema.GroupKind{Group: stash.GroupName, Kind: v1beta1.ResourceKindTask},
 			schema.GroupKind{Group: stash.GroupName, Kind: v1beta1.ResourceKindFunction},
 		), nil
-	})
+	}, stopCh)
 }
 
 func (c *Controller) extractDatabaseInfo(ri *restoreInfo) error {

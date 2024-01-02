@@ -34,6 +34,10 @@ import (
 )
 
 // ObjectStoreManager creates, loads and deletes Object Stores
+//
+// Notice: Experimental Preview
+//
+// This functionality is EXPERIMENTAL and may be changed in later releases.
 type ObjectStoreManager interface {
 	// ObjectStore will look up and bind to an existing object store instance.
 	ObjectStore(bucket string) (ObjectStore, error)
@@ -49,6 +53,10 @@ type ObjectStoreManager interface {
 
 // ObjectStore is a blob store capable of storing large objects efficiently in
 // JetStream streams
+//
+// Notice: Experimental Preview
+//
+// This functionality is EXPERIMENTAL and may be changed in later releases.
 type ObjectStore interface {
 	// Put will place the contents from the reader into a new object.
 	Put(obj *ObjectMeta, reader io.Reader, opts ...ObjectOpt) (*ObjectInfo, error)
@@ -142,17 +150,13 @@ var (
 
 // ObjectStoreConfig is the config for the object store.
 type ObjectStoreConfig struct {
-	Bucket      string        `json:"bucket"`
-	Description string        `json:"description,omitempty"`
-	TTL         time.Duration `json:"max_age,omitempty"`
-	MaxBytes    int64         `json:"max_bytes,omitempty"`
-	Storage     StorageType   `json:"storage,omitempty"`
-	Replicas    int           `json:"num_replicas,omitempty"`
-	Placement   *Placement    `json:"placement,omitempty"`
-
-	// Bucket-specific metadata
-	// NOTE: Metadata requires nats-server v2.10.0+
-	Metadata map[string]string `json:"metadata,omitempty"`
+	Bucket      string
+	Description string
+	TTL         time.Duration
+	MaxBytes    int64
+	Storage     StorageType
+	Replicas    int
+	Placement   *Placement
 }
 
 type ObjectStoreStatus interface {
@@ -172,8 +176,6 @@ type ObjectStoreStatus interface {
 	Size() uint64
 	// BackingStore provides details about the underlying storage
 	BackingStore() string
-	// Metadata is the user supplied metadata for the bucket
-	Metadata() map[string]string
 }
 
 // ObjectMetaOptions
@@ -184,10 +186,9 @@ type ObjectMetaOptions struct {
 
 // ObjectMeta is high level information about an object.
 type ObjectMeta struct {
-	Name        string            `json:"name"`
-	Description string            `json:"description,omitempty"`
-	Headers     Header            `json:"headers,omitempty"`
-	Metadata    map[string]string `json:"metadata,omitempty"`
+	Name        string `json:"name"`
+	Description string `json:"description,omitempty"`
+	Headers     Header `json:"headers,omitempty"`
 
 	// Optional options.
 	Opts *ObjectMetaOptions `json:"options,omitempty"`
@@ -279,7 +280,6 @@ func (js *js) CreateObjectStore(cfg *ObjectStoreConfig) (ObjectStore, error) {
 		Discard:     DiscardNew,
 		AllowRollup: true,
 		AllowDirect: true,
-		Metadata:    cfg.Metadata,
 	}
 
 	// Create our stream.
@@ -658,7 +658,7 @@ func (obs *obs) Get(name string, opts ...GetObjectOpt) (ObjectResult, error) {
 		result.digest.Write(m.Data)
 
 		// Check if we are done.
-		if tokens[parser.AckNumPendingTokenPos] == objNoPending {
+		if tokens[ackNumPendingTokenPos] == objNoPending {
 			pw.Close()
 			m.Sub.Unsubscribe()
 		}
@@ -974,7 +974,6 @@ func (obs *obs) UpdateMeta(name string, meta *ObjectMeta) error {
 	info.Name = meta.Name
 	info.Description = meta.Description
 	info.Headers = meta.Headers
-	info.Metadata = meta.Metadata
 
 	// Prepare the meta message
 	if err = publishMeta(info, obs.js); err != nil {
@@ -1057,8 +1056,6 @@ func (obs *obs) Watch(opts ...WatchOpt) (ObjectWatcher, error) {
 			w.updates <- &info
 		}
 
-		// if UpdatesOnly is set, no not send nil to the channel
-		// as it would always be triggered after initializing the watcher
 		if !initDoneMarker && meta.NumPending == 0 {
 			initDoneMarker = true
 			w.updates <- nil
@@ -1067,26 +1064,15 @@ func (obs *obs) Watch(opts ...WatchOpt) (ObjectWatcher, error) {
 
 	allMeta := fmt.Sprintf(objAllMetaPreTmpl, obs.name)
 	_, err := obs.js.GetLastMsg(obs.stream, allMeta)
-	// if there are no messages on the stream and we are not watching
-	// updates only, send nil to the channel to indicate that the initial
-	// watch is done
-	if !o.updatesOnly {
-		if errors.Is(err, ErrMsgNotFound) {
-			initDoneMarker = true
-			w.updates <- nil
-		}
-	} else {
-		// if UpdatesOnly was used, mark initialization as complete
+	if err == ErrMsgNotFound {
 		initDoneMarker = true
+		w.updates <- nil
 	}
 
 	// Used ordered consumer to deliver results.
 	subOpts := []SubOpt{OrderedConsumer()}
 	if !o.includeHistory {
 		subOpts = append(subOpts, DeliverLastPerSubject())
-	}
-	if o.updatesOnly {
-		subOpts = append(subOpts, DeliverNew())
 	}
 	sub, err := obs.js.Subscribe(allMeta, update, subOpts...)
 	if err != nil {
@@ -1197,9 +1183,6 @@ func (s *ObjectBucketStatus) Size() uint64 { return s.nfo.State.Bytes }
 
 // BackingStore indicates what technology is used for storage of the bucket
 func (s *ObjectBucketStatus) BackingStore() string { return "JetStream" }
-
-// Metadata is the metadata supplied when creating the bucket
-func (s *ObjectBucketStatus) Metadata() map[string]string { return s.nfo.Config.Metadata }
 
 // StreamInfo is the stream info retrieved to create the status
 func (s *ObjectBucketStatus) StreamInfo() *StreamInfo { return s.nfo }

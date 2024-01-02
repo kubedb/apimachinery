@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakeRedisOpsRequests struct {
 	ns   string
 }
 
-var redisopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("redisopsrequests")
+var redisopsrequestsResource = schema.GroupVersionResource{Group: "ops.kubedb.com", Version: "v1alpha1", Resource: "redisopsrequests"}
 
-var redisopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("RedisOpsRequest")
+var redisopsrequestsKind = schema.GroupVersionKind{Group: "ops.kubedb.com", Version: "v1alpha1", Kind: "RedisOpsRequest"}
 
 // Get takes name of the redisOpsRequest, and returns the corresponding redisOpsRequest object, and an error if there is any.
 func (c *FakeRedisOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.RedisOpsRequest, err error) {

@@ -23,6 +23,7 @@ import (
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +36,9 @@ type FakeMariaDBAutoscalers struct {
 	ns   string
 }
 
-var mariadbautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("mariadbautoscalers")
+var mariadbautoscalersResource = schema.GroupVersionResource{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Resource: "mariadbautoscalers"}
 
-var mariadbautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("MariaDBAutoscaler")
+var mariadbautoscalersKind = schema.GroupVersionKind{Group: "autoscaling.kubedb.com", Version: "v1alpha1", Kind: "MariaDBAutoscaler"}
 
 // Get takes name of the mariaDBAutoscaler, and returns the corresponding mariaDBAutoscaler object, and an error if there is any.
 func (c *FakeMariaDBAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MariaDBAutoscaler, err error) {
