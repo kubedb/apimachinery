@@ -134,16 +134,11 @@ type PgpoolConfiguration struct {
 	PgpoolConfig *runtime.RawExtension `json:"pgpoolConfig,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PgpoolList contains a list of Pgpool
 type PgpoolList struct {
 	meta.TypeMeta `json:",inline"`
 	meta.ListMeta `json:"metadata,omitempty"`
 	Items         []Pgpool `json:"items"`
-}
-
-func (in *PgpoolList) DeepCopyObject() runtime.Object {
-	//TODO implement me
-	panic("implement me")
 }
