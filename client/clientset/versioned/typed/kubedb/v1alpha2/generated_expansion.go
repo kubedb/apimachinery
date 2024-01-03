@@ -38,6 +38,8 @@ type PerconaXtraDBExpansion interface{}
 
 type PgBouncerExpansion interface{}
 
+type PgpoolExpansion interface{}
+
 type PostgresExpansion interface{}
 
 type ProxySQLExpansion interface{}

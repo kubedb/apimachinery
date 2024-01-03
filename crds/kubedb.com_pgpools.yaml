@@ -8,11 +8,16 @@ metadata:
 spec:
   group: kubedb.com
   names:
+    categories:
+    - datastore
+    - kubedb
+    - appscode
+    - all
     kind: Pgpool
     listKind: PgpoolList
     plural: pgpools
     shortNames:
-    - rm
+    - pp
     singular: pgpool
   scope: Namespaced
   versions:

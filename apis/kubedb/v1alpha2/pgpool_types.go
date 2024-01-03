@@ -34,29 +34,23 @@ const (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+// Pgpool is the Schema for the pgpools API
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:shortName=rm,scope=Namespaced
+// +kubebuilder:resource:path=pgpools,singular=pgpool,shortName=pp,categories={datastore,kubedb,appscode,all}
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-
-// Pgpool is the Schema for the pgpools API
 type Pgpool struct {
 	meta.TypeMeta   `json:",inline"`
 	meta.ObjectMeta `json:"metadata,omitempty"`
 	Spec            PgpoolSpec   `json:"spec,omitempty"`
 	Status          PgpoolStatus `json:"status,omitempty"`
-}
-
-func (in *Pgpool) DeepCopyObject() runtime.Object {
-	//TODO implement me
-	panic("implement me")
 }
 
 // PgpoolSpec defines the desired state of Pgpool
@@ -134,16 +128,11 @@ type PgpoolConfiguration struct {
 	PgpoolConfig *runtime.RawExtension `json:"pgpoolConfig,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PgpoolList contains a list of Pgpool
 type PgpoolList struct {
 	meta.TypeMeta `json:",inline"`
 	meta.ListMeta `json:"metadata,omitempty"`
 	Items         []Pgpool `json:"items"`
-}
-
-func (in *PgpoolList) DeepCopyObject() runtime.Object {
-	//TODO implement me
-	panic("implement me")
 }

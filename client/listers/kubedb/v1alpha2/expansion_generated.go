@@ -98,6 +98,14 @@ type PgBouncerListerExpansion interface{}
 // PgBouncerNamespaceLister.
 type PgBouncerNamespaceListerExpansion interface{}
 
+// PgpoolListerExpansion allows custom methods to be added to
+// PgpoolLister.
+type PgpoolListerExpansion interface{}
+
+// PgpoolNamespaceListerExpansion allows custom methods to be added to
+// PgpoolNamespaceLister.
+type PgpoolNamespaceListerExpansion interface{}
+
 // PostgresListerExpansion allows custom methods to be added to
 // PostgresLister.
 type PostgresListerExpansion interface{}

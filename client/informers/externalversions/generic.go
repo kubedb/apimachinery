@@ -159,6 +159,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().PerconaXtraDBs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("pgbouncers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().PgBouncers().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("pgpools"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Pgpools().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("postgreses"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Postgreses().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("proxysqls"):

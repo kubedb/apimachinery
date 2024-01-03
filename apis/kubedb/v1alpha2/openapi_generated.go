@@ -27526,8 +27526,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Pgpool(ref common.ReferenceCallbac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Pgpool is the Schema for the pgpools API",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{

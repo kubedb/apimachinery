@@ -76,7 +76,6 @@ type PgpoolSecurityContext struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-//+kubebuilder:object:root=true
 
 // PgpoolVersionList contains a list of PgpoolVersion
 type PgpoolVersionList struct {
