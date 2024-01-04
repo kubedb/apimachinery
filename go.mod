@@ -23,19 +23,20 @@ require (
 	k8s.io/api v0.29.0
 	k8s.io/apiextensions-apiserver v0.29.0
 	k8s.io/apimachinery v0.29.0
+	k8s.io/apiserver v0.29.0
 	k8s.io/client-go v0.29.0
 	k8s.io/klog/v2 v2.110.1
 	k8s.io/kube-aggregator v0.29.0
 	k8s.io/kube-openapi v0.0.0-20231129212854-f0671cc7e66a
 	k8s.io/metrics v0.25.1
-	kmodules.xyz/client-go v0.29.4
+	kmodules.xyz/client-go v0.29.5
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.29.0
 	kmodules.xyz/monitoring-agent-api v0.29.0
 	kmodules.xyz/objectstore-api v0.29.0
 	kmodules.xyz/offshoot-api v0.29.0
-	kmodules.xyz/resource-metadata v0.18.1-0.20231225184845-c3650ae60818
-	kmodules.xyz/webhook-runtime v0.29.0
+	kmodules.xyz/resource-metadata v0.18.2-0.20240101021508-7630737cb0e6
+	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/sidekick v0.0.5-0.20231225214445-a15c70833046
 	kubestash.dev/apimachinery v0.3.1-0.20231231034418-cc46ddfd674a
 	sigs.k8s.io/controller-runtime v0.16.3
@@ -174,7 +175,6 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/apiserver v0.29.0 // indirect
 	k8s.io/component-base v0.29.0 // indirect
 	k8s.io/kms v0.29.0 // indirect
 	k8s.io/utils v0.0.0-20231127182322-b307cd553661 // indirect
