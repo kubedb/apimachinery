@@ -42,6 +42,7 @@ type CatalogV1alpha1Interface interface {
 	PostgresVersionsGetter
 	ProxySQLVersionsGetter
 	RedisVersionsGetter
+	SinglestoreVersionsGetter
 }
 
 // CatalogV1alpha1Client is used to interact with features provided by the catalog.kubedb.com group.
@@ -99,6 +100,10 @@ func (c *CatalogV1alpha1Client) ProxySQLVersions() ProxySQLVersionInterface {
 
 func (c *CatalogV1alpha1Client) RedisVersions() RedisVersionInterface {
 	return newRedisVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) SinglestoreVersions() SinglestoreVersionInterface {
+	return newSinglestoreVersions(c)
 }
 
 // NewForConfig creates a new CatalogV1alpha1Client for the given config.

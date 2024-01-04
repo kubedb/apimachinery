@@ -76,6 +76,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&RedisVersionList{},
 		&KafkaVersion{},
 		&KafkaVersionList{},
+		&SinglestoreVersion{},
+		&SinglestoreVersionList{},
 		&KafkaConnectorVersion{},
 		&KafkaConnectorVersionList{},
 	)

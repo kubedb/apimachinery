@@ -81,6 +81,10 @@ func (c *FakeCatalogV1alpha1) RedisVersions() v1alpha1.RedisVersionInterface {
 	return &FakeRedisVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) SinglestoreVersions() v1alpha1.SinglestoreVersionInterface {
+	return &FakeSinglestoreVersions{c}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeCatalogV1alpha1) RESTClient() rest.Interface {

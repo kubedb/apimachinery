@@ -50,6 +50,8 @@ type Interface interface {
 	Redises() RedisInformer
 	// RedisSentinels returns a RedisSentinelInformer.
 	RedisSentinels() RedisSentinelInformer
+	// Singlestores returns a SinglestoreInformer.
+	Singlestores() SinglestoreInformer
 }
 
 type version struct {
@@ -126,4 +128,9 @@ func (v *version) Redises() RedisInformer {
 // RedisSentinels returns a RedisSentinelInformer.
 func (v *version) RedisSentinels() RedisSentinelInformer {
 	return &redisSentinelInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Singlestores returns a SinglestoreInformer.
+func (v *version) Singlestores() SinglestoreInformer {
+	return &singlestoreInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
