@@ -107,7 +107,7 @@ func UpdateMariaDBOpsRequestStatus(
 	if err != nil {
 		return nil, err
 	}
-	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
+	err = wait.PollUntilContextTimeout(ctx, kutil.RetryInterval, kutil.RetryTimeout, true, func(ctx context.Context) (bool, error) {
 		attempt++
 		var e2 error
 		result, e2 = c.MariaDBOpsRequests(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)

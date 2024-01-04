@@ -83,7 +83,7 @@ func PatchMongoDBAutoscalerObject(ctx context.Context, c ascs.AutoscalingV1alpha
 
 func TryUpdateMongoDBAutoscaler(ctx context.Context, c ascs.AutoscalingV1alpha1Interface, meta metav1.ObjectMeta, transform func(*asapi.MongoDBAutoscaler) *asapi.MongoDBAutoscaler, opts metav1.UpdateOptions) (result *asapi.MongoDBAutoscaler, err error) {
 	attempt := 0
-	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
+	err = wait.PollUntilContextTimeout(ctx, kutil.RetryInterval, kutil.RetryTimeout, true, func(ctx context.Context) (bool, error) {
 		attempt++
 		cur, e2 := c.MongoDBAutoscalers(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
@@ -129,7 +129,7 @@ func UpdateMongoDBAutoscalerStatus(
 	if err != nil {
 		return nil, err
 	}
-	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
+	err = wait.PollUntilContextTimeout(ctx, kutil.RetryInterval, kutil.RetryTimeout, true, func(ctx context.Context) (bool, error) {
 		attempt++
 		var e2 error
 		result, e2 = c.MongoDBAutoscalers(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)

@@ -83,7 +83,7 @@ func PatchMongoDBOpsRequestObject(ctx context.Context, c cs.OpsV1alpha1Interface
 
 func TryUpdateMongoDBOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface, meta metav1.ObjectMeta, transform func(*api.MongoDBOpsRequest) *api.MongoDBOpsRequest, opts metav1.UpdateOptions) (result *api.MongoDBOpsRequest, err error) {
 	attempt := 0
-	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
+	err = wait.PollUntilContextTimeout(ctx, kutil.RetryInterval, kutil.RetryTimeout, true, func(ctx context.Context) (bool, error) {
 		attempt++
 		cur, e2 := c.MongoDBOpsRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
@@ -128,7 +128,7 @@ func UpdateMongoDBOpsRequestStatus(
 	if err != nil {
 		return nil, err
 	}
-	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
+	err = wait.PollUntilContextTimeout(ctx, kutil.RetryInterval, kutil.RetryTimeout, true, func(ctx context.Context) (bool, error) {
 		attempt++
 		var e2 error
 		result, e2 = c.MongoDBOpsRequests(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
