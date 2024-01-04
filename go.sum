@@ -1362,8 +1362,8 @@ k8s.io/utils v0.0.0-20231127182322-b307cd553661 h1:FepOBzJ0GXm8t0su67ln2wAZjbQ6R
 k8s.io/utils v0.0.0-20231127182322-b307cd553661/go.mod h1:OLgZIPagt7ERELqWJFomSt595RzquPNLL48iOWgYOg0=
 kmodules.xyz/apiversion v0.2.0 h1:vAQYqZFm4xu4pbB1cAdHbFEPES6EQkcR4wc06xdTOWk=
 kmodules.xyz/apiversion v0.2.0/go.mod h1:oPX8g8LvlPdPX3Yc5YvCzJHQnw3YF/X4/jdW0b1am80=
-kmodules.xyz/client-go v0.29.4 h1:WW4vlYtzLc9JXrJjcFuJO4DX/kIZ5ia7QtDyhNDUwfI=
-kmodules.xyz/client-go v0.29.4/go.mod h1:xWlS/1zWkx1sIKCAkzULy9570mHZYi2exDECEoP1ek4=
+kmodules.xyz/client-go v0.29.5 h1:iRl4MoV+96TM1csInOCWjn5xSOXzuYlil6CO40vXLHU=
+kmodules.xyz/client-go v0.29.5/go.mod h1:pHuzpwzEcDUIGjVVvwz9N8lY+6A7HXwvs2d7NtK7Hho=
 kmodules.xyz/crd-schema-fuzz v0.29.1 h1:zJTlWYOrT5dsVVHW8HGcnR/vaWfxQfNh11QwTtkYpcs=
 kmodules.xyz/crd-schema-fuzz v0.29.1/go.mod h1:n708z9YQqLMP2KNLQVgBcRJw1QpSWLvpNCEi+KJDOYE=
 kmodules.xyz/custom-resources v0.29.0 h1:RaDM2+wSVXiwIvLqmkTVYpwoH83AC8wruXe2p2rOZNY=
@@ -1378,12 +1378,12 @@ kmodules.xyz/offshoot-api v0.29.0 h1:GHLhxxT9jU1N8+FvOCCeJNyU5g0duYS46UGrs6AHNLY
 kmodules.xyz/offshoot-api v0.29.0/go.mod h1:5NxhBblXoDHWStx9HCDJR2KFTwYjEZ7i1Id3jelIunw=
 kmodules.xyz/prober v0.29.0 h1:Ex7m4F9rH7uWNNJlLgP63ROOM+nUATJkC2L5OQ7nwMg=
 kmodules.xyz/prober v0.29.0/go.mod h1:UtK+HKyI1lFLEKX+HFLyOCVju6TO93zv3kwGpzqmKOo=
-kmodules.xyz/resource-metadata v0.18.1-0.20231225184845-c3650ae60818 h1:jHrryhrR488uf/LPKXz+8IOe/01uEktveG9IedciW1A=
-kmodules.xyz/resource-metadata v0.18.1-0.20231225184845-c3650ae60818/go.mod h1:t9zy5/xAD042zBn9Zf7igQKh9TSPa72B3kVMXdTQTUI=
+kmodules.xyz/resource-metadata v0.18.2-0.20240101021508-7630737cb0e6 h1:a1ZAbqyIL41vgnsbkKP64r9fQBOVxpmaM+5GpwPJhcc=
+kmodules.xyz/resource-metadata v0.18.2-0.20240101021508-7630737cb0e6/go.mod h1:XsCdEKjfoulX29tMGviDhjT/jLl158uvMvXlKOhK1as=
 kmodules.xyz/resource-metrics v0.29.0 h1:YBSVCbGdAugUqZK4igHu3fPhxvpYar4xejE6njryNM4=
 kmodules.xyz/resource-metrics v0.29.0/go.mod h1:OuG/QobZ7o8GFHl/u3lqaUR0fDZDegxtV8Vdh+MNBD4=
-kmodules.xyz/webhook-runtime v0.29.0 h1:6W3/MMcaCwLGbEggj6i5+WmOziwV3WwroWpfwe29rTU=
-kmodules.xyz/webhook-runtime v0.29.0/go.mod h1:/TBpnSdTISjjUh4euI3XhNlpFU937CfKYoWjDm39pUY=
+kmodules.xyz/webhook-runtime v0.29.1 h1:SQ8NvwJpxv5CUuXIubSg9g0Bk8BBnj4dhCWEk6Ou8g8=
+kmodules.xyz/webhook-runtime v0.29.1/go.mod h1:WVgNO4NqFdYwYZ82L6QIycN1Ax47y+yXi7XIHekYylo=
 kubeops.dev/sidekick v0.0.5-0.20231225214445-a15c70833046 h1:X1ieV+IXqNesmFwSH6NEVF1J2wO0vplC4k6v3Vmq0d0=
 kubeops.dev/sidekick v0.0.5-0.20231225214445-a15c70833046/go.mod h1:XX6Vhw9EMmX9R8Y13AgaYDAsfeLZdTL8MzymTOAT0nY=
 kubestash.dev/apimachinery v0.3.1-0.20231231034418-cc46ddfd674a h1:zkRd7mpfFk2QtGKefGxZqpczy909KJCk4iPu9WOwCKU=
