@@ -31,6 +31,7 @@ type CatalogV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	ElasticsearchVersionsGetter
 	EtcdVersionsGetter
+	KafkaConnectorVersionsGetter
 	KafkaVersionsGetter
 	MariaDBVersionsGetter
 	MemcachedVersionsGetter
@@ -54,6 +55,10 @@ func (c *CatalogV1alpha1Client) ElasticsearchVersions() ElasticsearchVersionInte
 
 func (c *CatalogV1alpha1Client) EtcdVersions() EtcdVersionInterface {
 	return newEtcdVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) KafkaConnectorVersions() KafkaConnectorVersionInterface {
+	return newKafkaConnectorVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) KafkaVersions() KafkaVersionInterface {

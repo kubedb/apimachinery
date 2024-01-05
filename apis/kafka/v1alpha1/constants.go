@@ -19,6 +19,10 @@ package v1alpha1
 import "kubedb.dev/apimachinery/apis/kafka"
 
 const (
+	Finalizer = kafka.GroupName
+)
+
+const (
 	LabelRole = kafka.GroupName + "/role"
 	RoleStats = "stats"
 
@@ -29,22 +33,64 @@ const (
 // ConnectCluster constants
 
 const (
-	ConnectClusterContainerName = "connect-cluster"
-	ConnectClusterModeEnv       = "CONNECT_CLUSTER_MODE"
+	ConnectClusterUser            = "connect"
+	ConnectClusterContainerName   = "connect-cluster"
+	ConnectClusterModeEnv         = "CONNECT_CLUSTER_MODE"
+	ConnectClusterPrimaryPortName = "primary"
+	ConnectClusterPortName        = "connect"
+	ConnectClusterRESTPort        = 8083
+	ConnectClusterUserEnv         = "CONNECT_CLUSTER_USER"
+	ConnectClusterPasswordEnv     = "CONNECT_CLUSTER_PASSWORD"
 
-	ConnectClusterOperatorVolumeConfig  = "connect-operator-config"
-	ConnectClusterCustomVolumeConfig    = "connect-custom-config"
-	ConnectorPluginsVolumeName          = "connector-plugins"
-	ConnectClusterAuthSecretVolumeName  = "connect-cluster-auth"
-	ConnectClusterOffsetFileDirName     = "connect-stand-offset"
-	KafkaClientCertVolumeName           = "kafka-client-ssl"
-	ConnectClusterServerCertsVolumeName = "server-certs"
+	ConnectClusterOperatorVolumeConfig = "connect-operator-config"
+	ConnectClusterCustomVolumeConfig   = "connect-custom-config"
+	ConnectorPluginsVolumeName         = "connector-plugins"
+	ConnectClusterAuthSecretVolumeName = "connect-cluster-auth"
+	ConnectClusterOffsetFileDirName    = "connect-stand-offset"
 
-	ConnectClusterOperatorConfigPath   = "/opt/kafka/config/connect-operator-config"
-	ConnectorPluginsVolumeDir          = "/opt/kafka/libs/connector-plugins"
-	ConnectClusterAuthSecretVolumePath = "/var/private/basic-auth"
+	ConnectClusterGroupID                     = "group.id"
+	ConnectClusterPluginPath                  = "plugin.path"
+	ConnectClusterRestAdvertisedHostName      = "rest.advertised.host.name"
+	ConnectClusterRestAdvertisedPort          = "rest.advertised.port"
+	ConnectClusterOffsetStorage               = "offset.storage.file.filename"
+	ConnectClusterKeyConverter                = "key.converter"
+	ConnectClusterValueConverter              = "value.converter"
+	ConnectClusterKeyConverterSchemasEnable   = "key.converter.schemas.enable"
+	ConnectClusterValueConverterSchemasEnable = "value.converter.schemas.enable"
+	ConnectClusterJsonConverterName           = "org.apache.kafka.connect.json.JsonConverter"
+	ConnectClusterStatusStorageTopic          = "status.storage.topic"
+	ConnectClusterConfigStorageTopic          = "config.storage.topic"
+	ConnectClusterOffsetStorageTopic          = "offset.storage.topic"
+	ConnectClusterBootstrapServers            = "bootstrap.servers"
+	ConnectClusterStatusStorageTopicName      = "connect-status"
+	ConnectClusterConfigStorageTopicName      = "connect-configs"
+	ConnectClusterOffsetStorageTopicName      = "connect-offsets"
+
+	ConnectClusterListeners               = "listeners"
+	ConnectClusterServerCertsVolumeName   = "server-certs"
+	KafkaClientCertVolumeName             = "kafka-client-ssl"
+	KafkaClientKeystoreKey                = "client.keystore.jks"
+	KafkaClientTruststoreKey              = "client.truststore.jks"
+	ConnectClusterBasicAuthKey            = "rest.extension.classes"
+	KafkaConnectRestAdvertisedListener    = "rest.advertised.listener"
+	ConnectClusterKeyPassword             = "listeners.https.ssl.key.password"
+	ConnectClusterKeystorePassword        = "listeners.https.ssl.keystore.password"
+	ConnectClusterKeystoreLocation        = "listeners.https.ssl.keystore.location"
+	ConnectClusterTruststoreLocation      = "listeners.https.ssl.truststore.location"
+	ConnectClusterTruststorePassword      = "listeners.https.ssl.truststore.password"
+	ConnectClusterClientAuthentication    = "listeners.https.ssl.client.authentication"
+	ConnectClusterIdentificationAlgorithm = "listeners.https.ssl.endpoint.identification.algorithm"
+	ConnectClusterBasicAuthValue          = "org.apache.kafka.connect.rest.basic.auth.extension.BasicAuthSecurityRestExtension"
+
 	ConnectClusterOffsetFileDir        = "/var/log/connect"
-	ConnectClusterCustomConfigPath     = "/opt/kafka/config/connect-custom-config"
-	KafkaClientCertDir                 = "/var/private/kafka-client-ssl"
 	ConnectClusterServerCertVolumeDir  = "/var/private/ssl"
+	ConnectClusterPluginPathDir        = "/opt/kafka/libs"
+	ConnectClusterAuthSecretVolumePath = "/var/private/basic-auth"
+	KafkaClientCertDir                 = "/var/private/kafka-client-ssl"
+	ConnectClusterOffsetFileName       = "/var/log/connect/connect.offsets"
+	ConnectorPluginsVolumeDir          = "/opt/kafka/libs/connector-plugins"
+	ConnectClusterCustomConfigPath     = "/opt/kafka/config/connect-custom-config"
+	ConnectClusterOperatorConfigPath   = "/opt/kafka/config/connect-operator-config"
+	KafkaClientKeystoreLocation        = "/var/private/kafka-client-ssl/client.keystore.jks"
+	KafkaClientTruststoreLocation      = "/var/private/kafka-client-ssl/client.truststore.jks"
 )

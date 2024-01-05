@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -205,6 +206,13 @@ func (k *ConnectCluster) GetCertSecretName(alias ConnectClusterCertificateAlias)
 		}
 	}
 	return k.CertificateName(alias)
+}
+
+// returns CertSecretVolumeMountPath
+// if configDir is "/opt/kafka/config",
+// mountPath will be, "/opt/kafka/config/<alias>".
+func (k *ConnectCluster) CertSecretVolumeMountPath(configDir string, cert string) string {
+	return filepath.Join(configDir, cert)
 }
 
 func (k *ConnectCluster) SetHealthCheckerDefaults() {
