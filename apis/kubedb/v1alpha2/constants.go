@@ -1000,6 +1000,13 @@ const (
 	DruidDeepStorageHDFS   DruidDeepStorageType = "hdfs"
 )
 
+const (
+	RabbitmqAMQPPort          = 5672
+	RabbitmqPeerDiscoveryPort = 4369
+	RabbitmqManagementUIPort  = 15672
+	RabbitmqInterNodePort     = 25672
+)
+
 // Resource kind related constants
 const (
 	ResourceKindStatefulSet = "StatefulSet"

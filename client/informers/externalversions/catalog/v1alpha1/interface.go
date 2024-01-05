@@ -52,6 +52,8 @@ type Interface interface {
 	PostgresVersions() PostgresVersionInformer
 	// ProxySQLVersions returns a ProxySQLVersionInformer.
 	ProxySQLVersions() ProxySQLVersionInformer
+	// RabbitmqVersions returns a RabbitmqVersionInformer.
+	RabbitmqVersions() RabbitmqVersionInformer
 	// RedisVersions returns a RedisVersionInformer.
 	RedisVersions() RedisVersionInformer
 	// SinglestoreVersions returns a SinglestoreVersionInformer.
@@ -141,6 +143,11 @@ func (v *version) PostgresVersions() PostgresVersionInformer {
 // ProxySQLVersions returns a ProxySQLVersionInformer.
 func (v *version) ProxySQLVersions() ProxySQLVersionInformer {
 	return &proxySQLVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// RabbitmqVersions returns a RabbitmqVersionInformer.
+func (v *version) RabbitmqVersions() RabbitmqVersionInformer {
+	return &rabbitmqVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // RedisVersions returns a RedisVersionInformer.
