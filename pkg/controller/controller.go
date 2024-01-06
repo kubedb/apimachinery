@@ -35,7 +35,6 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
 	core_util "kmodules.xyz/client-go/core/v1"
-	"kmodules.xyz/client-go/discovery"
 	"kmodules.xyz/client-go/tools/queue"
 	appcat_cs "kmodules.xyz/custom-resources/client/clientset/versioned"
 	appcat_in "kmodules.xyz/custom-resources/client/informers/externalversions"
@@ -61,9 +60,6 @@ type Controller struct {
 	AppCatalogClient appcat_cs.Interface
 	// Cluster topology when the operator started
 	ClusterTopology *core_util.Topology
-	// RESTMapper allows clients to map resources to kind, and map kind and version
-	// to interfaces for manipulating those objects.
-	Mapper discovery.ResourceMapper
 	// Event Recorder
 	Recorder record.EventRecorder
 	// Audit Event Publisher
