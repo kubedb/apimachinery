@@ -307,11 +307,12 @@ func (c *Controller) extractDatabaseInfo(ri *restoreInfo) error {
 	}
 	ri.do.Name = owner.Name
 
-	gvr, err := c.Mapper.GVR(schema.FromAPIVersionAndKind(owner.APIVersion, owner.Kind))
+	gvk := schema.FromAPIVersionAndKind(owner.APIVersion, owner.Kind)
+	mapping, err := c.KBClient.RESTMapper().RESTMapping(gvk.GroupKind(), gvk.Version)
 	if err != nil {
 		return err
 	}
-	ri.do.GVR = gvr
+	ri.do.GVR = mapping.Resource
 
 	return nil
 }
