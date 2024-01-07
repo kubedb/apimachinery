@@ -24,8 +24,6 @@ import (
 
 	cmInformers "github.com/cert-manager/cert-manager/pkg/client/informers/externalversions"
 	auditlib "go.bytebuilders.dev/audit/lib"
-	crd_cs "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
-	externalInformers "k8s.io/apiextensions-apiserver/pkg/client/informers/externalversions"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
@@ -50,8 +48,6 @@ type Controller struct {
 	KBClient client.Client
 	// Kubernetes client
 	Client kubernetes.Interface
-	// CRD Client
-	CRDClient crd_cs.Interface
 	// KubeDB client
 	DBClient cs.Interface
 	// Dynamic client
@@ -71,7 +67,6 @@ type Config struct {
 	KubeInformerFactory        informers.SharedInformerFactory
 	KubedbInformerFactory      kubedbinformers.SharedInformerFactory
 	AppCatInformerFactory      appcat_in.SharedInformerFactory
-	ExternalInformerFactory    externalInformers.SharedInformerFactory
 	CertManagerInformerFactory cmInformers.SharedInformerFactory
 
 	// External tool to initialize the database
