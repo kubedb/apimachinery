@@ -62,6 +62,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&EtcdList{},
 		&Kafka{},
 		&KafkaList{},
+		&Rabbitmq{},
+		&RabbitmqList{},
 		&MariaDB{},
 		&MariaDBList{},
 		&Memcached{},

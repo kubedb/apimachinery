@@ -42,6 +42,7 @@ type KubedbV1alpha2Interface interface {
 	PgpoolsGetter
 	PostgresesGetter
 	ProxySQLsGetter
+	RabbitmqsGetter
 	RedisesGetter
 	RedisSentinelsGetter
 	SinglestoresGetter
@@ -104,6 +105,10 @@ func (c *KubedbV1alpha2Client) Postgreses(namespace string) PostgresInterface {
 
 func (c *KubedbV1alpha2Client) ProxySQLs(namespace string) ProxySQLInterface {
 	return newProxySQLs(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Rabbitmqs(namespace string) RabbitmqInterface {
+	return newRabbitmqs(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Redises(namespace string) RedisInterface {

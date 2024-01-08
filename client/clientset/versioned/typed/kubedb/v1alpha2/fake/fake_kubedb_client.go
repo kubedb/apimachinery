@@ -81,6 +81,10 @@ func (c *FakeKubedbV1alpha2) ProxySQLs(namespace string) v1alpha2.ProxySQLInterf
 	return &FakeProxySQLs{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) Rabbitmqs(namespace string) v1alpha2.RabbitmqInterface {
+	return &FakeRabbitmqs{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Redises(namespace string) v1alpha2.RedisInterface {
 	return &FakeRedises{c, namespace}
 }

@@ -44,6 +44,8 @@ type PostgresExpansion interface{}
 
 type ProxySQLExpansion interface{}
 
+type RabbitmqExpansion interface{}
+
 type RedisExpansion interface{}
 
 type RedisSentinelExpansion interface{}

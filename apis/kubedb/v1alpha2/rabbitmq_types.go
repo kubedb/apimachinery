@@ -36,7 +36,6 @@ const (
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:shortName=rm,scope=Namespaced
@@ -135,6 +134,7 @@ type RabbitmqStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // RabbitmqList contains a list of Rabbitmq
 type RabbitmqList struct {
