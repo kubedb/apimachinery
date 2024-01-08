@@ -55,7 +55,7 @@ type KafkaVersionSpec struct {
 	// Database Image
 	DB KafkaVersionDatabase `json:"db"`
 	// Connect Image
-	Connect ConnectClusterVersion `json:"connect"`
+	ConnectCluster ConnectClusterVersion `json:"connectCluster"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`

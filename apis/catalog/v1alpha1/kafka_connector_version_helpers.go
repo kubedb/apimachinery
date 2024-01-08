@@ -54,10 +54,10 @@ func (r *KafkaConnectorVersion) ResourcePlural() string {
 
 func (r *KafkaConnectorVersion) ValidateSpecs() error {
 	if r.Spec.Version == "" ||
-		r.Spec.Connector.Image == "" {
+		r.Spec.ConnectorPlugin.Image == "" {
 		return fmt.Errorf(`atleast one of the following specs is not set for kafkaConnectorVersion "%v":
 							spec.version,
-							spec.connector.image`, r.Name)
+							spec.connectorPlugin.image`, r.Name)
 	}
 	return nil
 }

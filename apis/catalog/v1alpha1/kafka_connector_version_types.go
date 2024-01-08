@@ -54,7 +54,7 @@ type KafkaConnectorVersionSpec struct {
 	// Version of the connector plugins
 	Version string `json:"version"`
 	// Database Image
-	Connector ConnectorPlugin `json:"connector"`
+	ConnectorPlugin ConnectorPlugin `json:"connectorPlugin"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`

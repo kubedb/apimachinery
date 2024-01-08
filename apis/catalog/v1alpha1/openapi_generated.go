@@ -23595,7 +23595,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionSpec(ref com
 							Format:      "",
 						},
 					},
-					"connector": {
+					"connectorPlugin": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Database Image",
 							Default:     map[string]interface{}{},
@@ -23624,7 +23624,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionSpec(ref com
 						},
 					},
 				},
-				Required: []string{"type", "version", "connector"},
+				Required: []string{"type", "version", "connectorPlugin"},
 			},
 		},
 		Dependencies: []string{
@@ -23785,7 +23785,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref common.Refer
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionDatabase"),
 						},
 					},
-					"connect": {
+					"connectCluster": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Connect Image",
 							Default:     map[string]interface{}{},
@@ -23835,7 +23835,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "db", "connect", "cruiseControl"},
+				Required: []string{"version", "db", "connectCluster", "cruiseControl"},
 			},
 		},
 		Dependencies: []string{

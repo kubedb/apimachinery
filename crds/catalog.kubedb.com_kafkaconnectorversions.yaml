@@ -45,7 +45,7 @@ spec:
             type: object
           spec:
             properties:
-              connector:
+              connectorPlugin:
                 properties:
                   image:
                     type: string
@@ -72,7 +72,7 @@ spec:
               version:
                 type: string
             required:
-            - connector
+            - connectorPlugin
             - type
             - version
             type: object
