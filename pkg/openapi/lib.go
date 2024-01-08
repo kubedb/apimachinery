@@ -65,6 +65,18 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 		"/apis/mutators.schema.kubedb.com/v1alpha1/mongodbdatabasewebhooks",
 		"/apis/mutators.schema.kubedb.com/v1alpha1/mysqldatabasewebhooks",
 
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1",
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1/elasticsearchautoscalerwebhooks",
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1/mariadbautoscalerwebhooks",
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1/mongodbautoscalerwebhooks",
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1/mysqlautoscalerwebhooks",
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1/perconaxtradbautoscalerwebhooks",
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1/pgbouncerautoscalerwebhooks",
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1/postgresautoscalerwebhooks",
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1/proxysqlautoscalerwebhooks",
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1/redisautoscalerwebhooks",
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1/redissentinelautoscalerwebhooks",
+
 		"/apis/validators.dashboard.kubedb.com/v1alpha1",
 		"/apis/validators.dashboard.kubedb.com/v1alpha1/elasticsearchdashboardwebhooks",
 
