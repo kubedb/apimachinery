@@ -14,9 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package stash
+package restore
 
 import (
+	"fmt"
 	"time"
 
 	amc "kubedb.dev/apimachinery/pkg/controller"
@@ -26,25 +27,31 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/rest"
 	"k8s.io/klog/v2"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	dmcond "kmodules.xyz/client-go/dynamic/conditions"
 	"kmodules.xyz/client-go/tools/queue"
+	coreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"stash.appscode.dev/apimachinery/apis/stash/v1beta1"
 	scs "stash.appscode.dev/apimachinery/client/clientset/versioned"
 	stashinformer "stash.appscode.dev/apimachinery/client/informers/externalversions"
 )
 
 type Controller struct {
+	manager *manager.Manager
 	*amc.Controller
 	*amc.StashInitializer
 	restrictToNamespace string
 }
 
 func NewController(
+	mgr *manager.Manager,
 	ctrl *amc.Controller,
 	initializer *amc.StashInitializer,
 	restrictToNamespace string,
 ) *Controller {
 	return &Controller{
+		manager:             mgr,
 		Controller:          ctrl,
 		StashInitializer:    initializer,
 		restrictToNamespace: restrictToNamespace,
@@ -53,10 +60,20 @@ func NewController(
 
 type restoreInfo struct {
 	invoker    core.TypedLocalObjectReference
-	target     *v1beta1.RestoreTarget
-	phase      v1beta1.RestorePhase
+	stash      *stashInfo
+	kubestash  *kubestashInfo
 	do         dmcond.DynamicOptions
 	invokerUID types.UID
+}
+
+type stashInfo struct {
+	target *v1beta1.RestoreTarget
+	phase  v1beta1.RestorePhase
+}
+
+type kubestashInfo struct {
+	target *kmapi.TypedObjectReference
+	phase  coreapi.RestorePhase
 }
 
 func Configure(cfg *rest.Config, s *amc.StashInitializer, resyncPeriod time.Duration) error {
@@ -68,7 +85,7 @@ func Configure(cfg *rest.Config, s *amc.StashInitializer, resyncPeriod time.Dura
 	return nil
 }
 
-func (c *Controller) StartAfterStashInstalled(maxNumRequeues, numThreads int, selector metav1.LabelSelector, stopCh <-chan struct{}) {
+func (c *Controller) StartAfterStashInstalled(stopCh <-chan struct{}, maxNumRequeues, numThreads int, selector metav1.LabelSelector) {
 	// Wait until Stash operator installed
 	if err := c.waitUntilStashInstalled(stopCh); err != nil {
 		klog.Errorln("error during waiting for RestoreSession crd. Reason: ", err)
@@ -124,4 +141,18 @@ func (c *Controller) startController(stopCh <-chan struct{}) {
 	// run the queues
 	c.RSQueue.Run(stopCh)
 	c.RBQueue.Run(stopCh)
+}
+
+func (c *Controller) StartAfterKubeStashInstalled(stopCh <-chan struct{}, selector metav1.LabelSelector) {
+	// Here Wait until KubeStash operator installed
+	if err := c.waitUntilKubeStashInstalled(stopCh); err != nil {
+		klog.Errorln("error during waiting for RestoreSession crd. Reason: ", err)
+		return
+	}
+	if err := (&RestoreSessionReconciler{
+		ctrl: c,
+	}).SetupWithManager(*c.manager, selector); err != nil {
+		klog.Info(fmt.Errorf("unable to create RestoreSession controller. Reason: %w", err))
+		return
+	}
 }

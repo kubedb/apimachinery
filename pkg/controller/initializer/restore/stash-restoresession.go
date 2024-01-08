@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package stash
+package restore
 
 import (
 	"time"
@@ -27,9 +27,9 @@ import (
 	stashinformers "stash.appscode.dev/apimachinery/client/informers/externalversions/stash/v1beta1"
 )
 
-func (c *Controller) restoreBatchInformer(tweakListOptions func(options *metav1.ListOptions)) cache.SharedIndexInformer {
-	return c.StashInformerFactory.InformerFor(&v1beta1.RestoreBatch{}, func(client scs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-		return stashinformers.NewFilteredRestoreBatchInformer(
+func (c *Controller) restoreSessionInformer(tweakListOptions func(options *metav1.ListOptions)) cache.SharedIndexInformer {
+	return c.StashInformerFactory.InformerFor(&v1beta1.RestoreSession{}, func(client scs.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+		return stashinformers.NewFilteredRestoreSessionInformer(
 			client,
 			c.restrictToNamespace,
 			resyncPeriod,
@@ -39,27 +39,27 @@ func (c *Controller) restoreBatchInformer(tweakListOptions func(options *metav1.
 	})
 }
 
-func (c Controller) processRestoreBatch(key string) error {
+func (c *Controller) processRestoreSession(key string) error {
 	klog.Infof("started processing, key: %v", key)
-	obj, exists, err := c.RBInformer.GetIndexer().GetByKey(key)
+	obj, exists, err := c.RSInformer.GetIndexer().GetByKey(key)
 	if err != nil {
-		klog.Errorf("Fetching object with key %s from store failed with %v", key, err)
+		klog.Errorf("fetching object with key %s from store failed with %v", key, err)
 		return err
 	}
 
 	if !exists {
-		klog.V(5).Infof("RestoreBatch %s does not exist anymore", key)
+		klog.V(5).Infof("RestoreSession %s does not exist anymore", key)
 	} else {
 		// Note that you also have to check the uid if you have a local controlled resource, which
 		// is dependent on the actual instance, to detect that a Job was recreated with the same name
-		rb := obj.(*v1beta1.RestoreBatch).DeepCopy()
-		rb.GetObjectKind().SetGroupVersionKind(v1beta1.SchemeGroupVersion.WithKind(v1beta1.ResourceKindRestoreBatch))
-		ri, err := c.extractRestoreInfo(rb)
+		rs := obj.(*v1beta1.RestoreSession).DeepCopy()
+		rs.GetObjectKind().SetGroupVersionKind(v1beta1.SchemeGroupVersion.WithKind(v1beta1.ResourceKindRestoreSession))
+		ri, err := c.extractRestoreInfo(rs)
 		if err != nil {
 			klog.Errorln("failed to extract restore invoker info. Reason: ", err)
 			return err
 		}
-		if rb.DeletionTimestamp != nil {
+		if rs.DeletionTimestamp != nil {
 			return c.handleTerminateEvent(ri)
 		}
 		return c.handleRestoreInvokerEvent(ri)
