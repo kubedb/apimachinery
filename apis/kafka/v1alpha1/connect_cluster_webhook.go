@@ -40,7 +40,8 @@ func (k *ConnectCluster) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-// +kubebuilder:webhook:path=/mutate-connectcluster-kafka-kubedb-com-v1alpha1-connectcluster,mutating=true,failurePolicy=fail,sideEffects=None,groups=kafka.kubedb.com,resources=connectclusters,verbs=create;update,versions=v1alpha1,name=mconnectclusters.kb.io,admissionReviewVersions={v1,v1beta1}
+//+kubebuilder:webhook:path=/mutate-connectcluster-kafka-kubedb-com-v1alpha1-connectcluster,mutating=true,failurePolicy=fail,sideEffects=None,groups=kafka.kubedb.com,resources=connectclusters,verbs=create;update,versions=v1alpha1,name=mconnectclusters.kb.io,admissionReviewVersions={v1,v1beta1}
+
 var _ webhook.Defaulter = &ConnectCluster{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
