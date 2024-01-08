@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -244,7 +243,7 @@ func (k *ConnectCluster) SetDefaults() {
 	}
 
 	k.setDefaultContainerSecurityContext(&kfVersion, &k.Spec.PodTemplate)
-	k.setDefaultInitContainerSecurityContext(&kfVersion, &k.Spec.PodTemplate)
+	k.setDefaultInitContainerSecurityContext(&k.Spec.PodTemplate)
 
 	k.Spec.Monitor.SetDefaults()
 	if k.Spec.Monitor != nil && k.Spec.Monitor.Prometheus != nil && k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
@@ -279,25 +278,30 @@ func (k *ConnectCluster) SetDefaultEnvs() {
 	}
 }
 
-func (k *ConnectCluster) setDefaultInitContainerSecurityContext(kfVersion *catalog.KafkaVersion, podTemplate *ofstv2.PodTemplateSpec) {
+func (k *ConnectCluster) setDefaultInitContainerSecurityContext(podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
-	for i := range k.Spec.ConnectorPlugins {
-		// initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, name)
-		// TODO():
-		initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, "connector-"+strconv.Itoa(i))
+	for _, name := range k.Spec.ConnectorPlugins {
+		connectorVersion := &catalog.KafkaConnectorVersion{}
+		err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: name}, connectorVersion)
+		if err != nil {
+			klog.Errorf("can't get the kafka connector version object %s for %s \n", err.Error(), name)
+			return
+		}
+
+		initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, strings.ToLower(connectorVersion.Spec.Type))
 
 		if initContainer == nil {
 			initContainer = &core.Container{
-				Name: "connector-" + strconv.Itoa(i),
+				Name: strings.ToLower(connectorVersion.Spec.Type),
 			}
 			podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 		}
 		if initContainer.SecurityContext == nil {
 			initContainer.SecurityContext = &core.SecurityContext{}
 		}
-		k.assignDefaultContainerSecurityContext(kfVersion, initContainer.SecurityContext)
+		k.assignDefaultInitContainerSecurityContext(connectorVersion, initContainer.SecurityContext)
 	}
 }
 
@@ -323,6 +327,29 @@ func (k *ConnectCluster) setDefaultContainerSecurityContext(kfVersion *catalog.K
 		container.SecurityContext = &core.SecurityContext{}
 	}
 	k.assignDefaultContainerSecurityContext(kfVersion, container.SecurityContext)
+}
+
+func (k *ConnectCluster) assignDefaultInitContainerSecurityContext(connectorVersion *catalog.KafkaConnectorVersion, sc *core.SecurityContext) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = connectorVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.RunAsGroup == nil {
+		sc.RunAsGroup = connectorVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
 }
 
 func (k *ConnectCluster) assignDefaultContainerSecurityContext(kfVersion *catalog.KafkaVersion, sc *core.SecurityContext) {
