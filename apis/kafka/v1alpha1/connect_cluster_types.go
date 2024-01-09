@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -72,14 +74,14 @@ type ConnectClusterSpec struct {
 
 	// kafka connect cluster authentication secret
 	// +optional
-	AuthSecret *SecretReference `json:"authSecret,omitempty"`
+	AuthSecret *api.SecretReference `json:"authSecret,omitempty"`
 
 	// To enable https
 	EnableSSL bool `json:"enableSSL,omitempty"`
 
 	// Keystore encryption secret
 	// +optional
-	KeystoreCredSecret *SecretReference `json:"keystoreCredSecret,omitempty"`
+	KeystoreCredSecret *api.SecretReference `json:"keystoreCredSecret,omitempty"`
 
 	// TLS contains tls configurations
 	// +optional
@@ -99,11 +101,11 @@ type ConnectClusterSpec struct {
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
-	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
+	ServiceTemplates []api.NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
 
 	// TerminationPolicy controls the delete operation for database
 	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
+	TerminationPolicy api.TerminationPolicy `json:"terminationPolicy,omitempty"`
 
 	// HealthChecker defines attributes of the health checker
 	// +optional

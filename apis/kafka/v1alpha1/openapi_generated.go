@@ -464,8 +464,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.ConnectorList":                   schema_apimachinery_apis_kafka_v1alpha1_ConnectorList(ref),
 		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.ConnectorSpec":                   schema_apimachinery_apis_kafka_v1alpha1_ConnectorSpec(ref),
 		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.ConnectorStatus":                 schema_apimachinery_apis_kafka_v1alpha1_ConnectorStatus(ref),
-		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.NamedServiceTemplateSpec":        schema_apimachinery_apis_kafka_v1alpha1_NamedServiceTemplateSpec(ref),
-		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.SecretReference":                 schema_apimachinery_apis_kafka_v1alpha1_SecretReference(ref),
 		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.connectClusterStatsService":      schema_apimachinery_apis_kafka_v1alpha1_connectClusterStatsService(ref),
 	}
 }
@@ -22789,7 +22787,7 @@ func schema_apimachinery_apis_kafka_v1alpha1_ConnectClusterSpec(ref common.Refer
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "kafka connect cluster authentication secret",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kafka/v1alpha1.SecretReference"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
 					"enableSSL": {
@@ -22802,7 +22800,7 @@ func schema_apimachinery_apis_kafka_v1alpha1_ConnectClusterSpec(ref common.Refer
 					"keystoreCredSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Keystore encryption secret",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kafka/v1alpha1.SecretReference"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
 					"tls": {
@@ -22847,7 +22845,7 @@ func schema_apimachinery_apis_kafka_v1alpha1_ConnectClusterSpec(ref common.Refer
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/kafka/v1alpha1.NamedServiceTemplateSpec"),
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"),
 									},
 								},
 							},
@@ -22878,7 +22876,7 @@ func schema_apimachinery_apis_kafka_v1alpha1_ConnectClusterSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kafka/v1alpha1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kafka/v1alpha1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -23095,68 +23093,6 @@ func schema_apimachinery_apis_kafka_v1alpha1_ConnectorStatus(ref common.Referenc
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
-	}
-}
-
-func schema_apimachinery_apis_kafka_v1alpha1_NamedServiceTemplateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"alias": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Alias represents the identifier of the service.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ServiceSpec"),
-						},
-					},
-				},
-				Required: []string{"alias"},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.ObjectMeta", "kmodules.xyz/offshoot-api/api/v1.ServiceSpec"},
-	}
-}
-
-func schema_apimachinery_apis_kafka_v1alpha1_SecretReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"externallyManaged": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-				},
-			},
-		},
 	}
 }
 

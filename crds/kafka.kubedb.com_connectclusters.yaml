@@ -3717,7 +3717,9 @@ spec:
                 type: array
               terminationPolicy:
                 enum:
+                - Halt
                 - Delete
+                - WipeOut
                 - DoNotTerminate
                 type: string
               tls:

@@ -38,7 +38,7 @@ const (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=kafkaconnectorversions,singular=kafkaconnectorversion,scope=Cluster,shortName=kcversion,categories={datastore,kubedb,appscode}
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
-// +kubebuilder:printcolumn:name="Connector_Image",type="string",JSONPath=".spec.connector.image"
+// +kubebuilder:printcolumn:name="Connector_Image",type="string",JSONPath=".spec.connectorPlugin.image"
 // +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type KafkaConnectorVersion struct {

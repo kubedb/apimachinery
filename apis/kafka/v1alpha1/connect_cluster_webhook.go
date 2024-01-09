@@ -19,6 +19,8 @@ package v1alpha1
 import (
 	"strconv"
 
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
 	"github.com/pkg/errors"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -40,7 +42,7 @@ func (k *ConnectCluster) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-connectcluster-kafka-kubedb-com-v1alpha1-connectcluster,mutating=true,failurePolicy=fail,sideEffects=None,groups=kafka.kubedb.com,resources=connectclusters,verbs=create;update,versions=v1alpha1,name=mconnectclusters.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/mutate-kafka-kubedb-com-v1alpha1-connectcluster,mutating=true,failurePolicy=fail,sideEffects=None,groups=kafka.kubedb.com,resources=connectclusters,verbs=create;update,versions=v1alpha1,name=mconnectcluster.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Defaulter = &ConnectCluster{}
 
@@ -53,7 +55,7 @@ func (k *ConnectCluster) Default() {
 	k.SetDefaults()
 }
 
-//+kubebuilder:webhook:path=/validate-connectcluster-kafka-kubedb-com-v1alpha1-connectcluster,mutating=false,failurePolicy=fail,sideEffects=None,groups=kafka.kubedb.com,resources=connectclusters,verbs=create;update,delete,versions=v1alpha1,name=vconnectclusters.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/validate-kafka-kubedb-com-v1alpha1-connectcluster,mutating=false,failurePolicy=fail,sideEffects=None,groups=kafka.kubedb.com,resources=connectclusters,verbs=create;update,delete,versions=v1alpha1,name=vconnectcluster.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &ConnectCluster{}
 
@@ -91,7 +93,7 @@ func (k *ConnectCluster) ValidateDelete() (admission.Warnings, error) {
 	connectClusterLog.Info("validate delete", "name", k.Name)
 
 	var allErr field.ErrorList
-	if k.Spec.TerminationPolicy == TerminationPolicyDoNotTerminate {
+	if k.Spec.TerminationPolicy == api.TerminationPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			k.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))

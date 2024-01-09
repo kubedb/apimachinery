@@ -19,8 +19,6 @@ package v1alpha1
 import (
 	"sync"
 
-	core "k8s.io/api/core/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -33,37 +31,4 @@ func SetDefaultClient(kc client.Client) {
 	once.Do(func() {
 		DefaultClient = kc
 	})
-}
-
-// +kubebuilder:validation:Enum=Delete;DoNotTerminate
-type TerminationPolicy string
-
-const (
-	// TerminationPolicyDelete deletes cr, resources it creates
-	TerminationPolicyDelete TerminationPolicy = "Delete"
-	// TerminationPolicyDoNotTerminate Rejects attempt to delete using ValidationWebhook.
-	TerminationPolicyDoNotTerminate TerminationPolicy = "DoNotTerminate"
-)
-
-type SecretReference struct {
-	core.LocalObjectReference `json:",inline,omitempty"`
-	ExternallyManaged         bool `json:"externallyManaged,omitempty"`
-}
-
-// +kubebuilder:validation:Enum=primary;standby;stats
-type ServiceAlias string
-
-const (
-	PrimaryServiceAlias ServiceAlias = "primary"
-	StandbyServiceAlias ServiceAlias = "standby"
-	StatsServiceAlias   ServiceAlias = "stats"
-)
-
-type NamedServiceTemplateSpec struct {
-	// Alias represents the identifier of the service.
-	Alias ServiceAlias `json:"alias"`
-
-	// ServiceTemplate is an optional configuration for a service used to expose database
-	// +optional
-	ofst.ServiceTemplateSpec `json:",inline,omitempty"`
 }

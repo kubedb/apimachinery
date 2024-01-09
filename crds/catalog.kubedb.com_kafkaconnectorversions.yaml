@@ -24,7 +24,7 @@ spec:
     - jsonPath: .spec.version
       name: Version
       type: string
-    - jsonPath: .spec.connector.image
+    - jsonPath: .spec.connectorPlugin.image
       name: Connector_Image
       type: string
     - jsonPath: .spec.deprecated

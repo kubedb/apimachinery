@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -61,7 +63,7 @@ type ConnectorSpec struct {
 
 	// TerminationPolicy controls the delete operation for Connector
 	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
+	TerminationPolicy api.TerminationPolicy `json:"terminationPolicy,omitempty"`
 }
 
 // ConnectorStatus defines the observed state of connectors

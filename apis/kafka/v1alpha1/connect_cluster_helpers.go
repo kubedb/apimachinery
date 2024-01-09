@@ -24,6 +24,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kafka"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/crds"
 
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
@@ -107,7 +108,7 @@ func (k *ConnectCluster) OffshootLabels() map[string]string {
 }
 
 // GetServiceTemplate returns a pointer to the desired serviceTemplate referred by "aliaS". Otherwise, it returns nil.
-func (k *ConnectCluster) GetServiceTemplate(templates []NamedServiceTemplateSpec, alias ServiceAlias) ofst.ServiceTemplateSpec {
+func (k *ConnectCluster) GetServiceTemplate(templates []api.NamedServiceTemplateSpec, alias api.ServiceAlias) ofst.ServiceTemplateSpec {
 	for i := range templates {
 		c := templates[i]
 		if c.Alias == alias {
@@ -117,7 +118,7 @@ func (k *ConnectCluster) GetServiceTemplate(templates []NamedServiceTemplateSpec
 	return ofst.ServiceTemplateSpec{}
 }
 
-func (k *ConnectCluster) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+func (k *ConnectCluster) ServiceLabels(alias api.ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := k.GetServiceTemplate(k.Spec.ServiceTemplates, alias)
 	return k.offshootLabels(meta_util.OverwriteKeys(k.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
@@ -163,7 +164,7 @@ func (k *ConnectCluster) StatsService() mona.StatsAccessor {
 }
 
 func (k *ConnectCluster) StatsServiceLabels() map[string]string {
-	return k.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
+	return k.ServiceLabels(api.StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (k *ConnectCluster) PodLabels(extraLabels ...map[string]string) map[string]string {
@@ -228,7 +229,7 @@ func (k *ConnectCluster) SetHealthCheckerDefaults() {
 
 func (k *ConnectCluster) SetDefaults() {
 	if k.Spec.TerminationPolicy == "" {
-		k.Spec.TerminationPolicy = TerminationPolicyDelete
+		k.Spec.TerminationPolicy = api.TerminationPolicyDelete
 	}
 
 	if k.Spec.Replicas == nil {

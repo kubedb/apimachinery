@@ -58,7 +58,9 @@ spec:
                 type: object
               terminationPolicy:
                 enum:
+                - Halt
                 - Delete
+                - WipeOut
                 - DoNotTerminate
                 type: string
             required:
