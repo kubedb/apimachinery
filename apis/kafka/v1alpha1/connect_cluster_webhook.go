@@ -40,7 +40,7 @@ func (k *ConnectCluster) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-connectcluster-kafka-kubedb-com-v1alpha1-connectcluster,mutating=true,failurePolicy=fail,sideEffects=None,groups=kafka.kubedb.com,resources=connectclusters,verbs=create;update,versions=v1alpha1,name=mconnectclusters.kb.io,admissionReviewVersions={v1,v1beta1}
+//+kubebuilder:webhook:path=/mutate-connectcluster-kafka-kubedb-com-v1alpha1-connectcluster,mutating=true,failurePolicy=fail,sideEffects=None,groups=kafka.kubedb.com,resources=connectclusters,verbs=create;update,versions=v1alpha1,name=mconnectclusters.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Defaulter = &ConnectCluster{}
 
@@ -53,7 +53,7 @@ func (k *ConnectCluster) Default() {
 	k.SetDefaults()
 }
 
-//+kubebuilder:webhook:path=/validate-connectcluster-kafka-kubedb-com-v1alpha1-connectcluster,mutating=false,failurePolicy=fail,sideEffects=None,groups=kafka.kubedb.com,resources=connectclusters,verbs=create;update,delete,versions=v1alpha1,name=vconnectclusters.kb.io,admissionReviewVersions={v1,v1beta1}
+//+kubebuilder:webhook:path=/validate-connectcluster-kafka-kubedb-com-v1alpha1-connectcluster,mutating=false,failurePolicy=fail,sideEffects=None,groups=kafka.kubedb.com,resources=connectclusters,verbs=create;update,delete,versions=v1alpha1,name=vconnectclusters.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &ConnectCluster{}
 
