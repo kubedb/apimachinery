@@ -3,6 +3,10 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
+
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -10,8 +14,6 @@ import (
 	"k8s.io/klog/v2"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
-	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
 )
 
 func (p *Pgpool) ResourceFQN() string {
