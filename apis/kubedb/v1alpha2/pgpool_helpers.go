@@ -1,11 +1,15 @@
 package v1alpha2
 
 import (
+	"context"
 	"fmt"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
 	meta_util "kmodules.xyz/client-go/meta"
+	ofst "kmodules.xyz/offshoot-api/api/v2"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 )
@@ -145,7 +149,7 @@ func (p *Pgpool) SetSecurityContext(ppVersion *catalog.PgpoolVersion) {
 	p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup
 }
 
-func (p *Pgpool) SetDefaults(ppVersion *catalog.PgpoolVersion) {
+func (p *Pgpool) SetDefaults() {
 	if p == nil {
 		return
 	}
@@ -154,6 +158,20 @@ func (p *Pgpool) SetDefaults(ppVersion *catalog.PgpoolVersion) {
 	}
 	if p.Spec.TerminationPolicy == "" {
 		p.Spec.TerminationPolicy = TerminationPolicyDelete
+	}
+	if p.Spec.PodTemplate == nil {
+		p.Spec.PodTemplate = &ofst.PodTemplateSpec{}
+		p.Spec.PodTemplate.Spec.Containers = []core.Container{}
+	}
+	p.SetHealthCheckerDefaults()
+
+	ppVersion := &catalog.PgpoolVersion{}
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: p.Spec.Version,
+	}, ppVersion)
+	if err != nil {
+		klog.Errorf("can't get the pgpool version object %s for %s \n", err.Error(), p.Spec.Version)
+		return
 	}
 	if p.Spec.PodTemplate != nil {
 		p.SetSecurityContext(ppVersion)
