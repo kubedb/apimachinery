@@ -29,6 +29,7 @@ import (
 	catalog "kubedb.dev/apimachinery/client/informers/externalversions/catalog"
 	dashboard "kubedb.dev/apimachinery/client/informers/externalversions/dashboard"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
+	kafka "kubedb.dev/apimachinery/client/informers/externalversions/kafka"
 	kubedb "kubedb.dev/apimachinery/client/informers/externalversions/kubedb"
 	ops "kubedb.dev/apimachinery/client/informers/externalversions/ops"
 	postgres "kubedb.dev/apimachinery/client/informers/externalversions/postgres"
@@ -265,6 +266,7 @@ type SharedInformerFactory interface {
 	Autoscaling() autoscaling.Interface
 	Catalog() catalog.Interface
 	Dashboard() dashboard.Interface
+	Kafka() kafka.Interface
 	Kubedb() kubedb.Interface
 	Ops() ops.Interface
 	Postgres() postgres.Interface
@@ -285,6 +287,10 @@ func (f *sharedInformerFactory) Catalog() catalog.Interface {
 
 func (f *sharedInformerFactory) Dashboard() dashboard.Interface {
 	return dashboard.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Kafka() kafka.Interface {
+	return kafka.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) Kubedb() kubedb.Interface {

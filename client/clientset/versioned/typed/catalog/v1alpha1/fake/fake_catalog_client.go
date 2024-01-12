@@ -37,6 +37,10 @@ func (c *FakeCatalogV1alpha1) EtcdVersions() v1alpha1.EtcdVersionInterface {
 	return &FakeEtcdVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) KafkaConnectorVersions() v1alpha1.KafkaConnectorVersionInterface {
+	return &FakeKafkaConnectorVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) KafkaVersions() v1alpha1.KafkaVersionInterface {
 	return &FakeKafkaVersions{c}
 }

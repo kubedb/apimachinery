@@ -25,6 +25,7 @@ import (
 	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dashboardv1alpha1 "kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
+	kafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	postgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
@@ -99,6 +100,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().ElasticsearchVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("etcdversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().EtcdVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("kafkaconnectorversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().KafkaConnectorVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("kafkaversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().KafkaVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("mariadbversions"):
@@ -123,6 +126,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=dashboard.kubedb.com, Version=v1alpha1
 	case dashboardv1alpha1.SchemeGroupVersion.WithResource("elasticsearchdashboards"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Dashboard().V1alpha1().ElasticsearchDashboards().Informer()}, nil
+
+		// Group=kafka.kubedb.com, Version=v1alpha1
+	case kafkav1alpha1.SchemeGroupVersion.WithResource("connectclusters"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kafka().V1alpha1().ConnectClusters().Informer()}, nil
+	case kafkav1alpha1.SchemeGroupVersion.WithResource("connectors"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kafka().V1alpha1().Connectors().Informer()}, nil
 
 		// Group=kubedb.com, Version=v1alpha2
 	case v1alpha2.SchemeGroupVersion.WithResource("elasticsearches"):

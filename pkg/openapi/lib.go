@@ -61,6 +61,9 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 		"/apis/mutators.ops.kubedb.com/v1alpha1",
 		"/apis/mutators.ops.kubedb.com/v1alpha1/mysqlopsrequestwebhooks",
 
+		"/apis/mutators.kafka.kubedb.com/v1alpha1",
+		"/apis/mutators.kafka.kubedb.com/v1alpha1/connectclusterwebhooks",
+
 		"/apis/mutators.schema.kubedb.com/v1alpha1",
 		"/apis/mutators.schema.kubedb.com/v1alpha1/mongodbdatabasewebhooks",
 		"/apis/mutators.schema.kubedb.com/v1alpha1/mysqldatabasewebhooks",
@@ -106,6 +109,9 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 		"/apis/validators.postgres.kubedb.com/v1alpha1",
 		"/apis/validators.postgres.kubedb.com/v1alpha1/publisherwebhooks",
 		"/apis/validators.postgres.kubedb.com/v1alpha1/subscriberwebhooks",
+
+		"/apis/validators.kafka.kubedb.com/v1alpha1",
+		"/apis/validators.kafka.kubedb.com/v1alpha1/connectclusterwebhooks",
 
 		"/apis/validators.schema.kubedb.com/v1alpha1",
 		"/apis/validators.schema.kubedb.com/v1alpha1/mongodbdatabasewebhooks",

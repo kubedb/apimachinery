@@ -28,6 +28,8 @@ type Interface interface {
 	ElasticsearchVersions() ElasticsearchVersionInformer
 	// EtcdVersions returns a EtcdVersionInformer.
 	EtcdVersions() EtcdVersionInformer
+	// KafkaConnectorVersions returns a KafkaConnectorVersionInformer.
+	KafkaConnectorVersions() KafkaConnectorVersionInformer
 	// KafkaVersions returns a KafkaVersionInformer.
 	KafkaVersions() KafkaVersionInformer
 	// MariaDBVersions returns a MariaDBVersionInformer.
@@ -69,6 +71,11 @@ func (v *version) ElasticsearchVersions() ElasticsearchVersionInformer {
 // EtcdVersions returns a EtcdVersionInformer.
 func (v *version) EtcdVersions() EtcdVersionInformer {
 	return &etcdVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// KafkaConnectorVersions returns a KafkaConnectorVersionInformer.
+func (v *version) KafkaConnectorVersions() KafkaConnectorVersionInformer {
+	return &kafkaConnectorVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // KafkaVersions returns a KafkaVersionInformer.
