@@ -19,7 +19,7 @@ package v1alpha1
 import "kubedb.dev/apimachinery/apis/kafka"
 
 const (
-	Finalizer = kafka.GroupName
+	Finalizer = kafka.GroupName + "/finalizer"
 )
 
 const (

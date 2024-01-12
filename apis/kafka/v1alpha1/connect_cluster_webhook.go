@@ -17,17 +17,20 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"strconv"
+	"context"
+	"strings"
 
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	"github.com/pkg/errors"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	"k8s.io/klog/v2"
 	coreutil "kmodules.xyz/client-go/core/v1"
-	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
@@ -35,14 +38,6 @@ import (
 
 // log is for logging in this package.
 var connectClusterLog = logf.Log.WithName("connectCluster-resource")
-
-func (k *ConnectCluster) SetupWebhookWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewWebhookManagedBy(mgr).
-		For(k).
-		Complete()
-}
-
-//+kubebuilder:webhook:path=/mutate-kafka-kubedb-com-v1alpha1-connectcluster,mutating=true,failurePolicy=fail,sideEffects=None,groups=kafka.kubedb.com,resources=connectclusters,verbs=create;update,versions=v1alpha1,name=mconnectcluster.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Defaulter = &ConnectCluster{}
 
@@ -54,8 +49,6 @@ func (k *ConnectCluster) Default() {
 	connectClusterLog.Info("default", "name", k.Name)
 	k.SetDefaults()
 }
-
-//+kubebuilder:webhook:path=/validate-kafka-kubedb-com-v1alpha1-connectcluster,mutating=false,failurePolicy=fail,sideEffects=None,groups=kafka.kubedb.com,resources=connectclusters,verbs=create;update,delete,versions=v1alpha1,name=vconnectcluster.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &ConnectCluster{}
 
@@ -166,17 +159,11 @@ func (k *ConnectCluster) ValidateCreateOrUpdate() field.ErrorList {
 	return allErr
 }
 
-var availableVersions = []string{
-	"3.3.0",
-	"3.3.2",
-	"3.4.0",
-	"3.4.1",
-	"3.5.1",
-	"3.6.0",
-}
-
 func validateEnvVars(connect *ConnectCluster) error {
 	container := coreutil.GetContainerByName(connect.Spec.PodTemplate.Spec.Containers, ConnectClusterContainerName)
+	if container == nil {
+		return errors.New("container not found")
+	}
 	env := coreutil.GetEnvByName(container.Env, ConnectClusterModeEnv)
 	if env != nil {
 		if *connect.Spec.Replicas > 1 && env.Value == string(ConnectClusterNodeRoleStandalone) {
@@ -184,6 +171,15 @@ func validateEnvVars(connect *ConnectCluster) error {
 		}
 	}
 	return nil
+}
+
+var availableVersions = []string{
+	"3.3.0",
+	"3.3.2",
+	"3.4.0",
+	"3.4.1",
+	"3.5.1",
+	"3.6.0",
 }
 
 func validateVersion(connect *ConnectCluster) error {
@@ -235,6 +231,9 @@ var reservedVolumeMountPaths = []string{
 
 func validateContainerVolumeMountPaths(connect *ConnectCluster) error {
 	container := coreutil.GetContainerByName(connect.Spec.PodTemplate.Spec.Containers, ConnectClusterContainerName)
+	if container == nil {
+		return errors.New("container not found")
+	}
 	rPaths := reservedVolumeMountPaths
 	volumeMountPaths := container.VolumeMounts
 	for _, rvm := range rPaths {
@@ -248,9 +247,17 @@ func validateContainerVolumeMountPaths(connect *ConnectCluster) error {
 }
 
 func validateInitContainerVolumeMountPaths(connect *ConnectCluster) error {
-	for i := range connect.Spec.ConnectorPlugins {
-		// TODO():
-		initContainer := coreutil.GetContainerByName(connect.Spec.PodTemplate.Spec.InitContainers, "connector-"+strconv.Itoa(i))
+	for _, name := range connect.Spec.ConnectorPlugins {
+		connectorVersion := &catalog.KafkaConnectorVersion{}
+		err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: name}, connectorVersion)
+		if err != nil {
+			klog.Errorf("can't get the kafka connector version object %s for %s \n", err.Error(), name)
+			return errors.New("no connector version found for " + name)
+		}
+		initContainer := coreutil.GetContainerByName(connect.Spec.PodTemplate.Spec.InitContainers, strings.ToLower(connectorVersion.Spec.Type))
+		if initContainer == nil {
+			return errors.New("init container not found for " + strings.ToLower(connectorVersion.Spec.Type))
+		}
 		volumeMount := coreutil.GetVolumeMountByName(initContainer.VolumeMounts, ConnectorPluginsVolumeName)
 		if volumeMount != nil && volumeMount.MountPath == ConnectorPluginsVolumeDir {
 			return errors.New("Cannot use a reserve volume mount path: " + ConnectorPluginsVolumeDir)
