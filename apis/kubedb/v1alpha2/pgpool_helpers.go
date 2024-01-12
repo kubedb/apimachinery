@@ -22,15 +22,21 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	"kubedb.dev/apimachinery/crds"
 
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
+	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
+
+func (p *Pgpool) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralPgpool))
+}
 
 func (p *Pgpool) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", p.ResourcePlural(), kubedb.GroupName)
@@ -194,4 +200,13 @@ func (p *Pgpool) SetDefaults() {
 	if p.Spec.PodTemplate != nil {
 		p.SetSecurityContext(ppVersion)
 	}
+}
+
+func (p *Pgpool) GetPersistentSecrets() []string {
+	var secrets []string
+	if p.Spec.AuthSecret != nil {
+		secrets = append(secrets, p.Spec.AuthSecret.Name)
+		secrets = append(secrets, p.ConfigSecretName())
+	}
+	return secrets
 }
