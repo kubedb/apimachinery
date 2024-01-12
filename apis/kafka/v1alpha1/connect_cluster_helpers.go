@@ -217,7 +217,7 @@ func (k *ConnectCluster) CertSecretVolumeMountPath(configDir string, cert string
 
 func (k *ConnectCluster) SetHealthCheckerDefaults() {
 	if k.Spec.HealthChecker.PeriodSeconds == nil {
-		k.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(20)
+		k.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
 	}
 	if k.Spec.HealthChecker.TimeoutSeconds == nil {
 		k.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)
