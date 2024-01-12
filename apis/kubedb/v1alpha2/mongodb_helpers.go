@@ -1073,6 +1073,12 @@ func (m *MongoDB) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, s
 	if m.Spec.ShardTopology != nil {
 		expectedItems = 2 + int(m.Spec.ShardTopology.Shard.Shards)
 	}
+	if m.Spec.Arbiter != nil {
+		expectedItems++
+	}
+	if m.Spec.Hidden != nil {
+		expectedItems++
+	}
 	return checkReplicas(lister.StatefulSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
 }
 
