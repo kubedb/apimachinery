@@ -737,8 +737,13 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 	m.SetTLSDefaults()
 	m.SetHealthCheckerDefaults()
 	m.Spec.Monitor.SetDefaults()
-	if m.Spec.Monitor != nil && m.Spec.Monitor.Prometheus != nil && m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
-		m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = mgVersion.Spec.SecurityContext.RunAsUser
+	if m.Spec.Monitor != nil && m.Spec.Monitor.Prometheus != nil {
+		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = mgVersion.Spec.SecurityContext.RunAsUser
+		}
+		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = mgVersion.Spec.SecurityContext.RunAsGroup
+		}
 	}
 }
 
@@ -753,7 +758,7 @@ func (m *MongoDB) setDefaultSecurityContext(mgVersion *v1alpha1.MongoDBVersion, 
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = mgVersion.Spec.SecurityContext.RunAsUser
+		podTemplate.Spec.SecurityContext.FSGroup = mgVersion.Spec.SecurityContext.RunAsGroup
 	}
 	m.assignDefaultContainerSecurityContext(mgVersion, podTemplate.Spec.ContainerSecurityContext)
 }
@@ -774,7 +779,7 @@ func (m *MongoDB) assignDefaultContainerSecurityContext(mgVersion *v1alpha1.Mong
 		sc.RunAsUser = mgVersion.Spec.SecurityContext.RunAsUser
 	}
 	if sc.RunAsGroup == nil {
-		sc.RunAsGroup = mgVersion.Spec.SecurityContext.RunAsUser
+		sc.RunAsGroup = mgVersion.Spec.SecurityContext.RunAsGroup
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()

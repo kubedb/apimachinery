@@ -21529,6 +21529,22 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBSecurityContext": {
+      "description": "MongoDBSecurityContext provides additional securityContext settings for the MongoDBSecurityContext Image",
+      "type": "object",
+      "properties": {
+        "runAsGroup": {
+          "description": "RunAsGroup is default GID for the DB container.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "runAsUser": {
+          "description": "RunAsUser is default UID for the DB container.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersion": {
       "type": "object",
       "properties": {
@@ -21699,7 +21715,7 @@
         "securityContext": {
           "description": "SecurityContext is for the additional config for the DB container",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.SecurityContext"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBSecurityContext"
         },
         "stash": {
           "description": "Stash defines backup and restore task definitions.",
