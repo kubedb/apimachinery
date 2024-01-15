@@ -50,6 +50,8 @@ type Interface interface {
 	Redises() RedisInformer
 	// RedisSentinels returns a RedisSentinelInformer.
 	RedisSentinels() RedisSentinelInformer
+	// Solrs returns a SolrInformer.
+	Solrs() SolrInformer
 }
 
 type version struct {
@@ -126,4 +128,9 @@ func (v *version) Redises() RedisInformer {
 // RedisSentinels returns a RedisSentinelInformer.
 func (v *version) RedisSentinels() RedisSentinelInformer {
 	return &redisSentinelInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Solrs returns a SolrInformer.
+func (v *version) Solrs() SolrInformer {
+	return &solrInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

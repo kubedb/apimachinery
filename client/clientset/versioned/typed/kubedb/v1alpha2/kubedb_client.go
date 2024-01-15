@@ -21,10 +21,9 @@ package v1alpha2
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type KubedbV1alpha2Interface interface {
@@ -42,6 +41,7 @@ type KubedbV1alpha2Interface interface {
 	ProxySQLsGetter
 	RedisesGetter
 	RedisSentinelsGetter
+	SolrsGetter
 }
 
 // KubedbV1alpha2Client is used to interact with features provided by the kubedb.com group.
@@ -99,6 +99,10 @@ func (c *KubedbV1alpha2Client) Redises(namespace string) RedisInterface {
 
 func (c *KubedbV1alpha2Client) RedisSentinels(namespace string) RedisSentinelInterface {
 	return newRedisSentinels(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Solrs(namespace string) SolrInterface {
+	return newSolrs(c, namespace)
 }
 
 // NewForConfig creates a new KubedbV1alpha2Client for the given config.

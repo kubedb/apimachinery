@@ -69,3 +69,7 @@ type ProxySQLVersionListerExpansion interface{}
 // RedisVersionListerExpansion allows custom methods to be added to
 // RedisVersionLister.
 type RedisVersionListerExpansion interface{}
+
+// SolrVersionListerExpansion allows custom methods to be added to
+// SolrVersionLister.
+type SolrVersionListerExpansion interface{}

@@ -563,6 +563,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionSpec":                           schema_apimachinery_apis_catalog_v1alpha1_RedisVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector":                    schema_apimachinery_apis_catalog_v1alpha1_ReplicationModeDetector(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext":                            schema_apimachinery_apis_catalog_v1alpha1_SecurityContext(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer":                          schema_apimachinery_apis_catalog_v1alpha1_SolrInitContainer(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrSecurityContext":                        schema_apimachinery_apis_catalog_v1alpha1_SolrSecurityContext(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersion":                                schema_apimachinery_apis_catalog_v1alpha1_SolrVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase":                        schema_apimachinery_apis_catalog_v1alpha1_SolrVersionDatabase(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_SolrVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionPodSecurityPolicy":               schema_apimachinery_apis_catalog_v1alpha1_SolrVersionPodSecurityPolicy(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_SolrVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints":                          schema_apimachinery_apis_catalog_v1alpha1_UpdateConstraints(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.VolumeSnapshot":                             schema_apimachinery_apis_catalog_v1alpha1_VolumeSnapshot(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.WalgSpec":                                   schema_apimachinery_apis_catalog_v1alpha1_WalgSpec(ref),
@@ -26564,6 +26571,264 @@ func schema_apimachinery_apis_catalog_v1alpha1_SecurityContext(ref common.Refere
 				},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_SolrInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrInitContainer is the Solr init Container image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_SolrSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrSecurityContext provides additional securityContext settings for the Solr Image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"runAsUser": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RunAsUser is default UID for the DB container. It defaults to 8983.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"runAsGroup": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"runAsAnyNonRoot": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RunAsAnyNonRoot will be true if user can change the default UID to other than 8983.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_SolrVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrVersionDatabase is the Solr Database image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrVersionList contains a list of SolrVersion",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersion"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrVersionPodSecurityPolicy is the Solr pod security policies",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databasePolicyName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"databasePolicyName"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrVersionSpec defines the desired state of SolrVersion",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase"),
+						},
+					},
+					"initContainer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer"),
+						},
+					},
+					"deprecated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"podSecurityPolicies": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PSP names",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionPodSecurityPolicy"),
+						},
+					},
+					"securityContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecurityContext is for the additional security information for the Solr container",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrSecurityContext"),
+						},
+					},
+					"stash": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Stash defines backup and restore task definitions.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
+						},
+					},
+					"updateConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "update constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
+						},
+					},
+				},
+				Required: []string{"version", "db", "initContainer"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

@@ -78,6 +78,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&KafkaVersionList{},
 		&KafkaConnectorVersion{},
 		&KafkaConnectorVersionList{},
+		&SolrVersion{},
+		&SolrVersionList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

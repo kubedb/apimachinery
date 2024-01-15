@@ -43,3 +43,5 @@ type ProxySQLExpansion interface{}
 type RedisExpansion interface{}
 
 type RedisSentinelExpansion interface{}
+
+type SolrExpansion interface{}

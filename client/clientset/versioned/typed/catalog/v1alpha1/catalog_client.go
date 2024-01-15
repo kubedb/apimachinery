@@ -21,10 +21,9 @@ package v1alpha1
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type CatalogV1alpha1Interface interface {
@@ -42,6 +41,7 @@ type CatalogV1alpha1Interface interface {
 	PostgresVersionsGetter
 	ProxySQLVersionsGetter
 	RedisVersionsGetter
+	SolrVersionsGetter
 }
 
 // CatalogV1alpha1Client is used to interact with features provided by the catalog.kubedb.com group.
@@ -99,6 +99,10 @@ func (c *CatalogV1alpha1Client) ProxySQLVersions() ProxySQLVersionInterface {
 
 func (c *CatalogV1alpha1Client) RedisVersions() RedisVersionInterface {
 	return newRedisVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) SolrVersions() SolrVersionInterface {
+	return newSolrVersions(c)
 }
 
 // NewForConfig creates a new CatalogV1alpha1Client for the given config.

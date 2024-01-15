@@ -50,6 +50,8 @@ type Interface interface {
 	ProxySQLVersions() ProxySQLVersionInformer
 	// RedisVersions returns a RedisVersionInformer.
 	RedisVersions() RedisVersionInformer
+	// SolrVersions returns a SolrVersionInformer.
+	SolrVersions() SolrVersionInformer
 }
 
 type version struct {
@@ -126,4 +128,9 @@ func (v *version) ProxySQLVersions() ProxySQLVersionInformer {
 // RedisVersions returns a RedisVersionInformer.
 func (v *version) RedisVersions() RedisVersionInformer {
 	return &redisVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// SolrVersions returns a SolrVersionInformer.
+func (v *version) SolrVersions() SolrVersionInformer {
+	return &solrVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
