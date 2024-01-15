@@ -58,6 +58,8 @@ type Interface interface {
 	SinglestoreVersions() SinglestoreVersionInformer
 	// ZooKeeperVersions returns a ZooKeeperVersionInformer.
 	ZooKeeperVersions() ZooKeeperVersionInformer
+	// SolrVersions returns a SolrVersionInformer.
+	SolrVersions() SolrVersionInformer
 }
 
 type version struct {
@@ -154,4 +156,9 @@ func (v *version) SinglestoreVersions() SinglestoreVersionInformer {
 // ZooKeeperVersions returns a ZooKeeperVersionInformer.
 func (v *version) ZooKeeperVersions() ZooKeeperVersionInformer {
 	return &zooKeeperVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// SolrVersions returns a SolrVersionInformer.
+func (v *version) SolrVersions() SolrVersionInformer {
+	return &solrVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

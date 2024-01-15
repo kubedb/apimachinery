@@ -19,10 +19,9 @@ limitations under the License.
 package fake
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
-
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
+	v1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 )
 
 type FakeKubedbV1alpha2 struct {
@@ -95,6 +94,10 @@ func (c *FakeKubedbV1alpha2) Singlestores(namespace string) v1alpha2.Singlestore
 
 func (c *FakeKubedbV1alpha2) ZooKeepers(namespace string) v1alpha2.ZooKeeperInterface {
 	return &FakeZooKeepers{c, namespace}
+}
+
+func (c *FakeKubedbV1alpha2) Solrs(namespace string) v1alpha2.SolrInterface {
+	return &FakeSolrs{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

@@ -85,3 +85,7 @@ type SinglestoreVersionListerExpansion interface{}
 // ZooKeeperVersionListerExpansion allows custom methods to be added to
 // ZooKeeperVersionLister.
 type ZooKeeperVersionListerExpansion interface{}
+
+// SolrVersionListerExpansion allows custom methods to be added to
+// SolrVersionLister.
+type SolrVersionListerExpansion interface{}

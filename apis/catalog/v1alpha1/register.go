@@ -86,6 +86,10 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&SinglestoreVersionList{},
 		&ZooKeeperVersion{},
 		&ZooKeeperVersionList{},
+		&KafkaConnectorVersion{},
+		&KafkaConnectorVersionList{},
+		&SolrVersion{},
+		&SolrVersionList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,
