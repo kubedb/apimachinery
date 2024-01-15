@@ -495,7 +495,7 @@ const (
 	ConfigVolumeName                  = "pgpool-config"
 	ContainerName                     = "pgpool"
 	PgpoolAuthUsername                = "pcp"
-	SyncPeriod                        = 10
+	SyncPeriod                        = 20
 )
 
 // List of possible condition types for a KubeDB object

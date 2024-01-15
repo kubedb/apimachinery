@@ -84,6 +84,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&RedisSentinelList{},
 		&Singlestore{},
 		&SinglestoreList{},
+		&Pgpool{},
+		&PgpoolList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,
