@@ -24,28 +24,20 @@ import (
 )
 
 const (
-	ResourceCodeSolr          = "sl"
-	ResourceKindSolr          = "Solr"
-	ResourceSingularSolr      = "solr"
-	ResourcePluralSolr        = "solrs"
-	SolrPortName              = "http"
-	SolrRestPort              = 8983
-	SolrSecretName            = "solr-secret"
-	SolrSecretKey             = "solr.xml"
-	SolrContainerName         = "solr"
-	SolrInitContainerName     = "init-solr"
-	SolrInitAuthContainerName = "init-auth"
-	SolrSecret                = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<solr>\n <str name=\"coreRootDirectory\">/var/solr/data</str>\n <str name=\"sharedLib\">${solr.sharedLib:}</str>\n  <solrcloud>\n    <str name=\"host\">${host:}</str>\n    <int name=\"hostPort\">${solr.port.advertise:80}</int>\n    <str name=\"hostContext\">${hostContext:solr}</str>\n    <bool name=\"genericCoreNodeNames\">${genericCoreNodeNames:true}</bool>\n    <int name=\"zkClientTimeout\">${zkClientTimeout:30000}</int>\n    <int name=\"distribUpdateSoTimeout\">${distribUpdateSoTimeout:600000}</int>\n    <int name=\"distribUpdateConnTimeout\">${distribUpdateConnTimeout:60000}</int>\n    <str name=\"zkCredentialsProvider\">${zkCredentialsProvider:org.apache.solr.common.cloud.DefaultZkCredentialsProvider}</str>\n    <str name=\"zkACLProvider\">${zkACLProvider:org.apache.solr.common.cloud.DefaultZkACLProvider}</str>\n  </solrcloud>\n  <shardHandlerFactory name=\"shardHandlerFactory\"\n    class=\"HttpShardHandlerFactory\">\n    <int name=\"socketTimeout\">${socketTimeout:600000}</int>\n    <int name=\"connTimeout\">${connTimeout:60000}</int>\n  </shardHandlerFactory>\n  <int name=\"maxBooleanClauses\">${solr.max.booleanClauses:1024}</int>\n  <str name=\"allowPaths\">${solr.allowPaths:}</str>\n  <metrics enabled=\"${metricsEnabled:true}\"/>\n  \n</solr>\n"
-	SolrAdmin                 = "admin"
-	SolrUser                  = "solr"
-	SecurityJSON              = "security.json"
-	SolrACL                   = "acl"
-	SolrACLReadOnly           = "acl-read-only"
-	TempSecret                = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><solr>\n    <str name=\"coreRootDirectory\">var/solr/data</str>\n    <int name=\"maxBooleanClauses\">${solr.max.booleanClauses:1024}</int>\n    <str name=\"allowPaths\">${allowPaths:}</str>\n    <solrCloud><int name=\"hostPort\">${solr.port.advertise:80}</int>\n        <str name=\"host\">${host:}</str>\n        <int name=\"distribUpdateSoTimeout\">${distribUpdateSoTimeout:600000}</int>\n        <int name=\"distribUpdateConnTimeout\">${distribUpdateConnTimeout:60000}</int>\n        <str name=\"zkACLProvider\">${zkACLProvider:org.apache.solr.common.cloud.DefaultZkACLProvider}</str>\n        <bool name=\"genericCoreNodeNames\">${genericCoreNodeNames:true}</bool>\n        <str name=\"zkCredentialsProvider\">${zkCredentialsProvider:org.apache.solr.common.cloud.DefaultZkCredentialsProvider}</str>\n    </solrCloud>\n    <metrics enabled=\"${metricsEnabled:true}\"/>\n</solr>\n"
+	ResourceCodeSolr      = "sl"
+	ResourceKindSolr      = "Solr"
+	ResourceSingularSolr  = "solr"
+	ResourcePluralSolr    = "solrs"
+	SolrPortName          = "http"
+	SolrRestPort          = 8983
+	SolrSecretKey         = "solr.xml"
+	SolrContainerName     = "solr"
+	SolrInitContainerName = "init-solr"
+	SolrAdmin             = "admin"
+	SecurityJSON          = "security.json"
 )
 
 const (
-	SolrDefaultConfig       = "solr-config"
 	SolrVolumeDefaultConfig = "solr-config"
 	SolrVolumeCustomConfig  = "custom-config"
 	SolrVolumeAuthConfig    = "auth-config"
@@ -173,12 +165,6 @@ type SolrSpec struct {
 
 	// +optional
 	AuthConfigSecret *core.LocalObjectReference `json:"authConfigSecret,omitempty"`
-
-	// +optional
-	ZookeeperACLSecret *core.LocalObjectReference `json:"zookeeperACLSecret,omitempty"`
-
-	// +optional
-	ZookeeperACLReadOnlySecret *core.LocalObjectReference `json:"zookeeperACLReadOnlySecret,omitempty"`
 
 	//***********keystoresecret will be added later
 

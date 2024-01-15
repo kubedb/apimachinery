@@ -3577,16 +3577,6 @@ func (in *SolrSpec) DeepCopyInto(out *SolrSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
-	if in.ZookeeperACLSecret != nil {
-		in, out := &in.ZookeeperACLSecret, &out.ZookeeperACLSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
-	if in.ZookeeperACLReadOnlySecret != nil {
-		in, out := &in.ZookeeperACLReadOnlySecret, &out.ZookeeperACLReadOnlySecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	if in.ServiceTemplates != nil {
 		in, out := &in.ServiceTemplates, &out.ServiceTemplates
