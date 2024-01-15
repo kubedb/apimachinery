@@ -277,17 +277,6 @@ func (s *Solr) SetDefaults() {
 		}
 	}
 
-	if s.Spec.ZookeeperACLSecret == nil {
-		s.Spec.ZookeeperACLSecret = &v1.LocalObjectReference{
-			Name: s.SolrSecretName("acl"),
-		}
-	}
-
-	if s.Spec.ZookeeperACLReadOnlySecret == nil {
-		s.Spec.ZookeeperACLReadOnlySecret = &v1.LocalObjectReference{
-			Name: s.SolrSecretName("acl-read-only"),
-		}
-	}
 	var slVersion catalog.SolrVersion
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: s.Spec.Version,
@@ -443,14 +432,6 @@ func (s *Solr) GetPersistentSecrets() []string {
 
 	if s.Spec.AuthConfigSecret != nil {
 		secrets = append(secrets, s.Spec.AuthConfigSecret.Name)
-	}
-
-	if s.Spec.ZookeeperACLSecret != nil {
-		secrets = append(secrets, s.Spec.ZookeeperACLSecret.Name)
-	}
-
-	if s.Spec.ZookeeperACLReadOnlySecret != nil {
-		secrets = append(secrets, s.Spec.ZookeeperACLReadOnlySecret.Name)
 	}
 
 	return secrets

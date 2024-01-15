@@ -730,6 +730,9 @@ const (
 	KafkaAdminTopicConfigProvider = "com.linkedin.kafka.cruisecontrol.config.KafkaAdminTopicConfigProvider"
 	KafkaCCMetricReporter         = "com.linkedin.kafka.cruisecontrol.metricsreporter.CruiseControlMetricsReporter"
 	KafkaJMXMetricReporter        = "org.apache.kafka.common.metrics.JmxReporter"
+
+	// =========================== Solr Constants ============================
+
 )
 
 // =========================== Druid Constants ============================
