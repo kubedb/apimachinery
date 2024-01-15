@@ -23,42 +23,6 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
-const (
-	ResourceCodeSolr      = "sl"
-	ResourceKindSolr      = "Solr"
-	ResourceSingularSolr  = "solr"
-	ResourcePluralSolr    = "solrs"
-	SolrPortName          = "http"
-	SolrRestPort          = 8983
-	SolrSecretKey         = "solr.xml"
-	SolrContainerName     = "solr"
-	SolrInitContainerName = "init-solr"
-	SolrAdmin             = "admin"
-	SecurityJSON          = "security.json"
-)
-
-const (
-	SolrVolumeDefaultConfig = "solr-config"
-	SolrVolumeCustomConfig  = "custom-config"
-	SolrVolumeAuthConfig    = "auth-config"
-	SolrVolumeData          = "data"
-	SolrVolumeConfig        = "slconfig"
-)
-
-const (
-	DistLibs              = "/opt/solr/dist"
-	ContribLibs           = "/opt/solr/contrib/%s/lib"
-	SysPropLibPlaceholder = "${solr.sharedLib:}"
-)
-
-const (
-	SolrHomeDir           = "/var/solr"
-	SolrDataDir           = "/var/solr/data"
-	SolrTempConfigDir     = "/temp-config"
-	SolrCustomConfigDir   = "/custom-config"
-	SolrSecurityConfigDir = "/var/security"
-)
-
 var Keys = map[string]string{
 	"maxBooleanClauses": "solr.max.booleanClauses",
 	"sharedLib":         "solr.sharedLib",
