@@ -81,6 +81,10 @@ func (c *FakeKubedbV1alpha2) RedisSentinels(namespace string) v1alpha2.RedisSent
 	return &FakeRedisSentinels{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) Singlestores(namespace string) v1alpha2.SinglestoreInterface {
+	return &FakeSinglestores{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeKubedbV1alpha2) RESTClient() rest.Interface {

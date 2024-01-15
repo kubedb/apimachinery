@@ -42,6 +42,7 @@ type KubedbV1alpha2Interface interface {
 	ProxySQLsGetter
 	RedisesGetter
 	RedisSentinelsGetter
+	SinglestoresGetter
 }
 
 // KubedbV1alpha2Client is used to interact with features provided by the kubedb.com group.
@@ -99,6 +100,10 @@ func (c *KubedbV1alpha2Client) Redises(namespace string) RedisInterface {
 
 func (c *KubedbV1alpha2Client) RedisSentinels(namespace string) RedisSentinelInterface {
 	return newRedisSentinels(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Singlestores(namespace string) SinglestoreInterface {
+	return newSinglestores(c, namespace)
 }
 
 // NewForConfig creates a new KubedbV1alpha2Client for the given config.
