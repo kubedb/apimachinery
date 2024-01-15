@@ -502,6 +502,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionList":                       schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionPodSecurityPolicy":          schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionSpec":                       schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBSecurityContext":                     schema_apimachinery_apis_catalog_v1alpha1_MongoDBSecurityContext(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersion":                             schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionDatabase":                     schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionExporter":                     schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionExporter(ref),
@@ -24381,6 +24382,33 @@ func schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionSpec(ref common.R
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_MongoDBSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MongoDBSecurityContext provides additional securityContext settings for the MongoDBSecurityContext Image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"runAsUser": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RunAsUser is default UID for the DB container.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"runAsGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RunAsGroup is default GID for the DB container.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24642,7 +24670,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionSpec(ref common.Ref
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional config for the DB container",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBSecurityContext"),
 						},
 					},
 					"archiver": {
@@ -24657,7 +24685,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 
