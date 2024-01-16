@@ -193,11 +193,6 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 				s.Name,
 				".spec.topology.data can't be empty in cluster mode"))
 		}
-		if s.Spec.Topology.Data.Replicas == nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("data").Child("replicas"),
-				s.Name,
-				"doesn't support spec.topology.data.replicas is set"))
-		}
 		if *s.Spec.Topology.Data.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("data").Child("replicas"),
 				s.Name,
@@ -221,11 +216,6 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 				s.Name,
 				".spec.topology.overseer can't be empty in cluster mode"))
 		}
-		if s.Spec.Topology.Overseer.Replicas == nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("overseer").Child("replicas"),
-				s.Name,
-				"doesn't support spec.overseer.data.replicas is set"))
-		}
 		if *s.Spec.Topology.Overseer.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("overseer").Child("replicas"),
 				s.Name,
@@ -248,11 +238,6 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("coordinator"),
 				s.Name,
 				".spec.topology.coordinator can't be empty in cluster mode"))
-		}
-		if s.Spec.Topology.Coordinator.Replicas == nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("coordinatorr").Child("replicas"),
-				s.Name,
-				"doesn't support spec.coordinator.data.replicas is set"))
 		}
 		if *s.Spec.Topology.Coordinator.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("coordinator").Child("replicas"),

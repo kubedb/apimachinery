@@ -23,38 +23,6 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
-var Keys = map[string]string{
-	"maxBooleanClauses": "solr.max.booleanClauses",
-	"sharedLib":         "solr.sharedLib",
-	"hostPort":          "solr.port.advertise",
-	"allowPaths":        "solr.allowPaths",
-}
-
-var ShardHandlerFactory = map[string]interface{}{
-	"socketTimeout": 600000,
-	"connTimeout":   60000,
-}
-
-var SolrCloud = map[string]interface{}{
-	"host":                     "",
-	"hostPort":                 80,
-	"hostContext":              "solr",
-	"genericCoreNodeNames":     true,
-	"zkClientTimeout":          30000,
-	"distribUpdateSoTimeout":   600000,
-	"distribUpdateConnTimeout": 60000,
-	"zkCredentialsProvider":    "org.apache.solr.common.cloud.DefaultZkCredentialsProvider",
-	"zkACLProvider":            "org.apache.solr.common.cloud.DefaultZkACLProvider",
-}
-
-var SolrConf = map[string]interface{}{
-	"maxBooleanClauses": 1024,
-	//"sharedLib":           "",
-	"allowPaths":          "",
-	"solrcloud":           SolrCloud,
-	"shardHandlerFactory": ShardHandlerFactory,
-}
-
 // Solr is the schema for the Sole API
 
 // +genclient
@@ -178,16 +146,6 @@ type SolrNode struct {
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Provisioning;Ready;NotReady;Critical
-type SolrPhase string
-
-const (
-	SolrPhaseProvisioning SolrPhase = "Provisioning"
-	SolrPhaseReady        SolrPhase = "Ready"
-	SolrPhaseNotReady     SolrPhase = "NotReady"
-	SolrPhaseCritical     SolrPhase = "Critical"
-)
-
 // SolrStatus defines the observed state of Solr
 type SolrStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
@@ -195,7 +153,7 @@ type SolrStatus struct {
 
 	// Specifies the current phase of the database
 	// +optional
-	Phase SolrPhase `json:"phase,omitempty"`
+	Phase DatabasePhase `json:"phase,omitempty"`
 	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
 	// resource's generation, which is updated on mutation by the API Server.
 	// +optional

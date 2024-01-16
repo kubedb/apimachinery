@@ -744,7 +744,7 @@ const (
 	SolrAdmin             = "admin"
 	SecurityJSON          = "security.json"
 
-	SolrVolumeDefaultConfig = "solr-config"
+	SolrVolumeDefaultConfig = "default-config"
 	SolrVolumeCustomConfig  = "custom-config"
 	SolrVolumeAuthConfig    = "auth-config"
 	SolrVolumeData          = "data"
@@ -1035,3 +1035,35 @@ const (
 	GitSecretMountPath   = "/etc/git-secret"
 	GitSyncContainerName = "git-sync"
 )
+
+var Keys = map[string]string{
+	"maxBooleanClauses": "solr.max.booleanClauses",
+	"sharedLib":         "solr.sharedLib",
+	"hostPort":          "solr.port.advertise",
+	"allowPaths":        "solr.allowPaths",
+}
+
+var ShardHandlerFactory = map[string]interface{}{
+	"socketTimeout": 600000,
+	"connTimeout":   60000,
+}
+
+var SolrCloud = map[string]interface{}{
+	"host":                     "",
+	"hostPort":                 80,
+	"hostContext":              "solr",
+	"genericCoreNodeNames":     true,
+	"zkClientTimeout":          30000,
+	"distribUpdateSoTimeout":   600000,
+	"distribUpdateConnTimeout": 60000,
+	"zkCredentialsProvider":    "org.apache.solr.common.cloud.DefaultZkCredentialsProvider",
+	"zkACLProvider":            "org.apache.solr.common.cloud.DefaultZkACLProvider",
+}
+
+var SolrConf = map[string]interface{}{
+	"maxBooleanClauses": 1024,
+	//"sharedLib":           "",
+	"allowPaths":          "",
+	"solrcloud":           SolrCloud,
+	"shardHandlerFactory": ShardHandlerFactory,
+}
