@@ -753,7 +753,6 @@ const (
 	DistLibs              = "/opt/solr/dist"
 	ContribLibs           = "/opt/solr/contrib/%s/lib"
 	SysPropLibPlaceholder = "${solr.sharedLib:}"
-
 	SolrHomeDir           = "/var/solr"
 	SolrDataDir           = "/var/solr/data"
 	SolrTempConfigDir     = "/temp-config"
