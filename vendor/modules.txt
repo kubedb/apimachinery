@@ -372,6 +372,9 @@ github.com/inconshreveable/mousetrap
 # github.com/jmespath/go-jmespath v0.4.0
 ## explicit; go 1.14
 github.com/jmespath/go-jmespath
+# github.com/jonboulle/clockwork v0.4.0
+## explicit; go 1.15
+github.com/jonboulle/clockwork
 # github.com/josharian/intern v1.0.0
 ## explicit; go 1.5
 github.com/josharian/intern
@@ -515,7 +518,7 @@ github.com/yudai/gojsondiff/formatter
 # github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82
 ## explicit
 github.com/yudai/golcs
-# go.bytebuilders.dev/audit v0.0.29-0.20231225201242-3ff33160c6f0
+# go.bytebuilders.dev/audit v0.0.32-0.20240105184043-9cf3195203b7
 ## explicit; go 1.21.5
 go.bytebuilders.dev/audit/api/v1
 go.bytebuilders.dev/audit/lib
@@ -742,6 +745,9 @@ golang.org/x/text/width
 # golang.org/x/time v0.5.0
 ## explicit; go 1.18
 golang.org/x/time/rate
+# gomodules.xyz/counter v0.0.1
+## explicit; go 1.21.5
+gomodules.xyz/counter/hourly
 # gomodules.xyz/encoding v0.0.7
 ## explicit; go 1.17
 gomodules.xyz/encoding/json
