@@ -26,38 +26,38 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-// RabbitmqVersionLister helps list RabbitmqVersions.
+// RabbitMQVersionLister helps list RabbitMQVersions.
 // All objects returned here must be treated as read-only.
-type RabbitmqVersionLister interface {
-	// List lists all RabbitmqVersions in the indexer.
+type RabbitMQVersionLister interface {
+	// List lists all RabbitMQVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RabbitmqVersion, err error)
-	// Get retrieves the RabbitmqVersion from the index for a given name.
+	List(selector labels.Selector) (ret []*v1alpha1.RabbitMQVersion, err error)
+	// Get retrieves the RabbitMQVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.RabbitmqVersion, error)
-	RabbitmqVersionListerExpansion
+	Get(name string) (*v1alpha1.RabbitMQVersion, error)
+	RabbitMQVersionListerExpansion
 }
 
-// rabbitmqVersionLister implements the RabbitmqVersionLister interface.
-type rabbitmqVersionLister struct {
+// rabbitMQVersionLister implements the RabbitMQVersionLister interface.
+type rabbitMQVersionLister struct {
 	indexer cache.Indexer
 }
 
-// NewRabbitmqVersionLister returns a new RabbitmqVersionLister.
-func NewRabbitmqVersionLister(indexer cache.Indexer) RabbitmqVersionLister {
-	return &rabbitmqVersionLister{indexer: indexer}
+// NewRabbitMQVersionLister returns a new RabbitMQVersionLister.
+func NewRabbitMQVersionLister(indexer cache.Indexer) RabbitMQVersionLister {
+	return &rabbitMQVersionLister{indexer: indexer}
 }
 
-// List lists all RabbitmqVersions in the indexer.
-func (s *rabbitmqVersionLister) List(selector labels.Selector) (ret []*v1alpha1.RabbitmqVersion, err error) {
+// List lists all RabbitMQVersions in the indexer.
+func (s *rabbitMQVersionLister) List(selector labels.Selector) (ret []*v1alpha1.RabbitMQVersion, err error) {
 	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RabbitmqVersion))
+		ret = append(ret, m.(*v1alpha1.RabbitMQVersion))
 	})
 	return ret, err
 }
 
-// Get retrieves the RabbitmqVersion from the index for a given name.
-func (s *rabbitmqVersionLister) Get(name string) (*v1alpha1.RabbitmqVersion, error) {
+// Get retrieves the RabbitMQVersion from the index for a given name.
+func (s *rabbitMQVersionLister) Get(name string) (*v1alpha1.RabbitMQVersion, error) {
 	obj, exists, err := s.indexer.GetByKey(name)
 	if err != nil {
 		return nil, err
@@ -65,5 +65,5 @@ func (s *rabbitmqVersionLister) Get(name string) (*v1alpha1.RabbitmqVersion, err
 	if !exists {
 		return nil, errors.NewNotFound(v1alpha1.Resource("rabbitmqversion"), name)
 	}
-	return obj.(*v1alpha1.RabbitmqVersion), nil
+	return obj.(*v1alpha1.RabbitMQVersion), nil
 }

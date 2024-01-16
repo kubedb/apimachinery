@@ -12,8 +12,8 @@ spec:
     - datastore
     - kubedb
     - appscode
-    kind: RabbitmqVersion
-    listKind: RabbitmqVersionList
+    kind: RabbitMQVersion
+    listKind: RabbitMQVersionList
     plural: rabbitmqversions
     shortNames:
     - rmversion
@@ -67,6 +67,12 @@ spec:
                     type: string
                 required:
                 - databasePolicyName
+                type: object
+              securityContext:
+                properties:
+                  runAsUser:
+                    format: int64
+                    type: integer
                 type: object
               stash:
                 properties:

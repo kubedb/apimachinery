@@ -74,9 +74,9 @@ type PostgresVersionListerExpansion interface{}
 // ProxySQLVersionLister.
 type ProxySQLVersionListerExpansion interface{}
 
-// RabbitmqVersionListerExpansion allows custom methods to be added to
-// RabbitmqVersionLister.
-type RabbitmqVersionListerExpansion interface{}
+// RabbitMQVersionListerExpansion allows custom methods to be added to
+// RabbitMQVersionLister.
+type RabbitMQVersionListerExpansion interface{}
 
 // RedisVersionListerExpansion allows custom methods to be added to
 // RedisVersionLister.

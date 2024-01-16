@@ -34,61 +34,85 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
-func (r *Rabbitmq) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (r *RabbitMQ) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralRabbitmq))
 }
 
-func (r *Rabbitmq) AsOwner() *meta.OwnerReference {
-	return meta.NewControllerRef(r, SchemeGroupVersion.WithKind(ResourceKindRabbitmq))
+type RabbitmqApp struct {
+	*RabbitMQ
 }
 
-func (r *Rabbitmq) ResourceShortCode() string {
+func (r RabbitmqApp) Name() string {
+	return r.RabbitMQ.Name
+}
+
+func (r RabbitmqApp) Type() appcat.AppType {
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularRabbitmq))
+}
+
+func (r *RabbitMQ) AppBindingMeta() appcat.AppBindingMeta {
+	return &RabbitmqApp{r}
+}
+
+func (r *RabbitMQ) GetConnectionScheme() string {
+	scheme := "http"
+	if r.Spec.EnableSSL {
+		scheme = "https"
+	}
+	return scheme
+}
+
+func (r *RabbitMQ) ResourceShortCode() string {
 	return ResourceCodeRabbitmq
 }
 
-func (r *Rabbitmq) ResourceKind() string {
+func (r *RabbitMQ) ResourceKind() string {
 	return ResourceKindRabbitmq
 }
 
-func (r *Rabbitmq) ResourceSingular() string {
+func (r *RabbitMQ) ResourceSingular() string {
 	return ResourceSingularRabbitmq
 }
 
-func (r *Rabbitmq) ResourcePlural() string {
+func (r *RabbitMQ) ResourcePlural() string {
 	return ResourcePluralRabbitmq
 }
 
-func (r *Rabbitmq) ResourceFQN() string {
+func (r *RabbitMQ) AsOwner() *meta.OwnerReference {
+	return meta.NewControllerRef(r, SchemeGroupVersion.WithKind(ResourceKindRabbitmq))
+}
+
+func (r *RabbitMQ) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", r.ResourcePlural(), kubedb.GroupName)
 }
 
 // Owner returns owner reference to resources
-func (r *Rabbitmq) Owner() *meta.OwnerReference {
+func (r *RabbitMQ) Owner() *meta.OwnerReference {
 	return meta.NewControllerRef(r, SchemeGroupVersion.WithKind(r.ResourceKind()))
 }
 
-func (r *Rabbitmq) OffshootName() string {
+func (r *RabbitMQ) OffshootName() string {
 	return r.Name
 }
 
-func (r *Rabbitmq) ServiceName() string {
+func (r *RabbitMQ) ServiceName() string {
 	return r.OffshootName()
 }
 
-func (r *Rabbitmq) GoverningServiceName() string {
+func (r *RabbitMQ) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(r.ServiceName(), "pods")
 }
 
-func (r *Rabbitmq) StandbyServiceName() string {
+func (r *RabbitMQ) StandbyServiceName() string {
 	return meta_util.NameWithPrefix(r.ServiceName(), KafkaStandbyServiceSuffix)
 }
 
-func (r *Rabbitmq) offshootLabels(selector, override map[string]string) map[string]string {
+func (r *RabbitMQ) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, r.Labels, override))
 }
 
-func (r *Rabbitmq) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
+func (r *RabbitMQ) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
 		meta_util.NameLabelKey:      r.ResourceFQN(),
 		meta_util.InstanceLabelKey:  r.Name,
@@ -97,17 +121,17 @@ func (r *Rabbitmq) OffshootSelectors(extraSelectors ...map[string]string) map[st
 	return meta_util.OverwriteKeys(selector, extraSelectors...)
 }
 
-func (r *Rabbitmq) OffshootLabels() map[string]string {
+func (r *RabbitMQ) OffshootLabels() map[string]string {
 	return r.offshootLabels(r.OffshootSelectors(), nil)
 }
 
-func (r *Rabbitmq) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+func (r *RabbitMQ) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(r.Spec.ServiceTemplates, alias)
 	return r.offshootLabels(meta_util.OverwriteKeys(r.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 type RabbitmqStatsService struct {
-	*Rabbitmq
+	*RabbitMQ
 }
 
 func (ks RabbitmqStatsService) TLSConfig() *promapi.TLSConfig {
@@ -115,7 +139,7 @@ func (ks RabbitmqStatsService) TLSConfig() *promapi.TLSConfig {
 }
 
 func (ks RabbitmqStatsService) GetNamespace() string {
-	return ks.Rabbitmq.GetNamespace()
+	return ks.RabbitMQ.GetNamespace()
 }
 
 func (ks RabbitmqStatsService) ServiceName() string {
@@ -138,63 +162,63 @@ func (ks RabbitmqStatsService) Scheme() string {
 	return ""
 }
 
-func (r *Rabbitmq) StatsService() mona.StatsAccessor {
+func (r *RabbitMQ) StatsService() mona.StatsAccessor {
 	return &RabbitmqStatsService{r}
 }
 
-func (r *Rabbitmq) StatsServiceLabels() map[string]string {
+func (r *RabbitMQ) StatsServiceLabels() map[string]string {
 	return r.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
-func (r *Rabbitmq) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
+func (r *RabbitMQ) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
 	return r.offshootLabels(meta_util.OverwriteKeys(r.OffshootSelectors(), extraLabels...), r.Spec.PodTemplate.Controller.Labels)
 }
 
-func (r *Rabbitmq) PodLabels(extraLabels ...map[string]string) map[string]string {
+func (r *RabbitMQ) PodLabels(extraLabels ...map[string]string) map[string]string {
 	return r.offshootLabels(meta_util.OverwriteKeys(r.OffshootSelectors(), extraLabels...), r.Spec.PodTemplate.Labels)
 }
 
-func (r *Rabbitmq) StatefulSetName() string {
+func (r *RabbitMQ) StatefulSetName() string {
 	return r.OffshootName()
 }
 
-func (r *Rabbitmq) ServiceAccountName() string {
+func (r *RabbitMQ) ServiceAccountName() string {
 	return r.OffshootName()
 }
 
-func (r *Rabbitmq) DefaultPodRoleName() string {
+func (r *RabbitMQ) DefaultPodRoleName() string {
 	return meta_util.NameWithSuffix(r.OffshootName(), "role")
 }
 
-func (r *Rabbitmq) DefaultPodRoleBindingName() string {
+func (r *RabbitMQ) DefaultPodRoleBindingName() string {
 	return meta_util.NameWithSuffix(r.OffshootName(), "rolebinding")
 }
 
-func (r *Rabbitmq) ConfigSecretName() string {
+func (r *RabbitMQ) ConfigSecretName() string {
 	return meta_util.NameWithSuffix(r.OffshootName(), "config")
 }
 
-func (r *Rabbitmq) DefaultUserCredSecretName(username string) string {
+func (r *RabbitMQ) DefaultUserCredSecretName(username string) string {
 	return meta_util.NameWithSuffix(r.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", username), "_", "-"))
 }
 
-func (r *Rabbitmq) DefaultErlangCookieSecretName() string {
+func (r *RabbitMQ) DefaultErlangCookieSecretName() string {
 	return meta_util.NameWithSuffix(r.OffshootName(), "erlang-cookie")
 }
 
 // CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
-func (r *Rabbitmq) CertificateName(alias RabbitmqCertificateAlias) string {
+func (r *RabbitMQ) CertificateName(alias RabbitMQCertificateAlias) string {
 	return meta_util.NameWithSuffix(r.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
 // ClientCertificateCN returns the CN for a client certificate
-func (r *Rabbitmq) ClientCertificateCN(alias RabbitmqCertificateAlias) string {
+func (r *RabbitMQ) ClientCertificateCN(alias RabbitMQCertificateAlias) string {
 	return fmt.Sprintf("%s-%s", r.Name, string(alias))
 }
 
 // GetCertSecretName returns the secret name for a certificate alias if any,
 // otherwise returns default certificate secret name for the given alias.
-func (r *Rabbitmq) GetCertSecretName(alias RabbitmqCertificateAlias) string {
+func (r *RabbitMQ) GetCertSecretName(alias RabbitMQCertificateAlias) string {
 	if r.Spec.TLS != nil {
 		name, ok := kmapi.GetCertificateSecretName(r.Spec.TLS.Certificates, string(alias))
 		if ok {
@@ -206,22 +230,22 @@ func (r *Rabbitmq) GetCertSecretName(alias RabbitmqCertificateAlias) string {
 
 // returns the CertSecretVolumeName
 // Values will be like: client-certs, server-certs etc.
-func (r *Rabbitmq) CertSecretVolumeName(alias RabbitmqCertificateAlias) string {
+func (r *RabbitMQ) CertSecretVolumeName(alias RabbitMQCertificateAlias) string {
 	return string(alias) + "-certs"
 }
 
 // returns CertSecretVolumeMountPath
 // if configDir is "/opt/kafka/config",
 // mountPath will be, "/opt/kafka/config/<alias>".
-func (r *Rabbitmq) CertSecretVolumeMountPath(configDir string, cert string) string {
+func (r *RabbitMQ) CertSecretVolumeMountPath(configDir string, cert string) string {
 	return filepath.Join(configDir, cert)
 }
 
-func (r *Rabbitmq) PVCName(alias string) string {
+func (r *RabbitMQ) PVCName(alias string) string {
 	return meta_util.NameWithSuffix(r.Name, alias)
 }
 
-func (r *Rabbitmq) SetHealthCheckerDefaults() {
+func (r *RabbitMQ) SetHealthCheckerDefaults() {
 	if r.Spec.HealthChecker.PeriodSeconds == nil {
 		r.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
 	}
@@ -233,7 +257,7 @@ func (r *Rabbitmq) SetHealthCheckerDefaults() {
 	}
 }
 
-func (r *Rabbitmq) SetDefaults() {
+func (r *RabbitMQ) SetDefaults() {
 	if r.Spec.TerminationPolicy == "" {
 		r.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
@@ -245,34 +269,10 @@ func (r *Rabbitmq) SetDefaults() {
 	r.SetHealthCheckerDefaults()
 }
 
-func (r *Rabbitmq) SetTLSDefaults() {
+func (r *RabbitMQ) SetTLSDefaults() {
 	if r.Spec.TLS == nil || r.Spec.TLS.IssuerRef == nil {
 		return
 	}
 	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(RabbitmqServerCert), r.CertificateName(RabbitmqServerCert))
 	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(RabbitmqClientCert), r.CertificateName(RabbitmqClientCert))
-}
-
-type RabbitmqApp struct {
-	*Rabbitmq
-}
-
-func (r RabbitmqApp) Name() string {
-	return r.Rabbitmq.Name
-}
-
-func (r RabbitmqApp) Type() appcat.AppType {
-	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularRabbitmq))
-}
-
-func (r *Rabbitmq) AppBindingMeta() appcat.AppBindingMeta {
-	return &RabbitmqApp{r}
-}
-
-func (r *Rabbitmq) GetConnectionScheme() string {
-	scheme := "http"
-	if r.Spec.EnableSSL {
-		scheme = "https"
-	}
-	return scheme
 }

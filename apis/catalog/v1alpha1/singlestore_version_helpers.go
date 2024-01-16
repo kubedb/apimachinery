@@ -59,8 +59,8 @@ func (s SinglestoreVersion) ValidateSpecs() error {
 		s.Spec.Standalone.Image == "" {
 		return fmt.Errorf(`atleast one of the following specs is not set for singlestoreVersion "%v":
 spec.version,
-spec.db.image,
-spec.exporter.image.`, s.Name)
+spec.coordinator.image,
+spec.standalone.image.`, s.Name)
 	}
 	return nil
 }

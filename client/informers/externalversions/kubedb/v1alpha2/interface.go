@@ -50,8 +50,8 @@ type Interface interface {
 	Postgreses() PostgresInformer
 	// ProxySQLs returns a ProxySQLInformer.
 	ProxySQLs() ProxySQLInformer
-	// Rabbitmqs returns a RabbitmqInformer.
-	Rabbitmqs() RabbitmqInformer
+	// RabbitMQs returns a RabbitMQInformer.
+	RabbitMQs() RabbitMQInformer
 	// Redises returns a RedisInformer.
 	Redises() RedisInformer
 	// RedisSentinels returns a RedisSentinelInformer.
@@ -138,9 +138,9 @@ func (v *version) ProxySQLs() ProxySQLInformer {
 	return &proxySQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// Rabbitmqs returns a RabbitmqInformer.
-func (v *version) Rabbitmqs() RabbitmqInformer {
-	return &rabbitmqInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// RabbitMQs returns a RabbitMQInformer.
+func (v *version) RabbitMQs() RabbitMQInformer {
+	return &rabbitMQInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Redises returns a RedisInformer.

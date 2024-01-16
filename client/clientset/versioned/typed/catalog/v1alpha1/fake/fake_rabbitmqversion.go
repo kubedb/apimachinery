@@ -30,29 +30,29 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-// FakeRabbitmqVersions implements RabbitmqVersionInterface
-type FakeRabbitmqVersions struct {
+// FakeRabbitMQVersions implements RabbitMQVersionInterface
+type FakeRabbitMQVersions struct {
 	Fake *FakeCatalogV1alpha1
 }
 
 var rabbitmqversionsResource = v1alpha1.SchemeGroupVersion.WithResource("rabbitmqversions")
 
-var rabbitmqversionsKind = v1alpha1.SchemeGroupVersion.WithKind("RabbitmqVersion")
+var rabbitmqversionsKind = v1alpha1.SchemeGroupVersion.WithKind("RabbitMQVersion")
 
-// Get takes name of the rabbitmqVersion, and returns the corresponding rabbitmqVersion object, and an error if there is any.
-func (c *FakeRabbitmqVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.RabbitmqVersion, err error) {
+// Get takes name of the rabbitMQVersion, and returns the corresponding rabbitMQVersion object, and an error if there is any.
+func (c *FakeRabbitMQVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.RabbitMQVersion, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(rabbitmqversionsResource, name), &v1alpha1.RabbitmqVersion{})
+		Invokes(testing.NewRootGetAction(rabbitmqversionsResource, name), &v1alpha1.RabbitMQVersion{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha1.RabbitmqVersion), err
+	return obj.(*v1alpha1.RabbitMQVersion), err
 }
 
-// List takes label and field selectors, and returns the list of RabbitmqVersions that match those selectors.
-func (c *FakeRabbitmqVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.RabbitmqVersionList, err error) {
+// List takes label and field selectors, and returns the list of RabbitMQVersions that match those selectors.
+func (c *FakeRabbitMQVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.RabbitMQVersionList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(rabbitmqversionsResource, rabbitmqversionsKind, opts), &v1alpha1.RabbitmqVersionList{})
+		Invokes(testing.NewRootListAction(rabbitmqversionsResource, rabbitmqversionsKind, opts), &v1alpha1.RabbitMQVersionList{})
 	if obj == nil {
 		return nil, err
 	}
@@ -61,8 +61,8 @@ func (c *FakeRabbitmqVersions) List(ctx context.Context, opts v1.ListOptions) (r
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &v1alpha1.RabbitmqVersionList{ListMeta: obj.(*v1alpha1.RabbitmqVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.RabbitmqVersionList).Items {
+	list := &v1alpha1.RabbitMQVersionList{ListMeta: obj.(*v1alpha1.RabbitMQVersionList).ListMeta}
+	for _, item := range obj.(*v1alpha1.RabbitMQVersionList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -70,53 +70,53 @@ func (c *FakeRabbitmqVersions) List(ctx context.Context, opts v1.ListOptions) (r
 	return list, err
 }
 
-// Watch returns a watch.Interface that watches the requested rabbitmqVersions.
-func (c *FakeRabbitmqVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested rabbitMQVersions.
+func (c *FakeRabbitMQVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewRootWatchAction(rabbitmqversionsResource, opts))
 }
 
-// Create takes the representation of a rabbitmqVersion and creates it.  Returns the server's representation of the rabbitmqVersion, and an error, if there is any.
-func (c *FakeRabbitmqVersions) Create(ctx context.Context, rabbitmqVersion *v1alpha1.RabbitmqVersion, opts v1.CreateOptions) (result *v1alpha1.RabbitmqVersion, err error) {
+// Create takes the representation of a rabbitMQVersion and creates it.  Returns the server's representation of the rabbitMQVersion, and an error, if there is any.
+func (c *FakeRabbitMQVersions) Create(ctx context.Context, rabbitMQVersion *v1alpha1.RabbitMQVersion, opts v1.CreateOptions) (result *v1alpha1.RabbitMQVersion, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(rabbitmqversionsResource, rabbitmqVersion), &v1alpha1.RabbitmqVersion{})
+		Invokes(testing.NewRootCreateAction(rabbitmqversionsResource, rabbitMQVersion), &v1alpha1.RabbitMQVersion{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha1.RabbitmqVersion), err
+	return obj.(*v1alpha1.RabbitMQVersion), err
 }
 
-// Update takes the representation of a rabbitmqVersion and updates it. Returns the server's representation of the rabbitmqVersion, and an error, if there is any.
-func (c *FakeRabbitmqVersions) Update(ctx context.Context, rabbitmqVersion *v1alpha1.RabbitmqVersion, opts v1.UpdateOptions) (result *v1alpha1.RabbitmqVersion, err error) {
+// Update takes the representation of a rabbitMQVersion and updates it. Returns the server's representation of the rabbitMQVersion, and an error, if there is any.
+func (c *FakeRabbitMQVersions) Update(ctx context.Context, rabbitMQVersion *v1alpha1.RabbitMQVersion, opts v1.UpdateOptions) (result *v1alpha1.RabbitMQVersion, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(rabbitmqversionsResource, rabbitmqVersion), &v1alpha1.RabbitmqVersion{})
+		Invokes(testing.NewRootUpdateAction(rabbitmqversionsResource, rabbitMQVersion), &v1alpha1.RabbitMQVersion{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha1.RabbitmqVersion), err
+	return obj.(*v1alpha1.RabbitMQVersion), err
 }
 
-// Delete takes name of the rabbitmqVersion and deletes it. Returns an error if one occurs.
-func (c *FakeRabbitmqVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+// Delete takes name of the rabbitMQVersion and deletes it. Returns an error if one occurs.
+func (c *FakeRabbitMQVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(rabbitmqversionsResource, name, opts), &v1alpha1.RabbitmqVersion{})
+		Invokes(testing.NewRootDeleteActionWithOptions(rabbitmqversionsResource, name, opts), &v1alpha1.RabbitMQVersion{})
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeRabbitmqVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeRabbitMQVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
 	action := testing.NewRootDeleteCollectionAction(rabbitmqversionsResource, listOpts)
 
-	_, err := c.Fake.Invokes(action, &v1alpha1.RabbitmqVersionList{})
+	_, err := c.Fake.Invokes(action, &v1alpha1.RabbitMQVersionList{})
 	return err
 }
 
-// Patch applies the patch and returns the patched rabbitmqVersion.
-func (c *FakeRabbitmqVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.RabbitmqVersion, err error) {
+// Patch applies the patch and returns the patched rabbitMQVersion.
+func (c *FakeRabbitMQVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.RabbitMQVersion, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(rabbitmqversionsResource, name, pt, data, subresources...), &v1alpha1.RabbitmqVersion{})
+		Invokes(testing.NewRootPatchSubresourceAction(rabbitmqversionsResource, name, pt, data, subresources...), &v1alpha1.RabbitMQVersion{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha1.RabbitmqVersion), err
+	return obj.(*v1alpha1.RabbitMQVersion), err
 }

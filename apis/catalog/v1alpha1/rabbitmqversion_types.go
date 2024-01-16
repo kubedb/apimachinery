@@ -22,13 +22,13 @@ import (
 )
 
 const (
-	ResourceCodeRabbitmqVersion     = "rmversion"
-	ResourceKindRabbitmqVersion     = "RabbitmqVersion"
-	ResourceSingularRabbitmqVersion = "Rabbitmqversion"
-	ResourcePluralRabbitmqVersion   = "Rabbitmqversions"
+	ResourceCodeRabbitMQVersion     = "rmversion"
+	ResourceKindRabbitMQVersion     = "RabbitMQVersion"
+	ResourceSingularRabbitMQVersion = "Rabbitmqversion"
+	ResourcePluralRabbitMQVersion   = "Rabbitmqversions"
 )
 
-// RabbitmqVersion defines a Rabbitmq database version.
+// RabbitMQVersion defines a RabbitMQ database version.
 
 // +genclient
 // +genclient:nonNamespaced
@@ -42,54 +42,57 @@ const (
 // +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
 // +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-type RabbitmqVersion struct {
+type RabbitMQVersion struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              RabbitmqVersionSpec `json:"spec,omitempty"`
+	Spec              RabbitMQVersionSpec `json:"spec,omitempty"`
 }
 
-// RabbitmqVersionSpec is the spec for Rabbitmq version
-type RabbitmqVersionSpec struct {
+// RabbitMQVersionSpec is the spec for RabbitMQ version
+type RabbitMQVersionSpec struct {
 	// Version
 	Version string `json:"version"`
 	// Database Image
-	DB RabbitmqVersionDatabase `json:"db"`
+	DB RabbitMQVersionDatabase `json:"db"`
 	// Database Image
-	InitContainer RabbitmqInitContainer `json:"initContainer"`
+	InitContainer RabbitMQInitContainer `json:"initContainer"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
 	// PSP names
 	// +optional
-	PodSecurityPolicies RabbitmqVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	PodSecurityPolicies RabbitMQVersionPodSecurityPolicy `json:"podSecurityPolicies"`
 	// Stash defines backup and restore task definitions.
 	// +optional
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
+	// SecurityContext is for the additional config for the DB container
+	// +optional
+	SecurityContext SecurityContext `json:"securityContext"`
 }
 
-// RabbitmqVersionDatabase is the Rabbitmq Database image
-type RabbitmqVersionDatabase struct {
+// RabbitMQVersionDatabase is the RabbitMQ Database image
+type RabbitMQVersionDatabase struct {
 	Image string `json:"image"`
 }
 
-// RabbitmqInitContainer is the Rabbitmq init Container image
-type RabbitmqInitContainer struct {
+// RabbitMQInitContainer is the RabbitMQ init Container image
+type RabbitMQInitContainer struct {
 	Image string `json:"image"`
 }
 
-// RabbitmqVersionPodSecurityPolicy is the Rabbitmq pod security policies
-type RabbitmqVersionPodSecurityPolicy struct {
+// RabbitMQVersionPodSecurityPolicy is the RabbitMQ pod security policies
+type RabbitMQVersionPodSecurityPolicy struct {
 	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// RabbitmqVersionList is a list of RabbitmqVersions
-type RabbitmqVersionList struct {
+// RabbitMQVersionList is a list of RabbitmqVersions
+type RabbitMQVersionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	// Items is a list of RedisVersion CRD objects
-	Items []RabbitmqVersion `json:"items,omitempty"`
+	Items []RabbitMQVersion `json:"items,omitempty"`
 }
