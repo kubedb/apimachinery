@@ -3,6 +3,14 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"reflect"
+	"sort"
+	"strings"
+
+	"kubedb.dev/apimachinery/apis"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
+
 	"gomodules.xyz/pointer"
 	v1 "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -13,12 +21,6 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
-	"kubedb.dev/apimachinery/apis"
-	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
-	"reflect"
-	"sort"
-	"strings"
 )
 
 func (s *Solr) StatefulsetName(suffix string) string {
@@ -281,7 +283,6 @@ func (s *Solr) SetDefaults() {
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: s.Spec.Version,
 	}, &slVersion)
-
 	if err != nil {
 		klog.Errorf("can't get the solr version object %s for %s \n", err.Error(), s.Spec.Version)
 		return
@@ -353,7 +354,6 @@ func (s *Solr) SetDefaults() {
 }
 
 func (s *Solr) setDefaultInitContainerSecurityContext(slVersion *catalog.SolrVersion, podTemplate *ofst.PodTemplateSpec) {
-
 	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, SolrInitContainerName)
 	if initContainer == nil {
 		initContainer = &v1.Container{
@@ -369,7 +369,6 @@ func (s *Solr) setDefaultInitContainerSecurityContext(slVersion *catalog.SolrVer
 }
 
 func (s *Solr) setDefaultContainerSecurityContext(slVersion *catalog.SolrVersion, podTemplate *ofst.PodTemplateSpec) {
-
 	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, SolrContainerName)
 	if container == nil {
 		container = &v1.Container{
