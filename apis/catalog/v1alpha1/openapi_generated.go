@@ -549,6 +549,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersion":                              schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionDatabase":                      schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionList":                          schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionPodSecurityPolicy":             schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionSpec":                          schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext":                    schema_apimachinery_apis_catalog_v1alpha1_PostgresSecurityContext(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersion":                            schema_apimachinery_apis_catalog_v1alpha1_PostgresVersion(ref),
@@ -26097,6 +26098,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionList(ref common.Refe
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PgpoolVersionPodSecurityPolicy is the Pgpool pod security policies",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databasePolicyName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"databasePolicyName"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -26125,6 +26147,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionSpec(ref common.Refe
 							Format: "",
 						},
 					},
+					"podSecurityPolicies": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PSP names",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionPodSecurityPolicy"),
+						},
+					},
 					"securityContext": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional config for pgpool DB container",
@@ -26137,7 +26166,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionDatabase"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionPodSecurityPolicy"},
 	}
 }
 

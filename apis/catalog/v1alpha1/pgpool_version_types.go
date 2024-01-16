@@ -56,9 +56,17 @@ type PgpoolVersionSpec struct {
 	Pgpool PgpoolVersionDatabase `json:"pgpool"`
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
+	// PSP names
+	// +optional
+	PodSecurityPolicies PgpoolVersionPodSecurityPolicy `json:"podSecurityPolicies"`
 	// SecurityContext is for the additional config for pgpool DB container
 	// +optional
 	SecurityContext PgpoolSecurityContext `json:"securityContext"`
+}
+
+// PgpoolVersionPodSecurityPolicy is the Pgpool pod security policies
+type PgpoolVersionPodSecurityPolicy struct {
+	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
 // PgpoolVersionDatabase is the Pgpool Database image
