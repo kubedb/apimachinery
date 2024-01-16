@@ -26,7 +26,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
-	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
@@ -35,17 +34,7 @@ import (
 // log is for logging in this package.
 var solrlog = logf.Log.WithName("solr-resource")
 
-// SetupWebhookWithManager will setup the manager to manage the webhooks
-func (s *Solr) SetupWebhookWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewWebhookManagedBy(mgr).
-		For(s).
-		Complete()
-}
-
 // TODO(user): EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-
-//+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-solr,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=solrs,verbs=create;update,versions=v1alpha2,name=msolr.kb.io,admissionReviewVersions=v1
-
 var _ webhook.Defaulter = &Solr{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
@@ -61,8 +50,6 @@ func (s *Solr) Default() {
 }
 
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
-//+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-solr,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=solrs,verbs=create;update,versions=v1alpha2,name=vsolr.kb.io,admissionReviewVersions=v1
-
 var _ webhook.Validator = &Solr{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
