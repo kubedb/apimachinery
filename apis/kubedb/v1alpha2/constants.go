@@ -678,6 +678,206 @@ const (
 	KafkaJMXMetricReporter        = "org.apache.kafka.common.metrics.JmxReporter"
 )
 
+// =========================== Druid Constants ============================
+const (
+	DruidConfigDirCommon              = "/opt/druid/conf/druid/cluster/_common"
+	DruidConfigDirCoordinatorOverlord = "/opt/druid/conf/druid/cluster/master/coordinator-overlord"
+	DruidConfigDirHistoricals         = "/opt/druid/conf/druid/cluster/data/historical"
+	DruidConfigDirMiddleManagers      = "/opt/druid/conf/druid/cluster/data/middleManager"
+	DruidConfigDirBrokers             = "/opt/druid/conf/druid/cluster/query/broker"
+	DruidConfigDirRouters             = "/opt/druid/conf/druid/cluster/query/router"
+	DruidCConfigDirMySQLMetadata      = "/opt/druid/extensions/mysql-metadata-storage"
+
+	DruidVolumeOperatorConfig = "operator-config-volume"
+	DruidVolumeMainConfig     = "main-config-volume"
+	DruidVolumeCustomConfig   = "custom-config"
+
+	DruidOperatorConfigDir = "/tmp/config/operator-config"
+	DruidMainConfigDir     = "/opt/druid/conf"
+	DruidCustomConfigDir   = "/tmp/config/custom-config"
+
+	DruidVolumeConfigCommon           = "common-config-volume"
+	DruidVolumeConfigNodes            = "nodetype-config-volume"
+	DruidConfigFileNameCommon         = "common.runtime.properties"
+	DruidConfigFileNameJVM            = "jvm.config"
+	DruidVolumeConfigFileNodes        = "runtime.properties"
+	DruidConfigFileNameCoordinators   = "coordinators.properties"
+	DruidConfigFileNameHistoricals    = "historicals.properties"
+	DruidConfigFileNameMiddleManagers = "middleManagers.properties"
+	DruidConfigFileNameBrokers        = "brokers.properties"
+	DruidConfigFileNameRouters        = "routers.properties"
+	DruidVolumeMySQLMetadataStorage   = "mysql-metadata-storage"
+
+	DruidMainContainer = "druid"
+	DruidInitContainer = "init-druid"
+	DruidUserAdmin     = "admin"
+
+	EnvDruidAdminPassword          = "DRUID_ADMIN_PASSWORD"
+	EnvDruidMetdataStoragePassword = "DRUID_METADATA_STORAGE_PASSWORD"
+	EnvDruidZKServicePassword      = "DRUID_ZK_SERVICE_PASSWORD"
+	EnvDruidCoordinatorAsOverlord  = "DRUID_COORDINATOR_AS_OVERLORD"
+
+	// Common Runtime Configurations Properties
+	// ZooKeeper
+	DruidZKServiceHost              = "druid.zk.service.host"
+	DruidZKPathsBase                = "druid.zk.paths.base"
+	DruidZKServiceCompress          = "druid.zk.service.compress"
+	DruidZKServiceUserKey           = "druid.zk.service.user"
+	DruidZKServicePasswordKey       = "druid.zk.service.pwd"
+	DruidZKServicePasswordEnvConfig = "{\"type\": \"environment\", \"variable\": \"DRUID_ZK_SERVICE_PASSWORD\"}"
+
+	// Metadata Storage
+	DruidMetadataStorageTypeKey                    = "druid.metadata.storage.type"
+	DruidMetadataStorageConnectorConnectURI        = "druid.metadata.storage.connector.connectURI"
+	DruidMetadataStorageConnectURIPrefixMySQL      = "jdbc:mysql://"
+	DruidMetadataStorageConnectURIPrefixPostgreSQL = "jdbc:postgresql://"
+	DruidMetadataStorageConnectorUser              = "druid.metadata.storage.connector.user"
+	DruidMetadataStorageConnectorPassword          = "druid.metadata.storage.connector.password"
+	DruidMetadataStorageConnectorPasswordEnvConfig = "{\"type\": \"environment\", \"variable\": \"DRUID_METADATA_STORAGE_PASSWORD\"}"
+	DruidMetadataStorageCreateTables               = "druid.metadata.storage.connector.createTables"
+
+	// Deep Storage
+	DruidDeepStorageTypeKey      = "druid.storage.type"
+	DruidDeepStorageTypeS3       = "s3"
+	DruidDeepStorageBaseKey      = "druid.storage.baseKey"
+	DruidDeepStorageBucket       = "druid.storage.bucket"
+	DruidS3AccessKey             = "druid.s3.accessKey"
+	DruidS3SecretKey             = "druid.s3.secretKey"
+	DruidS3EndpointSigningRegion = "druid.s3.endpoint.signingRegion"
+	DruidS3EnablePathStyleAccess = "druid.s3.enablePathStyleAccess"
+	DruidS3EndpointURL           = "druid.s3.endpoint.url"
+
+	// Indexing service logs
+	DruidIndexerLogsType           = "druid.indexer.logs.type"
+	DruidIndexerLogsS3Bucket       = "druid.indexer.logs.s3Bucket"
+	DruidIndexerLogsS3Prefix       = "druid.indexer.logs.s3Prefix"
+	DruidEnableLookupSyncOnStartup = "druid.lookup.enableLookupSyncOnStartup"
+
+	// Authentication
+	DruidAuthAuthenticationChain                             = "druid.auth.authenticatorChain"
+	DruidAuthAuthenticationChainValueBasic                   = "[\"basic\"]"
+	DruidAuthAuthenticatorBasicType                          = "druid.auth.authenticator.basic.type"
+	DruidAuthAuthenticatorBasicTypeValue                     = "basic"
+	DruidAuthAuthenticatorBasicInitialAdminPassword          = "druid.auth.authenticator.basic.initialAdminPassword"
+	DruidAuthAuthenticatorBasicInitialAdminPasswordEnvConfig = "{\"type\": \"environment\", \"variable\": \"DRUID_ADMIN_PASSWORD\"}"
+	DruidAuthAuthenticatorBasicInitialInternalClientPassword = "druid.auth.authenticator.basic.initialInternalClientPassword"
+	DruidAuthAuthenticatorBasicCredentialsValidatorType      = "druid.auth.authenticator.basic.credentialsValidator.type"
+	DruidAuthAuthenticatorBasicSkipOnFailure                 = "druid.auth.authenticator.basic.skipOnFailure"
+	DruidAuthAuthenticatorBasicAuthorizerName                = "druid.auth.authenticator.basic.authorizerName"
+
+	// Escalator
+	DruidAuthEscalatorType                   = "druid.escalator.type"
+	DruidAuthEscalatorInternalClientUsername = "druid.escalator.internalClientUsername"
+	DruidAuthEscalatorInternalClientPassword = "druid.escalator.internalClientPassword"
+	DruidAuthEscalatorAuthorizerName         = "druid.escalator.authorizerName"
+	DruidAuthAuthorizers                     = "druid.auth.authorizers"
+	DruidAuthAuthorizerBasicType             = "druid.auth.authorizer.basic.type"
+
+	// Extension Load List
+	DruidExtensionLoadListKey               = "druid.extensions.loadList"
+	DruidExtensionLoadList                  = "[\"druid-avro-extensions\", \"druid-s3-extensions\", \"druid-hdfs-storage\", \"druid-kafka-indexing-service\", \"druid-datasketches\", \"mysql-metadata-storage\", \"druid-basic-security\", \"druid-multi-stage-query\"]"
+	DruidExtensionAvro                      = "druid-avro-extensions"
+	DruidExtensionS3                        = "druid-s3-extensions"
+	DruidExtensionHDFS                      = "druid-hdfs-storage"
+	DruidExtensionGoogle                    = "druid-google-extensions"
+	DruidExtensionAzure                     = "druid-azure-extensions"
+	DruidExtensionKafkaIndexingService      = "druid-kafka-indexing-service"
+	DruidExtensionDataSketches              = "druid-datasketches"
+	DruidExtensionKubernetes                = "druid-kubernetes-extensions"
+	DruidExtensionMySQLMetadataStorage      = "mysql-metadata-storage"
+	DruidExtensionPostgreSQLMetadataStorage = "postgresql-metadata-storage"
+	DruidExtensionBasicSecurity             = "druid-basic-security"
+	DruidExtensionMultiStageQuery           = "druid-multi-stage-query"
+
+	DruidService = "druid.service"
+
+	/// Coordinators Configurations
+	DruidCoordinatorStartDelay                = "druid.coordinator.startDelay"
+	DruidCoordinatorPeriod                    = "druid.coordinator.period"
+	DruidIndexerQueueStartDelay               = "druid.indexer.queue.startDelay"
+	DruidManagerSegmentsPollDuration          = "druid.manager.segments.pollDuration"
+	DruidCoordinatorKillAuditLogOn            = "druid.coordinator.kill.audit.on"
+	DruidMillisToWaitBeforeDeleting           = "millisToWaitBeforeDeleting"
+	DruidCoordinatorAsOverlord                = "druid.coordinator.asOverlord.enabled"
+	DruidCoordinatorAsOverlordOverlordService = "druid.coordinator.asOverlord.overlordService"
+
+	/// Overlords Configurations
+	DruidServiceNameOverlords            = "druid/overlord"
+	DruidIndexerStorageType              = "druid.indexer.storage.type"
+	DruidIndexerAuditLogEnabled          = "druid.indexer.auditLog.enabled"
+	DruidIndexerLogsKillEnables          = "druid.indexer.logs.kill.enabled"
+	DruidIndexerLogsKillDurationToRetain = "druid.indexer.logs.kill.durationToRetain"
+	DruidIndexerLogsKillInitialDelay     = "druid.indexer.logs.kill.initialDelay"
+	DruidIndexerLogsKillDelay            = "druid.indexer.logs.kill.delay"
+
+	/// Historicals Configurations
+	// Properties
+	DruidProcessingNumOfThreads = "druid.processing.numThreads"
+
+	// Segment Cache
+	DruidHistoricalsSegmentCacheLocations              = "druid.segmentCache.locations"
+	DruidHistoricalsSegmentCacheDropSegmentDelayMillis = "druid.segmentCache.dropSegmentDelayMillis"
+	DruidHistoricalsSegmentCacheDir                    = "/druid/data/segments"
+	DruidVolumeHistoricalsSegmentCache                 = "segment-cache"
+
+	// Query Cache
+	DruidHistoricalCacheUseCache      = "druid.historical.cache.useCache"
+	DruidHistoricalCachePopulateCache = "druid.historical.cache.populateCache"
+	DruidCacheSizeInBytes             = "druid.cache.sizeInBytes"
+
+	// Values
+	DruidSegmentCacheLocationsDefaultValue = "[{\"path\":\"/druid/data/segments\",\"maxSize\":10737418240}]"
+
+	/// MiddleManagers Configurations
+	// Properties
+	DruidWorkerCapacity                                    = "druid.worker.capacity"
+	DruidIndexerTaskBaseTaskDir                            = "druid.indexer.task.baseTaskDir"
+	DruidWorkerTaskBaseTaskDirKey                          = "druid.worker.task.baseTaskDir"
+	DruidWorkerTaskBaseTaskDir                             = "/var/druid/task"
+	DruidWorkerBaseTaskDirSize                             = "druid.worker.baseTaskDirSize"
+	DruidIndexerForkPropertyDruidProcessingBufferSizeBytes = "druid.indexer.fork.property.druid.processing.buffer.sizeBytes"
+	DruidMiddleManagersVolumeBaseTaskDir                   = "base-task-dir"
+	DruidVolumeMiddleManagersBaseTaskDir                   = "base-task-dir"
+
+	// Values
+	DruidIndexerTaskBaseTaskDirValue = "/druid/data/baseTaskDir"
+
+	/// Brokers Configurations
+	DruidBrokerHTTPNumOfConnections = "druid.broker.http.numConnections"
+	DruidSQLEnable                  = "druid.sql.enable"
+
+	/// Routers Configurations
+	DruidRouterHTTPNumOfConnections = "druid.router.http.numConnections"
+	DruidRouterHTTPNumOfMaxThreads  = "druid.router.http.numMaxThreads"
+
+	// Common Nodes Configurations
+	// Properties
+	DruidPlaintextPort               = "druid.plaintextPort"
+	DruidProcessingBufferSizeBytes   = "druid.processing.buffer.sizeBytes"
+	DruidProcessingNumOfMergeBuffers = "druid.processing.numMergeBuffers"
+	DruidServerHTTPNumOfThreads      = "druid.server.http.numThreads"
+
+	// Health Check
+	DruidHealthDataZero = "0"
+	DruidHealthDataOne  = "1"
+)
+
+type DruidMetadataStorageType string
+
+const (
+	DruidMetadataStorageMySQL      DruidMetadataStorageType = "MySQL"
+	DruidMetadataStoragePostgreSQL DruidMetadataStorageType = "PostgreSQL"
+)
+
+type DruidDeepStorageType string
+
+const (
+	DruidDeepStorageS3     DruidDeepStorageType = "s3"
+	DruidDeepStorageGoogle DruidDeepStorageType = "google"
+	DruidDeepStorageAzure  DruidDeepStorageType = "azure"
+	DruidDeepStorageHDFS   DruidDeepStorageType = "hdfs"
+)
+
 // Resource kind related constants
 const (
 	ResourceKindStatefulSet = "StatefulSet"

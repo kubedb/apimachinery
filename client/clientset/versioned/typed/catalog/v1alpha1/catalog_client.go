@@ -29,6 +29,7 @@ import (
 
 type CatalogV1alpha1Interface interface {
 	RESTClient() rest.Interface
+	DruidVersionsGetter
 	ElasticsearchVersionsGetter
 	EtcdVersionsGetter
 	KafkaConnectorVersionsGetter
@@ -48,6 +49,10 @@ type CatalogV1alpha1Interface interface {
 // CatalogV1alpha1Client is used to interact with features provided by the catalog.kubedb.com group.
 type CatalogV1alpha1Client struct {
 	restClient rest.Interface
+}
+
+func (c *CatalogV1alpha1Client) DruidVersions() DruidVersionInterface {
+	return newDruidVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) ElasticsearchVersions() ElasticsearchVersionInterface {

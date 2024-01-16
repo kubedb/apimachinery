@@ -24,6 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// DruidVersions returns a DruidVersionInformer.
+	DruidVersions() DruidVersionInformer
 	// ElasticsearchVersions returns a ElasticsearchVersionInformer.
 	ElasticsearchVersions() ElasticsearchVersionInformer
 	// EtcdVersions returns a EtcdVersionInformer.
@@ -63,6 +65,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// DruidVersions returns a DruidVersionInformer.
+func (v *version) DruidVersions() DruidVersionInformer {
+	return &druidVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ElasticsearchVersions returns a ElasticsearchVersionInformer.

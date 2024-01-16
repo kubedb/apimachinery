@@ -18,6 +18,10 @@ limitations under the License.
 
 package v1alpha1
 
+// DruidVersionListerExpansion allows custom methods to be added to
+// DruidVersionLister.
+type DruidVersionListerExpansion interface{}
+
 // ElasticsearchVersionListerExpansion allows custom methods to be added to
 // ElasticsearchVersionLister.
 type ElasticsearchVersionListerExpansion interface{}

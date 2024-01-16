@@ -29,6 +29,10 @@ type FakeCatalogV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeCatalogV1alpha1) DruidVersions() v1alpha1.DruidVersionInterface {
+	return &FakeDruidVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) ElasticsearchVersions() v1alpha1.ElasticsearchVersionInterface {
 	return &FakeElasticsearchVersions{c}
 }
