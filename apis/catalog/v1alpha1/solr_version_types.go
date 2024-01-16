@@ -28,7 +28,7 @@ const (
 	ResourceCodeSolrVersion     = "slversion"
 	ResourceKindSolrVersion     = "SolrVersion"
 	ResourceSingularSolrVersion = "Solrversion"
-	ResourcePluralSolrVersion   = "Solrversions"
+	ResourcePluralSolrVersion   = "solrversions"
 )
 
 // SolrVersion defines a Solr database version.
