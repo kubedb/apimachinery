@@ -566,12 +566,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionPodSecurityPolicy":           schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionProxysql":                    schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionProxysql(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionSpec":                        schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqInitContainer":                      schema_apimachinery_apis_catalog_v1alpha1_RabbitmqInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersion":                            schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersionDatabase":                    schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersionList":                        schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersionPodSecurityPolicy":           schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersionSpec":                        schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer":                      schema_apimachinery_apis_catalog_v1alpha1_RabbitMQInitContainer(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersion":                            schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase":                    schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionDatabase(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionList":                        schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionPodSecurityPolicy":           schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionPodSecurityPolicy(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionSpec":                        schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersion":                               schema_apimachinery_apis_catalog_v1alpha1_RedisVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionCoordinator":                    schema_apimachinery_apis_catalog_v1alpha1_RedisVersionCoordinator(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionDatabase":                       schema_apimachinery_apis_catalog_v1alpha1_RedisVersionDatabase(ref),
@@ -26741,11 +26741,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionSpec(ref common.Re
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "RabbitmqInitContainer is the Rabbitmq init Container image",
+				Description: "RabbitMQInitContainer is the RabbitMQ init Container image",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"image": {
@@ -26762,7 +26762,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqInitContainer(ref common.
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -26791,22 +26791,22 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersion(ref common.Refere
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersionSpec"),
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersionSpec"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionSpec"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "RabbitmqVersionDatabase is the Rabbitmq Database image",
+				Description: "RabbitMQVersionDatabase is the RabbitMQ Database image",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"image": {
@@ -26823,11 +26823,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionDatabase(ref commo
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "RabbitmqVersionList is a list of RabbitmqVersions",
+				Description: "RabbitMQVersionList is a list of RabbitmqVersions",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -26858,7 +26858,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionList(ref common.Re
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersion"),
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersion"),
 									},
 								},
 							},
@@ -26868,15 +26868,15 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionList(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersion"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersion"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "RabbitmqVersionPodSecurityPolicy is the Rabbitmq pod security policies",
+				Description: "RabbitMQVersionPodSecurityPolicy is the RabbitMQ pod security policies",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"databasePolicyName": {
@@ -26893,11 +26893,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionPodSecurityPolicy(
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "RabbitmqVersionSpec is the spec for Rabbitmq version",
+				Description: "RabbitMQVersionSpec is the spec for RabbitMQ version",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"version": {
@@ -26912,14 +26912,14 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionSpec(ref common.Re
 						SchemaProps: spec.SchemaProps{
 							Description: "Database Image",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersionDatabase"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase"),
 						},
 					},
 					"initContainer": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Database Image",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqInitContainer"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer"),
 						},
 					},
 					"deprecated": {
@@ -26933,7 +26933,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionSpec(ref common.Re
 						SchemaProps: spec.SchemaProps{
 							Description: "PSP names",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersionPodSecurityPolicy"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionPodSecurityPolicy"),
 						},
 					},
 					"stash": {
@@ -26950,12 +26950,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_RabbitmqVersionSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
 						},
 					},
+					"securityContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecurityContext is for the additional config for the DB container",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "initContainer"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitmqVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

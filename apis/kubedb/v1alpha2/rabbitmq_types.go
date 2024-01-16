@@ -26,16 +26,17 @@ import (
 
 const (
 	ResourceCodeRabbitmq     = "rm"
-	ResourceKindRabbitmq     = "Rabbitmq"
+	ResourceKindRabbitmq     = "RabbitMQ"
 	ResourceSingularRabbitmq = "rabbitmq"
 	ResourcePluralRabbitmq   = "rabbitmqs"
 )
 
-// Rabbitmq is the Schema for the Rabbitmq API
+// RabbitMQ is the Schema for the RabbitMQ API
 
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:shortName=rm,scope=Namespaced
@@ -43,28 +44,26 @@ const (
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-
-// Rabbitmq is the Schema for the rabbitmqs API
-type Rabbitmq struct {
+type RabbitMQ struct {
 	meta.TypeMeta   `json:",inline"`
 	meta.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   RabbitmqSpec   `json:"spec,omitempty"`
-	Status RabbitmqStatus `json:"status,omitempty"`
+	Spec   RabbitMQSpec   `json:"spec,omitempty"`
+	Status RabbitMQStatus `json:"status,omitempty"`
 }
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// RabbitmqSpec defines the desired state of Rabbitmq
-type RabbitmqSpec struct {
+// RabbitMQSpec defines the desired state of RabbitMQ
+type RabbitMQSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Version of Rabbitmq to be deployed.
+	// Version of RabbitMQ to be deployed.
 	Version string `json:"version"`
 
-	// Number of instances to deploy for a Rabbitmq database.
+	// Number of instances to deploy for a RabbitMQ database.
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
@@ -103,6 +102,10 @@ type RabbitmqSpec struct {
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
 
+	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
+	// +optional
+	Halted bool `json:"halted,omitempty"`
+
 	// TerminationPolicy controls the delete operation for database
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
@@ -117,13 +120,13 @@ type RabbitmqSpec struct {
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 }
 
-// RabbitmqStatus defines the observed state of Rabbitmq
-type RabbitmqStatus struct {
+// RabbitMQStatus defines the observed state of RabbitMQ
+type RabbitMQStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 	// Specifies the current phase of the database
 	// +optional
-	Phase RabbitmqPhase `json:"phase,omitempty"`
+	Phase RabbitMQPhase `json:"phase,omitempty"`
 	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
 	// resource's generation, which is updated on mutation by the API Server.
 	// +optional
@@ -133,31 +136,30 @@ type RabbitmqStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
-// +kubebuilder:object:root=true
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// RabbitmqList contains a list of Rabbitmq
-type RabbitmqList struct {
-	meta.TypeMeta `json:",inline"`
-	meta.ListMeta `json:"metadata,omitempty"`
-	Items         []Rabbitmq `json:"items"`
-}
-
 // +kubebuilder:validation:Enum=Provisioning;Ready;NotReady;Critical
-type RabbitmqPhase string
+type RabbitMQPhase string
 
 const (
-	RabbitmqProvisioning RabbitmqPhase = "Provisioning"
-	RabbitmqReady        RabbitmqPhase = "Ready"
-	RabbitmqNotReady     RabbitmqPhase = "NotReady"
-	RabbitmqCritical     RabbitmqPhase = "Critical"
+	RabbitmqProvisioning RabbitMQPhase = "Provisioning"
+	RabbitmqReady        RabbitMQPhase = "Ready"
+	RabbitmqNotReady     RabbitMQPhase = "NotReady"
+	RabbitmqCritical     RabbitMQPhase = "Critical"
 )
 
 // +kubebuilder:validation:Enum=ca;client;server
-type RabbitmqCertificateAlias string
+type RabbitMQCertificateAlias string
 
 const (
-	RabbitmqCACert     RabbitmqCertificateAlias = "ca"
-	RabbitmqClientCert RabbitmqCertificateAlias = "client"
-	RabbitmqServerCert RabbitmqCertificateAlias = "server"
+	RabbitmqCACert     RabbitMQCertificateAlias = "ca"
+	RabbitmqClientCert RabbitMQCertificateAlias = "client"
+	RabbitmqServerCert RabbitMQCertificateAlias = "server"
 )
+
+// RabbitMQList contains a list of RabbitMQ
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type RabbitMQList struct {
+	meta.TypeMeta `json:",inline"`
+	meta.ListMeta `json:"metadata,omitempty"`
+	Items         []RabbitMQ `json:"items"`
+}

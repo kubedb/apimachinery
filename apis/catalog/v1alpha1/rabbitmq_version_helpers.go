@@ -26,36 +26,36 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (_ RabbitmqVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralRabbitmqVersion))
+func (_ RabbitMQVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralRabbitMQVersion))
 }
 
-var _ apis.ResourceInfo = &RabbitmqVersion{}
+var _ apis.ResourceInfo = &RabbitMQVersion{}
 
-func (r RabbitmqVersion) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", ResourcePluralRabbitmqVersion, catalog.GroupName)
+func (r RabbitMQVersion) ResourceFQN() string {
+	return fmt.Sprintf("%s.%s", ResourcePluralRabbitMQVersion, catalog.GroupName)
 }
 
-func (r RabbitmqVersion) ResourceShortCode() string {
-	return ResourceCodeRabbitmqVersion
+func (r RabbitMQVersion) ResourceShortCode() string {
+	return ResourceCodeRabbitMQVersion
 }
 
-func (r RabbitmqVersion) ResourceKind() string {
-	return ResourceKindRabbitmqVersion
+func (r RabbitMQVersion) ResourceKind() string {
+	return ResourceKindRabbitMQVersion
 }
 
-func (r RabbitmqVersion) ResourceSingular() string {
-	return ResourceSingularRabbitmqVersion
+func (r RabbitMQVersion) ResourceSingular() string {
+	return ResourceSingularRabbitMQVersion
 }
 
-func (r RabbitmqVersion) ResourcePlural() string {
-	return ResourcePluralRabbitmqVersion
+func (r RabbitMQVersion) ResourcePlural() string {
+	return ResourcePluralRabbitMQVersion
 }
 
-func (r RabbitmqVersion) ValidateSpecs() error {
+func (r RabbitMQVersion) ValidateSpecs() error {
 	if r.Spec.Version == "" ||
 		r.Spec.DB.Image == "" {
-		return fmt.Errorf(`atleast one of the following specs is not set for RabbitmqVersion "%v":
+		return fmt.Errorf(`atleast one of the following specs is not set for RabbitMQVersion "%v":
 							spec.version,
 							spec.db.image`, r.Name)
 	}

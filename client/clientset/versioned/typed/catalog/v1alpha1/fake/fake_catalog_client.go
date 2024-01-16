@@ -85,8 +85,8 @@ func (c *FakeCatalogV1alpha1) ProxySQLVersions() v1alpha1.ProxySQLVersionInterfa
 	return &FakeProxySQLVersions{c}
 }
 
-func (c *FakeCatalogV1alpha1) RabbitmqVersions() v1alpha1.RabbitmqVersionInterface {
-	return &FakeRabbitmqVersions{c}
+func (c *FakeCatalogV1alpha1) RabbitMQVersions() v1alpha1.RabbitMQVersionInterface {
+	return &FakeRabbitMQVersions{c}
 }
 
 func (c *FakeCatalogV1alpha1) RedisVersions() v1alpha1.RedisVersionInterface {

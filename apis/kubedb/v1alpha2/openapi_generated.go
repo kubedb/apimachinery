@@ -552,12 +552,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLList":                   schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLSpec":                   schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLStatus":                 schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLStatus(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Rabbitmq":                       schema_apimachinery_apis_kubedb_v1alpha2_Rabbitmq(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQ":                       schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQ(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQList":                   schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQSpec":                   schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQStatus":                 schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitmqApp":                    schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqApp(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitmqList":                   schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqList(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitmqSpec":                   schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitmqStatsService":           schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqStatsService(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitmqStatus":                 schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RecoveryTarget":                 schema_apimachinery_apis_kubedb_v1alpha2_RecoveryTarget(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Redis":                          schema_apimachinery_apis_kubedb_v1alpha2_Redis(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisClusterSpec":               schema_apimachinery_apis_kubedb_v1alpha2_RedisClusterSpec(ref),
@@ -24825,7 +24825,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaCruiseControl(ref common.Refe
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"brokerCapacity": {
@@ -24838,7 +24838,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaCruiseControl(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceRequirements", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaBrokerCapacity", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.ResourceRequirements", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaBrokerCapacity", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -25050,7 +25050,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref common.ReferenceCall
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -25098,7 +25098,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaCruiseControl", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaCruiseControl", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -28516,12 +28516,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLStatus(ref common.Referenc
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_Rabbitmq(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQ(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Rabbitmq is the Schema for the rabbitmqs API",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -28546,49 +28545,28 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Rabbitmq(ref common.ReferenceCallb
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitmqSpec"),
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitmqStatus"),
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitmqSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitmqStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQStatus"},
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"Rabbitmq": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Rabbitmq"),
-						},
-					},
-				},
-				Required: []string{"Rabbitmq"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Rabbitmq"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RabbitmqList contains a list of Rabbitmq",
-				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -28617,7 +28595,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqList(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Rabbitmq"),
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQ"),
 									},
 								},
 							},
@@ -28628,20 +28606,20 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Rabbitmq"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQ"},
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "RabbitmqSpec defines the desired state of Rabbitmq",
+				Description: "RabbitMQSpec defines the desired state of RabbitMQ",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"version": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Version of Rabbitmq to be deployed.",
+							Description: "Version of RabbitMQ to be deployed.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28649,7 +28627,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqSpec(ref common.ReferenceC
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for a Rabbitmq database.",
+							Description: "Number of instances to deploy for a RabbitMQ database.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -28720,6 +28698,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqSpec(ref common.ReferenceC
 							},
 						},
 					},
+					"halted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TerminationPolicy controls the delete operation for database",
@@ -28749,31 +28734,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqSpec(ref common.ReferenceC
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"Rabbitmq": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Rabbitmq"),
-						},
-					},
-				},
-				Required: []string{"Rabbitmq"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Rabbitmq"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RabbitmqStatus defines the observed state of Rabbitmq",
+				Description: "RabbitMQStatus defines the observed state of RabbitMQ",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"phase": {
@@ -28809,6 +28774,46 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqStatus(ref common.Referenc
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"RabbitMQ": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQ"),
+						},
+					},
+				},
+				Required: []string{"RabbitMQ"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQ"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_RabbitmqStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"RabbitMQ": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQ"),
+						},
+					},
+				},
+				Required: []string{"RabbitMQ"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQ"},
 	}
 }
 

@@ -26,69 +26,69 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-// RabbitmqLister helps list Rabbitmqs.
+// RabbitMQLister helps list RabbitMQs.
 // All objects returned here must be treated as read-only.
-type RabbitmqLister interface {
-	// List lists all Rabbitmqs in the indexer.
+type RabbitMQLister interface {
+	// List lists all RabbitMQs in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Rabbitmq, err error)
-	// Rabbitmqs returns an object that can list and get Rabbitmqs.
-	Rabbitmqs(namespace string) RabbitmqNamespaceLister
-	RabbitmqListerExpansion
+	List(selector labels.Selector) (ret []*v1alpha2.RabbitMQ, err error)
+	// RabbitMQs returns an object that can list and get RabbitMQs.
+	RabbitMQs(namespace string) RabbitMQNamespaceLister
+	RabbitMQListerExpansion
 }
 
-// rabbitmqLister implements the RabbitmqLister interface.
-type rabbitmqLister struct {
+// rabbitMQLister implements the RabbitMQLister interface.
+type rabbitMQLister struct {
 	indexer cache.Indexer
 }
 
-// NewRabbitmqLister returns a new RabbitmqLister.
-func NewRabbitmqLister(indexer cache.Indexer) RabbitmqLister {
-	return &rabbitmqLister{indexer: indexer}
+// NewRabbitMQLister returns a new RabbitMQLister.
+func NewRabbitMQLister(indexer cache.Indexer) RabbitMQLister {
+	return &rabbitMQLister{indexer: indexer}
 }
 
-// List lists all Rabbitmqs in the indexer.
-func (s *rabbitmqLister) List(selector labels.Selector) (ret []*v1alpha2.Rabbitmq, err error) {
+// List lists all RabbitMQs in the indexer.
+func (s *rabbitMQLister) List(selector labels.Selector) (ret []*v1alpha2.RabbitMQ, err error) {
 	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Rabbitmq))
+		ret = append(ret, m.(*v1alpha2.RabbitMQ))
 	})
 	return ret, err
 }
 
-// Rabbitmqs returns an object that can list and get Rabbitmqs.
-func (s *rabbitmqLister) Rabbitmqs(namespace string) RabbitmqNamespaceLister {
-	return rabbitmqNamespaceLister{indexer: s.indexer, namespace: namespace}
+// RabbitMQs returns an object that can list and get RabbitMQs.
+func (s *rabbitMQLister) RabbitMQs(namespace string) RabbitMQNamespaceLister {
+	return rabbitMQNamespaceLister{indexer: s.indexer, namespace: namespace}
 }
 
-// RabbitmqNamespaceLister helps list and get Rabbitmqs.
+// RabbitMQNamespaceLister helps list and get RabbitMQs.
 // All objects returned here must be treated as read-only.
-type RabbitmqNamespaceLister interface {
-	// List lists all Rabbitmqs in the indexer for a given namespace.
+type RabbitMQNamespaceLister interface {
+	// List lists all RabbitMQs in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Rabbitmq, err error)
-	// Get retrieves the Rabbitmq from the indexer for a given namespace and name.
+	List(selector labels.Selector) (ret []*v1alpha2.RabbitMQ, err error)
+	// Get retrieves the RabbitMQ from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.Rabbitmq, error)
-	RabbitmqNamespaceListerExpansion
+	Get(name string) (*v1alpha2.RabbitMQ, error)
+	RabbitMQNamespaceListerExpansion
 }
 
-// rabbitmqNamespaceLister implements the RabbitmqNamespaceLister
+// rabbitMQNamespaceLister implements the RabbitMQNamespaceLister
 // interface.
-type rabbitmqNamespaceLister struct {
+type rabbitMQNamespaceLister struct {
 	indexer   cache.Indexer
 	namespace string
 }
 
-// List lists all Rabbitmqs in the indexer for a given namespace.
-func (s rabbitmqNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.Rabbitmq, err error) {
+// List lists all RabbitMQs in the indexer for a given namespace.
+func (s rabbitMQNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.RabbitMQ, err error) {
 	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Rabbitmq))
+		ret = append(ret, m.(*v1alpha2.RabbitMQ))
 	})
 	return ret, err
 }
 
-// Get retrieves the Rabbitmq from the indexer for a given namespace and name.
-func (s rabbitmqNamespaceLister) Get(name string) (*v1alpha2.Rabbitmq, error) {
+// Get retrieves the RabbitMQ from the indexer for a given namespace and name.
+func (s rabbitMQNamespaceLister) Get(name string) (*v1alpha2.RabbitMQ, error) {
 	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
@@ -96,5 +96,5 @@ func (s rabbitmqNamespaceLister) Get(name string) (*v1alpha2.Rabbitmq, error) {
 	if !exists {
 		return nil, errors.NewNotFound(v1alpha2.Resource("rabbitmq"), name)
 	}
-	return obj.(*v1alpha2.Rabbitmq), nil
+	return obj.(*v1alpha2.RabbitMQ), nil
 }

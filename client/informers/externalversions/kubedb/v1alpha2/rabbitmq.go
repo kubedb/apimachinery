@@ -33,59 +33,59 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// RabbitmqInformer provides access to a shared informer and lister for
-// Rabbitmqs.
-type RabbitmqInformer interface {
+// RabbitMQInformer provides access to a shared informer and lister for
+// RabbitMQs.
+type RabbitMQInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha2.RabbitmqLister
+	Lister() v1alpha2.RabbitMQLister
 }
 
-type rabbitmqInformer struct {
+type rabbitMQInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewRabbitmqInformer constructs a new informer for Rabbitmq type.
+// NewRabbitMQInformer constructs a new informer for RabbitMQ type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewRabbitmqInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredRabbitmqInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewRabbitMQInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredRabbitMQInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredRabbitmqInformer constructs a new informer for Rabbitmq type.
+// NewFilteredRabbitMQInformer constructs a new informer for RabbitMQ type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredRabbitmqInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredRabbitMQInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().Rabbitmqs(namespace).List(context.TODO(), options)
+				return client.KubedbV1alpha2().RabbitMQs(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().Rabbitmqs(namespace).Watch(context.TODO(), options)
+				return client.KubedbV1alpha2().RabbitMQs(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&kubedbv1alpha2.Rabbitmq{},
+		&kubedbv1alpha2.RabbitMQ{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *rabbitmqInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredRabbitmqInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *rabbitMQInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredRabbitMQInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *rabbitmqInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedbv1alpha2.Rabbitmq{}, f.defaultInformer)
+func (f *rabbitMQInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&kubedbv1alpha2.RabbitMQ{}, f.defaultInformer)
 }
 
-func (f *rabbitmqInformer) Lister() v1alpha2.RabbitmqLister {
-	return v1alpha2.NewRabbitmqLister(f.Informer().GetIndexer())
+func (f *rabbitMQInformer) Lister() v1alpha2.RabbitMQLister {
+	return v1alpha2.NewRabbitMQLister(f.Informer().GetIndexer())
 }

@@ -125,7 +125,7 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("proxysqlversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().ProxySQLVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("rabbitmqversions"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().RabbitmqVersions().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().RabbitMQVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("redisversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().RedisVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("singlestoreversions"):
@@ -173,7 +173,7 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	case v1alpha2.SchemeGroupVersion.WithResource("proxysqls"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ProxySQLs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("rabbitmqs"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Rabbitmqs().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().RabbitMQs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("redises"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Redises().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("redissentinels"):
