@@ -325,7 +325,7 @@ func solrValidateModules(s *Solr) error {
 			}
 		}
 		if !fl {
-			return errors.New(fmt.Sprintf("%s does not exist in available modules", mod))
+			return fmt.Errorf("%s does not exist in available modules", mod)
 		}
 	}
 	return nil
