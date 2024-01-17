@@ -56,10 +56,10 @@ type Interface interface {
 	RedisSentinels() RedisSentinelInformer
 	// Singlestores returns a SinglestoreInformer.
 	Singlestores() SinglestoreInformer
-	// ZooKeepers returns a ZooKeeperInformer.
-	ZooKeepers() ZooKeeperInformer
 	// Solrs returns a SolrInformer.
 	Solrs() SolrInformer
+	// ZooKeepers returns a ZooKeeperInformer.
+	ZooKeepers() ZooKeeperInformer
 }
 
 type version struct {
@@ -153,12 +153,12 @@ func (v *version) Singlestores() SinglestoreInformer {
 	return &singlestoreInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// ZooKeepers returns a ZooKeeperInformer.
-func (v *version) ZooKeepers() ZooKeeperInformer {
-	return &zooKeeperInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
 // Solrs returns a SolrInformer.
 func (v *version) Solrs() SolrInformer {
 	return &solrInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// ZooKeepers returns a ZooKeeperInformer.
+func (v *version) ZooKeepers() ZooKeeperInformer {
+	return &zooKeeperInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

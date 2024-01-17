@@ -50,6 +50,6 @@ type RedisSentinelExpansion interface{}
 
 type SinglestoreExpansion interface{}
 
-type ZooKeeperExpansion interface{}
-
 type SolrExpansion interface{}
+
+type ZooKeeperExpansion interface{}

@@ -146,14 +146,6 @@ type SinglestoreListerExpansion interface{}
 // SinglestoreNamespaceLister.
 type SinglestoreNamespaceListerExpansion interface{}
 
-// ZooKeeperListerExpansion allows custom methods to be added to
-// ZooKeeperLister.
-type ZooKeeperListerExpansion interface{}
-
-// ZooKeeperNamespaceListerExpansion allows custom methods to be added to
-// ZooKeeperNamespaceLister.
-type ZooKeeperNamespaceListerExpansion interface{}
-
 // SolrListerExpansion allows custom methods to be added to
 // SolrLister.
 type SolrListerExpansion interface{}
@@ -161,3 +153,11 @@ type SolrListerExpansion interface{}
 // SolrNamespaceListerExpansion allows custom methods to be added to
 // SolrNamespaceLister.
 type SolrNamespaceListerExpansion interface{}
+
+// ZooKeeperListerExpansion allows custom methods to be added to
+// ZooKeeperLister.
+type ZooKeeperListerExpansion interface{}
+
+// ZooKeeperNamespaceListerExpansion allows custom methods to be added to
+// ZooKeeperNamespaceLister.
+type ZooKeeperNamespaceListerExpansion interface{}

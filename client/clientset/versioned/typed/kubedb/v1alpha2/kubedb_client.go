@@ -45,8 +45,8 @@ type KubedbV1alpha2Interface interface {
 	RedisesGetter
 	RedisSentinelsGetter
 	SinglestoresGetter
-	ZooKeepersGetter
 	SolrsGetter
+	ZooKeepersGetter
 }
 
 // KubedbV1alpha2Client is used to interact with features provided by the kubedb.com group.
@@ -118,12 +118,12 @@ func (c *KubedbV1alpha2Client) Singlestores(namespace string) SinglestoreInterfa
 	return newSinglestores(c, namespace)
 }
 
-func (c *KubedbV1alpha2Client) ZooKeepers(namespace string) ZooKeeperInterface {
-	return newZooKeepers(c, namespace)
-}
-
 func (c *KubedbV1alpha2Client) Solrs(namespace string) SolrInterface {
 	return newSolrs(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) ZooKeepers(namespace string) ZooKeeperInterface {
+	return newZooKeepers(c, namespace)
 }
 
 // NewForConfig creates a new KubedbV1alpha2Client for the given config.
