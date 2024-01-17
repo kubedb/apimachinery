@@ -93,6 +93,10 @@ func (c *FakeCatalogV1alpha1) SinglestoreVersions() v1alpha1.SinglestoreVersionI
 	return &FakeSinglestoreVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) ZooKeeperVersions() v1alpha1.ZooKeeperVersionInterface {
+	return &FakeZooKeeperVersions{c}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeCatalogV1alpha1) RESTClient() rest.Interface {

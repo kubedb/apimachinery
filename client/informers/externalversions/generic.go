@@ -128,6 +128,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().RedisVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("singlestoreversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().SinglestoreVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("zookeeperversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().ZooKeeperVersions().Informer()}, nil
 
 		// Group=dashboard.kubedb.com, Version=v1alpha1
 	case dashboardv1alpha1.SchemeGroupVersion.WithResource("elasticsearchdashboards"):
@@ -172,6 +174,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().RedisSentinels().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("singlestores"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Singlestores().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("zookeepers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ZooKeepers().Informer()}, nil
 
 		// Group=ops.kubedb.com, Version=v1alpha1
 	case opsv1alpha1.SchemeGroupVersion.WithResource("elasticsearchopsrequests"):

@@ -56,6 +56,8 @@ type Interface interface {
 	RedisVersions() RedisVersionInformer
 	// SinglestoreVersions returns a SinglestoreVersionInformer.
 	SinglestoreVersions() SinglestoreVersionInformer
+	// ZooKeeperVersions returns a ZooKeeperVersionInformer.
+	ZooKeeperVersions() ZooKeeperVersionInformer
 }
 
 type version struct {
@@ -147,4 +149,9 @@ func (v *version) RedisVersions() RedisVersionInformer {
 // SinglestoreVersions returns a SinglestoreVersionInformer.
 func (v *version) SinglestoreVersions() SinglestoreVersionInformer {
 	return &singlestoreVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// ZooKeeperVersions returns a ZooKeeperVersionInformer.
+func (v *version) ZooKeeperVersions() ZooKeeperVersionInformer {
+	return &zooKeeperVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

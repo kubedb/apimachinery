@@ -45,6 +45,7 @@ type CatalogV1alpha1Interface interface {
 	ProxySQLVersionsGetter
 	RedisVersionsGetter
 	SinglestoreVersionsGetter
+	ZooKeeperVersionsGetter
 }
 
 // CatalogV1alpha1Client is used to interact with features provided by the catalog.kubedb.com group.
@@ -114,6 +115,10 @@ func (c *CatalogV1alpha1Client) RedisVersions() RedisVersionInterface {
 
 func (c *CatalogV1alpha1Client) SinglestoreVersions() SinglestoreVersionInterface {
 	return newSinglestoreVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) ZooKeeperVersions() ZooKeeperVersionInterface {
+	return newZooKeeperVersions(c)
 }
 
 // NewForConfig creates a new CatalogV1alpha1Client for the given config.

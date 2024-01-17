@@ -496,6 +496,47 @@ const (
 	ContainerName                     = "pgpool"
 	PgpoolAuthUsername                = "pcp"
 	SyncPeriod                        = 10
+	// ========================================== ZooKeeper Constants =================================================//
+
+	KubeDBZooKeeperRoleName         = "kubedb:zookeeper-version-reader"
+	KubeDBZooKeeperRoleBindingName  = "kubedb:zookeeper-version-reader"
+	ZooKeeperClientPortName         = "client"
+	ZooKeeperClientPort             = 2181
+	ZooKeeperQuorumPortName         = "quorum"
+	ZooKeeperQuorumPort             = 2888
+	ZooKeeperLeaderElectionPortName = "leader-election"
+	ZooKeeperLeaderElectionPort     = 3888
+	ZooKeeperMetricsPortName        = "metrics"
+	ZooKeeperMetricsPort            = 7000
+	ZooKeeperAdminServerPortName    = "admin-server"
+	ZooKeeperAdminServerPort        = 8080
+	ZooKeeperNode                   = "/kubedb_health_checker_node"
+	ZooKeeperData                   = "kubedb_health_checker_data"
+	ZooKeeperConfigVolumeName       = "zookeeper-config"
+	ZooKeeperConfigVolumePath       = "/conf"
+	ZooKeeperDataVolumeName         = "data"
+	ZooKeeperDataVolumePath         = "/data"
+	ZooKeeperScriptVolumeName       = "script-vol"
+	ZooKeeperScriptVolumePath       = "/scripts"
+	ZooKeeperContainerName          = ResourceSingularZooKeeper
+	ZooKeeperInitContainerName      = ResourceSingularZooKeeper + "-init"
+
+	ZooKeeperConfigFileName               = "zoo.cfg"
+	ZooKeeperLog4jPropertiesFileName      = "log4j.properties"
+	ZooKeeperLog4jQuietPropertiesFileName = "log4j-quiet.properties"
+
+	EnvZooKeeperDomain          = "DOMAIN"
+	EnvZooKeeperQuorumPort      = "QUORUM_PORT"
+	EnvZooKeeperLeaderPort      = "LEADER_PORT"
+	EnvZooKeeperClientHost      = "CLIENT_HOST"
+	EnvZooKeeperClientPort      = "CLIENT_PORT"
+	EnvZooKeeperAdminServerHost = "ADMIN_SERVER_HOST"
+	EnvZooKeeperAdminServerPort = "ADMIN_SERVER_PORT"
+	EnvZooKeeperClusterName     = "CLUSTER_NAME"
+	EnvZooKeeperClusterSize     = "CLUSTER_SIZE"
+	EnvZooKeeperUser            = "ZK_USER"
+	EnvZooKeeperPassword        = "ZK_PASSWORD"
+	ZooKeeperSuperUsername      = "super"
 )
 
 // List of possible condition types for a KubeDB object

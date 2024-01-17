@@ -49,3 +49,5 @@ type ProxySQLVersionExpansion interface{}
 type RedisVersionExpansion interface{}
 
 type SinglestoreVersionExpansion interface{}
+
+type ZooKeeperVersionExpansion interface{}
