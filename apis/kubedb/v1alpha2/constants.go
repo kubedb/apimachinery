@@ -1068,7 +1068,7 @@ const (
 //}
 
 const (
-	SolrCloudHostKey                       = "key"
+	SolrCloudHostKey                       = "host"
 	SolrCloudHostValue                     = ""
 	SolrCloudHostPortKey                   = "hostPort"
 	SolrCloudHostPortValue                 = 80
