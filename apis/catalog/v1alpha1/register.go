@@ -86,12 +86,10 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&RedisVersionList{},
 		&SinglestoreVersion{},
 		&SinglestoreVersionList{},
-		&ZooKeeperVersion{},
-		&ZooKeeperVersionList{},
-		&KafkaConnectorVersion{},
-		&KafkaConnectorVersionList{},
 		&SolrVersion{},
 		&SolrVersionList{},
+		&ZooKeeperVersion{},
+		&ZooKeeperVersionList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

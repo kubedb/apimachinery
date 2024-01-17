@@ -17,11 +17,15 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"context"
 	"errors"
+
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -100,7 +104,7 @@ func (r *RabbitMQ) ValidateCreateOrUpdate() error {
 			"number of replicas can not be 0 or less"))
 	}
 
-	err := r.validateVersion(r)
+	err := r.ValidateVersion(r)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 			r.Name,
@@ -139,18 +143,13 @@ func (r *RabbitMQ) ValidateCreateOrUpdate() error {
 	return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, r.Name, allErr)
 }
 
-var rabbitmqAvailableVersions = []string{
-	"3.12",
-}
-
-func (r *RabbitMQ) validateVersion(db *RabbitMQ) error {
-	version := db.Spec.Version
-	for _, v := range rabbitmqAvailableVersions {
-		if v == version {
-			return nil
-		}
+func (r *RabbitMQ) ValidateVersion(db *RabbitMQ) error {
+	rmVersion := catalog.RabbitMQVersion{}
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &rmVersion)
+	if err != nil {
+		return errors.New("version not supported")
 	}
-	return errors.New("version not supported")
+	return nil
 }
 
 var rabbitmqReservedVolumes = []string{

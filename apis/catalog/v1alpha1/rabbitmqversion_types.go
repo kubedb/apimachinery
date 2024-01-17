@@ -18,14 +18,13 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 )
 
 const (
 	ResourceCodeRabbitMQVersion     = "rmversion"
 	ResourceKindRabbitMQVersion     = "RabbitMQVersion"
-	ResourceSingularRabbitMQVersion = "Rabbitmqversion"
-	ResourcePluralRabbitMQVersion   = "Rabbitmqversions"
+	ResourceSingularRabbitMQVersion = "rabbitmqversion"
+	ResourcePluralRabbitMQVersion   = "rabbitmqversions"
 )
 
 // RabbitMQVersion defines a RabbitMQ database version.
@@ -59,14 +58,6 @@ type RabbitMQVersionSpec struct {
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
-	// PSP names
-	// +optional
-	PodSecurityPolicies RabbitMQVersionPodSecurityPolicy `json:"podSecurityPolicies"`
-	// Stash defines backup and restore task definitions.
-	// +optional
-	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
-	// update constraints
-	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 	// SecurityContext is for the additional config for the DB container
 	// +optional
 	SecurityContext SecurityContext `json:"securityContext"`
@@ -80,11 +71,6 @@ type RabbitMQVersionDatabase struct {
 // RabbitMQInitContainer is the RabbitMQ init Container image
 type RabbitMQInitContainer struct {
 	Image string `json:"image"`
-}
-
-// RabbitMQVersionPodSecurityPolicy is the RabbitMQ pod security policies
-type RabbitMQVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
