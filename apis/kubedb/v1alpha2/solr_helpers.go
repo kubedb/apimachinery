@@ -19,8 +19,6 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
-	"reflect"
-	"sort"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis"
@@ -122,100 +120,6 @@ func (s *Solr) Append(opt map[string]string) string {
 
 	}
 	return as
-}
-
-func GenerateAdditionalLibXMLPart(solrModules []string) string {
-	libs := make(map[string]bool, 0)
-
-	// Placeholder for users to specify libs via sysprop
-	libs[SysPropLibPlaceholder] = true
-
-	// Add all module library locations
-	if len(solrModules) > 0 {
-		libs[DistLibs] = true
-	}
-	for _, module := range solrModules {
-		libs[fmt.Sprintf(ContribLibs, module)] = true
-	}
-
-	// Add all custom library locations
-	//for _, libPath := range additionalLibs {
-	//	libs[libPath] = true
-	//}
-
-	libList := make([]string, 0)
-	for lib := range libs {
-		libList = append(libList, lib)
-	}
-	sort.Strings(libList)
-	return fmt.Sprintf("<str name=\"sharedLib\">%s</str>", strings.Join(libList, ","))
-}
-
-func getXMLConfigElement(name string, key string, value interface{}, kind string) string {
-	if key == "" {
-		key = name
-	}
-	pp := reflect.TypeOf(value).Kind()
-	if pp == reflect.Int {
-		return fmt.Sprintf("<%s name=\"%s\">${%s:%d}</%s>\n", kind, name, key, value, kind)
-	} else if pp == reflect.String {
-		return fmt.Sprintf("<%s name=\"%s\">${%s:%s}</%s>\n", kind, name, key, value, kind)
-	} else if pp == reflect.Bool {
-		return fmt.Sprintf("<%s name=\"%s\">${%s:%t}</%s>\n", kind, name, key, value, kind)
-	}
-	return ""
-}
-
-func intend(ss string, level int) string {
-	level *= 2
-	for level > 0 {
-		level--
-		ss += " "
-	}
-	return ss
-}
-
-func rec(mp map[string]interface{}, level int) string {
-	ss := ""
-	for x, y := range mp {
-		kind := reflect.TypeOf(y).Kind()
-		if kind == reflect.Int {
-			val := y.(int)
-			ss = intend(ss, level)
-			ss = ss + getXMLConfigElement(x, Keys[x], val, "int")
-		} else if kind == reflect.String {
-			val := y.(string)
-			ss = intend(ss, level)
-			ss = ss + getXMLConfigElement(x, Keys[x], val, "str")
-		} else if kind == reflect.Bool {
-			val := y.(bool)
-			ss = intend(ss, level)
-			ss = ss + getXMLConfigElement(x, Keys[x], val, "bool")
-		} else {
-			ss = intend(ss, level)
-			if x == "shardHandlerFactory" {
-				ss = ss + fmt.Sprintf("<%s name=\"shardHandlerFactory\" class=\"HttpShardHandlerFactory\">\n", x)
-			} else {
-				ss = ss + fmt.Sprintf("<%s>\n", x)
-			}
-			//	fmt.Println(x, y)
-			v, ok := y.(map[string]interface{})
-			if !ok {
-				fmt.Println("failed to decode")
-			}
-			ss += rec(v, level+1)
-			ss = intend(ss, level)
-			ss = ss + fmt.Sprintf("</%s>\n", x)
-		}
-	}
-	return ss
-}
-
-func (s *Solr) SolrSecret() string {
-	ss := "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<solr>\n" + "  <str name=\"coreRootDirectory\">/var/solr/data</str>\n  %s\n" + rec(SolrConf, 1)
-	ss += "  <metrics enabled=\"${metricsEnabled:true}\"/>\n"
-	ss += "</solr>\n"
-	return fmt.Sprintf(ss, GenerateAdditionalLibXMLPart(s.Spec.SolrModules))
 }
 
 func (s *Solr) OffshootName() string {
