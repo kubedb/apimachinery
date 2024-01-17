@@ -28,8 +28,8 @@ import (
 const (
 	ResourceCodeElasticsearchDashboard = "ed"
 	ResourceKindElasticsearchDashboard = "ElasticsearchDashboard"
-	ResourceElasticsearchDashboard     = "elasticsearchelasticsearch"
-	ResourceElasticsearchDashboards    = "elasticsearchelasticsearchs"
+	ResourceElasticsearchDashboard     = "elasticsearchdashboard"
+	ResourceElasticsearchDashboards    = "elasticsearchdashboards"
 )
 
 // ElasticsearchDashboardSpec defines the desired state of ElasticsearchDashboard
