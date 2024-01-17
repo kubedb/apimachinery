@@ -294,6 +294,23 @@ func (k *Kafka) SetDefaults() {
 		k.Spec.StorageType = StorageTypeDurable
 	}
 
+	var kfVersion catalog.KafkaVersion
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: k.Spec.Version}, &kfVersion)
+	if err != nil {
+		klog.Errorf("can't get the kafka version object %s for %s \n", err.Error(), k.Spec.Version)
+		return
+	}
+
+	k.setDefaultContainerSecurityContext(&kfVersion, &k.Spec.PodTemplate)
+	if k.Spec.CruiseControl != nil {
+		k.setDefaultContainerSecurityContext(&kfVersion, &k.Spec.CruiseControl.PodTemplate)
+	}
+
+	k.Spec.Monitor.SetDefaults()
+	if k.Spec.Monitor != nil && k.Spec.Monitor.Prometheus != nil && k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+		k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = kfVersion.Spec.SecurityContext.RunAsUser
+	}
+
 	if k.Spec.Topology != nil {
 		if k.Spec.Topology.Controller != nil {
 			if k.Spec.Topology.Controller.Suffix == "" {
@@ -315,27 +332,13 @@ func (k *Kafka) SetDefaults() {
 			apis.SetDefaultResourceLimits(&k.Spec.Topology.Broker.Resources, DefaultResources)
 		}
 	} else {
-		apis.SetDefaultResourceLimits(&k.Spec.PodTemplate.Spec.Containers[0].Resources, DefaultResources)
+		dbContainer := coreutil.GetContainerByName(k.Spec.PodTemplate.Spec.Containers, KafkaContainerName)
+		if dbContainer != nil {
+			apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
+		}
 		if k.Spec.Replicas == nil {
 			k.Spec.Replicas = pointer.Int32P(1)
 		}
-	}
-
-	var kfVersion catalog.KafkaVersion
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: k.Spec.Version}, &kfVersion)
-	if err != nil {
-		klog.Errorf("can't get the kafka version object %s for %s \n", err.Error(), k.Spec.Version)
-		return
-	}
-
-	k.setDefaultContainerSecurityContext(&kfVersion, &k.Spec.PodTemplate)
-	if k.Spec.CruiseControl != nil {
-		k.setDefaultContainerSecurityContext(&kfVersion, &k.Spec.CruiseControl.PodTemplate)
-	}
-
-	k.Spec.Monitor.SetDefaults()
-	if k.Spec.Monitor != nil && k.Spec.Monitor.Prometheus != nil && k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
-		k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = kfVersion.Spec.SecurityContext.RunAsUser
 	}
 
 	if k.Spec.EnableSSL {
