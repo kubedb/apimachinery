@@ -57,6 +57,7 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 		"/apis/mutators.kubedb.com/v1alpha1/proxysqlwebhooks",
 		"/apis/mutators.kubedb.com/v1alpha1/redissentinelwebhooks",
 		"/apis/mutators.kubedb.com/v1alpha1/rediswebhooks",
+		"/apis/mutators.kubedb.com/v1alpha1/zookeeperwebhooks",
 
 		"/apis/mutators.ops.kubedb.com/v1alpha1",
 		"/apis/mutators.ops.kubedb.com/v1alpha1/mysqlopsrequestwebhooks",
@@ -98,6 +99,7 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 		"/apis/validators.kubedb.com/v1alpha1/proxysqlwebhooks",
 		"/apis/validators.kubedb.com/v1alpha1/redissentinelwebhooks",
 		"/apis/validators.kubedb.com/v1alpha1/rediswebhooks",
+		"/apis/validators.kubedb.com/v1alpha1/zookeeperwebhooks",
 
 		"/apis/validators.ops.kubedb.com/v1alpha1",
 		"/apis/validators.ops.kubedb.com/v1alpha1/elasticsearchopsrequestwebhooks",

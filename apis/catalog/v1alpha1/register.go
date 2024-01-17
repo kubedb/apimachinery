@@ -84,6 +84,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&RedisVersionList{},
 		&SinglestoreVersion{},
 		&SinglestoreVersionList{},
+		&ZooKeeperVersion{},
+		&ZooKeeperVersionList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

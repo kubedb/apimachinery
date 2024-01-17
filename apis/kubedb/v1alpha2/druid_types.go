@@ -103,7 +103,7 @@ type DruidSpec struct {
 	DeepStorage *DeepStorageSpec `json:"deepStorage"`
 
 	// ZooKeeper contains information for Druid to connect to external dependency metadata storage
-	ZooKeeper *ZooKeeperSpec `json:"zooKeeper"`
+	ZooKeeper *ZooKeeperRef `json:"zooKeeper"`
 
 	// PodTemplate is an optional configuration
 	// +optional
@@ -192,7 +192,7 @@ type DeepStorageSpec struct {
 	ConfigSecret *core.LocalObjectReference `json:"configSecret"`
 }
 
-type ZooKeeperSpec struct {
+type ZooKeeperRef struct {
 	// Name of the appbinding of zookeeper
 	Name *string `json:"name"`
 

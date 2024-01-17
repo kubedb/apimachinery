@@ -145,3 +145,11 @@ type SinglestoreListerExpansion interface{}
 // SinglestoreNamespaceListerExpansion allows custom methods to be added to
 // SinglestoreNamespaceLister.
 type SinglestoreNamespaceListerExpansion interface{}
+
+// ZooKeeperListerExpansion allows custom methods to be added to
+// ZooKeeperLister.
+type ZooKeeperListerExpansion interface{}
+
+// ZooKeeperNamespaceListerExpansion allows custom methods to be added to
+// ZooKeeperNamespaceLister.
+type ZooKeeperNamespaceListerExpansion interface{}

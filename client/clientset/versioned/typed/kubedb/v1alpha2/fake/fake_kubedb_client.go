@@ -93,6 +93,10 @@ func (c *FakeKubedbV1alpha2) Singlestores(namespace string) v1alpha2.Singlestore
 	return &FakeSinglestores{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) ZooKeepers(namespace string) v1alpha2.ZooKeeperInterface {
+	return &FakeZooKeepers{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeKubedbV1alpha2) RESTClient() rest.Interface {

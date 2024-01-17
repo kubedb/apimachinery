@@ -49,3 +49,5 @@ type RedisExpansion interface{}
 type RedisSentinelExpansion interface{}
 
 type SinglestoreExpansion interface{}
+
+type ZooKeeperExpansion interface{}
