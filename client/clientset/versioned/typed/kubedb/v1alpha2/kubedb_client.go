@@ -21,10 +21,9 @@ package v1alpha2
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type KubedbV1alpha2Interface interface {
@@ -32,6 +31,7 @@ type KubedbV1alpha2Interface interface {
 	DruidsGetter
 	ElasticsearchesGetter
 	EtcdsGetter
+	FerretDBsGetter
 	KafkasGetter
 	MariaDBsGetter
 	MemcachedsGetter
@@ -65,6 +65,10 @@ func (c *KubedbV1alpha2Client) Elasticsearches(namespace string) ElasticsearchIn
 
 func (c *KubedbV1alpha2Client) Etcds(namespace string) EtcdInterface {
 	return newEtcds(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) FerretDBs(namespace string) FerretDBInterface {
+	return newFerretDBs(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Kafkas(namespace string) KafkaInterface {

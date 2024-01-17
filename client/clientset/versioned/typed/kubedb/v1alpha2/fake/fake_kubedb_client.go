@@ -19,10 +19,9 @@ limitations under the License.
 package fake
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
-
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
+	v1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 )
 
 type FakeKubedbV1alpha2 struct {
@@ -39,6 +38,10 @@ func (c *FakeKubedbV1alpha2) Elasticsearches(namespace string) v1alpha2.Elastics
 
 func (c *FakeKubedbV1alpha2) Etcds(namespace string) v1alpha2.EtcdInterface {
 	return &FakeEtcds{c, namespace}
+}
+
+func (c *FakeKubedbV1alpha2) FerretDBs(namespace string) v1alpha2.FerretDBInterface {
+	return &FakeFerretDBs{c, namespace}
 }
 
 func (c *FakeKubedbV1alpha2) Kafkas(namespace string) v1alpha2.KafkaInterface {
