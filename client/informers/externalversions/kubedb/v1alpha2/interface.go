@@ -44,6 +44,8 @@ type Interface interface {
 	PerconaXtraDBs() PerconaXtraDBInformer
 	// PgBouncers returns a PgBouncerInformer.
 	PgBouncers() PgBouncerInformer
+	// Pgpools returns a PgpoolInformer.
+	Pgpools() PgpoolInformer
 	// Postgreses returns a PostgresInformer.
 	Postgreses() PostgresInformer
 	// ProxySQLs returns a ProxySQLInformer.
@@ -115,6 +117,11 @@ func (v *version) PerconaXtraDBs() PerconaXtraDBInformer {
 // PgBouncers returns a PgBouncerInformer.
 func (v *version) PgBouncers() PgBouncerInformer {
 	return &pgBouncerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Pgpools returns a PgpoolInformer.
+func (v *version) Pgpools() PgpoolInformer {
+	return &pgpoolInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Postgreses returns a PostgresInformer.

@@ -39,6 +39,7 @@ type KubedbV1alpha2Interface interface {
 	MySQLsGetter
 	PerconaXtraDBsGetter
 	PgBouncersGetter
+	PgpoolsGetter
 	PostgresesGetter
 	ProxySQLsGetter
 	RedisesGetter
@@ -89,6 +90,10 @@ func (c *KubedbV1alpha2Client) PerconaXtraDBs(namespace string) PerconaXtraDBInt
 
 func (c *KubedbV1alpha2Client) PgBouncers(namespace string) PgBouncerInterface {
 	return newPgBouncers(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Pgpools(namespace string) PgpoolInterface {
+	return newPgpools(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Postgreses(namespace string) PostgresInterface {

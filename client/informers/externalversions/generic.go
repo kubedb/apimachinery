@@ -118,6 +118,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().PerconaXtraDBVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("pgbouncerversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().PgBouncerVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("pgpoolversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().PgpoolVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("postgresversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().PostgresVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("proxysqlversions"):
@@ -158,6 +160,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().PerconaXtraDBs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("pgbouncers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().PgBouncers().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("pgpools"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Pgpools().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("postgreses"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Postgreses().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("proxysqls"):

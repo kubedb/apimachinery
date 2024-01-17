@@ -74,6 +74,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PerconaXtraDBList{},
 		&PgBouncer{},
 		&PgBouncerList{},
+		&Pgpool{},
+		&PgpoolList{},
 		&Postgres{},
 		&PostgresList{},
 		&ProxySQL{},

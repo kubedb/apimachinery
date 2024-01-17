@@ -73,6 +73,10 @@ func (c *FakeCatalogV1alpha1) PgBouncerVersions() v1alpha1.PgBouncerVersionInter
 	return &FakePgBouncerVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) PgpoolVersions() v1alpha1.PgpoolVersionInterface {
+	return &FakePgpoolVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) PostgresVersions() v1alpha1.PostgresVersionInterface {
 	return &FakePostgresVersions{c}
 }

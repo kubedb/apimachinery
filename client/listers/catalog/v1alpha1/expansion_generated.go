@@ -62,6 +62,10 @@ type PerconaXtraDBVersionListerExpansion interface{}
 // PgBouncerVersionLister.
 type PgBouncerVersionListerExpansion interface{}
 
+// PgpoolVersionListerExpansion allows custom methods to be added to
+// PgpoolVersionLister.
+type PgpoolVersionListerExpansion interface{}
+
 // PostgresVersionListerExpansion allows custom methods to be added to
 // PostgresVersionLister.
 type PostgresVersionListerExpansion interface{}

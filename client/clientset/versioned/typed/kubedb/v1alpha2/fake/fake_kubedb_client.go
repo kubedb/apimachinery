@@ -69,6 +69,10 @@ func (c *FakeKubedbV1alpha2) PgBouncers(namespace string) v1alpha2.PgBouncerInte
 	return &FakePgBouncers{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) Pgpools(namespace string) v1alpha2.PgpoolInterface {
+	return &FakePgpools{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Postgreses(namespace string) v1alpha2.PostgresInterface {
 	return &FakePostgreses{c, namespace}
 }

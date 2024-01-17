@@ -74,6 +74,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MySQLVersionList{},
 		&PerconaXtraDBVersion{},
 		&PerconaXtraDBVersionList{},
+		&PgpoolVersion{},
+		&PgpoolVersionList{},
 		&PostgresVersion{},
 		&PostgresVersionList{},
 		&ProxySQLVersion{},
