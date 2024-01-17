@@ -718,7 +718,7 @@ const (
 	EnvDruidCoordinatorAsOverlord  = "DRUID_COORDINATOR_AS_OVERLORD"
 
 	// Common Runtime Configurations Properties
-	// ZooKeeper
+	// ZooKeeperSpec
 	DruidZKServiceHost              = "druid.zk.service.host"
 	DruidZKPathsBase                = "druid.zk.paths.base"
 	DruidZKServiceCompress          = "druid.zk.service.compress"

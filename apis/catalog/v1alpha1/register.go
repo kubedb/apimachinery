@@ -60,6 +60,10 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ElasticsearchVersionList{},
 		&EtcdVersion{},
 		&EtcdVersionList{},
+		&KafkaVersion{},
+		&KafkaVersionList{},
+		&KafkaConnectorVersion{},
+		&KafkaConnectorVersionList{},
 		&MemcachedVersion{},
 		&MemcachedVersionList{},
 		&MariaDBVersion{},
@@ -76,12 +80,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ProxySQLVersionList{},
 		&RedisVersion{},
 		&RedisVersionList{},
-		&KafkaVersion{},
-		&KafkaVersionList{},
 		&SinglestoreVersion{},
 		&SinglestoreVersionList{},
-		&KafkaConnectorVersion{},
-		&KafkaConnectorVersionList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

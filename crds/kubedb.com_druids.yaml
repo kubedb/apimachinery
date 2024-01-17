@@ -69,6 +69,8 @@ spec:
                 type: object
               disableSecurity:
                 type: boolean
+              halted:
+                type: boolean
               healthChecker:
                 default:
                   failureThreshold: 3
@@ -3543,6 +3545,11 @@ spec:
                 properties:
                   brokers:
                     properties:
+                      nodeSelector:
+                        additionalProperties:
+                          type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       podTemplate:
                         properties:
                           controller:
@@ -6986,9 +6993,30 @@ spec:
                         type: object
                       suffix:
                         type: string
+                      tolerations:
+                        items:
+                          properties:
+                            effect:
+                              type: string
+                            key:
+                              type: string
+                            operator:
+                              type: string
+                            tolerationSeconds:
+                              format: int64
+                              type: integer
+                            value:
+                              type: string
+                          type: object
+                        type: array
                     type: object
                   coordinators:
                     properties:
+                      nodeSelector:
+                        additionalProperties:
+                          type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       podTemplate:
                         properties:
                           controller:
@@ -10432,9 +10460,30 @@ spec:
                         type: object
                       suffix:
                         type: string
+                      tolerations:
+                        items:
+                          properties:
+                            effect:
+                              type: string
+                            key:
+                              type: string
+                            operator:
+                              type: string
+                            tolerationSeconds:
+                              format: int64
+                              type: integer
+                            value:
+                              type: string
+                          type: object
+                        type: array
                     type: object
                   historicals:
                     properties:
+                      nodeSelector:
+                        additionalProperties:
+                          type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       podTemplate:
                         properties:
                           controller:
@@ -13878,9 +13927,30 @@ spec:
                         type: object
                       suffix:
                         type: string
+                      tolerations:
+                        items:
+                          properties:
+                            effect:
+                              type: string
+                            key:
+                              type: string
+                            operator:
+                              type: string
+                            tolerationSeconds:
+                              format: int64
+                              type: integer
+                            value:
+                              type: string
+                          type: object
+                        type: array
                     type: object
                   middleManagers:
                     properties:
+                      nodeSelector:
+                        additionalProperties:
+                          type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       podTemplate:
                         properties:
                           controller:
@@ -17324,9 +17394,30 @@ spec:
                         type: object
                       suffix:
                         type: string
+                      tolerations:
+                        items:
+                          properties:
+                            effect:
+                              type: string
+                            key:
+                              type: string
+                            operator:
+                              type: string
+                            tolerationSeconds:
+                              format: int64
+                              type: integer
+                            value:
+                              type: string
+                          type: object
+                        type: array
                     type: object
                   overlords:
                     properties:
+                      nodeSelector:
+                        additionalProperties:
+                          type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       podTemplate:
                         properties:
                           controller:
@@ -20770,9 +20861,30 @@ spec:
                         type: object
                       suffix:
                         type: string
+                      tolerations:
+                        items:
+                          properties:
+                            effect:
+                              type: string
+                            key:
+                              type: string
+                            operator:
+                              type: string
+                            tolerationSeconds:
+                              format: int64
+                              type: integer
+                            value:
+                              type: string
+                          type: object
+                        type: array
                     type: object
                   routers:
                     properties:
+                      nodeSelector:
+                        additionalProperties:
+                          type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       podTemplate:
                         properties:
                           controller:
@@ -24216,6 +24328,22 @@ spec:
                         type: object
                       suffix:
                         type: string
+                      tolerations:
+                        items:
+                          properties:
+                            effect:
+                              type: string
+                            key:
+                              type: string
+                            operator:
+                              type: string
+                            tolerationSeconds:
+                              format: int64
+                              type: integer
+                            value:
+                              type: string
+                          type: object
+                        type: array
                     type: object
                 required:
                 - brokers

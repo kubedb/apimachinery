@@ -56,6 +56,11 @@ type DruidVersionSpec struct {
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
+	// PSP names
+	// +optional
+	PodSecurityPolicies DruidVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	// update constraints
+	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 	// SecurityContext is for the additional security information for the Solr container
 	// +optional
 	SecurityContext DruidSecurityContext `json:"securityContext"`
@@ -69,6 +74,11 @@ type DruidVersionDatabase struct {
 // Druid is the Druid Init Container image
 type DruidInitContainer struct {
 	Image string `json:"image"`
+}
+
+// SinglestoreVersionPodSecurityPolicy is the Singlestore pod security policies
+type DruidVersionPodSecurityPolicy struct {
+	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
 // DruidSecurityContext provides additional securityContext settings for the Solr Image

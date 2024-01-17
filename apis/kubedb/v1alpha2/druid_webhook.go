@@ -24,7 +24,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
-	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
@@ -32,15 +31,6 @@ import (
 
 // log is for logging in this package.
 var druidlog = logf.Log.WithName("druid-resource")
-
-// SetupWebhookWithManager will setup the manager to manage the webhooks
-func (d *Druid) SetupWebhookWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewWebhookManagedBy(mgr).
-		For(d).
-		Complete()
-}
-
-// TODO(user): EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 
 //+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-druid,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=druids,verbs=create;update,versions=v1alpha2,name=mdruid.kb.io,admissionReviewVersions=v1
 
@@ -53,11 +43,9 @@ func (d *Druid) Default() {
 	}
 	druidlog.Info("default", "name", d.Name)
 
-	// TODO(user): fill in your defaulting logic.
 	d.SetDefaults()
 }
 
-// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-druid,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=druids,verbs=create;update,versions=v1alpha2,name=vdruid.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &Druid{}
@@ -65,8 +53,6 @@ var _ webhook.Validator = &Druid{}
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (d *Druid) ValidateCreate() (admission.Warnings, error) {
 	druidlog.Info("validate create", "name", d.Name)
-
-	// TODO(user): fill in your validation logic upon object creation.
 
 	allErr := d.validateCreateOrUpdate()
 	if len(allErr) == 0 {
@@ -78,8 +64,6 @@ func (d *Druid) ValidateCreate() (admission.Warnings, error) {
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (d *Druid) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 	druidlog.Info("validate update", "name", d.Name)
-
-	// TODO(user): fill in your validation logic upon object update.
 	_ = old.(*Druid)
 	allErr := d.validateCreateOrUpdate()
 	if len(allErr) == 0 {
@@ -91,9 +75,6 @@ func (d *Druid) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
 func (d *Druid) ValidateDelete() (admission.Warnings, error) {
 	druidlog.Info("validate delete", "name", d.Name)
-
-	// TODO(user): fill in your validation logic upon object deletion.
-	// return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Druid"}, d.Name, allErr)
 	return nil, nil
 }
 
@@ -117,19 +98,6 @@ var druidReservedVolumeMountPaths = []string{
 
 func (d *Druid) validateCreateOrUpdate() field.ErrorList {
 	var allErr field.ErrorList
-	//if d.Spec.EnableSSL {
-	//	if d.Spec.TLS == nil {
-	//		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSSL"),
-	//			d.Name,
-	//			".spec.tls can't be nil, if .spec.enableSSL is true"))
-	//	}
-	//} else {
-	//	if d.Spec.TLS != nil {
-	//		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSSL"),
-	//			d.Name,
-	//			".spec.tls must be nil, if .spec.enableSSL is disabled"))
-	//	}
-	//}
 
 	if d.Spec.Version == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),

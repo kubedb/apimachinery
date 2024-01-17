@@ -465,7 +465,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConsumerNamespaces":             schema_apimachinery_apis_kubedb_v1alpha2_ConsumerNamespaces(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec":                schema_apimachinery_apis_kubedb_v1alpha2_CoordinatorSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Databases":                      schema_apimachinery_apis_kubedb_v1alpha2_Databases(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorage":                    schema_apimachinery_apis_kubedb_v1alpha2_DeepStorage(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec":                schema_apimachinery_apis_kubedb_v1alpha2_DeepStorageSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Druid":                          schema_apimachinery_apis_kubedb_v1alpha2_Druid(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidApp":                       schema_apimachinery_apis_kubedb_v1alpha2_DruidApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidClusterTopology":           schema_apimachinery_apis_kubedb_v1alpha2_DruidClusterTopology(ref),
@@ -570,7 +570,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SinglestoreTopology":            schema_apimachinery_apis_kubedb_v1alpha2_SinglestoreTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SystemUserSecretsSpec":          schema_apimachinery_apis_kubedb_v1alpha2_SystemUserSecretsSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.TLSPolicy":                      schema_apimachinery_apis_kubedb_v1alpha2_TLSPolicy(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeper":                      schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeper(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperSpec":                  schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchApp":               schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchStatsService":      schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.etcdApp":                        schema_apimachinery_apis_kubedb_v1alpha2_etcdApp(ref),
@@ -23144,7 +23144,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Databases(ref common.ReferenceCall
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_DeepStorage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_kubedb_v1alpha2_DeepStorageSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -23365,11 +23365,46 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidNode(ref common.ReferenceCall
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
+					"nodeSelector": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-map-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If specified, the pod's tolerations.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.Toleration", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -23436,13 +23471,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 					"deepStorage": {
 						SchemaProps: spec.SchemaProps{
 							Description: "DeepStorage contains specification for druid to connect to the deep storage",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorage"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec"),
 						},
 					},
 					"zooKeeper": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ZooKeeper contains information for Druid to connect to external dependency metadata storage",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeper"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperSpec"),
 						},
 					},
 					"podTemplate": {
@@ -23466,6 +23501,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 							},
 						},
 					},
+					"halted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TerminationPolicy controls the delete operation for database",
@@ -23485,7 +23527,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorage", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetadataStorage", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeper"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetadataStorage", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperSpec"},
 	}
 }
 
@@ -29552,7 +29594,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_TLSPolicy(ref common.ReferenceCall
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeper(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -29575,7 +29617,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeper(ref common.ReferenceCall
 					},
 					"pathsBase": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Base ZooKeeper path",
+							Description: "Base ZooKeeperSpec path",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

@@ -100,10 +100,10 @@ type DruidSpec struct {
 	MetadataStorage *MetadataStorage `json:"metadataStorage,omitempty"`
 
 	// DeepStorage contains specification for druid to connect to the deep storage
-	DeepStorage *DeepStorage `json:"deepStorage"`
+	DeepStorage *DeepStorageSpec `json:"deepStorage"`
 
 	// ZooKeeper contains information for Druid to connect to external dependency metadata storage
-	ZooKeeper *ZooKeeper `json:"zooKeeper"`
+	ZooKeeper *ZooKeeperSpec `json:"zooKeeper"`
 
 	// PodTemplate is an optional configuration
 	// +optional
@@ -113,6 +113,10 @@ type DruidSpec struct {
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
 
+	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
+	// +optional
+	Halted bool `json:"halted,omitempty"`
+
 	// TerminationPolicy controls the delete operation for database
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
@@ -121,10 +125,6 @@ type DruidSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 30, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
-
-	//// Monitor is used monitor database instance
-	// //+optional
-	//Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 }
 
 type DruidClusterTopology struct {
@@ -157,6 +157,16 @@ type DruidNode struct {
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+
+	// NodeSelector is a selector which must be true for the pod to fit on a node.
+	// Selector which must match a node's labels for the pod to be scheduled on that node.
+	// More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+	// +optional
+	// +mapType=atomic
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	// If specified, the pod's tolerations.
+	// +optional
+	Tolerations []core.Toleration `json:"tolerations,omitempty"`
 }
 
 type MetadataStorage struct {
@@ -172,7 +182,7 @@ type MetadataStorage struct {
 	CreateTables *bool `json:"createTables,omitempty"`
 }
 
-type DeepStorage struct {
+type DeepStorageSpec struct {
 	// Specifies the storage type to be used by druid
 	// Possible values: s3, google, azure, hdfs
 	Type *string `json:"type"`
@@ -182,7 +192,7 @@ type DeepStorage struct {
 	ConfigSecret *core.LocalObjectReference `json:"configSecret"`
 }
 
-type ZooKeeper struct {
+type ZooKeeperSpec struct {
 	// Name of the appbinding of zookeeper
 	Name *string `json:"name"`
 
@@ -190,7 +200,7 @@ type ZooKeeper struct {
 	// +optional
 	Namespace string `json:"namespace"`
 
-	// Base ZooKeeper path
+	// Base ZooKeeperSpec path
 	// +optional
 	PathsBase string `json:"pathsBase"`
 }
@@ -211,6 +221,15 @@ type DruidStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// DruidList contains a list of Druid
+type DruidList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []Druid `json:"items"`
+}
+
 // +kubebuilder:validation:Enum=Provisioning;Ready;NotReady;Critical
 type DruidPhase string
 
@@ -220,15 +239,6 @@ const (
 	DruidPhaseNotReady     DruidPhase = "NotReady"
 	DruidPhaseCritical     DruidPhase = "Critical"
 )
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// DruidList contains a list of Druid
-type DruidList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Druid `json:"items"`
-}
 
 type DruidNodeRoleType string
 
