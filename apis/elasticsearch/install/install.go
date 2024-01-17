@@ -17,7 +17,7 @@ limitations under the License.
 package install
 
 import (
-	"kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
+	"kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"

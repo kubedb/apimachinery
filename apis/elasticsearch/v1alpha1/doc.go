@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package v1alpha1 contains API Schema definitions for the dashboard v1alpha1 API group
+// Package v1alpha1 contains API Schema definitions for the elasticsearch v1alpha1 API group
 
 // +k8s:deepcopy-gen=package,register
 // +k8s:openapi-gen=true
 // +k8s:defaulter-gen=TypeMeta
 // +kubebuilder:object:generate=true
-// +groupName=dashboard.kubedb.com
+// +groupName=elasticsearch.kubedb.com
 package v1alpha1
 
 import (
@@ -30,7 +30,7 @@ import (
 
 var (
 	// SchemeGroupVersion is group version used to register these objects
-	SchemeGroupVersion = schema.GroupVersion{Group: "dashboard.kubedb.com", Version: "v1alpha1"}
+	SchemeGroupVersion = schema.GroupVersion{Group: "elasticsearch.kubedb.com", Version: "v1alpha1"}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: SchemeGroupVersion}

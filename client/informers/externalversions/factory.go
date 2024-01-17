@@ -27,7 +27,7 @@ import (
 	archiver "kubedb.dev/apimachinery/client/informers/externalversions/archiver"
 	autoscaling "kubedb.dev/apimachinery/client/informers/externalversions/autoscaling"
 	catalog "kubedb.dev/apimachinery/client/informers/externalversions/catalog"
-	dashboard "kubedb.dev/apimachinery/client/informers/externalversions/dashboard"
+	elasticsearch "kubedb.dev/apimachinery/client/informers/externalversions/elasticsearch"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
 	kafka "kubedb.dev/apimachinery/client/informers/externalversions/kafka"
 	kubedb "kubedb.dev/apimachinery/client/informers/externalversions/kubedb"
@@ -265,7 +265,7 @@ type SharedInformerFactory interface {
 	Archiver() archiver.Interface
 	Autoscaling() autoscaling.Interface
 	Catalog() catalog.Interface
-	Dashboard() dashboard.Interface
+	Elasticsearch() elasticsearch.Interface
 	Kafka() kafka.Interface
 	Kubedb() kubedb.Interface
 	Ops() ops.Interface
@@ -285,8 +285,8 @@ func (f *sharedInformerFactory) Catalog() catalog.Interface {
 	return catalog.New(f, f.namespace, f.tweakListOptions)
 }
 
-func (f *sharedInformerFactory) Dashboard() dashboard.Interface {
-	return dashboard.New(f, f.namespace, f.tweakListOptions)
+func (f *sharedInformerFactory) Elasticsearch() elasticsearch.Interface {
+	return elasticsearch.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) Kafka() kafka.Interface {
