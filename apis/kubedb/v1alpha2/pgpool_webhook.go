@@ -116,7 +116,6 @@ func (p *Pgpool) ValidateCreateOrUpdate() field.ErrorList {
 				"`spec.replica` must be greater than 0",
 			))
 		}
-
 		if *p.Spec.Replicas > 3 {
 			errorList = append(errorList, field.Required(field.NewPath("spec").Child("replicas"),
 				"`spec.replica` must be less than 4",
@@ -196,7 +195,7 @@ func PgpoolValidateVersion(p *Pgpool) error {
 }
 
 var PgpoolAvailableVersions = []string{
-	"4.4.3",
+	"4.4.2",
 }
 
 var PgpoolReservedVolumes = []string{

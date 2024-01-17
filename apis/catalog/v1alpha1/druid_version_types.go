@@ -61,7 +61,7 @@ type DruidVersionSpec struct {
 	PodSecurityPolicies DruidVersionPodSecurityPolicy `json:"podSecurityPolicies"`
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
-	// SecurityContext is for the additional security information for the Solr container
+	// SecurityContext is for the additional security information for the Druid container
 	// +optional
 	SecurityContext DruidSecurityContext `json:"securityContext"`
 }
@@ -81,14 +81,14 @@ type DruidVersionPodSecurityPolicy struct {
 	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
-// DruidSecurityContext provides additional securityContext settings for the Solr Image
+// DruidSecurityContext provides additional securityContext settings for the Druid Image
 type DruidSecurityContext struct {
-	// RunAsUser is default UID for the DB container. It defaults to 8983.
+	// RunAsUser is default UID for the DB container. It defaults to 1000.
 	RunAsUser *int64 `json:"runAsUser,omitempty"`
 
 	RunAsGroup *int64 `json:"runAsGroup,omitempty"`
 
-	// RunAsAnyNonRoot will be true if user can change the default UID to other than 8983.
+	// RunAsAnyNonRoot will be true if user can change the default UID to other than 1000.
 	RunAsAnyNonRoot bool `json:"runAsAnyNonRoot,omitempty"`
 }
 

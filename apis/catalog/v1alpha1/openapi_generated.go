@@ -22950,12 +22950,12 @@ func schema_apimachinery_apis_catalog_v1alpha1_DruidSecurityContext(ref common.R
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DruidSecurityContext provides additional securityContext settings for the Solr Image",
+				Description: "DruidSecurityContext provides additional securityContext settings for the Druid Image",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"runAsUser": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container. It defaults to 8983.",
+							Description: "RunAsUser is default UID for the DB container. It defaults to 1000.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -22968,7 +22968,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DruidSecurityContext(ref common.R
 					},
 					"runAsAnyNonRoot": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RunAsAnyNonRoot will be true if user can change the default UID to other than 8983.",
+							Description: "RunAsAnyNonRoot will be true if user can change the default UID to other than 1000.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -23161,7 +23161,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref common.Refer
 					},
 					"securityContext": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional security information for the Solr container",
+							Description: "SecurityContext is for the additional security information for the Druid container",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidSecurityContext"),
 						},
