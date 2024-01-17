@@ -19,23 +19,23 @@ limitations under the License.
 package fake
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/dashboard/v1alpha1"
+	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/elasticsearch/v1alpha1"
 
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 )
 
-type FakeDashboardV1alpha1 struct {
+type FakeElasticsearchV1alpha1 struct {
 	*testing.Fake
 }
 
-func (c *FakeDashboardV1alpha1) ElasticsearchDashboards(namespace string) v1alpha1.ElasticsearchDashboardInterface {
+func (c *FakeElasticsearchV1alpha1) ElasticsearchDashboards(namespace string) v1alpha1.ElasticsearchDashboardInterface {
 	return &FakeElasticsearchDashboards{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *FakeDashboardV1alpha1) RESTClient() rest.Interface {
+func (c *FakeElasticsearchV1alpha1) RESTClient() rest.Interface {
 	var ret *rest.RESTClient
 	return ret
 }

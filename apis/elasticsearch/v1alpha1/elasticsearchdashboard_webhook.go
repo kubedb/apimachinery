@@ -60,7 +60,7 @@ var forbiddenEnvVars = []string{
 }
 
 // log is for logging in this package.
-var edLog = logf.Log.WithName("elasticsearchdashboard-validation")
+var edLog = logf.Log.WithName("elasticsearchelasticsearch-validation")
 
 func (ed *ElasticsearchDashboard) SetupWebhookWithManager(mgr manager.Manager) error {
 	return builder.WebhookManagedBy(mgr).
@@ -70,7 +70,7 @@ func (ed *ElasticsearchDashboard) SetupWebhookWithManager(mgr manager.Manager) e
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 
-// +kubebuilder:webhook:path=/mutate-dashboard-kubedb-com-v1alpha1-elasticsearchdashboard,mutating=true,failurePolicy=fail,sideEffects=None,groups=dashboard.kubedb.com,resources=elasticsearchdashboards,verbs=create;update,versions=v1alpha1,name=melasticsearchdashboard.kb.io,admissionReviewVersions={v1,v1beta1}
+// +kubebuilder:webhook:path=/mutate-elasticsearch-kubedb-com-v1alpha1-elasticsearchelasticsearch,mutating=true,failurePolicy=fail,sideEffects=None,groups=elasticsearch.kubedb.com,resources=elasticsearchelasticsearchs,verbs=create;update,versions=v1alpha1,name=melasticsearchelasticsearch.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Defaulter = &ElasticsearchDashboard{}
 
@@ -138,7 +138,7 @@ func (ed *ElasticsearchDashboard) Default() {
 	}
 }
 
-// +kubebuilder:webhook:path=/validate-dashboard-kubedb-com-v1alpha1-elasticsearchdashboard,mutating=false,failurePolicy=fail,sideEffects=None,groups=dashboard.kubedb.com,resources=elasticsearchdashboards,verbs=create;update;delete,versions=v1alpha1,name=velasticsearchdashboard.kb.io,admissionReviewVersions={v1,v1beta1}
+// +kubebuilder:webhook:path=/validate-elasticsearch-kubedb-com-v1alpha1-elasticsearchelasticsearch,mutating=false,failurePolicy=fail,sideEffects=None,groups=elasticsearch.kubedb.com,resources=elasticsearchelasticsearchs,verbs=create;update;delete,versions=v1alpha1,name=velasticsearchelasticsearch.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.Validator = &ElasticsearchDashboard{}
 
@@ -174,7 +174,7 @@ func (ed *ElasticsearchDashboard) ValidateDelete() (admission.Warnings, error) {
 	}
 
 	return nil, apierrors.NewInvalid(
-		schema.GroupKind{Group: "dashboard.kubedb.com", Kind: "ElasticsearchDashboard"},
+		schema.GroupKind{Group: "elasticsearch.kubedb.com", Kind: "ElasticsearchDashboard"},
 		ed.Name, allErr)
 }
 
@@ -206,5 +206,5 @@ func (ed *ElasticsearchDashboard) Validate() error {
 		return nil
 	}
 
-	return apierrors.NewInvalid(schema.GroupKind{Group: "dashboard.kubedb.com", Kind: "ElasticsearchDashboard"}, ed.Name, allErr)
+	return apierrors.NewInvalid(schema.GroupKind{Group: "elasticsearch.kubedb.com", Kind: "ElasticsearchDashboard"}, ed.Name, allErr)
 }

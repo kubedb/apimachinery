@@ -32,7 +32,7 @@ const (
 	OS_PASSWORD_KEY = "opensearch.password"
 
 	ElasticsearchDashboardPortServer         = "server"
-	ElasticsearchDashboardConfigMergeCommand = "/usr/local/bin/dashboard-config-merger.sh"
+	ElasticsearchDashboardConfigMergeCommand = "/usr/local/bin/elasticsearch-config-merger.sh"
 
 	KibanaConfigDir       = "/usr/share/kibana/config"
 	KibanaTempConfigDir   = "/kibana/temp-config"
@@ -40,11 +40,11 @@ const (
 	KibanaStatusEndpoint  = "/api/status"
 	KibanaConfigFileName  = "kibana.yml"
 
-	OpensearchDashboardsConfigDir       = "/usr/share/opensearch-dashboards/config"
-	OpensearchDashboardsTempConfigDir   = "/opensearch-dashboards/temp-config"
-	OpensearchDashboardsCustomConfigDir = "/opensearch-dashboards/custom-config"
+	OpensearchDashboardsConfigDir       = "/usr/share/opensearch-elasticsearchs/config"
+	OpensearchDashboardsTempConfigDir   = "/opensearch-elasticsearchs/temp-config"
+	OpensearchDashboardsCustomConfigDir = "/opensearch-elasticsearchs/custom-config"
 	OpensearchDashboardsStatusEndpoint  = "/api/status"
-	OpensearchDasboardsConfigFileName   = "opensearch_dashboards.yml"
+	OpensearchDasboardsConfigFileName   = "opensearch_elasticsearchs.yml"
 
 	ElasticsearchHostsKey = "elasticsearch.hosts"
 	ElasticsearchSSLCaKey = "elasticsearch.ssl.certificateAuthorities"
@@ -80,7 +80,7 @@ const (
 	DBNotFound = "DatabaseNotFound"
 	DBNotReady = "DatabaseNotReady"
 
-	ComponentDashboard                  = "dashboard"
+	ComponentDashboard                  = "elasticsearch"
 	CaCertKey                           = "ca.crt"
 	DefaultElasticsearchClientCertAlias = "archiver"
 	HealthCheckInterval                 = 10 * time.Second

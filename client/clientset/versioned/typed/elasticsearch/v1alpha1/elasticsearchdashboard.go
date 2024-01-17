@@ -22,7 +22,7 @@ import (
 	"context"
 	"time"
 
-	v1alpha1 "kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
+	v1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
 	scheme "kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -58,7 +58,7 @@ type elasticsearchDashboards struct {
 }
 
 // newElasticsearchDashboards returns a ElasticsearchDashboards
-func newElasticsearchDashboards(c *DashboardV1alpha1Client, namespace string) *elasticsearchDashboards {
+func newElasticsearchDashboards(c *ElasticsearchV1alpha1Client, namespace string) *elasticsearchDashboards {
 	return &elasticsearchDashboards{
 		client: c.RESTClient(),
 		ns:     namespace,

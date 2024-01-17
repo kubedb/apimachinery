@@ -87,13 +87,13 @@ const (
 	StateUnavailable DashboardServerState = "unavailable"
 )
 
-// +kubebuilder:validation:Enum=dashboard-custom-config;dashboard-temp-config;dashboard-config;kibana-server;database-client
+// +kubebuilder:validation:Enum=elasticsearch-custom-config;elasticsearch-temp-config;elasticsearch-config;kibana-server;database-client
 type DashboardVolumeName string
 
 const (
-	DashboardVolumeCustomConfig            DashboardVolumeName = "dashboard-custom-config"
-	DashboardVolumeOperatorGeneratedConfig DashboardVolumeName = "dashboard-temp-config"
-	DashboardVolumeConfig                  DashboardVolumeName = "dashboard-config"
+	DashboardVolumeCustomConfig            DashboardVolumeName = "elasticsearch-custom-config"
+	DashboardVolumeOperatorGeneratedConfig DashboardVolumeName = "elasticsearch-temp-config"
+	DashboardVolumeConfig                  DashboardVolumeName = "elasticsearch-config"
 	DashboardVolumeServerTLS               DashboardVolumeName = "server-tls"
 	DashboardVolumeDatabaseClient          DashboardVolumeName = "database-client"
 )
