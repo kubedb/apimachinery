@@ -29,6 +29,7 @@ import (
 
 type KubedbV1alpha2Interface interface {
 	RESTClient() rest.Interface
+	DruidsGetter
 	ElasticsearchesGetter
 	EtcdsGetter
 	KafkasGetter
@@ -48,6 +49,10 @@ type KubedbV1alpha2Interface interface {
 // KubedbV1alpha2Client is used to interact with features provided by the kubedb.com group.
 type KubedbV1alpha2Client struct {
 	restClient rest.Interface
+}
+
+func (c *KubedbV1alpha2Client) Druids(namespace string) DruidInterface {
+	return newDruids(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Elasticsearches(namespace string) ElasticsearchInterface {
