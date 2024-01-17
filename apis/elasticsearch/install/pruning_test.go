@@ -14,20 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package fuzzer
+package install
 
 import (
-	"kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
+	"testing"
 
-	fuzz "github.com/google/gofuzz"
-	runtimeserializer "k8s.io/apimachinery/pkg/runtime/serializer"
+	"kubedb.dev/apimachinery/apis/elasticsearch/fuzzer"
+	"kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
+
+	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
+	crdfuzz "kmodules.xyz/crd-schema-fuzz"
 )
 
-// Funcs returns the fuzzer functions for this api group.
-var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
-	return []interface{}{
-		func(s *v1alpha1.ElasticsearchDashboard, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
-		},
+func TestPruneTypes(t *testing.T) {
+	Install(clientsetscheme.Scheme)
+
+	// CRD v1
+	if crd := (v1alpha1.ElasticsearchDashboard{}).CustomResourceDefinition(); crd.V1 != nil {
+		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
 	}
 }

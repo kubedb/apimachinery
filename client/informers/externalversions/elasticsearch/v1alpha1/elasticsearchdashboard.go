@@ -22,10 +22,10 @@ import (
 	"context"
 	time "time"
 
-	dashboardv1alpha1 "kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
+	elasticsearchv1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/dashboard/v1alpha1"
+	v1alpha1 "kubedb.dev/apimachinery/client/listers/elasticsearch/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -63,16 +63,16 @@ func NewFilteredElasticsearchDashboardInformer(client versioned.Interface, names
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.DashboardV1alpha1().ElasticsearchDashboards(namespace).List(context.TODO(), options)
+				return client.ElasticsearchV1alpha1().ElasticsearchDashboards(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.DashboardV1alpha1().ElasticsearchDashboards(namespace).Watch(context.TODO(), options)
+				return client.ElasticsearchV1alpha1().ElasticsearchDashboards(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&dashboardv1alpha1.ElasticsearchDashboard{},
+		&elasticsearchv1alpha1.ElasticsearchDashboard{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,7 +83,7 @@ func (f *elasticsearchDashboardInformer) defaultInformer(client versioned.Interf
 }
 
 func (f *elasticsearchDashboardInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&dashboardv1alpha1.ElasticsearchDashboard{}, f.defaultInformer)
+	return f.factory.InformerFor(&elasticsearchv1alpha1.ElasticsearchDashboard{}, f.defaultInformer)
 }
 
 func (f *elasticsearchDashboardInformer) Lister() v1alpha1.ElasticsearchDashboardLister {

@@ -51,7 +51,7 @@ func (ed ElasticsearchDashboard) DeploymentName() string {
 }
 
 func (ed ElasticsearchDashboard) DashboardContainerName() string {
-	return meta_util.NameWithSuffix(ed.Name, "dashboard")
+	return meta_util.NameWithSuffix(ed.Name, "elasticsearch")
 }
 
 func (ed ElasticsearchDashboard) ResourceFQN() string {

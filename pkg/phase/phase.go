@@ -17,7 +17,7 @@ limitations under the License.
 package phase
 
 import (
-	dapi "kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
+	dapi "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	kmapi "kmodules.xyz/client-go/api/v1"

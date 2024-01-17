@@ -28,8 +28,8 @@ import (
 	fakecatalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1/fake"
 	configv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/config/v1alpha1"
 	fakeconfigv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/config/v1alpha1/fake"
-	dashboardv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/dashboard/v1alpha1"
-	fakedashboardv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/dashboard/v1alpha1/fake"
+	elasticsearchv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/elasticsearch/v1alpha1"
+	fakeelasticsearchv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/elasticsearch/v1alpha1/fake"
 	kafkav1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kafka/v1alpha1"
 	fakekafkav1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kafka/v1alpha1/fake"
 	kubedbv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1"
@@ -122,9 +122,9 @@ func (c *Clientset) ConfigV1alpha1() configv1alpha1.ConfigV1alpha1Interface {
 	return &fakeconfigv1alpha1.FakeConfigV1alpha1{Fake: &c.Fake}
 }
 
-// DashboardV1alpha1 retrieves the DashboardV1alpha1Client
-func (c *Clientset) DashboardV1alpha1() dashboardv1alpha1.DashboardV1alpha1Interface {
-	return &fakedashboardv1alpha1.FakeDashboardV1alpha1{Fake: &c.Fake}
+// ElasticsearchV1alpha1 retrieves the ElasticsearchV1alpha1Client
+func (c *Clientset) ElasticsearchV1alpha1() elasticsearchv1alpha1.ElasticsearchV1alpha1Interface {
+	return &fakeelasticsearchv1alpha1.FakeElasticsearchV1alpha1{Fake: &c.Fake}
 }
 
 // KafkaV1alpha1 retrieves the KafkaV1alpha1Client

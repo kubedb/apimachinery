@@ -28,8 +28,8 @@ import (
 const (
 	ResourceCodeElasticsearchDashboard = "ed"
 	ResourceKindElasticsearchDashboard = "ElasticsearchDashboard"
-	ResourceElasticsearchDashboard     = "elasticsearchdashboard"
-	ResourceElasticsearchDashboards    = "elasticsearchdashboards"
+	ResourceElasticsearchDashboard     = "elasticsearchelasticsearch"
+	ResourceElasticsearchDashboards    = "elasticsearchelasticsearchs"
 )
 
 // ElasticsearchDashboardSpec defines the desired state of ElasticsearchDashboard
@@ -47,7 +47,7 @@ type ElasticsearchDashboardSpec struct {
 	// +optional
 	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty"`
 
-	// ConfigSecret is an optional field to provide custom configuration file for dashboard.
+	// ConfigSecret is an optional field to provide custom configuration file for elasticsearch.
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
@@ -83,7 +83,7 @@ type ElasticsearchDashboardStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
-// ElasticsearchDashboard is the Schema for the elasticsearchdashboards API
+// ElasticsearchDashboard is the Schema for the elasticsearchelasticsearchs API
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

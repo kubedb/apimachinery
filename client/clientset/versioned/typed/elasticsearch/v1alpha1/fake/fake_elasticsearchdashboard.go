@@ -21,7 +21,7 @@ package fake
 import (
 	"context"
 
-	v1alpha1 "kubedb.dev/apimachinery/apis/dashboard/v1alpha1"
+	v1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
@@ -32,7 +32,7 @@ import (
 
 // FakeElasticsearchDashboards implements ElasticsearchDashboardInterface
 type FakeElasticsearchDashboards struct {
-	Fake *FakeDashboardV1alpha1
+	Fake *FakeElasticsearchV1alpha1
 	ns   string
 }
 
