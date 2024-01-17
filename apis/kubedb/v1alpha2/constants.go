@@ -1035,34 +1035,76 @@ const (
 	GitSyncContainerName = "git-sync"
 )
 
-var Keys = map[string]string{
-	"maxBooleanClauses": "solr.max.booleanClauses",
-	"sharedLib":         "solr.sharedLib",
-	"hostPort":          "solr.port.advertise",
-	"allowPaths":        "solr.allowPaths",
-}
+//var Keys = map[string]string{
+//	"maxBooleanClauses": "solr.max.booleanClauses",
+//	"sharedLib":         "solr.sharedLib",
+//	"hostPort":          "solr.port.advertise",
+//	"allowPaths":        "solr.allowPaths",
+//}
+//
+//var ShardHandlerFactory = map[string]interface{}{
+//	"socketTimeout": 600000,
+//	"connTimeout":   60000,
+//}
+//
+//var SolrCloud = map[string]interface{}{
+//	"host":                     "",
+//	"hostPort":                 80,
+//	"hostContext":              "solr",
+//	"genericCoreNodeNames":     true,
+//	"zkClientTimeout":          30000,
+//	"distribUpdateSoTimeout":   600000,
+//	"distribUpdateConnTimeout": 60000,
+//	"zkCredentialsProvider":    "org.apache.solr.common.cloud.DefaultZkCredentialsProvider",
+//	"zkACLProvider":            "org.apache.solr.common.cloud.DefaultZkACLProvider",
+//}
+//
+//var SolrConf = map[string]interface{}{
+//	"maxBooleanClauses": 1024,
+//	//"sharedLib":           "",
+//	"allowPaths":          "",
+//	"solrcloud":           SolrCloud,
+//	"shardHandlerFactory": ShardHandlerFactory,
+//}
 
-var ShardHandlerFactory = map[string]interface{}{
-	"socketTimeout": 600000,
-	"connTimeout":   60000,
-}
+const (
+	SolrCloudHostKey                       = "key"
+	SolrCloudHostValue                     = ""
+	SolrCloudHostPortKey                   = "hostPort"
+	SolrCloudHostPortValue                 = 80
+	SolrCloudHostContextKey                = "hostContext"
+	SolrCloudHostContextValue              = "solr"
+	SolrCloudGenericCoreNodeNamesKey       = "genericCoreNodeNames"
+	SolrCloudGenericCoreNodeNamesValue     = true
+	SolrCloudZKClientTimeoutKey            = "zkClientTimeout"
+	SolrCloudZKClientTimeoutValue          = 30000
+	SolrCloudDistribUpdateSoTimeoutKey     = "distribUpdateSoTimeout"
+	SolrCloudDistribUpdateSoTimeoutValue   = 600000
+	SolrCloudDistribUpdateConnTimeoutKey   = "distribUpdateConnTimeout"
+	SolrCloudDistribUpdateConnTimeoutValue = 60000
+	SolrCloudZKCredentialProviderKey       = "zkCredentialsProvider"
+	SolrCloudZKCredentialProviderValue     = "org.apache.solr.common.cloud.DefaultZkCredentialsProvider"
+	SolrCloudZKAclProviderKey              = "zkACLProvider"
+	SolrCloudZKAclProviderValue            = "org.apache.solr.common.cloud.DefaultZkACLProvider"
 
-var SolrCloud = map[string]interface{}{
-	"host":                     "",
-	"hostPort":                 80,
-	"hostContext":              "solr",
-	"genericCoreNodeNames":     true,
-	"zkClientTimeout":          30000,
-	"distribUpdateSoTimeout":   600000,
-	"distribUpdateConnTimeout": 60000,
-	"zkCredentialsProvider":    "org.apache.solr.common.cloud.DefaultZkCredentialsProvider",
-	"zkACLProvider":            "org.apache.solr.common.cloud.DefaultZkACLProvider",
-}
+	ShardHandlerFactorySocketTimeoutKey   = "socketTimeout"
+	ShardHandlerFactorySocketTimeoutValue = 600000
+	ShardHandlerFactoryConnTimeoutKey     = "connTimeout"
+	ShardHandlerFactoryConnTimeoutValue   = 60000
 
-var SolrConf = map[string]interface{}{
-	"maxBooleanClauses": 1024,
-	//"sharedLib":           "",
-	"allowPaths":          "",
-	"solrcloud":           SolrCloud,
-	"shardHandlerFactory": ShardHandlerFactory,
-}
+	SolrKeysMaxBooleanClausesKey   = "maxBooleanClauses"
+	SolrKeysMaxBooleanClausesValue = "solr.max.booleanClauses"
+	SolrKeysSharedLibKey           = "sharedLib"
+	SolrKeysShardLibValue          = "solr.sharedLib"
+	SolrKeysHostPortKey            = "hostPort"
+	SolrKeysHostPortValue          = "solr.port.advertise"
+	SolrKeysAllowPathsKey          = "allowPaths"
+	SolrKeysAllowPathsValue        = "solr.allowPaths"
+
+	SolrConfMaxBooleanClausesKey   = "maxBooleanClauses"
+	SolrConfMaxBooleanClausesValue = 1024
+	SolrConfAllowPathsKey          = "allowPaths"
+	SolrConfAllowPathsValue        = ""
+	SolrConfSolrCloudKey           = "solrcloud"
+	SolrConfShardHandlerFactoryKey = "shardHandlerFactory"
+)
