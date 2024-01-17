@@ -17,13 +17,17 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"context"
 	"errors"
+
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
 	errors2 "github.com/pkg/errors"
 	"gomodules.xyz/pointer"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -204,23 +208,13 @@ func (k *Kafka) ValidateCreateOrUpdate() error {
 	return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, k.Name, allErr)
 }
 
-var kafkaAvailableVersions = []string{
-	"3.3.0",
-	"3.3.2",
-	"3.4.0",
-	"3.4.1",
-	"3.5.1",
-	"3.6.0",
-}
-
 func (k *Kafka) validateVersion(db *Kafka) error {
-	version := db.Spec.Version
-	for _, v := range kafkaAvailableVersions {
-		if v == version {
-			return nil
-		}
+	kfVersion := &catalog.KafkaVersion{}
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, kfVersion)
+	if err != nil {
+		return errors.New("version not supported")
 	}
-	return errors.New("version not supported")
+	return nil
 }
 
 func (k *Kafka) validateNodeSuffix(topology *KafkaClusterTopology) error {
