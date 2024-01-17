@@ -24,8 +24,8 @@ import (
 const (
 	ResourceCodeRabbitMQVersion     = "rmversion"
 	ResourceKindRabbitMQVersion     = "RabbitMQVersion"
-	ResourceSingularRabbitMQVersion = "Rabbitmqversion"
-	ResourcePluralRabbitMQVersion   = "Rabbitmqversions"
+	ResourceSingularRabbitMQVersion = "rabbitmqversion"
+	ResourcePluralRabbitMQVersion   = "rabbitmqversions"
 )
 
 // RabbitMQVersion defines a RabbitMQ database version.
