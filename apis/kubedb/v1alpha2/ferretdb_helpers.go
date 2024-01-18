@@ -1,14 +1,37 @@
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package v1alpha2
 
 import (
 	"fmt"
+	"kubedb.dev/apimachinery/crds"
+
 	v1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
+
+func (f *FerretDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralKafka))
+}
 
 func (f *FerretDB) ResourcePlural() string {
 	return ResourcePluralFerretDB
@@ -42,6 +65,7 @@ func (f *FerretDB) PodControllerLabels(podControllerLabels map[string]string, ex
 func (f *FerretDB) OffshootLabels() map[string]string {
 	return f.offshootLabels(f.OffshootSelectors(), nil)
 }
+
 func (f *FerretDB) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = ComponentDatabase
 	return meta_util.FilterKeys("kubedb.com", selector, meta_util.OverwriteKeys(nil, f.Labels, override))
@@ -70,9 +94,11 @@ func (f *FerretDB) PgBackendName() string {
 func (f *FerretDB) PodLabels(podTemplateLabels map[string]string, extraLabels ...map[string]string) map[string]string {
 	return f.offshootLabels(meta_util.OverwriteKeys(f.OffshootSelectors(), extraLabels...), podTemplateLabels)
 }
+
 func (f *FerretDB) CertificateName(alias FerretDBCertificateAlias) string {
 	return meta_util.NameWithSuffix(f.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
+
 func (f *FerretDB) GetCertSecretName(alias FerretDBCertificateAlias) string {
 	name, ok := kmapi.GetCertificateSecretName(f.Spec.TLS.Certificates, string(alias))
 	if ok {
@@ -209,9 +235,9 @@ func (f *FerretDB) StatsService() mona.StatsAccessor {
 	return &FerretDBStatsService{f}
 }
 
-func (m *FerretDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
-	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
-	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
+func (f *FerretDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(f.Spec.ServiceTemplates, alias)
+	return f.offshootLabels(meta_util.OverwriteKeys(f.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 func (f *FerretDB) StatsServiceLabels() map[string]string {

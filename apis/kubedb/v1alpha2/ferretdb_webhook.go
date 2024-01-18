@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
+
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -39,7 +40,7 @@ func (f *FerretDB) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-kubedb-dev-my-domain-v1alpha2-ferretdb,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.dev.my.domain,resources=ferretdbs,verbs=create;update,versions=v1alpha2,name=mferretdb.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-ferretdb,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=ferretdbs,verbs=create;update,versions=v1alpha2,name=mferretdb.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Defaulter = &FerretDB{}
 
@@ -52,7 +53,7 @@ func (f *FerretDB) Default() {
 	f.SetDefaults()
 }
 
-//+kubebuilder:webhook:path=/validate-kubedb-dev-my-domain-v1alpha2-ferretdb,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.dev.my.domain,resources=ferretdbs,verbs=create;update;delete,versions=v1alpha2,name=vferretdb.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-ferretdb,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=ferretdbs,verbs=create;update;delete,versions=v1alpha2,name=vferretdb.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &FerretDB{}
 
@@ -64,7 +65,7 @@ func (f *FerretDB) ValidateCreate() (admission.Warnings, error) {
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.dev.my.domain", Kind: "FerretDB"}, f.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "FerretDB"}, f.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -76,7 +77,7 @@ func (f *FerretDB) ValidateUpdate(old runtime.Object) (admission.Warnings, error
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.dev.my.domain", Kind: "FerretDB"}, f.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "FerretDB"}, f.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -88,7 +89,7 @@ func (f *FerretDB) ValidateDelete() (admission.Warnings, error) {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			f.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.dev.my.domain", Kind: "FerretDB"}, f.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "FerretDB"}, f.Name, allErr)
 	}
 	return nil, nil
 }
@@ -112,7 +113,7 @@ func (f *FerretDB) ValidateCreateOrUpdate() field.ErrorList {
 	if f.Spec.StorageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 			f.Name,
-			fmt.Sprintf(`'spec.storageType' is missing`)))
+			`'spec.storageType' is missing`))
 	}
 	if f.Spec.StorageType != StorageTypeDurable && f.Spec.StorageType != StorageTypeEphemeral {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
@@ -122,51 +123,52 @@ func (f *FerretDB) ValidateCreateOrUpdate() field.ErrorList {
 	if f.Spec.StorageType == StorageTypeEphemeral && f.Spec.Storage != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 			f.Name,
-			fmt.Sprintf(`'spec.storageType' is set to Ephemeral, so 'spec.storage' needs to be empty`)))
+			`'spec.storageType' is set to Ephemeral, so 'spec.storage' needs to be empty`))
 	}
 
 	if f.Spec.AuthSecret != nil && f.Spec.AuthSecret.ExternallyManaged != f.Spec.Backend.ExternallyManaged {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authSecret"),
 			f.Name,
-			fmt.Sprintf(`when 'sepc.backend' is internally manager, 'spec.authSecret' can't be externally managed and vice versa`)))
+			`when 'spec.backend' is internally manager, 'spec.authSecret' can't be externally managed and vice versa`))
 	}
 
 	if f.Spec.AuthSecret != nil && f.Spec.AuthSecret.ExternallyManaged && f.Spec.AuthSecret.Name == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authSecret"),
 			f.Name,
-			fmt.Sprintf(`for externallyManaged auth secret, user must configure "spec.authSecret.name"`)))
+			`for externallyManaged auth secret, user must configure "spec.authSecret.name"`))
 	}
 	if f.Spec.StorageType == StorageTypeEphemeral && f.Spec.TerminationPolicy == TerminationPolicyHalt {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 			f.Name,
-			fmt.Sprintf(`'spec.terminationPolicy: Halt' can not be used for 'Ephemeral' storage`)))
+			`'spec.terminationPolicy: Halt' can not be used for 'Ephemeral' storage`))
 	}
 	if f.Spec.TerminationPolicy == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			f.Name,
-			fmt.Sprintf(`'spec.terminationPolicy' is missing`)))
+			`'spec.terminationPolicy' is missing`))
 	}
 	if f.Spec.TerminationPolicy == TerminationPolicyHalt || f.Spec.TerminationPolicy == TerminationPolicyDelete {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			f.Name,
-			fmt.Sprintf(`'spec.terminationPolicy' value 'Hault' or 'Delete' is not supported yet for FerretDB`)))
+			`'spec.terminationPolicy' value 'Hault' or 'Delete' is not supported yet for FerretDB`))
 	}
 
 	if f.Spec.Backend.ExternallyManaged {
 		if f.Spec.Backend.Postgres == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
 				f.Name,
-				fmt.Sprintf(`'spec.postgres' is missing when backend is externally managed`)))
+				`'spec.postgres' is missing when backend is externally managed`))
 		}
 	}
 	if f.Spec.SSLMode == SSLModeAllowSSL || f.Spec.SSLMode == SSLModePreferSSL {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("sslMode"),
 			f.Name,
-			fmt.Sprintf(`'spec.sslMode' value 'allowSSL' or 'preferSSL' is not supported yet for FerretDB`)))
+			`'spec.sslMode' value 'allowSSL' or 'preferSSL' is not supported yet for FerretDB`))
 	}
 
 	return allErr
 }
+
 func FerretDBValidateEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resourceType string) error {
 	for _, env := range envs {
 		present, _ := arrays.Contains(forbiddenEnvs, env.Name)

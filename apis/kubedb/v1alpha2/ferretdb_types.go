@@ -52,7 +52,6 @@ type FerretDB struct {
 }
 
 type FerretDBSpec struct {
-
 	// Version of FerretDB to be deployed.
 	Version string `json:"version"`
 
