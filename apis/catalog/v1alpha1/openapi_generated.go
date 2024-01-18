@@ -590,7 +590,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersion":                                schema_apimachinery_apis_catalog_v1alpha1_SolrVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase":                        schema_apimachinery_apis_catalog_v1alpha1_SolrVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_SolrVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionPodSecurityPolicy":               schema_apimachinery_apis_catalog_v1alpha1_SolrVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_SolrVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints":                          schema_apimachinery_apis_catalog_v1alpha1_UpdateConstraints(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.VolumeSnapshot":                             schema_apimachinery_apis_catalog_v1alpha1_VolumeSnapshot(ref),
@@ -27485,8 +27484,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionList(ref common.Refere
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "SolrVersionList contains a list of SolrVersion",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -27530,27 +27528,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionList(ref common.Refere
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SolrVersionPodSecurityPolicy is the Solr pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27587,13 +27564,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionSpec(ref common.Refere
 							Format:      "",
 						},
 					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionPodSecurityPolicy"),
-						},
-					},
 					"securityContext": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional security information for the Solr container",
@@ -27601,26 +27571,12 @@ func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionSpec(ref common.Refere
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrSecurityContext"),
 						},
 					},
-					"stash": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Stash defines backup and restore task definitions.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
 				},
 				Required: []string{"version", "db", "initContainer"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase"},
 	}
 }
 

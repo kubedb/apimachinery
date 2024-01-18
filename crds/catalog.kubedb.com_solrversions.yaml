@@ -61,13 +61,6 @@ spec:
                 required:
                 - image
                 type: object
-              podSecurityPolicies:
-                properties:
-                  databasePolicyName:
-                    type: string
-                required:
-                - databasePolicyName
-                type: object
               securityContext:
                 properties:
                   runAsAnyNonRoot:
@@ -78,64 +71,6 @@ spec:
                   runAsUser:
                     format: int64
                     type: integer
-                type: object
-              stash:
-                properties:
-                  addon:
-                    properties:
-                      backupTask:
-                        properties:
-                          name:
-                            type: string
-                          params:
-                            items:
-                              properties:
-                                name:
-                                  type: string
-                                value:
-                                  type: string
-                              required:
-                              - name
-                              - value
-                              type: object
-                            type: array
-                        required:
-                        - name
-                        type: object
-                      restoreTask:
-                        properties:
-                          name:
-                            type: string
-                          params:
-                            items:
-                              properties:
-                                name:
-                                  type: string
-                                value:
-                                  type: string
-                              required:
-                              - name
-                              - value
-                              type: object
-                            type: array
-                        required:
-                        - name
-                        type: object
-                    required:
-                    - backupTask
-                    - restoreTask
-                    type: object
-                type: object
-              updateConstraints:
-                properties:
-                  allowlist:
-                    items:
-                      type: string
-                    type: array
-                  denylist:
-                    items:
-                      type: string
-                    type: array
                 type: object
               version:
                 type: string

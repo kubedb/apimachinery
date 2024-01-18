@@ -17,13 +17,17 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strings"
 
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -85,11 +89,6 @@ func (s *Solr) ValidateDelete() (admission.Warnings, error) {
 		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Solr"}, s.Name, allErr)
 	}
 	return nil, nil
-}
-
-var solrAvailableVersions = []string{
-	"9.4.0",
-	"8.11.0",
 }
 
 var solrReservedVolumes = []string{
@@ -267,13 +266,12 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 }
 
 func solrValidateVersion(s *Solr) error {
-	version := s.Spec.Version
-	for _, v := range solrAvailableVersions {
-		if v == version {
-			return nil
-		}
+	slVersion := &catalog.SolrVersion{}
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: s.Spec.Version}, slVersion)
+	if err != nil {
+		return errors.New("version not supported")
 	}
-	return errors.New("version not supported")
+	return nil
 }
 
 func solrValidateModules(s *Solr) error {
