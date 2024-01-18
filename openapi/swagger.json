@@ -27256,6 +27256,14 @@
           "type": "integer",
           "format": "int64"
         },
+        "pausedBackups": {
+          "description": "PausedBackups represents the list of backups that have been paused.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+          }
+        },
         "phase": {
           "description": "Specifies the current phase of the ops request",
           "type": "string"

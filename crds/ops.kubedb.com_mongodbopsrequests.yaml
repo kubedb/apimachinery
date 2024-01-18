@@ -856,6 +856,17 @@ spec:
               observedGeneration:
                 format: int64
                 type: integer
+              pausedBackups:
+                items:
+                  properties:
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
               phase:
                 enum:
                 - Pending
