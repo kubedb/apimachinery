@@ -27684,7 +27684,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref common.ReferenceCal
 					},
 					"configSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConfigSecret is an optional field to provide custom configuration file for database (i.e pgpool.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+							Description: "ConfigSecret is a configuration secret which will be created with default and InitConfiguration",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
@@ -27728,7 +27728,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"version"},
+				Required: []string{"version", "backend"},
 			},
 		},
 		Dependencies: []string{

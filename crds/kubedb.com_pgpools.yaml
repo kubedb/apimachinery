@@ -3531,6 +3531,7 @@ spec:
               version:
                 type: string
             required:
+            - backend
             - version
             type: object
           status:
