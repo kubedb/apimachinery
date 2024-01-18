@@ -58,9 +58,9 @@ type PgpoolSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// +optional
 	// SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the
 	// Pgpool server . Password changes are also synced in pgpool when it is enabled.
+	// +optional
 	SyncUsers bool `json:"syncUsers,omitempty"`
 
 	// Version of Pgpool to be deployed.
@@ -71,22 +71,22 @@ type PgpoolSpec struct {
 	Replicas *int32 `json:"replicas,omitempty"`
 
 	// Backend refers to the AppBinding of the backend PostgreSQL server
-	Backend *core.LocalObjectReference `json:"backend,omitempty"`
+	Backend *core.LocalObjectReference `json:"backend"`
 
 	// Pgpool secret containing username and password for pgpool pcp user
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
-	// ConfigSecret is an optional field to provide custom configuration file for database (i.e pgpool.conf).
-	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
+	// ConfigSecret is a configuration secret which will be created with default and InitConfiguration
+	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
 	// PodTemplate is an optional configuration for pods used to expose Pgpool
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
-	// +optional
 	// InitConfiguration contains information with which the Pgpool will bootstrap
+	// +optional
 	InitConfiguration *PgpoolConfiguration `json:"initConfig,omitempty"`
 
 	// ServiceTemplates is an optional configuration for services used to expose Pgpool
