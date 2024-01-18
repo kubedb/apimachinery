@@ -21,10 +21,9 @@ package v1alpha1
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type CatalogV1alpha1Interface interface {
@@ -32,6 +31,7 @@ type CatalogV1alpha1Interface interface {
 	DruidVersionsGetter
 	ElasticsearchVersionsGetter
 	EtcdVersionsGetter
+	FerretDBVersionsGetter
 	KafkaConnectorVersionsGetter
 	KafkaVersionsGetter
 	MariaDBVersionsGetter
@@ -65,6 +65,10 @@ func (c *CatalogV1alpha1Client) ElasticsearchVersions() ElasticsearchVersionInte
 
 func (c *CatalogV1alpha1Client) EtcdVersions() EtcdVersionInterface {
 	return newEtcdVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) FerretDBVersions() FerretDBVersionInterface {
+	return newFerretDBVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) KafkaConnectorVersions() KafkaConnectorVersionInterface {

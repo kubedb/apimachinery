@@ -18,6 +18,8 @@ package v1alpha2
 
 import (
 	"fmt"
+
+	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
 	v1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
@@ -26,6 +28,7 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
@@ -43,6 +46,22 @@ func (f *FerretDB) ResourceFQN() string {
 
 func (f *FerretDB) ServiceName() string {
 	return f.Name
+}
+
+type FerretDBApp struct {
+	*FerretDB
+}
+
+func (f FerretDBApp) Name() string {
+	return f.FerretDB.Name
+}
+
+func (f FerretDBApp) Type() appcat.AppType {
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularFerretDB))
+}
+
+func (f *FerretDB) AppBindingMeta() appcat.AppBindingMeta {
+	return &FerretDBApp{f}
 }
 
 func (f *FerretDB) OffshootName() string {

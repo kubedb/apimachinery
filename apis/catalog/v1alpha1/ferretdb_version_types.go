@@ -1,0 +1,73 @@
+package v1alpha1
+
+import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+const (
+	ResourceCodeFerretDBVersion     = "frversion"
+	ResourceKindFerretDBVersion     = "FerretDBVersion"
+	ResourceSingularFerretDBVersion = "ferretdbversion"
+	ResourcePluralFerretDBVersion   = "ferretdbversions"
+)
+
+// +genclient
+// +genclient:nonNamespaced
+// +genclient:skipVerbs=updateStatus
+// +k8s:openapi-gen=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=ferretdbversions,singular=ferretdbversion,scope=Cluster,shortName=drversion,categories={datastore,kubedb,appscode}
+// +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
+// +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
+// +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+type FerretDBVersion struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              FerretDBVersionSpec `json:"spec,omitempty"`
+}
+
+// FerretDBVersionSpec defines the desired state of FerretDBVersion
+type FerretDBVersionSpec struct {
+	// Version
+	Version string `json:"version"`
+
+	// Database Image
+	DB FerretDBVersionDatabase `json:"db"`
+
+	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
+	// +optional
+	Deprecated bool `json:"deprecated,omitempty"`
+
+	// update constraints
+	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
+
+	// SecurityContext is for the additional security information for the FerretDB container
+	// +optional
+	SecurityContext FerretDBSecurityContext `json:"securityContext"`
+}
+
+// FerretDBVersionDatabase is the FerretDB Database image
+type FerretDBVersionDatabase struct {
+	Image string `json:"image"`
+}
+
+// FerretDBSecurityContext provides additional securityContext settings for the FerretDB Image
+type FerretDBSecurityContext struct {
+	// RunAsUser is default UID for the DB container. It defaults to 1000.
+	RunAsUser *int64 `json:"runAsUser,omitempty"`
+
+	RunAsGroup *int64 `json:"runAsGroup,omitempty"`
+
+	// RunAsAnyNonRoot will be true if user can change the default UID to other than 1000.
+	RunAsAnyNonRoot bool `json:"runAsAnyNonRoot,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// FerretDBVersionList contains a list of FerretDBVersion
+type FerretDBVersionList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []FerretDBVersion `json:"items,omitempty"`
+}

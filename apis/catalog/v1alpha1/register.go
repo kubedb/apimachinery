@@ -60,6 +60,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ElasticsearchVersionList{},
 		&EtcdVersion{},
 		&EtcdVersionList{},
+		&FerretDBVersion{},
+		&FerretDBVersionList{},
 		&KafkaVersion{},
 		&KafkaVersionList{},
 		&KafkaConnectorVersion{},

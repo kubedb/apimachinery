@@ -487,6 +487,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_EtcdSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdStatus":                     schema_apimachinery_apis_kubedb_v1alpha2_EtcdStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDB":                       schema_apimachinery_apis_kubedb_v1alpha2_FerretDB(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBApp":                    schema_apimachinery_apis_kubedb_v1alpha2_FerretDBApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBList":                   schema_apimachinery_apis_kubedb_v1alpha2_FerretDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBSpec":                   schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBStatsService":           schema_apimachinery_apis_kubedb_v1alpha2_FerretDBStatsService(ref),
@@ -24655,6 +24656,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDB(ref common.ReferenceCallb
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"FerretDB": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDB"),
+						},
+					},
+				},
+				Required: []string{"FerretDB"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDB"},
 	}
 }
 

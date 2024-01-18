@@ -30,6 +30,10 @@ type ElasticsearchVersionListerExpansion interface{}
 // EtcdVersionLister.
 type EtcdVersionListerExpansion interface{}
 
+// FerretDBVersionListerExpansion allows custom methods to be added to
+// FerretDBVersionLister.
+type FerretDBVersionListerExpansion interface{}
+
 // KafkaConnectorVersionListerExpansion allows custom methods to be added to
 // KafkaConnectorVersionLister.
 type KafkaConnectorVersionListerExpansion interface{}
