@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -62,19 +61,9 @@ type SolrVersionSpec struct {
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
-	// PSP names
-	// +optional
-	PodSecurityPolicies SolrVersionPodSecurityPolicy `json:"podSecurityPolicies"`
-
 	// SecurityContext is for the additional security information for the Solr container
 	// +optional
 	SecurityContext SolrSecurityContext `json:"securityContext"`
-
-	// Stash defines backup and restore task definitions.
-	// +optional
-	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
-	// update constraints
-	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 }
 
 // SolrVersionDatabase is the Solr Database image
@@ -85,11 +74,6 @@ type SolrVersionDatabase struct {
 // SolrInitContainer is the Solr init Container image
 type SolrInitContainer struct {
 	Image string `json:"image"`
-}
-
-// SolrVersionPodSecurityPolicy is the Solr pod security policies
-type SolrVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
 // SolrSecurityContext provides additional securityContext settings for the Solr Image
@@ -103,9 +87,9 @@ type SolrSecurityContext struct {
 	RunAsAnyNonRoot bool `json:"runAsAnyNonRoot,omitempty"`
 }
 
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
 // SolrVersionList contains a list of SolrVersion
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type SolrVersionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

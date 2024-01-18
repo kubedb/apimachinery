@@ -34,7 +34,6 @@ import (
 // log is for logging in this package.
 var solrlog = logf.Log.WithName("solr-resource")
 
-// TODO(user): EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 var _ webhook.Defaulter = &Solr{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
@@ -45,18 +44,13 @@ func (s *Solr) Default() {
 	solrlog.Info("default", "name", s.Name)
 
 	s.SetDefaults()
-
-	// TODO(user): fill in your defaulting logic.
 }
 
-// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 var _ webhook.Validator = &Solr{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (s *Solr) ValidateCreate() (admission.Warnings, error) {
 	solrlog.Info("validate create", "name", s.Name)
-
-	// TODO(user): fill in your validation logic upon object creation.
 
 	allErr := s.ValidateCreateOrUpdate()
 	if len(allErr) == 0 {
@@ -68,8 +62,6 @@ func (s *Solr) ValidateCreate() (admission.Warnings, error) {
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (s *Solr) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 	solrlog.Info("validate update", "name", s.Name)
-
-	// TODO(user): fill in your validation logic upon object update.
 
 	_ = old.(*Solr)
 	allErr := s.ValidateCreateOrUpdate()
@@ -84,8 +76,6 @@ func (s *Solr) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
 func (s *Solr) ValidateDelete() (admission.Warnings, error) {
 	solrlog.Info("validate delete", "name", s.Name)
-
-	// TODO(user): fill in your validation logic upon object deletion.
 
 	var allErr field.ErrorList
 	if s.Spec.TerminationPolicy == TerminationPolicyDoNotTerminate {

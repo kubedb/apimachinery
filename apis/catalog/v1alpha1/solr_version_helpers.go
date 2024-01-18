@@ -57,8 +57,7 @@ func (s SolrVersion) ValidateSpecs() error {
 		s.Spec.DB.Image == "" {
 		return fmt.Errorf(`atleast one of the following specs is not set for solrVersion "%v":
 spec.version,
-spec.db.image,
-spec.exporter.image.`, s.Name)
+spec.db.image`, s.Name)
 	}
 	return nil
 }
