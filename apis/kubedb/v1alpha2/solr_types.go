@@ -98,10 +98,6 @@ type SolrSpec struct {
 	// +optional
 	AuthConfigSecret *core.LocalObjectReference `json:"authConfigSecret,omitempty"`
 
-	//***********keystoresecret will be added later
-
-	//***********tls will be added later
-
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
@@ -118,8 +114,6 @@ type SolrSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 20, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
-
-	//*********monitor will be added later
 }
 
 type SolrClusterTopology struct {
