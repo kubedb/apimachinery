@@ -35,7 +35,6 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
-	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
@@ -407,26 +406,26 @@ func (d *Druid) setDefaultContainerSecurityContext(druidVersion *catalog.DruidVe
 }
 
 func (d *Druid) assignDefaultContainerSecurityContext(druidVersion *catalog.DruidVersion, sc *v1.SecurityContext) {
-	if sc.AllowPrivilegeEscalation == nil {
-		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
-	}
-	if sc.Capabilities == nil {
-		sc.Capabilities = &v1.Capabilities{
-			Drop: []v1.Capability{"ALL"},
-		}
-	}
-	if sc.RunAsNonRoot == nil {
-		sc.RunAsNonRoot = pointer.BoolP(true)
-	}
-	if sc.RunAsUser == nil {
-		sc.RunAsUser = druidVersion.Spec.SecurityContext.RunAsUser
-	}
+	//if sc.AllowPrivilegeEscalation == nil {
+	//	sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	//}
+	//if sc.Capabilities == nil {
+	//	sc.Capabilities = &v1.Capabilities{
+	//		Drop: []v1.Capability{"ALL"},
+	//	}
+	//}
+	//if sc.RunAsNonRoot == nil {
+	//	sc.RunAsNonRoot = pointer.BoolP(true)
+	//}
+	//if sc.RunAsUser == nil {
+	//	sc.RunAsUser = druidVersion.Spec.SecurityContext.RunAsUser
+	//}
 	if sc.RunAsGroup == nil {
 		sc.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsGroup
 	}
-	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = secomp.DefaultSeccompProfile()
-	}
+	//if sc.SeccompProfile == nil {
+	//	sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	//}
 }
 
 func (d *Druid) GetPersistentSecrets() []string {
