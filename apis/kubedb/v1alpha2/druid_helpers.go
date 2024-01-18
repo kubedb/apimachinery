@@ -309,7 +309,7 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext == nil {
 				d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 			}
-			d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
 			d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Coordinators.PodTemplate)
 			d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Coordinators.PodTemplate)
 		}
@@ -321,7 +321,7 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext == nil {
 				d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 			}
-			d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
 			d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Overlords.PodTemplate)
 			d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Overlords.PodTemplate)
 		}
@@ -333,7 +333,7 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext == nil {
 				d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 			}
-			d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
 			d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.MiddleManagers.PodTemplate)
 			d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.MiddleManagers.PodTemplate)
 		}
@@ -345,7 +345,7 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext == nil {
 				d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 			}
-			d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
 			d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Historicals.PodTemplate)
 			d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Historicals.PodTemplate)
 		}
@@ -357,7 +357,7 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext == nil {
 				d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 			}
-			d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
 			d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Brokers.PodTemplate)
 			d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Brokers.PodTemplate)
 		}
@@ -369,7 +369,7 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext == nil {
 				d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 			}
-			d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
 			d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Routers.PodTemplate)
 			d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Routers.PodTemplate)
 		}
