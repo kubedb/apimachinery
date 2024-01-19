@@ -17,7 +17,10 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"context"
 	"fmt"
+
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
@@ -25,6 +28,7 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
@@ -152,7 +156,7 @@ func (p *Pgpool) ValidateCreateOrUpdate() field.ErrorList {
 		}
 	}
 
-	if err := p.ValidateHealth(p.Spec.HealthChecker); err != nil {
+	if err := p.ValidateHealth(&p.Spec.HealthChecker); err != nil {
 		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("healthChecker"),
 			p.Name,
 			err.Error(),
@@ -191,17 +195,14 @@ func (p *Pgpool) ValidateHealth(health *kmapi.HealthCheckSpec) error {
 }
 
 func PgpoolValidateVersion(p *Pgpool) error {
-	version := p.Spec.Version
-	for _, v := range PgpoolAvailableVersions {
-		if v == version {
-			return nil
-		}
+	ppVersion := catalog.PgpoolVersion{}
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: p.Spec.Version,
+	}, &ppVersion)
+	if err != nil {
+		return errors.New("version not supported")
 	}
-	return errors.New("version not supported")
-}
-
-var PgpoolAvailableVersions = []string{
-	"4.4.2",
+	return nil
 }
 
 var PgpoolReservedVolumes = []string{
