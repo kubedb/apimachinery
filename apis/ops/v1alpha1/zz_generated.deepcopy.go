@@ -2425,7 +2425,7 @@ func (in *OpsRequestStatus) DeepCopyInto(out *OpsRequestStatus) {
 	}
 	if in.PausedBackups != nil {
 		in, out := &in.PausedBackups, &out.PausedBackups
-		*out = make([]apiv1.ObjectReference, len(*in))
+		*out = make([]apiv1.TypedObjectReference, len(*in))
 		copy(*out, *in)
 	}
 	return

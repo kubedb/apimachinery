@@ -25888,7 +25888,7 @@ func schema_apimachinery_apis_ops_v1alpha1_OpsRequestStatus(ref common.Reference
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+										Ref:     ref("kmodules.xyz/client-go/api/v1.TypedObjectReference"),
 									},
 								},
 							},
@@ -25898,7 +25898,7 @@ func schema_apimachinery_apis_ops_v1alpha1_OpsRequestStatus(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kmodules.xyz/client-go/api/v1.ObjectReference"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kmodules.xyz/client-go/api/v1.TypedObjectReference"},
 	}
 }
 
