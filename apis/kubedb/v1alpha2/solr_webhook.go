@@ -129,6 +129,7 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 		}
 	}
 
+	fmt.Println("start chhhhhhhing webook version-------------------?")
 	if s.Spec.Version == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 			s.Name,
