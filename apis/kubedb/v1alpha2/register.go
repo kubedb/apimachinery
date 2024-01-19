@@ -80,6 +80,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PostgresList{},
 		&ProxySQL{},
 		&ProxySQLList{},
+		&RabbitMQ{},
+		&RabbitMQList{},
 		&Redis{},
 		&RedisList{},
 		&RedisSentinel{},

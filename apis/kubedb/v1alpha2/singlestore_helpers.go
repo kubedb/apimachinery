@@ -55,8 +55,16 @@ func (s *singlestoreApp) Type() appcat.AppType {
 	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularSinglestore))
 }
 
+func (s *Singlestore) ResourceShortCode() string {
+	return ResourceCodeSinglestore
+}
+
 func (s *Singlestore) ResourceKind() string {
 	return ResourceKindSinglestore
+}
+
+func (s *Singlestore) ResourceSingular() string {
+	return ResourceSingularRabbitmq
 }
 
 func (s *Singlestore) ResourcePlural() string {

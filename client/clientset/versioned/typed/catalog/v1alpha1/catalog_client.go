@@ -43,6 +43,7 @@ type CatalogV1alpha1Interface interface {
 	PgpoolVersionsGetter
 	PostgresVersionsGetter
 	ProxySQLVersionsGetter
+	RabbitMQVersionsGetter
 	RedisVersionsGetter
 	SinglestoreVersionsGetter
 	SolrVersionsGetter
@@ -108,6 +109,10 @@ func (c *CatalogV1alpha1Client) PostgresVersions() PostgresVersionInterface {
 
 func (c *CatalogV1alpha1Client) ProxySQLVersions() ProxySQLVersionInterface {
 	return newProxySQLVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) RabbitMQVersions() RabbitMQVersionInterface {
+	return newRabbitMQVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) RedisVersions() RedisVersionInterface {

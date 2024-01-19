@@ -1000,6 +1000,24 @@ const (
 	DruidDeepStorageHDFS   DruidDeepStorageType = "hdfs"
 )
 
+const (
+	RabbitMQAMQPPort          = 5672
+	RabbitMQPeerDiscoveryPort = 4369
+	RabbitMQManagementUIPort  = 15672
+	RabbitMQInterNodePort     = 25672
+
+	RabbitMQVolumeData         = "data"
+	RabbitMQVolumeConfig       = "rabbitmqconfig"
+	RabbitMQVolumeTempConfig   = "temp-config"
+	RabbitMQVolumeCustomConfig = "custom-config"
+
+	RabbitMQDataDir       = "/var/lib/rabbitmq/mnesia"
+	RabbitMQPluginsDir    = "/etc/rabbitmq/"
+	RabbitMQCertDir       = "/var/private/ssl"
+	RabbitMQConfigDir     = "/config/"
+	RabbitMQTempConfigDir = "/tmp/config/"
+)
+
 // Resource kind related constants
 const (
 	ResourceKindStatefulSet = "StatefulSet"

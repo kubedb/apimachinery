@@ -46,6 +46,8 @@ type PostgresVersionExpansion interface{}
 
 type ProxySQLVersionExpansion interface{}
 
+type RabbitMQVersionExpansion interface{}
+
 type RedisVersionExpansion interface{}
 
 type SinglestoreVersionExpansion interface{}

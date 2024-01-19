@@ -122,6 +122,14 @@ type ProxySQLListerExpansion interface{}
 // ProxySQLNamespaceLister.
 type ProxySQLNamespaceListerExpansion interface{}
 
+// RabbitMQListerExpansion allows custom methods to be added to
+// RabbitMQLister.
+type RabbitMQListerExpansion interface{}
+
+// RabbitMQNamespaceListerExpansion allows custom methods to be added to
+// RabbitMQNamespaceLister.
+type RabbitMQNamespaceListerExpansion interface{}
+
 // RedisListerExpansion allows custom methods to be added to
 // RedisLister.
 type RedisListerExpansion interface{}

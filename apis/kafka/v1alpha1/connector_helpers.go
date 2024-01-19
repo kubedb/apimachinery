@@ -17,11 +17,48 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
+
+	"kubedb.dev/apimachinery/apis/kafka"
 	"kubedb.dev/apimachinery/crds"
 
+	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"kmodules.xyz/client-go/apiextensions"
 )
 
 func (_ *Connector) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralConnector))
+}
+
+func (k *Connector) AsOwner() *meta.OwnerReference {
+	return meta.NewControllerRef(k, SchemeGroupVersion.WithKind(ResourceKindConnector))
+}
+
+func (k *Connector) ResourceShortCode() string {
+	return ResourceCodeConnector
+}
+
+func (k *Connector) ResourceKind() string {
+	return ResourceKindConnector
+}
+
+func (k *Connector) ResourceSingular() string {
+	return ResourceSingularConnector
+}
+
+func (k *Connector) ResourcePlural() string {
+	return ResourcePluralConnector
+}
+
+func (k *Connector) ResourceFQN() string {
+	return fmt.Sprintf("%s.%s", k.ResourcePlural(), kafka.GroupName)
+}
+
+// Owner returns owner reference to resources
+func (k *Connector) Owner() *meta.OwnerReference {
+	return meta.NewControllerRef(k, SchemeGroupVersion.WithKind(k.ResourceKind()))
+}
+
+func (k *Connector) OffshootName() string {
+	return k.Name
 }
