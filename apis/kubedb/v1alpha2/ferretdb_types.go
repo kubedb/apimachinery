@@ -40,7 +40,6 @@ const (
 // +kubebuilder:resource:shortName=fr,scope=Namespaced
 // +kubebuilder:printcolumn:name="Namespace",type="string",JSONPath=".metadata.namespace"
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
-// +kubebuilder:printcolumn:name="Backend",type="string",JSONPath=".spec.backend.backendDB"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type FerretDB struct {
