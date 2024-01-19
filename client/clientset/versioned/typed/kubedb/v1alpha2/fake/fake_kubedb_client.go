@@ -93,6 +93,10 @@ func (c *FakeKubedbV1alpha2) Singlestores(namespace string) v1alpha2.Singlestore
 	return &FakeSinglestores{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) Solrs(namespace string) v1alpha2.SolrInterface {
+	return &FakeSolrs{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) ZooKeepers(namespace string) v1alpha2.ZooKeeperInterface {
 	return &FakeZooKeepers{c, namespace}
 }

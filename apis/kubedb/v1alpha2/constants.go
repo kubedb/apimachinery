@@ -730,6 +730,74 @@ const (
 	KafkaAdminTopicConfigProvider = "com.linkedin.kafka.cruisecontrol.config.KafkaAdminTopicConfigProvider"
 	KafkaCCMetricReporter         = "com.linkedin.kafka.cruisecontrol.metricsreporter.CruiseControlMetricsReporter"
 	KafkaJMXMetricReporter        = "org.apache.kafka.common.metrics.JmxReporter"
+
+	// =========================== Solr Constants ============================
+	ResourceCodeSolr      = "sl"
+	ResourceKindSolr      = "Solr"
+	ResourceSingularSolr  = "solr"
+	ResourcePluralSolr    = "solrs"
+	SolrPortName          = "http"
+	SolrRestPort          = 8983
+	SolrSecretKey         = "solr.xml"
+	SolrContainerName     = "solr"
+	SolrInitContainerName = "init-solr"
+	SolrAdmin             = "admin"
+	SecurityJSON          = "security.json"
+
+	SolrVolumeDefaultConfig = "default-config"
+	SolrVolumeCustomConfig  = "custom-config"
+	SolrVolumeAuthConfig    = "auth-config"
+	SolrVolumeData          = "data"
+	SolrVolumeConfig        = "slconfig"
+
+	DistLibs              = "/opt/solr/dist"
+	ContribLibs           = "/opt/solr/contrib/%s/lib"
+	SysPropLibPlaceholder = "${solr.sharedLib:}"
+	SolrHomeDir           = "/var/solr"
+	SolrDataDir           = "/var/solr/data"
+	SolrTempConfigDir     = "/temp-config"
+	SolrCustomConfigDir   = "/custom-config"
+	SolrSecurityConfigDir = "/var/security"
+
+	SolrCloudHostKey                       = "host"
+	SolrCloudHostValue                     = ""
+	SolrCloudHostPortKey                   = "hostPort"
+	SolrCloudHostPortValue                 = 80
+	SolrCloudHostContextKey                = "hostContext"
+	SolrCloudHostContextValue              = "solr"
+	SolrCloudGenericCoreNodeNamesKey       = "genericCoreNodeNames"
+	SolrCloudGenericCoreNodeNamesValue     = true
+	SolrCloudZKClientTimeoutKey            = "zkClientTimeout"
+	SolrCloudZKClientTimeoutValue          = 30000
+	SolrCloudDistribUpdateSoTimeoutKey     = "distribUpdateSoTimeout"
+	SolrCloudDistribUpdateSoTimeoutValue   = 600000
+	SolrCloudDistribUpdateConnTimeoutKey   = "distribUpdateConnTimeout"
+	SolrCloudDistribUpdateConnTimeoutValue = 60000
+	SolrCloudZKCredentialProviderKey       = "zkCredentialsProvider"
+	SolrCloudZKCredentialProviderValue     = "org.apache.solr.common.cloud.DefaultZkCredentialsProvider"
+	SolrCloudZKAclProviderKey              = "zkACLProvider"
+	SolrCloudZKAclProviderValue            = "org.apache.solr.common.cloud.DefaultZkACLProvider"
+
+	ShardHandlerFactorySocketTimeoutKey   = "socketTimeout"
+	ShardHandlerFactorySocketTimeoutValue = 600000
+	ShardHandlerFactoryConnTimeoutKey     = "connTimeout"
+	ShardHandlerFactoryConnTimeoutValue   = 60000
+
+	SolrKeysMaxBooleanClausesKey   = "maxBooleanClauses"
+	SolrKeysMaxBooleanClausesValue = "solr.max.booleanClauses"
+	SolrKeysSharedLibKey           = "sharedLib"
+	SolrKeysShardLibValue          = "solr.sharedLib"
+	SolrKeysHostPortKey            = "hostPort"
+	SolrKeysHostPortValue          = "solr.port.advertise"
+	SolrKeysAllowPathsKey          = "allowPaths"
+	SolrKeysAllowPathsValue        = "solr.allowPaths"
+
+	SolrConfMaxBooleanClausesKey   = "maxBooleanClauses"
+	SolrConfMaxBooleanClausesValue = 1024
+	SolrConfAllowPathsKey          = "allowPaths"
+	SolrConfAllowPathsValue        = ""
+	SolrConfSolrCloudKey           = "solrcloud"
+	SolrConfShardHandlerFactoryKey = "shardHandlerFactory"
 )
 
 // =========================== Druid Constants ============================

@@ -50,4 +50,6 @@ type RedisVersionExpansion interface{}
 
 type SinglestoreVersionExpansion interface{}
 
+type SolrVersionExpansion interface{}
+
 type ZooKeeperVersionExpansion interface{}

@@ -45,6 +45,7 @@ type CatalogV1alpha1Interface interface {
 	ProxySQLVersionsGetter
 	RedisVersionsGetter
 	SinglestoreVersionsGetter
+	SolrVersionsGetter
 	ZooKeeperVersionsGetter
 }
 
@@ -115,6 +116,10 @@ func (c *CatalogV1alpha1Client) RedisVersions() RedisVersionInterface {
 
 func (c *CatalogV1alpha1Client) SinglestoreVersions() SinglestoreVersionInterface {
 	return newSinglestoreVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) SolrVersions() SolrVersionInterface {
+	return newSolrVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) ZooKeeperVersions() ZooKeeperVersionInterface {

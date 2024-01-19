@@ -88,6 +88,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&SinglestoreList{},
 		&ZooKeeper{},
 		&ZooKeeperList{},
+		&Solr{},
+		&SolrList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

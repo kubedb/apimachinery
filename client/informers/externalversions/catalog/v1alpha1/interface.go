@@ -56,6 +56,8 @@ type Interface interface {
 	RedisVersions() RedisVersionInformer
 	// SinglestoreVersions returns a SinglestoreVersionInformer.
 	SinglestoreVersions() SinglestoreVersionInformer
+	// SolrVersions returns a SolrVersionInformer.
+	SolrVersions() SolrVersionInformer
 	// ZooKeeperVersions returns a ZooKeeperVersionInformer.
 	ZooKeeperVersions() ZooKeeperVersionInformer
 }
@@ -149,6 +151,11 @@ func (v *version) RedisVersions() RedisVersionInformer {
 // SinglestoreVersions returns a SinglestoreVersionInformer.
 func (v *version) SinglestoreVersions() SinglestoreVersionInformer {
 	return &singlestoreVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// SolrVersions returns a SolrVersionInformer.
+func (v *version) SolrVersions() SolrVersionInformer {
+	return &solrVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeeperVersions returns a ZooKeeperVersionInformer.

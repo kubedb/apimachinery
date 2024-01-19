@@ -82,6 +82,10 @@ type RedisVersionListerExpansion interface{}
 // SinglestoreVersionLister.
 type SinglestoreVersionListerExpansion interface{}
 
+// SolrVersionListerExpansion allows custom methods to be added to
+// SolrVersionLister.
+type SolrVersionListerExpansion interface{}
+
 // ZooKeeperVersionListerExpansion allows custom methods to be added to
 // ZooKeeperVersionLister.
 type ZooKeeperVersionListerExpansion interface{}
