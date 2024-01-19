@@ -61,9 +61,6 @@ type SinglestoreVersionSpec struct {
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
-	// PSP names
-	// +optional
-	PodSecurityPolicies SinglestoreVersionPodSecurityPolicy `json:"podSecurityPolicies"`
 	// Stash defines backup and restore task definitions.
 	// +optional
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
@@ -98,11 +95,6 @@ type SinglestoreCoordinator struct {
 // SinglestoreInitContainer is the Singlestore init Container image
 type SinglestoreInitContainer struct {
 	Image string `json:"image"`
-}
-
-// SinglestoreVersionPodSecurityPolicy is the Singlestore pod security policies
-type SinglestoreVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
