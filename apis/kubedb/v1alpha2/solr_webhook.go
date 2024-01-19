@@ -268,6 +268,7 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 func solrValidateVersion(s *Solr) error {
 	slVersion := &catalog.SolrVersion{}
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: s.Spec.Version}, slVersion)
+	fmt.Println("------------------------->", slVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
