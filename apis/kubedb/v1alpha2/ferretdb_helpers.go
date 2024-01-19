@@ -19,17 +19,22 @@ package v1alpha2
 import (
 	"fmt"
 
+	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	"github.com/fatih/structs"
 	v1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
 func (f *FerretDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -157,6 +162,21 @@ func (f *FerretDB) SetDefaults() {
 
 	if f.Spec.Replicas == nil {
 		f.Spec.Replicas = pointer.Int32P(1)
+	}
+
+	if f.Spec.PodTemplate == nil {
+		f.Spec.PodTemplate = &ofst.PodTemplateSpec{}
+	}
+
+	dbContainer := coreutil.GetContainerByName(f.Spec.PodTemplate.Spec.Containers, FerretDBContainerName)
+	if dbContainer == nil {
+		dbContainer = &core.Container{
+			Name: FerretDBContainerName,
+		}
+		f.Spec.PodTemplate.Spec.Containers = append(f.Spec.PodTemplate.Spec.Containers, *dbContainer)
+	}
+	if structs.IsZero(dbContainer.Resources) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
 	}
 
 	if f.Spec.Backend.LinkedDB == "" {
