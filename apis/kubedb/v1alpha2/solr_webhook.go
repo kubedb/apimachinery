@@ -29,6 +29,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	"k8s.io/klog/v2"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -47,7 +48,14 @@ func (s *Solr) Default() {
 	}
 	solrlog.Info("default", "name", s.Name)
 
-	s.SetDefaults()
+	slVersion := catalog.SolrVersion{}
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: s.Spec.Version}, &slVersion)
+	if err != nil {
+		klog.Errorf("Version does not exist.")
+		return
+	}
+
+	s.SetDefaults(&slVersion)
 }
 
 var _ webhook.Validator = &Solr{}
@@ -169,7 +177,7 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 				s.Name,
 				".spec.topology.data can't be empty in cluster mode"))
 		}
-		if *s.Spec.Topology.Data.Replicas <= 0 {
+		if s.Spec.Topology.Data.Replicas != nil && *s.Spec.Topology.Data.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("data").Child("replicas"),
 				s.Name,
 				"number of replicas can not be less be 0 or less"))
@@ -192,7 +200,7 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 				s.Name,
 				".spec.topology.overseer can't be empty in cluster mode"))
 		}
-		if *s.Spec.Topology.Overseer.Replicas <= 0 {
+		if s.Spec.Topology.Overseer.Replicas != nil && *s.Spec.Topology.Overseer.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("overseer").Child("replicas"),
 				s.Name,
 				"number of replicas can not be less be 0 or less"))
@@ -215,7 +223,7 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 				s.Name,
 				".spec.topology.coordinator can't be empty in cluster mode"))
 		}
-		if *s.Spec.Topology.Coordinator.Replicas <= 0 {
+		if s.Spec.Topology.Coordinator.Replicas != nil && *s.Spec.Topology.Coordinator.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("coordinator").Child("replicas"),
 				s.Name,
 				"number of replicas can not be less be 0 or less"))
@@ -266,8 +274,8 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 }
 
 func solrValidateVersion(s *Solr) error {
-	slVersion := &catalog.SolrVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: s.Spec.Version}, slVersion)
+	slVersion := catalog.SolrVersion{}
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: s.Spec.Version}, &slVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
