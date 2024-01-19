@@ -32,7 +32,7 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
-func (f FerretDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (f *FerretDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralFerretDB))
 }
 

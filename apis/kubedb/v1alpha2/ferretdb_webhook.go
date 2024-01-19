@@ -17,13 +17,18 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"context"
+	"errors"
 	"fmt"
+
+	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -96,6 +101,13 @@ func (f *FerretDB) ValidateDelete() (admission.Warnings, error) {
 
 func (f *FerretDB) ValidateCreateOrUpdate() field.ErrorList {
 	var allErr field.ErrorList
+
+	err := f.validateFerretDBVersion()
+	if err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
+			f.Name,
+			err.Error()))
+	}
 	if f.Spec.Replicas == nil || *f.Spec.Replicas < 1 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 			f.Name,
@@ -166,10 +178,11 @@ func (f *FerretDB) ValidateCreateOrUpdate() field.ErrorList {
 			`'spec.sslMode' value 'allowSSL' or 'preferSSL' is not supported yet for FerretDB`))
 	}
 	if !f.Spec.Backend.ExternallyManaged && f.Spec.Backend.Postgres != nil && f.Spec.Backend.Postgres.Version != "" {
-		if !isKubeDBSupported(f.Spec.Backend.Postgres.Version) {
+		err := f.validatePostgresVersion()
+		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
 				f.Name,
-				fmt.Sprintf(`postgres version '%s' is not supported by kubedb as kubedb is managing backend`, f.Spec.Backend.Postgres.Version)))
+				err.Error()))
 		}
 	}
 
@@ -191,11 +204,6 @@ var forbiddenEnvVars = []string{
 	EnvFerretDBTLSPort, EnvFerretDBCAPath, EnvFerretDBCertPath, EnvFerretDBKeyPath,
 }
 
-var kubeDBSupportedPgVersions = []string{
-	"10.23", "10.23-bullseye", "timescaledb-2.1.0-pg11", "11.14-bullseye-postgis", "11.22", "timescaledb-2.1.0-pg12", "12.9-bullseye-postgis",
-	"12.17", "timescaledb-2.1.0-pg13", "13.5-bullseye-postgis", "13.13", "14.1-bullseye-postgis", "timescaledb-2.5.0-pg14.1", "14.10", "15.5", "16.1",
-}
-
 func getMainContainerEnvs(f *FerretDB) []core.EnvVar {
 	for _, container := range f.Spec.PodTemplate.Spec.Containers {
 		if container.Name == FerretDBContainerName {
@@ -205,11 +213,20 @@ func getMainContainerEnvs(f *FerretDB) []core.EnvVar {
 	return []core.EnvVar{}
 }
 
-func isKubeDBSupported(version string) bool {
-	for _, v := range kubeDBSupportedPgVersions {
-		if v == version {
-			return true
-		}
+func (f *FerretDB) validateFerretDBVersion() error {
+	frVersion := v1alpha1.FerretDBVersion{}
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: f.Spec.Version}, &frVersion)
+	if err != nil {
+		return errors.New("version not supported")
 	}
-	return false
+	return nil
+}
+
+func (f *FerretDB) validatePostgresVersion() error {
+	pgVersion := v1alpha1.PostgresVersion{}
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: f.Spec.Backend.Postgres.Version}, &pgVersion)
+	if err != nil {
+		return errors.New("postgres version not supported in KubeDB")
+	}
+	return nil
 }
