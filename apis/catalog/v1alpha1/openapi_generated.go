@@ -588,7 +588,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersion":                         schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionDatabase":                 schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionList":                     schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionPodSecurityPolicy":        schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionSpec":                     schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer":                          schema_apimachinery_apis_catalog_v1alpha1_SolrInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrSecurityContext":                        schema_apimachinery_apis_catalog_v1alpha1_SolrSecurityContext(ref),
@@ -27448,27 +27447,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionList(ref common
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SinglestoreVersionPodSecurityPolicy is the Singlestore pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27516,13 +27494,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionSpec(ref common
 							Format:      "",
 						},
 					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionPodSecurityPolicy"),
-						},
-					},
 					"stash": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Stash defines backup and restore task definitions.",
@@ -27549,7 +27520,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionSpec(ref common
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreStandaloneVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreStandaloneVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

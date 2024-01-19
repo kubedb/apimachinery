@@ -17,10 +17,15 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"context"
+
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+
 	"github.com/pkg/errors"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -218,10 +223,6 @@ func (s *Singlestore) ValidateCreateOrUpdate() field.ErrorList {
 	return allErr
 }
 
-var sdbAvailableVersions = []string{
-	"8.1.32",
-}
-
 // reserved volume and volumes mounts for singlestore
 var sdbReservedVolumes = []string{
 	SinglestoreVolumeNameUserInitScript,
@@ -238,13 +239,15 @@ var sdbReservedVolumesMountPaths = []string{
 }
 
 func sdbValidateVersion(s *Singlestore) error {
-	version := s.Spec.Version
-	for _, v := range sdbAvailableVersions {
-		if v == version {
-			return nil
-		}
+	var sdbVersion catalog.SinglestoreVersion
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: s.Spec.Version,
+	}, &sdbVersion)
+	if err != nil {
+		return errors.New("version not supported")
 	}
-	return errors.New("version not supported")
+
+	return nil
 }
 
 func sdbValidateVolumes(podTemplate *ofst.PodTemplateSpec) error {
