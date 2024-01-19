@@ -484,7 +484,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionExporter":                        schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionExporter(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBSecurityContext":                    schema_apimachinery_apis_catalog_v1alpha1_FerretDBSecurityContext(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersion":                            schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersionDatabase":                    schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersionList":                        schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersionList(ref),
@@ -23758,39 +23757,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionSpec(ref common.Refere
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_FerretDBSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "FerretDBSecurityContext provides additional securityContext settings for the FerretDB Image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container. It defaults to 1000.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"runAsGroup": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"runAsAnyNonRoot": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsAnyNonRoot will be true if user can change the default UID to other than 1000.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23940,7 +23906,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersionSpec(ref common.Re
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional security information for the FerretDB container",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBSecurityContext"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
 						},
 					},
 				},
@@ -23948,7 +23914,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersionSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

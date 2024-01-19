@@ -82,6 +82,7 @@ type FerretDBSpec struct {
 	Halted bool `json:"halted,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral for KubeDB Backend
+	// +optional
 	StorageType StorageType `json:"storageType,omitempty"`
 
 	// Storage to specify how storage shall be used for KubeDB Backend.
@@ -142,7 +143,7 @@ type PostgresRef struct {
 	Service *PostgresServiceRef `json:"service,omitempty"`
 	// Which versions pg will be used as backend of ferretdb
 	// +optional
-	Version string `json:"version"`
+	Version *string `json:"version"`
 }
 
 type PostgresServiceRef struct {

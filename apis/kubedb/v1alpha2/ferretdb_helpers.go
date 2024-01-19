@@ -102,8 +102,8 @@ func (f *FerretDB) GetAuthSecretName() string {
 	return meta_util.NameWithSuffix(f.PgBackendName(), "auth")
 }
 
-// Owner returns owner reference to resources
-func (f *FerretDB) Owner() *meta.OwnerReference {
+// AsOwner returns owner reference to resources
+func (f *FerretDB) AsOwner() *meta.OwnerReference {
 	return meta.NewControllerRef(f, SchemeGroupVersion.WithKind(f.ResourceKind()))
 }
 
@@ -190,9 +190,10 @@ func (f *FerretDB) SetDefaults() {
 		// 56790 is default port for Prometheus operator.
 		f.Spec.Monitor.Prometheus.Exporter.Port = 56790
 	}
+	defaultVersion := "13.13"
 	if !f.Spec.Backend.ExternallyManaged && f.Spec.Backend.Postgres == nil {
 		f.Spec.Backend.Postgres = &PostgresRef{
-			Version: "13.13",
+			Version: &defaultVersion,
 		}
 	}
 	f.SetTLSDefaults()

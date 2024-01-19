@@ -162,7 +162,7 @@ func (f *FerretDB) ValidateCreateOrUpdate() field.ErrorList {
 	if f.Spec.TerminationPolicy == TerminationPolicyHalt || f.Spec.TerminationPolicy == TerminationPolicyDelete {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			f.Name,
-			`'spec.terminationPolicy' value 'Hault' or 'Delete' is not supported yet for FerretDB`))
+			`'spec.terminationPolicy' value 'Halt' or 'Delete' is not supported yet for FerretDB`))
 	}
 
 	if f.Spec.Backend.ExternallyManaged {
@@ -177,7 +177,7 @@ func (f *FerretDB) ValidateCreateOrUpdate() field.ErrorList {
 			f.Name,
 			`'spec.sslMode' value 'allowSSL' or 'preferSSL' is not supported yet for FerretDB`))
 	}
-	if !f.Spec.Backend.ExternallyManaged && f.Spec.Backend.Postgres != nil && f.Spec.Backend.Postgres.Version != "" {
+	if !f.Spec.Backend.ExternallyManaged && f.Spec.Backend.Postgres != nil && f.Spec.Backend.Postgres.Version != nil {
 		err := f.validatePostgresVersion()
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
@@ -224,7 +224,7 @@ func (f *FerretDB) validateFerretDBVersion() error {
 
 func (f *FerretDB) validatePostgresVersion() error {
 	pgVersion := v1alpha1.PostgresVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: f.Spec.Backend.Postgres.Version}, &pgVersion)
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *f.Spec.Backend.Postgres.Version}, &pgVersion)
 	if err != nil {
 		return errors.New("postgres version not supported in KubeDB")
 	}

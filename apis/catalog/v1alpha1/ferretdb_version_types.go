@@ -56,27 +56,17 @@ type FerretDBVersionSpec struct {
 	Deprecated bool `json:"deprecated,omitempty"`
 
 	// update constraints
+	// +optional
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 
 	// SecurityContext is for the additional security information for the FerretDB container
 	// +optional
-	SecurityContext FerretDBSecurityContext `json:"securityContext"`
+	SecurityContext SecurityContext `json:"securityContext"`
 }
 
 // FerretDBVersionDatabase is the FerretDB Database image
 type FerretDBVersionDatabase struct {
 	Image string `json:"image"`
-}
-
-// FerretDBSecurityContext provides additional securityContext settings for the FerretDB Image
-type FerretDBSecurityContext struct {
-	// RunAsUser is default UID for the DB container. It defaults to 1000.
-	RunAsUser *int64 `json:"runAsUser,omitempty"`
-
-	RunAsGroup *int64 `json:"runAsGroup,omitempty"`
-
-	// RunAsAnyNonRoot will be true if user can change the default UID to other than 1000.
-	RunAsAnyNonRoot bool `json:"runAsAnyNonRoot,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

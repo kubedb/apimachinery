@@ -28318,7 +28318,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresRef(ref common.ReferenceCa
 					"version": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Which versions pg will be used as backend of ferretdb",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
