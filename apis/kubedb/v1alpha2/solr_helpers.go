@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha2
 
 import (
-	"context"
 	"fmt"
 	"strings"
 
@@ -29,8 +28,6 @@ import (
 	"gomodules.xyz/pointer"
 	v1 "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -184,7 +181,7 @@ func (s *Solr) PVCName(alias string) string {
 	return meta_util.NameWithSuffix(s.Name, alias)
 }
 
-func (s *Solr) SetDefaults() {
+func (s *Solr) SetDefaults(slVersion *catalog.SolrVersion) {
 	if s.Spec.TerminationPolicy == "" {
 		s.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
@@ -205,15 +202,6 @@ func (s *Solr) SetDefaults() {
 		}
 	}
 
-	var slVersion catalog.SolrVersion
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: s.Spec.Version,
-	}, &slVersion)
-	if err != nil {
-		klog.Errorf("can't get the solr version object %s for %s \n", err.Error(), s.Spec.Version)
-		return
-	}
-
 	if s.Spec.Topology != nil {
 		if s.Spec.Topology.Data != nil {
 			if s.Spec.Topology.Data.Suffix == "" {
@@ -227,8 +215,8 @@ func (s *Solr) SetDefaults() {
 				s.Spec.Topology.Data.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: slVersion.Spec.SecurityContext.RunAsUser}
 			}
 			s.Spec.Topology.Data.PodTemplate.Spec.SecurityContext.FSGroup = slVersion.Spec.SecurityContext.RunAsUser
-			s.setDefaultContainerSecurityContext(&slVersion, &s.Spec.Topology.Data.PodTemplate)
-			s.setDefaultInitContainerSecurityContext(&slVersion, &s.Spec.Topology.Data.PodTemplate)
+			s.setDefaultContainerSecurityContext(slVersion, &s.Spec.Topology.Data.PodTemplate)
+			s.setDefaultInitContainerSecurityContext(slVersion, &s.Spec.Topology.Data.PodTemplate)
 		}
 
 		if s.Spec.Topology.Overseer != nil {
@@ -243,8 +231,8 @@ func (s *Solr) SetDefaults() {
 				s.Spec.Topology.Overseer.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: slVersion.Spec.SecurityContext.RunAsUser}
 			}
 			s.Spec.Topology.Overseer.PodTemplate.Spec.SecurityContext.FSGroup = slVersion.Spec.SecurityContext.RunAsUser
-			s.setDefaultContainerSecurityContext(&slVersion, &s.Spec.Topology.Overseer.PodTemplate)
-			s.setDefaultInitContainerSecurityContext(&slVersion, &s.Spec.Topology.Overseer.PodTemplate)
+			s.setDefaultContainerSecurityContext(slVersion, &s.Spec.Topology.Overseer.PodTemplate)
+			s.setDefaultInitContainerSecurityContext(slVersion, &s.Spec.Topology.Overseer.PodTemplate)
 		}
 
 		if s.Spec.Topology.Coordinator != nil {
@@ -259,8 +247,8 @@ func (s *Solr) SetDefaults() {
 				s.Spec.Topology.Coordinator.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: slVersion.Spec.SecurityContext.RunAsUser}
 			}
 			s.Spec.Topology.Coordinator.PodTemplate.Spec.SecurityContext.FSGroup = slVersion.Spec.SecurityContext.RunAsUser
-			s.setDefaultContainerSecurityContext(&slVersion, &s.Spec.Topology.Coordinator.PodTemplate)
-			s.setDefaultInitContainerSecurityContext(&slVersion, &s.Spec.Topology.Coordinator.PodTemplate)
+			s.setDefaultContainerSecurityContext(slVersion, &s.Spec.Topology.Coordinator.PodTemplate)
+			s.setDefaultInitContainerSecurityContext(slVersion, &s.Spec.Topology.Coordinator.PodTemplate)
 		}
 	} else {
 
@@ -273,9 +261,9 @@ func (s *Solr) SetDefaults() {
 		}
 
 		s.Spec.PodTemplate.Spec.SecurityContext.FSGroup = slVersion.Spec.SecurityContext.RunAsUser
-		s.setDefaultContainerSecurityContext(&slVersion, &s.Spec.PodTemplate)
+		s.setDefaultContainerSecurityContext(slVersion, &s.Spec.PodTemplate)
 
-		s.setDefaultInitContainerSecurityContext(&slVersion, &s.Spec.PodTemplate)
+		s.setDefaultInitContainerSecurityContext(slVersion, &s.Spec.PodTemplate)
 	}
 }
 
