@@ -69,20 +69,18 @@ func (r *RabbitMQ) ValidateUpdate(old runtime.Object) (admission.Warnings, error
 func (r *RabbitMQ) ValidateDelete() (admission.Warnings, error) {
 	rabbitmqlog.Info("validate delete", "name", r.Name)
 
-	// TODO(user): fill in your validation logic upon object deletion.
 	var allErr field.ErrorList
 	if r.Spec.TerminationPolicy == TerminationPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("teminationPolicy"),
 			r.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, r.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "rabbitmq.kubedb.com", Kind: "RabbitMQ"}, r.Name, allErr)
 	}
 	return nil, nil
 }
 
 func (r *RabbitMQ) ValidateCreateOrUpdate() error {
 	var allErr field.ErrorList
-	// TODO(user): fill in your validation logic upon object creation.
 	if r.Spec.EnableSSL {
 		if r.Spec.TLS == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSSL"),
@@ -140,7 +138,7 @@ func (r *RabbitMQ) ValidateCreateOrUpdate() error {
 	if len(allErr) == 0 {
 		return nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, r.Name, allErr)
+	return apierrors.NewInvalid(schema.GroupKind{Group: "rabbitmq.kubedb.com", Kind: "RabbitMQ"}, r.Name, allErr)
 }
 
 func (r *RabbitMQ) ValidateVersion(db *RabbitMQ) error {

@@ -63,7 +63,7 @@ type SolrVersionSpec struct {
 	Deprecated bool `json:"deprecated,omitempty"`
 	// SecurityContext is for the additional security information for the Solr container
 	// +optional
-	SecurityContext SolrSecurityContext `json:"securityContext"`
+	SecurityContext SecurityContext `json:"securityContext"`
 }
 
 // SolrVersionDatabase is the Solr Database image
@@ -74,17 +74,6 @@ type SolrVersionDatabase struct {
 // SolrInitContainer is the Solr init Container image
 type SolrInitContainer struct {
 	Image string `json:"image"`
-}
-
-// SolrSecurityContext provides additional securityContext settings for the Solr Image
-type SolrSecurityContext struct {
-	// RunAsUser is default UID for the DB container. It defaults to 8983.
-	RunAsUser *int64 `json:"runAsUser,omitempty"`
-
-	RunAsGroup *int64 `json:"runAsGroup,omitempty"`
-
-	// RunAsAnyNonRoot will be true if user can change the default UID to other than 8983.
-	RunAsAnyNonRoot bool `json:"runAsAnyNonRoot,omitempty"`
 }
 
 // SolrVersionList contains a list of SolrVersion

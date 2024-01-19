@@ -421,9 +421,6 @@ func (d *Druid) assignDefaultContainerSecurityContext(druidVersion *catalog.Drui
 	if sc.RunAsUser == nil {
 		sc.RunAsUser = druidVersion.Spec.SecurityContext.RunAsUser
 	}
-	if sc.RunAsGroup == nil {
-		sc.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsGroup
-	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
