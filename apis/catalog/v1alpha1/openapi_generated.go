@@ -460,14 +460,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec":                               schema_apimachinery_apis_catalog_v1alpha1_ArchiverSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectClusterVersion":                      schema_apimachinery_apis_catalog_v1alpha1_ConnectClusterVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin":                            schema_apimachinery_apis_catalog_v1alpha1_ConnectorPlugin(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPluginPodSecurityPolicy":           schema_apimachinery_apis_catalog_v1alpha1_ConnectorPluginPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CruiseControlVersionDatabase":               schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidInitContainer":                         schema_apimachinery_apis_catalog_v1alpha1_DruidInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidSecurityContext":                       schema_apimachinery_apis_catalog_v1alpha1_DruidSecurityContext(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersion":                               schema_apimachinery_apis_catalog_v1alpha1_DruidVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionDatabase":                       schema_apimachinery_apis_catalog_v1alpha1_DruidVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionList":                           schema_apimachinery_apis_catalog_v1alpha1_DruidVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionPodSecurityPolicy":              schema_apimachinery_apis_catalog_v1alpha1_DruidVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionSpec":                           schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase":      schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchDashboardVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext":               schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchSecurityContext(ref),
@@ -590,7 +587,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionList":                     schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionSpec":                     schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer":                          schema_apimachinery_apis_catalog_v1alpha1_SolrInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrSecurityContext":                        schema_apimachinery_apis_catalog_v1alpha1_SolrSecurityContext(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersion":                                schema_apimachinery_apis_catalog_v1alpha1_SolrVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase":                        schema_apimachinery_apis_catalog_v1alpha1_SolrVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_SolrVersionList(ref),
@@ -22901,27 +22897,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_ConnectorPlugin(ref common.Refere
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ConnectorPluginPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ConnectorPluginPodSecurityPolicy is the Kafka init container security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22959,39 +22934,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_DruidInitContainer(ref common.Ref
 					},
 				},
 				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DruidSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DruidSecurityContext provides additional securityContext settings for the Druid Image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container. It defaults to 1000.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"runAsGroup": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"runAsAnyNonRoot": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsAnyNonRoot will be true if user can change the default UID to other than 1000.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-				},
 			},
 		},
 	}
@@ -23106,27 +23048,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionList(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SinglestoreVersionPodSecurityPolicy is the Singlestore pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23163,25 +23084,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref common.Refer
 							Format:      "",
 						},
 					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionPodSecurityPolicy"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
 					"securityContext": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional security information for the Druid container",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidSecurityContext"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
 						},
 					},
 				},
@@ -23189,7 +23096,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
 	}
 }
 
@@ -23900,13 +23807,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionSpec(ref com
 							Format:      "",
 						},
 					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPluginPodSecurityPolicy"),
-						},
-					},
 					"securityContext": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional config for the init container",
@@ -23919,7 +23819,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionSpec(ref com
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPluginPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
 	}
 }
 
@@ -27545,39 +27445,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_SolrInitContainer(ref common.Refe
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_SolrSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SolrSecurityContext provides additional securityContext settings for the Solr Image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container. It defaults to 8983.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"runAsGroup": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"runAsAnyNonRoot": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsAnyNonRoot will be true if user can change the default UID to other than 8983.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_SolrVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27727,7 +27594,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionSpec(ref common.Refere
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional security information for the Solr container",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrSecurityContext"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
 						},
 					},
 				},
@@ -27735,7 +27602,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase"},
 	}
 }
 
