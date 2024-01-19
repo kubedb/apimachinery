@@ -134,6 +134,7 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 			s.Name,
 			"spec.version' is missing"))
 	} else {
+		fmt.Println("checking verrsion-------------->")
 		err := solrValidateVersion(s)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
@@ -266,6 +267,7 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 }
 
 func solrValidateVersion(s *Solr) error {
+	fmt.Println("vakidating version 2------------------------->")
 	slVersion := &catalog.SolrVersion{}
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: s.Spec.Version}, slVersion)
 	fmt.Println("------------------------->", slVersion)
