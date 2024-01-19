@@ -23228,7 +23228,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DeepStorageSpec(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"type", "configSecret"},
+				Required: []string{"type"},
 			},
 		},
 		Dependencies: []string{
@@ -23487,13 +23487,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
-					"replicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for a Druid database",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Druid topology for node specification",
@@ -23587,7 +23580,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 						},
 					},
 				},
-				Required: []string{"version", "deepStorage", "zooKeeper"},
+				Required: []string{"version", "metadataStorage", "deepStorage"},
 			},
 		},
 		Dependencies: []string{
@@ -26068,7 +26061,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MetadataStorage(ref common.Referen
 					"name": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Name of the appbinding of metadata storage",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26076,6 +26068,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MetadataStorage(ref common.Referen
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Namespace of the appbinding of metadata storage",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If not KubeDB managed, then specify type of the metadata storage",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26088,7 +26087,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MetadataStorage(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"name"},
 			},
 		},
 	}
