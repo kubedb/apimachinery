@@ -56,14 +56,9 @@ type DruidVersionSpec struct {
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
-	// PSP names
-	// +optional
-	PodSecurityPolicies DruidVersionPodSecurityPolicy `json:"podSecurityPolicies"`
-	// update constraints
-	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 	// SecurityContext is for the additional security information for the Druid container
 	// +optional
-	SecurityContext DruidSecurityContext `json:"securityContext"`
+	SecurityContext SecurityContext `json:"securityContext"`
 }
 
 // DruidVersionDatabase is the Druid Database image
@@ -74,22 +69,6 @@ type DruidVersionDatabase struct {
 // Druid is the Druid Init Container image
 type DruidInitContainer struct {
 	Image string `json:"image"`
-}
-
-// SinglestoreVersionPodSecurityPolicy is the Singlestore pod security policies
-type DruidVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
-}
-
-// DruidSecurityContext provides additional securityContext settings for the Druid Image
-type DruidSecurityContext struct {
-	// RunAsUser is default UID for the DB container. It defaults to 1000.
-	RunAsUser *int64 `json:"runAsUser,omitempty"`
-
-	RunAsGroup *int64 `json:"runAsGroup,omitempty"`
-
-	// RunAsAnyNonRoot will be true if user can change the default UID to other than 1000.
-	RunAsAnyNonRoot bool `json:"runAsAnyNonRoot,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

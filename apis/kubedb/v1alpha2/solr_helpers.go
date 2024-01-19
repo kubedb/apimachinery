@@ -312,9 +312,6 @@ func (s *Solr) assignDefaultContainerSecurityContext(slVersion *catalog.SolrVers
 	if sc.RunAsUser == nil {
 		sc.RunAsUser = slVersion.Spec.SecurityContext.RunAsUser
 	}
-	if sc.RunAsGroup == nil {
-		sc.RunAsGroup = slVersion.Spec.SecurityContext.RunAsGroup
-	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
