@@ -4103,20 +4103,6 @@ func (in *SinglestoreNode) DeepCopyInto(out *SinglestoreNode) {
 		*out = new(v2.PodTemplateSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.NodeSelector != nil {
-		in, out := &in.NodeSelector, &out.NodeSelector
-		*out = make(map[string]string, len(*in))
-		for key, val := range *in {
-			(*out)[key] = val
-		}
-	}
-	if in.Tolerations != nil {
-		in, out := &in.Tolerations, &out.Tolerations
-		*out = make([]corev1.Toleration, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
-		}
-	}
 	return
 }
 
