@@ -2952,11 +2952,7 @@ func (in *PgpoolSpec) DeepCopyInto(out *PgpoolSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	if in.HealthChecker != nil {
-		in, out := &in.HealthChecker, &out.HealthChecker
-		*out = new(apiv1.HealthCheckSpec)
-		(*in).DeepCopyInto(*out)
-	}
+	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
 	return
 }
 

@@ -27730,6 +27730,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref common.ReferenceCal
 					"healthChecker": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
+							Default:     map[string]interface{}{},
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
