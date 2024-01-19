@@ -24,6 +24,8 @@ type ElasticsearchVersionExpansion interface{}
 
 type EtcdVersionExpansion interface{}
 
+type FerretDBVersionExpansion interface{}
+
 type KafkaConnectorVersionExpansion interface{}
 
 type KafkaVersionExpansion interface{}

@@ -41,6 +41,10 @@ func (c *FakeCatalogV1alpha1) EtcdVersions() v1alpha1.EtcdVersionInterface {
 	return &FakeEtcdVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) FerretDBVersions() v1alpha1.FerretDBVersionInterface {
+	return &FakeFerretDBVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) KafkaConnectorVersions() v1alpha1.KafkaConnectorVersionInterface {
 	return &FakeKafkaConnectorVersions{c}
 }

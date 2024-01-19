@@ -1022,6 +1022,32 @@ const (
 	RabbitMQTempConfigDir = "/tmp/config/"
 )
 
+// =========================== FerretDB Constants ============================
+const (
+
+	// envs
+	EnvFerretDBUser     = "FERRETDB_PG_USER"
+	EnvFerretDBPassword = "FERRETDB_PG_PASSWORD"
+	EnvFerretDBHandler  = "FERRETDB_HANDLER"
+	EnvFerretDBPgURL    = "FERRETDB_POSTGRESQL_URL"
+	EnvFerretDBTLSPort  = "FERRETDB_LISTEN_TLS"
+	EnvFerretDBCAPath   = "FERRETDB_LISTEN_TLS_CA_FILE"
+	EnvFerretDBCertPath = "FERRETDB_LISTEN_TLS_CERT_FILE"
+	EnvFerretDBKeyPath  = "FERRETDB_LISTEN_TLS_KEY_FILE"
+
+	FerretDBContainerName = "ferretdb"
+	FerretDBMainImage     = "ghcr.io/ferretdb/ferretdb"
+	FerretDBUser          = "postgres"
+
+	FerretDBServerPath = "/etc/certs/server"
+
+	FerretDBDefaultPort = 27017
+	FerretDBMetricsPort = 8080
+	FerretDBTLSPort     = 27018
+
+	FerretDBMetricsPath = "/debug/metrics"
+)
+
 // Resource kind related constants
 const (
 	ResourceKindStatefulSet = "StatefulSet"

@@ -30,6 +30,8 @@ type Interface interface {
 	Elasticsearches() ElasticsearchInformer
 	// Etcds returns a EtcdInformer.
 	Etcds() EtcdInformer
+	// FerretDBs returns a FerretDBInformer.
+	FerretDBs() FerretDBInformer
 	// Kafkas returns a KafkaInformer.
 	Kafkas() KafkaInformer
 	// MariaDBs returns a MariaDBInformer.
@@ -88,6 +90,11 @@ func (v *version) Elasticsearches() ElasticsearchInformer {
 // Etcds returns a EtcdInformer.
 func (v *version) Etcds() EtcdInformer {
 	return &etcdInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// FerretDBs returns a FerretDBInformer.
+func (v *version) FerretDBs() FerretDBInformer {
+	return &ferretDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Kafkas returns a KafkaInformer.
