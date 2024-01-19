@@ -32,6 +32,7 @@ type CatalogV1alpha1Interface interface {
 	DruidVersionsGetter
 	ElasticsearchVersionsGetter
 	EtcdVersionsGetter
+	FerretDBVersionsGetter
 	KafkaConnectorVersionsGetter
 	KafkaVersionsGetter
 	MariaDBVersionsGetter
@@ -65,6 +66,10 @@ func (c *CatalogV1alpha1Client) ElasticsearchVersions() ElasticsearchVersionInte
 
 func (c *CatalogV1alpha1Client) EtcdVersions() EtcdVersionInterface {
 	return newEtcdVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) FerretDBVersions() FerretDBVersionInterface {
+	return newFerretDBVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) KafkaConnectorVersions() KafkaConnectorVersionInterface {

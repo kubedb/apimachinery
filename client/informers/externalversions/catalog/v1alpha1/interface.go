@@ -30,6 +30,8 @@ type Interface interface {
 	ElasticsearchVersions() ElasticsearchVersionInformer
 	// EtcdVersions returns a EtcdVersionInformer.
 	EtcdVersions() EtcdVersionInformer
+	// FerretDBVersions returns a FerretDBVersionInformer.
+	FerretDBVersions() FerretDBVersionInformer
 	// KafkaConnectorVersions returns a KafkaConnectorVersionInformer.
 	KafkaConnectorVersions() KafkaConnectorVersionInformer
 	// KafkaVersions returns a KafkaVersionInformer.
@@ -88,6 +90,11 @@ func (v *version) ElasticsearchVersions() ElasticsearchVersionInformer {
 // EtcdVersions returns a EtcdVersionInformer.
 func (v *version) EtcdVersions() EtcdVersionInformer {
 	return &etcdVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// FerretDBVersions returns a FerretDBVersionInformer.
+func (v *version) FerretDBVersions() FerretDBVersionInformer {
+	return &ferretDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // KafkaConnectorVersions returns a KafkaConnectorVersionInformer.
