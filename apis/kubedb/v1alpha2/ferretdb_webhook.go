@@ -165,6 +165,13 @@ func (f *FerretDB) ValidateCreateOrUpdate() field.ErrorList {
 			f.Name,
 			`'spec.sslMode' value 'allowSSL' or 'preferSSL' is not supported yet for FerretDB`))
 	}
+	if !f.Spec.Backend.ExternallyManaged && f.Spec.Backend.Postgres != nil && f.Spec.Backend.Postgres.Version != "" {
+		if !isKubeDBSupported(f.Spec.Backend.Postgres.Version) {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
+				f.Name,
+				fmt.Sprintf(`postgres version '%s' is not supported by kubedb as kubedb is managing backend`, f.Spec.Backend.Postgres.Version)))
+		}
+	}
 
 	return allErr
 }
@@ -184,6 +191,11 @@ var forbiddenEnvVars = []string{
 	EnvFerretDBTLSPort, EnvFerretDBCAPath, EnvFerretDBCertPath, EnvFerretDBKeyPath,
 }
 
+var kubeDBSupportedPgVersions = []string{
+	"10.23", "10.23-bullseye", "timescaledb-2.1.0-pg11", "11.14-bullseye-postgis", "11.22", "timescaledb-2.1.0-pg12", "12.9-bullseye-postgis",
+	"12.17", "timescaledb-2.1.0-pg13", "13.5-bullseye-postgis", "13.13", "14.1-bullseye-postgis", "timescaledb-2.5.0-pg14.1", "14.10", "15.5", "16.1",
+}
+
 func getMainContainerEnvs(f *FerretDB) []core.EnvVar {
 	for _, container := range f.Spec.PodTemplate.Spec.Containers {
 		if container.Name == FerretDBContainerName {
@@ -191,4 +203,13 @@ func getMainContainerEnvs(f *FerretDB) []core.EnvVar {
 		}
 	}
 	return []core.EnvVar{}
+}
+
+func isKubeDBSupported(version string) bool {
+	for _, v := range kubeDBSupportedPgVersions {
+		if v == version {
+			return true
+		}
+	}
+	return false
 }

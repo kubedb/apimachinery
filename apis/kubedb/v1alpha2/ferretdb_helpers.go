@@ -32,8 +32,8 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
-func (f *FerretDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralKafka))
+func (f FerretDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralFerretDB))
 }
 
 func (f *FerretDB) ResourcePlural() string {
@@ -169,6 +169,11 @@ func (f *FerretDB) SetDefaults() {
 	if f.Spec.Monitor != nil && f.Spec.Monitor.Prometheus.Exporter.Port == 0 {
 		// 56790 is default port for Prometheus operator.
 		f.Spec.Monitor.Prometheus.Exporter.Port = 56790
+	}
+	if !f.Spec.Backend.ExternallyManaged && f.Spec.Backend.Postgres == nil {
+		f.Spec.Backend.Postgres = &PostgresRef{
+			Version: "13.13",
+		}
 	}
 	f.SetTLSDefaults()
 	f.SetHealthCheckerDefaults()

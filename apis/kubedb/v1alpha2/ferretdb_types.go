@@ -141,6 +141,9 @@ type PostgresRef struct {
 	// Service information for Postgres
 	// +optional
 	Service *PostgresServiceRef `json:"service,omitempty"`
+	// Which versions pg will be used as backend of ferretdb
+	// +optional
+	Version string `json:"version"`
 }
 
 type PostgresServiceRef struct {
