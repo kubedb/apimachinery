@@ -39,7 +39,7 @@ require (
 	kmodules.xyz/resource-metadata v0.18.2-0.20240101021508-7630737cb0e6
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/sidekick v0.0.5-0.20231225214445-a15c70833046
-	kubestash.dev/apimachinery v0.3.1-0.20231231034418-cc46ddfd674a
+	kubestash.dev/apimachinery v0.4.0-rc.0
 	sigs.k8s.io/controller-runtime v0.16.3
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.32.1-0.20231225221320-6f5a8df2ab6e
