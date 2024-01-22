@@ -31067,7 +31067,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperRef(ref common.ReferenceC
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Namespace of the appbinding of zookeeper",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -31075,13 +31074,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperRef(ref common.ReferenceC
 					"pathsBase": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Base ZooKeeperSpec path",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"name"},
 			},
 		},
 	}

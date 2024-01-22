@@ -370,8 +370,10 @@ func (d *Druid) SetDefaults() {
 			// d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Routers.PodTemplate)
 		}
 	}
-	if d.Spec.MetadataStorage.Name != nil && d.Spec.MetadataStorage.Namespace == nil {
-		*d.Spec.MetadataStorage.Namespace = d.Namespace
+	if d.Spec.MetadataStorage != nil {
+		if d.Spec.MetadataStorage.Name != nil && d.Spec.MetadataStorage.Namespace == nil {
+			*d.Spec.MetadataStorage.Namespace = d.Namespace
+		}
 	}
 }
 
