@@ -253,10 +253,16 @@ func (d *Druid) GetDruidSegmentCacheConfig() string {
 }
 
 func (d *Druid) GetDruidStorageSize(storageSize string) string {
-	storageSize = storageSize[:len(storageSize)-1]
-	storageSize = strings.ToLower(storageSize)
+	lastTwoCharacters := storageSize[len(storageSize)-2:]
+	storageSize = storageSize[:len(storageSize)-2]
+	intSorageSize, _ := strconv.Atoi(storageSize)
 
-	return storageSize
+	if lastTwoCharacters == "Gi" {
+		intSorageSize *= 1000000000
+	} else {
+		intSorageSize *= 1000000
+	}
+	return strconv.Itoa(intSorageSize)
 }
 
 func (d *Druid) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
@@ -381,8 +387,10 @@ func (d *Druid) SetDefaults() {
 			// d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Routers.PodTemplate)
 		}
 	}
-	if d.Spec.MetadataStorage.Name != nil && d.Spec.MetadataStorage.Namespace == nil {
-		*d.Spec.MetadataStorage.Namespace = d.Namespace
+	if d.Spec.MetadataStorage != nil {
+		if d.Spec.MetadataStorage.Name != nil && d.Spec.MetadataStorage.Namespace == nil {
+			*d.Spec.MetadataStorage.Namespace = d.Namespace
+		}
 	}
 }
 
