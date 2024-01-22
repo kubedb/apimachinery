@@ -45,6 +45,9 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 	if err != nil {
 		return nil, err
 	}
+	if gv.Group != api.SchemeGroupVersion.Group {
+		return nil, nil
+	}
 	dbInfo := &databaseInfo{
 		opts: dmcond.DynamicOptions{
 			Client:    c.DynamicClient,
@@ -255,6 +258,7 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+
 	case api.ResourceKindSolr:
 		dbInfo.opts.GVR.Resource = api.ResourcePluralSolr
 		sl, err := c.DBClient.KubedbV1alpha2().Solrs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
@@ -265,6 +269,7 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+
 	case api.ResourceKindZooKeeper:
 		dbInfo.opts.GVR.Resource = api.ResourcePluralZooKeeper
 		zk, err := c.DBClient.KubedbV1alpha2().ZooKeepers(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})

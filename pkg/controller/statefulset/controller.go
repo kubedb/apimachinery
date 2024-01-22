@@ -129,6 +129,9 @@ func (c *Controller) InitStsWatcher() {
 				}
 				return
 			}
+			if dbInfo == nil {
+				return
+			}
 			err = c.ensureReadyReplicasCond(dbInfo)
 			if err != nil {
 				klog.Warningf("failed to update ReadyReplicas condition. Reason: %v", err)
@@ -165,6 +168,9 @@ func (c *Controller) processStatefulSet(key string) error {
 		dbInfo, err := c.extractDatabaseInfo(sts)
 		if err != nil {
 			return fmt.Errorf("failed to extract database info from StatefulSet: %s/%s. Reason: %v", sts.Namespace, sts.Name, err)
+		}
+		if dbInfo == nil {
+			return nil
 		}
 		return c.ensureReadyReplicasCond(dbInfo)
 	}
