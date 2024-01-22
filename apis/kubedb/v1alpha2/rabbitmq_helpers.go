@@ -27,6 +27,8 @@ import (
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -275,4 +277,10 @@ func (r *RabbitMQ) SetTLSDefaults() {
 	}
 	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(RabbitmqServerCert), r.CertificateName(RabbitmqServerCert))
 	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(RabbitmqClientCert), r.CertificateName(RabbitmqClientCert))
+}
+
+func (r *RabbitMQ) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
+	// Desire number of statefulSets
+	expectedItems := 1
+	return checkReplicas(lister.StatefulSets(r.Namespace), labels.SelectorFromSet(r.OffshootLabels()), expectedItems)
 }

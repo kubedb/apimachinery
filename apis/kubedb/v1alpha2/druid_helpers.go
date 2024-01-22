@@ -30,7 +30,9 @@ import (
 	"gomodules.xyz/pointer"
 	v1 "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
+	appslister "k8s.io/client-go/listers/apps/v1"
 	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
@@ -269,6 +271,15 @@ func (d *Druid) OffshootSelectors(extraSelectors ...map[string]string) map[strin
 	return meta_util.OverwriteKeys(selector, extraSelectors...)
 }
 
+func (d Druid) OffshootLabels() map[string]string {
+	return d.offshootLabels(d.OffshootSelectors(), nil)
+}
+
+func (e Druid) offshootLabels(selector, override map[string]string) map[string]string {
+	selector[meta_util.ComponentLabelKey] = ComponentDatabase
+	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, e.Labels, override))
+}
+
 func (d *Druid) SetDefaults() {
 	if d.Spec.TerminationPolicy == "" {
 		d.Spec.TerminationPolicy = TerminationPolicyDelete
@@ -435,4 +446,19 @@ func (d *Druid) GetPersistentSecrets() []string {
 		secrets = append(secrets, d.Spec.AuthSecret.Name)
 	}
 	return secrets
+}
+
+func (d *Druid) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
+	// Desire number of statefulSets
+	expectedItems := 1
+	if d.Spec.Topology != nil {
+		expectedItems = 4
+	}
+	if d.Spec.Topology.Routers != nil {
+		expectedItems++
+	}
+	if d.Spec.Topology.Overlords != nil {
+		expectedItems++
+	}
+	return checkReplicas(lister.StatefulSets(d.Namespace), labels.SelectorFromSet(d.OffshootLabels()), expectedItems)
 }

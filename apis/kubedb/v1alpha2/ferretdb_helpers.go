@@ -28,6 +28,8 @@ import (
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
@@ -287,4 +289,10 @@ func (f *FerretDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]s
 
 func (f *FerretDB) StatsServiceLabels() map[string]string {
 	return f.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
+}
+
+func (f *FerretDB) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
+	// Desire number of statefulSets
+	expectedItems := 1
+	return checkReplicas(lister.StatefulSets(f.Namespace), labels.SelectorFromSet(f.OffshootLabels()), expectedItems)
 }
