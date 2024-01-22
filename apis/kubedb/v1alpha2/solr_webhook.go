@@ -158,6 +158,7 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 	}
 
 	if s.Spec.Topology == nil {
+		klog.Infof(fmt.Sprintf("number of replicas here is negative---------------------->%d", *s.Spec.Replicas))
 		if s.Spec.Replicas != nil && *s.Spec.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 				s.Name,
