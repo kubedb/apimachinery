@@ -24357,8 +24357,6 @@ spec:
                     type: string
                   pathsBase:
                     type: string
-                required:
-                - name
                 type: object
             required:
             - deepStorage

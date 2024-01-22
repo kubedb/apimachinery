@@ -196,15 +196,16 @@ type DeepStorageSpec struct {
 
 type ZooKeeperRef struct {
 	// Name of the appbinding of zookeeper
-	Name *string `json:"name"`
+	// +optional
+	Name *string `json:"name,omitempty"`
 
 	// Namespace of the appbinding of zookeeper
 	// +optional
-	Namespace string `json:"namespace"`
+	Namespace string `json:"namespace,omitempty"`
 
 	// Base ZooKeeperSpec path
 	// +optional
-	PathsBase string `json:"pathsBase"`
+	PathsBase string `json:"pathsBase,omitempty"`
 }
 
 // DruidStatus defines the observed state of Druid
