@@ -322,20 +322,24 @@ const (
 	MariaDBDataVolumeName                = "data"
 
 	// =========================== SingleStore Constants ============================
-	SinglestoreDatabasePortName              = "db"
-	SinglestorePrimaryServicePortName        = "primary"
-	SinglestoreDatabasePort                  = 3306
-	SinglestoreRootUserName                  = "ROOT_USERNAME"
-	SinglestoreRootPassword                  = "ROOT_PASSWORD"
-	SinglestoreRootUser                      = "root"
-	DatabasePodMaster                        = "Master"
-	DatabasePodAggregator                    = "Aggregator"
-	DatabasePodLeaf                          = "Leaf"
-	StatefulSetTypeMasterAggregator          = "master-aggregator"
-	StatefulSetTypeLeaf                      = "leaf"
-	SinglestoreCoordinatorContainerName      = "singlestore-coordinator"
-	SinglestoreContainerName                 = "singlestore"
-	SinglestoreInitContainerName             = "singlestore-init"
+	SinglestoreDatabasePortName       = "db"
+	SinglestorePrimaryServicePortName = "primary"
+	SinglestoreDatabasePort           = 3306
+	SinglestoreRootUserName           = "ROOT_USERNAME"
+	SinglestoreRootPassword           = "ROOT_PASSWORD"
+	SinglestoreRootUser               = "root"
+	DatabasePodMaster                 = "Master"
+	DatabasePodAggregator             = "Aggregator"
+	DatabasePodLeaf                   = "Leaf"
+	StatefulSetTypeMasterAggregator   = "master-aggregator"
+	StatefulSetTypeLeaf               = "leaf"
+	SinglestoreDatabaseHealth         = "singlestore_health"
+	SinglestoreTableHealth            = "singlestore_health_table"
+
+	SinglestoreCoordinatorContainerName = "singlestore-coordinator"
+	SinglestoreContainerName            = "singlestore"
+	SinglestoreInitContainerName        = "singlestore-init"
+
 	SinglestoreVolumeNameUserInitScript      = "initial-script"
 	SinglestoreVolumeMountPathUserInitScript = "/docker-entrypoint-initdb.d"
 	SinglestoreVolumeNameCustomConfig        = "custom-config"
@@ -730,6 +734,74 @@ const (
 	KafkaAdminTopicConfigProvider = "com.linkedin.kafka.cruisecontrol.config.KafkaAdminTopicConfigProvider"
 	KafkaCCMetricReporter         = "com.linkedin.kafka.cruisecontrol.metricsreporter.CruiseControlMetricsReporter"
 	KafkaJMXMetricReporter        = "org.apache.kafka.common.metrics.JmxReporter"
+
+	// =========================== Solr Constants ============================
+	ResourceCodeSolr      = "sl"
+	ResourceKindSolr      = "Solr"
+	ResourceSingularSolr  = "solr"
+	ResourcePluralSolr    = "solrs"
+	SolrPortName          = "http"
+	SolrRestPort          = 8983
+	SolrSecretKey         = "solr.xml"
+	SolrContainerName     = "solr"
+	SolrInitContainerName = "init-solr"
+	SolrAdmin             = "admin"
+	SecurityJSON          = "security.json"
+
+	SolrVolumeDefaultConfig = "default-config"
+	SolrVolumeCustomConfig  = "custom-config"
+	SolrVolumeAuthConfig    = "auth-config"
+	SolrVolumeData          = "data"
+	SolrVolumeConfig        = "slconfig"
+
+	DistLibs              = "/opt/solr/dist"
+	ContribLibs           = "/opt/solr/contrib/%s/lib"
+	SysPropLibPlaceholder = "${solr.sharedLib:}"
+	SolrHomeDir           = "/var/solr"
+	SolrDataDir           = "/var/solr/data"
+	SolrTempConfigDir     = "/temp-config"
+	SolrCustomConfigDir   = "/custom-config"
+	SolrSecurityConfigDir = "/var/security"
+
+	SolrCloudHostKey                       = "host"
+	SolrCloudHostValue                     = ""
+	SolrCloudHostPortKey                   = "hostPort"
+	SolrCloudHostPortValue                 = 80
+	SolrCloudHostContextKey                = "hostContext"
+	SolrCloudHostContextValue              = "solr"
+	SolrCloudGenericCoreNodeNamesKey       = "genericCoreNodeNames"
+	SolrCloudGenericCoreNodeNamesValue     = true
+	SolrCloudZKClientTimeoutKey            = "zkClientTimeout"
+	SolrCloudZKClientTimeoutValue          = 30000
+	SolrCloudDistribUpdateSoTimeoutKey     = "distribUpdateSoTimeout"
+	SolrCloudDistribUpdateSoTimeoutValue   = 600000
+	SolrCloudDistribUpdateConnTimeoutKey   = "distribUpdateConnTimeout"
+	SolrCloudDistribUpdateConnTimeoutValue = 60000
+	SolrCloudZKCredentialProviderKey       = "zkCredentialsProvider"
+	SolrCloudZKCredentialProviderValue     = "org.apache.solr.common.cloud.DefaultZkCredentialsProvider"
+	SolrCloudZKAclProviderKey              = "zkACLProvider"
+	SolrCloudZKAclProviderValue            = "org.apache.solr.common.cloud.DefaultZkACLProvider"
+
+	ShardHandlerFactorySocketTimeoutKey   = "socketTimeout"
+	ShardHandlerFactorySocketTimeoutValue = 600000
+	ShardHandlerFactoryConnTimeoutKey     = "connTimeout"
+	ShardHandlerFactoryConnTimeoutValue   = 60000
+
+	SolrKeysMaxBooleanClausesKey   = "maxBooleanClauses"
+	SolrKeysMaxBooleanClausesValue = "solr.max.booleanClauses"
+	SolrKeysSharedLibKey           = "sharedLib"
+	SolrKeysShardLibValue          = "solr.sharedLib"
+	SolrKeysHostPortKey            = "hostPort"
+	SolrKeysHostPortValue          = "solr.port.advertise"
+	SolrKeysAllowPathsKey          = "allowPaths"
+	SolrKeysAllowPathsValue        = "solr.allowPaths"
+
+	SolrConfMaxBooleanClausesKey   = "maxBooleanClauses"
+	SolrConfMaxBooleanClausesValue = 1024
+	SolrConfAllowPathsKey          = "allowPaths"
+	SolrConfAllowPathsValue        = ""
+	SolrConfSolrCloudKey           = "solrcloud"
+	SolrConfShardHandlerFactoryKey = "shardHandlerFactory"
 )
 
 // =========================== Druid Constants ============================
@@ -930,6 +1002,50 @@ const (
 	DruidDeepStorageGoogle DruidDeepStorageType = "google"
 	DruidDeepStorageAzure  DruidDeepStorageType = "azure"
 	DruidDeepStorageHDFS   DruidDeepStorageType = "hdfs"
+)
+
+const (
+	RabbitMQAMQPPort          = 5672
+	RabbitMQPeerDiscoveryPort = 4369
+	RabbitMQManagementUIPort  = 15672
+	RabbitMQInterNodePort     = 25672
+
+	RabbitMQVolumeData         = "data"
+	RabbitMQVolumeConfig       = "rabbitmqconfig"
+	RabbitMQVolumeTempConfig   = "temp-config"
+	RabbitMQVolumeCustomConfig = "custom-config"
+
+	RabbitMQDataDir       = "/var/lib/rabbitmq/mnesia"
+	RabbitMQPluginsDir    = "/etc/rabbitmq/"
+	RabbitMQCertDir       = "/var/private/ssl"
+	RabbitMQConfigDir     = "/config/"
+	RabbitMQTempConfigDir = "/tmp/config/"
+)
+
+// =========================== FerretDB Constants ============================
+const (
+
+	// envs
+	EnvFerretDBUser     = "FERRETDB_PG_USER"
+	EnvFerretDBPassword = "FERRETDB_PG_PASSWORD"
+	EnvFerretDBHandler  = "FERRETDB_HANDLER"
+	EnvFerretDBPgURL    = "FERRETDB_POSTGRESQL_URL"
+	EnvFerretDBTLSPort  = "FERRETDB_LISTEN_TLS"
+	EnvFerretDBCAPath   = "FERRETDB_LISTEN_TLS_CA_FILE"
+	EnvFerretDBCertPath = "FERRETDB_LISTEN_TLS_CERT_FILE"
+	EnvFerretDBKeyPath  = "FERRETDB_LISTEN_TLS_KEY_FILE"
+
+	FerretDBContainerName = "ferretdb"
+	FerretDBMainImage     = "ghcr.io/ferretdb/ferretdb"
+	FerretDBUser          = "postgres"
+
+	FerretDBServerPath = "/etc/certs/server"
+
+	FerretDBDefaultPort = 27017
+	FerretDBMetricsPort = 8080
+	FerretDBTLSPort     = 27018
+
+	FerretDBMetricsPath = "/debug/metrics"
 )
 
 // Resource kind related constants

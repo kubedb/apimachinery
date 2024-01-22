@@ -41,6 +41,10 @@ func (c *FakeCatalogV1alpha1) EtcdVersions() v1alpha1.EtcdVersionInterface {
 	return &FakeEtcdVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) FerretDBVersions() v1alpha1.FerretDBVersionInterface {
+	return &FakeFerretDBVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) KafkaConnectorVersions() v1alpha1.KafkaConnectorVersionInterface {
 	return &FakeKafkaConnectorVersions{c}
 }
@@ -85,12 +89,20 @@ func (c *FakeCatalogV1alpha1) ProxySQLVersions() v1alpha1.ProxySQLVersionInterfa
 	return &FakeProxySQLVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) RabbitMQVersions() v1alpha1.RabbitMQVersionInterface {
+	return &FakeRabbitMQVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) RedisVersions() v1alpha1.RedisVersionInterface {
 	return &FakeRedisVersions{c}
 }
 
 func (c *FakeCatalogV1alpha1) SinglestoreVersions() v1alpha1.SinglestoreVersionInterface {
 	return &FakeSinglestoreVersions{c}
+}
+
+func (c *FakeCatalogV1alpha1) SolrVersions() v1alpha1.SolrVersionInterface {
+	return &FakeSolrVersions{c}
 }
 
 func (c *FakeCatalogV1alpha1) ZooKeeperVersions() v1alpha1.ZooKeeperVersionInterface {

@@ -30,6 +30,8 @@ type Interface interface {
 	ElasticsearchVersions() ElasticsearchVersionInformer
 	// EtcdVersions returns a EtcdVersionInformer.
 	EtcdVersions() EtcdVersionInformer
+	// FerretDBVersions returns a FerretDBVersionInformer.
+	FerretDBVersions() FerretDBVersionInformer
 	// KafkaConnectorVersions returns a KafkaConnectorVersionInformer.
 	KafkaConnectorVersions() KafkaConnectorVersionInformer
 	// KafkaVersions returns a KafkaVersionInformer.
@@ -52,10 +54,14 @@ type Interface interface {
 	PostgresVersions() PostgresVersionInformer
 	// ProxySQLVersions returns a ProxySQLVersionInformer.
 	ProxySQLVersions() ProxySQLVersionInformer
+	// RabbitMQVersions returns a RabbitMQVersionInformer.
+	RabbitMQVersions() RabbitMQVersionInformer
 	// RedisVersions returns a RedisVersionInformer.
 	RedisVersions() RedisVersionInformer
 	// SinglestoreVersions returns a SinglestoreVersionInformer.
 	SinglestoreVersions() SinglestoreVersionInformer
+	// SolrVersions returns a SolrVersionInformer.
+	SolrVersions() SolrVersionInformer
 	// ZooKeeperVersions returns a ZooKeeperVersionInformer.
 	ZooKeeperVersions() ZooKeeperVersionInformer
 }
@@ -84,6 +90,11 @@ func (v *version) ElasticsearchVersions() ElasticsearchVersionInformer {
 // EtcdVersions returns a EtcdVersionInformer.
 func (v *version) EtcdVersions() EtcdVersionInformer {
 	return &etcdVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// FerretDBVersions returns a FerretDBVersionInformer.
+func (v *version) FerretDBVersions() FerretDBVersionInformer {
+	return &ferretDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // KafkaConnectorVersions returns a KafkaConnectorVersionInformer.
@@ -141,6 +152,11 @@ func (v *version) ProxySQLVersions() ProxySQLVersionInformer {
 	return &proxySQLVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
+// RabbitMQVersions returns a RabbitMQVersionInformer.
+func (v *version) RabbitMQVersions() RabbitMQVersionInformer {
+	return &rabbitMQVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
 // RedisVersions returns a RedisVersionInformer.
 func (v *version) RedisVersions() RedisVersionInformer {
 	return &redisVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
@@ -149,6 +165,11 @@ func (v *version) RedisVersions() RedisVersionInformer {
 // SinglestoreVersions returns a SinglestoreVersionInformer.
 func (v *version) SinglestoreVersions() SinglestoreVersionInformer {
 	return &singlestoreVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// SolrVersions returns a SolrVersionInformer.
+func (v *version) SolrVersions() SolrVersionInformer {
+	return &solrVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeeperVersions returns a ZooKeeperVersionInformer.

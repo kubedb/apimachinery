@@ -32,6 +32,7 @@ type KubedbV1alpha2Interface interface {
 	DruidsGetter
 	ElasticsearchesGetter
 	EtcdsGetter
+	FerretDBsGetter
 	KafkasGetter
 	MariaDBsGetter
 	MemcachedsGetter
@@ -42,9 +43,11 @@ type KubedbV1alpha2Interface interface {
 	PgpoolsGetter
 	PostgresesGetter
 	ProxySQLsGetter
+	RabbitMQsGetter
 	RedisesGetter
 	RedisSentinelsGetter
 	SinglestoresGetter
+	SolrsGetter
 	ZooKeepersGetter
 }
 
@@ -63,6 +66,10 @@ func (c *KubedbV1alpha2Client) Elasticsearches(namespace string) ElasticsearchIn
 
 func (c *KubedbV1alpha2Client) Etcds(namespace string) EtcdInterface {
 	return newEtcds(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) FerretDBs(namespace string) FerretDBInterface {
+	return newFerretDBs(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Kafkas(namespace string) KafkaInterface {
@@ -105,6 +112,10 @@ func (c *KubedbV1alpha2Client) ProxySQLs(namespace string) ProxySQLInterface {
 	return newProxySQLs(c, namespace)
 }
 
+func (c *KubedbV1alpha2Client) RabbitMQs(namespace string) RabbitMQInterface {
+	return newRabbitMQs(c, namespace)
+}
+
 func (c *KubedbV1alpha2Client) Redises(namespace string) RedisInterface {
 	return newRedises(c, namespace)
 }
@@ -115,6 +126,10 @@ func (c *KubedbV1alpha2Client) RedisSentinels(namespace string) RedisSentinelInt
 
 func (c *KubedbV1alpha2Client) Singlestores(namespace string) SinglestoreInterface {
 	return newSinglestores(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Solrs(namespace string) SolrInterface {
+	return newSolrs(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) ZooKeepers(namespace string) ZooKeeperInterface {

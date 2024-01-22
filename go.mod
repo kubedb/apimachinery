@@ -6,6 +6,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/cert-manager/cert-manager v1.9.1
 	github.com/evanphx/json-patch v5.7.0+incompatible
+	github.com/fatih/structs v1.1.0
 	github.com/google/go-cmp v0.6.0
 	github.com/google/gofuzz v1.2.0
 	github.com/iancoleman/orderedmap v0.2.0
@@ -38,7 +39,7 @@ require (
 	kmodules.xyz/resource-metadata v0.18.2-0.20240101021508-7630737cb0e6
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/sidekick v0.0.5-0.20231225214445-a15c70833046
-	kubestash.dev/apimachinery v0.3.1-0.20231231034418-cc46ddfd674a
+	kubestash.dev/apimachinery v0.4.0-rc.0
 	sigs.k8s.io/controller-runtime v0.16.3
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.32.1-0.20231225221320-6f5a8df2ab6e
@@ -77,7 +78,6 @@ require (
 	github.com/docker/docker-credential-helpers v0.7.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/evanphx/json-patch/v5 v5.7.0 // indirect
-	github.com/fatih/structs v1.1.0 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-logr/logr v1.3.0 // indirect

@@ -460,14 +460,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec":                               schema_apimachinery_apis_catalog_v1alpha1_ArchiverSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectClusterVersion":                      schema_apimachinery_apis_catalog_v1alpha1_ConnectClusterVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin":                            schema_apimachinery_apis_catalog_v1alpha1_ConnectorPlugin(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPluginPodSecurityPolicy":           schema_apimachinery_apis_catalog_v1alpha1_ConnectorPluginPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CruiseControlVersionDatabase":               schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidInitContainer":                         schema_apimachinery_apis_catalog_v1alpha1_DruidInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidSecurityContext":                       schema_apimachinery_apis_catalog_v1alpha1_DruidSecurityContext(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersion":                               schema_apimachinery_apis_catalog_v1alpha1_DruidVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionDatabase":                       schema_apimachinery_apis_catalog_v1alpha1_DruidVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionList":                           schema_apimachinery_apis_catalog_v1alpha1_DruidVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionPodSecurityPolicy":              schema_apimachinery_apis_catalog_v1alpha1_DruidVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionSpec":                           schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase":      schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchDashboardVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext":               schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchSecurityContext(ref),
@@ -484,6 +481,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionExporter":                        schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionExporter(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersion":                            schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersionDatabase":                    schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersionDatabase(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersionList":                        schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersionSpec":                        schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer":                                  schema_apimachinery_apis_catalog_v1alpha1_GitSyncer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersion":                      schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersionList":                  schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionList(ref),
@@ -566,6 +567,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionPodSecurityPolicy":           schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionProxysql":                    schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionProxysql(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionSpec":                        schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer":                      schema_apimachinery_apis_catalog_v1alpha1_RabbitMQInitContainer(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersion":                            schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase":                    schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionDatabase(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionList":                        schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionSpec":                        schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersion":                               schema_apimachinery_apis_catalog_v1alpha1_RedisVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionCoordinator":                    schema_apimachinery_apis_catalog_v1alpha1_RedisVersionCoordinator(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionDatabase":                       schema_apimachinery_apis_catalog_v1alpha1_RedisVersionDatabase(ref),
@@ -583,8 +589,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersion":                         schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionDatabase":                 schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionList":                     schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionPodSecurityPolicy":        schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionSpec":                     schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer":                          schema_apimachinery_apis_catalog_v1alpha1_SolrInitContainer(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersion":                                schema_apimachinery_apis_catalog_v1alpha1_SolrVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase":                        schema_apimachinery_apis_catalog_v1alpha1_SolrVersionDatabase(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_SolrVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_SolrVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints":                          schema_apimachinery_apis_catalog_v1alpha1_UpdateConstraints(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.VolumeSnapshot":                             schema_apimachinery_apis_catalog_v1alpha1_VolumeSnapshot(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.WalgSpec":                                   schema_apimachinery_apis_catalog_v1alpha1_WalgSpec(ref),
@@ -22891,27 +22901,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_ConnectorPlugin(ref common.Refere
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ConnectorPluginPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ConnectorPluginPodSecurityPolicy is the Kafka init container security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22949,39 +22938,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_DruidInitContainer(ref common.Ref
 					},
 				},
 				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DruidSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DruidSecurityContext provides additional securityContext settings for the Druid Image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container. It defaults to 1000.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"runAsGroup": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"runAsAnyNonRoot": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsAnyNonRoot will be true if user can change the default UID to other than 1000.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-				},
 			},
 		},
 	}
@@ -23096,27 +23052,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionList(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SinglestoreVersionPodSecurityPolicy is the Singlestore pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23153,25 +23088,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref common.Refer
 							Format:      "",
 						},
 					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionPodSecurityPolicy"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
 					"securityContext": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional security information for the Druid container",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidSecurityContext"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
 						},
 					},
 				},
@@ -23179,7 +23100,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
 	}
 }
 
@@ -23743,6 +23664,167 @@ func schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionSpec(ref common.Refere
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "FerretDBVersionDatabase is the FerretDB Database image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "FerretDBVersionList contains a list of FerretDBVersion",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersion"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_FerretDBVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "FerretDBVersionSpec defines the desired state of FerretDBVersion",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersionDatabase"),
+						},
+					},
+					"deprecated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"updateConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "update constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
+						},
+					},
+					"securityContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecurityContext is for the additional security information for the FerretDB container",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
+						},
+					},
+				},
+				Required: []string{"version", "db"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FerretDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_GitSyncer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23890,13 +23972,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionSpec(ref com
 							Format:      "",
 						},
 					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPluginPodSecurityPolicy"),
-						},
-					},
 					"securityContext": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional config for the init container",
@@ -23909,7 +23984,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionSpec(ref com
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPluginPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
 	}
 }
 
@@ -26736,6 +26811,189 @@ func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionSpec(ref common.Re
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RabbitMQInitContainer is the RabbitMQ init Container image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RabbitMQVersionDatabase is the RabbitMQ Database image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RabbitMQVersionList is a list of RabbitmqVersions",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of RedisVersion CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersion"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RabbitMQVersionSpec is the spec for RabbitMQ version",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase"),
+						},
+					},
+					"initContainer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer"),
+						},
+					},
+					"deprecated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"securityContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecurityContext is for the additional config for the DB container",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
+						},
+					},
+				},
+				Required: []string{"version", "db", "initContainer"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_RedisVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27261,27 +27519,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionList(ref common
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SinglestoreVersionPodSecurityPolicy is the Singlestore pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27329,13 +27566,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionSpec(ref common
 							Format:      "",
 						},
 					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionPodSecurityPolicy"),
-						},
-					},
 					"stash": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Stash defines backup and restore task definitions.",
@@ -27362,7 +27592,189 @@ func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionSpec(ref common
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreStandaloneVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreStandaloneVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_SolrInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrInitContainer is the Solr init Container image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_SolrVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrVersionDatabase is the Solr Database image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersion"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrVersionSpec defines the desired state of SolrVersion",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase"),
+						},
+					},
+					"initContainer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer"),
+						},
+					},
+					"deprecated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"securityContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecurityContext is for the additional security information for the Solr container",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
+						},
+					},
+				},
+				Required: []string{"version", "db", "initContainer"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase"},
 	}
 }
 

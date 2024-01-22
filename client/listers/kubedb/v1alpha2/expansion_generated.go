@@ -42,6 +42,14 @@ type EtcdListerExpansion interface{}
 // EtcdNamespaceLister.
 type EtcdNamespaceListerExpansion interface{}
 
+// FerretDBListerExpansion allows custom methods to be added to
+// FerretDBLister.
+type FerretDBListerExpansion interface{}
+
+// FerretDBNamespaceListerExpansion allows custom methods to be added to
+// FerretDBNamespaceLister.
+type FerretDBNamespaceListerExpansion interface{}
+
 // KafkaListerExpansion allows custom methods to be added to
 // KafkaLister.
 type KafkaListerExpansion interface{}
@@ -122,6 +130,14 @@ type ProxySQLListerExpansion interface{}
 // ProxySQLNamespaceLister.
 type ProxySQLNamespaceListerExpansion interface{}
 
+// RabbitMQListerExpansion allows custom methods to be added to
+// RabbitMQLister.
+type RabbitMQListerExpansion interface{}
+
+// RabbitMQNamespaceListerExpansion allows custom methods to be added to
+// RabbitMQNamespaceLister.
+type RabbitMQNamespaceListerExpansion interface{}
+
 // RedisListerExpansion allows custom methods to be added to
 // RedisLister.
 type RedisListerExpansion interface{}
@@ -145,6 +161,14 @@ type SinglestoreListerExpansion interface{}
 // SinglestoreNamespaceListerExpansion allows custom methods to be added to
 // SinglestoreNamespaceLister.
 type SinglestoreNamespaceListerExpansion interface{}
+
+// SolrListerExpansion allows custom methods to be added to
+// SolrLister.
+type SolrListerExpansion interface{}
+
+// SolrNamespaceListerExpansion allows custom methods to be added to
+// SolrNamespaceLister.
+type SolrNamespaceListerExpansion interface{}
 
 // ZooKeeperListerExpansion allows custom methods to be added to
 // ZooKeeperLister.

@@ -60,6 +60,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ElasticsearchList{},
 		&Etcd{},
 		&EtcdList{},
+		&FerretDB{},
+		&FerretDBList{},
 		&Kafka{},
 		&KafkaList{},
 		&MariaDB{},
@@ -80,6 +82,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PostgresList{},
 		&ProxySQL{},
 		&ProxySQLList{},
+		&RabbitMQ{},
+		&RabbitMQList{},
 		&Redis{},
 		&RedisList{},
 		&RedisSentinel{},
@@ -88,6 +92,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&SinglestoreList{},
 		&ZooKeeper{},
 		&ZooKeeperList{},
+		&Solr{},
+		&SolrList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

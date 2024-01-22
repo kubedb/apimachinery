@@ -24,6 +24,8 @@ type ElasticsearchVersionExpansion interface{}
 
 type EtcdVersionExpansion interface{}
 
+type FerretDBVersionExpansion interface{}
+
 type KafkaConnectorVersionExpansion interface{}
 
 type KafkaVersionExpansion interface{}
@@ -46,8 +48,12 @@ type PostgresVersionExpansion interface{}
 
 type ProxySQLVersionExpansion interface{}
 
+type RabbitMQVersionExpansion interface{}
+
 type RedisVersionExpansion interface{}
 
 type SinglestoreVersionExpansion interface{}
+
+type SolrVersionExpansion interface{}
 
 type ZooKeeperVersionExpansion interface{}

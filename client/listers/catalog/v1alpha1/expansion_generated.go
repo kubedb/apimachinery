@@ -30,6 +30,10 @@ type ElasticsearchVersionListerExpansion interface{}
 // EtcdVersionLister.
 type EtcdVersionListerExpansion interface{}
 
+// FerretDBVersionListerExpansion allows custom methods to be added to
+// FerretDBVersionLister.
+type FerretDBVersionListerExpansion interface{}
+
 // KafkaConnectorVersionListerExpansion allows custom methods to be added to
 // KafkaConnectorVersionLister.
 type KafkaConnectorVersionListerExpansion interface{}
@@ -74,6 +78,10 @@ type PostgresVersionListerExpansion interface{}
 // ProxySQLVersionLister.
 type ProxySQLVersionListerExpansion interface{}
 
+// RabbitMQVersionListerExpansion allows custom methods to be added to
+// RabbitMQVersionLister.
+type RabbitMQVersionListerExpansion interface{}
+
 // RedisVersionListerExpansion allows custom methods to be added to
 // RedisVersionLister.
 type RedisVersionListerExpansion interface{}
@@ -81,6 +89,10 @@ type RedisVersionListerExpansion interface{}
 // SinglestoreVersionListerExpansion allows custom methods to be added to
 // SinglestoreVersionLister.
 type SinglestoreVersionListerExpansion interface{}
+
+// SolrVersionListerExpansion allows custom methods to be added to
+// SolrVersionLister.
+type SolrVersionListerExpansion interface{}
 
 // ZooKeeperVersionListerExpansion allows custom methods to be added to
 // ZooKeeperVersionLister.

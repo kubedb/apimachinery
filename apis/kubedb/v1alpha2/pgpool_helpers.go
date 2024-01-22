@@ -189,16 +189,16 @@ func (p *Pgpool) SetDefaults() {
 	}
 	p.SetHealthCheckerDefaults()
 
-	ppVersion := &catalog.PgpoolVersion{}
+	ppVersion := catalog.PgpoolVersion{}
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: p.Spec.Version,
-	}, ppVersion)
+	}, &ppVersion)
 	if err != nil {
 		klog.Errorf("can't get the pgpool version object %s for %s \n", err.Error(), p.Spec.Version)
 		return
 	}
 	if p.Spec.PodTemplate != nil {
-		p.SetSecurityContext(ppVersion)
+		p.SetSecurityContext(&ppVersion)
 	}
 }
 

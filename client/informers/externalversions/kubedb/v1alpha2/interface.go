@@ -30,6 +30,8 @@ type Interface interface {
 	Elasticsearches() ElasticsearchInformer
 	// Etcds returns a EtcdInformer.
 	Etcds() EtcdInformer
+	// FerretDBs returns a FerretDBInformer.
+	FerretDBs() FerretDBInformer
 	// Kafkas returns a KafkaInformer.
 	Kafkas() KafkaInformer
 	// MariaDBs returns a MariaDBInformer.
@@ -50,12 +52,16 @@ type Interface interface {
 	Postgreses() PostgresInformer
 	// ProxySQLs returns a ProxySQLInformer.
 	ProxySQLs() ProxySQLInformer
+	// RabbitMQs returns a RabbitMQInformer.
+	RabbitMQs() RabbitMQInformer
 	// Redises returns a RedisInformer.
 	Redises() RedisInformer
 	// RedisSentinels returns a RedisSentinelInformer.
 	RedisSentinels() RedisSentinelInformer
 	// Singlestores returns a SinglestoreInformer.
 	Singlestores() SinglestoreInformer
+	// Solrs returns a SolrInformer.
+	Solrs() SolrInformer
 	// ZooKeepers returns a ZooKeeperInformer.
 	ZooKeepers() ZooKeeperInformer
 }
@@ -84,6 +90,11 @@ func (v *version) Elasticsearches() ElasticsearchInformer {
 // Etcds returns a EtcdInformer.
 func (v *version) Etcds() EtcdInformer {
 	return &etcdInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// FerretDBs returns a FerretDBInformer.
+func (v *version) FerretDBs() FerretDBInformer {
+	return &ferretDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Kafkas returns a KafkaInformer.
@@ -136,6 +147,11 @@ func (v *version) ProxySQLs() ProxySQLInformer {
 	return &proxySQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// RabbitMQs returns a RabbitMQInformer.
+func (v *version) RabbitMQs() RabbitMQInformer {
+	return &rabbitMQInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // Redises returns a RedisInformer.
 func (v *version) Redises() RedisInformer {
 	return &redisInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -149,6 +165,11 @@ func (v *version) RedisSentinels() RedisSentinelInformer {
 // Singlestores returns a SinglestoreInformer.
 func (v *version) Singlestores() SinglestoreInformer {
 	return &singlestoreInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Solrs returns a SolrInformer.
+func (v *version) Solrs() SolrInformer {
+	return &solrInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeepers returns a ZooKeeperInformer.

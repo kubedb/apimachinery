@@ -173,23 +173,13 @@ func validateEnvVars(connect *ConnectCluster) error {
 	return nil
 }
 
-var availableVersions = []string{
-	"3.3.0",
-	"3.3.2",
-	"3.4.0",
-	"3.4.1",
-	"3.5.1",
-	"3.6.0",
-}
-
 func validateVersion(connect *ConnectCluster) error {
-	version := connect.Spec.Version
-	for _, v := range availableVersions {
-		if v == version {
-			return nil
-		}
+	kccVersion := &catalog.KafkaVersion{}
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: connect.Spec.Version}, kccVersion)
+	if err != nil {
+		return errors.New("version not supported")
 	}
-	return errors.New("version not supported")
+	return nil
 }
 
 var reservedVolumes = []string{

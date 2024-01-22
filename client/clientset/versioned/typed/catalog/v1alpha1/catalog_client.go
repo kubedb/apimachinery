@@ -32,6 +32,7 @@ type CatalogV1alpha1Interface interface {
 	DruidVersionsGetter
 	ElasticsearchVersionsGetter
 	EtcdVersionsGetter
+	FerretDBVersionsGetter
 	KafkaConnectorVersionsGetter
 	KafkaVersionsGetter
 	MariaDBVersionsGetter
@@ -43,8 +44,10 @@ type CatalogV1alpha1Interface interface {
 	PgpoolVersionsGetter
 	PostgresVersionsGetter
 	ProxySQLVersionsGetter
+	RabbitMQVersionsGetter
 	RedisVersionsGetter
 	SinglestoreVersionsGetter
+	SolrVersionsGetter
 	ZooKeeperVersionsGetter
 }
 
@@ -63,6 +66,10 @@ func (c *CatalogV1alpha1Client) ElasticsearchVersions() ElasticsearchVersionInte
 
 func (c *CatalogV1alpha1Client) EtcdVersions() EtcdVersionInterface {
 	return newEtcdVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) FerretDBVersions() FerretDBVersionInterface {
+	return newFerretDBVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) KafkaConnectorVersions() KafkaConnectorVersionInterface {
@@ -109,12 +116,20 @@ func (c *CatalogV1alpha1Client) ProxySQLVersions() ProxySQLVersionInterface {
 	return newProxySQLVersions(c)
 }
 
+func (c *CatalogV1alpha1Client) RabbitMQVersions() RabbitMQVersionInterface {
+	return newRabbitMQVersions(c)
+}
+
 func (c *CatalogV1alpha1Client) RedisVersions() RedisVersionInterface {
 	return newRedisVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) SinglestoreVersions() SinglestoreVersionInterface {
 	return newSinglestoreVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) SolrVersions() SolrVersionInterface {
+	return newSolrVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) ZooKeeperVersions() ZooKeeperVersionInterface {

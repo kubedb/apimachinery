@@ -22,6 +22,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kafka"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -245,6 +246,11 @@ func (k *ConnectCluster) SetDefaults() {
 
 	k.setDefaultContainerSecurityContext(&kfVersion, &k.Spec.PodTemplate)
 	k.setDefaultInitContainerSecurityContext(&k.Spec.PodTemplate)
+
+	dbContainer := coreutil.GetContainerByName(k.Spec.PodTemplate.Spec.Containers, ConnectClusterContainerName)
+	if dbContainer != nil {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, api.DefaultResources)
+	}
 
 	k.Spec.Monitor.SetDefaults()
 	if k.Spec.Monitor != nil && k.Spec.Monitor.Prometheus != nil && k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {

@@ -1644,7 +1644,7 @@ kmodules.xyz/webhook-runtime/admission/v1
 ## explicit; go 1.21.5
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
-# kubestash.dev/apimachinery v0.3.1-0.20231231034418-cc46ddfd674a
+# kubestash.dev/apimachinery v0.4.0-rc.0
 ## explicit; go 1.21.5
 kubestash.dev/apimachinery/apis
 kubestash.dev/apimachinery/apis/addons/v1alpha1

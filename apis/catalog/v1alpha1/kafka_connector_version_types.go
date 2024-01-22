@@ -58,9 +58,6 @@ type KafkaConnectorVersionSpec struct {
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
-	// PSP names
-	// +optional
-	PodSecurityPolicies ConnectorPluginPodSecurityPolicy `json:"podSecurityPolicies"`
 	// SecurityContext is for the additional config for the init container
 	// +optional
 	SecurityContext SecurityContext `json:"securityContext"`
@@ -69,11 +66,6 @@ type KafkaConnectorVersionSpec struct {
 // ConnectorPlugin is the Kafka connector plugin image
 type ConnectorPlugin struct {
 	Image string `json:"image"`
-}
-
-// ConnectorPluginPodSecurityPolicy is the Kafka init container security policies
-type ConnectorPluginPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

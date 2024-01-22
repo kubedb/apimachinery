@@ -41,6 +41,10 @@ func (c *FakeKubedbV1alpha2) Etcds(namespace string) v1alpha2.EtcdInterface {
 	return &FakeEtcds{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) FerretDBs(namespace string) v1alpha2.FerretDBInterface {
+	return &FakeFerretDBs{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Kafkas(namespace string) v1alpha2.KafkaInterface {
 	return &FakeKafkas{c, namespace}
 }
@@ -81,6 +85,10 @@ func (c *FakeKubedbV1alpha2) ProxySQLs(namespace string) v1alpha2.ProxySQLInterf
 	return &FakeProxySQLs{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) RabbitMQs(namespace string) v1alpha2.RabbitMQInterface {
+	return &FakeRabbitMQs{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Redises(namespace string) v1alpha2.RedisInterface {
 	return &FakeRedises{c, namespace}
 }
@@ -91,6 +99,10 @@ func (c *FakeKubedbV1alpha2) RedisSentinels(namespace string) v1alpha2.RedisSent
 
 func (c *FakeKubedbV1alpha2) Singlestores(namespace string) v1alpha2.SinglestoreInterface {
 	return &FakeSinglestores{c, namespace}
+}
+
+func (c *FakeKubedbV1alpha2) Solrs(namespace string) v1alpha2.SolrInterface {
+	return &FakeSolrs{c, namespace}
 }
 
 func (c *FakeKubedbV1alpha2) ZooKeepers(namespace string) v1alpha2.ZooKeeperInterface {
