@@ -19,6 +19,9 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	coreutil "kmodules.xyz/client-go/core/v1"
+	"kmodules.xyz/client-go/policy/secomp"
+	"kubedb.dev/apimachinery/apis"
 	"strconv"
 	"strings"
 
@@ -36,6 +39,7 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
 func (d *Druid) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -211,7 +215,7 @@ func (d *Druid) GetMetadataStorageConnectURI(appbinding *appcat.AppBinding, meta
 }
 
 func (d *Druid) GetZKServiceHost(appbinding *appcat.AppBinding) string {
-	return appbinding.Spec.ClientConfig.Service.Name + ":" + strconv.Itoa(int(appbinding.Spec.ClientConfig.Service.Port))
+	return fmt.Sprintf("%s.%s.svc:%d", appbinding.Spec.ClientConfig.Service.Name, appbinding.Namespace, int(appbinding.Spec.ClientConfig.Service.Port))
 }
 
 func (d *Druid) AddDruidExtensionLoadList(druidExtensionLoadList string, extension string) string {
@@ -316,9 +320,9 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext == nil {
 				d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 			}
-			// d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
-			// d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Coordinators.PodTemplate)
-			// d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Coordinators.PodTemplate)
+			d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Coordinators.PodTemplate)
+			d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Coordinators.PodTemplate)
 		}
 		if d.Spec.Topology.Overlords != nil {
 			if d.Spec.Topology.Overlords.Replicas == nil {
@@ -328,9 +332,9 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext == nil {
 				d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 			}
-			// d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
-			// d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Overlords.PodTemplate)
-			// d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Overlords.PodTemplate)
+			d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Overlords.PodTemplate)
+			d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Overlords.PodTemplate)
 		}
 		if d.Spec.Topology.MiddleManagers != nil {
 			if d.Spec.Topology.MiddleManagers.Replicas == nil {
@@ -340,9 +344,9 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext == nil {
 				d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 			}
-			// d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
-			// d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.MiddleManagers.PodTemplate)
-			// d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.MiddleManagers.PodTemplate)
+			d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.MiddleManagers.PodTemplate)
+			d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.MiddleManagers.PodTemplate)
 		}
 		if d.Spec.Topology.Historicals != nil {
 			if d.Spec.Topology.Historicals.Replicas == nil {
@@ -352,9 +356,9 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext == nil {
 				d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 			}
-			// d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
-			// d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Historicals.PodTemplate)
-			// d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Historicals.PodTemplate)
+			d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Historicals.PodTemplate)
+			d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Historicals.PodTemplate)
 		}
 		if d.Spec.Topology.Brokers != nil {
 			if d.Spec.Topology.Brokers.Replicas == nil {
@@ -364,9 +368,9 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext == nil {
 				d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 			}
-			// d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
-			// d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Brokers.PodTemplate)
-			// d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Brokers.PodTemplate)
+			d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Brokers.PodTemplate)
+			d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Brokers.PodTemplate)
 		}
 		if d.Spec.Topology.Routers != nil {
 			if d.Spec.Topology.Routers.Replicas == nil {
@@ -376,9 +380,9 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext == nil {
 				d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 			}
-			// d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
-			// d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Routers.PodTemplate)
-			// d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Routers.PodTemplate)
+			d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext.FSGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Routers.PodTemplate)
+			d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Routers.PodTemplate)
 		}
 	}
 	if d.Spec.MetadataStorage != nil {
@@ -388,55 +392,55 @@ func (d *Druid) SetDefaults() {
 	}
 }
 
-//func (d *Druid) setDefaultInitContainerSecurityContext(slVersion *catalog.DruidVersion, podTemplate *ofst.PodTemplateSpec) {
-//	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, DruidInitContainer)
-//	if initContainer == nil {
-//		initContainer = &v1.Container{
-//			Name: DruidInitContainer,
-//		}
-//	}
-//	if initContainer.SecurityContext == nil {
-//		initContainer.SecurityContext = &v1.SecurityContext{}
-//	}
-//	apis.SetDefaultResourceLimits(&initContainer.Resources, DefaultResources)
-//	//d.assignDefaultContainerSecurityContext(slVersion, initContainer.SecurityContext)
-//	podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
-//}
-//
-//func (d *Druid) setDefaultContainerSecurityContext(druidVersion *catalog.DruidVersion, podTemplate *ofst.PodTemplateSpec) {
-//	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, DruidMainContainer)
-//	if container == nil {
-//		container = &v1.Container{
-//			Name: DruidMainContainer,
-//		}
-//	}
-//	if container.SecurityContext == nil {
-//		container.SecurityContext = &v1.SecurityContext{}
-//	}
-//	apis.SetDefaultResourceLimits(&container.Resources, DefaultResources)
-//	// d.assignDefaultContainerSecurityContext(druidVersion, container.SecurityContext)
-//	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
-//}
+func (d *Druid) setDefaultInitContainerSecurityContext(slVersion *catalog.DruidVersion, podTemplate *ofst.PodTemplateSpec) {
+	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, DruidInitContainer)
+	if initContainer == nil {
+		initContainer = &v1.Container{
+			Name: DruidInitContainer,
+		}
+	}
+	if initContainer.SecurityContext == nil {
+		initContainer.SecurityContext = &v1.SecurityContext{}
+	}
+	apis.SetDefaultResourceLimits(&initContainer.Resources, DefaultResources)
+	d.assignDefaultContainerSecurityContext(slVersion, initContainer.SecurityContext)
+	podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
+}
 
-//func (d *Druid) assignDefaultContainerSecurityContext(druidVersion *catalog.DruidVersion, sc *v1.SecurityContext) {
-//	//if sc.AllowPrivilegeEscalation == nil {
-//	//	sc.AllowPrivilegeEscalation = pointer.BoolP(false)
-//	//}
-//	//if sc.Capabilities == nil {
-//	//	sc.Capabilities = &v1.Capabilities{
-//	//		Drop: []v1.Capability{"ALL"},
-//	//	}
-//	//}
-//	//if sc.RunAsNonRoot == nil {
-//	//	sc.RunAsNonRoot = pointer.BoolP(true)
-//	//}
-//	//if sc.RunAsUser == nil {
-//	//	sc.RunAsUser = druidVersion.Spec.SecurityContext.RunAsUser
-//	//}
-//	//if sc.SeccompProfile == nil {
-//	//	sc.SeccompProfile = secomp.DefaultSeccompProfile()
-//	//}
-//}
+func (d *Druid) setDefaultContainerSecurityContext(druidVersion *catalog.DruidVersion, podTemplate *ofst.PodTemplateSpec) {
+	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, DruidMainContainer)
+	if container == nil {
+		container = &v1.Container{
+			Name: DruidMainContainer,
+		}
+	}
+	if container.SecurityContext == nil {
+		container.SecurityContext = &v1.SecurityContext{}
+	}
+	apis.SetDefaultResourceLimits(&container.Resources, DefaultResources)
+	d.assignDefaultContainerSecurityContext(druidVersion, container.SecurityContext)
+	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
+}
+
+func (d *Druid) assignDefaultContainerSecurityContext(druidVersion *catalog.DruidVersion, sc *v1.SecurityContext) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &v1.Capabilities{
+			Drop: []v1.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = druidVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
 
 func (d *Druid) GetPersistentSecrets() []string {
 	if d == nil {
