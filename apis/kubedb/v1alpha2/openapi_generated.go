@@ -23006,11 +23006,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Backend(ref common.ReferenceCallba
 					},
 					"externallyManaged": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
 						},
 					},
 				},
+				Required: []string{"externallyManaged"},
 			},
 		},
 		Dependencies: []string{
@@ -24743,7 +24745,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref common.ReferenceC
 					},
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Database authentication secret",
+							Description: "Database authentication secret. If authSecret is nil, authSecret.externallyManaged will set to backend.externallyManaged",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
@@ -28336,22 +28338,19 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresServiceRef(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"pgPort": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PgPort is used because the service referred to the pg pod can have any port between 1 and 65535, inclusive but targetPort is fixed to 5432",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
