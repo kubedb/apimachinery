@@ -32,7 +32,7 @@ const (
 	OS_PASSWORD_KEY = "opensearch.password"
 
 	ElasticsearchDashboardPortServer         = "server"
-	ElasticsearchDashboardConfigMergeCommand = "/usr/local/bin/elasticsearch-config-merger.sh"
+	ElasticsearchDashboardConfigMergeCommand = "/usr/local/bin/dashboard-config-merger.sh"
 
 	KibanaConfigDir       = "/usr/share/kibana/config"
 	KibanaTempConfigDir   = "/kibana/temp-config"
