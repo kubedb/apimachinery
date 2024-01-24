@@ -67,12 +67,6 @@ func (f *FerretDB) ValidateCreate() (admission.Warnings, error) {
 	ferretdblog.Info("validate create", "name", f.Name)
 
 	allErr := f.ValidateCreateOrUpdate()
-	if !f.Spec.Backend.ExternallyManaged && f.Spec.Backend.Postgres != nil &&
-		(f.Spec.Backend.Postgres.URL != nil || f.Spec.Backend.Postgres.Service != nil) {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-			f.Name,
-			`can not set 'postgres.url' and 'postgres.service' when backend is internally managed.They will be managed by FerretDB.`))
-	}
 	if len(allErr) == 0 {
 		return nil, nil
 	}
