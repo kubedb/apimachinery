@@ -211,7 +211,7 @@ func (d *Druid) GetMetadataStorageConnectURI(appbinding *appcat.AppBinding, meta
 }
 
 func (d *Druid) GetZKServiceHost(appbinding *appcat.AppBinding) string {
-	return appbinding.Spec.ClientConfig.Service.Name + ":" + strconv.Itoa(int(appbinding.Spec.ClientConfig.Service.Port))
+	return fmt.Sprintf("%s.%s.svc:%d", appbinding.Spec.ClientConfig.Service.Name, appbinding.Namespace, int(appbinding.Spec.ClientConfig.Service.Port))
 }
 
 func (d *Druid) AddDruidExtensionLoadList(druidExtensionLoadList string, extension string) string {
