@@ -17,11 +17,15 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"context"
 	"errors"
+
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -76,10 +80,6 @@ func (d *Druid) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 func (d *Druid) ValidateDelete() (admission.Warnings, error) {
 	druidlog.Info("validate delete", "name", d.Name)
 	return nil, nil
-}
-
-var druidAvailableVersions = []string{
-	"25.0.0",
 }
 
 var druidReservedVolumes = []string{
@@ -302,13 +302,14 @@ func (d *Druid) validateCreateOrUpdate() field.ErrorList {
 }
 
 func druidValidateVersion(d *Druid) error {
-	version := d.Spec.Version
-	for _, v := range druidAvailableVersions {
-		if v == version {
-			return nil
-		}
+	var druidVersion catalog.DruidVersion
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: d.Spec.Version,
+	}, &druidVersion)
+	if err != nil {
+		return errors.New("version not supported")
 	}
-	return errors.New("version not supported")
+	return nil
 }
 
 func druidValidateVolumes(podTemplate *ofst.PodTemplateSpec, nodeType DruidNodeRoleType) error {
