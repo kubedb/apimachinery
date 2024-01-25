@@ -80,6 +80,7 @@ func (d *Druid) ValidateDelete() (admission.Warnings, error) {
 
 var druidAvailableVersions = []string{
 	"25.0.0",
+	"28.0.1",
 }
 
 var druidReservedVolumes = []string{
