@@ -44,6 +44,11 @@ func (r *RestoreSessionReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
+	// Ignore nil target restore sessions. e.g: manifest
+	if rs.Spec.Target == nil {
+		return ctrl.Result{}, nil
+	}
+
 	ri, err := r.ctrl.extractRestoreInfo(rs)
 	if err != nil {
 		klog.Errorln("failed to extract kubeStash invoker info. Reason: ", err)
