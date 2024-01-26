@@ -211,10 +211,16 @@ func (f *FerretDB) SetDefaults() {
 			ExternallyManaged: f.Spec.Backend.ExternallyManaged,
 		}
 	}
-	if f.Spec.Monitor != nil && f.Spec.Monitor.Prometheus.Exporter.Port == 0 {
-		// 56790 is default port for Prometheus operator.
-		f.Spec.Monitor.Prometheus.Exporter.Port = 56790
+	f.Spec.Monitor.SetDefaults()
+	if f.Spec.Monitor != nil && f.Spec.Monitor.Prometheus != nil {
+		if f.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+			f.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = frVersion.Spec.SecurityContext.RunAsUser
+		}
+		if f.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+			f.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = frVersion.Spec.SecurityContext.RunAsUser
+		}
 	}
+
 	defaultVersion := "13.13"
 	if !f.Spec.Backend.ExternallyManaged && f.Spec.Backend.Postgres == nil {
 		f.Spec.Backend.Postgres = &PostgresRef{
