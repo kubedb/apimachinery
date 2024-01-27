@@ -32,14 +32,14 @@ require (
 	k8s.io/metrics v0.25.1
 	kmodules.xyz/client-go v0.29.6
 	kmodules.xyz/crd-schema-fuzz v0.29.1
-	kmodules.xyz/custom-resources v0.29.0
+	kmodules.xyz/custom-resources v0.29.1
 	kmodules.xyz/monitoring-agent-api v0.29.0
 	kmodules.xyz/objectstore-api v0.29.0
 	kmodules.xyz/offshoot-api v0.29.0
 	kmodules.xyz/resource-metadata v0.18.2-0.20240101021508-7630737cb0e6
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/sidekick v0.0.5-0.20231225214445-a15c70833046
-	kubestash.dev/apimachinery v0.4.0-rc.0
+	kubestash.dev/apimachinery v0.4.0-rc.1
 	sigs.k8s.io/controller-runtime v0.16.3
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.32.1-0.20231225221320-6f5a8df2ab6e
@@ -85,6 +85,7 @@ require (
 	github.com/go-openapi/jsonpointer v0.20.0 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/swag v0.22.4 // indirect
+	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/gofrs/uuid v4.3.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
