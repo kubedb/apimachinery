@@ -173,7 +173,7 @@ func (z *ZooKeeper) SetDefaults() {
 
 	apis.SetDefaultResourceLimits(&z.Spec.PodTemplate.Spec.Resources, DefaultResources)
 	if z.Spec.Replicas == nil {
-		z.Spec.Replicas = pointer.Int32P(3)
+		z.Spec.Replicas = pointer.Int32P(1)
 	}
 
 	if z.Spec.Halted {

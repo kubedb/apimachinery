@@ -23006,11 +23006,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Backend(ref common.ReferenceCallba
 					},
 					"externallyManaged": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
 						},
 					},
 				},
+				Required: []string{"externallyManaged"},
 			},
 		},
 		Dependencies: []string{
@@ -23228,7 +23230,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DeepStorageSpec(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"type", "configSecret"},
+				Required: []string{"type"},
 			},
 		},
 		Dependencies: []string{
@@ -23487,13 +23489,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
-					"replicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for a Druid database",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Druid topology for node specification",
@@ -23587,7 +23582,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 						},
 					},
 				},
-				Required: []string{"version", "deepStorage", "zooKeeper"},
+				Required: []string{"version", "metadataStorage", "deepStorage"},
 			},
 		},
 		Dependencies: []string{
@@ -24750,7 +24745,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref common.ReferenceC
 					},
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Database authentication secret",
+							Description: "Database authentication secret. If authSecret is nil, authSecret.externallyManaged will set to backend.externallyManaged",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
@@ -26074,7 +26069,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MetadataStorage(ref common.Referen
 					"name": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Name of the appbinding of metadata storage",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26082,6 +26076,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MetadataStorage(ref common.Referen
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Namespace of the appbinding of metadata storage",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If not KubeDB managed, then specify type of the metadata storage",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26094,7 +26095,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MetadataStorage(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"name"},
 			},
 		},
 	}
@@ -28344,22 +28344,19 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresServiceRef(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"pgPort": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PgPort is used because the service referred to the pg pod can have any port between 1 and 65535, inclusive but targetPort is fixed to 5432",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -31075,7 +31072,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperRef(ref common.ReferenceC
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Namespace of the appbinding of zookeeper",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -31083,13 +31079,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperRef(ref common.ReferenceC
 					"pathsBase": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Base ZooKeeperSpec path",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"name"},
 			},
 		},
 	}

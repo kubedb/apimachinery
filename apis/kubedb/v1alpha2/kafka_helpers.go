@@ -224,6 +224,17 @@ func (k *Kafka) ConfigSecretName(role KafkaNodeRoleType) string {
 	return meta_util.NameWithSuffix(k.OffshootName(), "config")
 }
 
+func (k *Kafka) GetPersistentSecrets() []string {
+	var secrets []string
+	if k.Spec.AuthSecret != nil {
+		secrets = append(secrets, k.Spec.AuthSecret.Name)
+	}
+	if k.Spec.KeystoreCredSecret != nil {
+		secrets = append(secrets, k.Spec.KeystoreCredSecret.Name)
+	}
+	return secrets
+}
+
 func (k *Kafka) CruiseControlConfigSecretName() string {
 	return meta_util.NameWithSuffix(k.OffshootName(), "cruise-control-config")
 }
@@ -309,8 +320,13 @@ func (k *Kafka) SetDefaults() {
 	}
 
 	k.Spec.Monitor.SetDefaults()
-	if k.Spec.Monitor != nil && k.Spec.Monitor.Prometheus != nil && k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
-		k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = kfVersion.Spec.SecurityContext.RunAsUser
+	if k.Spec.Monitor != nil && k.Spec.Monitor.Prometheus != nil {
+		if k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+			k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = kfVersion.Spec.SecurityContext.RunAsUser
+		}
+		if k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+			k.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = kfVersion.Spec.SecurityContext.RunAsUser
+		}
 	}
 
 	if k.Spec.Topology != nil {
