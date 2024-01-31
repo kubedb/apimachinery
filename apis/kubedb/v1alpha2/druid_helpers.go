@@ -26,6 +26,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	"github.com/Masterminds/semver/v3"
 	"gomodules.xyz/pointer"
 	v1 "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -316,12 +317,18 @@ func (d *Druid) SetDefaults() {
 		return
 	}
 
+	version, err := semver.NewVersion(druidVersion.Spec.Version)
+	if err != nil {
+		klog.Errorf("failed to parse druid version :%s\n", err.Error())
+		return
+	}
+
 	if d.Spec.Topology != nil {
 		if d.Spec.Topology.Coordinators != nil {
 			if d.Spec.Topology.Coordinators.Replicas == nil {
 				d.Spec.Topology.Coordinators.Replicas = pointer.Int32P(1)
 			}
-			if d.Spec.Version > "25.0.0" {
+			if version.Major() > 25 {
 				if d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 				}
@@ -333,7 +340,7 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Overlords.Replicas == nil {
 				d.Spec.Topology.Overlords.Replicas = pointer.Int32P(1)
 			}
-			if d.Spec.Version > "25.0.0" {
+			if version.Major() > 25 {
 				if d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 				}
@@ -345,7 +352,7 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.MiddleManagers.Replicas == nil {
 				d.Spec.Topology.MiddleManagers.Replicas = pointer.Int32P(1)
 			}
-			if d.Spec.Version > "25.0.0" {
+			if version.Major() > 25 {
 				if d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 				}
@@ -369,7 +376,7 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Brokers.Replicas == nil {
 				d.Spec.Topology.Brokers.Replicas = pointer.Int32P(1)
 			}
-			if d.Spec.Version > "25.0.0" {
+			if version.Major() > 25 {
 				if d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 				}
@@ -382,7 +389,7 @@ func (d *Druid) SetDefaults() {
 			if d.Spec.Topology.Routers.Replicas == nil {
 				d.Spec.Topology.Routers.Replicas = pointer.Int32P(1)
 			}
-			if d.Spec.Version > "25.0.0" {
+			if version.Major() > 25 {
 				if d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
 				}
