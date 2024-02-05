@@ -34,7 +34,7 @@ require (
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.29.1
 	kmodules.xyz/monitoring-agent-api v0.29.0
-	kmodules.xyz/objectstore-api v0.29.0
+	kmodules.xyz/objectstore-api v0.29.1
 	kmodules.xyz/offshoot-api v0.29.0
 	kmodules.xyz/resource-metadata v0.18.2-0.20240105072614-e92a8a48d400
 	kmodules.xyz/webhook-runtime v0.29.1
