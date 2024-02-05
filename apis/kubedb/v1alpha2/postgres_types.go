@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
@@ -164,6 +165,26 @@ type PostgresSpec struct {
 	// Arbiter controls spec for arbiter pods
 	// +optional
 	Arbiter *ArbiterSpec `json:"arbiter,omitempty"`
+
+	// +optional
+	Replication *PostgresReplication `json:"replication,omitempty"`
+}
+
+type WALLimitPolicy string
+
+const (
+	WALKeepSize     WALLimitPolicy = "WALKeepSize"
+	ReplicationSlot WALLimitPolicy = "ReplicationSlot"
+)
+
+type PostgresReplication struct {
+	WALLimitPolicy WALLimitPolicy `json:"walLimitPolicy"`
+
+	// +optional
+	WalKeepSize *resource.Quantity `json:"walKeepSize,omitempty"`
+
+	// +optional
+	MaxSlotWALKeepSize *resource.Quantity `json:"maxSlotWALKeepSize,omitempty"`
 }
 
 type ArbiterSpec struct {
