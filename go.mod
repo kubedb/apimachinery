@@ -11,7 +11,7 @@ require (
 	github.com/google/gofuzz v1.2.0
 	github.com/iancoleman/orderedmap v0.2.0
 	github.com/json-iterator/go v1.1.12
-	github.com/kubernetes-csi/external-snapshotter/client/v4 v4.2.0
+	github.com/kubernetes-csi/external-snapshotter/client/v7 v7.0.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.70.0
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.70.0
