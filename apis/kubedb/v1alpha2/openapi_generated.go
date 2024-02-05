@@ -31116,6 +31116,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperSpec(ref common.Reference
 							Format:      "int32",
 						},
 					},
+					"adminServerPort": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
 					"storage": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Storage to specify how storage shall be used.",
@@ -31184,7 +31191,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperSpec(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"version"},
+				Required: []string{"version", "adminServerPort"},
 			},
 		},
 		Dependencies: []string{
