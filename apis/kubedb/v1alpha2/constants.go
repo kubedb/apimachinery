@@ -324,7 +324,10 @@ const (
 	// =========================== SingleStore Constants ============================
 	SinglestoreDatabasePortName       = "db"
 	SinglestorePrimaryServicePortName = "primary"
+	SinglestoreStudioPortName         = "studio"
 	SinglestoreDatabasePort           = 3306
+	SinglestoreStudioPort             = 8081
+	SinglestoreExporterPort           = 9104
 	SinglestoreRootUserName           = "ROOT_USERNAME"
 	SinglestoreRootPassword           = "ROOT_PASSWORD"
 	SinglestoreRootUser               = "root"

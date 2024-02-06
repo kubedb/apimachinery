@@ -141,8 +141,8 @@ func (s *Singlestore) AppBindingMeta() appcat.AppBindingMeta {
 	return &singlestoreApp{s}
 }
 
-func (s *Singlestore) StandbyServiceName() string {
-	return metautil.NameWithPrefix(s.ServiceName(), "standby")
+func (s *Singlestore) StudioServiceName() string {
+	return metautil.NameWithPrefix(s.ServiceName(), "studio")
 }
 
 func (s *Singlestore) GoverningServiceName() string {
