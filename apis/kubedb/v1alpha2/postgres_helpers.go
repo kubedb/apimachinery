@@ -21,6 +21,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/Masterminds/semver/v3"
+	"github.com/pkg/errors"
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -261,6 +263,7 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topolog
 	// So that /var/pv directory have the group permission for the RunAsGroup user GID.
 	// Otherwise, We will get write permission denied.
 	p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup
+	p.SetDefaultReplicationMode(postgresVersion)
 	p.SetArbiterDefault()
 	p.SetTLSDefaults()
 	p.SetHealthCheckerDefaults()
@@ -276,6 +279,28 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topolog
 			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = postgresVersion.Spec.SecurityContext.RunAsUser
 		}
 	}
+}
+
+func getMajorPgVersion(postgresVersion *catalog.PostgresVersion) (uint64, error) {
+	ver, err := semver.NewVersion(postgresVersion.Spec.Version)
+	if err != nil {
+		return 0, errors.Wrap(err, "Failed to get postgres major.")
+	}
+	return ver.Major(), nil
+}
+
+// SetDefaultReplicationMode set the default replication mode.
+// Replication slot will be prioritized if no WalLimitPolicy is mentioned
+func (p *Postgres) SetDefaultReplicationMode(postgresVersion *catalog.PostgresVersion) {
+	majorVersion, _ := getMajorPgVersion(postgresVersion)
+	if p.Spec.Replication.WALLimitPolicy == "" {
+		if majorVersion <= uint64(10) {
+			p.Spec.Replication.WALLimitPolicy = WALKeepSegment
+		} else {
+			p.Spec.Replication.WALLimitPolicy = ReplicationSlot
+		}
+	}
+
 }
 
 func (p *Postgres) SetArbiterDefault() {

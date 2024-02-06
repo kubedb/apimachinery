@@ -175,6 +175,7 @@ type WALLimitPolicy string
 const (
 	WALKeepSize     WALLimitPolicy = "WALKeepSize"
 	ReplicationSlot WALLimitPolicy = "ReplicationSlot"
+	WALKeepSegment  WALLimitPolicy = "WALKeepSegment"
 )
 
 type PostgresReplication struct {
@@ -182,7 +183,8 @@ type PostgresReplication struct {
 
 	// +optional
 	WalKeepSize *resource.Quantity `json:"walKeepSize,omitempty"`
-
+	// +optional
+	WalKeepSegment int32 `json:"walKeepSegment,omitempty"`
 	// +optional
 	MaxSlotWALKeepSize *resource.Quantity `json:"maxSlotWALKeepSize,omitempty"`
 }
