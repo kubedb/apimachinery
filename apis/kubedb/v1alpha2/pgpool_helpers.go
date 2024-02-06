@@ -19,8 +19,9 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 
-	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
@@ -33,9 +34,7 @@ import (
 	appslister "k8s.io/client-go/listers/apps/v1"
 	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
-	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
-	"kmodules.xyz/client-go/policy/secomp"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
@@ -156,58 +155,71 @@ func (p *Pgpool) GetNameSpacedName() string {
 	return p.Namespace + "/" + p.Name
 }
 
-func (p *Pgpool) SetSecurityContext(ppVersion *catalog.PgpoolVersion, podTemplate *ofst.PodTemplateSpec) {
-	if podTemplate == nil {
-		return
-	}
-	if podTemplate.Spec.SecurityContext == nil {
-		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
-	}
-	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = ppVersion.Spec.SecurityContext.RunAsUser
-	}
-
-	container := core_util.GetContainerByName(podTemplate.Spec.Containers, PgpoolContainerName)
-	if container == nil {
-		container = &core.Container{
-			Name: PgpoolContainerName,
-		}
-	}
-	if container.SecurityContext == nil {
-		container.SecurityContext = &core.SecurityContext{}
-	}
-	p.assignContainerSecurityContext(ppVersion, container.SecurityContext)
-	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *container)
+type PgpoolStatsService struct {
+	*Pgpool
 }
 
-func (p *Pgpool) assignContainerSecurityContext(ppVersion *catalog.PgpoolVersion, sc *core.SecurityContext) {
-	if sc.AllowPrivilegeEscalation == nil {
-		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
-	}
-	if sc.Capabilities == nil {
-		sc.Capabilities = &core.Capabilities{
-			Drop: []core.Capability{"ALL"},
-		}
-	}
-	if sc.RunAsNonRoot == nil {
-		sc.RunAsNonRoot = pointer.BoolP(true)
-	}
-	if sc.RunAsUser == nil {
-		sc.RunAsUser = ppVersion.Spec.SecurityContext.RunAsUser
-	}
-	if sc.RunAsGroup == nil {
-		sc.RunAsGroup = ppVersion.Spec.SecurityContext.RunAsUser
-	}
-	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = secomp.DefaultSeccompProfile()
-	}
+func (p PgpoolStatsService) GetNamespace() string {
+	return p.Pgpool.GetNamespace()
 }
 
-func (p *Pgpool) setContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
-	ppContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, PgpoolContainerName)
-	if ppContainer != nil && (ppContainer.Resources.Requests == nil && ppContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&ppContainer.Resources, DefaultResources)
+func (p PgpoolStatsService) ServiceName() string {
+	return p.OffshootName() + "-stats"
+}
+
+func (p PgpoolStatsService) ServiceMonitorName() string {
+	return p.ServiceName()
+}
+
+func (p PgpoolStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return p.OffshootLabels()
+}
+
+func (p PgpoolStatsService) Path() string {
+	return DefaultStatsPath
+}
+
+func (p PgpoolStatsService) Scheme() string {
+	return ""
+}
+
+func (p PgpoolStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
+}
+
+func (p Pgpool) StatsService() mona.StatsAccessor {
+	return &PgpoolStatsService{&p}
+}
+
+func (p Pgpool) StatsServiceLabels() map[string]string {
+	return p.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
+}
+
+func (p *Pgpool) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(p.Spec.ServiceTemplates, alias)
+	return p.offshootLabels(meta_util.OverwriteKeys(p.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
+}
+
+func (p *Pgpool) SetSecurityContext(ppVersion *catalog.PgpoolVersion) {
+	if p.Spec.PodTemplate.Spec.SecurityContext == nil {
+		p.Spec.PodTemplate.Spec.SecurityContext = &core.PodSecurityContext{
+			RunAsUser:    ppVersion.Spec.SecurityContext.RunAsUser,
+			RunAsGroup:   ppVersion.Spec.SecurityContext.RunAsUser,
+			RunAsNonRoot: pointer.BoolP(true),
+		}
+	} else {
+		if p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser == nil {
+			p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser = ppVersion.Spec.SecurityContext.RunAsUser
+		}
+		if p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup == nil {
+			p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup = p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser
+		}
 	}
+
+	// Need to set FSGroup equal to  p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup.
+	// So that /var/pv directory have the group permission for the RunAsGroup user GID.
+	// Otherwise, We will get write permission denied.
+	p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup
 }
 
 func (p *Pgpool) SetDefaults() {
@@ -233,10 +245,20 @@ func (p *Pgpool) SetDefaults() {
 		klog.Errorf("can't get the pgpool version object %s for %s \n", err.Error(), p.Spec.Version)
 		return
 	}
+	if p.Spec.PodTemplate != nil {
+		p.SetSecurityContext(&ppVersion)
+	}
 
 	p.SetHealthCheckerDefaults()
-	p.SetSecurityContext(&ppVersion, p.Spec.PodTemplate)
-	p.setContainerResourceLimits(p.Spec.PodTemplate)
+	p.Spec.Monitor.SetDefaults()
+	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil {
+		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = ppVersion.Spec.SecurityContext.RunAsUser
+		}
+		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser
+		}
+	}
 }
 
 func (p *Pgpool) GetPersistentSecrets() []string {
