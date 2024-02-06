@@ -344,29 +344,33 @@ func (p *Postgres) setDefaultContainerSecurityContext(podTemplate *ofst.PodTempl
 func (p *Postgres) setDefaultCapabilitiesForPostgres(sc *core.SecurityContext) {
 	if sc.Capabilities == nil {
 		sc.Capabilities = &core.Capabilities{
-			Add: []core.Capability{IPS_LOCK, SYS_RESOURCE},
+			Drop: []core.Capability{"ALL"},
 		}
-	} else {
-		newCapabilities := &core.Capabilities{}
-		caps := []core.Capability{IPS_LOCK, SYS_RESOURCE}
-		if sc.Capabilities.Add == nil {
-			newCapabilities.Add = caps
-		} else {
-			newCapabilities.Add = sc.Capabilities.Add
-			for i := range caps {
-				found := false
-				for _, capability := range sc.Capabilities.Add {
-					if caps[i] == capability {
-						found = true
-					}
-				}
-				if !found {
-					newCapabilities.Add = append(newCapabilities.Add, caps[i])
-				}
+	} else if sc.Capabilities.Drop == nil && p.matchedPreviousCapabilities(sc) {
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
+	}
+}
+
+func (p *Postgres) matchedPreviousCapabilities(sc *core.SecurityContext) bool {
+	caps := sc.Capabilities.Add
+	capPattern := []core.Capability{IPS_LOCK, SYS_RESOURCE}
+	if len(caps) != len(capPattern) {
+		return false
+	}
+	for i := range caps {
+		found := false
+		for _, capability := range capPattern {
+			if caps[i] == capability {
+				found = true
 			}
 		}
-		sc.Capabilities = newCapabilities
+		if !found {
+			return false
+		}
 	}
+	return true
 }
 
 func (p *Postgres) assignDefaultContainerSecurityContext(sc *core.SecurityContext, pgVersion *catalog.PostgresVersion) {
@@ -374,7 +378,9 @@ func (p *Postgres) assignDefaultContainerSecurityContext(sc *core.SecurityContex
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
 	if sc.Capabilities == nil {
-		sc.Capabilities = &core.Capabilities{}
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
 	}
 	if sc.RunAsNonRoot == nil {
 		sc.RunAsNonRoot = pointer.BoolP(true)
