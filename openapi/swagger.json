@@ -26321,6 +26321,9 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchVolumeExpansionSpec": {
       "description": "ElasticsearchVolumeExpansionSpec is the spec for Elasticsearch volume expansion",
       "type": "object",
+      "required": [
+        "mode"
+      ],
       "properties": {
         "coordinating": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
@@ -26356,7 +26359,8 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "mode": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "node": {
           "description": "volume specification for combined nodes",
@@ -26958,6 +26962,9 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBVolumeExpansionSpec": {
       "description": "MongoDBVolumeExpansionSpec is the spec for mongodb volume expansion",
       "type": "object",
+      "required": [
+        "mode"
+      ],
       "properties": {
         "configServer": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
@@ -26966,7 +26973,8 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "mode": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "replicaSet": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
@@ -27235,9 +27243,13 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLVolumeExpansionSpec": {
       "description": "MySQLVolumeExpansionSpec is the spec for MySQL volume expansion",
       "type": "object",
+      "required": [
+        "mode"
+      ],
       "properties": {
         "mode": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "mysql": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
@@ -27491,9 +27503,13 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBVolumeExpansionSpec": {
       "description": "PerconaXtraDBVolumeExpansionSpec is the spec for PerconaXtraDB volume expansion",
       "type": "object",
+      "required": [
+        "mode"
+      ],
       "properties": {
         "mode": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "perconaxtradb": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
@@ -27733,12 +27749,16 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresVolumeExpansionSpec": {
       "description": "PostgresVolumeExpansionSpec is the spec for Postgres volume expansion",
       "type": "object",
+      "required": [
+        "mode"
+      ],
       "properties": {
         "arbiter": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "mode": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "postgres": {
           "description": "volume specification for Postgres",
@@ -28166,9 +28186,13 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisVolumeExpansionSpec": {
       "description": "RedisVolumeExpansionSpec is the spec for Redis volume expansion",
       "type": "object",
+      "required": [
+        "mode"
+      ],
       "properties": {
         "mode": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "redis": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"

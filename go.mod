@@ -11,7 +11,7 @@ require (
 	github.com/google/gofuzz v1.2.0
 	github.com/iancoleman/orderedmap v0.2.0
 	github.com/json-iterator/go v1.1.12
-	github.com/kubernetes-csi/external-snapshotter/client/v4 v4.2.0
+	github.com/kubernetes-csi/external-snapshotter/client/v7 v7.0.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.70.0
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.70.0
@@ -34,12 +34,12 @@ require (
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.29.1
 	kmodules.xyz/monitoring-agent-api v0.29.0
-	kmodules.xyz/objectstore-api v0.29.0
+	kmodules.xyz/objectstore-api v0.29.1
 	kmodules.xyz/offshoot-api v0.29.0
 	kmodules.xyz/resource-metadata v0.18.2-0.20240105072614-e92a8a48d400
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/sidekick v0.0.5-0.20231225214445-a15c70833046
-	kubestash.dev/apimachinery v0.4.0-rc.2
+	kubestash.dev/apimachinery v0.4.0
 	sigs.k8s.io/controller-runtime v0.17.0
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.32.1-0.20231225221320-6f5a8df2ab6e
