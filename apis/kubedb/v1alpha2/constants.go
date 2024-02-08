@@ -437,17 +437,20 @@ const (
 	// =========================== Redis Constants ============================
 	RedisConfigKey = "redis.conf" // RedisConfigKey is going to create for the customize redis configuration
 	// DefaultConfigKey is going to create for the default redis configuration
-	RedisContainerName          = ResourceSingularRedis
-	RedisSentinelContainerName  = "redissentinel"
-	DefaultConfigKey            = "default.conf"
-	RedisShardKey               = RedisKey + "/shard"
-	RedisDatabasePortName       = "db"
-	RedisPrimaryServicePortName = "primary"
-	RedisDatabasePort           = 6379
-	RedisSentinelPort           = 26379
-	RedisGossipPortName         = "gossip"
-	RedisGossipPort             = 16379
-	RedisSentinelPortName       = "sentinel"
+	RedisContainerName             = ResourceSingularRedis
+	RedisSentinelContainerName     = "redissentinel"
+	DefaultConfigKey               = "default.conf"
+	RedisShardKey                  = RedisKey + "/shard"
+	RedisDatabasePortName          = "db"
+	RedisPrimaryServicePortName    = "primary"
+	RedisDatabasePort              = 6379
+	RedisSentinelPort              = 26379
+	RedisGossipPortName            = "gossip"
+	RedisGossipPort                = 16379
+	RedisSentinelPortName          = "sentinel"
+	RedisInitContainerName         = "redis-init"
+	RedisCoordinatorContainerName  = "rd-coordinator"
+	RedisSentinelInitContainerName = "sentinel-init"
 
 	RedisScriptVolumeName      = "script-vol"
 	RedisScriptVolumePath      = "/scripts"
@@ -460,6 +463,8 @@ const (
 	RedisSentinelTLSVolumePath = "/sentinel-certs"
 	RedisConfigVolumeName      = "redis-config"
 	RedisConfigVolumePath      = "/usr/local/etc/redis/"
+	RedisInitVolumeName        = "init-volume"
+	RedisInitVolumePath        = "/init"
 
 	RedisNodeFlagMaster = "master"
 	RedisNodeFlagNoAddr = "noaddr"
@@ -468,8 +473,11 @@ const (
 	RedisKeyFileSecretSuffix = "key"
 	RedisPEMSecretSuffix     = "pem"
 	RedisRootUsername        = "default"
-	EnvRedisUser             = "USERNAME"
-	EnvRedisPassword         = "REDISCLI_AUTH"
+
+	EnvRedisUser              = "USERNAME"
+	EnvRedisPassword          = "REDISCLI_AUTH"
+	EnvRedisMode              = "REDIS_MODE"
+	EnvRedisMajorRedisVersion = "MAJOR_REDIS_VERSION"
 
 	// =========================== PgBouncer Constants ============================
 	PgBouncerUpstreamServerCA               = "upstream-server-ca.crt"
