@@ -548,7 +548,12 @@ const (
 	EnvZooKeeperClusterSize     = "CLUSTER_SIZE"
 	EnvZooKeeperUser            = "ZK_USER"
 	EnvZooKeeperPassword        = "ZK_PASSWORD"
-	ZooKeeperSuperUsername      = "super"
+	EnvZooKeeperJaasFilePath    = "ZK_JAAS_FILE_PATH"
+	EnvZooKeeperJVMFLags        = "JVMFLAGS"
+
+	ZooKeeperSuperUsername       = "super"
+	ZooKeeperSASLAuthLoginConfig = "-Djava.security.auth.login.config"
+	ZooKeeperJaasFilePath        = "/data/jaas.conf"
 )
 
 // List of possible condition types for a KubeDB object
