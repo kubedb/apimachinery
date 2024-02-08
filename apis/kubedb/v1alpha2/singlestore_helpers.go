@@ -151,11 +151,19 @@ func (s *Singlestore) PVCName(alias string) string {
 }
 
 func (s *Singlestore) AggregatorStatefulSet() string {
-	return metautil.NameWithSuffix(s.OffshootName(), StatefulSetTypeMasterAggregator)
+	sts := s.OffshootName()
+	if s.Spec.Topology.Aggregator.Suffix != "" {
+		sts = metautil.NameWithSuffix(sts, s.Spec.Topology.Aggregator.Suffix)
+	}
+	return metautil.NameWithSuffix(sts, StatefulSetTypeAggregator)
 }
 
 func (s *Singlestore) LeafStatefulSet() string {
-	return metautil.NameWithSuffix(s.OffshootName(), StatefulSetTypeLeaf)
+	sts := s.OffshootName()
+	if s.Spec.Topology.Leaf.Suffix != "" {
+		sts = metautil.NameWithSuffix(sts, s.Spec.Topology.Leaf.Suffix)
+	}
+	return metautil.NameWithSuffix(sts, StatefulSetTypeLeaf)
 }
 
 func (s *Singlestore) PodLabels(extraLabels ...map[string]string) map[string]string {
