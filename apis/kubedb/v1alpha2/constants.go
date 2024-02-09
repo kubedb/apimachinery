@@ -847,9 +847,9 @@ const (
 	DruidConfigFileNameRouters        = "routers.properties"
 	DruidVolumeMySQLMetadataStorage   = "mysql-metadata-storage"
 
-	DruidMainContainer = "druid"
-	DruidInitContainer = "init-druid"
-	DruidUserAdmin     = "admin"
+	DruidContainerName     = "druid"
+	DruidInitContainerName = "init-druid"
+	DruidUserAdmin         = "admin"
 
 	EnvDruidAdminPassword          = "DRUID_ADMIN_PASSWORD"
 	EnvDruidMetdataStoragePassword = "DRUID_METADATA_STORAGE_PASSWORD"
@@ -1021,6 +1021,7 @@ const (
 	RabbitMQAMQPPort          = 5672
 	RabbitMQPeerDiscoveryPort = 4369
 	RabbitMQManagementUIPort  = 15672
+	RabbitMQExporterPort      = 15692
 	RabbitMQInterNodePort     = 25672
 
 	RabbitMQVolumeData         = "data"
