@@ -1021,6 +1021,7 @@ const (
 	RabbitMQAMQPPort          = 5672
 	RabbitMQPeerDiscoveryPort = 4369
 	RabbitMQManagementUIPort  = 15672
+	RabbitMQExporterPort      = 15692
 	RabbitMQInterNodePort     = 25672
 
 	RabbitMQVolumeData         = "data"
