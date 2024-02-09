@@ -299,7 +299,7 @@ func (r *RabbitMQ) SetDefaults() {
 	r.setDefaultContainerSecurityContext(&rmVersion, &r.Spec.PodTemplate)
 
 	dbContainer := coreutil.GetContainerByName(r.Spec.PodTemplate.Spec.Containers, RabbitMQContainerName)
-	if dbContainer != nil {
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
 	}
 

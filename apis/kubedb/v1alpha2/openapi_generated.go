@@ -30325,13 +30325,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SinglestoreSpec(ref common.Referen
 							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 						},
 					},
-					"enableSSL": {
-						SchemaProps: spec.SchemaProps{
-							Description: "To enable ssl for http layer",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"init": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init is used to initialize database",

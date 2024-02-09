@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"strings"
 
+	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
@@ -277,10 +278,16 @@ func (s *Singlestore) SetDefaults() {
 		s.setDefaultContainerSecurityContext(&sdbVersion, s.Spec.Topology.Leaf.PodTemplate)
 	}
 
-	if s.Spec.EnableSSL {
-		s.SetTLSDefaults()
-	}
+	s.SetTLSDefaults()
+
 	s.SetHealthCheckerDefaults()
+
+	if s.IsClustering() {
+		s.setDefaultContainerResourceLimits(s.Spec.Topology.Aggregator.PodTemplate)
+		s.setDefaultContainerResourceLimits(s.Spec.Topology.Leaf.PodTemplate)
+	} else {
+		s.setDefaultContainerResourceLimits(s.Spec.PodTemplate)
+	}
 }
 
 func (s *Singlestore) setDefaultContainerSecurityContext(sdbVersion *catalog.SinglestoreVersion, podTemplate *ofst.PodTemplateSpec) {
@@ -376,6 +383,25 @@ func (s *Singlestore) assignDefaultContainerSecurityContext(sdbVersion *catalog.
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
+
+func (s *Singlestore) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
+	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, SinglestoreContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
+	}
+
+	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, SinglestoreInitContainerName)
+	if initContainer != nil && (initContainer.Resources.Requests == nil && initContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&initContainer.Resources, DefaultInitContainerResource)
+	}
+
+	if s.IsClustering() {
+		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, SinglestoreCoordinatorContainerName)
+		if coordinatorContainer != nil && (coordinatorContainer.Resources.Requests == nil && coordinatorContainer.Resources.Limits == nil) {
+			apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, CoordinatorDefaultResources)
+		}
 	}
 }
 

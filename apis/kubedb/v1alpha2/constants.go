@@ -847,9 +847,9 @@ const (
 	DruidConfigFileNameRouters        = "routers.properties"
 	DruidVolumeMySQLMetadataStorage   = "mysql-metadata-storage"
 
-	DruidMainContainer = "druid"
-	DruidInitContainer = "init-druid"
-	DruidUserAdmin     = "admin"
+	DruidContainerName     = "druid"
+	DruidInitContainerName = "init-druid"
+	DruidUserAdmin         = "admin"
 
 	EnvDruidAdminPassword          = "DRUID_ADMIN_PASSWORD"
 	EnvDruidMetdataStoragePassword = "DRUID_METADATA_STORAGE_PASSWORD"
