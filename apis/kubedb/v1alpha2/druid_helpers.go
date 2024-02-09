@@ -335,7 +335,7 @@ func (d *Druid) SetDefaults() {
 				}
 				d.setDefaultContainerSecurityContext(&druidVersion, &d.Spec.Topology.Coordinators.PodTemplate)
 				d.setDefaultInitContainerSecurityContext(&druidVersion, &d.Spec.Topology.Coordinators.PodTemplate)
-				d.setDefaultContainerResourceLimits(&d.Spec.Topology.Coordinators.PodTemplate)
+				d.setCoordinatorsDefaultContainerResourceLimits(&d.Spec.Topology.Coordinators.PodTemplate)
 			}
 		}
 		if d.Spec.Topology.Overlords != nil {
@@ -465,10 +465,12 @@ func (d *Druid) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateS
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
 	}
+}
 
-	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, DruidInitContainerName)
-	if initContainer != nil && (initContainer.Resources.Requests == nil && initContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&initContainer.Resources, DefaultInitContainerResource)
+func (d *Druid) setCoordinatorsDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
+	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, DruidContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResourcesMemoryIntensive)
 	}
 }
 
