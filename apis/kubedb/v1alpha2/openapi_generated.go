@@ -550,6 +550,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolConfiguration":            schema_apimachinery_apis_kubedb_v1alpha2_PgpoolConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolList":                     schema_apimachinery_apis_kubedb_v1alpha2_PgpoolList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolSpec":                     schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolStatsService":             schema_apimachinery_apis_kubedb_v1alpha2_PgpoolStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolStatus":                   schema_apimachinery_apis_kubedb_v1alpha2_PgpoolStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgreLeaderElectionConfig":    schema_apimachinery_apis_kubedb_v1alpha2_PostgreLeaderElectionConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Postgres":                       schema_apimachinery_apis_kubedb_v1alpha2_Postgres(ref),
@@ -28221,6 +28222,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Pgpool": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Pgpool"),
+						},
+					},
+				},
+				Required: []string{"Pgpool"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Pgpool"},
 	}
 }
 
