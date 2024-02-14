@@ -503,9 +503,9 @@ const (
 	EnvPgpoolPasswordEncryptionMethod = "PGPOOL_PASSWORD_ENCRYPTION_METHOD"
 	EnvEnablePoolPasswd               = "PGPOOL_ENABLE_POOL_PASSWD"
 	EnvSkipPasswdEncryption           = "PGPOOL_SKIP_PASSWORD_ENCRYPTION"
-	ConfigSecretMountPath             = "/config"
-	ConfigVolumeName                  = "pgpool-config"
-	ContainerName                     = "pgpool"
+	PgpoolConfigSecretMountPath       = "/config"
+	PgpoolConfigVolumeName            = "pgpool-config"
+	PgpoolContainerName               = "pgpool"
 	PgpoolAuthUsername                = "pcp"
 	SyncPeriod                        = 10
 	// ========================================== ZooKeeper Constants =================================================//
