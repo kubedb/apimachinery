@@ -160,38 +160,24 @@ func (p *Pgpool) SetSecurityContext(ppVersion *catalog.PgpoolVersion, podTemplat
 	if podTemplate == nil {
 		return
 	}
-
 	if podTemplate.Spec.SecurityContext == nil {
-		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{
-			RunAsUser:    ppVersion.Spec.SecurityContext.RunAsUser,
-			RunAsGroup:   ppVersion.Spec.SecurityContext.RunAsUser,
-			RunAsNonRoot: pointer.BoolP(true),
-		}
-	} else {
-		if podTemplate.Spec.SecurityContext.RunAsUser == nil {
-			podTemplate.Spec.SecurityContext.RunAsUser = ppVersion.Spec.SecurityContext.RunAsUser
-		}
-		if podTemplate.Spec.SecurityContext.RunAsGroup == nil {
-			podTemplate.Spec.SecurityContext.RunAsGroup = podTemplate.Spec.SecurityContext.RunAsUser
-		}
+		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
-
-	// Need to set FSGroup equal to  p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup.
-	// So that /var/pv directory have the group permission for the RunAsGroup user GID.
-	// Otherwise, We will get write permission denied.
-	podTemplate.Spec.SecurityContext.FSGroup = podTemplate.Spec.SecurityContext.RunAsGroup
+	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+		podTemplate.Spec.SecurityContext.FSGroup = ppVersion.Spec.SecurityContext.RunAsUser
+	}
 
 	container := core_util.GetContainerByName(podTemplate.Spec.Containers, PgpoolContainerName)
 	if container == nil {
 		container = &core.Container{
 			Name: PgpoolContainerName,
 		}
-		podTemplate.Spec.Containers = append(podTemplate.Spec.Containers, *container)
 	}
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
 	p.assignContainerSecurityContext(ppVersion, container.SecurityContext)
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *container)
 }
 
 func (p *Pgpool) assignContainerSecurityContext(ppVersion *catalog.PgpoolVersion, sc *core.SecurityContext) {
