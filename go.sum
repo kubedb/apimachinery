@@ -247,6 +247,8 @@ github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/klauspost/compress v1.17.0 h1:Rnbp4K9EjcDuVuHtd0dgA4qNuv9yKDYKK1ulpJwgrqM=
 github.com/klauspost/compress v1.17.0/go.mod h1:ntbaceVETuRiXiv4DpjP66DpAtAGkEQskQzEyD//IeE=
+github.com/klauspost/cpuid/v2 v2.0.9 h1:lgaqFMSdTdQYdZ04uHyN2d/eKdOMyi2YLSvlQIBFYa4=
+github.com/klauspost/cpuid/v2 v2.0.9/go.mod h1:FInQzS24/EEf25PyTYn52gqo7WaD8xa0213Md/qVLRg=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pretty v0.2.1/go.mod h1:ipq/a2n7PKx3OHsz4KJII5eveXtPO4qwEXGdVfWzfnI=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
@@ -375,6 +377,10 @@ github.com/yudai/pp v2.0.1+incompatible/go.mod h1:PuxR/8QJ7cyCkFp/aUDS+JY727OFEZ
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
+github.com/zeebo/assert v1.3.0 h1:g7C04CbJuIDKNPFHmsk4hwZDO5O+kntRxzaUoNXj+IQ=
+github.com/zeebo/assert v1.3.0/go.mod h1:Pq9JiuJQpG8JLJdtkwrJESF0Foym2/D9XMU5ciN/wJ0=
+github.com/zeebo/xxh3 v1.0.2 h1:xZmwmqxHZA8AI603jOQ0tMqmBr9lPeFwGg6d+xy9DC0=
+github.com/zeebo/xxh3 v1.0.2/go.mod h1:5NWz9Sef7zIDm2JHfFlcQvNekmcEl9ekUZQQKCYaDcA=
 go.bytebuilders.dev/audit v0.0.32-0.20240105184043-9cf3195203b7 h1:LaxhSR/p5uH9a7gPTGeAXJ58df9TxT4Hq9LjZAzmn0w=
 go.bytebuilders.dev/audit v0.0.32-0.20240105184043-9cf3195203b7/go.mod h1:7B7cjCAoqAW+DghpBi6MzajKYxn4d+8dqx7iIAjMvu0=
 go.bytebuilders.dev/license-proxyserver v0.0.7-0.20231225202028-31122ab82502 h1:825EwUwDMThCiOJs5NZvnSYfWy77oz83FZkpFUwlryM=
@@ -647,8 +653,8 @@ k8s.io/utils v0.0.0-20231127182322-b307cd553661 h1:FepOBzJ0GXm8t0su67ln2wAZjbQ6R
 k8s.io/utils v0.0.0-20231127182322-b307cd553661/go.mod h1:OLgZIPagt7ERELqWJFomSt595RzquPNLL48iOWgYOg0=
 kmodules.xyz/apiversion v0.2.0 h1:vAQYqZFm4xu4pbB1cAdHbFEPES6EQkcR4wc06xdTOWk=
 kmodules.xyz/apiversion v0.2.0/go.mod h1:oPX8g8LvlPdPX3Yc5YvCzJHQnw3YF/X4/jdW0b1am80=
-kmodules.xyz/client-go v0.29.6 h1:xTVq5LZvsPBUTLY7PORq7zveLOj/vpuTDvkpHWOk3RM=
-kmodules.xyz/client-go v0.29.6/go.mod h1:pHuzpwzEcDUIGjVVvwz9N8lY+6A7HXwvs2d7NtK7Hho=
+kmodules.xyz/client-go v0.29.8 h1:8Uw7zoaye0ZaY47fBVTLjDOOn6cXzLPYBNnzHj7pgH4=
+kmodules.xyz/client-go v0.29.8/go.mod h1:WYM/ZC3I5/AUGHYyYYEzYHFhnSwK+tEZyGld6KpLoxI=
 kmodules.xyz/crd-schema-fuzz v0.29.1 h1:zJTlWYOrT5dsVVHW8HGcnR/vaWfxQfNh11QwTtkYpcs=
 kmodules.xyz/crd-schema-fuzz v0.29.1/go.mod h1:n708z9YQqLMP2KNLQVgBcRJw1QpSWLvpNCEi+KJDOYE=
 kmodules.xyz/custom-resources v0.29.1 h1:xiNylhs3ILRbcUhxxy306AOy9GMA4Mq7xFIptZKgal4=
@@ -669,10 +675,10 @@ kmodules.xyz/resource-metrics v0.29.0 h1:YBSVCbGdAugUqZK4igHu3fPhxvpYar4xejE6njr
 kmodules.xyz/resource-metrics v0.29.0/go.mod h1:OuG/QobZ7o8GFHl/u3lqaUR0fDZDegxtV8Vdh+MNBD4=
 kmodules.xyz/webhook-runtime v0.29.1 h1:SQ8NvwJpxv5CUuXIubSg9g0Bk8BBnj4dhCWEk6Ou8g8=
 kmodules.xyz/webhook-runtime v0.29.1/go.mod h1:WVgNO4NqFdYwYZ82L6QIycN1Ax47y+yXi7XIHekYylo=
-kubeops.dev/sidekick v0.0.5-0.20231225214445-a15c70833046 h1:X1ieV+IXqNesmFwSH6NEVF1J2wO0vplC4k6v3Vmq0d0=
-kubeops.dev/sidekick v0.0.5-0.20231225214445-a15c70833046/go.mod h1:XX6Vhw9EMmX9R8Y13AgaYDAsfeLZdTL8MzymTOAT0nY=
-kubestash.dev/apimachinery v0.4.0 h1:FH4gS7hWwGeY0MdWyMwAZYF43xXj3q/dNlMApiVYPz4=
-kubestash.dev/apimachinery v0.4.0/go.mod h1:ysktK/jLtv5SnFgyxmBZmSFDZmD03lFwEF/8bG/VoF8=
+kubeops.dev/sidekick v0.0.5 h1:HFeAVomGJmSmbnxoNiT+uP97IjgCY17zG4RtPUlzVZs=
+kubeops.dev/sidekick v0.0.5/go.mod h1:uEz3ICN1oXA9dB+86T8kgRCrbakSjafWDPxQadqFkS0=
+kubestash.dev/apimachinery v0.5.0 h1:wfEv593FpyckyAkoJhuRN3WXyDJJ2Javxs4g56kBcFA=
+kubestash.dev/apimachinery v0.5.0/go.mod h1:f01bFDdWNYXxe0TSvE1AzgZgHw9pZzi3Wy+/GDbBopA=
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.28.0 h1:TgtAeesdhpm2SGwkQasmbeqDo8th5wOBA5h/AjTKA4I=
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.28.0/go.mod h1:VHVDI/KrK4fjnV61bE2g3sA7tiETLn8sooImelsCx3Y=
 sigs.k8s.io/cli-utils v0.34.0 h1:zCUitt54f0/MYj/ajVFnG6XSXMhpZ72O/3RewIchW8w=
@@ -687,7 +693,7 @@ sigs.k8s.io/structured-merge-diff/v4 v4.4.1 h1:150L+0vs/8DA78h1u02ooW1/fFq/Lwr+s
 sigs.k8s.io/structured-merge-diff/v4 v4.4.1/go.mod h1:N8hJocpFajUSSeSJ9bOZ77VzejKZaXsTtZo4/u7Io08=
 sigs.k8s.io/yaml v1.4.0 h1:Mk1wCc2gy/F0THH0TAp1QYyJNzRm2KCLy3o5ASXVI5E=
 sigs.k8s.io/yaml v1.4.0/go.mod h1:Ejl7/uTz7PSA4eKMyQCUTnhZYNmLIl+5c2lQPGR2BPY=
-stash.appscode.dev/apimachinery v0.33.0-rc.0 h1:yfLn3YYgfo12pTI8oOZBswkQpzFt4MzPaIaoZ2Nok64=
-stash.appscode.dev/apimachinery v0.33.0-rc.0/go.mod h1:M51wIqUONZ7cmx/h5W+Lp+/TlYAF8z7+kQJPsvtl7G4=
+stash.appscode.dev/apimachinery v0.33.0 h1:0HpdLsXTErZWTPl3xH1N2ev8SwLOwH20mTd8Y4Oy+yg=
+stash.appscode.dev/apimachinery v0.33.0/go.mod h1:3A7DVqgJfI7LbLAM5pBpJebd/mChJb86nmekm73TRGw=
 x-helm.dev/apimachinery v0.0.16 h1:Eb160xcdH9fMVHak5QSWYWxoaReytch+A7kk25QWjx0=
 x-helm.dev/apimachinery v0.0.16/go.mod h1:05brgFw5oWOX7OTXT090SQojqXjbttqWfqoJo+ejBU4=

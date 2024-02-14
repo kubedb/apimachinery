@@ -30,7 +30,7 @@ require (
 	k8s.io/kube-aggregator v0.29.0
 	k8s.io/kube-openapi v0.0.0-20231129212854-f0671cc7e66a
 	k8s.io/metrics v0.25.1
-	kmodules.xyz/client-go v0.29.6
+	kmodules.xyz/client-go v0.29.8
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.29.1
 	kmodules.xyz/monitoring-agent-api v0.29.0
@@ -38,11 +38,11 @@ require (
 	kmodules.xyz/offshoot-api v0.29.0
 	kmodules.xyz/resource-metadata v0.18.2-0.20240105072614-e92a8a48d400
 	kmodules.xyz/webhook-runtime v0.29.1
-	kubeops.dev/sidekick v0.0.5-0.20231225214445-a15c70833046
-	kubestash.dev/apimachinery v0.4.0
+	kubeops.dev/sidekick v0.0.5
+	kubestash.dev/apimachinery v0.5.0
 	sigs.k8s.io/controller-runtime v0.17.0
 	sigs.k8s.io/yaml v1.4.0
-	stash.appscode.dev/apimachinery v0.33.0-rc.0
+	stash.appscode.dev/apimachinery v0.33.0
 )
 
 require (
@@ -107,6 +107,7 @@ require (
 	github.com/jonboulle/clockwork v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
+	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
@@ -136,6 +137,7 @@ require (
 	github.com/vbatts/tar-split v0.11.3 // indirect
 	github.com/yudai/gojsondiff v1.0.0 // indirect
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
+	github.com/zeebo/xxh3 v1.0.2 // indirect
 	go.bytebuilders.dev/license-proxyserver v0.0.7-0.20231225202028-31122ab82502 // indirect
 	go.bytebuilders.dev/license-verifier v0.13.4 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.10 // indirect
