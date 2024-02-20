@@ -21,13 +21,13 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Masterminds/semver/v3"
-	"github.com/pkg/errors"
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	"github.com/Masterminds/semver/v3"
+	"github.com/pkg/errors"
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
@@ -294,13 +294,21 @@ func getMajorPgVersion(postgresVersion *catalog.PostgresVersion) (uint64, error)
 func (p *Postgres) SetDefaultReplicationMode(postgresVersion *catalog.PostgresVersion) {
 	majorVersion, _ := getMajorPgVersion(postgresVersion)
 	if p.Spec.Replication.WALLimitPolicy == "" {
-		if majorVersion <= uint64(10) {
+		if majorVersion <= uint64(12) {
 			p.Spec.Replication.WALLimitPolicy = WALKeepSegment
 		} else {
 			p.Spec.Replication.WALLimitPolicy = ReplicationSlot
 		}
 	}
-
+	if p.Spec.Replication.WALLimitPolicy == WALKeepSegment && p.Spec.Replication.WalKeepSegment == nil {
+		p.Spec.Replication.WalKeepSegment = pointer.Int32P(64)
+	}
+	if p.Spec.Replication.WALLimitPolicy == WALKeepSize && p.Spec.Replication.WalKeepSizeInMegaBytes == nil {
+		p.Spec.Replication.WalKeepSizeInMegaBytes = pointer.Int32P(1024)
+	}
+	if p.Spec.Replication.WALLimitPolicy == ReplicationSlot && p.Spec.Replication.MaxSlotWALKeepSizeInMegaBytes == nil {
+		p.Spec.Replication.MaxSlotWALKeepSizeInMegaBytes = pointer.Int32P(-1)
+	}
 }
 
 func (p *Postgres) SetArbiterDefault() {
