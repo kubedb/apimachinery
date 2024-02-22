@@ -225,20 +225,6 @@ func (p *Pgpool) SetSecurityContext(ppVersion *catalog.PgpoolVersion, podTemplat
 	}
 	p.assignContainerSecurityContext(ppVersion, container.SecurityContext)
 	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *container)
-
-	//if p.Spec.Monitor != nil {
-	//	container = core_util.GetContainerByName(podTemplate.Spec.Containers, mona.PrometheusExporterPortName)
-	//	if container == nil {
-	//		container = &core.Container{
-	//			Name: mona.PrometheusExporterPortName,
-	//		}
-	//	}
-	//	if container.SecurityContext == nil {
-	//		container.SecurityContext = &core.SecurityContext{}
-	//	}
-	//	p.assignContainerSecurityContext(ppVersion, container.SecurityContext)
-	//	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *container)
-	//}
 }
 
 func (p *Pgpool) assignContainerSecurityContext(ppVersion *catalog.PgpoolVersion, sc *core.SecurityContext) {
@@ -269,11 +255,6 @@ func (p *Pgpool) setContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
 	if ppContainer != nil && (ppContainer.Resources.Requests == nil && ppContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&ppContainer.Resources, DefaultResources)
 	}
-
-	//exporterContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, mona.PrometheusExporterPortName)
-	//if exporterContainer != nil && (exporterContainer.Resources.Requests == nil && exporterContainer.Resources.Limits == nil) {
-	//	apis.SetDefaultResourceLimits(&exporterContainer.Resources, DefaultResources)
-	//}
 }
 
 func (p *Pgpool) SetDefaults() {
