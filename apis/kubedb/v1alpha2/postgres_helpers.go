@@ -340,26 +340,6 @@ func (p *Postgres) setDefaultCapabilitiesForPostgres(sc *core.SecurityContext) {
 		sc.Capabilities = &core.Capabilities{
 			Add: []core.Capability{IPS_LOCK, SYS_RESOURCE},
 		}
-	} else {
-		newCapabilities := &core.Capabilities{}
-		caps := []core.Capability{IPS_LOCK, SYS_RESOURCE}
-		if sc.Capabilities.Add == nil {
-			newCapabilities.Add = caps
-		} else {
-			newCapabilities.Add = sc.Capabilities.Add
-			for i := range caps {
-				found := false
-				for _, capability := range sc.Capabilities.Add {
-					if caps[i] == capability {
-						found = true
-					}
-				}
-				if !found {
-					newCapabilities.Add = append(newCapabilities.Add, caps[i])
-				}
-			}
-		}
-		sc.Capabilities = newCapabilities
 	}
 }
 
