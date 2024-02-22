@@ -304,6 +304,9 @@ func (r *RabbitMQ) SetDefaults() {
 	}
 
 	r.SetHealthCheckerDefaults()
+	if r.Spec.Monitor != nil {
+		r.Spec.Monitor.SetDefaults()
+	}
 }
 
 func (r *RabbitMQ) setDefaultContainerSecurityContext(rmVersion *catalog.RabbitMQVersion, podTemplate *ofst.PodTemplateSpec) {
