@@ -500,17 +500,26 @@ const (
 	PgBouncerDefaultIgnoreStartupParameters = "empty"
 
 	// =========================== Pgpool Constants ============================
-	EnvPostgresUsername               = "POSTGRES_USERNAME"
-	EnvPgpoolPcpUser                  = "PGPOOL_PCP_USER"
-	EnvPgpoolPcpPassword              = "PGPOOL_PCP_PASSWORD"
-	EnvPgpoolPasswordEncryptionMethod = "PGPOOL_PASSWORD_ENCRYPTION_METHOD"
-	EnvEnablePoolPasswd               = "PGPOOL_ENABLE_POOL_PASSWD"
-	EnvSkipPasswdEncryption           = "PGPOOL_SKIP_PASSWORD_ENCRYPTION"
-	PgpoolConfigSecretMountPath       = "/config"
-	PgpoolConfigVolumeName            = "pgpool-config"
-	PgpoolContainerName               = "pgpool"
-	PgpoolAuthUsername                = "pcp"
-	SyncPeriod                        = 10
+	EnvPostgresUsername                = "POSTGRES_USERNAME"
+	EnvPgpoolPcpUser                   = "PGPOOL_PCP_USER"
+	EnvPgpoolPcpPassword               = "PGPOOL_PCP_PASSWORD"
+	EnvPgpoolPasswordEncryptionMethod  = "PGPOOL_PASSWORD_ENCRYPTION_METHOD"
+	EnvEnablePoolPasswd                = "PGPOOL_ENABLE_POOL_PASSWD"
+	EnvSkipPasswdEncryption            = "PGPOOL_SKIP_PASSWORD_ENCRYPTION"
+	PgpoolConfigSecretMountPath        = "/config"
+	PgpoolConfigVolumeName             = "pgpool-config"
+	PgpoolContainerName                = "pgpool"
+	PgpoolDefaultServicePort           = 9999
+	PgpoolMonitoringDefaultServicePort = 9719
+	PgpoolExporterDatabase             = "postgres"
+	EnvPgpoolExporterDatabase          = "POSTGRES_DATABASE"
+	EnvPgpoolService                   = "PGPOOL_SERVICE"
+	EnvPgpoolServicePort               = "PGPOOL_SERVICE_PORT"
+	EnvPgpoolSSLMode                   = "SSLMODE"
+	PgpoolDefaultSSLMode               = "disable"
+	PgpoolExporterContainerName        = "exporter"
+	PgpoolAuthUsername                 = "pcp"
+	SyncPeriod                         = 10
 	// ========================================== ZooKeeper Constants =================================================//
 
 	KubeDBZooKeeperRoleName         = "kubedb:zookeeper-version-reader"
