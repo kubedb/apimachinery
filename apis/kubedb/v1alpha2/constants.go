@@ -791,9 +791,11 @@ const (
 	SolrCloudDistribUpdateConnTimeoutKey   = "distribUpdateConnTimeout"
 	SolrCloudDistribUpdateConnTimeoutValue = 60000
 	SolrCloudZKCredentialProviderKey       = "zkCredentialsProvider"
-	SolrCloudZKCredentialProviderValue     = "org.apache.solr.common.cloud.DefaultZkCredentialsProvider"
+	SolrCloudZKCredentialProviderValue     = "org.apache.solr.common.cloud.DigestZkCredentialsProvider"
 	SolrCloudZKAclProviderKey              = "zkACLProvider"
-	SolrCloudZKAclProviderValue            = "org.apache.solr.common.cloud.DefaultZkACLProvider"
+	SolrCloudZKAclProviderValue            = "org.apache.solr.common.cloud.DigestZkACLProvider"
+	SolrCloudZKCredentialsInjectorKey      = "zkCredentialsInjector"
+	SolrCloudZKCredentialsInjectorValue    = "org.apache.solr.common.cloud.VMParamsZkCredentialsInjector"
 
 	ShardHandlerFactorySocketTimeoutKey   = "socketTimeout"
 	ShardHandlerFactorySocketTimeoutValue = 600000
