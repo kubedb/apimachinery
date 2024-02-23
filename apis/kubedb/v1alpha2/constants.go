@@ -1001,22 +1001,6 @@ const (
 	DruidHealthDataOne  = "1"
 )
 
-type DruidMetadataStorageType string
-
-const (
-	DruidMetadataStorageMySQL      DruidMetadataStorageType = "MySQL"
-	DruidMetadataStoragePostgreSQL DruidMetadataStorageType = "PostgreSQL"
-)
-
-type DruidDeepStorageType string
-
-const (
-	DruidDeepStorageS3     DruidDeepStorageType = "s3"
-	DruidDeepStorageGoogle DruidDeepStorageType = "google"
-	DruidDeepStorageAzure  DruidDeepStorageType = "azure"
-	DruidDeepStorageHDFS   DruidDeepStorageType = "hdfs"
-)
-
 const (
 	RabbitMQAMQPPort          = 5672
 	RabbitMQPeerDiscoveryPort = 4369

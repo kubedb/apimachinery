@@ -14126,11 +14126,13 @@ spec:
                 properties:
                   name:
                     type: string
+                  namespace:
+                    type: string
+                required:
+                - name
                 type: object
-                x-kubernetes-map-type: atomic
             required:
             - version
-            - zookeeperRef
             type: object
           status:
             properties:

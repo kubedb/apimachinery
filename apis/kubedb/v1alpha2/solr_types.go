@@ -69,7 +69,8 @@ type SolrSpec struct {
 	// Storage to specify how storage shall be used
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
-	ZookeeperRef *core.LocalObjectReference `json:"zookeeperRef"`
+	// 	// ZooKeeper contains information for Solr to store configurations for collections
+	ZookeeperRef *kmapi.ObjectReference `json:"zookeeperRef,omitempty"`
 
 	// +optional
 	SolrModules []string `json:"solrModules,omitempty"`
