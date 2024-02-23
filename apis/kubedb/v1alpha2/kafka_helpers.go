@@ -386,7 +386,7 @@ func (k *Kafka) setDefaultContainerSecurityContext(kfVersion *catalog.KafkaVersi
 		dbContainer = &core.Container{
 			Name: KafkaContainerName,
 		}
-		podTemplate.Spec.Containers = append(podTemplate.Spec.Containers, *dbContainer)
+		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
 	}
 	if dbContainer.SecurityContext == nil {
 		dbContainer.SecurityContext = &core.SecurityContext{}
