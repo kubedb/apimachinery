@@ -322,7 +322,7 @@ func (s *Solr) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSp
 
 	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, SolrInitContainerName)
 	if initContainer != nil && (initContainer.Resources.Requests == nil && initContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&initContainer.Resources, DefaultResources)
+		apis.SetDefaultResourceLimits(&initContainer.Resources, DefaultInitContainerResource)
 	}
 }
 
