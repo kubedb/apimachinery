@@ -23,7 +23,7 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
-// Solr is the schema for the Sole API
+// Solr is the schema for the Solr API
 
 // +genclient
 // +k8s:openapi-gen=true
@@ -69,7 +69,7 @@ type SolrSpec struct {
 	// Storage to specify how storage shall be used
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
-	ZookeeperRef *core.LocalObjectReference `json:"zookeeperRef"`
+	Zookeeper Zookeeper `json:"zookeeper"`
 
 	// +optional
 	SolrModules []string `json:"solrModules,omitempty"`
@@ -114,6 +114,11 @@ type SolrSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 20, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+}
+
+type Zookeeper struct {
+	Name      string `json:"name,omitempty"`
+	Namespace string `json:"namespace,omitempty"`
 }
 
 type SolrClusterTopology struct {
