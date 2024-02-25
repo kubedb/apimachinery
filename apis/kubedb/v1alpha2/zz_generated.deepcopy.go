@@ -3766,6 +3766,11 @@ func (in *RabbitMQSpec) DeepCopyInto(out *RabbitMQSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.Monitor != nil {
+		in, out := &in.Monitor, &out.Monitor
+		*out = new(monitoringagentapiapiv1.AgentSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
 	return
 }
@@ -4936,6 +4941,11 @@ func (in *ZooKeeperSpec) DeepCopyInto(out *ZooKeeperSpec) {
 		}
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
+	if in.Monitor != nil {
+		in, out := &in.Monitor, &out.Monitor
+		*out = new(monitoringagentapiapiv1.AgentSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

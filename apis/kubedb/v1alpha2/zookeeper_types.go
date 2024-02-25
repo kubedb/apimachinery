@@ -20,7 +20,8 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
 const (
@@ -60,6 +61,9 @@ type ZooKeeperSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas"`
 
+	// +kubebuilder:default=8080
+	AdminServerPort int32 `json:"adminServerPort"`
+
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
@@ -96,6 +100,10 @@ type ZooKeeperSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 20, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+
+	// Monitor is used monitor database instance
+	// +optional
+	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 }
 
 // ZooKeeperStatus defines the observed state of ZooKeeper
