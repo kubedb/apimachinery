@@ -115,8 +115,8 @@ func (p *Pgpool) ValidateCreateOrUpdate() field.ErrorList {
 	}
 
 	if p.Spec.PostgresRef == nil {
-		errorList = append(errorList, field.Required(field.NewPath("spec").Child("backend").Child("name"),
-			"`spec.backend.name` is missing",
+		errorList = append(errorList, field.Required(field.NewPath("spec").Child("postgresRef"),
+			"`spec.postgresRef` is missing",
 		))
 	}
 

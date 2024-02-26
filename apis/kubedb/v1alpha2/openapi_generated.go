@@ -28024,7 +28024,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref common.ReferenceCal
 					},
 					"postgresRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FerretDBBackend refers to the AppBinding of the backend PostgreSQL server",
+							Description: "PostgresRef refers to the AppBinding of the backend PostgreSQL server",
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},

@@ -70,7 +70,7 @@ type PgpoolSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
-	// FerretDBBackend refers to the AppBinding of the backend PostgreSQL server
+	// PostgresRef refers to the AppBinding of the backend PostgreSQL server
 	PostgresRef *kmapi.ObjectReference `json:"postgresRef"`
 
 	// Pgpool secret containing username and password for pgpool pcp user
