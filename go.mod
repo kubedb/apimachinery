@@ -38,7 +38,7 @@ require (
 	kmodules.xyz/offshoot-api v0.29.0
 	kmodules.xyz/resource-metadata v0.18.2-0.20240219094915-0a7ba5704897
 	kmodules.xyz/webhook-runtime v0.29.1
-	kubeops.dev/petset v0.0.5-0.20240226114411-a1794c1daae2
+	kubeops.dev/petset v0.0.5-0.20240227054739-1b734770b729
 	kubeops.dev/sidekick v0.0.5
 	kubestash.dev/apimachinery v0.5.0
 	sigs.k8s.io/controller-runtime v0.17.0

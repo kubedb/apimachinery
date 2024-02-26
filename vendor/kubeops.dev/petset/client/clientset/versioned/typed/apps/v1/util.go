@@ -20,8 +20,6 @@ import (
 	"context"
 	"fmt"
 
-	petsetcs "kubeops.dev/petset/client/clientset/versioned"
-
 	jsoniter "github.com/json-iterator/go"
 	"github.com/pkg/errors"
 	"gomodules.xyz/pointer"
@@ -34,18 +32,19 @@ import (
 	"k8s.io/klog/v2"
 	kutil "kmodules.xyz/client-go"
 	core_util "kmodules.xyz/client-go/core/v1"
+	"kubeops.dev/petset/apis/apps/v1"
 )
 
 var json = jsoniter.ConfigFastest
 
-func CreateOrPatchPetSet(ctx context.Context, psc petsetcs.Interface, meta metav1.ObjectMeta, transform func(*PetSet) *PetSet, opts metav1.PatchOptions) (*PetSet, kutil.VerbType, error) {
-	cur, err := psc.AppsV1().PetSets(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+func CreateOrPatchPetSet(ctx context.Context, psc AppsV1Interface, meta metav1.ObjectMeta, transform func(*v1.PetSet) *v1.PetSet, opts metav1.PatchOptions) (*v1.PetSet, kutil.VerbType, error) {
+	cur, err := psc.PetSets(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
 		klog.V(3).Infof("Creating PetSet %s/%s.", meta.Namespace, meta.Name)
-		out, err := psc.AppsV1().PetSets(meta.Namespace).Create(ctx, transform(&PetSet{
+		out, err := psc.PetSets(meta.Namespace).Create(ctx, transform(&v1.PetSet{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "PetSet",
-				APIVersion: SchemeGroupVersion.String(),
+				APIVersion: v1.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: meta,
 		}), metav1.CreateOptions{
@@ -59,11 +58,11 @@ func CreateOrPatchPetSet(ctx context.Context, psc petsetcs.Interface, meta metav
 	return PatchPetSet(ctx, psc, cur, transform, opts)
 }
 
-func PatchPetSet(ctx context.Context, psc petsetcs.Interface, cur *PetSet, transform func(*PetSet) *PetSet, opts metav1.PatchOptions) (*PetSet, kutil.VerbType, error) {
+func PatchPetSet(ctx context.Context, psc AppsV1Interface, cur *v1.PetSet, transform func(*v1.PetSet) *v1.PetSet, opts metav1.PatchOptions) (*v1.PetSet, kutil.VerbType, error) {
 	return PatchPetSetObject(ctx, psc, cur, transform(cur.DeepCopy()), opts)
 }
 
-func PatchPetSetObject(ctx context.Context, psc petsetcs.Interface, cur, mod *PetSet, opts metav1.PatchOptions) (*PetSet, kutil.VerbType, error) {
+func PatchPetSetObject(ctx context.Context, psc AppsV1Interface, cur, mod *v1.PetSet, opts metav1.PatchOptions) (*v1.PetSet, kutil.VerbType, error) {
 	curJson, err := json.Marshal(cur)
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
@@ -74,7 +73,7 @@ func PatchPetSetObject(ctx context.Context, psc petsetcs.Interface, cur, mod *Pe
 		return nil, kutil.VerbUnchanged, err
 	}
 
-	patch, err := strategicpatch.CreateTwoWayMergePatch(curJson, modJson, PetSet{})
+	patch, err := strategicpatch.CreateTwoWayMergePatch(curJson, modJson, v1.PetSet{})
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
 	}
@@ -82,19 +81,19 @@ func PatchPetSetObject(ctx context.Context, psc petsetcs.Interface, cur, mod *Pe
 		return cur, kutil.VerbUnchanged, nil
 	}
 	klog.V(3).Infof("Patching PetSet %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
-	out, err := psc.AppsV1().PetSets(cur.Namespace).Patch(ctx, cur.Name, types.StrategicMergePatchType, patch, opts)
+	out, err := psc.PetSets(cur.Namespace).Patch(ctx, cur.Name, types.StrategicMergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
 
-func TryUpdatePetSet(ctx context.Context, psc petsetcs.Interface, meta metav1.ObjectMeta, transform func(*PetSet) *PetSet, opts metav1.UpdateOptions) (result *PetSet, err error) {
+func TryUpdatePetSet(ctx context.Context, psc AppsV1Interface, meta metav1.ObjectMeta, transform func(*v1.PetSet) *v1.PetSet, opts metav1.UpdateOptions) (result *v1.PetSet, err error) {
 	attempt := 0
 	err = wait.PollUntilContextTimeout(ctx, kutil.RetryInterval, kutil.RetryTimeout, true, func(ctx context.Context) (bool, error) {
 		attempt++
-		cur, e2 := psc.AppsV1().PetSets(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+		cur, e2 := psc.PetSets(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
 			return false, e2
 		} else if e2 == nil {
-			result, e2 = psc.AppsV1().PetSets(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
+			result, e2 = psc.PetSets(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
 		klog.Errorf("Attempt %d failed to update PetSet %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
@@ -107,7 +106,7 @@ func TryUpdatePetSet(ctx context.Context, psc petsetcs.Interface, meta metav1.Ob
 	return
 }
 
-func IsPetSetReady(obj *PetSet) bool {
+func IsPetSetReady(obj *v1.PetSet) bool {
 	replicas := int32(1)
 	if obj.Spec.Replicas != nil {
 		replicas = *obj.Spec.Replicas
@@ -115,7 +114,7 @@ func IsPetSetReady(obj *PetSet) bool {
 	return replicas == obj.Status.ReadyReplicas
 }
 
-func PetSetsAreReady(items []*PetSet) (bool, string) {
+func PetSetsAreReady(items []*v1.PetSet) (bool, string) {
 	for _, ps := range items {
 		if !IsPetSetReady(ps) {
 			return false, fmt.Sprintf("All desired replicas are not ready. For PetSet: %s/%s desired replicas: %d, ready replicas: %d.", ps.Namespace, ps.Name, pointer.Int32(ps.Spec.Replicas), ps.Status.ReadyReplicas)
@@ -124,17 +123,17 @@ func PetSetsAreReady(items []*PetSet) (bool, string) {
 	return true, "All desired replicas are ready."
 }
 
-func WaitUntilPetSetReady(ctx context.Context, psc petsetcs.Interface, meta metav1.ObjectMeta) error {
+func WaitUntilPetSetReady(ctx context.Context, psc AppsV1Interface, meta metav1.ObjectMeta) error {
 	return wait.PollUntilContextTimeout(ctx, kutil.RetryInterval, kutil.ReadinessTimeout, true, func(ctx context.Context) (bool, error) {
-		if obj, err := psc.AppsV1().PetSets(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{}); err == nil {
+		if obj, err := psc.PetSets(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{}); err == nil {
 			return IsPetSetReady(obj), nil
 		}
 		return false, nil
 	})
 }
 
-func DeletePetSet(ctx context.Context, c kubernetes.Interface, psc petsetcs.Interface, meta metav1.ObjectMeta) error {
-	petSet, err := psc.AppsV1().PetSets(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+func DeletePetSet(ctx context.Context, c kubernetes.Interface, psc AppsV1Interface, meta metav1.ObjectMeta) error {
+	petSet, err := psc.PetSets(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if err != nil {
 		if kerr.IsNotFound(err) {
 			return nil
@@ -144,7 +143,7 @@ func DeletePetSet(ctx context.Context, c kubernetes.Interface, psc petsetcs.Inte
 	}
 
 	// Update PetSet
-	_, _, err = PatchPetSet(ctx, psc, petSet, func(in *PetSet) *PetSet {
+	_, _, err = PatchPetSet(ctx, psc, petSet, func(in *v1.PetSet) *v1.PetSet {
 		in.Spec.Replicas = pointer.Int32P(0)
 		return in
 	}, metav1.PatchOptions{})
@@ -157,5 +156,5 @@ func DeletePetSet(ctx context.Context, c kubernetes.Interface, psc petsetcs.Inte
 		return err
 	}
 
-	return psc.AppsV1().PetSets(petSet.Namespace).Delete(ctx, petSet.Name, metav1.DeleteOptions{})
+	return psc.PetSets(petSet.Namespace).Delete(ctx, petSet.Name, metav1.DeleteOptions{})
 }

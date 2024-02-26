@@ -21,6 +21,7 @@ import (
 
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 	kubedbinformers "kubedb.dev/apimachinery/client/informers/externalversions"
+	petsetcs "kubeops.dev/petset/client/clientset/versioned"
 
 	cmInformers "github.com/cert-manager/cert-manager/pkg/client/informers/externalversions"
 	auditlib "go.bytebuilders.dev/audit/lib"
@@ -52,6 +53,8 @@ type Controller struct {
 	Client kubernetes.Interface
 	// KubeDB client
 	DBClient cs.Interface
+	// PetSet client
+	PSClient petsetcs.Interface
 	// Dynamic client
 	DynamicClient dynamic.Interface
 	// AppCatalog client

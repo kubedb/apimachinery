@@ -27,7 +27,7 @@ import (
 	appslister "k8s.io/client-go/listers/apps/v1"
 	apps_util "kmodules.xyz/client-go/apps/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
-	petsetapps "kubeops.dev/petset/apis/apps/v1"
+	petsetutil "kubeops.dev/petset/client/clientset/versioned/typed/apps/v1"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -56,7 +56,7 @@ func checkReplicasOfPetSet(lister pslister.PetSetNamespaceLister, selector label
 	}
 
 	// return isReplicasReady, message, error
-	ready, msg := petsetapps.PetSetsAreReady(items)
+	ready, msg := petsetutil.PetSetsAreReady(items)
 	return ready, msg, nil
 }
 
