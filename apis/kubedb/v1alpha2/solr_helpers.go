@@ -274,7 +274,6 @@ func (s *Solr) setDefaultContainerSecurityContext(slVersion *catalog.SolrVersion
 		initContainer = &v1.Container{
 			Name: SolrInitContainerName,
 		}
-		podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 	}
 	if initContainer.SecurityContext == nil {
 		initContainer.SecurityContext = &v1.SecurityContext{}
@@ -287,12 +286,12 @@ func (s *Solr) setDefaultContainerSecurityContext(slVersion *catalog.SolrVersion
 		container = &v1.Container{
 			Name: SolrContainerName,
 		}
-		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 	}
 	if container.SecurityContext == nil {
 		container.SecurityContext = &v1.SecurityContext{}
 	}
 	s.assignDefaultContainerSecurityContext(slVersion, container.SecurityContext)
+	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 }
 
 func (s *Solr) assignDefaultContainerSecurityContext(slVersion *catalog.SolrVersion, sc *v1.SecurityContext) {
