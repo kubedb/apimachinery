@@ -32,7 +32,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
@@ -41,6 +40,7 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 func (_ Postgres) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -415,10 +415,10 @@ func (p *PostgresSpec) GetPersistentSecrets() []string {
 	return secrets
 }
 
-func (p *Postgres) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
-	// Desire number of statefulSets
+func (p *Postgres) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
+	// Desire number of petsets
 	expectedItems := 1
-	return checkReplicas(lister.StatefulSets(p.Namespace), labels.SelectorFromSet(p.OffshootLabels()), expectedItems)
+	return checkReplicasOfPetSet(lister.PetSets(p.Namespace), labels.SelectorFromSet(p.OffshootLabels()), expectedItems)
 }
 
 // CertificateName returns the default certificate name and/or certificate secret name for a certificate alias

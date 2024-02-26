@@ -27,6 +27,8 @@ import (
 	appslister "k8s.io/client-go/listers/apps/v1"
 	apps_util "kmodules.xyz/client-go/apps/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
+	petsetapps "kubeops.dev/petset/apis/apps/v1"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -41,6 +43,20 @@ func checkReplicas(lister appslister.StatefulSetNamespaceLister, selector labels
 
 	// return isReplicasReady, message, error
 	ready, msg := apps_util.StatefulSetsAreReady(items)
+	return ready, msg, nil
+}
+
+func checkReplicasOfPetSet(lister pslister.PetSetNamespaceLister, selector labels.Selector, expectedItems int) (bool, string, error) {
+	items, err := lister.List(selector)
+	if err != nil {
+		return false, "", err
+	}
+	if len(items) < expectedItems {
+		return false, fmt.Sprintf("All PetSets are not available. Desire number of PetSet: %d, Available: %d", expectedItems, len(items)), nil
+	}
+
+	// return isReplicasReady, message, error
+	ready, msg := petsetapps.PetSetsAreReady(items)
 	return ready, msg, nil
 }
 

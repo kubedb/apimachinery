@@ -38,6 +38,7 @@ require (
 	kmodules.xyz/offshoot-api v0.29.0
 	kmodules.xyz/resource-metadata v0.18.2-0.20240219094915-0a7ba5704897
 	kmodules.xyz/webhook-runtime v0.29.1
+	kubeops.dev/petset v0.0.5-0.20240226114411-a1794c1daae2
 	kubeops.dev/sidekick v0.0.5
 	kubestash.dev/apimachinery v0.5.0
 	sigs.k8s.io/controller-runtime v0.17.0
@@ -120,7 +121,7 @@ require (
 	github.com/nats-io/nats.go v1.31.0 // indirect
 	github.com/nats-io/nkeys v0.4.6 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
-	github.com/onsi/gomega v1.30.0 // indirect
+	github.com/onsi/gomega v1.31.1 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc3 // indirect
 	github.com/prometheus/client_golang v1.18.0 // indirect
