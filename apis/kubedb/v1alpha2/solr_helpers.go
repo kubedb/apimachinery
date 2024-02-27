@@ -311,11 +311,9 @@ func (s *Solr) SetDefaults(slVersion *catalog.SolrVersion) {
 			s.setDefaultContainerResourceLimits(&s.Spec.Topology.Coordinator.PodTemplate)
 		}
 	} else {
-
 		if s.Spec.Replicas == nil {
 			s.Spec.Replicas = pointer.Int32P(1)
 		}
-
 		if s.Spec.PodTemplate.Spec.SecurityContext == nil {
 			s.Spec.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{}
 		}
