@@ -760,6 +760,8 @@ const (
 	SolrInitContainerName = "init-solr"
 	SolrAdmin             = "admin"
 	SecurityJSON          = "security.json"
+	SolrZkDigest          = "zk-digest"
+	SolrZkReadonlyDigest  = "zk-digest-readonly"
 
 	SolrVolumeDefaultConfig = "default-config"
 	SolrVolumeCustomConfig  = "custom-config"
@@ -791,9 +793,11 @@ const (
 	SolrCloudDistribUpdateConnTimeoutKey   = "distribUpdateConnTimeout"
 	SolrCloudDistribUpdateConnTimeoutValue = 60000
 	SolrCloudZKCredentialProviderKey       = "zkCredentialsProvider"
-	SolrCloudZKCredentialProviderValue     = "org.apache.solr.common.cloud.DefaultZkCredentialsProvider"
+	SolrCloudZKCredentialProviderValue     = "org.apache.solr.common.cloud.DigestZkCredentialsProvider"
 	SolrCloudZKAclProviderKey              = "zkACLProvider"
-	SolrCloudZKAclProviderValue            = "org.apache.solr.common.cloud.DefaultZkACLProvider"
+	SolrCloudZKAclProviderValue            = "org.apache.solr.common.cloud.DigestZkACLProvider"
+	SolrCloudZKCredentialsInjectorKey      = "zkCredentialsInjector"
+	SolrCloudZKCredentialsInjectorValue    = "org.apache.solr.common.cloud.VMParamsZkCredentialsInjector"
 
 	ShardHandlerFactorySocketTimeoutKey   = "socketTimeout"
 	ShardHandlerFactorySocketTimeoutValue = 600000
@@ -835,17 +839,19 @@ const (
 	DruidMainConfigDir     = "/opt/druid/conf"
 	DruidCustomConfigDir   = "/tmp/config/custom-config"
 
-	DruidVolumeConfigCommon           = "common-config-volume"
-	DruidVolumeConfigNodes            = "nodetype-config-volume"
-	DruidConfigFileNameCommon         = "common.runtime.properties"
-	DruidConfigFileNameJVM            = "jvm.config"
-	DruidVolumeConfigFileNodes        = "runtime.properties"
-	DruidConfigFileNameCoordinators   = "coordinators.properties"
-	DruidConfigFileNameHistoricals    = "historicals.properties"
-	DruidConfigFileNameMiddleManagers = "middleManagers.properties"
-	DruidConfigFileNameBrokers        = "brokers.properties"
-	DruidConfigFileNameRouters        = "routers.properties"
-	DruidVolumeMySQLMetadataStorage   = "mysql-metadata-storage"
+	DruidVolumeCommonConfig          = "common-config-volume"
+	DruidCommonConfigFile            = "common.runtime.properties"
+	DruidCoordinatorsJVMConfigFile   = "coordinators.jvm.config"
+	DruidHistoricalsJVMConfigFile    = "historicals.jvm.config"
+	DruidBrokersJVMConfigFile        = "brokers.jvm.config"
+	DruidMiddleManagersJVMConfigFile = "middleManagers.jvm.config"
+	DruidRoutersJVMConfigFile        = "routers.jvm.config"
+	DruidCoordinatorsConfigFile      = "coordinators.properties"
+	DruidHistoricalsConfigFile       = "historicals.properties"
+	DruidMiddleManagersConfigFile    = "middleManagers.properties"
+	DruidBrokersConfigFile           = "brokers.properties"
+	DruidRoutersConfigFile           = "routers.properties"
+	DruidVolumeMySQLMetadataStorage  = "mysql-metadata-storage"
 
 	DruidContainerName     = "druid"
 	DruidInitContainerName = "init-druid"
@@ -855,6 +861,13 @@ const (
 	EnvDruidMetdataStoragePassword = "DRUID_METADATA_STORAGE_PASSWORD"
 	EnvDruidZKServicePassword      = "DRUID_ZK_SERVICE_PASSWORD"
 	EnvDruidCoordinatorAsOverlord  = "DRUID_COORDINATOR_AS_OVERLORD"
+
+	DruidPortCoordinators   = 8081
+	DruidPortOverlords      = 8090
+	DruidPortHistoricals    = 8083
+	DruidPortMiddleManagers = 8091
+	DruidPortBrokers        = 8082
+	DruidPortRouters        = 8888
 
 	// Common Runtime Configurations Properties
 	// ZooKeeperSpec
@@ -927,8 +940,7 @@ const (
 	DruidExtensionPostgreSQLMetadataStorage = "postgresql-metadata-storage"
 	DruidExtensionBasicSecurity             = "druid-basic-security"
 	DruidExtensionMultiStageQuery           = "druid-multi-stage-query"
-
-	DruidService = "druid.service"
+	DruidService                            = "druid.service"
 
 	/// Coordinators Configurations
 	DruidCoordinatorStartDelay                = "druid.coordinator.startDelay"
@@ -999,22 +1011,6 @@ const (
 	// Health Check
 	DruidHealthDataZero = "0"
 	DruidHealthDataOne  = "1"
-)
-
-type DruidMetadataStorageType string
-
-const (
-	DruidMetadataStorageMySQL      DruidMetadataStorageType = "MySQL"
-	DruidMetadataStoragePostgreSQL DruidMetadataStorageType = "PostgreSQL"
-)
-
-type DruidDeepStorageType string
-
-const (
-	DruidDeepStorageS3     DruidDeepStorageType = "s3"
-	DruidDeepStorageGoogle DruidDeepStorageType = "google"
-	DruidDeepStorageAzure  DruidDeepStorageType = "azure"
-	DruidDeepStorageHDFS   DruidDeepStorageType = "hdfs"
 )
 
 const (

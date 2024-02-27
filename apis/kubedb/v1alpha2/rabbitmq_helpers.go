@@ -325,7 +325,7 @@ func (r *RabbitMQ) setDefaultContainerSecurityContext(rmVersion *catalog.RabbitM
 		container = &core.Container{
 			Name: RabbitMQContainerName,
 		}
-		podTemplate.Spec.Containers = append(podTemplate.Spec.Containers, *container)
+		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 	}
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
@@ -337,7 +337,7 @@ func (r *RabbitMQ) setDefaultContainerSecurityContext(rmVersion *catalog.RabbitM
 		initContainer = &core.Container{
 			Name: RabbitMQInitContainerName,
 		}
-		podTemplate.Spec.InitContainers = append(podTemplate.Spec.InitContainers, *initContainer)
+		podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 	}
 	if initContainer.SecurityContext == nil {
 		initContainer.SecurityContext = &core.SecurityContext{}
