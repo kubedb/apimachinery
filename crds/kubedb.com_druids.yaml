@@ -100,10 +100,15 @@ spec:
                 properties:
                   createTables:
                     type: boolean
-                  name:
-                    type: string
-                  namespace:
-                    type: string
+                  omitempty:
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    required:
+                    - name
+                    type: object
                   type:
                     enum:
                     - MySQL

@@ -159,13 +159,9 @@ type DruidNode struct {
 }
 
 type MetadataStorage struct {
-	// Name of the appbinding of metadata storage
+	// Name of the appbinding of zookeeper
 	// +optional
-	Name *string `json:"name,omitempty"`
-
-	// Namespace of the appbinding of metadata storage
-	// +optional
-	Namespace *string `json:"namespace,omitempty"`
+	*kmapi.ObjectReference `json:"omitempty"`
 
 	// If not KubeDB managed, then specify type of the metadata storage
 	// +optional
