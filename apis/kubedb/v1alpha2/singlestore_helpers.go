@@ -141,10 +141,6 @@ func (s *Singlestore) AppBindingMeta() appcat.AppBindingMeta {
 	return &singlestoreApp{s}
 }
 
-func (s *Singlestore) StudioServiceName() string {
-	return metautil.NameWithPrefix(s.ServiceName(), "studio")
-}
-
 func (s *Singlestore) GoverningServiceName() string {
 	return metautil.NameWithSuffix(s.ServiceName(), "pods")
 }
@@ -323,14 +319,14 @@ func (s *Singlestore) SetDefaults() {
 	s.SetTLSDefaults()
 
 	s.SetHealthCheckerDefaults()
-	s.Spec.Monitor.SetDefaults()
-	if s.Spec.Monitor != nil && s.Spec.Monitor.Prometheus != nil {
-		if s.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
-			s.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = sdbVersion.Spec.SecurityContext.RunAsUser
+	if s.Spec.Monitor != nil {
+		if s.Spec.Monitor.Prometheus == nil {
+			s.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
 		}
-		if s.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
-			s.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = sdbVersion.Spec.SecurityContext.RunAsGroup
+		if s.Spec.Monitor.Prometheus != nil && s.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+			s.Spec.Monitor.Prometheus.Exporter.Port = SinglestoreExporterPort
 		}
+		s.Spec.Monitor.SetDefaults()
 	}
 
 	if s.IsClustering() {
@@ -357,24 +353,25 @@ func (s *Singlestore) setDefaultContainerSecurityContext(sdbVersion *catalog.Sin
 		container = &core.Container{
 			Name: SinglestoreContainerName,
 		}
-		podTemplate.Spec.Containers = append(podTemplate.Spec.Containers, *container)
 	}
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
 	s.assignDefaultContainerSecurityContext(sdbVersion, container.SecurityContext)
 
+	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
+
 	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, SinglestoreInitContainerName)
 	if initContainer == nil {
 		initContainer = &core.Container{
 			Name: SinglestoreInitContainerName,
 		}
-		podTemplate.Spec.InitContainers = append(podTemplate.Spec.InitContainers, *initContainer)
 	}
 	if initContainer.SecurityContext == nil {
 		initContainer.SecurityContext = &core.SecurityContext{}
 	}
 	s.assignDefaultInitContainerSecurityContext(sdbVersion, initContainer.SecurityContext)
+	podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 
 	if s.IsClustering() {
 		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, SinglestoreCoordinatorContainerName)
@@ -382,12 +379,12 @@ func (s *Singlestore) setDefaultContainerSecurityContext(sdbVersion *catalog.Sin
 			coordinatorContainer = &core.Container{
 				Name: SinglestoreCoordinatorContainerName,
 			}
-			podTemplate.Spec.Containers = append(podTemplate.Spec.Containers, *coordinatorContainer)
 		}
 		if coordinatorContainer.SecurityContext == nil {
 			coordinatorContainer.SecurityContext = &core.SecurityContext{}
 		}
 		s.assignDefaultContainerSecurityContext(sdbVersion, coordinatorContainer.SecurityContext)
+		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *coordinatorContainer)
 	}
 }
 
@@ -440,7 +437,7 @@ func (s *Singlestore) assignDefaultContainerSecurityContext(sdbVersion *catalog.
 func (s *Singlestore) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
 	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, SinglestoreContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResourcesMemoryIntensive)
 	}
 
 	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, SinglestoreInitContainerName)

@@ -631,6 +631,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.redisSentinelStatsService":      schema_apimachinery_apis_kubedb_v1alpha2_redisSentinelStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.redisStatsService":              schema_apimachinery_apis_kubedb_v1alpha2_redisStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.singlestoreApp":                 schema_apimachinery_apis_kubedb_v1alpha2_singlestoreApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.singlestoreStatsService":        schema_apimachinery_apis_kubedb_v1alpha2_singlestoreStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.zookeeperStatsService":          schema_apimachinery_apis_kubedb_v1alpha2_zookeeperStatsService(ref),
 	}
 }
@@ -31921,6 +31922,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_redisStatsService(ref common.Refer
 }
 
 func schema_apimachinery_apis_kubedb_v1alpha2_singlestoreApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Singlestore": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Singlestore"),
+						},
+					},
+				},
+				Required: []string{"Singlestore"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Singlestore"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_singlestoreStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
