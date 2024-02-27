@@ -109,6 +109,33 @@ func GetDatabasePods(db metav1.Object, stsLister appslister.StatefulSetLister, p
 	return dbPods, nil
 }
 
+func GetDatabasePodsByPetSetLister(db metav1.Object, psLister pslister.PetSetLister, pods []core.Pod) ([]core.Pod, error) {
+	var dbPods []core.Pod
+
+	for i := range pods {
+		owner := metav1.GetControllerOf(&pods[i])
+		if owner == nil {
+			continue
+		}
+
+		// If the Pod is not control by a PetSet, then it is not a KubeDB database Pod
+		if owner.Kind == ResourceKindPetSet {
+			// Find the controlling PetSet
+			ps, err := psLister.PetSets(db.GetNamespace()).Get(owner.Name)
+			if err != nil {
+				return nil, err
+			}
+
+			// Check if the StatefulSet is controlled by the database
+			if metav1.IsControlledBy(ps, db) {
+				dbPods = append(dbPods, pods[i])
+			}
+		}
+	}
+
+	return dbPods, nil
+}
+
 // Upsert elements to string slice
 func upsertStringSlice(inSlice []string, values ...string) []string {
 	upsert := func(m string) {

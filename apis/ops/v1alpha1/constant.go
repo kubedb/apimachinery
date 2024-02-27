@@ -119,6 +119,15 @@ const (
 	DeleteStatefulSets          = "DeleteStatefulSets"
 )
 
+// PetSets
+const (
+	UpdatePetSets          = "UpdatePetSets"
+	UpdatePetSetsSucceeded = "UpdatePetSetsSucceeded"
+	UpdatePetSetsFailed    = "UpdatePetSetsFailed"
+	ReadyPetSets           = "ReadyPetSets"
+	DeletePetSets          = "DeletePetSets"
+)
+
 // Stash
 const (
 	PauseBackupConfiguration  = "PauseBackupConfiguration"
