@@ -198,6 +198,18 @@ func (s *Solr) SetDefaults(slVersion *catalog.SolrVersion) {
 		}
 	}
 
+	if s.Spec.ZookeeperDigestSecret != nil {
+		s.Spec.ZookeeperDigestSecret = &v1.LocalObjectReference{
+			Name: s.SolrSecretName("zk-digest"),
+		}
+	}
+
+	if s.Spec.ZookeeperDigestReadonlySecret != nil {
+		s.Spec.ZookeeperDigestReadonlySecret = &v1.LocalObjectReference{
+			Name: s.SolrSecretName("zk-digest-readonly"),
+		}
+	}
+
 	if s.Spec.AuthConfigSecret == nil {
 		s.Spec.AuthConfigSecret = &v1.LocalObjectReference{
 			Name: s.SolrSecretName("auth-config"),

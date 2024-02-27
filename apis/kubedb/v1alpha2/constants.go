@@ -760,6 +760,8 @@ const (
 	SolrInitContainerName = "init-solr"
 	SolrAdmin             = "admin"
 	SecurityJSON          = "security.json"
+	SolrZkDigest          = "zk-digest"
+	SolrZkReadonlyDigest  = "zk-digest-readonly"
 
 	SolrVolumeDefaultConfig = "default-config"
 	SolrVolumeCustomConfig  = "custom-config"

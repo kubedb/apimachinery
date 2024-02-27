@@ -4694,6 +4694,16 @@ func (in *SolrSpec) DeepCopyInto(out *SolrSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.ZookeeperDigestSecret != nil {
+		in, out := &in.ZookeeperDigestSecret, &out.ZookeeperDigestSecret
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
+	if in.ZookeeperDigestReadonlySecret != nil {
+		in, out := &in.ZookeeperDigestReadonlySecret, &out.ZookeeperDigestReadonlySecret
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	if in.AuthConfigSecret != nil {
 		in, out := &in.AuthConfigSecret, &out.AuthConfigSecret
 		*out = new(corev1.LocalObjectReference)

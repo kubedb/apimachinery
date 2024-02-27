@@ -14122,6 +14122,18 @@ spec:
                 type: object
               version:
                 type: string
+              zookeeperDigestReadonlySecret:
+                properties:
+                  name:
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
+              zookeeperDigestSecret:
+                properties:
+                  name:
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               zookeeperRef:
                 properties:
                   name:

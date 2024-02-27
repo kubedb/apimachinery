@@ -97,6 +97,12 @@ type SolrSpec struct {
 	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty"`
 
 	// +optional
+	ZookeeperDigestSecret *core.LocalObjectReference `json:"zookeeperDigestSecret,omitempty"`
+
+	// +optional
+	ZookeeperDigestReadonlySecret *core.LocalObjectReference `json:"zookeeperDigestReadonlySecret,omitempty"`
+
+	// +optional
 	AuthConfigSecret *core.LocalObjectReference `json:"authConfigSecret,omitempty"`
 
 	// PodTemplate is an optional configuration for pods used to expose database
