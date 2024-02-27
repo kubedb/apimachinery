@@ -305,6 +305,9 @@ func (r *RabbitMQ) SetDefaults() {
 
 	r.SetHealthCheckerDefaults()
 	if r.Spec.Monitor != nil {
+		if r.Spec.Monitor.Prometheus == nil {
+			r.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+		}
 		if r.Spec.Monitor.Prometheus != nil && r.Spec.Monitor.Prometheus.Exporter.Port == 0 {
 			r.Spec.Monitor.Prometheus.Exporter.Port = RabbitMQExporterPort
 		}
