@@ -271,7 +271,6 @@ func (s *Solr) SetDefaults(slVersion *catalog.SolrVersion) {
 			if s.Spec.Topology.Data.Replicas == nil {
 				s.Spec.Topology.Data.Replicas = pointer.Int32P(1)
 			}
-
 			if s.Spec.Topology.Data.PodTemplate.Spec.SecurityContext == nil {
 				s.Spec.Topology.Data.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{}
 			}
@@ -287,7 +286,6 @@ func (s *Solr) SetDefaults(slVersion *catalog.SolrVersion) {
 			if s.Spec.Topology.Overseer.Replicas == nil {
 				s.Spec.Topology.Overseer.Replicas = pointer.Int32P(1)
 			}
-
 			if s.Spec.Topology.Overseer.PodTemplate.Spec.SecurityContext == nil {
 				s.Spec.Topology.Overseer.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{}
 			}
@@ -335,7 +333,6 @@ func (s *Solr) setDefaultContainerSecurityContext(slVersion *catalog.SolrVersion
 	}
 	s.assignDefaultContainerSecurityContext(slVersion, initContainer.SecurityContext)
 	podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
-
 	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, SolrContainerName)
 	if container == nil {
 		container = &v1.Container{
