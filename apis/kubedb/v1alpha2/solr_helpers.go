@@ -276,20 +276,6 @@ func (s *Solr) SetDefaults(slVersion *catalog.SolrVersion) {
 				s.Spec.Topology.Data.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{}
 			}
 			s.Spec.Topology.Data.PodTemplate.Spec.SecurityContext.FSGroup = slVersion.Spec.SecurityContext.RunAsUser
-			container := coreutil.GetContainerByName(s.Spec.Topology.Data.PodTemplate.Spec.Containers, SolrContainerName)
-			if container == nil {
-				container = &v1.Container{
-					Name: SolrContainerName,
-				}
-			}
-			s.Spec.Topology.Data.PodTemplate.Spec.Containers = coreutil.UpsertContainer(s.Spec.Topology.Data.PodTemplate.Spec.Containers, *container)
-			initContainer := coreutil.GetContainerByName(s.Spec.Topology.Data.PodTemplate.Spec.InitContainers, SolrInitContainerName)
-			if initContainer == nil {
-				initContainer = &v1.Container{
-					Name: SolrInitContainerName,
-				}
-			}
-			s.Spec.Topology.Data.PodTemplate.Spec.InitContainers = coreutil.UpsertContainer(s.Spec.Topology.Data.PodTemplate.Spec.InitContainers, *initContainer)
 			s.setDefaultContainerSecurityContext(slVersion, &s.Spec.Topology.Data.PodTemplate)
 			s.setDefaultContainerResourceLimits(&s.Spec.Topology.Data.PodTemplate)
 		}
@@ -306,20 +292,6 @@ func (s *Solr) SetDefaults(slVersion *catalog.SolrVersion) {
 				s.Spec.Topology.Overseer.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{}
 			}
 			s.Spec.Topology.Overseer.PodTemplate.Spec.SecurityContext.FSGroup = slVersion.Spec.SecurityContext.RunAsUser
-			container := coreutil.GetContainerByName(s.Spec.Topology.Overseer.PodTemplate.Spec.Containers, SolrContainerName)
-			if container == nil {
-				container = &v1.Container{
-					Name: SolrContainerName,
-				}
-			}
-			s.Spec.Topology.Overseer.PodTemplate.Spec.Containers = coreutil.UpsertContainer(s.Spec.Topology.Overseer.PodTemplate.Spec.Containers, *container)
-			initContainer := coreutil.GetContainerByName(s.Spec.Topology.Overseer.PodTemplate.Spec.InitContainers, SolrInitContainerName)
-			if initContainer == nil {
-				initContainer = &v1.Container{
-					Name: SolrInitContainerName,
-				}
-			}
-			s.Spec.Topology.Overseer.PodTemplate.Spec.InitContainers = coreutil.UpsertContainer(s.Spec.Topology.Overseer.PodTemplate.Spec.InitContainers, *initContainer)
 			s.setDefaultContainerSecurityContext(slVersion, &s.Spec.Topology.Overseer.PodTemplate)
 			s.setDefaultContainerResourceLimits(&s.Spec.Topology.Overseer.PodTemplate)
 		}
@@ -335,20 +307,6 @@ func (s *Solr) SetDefaults(slVersion *catalog.SolrVersion) {
 				s.Spec.Topology.Coordinator.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{}
 			}
 			s.Spec.Topology.Coordinator.PodTemplate.Spec.SecurityContext.FSGroup = slVersion.Spec.SecurityContext.RunAsUser
-			container := coreutil.GetContainerByName(s.Spec.Topology.Coordinator.PodTemplate.Spec.Containers, SolrContainerName)
-			if container == nil {
-				container = &v1.Container{
-					Name: SolrContainerName,
-				}
-			}
-			s.Spec.Topology.Coordinator.PodTemplate.Spec.Containers = coreutil.UpsertContainer(s.Spec.Topology.Coordinator.PodTemplate.Spec.Containers, *container)
-			initContainer := coreutil.GetContainerByName(s.Spec.Topology.Coordinator.PodTemplate.Spec.InitContainers, SolrInitContainerName)
-			if initContainer == nil {
-				initContainer = &v1.Container{
-					Name: SolrInitContainerName,
-				}
-			}
-			s.Spec.Topology.Coordinator.PodTemplate.Spec.InitContainers = coreutil.UpsertContainer(s.Spec.Topology.Coordinator.PodTemplate.Spec.InitContainers, *initContainer)
 			s.setDefaultContainerSecurityContext(slVersion, &s.Spec.Topology.Coordinator.PodTemplate)
 			s.setDefaultContainerResourceLimits(&s.Spec.Topology.Coordinator.PodTemplate)
 		}
@@ -362,21 +320,6 @@ func (s *Solr) SetDefaults(slVersion *catalog.SolrVersion) {
 			s.Spec.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{}
 		}
 		s.Spec.PodTemplate.Spec.SecurityContext.FSGroup = slVersion.Spec.SecurityContext.RunAsUser
-		container := coreutil.GetContainerByName(s.Spec.PodTemplate.Spec.Containers, SolrContainerName)
-		if container == nil {
-			container = &v1.Container{
-				Name: SolrContainerName,
-			}
-		}
-		s.Spec.PodTemplate.Spec.Containers = coreutil.UpsertContainer(s.Spec.PodTemplate.Spec.Containers, *container)
-
-		initContainer := coreutil.GetContainerByName(s.Spec.PodTemplate.Spec.InitContainers, SolrInitContainerName)
-		if initContainer == nil {
-			initContainer = &v1.Container{
-				Name: SolrInitContainerName,
-			}
-		}
-		s.Spec.PodTemplate.Spec.InitContainers = coreutil.UpsertContainer(s.Spec.PodTemplate.Spec.InitContainers, *initContainer)
 		s.setDefaultContainerSecurityContext(slVersion, &s.Spec.PodTemplate)
 		s.setDefaultContainerResourceLimits(&s.Spec.PodTemplate)
 	}
