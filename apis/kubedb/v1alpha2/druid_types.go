@@ -161,7 +161,7 @@ type DruidNode struct {
 type MetadataStorage struct {
 	// Name of the appbinding of zookeeper
 	// +optional
-	*kmapi.ObjectReference `json:"omitempty"`
+	*kmapi.ObjectReference `json:",omitempty"`
 
 	// If not KubeDB managed, then specify type of the metadata storage
 	// +optional
@@ -186,7 +186,7 @@ type DeepStorageSpec struct {
 type ZookeeperRef struct {
 	// Name of the appbinding of zookeeper
 	// +optional
-	*kmapi.ObjectReference `json:"omitempty"`
+	*kmapi.ObjectReference `json:",omitempty"`
 
 	// Base ZooKeeperSpec path
 	// +optional

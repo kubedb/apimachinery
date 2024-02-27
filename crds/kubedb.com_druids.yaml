@@ -100,20 +100,17 @@ spec:
                 properties:
                   createTables:
                     type: boolean
-                  omitempty:
-                    properties:
-                      name:
-                        type: string
-                      namespace:
-                        type: string
-                    required:
-                    - name
-                    type: object
+                  name:
+                    type: string
+                  namespace:
+                    type: string
                   type:
                     enum:
                     - MySQL
                     - PostgreSQL
                     type: string
+                required:
+                - name
                 type: object
               podTemplate:
                 properties:
@@ -24364,17 +24361,14 @@ spec:
                 type: string
               zookeeperRef:
                 properties:
-                  omitempty:
-                    properties:
-                      name:
-                        type: string
-                      namespace:
-                        type: string
-                    required:
-                    - name
-                    type: object
+                  name:
+                    type: string
+                  namespace:
+                    type: string
                   pathsBase:
                     type: string
+                required:
+                - name
                 type: object
             required:
             - deepStorage
