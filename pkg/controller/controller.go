@@ -21,7 +21,6 @@ import (
 
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 	kubedbinformers "kubedb.dev/apimachinery/client/informers/externalversions"
-	petsetcs "kubeops.dev/petset/client/clientset/versioned"
 
 	cmInformers "github.com/cert-manager/cert-manager/pkg/client/informers/externalversions"
 	auditlib "go.bytebuilders.dev/audit/lib"
@@ -37,6 +36,7 @@ import (
 	"kmodules.xyz/client-go/tools/queue"
 	appcat_cs "kmodules.xyz/custom-resources/client/clientset/versioned"
 	appcat_in "kmodules.xyz/custom-resources/client/informers/externalversions"
+	petsetcs "kubeops.dev/petset/client/clientset/versioned"
 	psinformer "kubeops.dev/petset/client/informers/externalversions"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"

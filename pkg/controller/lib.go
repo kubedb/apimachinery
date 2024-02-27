@@ -31,6 +31,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	core_util "kmodules.xyz/client-go/core/v1"
 	policy_util "kmodules.xyz/client-go/policy"
+	psapps "kubeops.dev/petset/apis/apps/v1"
 )
 
 // SyncStatefulSetPodDisruptionBudget syncs the PDB with the current state of the statefulSet.
@@ -53,6 +54,28 @@ func (c *Controller) SyncStatefulSetPodDisruptionBudget(sts *apps.StatefulSet) e
 		return nil
 	}
 	return c.SyncStatefulSetPDBWithCustomLabelSelectors(sts, *sts.Spec.Replicas, sts.Labels, sts.Spec.Selector.MatchLabels)
+}
+
+// SyncPetSetPodDisruptionBudget syncs the PDB with the current state of the petSet.
+// The maxUnavailable is calculated based petSet replica count, maxUnavailable = (replicas-1)/2.
+// Also cleanup the PDB, when replica count is 1 or less.
+func (c *Controller) SyncPetSetPodDisruptionBudget(ps *psapps.PetSet) error {
+	if ps == nil {
+		return nil
+	}
+	// CleanUp PDB for petSet with replica 1
+	if *ps.Spec.Replicas <= 1 {
+		// pdb name & namespace is same as the corresponding statefulSet's name & namespace.
+		err := policy_util.DeletePodDisruptionBudget(context.TODO(), c.Client, types.NamespacedName{
+			Namespace: ps.Namespace,
+			Name:      ps.Name,
+		})
+		if !kerr.IsNotFound(err) {
+			return err
+		}
+		return nil
+	}
+	return c.SyncPetSetPDBWithCustomLabelSelectors(ps, *ps.Spec.Replicas, ps.Labels, ps.Spec.Selector.MatchLabels)
 }
 
 // Deprecated: CreateStatefulSetPodDisruptionBudget is deprecated. Use SyncStatefulSetPodDisruptionBudget instead.
@@ -94,6 +117,33 @@ func (c *Controller) SyncStatefulSetPDBWithCustomLabelSelectors(sts *apps.Statef
 	maxUnavailable := &intstr.IntOrString{IntVal: r}
 
 	owner := metav1.NewControllerRef(sts, apps.SchemeGroupVersion.WithKind("StatefulSet"))
+	_, _, err := policy_util.CreateOrPatchPodDisruptionBudget(context.TODO(), c.Client, pdbRef,
+		func(in *policy.PodDisruptionBudget) *policy.PodDisruptionBudget {
+			in.Labels = labels
+			core_util.EnsureOwnerReference(&in.ObjectMeta, owner)
+			in.Spec.Selector = &metav1.LabelSelector{
+				MatchLabels: matchLabelSelectors,
+			}
+			in.Spec.MaxUnavailable = maxUnavailable
+			in.Spec.MinAvailable = nil
+			return in
+		}, metav1.PatchOptions{})
+	return err
+}
+
+func (c *Controller) SyncPetSetPDBWithCustomLabelSelectors(ps *psapps.PetSet, replicas int32, labels map[string]string, matchLabelSelectors map[string]string) error {
+	if ps == nil {
+		return nil
+	}
+	pdbRef := metav1.ObjectMeta{
+		Name:      ps.Name,
+		Namespace: ps.Namespace,
+	}
+
+	r := int32(math.Max(1, math.Floor(float64(replicas-1)/2.0)))
+	maxUnavailable := &intstr.IntOrString{IntVal: r}
+
+	owner := metav1.NewControllerRef(ps, psapps.SchemeGroupVersion.WithKind("PetSet"))
 	_, _, err := policy_util.CreateOrPatchPodDisruptionBudget(context.TODO(), c.Client, pdbRef,
 		func(in *policy.PodDisruptionBudget) *policy.PodDisruptionBudget {
 			in.Labels = labels
