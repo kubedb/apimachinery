@@ -282,9 +282,13 @@ func (p *Pgpool) SetDefaults() {
 	}
 
 	if p.Spec.Monitor != nil {
+		if p.Spec.Monitor.Prometheus == nil {
+			p.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+		}
+		if p.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+			p.Spec.Monitor.Prometheus.Exporter.Port = PgpoolMonitoringDefaultServicePort
+		}
 		p.Spec.Monitor.SetDefaults()
-	}
-	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil {
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
 			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = ppVersion.Spec.SecurityContext.RunAsUser
 		}
