@@ -365,6 +365,14 @@ func (s *Solr) GetPersistentSecrets() []string {
 		secrets = append(secrets, s.Spec.AuthConfigSecret.Name)
 	}
 
+	if s.Spec.ZookeeperDigestSecret != nil {
+		secrets = append(secrets, s.Spec.ZookeeperDigestSecret.Name)
+	}
+
+	if s.Spec.ZookeeperDigestReadonlySecret != nil {
+		secrets = append(secrets, s.Spec.ZookeeperDigestReadonlySecret.Name)
+	}
+
 	return secrets
 }
 

@@ -604,7 +604,7 @@ const (
 	DatabaseReadAccessCheckSucceeded           = "DatabaseReadAccessCheckSucceeded"
 	DatabaseWriteAccessCheckSucceeded          = "DatabaseWriteAccessCheckSucceeded"
 	DatabaseReadAccessCheckFailed              = "DatabaseReadAccessCheckFailed"
-	DatabaseWriteAccessCheckFailed             = "DatabaseReadAccessCheckFailed"
+	DatabaseWriteAccessCheckFailed             = "DatabaseWriteAccessCheckFailed"
 	InternalUsersCredentialSyncFailed          = "InternalUsersCredentialsSyncFailed"
 	InternalUsersCredentialsSyncedSuccessfully = "InternalUsersCredentialsSyncedSuccessfully"
 )
