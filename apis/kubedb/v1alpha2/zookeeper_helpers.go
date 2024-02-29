@@ -206,6 +206,12 @@ func (z *ZooKeeper) SetDefaults() {
 
 	z.SetHealthCheckerDefaults()
 	if z.Spec.Monitor != nil {
+		if z.Spec.Monitor.Prometheus == nil {
+			z.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+		}
+		if z.Spec.Monitor.Prometheus != nil && z.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+			z.Spec.Monitor.Prometheus.Exporter.Port = ZooKeeperMetricsPort
+		}
 		z.Spec.Monitor.SetDefaults()
 	}
 }

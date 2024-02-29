@@ -461,7 +461,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver":                       schema_apimachinery_apis_kubedb_v1alpha2_Archiver(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ArchiverRecovery":               schema_apimachinery_apis_kubedb_v1alpha2_ArchiverRecovery(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec":                    schema_apimachinery_apis_kubedb_v1alpha2_AutoOpsSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Backend":                        schema_apimachinery_apis_kubedb_v1alpha2_Backend(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConnectionPoolConfig":           schema_apimachinery_apis_kubedb_v1alpha2_ConnectionPoolConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConsumerNamespaces":             schema_apimachinery_apis_kubedb_v1alpha2_ConsumerNamespaces(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec":                schema_apimachinery_apis_kubedb_v1alpha2_CoordinatorSpec(ref),
@@ -488,6 +487,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.EtcdStatus":                     schema_apimachinery_apis_kubedb_v1alpha2_EtcdStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDB":                       schema_apimachinery_apis_kubedb_v1alpha2_FerretDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBApp":                    schema_apimachinery_apis_kubedb_v1alpha2_FerretDBApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBBackend":                schema_apimachinery_apis_kubedb_v1alpha2_FerretDBBackend(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBList":                   schema_apimachinery_apis_kubedb_v1alpha2_FerretDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBSpec":                   schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBStatsService":           schema_apimachinery_apis_kubedb_v1alpha2_FerretDBStatsService(ref),
@@ -600,9 +600,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeper":                      schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeper(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperApp":                   schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperList":                  schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperList(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperRef":                   schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperRef(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperSpec":                  schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperStatus":                schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZookeeperRef":                   schema_apimachinery_apis_kubedb_v1alpha2_ZookeeperRef(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchApp":               schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchStatsService":      schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.etcdApp":                        schema_apimachinery_apis_kubedb_v1alpha2_etcdApp(ref),
@@ -22993,40 +22993,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_AutoOpsSpec(ref common.ReferenceCa
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_Backend(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"postgres": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresRef"),
-						},
-					},
-					"linkedDB": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A DB inside backend specifically made for ferretdb",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"externallyManaged": {
-						SchemaProps: spec.SchemaProps{
-							Default: false,
-							Type:    []string{"boolean"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"externallyManaged"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresRef"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_ConnectionPoolConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23226,6 +23192,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DeepStorageSpec(ref common.Referen
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the storage type to be used by druid Possible values: s3, google, azure, hdfs",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -23540,10 +23507,10 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec"),
 						},
 					},
-					"zooKeeper": {
+					"zookeeperRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ZooKeeper contains information for Druid to connect to external dependency metadata storage",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperRef"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZookeeperRef"),
 						},
 					},
 					"podTemplate": {
@@ -23593,7 +23560,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetadataStorage", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperRef"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetadataStorage", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZookeeperRef"},
 	}
 }
 
@@ -24681,6 +24648,40 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBApp(ref common.ReferenceCa
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBBackend(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"postgres": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresRef"),
+						},
+					},
+					"linkedDB": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A DB inside backend specifically made for ferretdb",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"externallyManaged": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"externallyManaged"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresRef"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24831,7 +24832,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref common.ReferenceC
 					},
 					"backend": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Backend"),
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBBackend"),
 						},
 					},
 				},
@@ -24839,7 +24840,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Backend", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBBackend", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -26073,20 +26074,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MetadataStorage(ref common.Referen
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name of the appbinding of metadata storage",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"namespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Namespace of the appbinding of metadata storage",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "If not KubeDB managed, then specify type of the metadata storage",
@@ -28027,10 +28014,10 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref common.ReferenceCal
 							Format:      "int32",
 						},
 					},
-					"backend": {
+					"postgresRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Backend refers to the AppBinding of the backend PostgreSQL server",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+							Description: "PostgresRef refers to the AppBinding of the backend PostgreSQL server",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
 					"authSecret": {
@@ -28086,11 +28073,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"version", "backend"},
+				Required: []string{"version", "postgresRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -30743,7 +30730,8 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 					},
 					"zookeeperRef": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
+							Description: "\t// ZooKeeper contains information for Solr to store configurations for collections",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
 					"solrModules": {
@@ -30804,6 +30792,16 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"zookeeperDigestSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"zookeeperDigestReadonlySecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
 					"authConfigSecret": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
@@ -30845,11 +30843,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 						},
 					},
 				},
-				Required: []string{"version", "zookeeperRef"},
+				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrClusterTopology"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrClusterTopology"},
 	}
 }
 
@@ -31061,39 +31059,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperList(ref common.Reference
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name of the appbinding of zookeeper",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"namespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Namespace of the appbinding of zookeeper",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"pathsBase": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Base ZooKeeperSpec path",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -31245,6 +31210,25 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperStatus(ref common.Referen
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_ZookeeperRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"pathsBase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Base ZooKeeperSpec path",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

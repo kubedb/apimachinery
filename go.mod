@@ -30,13 +30,13 @@ require (
 	k8s.io/kube-aggregator v0.29.0
 	k8s.io/kube-openapi v0.0.0-20231129212854-f0671cc7e66a
 	k8s.io/metrics v0.25.1
-	kmodules.xyz/client-go v0.29.9
+	kmodules.xyz/client-go v0.29.12
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.29.1
 	kmodules.xyz/monitoring-agent-api v0.29.0
 	kmodules.xyz/objectstore-api v0.29.1
 	kmodules.xyz/offshoot-api v0.29.0
-	kmodules.xyz/resource-metadata v0.18.2-0.20240105072614-e92a8a48d400
+	kmodules.xyz/resource-metadata v0.18.2-0.20240219094915-0a7ba5704897
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/sidekick v0.0.5
 	kubestash.dev/apimachinery v0.5.0
@@ -72,7 +72,7 @@ require (
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
-	github.com/docker/cli v24.0.0+incompatible // indirect
+	github.com/docker/cli v24.0.7+incompatible // indirect
 	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/docker/docker v24.0.7+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.7.0 // indirect

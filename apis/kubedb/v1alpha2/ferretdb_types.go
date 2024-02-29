@@ -102,7 +102,7 @@ type FerretDBSpec struct {
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 
-	Backend *Backend `json:"backend"`
+	Backend *FerretDBBackend `json:"backend"`
 }
 
 type FerretDBStatus struct {
@@ -118,15 +118,7 @@ type FerretDBStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=server;client;
-type FerretDBCertificateAlias string
-
-const (
-	FerretDBServerCert FerretDBCertificateAlias = "server"
-	FerretDBClientCert FerretDBCertificateAlias = "client"
-)
-
-type Backend struct {
+type FerretDBBackend struct {
 	// +optional
 	Postgres *PostgresRef `json:"postgres,omitempty"`
 	// A DB inside backend specifically made for ferretdb
@@ -158,6 +150,14 @@ type PostgresServiceRef struct {
 	// +optional
 	PgPort int32 `json:"pgPort,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=server;client
+type FerretDBCertificateAlias string
+
+const (
+	FerretDBServerCert FerretDBCertificateAlias = "server"
+	FerretDBClientCert FerretDBCertificateAlias = "client"
+)
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

@@ -70,8 +70,8 @@ type PgpoolSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
-	// Backend refers to the AppBinding of the backend PostgreSQL server
-	Backend *core.LocalObjectReference `json:"backend"`
+	// PostgresRef refers to the AppBinding of the backend PostgreSQL server
+	PostgresRef *kmapi.ObjectReference `json:"postgresRef"`
 
 	// Pgpool secret containing username and password for pgpool pcp user
 	// +optional
