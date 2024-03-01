@@ -28,6 +28,8 @@ type Interface interface {
 	ElasticsearchAutoscalers() ElasticsearchAutoscalerInformer
 	// EtcdAutoscalers returns a EtcdAutoscalerInformer.
 	EtcdAutoscalers() EtcdAutoscalerInformer
+	// KafkaAutoscalers returns a KafkaAutoscalerInformer.
+	KafkaAutoscalers() KafkaAutoscalerInformer
 	// MariaDBAutoscalers returns a MariaDBAutoscalerInformer.
 	MariaDBAutoscalers() MariaDBAutoscalerInformer
 	// MemcachedAutoscalers returns a MemcachedAutoscalerInformer.
@@ -69,6 +71,11 @@ func (v *version) ElasticsearchAutoscalers() ElasticsearchAutoscalerInformer {
 // EtcdAutoscalers returns a EtcdAutoscalerInformer.
 func (v *version) EtcdAutoscalers() EtcdAutoscalerInformer {
 	return &etcdAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// KafkaAutoscalers returns a KafkaAutoscalerInformer.
+func (v *version) KafkaAutoscalers() KafkaAutoscalerInformer {
+	return &kafkaAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MariaDBAutoscalers returns a MariaDBAutoscalerInformer.
