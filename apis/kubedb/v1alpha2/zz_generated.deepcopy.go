@@ -93,6 +93,11 @@ func (in *ArbiterSpec) DeepCopyInto(out *ArbiterSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.PodPlacementPolicy != nil {
+		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	return
 }
 
@@ -3413,6 +3418,11 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		in, out := &in.Arbiter, &out.Arbiter
 		*out = new(ArbiterSpec)
 		(*in).DeepCopyInto(*out)
+	}
+	if in.PodPlacementPolicy != nil {
+		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
 	}
 	return
 }

@@ -22881,6 +22881,10 @@
           },
           "x-kubernetes-map-type": "atomic"
         },
+        "podPlacementPolicy": {
+          "description": "PodPlacementPolicy is the reference of the podPlacementPolicy",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
         "resources": {
           "description": "Compute Resources required by the sidecar container.",
           "default": {},
@@ -25318,6 +25322,10 @@
         "monitor": {
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
+        },
+        "podPlacementPolicy": {
+          "description": "PodPlacementPolicy is the reference of the podPlacementPolicy",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "podTemplate": {
           "description": "PodTemplate is an optional configuration for pods used to expose database",

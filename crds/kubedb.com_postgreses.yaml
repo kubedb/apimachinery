@@ -121,6 +121,14 @@ spec:
                       type: string
                     type: object
                     x-kubernetes-map-type: atomic
+                  podPlacementPolicy:
+                    default:
+                      name: default
+                    properties:
+                      name:
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
                   resources:
                     properties:
                       claims:
@@ -1517,6 +1525,14 @@ spec:
                         type: object
                     type: object
                 type: object
+              podPlacementPolicy:
+                default:
+                  name: default
+                properties:
+                  name:
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               podTemplate:
                 properties:
                   controller:
