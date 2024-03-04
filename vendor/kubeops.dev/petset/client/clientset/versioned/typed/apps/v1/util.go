@@ -81,7 +81,7 @@ func PatchPetSetObject(ctx context.Context, psc AppsV1Interface, cur, mod *v1.Pe
 		return cur, kutil.VerbUnchanged, nil
 	}
 	klog.V(3).Infof("Patching PetSet %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
-	out, err := psc.PetSets(cur.Namespace).Patch(ctx, cur.Name, types.StrategicMergePatchType, patch, opts)
+	out, err := psc.PetSets(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
 
