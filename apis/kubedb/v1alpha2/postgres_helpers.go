@@ -293,11 +293,14 @@ func getMajorPgVersion(postgresVersion *catalog.PostgresVersion) (uint64, error)
 // Replication slot will be prioritized if no WalLimitPolicy is mentioned
 func (p *Postgres) SetDefaultReplicationMode(postgresVersion *catalog.PostgresVersion) {
 	majorVersion, _ := getMajorPgVersion(postgresVersion)
+	if p.Spec.Replication == nil {
+		p.Spec.Replication = &PostgresReplication{}
+	}
 	if p.Spec.Replication.WALLimitPolicy == "" {
 		if majorVersion <= uint64(12) {
 			p.Spec.Replication.WALLimitPolicy = WALKeepSegment
 		} else {
-			p.Spec.Replication.WALLimitPolicy = ReplicationSlot
+			p.Spec.Replication.WALLimitPolicy = WALKeepSize
 		}
 	}
 	if p.Spec.Replication.WALLimitPolicy == WALKeepSegment && p.Spec.Replication.WalKeepSegment == nil {
