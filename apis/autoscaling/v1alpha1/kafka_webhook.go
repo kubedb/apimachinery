@@ -34,15 +34,15 @@ import (
 // log is for logging in this package.
 var kafkaLog = logf.Log.WithName("kafka-autoscaler")
 
-var _ webhook.CustomDefaulter = &KafkaAutoscaler{}
+var _ webhook.Defaulter = &KafkaAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (k *KafkaAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+func (k *KafkaAutoscaler) Default() {
 	kafkaLog.Info("defaulting", "name", k.Name)
-	return k.setDefaults()
+	k.setDefaults()
 }
 
-func (k *KafkaAutoscaler) setDefaults() error {
+func (k *KafkaAutoscaler) setDefaults() {
 	var db dbapi.Kafka
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      k.Spec.DatabaseRef.Name,
@@ -50,7 +50,7 @@ func (k *KafkaAutoscaler) setDefaults() error {
 	}, &db)
 	if err != nil {
 		_ = fmt.Errorf("can't get Kafka %s/%s \n", k.Namespace, k.Spec.DatabaseRef.Name)
-		return errors.New("can't get Kafka")
+		return
 	}
 
 	k.setOpsReqOptsDefaults()
@@ -72,7 +72,6 @@ func (k *KafkaAutoscaler) setDefaults() error {
 			setDefaultComputeValues(k.Spec.Compute.Node)
 		}
 	}
-	return nil
 }
 
 func (k *KafkaAutoscaler) setOpsReqOptsDefaults() {
@@ -86,21 +85,21 @@ func (k *KafkaAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.CustomValidator = &KafkaAutoscaler{}
+var _ webhook.Validator = &KafkaAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *KafkaAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (k *KafkaAutoscaler) ValidateCreate() (admission.Warnings, error) {
 	kafkaLog.Info("validate create", "name", k.Name)
 	return nil, k.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *KafkaAutoscaler) ValidateUpdate(ctx context.Context, oldObj runtime.Object, newObj runtime.Object) (admission.Warnings, error) {
+func (k *KafkaAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
 	kafkaLog.Info("validate create", "name", k.Name)
 	return nil, k.validate()
 }
 
-func (_ *KafkaAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *KafkaAutoscaler) ValidateDelete() (admission.Warnings, error) {
 	return nil, nil
 }
 
