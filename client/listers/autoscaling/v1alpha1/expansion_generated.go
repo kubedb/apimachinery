@@ -34,6 +34,14 @@ type EtcdAutoscalerListerExpansion interface{}
 // EtcdAutoscalerNamespaceLister.
 type EtcdAutoscalerNamespaceListerExpansion interface{}
 
+// KafkaAutoscalerListerExpansion allows custom methods to be added to
+// KafkaAutoscalerLister.
+type KafkaAutoscalerListerExpansion interface{}
+
+// KafkaAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// KafkaAutoscalerNamespaceLister.
+type KafkaAutoscalerNamespaceListerExpansion interface{}
+
 // MariaDBAutoscalerListerExpansion allows custom methods to be added to
 // MariaDBAutoscalerLister.
 type MariaDBAutoscalerListerExpansion interface{}

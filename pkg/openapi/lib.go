@@ -30,6 +30,7 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 
 		"/apis/mutators.autoscaling.kubedb.com/v1alpha1",
 		"/apis/mutators.autoscaling.kubedb.com/v1alpha1/elasticsearchautoscalerwebhooks",
+		"/apis/mutators.autoscaling.kubedb.com/v1alpha1/kafkaautoscalerwebhooks",
 		"/apis/mutators.autoscaling.kubedb.com/v1alpha1/mariadbautoscalerwebhooks",
 		"/apis/mutators.autoscaling.kubedb.com/v1alpha1/mongodbautoscalerwebhooks",
 		"/apis/mutators.autoscaling.kubedb.com/v1alpha1/mysqlautoscalerwebhooks",
@@ -81,6 +82,7 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 
 		"/apis/validators.autoscaling.kubedb.com/v1alpha1",
 		"/apis/validators.autoscaling.kubedb.com/v1alpha1/elasticsearchautoscalerwebhooks",
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1/kafkaautoscalerwebhooks",
 		"/apis/validators.autoscaling.kubedb.com/v1alpha1/mariadbautoscalerwebhooks",
 		"/apis/validators.autoscaling.kubedb.com/v1alpha1/mongodbautoscalerwebhooks",
 		"/apis/validators.autoscaling.kubedb.com/v1alpha1/mysqlautoscalerwebhooks",

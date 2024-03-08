@@ -37,6 +37,10 @@ func (c *FakeAutoscalingV1alpha1) EtcdAutoscalers(namespace string) v1alpha1.Etc
 	return &FakeEtcdAutoscalers{c, namespace}
 }
 
+func (c *FakeAutoscalingV1alpha1) KafkaAutoscalers(namespace string) v1alpha1.KafkaAutoscalerInterface {
+	return &FakeKafkaAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) MariaDBAutoscalers(namespace string) v1alpha1.MariaDBAutoscalerInterface {
 	return &FakeMariaDBAutoscalers{c, namespace}
 }
