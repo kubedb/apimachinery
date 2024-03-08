@@ -76,6 +76,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().ElasticsearchAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("etcdautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().EtcdAutoscalers().Informer()}, nil
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("kafkaautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().KafkaAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("mariadbautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MariaDBAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("memcachedautoscalers"):
