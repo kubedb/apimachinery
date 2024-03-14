@@ -1116,6 +1116,7 @@ const (
 // Resource kind related constants
 const (
 	ResourceKindStatefulSet = "StatefulSet"
+	ResourceKindPetSet      = "PetSet"
 )
 
 var (

@@ -164,6 +164,11 @@ type PostgresSpec struct {
 	// Arbiter controls spec for arbiter pods
 	// +optional
 	Arbiter *ArbiterSpec `json:"arbiter,omitempty"`
+
+	// PodPlacementPolicy is the reference of the podPlacementPolicy
+	// +kubebuilder:default={name: "default"}
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 }
 
 type ArbiterSpec struct {
@@ -179,6 +184,11 @@ type ArbiterSpec struct {
 	// If specified, the pod's tolerations.
 	// +optional
 	Tolerations []core.Toleration `json:"tolerations,omitempty"`
+
+	// PodPlacementPolicy is the reference of the podPlacementPolicy
+	// +kubebuilder:default={name: "default"}
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 }
 
 // PostgreLeaderElectionConfig contains essential attributes of leader election.
