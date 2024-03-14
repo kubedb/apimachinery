@@ -23673,6 +23673,14 @@
             "default": {},
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceStatus"
           }
+        },
+        "ui": {
+          "description": "UI is an optional list of database web uis",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedURL"
+          }
         }
       }
     },
@@ -24861,6 +24869,29 @@
           "description": "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceSpec"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedURL": {
+      "type": "object",
+      "required": [
+        "alias",
+        "url"
+      ],
+      "properties": {
+        "alias": {
+          "description": "Alias represents the identifier of the service. This should match the db ui chart name",
+          "type": "string",
+          "default": ""
+        },
+        "helmRelease": {
+          "description": "HelmRelease is the name of the helm release used to deploy this ui The name format is typically \u003calias\u003e-\u003cdb-name\u003e",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "url": {
+          "description": "URL of the database ui",
+          "type": "string",
+          "default": ""
         }
       }
     },
