@@ -189,20 +189,20 @@ func (s *Singlestore) PVCName(alias string) string {
 	// return s.OffshootName()
 }
 
-func (s *Singlestore) AggregatorStatefulSet() string {
-	sts := s.OffshootName()
+func (s *Singlestore) AggregatorPetSet() string {
+	ps := s.OffshootName()
 	if s.Spec.Topology.Aggregator.Suffix != "" {
-		sts = metautil.NameWithSuffix(sts, s.Spec.Topology.Aggregator.Suffix)
+		ps = metautil.NameWithSuffix(ps, s.Spec.Topology.Aggregator.Suffix)
 	}
-	return metautil.NameWithSuffix(sts, StatefulSetTypeAggregator)
+	return metautil.NameWithSuffix(ps, PetSetTypeAggregator)
 }
 
-func (s *Singlestore) LeafStatefulSet() string {
-	sts := s.OffshootName()
+func (s *Singlestore) LeafPetSet() string {
+	ps := s.OffshootName()
 	if s.Spec.Topology.Leaf.Suffix != "" {
-		sts = metautil.NameWithSuffix(sts, s.Spec.Topology.Leaf.Suffix)
+		ps = metautil.NameWithSuffix(ps, s.Spec.Topology.Leaf.Suffix)
 	}
-	return metautil.NameWithSuffix(sts, StatefulSetTypeLeaf)
+	return metautil.NameWithSuffix(ps, PetSetTypeLeaf)
 }
 
 func (s *Singlestore) PodLabels(extraLabels ...map[string]string) map[string]string {
