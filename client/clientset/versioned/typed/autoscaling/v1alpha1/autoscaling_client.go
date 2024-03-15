@@ -21,16 +21,16 @@ package v1alpha1
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type AutoscalingV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	ElasticsearchAutoscalersGetter
 	EtcdAutoscalersGetter
+	KafkaAutoscalersGetter
 	MariaDBAutoscalersGetter
 	MemcachedAutoscalersGetter
 	MongoDBAutoscalersGetter
@@ -54,6 +54,10 @@ func (c *AutoscalingV1alpha1Client) ElasticsearchAutoscalers(namespace string) E
 
 func (c *AutoscalingV1alpha1Client) EtcdAutoscalers(namespace string) EtcdAutoscalerInterface {
 	return newEtcdAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) KafkaAutoscalers(namespace string) KafkaAutoscalerInterface {
+	return newKafkaAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) MariaDBAutoscalers(namespace string) MariaDBAutoscalerInterface {

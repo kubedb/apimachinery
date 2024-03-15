@@ -23398,6 +23398,9 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
+        "gateway": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -23628,6 +23631,9 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
+        "gateway": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -23636,6 +23642,45 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway": {
+      "type": "object",
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "hostname": {
+          "type": "string"
+        },
+        "ip": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "type": "string",
+          "default": ""
+        },
+        "services": {
+          "description": "Services is an optional configuration for services used to expose database",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceStatus"
+          }
+        },
+        "ui": {
+          "description": "UI is an optional list of database web uis",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedURL"
+          }
         }
       }
     },
@@ -23790,6 +23835,10 @@
           "description": "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AllowedConsumers"
         },
+        "archiver": {
+          "description": "Archiver controls database backup using Archiver CR",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Archiver"
+        },
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
@@ -23822,7 +23871,7 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
         },
         "monitor": {
-          "description": "Monitor is used monitor database instance",
+          "description": "Monitor is used to monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
         },
         "podTemplate": {
@@ -23887,6 +23936,9 @@
             "default": {},
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "gateway": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
         },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
@@ -24041,6 +24093,9 @@
             "default": {},
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "gateway": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
         },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
@@ -24412,6 +24467,9 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
+        "gateway": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -24675,6 +24733,9 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
+        "gateway": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -24767,6 +24828,27 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceStatus": {
+      "type": "object",
+      "required": [
+        "alias",
+        "ports"
+      ],
+      "properties": {
+        "alias": {
+          "description": "Alias represents the identifier of the service.",
+          "type": "string",
+          "default": ""
+        },
+        "ports": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServicePort"
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec": {
       "type": "object",
       "required": [
@@ -24787,6 +24869,29 @@
           "description": "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceSpec"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedURL": {
+      "type": "object",
+      "required": [
+        "alias",
+        "url"
+      ],
+      "properties": {
+        "alias": {
+          "description": "Alias represents the identifier of the service. This should match the db ui chart name",
+          "type": "string",
+          "default": ""
+        },
+        "helmRelease": {
+          "description": "HelmRelease is the name of the helm release used to deploy this ui The name format is typically \u003calias\u003e-\u003cdb-name\u003e",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "url": {
+          "description": "URL of the database ui",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -24962,6 +25067,9 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
+        "gateway": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -25124,6 +25232,9 @@
             "default": {},
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "gateway": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
         },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
@@ -25390,6 +25501,9 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
+        "gateway": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -25575,6 +25689,9 @@
             "default": {},
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "gateway": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
         },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
@@ -25793,6 +25910,9 @@
             "default": {},
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
+        },
+        "gateway": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
         },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",

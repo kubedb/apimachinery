@@ -31,7 +31,6 @@ import (
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
@@ -40,6 +39,7 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 func (z *ZooKeeper) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -75,7 +75,7 @@ func (z *ZooKeeper) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", z.ResourcePlural(), kubedb.GroupName)
 }
 
-func (z *ZooKeeper) StatefulSetName() string {
+func (z *ZooKeeper) PetSetName() string {
 	return z.OffshootName()
 }
 
@@ -206,6 +206,9 @@ func (z *ZooKeeper) SetDefaults() {
 
 	z.SetHealthCheckerDefaults()
 	if z.Spec.Monitor != nil {
+		if z.Spec.Monitor.Prometheus == nil {
+			z.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+		}
 		if z.Spec.Monitor.Prometheus != nil && z.Spec.Monitor.Prometheus.Exporter.Port == 0 {
 			z.Spec.Monitor.Prometheus.Exporter.Port = ZooKeeperMetricsPort
 		}
@@ -339,8 +342,8 @@ func (z *ZooKeeper) GetConnectionScheme() string {
 	return scheme
 }
 
-func (z *ZooKeeper) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
-	// Desire number of statefulSets
+func (z *ZooKeeper) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
+	// Desire number of petSets
 	expectedItems := 1
-	return checkReplicas(lister.StatefulSets(z.Namespace), labels.SelectorFromSet(z.OffshootLabels()), expectedItems)
+	return checkReplicasOfPetSet(lister.PetSets(z.Namespace), labels.SelectorFromSet(z.OffshootLabels()), expectedItems)
 }

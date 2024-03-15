@@ -19,10 +19,9 @@ limitations under the License.
 package fake
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
-
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
+	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 )
 
 type FakeAutoscalingV1alpha1 struct {
@@ -35,6 +34,10 @@ func (c *FakeAutoscalingV1alpha1) ElasticsearchAutoscalers(namespace string) v1a
 
 func (c *FakeAutoscalingV1alpha1) EtcdAutoscalers(namespace string) v1alpha1.EtcdAutoscalerInterface {
 	return &FakeEtcdAutoscalers{c, namespace}
+}
+
+func (c *FakeAutoscalingV1alpha1) KafkaAutoscalers(namespace string) v1alpha1.KafkaAutoscalerInterface {
+	return &FakeKafkaAutoscalers{c, namespace}
 }
 
 func (c *FakeAutoscalingV1alpha1) MariaDBAutoscalers(namespace string) v1alpha1.MariaDBAutoscalerInterface {

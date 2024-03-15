@@ -36,6 +36,9 @@ import (
 	"kmodules.xyz/client-go/tools/queue"
 	appcat_cs "kmodules.xyz/custom-resources/client/clientset/versioned"
 	appcat_in "kmodules.xyz/custom-resources/client/informers/externalversions"
+	petsetcs "kubeops.dev/petset/client/clientset/versioned"
+	psinformer "kubeops.dev/petset/client/informers/externalversions"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	scs "stash.appscode.dev/apimachinery/client/clientset/versioned"
 	stashinformer "stash.appscode.dev/apimachinery/client/informers/externalversions"
@@ -50,6 +53,8 @@ type Controller struct {
 	Client kubernetes.Interface
 	// KubeDB client
 	DBClient cs.Interface
+	// PetSet client
+	PSClient petsetcs.Interface
 	// Dynamic client
 	DynamicClient dynamic.Interface
 	// AppCatalog client
@@ -68,6 +73,7 @@ type Config struct {
 	KubedbInformerFactory      kubedbinformers.SharedInformerFactory
 	AppCatInformerFactory      appcat_in.SharedInformerFactory
 	CertManagerInformerFactory cmInformers.SharedInformerFactory
+	PetSetInformerFactory      psinformer.SharedInformerFactory
 
 	// External tool to initialize the database
 	Initializers Initializers
@@ -80,6 +86,11 @@ type Config struct {
 	StsQueue    *queue.Worker
 	StsInformer cache.SharedIndexInformer
 	StsLister   appslister.StatefulSetLister
+
+	// PetSet Watcher
+	PSQueue    *queue.Worker
+	PSInformer cache.SharedIndexInformer
+	PSLister   pslister.PetSetLister
 
 	// Only watch or reconcile objects in this namespace (usually for license reasons)
 	RestrictToNamespace    string

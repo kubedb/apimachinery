@@ -30,7 +30,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -38,6 +37,7 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 type SolrApp struct {
@@ -48,7 +48,7 @@ func (s *Solr) CustomResourceDefinition() *apiextensions.CustomResourceDefinitio
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralSolr))
 }
 
-func (s *Solr) StatefulsetName(suffix string) string {
+func (s *Solr) PetSetName(suffix string) string {
 	sts := []string{s.Name}
 	if suffix != "" {
 		sts = append(sts, suffix)
@@ -405,14 +405,22 @@ func (s *Solr) GetPersistentSecrets() []string {
 		secrets = append(secrets, s.Spec.AuthConfigSecret.Name)
 	}
 
+	if s.Spec.ZookeeperDigestSecret != nil {
+		secrets = append(secrets, s.Spec.ZookeeperDigestSecret.Name)
+	}
+
+	if s.Spec.ZookeeperDigestReadonlySecret != nil {
+		secrets = append(secrets, s.Spec.ZookeeperDigestReadonlySecret.Name)
+	}
+
 	return secrets
 }
 
-func (s *Solr) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
-	// Desire number of statefulSets
+func (s *Solr) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
+	// Desire number of petSets
 	expectedItems := 1
 	if s.Spec.Topology != nil {
 		expectedItems = 3
 	}
-	return checkReplicas(lister.StatefulSets(s.Namespace), labels.SelectorFromSet(s.OffshootLabels()), expectedItems)
+	return checkReplicasOfPetSet(lister.PetSets(s.Namespace), labels.SelectorFromSet(s.OffshootLabels()), expectedItems)
 }

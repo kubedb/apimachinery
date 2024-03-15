@@ -19,14 +19,17 @@ limitations under the License.
 package fake
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/archiver/v1alpha1"
-
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
+	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/archiver/v1alpha1"
 )
 
 type FakeArchiverV1alpha1 struct {
 	*testing.Fake
+}
+
+func (c *FakeArchiverV1alpha1) MariaDBArchivers(namespace string) v1alpha1.MariaDBArchiverInterface {
+	return &FakeMariaDBArchivers{c, namespace}
 }
 
 func (c *FakeArchiverV1alpha1) MongoDBArchivers(namespace string) v1alpha1.MongoDBArchiverInterface {

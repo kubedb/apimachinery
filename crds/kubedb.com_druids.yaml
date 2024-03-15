@@ -3556,6 +3556,14 @@ spec:
                           type: string
                         type: object
                         x-kubernetes-map-type: atomic
+                      podPlacementPolicy:
+                        default:
+                          name: default
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       podTemplate:
                         properties:
                           controller:
@@ -7021,6 +7029,14 @@ spec:
                       nodeSelector:
                         additionalProperties:
                           type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
+                      podPlacementPolicy:
+                        default:
+                          name: default
+                        properties:
+                          name:
+                            type: string
                         type: object
                         x-kubernetes-map-type: atomic
                       podTemplate:
@@ -10490,6 +10506,14 @@ spec:
                           type: string
                         type: object
                         x-kubernetes-map-type: atomic
+                      podPlacementPolicy:
+                        default:
+                          name: default
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       podTemplate:
                         properties:
                           controller:
@@ -13955,6 +13979,14 @@ spec:
                       nodeSelector:
                         additionalProperties:
                           type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
+                      podPlacementPolicy:
+                        default:
+                          name: default
+                        properties:
+                          name:
+                            type: string
                         type: object
                         x-kubernetes-map-type: atomic
                       podTemplate:
@@ -17424,6 +17456,14 @@ spec:
                           type: string
                         type: object
                         x-kubernetes-map-type: atomic
+                      podPlacementPolicy:
+                        default:
+                          name: default
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       podTemplate:
                         properties:
                           controller:
@@ -20889,6 +20929,14 @@ spec:
                       nodeSelector:
                         additionalProperties:
                           type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
+                      podPlacementPolicy:
+                        default:
+                          name: default
+                        properties:
+                          name:
+                            type: string
                         type: object
                         x-kubernetes-map-type: atomic
                       podTemplate:
@@ -24402,6 +24450,67 @@ spec:
                   - type
                   type: object
                 type: array
+              gateway:
+                properties:
+                  hostname:
+                    type: string
+                  ip:
+                    type: string
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                  services:
+                    items:
+                      properties:
+                        alias:
+                          enum:
+                          - primary
+                          - standby
+                          - stats
+                          type: string
+                        ports:
+                          items:
+                            properties:
+                              name:
+                                type: string
+                              nodePort:
+                                format: int32
+                                type: integer
+                              port:
+                                format: int32
+                                type: integer
+                            required:
+                            - port
+                            type: object
+                          type: array
+                      required:
+                      - alias
+                      - ports
+                      type: object
+                    type: array
+                  ui:
+                    items:
+                      properties:
+                        alias:
+                          type: string
+                        helmRelease:
+                          properties:
+                            name:
+                              type: string
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        url:
+                          type: string
+                      required:
+                      - alias
+                      - url
+                      type: object
+                    type: array
+                required:
+                - name
+                - namespace
+                type: object
               observedGeneration:
                 format: int64
                 type: integer
