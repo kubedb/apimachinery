@@ -32,7 +32,6 @@ import (
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	"k8s.io/klog/v2"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
@@ -42,6 +41,7 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 func (s *Singlestore) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -220,7 +220,7 @@ func (s *Singlestore) ConfigSecretName() string {
 	return metautil.NameWithSuffix(s.OffshootName(), "config")
 }
 
-func (s *Singlestore) StatefulSetName() string {
+func (s *Singlestore) PetSetName() string {
 	return s.OffshootName()
 }
 
@@ -466,11 +466,11 @@ func (s *Singlestore) CertificateName(alias SinglestoreCertificateAlias) string 
 	return metautil.NameWithSuffix(s.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
-func (s *Singlestore) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
-	// Desire number of statefulSets
+func (s *Singlestore) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
+	// Desire number of petSets
 	expectedItems := 1
 	if s.Spec.Topology != nil {
 		expectedItems = 2
 	}
-	return checkReplicas(lister.StatefulSets(s.Namespace), labels.SelectorFromSet(s.OffshootLabels()), expectedItems)
+	return checkReplicasOfPetSet(lister.PetSets(s.Namespace), labels.SelectorFromSet(s.OffshootLabels()), expectedItems)
 }

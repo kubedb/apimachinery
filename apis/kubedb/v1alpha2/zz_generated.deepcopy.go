@@ -474,6 +474,11 @@ func (in *DruidNode) DeepCopyInto(out *DruidNode) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.PodPlacementPolicy != nil {
+		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	return
 }
 
@@ -1265,6 +1270,11 @@ func (in *FerretDBSpec) DeepCopyInto(out *FerretDBSpec) {
 		in, out := &in.Backend, &out.Backend
 		*out = new(FerretDBBackend)
 		(*in).DeepCopyInto(*out)
+	}
+	if in.PodPlacementPolicy != nil {
+		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
 	}
 	return
 }
@@ -3291,6 +3301,11 @@ func (in *PgpoolSpec) DeepCopyInto(out *PgpoolSpec) {
 		*out = new(monitoringagentapiapiv1.AgentSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.PodPlacementPolicy != nil {
+		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	return
 }
 
@@ -3925,6 +3940,11 @@ func (in *RabbitMQSpec) DeepCopyInto(out *RabbitMQSpec) {
 		(*in).DeepCopyInto(*out)
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
+	if in.PodPlacementPolicy != nil {
+		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	return
 }
 
@@ -4539,6 +4559,11 @@ func (in *SinglestoreNode) DeepCopyInto(out *SinglestoreNode) {
 		*out = new(v2.PodTemplateSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.PodPlacementPolicy != nil {
+		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	return
 }
 
@@ -4612,6 +4637,11 @@ func (in *SinglestoreSpec) DeepCopyInto(out *SinglestoreSpec) {
 		in, out := &in.Monitor, &out.Monitor
 		*out = new(monitoringagentapiapiv1.AgentSpec)
 		(*in).DeepCopyInto(*out)
+	}
+	if in.PodPlacementPolicy != nil {
+		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
 	}
 	return
 }
@@ -4821,6 +4851,11 @@ func (in *SolrNode) DeepCopyInto(out *SolrNode) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.PodPlacementPolicy != nil {
+		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	return
 }
 
@@ -4906,6 +4941,11 @@ func (in *SolrSpec) DeepCopyInto(out *SolrSpec) {
 		}
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
+	if in.PodPlacementPolicy != nil {
+		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	return
 }
 
@@ -5112,6 +5152,11 @@ func (in *ZooKeeperSpec) DeepCopyInto(out *ZooKeeperSpec) {
 		in, out := &in.Monitor, &out.Monitor
 		*out = new(monitoringagentapiapiv1.AgentSpec)
 		(*in).DeepCopyInto(*out)
+	}
+	if in.PodPlacementPolicy != nil {
+		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
 	}
 	return
 }

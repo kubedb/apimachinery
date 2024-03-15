@@ -67,7 +67,7 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
-		dbInfo.replicasReady, dbInfo.msg, err = dr.ReplicasAreReady(c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = dr.ReplicasAreReady(c.PSLister)
 		if err != nil {
 			return nil, err
 		}
@@ -100,7 +100,7 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
-		dbInfo.replicasReady, dbInfo.msg, err = fr.ReplicasAreReady(c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = fr.ReplicasAreReady(c.PSLister)
 		if err != nil {
 			return nil, err
 		}
@@ -188,7 +188,7 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
-		dbInfo.replicasReady, dbInfo.msg, err = pp.ReplicasAreReady(c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = pp.ReplicasAreReady(c.PSLister)
 		if err != nil {
 			return nil, err
 		}
@@ -221,7 +221,7 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
-		dbInfo.replicasReady, dbInfo.msg, err = rb.ReplicasAreReady(c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = rb.ReplicasAreReady(c.PSLister)
 		if err != nil {
 			return nil, err
 		}
@@ -254,7 +254,7 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
-		dbInfo.replicasReady, dbInfo.msg, err = ss.ReplicasAreReady(c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = ss.ReplicasAreReady(c.PSLister)
 		if err != nil {
 			return nil, err
 		}
@@ -265,7 +265,7 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
-		dbInfo.replicasReady, dbInfo.msg, err = sl.ReplicasAreReady(c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = sl.ReplicasAreReady(c.PSLister)
 		if err != nil {
 			return nil, err
 		}
@@ -276,7 +276,7 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
-		dbInfo.replicasReady, dbInfo.msg, err = zk.ReplicasAreReady(c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = zk.ReplicasAreReady(c.PSLister)
 		if err != nil {
 			return nil, err
 		}
