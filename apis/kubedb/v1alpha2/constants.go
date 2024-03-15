@@ -363,25 +363,20 @@ const (
 	MsSQLDatabasePort                  = 1433
 	MsSQLDatabaseMirroringEndpointPort = 5022
 	MsSQLCoordinatorPort               = 2381
-
-	MsSQLSAUser = "sa"
-
-	// --- Environment Variables
+	MsSQLSAUser                        = "sa"
+	// environment variables
 	EnvAcceptEula        = "ACCEPT_EULA"
 	EnvMsSQLEnableHADR   = "MSSQL_ENABLE_HADR"
 	EnvMsSQLAgentEnabled = "MSSQL_AGENT_ENABLED"
 	EnvMsSQLSAUsername   = "MSSQL_SA_USERNAME"
 	EnvMsSQLSAPassword   = "MSSQL_SA_PASSWORD"
-
-	// --- Container related
-	MsSQLContainerName            = "mssql"
-	MsSQLCoordinatorContainerName = "mssql-coordinator"
-	MsSQLInitContainerName        = "mssql-init"
-
+	// container related
+	MsSQLContainerName             = "mssql"
+	MsSQLCoordinatorContainerName  = "mssql-coordinator"
+	MsSQLInitContainerName         = "mssql-init"
 	MsSQLVolumeNameInitScript      = "init-scripts"
 	MsSQLVolumeMountPathInitScript = "/scripts"
-
-	// Volume related
+	// volume related
 	MsSQLVolumeNameData      = "data"
 	MsSQLVolumeMountPathData = "/var/opt/mssql"
 
