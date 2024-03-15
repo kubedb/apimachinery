@@ -370,7 +370,7 @@ func (s *Solr) assignDefaultContainerSecurityContext(slVersion *catalog.SolrVers
 func (s *Solr) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
 	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, SolrContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResourcesMemoryIntensive)
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResourcesCoreAndMemoryIntensiveSolr)
 	}
 
 	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, SolrInitContainerName)
