@@ -341,6 +341,7 @@ func (s *Singlestore) setDefaultContainerSecurityContext(sdbVersion *catalog.Sin
 	if podTemplate == nil {
 		return
 	}
+
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
