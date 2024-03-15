@@ -1206,7 +1206,7 @@ var (
 	// DefaultResourcesCoreAndMemoryIntensive must be used for Solr
 	DefaultResourcesCoreAndMemoryIntensiveSolr = core.ResourceRequirements{
 		Requests: core.ResourceList{
-			core.ResourceCPU:    resource.MustParse(".700"),
+			core.ResourceCPU:    resource.MustParse(".900"),
 			core.ResourceMemory: resource.MustParse("1.5Gi"),
 		},
 		Limits: core.ResourceList{
