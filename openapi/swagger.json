@@ -25362,6 +25362,30 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresReplication": {
+      "type": "object",
+      "required": [
+        "walLimitPolicy"
+      ],
+      "properties": {
+        "maxSlotWALKeepSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "walKeepSegment": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "walKeepSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "walLimitPolicy": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresSpec": {
       "type": "object",
       "required": [
@@ -25443,6 +25467,9 @@
           "description": "Number of instances to deploy for a Postgres database.",
           "type": "integer",
           "format": "int32"
+        },
+        "replication": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresReplication"
         },
         "serviceTemplates": {
           "description": "ServiceTemplates is an optional configuration for services used to expose database",
