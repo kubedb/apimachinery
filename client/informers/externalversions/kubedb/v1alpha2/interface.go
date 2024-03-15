@@ -40,6 +40,8 @@ type Interface interface {
 	Memcacheds() MemcachedInformer
 	// MongoDBs returns a MongoDBInformer.
 	MongoDBs() MongoDBInformer
+	// MsSQLs returns a MsSQLInformer.
+	MsSQLs() MsSQLInformer
 	// MySQLs returns a MySQLInformer.
 	MySQLs() MySQLInformer
 	// PerconaXtraDBs returns a PerconaXtraDBInformer.
@@ -115,6 +117,11 @@ func (v *version) Memcacheds() MemcachedInformer {
 // MongoDBs returns a MongoDBInformer.
 func (v *version) MongoDBs() MongoDBInformer {
 	return &mongoDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MsSQLs returns a MsSQLInformer.
+func (v *version) MsSQLs() MsSQLInformer {
+	return &msSQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MySQLs returns a MySQLInformer.

@@ -54,6 +54,10 @@ type MemcachedVersionListerExpansion interface{}
 // MongoDBVersionLister.
 type MongoDBVersionListerExpansion interface{}
 
+// MsSQLVersionListerExpansion allows custom methods to be added to
+// MsSQLVersionLister.
+type MsSQLVersionListerExpansion interface{}
+
 // MySQLVersionListerExpansion allows custom methods to be added to
 // MySQLVersionLister.
 type MySQLVersionListerExpansion interface{}
