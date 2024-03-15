@@ -952,7 +952,25 @@ const (
 	DruidExtensionPostgreSQLMetadataStorage = "postgresql-metadata-storage"
 	DruidExtensionBasicSecurity             = "druid-basic-security"
 	DruidExtensionMultiStageQuery           = "druid-multi-stage-query"
+	DruidExtensionPrometheusEmitter         = "prometheus-emitter"
 	DruidService                            = "druid.service"
+
+	// Monitoring Configurations
+	DruidEmitter                                = "druid.emitter"
+	DruidEmitterPrometheus                      = "prometheus"
+	DruidEmitterPrometheusPortKey               = "druid.emitter.prometheus.port"
+	DruidEmitterPrometheusPortVal               = 8080
+	DruidMonitoringMonitorsKey                  = "druid.monitoring.monitors"
+	DruidEmitterPrometheusStrategy              = "druid.emitter.prometheus.strategy"
+	DruidMetricsJVMMonitor                      = "org.apache.druid.java.util.metrics.JvmMonitor"
+	DruidMetricsServiceStatusMonitor            = "org.apache.druid.server.metrics.ServiceStatusMonitor"
+	DruidMetricsQueryCountStatsMonitor          = "org.apache.druid.server.metrics.QueryCountStatsMonitor"
+	DruidMonitoringHistoricalMetricsMonitor     = "org.apache.druid.server.metrics.HistoricalMetricsMonitor"
+	DruidMonitoringSegmentsStatsMonitor         = "org.apache.druid.server.metrics.SegmentStatsMonitor"
+	DruidMonitoringWorkerTaskCountsStatsMonitor = "org.apache.druid.server.metrics.WorkerTaskCountStatsMonitor"
+	DruidMonitoringQueryCountStatsMonitor       = "org.apache.druid.server.metrics.QueryCountStatsMonitor"
+	DruidMonitoringTaskCountStatsMonitor        = "org.apache.druid.server.metrics.TaskCountStatsMonitor"
+	DruidMonitoringSysMonitor                   = "org.apache.druid.java.util.metrics.SysMonitor"
 
 	/// Coordinators Configurations
 	DruidCoordinatorStartDelay                = "druid.coordinator.startDelay"
@@ -972,6 +990,8 @@ const (
 	DruidIndexerLogsKillDurationToRetain = "druid.indexer.logs.kill.durationToRetain"
 	DruidIndexerLogsKillInitialDelay     = "druid.indexer.logs.kill.initialDelay"
 	DruidIndexerLogsKillDelay            = "druid.indexer.logs.kill.delay"
+
+	DruidEmitterLoggingLogLevel = "druid.emitter.logging.logLevel"
 
 	/// Historicals Configurations
 	// Properties
