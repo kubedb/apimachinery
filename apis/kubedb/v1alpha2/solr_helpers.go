@@ -277,6 +277,7 @@ func (s *Solr) SetDefaults(slVersion *catalog.SolrVersion) {
 			s.Spec.Topology.Data.PodTemplate.Spec.SecurityContext.FSGroup = slVersion.Spec.SecurityContext.RunAsUser
 			s.setDefaultContainerSecurityContext(slVersion, &s.Spec.Topology.Data.PodTemplate)
 			s.setDefaultContainerResourceLimits(&s.Spec.Topology.Data.PodTemplate)
+
 		}
 
 		if s.Spec.Topology.Overseer != nil {
