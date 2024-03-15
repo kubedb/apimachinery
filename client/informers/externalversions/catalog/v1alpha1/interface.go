@@ -42,6 +42,8 @@ type Interface interface {
 	MemcachedVersions() MemcachedVersionInformer
 	// MongoDBVersions returns a MongoDBVersionInformer.
 	MongoDBVersions() MongoDBVersionInformer
+	// MsSQLVersions returns a MsSQLVersionInformer.
+	MsSQLVersions() MsSQLVersionInformer
 	// MySQLVersions returns a MySQLVersionInformer.
 	MySQLVersions() MySQLVersionInformer
 	// PerconaXtraDBVersions returns a PerconaXtraDBVersionInformer.
@@ -120,6 +122,11 @@ func (v *version) MemcachedVersions() MemcachedVersionInformer {
 // MongoDBVersions returns a MongoDBVersionInformer.
 func (v *version) MongoDBVersions() MongoDBVersionInformer {
 	return &mongoDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// MsSQLVersions returns a MsSQLVersionInformer.
+func (v *version) MsSQLVersions() MsSQLVersionInformer {
+	return &msSQLVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // MySQLVersions returns a MySQLVersionInformer.

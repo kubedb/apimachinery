@@ -82,6 +82,14 @@ type MongoDBListerExpansion interface{}
 // MongoDBNamespaceLister.
 type MongoDBNamespaceListerExpansion interface{}
 
+// MsSQLListerExpansion allows custom methods to be added to
+// MsSQLLister.
+type MsSQLListerExpansion interface{}
+
+// MsSQLNamespaceListerExpansion allows custom methods to be added to
+// MsSQLNamespaceLister.
+type MsSQLNamespaceListerExpansion interface{}
+
 // MySQLListerExpansion allows custom methods to be added to
 // MySQLLister.
 type MySQLListerExpansion interface{}
