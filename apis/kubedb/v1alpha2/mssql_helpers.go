@@ -2,13 +2,15 @@ package v1alpha2
 
 import (
 	"fmt"
+	"strings"
+
+	"kubedb.dev/apimachinery/apis/kubedb"
+
 	"gomodules.xyz/pointer"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	metautil "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
-	"kubedb.dev/apimachinery/apis/kubedb"
-	"strings"
 )
 
 type MsSQLApp struct {
@@ -98,6 +100,7 @@ func (m *MsSQL) PVCName(alias string) string {
 func (m *MsSQL) PodLabels(extraLabels ...map[string]string) map[string]string {
 	return m.offshootLabels(metautil.OverwriteKeys(m.OffshootSelectors(), extraLabels...), m.Spec.PodTemplate.Labels)
 }
+
 func (m *MsSQL) PodLabel(podTemplate *ofst.PodTemplateSpec) map[string]string {
 	if podTemplate != nil && podTemplate.Labels != nil {
 		return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Labels)
