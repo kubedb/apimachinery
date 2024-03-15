@@ -28,6 +28,7 @@ import (
 	"kubedb.dev/apimachinery/crds"
 
 	"github.com/Masterminds/semver/v3"
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	v1 "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -39,6 +40,7 @@ import (
 	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
@@ -124,6 +126,46 @@ func (r *Druid) Finalizer() string {
 
 func (d *Druid) DefaultUserCredSecretName(username string) string {
 	return meta_util.NameWithSuffix(d.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", username), "_", "-"))
+}
+
+type DruidStatsService struct {
+	*Druid
+}
+
+func (ks DruidStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
+}
+
+func (ks DruidStatsService) GetNamespace() string {
+	return ks.Druid.GetNamespace()
+}
+
+func (ks DruidStatsService) ServiceName() string {
+	return ks.OffShootName() + "-stats"
+}
+
+func (ks DruidStatsService) ServiceMonitorName() string {
+	return ks.ServiceName()
+}
+
+func (ks DruidStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return ks.OffshootLabels()
+}
+
+func (ks DruidStatsService) Path() string {
+	return DefaultStatsPath
+}
+
+func (ks DruidStatsService) Scheme() string {
+	return ""
+}
+
+func (d *Druid) StatsService() mona.StatsAccessor {
+	return &DruidStatsService{d}
+}
+
+func (d *Druid) StatsServiceLabels() map[string]string {
+	return d.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (d *Druid) ConfigSecretName() string {

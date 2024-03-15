@@ -437,7 +437,7 @@ func (s *Singlestore) assignDefaultContainerSecurityContext(sdbVersion *catalog.
 func (s *Singlestore) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
 	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, SinglestoreContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResourcesMemoryIntensive)
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResourcesMemoryIntensiveSDB)
 	}
 
 	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, SinglestoreInitContainerName)
