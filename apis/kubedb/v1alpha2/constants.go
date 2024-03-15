@@ -334,8 +334,8 @@ const (
 	DatabasePodMaster                 = "Master"
 	DatabasePodAggregator             = "Aggregator"
 	DatabasePodLeaf                   = "Leaf"
-	StatefulSetTypeAggregator         = "aggregator"
-	StatefulSetTypeLeaf               = "leaf"
+	PetSetTypeAggregator              = "aggregator"
+	PetSetTypeLeaf                    = "leaf"
 	SinglestoreDatabaseHealth         = "singlestore_health"
 	SinglestoreTableHealth            = "singlestore_health_table"
 
