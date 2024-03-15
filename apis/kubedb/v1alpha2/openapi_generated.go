@@ -472,6 +472,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidList":                      schema_apimachinery_apis_kubedb_v1alpha2_DruidList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidNode":                      schema_apimachinery_apis_kubedb_v1alpha2_DruidNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidStatsService":              schema_apimachinery_apis_kubedb_v1alpha2_DruidStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidStatus":                    schema_apimachinery_apis_kubedb_v1alpha2_DruidStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Elasticsearch":                  schema_apimachinery_apis_kubedb_v1alpha2_Elasticsearch(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ElasticsearchClusterTopology":   schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchClusterTopology(ref),
@@ -23552,6 +23553,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
+					"monitor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Monitor is used monitor database instance",
+							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
+						},
+					},
 					"terminationPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TerminationPolicy controls the delete operation for database",
@@ -23571,7 +23578,27 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetadataStorage", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZookeeperRef"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetadataStorage", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZookeeperRef"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DruidStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Druid": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Druid"),
+						},
+					},
+				},
+				Required: []string{"Druid"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Druid"},
 	}
 }
 
