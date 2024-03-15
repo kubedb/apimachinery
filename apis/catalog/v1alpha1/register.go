@@ -92,6 +92,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&SolrVersionList{},
 		&ZooKeeperVersion{},
 		&ZooKeeperVersionList{},
+		&MsSQLVersion{},
+		&MsSQLVersionList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,
