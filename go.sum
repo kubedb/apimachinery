@@ -679,6 +679,8 @@ kmodules.xyz/resource-metrics v0.29.1 h1:gP4SNosdDGFImpne52mnQtHacmnllYkTMcYL//p
 kmodules.xyz/resource-metrics v0.29.1/go.mod h1:OuG/QobZ7o8GFHl/u3lqaUR0fDZDegxtV8Vdh+MNBD4=
 kmodules.xyz/webhook-runtime v0.29.1 h1:SQ8NvwJpxv5CUuXIubSg9g0Bk8BBnj4dhCWEk6Ou8g8=
 kmodules.xyz/webhook-runtime v0.29.1/go.mod h1:WVgNO4NqFdYwYZ82L6QIycN1Ax47y+yXi7XIHekYylo=
+kubeops.dev/petset v0.0.5 h1:VVXi39JhjondlbHyZ98z0MLp6VCmiCMinL59K48Y2zA=
+kubeops.dev/petset v0.0.5/go.mod h1:ijtKT1HlAht2vBEZj5LW7C00XEs3B0d1VdCQgd5V4cA=
 kubeops.dev/sidekick v0.0.5 h1:HFeAVomGJmSmbnxoNiT+uP97IjgCY17zG4RtPUlzVZs=
 kubeops.dev/sidekick v0.0.5/go.mod h1:uEz3ICN1oXA9dB+86T8kgRCrbakSjafWDPxQadqFkS0=
 kubestash.dev/apimachinery v0.5.0 h1:wfEv593FpyckyAkoJhuRN3WXyDJJ2Javxs4g56kBcFA=

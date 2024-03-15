@@ -2,8 +2,6 @@ module kubedb.dev/apimachinery
 
 go 1.22.0
 
-toolchain go1.22.1
-
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/cert-manager/cert-manager v1.13.3
@@ -40,6 +38,7 @@ require (
 	kmodules.xyz/offshoot-api v0.29.0
 	kmodules.xyz/resource-metadata v0.18.2
 	kmodules.xyz/webhook-runtime v0.29.1
+	kubeops.dev/petset v0.0.5
 	kubeops.dev/sidekick v0.0.5
 	kubestash.dev/apimachinery v0.5.0
 	sigs.k8s.io/controller-runtime v0.17.2

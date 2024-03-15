@@ -33,7 +33,6 @@ import (
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
@@ -41,6 +40,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 func (d *Druid) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -130,7 +130,7 @@ func (d *Druid) ConfigSecretName() string {
 	return meta_util.NameWithSuffix(d.OffShootName(), "config")
 }
 
-func (d *Druid) StatefulSetName(nodeRole DruidNodeRoleType) string {
+func (d *Druid) PetSetName(nodeRole DruidNodeRoleType) string {
 	return meta_util.NameWithSuffix(d.OffShootName(), d.DruidNodeRoleString(nodeRole))
 }
 
@@ -480,8 +480,8 @@ func (d *Druid) GetPersistentSecrets() []string {
 	return secrets
 }
 
-func (d *Druid) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
-	// Desire number of statefulSets
+func (d *Druid) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
+	// Desire number of petSets
 	expectedItems := 1
 	if d.Spec.Topology != nil {
 		expectedItems = 4
@@ -492,5 +492,5 @@ func (d *Druid) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, str
 	if d.Spec.Topology.Overlords != nil {
 		expectedItems++
 	}
-	return checkReplicas(lister.StatefulSets(d.Namespace), labels.SelectorFromSet(d.OffshootLabels()), expectedItems)
+	return checkReplicasOfPetSet(lister.PetSets(d.Namespace), labels.SelectorFromSet(d.OffshootLabels()), expectedItems)
 }
