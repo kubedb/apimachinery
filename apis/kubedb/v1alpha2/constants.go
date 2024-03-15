@@ -1207,10 +1207,10 @@ var (
 	DefaultResourcesCoreAndMemoryIntensiveSolr = core.ResourceRequirements{
 		Requests: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse(".900"),
-			core.ResourceMemory: resource.MustParse("1.5Gi"),
+			core.ResourceMemory: resource.MustParse("2Gi"),
 		},
 		Limits: core.ResourceList{
-			core.ResourceMemory: resource.MustParse("1.5Gi"),
+			core.ResourceMemory: resource.MustParse("2Gi"),
 		},
 	}
 
