@@ -1674,7 +1674,7 @@ kubeops.dev/petset/pkg/features
 ## explicit; go 1.21.5
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
-# kubestash.dev/apimachinery v0.5.0
+# kubestash.dev/apimachinery v0.7.0
 ## explicit; go 1.21.5
 kubestash.dev/apimachinery/apis
 kubestash.dev/apimachinery/apis/addons/v1alpha1
