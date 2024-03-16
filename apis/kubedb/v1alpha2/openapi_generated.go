@@ -636,6 +636,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.redisStatsService":              schema_apimachinery_apis_kubedb_v1alpha2_redisStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.singlestoreApp":                 schema_apimachinery_apis_kubedb_v1alpha2_singlestoreApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.singlestoreStatsService":        schema_apimachinery_apis_kubedb_v1alpha2_singlestoreStatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.solrStatsService":               schema_apimachinery_apis_kubedb_v1alpha2_solrStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.zookeeperStatsService":          schema_apimachinery_apis_kubedb_v1alpha2_zookeeperStatsService(ref),
 	}
 }
@@ -31219,6 +31220,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
+					"monitor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Monitor is used monitor database instance",
+							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
+						},
+					},
 					"podPlacementPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodPlacementPolicy is the reference of the podPlacementPolicy",
@@ -31230,7 +31237,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrClusterTopology"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrClusterTopology"},
 	}
 }
 
@@ -32168,6 +32175,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_singlestoreStatsService(ref common
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Singlestore"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_solrStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Solr": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Solr"),
+						},
+					},
+				},
+				Required: []string{"Solr"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Solr"},
 	}
 }
 
