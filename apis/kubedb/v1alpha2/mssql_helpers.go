@@ -1,7 +1,15 @@
 package v1alpha2
 
 import (
+	"context"
 	"fmt"
+	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
+	coreutil "kmodules.xyz/client-go/core/v1"
+	"kmodules.xyz/client-go/policy/secomp"
+	"kubedb.dev/apimachinery/apis"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -168,4 +176,166 @@ func (m *MsSQL) GetNameSpacedName() string {
 
 func (m *MsSQL) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
+}
+
+func (m *MsSQL) SetDefaults() {
+	if m == nil {
+		return
+	}
+	if m.Spec.StorageType == "" {
+		m.Spec.StorageType = StorageTypeDurable
+	}
+	if m.Spec.TerminationPolicy == "" {
+		m.Spec.TerminationPolicy = TerminationPolicyDelete
+	}
+
+	if m.Spec.Topology == nil {
+		if m.Spec.Replicas == nil {
+			m.Spec.Replicas = pointer.Int32P(1)
+		}
+		if m.Spec.PodTemplate == nil {
+			m.Spec.PodTemplate = &ofst.PodTemplateSpec{}
+		}
+	} else {
+		if m.Spec.Replicas == nil {
+			m.Spec.Replicas = pointer.Int32P(3)
+		}
+	}
+
+	var mssqlVersion catalog.MsSQLVersion
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: m.Spec.Version,
+	}, &mssqlVersion)
+	if err != nil {
+		klog.Errorf("can't get the MSSQL version object %s for %s \n", m.Spec.Version, err.Error())
+		return
+	}
+
+	m.setDefaultContainerSecurityContext(&mssqlVersion, m.Spec.PodTemplate)
+
+	// TODO:
+	//m.SetTLSDefaults()
+
+	m.SetHealthCheckerDefaults()
+
+	m.setDefaultContainerResourceLimits(m.Spec.PodTemplate)
+
+}
+
+func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVersion, podTemplate *ofst.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
+	}
+	if podTemplate.Spec.SecurityContext == nil {
+		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
+	}
+	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+		podTemplate.Spec.SecurityContext.FSGroup = mssqlVersion.Spec.SecurityContext.RunAsUser
+	}
+
+	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLContainerName)
+	if container == nil {
+		container = &core.Container{
+			Name: MsSQLContainerName,
+		}
+	}
+	if container.SecurityContext == nil {
+		container.SecurityContext = &core.SecurityContext{}
+	}
+
+	m.assignDefaultContainerSecurityContext(mssqlVersion, container.SecurityContext)
+
+	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
+
+	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, MsSQLInitContainerName)
+	if initContainer == nil {
+		initContainer = &core.Container{
+			Name: MsSQLInitContainerName,
+		}
+	}
+	if initContainer.SecurityContext == nil {
+		initContainer.SecurityContext = &core.SecurityContext{}
+	}
+	m.assignDefaultInitContainerSecurityContext(mssqlVersion, initContainer.SecurityContext)
+	podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
+
+	if m.IsClustering() {
+		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLCoordinatorContainerName)
+		if coordinatorContainer == nil {
+			coordinatorContainer = &core.Container{
+				Name: MsSQLCoordinatorContainerName,
+			}
+		}
+		if coordinatorContainer.SecurityContext == nil {
+			coordinatorContainer.SecurityContext = &core.SecurityContext{}
+		}
+		m.assignDefaultContainerSecurityContext(mssqlVersion, coordinatorContainer.SecurityContext)
+		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *coordinatorContainer)
+	}
+
+}
+
+func (m *MsSQL) assignDefaultInitContainerSecurityContext(mssqlVersion *catalog.MsSQLVersion, sc *core.SecurityContext) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = mssqlVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.RunAsGroup == nil {
+		sc.RunAsGroup = mssqlVersion.Spec.SecurityContext.RunAsGroup
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
+
+func (m *MsSQL) assignDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVersion, sc *core.SecurityContext) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = mssqlVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.RunAsGroup == nil {
+		sc.RunAsGroup = mssqlVersion.Spec.SecurityContext.RunAsGroup
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
+
+func (m *MsSQL) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
+	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResourcesMSSQL)
+	}
+
+	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, MsSQLInitContainerName)
+	if initContainer != nil && (initContainer.Resources.Requests == nil && initContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&initContainer.Resources, DefaultInitContainerResource)
+	}
+
+	if m.IsClustering() {
+		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLCoordinatorContainerName)
+		if coordinatorContainer != nil && (coordinatorContainer.Resources.Requests == nil && coordinatorContainer.Resources.Limits == nil) {
+			apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, CoordinatorDefaultResources)
+		}
+	}
 }
