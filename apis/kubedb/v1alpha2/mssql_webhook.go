@@ -19,14 +19,15 @@ package v1alpha2
 import (
 	"context"
 	"errors"
+
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
-	api "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
-	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -186,7 +187,7 @@ var mssqlReservedVolumesMountPaths = []string{
 
 func mssqlValidateVersion(m *MsSQL) error {
 	var mssqlVersion catalog.MsSQLVersion
-	err := api.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: m.Spec.Version,
 	}, &mssqlVersion)
 	if err != nil {
