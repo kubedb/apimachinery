@@ -1215,12 +1215,14 @@ var (
 	}
 
 	// DefaultResourcesMemoryIntensiveSDB must be used for Singlestore when enabled monitoring or version >= 8.5.x
+	// For SingleStore must add the cpu in limits
 	DefaultResourcesMemoryIntensiveSDB = core.ResourceRequirements{
 		Requests: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse(".500"),
 			core.ResourceMemory: resource.MustParse("2Gi"),
 		},
 		Limits: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".500"),
 			core.ResourceMemory: resource.MustParse("2Gi"),
 		},
 	}
