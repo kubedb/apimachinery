@@ -440,7 +440,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/objectstore-api/api/v1.SwiftSpec":                               schema_kmodulesxyz_objectstore_api_api_v1_SwiftSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings":                   schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.EphemeralVolumeSource":                      schema_kmodulesxyz_offshoot_api_api_v1_EphemeralVolumeSource(ref),
-		"kmodules.xyz/offshoot-api/api/v1.GatewayPort":                                schema_kmodulesxyz_offshoot_api_api_v1_GatewayPort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.IONiceSettings":                             schema_kmodulesxyz_offshoot_api_api_v1_IONiceSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.NiceSettings":                               schema_kmodulesxyz_offshoot_api_api_v1_NiceSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ObjectMeta":                                 schema_kmodulesxyz_offshoot_api_api_v1_ObjectMeta(ref),
@@ -532,7 +531,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQL":                          schema_apimachinery_apis_kubedb_v1alpha2_MsSQL(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLApp":                       schema_apimachinery_apis_kubedb_v1alpha2_MsSQLApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLAvailabilityGroupSpec":     schema_apimachinery_apis_kubedb_v1alpha2_MsSQLAvailabilityGroupSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLLeaderElectionConfig":      schema_apimachinery_apis_kubedb_v1alpha2_MsSQLLeaderElectionConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLList":                      schema_apimachinery_apis_kubedb_v1alpha2_MsSQLList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_MsSQLSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLStatus":                    schema_apimachinery_apis_kubedb_v1alpha2_MsSQLStatus(ref),
@@ -21427,49 +21425,6 @@ func schema_kmodulesxyz_offshoot_api_api_v1_EphemeralVolumeSource(ref common.Ref
 	}
 }
 
-func schema_kmodulesxyz_offshoot_api_api_v1_GatewayPort(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "GatewayPort contains information on Gateway service's port.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The name of this port within the gateway service.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"port": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The port that will be exposed by the gateway service.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"backendServicePort": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Number of the port to access the backend service.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"nodePort": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The port on each node on which this gateway service is exposed when type is NodePort or LoadBalancer.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-				},
-				Required: []string{"port"},
-			},
-		},
-	}
-}
-
 func schema_kmodulesxyz_offshoot_api_api_v1_IONiceSettings(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27065,55 +27020,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLAvailabilityGroupSpec(ref com
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLLeaderElectionConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MsSQLLeaderElectionConfig contains essential attributes of leader election.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"period": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Period between Node.Tick invocations",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-					"electionTick": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ElectionTick is the number of Node.Tick invocations that must pass between\n\telections. That is, if a follower does not receive any message from the\n leader of current term before ElectionTick has elapsed, it will become\n\tcandidate and start an election. ElectionTick must be greater than\n HeartbeatTick. We suggest ElectionTick = 10 * HeartbeatTick to avoid\n unnecessary leader switching. default value is 10.",
-							Default:     10,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"heartbeatTick": {
-						SchemaProps: spec.SchemaProps{
-							Description: "HeartbeatTick is the number of Node.Tick invocations that must pass between heartbeats. That is, a leader sends heartbeat messages to maintain its leadership every HeartbeatTick ticks. default value is 1.",
-							Default:     1,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"transferLeadershipInterval": {
-						SchemaProps: spec.SchemaProps{
-							Description: "TransferLeadershipInterval retry interval for transfer leadership to the healthiest node",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-					"transferLeadershipTimeout": {
-						SchemaProps: spec.SchemaProps{
-							Description: "TransferLeadershipTimeout retry timeout for transfer leadership to the healthiest node",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27257,12 +27163,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLSpec(ref common.ReferenceCall
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec"),
 						},
 					},
-					"leaderElection": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Leader election configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLLeaderElectionConfig"),
-						},
-					},
 					"healthChecker": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
@@ -27270,18 +27170,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLSpec(ref common.ReferenceCall
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
-					"podPlacementPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PodPlacementPolicy is the reference of the podPlacementPolicy",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLLeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -27904,7 +27798,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_NamedServiceStatus(ref common.Refe
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/offshoot-api/api/v1.GatewayPort"),
+										Ref:     ref("kmodules.xyz/offshoot-api/api/v1.ServicePort"),
 									},
 								},
 							},
@@ -27915,7 +27809,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_NamedServiceStatus(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.GatewayPort"},
+			"kmodules.xyz/offshoot-api/api/v1.ServicePort"},
 	}
 }
 
@@ -27978,12 +27872,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_NamedURL(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
-					"port": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kmodules.xyz/offshoot-api/api/v1.GatewayPort"),
-						},
-					},
 					"helmRelease": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HelmRelease is the name of the helm release used to deploy this ui The name format is typically <alias>-<db-name>",
@@ -27995,7 +27883,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_NamedURL(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/offshoot-api/api/v1.GatewayPort"},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
