@@ -529,6 +529,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBSpec":                    schema_apimachinery_apis_kubedb_v1alpha2_MongoDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBStatus":                  schema_apimachinery_apis_kubedb_v1alpha2_MongoDBStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoHiddenNode":                schema_apimachinery_apis_kubedb_v1alpha2_MongoHiddenNode(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQL":                          schema_apimachinery_apis_kubedb_v1alpha2_MsSQL(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLApp":                       schema_apimachinery_apis_kubedb_v1alpha2_MsSQLApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLAvailabilityGroupSpec":     schema_apimachinery_apis_kubedb_v1alpha2_MsSQLAvailabilityGroupSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLList":                      schema_apimachinery_apis_kubedb_v1alpha2_MsSQLList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_MsSQLSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLStatus":                    schema_apimachinery_apis_kubedb_v1alpha2_MsSQLStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLTopology":                  schema_apimachinery_apis_kubedb_v1alpha2_MsSQLTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQL":                          schema_apimachinery_apis_kubedb_v1alpha2_MySQL(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLGroupSpec":                 schema_apimachinery_apis_kubedb_v1alpha2_MySQLGroupSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLInnoDBClusterSpec":         schema_apimachinery_apis_kubedb_v1alpha2_MySQLInnoDBClusterSpec(ref),
@@ -26959,6 +26966,330 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MongoHiddenNode(ref common.Referen
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MsSQL(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"MsSQL": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQL"),
+						},
+					},
+				},
+				Required: []string{"MsSQL"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQL"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLAvailabilityGroupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MsSQLAvailabilityGroupSpec defines the availability group spec for MsSQL",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databases": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AvailabilityDatabases is an array of databases to be included in the availability group",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"databases"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MsSQLList contains a list of MsSQL",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQL"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQL"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MsSQLSpec defines the desired state of MsSQL",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version of MsSQL to be deployed.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of instances to deploy for a MsSQL database. In case of MsSQL Availability Group (default 3).",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"topology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MsSQL cluster topology",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLTopology"),
+						},
+					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType can be durable (default) or ephemeral",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage spec to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"authSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database authentication secret",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+					"init": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Init is used to initialize database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec"),
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+					"serviceTemplates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceTemplates is an optional configuration for services used to expose database",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"halted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"terminationPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TerminationPolicy controls the delete operation for database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"coordinator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Coordinator defines attributes of the coordinator container",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec"),
+						},
+					},
+					"healthChecker": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HealthChecker defines attributes of the health checker",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
+						},
+					},
+				},
+				Required: []string{"version"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MsSQLStatus defines the observed state of MsSQL",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions applied to the database, such as approval or denial.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLTopology(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If set to - \"AvailabilityGroup\", MsSQLAvailabilityGroupSpec is required and MsSQL servers will start an Availability Group",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"availabilityGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AvailabilityGroup info for MsSQL",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLAvailabilityGroupSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLAvailabilityGroupSpec"},
 	}
 }
 
