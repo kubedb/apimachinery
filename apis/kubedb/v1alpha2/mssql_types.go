@@ -143,7 +143,7 @@ type MsSQLStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // MsSQLList contains a list of MsSQL
 type MsSQLList struct {
