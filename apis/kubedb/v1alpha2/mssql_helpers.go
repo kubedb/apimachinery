@@ -3,26 +3,34 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"strings"
+
+	"kmodules.xyz/client-go/apiextensions"
+
+	"kubedb.dev/apimachinery/apis"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
+
+	"kubedb.dev/apimachinery/crds"
+
+	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
+	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
 	coreutil "kmodules.xyz/client-go/core/v1"
-	"kmodules.xyz/client-go/policy/secomp"
-	"kubedb.dev/apimachinery/apis"
-	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"strings"
-
-	"kubedb.dev/apimachinery/apis/kubedb"
-
-	"gomodules.xyz/pointer"
-	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	metautil "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
 type MsSQLApp struct {
 	*MsSQL
+}
+
+func (m *MsSQL) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMsSQL))
 }
 
 func (m MsSQLApp) Name() string {
@@ -214,12 +222,11 @@ func (m *MsSQL) SetDefaults() {
 	m.setDefaultContainerSecurityContext(&mssqlVersion, m.Spec.PodTemplate)
 
 	// TODO:
-	//m.SetTLSDefaults()
+	// m.SetTLSDefaults()
 
 	m.SetHealthCheckerDefaults()
 
 	m.setDefaultContainerResourceLimits(m.Spec.PodTemplate)
-
 }
 
 func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVersion, podTemplate *ofst.PodTemplateSpec) {
@@ -272,7 +279,6 @@ func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVe
 		m.assignDefaultContainerSecurityContext(mssqlVersion, coordinatorContainer.SecurityContext)
 		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *coordinatorContainer)
 	}
-
 }
 
 func (m *MsSQL) assignDefaultInitContainerSecurityContext(mssqlVersion *catalog.MsSQLVersion, sc *core.SecurityContext) {
@@ -324,7 +330,7 @@ func (m *MsSQL) assignDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQ
 func (m *MsSQL) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
 	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResourcesMSSQL)
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResourcesMemoryIntensive)
 	}
 
 	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, MsSQLInitContainerName)
