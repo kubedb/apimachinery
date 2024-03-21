@@ -66,6 +66,14 @@ type MongoDBOpsRequestListerExpansion interface{}
 // MongoDBOpsRequestNamespaceLister.
 type MongoDBOpsRequestNamespaceListerExpansion interface{}
 
+// MsSQLOpsRequestListerExpansion allows custom methods to be added to
+// MsSQLOpsRequestLister.
+type MsSQLOpsRequestListerExpansion interface{}
+
+// MsSQLOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// MsSQLOpsRequestNamespaceLister.
+type MsSQLOpsRequestNamespaceListerExpansion interface{}
+
 // MySQLOpsRequestListerExpansion allows custom methods to be added to
 // MySQLOpsRequestLister.
 type MySQLOpsRequestListerExpansion interface{}

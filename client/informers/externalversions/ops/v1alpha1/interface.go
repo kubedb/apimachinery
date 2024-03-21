@@ -36,6 +36,8 @@ type Interface interface {
 	MemcachedOpsRequests() MemcachedOpsRequestInformer
 	// MongoDBOpsRequests returns a MongoDBOpsRequestInformer.
 	MongoDBOpsRequests() MongoDBOpsRequestInformer
+	// MsSQLOpsRequests returns a MsSQLOpsRequestInformer.
+	MsSQLOpsRequests() MsSQLOpsRequestInformer
 	// MySQLOpsRequests returns a MySQLOpsRequestInformer.
 	MySQLOpsRequests() MySQLOpsRequestInformer
 	// PerconaXtraDBOpsRequests returns a PerconaXtraDBOpsRequestInformer.
@@ -91,6 +93,11 @@ func (v *version) MemcachedOpsRequests() MemcachedOpsRequestInformer {
 // MongoDBOpsRequests returns a MongoDBOpsRequestInformer.
 func (v *version) MongoDBOpsRequests() MongoDBOpsRequestInformer {
 	return &mongoDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MsSQLOpsRequests returns a MsSQLOpsRequestInformer.
+func (v *version) MsSQLOpsRequests() MsSQLOpsRequestInformer {
+	return &msSQLOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MySQLOpsRequests returns a MySQLOpsRequestInformer.

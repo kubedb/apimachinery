@@ -496,6 +496,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Gateway":                        schema_apimachinery_apis_kubedb_v1alpha2_Gateway(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.GitRepo":                        schema_apimachinery_apis_kubedb_v1alpha2_GitRepo(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InternalAuthentication":         schema_apimachinery_apis_kubedb_v1alpha2_InternalAuthentication(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Kafka":                          schema_apimachinery_apis_kubedb_v1alpha2_Kafka(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaApp":                       schema_apimachinery_apis_kubedb_v1alpha2_KafkaApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaBrokerCapacity":            schema_apimachinery_apis_kubedb_v1alpha2_KafkaBrokerCapacity(ref),
@@ -25149,6 +25150,28 @@ func schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref common.ReferenceCallb
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_InternalAuthentication(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "InternalAuthentication provides different way of endpoint authentication",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"endpointCert": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EndpointCert is used for endpoint authentication of MSSql Server",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+						},
+					},
+				},
+				Required: []string{"endpointCert"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.TLSConfig"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_Kafka(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27116,6 +27139,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLSpec(ref common.ReferenceCall
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
+					"internalAuth": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InternalAuth is used to authenticate endpoint",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InternalAuthentication"),
+						},
+					},
 					"init": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init is used to initialize database",
@@ -27175,7 +27204,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MsSQLSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InternalAuthentication", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MsSQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
