@@ -30,6 +30,8 @@ type MemcachedOpsRequestExpansion interface{}
 
 type MongoDBOpsRequestExpansion interface{}
 
+type MsSQLOpsRequestExpansion interface{}
+
 type MySQLOpsRequestExpansion interface{}
 
 type PerconaXtraDBOpsRequestExpansion interface{}

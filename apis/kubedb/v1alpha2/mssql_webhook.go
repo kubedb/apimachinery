@@ -123,6 +123,27 @@ func (m *MsSQL) ValidateCreateOrUpdate() field.ErrorList {
 		}
 	}
 
+	if m.Spec.InternalAuth == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("internalAuth"),
+			m.Name,
+			"spec.internalAuth, spec.internalAuth.endpointCert, spec.internalAuth.endpointCert.issuerRef' is missing"))
+	} else if m.Spec.InternalAuth.EndpointCert == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("internalAuth").Child("endpointCert"),
+			m.Name,
+			"spec.internalAuth.endpointCert, spec.internalAuth.endpointCert.issuerRef' is missing"))
+	} else if m.Spec.InternalAuth.EndpointCert != nil {
+		if m.Spec.InternalAuth.EndpointCert.IssuerRef == nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("internalAuth").Child("endpointCert").Child("issuerRef"),
+				m.Name,
+				"spec.internalAuth.endpointCert.issuerRef' is missing"))
+		}
+		if len(m.Spec.InternalAuth.EndpointCert.Certificates) > 1 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("internalAuth").Child("endpointCert").Child("certificates"),
+				m.Name,
+				"spec.internalAuth.endpointCert.certificates' can have only one certificate"))
+		}
+	}
+
 	if m.Spec.Topology == nil {
 		if *m.Spec.Replicas != 1 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
