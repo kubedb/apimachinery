@@ -21,10 +21,9 @@ package v1alpha1
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type PostgresV1alpha1Interface interface {

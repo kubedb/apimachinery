@@ -1133,6 +1133,26 @@ spec:
                   waitForInitialRestore:
                     type: boolean
                 type: object
+              leaderElection:
+                properties:
+                  electionTick:
+                    default: 10
+                    format: int32
+                    type: integer
+                  heartbeatTick:
+                    default: 1
+                    format: int32
+                    type: integer
+                  period:
+                    default: 100ms
+                    type: string
+                  transferLeadershipInterval:
+                    default: 1s
+                    type: string
+                  transferLeadershipTimeout:
+                    default: 60s
+                    type: string
+                type: object
               podTemplate:
                 properties:
                   controller:
