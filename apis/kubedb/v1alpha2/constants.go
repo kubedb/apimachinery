@@ -961,6 +961,7 @@ const (
 	DruidEmitterPrometheusPortKey               = "druid.emitter.prometheus.port"
 	DruidEmitterPrometheusPortVal               = 8080
 	DruidMonitoringMonitorsKey                  = "druid.monitoring.monitors"
+	DruidEmitterPrometheusDimensionMapPath      = "druid.emitter.prometheus.dimensionMapPath"
 	DruidEmitterPrometheusStrategy              = "druid.emitter.prometheus.strategy"
 	DruidMetricsJVMMonitor                      = "org.apache.druid.java.util.metrics.JvmMonitor"
 	DruidMetricsServiceStatusMonitor            = "org.apache.druid.server.metrics.ServiceStatusMonitor"
