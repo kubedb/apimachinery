@@ -73,6 +73,10 @@ func (c *FakeOpsV1alpha1) ProxySQLOpsRequests(namespace string) v1alpha1.ProxySQ
 	return &FakeProxySQLOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) RabbitMQOpsRequests(namespace string) v1alpha1.RabbitMQOpsRequestInterface {
+	return &FakeRabbitMQOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) RedisOpsRequests(namespace string) v1alpha1.RedisOpsRequestInterface {
 	return &FakeRedisOpsRequests{c, namespace}
 }
