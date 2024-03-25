@@ -1052,3 +1052,31 @@ func (esTopology *ElasticsearchClusterTopology) ToMap() map[ElasticsearchNodeRol
 	}
 	return topology
 }
+
+func (e *Elasticsearch) isStandaloneDataNodeCluster() bool {
+	var dnCount int32
+	if e.Spec.Topology != nil {
+		if e.Spec.Topology.Data != nil {
+			dnCount += pointer.Int32(e.Spec.Topology.Data.Replicas)
+		}
+		if e.Spec.Topology.DataHot != nil {
+			dnCount += pointer.Int32(e.Spec.Topology.DataHot.Replicas)
+		}
+		if e.Spec.Topology.DataWarm != nil {
+			dnCount += pointer.Int32(e.Spec.Topology.DataWarm.Replicas)
+		}
+		if e.Spec.Topology.DataCold != nil {
+			dnCount += pointer.Int32(e.Spec.Topology.DataCold.Replicas)
+		}
+		if e.Spec.Topology.DataFrozen != nil {
+			dnCount += pointer.Int32(e.Spec.Topology.DataFrozen.Replicas)
+		}
+		if e.Spec.Topology.DataContent != nil {
+			dnCount += pointer.Int32(e.Spec.Topology.DataContent.Replicas)
+		}
+	} else {
+		dnCount += pointer.Int32(e.Spec.Replicas)
+	}
+
+	return dnCount == 1
+}
