@@ -1053,7 +1053,7 @@ func (esTopology *ElasticsearchClusterTopology) ToMap() map[ElasticsearchNodeRol
 	return topology
 }
 
-func (e *Elasticsearch) isStandaloneDataNodeCluster() bool {
+func (e *Elasticsearch) IsStandaloneDataNodeCluster() bool {
 	var dnCount int32
 	if e.Spec.Topology != nil {
 		if e.Spec.Topology.Data != nil {
