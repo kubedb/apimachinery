@@ -1225,6 +1225,17 @@ var (
 			core.ResourceMemory: resource.MustParse("2Gi"),
 		},
 	}
+
+	// DefaultResourcesMemoryIntensive must be used for Druid MiddleManagers
+	DefaultResourcesMemoryIntensiveDruid = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".500"),
+			core.ResourceMemory: resource.MustParse("2.5Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("2.5Gi"),
+		},
+	}
 )
 
 func DefaultArbiter(computeOnly bool) core.ResourceRequirements {
