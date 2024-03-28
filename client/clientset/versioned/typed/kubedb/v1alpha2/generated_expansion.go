@@ -34,6 +34,8 @@ type MemcachedExpansion interface{}
 
 type MongoDBExpansion interface{}
 
+type MsSQLExpansion interface{}
+
 type MySQLExpansion interface{}
 
 type PerconaXtraDBExpansion interface{}

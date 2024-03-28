@@ -61,6 +61,10 @@ func (c *FakeKubedbV1alpha2) MongoDBs(namespace string) v1alpha2.MongoDBInterfac
 	return &FakeMongoDBs{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) MsSQLs(namespace string) v1alpha2.MsSQLInterface {
+	return &FakeMsSQLs{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) MySQLs(namespace string) v1alpha2.MySQLInterface {
 	return &FakeMySQLs{c, namespace}
 }

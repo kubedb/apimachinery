@@ -65,6 +65,10 @@ func (c *FakeCatalogV1alpha1) MongoDBVersions() v1alpha1.MongoDBVersionInterface
 	return &FakeMongoDBVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) MsSQLVersions() v1alpha1.MsSQLVersionInterface {
+	return &FakeMsSQLVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) MySQLVersions() v1alpha1.MySQLVersionInterface {
 	return &FakeMySQLVersions{c}
 }

@@ -38,6 +38,7 @@ type CatalogV1alpha1Interface interface {
 	MariaDBVersionsGetter
 	MemcachedVersionsGetter
 	MongoDBVersionsGetter
+	MsSQLVersionsGetter
 	MySQLVersionsGetter
 	PerconaXtraDBVersionsGetter
 	PgBouncerVersionsGetter
@@ -90,6 +91,10 @@ func (c *CatalogV1alpha1Client) MemcachedVersions() MemcachedVersionInterface {
 
 func (c *CatalogV1alpha1Client) MongoDBVersions() MongoDBVersionInterface {
 	return newMongoDBVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) MsSQLVersions() MsSQLVersionInterface {
+	return newMsSQLVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) MySQLVersions() MySQLVersionInterface {

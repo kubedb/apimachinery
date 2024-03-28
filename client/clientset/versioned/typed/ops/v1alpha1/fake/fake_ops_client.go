@@ -53,6 +53,10 @@ func (c *FakeOpsV1alpha1) MongoDBOpsRequests(namespace string) v1alpha1.MongoDBO
 	return &FakeMongoDBOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) MsSQLOpsRequests(namespace string) v1alpha1.MsSQLOpsRequestInterface {
+	return &FakeMsSQLOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) MySQLOpsRequests(namespace string) v1alpha1.MySQLOpsRequestInterface {
 	return &FakeMySQLOpsRequests{c, namespace}
 }
