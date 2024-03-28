@@ -83,6 +83,10 @@ type MsSQLSpec struct {
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
+	// InternalAuth is used to authenticate endpoint
+	// +optional
+	InternalAuth *InternalAuthentication `json:"internalAuth"`
+
 	// Init is used to initialize database
 	// +optional
 	Init *InitSpec `json:"init,omitempty"`
@@ -120,6 +124,12 @@ type MsSQLSpec struct {
 	// +kubebuilder:default={name: "default"}
 	// +optional
 	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
+}
+
+// InternalAuthentication provides different way of endpoint authentication
+type InternalAuthentication struct {
+	// EndpointCert is used for endpoint authentication of MSSql Server
+	EndpointCert *kmapi.TLSConfig `json:"endpointCert"`
 }
 
 type MsSQLTopology struct {
