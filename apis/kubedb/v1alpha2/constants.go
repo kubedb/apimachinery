@@ -767,6 +767,7 @@ const (
 	ResourcePluralSolr    = "solrs"
 	SolrPortName          = "http"
 	SolrRestPort          = 8983
+	SolrExporterPort      = 9854
 	SolrSecretKey         = "solr.xml"
 	SolrContainerName     = "solr"
 	SolrInitContainerName = "init-solr"
