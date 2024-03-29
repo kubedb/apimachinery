@@ -18,7 +18,7 @@ spec:
     shortNames:
     - msversion
     singular: mssqlversion
-  scope: Namespaced
+  scope: Cluster
   versions:
   - additionalPrinterColumns:
     - jsonPath: .spec.version

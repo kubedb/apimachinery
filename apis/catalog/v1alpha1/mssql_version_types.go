@@ -21,12 +21,6 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
-// TODO:
-// set scope=Cluster for  MsSQLVersion struct
-
 const (
 	ResourceCodeMsSQLVersion     = "msversion"
 	ResourceKindMsSQLVersion     = "MsSQLVersion"
@@ -41,7 +35,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=mssqlversions,singular=mssqlversion,shortName=msversion,categories={datastore,kubedb,appscode}
+// +kubebuilder:resource:path=mssqlversions,singular=mssqlversion,scope=Cluster,shortName=msversion,categories={datastore,kubedb,appscode}
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
 // +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
