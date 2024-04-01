@@ -71,8 +71,8 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 
 		// stash information
 		ri.stash = &stashInfo{
-			target: ri.stash.target,
-			phase:  ri.stash.phase,
+			target: inv.Spec.Target,
+			phase:  inv.Status.Phase,
 		}
 	case *v1beta1.RestoreBatch:
 		// invoker information
