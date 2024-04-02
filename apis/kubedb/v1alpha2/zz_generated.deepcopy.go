@@ -2827,7 +2827,7 @@ func (in *NamedServiceStatus) DeepCopyInto(out *NamedServiceStatus) {
 	*out = *in
 	if in.Ports != nil {
 		in, out := &in.Ports, &out.Ports
-		*out = make([]offshootapiapiv1.ServicePort, len(*in))
+		*out = make([]offshootapiapiv1.GatewayPort, len(*in))
 		copy(*out, *in)
 	}
 	return

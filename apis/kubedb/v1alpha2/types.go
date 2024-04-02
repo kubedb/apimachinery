@@ -251,7 +251,7 @@ type NamedServiceStatus struct {
 	// Alias represents the identifier of the service.
 	Alias ServiceAlias `json:"alias"`
 
-	Ports []ofst.ServicePort `json:"ports"`
+	Ports []ofst.GatewayPort `json:"ports"`
 }
 
 type NamedURL struct {
