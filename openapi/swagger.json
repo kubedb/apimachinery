@@ -24888,6 +24888,10 @@
           "description": "HelmRelease is the name of the helm release used to deploy this ui The name format is typically \u003calias\u003e-\u003cdb-name\u003e",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "port": {
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.GatewayPort"
+        },
         "url": {
           "description": "URL of the database ui",
           "type": "string",
