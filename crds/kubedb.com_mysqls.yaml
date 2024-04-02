@@ -6871,6 +6871,9 @@ spec:
                         ports:
                           items:
                             properties:
+                              backendServicePort:
+                                format: int32
+                                type: integer
                               name:
                                 type: string
                               nodePort:

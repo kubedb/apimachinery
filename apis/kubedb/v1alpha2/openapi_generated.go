@@ -440,6 +440,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/objectstore-api/api/v1.SwiftSpec":                               schema_kmodulesxyz_objectstore_api_api_v1_SwiftSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings":                   schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.EphemeralVolumeSource":                      schema_kmodulesxyz_offshoot_api_api_v1_EphemeralVolumeSource(ref),
+		"kmodules.xyz/offshoot-api/api/v1.GatewayPort":                                schema_kmodulesxyz_offshoot_api_api_v1_GatewayPort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.IONiceSettings":                             schema_kmodulesxyz_offshoot_api_api_v1_IONiceSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.NiceSettings":                               schema_kmodulesxyz_offshoot_api_api_v1_NiceSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ObjectMeta":                                 schema_kmodulesxyz_offshoot_api_api_v1_ObjectMeta(ref),
@@ -21418,6 +21419,49 @@ func schema_kmodulesxyz_offshoot_api_api_v1_EphemeralVolumeSource(ref common.Ref
 	}
 }
 
+func schema_kmodulesxyz_offshoot_api_api_v1_GatewayPort(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GatewayPort contains information on Gateway service's port.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The name of this port within the gateway service.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"port": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The port that will be exposed by the gateway service.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"backendServicePort": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of the port to access the backend service.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"nodePort": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The port on each node on which this gateway service is exposed when type is NodePort or LoadBalancer.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"port"},
+			},
+		},
+	}
+}
+
 func schema_kmodulesxyz_offshoot_api_api_v1_IONiceSettings(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27467,7 +27511,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_NamedServiceStatus(ref common.Refe
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/offshoot-api/api/v1.ServicePort"),
+										Ref:     ref("kmodules.xyz/offshoot-api/api/v1.GatewayPort"),
 									},
 								},
 							},
@@ -27478,7 +27522,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_NamedServiceStatus(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.ServicePort"},
+			"kmodules.xyz/offshoot-api/api/v1.GatewayPort"},
 	}
 }
 
