@@ -173,7 +173,7 @@ func (m MsSQL) GetAuthSecretName() string {
 	if m.Spec.AuthSecret != nil && m.Spec.AuthSecret.Name != "" {
 		return m.Spec.AuthSecret.Name
 	}
-	return m.DefaultUserCredSecretName(MsSQLSAUser)
+	return metautil.NameWithSuffix(m.OffshootName(), "auth")
 }
 
 func (m *MsSQL) GetNameSpacedName() string {
