@@ -99,7 +99,7 @@ func (m *MsSQL) OffshootSelectors(extraSelectors ...map[string]string) map[strin
 	return metautil.OverwriteKeys(selector, extraSelectors...)
 }
 
-func (m *MsSQL) isAvailabilityGroup() bool {
+func (m *MsSQL) IsAvailabilityGroup() bool {
 	return m.Spec.Topology != nil &&
 		m.Spec.Topology.Mode != nil &&
 		*m.Spec.Topology.Mode == MsSQLModeAvailabilityGroup
@@ -197,17 +197,18 @@ func (m *MsSQL) SetDefaults() {
 		m.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
 
-	if m.Spec.Topology == nil {
+	if m.IsStandalone() {
 		if m.Spec.Replicas == nil {
 			m.Spec.Replicas = pointer.Int32P(1)
 		}
-		if m.Spec.PodTemplate == nil {
-			m.Spec.PodTemplate = &ofst.PodTemplateSpec{}
-		}
 	} else {
 		if m.Spec.Replicas == nil {
-			m.Spec.Replicas = pointer.Int32P(3)
+			m.Spec.Replicas = pointer.Int32P(MsSQLDefaultAvailabilityGroupSize)
 		}
+	}
+
+	if m.Spec.PodTemplate == nil {
+		m.Spec.PodTemplate = &ofst.PodTemplateSpec{}
 	}
 
 	var mssqlVersion catalog.MsSQLVersion
@@ -215,14 +216,11 @@ func (m *MsSQL) SetDefaults() {
 		Name: m.Spec.Version,
 	}, &mssqlVersion)
 	if err != nil {
-		klog.Errorf("can't get the MSSQL version object %s for %s \n", m.Spec.Version, err.Error())
+		klog.Errorf("can't get the MsSQL version object %s for %s \n", m.Spec.Version, err.Error())
 		return
 	}
 
 	m.setDefaultContainerSecurityContext(&mssqlVersion, m.Spec.PodTemplate)
-
-	// TODO:
-	// m.SetTLSDefaults()
 
 	m.SetHealthCheckerDefaults()
 
@@ -250,7 +248,7 @@ func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVe
 		container.SecurityContext = &core.SecurityContext{}
 	}
 
-	m.assignDefaultContainerSecurityContext(mssqlVersion, container.SecurityContext)
+	m.assignDefaultContainerSecurityContext(mssqlVersion, container.SecurityContext, true)
 
 	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 
@@ -263,10 +261,10 @@ func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVe
 	if initContainer.SecurityContext == nil {
 		initContainer.SecurityContext = &core.SecurityContext{}
 	}
-	m.assignDefaultInitContainerSecurityContext(mssqlVersion, initContainer.SecurityContext)
+	m.assignDefaultContainerSecurityContext(mssqlVersion, initContainer.SecurityContext, false)
 	podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 
-	if m.isAvailabilityGroup() {
+	if m.IsAvailabilityGroup() {
 		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLCoordinatorContainerName)
 		if coordinatorContainer == nil {
 			coordinatorContainer = &core.Container{
@@ -276,41 +274,25 @@ func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVe
 		if coordinatorContainer.SecurityContext == nil {
 			coordinatorContainer.SecurityContext = &core.SecurityContext{}
 		}
-		m.assignDefaultContainerSecurityContext(mssqlVersion, coordinatorContainer.SecurityContext)
+		m.assignDefaultContainerSecurityContext(mssqlVersion, coordinatorContainer.SecurityContext, false)
 		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *coordinatorContainer)
 	}
 }
 
-func (m *MsSQL) assignDefaultInitContainerSecurityContext(mssqlVersion *catalog.MsSQLVersion, sc *core.SecurityContext) {
+func (m *MsSQL) assignDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVersion, sc *core.SecurityContext, isMainContainer bool) {
 	if sc.AllowPrivilegeEscalation == nil {
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
 	if sc.Capabilities == nil {
-		sc.Capabilities = &core.Capabilities{
-			Drop: []core.Capability{"ALL"},
-		}
-	}
-	if sc.RunAsNonRoot == nil {
-		sc.RunAsNonRoot = pointer.BoolP(true)
-	}
-	if sc.RunAsUser == nil {
-		sc.RunAsUser = mssqlVersion.Spec.SecurityContext.RunAsUser
-	}
-	if sc.RunAsGroup == nil {
-		sc.RunAsGroup = mssqlVersion.Spec.SecurityContext.RunAsGroup
-	}
-	if sc.SeccompProfile == nil {
-		sc.SeccompProfile = secomp.DefaultSeccompProfile()
-	}
-}
-
-func (m *MsSQL) assignDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVersion, sc *core.SecurityContext) {
-	if sc.AllowPrivilegeEscalation == nil {
-		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
-	}
-	if sc.Capabilities == nil {
-		sc.Capabilities = &core.Capabilities{
-			Drop: []core.Capability{"ALL"},
+		if isMainContainer {
+			sc.Capabilities = &core.Capabilities{
+				Drop: []core.Capability{"ALL"},
+				Add:  []core.Capability{"NET_BIND_SERVICE"},
+			}
+		} else {
+			sc.Capabilities = &core.Capabilities{
+				Drop: []core.Capability{"ALL"},
+			}
 		}
 	}
 	if sc.RunAsNonRoot == nil {
@@ -338,7 +320,7 @@ func (m *MsSQL) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateS
 		apis.SetDefaultResourceLimits(&initContainer.Resources, DefaultInitContainerResource)
 	}
 
-	if m.isAvailabilityGroup() {
+	if m.IsAvailabilityGroup() {
 		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLCoordinatorContainerName)
 		if coordinatorContainer != nil && (coordinatorContainer.Resources.Requests == nil && coordinatorContainer.Resources.Limits == nil) {
 			apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, CoordinatorDefaultResources)
