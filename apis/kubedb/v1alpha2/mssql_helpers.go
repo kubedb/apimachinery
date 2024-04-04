@@ -99,12 +99,14 @@ func (m *MsSQL) OffshootSelectors(extraSelectors ...map[string]string) map[strin
 	return metautil.OverwriteKeys(selector, extraSelectors...)
 }
 
-func (m *MsSQL) IsClustering() bool {
-	return m.Spec.Topology != nil && m.Spec.Topology.Mode != nil && *m.Spec.Topology.Mode == MsSQLModeAvailabilityGroup
+func (m *MsSQL) isAvailabilityGroup() bool {
+	return m.Spec.Topology != nil &&
+		m.Spec.Topology.Mode != nil &&
+		*m.Spec.Topology.Mode == MsSQLModeAvailabilityGroup
 }
 
 func (m *MsSQL) IsStandalone() bool {
-	return m.Spec.Topology == nil || (m.Spec.Topology.Mode != nil && *m.Spec.Topology.Mode == MsSQLModeStandalone)
+	return m.Spec.Topology == nil
 }
 
 func (m *MsSQL) PVCName(alias string) string {
@@ -264,7 +266,7 @@ func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVe
 	m.assignDefaultInitContainerSecurityContext(mssqlVersion, initContainer.SecurityContext)
 	podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 
-	if m.IsClustering() {
+	if m.isAvailabilityGroup() {
 		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLCoordinatorContainerName)
 		if coordinatorContainer == nil {
 			coordinatorContainer = &core.Container{
@@ -336,7 +338,7 @@ func (m *MsSQL) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateS
 		apis.SetDefaultResourceLimits(&initContainer.Resources, DefaultInitContainerResource)
 	}
 
-	if m.IsClustering() {
+	if m.isAvailabilityGroup() {
 		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLCoordinatorContainerName)
 		if coordinatorContainer != nil && (coordinatorContainer.Resources.Requests == nil && coordinatorContainer.Resources.Limits == nil) {
 			apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, CoordinatorDefaultResources)
