@@ -353,16 +353,19 @@ const (
 	SinglestoreVolumeMountPathData           = "/var/lib/memsql"
 
 	// =========================== MsSQL Constants ============================
-	MsSQLDatabasePodPrimary            = "primary"
-	MsSQLDatabasePodSecondary          = "secondary"
-	MsSQLSecondaryServiceAlias         = "secondary"
+	MsSQLSAUser                       = "sa"
+	MsSQLDefaultAvailabilityGroupSize = 3
+
+	MsSQLDatabasePodPrimary       = "primary"
+	MsSQLDatabasePodSecondary     = "secondary"
+	MsSQLSecondaryServiceAlias    = "secondary"
+	MsSQLSecondaryServicePortName = "secondary"
+	// port related
 	MsSQLDatabasePortName              = "db"
 	MsSQLPrimaryServicePortName        = "primary"
-	MsSQLSecondaryServicePortName      = "secondary"
 	MsSQLDatabasePort                  = 1433
 	MsSQLDatabaseMirroringEndpointPort = 5022
 	MsSQLCoordinatorPort               = 2381
-	MsSQLSAUser                        = "sa"
 	// environment variables
 	EnvAcceptEula        = "ACCEPT_EULA"
 	EnvMsSQLEnableHADR   = "MSSQL_ENABLE_HADR"
@@ -370,14 +373,14 @@ const (
 	EnvMsSQLSAUsername   = "MSSQL_SA_USERNAME"
 	EnvMsSQLSAPassword   = "MSSQL_SA_PASSWORD"
 	// container related
-	MsSQLContainerName             = "mssql"
-	MsSQLCoordinatorContainerName  = "mssql-coordinator"
-	MsSQLInitContainerName         = "mssql-init"
+	MsSQLContainerName            = "mssql"
+	MsSQLCoordinatorContainerName = "mssql-coordinator"
+	MsSQLInitContainerName        = "mssql-init"
+	// volume related
+	MsSQLVolumeNameData            = "data"
+	MsSQLVolumeMountPathData       = "/var/opt/mssql"
 	MsSQLVolumeNameInitScript      = "init-scripts"
 	MsSQLVolumeMountPathInitScript = "/scripts"
-	// volume related
-	MsSQLVolumeNameData      = "data"
-	MsSQLVolumeMountPathData = "/var/opt/mssql"
 
 	// =========================== PostgreSQL Constants ============================
 	PostgresDatabasePortName          = "db"
