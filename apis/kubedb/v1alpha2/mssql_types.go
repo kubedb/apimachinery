@@ -30,11 +30,10 @@ const (
 	ResourcePluralMsSQL   = "mssqls"
 )
 
-// +kubebuilder:validation:Enum=Standalone;AvailabilityGroup
+// +kubebuilder:validation:Enum=AvailabilityGroup;RemoteReplica
 type MsSQLMode string
 
 const (
-	MsSQLModeStandalone        MsSQLMode = "Standalone"
 	MsSQLModeAvailabilityGroup MsSQLMode = "AvailabilityGroup"
 	MsSQLModeRemoteReplica     MsSQLMode = "RemoteReplica"
 )
