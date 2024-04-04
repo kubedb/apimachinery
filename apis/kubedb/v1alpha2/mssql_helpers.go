@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -128,7 +129,7 @@ func (m *MsSQL) ConfigSecretName() string {
 	return metautil.NameWithSuffix(m.OffshootName(), "config")
 }
 
-func (m *MsSQL) StatefulSetName() string {
+func (m *MsSQL) PetSetName() string {
 	return m.OffshootName()
 }
 
@@ -204,6 +205,29 @@ func (m *MsSQL) SetDefaults() {
 	} else {
 		if m.Spec.Replicas == nil {
 			m.Spec.Replicas = pointer.Int32P(MsSQLDefaultAvailabilityGroupSize)
+		}
+
+		if m.Spec.LeaderElection == nil {
+			m.Spec.LeaderElection = &MsSQLLeaderElectionConfig{
+				// The upper limit of election timeout is 50000ms (50s), which should only be used when deploying a
+				// globally-distributed etcd cluster. A reasonable round-trip time for the continental United States is around 130-150ms,
+				// and the time between US and Japan is around 350-400ms. If the network has uneven performance or regular packet
+				// delays/loss then it is possible that a couple of retries may be necessary to successfully send a packet.
+				// So 5s is a safe upper limit of global round-trip time. As the election timeout should be an order of magnitude
+				// bigger than broadcast time, in the case of ~5s for a globally distributed cluster, then 50 seconds becomes
+				// a reasonable maximum.
+				Period: meta.Duration{Duration: 300 * time.Millisecond},
+				// the amount of HeartbeatTick can be missed before the failOver
+				ElectionTick: 10,
+				// this value should be one.
+				HeartbeatTick: 1,
+			}
+		}
+		if m.Spec.LeaderElection.TransferLeadershipInterval == nil {
+			m.Spec.LeaderElection.TransferLeadershipInterval = &meta.Duration{Duration: 1 * time.Second}
+		}
+		if m.Spec.LeaderElection.TransferLeadershipTimeout == nil {
+			m.Spec.LeaderElection.TransferLeadershipTimeout = &meta.Duration{Duration: 60 * time.Second}
 		}
 	}
 
