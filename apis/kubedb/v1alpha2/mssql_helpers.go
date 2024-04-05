@@ -259,7 +259,7 @@ func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVe
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = mssqlVersion.Spec.SecurityContext.RunAsUser
+		podTemplate.Spec.SecurityContext.FSGroup = mssqlVersion.Spec.SecurityContext.RunAsGroup
 	}
 
 	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLContainerName)
