@@ -115,8 +115,15 @@ type StorageAutoscalerSpec struct {
 	// we need to scale that by ScalingThreshold percentage. The Default is 50%
 	ScalingThreshold int32 `json:"scalingThreshold,omitempty"`
 
+	ScalingRules []StorageScalingRule `json:"scalingRules,omitempty"`
+
 	// ExpansionMode can be `Online` or `Offline`
 	ExpansionMode opsapi.VolumeExpansionMode `json:"expansionMode"`
+}
+
+type StorageScalingRule struct {
+	AppliesBelow string `json:"appliesBelow"`
+	Threshold    string `json:"threshold"`
 }
 
 // AutoscalerStatus describes the runtime state of the autoscaler.
