@@ -84,6 +84,7 @@ type MsSQLSpec struct {
 
 	// InternalAuth is used to authenticate endpoint
 	// +optional
+	// +nullable
 	InternalAuth *InternalAuthentication `json:"internalAuth,omitempty"`
 
 	// Init is used to initialize database
