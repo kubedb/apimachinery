@@ -1134,6 +1134,7 @@ spec:
                     type: boolean
                 type: object
               internalAuth:
+                nullable: true
                 properties:
                   endpointCert:
                     properties:
