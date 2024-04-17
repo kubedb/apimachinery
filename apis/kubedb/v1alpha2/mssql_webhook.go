@@ -27,6 +27,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	"k8s.io/utils/ptr"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -80,7 +81,7 @@ func (m *MsSQL) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 	oldMsSQL := old.(*MsSQL)
 	allErr := m.ValidateCreateOrUpdate()
 
-	if m.Spec.Topology == nil && *oldMsSQL.Spec.Replicas == 1 && *m.Spec.Replicas > 1 {
+	if m.Spec.Topology == nil && ptr.Deref(oldMsSQL.Spec.Replicas, 0) == 1 && ptr.Deref(m.Spec.Replicas, 0) > 1 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 			m.Name,
 			"Cannot scale up from 1 to more than 1 in standalone mode"))
@@ -124,7 +125,7 @@ func (m *MsSQL) ValidateCreateOrUpdate() field.ErrorList {
 	}
 
 	if m.IsStandalone() {
-		if *m.Spec.Replicas != 1 {
+		if ptr.Deref(m.Spec.Replicas, 0) != 1 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 				m.Name,
 				"number of replicas for standalone must be one "))
@@ -142,7 +143,7 @@ func (m *MsSQL) ValidateCreateOrUpdate() field.ErrorList {
 				".spec.replicas can not be nil"))
 		}
 
-		if *m.Spec.Replicas <= 0 {
+		if ptr.Deref(m.Spec.Replicas, 0) <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 				m.Name,
 				"number of replicas can not be less be 0 or less"))
