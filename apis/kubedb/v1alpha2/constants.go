@@ -354,8 +354,7 @@ const (
 	SinglestoreVolumeMountPathData           = "/var/lib/memsql"
 
 	// =========================== MsSQL Constants ============================
-	MsSQLSAUser                       = "sa"
-	MsSQLDefaultAvailabilityGroupSize = 3
+	MsSQLSAUser = "sa"
 
 	MsSQLDatabasePodPrimary       = "primary"
 	MsSQLDatabasePodSecondary     = "secondary"

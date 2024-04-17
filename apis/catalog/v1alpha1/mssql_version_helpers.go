@@ -59,5 +59,6 @@ spec.version,
 spec.coordinator.image,
 spec.initContainer.image`, m.Name)
 	}
+	// TODO: add m.spec.exporter.image check FOR monitoring
 	return nil
 }

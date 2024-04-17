@@ -219,10 +219,6 @@ func (m *MsSQL) SetDefaults() {
 			m.Spec.Replicas = pointer.Int32P(1)
 		}
 	} else {
-		if m.Spec.Replicas == nil {
-			m.Spec.Replicas = pointer.Int32P(MsSQLDefaultAvailabilityGroupSize)
-		}
-
 		if m.Spec.LeaderElection == nil {
 			m.Spec.LeaderElection = &MsSQLLeaderElectionConfig{
 				// The upper limit of election timeout is 50000ms (50s), which should only be used when deploying a
