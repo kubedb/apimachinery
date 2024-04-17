@@ -354,7 +354,8 @@ const (
 	SinglestoreVolumeMountPathData           = "/var/lib/memsql"
 
 	// =========================== MsSQL Constants ============================
-	MsSQLSAUser = "sa"
+	MsSQLSAUser                  = "sa"
+	MsSQLEndpointCertsSecretName = "endpoint-cert"
 
 	MsSQLDatabasePodPrimary       = "primary"
 	MsSQLDatabasePodSecondary     = "secondary"
@@ -377,10 +378,17 @@ const (
 	MsSQLCoordinatorContainerName = "mssql-coordinator"
 	MsSQLInitContainerName        = "mssql-init"
 	// volume related
-	MsSQLVolumeNameData            = "data"
-	MsSQLVolumeMountPathData       = "/var/opt/mssql"
-	MsSQLVolumeNameInitScript      = "init-scripts"
-	MsSQLVolumeMountPathInitScript = "/scripts"
+	MsSQLVolumeNameData              = "data"
+	MsSQLVolumeMountPathData         = "/var/opt/mssql"
+	MsSQLVolumeNameInitScript        = "init-scripts"
+	MsSQLVolumeMountPathInitScript   = "/scripts"
+	MsSQLVolumeNameEndpointCert      = "endpoint-cert"
+	MsSQLVolumeMountPathEndpointCert = "/var/opt/mssql/endpoint-cert"
+	MsSQLVolumeNameCerts             = "certs"
+	MsSQLVolumeMountPathCerts        = "/var/opt/mssql/certs"
+	// tls related
+	MsSQLInternalTLSCrt = "tls.crt"
+	MsSQLInternalTLSKey = "tls.key"
 
 	// =========================== PostgreSQL Constants ============================
 	PostgresDatabasePortName          = "db"
