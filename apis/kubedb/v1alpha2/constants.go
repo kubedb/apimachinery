@@ -355,6 +355,8 @@ const (
 	// =========================== MsSQL Constants ============================
 	MsSQLSAUser                  = "sa"
 	MsSQLEndpointCertsSecretName = "endpoint-cert"
+	MsSQLDbmLoginSecretName      = "dbm-login-secret"
+	MsSQLMasterKeySecretName     = "master-key-secret"
 
 	MsSQLDatabasePodPrimary       = "primary"
 	MsSQLDatabasePodSecondary     = "secondary"
