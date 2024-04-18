@@ -372,6 +372,10 @@ func (m *MySQLSpec) GetPersistentSecrets() []string {
 	if m.AuthSecret != nil {
 		secrets = append(secrets, m.AuthSecret.Name)
 	}
+
+	secrets = append(secrets, MsSQLEndpointCertsSecretName)
+	secrets = append(secrets, MsSQLDbmLoginSecretName)
+	secrets = append(secrets, MsSQLMasterKeySecretName)
 	return secrets
 }
 
