@@ -26,69 +26,69 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-// MsSQLOpsRequestLister helps list MsSQLOpsRequests.
+// MSSQLOpsRequestLister helps list MSSQLOpsRequests.
 // All objects returned here must be treated as read-only.
-type MsSQLOpsRequestLister interface {
-	// List lists all MsSQLOpsRequests in the indexer.
+type MSSQLOpsRequestLister interface {
+	// List lists all MSSQLOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MsSQLOpsRequest, err error)
-	// MsSQLOpsRequests returns an object that can list and get MsSQLOpsRequests.
-	MsSQLOpsRequests(namespace string) MsSQLOpsRequestNamespaceLister
-	MsSQLOpsRequestListerExpansion
+	List(selector labels.Selector) (ret []*v1alpha1.MSSQLOpsRequest, err error)
+	// MSSQLOpsRequests returns an object that can list and get MSSQLOpsRequests.
+	MSSQLOpsRequests(namespace string) MSSQLOpsRequestNamespaceLister
+	MSSQLOpsRequestListerExpansion
 }
 
-// msSQLOpsRequestLister implements the MsSQLOpsRequestLister interface.
-type msSQLOpsRequestLister struct {
+// mSSQLOpsRequestLister implements the MSSQLOpsRequestLister interface.
+type mSSQLOpsRequestLister struct {
 	indexer cache.Indexer
 }
 
-// NewMsSQLOpsRequestLister returns a new MsSQLOpsRequestLister.
-func NewMsSQLOpsRequestLister(indexer cache.Indexer) MsSQLOpsRequestLister {
-	return &msSQLOpsRequestLister{indexer: indexer}
+// NewMSSQLOpsRequestLister returns a new MSSQLOpsRequestLister.
+func NewMSSQLOpsRequestLister(indexer cache.Indexer) MSSQLOpsRequestLister {
+	return &mSSQLOpsRequestLister{indexer: indexer}
 }
 
-// List lists all MsSQLOpsRequests in the indexer.
-func (s *msSQLOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.MsSQLOpsRequest, err error) {
+// List lists all MSSQLOpsRequests in the indexer.
+func (s *mSSQLOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.MSSQLOpsRequest, err error) {
 	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MsSQLOpsRequest))
+		ret = append(ret, m.(*v1alpha1.MSSQLOpsRequest))
 	})
 	return ret, err
 }
 
-// MsSQLOpsRequests returns an object that can list and get MsSQLOpsRequests.
-func (s *msSQLOpsRequestLister) MsSQLOpsRequests(namespace string) MsSQLOpsRequestNamespaceLister {
-	return msSQLOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+// MSSQLOpsRequests returns an object that can list and get MSSQLOpsRequests.
+func (s *mSSQLOpsRequestLister) MSSQLOpsRequests(namespace string) MSSQLOpsRequestNamespaceLister {
+	return mSSQLOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
 }
 
-// MsSQLOpsRequestNamespaceLister helps list and get MsSQLOpsRequests.
+// MSSQLOpsRequestNamespaceLister helps list and get MSSQLOpsRequests.
 // All objects returned here must be treated as read-only.
-type MsSQLOpsRequestNamespaceLister interface {
-	// List lists all MsSQLOpsRequests in the indexer for a given namespace.
+type MSSQLOpsRequestNamespaceLister interface {
+	// List lists all MSSQLOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MsSQLOpsRequest, err error)
-	// Get retrieves the MsSQLOpsRequest from the indexer for a given namespace and name.
+	List(selector labels.Selector) (ret []*v1alpha1.MSSQLOpsRequest, err error)
+	// Get retrieves the MSSQLOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MsSQLOpsRequest, error)
-	MsSQLOpsRequestNamespaceListerExpansion
+	Get(name string) (*v1alpha1.MSSQLOpsRequest, error)
+	MSSQLOpsRequestNamespaceListerExpansion
 }
 
-// msSQLOpsRequestNamespaceLister implements the MsSQLOpsRequestNamespaceLister
+// mSSQLOpsRequestNamespaceLister implements the MSSQLOpsRequestNamespaceLister
 // interface.
-type msSQLOpsRequestNamespaceLister struct {
+type mSSQLOpsRequestNamespaceLister struct {
 	indexer   cache.Indexer
 	namespace string
 }
 
-// List lists all MsSQLOpsRequests in the indexer for a given namespace.
-func (s msSQLOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MsSQLOpsRequest, err error) {
+// List lists all MSSQLOpsRequests in the indexer for a given namespace.
+func (s mSSQLOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MSSQLOpsRequest, err error) {
 	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MsSQLOpsRequest))
+		ret = append(ret, m.(*v1alpha1.MSSQLOpsRequest))
 	})
 	return ret, err
 }
 
-// Get retrieves the MsSQLOpsRequest from the indexer for a given namespace and name.
-func (s msSQLOpsRequestNamespaceLister) Get(name string) (*v1alpha1.MsSQLOpsRequest, error) {
+// Get retrieves the MSSQLOpsRequest from the indexer for a given namespace and name.
+func (s mSSQLOpsRequestNamespaceLister) Get(name string) (*v1alpha1.MSSQLOpsRequest, error) {
 	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
@@ -96,5 +96,5 @@ func (s msSQLOpsRequestNamespaceLister) Get(name string) (*v1alpha1.MsSQLOpsRequ
 	if !exists {
 		return nil, errors.NewNotFound(v1alpha1.Resource("mssqlopsrequest"), name)
 	}
-	return obj.(*v1alpha1.MsSQLOpsRequest), nil
+	return obj.(*v1alpha1.MSSQLOpsRequest), nil
 }

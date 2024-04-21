@@ -12,87 +12,87 @@ import (
 )
 
 const (
-	// MsSQLOpsRequestTypeUpdateVersion is a MsSQLOpsRequestType of type UpdateVersion.
-	MsSQLOpsRequestTypeUpdateVersion MsSQLOpsRequestType = "UpdateVersion"
-	// MsSQLOpsRequestTypeHorizontalScaling is a MsSQLOpsRequestType of type HorizontalScaling.
-	MsSQLOpsRequestTypeHorizontalScaling MsSQLOpsRequestType = "HorizontalScaling"
-	// MsSQLOpsRequestTypeVerticalScaling is a MsSQLOpsRequestType of type VerticalScaling.
-	MsSQLOpsRequestTypeVerticalScaling MsSQLOpsRequestType = "VerticalScaling"
-	// MsSQLOpsRequestTypeVolumeExpansion is a MsSQLOpsRequestType of type VolumeExpansion.
-	MsSQLOpsRequestTypeVolumeExpansion MsSQLOpsRequestType = "VolumeExpansion"
-	// MsSQLOpsRequestTypeRestart is a MsSQLOpsRequestType of type Restart.
-	MsSQLOpsRequestTypeRestart MsSQLOpsRequestType = "Restart"
-	// MsSQLOpsRequestTypeReconfigure is a MsSQLOpsRequestType of type Reconfigure.
-	MsSQLOpsRequestTypeReconfigure MsSQLOpsRequestType = "Reconfigure"
-	// MsSQLOpsRequestTypeReconfigureTLS is a MsSQLOpsRequestType of type ReconfigureTLS.
-	MsSQLOpsRequestTypeReconfigureTLS MsSQLOpsRequestType = "ReconfigureTLS"
+	// MSSQLOpsRequestTypeUpdateVersion is a MSSQLOpsRequestType of type UpdateVersion.
+	MSSQLOpsRequestTypeUpdateVersion MSSQLOpsRequestType = "UpdateVersion"
+	// MSSQLOpsRequestTypeHorizontalScaling is a MSSQLOpsRequestType of type HorizontalScaling.
+	MSSQLOpsRequestTypeHorizontalScaling MSSQLOpsRequestType = "HorizontalScaling"
+	// MSSQLOpsRequestTypeVerticalScaling is a MSSQLOpsRequestType of type VerticalScaling.
+	MSSQLOpsRequestTypeVerticalScaling MSSQLOpsRequestType = "VerticalScaling"
+	// MSSQLOpsRequestTypeVolumeExpansion is a MSSQLOpsRequestType of type VolumeExpansion.
+	MSSQLOpsRequestTypeVolumeExpansion MSSQLOpsRequestType = "VolumeExpansion"
+	// MSSQLOpsRequestTypeRestart is a MSSQLOpsRequestType of type Restart.
+	MSSQLOpsRequestTypeRestart MSSQLOpsRequestType = "Restart"
+	// MSSQLOpsRequestTypeReconfigure is a MSSQLOpsRequestType of type Reconfigure.
+	MSSQLOpsRequestTypeReconfigure MSSQLOpsRequestType = "Reconfigure"
+	// MSSQLOpsRequestTypeReconfigureTLS is a MSSQLOpsRequestType of type ReconfigureTLS.
+	MSSQLOpsRequestTypeReconfigureTLS MSSQLOpsRequestType = "ReconfigureTLS"
 )
 
-var ErrInvalidMsSQLOpsRequestType = fmt.Errorf("not a valid MsSQLOpsRequestType, try [%s]", strings.Join(_MsSQLOpsRequestTypeNames, ", "))
+var ErrInvalidMSSQLOpsRequestType = fmt.Errorf("not a valid MSSQLOpsRequestType, try [%s]", strings.Join(_MSSQLOpsRequestTypeNames, ", "))
 
-var _MsSQLOpsRequestTypeNames = []string{
-	string(MsSQLOpsRequestTypeUpdateVersion),
-	string(MsSQLOpsRequestTypeHorizontalScaling),
-	string(MsSQLOpsRequestTypeVerticalScaling),
-	string(MsSQLOpsRequestTypeVolumeExpansion),
-	string(MsSQLOpsRequestTypeRestart),
-	string(MsSQLOpsRequestTypeReconfigure),
-	string(MsSQLOpsRequestTypeReconfigureTLS),
+var _MSSQLOpsRequestTypeNames = []string{
+	string(MSSQLOpsRequestTypeUpdateVersion),
+	string(MSSQLOpsRequestTypeHorizontalScaling),
+	string(MSSQLOpsRequestTypeVerticalScaling),
+	string(MSSQLOpsRequestTypeVolumeExpansion),
+	string(MSSQLOpsRequestTypeRestart),
+	string(MSSQLOpsRequestTypeReconfigure),
+	string(MSSQLOpsRequestTypeReconfigureTLS),
 }
 
-// MsSQLOpsRequestTypeNames returns a list of possible string values of MsSQLOpsRequestType.
-func MsSQLOpsRequestTypeNames() []string {
-	tmp := make([]string, len(_MsSQLOpsRequestTypeNames))
-	copy(tmp, _MsSQLOpsRequestTypeNames)
+// MSSQLOpsRequestTypeNames returns a list of possible string values of MSSQLOpsRequestType.
+func MSSQLOpsRequestTypeNames() []string {
+	tmp := make([]string, len(_MSSQLOpsRequestTypeNames))
+	copy(tmp, _MSSQLOpsRequestTypeNames)
 	return tmp
 }
 
-// MsSQLOpsRequestTypeValues returns a list of the values for MsSQLOpsRequestType
-func MsSQLOpsRequestTypeValues() []MsSQLOpsRequestType {
-	return []MsSQLOpsRequestType{
-		MsSQLOpsRequestTypeUpdateVersion,
-		MsSQLOpsRequestTypeHorizontalScaling,
-		MsSQLOpsRequestTypeVerticalScaling,
-		MsSQLOpsRequestTypeVolumeExpansion,
-		MsSQLOpsRequestTypeRestart,
-		MsSQLOpsRequestTypeReconfigure,
-		MsSQLOpsRequestTypeReconfigureTLS,
+// MSSQLOpsRequestTypeValues returns a list of the values for MSSQLOpsRequestType
+func MSSQLOpsRequestTypeValues() []MSSQLOpsRequestType {
+	return []MSSQLOpsRequestType{
+		MSSQLOpsRequestTypeUpdateVersion,
+		MSSQLOpsRequestTypeHorizontalScaling,
+		MSSQLOpsRequestTypeVerticalScaling,
+		MSSQLOpsRequestTypeVolumeExpansion,
+		MSSQLOpsRequestTypeRestart,
+		MSSQLOpsRequestTypeReconfigure,
+		MSSQLOpsRequestTypeReconfigureTLS,
 	}
 }
 
 // String implements the Stringer interface.
-func (x MsSQLOpsRequestType) String() string {
+func (x MSSQLOpsRequestType) String() string {
 	return string(x)
 }
 
 // IsValid provides a quick way to determine if the typed value is
 // part of the allowed enumerated values
-func (x MsSQLOpsRequestType) IsValid() bool {
-	_, err := ParseMsSQLOpsRequestType(string(x))
+func (x MSSQLOpsRequestType) IsValid() bool {
+	_, err := ParseMSSQLOpsRequestType(string(x))
 	return err == nil
 }
 
-var _MsSQLOpsRequestTypeValue = map[string]MsSQLOpsRequestType{
-	"UpdateVersion":     MsSQLOpsRequestTypeUpdateVersion,
-	"HorizontalScaling": MsSQLOpsRequestTypeHorizontalScaling,
-	"VerticalScaling":   MsSQLOpsRequestTypeVerticalScaling,
-	"VolumeExpansion":   MsSQLOpsRequestTypeVolumeExpansion,
-	"Restart":           MsSQLOpsRequestTypeRestart,
-	"Reconfigure":       MsSQLOpsRequestTypeReconfigure,
-	"ReconfigureTLS":    MsSQLOpsRequestTypeReconfigureTLS,
+var _MSSQLOpsRequestTypeValue = map[string]MSSQLOpsRequestType{
+	"UpdateVersion":     MSSQLOpsRequestTypeUpdateVersion,
+	"HorizontalScaling": MSSQLOpsRequestTypeHorizontalScaling,
+	"VerticalScaling":   MSSQLOpsRequestTypeVerticalScaling,
+	"VolumeExpansion":   MSSQLOpsRequestTypeVolumeExpansion,
+	"Restart":           MSSQLOpsRequestTypeRestart,
+	"Reconfigure":       MSSQLOpsRequestTypeReconfigure,
+	"ReconfigureTLS":    MSSQLOpsRequestTypeReconfigureTLS,
 }
 
-// ParseMsSQLOpsRequestType attempts to convert a string to a MsSQLOpsRequestType.
-func ParseMsSQLOpsRequestType(name string) (MsSQLOpsRequestType, error) {
-	if x, ok := _MsSQLOpsRequestTypeValue[name]; ok {
+// ParseMSSQLOpsRequestType attempts to convert a string to a MSSQLOpsRequestType.
+func ParseMSSQLOpsRequestType(name string) (MSSQLOpsRequestType, error) {
+	if x, ok := _MSSQLOpsRequestTypeValue[name]; ok {
 		return x, nil
 	}
-	return MsSQLOpsRequestType(""), fmt.Errorf("%s is %w", name, ErrInvalidMsSQLOpsRequestType)
+	return MSSQLOpsRequestType(""), fmt.Errorf("%s is %w", name, ErrInvalidMSSQLOpsRequestType)
 }
 
-// MustParseMsSQLOpsRequestType converts a string to a MsSQLOpsRequestType, and panics if is not valid.
-func MustParseMsSQLOpsRequestType(name string) MsSQLOpsRequestType {
-	val, err := ParseMsSQLOpsRequestType(name)
+// MustParseMSSQLOpsRequestType converts a string to a MSSQLOpsRequestType, and panics if is not valid.
+func MustParseMSSQLOpsRequestType(name string) MSSQLOpsRequestType {
+	val, err := ParseMSSQLOpsRequestType(name)
 	if err != nil {
 		panic(err)
 	}

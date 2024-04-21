@@ -26,69 +26,69 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-// MsSQLLister helps list MsSQLs.
+// MSSQLLister helps list MSSQLs.
 // All objects returned here must be treated as read-only.
-type MsSQLLister interface {
-	// List lists all MsSQLs in the indexer.
+type MSSQLLister interface {
+	// List lists all MSSQLs in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.MsSQL, err error)
-	// MsSQLs returns an object that can list and get MsSQLs.
-	MsSQLs(namespace string) MsSQLNamespaceLister
-	MsSQLListerExpansion
+	List(selector labels.Selector) (ret []*v1alpha2.MSSQL, err error)
+	// MSSQLs returns an object that can list and get MSSQLs.
+	MSSQLs(namespace string) MSSQLNamespaceLister
+	MSSQLListerExpansion
 }
 
-// msSQLLister implements the MsSQLLister interface.
-type msSQLLister struct {
+// mSSQLLister implements the MSSQLLister interface.
+type mSSQLLister struct {
 	indexer cache.Indexer
 }
 
-// NewMsSQLLister returns a new MsSQLLister.
-func NewMsSQLLister(indexer cache.Indexer) MsSQLLister {
-	return &msSQLLister{indexer: indexer}
+// NewMSSQLLister returns a new MSSQLLister.
+func NewMSSQLLister(indexer cache.Indexer) MSSQLLister {
+	return &mSSQLLister{indexer: indexer}
 }
 
-// List lists all MsSQLs in the indexer.
-func (s *msSQLLister) List(selector labels.Selector) (ret []*v1alpha2.MsSQL, err error) {
+// List lists all MSSQLs in the indexer.
+func (s *mSSQLLister) List(selector labels.Selector) (ret []*v1alpha2.MSSQL, err error) {
 	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.MsSQL))
+		ret = append(ret, m.(*v1alpha2.MSSQL))
 	})
 	return ret, err
 }
 
-// MsSQLs returns an object that can list and get MsSQLs.
-func (s *msSQLLister) MsSQLs(namespace string) MsSQLNamespaceLister {
-	return msSQLNamespaceLister{indexer: s.indexer, namespace: namespace}
+// MSSQLs returns an object that can list and get MSSQLs.
+func (s *mSSQLLister) MSSQLs(namespace string) MSSQLNamespaceLister {
+	return mSSQLNamespaceLister{indexer: s.indexer, namespace: namespace}
 }
 
-// MsSQLNamespaceLister helps list and get MsSQLs.
+// MSSQLNamespaceLister helps list and get MSSQLs.
 // All objects returned here must be treated as read-only.
-type MsSQLNamespaceLister interface {
-	// List lists all MsSQLs in the indexer for a given namespace.
+type MSSQLNamespaceLister interface {
+	// List lists all MSSQLs in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.MsSQL, err error)
-	// Get retrieves the MsSQL from the indexer for a given namespace and name.
+	List(selector labels.Selector) (ret []*v1alpha2.MSSQL, err error)
+	// Get retrieves the MSSQL from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.MsSQL, error)
-	MsSQLNamespaceListerExpansion
+	Get(name string) (*v1alpha2.MSSQL, error)
+	MSSQLNamespaceListerExpansion
 }
 
-// msSQLNamespaceLister implements the MsSQLNamespaceLister
+// mSSQLNamespaceLister implements the MSSQLNamespaceLister
 // interface.
-type msSQLNamespaceLister struct {
+type mSSQLNamespaceLister struct {
 	indexer   cache.Indexer
 	namespace string
 }
 
-// List lists all MsSQLs in the indexer for a given namespace.
-func (s msSQLNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.MsSQL, err error) {
+// List lists all MSSQLs in the indexer for a given namespace.
+func (s mSSQLNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.MSSQL, err error) {
 	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.MsSQL))
+		ret = append(ret, m.(*v1alpha2.MSSQL))
 	})
 	return ret, err
 }
 
-// Get retrieves the MsSQL from the indexer for a given namespace and name.
-func (s msSQLNamespaceLister) Get(name string) (*v1alpha2.MsSQL, error) {
+// Get retrieves the MSSQL from the indexer for a given namespace and name.
+func (s mSSQLNamespaceLister) Get(name string) (*v1alpha2.MSSQL, error) {
 	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
@@ -96,5 +96,5 @@ func (s msSQLNamespaceLister) Get(name string) (*v1alpha2.MsSQL, error) {
 	if !exists {
 		return nil, errors.NewNotFound(v1alpha2.Resource("mssql"), name)
 	}
-	return obj.(*v1alpha2.MsSQL), nil
+	return obj.(*v1alpha2.MSSQL), nil
 }

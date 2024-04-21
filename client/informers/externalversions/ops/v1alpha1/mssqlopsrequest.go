@@ -33,59 +33,59 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// MsSQLOpsRequestInformer provides access to a shared informer and lister for
-// MsSQLOpsRequests.
-type MsSQLOpsRequestInformer interface {
+// MSSQLOpsRequestInformer provides access to a shared informer and lister for
+// MSSQLOpsRequests.
+type MSSQLOpsRequestInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MsSQLOpsRequestLister
+	Lister() v1alpha1.MSSQLOpsRequestLister
 }
 
-type msSQLOpsRequestInformer struct {
+type mSSQLOpsRequestInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewMsSQLOpsRequestInformer constructs a new informer for MsSQLOpsRequest type.
+// NewMSSQLOpsRequestInformer constructs a new informer for MSSQLOpsRequest type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewMsSQLOpsRequestInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredMsSQLOpsRequestInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewMSSQLOpsRequestInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredMSSQLOpsRequestInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredMsSQLOpsRequestInformer constructs a new informer for MsSQLOpsRequest type.
+// NewFilteredMSSQLOpsRequestInformer constructs a new informer for MSSQLOpsRequest type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredMsSQLOpsRequestInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredMSSQLOpsRequestInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.OpsV1alpha1().MsSQLOpsRequests(namespace).List(context.TODO(), options)
+				return client.OpsV1alpha1().MSSQLOpsRequests(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.OpsV1alpha1().MsSQLOpsRequests(namespace).Watch(context.TODO(), options)
+				return client.OpsV1alpha1().MSSQLOpsRequests(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&opsv1alpha1.MsSQLOpsRequest{},
+		&opsv1alpha1.MSSQLOpsRequest{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *msSQLOpsRequestInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredMsSQLOpsRequestInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *mSSQLOpsRequestInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredMSSQLOpsRequestInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *msSQLOpsRequestInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&opsv1alpha1.MsSQLOpsRequest{}, f.defaultInformer)
+func (f *mSSQLOpsRequestInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&opsv1alpha1.MSSQLOpsRequest{}, f.defaultInformer)
 }
 
-func (f *msSQLOpsRequestInformer) Lister() v1alpha1.MsSQLOpsRequestLister {
-	return v1alpha1.NewMsSQLOpsRequestLister(f.Informer().GetIndexer())
+func (f *mSSQLOpsRequestInformer) Lister() v1alpha1.MSSQLOpsRequestLister {
+	return v1alpha1.NewMSSQLOpsRequestLister(f.Informer().GetIndexer())
 }

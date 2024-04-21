@@ -24,24 +24,24 @@ import (
 )
 
 const (
-	ResourceCodeMsSQL     = "ms"
-	ResourceKindMsSQL     = "MsSQL"
-	ResourceSingularMsSQL = "mssql"
-	ResourcePluralMsSQL   = "mssqls"
+	ResourceCodeMSSQL     = "ms"
+	ResourceKindMSSQL     = "MSSQL"
+	ResourceSingularMSSQL = "mssql"
+	ResourcePluralMSSQL   = "mssqls"
 )
 
 // +kubebuilder:validation:Enum=AvailabilityGroup;RemoteReplica
-type MsSQLMode string
+type MSSQLMode string
 
 const (
-	MsSQLModeAvailabilityGroup MsSQLMode = "AvailabilityGroup"
-	MsSQLModeRemoteReplica     MsSQLMode = "RemoteReplica"
+	MSSQLModeAvailabilityGroup MSSQLMode = "AvailabilityGroup"
+	MSSQLModeRemoteReplica     MSSQLMode = "RemoteReplica"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// MsSQL defines a MsSQL database.
+// MSSQL defines a MSSQL database.
 
 // +genclient
 // +k8s:openapi-gen=true
@@ -53,24 +53,24 @@ const (
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-type MsSQL struct {
+type MSSQL struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   MsSQLSpec   `json:"spec,omitempty"`
-	Status MsSQLStatus `json:"status,omitempty"`
+	Spec   MSSQLSpec   `json:"spec,omitempty"`
+	Status MSSQLStatus `json:"status,omitempty"`
 }
 
-// MsSQLSpec defines the desired state of MsSQL
-type MsSQLSpec struct {
-	// Version of MsSQL to be deployed.
+// MSSQLSpec defines the desired state of MSSQL
+type MSSQLSpec struct {
+	// Version of MSSQL to be deployed.
 	Version string `json:"version"`
 
-	// Number of instances to deploy for a MsSQL database. In case of MsSQL Availability Group (default 3).
+	// Number of instances to deploy for a MSSQL database. In case of MSSQL Availability Group (default 3).
 	Replicas *int32 `json:"replicas,omitempty"`
 
-	// MsSQL cluster topology
-	Topology *MsSQLTopology `json:"topology,omitempty"` // ag or standalone
+	// MSSQL cluster topology
+	Topology *MSSQLTopology `json:"topology,omitempty"` // ag or standalone
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -113,7 +113,7 @@ type MsSQLSpec struct {
 
 	// Leader election configuration
 	// +optional
-	LeaderElection *MsSQLLeaderElectionConfig `json:"leaderElection,omitempty"`
+	LeaderElection *MSSQLLeaderElectionConfig `json:"leaderElection,omitempty"`
 
 	// HealthChecker defines attributes of the health checker
 	// +optional
@@ -132,24 +132,24 @@ type InternalAuthentication struct {
 	EndpointCert *kmapi.TLSConfig `json:"endpointCert"`
 }
 
-type MsSQLTopology struct {
+type MSSQLTopology struct {
 	// If set to -
-	// "AvailabilityGroup", MsSQLAvailabilityGroupSpec is required and MsSQL servers will start an Availability Group
-	Mode *MsSQLMode `json:"mode,omitempty"`
+	// "AvailabilityGroup", MSSQLAvailabilityGroupSpec is required and MSSQL servers will start an Availability Group
+	Mode *MSSQLMode `json:"mode,omitempty"`
 
-	// AvailabilityGroup info for MsSQL
+	// AvailabilityGroup info for MSSQL
 	// +optional
-	AvailabilityGroup *MsSQLAvailabilityGroupSpec `json:"availabilityGroup,omitempty"`
+	AvailabilityGroup *MSSQLAvailabilityGroupSpec `json:"availabilityGroup,omitempty"`
 }
 
-// MsSQLAvailabilityGroupSpec defines the availability group spec for MsSQL
-type MsSQLAvailabilityGroupSpec struct {
+// MSSQLAvailabilityGroupSpec defines the availability group spec for MSSQL
+type MSSQLAvailabilityGroupSpec struct {
 	// AvailabilityDatabases is an array of databases to be included in the availability group
 	AvailabilityDatabases []string `json:"databases"`
 }
 
-// MsSQLStatus defines the observed state of MsSQL
-type MsSQLStatus struct {
+// MSSQLStatus defines the observed state of MSSQL
+type MSSQLStatus struct {
 	// Specifies the current phase of the database
 	// +optional
 	Phase DatabasePhase `json:"phase,omitempty"`
@@ -162,8 +162,8 @@ type MsSQLStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
-// MsSQLLeaderElectionConfig contains essential attributes of leader election.
-type MsSQLLeaderElectionConfig struct {
+// MSSQLLeaderElectionConfig contains essential attributes of leader election.
+type MSSQLLeaderElectionConfig struct {
 	// Period between Node.Tick invocations
 	// +kubebuilder:default="100ms"
 	// +optional
@@ -203,9 +203,9 @@ type MsSQLLeaderElectionConfig struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// MsSQLList contains a list of MsSQL
-type MsSQLList struct {
+// MSSQLList contains a list of MSSQL
+type MSSQLList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MsSQL `json:"items"`
+	Items           []MSSQL `json:"items"`
 }

@@ -31,40 +31,40 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-// MsSQLVersionsGetter has a method to return a MsSQLVersionInterface.
+// MSSQLVersionsGetter has a method to return a MSSQLVersionInterface.
 // A group's client should implement this interface.
-type MsSQLVersionsGetter interface {
-	MsSQLVersions() MsSQLVersionInterface
+type MSSQLVersionsGetter interface {
+	MSSQLVersions() MSSQLVersionInterface
 }
 
-// MsSQLVersionInterface has methods to work with MsSQLVersion resources.
-type MsSQLVersionInterface interface {
-	Create(ctx context.Context, msSQLVersion *v1alpha1.MsSQLVersion, opts v1.CreateOptions) (*v1alpha1.MsSQLVersion, error)
-	Update(ctx context.Context, msSQLVersion *v1alpha1.MsSQLVersion, opts v1.UpdateOptions) (*v1alpha1.MsSQLVersion, error)
+// MSSQLVersionInterface has methods to work with MSSQLVersion resources.
+type MSSQLVersionInterface interface {
+	Create(ctx context.Context, mSSQLVersion *v1alpha1.MSSQLVersion, opts v1.CreateOptions) (*v1alpha1.MSSQLVersion, error)
+	Update(ctx context.Context, mSSQLVersion *v1alpha1.MSSQLVersion, opts v1.UpdateOptions) (*v1alpha1.MSSQLVersion, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.MsSQLVersion, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.MsSQLVersionList, error)
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.MSSQLVersion, error)
+	List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.MSSQLVersionList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MsSQLVersion, err error)
-	MsSQLVersionExpansion
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MSSQLVersion, err error)
+	MSSQLVersionExpansion
 }
 
-// msSQLVersions implements MsSQLVersionInterface
-type msSQLVersions struct {
+// mSSQLVersions implements MSSQLVersionInterface
+type mSSQLVersions struct {
 	client rest.Interface
 }
 
-// newMsSQLVersions returns a MsSQLVersions
-func newMsSQLVersions(c *CatalogV1alpha1Client) *msSQLVersions {
-	return &msSQLVersions{
+// newMSSQLVersions returns a MSSQLVersions
+func newMSSQLVersions(c *CatalogV1alpha1Client) *mSSQLVersions {
+	return &mSSQLVersions{
 		client: c.RESTClient(),
 	}
 }
 
-// Get takes name of the msSQLVersion, and returns the corresponding msSQLVersion object, and an error if there is any.
-func (c *msSQLVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MsSQLVersion, err error) {
-	result = &v1alpha1.MsSQLVersion{}
+// Get takes name of the mSSQLVersion, and returns the corresponding mSSQLVersion object, and an error if there is any.
+func (c *mSSQLVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MSSQLVersion, err error) {
+	result = &v1alpha1.MSSQLVersion{}
 	err = c.client.Get().
 		Resource("mssqlversions").
 		Name(name).
@@ -74,13 +74,13 @@ func (c *msSQLVersions) Get(ctx context.Context, name string, options v1.GetOpti
 	return
 }
 
-// List takes label and field selectors, and returns the list of MsSQLVersions that match those selectors.
-func (c *msSQLVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MsSQLVersionList, err error) {
+// List takes label and field selectors, and returns the list of MSSQLVersions that match those selectors.
+func (c *mSSQLVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MSSQLVersionList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
 	}
-	result = &v1alpha1.MsSQLVersionList{}
+	result = &v1alpha1.MSSQLVersionList{}
 	err = c.client.Get().
 		Resource("mssqlversions").
 		VersionedParams(&opts, scheme.ParameterCodec).
@@ -90,8 +90,8 @@ func (c *msSQLVersions) List(ctx context.Context, opts v1.ListOptions) (result *
 	return
 }
 
-// Watch returns a watch.Interface that watches the requested msSQLVersions.
-func (c *msSQLVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested mSSQLVersions.
+func (c *mSSQLVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -104,33 +104,33 @@ func (c *msSQLVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.I
 		Watch(ctx)
 }
 
-// Create takes the representation of a msSQLVersion and creates it.  Returns the server's representation of the msSQLVersion, and an error, if there is any.
-func (c *msSQLVersions) Create(ctx context.Context, msSQLVersion *v1alpha1.MsSQLVersion, opts v1.CreateOptions) (result *v1alpha1.MsSQLVersion, err error) {
-	result = &v1alpha1.MsSQLVersion{}
+// Create takes the representation of a mSSQLVersion and creates it.  Returns the server's representation of the mSSQLVersion, and an error, if there is any.
+func (c *mSSQLVersions) Create(ctx context.Context, mSSQLVersion *v1alpha1.MSSQLVersion, opts v1.CreateOptions) (result *v1alpha1.MSSQLVersion, err error) {
+	result = &v1alpha1.MSSQLVersion{}
 	err = c.client.Post().
 		Resource("mssqlversions").
 		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(msSQLVersion).
+		Body(mSSQLVersion).
 		Do(ctx).
 		Into(result)
 	return
 }
 
-// Update takes the representation of a msSQLVersion and updates it. Returns the server's representation of the msSQLVersion, and an error, if there is any.
-func (c *msSQLVersions) Update(ctx context.Context, msSQLVersion *v1alpha1.MsSQLVersion, opts v1.UpdateOptions) (result *v1alpha1.MsSQLVersion, err error) {
-	result = &v1alpha1.MsSQLVersion{}
+// Update takes the representation of a mSSQLVersion and updates it. Returns the server's representation of the mSSQLVersion, and an error, if there is any.
+func (c *mSSQLVersions) Update(ctx context.Context, mSSQLVersion *v1alpha1.MSSQLVersion, opts v1.UpdateOptions) (result *v1alpha1.MSSQLVersion, err error) {
+	result = &v1alpha1.MSSQLVersion{}
 	err = c.client.Put().
 		Resource("mssqlversions").
-		Name(msSQLVersion.Name).
+		Name(mSSQLVersion.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(msSQLVersion).
+		Body(mSSQLVersion).
 		Do(ctx).
 		Into(result)
 	return
 }
 
-// Delete takes name of the msSQLVersion and deletes it. Returns an error if one occurs.
-func (c *msSQLVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+// Delete takes name of the mSSQLVersion and deletes it. Returns an error if one occurs.
+func (c *mSSQLVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
 		Resource("mssqlversions").
 		Name(name).
@@ -140,7 +140,7 @@ func (c *msSQLVersions) Delete(ctx context.Context, name string, opts v1.DeleteO
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *msSQLVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *mSSQLVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
 	var timeout time.Duration
 	if listOpts.TimeoutSeconds != nil {
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
@@ -154,9 +154,9 @@ func (c *msSQLVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOpti
 		Error()
 }
 
-// Patch applies the patch and returns the patched msSQLVersion.
-func (c *msSQLVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MsSQLVersion, err error) {
-	result = &v1alpha1.MsSQLVersion{}
+// Patch applies the patch and returns the patched mSSQLVersion.
+func (c *mSSQLVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MSSQLVersion, err error) {
+	result = &v1alpha1.MSSQLVersion{}
 	err = c.client.Patch(pt).
 		Resource("mssqlversions").
 		Name(name).

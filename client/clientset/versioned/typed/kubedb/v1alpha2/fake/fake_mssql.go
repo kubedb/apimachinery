@@ -30,31 +30,31 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-// FakeMsSQLs implements MsSQLInterface
-type FakeMsSQLs struct {
+// FakeMSSQLs implements MSSQLInterface
+type FakeMSSQLs struct {
 	Fake *FakeKubedbV1alpha2
 	ns   string
 }
 
 var mssqlsResource = v1alpha2.SchemeGroupVersion.WithResource("mssqls")
 
-var mssqlsKind = v1alpha2.SchemeGroupVersion.WithKind("MsSQL")
+var mssqlsKind = v1alpha2.SchemeGroupVersion.WithKind("MSSQL")
 
-// Get takes name of the msSQL, and returns the corresponding msSQL object, and an error if there is any.
-func (c *FakeMsSQLs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.MsSQL, err error) {
+// Get takes name of the mSSQL, and returns the corresponding mSSQL object, and an error if there is any.
+func (c *FakeMSSQLs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.MSSQL, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mssqlsResource, c.ns, name), &v1alpha2.MsSQL{})
+		Invokes(testing.NewGetAction(mssqlsResource, c.ns, name), &v1alpha2.MSSQL{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha2.MsSQL), err
+	return obj.(*v1alpha2.MSSQL), err
 }
 
-// List takes label and field selectors, and returns the list of MsSQLs that match those selectors.
-func (c *FakeMsSQLs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.MsSQLList, err error) {
+// List takes label and field selectors, and returns the list of MSSQLs that match those selectors.
+func (c *FakeMSSQLs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.MSSQLList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mssqlsResource, mssqlsKind, c.ns, opts), &v1alpha2.MsSQLList{})
+		Invokes(testing.NewListAction(mssqlsResource, mssqlsKind, c.ns, opts), &v1alpha2.MSSQLList{})
 
 	if obj == nil {
 		return nil, err
@@ -64,8 +64,8 @@ func (c *FakeMsSQLs) List(ctx context.Context, opts v1.ListOptions) (result *v1a
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &v1alpha2.MsSQLList{ListMeta: obj.(*v1alpha2.MsSQLList).ListMeta}
-	for _, item := range obj.(*v1alpha2.MsSQLList).Items {
+	list := &v1alpha2.MSSQLList{ListMeta: obj.(*v1alpha2.MSSQLList).ListMeta}
+	for _, item := range obj.(*v1alpha2.MSSQLList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -73,70 +73,70 @@ func (c *FakeMsSQLs) List(ctx context.Context, opts v1.ListOptions) (result *v1a
 	return list, err
 }
 
-// Watch returns a watch.Interface that watches the requested msSQLs.
-func (c *FakeMsSQLs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested mSSQLs.
+func (c *FakeMSSQLs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(mssqlsResource, c.ns, opts))
 
 }
 
-// Create takes the representation of a msSQL and creates it.  Returns the server's representation of the msSQL, and an error, if there is any.
-func (c *FakeMsSQLs) Create(ctx context.Context, msSQL *v1alpha2.MsSQL, opts v1.CreateOptions) (result *v1alpha2.MsSQL, err error) {
+// Create takes the representation of a mSSQL and creates it.  Returns the server's representation of the mSSQL, and an error, if there is any.
+func (c *FakeMSSQLs) Create(ctx context.Context, mSSQL *v1alpha2.MSSQL, opts v1.CreateOptions) (result *v1alpha2.MSSQL, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mssqlsResource, c.ns, msSQL), &v1alpha2.MsSQL{})
+		Invokes(testing.NewCreateAction(mssqlsResource, c.ns, mSSQL), &v1alpha2.MSSQL{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha2.MsSQL), err
+	return obj.(*v1alpha2.MSSQL), err
 }
 
-// Update takes the representation of a msSQL and updates it. Returns the server's representation of the msSQL, and an error, if there is any.
-func (c *FakeMsSQLs) Update(ctx context.Context, msSQL *v1alpha2.MsSQL, opts v1.UpdateOptions) (result *v1alpha2.MsSQL, err error) {
+// Update takes the representation of a mSSQL and updates it. Returns the server's representation of the mSSQL, and an error, if there is any.
+func (c *FakeMSSQLs) Update(ctx context.Context, mSSQL *v1alpha2.MSSQL, opts v1.UpdateOptions) (result *v1alpha2.MSSQL, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mssqlsResource, c.ns, msSQL), &v1alpha2.MsSQL{})
+		Invokes(testing.NewUpdateAction(mssqlsResource, c.ns, mSSQL), &v1alpha2.MSSQL{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha2.MsSQL), err
+	return obj.(*v1alpha2.MSSQL), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMsSQLs) UpdateStatus(ctx context.Context, msSQL *v1alpha2.MsSQL, opts v1.UpdateOptions) (*v1alpha2.MsSQL, error) {
+func (c *FakeMSSQLs) UpdateStatus(ctx context.Context, mSSQL *v1alpha2.MSSQL, opts v1.UpdateOptions) (*v1alpha2.MSSQL, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mssqlsResource, "status", c.ns, msSQL), &v1alpha2.MsSQL{})
+		Invokes(testing.NewUpdateSubresourceAction(mssqlsResource, "status", c.ns, mSSQL), &v1alpha2.MSSQL{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha2.MsSQL), err
+	return obj.(*v1alpha2.MSSQL), err
 }
 
-// Delete takes name of the msSQL and deletes it. Returns an error if one occurs.
-func (c *FakeMsSQLs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+// Delete takes name of the mSSQL and deletes it. Returns an error if one occurs.
+func (c *FakeMSSQLs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mssqlsResource, c.ns, name, opts), &v1alpha2.MsSQL{})
+		Invokes(testing.NewDeleteActionWithOptions(mssqlsResource, c.ns, name, opts), &v1alpha2.MSSQL{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeMsSQLs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeMSSQLs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(mssqlsResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &v1alpha2.MsSQLList{})
+	_, err := c.Fake.Invokes(action, &v1alpha2.MSSQLList{})
 	return err
 }
 
-// Patch applies the patch and returns the patched msSQL.
-func (c *FakeMsSQLs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.MsSQL, err error) {
+// Patch applies the patch and returns the patched mSSQL.
+func (c *FakeMSSQLs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.MSSQL, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mssqlsResource, c.ns, name, pt, data, subresources...), &v1alpha2.MsSQL{})
+		Invokes(testing.NewPatchSubresourceAction(mssqlsResource, c.ns, name, pt, data, subresources...), &v1alpha2.MSSQL{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha2.MsSQL), err
+	return obj.(*v1alpha2.MSSQL), err
 }

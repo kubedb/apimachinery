@@ -31,43 +31,43 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-// MsSQLOpsRequestsGetter has a method to return a MsSQLOpsRequestInterface.
+// MSSQLOpsRequestsGetter has a method to return a MSSQLOpsRequestInterface.
 // A group's client should implement this interface.
-type MsSQLOpsRequestsGetter interface {
-	MsSQLOpsRequests(namespace string) MsSQLOpsRequestInterface
+type MSSQLOpsRequestsGetter interface {
+	MSSQLOpsRequests(namespace string) MSSQLOpsRequestInterface
 }
 
-// MsSQLOpsRequestInterface has methods to work with MsSQLOpsRequest resources.
-type MsSQLOpsRequestInterface interface {
-	Create(ctx context.Context, msSQLOpsRequest *v1alpha1.MsSQLOpsRequest, opts v1.CreateOptions) (*v1alpha1.MsSQLOpsRequest, error)
-	Update(ctx context.Context, msSQLOpsRequest *v1alpha1.MsSQLOpsRequest, opts v1.UpdateOptions) (*v1alpha1.MsSQLOpsRequest, error)
-	UpdateStatus(ctx context.Context, msSQLOpsRequest *v1alpha1.MsSQLOpsRequest, opts v1.UpdateOptions) (*v1alpha1.MsSQLOpsRequest, error)
+// MSSQLOpsRequestInterface has methods to work with MSSQLOpsRequest resources.
+type MSSQLOpsRequestInterface interface {
+	Create(ctx context.Context, mSSQLOpsRequest *v1alpha1.MSSQLOpsRequest, opts v1.CreateOptions) (*v1alpha1.MSSQLOpsRequest, error)
+	Update(ctx context.Context, mSSQLOpsRequest *v1alpha1.MSSQLOpsRequest, opts v1.UpdateOptions) (*v1alpha1.MSSQLOpsRequest, error)
+	UpdateStatus(ctx context.Context, mSSQLOpsRequest *v1alpha1.MSSQLOpsRequest, opts v1.UpdateOptions) (*v1alpha1.MSSQLOpsRequest, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.MsSQLOpsRequest, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.MsSQLOpsRequestList, error)
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.MSSQLOpsRequest, error)
+	List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.MSSQLOpsRequestList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MsSQLOpsRequest, err error)
-	MsSQLOpsRequestExpansion
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MSSQLOpsRequest, err error)
+	MSSQLOpsRequestExpansion
 }
 
-// msSQLOpsRequests implements MsSQLOpsRequestInterface
-type msSQLOpsRequests struct {
+// mSSQLOpsRequests implements MSSQLOpsRequestInterface
+type mSSQLOpsRequests struct {
 	client rest.Interface
 	ns     string
 }
 
-// newMsSQLOpsRequests returns a MsSQLOpsRequests
-func newMsSQLOpsRequests(c *OpsV1alpha1Client, namespace string) *msSQLOpsRequests {
-	return &msSQLOpsRequests{
+// newMSSQLOpsRequests returns a MSSQLOpsRequests
+func newMSSQLOpsRequests(c *OpsV1alpha1Client, namespace string) *mSSQLOpsRequests {
+	return &mSSQLOpsRequests{
 		client: c.RESTClient(),
 		ns:     namespace,
 	}
 }
 
-// Get takes name of the msSQLOpsRequest, and returns the corresponding msSQLOpsRequest object, and an error if there is any.
-func (c *msSQLOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MsSQLOpsRequest, err error) {
-	result = &v1alpha1.MsSQLOpsRequest{}
+// Get takes name of the mSSQLOpsRequest, and returns the corresponding mSSQLOpsRequest object, and an error if there is any.
+func (c *mSSQLOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MSSQLOpsRequest, err error) {
+	result = &v1alpha1.MSSQLOpsRequest{}
 	err = c.client.Get().
 		Namespace(c.ns).
 		Resource("mssqlopsrequests").
@@ -78,13 +78,13 @@ func (c *msSQLOpsRequests) Get(ctx context.Context, name string, options v1.GetO
 	return
 }
 
-// List takes label and field selectors, and returns the list of MsSQLOpsRequests that match those selectors.
-func (c *msSQLOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MsSQLOpsRequestList, err error) {
+// List takes label and field selectors, and returns the list of MSSQLOpsRequests that match those selectors.
+func (c *mSSQLOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MSSQLOpsRequestList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
 	}
-	result = &v1alpha1.MsSQLOpsRequestList{}
+	result = &v1alpha1.MSSQLOpsRequestList{}
 	err = c.client.Get().
 		Namespace(c.ns).
 		Resource("mssqlopsrequests").
@@ -95,8 +95,8 @@ func (c *msSQLOpsRequests) List(ctx context.Context, opts v1.ListOptions) (resul
 	return
 }
 
-// Watch returns a watch.Interface that watches the requested msSQLOpsRequests.
-func (c *msSQLOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested mSSQLOpsRequests.
+func (c *mSSQLOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -110,28 +110,28 @@ func (c *msSQLOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watc
 		Watch(ctx)
 }
 
-// Create takes the representation of a msSQLOpsRequest and creates it.  Returns the server's representation of the msSQLOpsRequest, and an error, if there is any.
-func (c *msSQLOpsRequests) Create(ctx context.Context, msSQLOpsRequest *v1alpha1.MsSQLOpsRequest, opts v1.CreateOptions) (result *v1alpha1.MsSQLOpsRequest, err error) {
-	result = &v1alpha1.MsSQLOpsRequest{}
+// Create takes the representation of a mSSQLOpsRequest and creates it.  Returns the server's representation of the mSSQLOpsRequest, and an error, if there is any.
+func (c *mSSQLOpsRequests) Create(ctx context.Context, mSSQLOpsRequest *v1alpha1.MSSQLOpsRequest, opts v1.CreateOptions) (result *v1alpha1.MSSQLOpsRequest, err error) {
+	result = &v1alpha1.MSSQLOpsRequest{}
 	err = c.client.Post().
 		Namespace(c.ns).
 		Resource("mssqlopsrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(msSQLOpsRequest).
+		Body(mSSQLOpsRequest).
 		Do(ctx).
 		Into(result)
 	return
 }
 
-// Update takes the representation of a msSQLOpsRequest and updates it. Returns the server's representation of the msSQLOpsRequest, and an error, if there is any.
-func (c *msSQLOpsRequests) Update(ctx context.Context, msSQLOpsRequest *v1alpha1.MsSQLOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.MsSQLOpsRequest, err error) {
-	result = &v1alpha1.MsSQLOpsRequest{}
+// Update takes the representation of a mSSQLOpsRequest and updates it. Returns the server's representation of the mSSQLOpsRequest, and an error, if there is any.
+func (c *mSSQLOpsRequests) Update(ctx context.Context, mSSQLOpsRequest *v1alpha1.MSSQLOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.MSSQLOpsRequest, err error) {
+	result = &v1alpha1.MSSQLOpsRequest{}
 	err = c.client.Put().
 		Namespace(c.ns).
 		Resource("mssqlopsrequests").
-		Name(msSQLOpsRequest.Name).
+		Name(mSSQLOpsRequest.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(msSQLOpsRequest).
+		Body(mSSQLOpsRequest).
 		Do(ctx).
 		Into(result)
 	return
@@ -139,22 +139,22 @@ func (c *msSQLOpsRequests) Update(ctx context.Context, msSQLOpsRequest *v1alpha1
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *msSQLOpsRequests) UpdateStatus(ctx context.Context, msSQLOpsRequest *v1alpha1.MsSQLOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.MsSQLOpsRequest, err error) {
-	result = &v1alpha1.MsSQLOpsRequest{}
+func (c *mSSQLOpsRequests) UpdateStatus(ctx context.Context, mSSQLOpsRequest *v1alpha1.MSSQLOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.MSSQLOpsRequest, err error) {
+	result = &v1alpha1.MSSQLOpsRequest{}
 	err = c.client.Put().
 		Namespace(c.ns).
 		Resource("mssqlopsrequests").
-		Name(msSQLOpsRequest.Name).
+		Name(mSSQLOpsRequest.Name).
 		SubResource("status").
 		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(msSQLOpsRequest).
+		Body(mSSQLOpsRequest).
 		Do(ctx).
 		Into(result)
 	return
 }
 
-// Delete takes name of the msSQLOpsRequest and deletes it. Returns an error if one occurs.
-func (c *msSQLOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+// Delete takes name of the mSSQLOpsRequest and deletes it. Returns an error if one occurs.
+func (c *mSSQLOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
 		Namespace(c.ns).
 		Resource("mssqlopsrequests").
@@ -165,7 +165,7 @@ func (c *msSQLOpsRequests) Delete(ctx context.Context, name string, opts v1.Dele
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *msSQLOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *mSSQLOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
 	var timeout time.Duration
 	if listOpts.TimeoutSeconds != nil {
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
@@ -180,9 +180,9 @@ func (c *msSQLOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteO
 		Error()
 }
 
-// Patch applies the patch and returns the patched msSQLOpsRequest.
-func (c *msSQLOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MsSQLOpsRequest, err error) {
-	result = &v1alpha1.MsSQLOpsRequest{}
+// Patch applies the patch and returns the patched mSSQLOpsRequest.
+func (c *mSSQLOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MSSQLOpsRequest, err error) {
+	result = &v1alpha1.MSSQLOpsRequest{}
 	err = c.client.Patch(pt).
 		Namespace(c.ns).
 		Resource("mssqlopsrequests").

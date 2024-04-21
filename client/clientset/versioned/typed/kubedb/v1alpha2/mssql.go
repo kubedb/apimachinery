@@ -31,43 +31,43 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-// MsSQLsGetter has a method to return a MsSQLInterface.
+// MSSQLsGetter has a method to return a MSSQLInterface.
 // A group's client should implement this interface.
-type MsSQLsGetter interface {
-	MsSQLs(namespace string) MsSQLInterface
+type MSSQLsGetter interface {
+	MSSQLs(namespace string) MSSQLInterface
 }
 
-// MsSQLInterface has methods to work with MsSQL resources.
-type MsSQLInterface interface {
-	Create(ctx context.Context, msSQL *v1alpha2.MsSQL, opts v1.CreateOptions) (*v1alpha2.MsSQL, error)
-	Update(ctx context.Context, msSQL *v1alpha2.MsSQL, opts v1.UpdateOptions) (*v1alpha2.MsSQL, error)
-	UpdateStatus(ctx context.Context, msSQL *v1alpha2.MsSQL, opts v1.UpdateOptions) (*v1alpha2.MsSQL, error)
+// MSSQLInterface has methods to work with MSSQL resources.
+type MSSQLInterface interface {
+	Create(ctx context.Context, mSSQL *v1alpha2.MSSQL, opts v1.CreateOptions) (*v1alpha2.MSSQL, error)
+	Update(ctx context.Context, mSSQL *v1alpha2.MSSQL, opts v1.UpdateOptions) (*v1alpha2.MSSQL, error)
+	UpdateStatus(ctx context.Context, mSSQL *v1alpha2.MSSQL, opts v1.UpdateOptions) (*v1alpha2.MSSQL, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha2.MsSQL, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v1alpha2.MsSQLList, error)
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha2.MSSQL, error)
+	List(ctx context.Context, opts v1.ListOptions) (*v1alpha2.MSSQLList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.MsSQL, err error)
-	MsSQLExpansion
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.MSSQL, err error)
+	MSSQLExpansion
 }
 
-// msSQLs implements MsSQLInterface
-type msSQLs struct {
+// mSSQLs implements MSSQLInterface
+type mSSQLs struct {
 	client rest.Interface
 	ns     string
 }
 
-// newMsSQLs returns a MsSQLs
-func newMsSQLs(c *KubedbV1alpha2Client, namespace string) *msSQLs {
-	return &msSQLs{
+// newMSSQLs returns a MSSQLs
+func newMSSQLs(c *KubedbV1alpha2Client, namespace string) *mSSQLs {
+	return &mSSQLs{
 		client: c.RESTClient(),
 		ns:     namespace,
 	}
 }
 
-// Get takes name of the msSQL, and returns the corresponding msSQL object, and an error if there is any.
-func (c *msSQLs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.MsSQL, err error) {
-	result = &v1alpha2.MsSQL{}
+// Get takes name of the mSSQL, and returns the corresponding mSSQL object, and an error if there is any.
+func (c *mSSQLs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.MSSQL, err error) {
+	result = &v1alpha2.MSSQL{}
 	err = c.client.Get().
 		Namespace(c.ns).
 		Resource("mssqls").
@@ -78,13 +78,13 @@ func (c *msSQLs) Get(ctx context.Context, name string, options v1.GetOptions) (r
 	return
 }
 
-// List takes label and field selectors, and returns the list of MsSQLs that match those selectors.
-func (c *msSQLs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.MsSQLList, err error) {
+// List takes label and field selectors, and returns the list of MSSQLs that match those selectors.
+func (c *mSSQLs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.MSSQLList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
 	}
-	result = &v1alpha2.MsSQLList{}
+	result = &v1alpha2.MSSQLList{}
 	err = c.client.Get().
 		Namespace(c.ns).
 		Resource("mssqls").
@@ -95,8 +95,8 @@ func (c *msSQLs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha
 	return
 }
 
-// Watch returns a watch.Interface that watches the requested msSQLs.
-func (c *msSQLs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested mSSQLs.
+func (c *mSSQLs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -110,28 +110,28 @@ func (c *msSQLs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interfac
 		Watch(ctx)
 }
 
-// Create takes the representation of a msSQL and creates it.  Returns the server's representation of the msSQL, and an error, if there is any.
-func (c *msSQLs) Create(ctx context.Context, msSQL *v1alpha2.MsSQL, opts v1.CreateOptions) (result *v1alpha2.MsSQL, err error) {
-	result = &v1alpha2.MsSQL{}
+// Create takes the representation of a mSSQL and creates it.  Returns the server's representation of the mSSQL, and an error, if there is any.
+func (c *mSSQLs) Create(ctx context.Context, mSSQL *v1alpha2.MSSQL, opts v1.CreateOptions) (result *v1alpha2.MSSQL, err error) {
+	result = &v1alpha2.MSSQL{}
 	err = c.client.Post().
 		Namespace(c.ns).
 		Resource("mssqls").
 		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(msSQL).
+		Body(mSSQL).
 		Do(ctx).
 		Into(result)
 	return
 }
 
-// Update takes the representation of a msSQL and updates it. Returns the server's representation of the msSQL, and an error, if there is any.
-func (c *msSQLs) Update(ctx context.Context, msSQL *v1alpha2.MsSQL, opts v1.UpdateOptions) (result *v1alpha2.MsSQL, err error) {
-	result = &v1alpha2.MsSQL{}
+// Update takes the representation of a mSSQL and updates it. Returns the server's representation of the mSSQL, and an error, if there is any.
+func (c *mSSQLs) Update(ctx context.Context, mSSQL *v1alpha2.MSSQL, opts v1.UpdateOptions) (result *v1alpha2.MSSQL, err error) {
+	result = &v1alpha2.MSSQL{}
 	err = c.client.Put().
 		Namespace(c.ns).
 		Resource("mssqls").
-		Name(msSQL.Name).
+		Name(mSSQL.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(msSQL).
+		Body(mSSQL).
 		Do(ctx).
 		Into(result)
 	return
@@ -139,22 +139,22 @@ func (c *msSQLs) Update(ctx context.Context, msSQL *v1alpha2.MsSQL, opts v1.Upda
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *msSQLs) UpdateStatus(ctx context.Context, msSQL *v1alpha2.MsSQL, opts v1.UpdateOptions) (result *v1alpha2.MsSQL, err error) {
-	result = &v1alpha2.MsSQL{}
+func (c *mSSQLs) UpdateStatus(ctx context.Context, mSSQL *v1alpha2.MSSQL, opts v1.UpdateOptions) (result *v1alpha2.MSSQL, err error) {
+	result = &v1alpha2.MSSQL{}
 	err = c.client.Put().
 		Namespace(c.ns).
 		Resource("mssqls").
-		Name(msSQL.Name).
+		Name(mSSQL.Name).
 		SubResource("status").
 		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(msSQL).
+		Body(mSSQL).
 		Do(ctx).
 		Into(result)
 	return
 }
 
-// Delete takes name of the msSQL and deletes it. Returns an error if one occurs.
-func (c *msSQLs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+// Delete takes name of the mSSQL and deletes it. Returns an error if one occurs.
+func (c *mSSQLs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
 		Namespace(c.ns).
 		Resource("mssqls").
@@ -165,7 +165,7 @@ func (c *msSQLs) Delete(ctx context.Context, name string, opts v1.DeleteOptions)
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *msSQLs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *mSSQLs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
 	var timeout time.Duration
 	if listOpts.TimeoutSeconds != nil {
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
@@ -180,9 +180,9 @@ func (c *msSQLs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, li
 		Error()
 }
 
-// Patch applies the patch and returns the patched msSQL.
-func (c *msSQLs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.MsSQL, err error) {
-	result = &v1alpha2.MsSQL{}
+// Patch applies the patch and returns the patched mSSQL.
+func (c *mSSQLs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.MSSQL, err error) {
+	result = &v1alpha2.MSSQL{}
 	err = c.client.Patch(pt).
 		Namespace(c.ns).
 		Resource("mssqls").

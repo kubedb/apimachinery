@@ -26,35 +26,35 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (m MsSQLVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMsSQLVersion))
+func (m MSSQLVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMSSQLVersion))
 }
 
-var _ apis.ResourceInfo = &MsSQLVersion{}
+var _ apis.ResourceInfo = &MSSQLVersion{}
 
-func (m MsSQLVersion) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", ResourcePluralMsSQLVersion, catalog.GroupName)
+func (m MSSQLVersion) ResourceFQN() string {
+	return fmt.Sprintf("%s.%s", ResourcePluralMSSQLVersion, catalog.GroupName)
 }
 
-func (m MsSQLVersion) ResourceShortCode() string {
-	return ResourceCodeMsSQLVersion
+func (m MSSQLVersion) ResourceShortCode() string {
+	return ResourceCodeMSSQLVersion
 }
 
-func (m MsSQLVersion) ResourceKind() string {
-	return ResourceKindMsSQLVersion
+func (m MSSQLVersion) ResourceKind() string {
+	return ResourceKindMSSQLVersion
 }
 
-func (m MsSQLVersion) ResourceSingular() string {
-	return ResourceSingularMsSQLVersion
+func (m MSSQLVersion) ResourceSingular() string {
+	return ResourceSingularMSSQLVersion
 }
 
-func (m MsSQLVersion) ResourcePlural() string {
-	return ResourcePluralMsSQLVersion
+func (m MSSQLVersion) ResourcePlural() string {
+	return ResourcePluralMSSQLVersion
 }
 
-func (m MsSQLVersion) ValidateSpecs() error {
+func (m MSSQLVersion) ValidateSpecs() error {
 	if m.Spec.Version == "" || m.Spec.DB.Image == "" || m.Spec.Coordinator.Image == "" {
-		return fmt.Errorf(`at least one of the following specs is not set for MsSQLVersion "%v":
+		return fmt.Errorf(`at least one of the following specs is not set for MSSQLVersion "%v":
 spec.version,
 spec.coordinator.image,
 spec.initContainer.image`, m.Name)

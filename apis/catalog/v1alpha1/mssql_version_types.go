@@ -22,10 +22,10 @@ import (
 )
 
 const (
-	ResourceCodeMsSQLVersion     = "msversion"
-	ResourceKindMsSQLVersion     = "MsSQLVersion"
-	ResourceSingularMsSQLVersion = "mssqlversion"
-	ResourcePluralMsSQLVersion   = "mssqlversions"
+	ResourceCodeMSSQLVersion     = "msversion"
+	ResourceKindMSSQLVersion     = "MSSQLVersion"
+	ResourceSingularMSSQLVersion = "mssqlversion"
+	ResourcePluralMSSQLVersion   = "mssqlversions"
 )
 
 // +genclient
@@ -40,23 +40,23 @@ const (
 // +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
 // +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-type MsSQLVersion struct {
+type MSSQLVersion struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              MsSQLVersionSpec `json:"spec,omitempty"`
+	Spec              MSSQLVersionSpec `json:"spec,omitempty"`
 }
 
-// MsSQLVersionSpec defines the desired state of MsSQL Version
-type MsSQLVersionSpec struct {
+// MSSQLVersionSpec defines the desired state of MSSQL Version
+type MSSQLVersionSpec struct {
 	// Version
 	Version string `json:"version"`
 	// Database Image
-	DB MsSQLVersionDatabase `json:"db"`
+	DB MSSQLVersionDatabase `json:"db"`
 	// Coordinator Image
 	// +optional
-	Coordinator MsSQLCoordinator `json:"coordinator,omitempty"`
+	Coordinator MSSQLCoordinator `json:"coordinator,omitempty"`
 	// Init container Image
-	InitContainer MsSQLInitContainer `json:"initContainer"`
+	InitContainer MSSQLInitContainer `json:"initContainer"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
@@ -65,45 +65,45 @@ type MsSQLVersionSpec struct {
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
 	// SecurityContext is for the additional config for the DB container
 	// +optional
-	SecurityContext MsSQLSecurityContext `json:"securityContext"`
+	SecurityContext MSSQLSecurityContext `json:"securityContext"`
 	// PSP names
 	// +optional
-	PodSecurityPolicies MsSQLVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	PodSecurityPolicies MSSQLVersionPodSecurityPolicy `json:"podSecurityPolicies"`
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 }
 
-// MsSQLVersionDatabase is the MsSQL Database image
-type MsSQLVersionDatabase struct {
+// MSSQLVersionDatabase is the MSSQL Database image
+type MSSQLVersionDatabase struct {
 	Image string `json:"image"`
 }
 
-// MsSQLCoordinator is the MSSQL coordinator Container image
-type MsSQLCoordinator struct {
+// MSSQLCoordinator is the MSSQL coordinator Container image
+type MSSQLCoordinator struct {
 	Image string `json:"image"`
 }
 
-// MsSQLInitContainer is the MsSQL Container initializer
-type MsSQLInitContainer struct {
+// MSSQLInitContainer is the MSSQL Container initializer
+type MSSQLInitContainer struct {
 	Image string `json:"image"`
 }
 
-// MsSQLVersionPodSecurityPolicy is the MsSQL pod security policies
-type MsSQLVersionPodSecurityPolicy struct {
+// MSSQLVersionPodSecurityPolicy is the MSSQL pod security policies
+type MSSQLVersionPodSecurityPolicy struct {
 	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
-// MsSQLSecurityContext is for additional configuration for the MSSQL database container
-type MsSQLSecurityContext struct {
+// MSSQLSecurityContext is for additional configuration for the MSSQL database container
+type MSSQLSecurityContext struct {
 	RunAsUser  *int64 `json:"runAsUser,omitempty"`
 	RunAsGroup *int64 `json:"runAsGroup,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// MsSQLVersionList contains a list of MsSQLVersion
-type MsSQLVersionList struct {
+// MSSQLVersionList contains a list of MSSQLVersion
+type MSSQLVersionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MsSQLVersion `json:"items"`
+	Items           []MSSQLVersion `json:"items"`
 }

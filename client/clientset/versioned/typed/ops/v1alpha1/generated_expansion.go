@@ -24,13 +24,13 @@ type EtcdOpsRequestExpansion interface{}
 
 type KafkaOpsRequestExpansion interface{}
 
+type MSSQLOpsRequestExpansion interface{}
+
 type MariaDBOpsRequestExpansion interface{}
 
 type MemcachedOpsRequestExpansion interface{}
 
 type MongoDBOpsRequestExpansion interface{}
-
-type MsSQLOpsRequestExpansion interface{}
 
 type MySQLOpsRequestExpansion interface{}
 

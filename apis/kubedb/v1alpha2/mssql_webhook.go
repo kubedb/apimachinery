@@ -39,7 +39,7 @@ import (
 var mssqllog = logf.Log.WithName("mssql-resource")
 
 // SetupWebhookWithManager will setup the manager to manage the webhooks
-func (r *MsSQL) SetupWebhookWithManager(mgr ctrl.Manager) error {
+func (r *MSSQL) SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
 		For(r).
 		Complete()
@@ -47,10 +47,10 @@ func (r *MsSQL) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-mssql,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=mssqls,verbs=create;update,versions=v1alpha2,name=mmssql.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &MsSQL{}
+var _ webhook.Defaulter = &MSSQL{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (m *MsSQL) Default() {
+func (m *MSSQL) Default() {
 	if m == nil {
 		return
 	}
@@ -61,27 +61,27 @@ func (m *MsSQL) Default() {
 
 //+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-mssql,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=mssqls,verbs=create;update,versions=v1alpha2,name=vmssql.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &MsSQL{}
+var _ webhook.Validator = &MSSQL{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (m *MsSQL) ValidateCreate() (admission.Warnings, error) {
+func (m *MSSQL) ValidateCreate() (admission.Warnings, error) {
 	mssqllog.Info("validate create", "name", m.Name)
 
 	allErr := m.ValidateCreateOrUpdate()
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "MsSQL"}, m.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "MSSQL"}, m.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (m *MsSQL) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (m *MSSQL) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 	mssqllog.Info("validate update", "name", m.Name)
 
-	oldMsSQL := old.(*MsSQL)
+	oldMSSQL := old.(*MSSQL)
 	allErr := m.ValidateCreateOrUpdate()
 
-	if m.Spec.Topology == nil && ptr.Deref(oldMsSQL.Spec.Replicas, 0) == 1 && ptr.Deref(m.Spec.Replicas, 0) > 1 {
+	if m.Spec.Topology == nil && ptr.Deref(oldMSSQL.Spec.Replicas, 0) == 1 && ptr.Deref(m.Spec.Replicas, 0) > 1 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 			m.Name,
 			"Cannot scale up from 1 to more than 1 in standalone mode"))
@@ -91,11 +91,11 @@ func (m *MsSQL) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 		return nil, nil
 	}
 
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "MsSQL"}, m.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "MSSQL"}, m.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (m *MsSQL) ValidateDelete() (admission.Warnings, error) {
+func (m *MSSQL) ValidateDelete() (admission.Warnings, error) {
 	mssqllog.Info("validate delete", "name", m.Name)
 
 	var allErr field.ErrorList
@@ -103,12 +103,12 @@ func (m *MsSQL) ValidateDelete() (admission.Warnings, error) {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			m.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "MsSQL"}, m.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "MSSQL"}, m.Name, allErr)
 	}
 	return nil, nil
 }
 
-func (m *MsSQL) ValidateCreateOrUpdate() field.ErrorList {
+func (m *MSSQL) ValidateCreateOrUpdate() field.ErrorList {
 	var allErr field.ErrorList
 
 	if m.Spec.Version == "" {
@@ -202,19 +202,19 @@ func (m *MsSQL) ValidateCreateOrUpdate() field.ErrorList {
 
 // reserved volume and volumes mounts for mssql
 var mssqlReservedVolumes = []string{
-	MsSQLVolumeNameData,
-	MsSQLVolumeNameInitScript,
+	MSSQLVolumeNameData,
+	MSSQLVolumeNameInitScript,
 	// Add any additional reserved volume names here
 }
 
 var mssqlReservedVolumesMountPaths = []string{
-	MsSQLVolumeMountPathData,
-	MsSQLVolumeMountPathInitScript,
+	MSSQLVolumeMountPathData,
+	MSSQLVolumeMountPathInitScript,
 	// Add any additional reserved volume mount paths here
 }
 
-func mssqlValidateVersion(m *MsSQL) error {
-	var mssqlVersion catalog.MsSQLVersion
+func mssqlValidateVersion(m *MSSQL) error {
+	var mssqlVersion catalog.MSSQLVersion
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: m.Spec.Version,
 	}, &mssqlVersion)

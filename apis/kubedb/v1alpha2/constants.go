@@ -353,44 +353,44 @@ const (
 	SinglestoreVolumeNameData                = "data"
 	SinglestoreVolumeMountPathData           = "/var/lib/memsql"
 
-	// =========================== MsSQL Constants ============================
-	MsSQLSAUser                  = "sa"
-	MsSQLEndpointCertsSecretName = "endpoint-cert"
-	MsSQLDbmLoginSecretName      = "dbm-login-secret"
-	MsSQLMasterKeySecretName     = "master-key-secret"
+	// =========================== MSSQL Constants ============================
+	MSSQLSAUser                  = "sa"
+	MSSQLEndpointCertsSecretName = "endpoint-cert"
+	MSSQLDbmLoginSecretName      = "dbm-login-secret"
+	MSSQLMasterKeySecretName     = "master-key-secret"
 
-	MsSQLDatabasePodPrimary       = "primary"
-	MsSQLDatabasePodSecondary     = "secondary"
-	MsSQLSecondaryServiceAlias    = "secondary"
-	MsSQLSecondaryServicePortName = "secondary"
+	MSSQLDatabasePodPrimary       = "primary"
+	MSSQLDatabasePodSecondary     = "secondary"
+	MSSQLSecondaryServiceAlias    = "secondary"
+	MSSQLSecondaryServicePortName = "secondary"
 	// port related
-	MsSQLDatabasePortName              = "db"
-	MsSQLPrimaryServicePortName        = "primary"
-	MsSQLDatabasePort                  = 1433
-	MsSQLDatabaseMirroringEndpointPort = 5022
-	MsSQLCoordinatorPort               = 2381
+	MSSQLDatabasePortName              = "db"
+	MSSQLPrimaryServicePortName        = "primary"
+	MSSQLDatabasePort                  = 1433
+	MSSQLDatabaseMirroringEndpointPort = 5022
+	MSSQLCoordinatorPort               = 2381
 	// environment variables
 	EnvAcceptEula        = "ACCEPT_EULA"
-	EnvMsSQLEnableHADR   = "MSSQL_ENABLE_HADR"
-	EnvMsSQLAgentEnabled = "MSSQL_AGENT_ENABLED"
-	EnvMsSQLSAUsername   = "MSSQL_SA_USERNAME"
-	EnvMsSQLSAPassword   = "MSSQL_SA_PASSWORD"
+	EnvMSSQLEnableHADR   = "MSSQL_ENABLE_HADR"
+	EnvMSSQLAgentEnabled = "MSSQL_AGENT_ENABLED"
+	EnvMSSQLSAUsername   = "MSSQL_SA_USERNAME"
+	EnvMSSQLSAPassword   = "MSSQL_SA_PASSWORD"
 	// container related
-	MsSQLContainerName            = "mssql"
-	MsSQLCoordinatorContainerName = "mssql-coordinator"
-	MsSQLInitContainerName        = "mssql-init"
+	MSSQLContainerName            = "mssql"
+	MSSQLCoordinatorContainerName = "mssql-coordinator"
+	MSSQLInitContainerName        = "mssql-init"
 	// volume related
-	MsSQLVolumeNameData              = "data"
-	MsSQLVolumeMountPathData         = "/var/opt/mssql"
-	MsSQLVolumeNameInitScript        = "init-scripts"
-	MsSQLVolumeMountPathInitScript   = "/scripts"
-	MsSQLVolumeNameEndpointCert      = "endpoint-cert"
-	MsSQLVolumeMountPathEndpointCert = "/var/opt/mssql/endpoint-cert"
-	MsSQLVolumeNameCerts             = "certs"
-	MsSQLVolumeMountPathCerts        = "/var/opt/mssql/certs"
+	MSSQLVolumeNameData              = "data"
+	MSSQLVolumeMountPathData         = "/var/opt/mssql"
+	MSSQLVolumeNameInitScript        = "init-scripts"
+	MSSQLVolumeMountPathInitScript   = "/scripts"
+	MSSQLVolumeNameEndpointCert      = "endpoint-cert"
+	MSSQLVolumeMountPathEndpointCert = "/var/opt/mssql/endpoint-cert"
+	MSSQLVolumeNameCerts             = "certs"
+	MSSQLVolumeMountPathCerts        = "/var/opt/mssql/certs"
 	// tls related
-	MsSQLInternalTLSCrt = "tls.crt"
-	MsSQLInternalTLSKey = "tls.key"
+	MSSQLInternalTLSCrt = "tls.crt"
+	MSSQLInternalTLSKey = "tls.key"
 
 	// =========================== PostgreSQL Constants ============================
 	PostgresDatabasePortName          = "db"
