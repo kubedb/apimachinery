@@ -53,6 +53,10 @@ func (c *FakeCatalogV1alpha1) KafkaVersions() v1alpha1.KafkaVersionInterface {
 	return &FakeKafkaVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) MSSQLVersions() v1alpha1.MSSQLVersionInterface {
+	return &FakeMSSQLVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) MariaDBVersions() v1alpha1.MariaDBVersionInterface {
 	return &FakeMariaDBVersions{c}
 }
@@ -63,10 +67,6 @@ func (c *FakeCatalogV1alpha1) MemcachedVersions() v1alpha1.MemcachedVersionInter
 
 func (c *FakeCatalogV1alpha1) MongoDBVersions() v1alpha1.MongoDBVersionInterface {
 	return &FakeMongoDBVersions{c}
-}
-
-func (c *FakeCatalogV1alpha1) MsSQLVersions() v1alpha1.MsSQLVersionInterface {
-	return &FakeMsSQLVersions{c}
 }
 
 func (c *FakeCatalogV1alpha1) MySQLVersions() v1alpha1.MySQLVersionInterface {

@@ -36,14 +36,14 @@ type Interface interface {
 	KafkaConnectorVersions() KafkaConnectorVersionInformer
 	// KafkaVersions returns a KafkaVersionInformer.
 	KafkaVersions() KafkaVersionInformer
+	// MSSQLVersions returns a MSSQLVersionInformer.
+	MSSQLVersions() MSSQLVersionInformer
 	// MariaDBVersions returns a MariaDBVersionInformer.
 	MariaDBVersions() MariaDBVersionInformer
 	// MemcachedVersions returns a MemcachedVersionInformer.
 	MemcachedVersions() MemcachedVersionInformer
 	// MongoDBVersions returns a MongoDBVersionInformer.
 	MongoDBVersions() MongoDBVersionInformer
-	// MsSQLVersions returns a MsSQLVersionInformer.
-	MsSQLVersions() MsSQLVersionInformer
 	// MySQLVersions returns a MySQLVersionInformer.
 	MySQLVersions() MySQLVersionInformer
 	// PerconaXtraDBVersions returns a PerconaXtraDBVersionInformer.
@@ -109,6 +109,11 @@ func (v *version) KafkaVersions() KafkaVersionInformer {
 	return &kafkaVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
+// MSSQLVersions returns a MSSQLVersionInformer.
+func (v *version) MSSQLVersions() MSSQLVersionInformer {
+	return &mSSQLVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
 // MariaDBVersions returns a MariaDBVersionInformer.
 func (v *version) MariaDBVersions() MariaDBVersionInformer {
 	return &mariaDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
@@ -122,11 +127,6 @@ func (v *version) MemcachedVersions() MemcachedVersionInformer {
 // MongoDBVersions returns a MongoDBVersionInformer.
 func (v *version) MongoDBVersions() MongoDBVersionInformer {
 	return &mongoDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
-}
-
-// MsSQLVersions returns a MsSQLVersionInformer.
-func (v *version) MsSQLVersions() MsSQLVersionInformer {
-	return &msSQLVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // MySQLVersions returns a MySQLVersionInformer.

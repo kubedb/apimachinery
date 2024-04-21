@@ -30,31 +30,31 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-// FakeMsSQLOpsRequests implements MsSQLOpsRequestInterface
-type FakeMsSQLOpsRequests struct {
+// FakeMSSQLOpsRequests implements MSSQLOpsRequestInterface
+type FakeMSSQLOpsRequests struct {
 	Fake *FakeOpsV1alpha1
 	ns   string
 }
 
 var mssqlopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("mssqlopsrequests")
 
-var mssqlopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("MsSQLOpsRequest")
+var mssqlopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("MSSQLOpsRequest")
 
-// Get takes name of the msSQLOpsRequest, and returns the corresponding msSQLOpsRequest object, and an error if there is any.
-func (c *FakeMsSQLOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MsSQLOpsRequest, err error) {
+// Get takes name of the mSSQLOpsRequest, and returns the corresponding mSSQLOpsRequest object, and an error if there is any.
+func (c *FakeMSSQLOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MSSQLOpsRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mssqlopsrequestsResource, c.ns, name), &v1alpha1.MsSQLOpsRequest{})
+		Invokes(testing.NewGetAction(mssqlopsrequestsResource, c.ns, name), &v1alpha1.MSSQLOpsRequest{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha1.MsSQLOpsRequest), err
+	return obj.(*v1alpha1.MSSQLOpsRequest), err
 }
 
-// List takes label and field selectors, and returns the list of MsSQLOpsRequests that match those selectors.
-func (c *FakeMsSQLOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MsSQLOpsRequestList, err error) {
+// List takes label and field selectors, and returns the list of MSSQLOpsRequests that match those selectors.
+func (c *FakeMSSQLOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MSSQLOpsRequestList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mssqlopsrequestsResource, mssqlopsrequestsKind, c.ns, opts), &v1alpha1.MsSQLOpsRequestList{})
+		Invokes(testing.NewListAction(mssqlopsrequestsResource, mssqlopsrequestsKind, c.ns, opts), &v1alpha1.MSSQLOpsRequestList{})
 
 	if obj == nil {
 		return nil, err
@@ -64,8 +64,8 @@ func (c *FakeMsSQLOpsRequests) List(ctx context.Context, opts v1.ListOptions) (r
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &v1alpha1.MsSQLOpsRequestList{ListMeta: obj.(*v1alpha1.MsSQLOpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MsSQLOpsRequestList).Items {
+	list := &v1alpha1.MSSQLOpsRequestList{ListMeta: obj.(*v1alpha1.MSSQLOpsRequestList).ListMeta}
+	for _, item := range obj.(*v1alpha1.MSSQLOpsRequestList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -73,70 +73,70 @@ func (c *FakeMsSQLOpsRequests) List(ctx context.Context, opts v1.ListOptions) (r
 	return list, err
 }
 
-// Watch returns a watch.Interface that watches the requested msSQLOpsRequests.
-func (c *FakeMsSQLOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested mSSQLOpsRequests.
+func (c *FakeMSSQLOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(mssqlopsrequestsResource, c.ns, opts))
 
 }
 
-// Create takes the representation of a msSQLOpsRequest and creates it.  Returns the server's representation of the msSQLOpsRequest, and an error, if there is any.
-func (c *FakeMsSQLOpsRequests) Create(ctx context.Context, msSQLOpsRequest *v1alpha1.MsSQLOpsRequest, opts v1.CreateOptions) (result *v1alpha1.MsSQLOpsRequest, err error) {
+// Create takes the representation of a mSSQLOpsRequest and creates it.  Returns the server's representation of the mSSQLOpsRequest, and an error, if there is any.
+func (c *FakeMSSQLOpsRequests) Create(ctx context.Context, mSSQLOpsRequest *v1alpha1.MSSQLOpsRequest, opts v1.CreateOptions) (result *v1alpha1.MSSQLOpsRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mssqlopsrequestsResource, c.ns, msSQLOpsRequest), &v1alpha1.MsSQLOpsRequest{})
+		Invokes(testing.NewCreateAction(mssqlopsrequestsResource, c.ns, mSSQLOpsRequest), &v1alpha1.MSSQLOpsRequest{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha1.MsSQLOpsRequest), err
+	return obj.(*v1alpha1.MSSQLOpsRequest), err
 }
 
-// Update takes the representation of a msSQLOpsRequest and updates it. Returns the server's representation of the msSQLOpsRequest, and an error, if there is any.
-func (c *FakeMsSQLOpsRequests) Update(ctx context.Context, msSQLOpsRequest *v1alpha1.MsSQLOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.MsSQLOpsRequest, err error) {
+// Update takes the representation of a mSSQLOpsRequest and updates it. Returns the server's representation of the mSSQLOpsRequest, and an error, if there is any.
+func (c *FakeMSSQLOpsRequests) Update(ctx context.Context, mSSQLOpsRequest *v1alpha1.MSSQLOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.MSSQLOpsRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mssqlopsrequestsResource, c.ns, msSQLOpsRequest), &v1alpha1.MsSQLOpsRequest{})
+		Invokes(testing.NewUpdateAction(mssqlopsrequestsResource, c.ns, mSSQLOpsRequest), &v1alpha1.MSSQLOpsRequest{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha1.MsSQLOpsRequest), err
+	return obj.(*v1alpha1.MSSQLOpsRequest), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMsSQLOpsRequests) UpdateStatus(ctx context.Context, msSQLOpsRequest *v1alpha1.MsSQLOpsRequest, opts v1.UpdateOptions) (*v1alpha1.MsSQLOpsRequest, error) {
+func (c *FakeMSSQLOpsRequests) UpdateStatus(ctx context.Context, mSSQLOpsRequest *v1alpha1.MSSQLOpsRequest, opts v1.UpdateOptions) (*v1alpha1.MSSQLOpsRequest, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mssqlopsrequestsResource, "status", c.ns, msSQLOpsRequest), &v1alpha1.MsSQLOpsRequest{})
+		Invokes(testing.NewUpdateSubresourceAction(mssqlopsrequestsResource, "status", c.ns, mSSQLOpsRequest), &v1alpha1.MSSQLOpsRequest{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha1.MsSQLOpsRequest), err
+	return obj.(*v1alpha1.MSSQLOpsRequest), err
 }
 
-// Delete takes name of the msSQLOpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeMsSQLOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+// Delete takes name of the mSSQLOpsRequest and deletes it. Returns an error if one occurs.
+func (c *FakeMSSQLOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mssqlopsrequestsResource, c.ns, name, opts), &v1alpha1.MsSQLOpsRequest{})
+		Invokes(testing.NewDeleteActionWithOptions(mssqlopsrequestsResource, c.ns, name, opts), &v1alpha1.MSSQLOpsRequest{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeMsSQLOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeMSSQLOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(mssqlopsrequestsResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &v1alpha1.MsSQLOpsRequestList{})
+	_, err := c.Fake.Invokes(action, &v1alpha1.MSSQLOpsRequestList{})
 	return err
 }
 
-// Patch applies the patch and returns the patched msSQLOpsRequest.
-func (c *FakeMsSQLOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MsSQLOpsRequest, err error) {
+// Patch applies the patch and returns the patched mSSQLOpsRequest.
+func (c *FakeMSSQLOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MSSQLOpsRequest, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mssqlopsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.MsSQLOpsRequest{})
+		Invokes(testing.NewPatchSubresourceAction(mssqlopsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.MSSQLOpsRequest{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha1.MsSQLOpsRequest), err
+	return obj.(*v1alpha1.MSSQLOpsRequest), err
 }

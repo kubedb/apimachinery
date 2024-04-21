@@ -27,50 +27,50 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (_ *MsSQLOpsRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMsSQLOpsRequest))
+func (_ *MSSQLOpsRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMSSQLOpsRequest))
 }
 
-var _ apis.ResourceInfo = &MsSQLOpsRequest{}
+var _ apis.ResourceInfo = &MSSQLOpsRequest{}
 
-func (k *MsSQLOpsRequest) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", ResourcePluralMsSQLOpsRequest, ops.GroupName)
+func (k *MSSQLOpsRequest) ResourceFQN() string {
+	return fmt.Sprintf("%s.%s", ResourcePluralMSSQLOpsRequest, ops.GroupName)
 }
 
-func (k *MsSQLOpsRequest) ResourceShortCode() string {
-	return ResourceCodeMsSQLOpsRequest
+func (k *MSSQLOpsRequest) ResourceShortCode() string {
+	return ResourceCodeMSSQLOpsRequest
 }
 
-func (k *MsSQLOpsRequest) ResourceKind() string {
-	return ResourceKindMsSQLOpsRequest
+func (k *MSSQLOpsRequest) ResourceKind() string {
+	return ResourceKindMSSQLOpsRequest
 }
 
-func (k *MsSQLOpsRequest) ResourceSingular() string {
-	return ResourceSingularMsSQLOpsRequest
+func (k *MSSQLOpsRequest) ResourceSingular() string {
+	return ResourceSingularMSSQLOpsRequest
 }
 
-func (k *MsSQLOpsRequest) ResourcePlural() string {
-	return ResourcePluralMsSQLOpsRequest
+func (k *MSSQLOpsRequest) ResourcePlural() string {
+	return ResourcePluralMSSQLOpsRequest
 }
 
-var _ Accessor = &MsSQLOpsRequest{}
+var _ Accessor = &MSSQLOpsRequest{}
 
-func (k *MsSQLOpsRequest) GetObjectMeta() metav1.ObjectMeta {
+func (k *MSSQLOpsRequest) GetObjectMeta() metav1.ObjectMeta {
 	return k.ObjectMeta
 }
 
-func (k *MsSQLOpsRequest) GetDBRefName() string {
+func (k *MSSQLOpsRequest) GetDBRefName() string {
 	return k.Spec.DatabaseRef.Name
 }
 
-func (k *MsSQLOpsRequest) GetRequestType() any {
+func (k *MSSQLOpsRequest) GetRequestType() any {
 	return k.Spec.Type
 }
 
-func (k *MsSQLOpsRequest) GetStatus() OpsRequestStatus {
+func (k *MSSQLOpsRequest) GetStatus() OpsRequestStatus {
 	return k.Status
 }
 
-func (k *MsSQLOpsRequest) SetStatus(s OpsRequestStatus) {
+func (k *MSSQLOpsRequest) SetStatus(s OpsRequestStatus) {
 	k.Status = s
 }

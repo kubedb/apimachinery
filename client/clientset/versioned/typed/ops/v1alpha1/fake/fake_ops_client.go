@@ -41,6 +41,10 @@ func (c *FakeOpsV1alpha1) KafkaOpsRequests(namespace string) v1alpha1.KafkaOpsRe
 	return &FakeKafkaOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) MSSQLOpsRequests(namespace string) v1alpha1.MSSQLOpsRequestInterface {
+	return &FakeMSSQLOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) MariaDBOpsRequests(namespace string) v1alpha1.MariaDBOpsRequestInterface {
 	return &FakeMariaDBOpsRequests{c, namespace}
 }
@@ -51,10 +55,6 @@ func (c *FakeOpsV1alpha1) MemcachedOpsRequests(namespace string) v1alpha1.Memcac
 
 func (c *FakeOpsV1alpha1) MongoDBOpsRequests(namespace string) v1alpha1.MongoDBOpsRequestInterface {
 	return &FakeMongoDBOpsRequests{c, namespace}
-}
-
-func (c *FakeOpsV1alpha1) MsSQLOpsRequests(namespace string) v1alpha1.MsSQLOpsRequestInterface {
-	return &FakeMsSQLOpsRequests{c, namespace}
 }
 
 func (c *FakeOpsV1alpha1) MySQLOpsRequests(namespace string) v1alpha1.MySQLOpsRequestInterface {

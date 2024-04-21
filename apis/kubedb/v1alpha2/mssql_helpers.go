@@ -40,74 +40,74 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
-type MsSQLApp struct {
-	*MsSQL
+type MSSQLApp struct {
+	*MSSQL
 }
 
-func (m *MsSQL) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMsSQL))
+func (m *MSSQL) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMSSQL))
 }
 
-func (m MsSQLApp) Name() string {
-	return m.MsSQL.Name
+func (m MSSQLApp) Name() string {
+	return m.MSSQL.Name
 }
 
-func (m MsSQLApp) Type() appcat.AppType {
-	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularMsSQL))
+func (m MSSQLApp) Type() appcat.AppType {
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularMSSQL))
 }
 
-func (m *MsSQL) ResourceKind() string {
-	return ResourceKindMsSQL
+func (m *MSSQL) ResourceKind() string {
+	return ResourceKindMSSQL
 }
 
-func (m *MsSQL) ResourcePlural() string {
-	return ResourcePluralMsSQL
+func (m *MSSQL) ResourcePlural() string {
+	return ResourcePluralMSSQL
 }
 
-func (m *MsSQL) ResourceFQN() string {
+func (m *MSSQL) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", m.ResourcePlural(), kubedb.GroupName)
 }
 
 // Owner returns owner reference to resources
-func (m *MsSQL) Owner() *meta.OwnerReference {
+func (m *MSSQL) Owner() *meta.OwnerReference {
 	return meta.NewControllerRef(m, SchemeGroupVersion.WithKind(m.ResourceKind()))
 }
 
-func (m *MsSQL) OffshootName() string {
+func (m *MSSQL) OffshootName() string {
 	return m.Name
 }
 
-func (m *MsSQL) ServiceName() string {
+func (m *MSSQL) ServiceName() string {
 	return m.OffshootName()
 }
 
-func (m *MsSQL) SecondaryServiceName() string {
+func (m *MSSQL) SecondaryServiceName() string {
 	return metautil.NameWithPrefix(m.ServiceName(), "secondary")
 }
 
-func (m *MsSQL) GoverningServiceName() string {
+func (m *MSSQL) GoverningServiceName() string {
 	return metautil.NameWithSuffix(m.ServiceName(), "pods")
 }
 
-func (m *MsSQL) DefaultUserCredSecretName(username string) string {
+func (m *MSSQL) DefaultUserCredSecretName(username string) string {
 	return metautil.NameWithSuffix(m.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", username), "_", "-"))
 }
 
-func (m *MsSQL) offshootLabels(selector, override map[string]string) map[string]string {
+func (m *MSSQL) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[metautil.ComponentLabelKey] = ComponentDatabase
 	return metautil.FilterKeys(kubedb.GroupName, selector, metautil.OverwriteKeys(nil, m.Labels, override))
 }
 
-func (m *MsSQL) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+func (m *MSSQL) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
 	return m.offshootLabels(metautil.OverwriteKeys(m.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
-func (m *MsSQL) OffshootLabels() map[string]string {
+func (m *MSSQL) OffshootLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
 
-func (m *MsSQL) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
+func (m *MSSQL) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
 		metautil.NameLabelKey:      m.ResourceFQN(),
 		metautil.InstanceLabelKey:  m.Name,
@@ -116,72 +116,72 @@ func (m *MsSQL) OffshootSelectors(extraSelectors ...map[string]string) map[strin
 	return metautil.OverwriteKeys(selector, extraSelectors...)
 }
 
-func (m *MsSQL) IsAvailabilityGroup() bool {
+func (m *MSSQL) IsAvailabilityGroup() bool {
 	return m.Spec.Topology != nil &&
 		m.Spec.Topology.Mode != nil &&
-		*m.Spec.Topology.Mode == MsSQLModeAvailabilityGroup
+		*m.Spec.Topology.Mode == MSSQLModeAvailabilityGroup
 }
 
-func (m *MsSQL) IsStandalone() bool {
+func (m *MSSQL) IsStandalone() bool {
 	return m.Spec.Topology == nil
 }
 
-func (m *MsSQL) PVCName(alias string) string {
+func (m *MSSQL) PVCName(alias string) string {
 	return metautil.NameWithSuffix(m.Name, alias)
 }
 
-func (m *MsSQL) PodLabels(extraLabels ...map[string]string) map[string]string {
+func (m *MSSQL) PodLabels(extraLabels ...map[string]string) map[string]string {
 	return m.offshootLabels(metautil.OverwriteKeys(m.OffshootSelectors(), extraLabels...), m.Spec.PodTemplate.Labels)
 }
 
-func (m *MsSQL) PodLabel(podTemplate *ofst.PodTemplateSpec) map[string]string {
+func (m *MSSQL) PodLabel(podTemplate *ofst.PodTemplateSpec) map[string]string {
 	if podTemplate != nil && podTemplate.Labels != nil {
 		return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Labels)
 	}
 	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
 
-func (m *MsSQL) ConfigSecretName() string {
+func (m *MSSQL) ConfigSecretName() string {
 	return metautil.NameWithSuffix(m.OffshootName(), "config")
 }
 
-func (m *MsSQL) PetSetName() string {
+func (m *MSSQL) PetSetName() string {
 	return m.OffshootName()
 }
 
-func (m *MsSQL) ServiceAccountName() string {
+func (m *MSSQL) ServiceAccountName() string {
 	return m.OffshootName()
 }
 
-func (m *MsSQL) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
+func (m *MSSQL) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
 	return m.offshootLabels(metautil.OverwriteKeys(m.OffshootSelectors(), extraLabels...), m.Spec.PodTemplate.Controller.Labels)
 }
 
-func (m *MsSQL) PodControllerLabel(podTemplate *ofst.PodTemplateSpec) map[string]string {
+func (m *MSSQL) PodControllerLabel(podTemplate *ofst.PodTemplateSpec) map[string]string {
 	if podTemplate != nil && podTemplate.Controller.Labels != nil {
 		return m.offshootLabels(m.OffshootSelectors(), podTemplate.Controller.Labels)
 	}
 	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
 
-func (m *MsSQL) GetPersistentSecrets() []string {
+func (m *MSSQL) GetPersistentSecrets() []string {
 	var secrets []string
 	if m.Spec.AuthSecret != nil {
 		secrets = append(secrets, m.Spec.AuthSecret.Name)
 	}
 
-	secrets = append(secrets, MsSQLEndpointCertsSecretName)
-	secrets = append(secrets, MsSQLDbmLoginSecretName)
-	secrets = append(secrets, MsSQLMasterKeySecretName)
+	secrets = append(secrets, MSSQLEndpointCertsSecretName)
+	secrets = append(secrets, MSSQLDbmLoginSecretName)
+	secrets = append(secrets, MSSQLMasterKeySecretName)
 
 	return secrets
 }
 
-func (m *MsSQL) AppBindingMeta() appcat.AppBindingMeta {
-	return &MsSQLApp{m}
+func (m *MSSQL) AppBindingMeta() appcat.AppBindingMeta {
+	return &MSSQLApp{m}
 }
 
-func (m MsSQL) SetHealthCheckerDefaults() {
+func (m MSSQL) SetHealthCheckerDefaults() {
 	if m.Spec.HealthChecker.PeriodSeconds == nil {
 		m.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
 	}
@@ -193,22 +193,22 @@ func (m MsSQL) SetHealthCheckerDefaults() {
 	}
 }
 
-func (m MsSQL) GetAuthSecretName() string {
+func (m MSSQL) GetAuthSecretName() string {
 	if m.Spec.AuthSecret != nil && m.Spec.AuthSecret.Name != "" {
 		return m.Spec.AuthSecret.Name
 	}
 	return metautil.NameWithSuffix(m.OffshootName(), "auth")
 }
 
-func (m *MsSQL) GetNameSpacedName() string {
+func (m *MSSQL) GetNameSpacedName() string {
 	return m.Namespace + "/" + m.Name
 }
 
-func (m *MsSQL) PrimaryServiceDNS() string {
+func (m *MSSQL) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
 }
 
-func (m *MsSQL) SetDefaults() {
+func (m *MSSQL) SetDefaults() {
 	if m == nil {
 		return
 	}
@@ -225,7 +225,7 @@ func (m *MsSQL) SetDefaults() {
 		}
 	} else {
 		if m.Spec.LeaderElection == nil {
-			m.Spec.LeaderElection = &MsSQLLeaderElectionConfig{
+			m.Spec.LeaderElection = &MSSQLLeaderElectionConfig{
 				// The upper limit of election timeout is 50000ms (50s), which should only be used when deploying a
 				// globally-distributed etcd cluster. A reasonable round-trip time for the continental United States is around 130-150ms,
 				// and the time between US and Japan is around 350-400ms. If the network has uneven performance or regular packet
@@ -252,12 +252,12 @@ func (m *MsSQL) SetDefaults() {
 		m.Spec.PodTemplate = &ofst.PodTemplateSpec{}
 	}
 
-	var mssqlVersion catalog.MsSQLVersion
+	var mssqlVersion catalog.MSSQLVersion
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: m.Spec.Version,
 	}, &mssqlVersion)
 	if err != nil {
-		klog.Errorf("can't get the MsSQL version object %s for %s \n", m.Spec.Version, err.Error())
+		klog.Errorf("can't get the MSSQL version object %s for %s \n", m.Spec.Version, err.Error())
 		return
 	}
 
@@ -268,7 +268,7 @@ func (m *MsSQL) SetDefaults() {
 	m.setDefaultContainerResourceLimits(m.Spec.PodTemplate)
 }
 
-func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVersion, podTemplate *ofst.PodTemplateSpec) {
+func (m *MSSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MSSQLVersion, podTemplate *ofst.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -279,10 +279,10 @@ func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVe
 		podTemplate.Spec.SecurityContext.FSGroup = mssqlVersion.Spec.SecurityContext.RunAsGroup
 	}
 
-	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLContainerName)
+	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, MSSQLContainerName)
 	if container == nil {
 		container = &core.Container{
-			Name: MsSQLContainerName,
+			Name: MSSQLContainerName,
 		}
 	}
 	if container.SecurityContext == nil {
@@ -293,10 +293,10 @@ func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVe
 
 	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 
-	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, MsSQLInitContainerName)
+	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, MSSQLInitContainerName)
 	if initContainer == nil {
 		initContainer = &core.Container{
-			Name: MsSQLInitContainerName,
+			Name: MSSQLInitContainerName,
 		}
 	}
 	if initContainer.SecurityContext == nil {
@@ -306,10 +306,10 @@ func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVe
 	podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 
 	if m.IsAvailabilityGroup() {
-		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLCoordinatorContainerName)
+		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MSSQLCoordinatorContainerName)
 		if coordinatorContainer == nil {
 			coordinatorContainer = &core.Container{
-				Name: MsSQLCoordinatorContainerName,
+				Name: MSSQLCoordinatorContainerName,
 			}
 		}
 		if coordinatorContainer.SecurityContext == nil {
@@ -320,7 +320,7 @@ func (m *MsSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVe
 	}
 }
 
-func (m *MsSQL) assignDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQLVersion, sc *core.SecurityContext, isMainContainer bool) {
+func (m *MSSQL) assignDefaultContainerSecurityContext(mssqlVersion *catalog.MSSQLVersion, sc *core.SecurityContext, isMainContainer bool) {
 	if sc.AllowPrivilegeEscalation == nil {
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
@@ -350,19 +350,19 @@ func (m *MsSQL) assignDefaultContainerSecurityContext(mssqlVersion *catalog.MsSQ
 	}
 }
 
-func (m *MsSQL) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
-	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLContainerName)
+func (m *MSSQL) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
+	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MSSQLContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResourcesMemoryIntensive)
 	}
 
-	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, MsSQLInitContainerName)
+	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, MSSQLInitContainerName)
 	if initContainer != nil && (initContainer.Resources.Requests == nil && initContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&initContainer.Resources, DefaultInitContainerResource)
 	}
 
 	if m.IsAvailabilityGroup() {
-		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MsSQLCoordinatorContainerName)
+		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MSSQLCoordinatorContainerName)
 		if coordinatorContainer != nil && (coordinatorContainer.Resources.Requests == nil && coordinatorContainer.Resources.Limits == nil) {
 			apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, CoordinatorDefaultResources)
 		}

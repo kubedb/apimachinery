@@ -49,6 +49,10 @@ func (c *FakeKubedbV1alpha2) Kafkas(namespace string) v1alpha2.KafkaInterface {
 	return &FakeKafkas{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) MSSQLs(namespace string) v1alpha2.MSSQLInterface {
+	return &FakeMSSQLs{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) MariaDBs(namespace string) v1alpha2.MariaDBInterface {
 	return &FakeMariaDBs{c, namespace}
 }
@@ -59,10 +63,6 @@ func (c *FakeKubedbV1alpha2) Memcacheds(namespace string) v1alpha2.MemcachedInte
 
 func (c *FakeKubedbV1alpha2) MongoDBs(namespace string) v1alpha2.MongoDBInterface {
 	return &FakeMongoDBs{c, namespace}
-}
-
-func (c *FakeKubedbV1alpha2) MsSQLs(namespace string) v1alpha2.MsSQLInterface {
-	return &FakeMsSQLs{c, namespace}
 }
 
 func (c *FakeKubedbV1alpha2) MySQLs(namespace string) v1alpha2.MySQLInterface {

@@ -33,59 +33,59 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// MsSQLInformer provides access to a shared informer and lister for
-// MsSQLs.
-type MsSQLInformer interface {
+// MSSQLInformer provides access to a shared informer and lister for
+// MSSQLs.
+type MSSQLInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha2.MsSQLLister
+	Lister() v1alpha2.MSSQLLister
 }
 
-type msSQLInformer struct {
+type mSSQLInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewMsSQLInformer constructs a new informer for MsSQL type.
+// NewMSSQLInformer constructs a new informer for MSSQL type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewMsSQLInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredMsSQLInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewMSSQLInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredMSSQLInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredMsSQLInformer constructs a new informer for MsSQL type.
+// NewFilteredMSSQLInformer constructs a new informer for MSSQL type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredMsSQLInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredMSSQLInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().MsSQLs(namespace).List(context.TODO(), options)
+				return client.KubedbV1alpha2().MSSQLs(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().MsSQLs(namespace).Watch(context.TODO(), options)
+				return client.KubedbV1alpha2().MSSQLs(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&kubedbv1alpha2.MsSQL{},
+		&kubedbv1alpha2.MSSQL{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *msSQLInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredMsSQLInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *mSSQLInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredMSSQLInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *msSQLInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedbv1alpha2.MsSQL{}, f.defaultInformer)
+func (f *mSSQLInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&kubedbv1alpha2.MSSQL{}, f.defaultInformer)
 }
 
-func (f *msSQLInformer) Lister() v1alpha2.MsSQLLister {
-	return v1alpha2.NewMsSQLLister(f.Informer().GetIndexer())
+func (f *mSSQLInformer) Lister() v1alpha2.MSSQLLister {
+	return v1alpha2.NewMSSQLLister(f.Informer().GetIndexer())
 }

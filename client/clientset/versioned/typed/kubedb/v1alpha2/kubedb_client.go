@@ -34,10 +34,10 @@ type KubedbV1alpha2Interface interface {
 	EtcdsGetter
 	FerretDBsGetter
 	KafkasGetter
+	MSSQLsGetter
 	MariaDBsGetter
 	MemcachedsGetter
 	MongoDBsGetter
-	MsSQLsGetter
 	MySQLsGetter
 	PerconaXtraDBsGetter
 	PgBouncersGetter
@@ -77,6 +77,10 @@ func (c *KubedbV1alpha2Client) Kafkas(namespace string) KafkaInterface {
 	return newKafkas(c, namespace)
 }
 
+func (c *KubedbV1alpha2Client) MSSQLs(namespace string) MSSQLInterface {
+	return newMSSQLs(c, namespace)
+}
+
 func (c *KubedbV1alpha2Client) MariaDBs(namespace string) MariaDBInterface {
 	return newMariaDBs(c, namespace)
 }
@@ -87,10 +91,6 @@ func (c *KubedbV1alpha2Client) Memcacheds(namespace string) MemcachedInterface {
 
 func (c *KubedbV1alpha2Client) MongoDBs(namespace string) MongoDBInterface {
 	return newMongoDBs(c, namespace)
-}
-
-func (c *KubedbV1alpha2Client) MsSQLs(namespace string) MsSQLInterface {
-	return newMsSQLs(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) MySQLs(namespace string) MySQLInterface {

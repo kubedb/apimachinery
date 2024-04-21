@@ -112,14 +112,14 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().KafkaConnectorVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("kafkaversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().KafkaVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("mssqlversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().MSSQLVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("mariadbversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().MariaDBVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("memcachedversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().MemcachedVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("mongodbversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().MongoDBVersions().Informer()}, nil
-	case catalogv1alpha1.SchemeGroupVersion.WithResource("mssqlversions"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().MsSQLVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("mysqlversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().MySQLVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("perconaxtradbversions"):
@@ -164,14 +164,14 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().FerretDBs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("kafkas"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Kafkas().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("mssqls"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().MSSQLs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("mariadbs"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().MariaDBs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("memcacheds"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Memcacheds().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("mongodbs"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().MongoDBs().Informer()}, nil
-	case v1alpha2.SchemeGroupVersion.WithResource("mssqls"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().MsSQLs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("mysqls"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().MySQLs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("perconaxtradbs"):
@@ -204,14 +204,14 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().EtcdOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("kafkaopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().KafkaOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("mssqlopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MSSQLOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("mariadbopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MariaDBOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("memcachedopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MemcachedOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("mongodbopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MongoDBOpsRequests().Informer()}, nil
-	case opsv1alpha1.SchemeGroupVersion.WithResource("mssqlopsrequests"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MsSQLOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("mysqlopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MySQLOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("perconaxtradbopsrequests"):

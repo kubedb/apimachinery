@@ -26,38 +26,38 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-// MsSQLVersionLister helps list MsSQLVersions.
+// MSSQLVersionLister helps list MSSQLVersions.
 // All objects returned here must be treated as read-only.
-type MsSQLVersionLister interface {
-	// List lists all MsSQLVersions in the indexer.
+type MSSQLVersionLister interface {
+	// List lists all MSSQLVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MsSQLVersion, err error)
-	// Get retrieves the MsSQLVersion from the index for a given name.
+	List(selector labels.Selector) (ret []*v1alpha1.MSSQLVersion, err error)
+	// Get retrieves the MSSQLVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MsSQLVersion, error)
-	MsSQLVersionListerExpansion
+	Get(name string) (*v1alpha1.MSSQLVersion, error)
+	MSSQLVersionListerExpansion
 }
 
-// msSQLVersionLister implements the MsSQLVersionLister interface.
-type msSQLVersionLister struct {
+// mSSQLVersionLister implements the MSSQLVersionLister interface.
+type mSSQLVersionLister struct {
 	indexer cache.Indexer
 }
 
-// NewMsSQLVersionLister returns a new MsSQLVersionLister.
-func NewMsSQLVersionLister(indexer cache.Indexer) MsSQLVersionLister {
-	return &msSQLVersionLister{indexer: indexer}
+// NewMSSQLVersionLister returns a new MSSQLVersionLister.
+func NewMSSQLVersionLister(indexer cache.Indexer) MSSQLVersionLister {
+	return &mSSQLVersionLister{indexer: indexer}
 }
 
-// List lists all MsSQLVersions in the indexer.
-func (s *msSQLVersionLister) List(selector labels.Selector) (ret []*v1alpha1.MsSQLVersion, err error) {
+// List lists all MSSQLVersions in the indexer.
+func (s *mSSQLVersionLister) List(selector labels.Selector) (ret []*v1alpha1.MSSQLVersion, err error) {
 	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MsSQLVersion))
+		ret = append(ret, m.(*v1alpha1.MSSQLVersion))
 	})
 	return ret, err
 }
 
-// Get retrieves the MsSQLVersion from the index for a given name.
-func (s *msSQLVersionLister) Get(name string) (*v1alpha1.MsSQLVersion, error) {
+// Get retrieves the MSSQLVersion from the index for a given name.
+func (s *mSSQLVersionLister) Get(name string) (*v1alpha1.MSSQLVersion, error) {
 	obj, exists, err := s.indexer.GetByKey(name)
 	if err != nil {
 		return nil, err
@@ -65,5 +65,5 @@ func (s *msSQLVersionLister) Get(name string) (*v1alpha1.MsSQLVersion, error) {
 	if !exists {
 		return nil, errors.NewNotFound(v1alpha1.Resource("mssqlversion"), name)
 	}
-	return obj.(*v1alpha1.MsSQLVersion), nil
+	return obj.(*v1alpha1.MSSQLVersion), nil
 }

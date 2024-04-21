@@ -30,14 +30,14 @@ type Interface interface {
 	EtcdOpsRequests() EtcdOpsRequestInformer
 	// KafkaOpsRequests returns a KafkaOpsRequestInformer.
 	KafkaOpsRequests() KafkaOpsRequestInformer
+	// MSSQLOpsRequests returns a MSSQLOpsRequestInformer.
+	MSSQLOpsRequests() MSSQLOpsRequestInformer
 	// MariaDBOpsRequests returns a MariaDBOpsRequestInformer.
 	MariaDBOpsRequests() MariaDBOpsRequestInformer
 	// MemcachedOpsRequests returns a MemcachedOpsRequestInformer.
 	MemcachedOpsRequests() MemcachedOpsRequestInformer
 	// MongoDBOpsRequests returns a MongoDBOpsRequestInformer.
 	MongoDBOpsRequests() MongoDBOpsRequestInformer
-	// MsSQLOpsRequests returns a MsSQLOpsRequestInformer.
-	MsSQLOpsRequests() MsSQLOpsRequestInformer
 	// MySQLOpsRequests returns a MySQLOpsRequestInformer.
 	MySQLOpsRequests() MySQLOpsRequestInformer
 	// PerconaXtraDBOpsRequests returns a PerconaXtraDBOpsRequestInformer.
@@ -80,6 +80,11 @@ func (v *version) KafkaOpsRequests() KafkaOpsRequestInformer {
 	return &kafkaOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// MSSQLOpsRequests returns a MSSQLOpsRequestInformer.
+func (v *version) MSSQLOpsRequests() MSSQLOpsRequestInformer {
+	return &mSSQLOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // MariaDBOpsRequests returns a MariaDBOpsRequestInformer.
 func (v *version) MariaDBOpsRequests() MariaDBOpsRequestInformer {
 	return &mariaDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -93,11 +98,6 @@ func (v *version) MemcachedOpsRequests() MemcachedOpsRequestInformer {
 // MongoDBOpsRequests returns a MongoDBOpsRequestInformer.
 func (v *version) MongoDBOpsRequests() MongoDBOpsRequestInformer {
 	return &mongoDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// MsSQLOpsRequests returns a MsSQLOpsRequestInformer.
-func (v *version) MsSQLOpsRequests() MsSQLOpsRequestInformer {
-	return &msSQLOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MySQLOpsRequests returns a MySQLOpsRequestInformer.

@@ -23,10 +23,10 @@ import (
 )
 
 const (
-	ResourceCodeMsSQLOpsRequest     = "msops"
-	ResourceKindMsSQLOpsRequest     = "MsSQLOpsRequest"
-	ResourceSingularMsSQLOpsRequest = "mssqlopsrequest"
-	ResourcePluralMsSQLOpsRequest   = "mssqlopsrequests"
+	ResourceCodeMSSQLOpsRequest     = "msops"
+	ResourceKindMSSQLOpsRequest     = "MSSQLOpsRequest"
+	ResourceSingularMSSQLOpsRequest = "mssqlopsrequest"
+	ResourcePluralMSSQLOpsRequest   = "mssqlopsrequests"
 )
 
 // MsSDBOpsRequest defines a MsS DBA operation.
@@ -41,29 +41,29 @@ const (
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-type MsSQLOpsRequest struct {
+type MSSQLOpsRequest struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              MsSQLOpsRequestSpec `json:"spec,omitempty"`
+	Spec              MSSQLOpsRequestSpec `json:"spec,omitempty"`
 	Status            OpsRequestStatus    `json:"status,omitempty"`
 }
 
-// MsSQLOpsRequestSpec is the spec for MsSQLOpsRequest
-type MsSQLOpsRequestSpec struct {
-	// Specifies the MsSQL reference
+// MSSQLOpsRequestSpec is the spec for MSSQLOpsRequest
+type MSSQLOpsRequestSpec struct {
+	// Specifies the MSSQL reference
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
-	Type MsSQLOpsRequestType `json:"type"`
-	// Specifies information necessary for upgrading MsSQL
-	UpdateVersion *MsSQLUpdateVersionSpec `json:"updateVersion,omitempty"`
+	Type MSSQLOpsRequestType `json:"type"`
+	// Specifies information necessary for upgrading MSSQL
+	UpdateVersion *MSSQLUpdateVersionSpec `json:"updateVersion,omitempty"`
 	// Specifies information necessary for horizontal scaling
-	HorizontalScaling *MsSQLHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
+	HorizontalScaling *MSSQLHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
-	VerticalScaling *MsSQLVerticalScalingSpec `json:"verticalScaling,omitempty"`
+	VerticalScaling *MSSQLVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for volume expansion
-	VolumeExpansion *MsSQLVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
-	// Specifies information necessary for custom configuration of MsSQL
-	Configuration *MsSQLCustomConfigurationSpec `json:"configuration,omitempty"`
+	VolumeExpansion *MSSQLVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
+	// Specifies information necessary for custom configuration of MSSQL
+	Configuration *MSSQLCustomConfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for configuring TLS
 	TLS *TLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for restarting database
@@ -77,36 +77,36 @@ type MsSQLOpsRequestSpec struct {
 
 // +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
 // ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
-type MsSQLOpsRequestType string
+type MSSQLOpsRequestType string
 
-// MsSQLReplicaReadinessCriteria is the criteria for checking readiness of a MsSQL pod
+// MSSQLReplicaReadinessCriteria is the criteria for checking readiness of a MSSQL pod
 // after updating, horizontal scaling etc.
-type MsSQLReplicaReadinessCriteria struct{}
+type MSSQLReplicaReadinessCriteria struct{}
 
-// MsSQLUpdateVersionSpec contains the update version information of a MsSQL cluster
-type MsSQLUpdateVersionSpec struct {
+// MSSQLUpdateVersionSpec contains the update version information of a MSSQL cluster
+type MSSQLUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty"`
 }
 
-// MsSQLHorizontalScalingSpec contains the horizontal scaling information of a MsSQL cluster
-type MsSQLHorizontalScalingSpec struct{}
+// MSSQLHorizontalScalingSpec contains the horizontal scaling information of a MSSQL cluster
+type MSSQLHorizontalScalingSpec struct{}
 
-// MsSQLVerticalScalingSpec contains the vertical scaling information of a MsSQL cluster
-type MsSQLVerticalScalingSpec struct{}
+// MSSQLVerticalScalingSpec contains the vertical scaling information of a MSSQL cluster
+type MSSQLVerticalScalingSpec struct{}
 
-// MsSQLVolumeExpansionSpec is the spec for MsSQL volume expansion
-type MsSQLVolumeExpansionSpec struct{}
+// MSSQLVolumeExpansionSpec is the spec for MSSQL volume expansion
+type MSSQLVolumeExpansionSpec struct{}
 
-// MsSQLCustomConfigurationSpec is the spec for Reconfiguring the MsSQL Settings
-type MsSQLCustomConfigurationSpec struct{}
+// MSSQLCustomConfigurationSpec is the spec for Reconfiguring the MSSQL Settings
+type MSSQLCustomConfigurationSpec struct{}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// MsSQLOpsRequestList is a list of MsSQLOpsRequests
-type MsSQLOpsRequestList struct {
+// MSSQLOpsRequestList is a list of MSSQLOpsRequests
+type MSSQLOpsRequestList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	// Items is a list of MsSQLOpsRequest CRD objects
-	Items []MsSQLOpsRequest `json:"items,omitempty"`
+	// Items is a list of MSSQLOpsRequest CRD objects
+	Items []MSSQLOpsRequest `json:"items,omitempty"`
 }
