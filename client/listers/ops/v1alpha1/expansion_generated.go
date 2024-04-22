@@ -42,14 +42,6 @@ type KafkaOpsRequestListerExpansion interface{}
 // KafkaOpsRequestNamespaceLister.
 type KafkaOpsRequestNamespaceListerExpansion interface{}
 
-// MSSQLOpsRequestListerExpansion allows custom methods to be added to
-// MSSQLOpsRequestLister.
-type MSSQLOpsRequestListerExpansion interface{}
-
-// MSSQLOpsRequestNamespaceListerExpansion allows custom methods to be added to
-// MSSQLOpsRequestNamespaceLister.
-type MSSQLOpsRequestNamespaceListerExpansion interface{}
-
 // MariaDBOpsRequestListerExpansion allows custom methods to be added to
 // MariaDBOpsRequestLister.
 type MariaDBOpsRequestListerExpansion interface{}

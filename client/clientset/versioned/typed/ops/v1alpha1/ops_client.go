@@ -21,9 +21,10 @@ package v1alpha1
 import (
 	"net/http"
 
-	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
+
+	rest "k8s.io/client-go/rest"
 )
 
 type OpsV1alpha1Interface interface {
@@ -31,7 +32,6 @@ type OpsV1alpha1Interface interface {
 	ElasticsearchOpsRequestsGetter
 	EtcdOpsRequestsGetter
 	KafkaOpsRequestsGetter
-	MSSQLOpsRequestsGetter
 	MariaDBOpsRequestsGetter
 	MemcachedOpsRequestsGetter
 	MongoDBOpsRequestsGetter
@@ -59,10 +59,6 @@ func (c *OpsV1alpha1Client) EtcdOpsRequests(namespace string) EtcdOpsRequestInte
 
 func (c *OpsV1alpha1Client) KafkaOpsRequests(namespace string) KafkaOpsRequestInterface {
 	return newKafkaOpsRequests(c, namespace)
-}
-
-func (c *OpsV1alpha1Client) MSSQLOpsRequests(namespace string) MSSQLOpsRequestInterface {
-	return newMSSQLOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) MariaDBOpsRequests(namespace string) MariaDBOpsRequestInterface {
