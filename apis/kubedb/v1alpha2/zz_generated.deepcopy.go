@@ -3603,6 +3603,11 @@ func (in *PgpoolSpec) DeepCopyInto(out *PgpoolSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(apiv1.TLSConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

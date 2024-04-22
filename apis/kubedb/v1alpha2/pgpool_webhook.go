@@ -31,6 +31,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -117,6 +118,32 @@ func (p *Pgpool) ValidateCreateOrUpdate() field.ErrorList {
 	if p.Spec.PostgresRef == nil {
 		errorList = append(errorList, field.Required(field.NewPath("spec").Child("postgresRef"),
 			"`spec.postgresRef` is missing",
+		))
+	}
+
+	apb := appcat.AppBinding{}
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      p.Spec.PostgresRef.Name,
+		Namespace: p.Spec.PostgresRef.Namespace,
+	}, &apb)
+	if err != nil {
+		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("postgresRef"),
+			p.Name,
+			err.Error(),
+		))
+	}
+
+	backendSSL, err := p.IsBackendTLSEnabled()
+	if err != nil {
+		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("postgresRef"),
+			p.Name,
+			err.Error(),
+		))
+	}
+
+	if p.Spec.TLS == nil && backendSSL {
+		errorList = append(errorList, field.Required(field.NewPath("spec").Child("tls"),
+			"`spec.tls` must be set because backend postgres is tls enabled",
 		))
 	}
 
@@ -207,6 +234,7 @@ func PgpoolValidateVersion(p *Pgpool) error {
 
 var PgpoolReservedVolumes = []string{
 	PgpoolConfigVolumeName,
+	PgpoolTlsVolumeName,
 }
 
 func PgpoolValidateVolumes(p *Pgpool) error {
@@ -278,4 +306,5 @@ func PgpoolValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 
 var PgpoolReservedVolumesMountPaths = []string{
 	PgpoolConfigSecretMountPath,
+	PgpoolTlsVolumeMountPath,
 }
