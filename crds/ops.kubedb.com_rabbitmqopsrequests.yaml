@@ -16,7 +16,7 @@ spec:
     listKind: RabbitMQOpsRequestList
     plural: rabbitmqopsrequests
     shortNames:
-    - kfops
+    - rmops
     singular: rabbitmqopsrequest
   scope: Namespaced
   versions:
