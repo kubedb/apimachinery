@@ -359,10 +359,13 @@ const (
 	MSSQLDbmLoginSecretName      = "dbm-login-secret"
 	MSSQLMasterKeySecretName     = "master-key-secret"
 
+	AGPrimaryReplicaReadyCondition = "AGPrimaryReplicaReady"
+
 	MSSQLDatabasePodPrimary       = "primary"
 	MSSQLDatabasePodSecondary     = "secondary"
 	MSSQLSecondaryServiceAlias    = "secondary"
 	MSSQLSecondaryServicePortName = "secondary"
+
 	// port related
 	MSSQLDatabasePortName              = "db"
 	MSSQLPrimaryServicePortName        = "primary"
