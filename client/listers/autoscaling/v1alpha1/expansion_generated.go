@@ -106,6 +106,14 @@ type ProxySQLAutoscalerListerExpansion interface{}
 // ProxySQLAutoscalerNamespaceLister.
 type ProxySQLAutoscalerNamespaceListerExpansion interface{}
 
+// RabbitMQAutoscalerListerExpansion allows custom methods to be added to
+// RabbitMQAutoscalerLister.
+type RabbitMQAutoscalerListerExpansion interface{}
+
+// RabbitMQAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// RabbitMQAutoscalerNamespaceLister.
+type RabbitMQAutoscalerNamespaceListerExpansion interface{}
+
 // RedisAutoscalerListerExpansion allows custom methods to be added to
 // RedisAutoscalerLister.
 type RedisAutoscalerListerExpansion interface{}

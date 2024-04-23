@@ -73,6 +73,10 @@ func (c *FakeAutoscalingV1alpha1) ProxySQLAutoscalers(namespace string) v1alpha1
 	return &FakeProxySQLAutoscalers{c, namespace}
 }
 
+func (c *FakeAutoscalingV1alpha1) RabbitMQAutoscalers(namespace string) v1alpha1.RabbitMQAutoscalerInterface {
+	return &FakeRabbitMQAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) RedisAutoscalers(namespace string) v1alpha1.RedisAutoscalerInterface {
 	return &FakeRedisAutoscalers{c, namespace}
 }
