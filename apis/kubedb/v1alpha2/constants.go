@@ -231,9 +231,10 @@ const (
 	MySQLRouterTLSDirectoryPath        = "/etc/mysql/certs"
 	MySQLReplicationUser               = "repl"
 
-	MySQLComponentKey    = MySQLKey + "/component"
-	MySQLComponentDB     = "database"
-	MySQLComponentRouter = "router"
+	MySQLComponentKey     = MySQLKey + "/component"
+	MySQLComponentDB      = "database"
+	MySQLComponentRouter  = "router"
+	MySQLCustomConfigFile = "my-inline.cnf"
 
 	// mysql volume and volume Mounts
 
@@ -389,6 +390,7 @@ const (
 	PostgresSharedScriptsDir         = "/scripts"
 	PostgresSharedTlsVolumeName      = "certs"
 	PostgresSharedTlsVolumeMountPath = "/tls/certs"
+	PostgresCustomConfigFile         = "user.conf"
 
 	PostgresKeyFileSecretSuffix = "key"
 	PostgresPEMSecretSuffix     = "pem"
