@@ -276,7 +276,7 @@ func (m *MSSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MSSQLVe
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = mssqlVersion.Spec.SecurityContext.RunAsGroup
+		podTemplate.Spec.SecurityContext.FSGroup = mssqlVersion.Spec.SecurityContext.RunAsUser
 	}
 
 	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, MSSQLContainerName)
@@ -343,7 +343,7 @@ func (m *MSSQL) assignDefaultContainerSecurityContext(mssqlVersion *catalog.MSSQ
 		sc.RunAsUser = mssqlVersion.Spec.SecurityContext.RunAsUser
 	}
 	if sc.RunAsGroup == nil {
-		sc.RunAsGroup = mssqlVersion.Spec.SecurityContext.RunAsGroup
+		sc.RunAsGroup = mssqlVersion.Spec.SecurityContext.RunAsUser
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()

@@ -24510,14 +24510,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionSpec(ref common.Refer
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional config for the DB container",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLSecurityContext"),
-						},
-					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionPodSecurityPolicy"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
 						},
 					},
 					"updateConstraints": {
@@ -24532,7 +24525,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

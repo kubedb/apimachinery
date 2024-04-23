@@ -25825,7 +25825,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLAvailabilityGroupSpec(ref com
 						},
 					},
 				},
-				Required: []string{"databases"},
 			},
 		},
 	}
@@ -25946,7 +25945,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLSpec(ref common.ReferenceCall
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for a MSSQL database. In case of MSSQL Availability Group (default 3).",
+							Description: "Number of instances to deploy for a MSSQL database. In case of MSSQL Availability Group.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

@@ -38,9 +38,6 @@ const (
 	MSSQLModeRemoteReplica     MSSQLMode = "RemoteReplica"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // MSSQL defines a MSSQL database.
 
 // +genclient
@@ -66,11 +63,12 @@ type MSSQLSpec struct {
 	// Version of MSSQL to be deployed.
 	Version string `json:"version"`
 
-	// Number of instances to deploy for a MSSQL database. In case of MSSQL Availability Group (default 3).
+	// Number of instances to deploy for a MSSQL database. In case of MSSQL Availability Group.
 	Replicas *int32 `json:"replicas,omitempty"`
 
 	// MSSQL cluster topology
-	Topology *MSSQLTopology `json:"topology,omitempty"` // ag or standalone
+	// +optional
+	Topology *MSSQLTopology `json:"topology,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -145,6 +143,7 @@ type MSSQLTopology struct {
 // MSSQLAvailabilityGroupSpec defines the availability group spec for MSSQL
 type MSSQLAvailabilityGroupSpec struct {
 	// AvailabilityDatabases is an array of databases to be included in the availability group
+	// +optional
 	AvailabilityDatabases []string `json:"databases"`
 }
 

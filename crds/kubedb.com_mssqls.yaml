@@ -4799,8 +4799,6 @@ spec:
                         items:
                           type: string
                         type: array
-                    required:
-                    - databases
                     type: object
                   mode:
                     enum:

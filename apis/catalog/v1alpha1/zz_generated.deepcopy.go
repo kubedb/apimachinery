@@ -1016,7 +1016,6 @@ func (in *MSSQLVersionSpec) DeepCopyInto(out *MSSQLVersionSpec) {
 	out.InitContainer = in.InitContainer
 	in.Stash.DeepCopyInto(&out.Stash)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
-	out.PodSecurityPolicies = in.PodSecurityPolicies
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	return
 }

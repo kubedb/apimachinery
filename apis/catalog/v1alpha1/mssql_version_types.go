@@ -65,10 +65,7 @@ type MSSQLVersionSpec struct {
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
 	// SecurityContext is for the additional config for the DB container
 	// +optional
-	SecurityContext MSSQLSecurityContext `json:"securityContext"`
-	// PSP names
-	// +optional
-	PodSecurityPolicies MSSQLVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	SecurityContext SecurityContext `json:"securityContext"`
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 }
