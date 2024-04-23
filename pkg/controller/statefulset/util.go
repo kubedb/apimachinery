@@ -133,7 +133,7 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
-		dbInfo.replicasReady, dbInfo.msg, err = mc.ReplicasAreReady(c.StsLister)
+		dbInfo.replicasReady, dbInfo.msg, err = mc.ReplicasAreReady(c.PSLister)
 		if err != nil {
 			return nil, err
 		}
