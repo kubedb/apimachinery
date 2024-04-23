@@ -31,6 +31,15 @@ const (
 	ResourcePluralMemcached   = "memcacheds"
 )
 
+// +kubebuilder:validation:Enum=Standalone;Cluster;Sentinel
+type MemcachedMode string
+
+const (
+	MemcachedModeStandalone MemcachedMode = "Standalone"
+	MemcachedModeCluster    MemcachedMode = "Cluster"
+	MemcachedModeSentinel   MemcachedMode = "Sentinel"
+)
+
 // Memcached defines a Memcached database.
 
 // +genclient
@@ -102,6 +111,16 @@ type MemcachedSpec struct {
 	// TerminationPolicy controls the delete operation for database
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
+
+	// HealthChecker defines attributes of the health checker
+	// +optional
+	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 1}
+	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+
+	// PodPlacementPolicy is the reference of the podPlacementPolicy
+	// +kubebuilder:default={name: "default"}
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;metrics-exporter

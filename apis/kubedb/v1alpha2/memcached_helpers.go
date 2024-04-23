@@ -18,7 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
-
+	"gomodules.xyz/pointer"
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
@@ -26,11 +26,11 @@ import (
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 func (_ Memcached) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -161,6 +161,10 @@ func (m Memcached) StatsServiceLabels() map[string]string {
 	return m.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
+func (m *Memcached) PetSetName() string {
+	return m.OffshootName()
+}
+
 func (m *Memcached) SetDefaults() {
 	if m == nil {
 		return
@@ -170,21 +174,33 @@ func (m *Memcached) SetDefaults() {
 	if m.Spec.TerminationPolicy == "" {
 		m.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
-
 	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
 
 	m.Spec.Monitor.SetDefaults()
+	m.SetHealthCheckerDefaults()
 	apis.SetDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, DefaultResources)
+}
+
+func (m *Memcached) SetHealthCheckerDefaults() {
+	if m.Spec.HealthChecker.PeriodSeconds == nil {
+		m.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
+	}
+	if m.Spec.HealthChecker.TimeoutSeconds == nil {
+		m.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)
+	}
+	if m.Spec.HealthChecker.FailureThreshold == nil {
+		m.Spec.HealthChecker.FailureThreshold = pointer.Int32P(10)
+	}
 }
 
 func (m *MemcachedSpec) GetPersistentSecrets() []string {
 	return nil
 }
 
-func (m *Memcached) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
-	// Desire number of statefulSets
+func (m *Memcached) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
+	// Desire number of petSets
 	expectedItems := 1
-	return checkReplicas(lister.StatefulSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
+	return checkReplicasOfPetSet(lister.PetSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
 }

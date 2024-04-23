@@ -2055,6 +2055,12 @@ func (in *MemcachedSpec) DeepCopyInto(out *MemcachedSpec) {
 		*out = new(apiv1.TLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
+	if in.PodPlacementPolicy != nil {
+		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	return
 }
 

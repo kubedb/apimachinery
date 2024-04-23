@@ -26206,12 +26206,25 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MemcachedSpec(ref common.Reference
 							Format:      "",
 						},
 					},
+					"healthChecker": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HealthChecker defines attributes of the health checker",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
+						},
+					},
+					"podPlacementPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodPlacementPolicy is the reference of the podPlacementPolicy",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
 

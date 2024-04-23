@@ -127,7 +127,7 @@ const (
 	MemcachedDatabasePortName       = "db"
 	MemcachedPrimaryServicePortName = "primary"
 	MemcachedDatabasePort           = 11211
-
+	MemcachedShardKey               = MemcachedKey + "/shard"
 	// =========================== MongoDB Constants ============================
 
 	MongoDBDatabasePortName       = "db"
