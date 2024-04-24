@@ -883,6 +883,7 @@ const (
 	DruidPortMiddleManagers = 8091
 	DruidPortBrokers        = 8082
 	DruidPortRouters        = 8888
+	DruidExporterPort       = 9104
 
 	// Common Runtime Configurations Properties
 	// ZooKeeperSpec
@@ -962,7 +963,7 @@ const (
 	DruidEmitter                                = "druid.emitter"
 	DruidEmitterPrometheus                      = "prometheus"
 	DruidEmitterPrometheusPortKey               = "druid.emitter.prometheus.port"
-	DruidEmitterPrometheusPortVal               = 8080
+	DruidEmitterPrometheusPortVal               = 9104
 	DruidMonitoringMonitorsKey                  = "druid.monitoring.monitors"
 	DruidEmitterPrometheusDimensionMapPath      = "druid.emitter.prometheus.dimensionMapPath"
 	DruidEmitterPrometheusStrategy              = "druid.emitter.prometheus.strategy"
