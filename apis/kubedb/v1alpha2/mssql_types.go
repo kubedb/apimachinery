@@ -144,7 +144,7 @@ type MSSQLTopology struct {
 type MSSQLAvailabilityGroupSpec struct {
 	// AvailabilityDatabases is an array of databases to be included in the availability group
 	// +optional
-	AvailabilityDatabases []string `json:"databases"`
+	Databases []string `json:"databases"`
 }
 
 // MSSQLStatus defines the observed state of MSSQL
