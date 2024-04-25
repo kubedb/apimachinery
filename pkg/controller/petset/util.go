@@ -138,6 +138,17 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
+	case api.ResourceKindMemcached:
+		dbInfo.opts.GVR.Resource = api.ResourcePluralMemcached
+		mc, err := c.DBClient.KubedbV1alpha2().Memcacheds(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
+		dbInfo.replicasReady, dbInfo.msg, err = mc.ReplicasAreReady(c.PSLister)
+		if err != nil {
+			return nil, err
+		}
+
 	default:
 		return nil, fmt.Errorf("unknown database kind: %s", owner.Kind)
 	}
