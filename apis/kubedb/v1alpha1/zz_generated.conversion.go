@@ -24,8 +24,6 @@ package v1alpha1
 import (
 	unsafe "unsafe"
 
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-
 	types "gomodules.xyz/encoding/json/types"
 	v1 "k8s.io/api/core/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
@@ -33,6 +31,7 @@ import (
 	intstr "k8s.io/apimachinery/pkg/util/intstr"
 	apiv1 "kmodules.xyz/monitoring-agent-api/api/v1"
 	offshootapiapiv1 "kmodules.xyz/offshoot-api/api/v1"
+	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 )
 
 func init() {
@@ -427,6 +426,11 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*PostgresArchiverSpec)(nil), (*v1alpha2.Archiver)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha1_PostgresArchiverSpec_To_v1alpha2_Archiver(a.(*PostgresArchiverSpec), b.(*v1alpha2.Archiver), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*PostgresSpec)(nil), (*v1alpha2.PostgresSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha1_PostgresSpec_To_v1alpha2_PostgresSpec(a.(*PostgresSpec), b.(*v1alpha2.PostgresSpec), scope)
 	}); err != nil {
@@ -444,6 +448,11 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddConversionFunc((*RedisStatus)(nil), (*v1alpha2.RedisStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha1_RedisStatus_To_v1alpha2_RedisStatus(a.(*RedisStatus), b.(*v1alpha2.RedisStatus), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1alpha2.Archiver)(nil), (*PostgresArchiverSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_Archiver_To_v1alpha1_PostgresArchiverSpec(a.(*v1alpha2.Archiver), b.(*PostgresArchiverSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -701,6 +710,8 @@ func autoConvert_v1alpha2_ElasticsearchNode_To_v1alpha1_ElasticsearchNode(in *v1
 	out.Storage = (*v1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.Resources = in.Resources
 	out.MaxUnavailable = (*intstr.IntOrString)(unsafe.Pointer(in.MaxUnavailable))
+	// WARNING: in.NodeSelector requires manual conversion: does not exist in peer-type
+	// WARNING: in.Tolerations requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -798,6 +809,7 @@ func autoConvert_v1alpha2_ElasticsearchStatus_To_v1alpha1_ElasticsearchStatus(in
 	// WARNING: in.ObservedGeneration requires manual conversion: inconvertible types (int64 vs *gomodules.xyz/encoding/json/types.IntHash)
 	// WARNING: in.Conditions requires manual conversion: does not exist in peer-type
 	// WARNING: in.AuthSecret requires manual conversion: does not exist in peer-type
+	// WARNING: in.Gateway requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -936,6 +948,7 @@ func autoConvert_v1alpha2_EtcdStatus_To_v1alpha1_EtcdStatus(in *v1alpha2.EtcdSta
 	// WARNING: in.ObservedGeneration requires manual conversion: inconvertible types (int64 vs *gomodules.xyz/encoding/json/types.IntHash)
 	// WARNING: in.Conditions requires manual conversion: does not exist in peer-type
 	// WARNING: in.AuthSecret requires manual conversion: does not exist in peer-type
+	// WARNING: in.Gateway requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -951,6 +964,7 @@ func autoConvert_v1alpha2_InitSpec_To_v1alpha1_InitSpec(in *v1alpha2.InitSpec, o
 	// WARNING: in.Initialized requires manual conversion: does not exist in peer-type
 	// WARNING: in.WaitForInitialRestore requires manual conversion: does not exist in peer-type
 	// WARNING: in.Script requires manual conversion: does not exist in peer-type
+	// WARNING: in.Archiver requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -1080,6 +1094,7 @@ func autoConvert_v1alpha2_MariaDBSpec_To_v1alpha1_MariaDBSpec(in *v1alpha2.Maria
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	// WARNING: in.AllowedSchemas requires manual conversion: does not exist in peer-type
 	// WARNING: in.HealthChecker requires manual conversion: does not exist in peer-type
+	// WARNING: in.Archiver requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -1095,6 +1110,7 @@ func autoConvert_v1alpha2_MariaDBStatus_To_v1alpha1_MariaDBStatus(in *v1alpha2.M
 	// WARNING: in.ObservedGeneration requires manual conversion: inconvertible types (int64 vs *gomodules.xyz/encoding/json/types.IntHash)
 	// WARNING: in.Conditions requires manual conversion: does not exist in peer-type
 	// WARNING: in.AuthSecret requires manual conversion: does not exist in peer-type
+	// WARNING: in.Gateway requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -1231,6 +1247,7 @@ func autoConvert_v1alpha2_MemcachedStatus_To_v1alpha1_MemcachedStatus(in *v1alph
 	out.Phase = DatabasePhase(in.Phase)
 	// WARNING: in.ObservedGeneration requires manual conversion: inconvertible types (int64 vs *gomodules.xyz/encoding/json/types.IntHash)
 	// WARNING: in.Conditions requires manual conversion: does not exist in peer-type
+	// WARNING: in.Gateway requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -1539,6 +1556,7 @@ func autoConvert_v1alpha2_MongoDBSpec_To_v1alpha1_MongoDBSpec(in *v1alpha2.Mongo
 	// WARNING: in.Arbiter requires manual conversion: does not exist in peer-type
 	// WARNING: in.Hidden requires manual conversion: does not exist in peer-type
 	// WARNING: in.HealthChecker requires manual conversion: does not exist in peer-type
+	// WARNING: in.Archiver requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -1554,6 +1572,7 @@ func autoConvert_v1alpha2_MongoDBStatus_To_v1alpha1_MongoDBStatus(in *v1alpha2.M
 	// WARNING: in.ObservedGeneration requires manual conversion: inconvertible types (int64 vs *gomodules.xyz/encoding/json/types.IntHash)
 	// WARNING: in.Conditions requires manual conversion: does not exist in peer-type
 	// WARNING: in.AuthSecret requires manual conversion: does not exist in peer-type
+	// WARNING: in.Gateway requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -1721,6 +1740,7 @@ func autoConvert_v1alpha2_MySQLSpec_To_v1alpha1_MySQLSpec(in *v1alpha2.MySQLSpec
 	// WARNING: in.AllowedSchemas requires manual conversion: does not exist in peer-type
 	// WARNING: in.AllowedReadReplicas requires manual conversion: does not exist in peer-type
 	// WARNING: in.HealthChecker requires manual conversion: does not exist in peer-type
+	// WARNING: in.Archiver requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -1736,6 +1756,7 @@ func autoConvert_v1alpha2_MySQLStatus_To_v1alpha1_MySQLStatus(in *v1alpha2.MySQL
 	// WARNING: in.ObservedGeneration requires manual conversion: inconvertible types (int64 vs *gomodules.xyz/encoding/json/types.IntHash)
 	// WARNING: in.Conditions requires manual conversion: does not exist in peer-type
 	// WARNING: in.AuthSecret requires manual conversion: does not exist in peer-type
+	// WARNING: in.Gateway requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -1770,7 +1791,7 @@ func autoConvert_v1alpha2_MySQLTopology_To_v1alpha1_MySQLTopology(in *v1alpha2.M
 		out.Group = nil
 	}
 	// WARNING: in.InnoDBCluster requires manual conversion: does not exist in peer-type
-	// WARNING: in.ReadReplica requires manual conversion: does not exist in peer-type
+	// WARNING: in.RemoteReplica requires manual conversion: does not exist in peer-type
 	// WARNING: in.SemiSync requires manual conversion: does not exist in peer-type
 	return nil
 }
@@ -1917,6 +1938,7 @@ func autoConvert_v1alpha2_PerconaXtraDBStatus_To_v1alpha1_PerconaXtraDBStatus(in
 	// WARNING: in.ObservedGeneration requires manual conversion: inconvertible types (int64 vs *gomodules.xyz/encoding/json/types.IntHash)
 	// WARNING: in.Conditions requires manual conversion: does not exist in peer-type
 	// WARNING: in.AuthSecret requires manual conversion: does not exist in peer-type
+	// WARNING: in.Gateway requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -1999,7 +2021,15 @@ func autoConvert_v1alpha1_PostgresSpec_To_v1alpha2_PostgresSpec(in *PostgresSpec
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.StandbyMode = (*v1alpha2.PostgresStandbyMode)(unsafe.Pointer(in.StandbyMode))
 	out.StreamingMode = (*v1alpha2.PostgresStreamingMode)(unsafe.Pointer(in.StreamingMode))
-	// WARNING: in.Archiver requires manual conversion: does not exist in peer-type
+	if in.Archiver != nil {
+		in, out := &in.Archiver, &out.Archiver
+		*out = new(v1alpha2.Archiver)
+		if err := Convert_v1alpha1_PostgresArchiverSpec_To_v1alpha2_Archiver(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Archiver = nil
+	}
 	if in.LeaderElection != nil {
 		in, out := &in.LeaderElection, &out.LeaderElection
 		*out = new(v1alpha2.PostgreLeaderElectionConfig)
@@ -2038,6 +2068,8 @@ func autoConvert_v1alpha2_PostgresSpec_To_v1alpha1_PostgresSpec(in *v1alpha2.Pos
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.StandbyMode = (*PostgresStandbyMode)(unsafe.Pointer(in.StandbyMode))
 	out.StreamingMode = (*PostgresStreamingMode)(unsafe.Pointer(in.StreamingMode))
+	// WARNING: in.Mode requires manual conversion: does not exist in peer-type
+	// WARNING: in.RemoteReplica requires manual conversion: does not exist in peer-type
 	if in.LeaderElection != nil {
 		in, out := &in.LeaderElection, &out.LeaderElection
 		*out = new(LeaderElectionConfig)
@@ -2072,6 +2104,17 @@ func autoConvert_v1alpha2_PostgresSpec_To_v1alpha1_PostgresSpec(in *v1alpha2.Pos
 	// WARNING: in.EnforceFsGroup requires manual conversion: does not exist in peer-type
 	// WARNING: in.AllowedSchemas requires manual conversion: does not exist in peer-type
 	// WARNING: in.HealthChecker requires manual conversion: does not exist in peer-type
+	if in.Archiver != nil {
+		in, out := &in.Archiver, &out.Archiver
+		*out = new(PostgresArchiverSpec)
+		if err := Convert_v1alpha2_Archiver_To_v1alpha1_PostgresArchiverSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Archiver = nil
+	}
+	// WARNING: in.Arbiter requires manual conversion: does not exist in peer-type
+	// WARNING: in.Replication requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -2087,6 +2130,7 @@ func autoConvert_v1alpha2_PostgresStatus_To_v1alpha1_PostgresStatus(in *v1alpha2
 	// WARNING: in.ObservedGeneration requires manual conversion: inconvertible types (int64 vs *gomodules.xyz/encoding/json/types.IntHash)
 	// WARNING: in.Conditions requires manual conversion: does not exist in peer-type
 	// WARNING: in.AuthSecret requires manual conversion: does not exist in peer-type
+	// WARNING: in.Gateway requires manual conversion: does not exist in peer-type
 	return nil
 }
 
@@ -2265,6 +2309,7 @@ func autoConvert_v1alpha2_RedisStatus_To_v1alpha1_RedisStatus(in *v1alpha2.Redis
 	// WARNING: in.ObservedGeneration requires manual conversion: inconvertible types (int64 vs *gomodules.xyz/encoding/json/types.IntHash)
 	// WARNING: in.Conditions requires manual conversion: does not exist in peer-type
 	// WARNING: in.AuthSecret requires manual conversion: does not exist in peer-type
+	// WARNING: in.Gateway requires manual conversion: does not exist in peer-type
 	return nil
 }
 

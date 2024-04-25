@@ -31,7 +31,7 @@ spec:
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
-    name: v1alpha2
+    name: v1alpha3
     schema:
       openAPIV3Schema:
         properties:
@@ -355,6 +355,14 @@ spec:
                         type: object
                     type: object
                 type: object
+              podPlacementPolicy:
+                default:
+                  name: default
+                properties:
+                  name:
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               podTemplate:
                 properties:
                   controller:

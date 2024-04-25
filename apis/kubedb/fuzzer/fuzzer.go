@@ -17,10 +17,10 @@ limitations under the License.
 package fuzzer
 
 import (
-	"kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-
 	fuzz "github.com/google/gofuzz"
 	runtimeserializer "k8s.io/apimachinery/pkg/runtime/serializer"
+	"kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	"kubedb.dev/apimachinery/apis/kubedb/v1alpha3"
 )
 
 // Funcs returns the fuzzer functions for this api group.
@@ -47,7 +47,7 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []interface{} {
 		func(s *v1alpha2.PerconaXtraDB, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha2.PgBouncer, c fuzz.Continue) {
+		func(s *v1alpha3.PgBouncer, c fuzz.Continue) {
 			c.FuzzNoCustom(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha2.Postgres, c fuzz.Continue) {

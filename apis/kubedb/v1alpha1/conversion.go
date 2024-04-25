@@ -1028,3 +1028,11 @@ func Convert_v1alpha2_RedisStatus_To_v1alpha1_RedisStatus(in *v1alpha2.RedisStat
 	// WARNING: in.Conditions requires manual conversion: does not exist in peer-type
 	return nil
 }
+
+func Convert_v1alpha1_PostgresArchiverSpec_To_v1alpha2_Archiver(in *PostgresArchiverSpec, out *v1alpha2.Archiver, s conversion.Scope) error {
+	return nil
+}
+
+func Convert_v1alpha2_Archiver_To_v1alpha1_PostgresArchiverSpec(in *v1alpha2.Archiver, out *PostgresArchiverSpec, s conversion.Scope) error {
+	return nil
+}

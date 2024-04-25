@@ -22,6 +22,9 @@ import (
 	"fmt"
 	"net/http"
 
+	discovery "k8s.io/client-go/discovery"
+	rest "k8s.io/client-go/rest"
+	flowcontrol "k8s.io/client-go/util/flowcontrol"
 	archiverv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/archiver/v1alpha1"
 	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
@@ -30,14 +33,11 @@ import (
 	kafkav1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kafka/v1alpha1"
 	kubedbv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1"
 	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
+	kubedbv1alpha3 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha3"
 	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 	postgresv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/postgres/v1alpha1"
 	schemav1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/schema/v1alpha1"
 	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
-
-	discovery "k8s.io/client-go/discovery"
-	rest "k8s.io/client-go/rest"
-	flowcontrol "k8s.io/client-go/util/flowcontrol"
 )
 
 type Interface interface {
@@ -50,6 +50,7 @@ type Interface interface {
 	KafkaV1alpha1() kafkav1alpha1.KafkaV1alpha1Interface
 	KubedbV1alpha1() kubedbv1alpha1.KubedbV1alpha1Interface
 	KubedbV1alpha2() kubedbv1alpha2.KubedbV1alpha2Interface
+	KubedbV1alpha3() kubedbv1alpha3.KubedbV1alpha3Interface
 	OpsV1alpha1() opsv1alpha1.OpsV1alpha1Interface
 	PostgresV1alpha1() postgresv1alpha1.PostgresV1alpha1Interface
 	SchemaV1alpha1() schemav1alpha1.SchemaV1alpha1Interface
@@ -67,6 +68,7 @@ type Clientset struct {
 	kafkaV1alpha1         *kafkav1alpha1.KafkaV1alpha1Client
 	kubedbV1alpha1        *kubedbv1alpha1.KubedbV1alpha1Client
 	kubedbV1alpha2        *kubedbv1alpha2.KubedbV1alpha2Client
+	kubedbV1alpha3        *kubedbv1alpha3.KubedbV1alpha3Client
 	opsV1alpha1           *opsv1alpha1.OpsV1alpha1Client
 	postgresV1alpha1      *postgresv1alpha1.PostgresV1alpha1Client
 	schemaV1alpha1        *schemav1alpha1.SchemaV1alpha1Client
@@ -111,6 +113,11 @@ func (c *Clientset) KubedbV1alpha1() kubedbv1alpha1.KubedbV1alpha1Interface {
 // KubedbV1alpha2 retrieves the KubedbV1alpha2Client
 func (c *Clientset) KubedbV1alpha2() kubedbv1alpha2.KubedbV1alpha2Interface {
 	return c.kubedbV1alpha2
+}
+
+// KubedbV1alpha3 retrieves the KubedbV1alpha3Client
+func (c *Clientset) KubedbV1alpha3() kubedbv1alpha3.KubedbV1alpha3Interface {
+	return c.kubedbV1alpha3
 }
 
 // OpsV1alpha1 retrieves the OpsV1alpha1Client
@@ -209,6 +216,10 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 	if err != nil {
 		return nil, err
 	}
+	cs.kubedbV1alpha3, err = kubedbv1alpha3.NewForConfigAndClient(&configShallowCopy, httpClient)
+	if err != nil {
+		return nil, err
+	}
 	cs.opsV1alpha1, err = opsv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
@@ -254,6 +265,7 @@ func New(c rest.Interface) *Clientset {
 	cs.kafkaV1alpha1 = kafkav1alpha1.New(c)
 	cs.kubedbV1alpha1 = kubedbv1alpha1.New(c)
 	cs.kubedbV1alpha2 = kubedbv1alpha2.New(c)
+	cs.kubedbV1alpha3 = kubedbv1alpha3.New(c)
 	cs.opsV1alpha1 = opsv1alpha1.New(c)
 	cs.postgresV1alpha1 = postgresv1alpha1.New(c)
 	cs.schemaV1alpha1 = schemav1alpha1.New(c)

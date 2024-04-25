@@ -31331,6 +31331,11 @@
           "version": "v1alpha2"
         },
         {
+          "group": "kubedb.com",
+          "kind": "DeleteOptions",
+          "version": "v1alpha3"
+        },
+        {
           "group": "ops.kubedb.com",
           "kind": "DeleteOptions",
           "version": "v1alpha1"
@@ -31699,6 +31704,11 @@
           "version": "v1alpha2"
         },
         {
+          "group": "kubedb.com",
+          "kind": "Status",
+          "version": "v1alpha3"
+        },
+        {
           "group": "ops.kubedb.com",
           "kind": "Status",
           "version": "v1alpha1"
@@ -31795,6 +31805,11 @@
           "group": "kubedb.com",
           "kind": "WatchEvent",
           "version": "v1alpha2"
+        },
+        {
+          "group": "kubedb.com",
+          "kind": "WatchEvent",
+          "version": "v1alpha3"
         },
         {
           "group": "ops.kubedb.com",
