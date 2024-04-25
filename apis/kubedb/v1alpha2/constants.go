@@ -231,9 +231,10 @@ const (
 	MySQLRouterTLSDirectoryPath        = "/etc/mysql/certs"
 	MySQLReplicationUser               = "repl"
 
-	MySQLComponentKey    = MySQLKey + "/component"
-	MySQLComponentDB     = "database"
-	MySQLComponentRouter = "router"
+	MySQLComponentKey     = MySQLKey + "/component"
+	MySQLComponentDB      = "database"
+	MySQLComponentRouter  = "router"
+	MySQLCustomConfigFile = "my-inline.cnf"
 
 	// mysql volume and volume Mounts
 
@@ -352,6 +353,48 @@ const (
 	SinglestoreVolumeNameData                = "data"
 	SinglestoreVolumeMountPathData           = "/var/lib/memsql"
 
+	// =========================== MSSQL Constants ============================
+	MSSQLSAUser                  = "sa"
+	MSSQLEndpointCertsSecretName = "endpoint-cert"
+	MSSQLDbmLoginSecretName      = "dbm-login-secret"
+	MSSQLMasterKeySecretName     = "master-key-secret"
+
+	AGPrimaryReplicaReadyCondition = "AGPrimaryReplicaReady"
+
+	MSSQLDatabasePodPrimary       = "primary"
+	MSSQLDatabasePodSecondary     = "secondary"
+	MSSQLSecondaryServiceAlias    = "secondary"
+	MSSQLSecondaryServicePortName = "secondary"
+
+	// port related
+	MSSQLDatabasePortName              = "db"
+	MSSQLPrimaryServicePortName        = "primary"
+	MSSQLDatabasePort                  = 1433
+	MSSQLDatabaseMirroringEndpointPort = 5022
+	MSSQLCoordinatorPort               = 2381
+	// environment variables
+	EnvAcceptEula        = "ACCEPT_EULA"
+	EnvMSSQLEnableHADR   = "MSSQL_ENABLE_HADR"
+	EnvMSSQLAgentEnabled = "MSSQL_AGENT_ENABLED"
+	EnvMSSQLSAUsername   = "MSSQL_SA_USERNAME"
+	EnvMSSQLSAPassword   = "MSSQL_SA_PASSWORD"
+	// container related
+	MSSQLContainerName            = "mssql"
+	MSSQLCoordinatorContainerName = "mssql-coordinator"
+	MSSQLInitContainerName        = "mssql-init"
+	// volume related
+	MSSQLVolumeNameData              = "data"
+	MSSQLVolumeMountPathData         = "/var/opt/mssql"
+	MSSQLVolumeNameInitScript        = "init-scripts"
+	MSSQLVolumeMountPathInitScript   = "/scripts"
+	MSSQLVolumeNameEndpointCert      = "endpoint-cert"
+	MSSQLVolumeMountPathEndpointCert = "/var/opt/mssql/endpoint-cert"
+	MSSQLVolumeNameCerts             = "certs"
+	MSSQLVolumeMountPathCerts        = "/var/opt/mssql/certs"
+	// tls related
+	MSSQLInternalTLSCrt = "tls.crt"
+	MSSQLInternalTLSKey = "tls.key"
+
 	// =========================== PostgreSQL Constants ============================
 	PostgresDatabasePortName          = "db"
 	PostgresPrimaryServicePortName    = "primary"
@@ -389,6 +432,7 @@ const (
 	PostgresSharedScriptsDir         = "/scripts"
 	PostgresSharedTlsVolumeName      = "certs"
 	PostgresSharedTlsVolumeMountPath = "/tls/certs"
+	PostgresCustomConfigFile         = "user.conf"
 
 	PostgresKeyFileSecretSuffix = "key"
 	PostgresPEMSecretSuffix     = "pem"
@@ -881,6 +925,7 @@ const (
 	DruidPortMiddleManagers = 8091
 	DruidPortBrokers        = 8082
 	DruidPortRouters        = 8888
+	DruidExporterPort       = 9104
 
 	// Common Runtime Configurations Properties
 	// ZooKeeperSpec
@@ -960,7 +1005,7 @@ const (
 	DruidEmitter                                = "druid.emitter"
 	DruidEmitterPrometheus                      = "prometheus"
 	DruidEmitterPrometheusPortKey               = "druid.emitter.prometheus.port"
-	DruidEmitterPrometheusPortVal               = 8080
+	DruidEmitterPrometheusPortVal               = 9104
 	DruidMonitoringMonitorsKey                  = "druid.monitoring.monitors"
 	DruidEmitterPrometheusDimensionMapPath      = "druid.emitter.prometheus.dimensionMapPath"
 	DruidEmitterPrometheusStrategy              = "druid.emitter.prometheus.strategy"

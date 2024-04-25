@@ -30,6 +30,8 @@ type KafkaConnectorVersionExpansion interface{}
 
 type KafkaVersionExpansion interface{}
 
+type MSSQLVersionExpansion interface{}
+
 type MariaDBVersionExpansion interface{}
 
 type MemcachedVersionExpansion interface{}

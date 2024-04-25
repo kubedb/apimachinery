@@ -450,6 +450,15 @@ func (d *Druid) SetDefaults() {
 			d.Spec.MetadataStorage.Namespace = d.Namespace
 		}
 	}
+	if d.Spec.Monitor != nil {
+		if d.Spec.Monitor.Prometheus == nil {
+			d.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+		}
+		if d.Spec.Monitor.Prometheus != nil && d.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+			d.Spec.Monitor.Prometheus.Exporter.Port = DruidExporterPort
+		}
+		d.Spec.Monitor.SetDefaults()
+	}
 }
 
 func (d *Druid) setDefaultContainerSecurityContext(druidVersion *catalog.DruidVersion, podTemplate *ofst.PodTemplateSpec) {

@@ -36,6 +36,8 @@ type Interface interface {
 	KafkaConnectorVersions() KafkaConnectorVersionInformer
 	// KafkaVersions returns a KafkaVersionInformer.
 	KafkaVersions() KafkaVersionInformer
+	// MSSQLVersions returns a MSSQLVersionInformer.
+	MSSQLVersions() MSSQLVersionInformer
 	// MariaDBVersions returns a MariaDBVersionInformer.
 	MariaDBVersions() MariaDBVersionInformer
 	// MemcachedVersions returns a MemcachedVersionInformer.
@@ -105,6 +107,11 @@ func (v *version) KafkaConnectorVersions() KafkaConnectorVersionInformer {
 // KafkaVersions returns a KafkaVersionInformer.
 func (v *version) KafkaVersions() KafkaVersionInformer {
 	return &kafkaVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// MSSQLVersions returns a MSSQLVersionInformer.
+func (v *version) MSSQLVersions() MSSQLVersionInformer {
+	return &mSSQLVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // MariaDBVersions returns a MariaDBVersionInformer.
