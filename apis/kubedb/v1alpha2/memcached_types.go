@@ -31,15 +31,6 @@ const (
 	ResourcePluralMemcached   = "memcacheds"
 )
 
-// +kubebuilder:validation:Enum=Standalone;Cluster;Sentinel
-type MemcachedMode string
-
-const (
-	MemcachedModeStandalone MemcachedMode = "Standalone"
-	MemcachedModeCluster    MemcachedMode = "Cluster"
-	MemcachedModeSentinel   MemcachedMode = "Sentinel"
-)
-
 // Memcached defines a Memcached database.
 
 // +genclient
