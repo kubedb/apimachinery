@@ -353,6 +353,48 @@ const (
 	SinglestoreVolumeNameData                = "data"
 	SinglestoreVolumeMountPathData           = "/var/lib/memsql"
 
+	// =========================== MSSQL Constants ============================
+	MSSQLSAUser                  = "sa"
+	MSSQLEndpointCertsSecretName = "endpoint-cert"
+	MSSQLDbmLoginSecretName      = "dbm-login-secret"
+	MSSQLMasterKeySecretName     = "master-key-secret"
+
+	AGPrimaryReplicaReadyCondition = "AGPrimaryReplicaReady"
+
+	MSSQLDatabasePodPrimary       = "primary"
+	MSSQLDatabasePodSecondary     = "secondary"
+	MSSQLSecondaryServiceAlias    = "secondary"
+	MSSQLSecondaryServicePortName = "secondary"
+
+	// port related
+	MSSQLDatabasePortName              = "db"
+	MSSQLPrimaryServicePortName        = "primary"
+	MSSQLDatabasePort                  = 1433
+	MSSQLDatabaseMirroringEndpointPort = 5022
+	MSSQLCoordinatorPort               = 2381
+	// environment variables
+	EnvAcceptEula        = "ACCEPT_EULA"
+	EnvMSSQLEnableHADR   = "MSSQL_ENABLE_HADR"
+	EnvMSSQLAgentEnabled = "MSSQL_AGENT_ENABLED"
+	EnvMSSQLSAUsername   = "MSSQL_SA_USERNAME"
+	EnvMSSQLSAPassword   = "MSSQL_SA_PASSWORD"
+	// container related
+	MSSQLContainerName            = "mssql"
+	MSSQLCoordinatorContainerName = "mssql-coordinator"
+	MSSQLInitContainerName        = "mssql-init"
+	// volume related
+	MSSQLVolumeNameData              = "data"
+	MSSQLVolumeMountPathData         = "/var/opt/mssql"
+	MSSQLVolumeNameInitScript        = "init-scripts"
+	MSSQLVolumeMountPathInitScript   = "/scripts"
+	MSSQLVolumeNameEndpointCert      = "endpoint-cert"
+	MSSQLVolumeMountPathEndpointCert = "/var/opt/mssql/endpoint-cert"
+	MSSQLVolumeNameCerts             = "certs"
+	MSSQLVolumeMountPathCerts        = "/var/opt/mssql/certs"
+	// tls related
+	MSSQLInternalTLSCrt = "tls.crt"
+	MSSQLInternalTLSKey = "tls.key"
+
 	// =========================== PostgreSQL Constants ============================
 	PostgresDatabasePortName          = "db"
 	PostgresPrimaryServicePortName    = "primary"

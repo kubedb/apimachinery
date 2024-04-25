@@ -30,6 +30,7 @@ require (
 	k8s.io/kube-aggregator v0.29.2
 	k8s.io/kube-openapi v0.0.0-20240228011516-70dd3763d340
 	k8s.io/metrics v0.25.1
+	k8s.io/utils v0.0.0-20240102154912-e7106e64919e
 	kmodules.xyz/client-go v0.29.13
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.29.1
@@ -183,7 +184,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/component-base v0.29.2 // indirect
 	k8s.io/kms v0.29.2 // indirect
-	k8s.io/utils v0.0.0-20240102154912-e7106e64919e // indirect
 	kmodules.xyz/apiversion v0.2.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.12 // indirect
 	kmodules.xyz/prober v0.29.0 // indirect
