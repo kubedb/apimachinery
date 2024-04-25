@@ -147,6 +147,22 @@ func (p *Pgpool) ValidateCreateOrUpdate() field.ErrorList {
 		))
 	}
 
+	if p.Spec.TLS == nil {
+		if p.Spec.SSLMode != "disable" {
+			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("sslMode"),
+				p.Name,
+				"Tls is not enabled, enable it to use this sslMode",
+			))
+		}
+
+		if p.Spec.ClientAuthMode == "cert" {
+			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("clientAuthMode"),
+				p.Name,
+				"Tls is not enabled, enable it to use this clientAuthMode",
+			))
+		}
+	}
+
 	if p.Spec.Replicas != nil {
 		if *p.Spec.Replicas <= 0 {
 			errorList = append(errorList, field.Required(field.NewPath("spec").Child("replicas"),

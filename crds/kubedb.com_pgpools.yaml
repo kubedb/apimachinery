@@ -55,6 +55,7 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
               clientAuthMode:
+                default: md5
                 enum:
                 - md5
                 - scram

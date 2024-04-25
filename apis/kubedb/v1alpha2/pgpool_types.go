@@ -116,6 +116,7 @@ type PgpoolSpec struct {
 	SSLMode PgpoolSSLMode `json:"sslMode,omitempty"`
 
 	// ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
+	// +kubebuilder:default=md5
 	ClientAuthMode PgpoolClientAuthMode `json:"clientAuthMode,omitempty"`
 
 	// TLS contains tls configurations for client and server.

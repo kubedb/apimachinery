@@ -210,17 +210,19 @@ func (p *Pgpool) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]str
 	return p.offshootLabels(meta_util.OverwriteKeys(p.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
-func (p *Pgpool) GetSSLMODE(appBinding *appcat.AppBinding) (string, error) {
+func (p *Pgpool) GetSSLMODE(appBinding *appcat.AppBinding) (PgpoolSSLMode, error) {
+	if appBinding.Spec.ClientConfig.Service == nil {
+		return PgpoolSSLModeDisable, nil
+	}
 	sslmodeString := appBinding.Spec.ClientConfig.Service.Query
 	if sslmodeString == "" {
-		return "disable", nil
+		return PgpoolSSLModeDisable, nil
 	}
 	temps := strings.Split(sslmodeString, "=")
 	if len(temps) != 2 {
 		return "", fmt.Errorf("the sslmode is not valid. please provide the valid template. the temlpate should be like this: sslmode=<your_desire_sslmode>")
 	}
-
-	return strings.TrimSpace(temps[1]), nil
+	return PgpoolSSLMode(strings.TrimSpace(temps[1])), nil
 }
 
 func (p *Pgpool) IsBackendTLSEnabled() (bool, error) {
@@ -236,7 +238,7 @@ func (p *Pgpool) IsBackendTLSEnabled() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if apb.Spec.TLSSecret != nil || len(apb.Spec.ClientConfig.CABundle) > 0 || sslMode == "require" || sslMode == "prefer" || sslMode == "allow" || sslMode == "verify-ca" || sslMode == "verify-full" {
+	if apb.Spec.TLSSecret != nil || len(apb.Spec.ClientConfig.CABundle) > 0 || sslMode != PgpoolSSLModeDisable {
 		return true, nil
 	}
 	return false, nil
@@ -341,15 +343,9 @@ func (p *Pgpool) SetDefaults() {
 		if p.Spec.SSLMode == "" {
 			p.Spec.SSLMode = PgpoolSSLModeVerifyFull
 		}
-		if p.Spec.ClientAuthMode == "" {
-			p.Spec.ClientAuthMode = PgpoolClientAuthModeMD5
-		}
 	} else {
 		if p.Spec.SSLMode == "" {
 			p.Spec.SSLMode = PgpoolSSLModeDisable
-		}
-		if p.Spec.ClientAuthMode == "" {
-			p.Spec.ClientAuthMode = PgpoolClientAuthModeMD5
 		}
 	}
 
