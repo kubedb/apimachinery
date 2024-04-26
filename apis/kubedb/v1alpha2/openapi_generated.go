@@ -26213,12 +26213,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MemcachedSpec(ref common.Reference
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
-					"podPlacementPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PodPlacementPolicy is the reference of the podPlacementPolicy",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
 				},
 				Required: []string{"version"},
 			},

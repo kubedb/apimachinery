@@ -27,11 +27,11 @@ import (
 	"gomodules.xyz/pointer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
+	appslister "k8s.io/client-go/listers/apps/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 func (_ Memcached) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -126,6 +126,10 @@ type memcachedStatsService struct {
 	*Memcached
 }
 
+func (m Memcached) Address() string {
+	return fmt.Sprintf("%s.%s.svc:11211", m.ServiceName(), m.Namespace)
+}
+
 func (m memcachedStatsService) GetNamespace() string {
 	return m.Memcached.GetNamespace()
 }
@@ -162,10 +166,6 @@ func (m Memcached) StatsServiceLabels() map[string]string {
 	return m.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
-func (m *Memcached) PetSetName() string {
-	return m.OffshootName()
-}
-
 func (m *Memcached) SetDefaults() {
 	if m == nil {
 		return
@@ -200,8 +200,8 @@ func (m *MemcachedSpec) GetPersistentSecrets() []string {
 	return nil
 }
 
-func (m *Memcached) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
-	// Desire number of petSets
+func (m *Memcached) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
+	// Desire number of statefulSets
 	expectedItems := 1
-	return checkReplicasOfPetSet(lister.PetSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
+	return checkReplicas(lister.StatefulSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
 }
