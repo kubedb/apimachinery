@@ -508,13 +508,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaStatus":                    schema_apimachinery_apis_kubedb_v1alpha2_KafkaStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KernelSettings":                 schema_apimachinery_apis_kubedb_v1alpha2_KernelSettings(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQL":                          schema_apimachinery_apis_kubedb_v1alpha2_MSSQL(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLApp":                       schema_apimachinery_apis_kubedb_v1alpha2_MSSQLApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLAvailabilityGroupSpec":     schema_apimachinery_apis_kubedb_v1alpha2_MSSQLAvailabilityGroupSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLLeaderElectionConfig":      schema_apimachinery_apis_kubedb_v1alpha2_MSSQLLeaderElectionConfig(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLList":                      schema_apimachinery_apis_kubedb_v1alpha2_MSSQLList(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_MSSQLSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLStatus":                    schema_apimachinery_apis_kubedb_v1alpha2_MSSQLStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServer":                    schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServer(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerApp":                 schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerList":                schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerSpec":                schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerStatus":              schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLTopology":                  schema_apimachinery_apis_kubedb_v1alpha2_MSSQLTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MariaDB":                        schema_apimachinery_apis_kubedb_v1alpha2_MariaDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MariaDBList":                    schema_apimachinery_apis_kubedb_v1alpha2_MariaDBList(ref),
@@ -25736,77 +25736,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KernelSettings(ref common.Referenc
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_MSSQL(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLSpec"),
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLStatus"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLStatus"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"MSSQL": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQL"),
-						},
-					},
-				},
-				Required: []string{"MSSQL"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQL"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLAvailabilityGroupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLAvailabilityGroupSpec defines the availability group spec for MSSQL",
+				Description: "MSSQLAvailabilityGroupSpec defines the availability group spec for MSSQLServer",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"databases": {
@@ -25879,11 +25813,77 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLLeaderElectionConfig(ref comm
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLList contains a list of MSSQL",
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"MSSQLServer": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServer"),
+						},
+					},
+				},
+				Required: []string{"MSSQLServer"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServer"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLServerList contains a list of MSSQLServer",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -25913,7 +25913,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLList(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQL"),
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServer"),
 									},
 								},
 							},
@@ -25924,20 +25924,20 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQL"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServer"},
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLSpec defines the desired state of MSSQL",
+				Description: "MSSQLServerSpec defines the desired state of MSSQLServer",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"version": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Version of MSSQL to be deployed.",
+							Description: "Version of MSSQLServer to be deployed.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -25945,14 +25945,14 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLSpec(ref common.ReferenceCall
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for a MSSQL database. In case of MSSQL Availability Group.",
+							Description: "Number of instances to deploy for a MSSQLServer database. In case of MSSQLServer Availability Group.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MSSQL cluster topology",
+							Description: "MSSQLServer cluster topology",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLTopology"),
 						},
 					},
@@ -26056,11 +26056,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLSpec(ref common.ReferenceCall
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLStatus defines the observed state of MSSQL",
+				Description: "MSSQLServerStatus defines the observed state of MSSQLServer",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"phase": {
@@ -26107,14 +26107,14 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLTopology(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "If set to - \"AvailabilityGroup\", MSSQLAvailabilityGroupSpec is required and MSSQL servers will start an Availability Group",
+							Description: "If set to - \"AvailabilityGroup\", MSSQLAvailabilityGroupSpec is required and MSSQLServer servers will start an Availability Group",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"availabilityGroup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AvailabilityGroup info for MSSQL",
+							Description: "AvailabilityGroup info for MSSQLServer",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLAvailabilityGroupSpec"),
 						},
 					},

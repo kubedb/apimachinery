@@ -34,8 +34,8 @@ type Interface interface {
 	FerretDBs() FerretDBInformer
 	// Kafkas returns a KafkaInformer.
 	Kafkas() KafkaInformer
-	// MSSQLs returns a MSSQLInformer.
-	MSSQLs() MSSQLInformer
+	// MSSQLServers returns a MSSQLServerInformer.
+	MSSQLServers() MSSQLServerInformer
 	// MariaDBs returns a MariaDBInformer.
 	MariaDBs() MariaDBInformer
 	// Memcacheds returns a MemcachedInformer.
@@ -104,9 +104,9 @@ func (v *version) Kafkas() KafkaInformer {
 	return &kafkaInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// MSSQLs returns a MSSQLInformer.
-func (v *version) MSSQLs() MSSQLInformer {
-	return &mSSQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// MSSQLServers returns a MSSQLServerInformer.
+func (v *version) MSSQLServers() MSSQLServerInformer {
+	return &mSSQLServerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MariaDBs returns a MariaDBInformer.

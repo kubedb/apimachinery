@@ -42,9 +42,9 @@ type KafkaConnectorVersionListerExpansion interface{}
 // KafkaVersionLister.
 type KafkaVersionListerExpansion interface{}
 
-// MSSQLVersionListerExpansion allows custom methods to be added to
-// MSSQLVersionLister.
-type MSSQLVersionListerExpansion interface{}
+// MSSQLServerVersionListerExpansion allows custom methods to be added to
+// MSSQLServerVersionLister.
+type MSSQLServerVersionListerExpansion interface{}
 
 // MariaDBVersionListerExpansion allows custom methods to be added to
 // MariaDBVersionLister.

@@ -24,10 +24,10 @@ import (
 )
 
 const (
-	ResourceCodeMSSQL     = "ms"
-	ResourceKindMSSQL     = "MSSQL"
-	ResourceSingularMSSQL = "mssql"
-	ResourcePluralMSSQL   = "mssqls"
+	ResourceCodeMSSQLServer     = "ms"
+	ResourceKindMSSQLServer     = "MSSQLServer"
+	ResourceSingularMSSQLServer = "mssqlserver"
+	ResourcePluralMSSQLServer   = "mssqlservers"
 )
 
 // +kubebuilder:validation:Enum=AvailabilityGroup;RemoteReplica
@@ -38,35 +38,35 @@ const (
 	MSSQLModeRemoteReplica     MSSQLMode = "RemoteReplica"
 )
 
-// MSSQL defines a MSSQL database.
+// MSSQLServer defines a MSSQLServer database.
 
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=mssqls,singular=mssql,shortName=ms,categories={datastore,kubedb,appscode,all}
+// +kubebuilder:resource:path=mssqlservers,singular=mssqlserver,shortName=ms,categories={datastore,kubedb,appscode,all}
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-type MSSQL struct {
+type MSSQLServer struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   MSSQLSpec   `json:"spec,omitempty"`
-	Status MSSQLStatus `json:"status,omitempty"`
+	Spec   MSSQLServerSpec   `json:"spec,omitempty"`
+	Status MSSQLServerStatus `json:"status,omitempty"`
 }
 
-// MSSQLSpec defines the desired state of MSSQL
-type MSSQLSpec struct {
-	// Version of MSSQL to be deployed.
+// MSSQLServerSpec defines the desired state of MSSQLServer
+type MSSQLServerSpec struct {
+	// Version of MSSQLServer to be deployed.
 	Version string `json:"version"`
 
-	// Number of instances to deploy for a MSSQL database. In case of MSSQL Availability Group.
+	// Number of instances to deploy for a MSSQLServer database. In case of MSSQLServer Availability Group.
 	Replicas *int32 `json:"replicas,omitempty"`
 
-	// MSSQL cluster topology
+	// MSSQLServer cluster topology
 	// +optional
 	Topology *MSSQLTopology `json:"topology,omitempty"`
 
@@ -132,23 +132,23 @@ type InternalAuthentication struct {
 
 type MSSQLTopology struct {
 	// If set to -
-	// "AvailabilityGroup", MSSQLAvailabilityGroupSpec is required and MSSQL servers will start an Availability Group
+	// "AvailabilityGroup", MSSQLAvailabilityGroupSpec is required and MSSQLServer servers will start an Availability Group
 	Mode *MSSQLMode `json:"mode,omitempty"`
 
-	// AvailabilityGroup info for MSSQL
+	// AvailabilityGroup info for MSSQLServer
 	// +optional
 	AvailabilityGroup *MSSQLAvailabilityGroupSpec `json:"availabilityGroup,omitempty"`
 }
 
-// MSSQLAvailabilityGroupSpec defines the availability group spec for MSSQL
+// MSSQLAvailabilityGroupSpec defines the availability group spec for MSSQLServer
 type MSSQLAvailabilityGroupSpec struct {
 	// AvailabilityDatabases is an array of databases to be included in the availability group
 	// +optional
 	Databases []string `json:"databases"`
 }
 
-// MSSQLStatus defines the observed state of MSSQL
-type MSSQLStatus struct {
+// MSSQLServerStatus defines the observed state of MSSQLServer
+type MSSQLServerStatus struct {
 	// Specifies the current phase of the database
 	// +optional
 	Phase DatabasePhase `json:"phase,omitempty"`
@@ -202,9 +202,9 @@ type MSSQLLeaderElectionConfig struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// MSSQLList contains a list of MSSQL
-type MSSQLList struct {
+// MSSQLServerList contains a list of MSSQLServer
+type MSSQLServerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MSSQL `json:"items"`
+	Items           []MSSQLServer `json:"items"`
 }

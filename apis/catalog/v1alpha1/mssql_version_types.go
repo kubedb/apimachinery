@@ -22,10 +22,10 @@ import (
 )
 
 const (
-	ResourceCodeMSSQLVersion     = "msversion"
-	ResourceKindMSSQLVersion     = "MSSQLVersion"
-	ResourceSingularMSSQLVersion = "mssqlversion"
-	ResourcePluralMSSQLVersion   = "mssqlversions"
+	ResourceCodeMSSQLServerVersion     = "msversion"
+	ResourceKindMSSQLServerVersion     = "MSSQLServerVersion"
+	ResourceSingularMSSQLServerVersion = "mssqlserverversion"
+	ResourcePluralMSSQLServerVersion   = "mssqlserverversions"
 )
 
 // +genclient
@@ -35,28 +35,28 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=mssqlversions,singular=mssqlversion,scope=Cluster,shortName=msversion,categories={datastore,kubedb,appscode}
+// +kubebuilder:resource:path=mssqlserverversions,singular=mssqlserverversion,scope=Cluster,shortName=msversion,categories={datastore,kubedb,appscode}
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
 // +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-type MSSQLVersion struct {
+type MSSQLServerVersion struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              MSSQLVersionSpec `json:"spec,omitempty"`
+	Spec              MSSQLServerVersionSpec `json:"spec,omitempty"`
 }
 
-// MSSQLVersionSpec defines the desired state of MSSQL Version
-type MSSQLVersionSpec struct {
+// MSSQLServerVersionSpec defines the desired state of MSSQLServer Version
+type MSSQLServerVersionSpec struct {
 	// Version
 	Version string `json:"version"`
 	// Database Image
-	DB MSSQLVersionDatabase `json:"db"`
+	DB MSSQLServerDatabase `json:"db"`
 	// Coordinator Image
 	// +optional
-	Coordinator MSSQLCoordinator `json:"coordinator,omitempty"`
+	Coordinator MSSQLServerCoordinator `json:"coordinator,omitempty"`
 	// Init container Image
-	InitContainer MSSQLInitContainer `json:"initContainer"`
+	InitContainer MSSQLServerInitContainer `json:"initContainer"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
@@ -70,37 +70,26 @@ type MSSQLVersionSpec struct {
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 }
 
-// MSSQLVersionDatabase is the MSSQL Database image
-type MSSQLVersionDatabase struct {
+// MSSQLServerDatabase is the MSSQLServer Database image
+type MSSQLServerDatabase struct {
 	Image string `json:"image"`
 }
 
-// MSSQLCoordinator is the MSSQL coordinator Container image
-type MSSQLCoordinator struct {
+// MSSQLServerCoordinator is the MSSQLServer coordinator Container image
+type MSSQLServerCoordinator struct {
 	Image string `json:"image"`
 }
 
-// MSSQLInitContainer is the MSSQL Container initializer
-type MSSQLInitContainer struct {
+// MSSQLServerInitContainer is the MSSQLServer Container initializer
+type MSSQLServerInitContainer struct {
 	Image string `json:"image"`
-}
-
-// MSSQLVersionPodSecurityPolicy is the MSSQL pod security policies
-type MSSQLVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
-}
-
-// MSSQLSecurityContext is for additional configuration for the MSSQL database container
-type MSSQLSecurityContext struct {
-	RunAsUser  *int64 `json:"runAsUser,omitempty"`
-	RunAsGroup *int64 `json:"runAsGroup,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// MSSQLVersionList contains a list of MSSQLVersion
-type MSSQLVersionList struct {
+// MSSQLServerVersionList contains a list of MSSQLServerVersion
+type MSSQLServerVersionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MSSQLVersion `json:"items"`
+	Items           []MSSQLServerVersion `json:"items"`
 }

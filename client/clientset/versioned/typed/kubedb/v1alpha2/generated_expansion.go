@@ -28,7 +28,7 @@ type FerretDBExpansion interface{}
 
 type KafkaExpansion interface{}
 
-type MSSQLExpansion interface{}
+type MSSQLServerExpansion interface{}
 
 type MariaDBExpansion interface{}
 

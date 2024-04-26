@@ -53,8 +53,8 @@ func (c *FakeCatalogV1alpha1) KafkaVersions() v1alpha1.KafkaVersionInterface {
 	return &FakeKafkaVersions{c}
 }
 
-func (c *FakeCatalogV1alpha1) MSSQLVersions() v1alpha1.MSSQLVersionInterface {
-	return &FakeMSSQLVersions{c}
+func (c *FakeCatalogV1alpha1) MSSQLServerVersions() v1alpha1.MSSQLServerVersionInterface {
+	return &FakeMSSQLServerVersions{c}
 }
 
 func (c *FakeCatalogV1alpha1) MariaDBVersions() v1alpha1.MariaDBVersionInterface {

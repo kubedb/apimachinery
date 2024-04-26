@@ -364,7 +364,7 @@ const (
 	SinglestoreTLSConfigFalse      = "false"
 	SinglestoreTLSConfigPreferred  = "preferred"
 
-	// =========================== MSSQL Constants ============================
+	// =========================== MSSQLServer Constants ============================
 	MSSQLSAUser                  = "sa"
 	MSSQLEndpointCertsSecretName = "endpoint-cert"
 	MSSQLDbmLoginSecretName      = "dbm-login-secret"

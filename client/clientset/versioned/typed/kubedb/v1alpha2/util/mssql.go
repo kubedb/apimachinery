@@ -32,13 +32,13 @@ import (
 	kutil "kmodules.xyz/client-go"
 )
 
-func CreateOrPatchMSSQL(ctx context.Context, c cs.KubedbV1alpha2Interface, meta metav1.ObjectMeta, transform func(*api.MSSQL) *api.MSSQL, opts metav1.PatchOptions) (*api.MSSQL, kutil.VerbType, error) {
-	cur, err := c.MSSQLs(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+func CreateOrPatchMSSQL(ctx context.Context, c cs.KubedbV1alpha2Interface, meta metav1.ObjectMeta, transform func(*api.MSSQLServer) *api.MSSQLServer, opts metav1.PatchOptions) (*api.MSSQLServer, kutil.VerbType, error) {
+	cur, err := c.MSSQLServers(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
-		klog.V(3).Infof("Creating MSSQL %s/%s.", meta.Namespace, meta.Name)
-		out, err := c.MSSQLs(meta.Namespace).Create(ctx, transform(&api.MSSQL{
+		klog.V(3).Infof("Creating MSSQLServer %s/%s.", meta.Namespace, meta.Name)
+		out, err := c.MSSQLServers(meta.Namespace).Create(ctx, transform(&api.MSSQLServer{
 			TypeMeta: metav1.TypeMeta{
-				Kind:       "MSSQL",
+				Kind:       "MSSQLServer",
 				APIVersion: api.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: meta,
@@ -53,11 +53,11 @@ func CreateOrPatchMSSQL(ctx context.Context, c cs.KubedbV1alpha2Interface, meta 
 	return PatchMSSQL(ctx, c, cur, transform, opts)
 }
 
-func PatchMSSQL(ctx context.Context, c cs.KubedbV1alpha2Interface, cur *api.MSSQL, transform func(*api.MSSQL) *api.MSSQL, opts metav1.PatchOptions) (*api.MSSQL, kutil.VerbType, error) {
+func PatchMSSQL(ctx context.Context, c cs.KubedbV1alpha2Interface, cur *api.MSSQLServer, transform func(*api.MSSQLServer) *api.MSSQLServer, opts metav1.PatchOptions) (*api.MSSQLServer, kutil.VerbType, error) {
 	return PatchMSSQLObject(ctx, c, cur, transform(cur.DeepCopy()), opts)
 }
 
-func PatchMSSQLObject(ctx context.Context, c cs.KubedbV1alpha2Interface, cur, mod *api.MSSQL, opts metav1.PatchOptions) (*api.MSSQL, kutil.VerbType, error) {
+func PatchMSSQLObject(ctx context.Context, c cs.KubedbV1alpha2Interface, cur, mod *api.MSSQLServer, opts metav1.PatchOptions) (*api.MSSQLServer, kutil.VerbType, error) {
 	curJson, err := json.Marshal(cur)
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
@@ -75,29 +75,29 @@ func PatchMSSQLObject(ctx context.Context, c cs.KubedbV1alpha2Interface, cur, mo
 	if len(patch) == 0 || string(patch) == "{}" {
 		return cur, kutil.VerbUnchanged, nil
 	}
-	klog.V(3).Infof("Patching MSSQL %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
-	out, err := c.MSSQLs(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
+	klog.V(3).Infof("Patching MSSQLServer %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
+	out, err := c.MSSQLServers(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
 
-func TryUpdateMSSQL(ctx context.Context, c cs.KubedbV1alpha2Interface, meta metav1.ObjectMeta, transform func(*api.MSSQL) *api.MSSQL, opts metav1.UpdateOptions) (result *api.MSSQL, err error) {
+func TryUpdateMSSQL(ctx context.Context, c cs.KubedbV1alpha2Interface, meta metav1.ObjectMeta, transform func(*api.MSSQLServer) *api.MSSQLServer, opts metav1.UpdateOptions) (result *api.MSSQLServer, err error) {
 	attempt := 0
 	err = wait.PollUntilContextTimeout(ctx, kutil.RetryInterval, kutil.RetryTimeout, true, func(ctx context.Context) (bool, error) {
 		attempt++
-		cur, e2 := c.MSSQLs(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+		cur, e2 := c.MSSQLServers(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
 			return false, e2
 		} else if e2 == nil {
 
-			result, e2 = c.MSSQLs(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
+			result, e2 = c.MSSQLServers(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
-		klog.Errorf("Attempt %d failed to update MSSQL %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
+		klog.Errorf("Attempt %d failed to update MSSQLServer %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
 		return false, nil
 	})
 
 	if err != nil {
-		err = fmt.Errorf("failed to update MSSQL %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
+		err = fmt.Errorf("failed to update MSSQLServer %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
 	return
 }
@@ -106,16 +106,16 @@ func UpdateMSSQLStatus(
 	ctx context.Context,
 	c cs.KubedbV1alpha2Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.MSSQLStatus) (types.UID, *api.MSSQLStatus),
+	transform func(*api.MSSQLServerStatus) (types.UID, *api.MSSQLServerStatus),
 	opts metav1.UpdateOptions,
-) (result *api.MSSQL, err error) {
-	apply := func(x *api.MSSQL) *api.MSSQL {
+) (result *api.MSSQLServer, err error) {
+	apply := func(x *api.MSSQLServer) *api.MSSQLServer {
 		uid, updatedStatus := transform(x.Status.DeepCopy())
 		// Ignore status update when uid does not match
 		if uid != "" && uid != x.UID {
 			return x
 		}
-		return &api.MSSQL{
+		return &api.MSSQLServer{
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,
@@ -124,16 +124,16 @@ func UpdateMSSQLStatus(
 	}
 
 	attempt := 0
-	cur, err := c.MSSQLs(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+	cur, err := c.MSSQLServers(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	err = wait.PollUntilContextTimeout(ctx, kutil.RetryInterval, kutil.RetryTimeout, true, func(ctx context.Context) (bool, error) {
 		attempt++
 		var e2 error
-		result, e2 = c.MSSQLs(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
+		result, e2 = c.MSSQLServers(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
 		if kerr.IsConflict(e2) {
-			latest, e3 := c.MSSQLs(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+			latest, e3 := c.MSSQLServers(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 			switch {
 			case e3 == nil:
 				cur = latest
@@ -150,7 +150,7 @@ func UpdateMSSQLStatus(
 	})
 
 	if err != nil {
-		err = fmt.Errorf("failed to update status of MSSQL %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
+		err = fmt.Errorf("failed to update status of MSSQLServer %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
 	return
 }

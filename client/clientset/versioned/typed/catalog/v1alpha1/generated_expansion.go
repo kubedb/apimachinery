@@ -30,7 +30,7 @@ type KafkaConnectorVersionExpansion interface{}
 
 type KafkaVersionExpansion interface{}
 
-type MSSQLVersionExpansion interface{}
+type MSSQLServerVersionExpansion interface{}
 
 type MariaDBVersionExpansion interface{}
 

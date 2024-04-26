@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: mssqls.kubedb.com
+  name: mssqlservers.kubedb.com
 spec:
   group: kubedb.com
   names:
@@ -13,12 +13,12 @@ spec:
     - kubedb
     - appscode
     - all
-    kind: MSSQL
-    listKind: MSSQLList
-    plural: mssqls
+    kind: MSSQLServer
+    listKind: MSSQLServerList
+    plural: mssqlservers
     shortNames:
     - ms
-    singular: mssql
+    singular: mssqlserver
   scope: Namespaced
   versions:
   - additionalPrinterColumns:

@@ -58,13 +58,13 @@ type KafkaListerExpansion interface{}
 // KafkaNamespaceLister.
 type KafkaNamespaceListerExpansion interface{}
 
-// MSSQLListerExpansion allows custom methods to be added to
-// MSSQLLister.
-type MSSQLListerExpansion interface{}
+// MSSQLServerListerExpansion allows custom methods to be added to
+// MSSQLServerLister.
+type MSSQLServerListerExpansion interface{}
 
-// MSSQLNamespaceListerExpansion allows custom methods to be added to
-// MSSQLNamespaceLister.
-type MSSQLNamespaceListerExpansion interface{}
+// MSSQLServerNamespaceListerExpansion allows custom methods to be added to
+// MSSQLServerNamespaceLister.
+type MSSQLServerNamespaceListerExpansion interface{}
 
 // MariaDBListerExpansion allows custom methods to be added to
 // MariaDBLister.

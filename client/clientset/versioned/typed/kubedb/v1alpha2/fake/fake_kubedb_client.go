@@ -49,8 +49,8 @@ func (c *FakeKubedbV1alpha2) Kafkas(namespace string) v1alpha2.KafkaInterface {
 	return &FakeKafkas{c, namespace}
 }
 
-func (c *FakeKubedbV1alpha2) MSSQLs(namespace string) v1alpha2.MSSQLInterface {
-	return &FakeMSSQLs{c, namespace}
+func (c *FakeKubedbV1alpha2) MSSQLServers(namespace string) v1alpha2.MSSQLServerInterface {
+	return &FakeMSSQLServers{c, namespace}
 }
 
 func (c *FakeKubedbV1alpha2) MariaDBs(namespace string) v1alpha2.MariaDBInterface {

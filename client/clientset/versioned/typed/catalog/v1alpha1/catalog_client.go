@@ -35,7 +35,7 @@ type CatalogV1alpha1Interface interface {
 	FerretDBVersionsGetter
 	KafkaConnectorVersionsGetter
 	KafkaVersionsGetter
-	MSSQLVersionsGetter
+	MSSQLServerVersionsGetter
 	MariaDBVersionsGetter
 	MemcachedVersionsGetter
 	MongoDBVersionsGetter
@@ -81,8 +81,8 @@ func (c *CatalogV1alpha1Client) KafkaVersions() KafkaVersionInterface {
 	return newKafkaVersions(c)
 }
 
-func (c *CatalogV1alpha1Client) MSSQLVersions() MSSQLVersionInterface {
-	return newMSSQLVersions(c)
+func (c *CatalogV1alpha1Client) MSSQLServerVersions() MSSQLServerVersionInterface {
+	return newMSSQLServerVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) MariaDBVersions() MariaDBVersionInterface {
