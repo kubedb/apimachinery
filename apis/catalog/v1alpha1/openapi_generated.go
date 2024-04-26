@@ -495,14 +495,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionList":                           schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionPodSecurityPolicy":              schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionSpec":                           schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLCoordinator":                           schema_apimachinery_apis_catalog_v1alpha1_MSSQLCoordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLInitContainer":                         schema_apimachinery_apis_catalog_v1alpha1_MSSQLInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLSecurityContext":                       schema_apimachinery_apis_catalog_v1alpha1_MSSQLSecurityContext(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersion":                               schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionDatabase":                       schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionList":                           schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionPodSecurityPolicy":              schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionSpec":                           schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerCoordinator":                     schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerCoordinator(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerDatabase":                        schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerDatabase(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerInitContainer":                   schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerInitContainer(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersion":                         schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionList":                     schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionSpec":                     schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestBackup":                             schema_apimachinery_apis_catalog_v1alpha1_ManifestBackup(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestRestore":                            schema_apimachinery_apis_catalog_v1alpha1_ManifestRestore(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersion":                             schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersion(ref),
@@ -24258,11 +24256,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLCoordinator is the MSSQL coordinator Container image",
+				Description: "MSSQLServerCoordinator is the MSSQLServer coordinator Container image",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"image": {
@@ -24279,11 +24277,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLCoordinator(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLInitContainer is the MSSQL Container initializer",
+				Description: "MSSQLServerDatabase is the MSSQLServer Database image",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"image": {
@@ -24300,32 +24298,28 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLInitContainer(ref common.Ref
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLSecurityContext is for additional configuration for the MSSQL database container",
+				Description: "MSSQLServerInitContainer is the MSSQLServer Container initializer",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"runAsUser": {
+					"image": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"runAsGroup": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
 						},
 					},
 				},
+				Required: []string{"image"},
 			},
 		},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -24354,43 +24348,22 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersion(ref common.Reference
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionSpec"),
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionSpec"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionSpec"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLVersionDatabase is the MSSQL Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLVersionList contains a list of MSSQLVersion",
+				Description: "MSSQLServerVersionList contains a list of MSSQLServerVersion",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -24420,7 +24393,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionList(ref common.Refer
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersion"),
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersion"),
 									},
 								},
 							},
@@ -24431,36 +24404,15 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionList(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersion"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersion"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLVersionPodSecurityPolicy is the MSSQL pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLVersionSpec defines the desired state of MSSQL Version",
+				Description: "MSSQLServerVersionSpec defines the desired state of MSSQLServer Version",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"version": {
@@ -24475,21 +24427,21 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionSpec(ref common.Refer
 						SchemaProps: spec.SchemaProps{
 							Description: "Database Image",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionDatabase"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerDatabase"),
 						},
 					},
 					"coordinator": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Coordinator Image",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLCoordinator"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerCoordinator"),
 						},
 					},
 					"initContainer": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init container Image",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLInitContainer"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerInitContainer"),
 						},
 					},
 					"deprecated": {
@@ -24525,7 +24477,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

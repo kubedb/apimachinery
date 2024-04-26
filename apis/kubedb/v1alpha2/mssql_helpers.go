@@ -40,74 +40,74 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
-type MSSQLApp struct {
-	*MSSQL
+type MSSQLServerApp struct {
+	*MSSQLServer
 }
 
-func (m *MSSQL) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMSSQL))
+func (m *MSSQLServer) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMSSQLServer))
 }
 
-func (m MSSQLApp) Name() string {
-	return m.MSSQL.Name
+func (m MSSQLServerApp) Name() string {
+	return m.MSSQLServer.Name
 }
 
-func (m MSSQLApp) Type() appcat.AppType {
-	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularMSSQL))
+func (m MSSQLServerApp) Type() appcat.AppType {
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularMSSQLServer))
 }
 
-func (m *MSSQL) ResourceKind() string {
-	return ResourceKindMSSQL
+func (m *MSSQLServer) ResourceKind() string {
+	return ResourceKindMSSQLServer
 }
 
-func (m *MSSQL) ResourcePlural() string {
-	return ResourcePluralMSSQL
+func (m *MSSQLServer) ResourcePlural() string {
+	return ResourcePluralMSSQLServer
 }
 
-func (m *MSSQL) ResourceFQN() string {
+func (m *MSSQLServer) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", m.ResourcePlural(), kubedb.GroupName)
 }
 
 // Owner returns owner reference to resources
-func (m *MSSQL) Owner() *meta.OwnerReference {
+func (m *MSSQLServer) Owner() *meta.OwnerReference {
 	return meta.NewControllerRef(m, SchemeGroupVersion.WithKind(m.ResourceKind()))
 }
 
-func (m *MSSQL) OffshootName() string {
+func (m *MSSQLServer) OffshootName() string {
 	return m.Name
 }
 
-func (m *MSSQL) ServiceName() string {
+func (m *MSSQLServer) ServiceName() string {
 	return m.OffshootName()
 }
 
-func (m *MSSQL) SecondaryServiceName() string {
+func (m *MSSQLServer) SecondaryServiceName() string {
 	return metautil.NameWithPrefix(m.ServiceName(), "secondary")
 }
 
-func (m *MSSQL) GoverningServiceName() string {
+func (m *MSSQLServer) GoverningServiceName() string {
 	return metautil.NameWithSuffix(m.ServiceName(), "pods")
 }
 
-func (m *MSSQL) DefaultUserCredSecretName(username string) string {
+func (m *MSSQLServer) DefaultUserCredSecretName(username string) string {
 	return metautil.NameWithSuffix(m.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", username), "_", "-"))
 }
 
-func (m *MSSQL) offshootLabels(selector, override map[string]string) map[string]string {
+func (m *MSSQLServer) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[metautil.ComponentLabelKey] = ComponentDatabase
 	return metautil.FilterKeys(kubedb.GroupName, selector, metautil.OverwriteKeys(nil, m.Labels, override))
 }
 
-func (m *MSSQL) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+func (m *MSSQLServer) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
 	return m.offshootLabels(metautil.OverwriteKeys(m.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
-func (m *MSSQL) OffshootLabels() map[string]string {
+func (m *MSSQLServer) OffshootLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
 
-func (m *MSSQL) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
+func (m *MSSQLServer) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
 		metautil.NameLabelKey:      m.ResourceFQN(),
 		metautil.InstanceLabelKey:  m.Name,
@@ -116,55 +116,55 @@ func (m *MSSQL) OffshootSelectors(extraSelectors ...map[string]string) map[strin
 	return metautil.OverwriteKeys(selector, extraSelectors...)
 }
 
-func (m *MSSQL) IsAvailabilityGroup() bool {
+func (m *MSSQLServer) IsAvailabilityGroup() bool {
 	return m.Spec.Topology != nil &&
 		m.Spec.Topology.Mode != nil &&
 		*m.Spec.Topology.Mode == MSSQLModeAvailabilityGroup
 }
 
-func (m *MSSQL) IsStandalone() bool {
+func (m *MSSQLServer) IsStandalone() bool {
 	return m.Spec.Topology == nil
 }
 
-func (m *MSSQL) PVCName(alias string) string {
+func (m *MSSQLServer) PVCName(alias string) string {
 	return metautil.NameWithSuffix(m.Name, alias)
 }
 
-func (m *MSSQL) PodLabels(extraLabels ...map[string]string) map[string]string {
+func (m *MSSQLServer) PodLabels(extraLabels ...map[string]string) map[string]string {
 	return m.offshootLabels(metautil.OverwriteKeys(m.OffshootSelectors(), extraLabels...), m.Spec.PodTemplate.Labels)
 }
 
-func (m *MSSQL) PodLabel(podTemplate *ofst.PodTemplateSpec) map[string]string {
+func (m *MSSQLServer) PodLabel(podTemplate *ofst.PodTemplateSpec) map[string]string {
 	if podTemplate != nil && podTemplate.Labels != nil {
 		return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Labels)
 	}
 	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
 
-func (m *MSSQL) ConfigSecretName() string {
+func (m *MSSQLServer) ConfigSecretName() string {
 	return metautil.NameWithSuffix(m.OffshootName(), "config")
 }
 
-func (m *MSSQL) PetSetName() string {
+func (m *MSSQLServer) PetSetName() string {
 	return m.OffshootName()
 }
 
-func (m *MSSQL) ServiceAccountName() string {
+func (m *MSSQLServer) ServiceAccountName() string {
 	return m.OffshootName()
 }
 
-func (m *MSSQL) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
+func (m *MSSQLServer) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
 	return m.offshootLabels(metautil.OverwriteKeys(m.OffshootSelectors(), extraLabels...), m.Spec.PodTemplate.Controller.Labels)
 }
 
-func (m *MSSQL) PodControllerLabel(podTemplate *ofst.PodTemplateSpec) map[string]string {
+func (m *MSSQLServer) PodControllerLabel(podTemplate *ofst.PodTemplateSpec) map[string]string {
 	if podTemplate != nil && podTemplate.Controller.Labels != nil {
 		return m.offshootLabels(m.OffshootSelectors(), podTemplate.Controller.Labels)
 	}
 	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
 
-func (m *MSSQL) GetPersistentSecrets() []string {
+func (m *MSSQLServer) GetPersistentSecrets() []string {
 	var secrets []string
 	if m.Spec.AuthSecret != nil {
 		secrets = append(secrets, m.Spec.AuthSecret.Name)
@@ -177,11 +177,11 @@ func (m *MSSQL) GetPersistentSecrets() []string {
 	return secrets
 }
 
-func (m *MSSQL) AppBindingMeta() appcat.AppBindingMeta {
-	return &MSSQLApp{m}
+func (m *MSSQLServer) AppBindingMeta() appcat.AppBindingMeta {
+	return &MSSQLServerApp{m}
 }
 
-func (m MSSQL) SetHealthCheckerDefaults() {
+func (m MSSQLServer) SetHealthCheckerDefaults() {
 	if m.Spec.HealthChecker.PeriodSeconds == nil {
 		m.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
 	}
@@ -193,22 +193,22 @@ func (m MSSQL) SetHealthCheckerDefaults() {
 	}
 }
 
-func (m MSSQL) GetAuthSecretName() string {
+func (m MSSQLServer) GetAuthSecretName() string {
 	if m.Spec.AuthSecret != nil && m.Spec.AuthSecret.Name != "" {
 		return m.Spec.AuthSecret.Name
 	}
 	return metautil.NameWithSuffix(m.OffshootName(), "auth")
 }
 
-func (m *MSSQL) GetNameSpacedName() string {
+func (m *MSSQLServer) GetNameSpacedName() string {
 	return m.Namespace + "/" + m.Name
 }
 
-func (m *MSSQL) PrimaryServiceDNS() string {
+func (m *MSSQLServer) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
 }
 
-func (m *MSSQL) SetDefaults() {
+func (m *MSSQLServer) SetDefaults() {
 	if m == nil {
 		return
 	}
@@ -252,12 +252,12 @@ func (m *MSSQL) SetDefaults() {
 		m.Spec.PodTemplate = &ofst.PodTemplateSpec{}
 	}
 
-	var mssqlVersion catalog.MSSQLVersion
+	var mssqlVersion catalog.MSSQLServerVersion
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: m.Spec.Version,
 	}, &mssqlVersion)
 	if err != nil {
-		klog.Errorf("can't get the MSSQL version object %s for %s \n", m.Spec.Version, err.Error())
+		klog.Errorf("can't get the MSSQLServer version object %s for %s \n", m.Spec.Version, err.Error())
 		return
 	}
 
@@ -268,7 +268,7 @@ func (m *MSSQL) SetDefaults() {
 	m.setDefaultContainerResourceLimits(m.Spec.PodTemplate)
 }
 
-func (m *MSSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MSSQLVersion, podTemplate *ofst.PodTemplateSpec) {
+func (m *MSSQLServer) setDefaultContainerSecurityContext(mssqlVersion *catalog.MSSQLServerVersion, podTemplate *ofst.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -320,7 +320,7 @@ func (m *MSSQL) setDefaultContainerSecurityContext(mssqlVersion *catalog.MSSQLVe
 	}
 }
 
-func (m *MSSQL) assignDefaultContainerSecurityContext(mssqlVersion *catalog.MSSQLVersion, sc *core.SecurityContext, isMainContainer bool) {
+func (m *MSSQLServer) assignDefaultContainerSecurityContext(mssqlVersion *catalog.MSSQLServerVersion, sc *core.SecurityContext, isMainContainer bool) {
 	if sc.AllowPrivilegeEscalation == nil {
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
@@ -350,7 +350,7 @@ func (m *MSSQL) assignDefaultContainerSecurityContext(mssqlVersion *catalog.MSSQ
 	}
 }
 
-func (m *MSSQL) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
+func (m *MSSQLServer) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
 	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, MSSQLContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResourcesMemoryIntensive)

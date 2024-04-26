@@ -40,7 +40,7 @@ import (
 var mssqllog = logf.Log.WithName("mssql-resource")
 
 // SetupWebhookWithManager will setup the manager to manage the webhooks
-func (r *MSSQL) SetupWebhookWithManager(mgr ctrl.Manager) error {
+func (r *MSSQLServer) SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
 		For(r).
 		Complete()
@@ -48,10 +48,10 @@ func (r *MSSQL) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-mssql,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=mssqls,verbs=create;update,versions=v1alpha2,name=mmssql.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &MSSQL{}
+var _ webhook.Defaulter = &MSSQLServer{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (m *MSSQL) Default() {
+func (m *MSSQLServer) Default() {
 	if m == nil {
 		return
 	}
@@ -62,21 +62,21 @@ func (m *MSSQL) Default() {
 
 //+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-mssql,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=mssqls,verbs=create;update,versions=v1alpha2,name=vmssql.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &MSSQL{}
+var _ webhook.Validator = &MSSQLServer{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (m *MSSQL) ValidateCreate() (admission.Warnings, error) {
+func (m *MSSQLServer) ValidateCreate() (admission.Warnings, error) {
 	mssqllog.Info("validate create", "name", m.Name)
 
 	allErr := m.ValidateCreateOrUpdate()
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: ResourceKindMSSQL}, m.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: ResourceKindMSSQLServer}, m.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (m *MSSQL) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (m *MSSQLServer) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 	mssqllog.Info("validate update", "name", m.Name)
 
 	allErr := m.ValidateCreateOrUpdate()
@@ -84,11 +84,11 @@ func (m *MSSQL) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 		return nil, nil
 	}
 
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: ResourceKindMSSQL}, m.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: ResourceKindMSSQLServer}, m.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (m *MSSQL) ValidateDelete() (admission.Warnings, error) {
+func (m *MSSQLServer) ValidateDelete() (admission.Warnings, error) {
 	mssqllog.Info("validate delete", "name", m.Name)
 
 	var allErr field.ErrorList
@@ -96,12 +96,12 @@ func (m *MSSQL) ValidateDelete() (admission.Warnings, error) {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			m.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: ResourceKindMSSQL}, m.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: ResourceKindMSSQLServer}, m.Name, allErr)
 	}
 	return nil, nil
 }
 
-func (m *MSSQL) ValidateCreateOrUpdate() field.ErrorList {
+func (m *MSSQLServer) ValidateCreateOrUpdate() field.ErrorList {
 	var allErr field.ErrorList
 
 	err := mssqlValidateVersion(m)
@@ -196,8 +196,8 @@ var mssqlReservedVolumesMountPaths = []string{
 	MSSQLVolumeMountPathCerts,
 }
 
-func mssqlValidateVersion(m *MSSQL) error {
-	var mssqlVersion catalog.MSSQLVersion
+func mssqlValidateVersion(m *MSSQLServer) error {
+	var mssqlVersion catalog.MSSQLServerVersion
 
 	return DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: m.Spec.Version,

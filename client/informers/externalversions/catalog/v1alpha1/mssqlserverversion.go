@@ -33,58 +33,58 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// MSSQLVersionInformer provides access to a shared informer and lister for
-// MSSQLVersions.
-type MSSQLVersionInformer interface {
+// MSSQLServerVersionInformer provides access to a shared informer and lister for
+// MSSQLServerVersions.
+type MSSQLServerVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MSSQLVersionLister
+	Lister() v1alpha1.MSSQLServerVersionLister
 }
 
-type mSSQLVersionInformer struct {
+type mSSQLServerVersionInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 }
 
-// NewMSSQLVersionInformer constructs a new informer for MSSQLVersion type.
+// NewMSSQLServerVersionInformer constructs a new informer for MSSQLServerVersion type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewMSSQLVersionInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredMSSQLVersionInformer(client, resyncPeriod, indexers, nil)
+func NewMSSQLServerVersionInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredMSSQLServerVersionInformer(client, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredMSSQLVersionInformer constructs a new informer for MSSQLVersion type.
+// NewFilteredMSSQLServerVersionInformer constructs a new informer for MSSQLServerVersion type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredMSSQLVersionInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredMSSQLServerVersionInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().MSSQLVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().MSSQLServerVersions().List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().MSSQLVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().MSSQLServerVersions().Watch(context.TODO(), options)
 			},
 		},
-		&catalogv1alpha1.MSSQLVersion{},
+		&catalogv1alpha1.MSSQLServerVersion{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *mSSQLVersionInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredMSSQLVersionInformer(client, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *mSSQLServerVersionInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredMSSQLServerVersionInformer(client, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *mSSQLVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.MSSQLVersion{}, f.defaultInformer)
+func (f *mSSQLServerVersionInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&catalogv1alpha1.MSSQLServerVersion{}, f.defaultInformer)
 }
 
-func (f *mSSQLVersionInformer) Lister() v1alpha1.MSSQLVersionLister {
-	return v1alpha1.NewMSSQLVersionLister(f.Informer().GetIndexer())
+func (f *mSSQLServerVersionInformer) Lister() v1alpha1.MSSQLServerVersionLister {
+	return v1alpha1.NewMSSQLServerVersionLister(f.Informer().GetIndexer())
 }
