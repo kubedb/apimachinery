@@ -27,29 +27,29 @@ import (
 )
 
 func (r RabbitMQAutoscaler) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMongoDBAutoscaler))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralRabbitMQAutoscaler))
 }
 
 var _ apis.ResourceInfo = &RabbitMQAutoscaler{}
 
 func (r RabbitMQAutoscaler) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", ResourcePluralMongoDBAutoscaler, autoscaling.GroupName)
+	return fmt.Sprintf("%s.%s", ResourcePluralRabbitMQAutoscaler, autoscaling.GroupName)
 }
 
 func (r RabbitMQAutoscaler) ResourceShortCode() string {
-	return ResourceCodeMongoDBAutoscaler
+	return ResourceCodeRabbitMQAutoscaler
 }
 
 func (r RabbitMQAutoscaler) ResourceKind() string {
-	return ResourceKindMongoDBAutoscaler
+	return ResourceKindRabbitMQAutoscaler
 }
 
 func (r RabbitMQAutoscaler) ResourceSingular() string {
-	return ResourceSingularMongoDBAutoscaler
+	return ResourceSingularRabbitMQAutoscaler
 }
 
 func (r RabbitMQAutoscaler) ResourcePlural() string {
-	return ResourcePluralMongoDBAutoscaler
+	return ResourcePluralRabbitMQAutoscaler
 }
 
 func (r RabbitMQAutoscaler) ValidateSpecs() error {
