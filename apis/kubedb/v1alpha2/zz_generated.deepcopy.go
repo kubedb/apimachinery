@@ -2325,6 +2325,7 @@ func (in *MemcachedSpec) DeepCopyInto(out *MemcachedSpec) {
 		*out = new(apiv1.TLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
 	return
 }
 

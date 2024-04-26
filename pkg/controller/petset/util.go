@@ -137,7 +137,6 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
-
 	default:
 		return nil, fmt.Errorf("unknown database kind: %s", owner.Kind)
 	}
