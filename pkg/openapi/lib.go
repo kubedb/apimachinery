@@ -38,6 +38,7 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 		"/apis/mutators.autoscaling.kubedb.com/v1alpha1/pgbouncerautoscalerwebhooks",
 		"/apis/mutators.autoscaling.kubedb.com/v1alpha1/postgresautoscalerwebhooks",
 		"/apis/mutators.autoscaling.kubedb.com/v1alpha1/proxysqlautoscalerwebhooks",
+		"/apis/mutators.autoscaling.kubedb.com/v1alpha1/rabbitmqautoscalerwebhooks",
 		"/apis/mutators.autoscaling.kubedb.com/v1alpha1/redisautoscalerwebhooks",
 		"/apis/mutators.autoscaling.kubedb.com/v1alpha1/redissentinelautoscalerwebhooks",
 
@@ -90,6 +91,7 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 		"/apis/validators.autoscaling.kubedb.com/v1alpha1/pgbouncerautoscalerwebhooks",
 		"/apis/validators.autoscaling.kubedb.com/v1alpha1/postgresautoscalerwebhooks",
 		"/apis/validators.autoscaling.kubedb.com/v1alpha1/proxysqlautoscalerwebhooks",
+		"/apis/validators.autoscaling.kubedb.com/v1alpha1/rabbitmqautoscalerwebhooks",
 		"/apis/validators.autoscaling.kubedb.com/v1alpha1/redisautoscalerwebhooks",
 		"/apis/validators.autoscaling.kubedb.com/v1alpha1/redissentinelautoscalerwebhooks",
 
