@@ -560,10 +560,16 @@ const (
 	EnvPgpoolService                   = "PGPOOL_SERVICE"
 	EnvPgpoolServicePort               = "PGPOOL_SERVICE_PORT"
 	EnvPgpoolSSLMode                   = "SSLMODE"
+	EnvPgpoolExporterConnectionString  = "DATA_SOURCE_NAME"
 	PgpoolDefaultSSLMode               = "disable"
 	PgpoolExporterContainerName        = "exporter"
 	PgpoolAuthUsername                 = "pcp"
 	SyncPeriod                         = 10
+	PgpoolTlsVolumeName                = "certs"
+	PgpoolTlsVolumeMountPath           = "/config/tls"
+	PgpoolExporterTlsVolumeName        = "exporter-certs"
+	PgpoolExporterTlsVolumeMountPath   = "/tls/certs"
+	PgpoolRootUser                     = "postgres"
 	// ========================================== ZooKeeper Constants =================================================//
 
 	KubeDBZooKeeperRoleName         = "kubedb:zookeeper-version-reader"
