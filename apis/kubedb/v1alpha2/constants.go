@@ -326,19 +326,22 @@ const (
 	SinglestoreDatabasePortName       = "db"
 	SinglestorePrimaryServicePortName = "primary"
 	SinglestoreStudioPortName         = "studio"
-	SinglestoreDatabasePort           = 3306
-	SinglestoreStudioPort             = 8081
-	SinglestoreExporterPort           = 9104
-	SinglestoreRootUserName           = "ROOT_USERNAME"
-	SinglestoreRootPassword           = "ROOT_PASSWORD"
-	SinglestoreRootUser               = "root"
-	DatabasePodMaster                 = "Master"
-	DatabasePodAggregator             = "Aggregator"
-	DatabasePodLeaf                   = "Leaf"
-	PetSetTypeAggregator              = "aggregator"
-	PetSetTypeLeaf                    = "leaf"
-	SinglestoreDatabaseHealth         = "singlestore_health"
-	SinglestoreTableHealth            = "singlestore_health_table"
+
+	SinglestoreDatabasePort = 3306
+	SinglestoreStudioPort   = 8081
+	SinglestoreExporterPort = 9104
+
+	SinglestoreRootUserName = "ROOT_USERNAME"
+	SinglestoreRootPassword = "ROOT_PASSWORD"
+	SinglestoreRootUser     = "root"
+	DatabasePodMaster       = "Master"
+	DatabasePodAggregator   = "Aggregator"
+	DatabasePodLeaf         = "Leaf"
+	PetSetTypeAggregator    = "aggregator"
+	PetSetTypeLeaf          = "leaf"
+
+	SinglestoreDatabaseHealth = "singlestore_health"
+	SinglestoreTableHealth    = "singlestore_health_table"
 
 	SinglestoreCoordinatorContainerName = "singlestore-coordinator"
 	SinglestoreContainerName            = "singlestore"
@@ -352,6 +355,14 @@ const (
 	SinglestoreVolumeMountPathInitScript     = "/scripts"
 	SinglestoreVolumeNameData                = "data"
 	SinglestoreVolumeMountPathData           = "/var/lib/memsql"
+	SinglestoreVolumeNameTLS                 = "tls-volume"
+	SinglestoreVolumeMountPathTLS            = "/etc/memsql/certs"
+
+	SinglestoreTLSConfigCustom     = "custom"
+	SinglestoreTLSConfigSkipVerify = "skip-verify"
+	SinglestoreTLSConfigTrue       = "true"
+	SinglestoreTLSConfigFalse      = "false"
+	SinglestoreTLSConfigPreferred  = "preferred"
 
 	// =========================== MSSQL Constants ============================
 	MSSQLSAUser                  = "sa"
