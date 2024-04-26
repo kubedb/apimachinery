@@ -326,19 +326,22 @@ const (
 	SinglestoreDatabasePortName       = "db"
 	SinglestorePrimaryServicePortName = "primary"
 	SinglestoreStudioPortName         = "studio"
-	SinglestoreDatabasePort           = 3306
-	SinglestoreStudioPort             = 8081
-	SinglestoreExporterPort           = 9104
-	SinglestoreRootUserName           = "ROOT_USERNAME"
-	SinglestoreRootPassword           = "ROOT_PASSWORD"
-	SinglestoreRootUser               = "root"
-	DatabasePodMaster                 = "Master"
-	DatabasePodAggregator             = "Aggregator"
-	DatabasePodLeaf                   = "Leaf"
-	PetSetTypeAggregator              = "aggregator"
-	PetSetTypeLeaf                    = "leaf"
-	SinglestoreDatabaseHealth         = "singlestore_health"
-	SinglestoreTableHealth            = "singlestore_health_table"
+
+	SinglestoreDatabasePort = 3306
+	SinglestoreStudioPort   = 8081
+	SinglestoreExporterPort = 9104
+
+	SinglestoreRootUserName = "ROOT_USERNAME"
+	SinglestoreRootPassword = "ROOT_PASSWORD"
+	SinglestoreRootUser     = "root"
+	DatabasePodMaster       = "Master"
+	DatabasePodAggregator   = "Aggregator"
+	DatabasePodLeaf         = "Leaf"
+	PetSetTypeAggregator    = "aggregator"
+	PetSetTypeLeaf          = "leaf"
+
+	SinglestoreDatabaseHealth = "singlestore_health"
+	SinglestoreTableHealth    = "singlestore_health_table"
 
 	SinglestoreCoordinatorContainerName = "singlestore-coordinator"
 	SinglestoreContainerName            = "singlestore"
@@ -352,6 +355,56 @@ const (
 	SinglestoreVolumeMountPathInitScript     = "/scripts"
 	SinglestoreVolumeNameData                = "data"
 	SinglestoreVolumeMountPathData           = "/var/lib/memsql"
+	SinglestoreVolumeNameTLS                 = "tls-volume"
+	SinglestoreVolumeMountPathTLS            = "/etc/memsql/certs"
+
+	SinglestoreTLSConfigCustom     = "custom"
+	SinglestoreTLSConfigSkipVerify = "skip-verify"
+	SinglestoreTLSConfigTrue       = "true"
+	SinglestoreTLSConfigFalse      = "false"
+	SinglestoreTLSConfigPreferred  = "preferred"
+
+	// =========================== MSSQL Constants ============================
+	MSSQLSAUser                  = "sa"
+	MSSQLEndpointCertsSecretName = "endpoint-cert"
+	MSSQLDbmLoginSecretName      = "dbm-login-secret"
+	MSSQLMasterKeySecretName     = "master-key-secret"
+
+	AGPrimaryReplicaReadyCondition = "AGPrimaryReplicaReady"
+
+	MSSQLDatabasePodPrimary       = "primary"
+	MSSQLDatabasePodSecondary     = "secondary"
+	MSSQLSecondaryServiceAlias    = "secondary"
+	MSSQLSecondaryServicePortName = "secondary"
+
+	// port related
+	MSSQLDatabasePortName              = "db"
+	MSSQLPrimaryServicePortName        = "primary"
+	MSSQLDatabasePort                  = 1433
+	MSSQLDatabaseMirroringEndpointPort = 5022
+	MSSQLCoordinatorPort               = 2381
+	// environment variables
+	EnvAcceptEula        = "ACCEPT_EULA"
+	EnvMSSQLEnableHADR   = "MSSQL_ENABLE_HADR"
+	EnvMSSQLAgentEnabled = "MSSQL_AGENT_ENABLED"
+	EnvMSSQLSAUsername   = "MSSQL_SA_USERNAME"
+	EnvMSSQLSAPassword   = "MSSQL_SA_PASSWORD"
+	// container related
+	MSSQLContainerName            = "mssql"
+	MSSQLCoordinatorContainerName = "mssql-coordinator"
+	MSSQLInitContainerName        = "mssql-init"
+	// volume related
+	MSSQLVolumeNameData              = "data"
+	MSSQLVolumeMountPathData         = "/var/opt/mssql"
+	MSSQLVolumeNameInitScript        = "init-scripts"
+	MSSQLVolumeMountPathInitScript   = "/scripts"
+	MSSQLVolumeNameEndpointCert      = "endpoint-cert"
+	MSSQLVolumeMountPathEndpointCert = "/var/opt/mssql/endpoint-cert"
+	MSSQLVolumeNameCerts             = "certs"
+	MSSQLVolumeMountPathCerts        = "/var/opt/mssql/certs"
+	// tls related
+	MSSQLInternalTLSCrt = "tls.crt"
+	MSSQLInternalTLSKey = "tls.key"
 
 	// =========================== PostgreSQL Constants ============================
 	PostgresDatabasePortName          = "db"
@@ -518,10 +571,16 @@ const (
 	EnvPgpoolService                   = "PGPOOL_SERVICE"
 	EnvPgpoolServicePort               = "PGPOOL_SERVICE_PORT"
 	EnvPgpoolSSLMode                   = "SSLMODE"
+	EnvPgpoolExporterConnectionString  = "DATA_SOURCE_NAME"
 	PgpoolDefaultSSLMode               = "disable"
 	PgpoolExporterContainerName        = "exporter"
 	PgpoolAuthUsername                 = "pcp"
 	SyncPeriod                         = 10
+	PgpoolTlsVolumeName                = "certs"
+	PgpoolTlsVolumeMountPath           = "/config/tls"
+	PgpoolExporterTlsVolumeName        = "exporter-certs"
+	PgpoolExporterTlsVolumeMountPath   = "/tls/certs"
+	PgpoolRootUser                     = "postgres"
 	// ========================================== ZooKeeper Constants =================================================//
 
 	KubeDBZooKeeperRoleName         = "kubedb:zookeeper-version-reader"
@@ -883,6 +942,7 @@ const (
 	DruidPortMiddleManagers = 8091
 	DruidPortBrokers        = 8082
 	DruidPortRouters        = 8888
+	DruidExporterPort       = 9104
 
 	// Common Runtime Configurations Properties
 	// ZooKeeperSpec
@@ -962,7 +1022,7 @@ const (
 	DruidEmitter                                = "druid.emitter"
 	DruidEmitterPrometheus                      = "prometheus"
 	DruidEmitterPrometheusPortKey               = "druid.emitter.prometheus.port"
-	DruidEmitterPrometheusPortVal               = 8080
+	DruidEmitterPrometheusPortVal               = 9104
 	DruidMonitoringMonitorsKey                  = "druid.monitoring.monitors"
 	DruidEmitterPrometheusDimensionMapPath      = "druid.emitter.prometheus.dimensionMapPath"
 	DruidEmitterPrometheusStrategy              = "druid.emitter.prometheus.strategy"

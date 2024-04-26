@@ -495,6 +495,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionList":                           schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionPodSecurityPolicy":              schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionSpec":                           schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLCoordinator":                           schema_apimachinery_apis_catalog_v1alpha1_MSSQLCoordinator(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLInitContainer":                         schema_apimachinery_apis_catalog_v1alpha1_MSSQLInitContainer(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLSecurityContext":                       schema_apimachinery_apis_catalog_v1alpha1_MSSQLSecurityContext(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersion":                               schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionDatabase":                       schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionDatabase(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionList":                           schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionPodSecurityPolicy":              schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionPodSecurityPolicy(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionSpec":                           schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestBackup":                             schema_apimachinery_apis_catalog_v1alpha1_ManifestBackup(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestRestore":                            schema_apimachinery_apis_catalog_v1alpha1_ManifestRestore(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersion":                             schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersion(ref),
@@ -24247,6 +24255,277 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref common.Refer
 		},
 		Dependencies: []string{
 			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectClusterVersion", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CruiseControlVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLCoordinator is the MSSQL coordinator Container image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLInitContainer is the MSSQL Container initializer",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLSecurityContext is for additional configuration for the MSSQL database container",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"runAsUser": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"runAsGroup": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLVersionDatabase is the MSSQL Database image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLVersionList contains a list of MSSQLVersion",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersion"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLVersionPodSecurityPolicy is the MSSQL pod security policies",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databasePolicyName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"databasePolicyName"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLVersionSpec defines the desired state of MSSQL Version",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionDatabase"),
+						},
+					},
+					"coordinator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Coordinator Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLCoordinator"),
+						},
+					},
+					"initContainer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Init container Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLInitContainer"),
+						},
+					},
+					"deprecated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"stash": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Stash defines backup and restore task definitions.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
+						},
+					},
+					"securityContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecurityContext is for the additional config for the DB container",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
+						},
+					},
+					"updateConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "update constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
+						},
+					},
+				},
+				Required: []string{"version", "db", "initContainer"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

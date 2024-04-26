@@ -28,6 +28,8 @@ type FerretDBExpansion interface{}
 
 type KafkaExpansion interface{}
 
+type MSSQLExpansion interface{}
+
 type MariaDBExpansion interface{}
 
 type MemcachedExpansion interface{}
