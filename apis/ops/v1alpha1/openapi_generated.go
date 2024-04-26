@@ -493,9 +493,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaVolumeExpansionSpec":                   schema_apimachinery_apis_ops_v1alpha1_KafkaVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLCustomConfigurationSpec":               schema_apimachinery_apis_ops_v1alpha1_MSSQLCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLHorizontalScalingSpec":                 schema_apimachinery_apis_ops_v1alpha1_MSSQLHorizontalScalingSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLOpsRequest":                            schema_apimachinery_apis_ops_v1alpha1_MSSQLOpsRequest(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLOpsRequestList":                        schema_apimachinery_apis_ops_v1alpha1_MSSQLOpsRequestList(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLOpsRequestSpec":                        schema_apimachinery_apis_ops_v1alpha1_MSSQLOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequest":                      schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequest(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequestList":                  schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestList(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequestSpec":                  schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLReplicaReadinessCriteria":              schema_apimachinery_apis_ops_v1alpha1_MSSQLReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLUpdateVersionSpec":                     schema_apimachinery_apis_ops_v1alpha1_MSSQLUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLVerticalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_MSSQLVerticalScalingSpec(ref),
@@ -24219,7 +24219,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLHorizontalScalingSpec(ref common
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_MSSQLOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -24248,7 +24248,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLOpsRequest(ref common.ReferenceC
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLOpsRequestSpec"),
+							Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequestSpec"),
 						},
 					},
 					"status": {
@@ -24261,15 +24261,15 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLOpsRequest(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLOpsRequestSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.OpsRequestStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequestSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.OpsRequestStatus"},
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_MSSQLOpsRequestList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLOpsRequestList is a list of MSSQLOpsRequests",
+				Description: "MSSQLServerOpsRequestList is a list of MSSQLServerOpsRequests",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -24294,13 +24294,13 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLOpsRequestList(ref common.Refere
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of MSSQLOpsRequest CRD objects",
+							Description: "Items is a list of MSSQLServerOpsRequest CRD objects",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLOpsRequest"),
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequest"),
 									},
 								},
 							},
@@ -24310,15 +24310,15 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLOpsRequestList(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLOpsRequest"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequest"},
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_MSSQLOpsRequestSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLOpsRequestSpec is the spec for MSSQLOpsRequest",
+				Description: "MSSQLServerOpsRequestSpec is the spec for MSSQLServerOpsRequest",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"databaseRef": {

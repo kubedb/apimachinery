@@ -23,37 +23,37 @@ import (
 )
 
 const (
-	ResourceCodeMSSQLOpsRequest     = "msops"
-	ResourceKindMSSQLOpsRequest     = "MSSQLOpsRequest"
-	ResourceSingularMSSQLOpsRequest = "mssqlopsrequest"
-	ResourcePluralMSSQLOpsRequest   = "mssqlopsrequests"
+	ResourceCodeMSSQLServerOpsRequest     = "msops"
+	ResourceKindMSSQLServerOpsRequest     = "MSSQLServerOpsRequest"
+	ResourceSingularMSSQLServerOpsRequest = "mssqlserveropsrequest"
+	ResourcePluralMSSQLServerOpsRequest   = "mssqlserveropsrequests"
 )
 
-// MsSDBOpsRequest defines a MsS DBA operation.
+// MSSQLServerOpsRequest defines a MsS DBA operation.
 
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=mssqlopsrequests,singular=mssqlopsrequest,shortName=msops,categories={datastore,kubedb,appscode}
+// +kubebuilder:resource:path=mssqlserveropsrequests,singular=mssqlserveropsrequest,shortName=msops,categories={datastore,kubedb,appscode}
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-type MSSQLOpsRequest struct {
+type MSSQLServerOpsRequest struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              MSSQLOpsRequestSpec `json:"spec,omitempty"`
-	Status            OpsRequestStatus    `json:"status,omitempty"`
+	Spec              MSSQLServerOpsRequestSpec `json:"spec,omitempty"`
+	Status            OpsRequestStatus          `json:"status,omitempty"`
 }
 
-// MSSQLOpsRequestSpec is the spec for MSSQLOpsRequest
-type MSSQLOpsRequestSpec struct {
+// MSSQLServerOpsRequestSpec is the spec for MSSQLServerOpsRequest
+type MSSQLServerOpsRequestSpec struct {
 	// Specifies the MSSQL reference
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
-	Type MSSQLOpsRequestType `json:"type"`
+	Type MSSQLServerOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading MSSQL
 	UpdateVersion *MSSQLUpdateVersionSpec `json:"updateVersion,omitempty"`
 	// Specifies information necessary for horizontal scaling
@@ -77,7 +77,7 @@ type MSSQLOpsRequestSpec struct {
 
 // +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
 // ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
-type MSSQLOpsRequestType string
+type MSSQLServerOpsRequestType string
 
 // MSSQLReplicaReadinessCriteria is the criteria for checking readiness of a MSSQL pod
 // after updating, horizontal scaling etc.
@@ -103,10 +103,10 @@ type MSSQLCustomConfigurationSpec struct{}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// MSSQLOpsRequestList is a list of MSSQLOpsRequests
-type MSSQLOpsRequestList struct {
+// MSSQLServerOpsRequestList is a list of MSSQLServerOpsRequests
+type MSSQLServerOpsRequestList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	// Items is a list of MSSQLOpsRequest CRD objects
-	Items []MSSQLOpsRequest `json:"items,omitempty"`
+	// Items is a list of MSSQLServerOpsRequest CRD objects
+	Items []MSSQLServerOpsRequest `json:"items,omitempty"`
 }
