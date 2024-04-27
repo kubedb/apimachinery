@@ -30,8 +30,8 @@ type Interface interface {
 	EtcdOpsRequests() EtcdOpsRequestInformer
 	// KafkaOpsRequests returns a KafkaOpsRequestInformer.
 	KafkaOpsRequests() KafkaOpsRequestInformer
-	// MSSQLOpsRequests returns a MSSQLOpsRequestInformer.
-	MSSQLOpsRequests() MSSQLOpsRequestInformer
+	// MSSQLServerOpsRequests returns a MSSQLServerOpsRequestInformer.
+	MSSQLServerOpsRequests() MSSQLServerOpsRequestInformer
 	// MariaDBOpsRequests returns a MariaDBOpsRequestInformer.
 	MariaDBOpsRequests() MariaDBOpsRequestInformer
 	// MemcachedOpsRequests returns a MemcachedOpsRequestInformer.
@@ -82,9 +82,9 @@ func (v *version) KafkaOpsRequests() KafkaOpsRequestInformer {
 	return &kafkaOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// MSSQLOpsRequests returns a MSSQLOpsRequestInformer.
-func (v *version) MSSQLOpsRequests() MSSQLOpsRequestInformer {
-	return &mSSQLOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// MSSQLServerOpsRequests returns a MSSQLServerOpsRequestInformer.
+func (v *version) MSSQLServerOpsRequests() MSSQLServerOpsRequestInformer {
+	return &mSSQLServerOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MariaDBOpsRequests returns a MariaDBOpsRequestInformer.

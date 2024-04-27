@@ -493,10 +493,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaVolumeExpansionSpec":                   schema_apimachinery_apis_ops_v1alpha1_KafkaVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLCustomConfigurationSpec":               schema_apimachinery_apis_ops_v1alpha1_MSSQLCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLHorizontalScalingSpec":                 schema_apimachinery_apis_ops_v1alpha1_MSSQLHorizontalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLReplicaReadinessCriteria":              schema_apimachinery_apis_ops_v1alpha1_MSSQLReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequest":                      schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequestList":                  schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequestSpec":                  schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLReplicaReadinessCriteria":              schema_apimachinery_apis_ops_v1alpha1_MSSQLReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLUpdateVersionSpec":                     schema_apimachinery_apis_ops_v1alpha1_MSSQLUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLVerticalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_MSSQLVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLVolumeExpansionSpec":                   schema_apimachinery_apis_ops_v1alpha1_MSSQLVolumeExpansionSpec(ref),
@@ -24219,6 +24219,17 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLHorizontalScalingSpec(ref common
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_MSSQLReplicaReadinessCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLReplicaReadinessCriteria is the criteria for checking readiness of a MSSQL pod after updating, horizontal scaling etc.",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24397,17 +24408,6 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestSpec(ref common.
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
-	}
-}
-
-func schema_apimachinery_apis_ops_v1alpha1_MSSQLReplicaReadinessCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLReplicaReadinessCriteria is the criteria for checking readiness of a MSSQL pod after updating, horizontal scaling etc.",
-				Type:        []string{"object"},
-			},
-		},
 	}
 }
 

@@ -24,7 +24,7 @@ type EtcdOpsRequestExpansion interface{}
 
 type KafkaOpsRequestExpansion interface{}
 
-type MSSQLOpsRequestExpansion interface{}
+type MSSQLServerOpsRequestExpansion interface{}
 
 type MariaDBOpsRequestExpansion interface{}
 

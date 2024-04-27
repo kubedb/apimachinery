@@ -32,7 +32,7 @@ type OpsV1alpha1Interface interface {
 	ElasticsearchOpsRequestsGetter
 	EtcdOpsRequestsGetter
 	KafkaOpsRequestsGetter
-	MSSQLOpsRequestsGetter
+	MSSQLServerOpsRequestsGetter
 	MariaDBOpsRequestsGetter
 	MemcachedOpsRequestsGetter
 	MongoDBOpsRequestsGetter
@@ -63,8 +63,8 @@ func (c *OpsV1alpha1Client) KafkaOpsRequests(namespace string) KafkaOpsRequestIn
 	return newKafkaOpsRequests(c, namespace)
 }
 
-func (c *OpsV1alpha1Client) MSSQLOpsRequests(namespace string) MSSQLOpsRequestInterface {
-	return newMSSQLOpsRequests(c, namespace)
+func (c *OpsV1alpha1Client) MSSQLServerOpsRequests(namespace string) MSSQLServerOpsRequestInterface {
+	return newMSSQLServerOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) MariaDBOpsRequests(namespace string) MariaDBOpsRequestInterface {

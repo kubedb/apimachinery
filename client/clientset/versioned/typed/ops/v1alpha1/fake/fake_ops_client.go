@@ -41,8 +41,8 @@ func (c *FakeOpsV1alpha1) KafkaOpsRequests(namespace string) v1alpha1.KafkaOpsRe
 	return &FakeKafkaOpsRequests{c, namespace}
 }
 
-func (c *FakeOpsV1alpha1) MSSQLOpsRequests(namespace string) v1alpha1.MSSQLOpsRequestInterface {
-	return &FakeMSSQLOpsRequests{c, namespace}
+func (c *FakeOpsV1alpha1) MSSQLServerOpsRequests(namespace string) v1alpha1.MSSQLServerOpsRequestInterface {
+	return &FakeMSSQLServerOpsRequests{c, namespace}
 }
 
 func (c *FakeOpsV1alpha1) MariaDBOpsRequests(namespace string) v1alpha1.MariaDBOpsRequestInterface {
