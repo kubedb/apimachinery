@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
 	"time"
 
@@ -153,6 +154,32 @@ func (m *MSSQLServer) PetSetName() string {
 
 func (m *MSSQLServer) ServiceAccountName() string {
 	return m.OffshootName()
+}
+
+func (m *MSSQLServer) AvailabilityGroupName() string {
+	// Get the database name
+	dbName := m.Name
+
+	// Regular expression pattern to match allowed characters (alphanumeric only)
+	allowedPattern := regexp.MustCompile(`[a-zA-Z0-9]+`)
+
+	// Extract valid characters from the database name
+	validChars := allowedPattern.FindAllString(dbName, -1)
+
+	// Ensure that the availability group name is not empty
+	var availabilityGroupName string
+	if len(validChars) == 0 {
+		klog.Warningf("Database name '%s' contains no valid characters for the availability group name. Setting availability group name to 'DefaultGroupName'.", dbName)
+		availabilityGroupName = "DefaultGroupName" // Provide a default name if the database name contains no valid characters
+	} else {
+		// Concatenate the valid characters to form the availability group name
+		availabilityGroupName = ""
+		for _, char := range validChars {
+			availabilityGroupName += char
+		}
+	}
+
+	return availabilityGroupName
 }
 
 func (m *MSSQLServer) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
