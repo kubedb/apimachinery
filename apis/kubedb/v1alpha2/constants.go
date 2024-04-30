@@ -581,6 +581,8 @@ const (
 	PgpoolExporterTlsVolumeName        = "exporter-certs"
 	PgpoolExporterTlsVolumeMountPath   = "/tls/certs"
 	PgpoolRootUser                     = "postgres"
+	PgpoolPrimaryServicePortName       = "primary"
+	PgpoolDatabasePortName             = "db"
 	// ========================================== ZooKeeper Constants =================================================//
 
 	KubeDBZooKeeperRoleName         = "kubedb:zookeeper-version-reader"
