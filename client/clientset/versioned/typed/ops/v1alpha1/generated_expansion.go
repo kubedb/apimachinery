@@ -36,6 +36,8 @@ type PerconaXtraDBOpsRequestExpansion interface{}
 
 type PgBouncerOpsRequestExpansion interface{}
 
+type PgpoolOpsRequestExpansion interface{}
+
 type PostgresOpsRequestExpansion interface{}
 
 type ProxySQLOpsRequestExpansion interface{}

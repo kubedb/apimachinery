@@ -90,6 +90,14 @@ type PgBouncerOpsRequestListerExpansion interface{}
 // PgBouncerOpsRequestNamespaceLister.
 type PgBouncerOpsRequestNamespaceListerExpansion interface{}
 
+// PgpoolOpsRequestListerExpansion allows custom methods to be added to
+// PgpoolOpsRequestLister.
+type PgpoolOpsRequestListerExpansion interface{}
+
+// PgpoolOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// PgpoolOpsRequestNamespaceLister.
+type PgpoolOpsRequestNamespaceListerExpansion interface{}
+
 // PostgresOpsRequestListerExpansion allows custom methods to be added to
 // PostgresOpsRequestLister.
 type PostgresOpsRequestListerExpansion interface{}

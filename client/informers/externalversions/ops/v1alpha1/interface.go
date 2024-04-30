@@ -42,6 +42,8 @@ type Interface interface {
 	PerconaXtraDBOpsRequests() PerconaXtraDBOpsRequestInformer
 	// PgBouncerOpsRequests returns a PgBouncerOpsRequestInformer.
 	PgBouncerOpsRequests() PgBouncerOpsRequestInformer
+	// PgpoolOpsRequests returns a PgpoolOpsRequestInformer.
+	PgpoolOpsRequests() PgpoolOpsRequestInformer
 	// PostgresOpsRequests returns a PostgresOpsRequestInformer.
 	PostgresOpsRequests() PostgresOpsRequestInformer
 	// ProxySQLOpsRequests returns a ProxySQLOpsRequestInformer.
@@ -110,6 +112,11 @@ func (v *version) PerconaXtraDBOpsRequests() PerconaXtraDBOpsRequestInformer {
 // PgBouncerOpsRequests returns a PgBouncerOpsRequestInformer.
 func (v *version) PgBouncerOpsRequests() PgBouncerOpsRequestInformer {
 	return &pgBouncerOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// PgpoolOpsRequests returns a PgpoolOpsRequestInformer.
+func (v *version) PgpoolOpsRequests() PgpoolOpsRequestInformer {
+	return &pgpoolOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PostgresOpsRequests returns a PostgresOpsRequestInformer.

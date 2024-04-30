@@ -65,6 +65,10 @@ func (c *FakeOpsV1alpha1) PgBouncerOpsRequests(namespace string) v1alpha1.PgBoun
 	return &FakePgBouncerOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) PgpoolOpsRequests(namespace string) v1alpha1.PgpoolOpsRequestInterface {
+	return &FakePgpoolOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) PostgresOpsRequests(namespace string) v1alpha1.PostgresOpsRequestInterface {
 	return &FakePostgresOpsRequests{c, namespace}
 }
