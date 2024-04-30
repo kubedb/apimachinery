@@ -636,6 +636,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.perconaXtraDBStatsService":      schema_apimachinery_apis_kubedb_v1alpha2_perconaXtraDBStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.pgbouncerApp":                   schema_apimachinery_apis_kubedb_v1alpha2_pgbouncerApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.pgbouncerStatsService":          schema_apimachinery_apis_kubedb_v1alpha2_pgbouncerStatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.pgpoolApp":                      schema_apimachinery_apis_kubedb_v1alpha2_pgpoolApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.postgresApp":                    schema_apimachinery_apis_kubedb_v1alpha2_postgresApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.postgresStatsService":           schema_apimachinery_apis_kubedb_v1alpha2_postgresStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.proxysqlApp":                    schema_apimachinery_apis_kubedb_v1alpha2_proxysqlApp(ref),
@@ -32473,6 +32474,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_pgbouncerStatsService(ref common.R
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgBouncer"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_pgpoolApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Pgpool": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Pgpool"),
+						},
+					},
+				},
+				Required: []string{"Pgpool"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Pgpool"},
 	}
 }
 

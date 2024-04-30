@@ -48,6 +48,22 @@ func (p *Pgpool) CustomResourceDefinition() *apiextensions.CustomResourceDefinit
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralPgpool))
 }
 
+type pgpoolApp struct {
+	*Pgpool
+}
+
+func (p *pgpoolApp) Name() string {
+	return p.Pgpool.Name
+}
+
+func (p *pgpoolApp) Type() appcat.AppType {
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularPgpool))
+}
+
+func (p *Pgpool) AppBindingMeta() appcat.AppBindingMeta {
+	return &pgpoolApp{p}
+}
+
 func (p *Pgpool) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", p.ResourcePlural(), kubedb.GroupName)
 }
