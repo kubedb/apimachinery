@@ -45,3 +45,5 @@ type RabbitMQOpsRequestExpansion interface{}
 type RedisOpsRequestExpansion interface{}
 
 type RedisSentinelOpsRequestExpansion interface{}
+
+type SinglestoreOpsRequestExpansion interface{}

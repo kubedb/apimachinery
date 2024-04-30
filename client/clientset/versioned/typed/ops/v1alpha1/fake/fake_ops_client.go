@@ -85,6 +85,10 @@ func (c *FakeOpsV1alpha1) RedisSentinelOpsRequests(namespace string) v1alpha1.Re
 	return &FakeRedisSentinelOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) SinglestoreOpsRequests(namespace string) v1alpha1.SinglestoreOpsRequestInterface {
+	return &FakeSinglestoreOpsRequests{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeOpsV1alpha1) RESTClient() rest.Interface {

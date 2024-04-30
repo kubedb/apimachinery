@@ -287,3 +287,9 @@ const (
 	HorizontalScaleSentinelUp   = "HorizontalScaleSentinelUp"
 	HorizontalScaleSentinelDown = "HorizontalScaleSentinelDown"
 )
+
+// SingleStore Constants
+const (
+	UpdateAggregatorNodePVCs = "UpdateAggregatorNodePVCs"
+	UpdateLeafNodePVCs       = "UpdateLeafNodePVCs"
+)

@@ -80,6 +80,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&RedisOpsRequestList{},
 		&RedisSentinelOpsRequest{},
 		&RedisSentinelOpsRequestList{},
+		&SinglestoreOpsRequest{},
+		&SinglestoreOpsRequestList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,
