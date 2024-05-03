@@ -72,6 +72,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PerconaXtraDBOpsRequestList{},
 		&PostgresOpsRequest{},
 		&PostgresOpsRequestList{},
+		&PgpoolOpsRequest{},
+		&PgpoolOpsRequestList{},
 		&ProxySQLOpsRequest{},
 		&ProxySQLOpsRequestList{},
 		&RabbitMQOpsRequest{},
