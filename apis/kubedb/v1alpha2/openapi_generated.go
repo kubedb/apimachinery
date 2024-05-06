@@ -32062,7 +32062,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperSpec(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"version", "adminServerPort"},
+				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
