@@ -61,6 +61,7 @@ type ZooKeeperSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas"`
 
+	// +optional
 	// +kubebuilder:default=8080
 	AdminServerPort int32 `json:"adminServerPort"`
 
