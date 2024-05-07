@@ -18,6 +18,8 @@ limitations under the License.
 
 package v1alpha1
 
+type DruidOpsRequestExpansion interface{}
+
 type ElasticsearchOpsRequestExpansion interface{}
 
 type EtcdOpsRequestExpansion interface{}

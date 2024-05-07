@@ -24,6 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// DruidOpsRequests returns a DruidOpsRequestInformer.
+	DruidOpsRequests() DruidOpsRequestInformer
 	// ElasticsearchOpsRequests returns a ElasticsearchOpsRequestInformer.
 	ElasticsearchOpsRequests() ElasticsearchOpsRequestInformer
 	// EtcdOpsRequests returns a EtcdOpsRequestInformer.
@@ -67,6 +69,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// DruidOpsRequests returns a DruidOpsRequestInformer.
+func (v *version) DruidOpsRequests() DruidOpsRequestInformer {
+	return &druidOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ElasticsearchOpsRequests returns a ElasticsearchOpsRequestInformer.

@@ -288,6 +288,12 @@ const (
 	HorizontalScaleSentinelDown = "HorizontalScaleSentinelDown"
 )
 
+// Druid Constants
+const (
+	UpdateMiddleManagersNodePVCs = "UpdateMiddleManagersNodePVCs"
+	UpdateHistoricalsNodePVCs    = "UpdateHistoricalsNodePVCs"
+)
+
 // SingleStore Constants
 const (
 	UpdateAggregatorNodePVCs = "UpdateAggregatorNodePVCs"
