@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
 	"time"
 
@@ -30,6 +31,7 @@ import (
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
@@ -38,6 +40,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 type MSSQLServerApp struct {
@@ -119,7 +122,7 @@ func (m *MSSQLServer) OffshootSelectors(extraSelectors ...map[string]string) map
 func (m *MSSQLServer) IsAvailabilityGroup() bool {
 	return m.Spec.Topology != nil &&
 		m.Spec.Topology.Mode != nil &&
-		*m.Spec.Topology.Mode == MSSQLModeAvailabilityGroup
+		*m.Spec.Topology.Mode == MSSQLServerModeAvailabilityGroup
 }
 
 func (m *MSSQLServer) IsStandalone() bool {
@@ -151,6 +154,32 @@ func (m *MSSQLServer) PetSetName() string {
 
 func (m *MSSQLServer) ServiceAccountName() string {
 	return m.OffshootName()
+}
+
+func (m *MSSQLServer) AvailabilityGroupName() string {
+	// Get the database name
+	dbName := m.Name
+
+	// Regular expression pattern to match allowed characters (alphanumeric only)
+	allowedPattern := regexp.MustCompile(`[a-zA-Z0-9]+`)
+
+	// Extract valid characters from the database name
+	validChars := allowedPattern.FindAllString(dbName, -1)
+
+	// Ensure that the availability group name is not empty
+	var availabilityGroupName string
+	if len(validChars) == 0 {
+		klog.Warningf("Database name '%s' contains no valid characters for the availability group name. Setting availability group name to 'DefaultGroupName'.", dbName)
+		availabilityGroupName = "DefaultGroupName" // Provide a default name if the database name contains no valid characters
+	} else {
+		// Concatenate the valid characters to form the availability group name
+		availabilityGroupName = ""
+		for _, char := range validChars {
+			availabilityGroupName += char
+		}
+	}
+
+	return availabilityGroupName
 }
 
 func (m *MSSQLServer) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
@@ -225,7 +254,7 @@ func (m *MSSQLServer) SetDefaults() {
 		}
 	} else {
 		if m.Spec.LeaderElection == nil {
-			m.Spec.LeaderElection = &MSSQLLeaderElectionConfig{
+			m.Spec.LeaderElection = &MSSQLServerLeaderElectionConfig{
 				// The upper limit of election timeout is 50000ms (50s), which should only be used when deploying a
 				// globally-distributed etcd cluster. A reasonable round-trip time for the continental United States is around 130-150ms,
 				// and the time between US and Japan is around 350-400ms. If the network has uneven performance or regular packet
@@ -367,4 +396,10 @@ func (m *MSSQLServer) setDefaultContainerResourceLimits(podTemplate *ofst.PodTem
 			apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, CoordinatorDefaultResources)
 		}
 	}
+}
+
+func (m *MSSQLServer) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
+	// Desire number of petSets
+	expectedItems := 1
+	return checkReplicasOfPetSet(lister.PetSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
 }

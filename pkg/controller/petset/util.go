@@ -83,6 +83,17 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
+	case api.ResourceKindMSSQLServer:
+		dbInfo.opts.GVR.Resource = api.ResourcePluralMSSQLServer
+		ms, err := c.DBClient.KubedbV1alpha2().MSSQLServers(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
+		dbInfo.replicasReady, dbInfo.msg, err = ms.ReplicasAreReady(c.PSLister)
+		if err != nil {
+			return nil, err
+		}
+
 	case api.ResourceKindPgpool:
 		dbInfo.opts.GVR.Resource = api.ResourcePluralPgpool
 		pp, err := c.DBClient.KubedbV1alpha2().Pgpools(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
