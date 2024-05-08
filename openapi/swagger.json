@@ -23059,7 +23059,7 @@
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.AppReference"
         },
         "syncUsers": {
-          "description": "SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the PgBouncer server. Password changes are also synced in pgBouncer when it is enabled.",
+          "description": "SyncUsers is a boolean type and when enabled, operator fetches users of backend server from externally managed secrets to the PgBouncer server. Secrets updation or deletion are also synced in pgBouncer when it is enabled.",
           "type": "boolean"
         }
       }

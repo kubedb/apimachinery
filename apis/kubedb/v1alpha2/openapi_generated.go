@@ -23215,7 +23215,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Databases(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"syncUsers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the PgBouncer server. Password changes are also synced in pgBouncer when it is enabled.",
+							Description: "SyncUsers is a boolean type and when enabled, operator fetches users of backend server from externally managed secrets to the PgBouncer server. Secrets updation or deletion are also synced in pgBouncer when it is enabled.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
