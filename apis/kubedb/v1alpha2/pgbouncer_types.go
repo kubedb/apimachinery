@@ -118,8 +118,8 @@ const (
 )
 
 type Databases struct {
-	// SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the
-	// PgBouncer server. Password changes are also synced in pgBouncer when it is enabled.
+	// SyncUsers is a boolean type and when enabled, operator fetches users of backend server from externally managed
+	// secrets to the PgBouncer server. Password updation or deletion are also synced in pgBouncer when it is enabled.
 	// +optional
 	SyncUsers bool `json:"syncUsers,omitempty"`
 
