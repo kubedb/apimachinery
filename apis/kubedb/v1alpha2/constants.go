@@ -579,6 +579,7 @@ const (
 	PgpoolContainerName                = "pgpool"
 	PgpoolDefaultServicePort           = 9999
 	PgpoolMonitoringDefaultServicePort = 9719
+	PgpoolPcpServicePort               = 9595
 	PgpoolExporterDatabase             = "postgres"
 	EnvPgpoolExporterDatabase          = "POSTGRES_DATABASE"
 	EnvPgpoolService                   = "PGPOOL_SERVICE"
@@ -596,6 +597,7 @@ const (
 	PgpoolRootUser                     = "postgres"
 	PgpoolPrimaryServicePortName       = "primary"
 	PgpoolDatabasePortName             = "db"
+	PgpoolPcpServicePortName           = "pcp"
 	// ========================================== ZooKeeper Constants =================================================//
 
 	KubeDBZooKeeperRoleName         = "kubedb:zookeeper-version-reader"

@@ -104,6 +104,10 @@ func (p *Pgpool) ServiceName() string {
 	return p.OffshootName()
 }
 
+func (p *Pgpool) PcpServiceName() string {
+	return meta_util.NameWithSuffix(p.ServiceName(), "pcp")
+}
+
 // Owner returns owner reference to resources
 func (p *Pgpool) Owner() *meta.OwnerReference {
 	return meta.NewControllerRef(p, SchemeGroupVersion.WithKind(p.ResourceKind()))
