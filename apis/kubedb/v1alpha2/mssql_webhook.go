@@ -46,7 +46,7 @@ func (r *MSSQLServer) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-mssql,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=mssqls,verbs=create;update,versions=v1alpha2,name=mmssql.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-mssqlserver,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=mssqlservers,verbs=create;update,versions=v1alpha2,name=mmssqlserver.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Defaulter = &MSSQLServer{}
 
@@ -60,7 +60,7 @@ func (m *MSSQLServer) Default() {
 	m.SetDefaults()
 }
 
-//+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-mssql,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=mssqls,verbs=create;update,versions=v1alpha2,name=vmssql.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-mssqlserver,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=mssqlservers,verbs=create;update,versions=v1alpha2,name=vmssqlserver.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &MSSQLServer{}
 

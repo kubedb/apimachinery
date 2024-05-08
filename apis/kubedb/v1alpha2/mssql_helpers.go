@@ -122,7 +122,7 @@ func (m *MSSQLServer) OffshootSelectors(extraSelectors ...map[string]string) map
 func (m *MSSQLServer) IsAvailabilityGroup() bool {
 	return m.Spec.Topology != nil &&
 		m.Spec.Topology.Mode != nil &&
-		*m.Spec.Topology.Mode == MSSQLModeAvailabilityGroup
+		*m.Spec.Topology.Mode == MSSQLServerModeAvailabilityGroup
 }
 
 func (m *MSSQLServer) IsStandalone() bool {
@@ -254,7 +254,7 @@ func (m *MSSQLServer) SetDefaults() {
 		}
 	} else {
 		if m.Spec.LeaderElection == nil {
-			m.Spec.LeaderElection = &MSSQLLeaderElectionConfig{
+			m.Spec.LeaderElection = &MSSQLServerLeaderElectionConfig{
 				// The upper limit of election timeout is 50000ms (50s), which should only be used when deploying a
 				// globally-distributed etcd cluster. A reasonable round-trip time for the continental United States is around 130-150ms,
 				// and the time between US and Japan is around 350-400ms. If the network has uneven performance or regular packet
