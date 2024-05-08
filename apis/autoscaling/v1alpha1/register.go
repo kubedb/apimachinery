@@ -71,6 +71,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PerconaXtraDBAutoscaler{},
 		&PerconaXtraDBAutoscalerList{},
 		&PostgresAutoscaler{},
+		&PgpoolAutoscaler{},
+		&PgpoolAutoscalerList{},
 		&PostgresAutoscalerList{},
 		&ProxySQLAutoscaler{},
 		&ProxySQLAutoscalerList{},

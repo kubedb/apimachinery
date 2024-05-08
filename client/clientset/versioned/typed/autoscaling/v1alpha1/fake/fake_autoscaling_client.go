@@ -65,6 +65,10 @@ func (c *FakeAutoscalingV1alpha1) PgBouncerAutoscalers(namespace string) v1alpha
 	return &FakePgBouncerAutoscalers{c, namespace}
 }
 
+func (c *FakeAutoscalingV1alpha1) PgpoolAutoscalers(namespace string) v1alpha1.PgpoolAutoscalerInterface {
+	return &FakePgpoolAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) PostgresAutoscalers(namespace string) v1alpha1.PostgresAutoscalerInterface {
 	return &FakePostgresAutoscalers{c, namespace}
 }

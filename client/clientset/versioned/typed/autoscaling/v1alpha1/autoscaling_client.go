@@ -38,6 +38,7 @@ type AutoscalingV1alpha1Interface interface {
 	MySQLAutoscalersGetter
 	PerconaXtraDBAutoscalersGetter
 	PgBouncerAutoscalersGetter
+	PgpoolAutoscalersGetter
 	PostgresAutoscalersGetter
 	ProxySQLAutoscalersGetter
 	RabbitMQAutoscalersGetter
@@ -85,6 +86,10 @@ func (c *AutoscalingV1alpha1Client) PerconaXtraDBAutoscalers(namespace string) P
 
 func (c *AutoscalingV1alpha1Client) PgBouncerAutoscalers(namespace string) PgBouncerAutoscalerInterface {
 	return newPgBouncerAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) PgpoolAutoscalers(namespace string) PgpoolAutoscalerInterface {
+	return newPgpoolAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) PostgresAutoscalers(namespace string) PostgresAutoscalerInterface {

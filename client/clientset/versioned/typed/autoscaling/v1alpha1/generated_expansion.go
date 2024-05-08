@@ -36,6 +36,8 @@ type PerconaXtraDBAutoscalerExpansion interface{}
 
 type PgBouncerAutoscalerExpansion interface{}
 
+type PgpoolAutoscalerExpansion interface{}
+
 type PostgresAutoscalerExpansion interface{}
 
 type ProxySQLAutoscalerExpansion interface{}
