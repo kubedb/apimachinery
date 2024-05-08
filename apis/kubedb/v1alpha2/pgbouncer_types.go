@@ -118,10 +118,17 @@ const (
 )
 
 type Databases struct {
+	// SyncUsers is a boolean type and when enabled, operator fetches users of backend server from externally managed
+	// secrets to the PgBouncer server. Secrets updation or deletion are also synced in pgBouncer when it is enabled.
+	// +optional
+	SyncUsers bool `json:"syncUsers,omitempty"`
+
 	// Alias to uniquely identify a target database running inside a specific Postgres instance.
 	Alias string `json:"alias"`
+
 	// DatabaseRef specifies the database appbinding reference in any namespace.
 	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
 	// DatabaseName is the name of the target database inside a Postgres instance.
 	DatabaseName string `json:"databaseName"`
 }

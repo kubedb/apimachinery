@@ -23057,6 +23057,10 @@
           "description": "DatabaseRef specifies the database appbinding reference in any namespace.",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.AppReference"
+        },
+        "syncUsers": {
+          "description": "SyncUsers is a boolean type and when enabled, operator fetches users of backend server from externally managed secrets to the PgBouncer server. Secrets updation or deletion are also synced in pgBouncer when it is enabled.",
+          "type": "boolean"
         }
       }
     },

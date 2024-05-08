@@ -23213,6 +23213,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Databases(ref common.ReferenceCall
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"syncUsers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SyncUsers is a boolean type and when enabled, operator fetches users of backend server from externally managed secrets to the PgBouncer server. Secrets updation or deletion are also synced in pgBouncer when it is enabled.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"alias": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Alias to uniquely identify a target database running inside a specific Postgres instance.",

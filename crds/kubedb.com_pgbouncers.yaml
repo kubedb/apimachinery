@@ -140,6 +140,8 @@ spec:
                       - name
                       - namespace
                       type: object
+                    syncUsers:
+                      type: boolean
                   required:
                   - alias
                   - databaseName
