@@ -29,6 +29,10 @@ type FakeKubedbV1alpha2 struct {
 	*testing.Fake
 }
 
+func (c *FakeKubedbV1alpha2) ClickHouses(namespace string) v1alpha2.ClickHouseInterface {
+	return &FakeClickHouses{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Druids(namespace string) v1alpha2.DruidInterface {
 	return &FakeDruids{c, namespace}
 }

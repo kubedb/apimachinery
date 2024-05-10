@@ -18,6 +18,10 @@ limitations under the License.
 
 package v1alpha1
 
+// ClickHouseVersionListerExpansion allows custom methods to be added to
+// ClickHouseVersionLister.
+type ClickHouseVersionListerExpansion interface{}
+
 // DruidVersionListerExpansion allows custom methods to be added to
 // DruidVersionLister.
 type DruidVersionListerExpansion interface{}

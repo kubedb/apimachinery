@@ -24,6 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// ClickHouses returns a ClickHouseInformer.
+	ClickHouses() ClickHouseInformer
 	// Druids returns a DruidInformer.
 	Druids() DruidInformer
 	// Elasticsearches returns a ElasticsearchInformer.
@@ -77,6 +79,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// ClickHouses returns a ClickHouseInformer.
+func (v *version) ClickHouses() ClickHouseInformer {
+	return &clickHouseInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Druids returns a DruidInformer.

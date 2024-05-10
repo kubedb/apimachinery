@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha2
 
+// ClickHouseListerExpansion allows custom methods to be added to
+// ClickHouseLister.
+type ClickHouseListerExpansion interface{}
+
+// ClickHouseNamespaceListerExpansion allows custom methods to be added to
+// ClickHouseNamespaceLister.
+type ClickHouseNamespaceListerExpansion interface{}
+
 // DruidListerExpansion allows custom methods to be added to
 // DruidLister.
 type DruidListerExpansion interface{}

@@ -29,6 +29,10 @@ type FakeCatalogV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeCatalogV1alpha1) ClickHouseVersions() v1alpha1.ClickHouseVersionInterface {
+	return &FakeClickHouseVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) DruidVersions() v1alpha1.DruidVersionInterface {
 	return &FakeDruidVersions{c}
 }
