@@ -23038,16 +23038,10 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Database": {
       "type": "object",
       "required": [
-        "alias",
         "databaseRef",
         "databaseName"
       ],
       "properties": {
-        "alias": {
-          "description": "Alias to uniquely identify a target database running inside a specific Postgres instance.",
-          "type": "string",
-          "default": ""
-        },
         "databaseName": {
           "description": "DatabaseName is the name of the target database inside a Postgres instance.",
           "type": "string",

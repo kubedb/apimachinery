@@ -121,8 +121,6 @@ spec:
                 type: object
               database:
                 properties:
-                  alias:
-                    type: string
                   databaseName:
                     type: string
                   databaseRef:
@@ -142,7 +140,6 @@ spec:
                   syncUsers:
                     type: boolean
                 required:
-                - alias
                 - databaseName
                 - databaseRef
                 type: object

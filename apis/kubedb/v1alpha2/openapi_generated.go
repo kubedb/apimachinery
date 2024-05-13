@@ -23220,14 +23220,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Database(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
-					"alias": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Alias to uniquely identify a target database running inside a specific Postgres instance.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "DatabaseRef specifies the database appbinding reference in any namespace.",
@@ -23244,7 +23236,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Database(ref common.ReferenceCallb
 						},
 					},
 				},
-				Required: []string{"alias", "databaseRef", "databaseName"},
+				Required: []string{"databaseRef", "databaseName"},
 			},
 		},
 		Dependencies: []string{

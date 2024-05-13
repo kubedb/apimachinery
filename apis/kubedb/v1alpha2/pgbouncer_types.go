@@ -123,9 +123,6 @@ type Database struct {
 	// +optional
 	SyncUsers bool `json:"syncUsers,omitempty"`
 
-	// Alias to uniquely identify a target database running inside a specific Postgres instance.
-	Alias string `json:"alias"`
-
 	// DatabaseRef specifies the database appbinding reference in any namespace.
 	DatabaseRef appcat.AppReference `json:"databaseRef"`
 
