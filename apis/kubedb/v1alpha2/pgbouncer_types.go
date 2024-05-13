@@ -71,9 +71,9 @@ type PgBouncerSpec struct {
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
-	// Databases to proxy by connection pooling.
+	// Database to proxy by connection pooling.
 	// +optional
-	Databases []Databases `json:"databases,omitempty"`
+	Database Database `json:"database,omitempty"`
 
 	// ConnectionPoolConfig defines Connection pool configuration.
 	// +optional
@@ -117,7 +117,7 @@ const (
 	PgBouncerMetricsExporterCert PgBouncerCertificateAlias = "metrics-exporter"
 )
 
-type Databases struct {
+type Database struct {
 	// SyncUsers is a boolean type and when enabled, operator fetches users of backend server from externally managed
 	// secrets to the PgBouncer server. Secrets updation or deletion are also synced in pgBouncer when it is enabled.
 	// +optional

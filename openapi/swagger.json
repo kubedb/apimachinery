@@ -23035,7 +23035,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Databases": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Database": {
       "type": "object",
       "required": [
         "alias",
@@ -25181,13 +25181,10 @@
           "description": "ConnectionPoolConfig defines Connection pool configuration.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConnectionPoolConfig"
         },
-        "databases": {
-          "description": "Databases to proxy by connection pooling.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Databases"
-          }
+        "database": {
+          "description": "Database to proxy by connection pooling.",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Database"
         },
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",
