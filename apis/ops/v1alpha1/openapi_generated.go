@@ -610,6 +610,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreOpsRequest":                      schema_apimachinery_apis_ops_v1alpha1_SinglestoreOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreOpsRequestList":                  schema_apimachinery_apis_ops_v1alpha1_SinglestoreOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreOpsRequestSpec":                  schema_apimachinery_apis_ops_v1alpha1_SinglestoreOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreReplicaReadinessCriteria":        schema_apimachinery_apis_ops_v1alpha1_SinglestoreReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreVerticalScalingSpec":             schema_apimachinery_apis_ops_v1alpha1_SinglestoreVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreVolumeExpansionSpec":             schema_apimachinery_apis_ops_v1alpha1_SinglestoreVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec":                                    schema_apimachinery_apis_ops_v1alpha1_TLSSpec(ref),

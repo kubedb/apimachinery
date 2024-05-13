@@ -52,6 +52,8 @@ type Interface interface {
 	RedisAutoscalers() RedisAutoscalerInformer
 	// RedisSentinelAutoscalers returns a RedisSentinelAutoscalerInformer.
 	RedisSentinelAutoscalers() RedisSentinelAutoscalerInformer
+	// SinglestoreAutoscalers returns a SinglestoreAutoscalerInformer.
+	SinglestoreAutoscalers() SinglestoreAutoscalerInformer
 }
 
 type version struct {
@@ -133,4 +135,9 @@ func (v *version) RedisAutoscalers() RedisAutoscalerInformer {
 // RedisSentinelAutoscalers returns a RedisSentinelAutoscalerInformer.
 func (v *version) RedisSentinelAutoscalers() RedisSentinelAutoscalerInformer {
 	return &redisSentinelAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// SinglestoreAutoscalers returns a SinglestoreAutoscalerInformer.
+func (v *version) SinglestoreAutoscalers() SinglestoreAutoscalerInformer {
+	return &singlestoreAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

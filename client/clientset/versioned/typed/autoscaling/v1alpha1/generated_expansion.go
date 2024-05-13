@@ -45,3 +45,5 @@ type RabbitMQAutoscalerExpansion interface{}
 type RedisAutoscalerExpansion interface{}
 
 type RedisSentinelAutoscalerExpansion interface{}
+
+type SinglestoreAutoscalerExpansion interface{}
