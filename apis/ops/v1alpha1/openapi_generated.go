@@ -28655,11 +28655,17 @@ func schema_apimachinery_apis_ops_v1alpha1_SinglestoreVerticalScalingSpec(ref co
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
 						},
 					},
+					"coordinator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for Coordinator container",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
 	}
 }
 

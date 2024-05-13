@@ -4384,6 +4384,11 @@ func (in *SinglestoreVerticalScalingSpec) DeepCopyInto(out *SinglestoreVerticalS
 		*out = new(PodResources)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Coordinator != nil {
+		in, out := &in.Coordinator, &out.Coordinator
+		*out = new(ContainerResources)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

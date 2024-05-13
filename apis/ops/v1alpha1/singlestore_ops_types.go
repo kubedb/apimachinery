@@ -80,6 +80,8 @@ type SinglestoreVerticalScalingSpec struct {
 	Aggregator *PodResources `json:"aggregator,omitempty"`
 	// Resource spec for Leaf
 	Leaf *PodResources `json:"leaf,omitempty"`
+	// Resource spec for Coordinator container
+	Coordinator *ContainerResources `json:"coordinator,omitempty"`
 }
 
 // SinglestoreVolumeExpansionSpec is the spec for Singlestore volume expansion
