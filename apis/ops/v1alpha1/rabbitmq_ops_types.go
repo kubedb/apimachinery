@@ -55,6 +55,8 @@ type RabbitMQOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type RabbitMQOpsRequestType `json:"type"`
+	// Specifies information necessary for horizontal scaling
+	HorizontalScaling *RabbitMQHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *RabbitMQVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for volume expansion
@@ -68,13 +70,19 @@ type RabbitMQOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart
-// ENUM(VerticalScaling, VolumeExpansion, Restart)
+// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
 type RabbitMQOpsRequestType string
 
 // RabbitMQReplicaReadinessCriteria is the criteria for checking readiness of a RabbitMQ pod
 // after updating, horizontal scaling etc.
 type RabbitMQReplicaReadinessCriteria struct{}
+
+// RabbitMQHorizontalScalingSpec contains the horizontal scaling information of a RabbitMQ cluster
+type RabbitMQHorizontalScalingSpec struct {
+	// Number of node
+	Node *int32 `json:"node,omitempty"`
+}
 
 // RabbitMQVerticalScalingSpec contains the vertical scaling information of a RabbitMQ cluster
 type RabbitMQVerticalScalingSpec struct {

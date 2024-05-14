@@ -54,15 +54,25 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              horizontalScaling:
+                properties:
+                  node:
+                    format: int32
+                    type: integer
+                type: object
               restart:
                 type: object
               timeout:
                 type: string
               type:
                 enum:
+                - UpdateVersion
+                - HorizontalScaling
                 - VerticalScaling
                 - VolumeExpansion
                 - Restart
+                - Reconfigure
+                - ReconfigureTLS
                 type: string
               verticalScaling:
                 properties:

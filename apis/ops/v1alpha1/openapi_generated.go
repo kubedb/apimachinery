@@ -576,6 +576,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLReplicaReadinessCriteria":           schema_apimachinery_apis_ops_v1alpha1_ProxySQLReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLUpdateVersionSpec":                  schema_apimachinery_apis_ops_v1alpha1_ProxySQLUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLVerticalScalingSpec":                schema_apimachinery_apis_ops_v1alpha1_ProxySQLVerticalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQHorizontalScalingSpec":              schema_apimachinery_apis_ops_v1alpha1_RabbitMQHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQOpsRequest":                         schema_apimachinery_apis_ops_v1alpha1_RabbitMQOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQOpsRequestList":                     schema_apimachinery_apis_ops_v1alpha1_RabbitMQOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQOpsRequestSpec":                     schema_apimachinery_apis_ops_v1alpha1_RabbitMQOpsRequestSpec(ref),
@@ -27494,6 +27495,26 @@ func schema_apimachinery_apis_ops_v1alpha1_ProxySQLVerticalScalingSpec(ref commo
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_RabbitMQHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RabbitMQHorizontalScalingSpec contains the horizontal scaling information of a RabbitMQ cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of node",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_RabbitMQOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27611,6 +27632,12 @@ func schema_apimachinery_apis_ops_v1alpha1_RabbitMQOpsRequestSpec(ref common.Ref
 							Format:      "",
 						},
 					},
+					"horizontalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for horizontal scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQHorizontalScalingSpec"),
+						},
+					},
 					"verticalScaling": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for vertical scaling",
@@ -27647,7 +27674,7 @@ func schema_apimachinery_apis_ops_v1alpha1_RabbitMQOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
