@@ -31,7 +31,8 @@ const (
 
 	KubeDBOrganization = "kubedb"
 
-	LabelRole = kubedb.GroupName + "/role"
+	LabelRole   = kubedb.GroupName + "/role"
+	LabelPetSet = kubedb.GroupName + "/petset"
 
 	ReplicationModeDetectorContainerName = "replication-mode-detector"
 	DatabasePodPrimary                   = "primary"
@@ -339,6 +340,7 @@ const (
 	DatabasePodLeaf         = "Leaf"
 	PetSetTypeAggregator    = "aggregator"
 	PetSetTypeLeaf          = "leaf"
+	PetSetTypeStandalone    = "standalone"
 
 	SinglestoreDatabaseHealth = "singlestore_health"
 	SinglestoreTableHealth    = "singlestore_health_table"
