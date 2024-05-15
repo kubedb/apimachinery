@@ -14,23 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+package v1alpha1
 
 const (
-	DBModeEnsemble   = "Ensemble"
-	DBModeCluster    = "Cluster"
-	DBModeSharded    = "Sharded"
-	DBModeStandalone = "Standalone"
-	DBModeReplicaSet = "ReplicaSet"
-	DBModeDedicated  = "Dedicated"
-	DBModeCombined   = "Combined"
+	ConnectClusterModeStandalone  = "Standalone"
+	ConnectClusterModeDistributed = "Distributed"
 )
 
 const (
-	DruidContainerName       = "druid"
-	PgpoolContainerName      = "pgpool"
-	RabbitMQContainerName    = "rabbitmq"
-	SinglestoreContainerName = "singlestore"
-	SolrContainerName        = "solr"
-	ZooKeeperContainerName   = "zookeeper"
+	ConnectClusterContainerName = "connect-cluster"
 )

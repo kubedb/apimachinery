@@ -15,7 +15,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.71.2
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.70.0
-	go.bytebuilders.dev/audit v0.0.33
+	go.bytebuilders.dev/audit v0.0.35
 	gomodules.xyz/encoding v0.0.7
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.3.0
@@ -37,12 +37,12 @@ require (
 	kmodules.xyz/monitoring-agent-api v0.29.0
 	kmodules.xyz/objectstore-api v0.29.1
 	kmodules.xyz/offshoot-api v0.29.2
-	kmodules.xyz/resource-metadata v0.18.2
+	kmodules.xyz/resource-metadata v0.18.5
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/petset v0.0.5
 	kubeops.dev/sidekick v0.0.5
 	kubestash.dev/apimachinery v0.7.0
-	sigs.k8s.io/controller-runtime v0.17.3
+	sigs.k8s.io/controller-runtime v0.17.4
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.34.0
 )
@@ -141,7 +141,8 @@ require (
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
 	go.bytebuilders.dev/license-proxyserver v0.0.9 // indirect
-	go.bytebuilders.dev/license-verifier v0.14.0 // indirect
+	go.bytebuilders.dev/license-verifier v0.14.1 // indirect
+	go.bytebuilders.dev/license-verifier/kubernetes v0.14.1 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.10 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.10 // indirect
 	go.etcd.io/etcd/client/v3 v3.5.10 // indirect
@@ -187,7 +188,7 @@ require (
 	kmodules.xyz/apiversion v0.2.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.12 // indirect
 	kmodules.xyz/prober v0.29.0 // indirect
-	kmodules.xyz/resource-metrics v0.29.1 // indirect
+	kmodules.xyz/resource-metrics v0.29.5 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.28.0 // indirect
 	sigs.k8s.io/cli-utils v0.34.0 // indirect
 	sigs.k8s.io/gateway-api v0.8.0 // indirect
