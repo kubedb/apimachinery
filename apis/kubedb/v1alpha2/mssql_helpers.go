@@ -199,7 +199,7 @@ func (m *MSSQLServer) GetPersistentSecrets() []string {
 		secrets = append(secrets, m.Spec.AuthSecret.Name)
 	}
 
-	secrets = append(secrets, MSSQLEndpointCertsSecretName)
+	secrets = append(secrets, m.SecretName(MSSQLEndpointAlias))
 	secrets = append(secrets, MSSQLDbmLoginSecretName)
 	secrets = append(secrets, MSSQLMasterKeySecretName)
 
@@ -402,4 +402,12 @@ func (m *MSSQLServer) ReplicasAreReady(lister pslister.PetSetLister) (bool, stri
 	// Desire number of petSets
 	expectedItems := 1
 	return checkReplicasOfPetSet(lister.PetSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
+}
+
+func (m *MSSQLServer) CertificateName(alias string) string {
+	return metautil.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", alias))
+}
+
+func (m *MSSQLServer) SecretName(alias string) string {
+	return metautil.NameWithSuffix(m.Name, fmt.Sprintf("%s-secret", alias))
 }

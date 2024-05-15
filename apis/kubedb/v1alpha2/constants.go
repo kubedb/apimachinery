@@ -367,6 +367,7 @@ const (
 	// =========================== MSSQLServer Constants ============================
 	MSSQLSAUser                  = "sa"
 	MSSQLEndpointCertsSecretName = "endpoint-cert"
+	MSSQLEndpointAlias           = "endpoint"
 	MSSQLDbmLoginSecretName      = "dbm-login-secret"
 	MSSQLMasterKeySecretName     = "master-key-secret"
 
