@@ -28577,6 +28577,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgBouncerStatus(ref common.Referen
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Gateway"),
 						},
 					},
+					"resourceVersionOfBackendSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "It is to decide if the Auth_file needs to get updated by comparing with the Resource Version of the Backend Secret",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
