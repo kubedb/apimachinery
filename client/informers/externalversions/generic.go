@@ -154,6 +154,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kafka().V1alpha1().ConnectClusters().Informer()}, nil
 	case kafkav1alpha1.SchemeGroupVersion.WithResource("connectors"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kafka().V1alpha1().Connectors().Informer()}, nil
+	case kafkav1alpha1.SchemeGroupVersion.WithResource("schemaregistries"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kafka().V1alpha1().SchemaRegistries().Informer()}, nil
 
 		// Group=kubedb.com, Version=v1alpha2
 	case v1alpha2.SchemeGroupVersion.WithResource("druids"):

@@ -94,3 +94,9 @@ const (
 	KafkaClientKeystoreLocation        = "/var/private/kafka-client-ssl/client.keystore.jks"
 	KafkaClientTruststoreLocation      = "/var/private/kafka-client-ssl/client.truststore.jks"
 )
+
+// SchemaRegistry constants
+
+const (
+	SchemaRegistryContainerName = "schema-registry"
+)

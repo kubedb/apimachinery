@@ -37,6 +37,10 @@ func (c *FakeKafkaV1alpha1) Connectors(namespace string) v1alpha1.ConnectorInter
 	return &FakeConnectors{c, namespace}
 }
 
+func (c *FakeKafkaV1alpha1) SchemaRegistries(namespace string) v1alpha1.SchemaRegistryInterface {
+	return &FakeSchemaRegistries{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeKafkaV1alpha1) RESTClient() rest.Interface {
