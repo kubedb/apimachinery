@@ -124,6 +124,18 @@ type MSSQLServerSpec struct {
 	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 }
 
+// +kubebuilder:validation:Enum=ca;client;server;metrics-exporter
+type MSSQLServerCertificateAlias string
+
+const (
+	MSSQLServerEndpoint         MSSQLServerCertificateAlias = "endpoint"
+	MSSQLServerPrimaryService   MSSQLServerCertificateAlias = "primary"
+	MSSQLServerSecondaryService MSSQLServerCertificateAlias = "secondary"
+	MSSQLServerServer           MSSQLServerCertificateAlias = "server"
+	MSSQLServerClient           MSSQLServerCertificateAlias = "client"
+	MSSQLServerExporter         MSSQLServerCertificateAlias = "exporter"
+)
+
 // InternalAuthentication provides different way of endpoint authentication
 type InternalAuthentication struct {
 	// EndpointCert is used for endpoint authentication of MSSql Server

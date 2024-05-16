@@ -366,7 +366,6 @@ const (
 
 	// =========================== MSSQLServer Constants ============================
 	MSSQLSAUser              = "sa"
-	MSSQLEndpointAlias       = "endpoint"
 	MSSQLDbmLoginSecretName  = "dbm-login-secret"
 	MSSQLMasterKeySecretName = "master-key-secret"
 
@@ -374,7 +373,6 @@ const (
 
 	MSSQLDatabasePodPrimary       = "primary"
 	MSSQLDatabasePodSecondary     = "secondary"
-	MSSQLSecondaryServiceAlias    = "secondary"
 	MSSQLSecondaryServicePortName = "secondary"
 
 	// port related
