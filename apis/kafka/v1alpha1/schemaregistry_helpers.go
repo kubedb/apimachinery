@@ -77,6 +77,10 @@ func (k *SchemaRegistry) OffshootName() string {
 	return k.Name
 }
 
+func (k *SchemaRegistry) GoverningServiceName() string {
+	return meta_util.NameWithSuffix(k.ServiceName(), "pods")
+}
+
 func (k *SchemaRegistry) ServiceName() string {
 	return k.OffshootName()
 }
@@ -163,7 +167,7 @@ func (k *SchemaRegistry) PodLabels(extraLabels ...map[string]string) map[string]
 	return k.offshootLabels(meta_util.OverwriteKeys(k.OffshootSelectors(), extraLabels...), k.Spec.PodTemplate.Labels)
 }
 
-func (k *SchemaRegistry) DeploymentName() string {
+func (k *SchemaRegistry) StatefulSetName() string {
 	return k.OffshootName()
 }
 

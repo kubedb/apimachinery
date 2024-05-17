@@ -12,7 +12,7 @@ spec:
     listKind: SchemaRegistryList
     plural: schemaregistries
     shortNames:
-    - kcc
+    - ksr
     singular: schemaregistry
   scope: Namespaced
   versions:

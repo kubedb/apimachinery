@@ -28,7 +28,7 @@ const (
 	ResourceCodeSchemaRegistry     = "ksr"
 	ResourceKindSchemaRegistry     = "SchemaRegistry"
 	ResourceSingularSchemaRegistry = "schemaregistry"
-	ResourcePluralSchemaRegistry   = "schemaregistrys"
+	ResourcePluralSchemaRegistry   = "schemaregistries"
 )
 
 // SchemaRegistry defines a  runtime server system that stores a specific set of artifacts as files.
@@ -39,7 +39,7 @@ const (
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:shortName=kcc,scope=Namespaced
+// +kubebuilder:resource:shortName=ksr,scope=Namespaced
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
