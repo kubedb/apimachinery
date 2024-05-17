@@ -598,6 +598,7 @@ const (
 	PgpoolPrimaryServicePortName       = "primary"
 	PgpoolDatabasePortName             = "db"
 	PgpoolPcpServicePortName           = "pcp"
+	PgpoolCustomConfigFile             = "pgpool.conf"
 	// ========================================== ZooKeeper Constants =================================================//
 
 	KubeDBZooKeeperRoleName         = "kubedb:zookeeper-version-reader"

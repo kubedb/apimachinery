@@ -56,6 +56,8 @@ type PgpoolOpsRequestSpec struct {
 	Type PgpoolOpsRequestType `json:"type"`
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *PgpoolVerticalScalingSpec `json:"verticalScaling,omitempty"`
+	// Specifies information necessary for custom configuration of Pgpool
+	Configuration *PgpoolCustomConfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
@@ -65,18 +67,20 @@ type PgpoolOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart
-// ENUM(VerticalScaling, Restart)
+// +kubebuilder:validation:Enum=VerticalScaling;Reconfigure;Restart
+// ENUM(VerticalScaling, Restart, Reconfigure)
 type PgpoolOpsRequestType string
-
-// PgpoolReplicaReadinessCriteria is the criteria for checking readiness of a Pgpool pod
-// after updating, horizontal scaling etc.
-type PgpoolReplicaReadinessCriteria struct{}
 
 // PgpoolVerticalScalingSpec contains the vertical scaling information of a Pgpool cluster
 type PgpoolVerticalScalingSpec struct {
 	// Resource spec for nodes
 	Node *PodResources `json:"node,omitempty"`
+}
+
+type PgpoolCustomConfigurationSpec struct {
+	ConfigSecret       *core.LocalObjectReference `json:"configSecret,omitempty"`
+	ApplyConfig        map[string]string          `json:"applyConfig,omitempty"`
+	RemoveCustomConfig bool                       `json:"removeCustomConfig,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

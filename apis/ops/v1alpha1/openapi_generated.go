@@ -556,10 +556,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerReplicaReadinessCriteria":          schema_apimachinery_apis_ops_v1alpha1_PgBouncerReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerUpdateVersionSpec":                 schema_apimachinery_apis_ops_v1alpha1_PgBouncerUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerVerticalScalingSpec":               schema_apimachinery_apis_ops_v1alpha1_PgBouncerVerticalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolCustomConfigurationSpec":              schema_apimachinery_apis_ops_v1alpha1_PgpoolCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolOpsRequest":                           schema_apimachinery_apis_ops_v1alpha1_PgpoolOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolOpsRequestList":                       schema_apimachinery_apis_ops_v1alpha1_PgpoolOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolOpsRequestSpec":                       schema_apimachinery_apis_ops_v1alpha1_PgpoolOpsRequestSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolReplicaReadinessCriteria":             schema_apimachinery_apis_ops_v1alpha1_PgpoolReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolVerticalScalingSpec":                  schema_apimachinery_apis_ops_v1alpha1_PgpoolVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources":                               schema_apimachinery_apis_ops_v1alpha1_PodResources(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresCustomConfiguration":                schema_apimachinery_apis_ops_v1alpha1_PostgresCustomConfiguration(ref),
@@ -26699,6 +26699,46 @@ func schema_apimachinery_apis_ops_v1alpha1_PgBouncerVerticalScalingSpec(ref comm
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_PgpoolCustomConfigurationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"applyConfig": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"removeCustomConfig": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_PgpoolOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -26822,6 +26862,12 @@ func schema_apimachinery_apis_ops_v1alpha1_PgpoolOpsRequestSpec(ref common.Refer
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolVerticalScalingSpec"),
 						},
 					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for custom configuration of Pgpool",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolCustomConfigurationSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -26846,18 +26892,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PgpoolOpsRequestSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
-	}
-}
-
-func schema_apimachinery_apis_ops_v1alpha1_PgpoolReplicaReadinessCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgpoolReplicaReadinessCriteria is the criteria for checking readiness of a Pgpool pod after updating, horizontal scaling etc.",
-				Type:        []string{"object"},
-			},
-		},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 

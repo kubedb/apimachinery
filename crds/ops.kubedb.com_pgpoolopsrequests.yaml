@@ -48,6 +48,21 @@ spec:
                 - IfReady
                 - Always
                 type: string
+              configuration:
+                properties:
+                  applyConfig:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  configSecret:
+                    properties:
+                      name:
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  removeCustomConfig:
+                    type: boolean
+                type: object
               databaseRef:
                 properties:
                   name:
@@ -61,7 +76,7 @@ spec:
               type:
                 enum:
                 - VerticalScaling
-                - VolumeExpansion
+                - Reconfigure
                 - Restart
                 type: string
               verticalScaling:

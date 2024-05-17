@@ -121,7 +121,7 @@ func (p *Pgpool) ValidateCreateOrUpdate() field.ErrorList {
 		))
 	}
 
-	if p.Spec.ConfigSecret != nil && (p.Spec.InitConfiguration != nil || p.Spec.InitConfiguration.PgpoolConfig != nil) {
+	if p.Spec.ConfigSecret != nil && (p.Spec.InitConfiguration != nil && p.Spec.InitConfiguration.PgpoolConfig != nil) {
 		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configSecret"),
 			p.Name,
 			"use either `spec.configSecret` or `spec.initConfig`"))
@@ -134,7 +134,7 @@ func (p *Pgpool) ValidateCreateOrUpdate() field.ErrorList {
 		secret := core.Secret{}
 		err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      p.Spec.ConfigSecret.Name,
-			Namespace: p.Spec.PostgresRef.Namespace,
+			Namespace: p.Namespace,
 		}, &secret)
 		if err != nil {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configSecret"),
@@ -142,11 +142,11 @@ func (p *Pgpool) ValidateCreateOrUpdate() field.ErrorList {
 				err.Error(),
 			))
 		}
-		_, ok := secret.Data["pgpool.conf"]
+		_, ok := secret.Data[PgpoolCustomConfigFile]
 		if !ok {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configSecret"),
 				p.Name,
-				"`pgpool.conf` is missing",
+				fmt.Sprintf("`%v` is missing", PgpoolCustomConfigFile),
 			))
 		}
 	}
