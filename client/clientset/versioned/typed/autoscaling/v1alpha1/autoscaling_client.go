@@ -29,6 +29,7 @@ import (
 
 type AutoscalingV1alpha1Interface interface {
 	RESTClient() rest.Interface
+	DruidAutoscalersGetter
 	ElasticsearchAutoscalersGetter
 	EtcdAutoscalersGetter
 	KafkaAutoscalersGetter
@@ -50,6 +51,10 @@ type AutoscalingV1alpha1Interface interface {
 // AutoscalingV1alpha1Client is used to interact with features provided by the autoscaling.kubedb.com group.
 type AutoscalingV1alpha1Client struct {
 	restClient rest.Interface
+}
+
+func (c *AutoscalingV1alpha1Client) DruidAutoscalers(namespace string) DruidAutoscalerInterface {
+	return newDruidAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) ElasticsearchAutoscalers(namespace string) ElasticsearchAutoscalerInterface {

@@ -29,6 +29,10 @@ type FakeAutoscalingV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeAutoscalingV1alpha1) DruidAutoscalers(namespace string) v1alpha1.DruidAutoscalerInterface {
+	return &FakeDruidAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) ElasticsearchAutoscalers(namespace string) v1alpha1.ElasticsearchAutoscalerInterface {
 	return &FakeElasticsearchAutoscalers{c, namespace}
 }

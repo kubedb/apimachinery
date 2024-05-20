@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// DruidAutoscalerListerExpansion allows custom methods to be added to
+// DruidAutoscalerLister.
+type DruidAutoscalerListerExpansion interface{}
+
+// DruidAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// DruidAutoscalerNamespaceLister.
+type DruidAutoscalerNamespaceListerExpansion interface{}
+
 // ElasticsearchAutoscalerListerExpansion allows custom methods to be added to
 // ElasticsearchAutoscalerLister.
 type ElasticsearchAutoscalerListerExpansion interface{}
