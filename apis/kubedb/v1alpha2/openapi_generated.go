@@ -31190,12 +31190,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SinglestoreSpec(ref common.Referen
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
-					"configSecret": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ConfigSecret is an optional field to provide custom configuration file for database (i.e config.properties). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",

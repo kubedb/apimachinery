@@ -49,12 +49,6 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
-              configSecret:
-                properties:
-                  name:
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
               halted:
                 type: boolean
               healthChecker:

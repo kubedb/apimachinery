@@ -352,7 +352,7 @@ const (
 	SinglestoreVolumeNameUserInitScript      = "initial-script"
 	SinglestoreVolumeMountPathUserInitScript = "/docker-entrypoint-initdb.d"
 	SinglestoreVolumeNameCustomConfig        = "custom-config"
-	SinglestoreVolumeMountPathCustomConfig   = "/config"
+	SinglestoreVolumeMountPathCustomConfig   = "/etc/memsql/conf.d"
 	SinglestoreVolmeNameInitScript           = "init-scripts"
 	SinglestoreVolumeMountPathInitScript     = "/scripts"
 	SinglestoreVolumeNameData                = "data"
