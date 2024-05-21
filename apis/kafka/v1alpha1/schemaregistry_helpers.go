@@ -205,14 +205,14 @@ func (k *SchemaRegistry) SetDefaults() {
 		k.Spec.Replicas = pointer.Int32P(1)
 	}
 
-	var kfVersion catalog.KafkaVersion
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: k.Spec.Version}, &kfVersion)
+	var ksrVersion catalog.SchemaRegistryVersion
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: k.Spec.Version}, &ksrVersion)
 	if err != nil {
-		klog.Errorf("can't get the kafka version object %s for %s \n", err.Error(), k.Spec.Version)
+		klog.Errorf("can't get the schema-registry version object %s for %s \n", err.Error(), k.Spec.Version)
 		return
 	}
 
-	k.setDefaultContainerSecurityContext(&kfVersion, &k.Spec.PodTemplate)
+	k.setDefaultContainerSecurityContext(&ksrVersion, &k.Spec.PodTemplate)
 
 	dbContainer := coreutil.GetContainerByName(k.Spec.PodTemplate.Spec.Containers, SchemaRegistryContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
@@ -220,17 +220,9 @@ func (k *SchemaRegistry) SetDefaults() {
 	}
 
 	k.SetHealthCheckerDefaults()
-
-	k.SetDefaultEnvs()
 }
 
-func (k *SchemaRegistry) SetDefaultEnvs() {
-	container := coreutil.GetContainerByName(k.Spec.PodTemplate.Spec.Containers, SchemaRegistryContainerName)
-	if container != nil {
-	}
-}
-
-func (k *SchemaRegistry) setDefaultContainerSecurityContext(kfVersion *catalog.KafkaVersion, podTemplate *ofstv2.PodTemplateSpec) {
+func (k *SchemaRegistry) setDefaultContainerSecurityContext(ksrVersion *catalog.SchemaRegistryVersion, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -238,7 +230,7 @@ func (k *SchemaRegistry) setDefaultContainerSecurityContext(kfVersion *catalog.K
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = kfVersion.Spec.SecurityContext.RunAsUser
+		podTemplate.Spec.SecurityContext.FSGroup = ksrVersion.Spec.SecurityContext.RunAsUser
 	}
 
 	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, SchemaRegistryContainerName)
@@ -250,11 +242,11 @@ func (k *SchemaRegistry) setDefaultContainerSecurityContext(kfVersion *catalog.K
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
-	k.assignDefaultContainerSecurityContext(kfVersion, container.SecurityContext)
+	k.assignDefaultContainerSecurityContext(ksrVersion, container.SecurityContext)
 	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 }
 
-func (k *SchemaRegistry) assignDefaultContainerSecurityContext(kfVersion *catalog.KafkaVersion, sc *core.SecurityContext) {
+func (k *SchemaRegistry) assignDefaultContainerSecurityContext(ksrVersion *catalog.SchemaRegistryVersion, sc *core.SecurityContext) {
 	if sc.AllowPrivilegeEscalation == nil {
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
@@ -267,10 +259,10 @@ func (k *SchemaRegistry) assignDefaultContainerSecurityContext(kfVersion *catalo
 		sc.RunAsNonRoot = pointer.BoolP(true)
 	}
 	if sc.RunAsUser == nil {
-		sc.RunAsUser = kfVersion.Spec.SecurityContext.RunAsUser
+		sc.RunAsUser = ksrVersion.Spec.SecurityContext.RunAsUser
 	}
 	if sc.RunAsGroup == nil {
-		sc.RunAsGroup = kfVersion.Spec.SecurityContext.RunAsUser
+		sc.RunAsGroup = ksrVersion.Spec.SecurityContext.RunAsUser
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()

@@ -148,7 +148,7 @@ func (k *SchemaRegistry) validateEnvVars() error {
 }
 
 func (k *SchemaRegistry) validateVersion() error {
-	ksrVersion := &catalog.KafkaVersion{}
+	ksrVersion := &catalog.SchemaRegistryVersion{}
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: k.Spec.Version}, ksrVersion)
 	if err != nil {
 		return errors.New("version not supported")
