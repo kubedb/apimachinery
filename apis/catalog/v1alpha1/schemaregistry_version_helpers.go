@@ -55,10 +55,10 @@ func (r *SchemaRegistryVersion) ResourcePlural() string {
 func (r *SchemaRegistryVersion) ValidateSpecs() error {
 	if r.Spec.Version == "" ||
 		r.Spec.Registry.Image == "" ||
-		r.Spec.InMemory.Image == "" || r.Spec.SQL.Image == "" {
+		r.Spec.InMemory.Image == "" {
 		return fmt.Errorf(`atleast one of the following specs is not set for schemaRegistryVersion "%v":
 							spec.version,
-							spec.registry.image, r.inMemory.image, r.sql.image`, r.Name)
+							spec.registry.image, r.inMemory.image`, r.Name)
 	}
 	return nil
 }

@@ -57,8 +57,6 @@ type SchemaRegistryVersionSpec struct {
 	Registry RegistryImage `json:"registry"`
 	// Schema Registry In Memory Image
 	InMemory ApicurioInMemory `json:"inMemory,omitempty"`
-	// Schema Registry SQL Image
-	SQL ApicurioSQL `json:"sql,omitempty"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
@@ -76,11 +74,6 @@ type RegistryImage struct {
 
 // ApicurioInMemory is the Apicurio Registry In-Memory image
 type ApicurioInMemory struct {
-	Image string `json:"image"`
-}
-
-// ApicurioSQL is the Apicurio Registry sql image
-type ApicurioSQL struct {
 	Image string `json:"image"`
 }
 

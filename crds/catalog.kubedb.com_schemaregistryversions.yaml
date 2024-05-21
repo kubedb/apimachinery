@@ -75,13 +75,6 @@ spec:
                     format: int64
                     type: integer
                 type: object
-              sql:
-                properties:
-                  image:
-                    type: string
-                required:
-                - image
-                type: object
               updateConstraints:
                 properties:
                   allowlist:

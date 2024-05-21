@@ -459,7 +459,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AddonSpec":                                  schema_apimachinery_apis_catalog_v1alpha1_AddonSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AddonTasks":                                 schema_apimachinery_apis_catalog_v1alpha1_AddonTasks(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ApicurioInMemory":                           schema_apimachinery_apis_catalog_v1alpha1_ApicurioInMemory(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ApicurioSQL":                                schema_apimachinery_apis_catalog_v1alpha1_ApicurioSQL(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec":                               schema_apimachinery_apis_catalog_v1alpha1_ArchiverSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectClusterVersion":                      schema_apimachinery_apis_catalog_v1alpha1_ConnectClusterVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin":                            schema_apimachinery_apis_catalog_v1alpha1_ConnectorPlugin(ref),
@@ -22917,27 +22916,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_ApicurioInMemory(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ApicurioSQL(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ApicurioSQL is the Apicurio Registry sql image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_ArchiverSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27799,13 +27777,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_SchemaRegistryVersionSpec(ref com
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ApicurioInMemory"),
 						},
 					},
-					"sql": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Schema Registry SQL Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ApicurioSQL"),
-						},
-					},
 					"deprecated": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -27832,7 +27803,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_SchemaRegistryVersionSpec(ref com
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ApicurioInMemory", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ApicurioSQL", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RegistryImage", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ApicurioInMemory", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RegistryImage", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 
