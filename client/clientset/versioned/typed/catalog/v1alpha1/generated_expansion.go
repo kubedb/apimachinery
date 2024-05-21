@@ -54,6 +54,8 @@ type RabbitMQVersionExpansion interface{}
 
 type RedisVersionExpansion interface{}
 
+type SchemaRegistryVersionExpansion interface{}
+
 type SinglestoreVersionExpansion interface{}
 
 type SolrVersionExpansion interface{}

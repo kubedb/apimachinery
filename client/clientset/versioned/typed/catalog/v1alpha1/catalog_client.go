@@ -47,6 +47,7 @@ type CatalogV1alpha1Interface interface {
 	ProxySQLVersionsGetter
 	RabbitMQVersionsGetter
 	RedisVersionsGetter
+	SchemaRegistryVersionsGetter
 	SinglestoreVersionsGetter
 	SolrVersionsGetter
 	ZooKeeperVersionsGetter
@@ -127,6 +128,10 @@ func (c *CatalogV1alpha1Client) RabbitMQVersions() RabbitMQVersionInterface {
 
 func (c *CatalogV1alpha1Client) RedisVersions() RedisVersionInterface {
 	return newRedisVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) SchemaRegistryVersions() SchemaRegistryVersionInterface {
+	return newSchemaRegistryVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) SinglestoreVersions() SinglestoreVersionInterface {

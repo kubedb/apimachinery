@@ -101,6 +101,10 @@ func (c *FakeCatalogV1alpha1) RedisVersions() v1alpha1.RedisVersionInterface {
 	return &FakeRedisVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) SchemaRegistryVersions() v1alpha1.SchemaRegistryVersionInterface {
+	return &FakeSchemaRegistryVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) SinglestoreVersions() v1alpha1.SinglestoreVersionInterface {
 	return &FakeSinglestoreVersions{c}
 }

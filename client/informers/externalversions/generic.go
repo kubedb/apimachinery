@@ -138,6 +138,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().RabbitMQVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("redisversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().RedisVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("schemaregistryversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().SchemaRegistryVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("singlestoreversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().SinglestoreVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("solrversions"):

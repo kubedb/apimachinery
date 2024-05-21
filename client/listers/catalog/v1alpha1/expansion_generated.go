@@ -90,6 +90,10 @@ type RabbitMQVersionListerExpansion interface{}
 // RedisVersionLister.
 type RedisVersionListerExpansion interface{}
 
+// SchemaRegistryVersionListerExpansion allows custom methods to be added to
+// SchemaRegistryVersionLister.
+type SchemaRegistryVersionListerExpansion interface{}
+
 // SinglestoreVersionListerExpansion allows custom methods to be added to
 // SinglestoreVersionLister.
 type SinglestoreVersionListerExpansion interface{}

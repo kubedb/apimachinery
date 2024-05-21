@@ -60,6 +60,8 @@ type Interface interface {
 	RabbitMQVersions() RabbitMQVersionInformer
 	// RedisVersions returns a RedisVersionInformer.
 	RedisVersions() RedisVersionInformer
+	// SchemaRegistryVersions returns a SchemaRegistryVersionInformer.
+	SchemaRegistryVersions() SchemaRegistryVersionInformer
 	// SinglestoreVersions returns a SinglestoreVersionInformer.
 	SinglestoreVersions() SinglestoreVersionInformer
 	// SolrVersions returns a SolrVersionInformer.
@@ -167,6 +169,11 @@ func (v *version) RabbitMQVersions() RabbitMQVersionInformer {
 // RedisVersions returns a RedisVersionInformer.
 func (v *version) RedisVersions() RedisVersionInformer {
 	return &redisVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// SchemaRegistryVersions returns a SchemaRegistryVersionInformer.
+func (v *version) SchemaRegistryVersions() SchemaRegistryVersionInformer {
+	return &schemaRegistryVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // SinglestoreVersions returns a SinglestoreVersionInformer.
