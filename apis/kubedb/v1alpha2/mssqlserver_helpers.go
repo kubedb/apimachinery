@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 	"regexp"
-	"strings"
 	"time"
 
 	"kubedb.dev/apimachinery/apis"
@@ -28,6 +27,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -40,6 +40,7 @@ import (
 	metautil "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
@@ -93,10 +94,6 @@ func (m *MSSQLServer) GoverningServiceName() string {
 	return metautil.NameWithSuffix(m.ServiceName(), "pods")
 }
 
-func (m *MSSQLServer) DefaultUserCredSecretName(username string) string {
-	return metautil.NameWithSuffix(m.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", username), "_", "-"))
-}
-
 func (m *MSSQLServer) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[metautil.ComponentLabelKey] = kubedb.ComponentDatabase
 	return metautil.FilterKeys(kubedb.GroupName, selector, metautil.OverwriteKeys(nil, m.Labels, override))
@@ -118,6 +115,46 @@ func (m *MSSQLServer) OffshootSelectors(extraSelectors ...map[string]string) map
 		metautil.ManagedByLabelKey: kubedb.GroupName,
 	}
 	return metautil.OverwriteKeys(selector, extraSelectors...)
+}
+
+type mssqlserverStatsService struct {
+	*MSSQLServer
+}
+
+func (s mssqlserverStatsService) GetNamespace() string {
+	return s.MSSQLServer.GetNamespace()
+}
+
+func (s mssqlserverStatsService) ServiceName() string {
+	return s.OffshootName() + "-stats"
+}
+
+func (s mssqlserverStatsService) ServiceMonitorName() string {
+	return s.ServiceName()
+}
+
+func (s mssqlserverStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return s.OffshootLabels()
+}
+
+func (s mssqlserverStatsService) Path() string {
+	return DefaultStatsPath
+}
+
+func (s mssqlserverStatsService) Scheme() string {
+	return ""
+}
+
+func (s mssqlserverStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
+}
+
+func (s MSSQLServer) StatsService() mona.StatsAccessor {
+	return &mssqlserverStatsService{&s}
+}
+
+func (s MSSQLServer) StatsServiceLabels() map[string]string {
+	return s.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (m *MSSQLServer) IsAvailabilityGroup() bool {
