@@ -121,40 +121,40 @@ type mssqlserverStatsService struct {
 	*MSSQLServer
 }
 
-func (s mssqlserverStatsService) GetNamespace() string {
-	return s.MSSQLServer.GetNamespace()
+func (m mssqlserverStatsService) GetNamespace() string {
+	return m.MSSQLServer.GetNamespace()
 }
 
-func (s mssqlserverStatsService) ServiceName() string {
-	return s.OffshootName() + "-stats"
+func (m mssqlserverStatsService) ServiceName() string {
+	return m.OffshootName() + "-stats"
 }
 
-func (s mssqlserverStatsService) ServiceMonitorName() string {
-	return s.ServiceName()
+func (m mssqlserverStatsService) ServiceMonitorName() string {
+	return m.ServiceName()
 }
 
-func (s mssqlserverStatsService) ServiceMonitorAdditionalLabels() map[string]string {
-	return s.OffshootLabels()
+func (m mssqlserverStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return m.OffshootLabels()
 }
 
-func (s mssqlserverStatsService) Path() string {
+func (m mssqlserverStatsService) Path() string {
 	return DefaultStatsPath
 }
 
-func (s mssqlserverStatsService) Scheme() string {
+func (m mssqlserverStatsService) Scheme() string {
 	return ""
 }
 
-func (s mssqlserverStatsService) TLSConfig() *promapi.TLSConfig {
+func (m mssqlserverStatsService) TLSConfig() *promapi.TLSConfig {
 	return nil
 }
 
-func (s MSSQLServer) StatsService() mona.StatsAccessor {
-	return &mssqlserverStatsService{&s}
+func (m MSSQLServer) StatsService() mona.StatsAccessor {
+	return &mssqlserverStatsService{&m}
 }
 
-func (s MSSQLServer) StatsServiceLabels() map[string]string {
-	return s.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
+func (m MSSQLServer) StatsServiceLabels() map[string]string {
+	return m.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (m *MSSQLServer) IsAvailabilityGroup() bool {
