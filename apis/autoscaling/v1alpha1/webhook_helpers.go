@@ -59,7 +59,7 @@ func setDefaultScalingRules(storageSpec *StorageAutoscalerSpec) {
 		storageSpec.ScalingRules = []StorageScalingRule{
 			{
 				AppliesUpto: "",
-				Threshold:   strconv.Itoa(int(*storageSpec.ScalingThreshold)),
+				Threshold:   fmt.Sprintf("%spc", strconv.Itoa(int(*storageSpec.ScalingThreshold))),
 			},
 		}
 	}
