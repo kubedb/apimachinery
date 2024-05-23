@@ -30,7 +30,9 @@ import (
 	"github.com/Masterminds/semver/v3"
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
@@ -176,12 +178,32 @@ func (d *Druid) PetSetName(nodeRole DruidNodeRoleType) string {
 	return meta_util.NameWithSuffix(d.OffShootName(), d.DruidNodeRoleString(nodeRole))
 }
 
-func (d *Druid) PodLabels(extraLebels ...map[string]string) map[string]string {
-	return d.offShootLabels(meta_util.OverwriteKeys(d.OffShootSelectors(), extraLebels...), d.Spec.PodTemplate.Labels)
+func (d *Druid) PodLabels(nodeType DruidNodeRoleType, extraLabels ...map[string]string) map[string]string {
+	nodeSpec := d.GetNodeSpec(nodeType)
+	return d.offShootLabels(meta_util.OverwriteKeys(d.OffShootSelectors(), extraLabels...), nodeSpec.PodTemplate.Labels)
 }
 
-func (d *Druid) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
-	return d.offShootLabels(meta_util.OverwriteKeys(d.OffShootSelectors(), extraLabels...), d.Spec.PodTemplate.Controller.Labels)
+func (d *Druid) PodControllerLabels(nodeType DruidNodeRoleType, extraLabels ...map[string]string) map[string]string {
+	nodeSpec := d.GetNodeSpec(nodeType)
+	return d.offShootLabels(meta_util.OverwriteKeys(d.OffShootSelectors(), extraLabels...), nodeSpec.PodTemplate.Controller.Labels)
+}
+
+func (d *Druid) GetNodeSpec(nodeType DruidNodeRoleType) *DruidNode {
+	if nodeType == DruidNodeRoleCoordinators {
+		return d.Spec.Topology.Coordinators
+	} else if nodeType == DruidNodeRoleOverlords {
+		return d.Spec.Topology.Overlords
+	} else if nodeType == DruidNodeRoleMiddleManagers {
+		return d.Spec.Topology.MiddleManagers
+	} else if nodeType == DruidNodeRoleHistoricals {
+		return d.Spec.Topology.Historicals
+	} else if nodeType == DruidNodeRoleBrokers {
+		return d.Spec.Topology.Brokers
+	} else if nodeType == DruidNodeRoleRouters {
+		return d.Spec.Topology.Routers
+	}
+
+	panic("Node role name does not match any known types")
 }
 
 func (d *Druid) ServiceAccountName() string {
@@ -371,10 +393,10 @@ func (d *Druid) SetDefaults() {
 	}
 
 	if d.Spec.Topology != nil {
+		if d.Spec.Topology.Coordinators == nil {
+			d.Spec.Topology.Coordinators = &DruidNode{}
+		}
 		if d.Spec.Topology.Coordinators != nil {
-			if d.Spec.Topology.Coordinators.Replicas == nil {
-				d.Spec.Topology.Coordinators.Replicas = pointer.Int32P(1)
-			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
@@ -384,9 +406,6 @@ func (d *Druid) SetDefaults() {
 			}
 		}
 		if d.Spec.Topology.Overlords != nil {
-			if d.Spec.Topology.Overlords.Replicas == nil {
-				d.Spec.Topology.Overlords.Replicas = pointer.Int32P(1)
-			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
@@ -395,10 +414,14 @@ func (d *Druid) SetDefaults() {
 				d.setDefaultContainerResourceLimits(&d.Spec.Topology.Overlords.PodTemplate, DruidNodeRoleOverlords)
 			}
 		}
+
+		if d.Spec.Topology.MiddleManagers == nil {
+			d.Spec.Topology.MiddleManagers = &DruidNode{}
+		}
+		if d.Spec.Topology.MiddleManagers.Storage == nil && d.Spec.StorageType == StorageTypeDurable {
+			d.Spec.Topology.MiddleManagers.Storage = d.getDefaultPVC()
+		}
 		if d.Spec.Topology.MiddleManagers != nil {
-			if d.Spec.Topology.MiddleManagers.Replicas == nil {
-				d.Spec.Topology.MiddleManagers.Replicas = pointer.Int32P(1)
-			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
@@ -407,10 +430,14 @@ func (d *Druid) SetDefaults() {
 				d.setDefaultContainerResourceLimits(&d.Spec.Topology.MiddleManagers.PodTemplate, DruidNodeRoleMiddleManagers)
 			}
 		}
+
+		if d.Spec.Topology.Historicals == nil {
+			d.Spec.Topology.Historicals = &DruidNode{}
+		}
+		if d.Spec.Topology.Historicals.Storage == nil && d.Spec.StorageType == StorageTypeDurable {
+			d.Spec.Topology.Historicals.Storage = d.getDefaultPVC()
+		}
 		if d.Spec.Topology.Historicals != nil {
-			if d.Spec.Topology.Historicals.Replicas == nil {
-				d.Spec.Topology.Historicals.Replicas = pointer.Int32P(1)
-			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
@@ -419,10 +446,11 @@ func (d *Druid) SetDefaults() {
 				d.setDefaultContainerResourceLimits(&d.Spec.Topology.Historicals.PodTemplate, DruidNodeRoleHistoricals)
 			}
 		}
+
+		if d.Spec.Topology.Brokers == nil {
+			d.Spec.Topology.Brokers = &DruidNode{}
+		}
 		if d.Spec.Topology.Brokers != nil {
-			if d.Spec.Topology.Brokers.Replicas == nil {
-				d.Spec.Topology.Brokers.Replicas = pointer.Int32P(1)
-			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
@@ -432,10 +460,8 @@ func (d *Druid) SetDefaults() {
 
 			}
 		}
+
 		if d.Spec.Topology.Routers != nil {
-			if d.Spec.Topology.Routers.Replicas == nil {
-				d.Spec.Topology.Routers.Replicas = pointer.Int32P(1)
-			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
@@ -458,6 +484,16 @@ func (d *Druid) SetDefaults() {
 			d.Spec.Monitor.Prometheus.Exporter.Port = DruidExporterPort
 		}
 		d.Spec.Monitor.SetDefaults()
+	}
+}
+
+func (d *Druid) getDefaultPVC() *core.PersistentVolumeClaimSpec {
+	return &core.PersistentVolumeClaimSpec{
+		Resources: core.VolumeResourceRequirements{
+			Requests: core.ResourceList{
+				core.ResourceStorage: resource.MustParse("1Gi"),
+			},
+		},
 	}
 }
 

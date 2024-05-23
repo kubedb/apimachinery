@@ -190,6 +190,22 @@ func (d *Druid) validateCreateOrUpdate() field.ErrorList {
 					"number of replicas can not be 0 or less"))
 			}
 
+			if d.Spec.StorageType == StorageTypeEphemeral && d.Spec.Topology.MiddleManagers.Storage != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("middleManagers").Child("storage"),
+					d.Name,
+					"spec.topology.middleManagers.storage can not be set when storageType is Ephemeral"))
+			}
+			if d.Spec.StorageType == StorageTypeDurable && d.Spec.Topology.MiddleManagers.EphemeralStorage != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("middleManagers").Child("ephemeralStorage"),
+					d.Name,
+					"spec.topology.middleManagers.ephemeralStorage can not be set when storageType is Durable"))
+			}
+			if d.Spec.StorageType == StorageTypeDurable && d.Spec.Topology.MiddleManagers.Storage == nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("middleManagers").Child("storage"),
+					d.Name,
+					"spec.topology.middleManagers.storage needs to be set when storageType is Durable"))
+			}
+
 			err := druidValidateVolumes(&d.Spec.Topology.MiddleManagers.PodTemplate, DruidNodeRoleMiddleManagers)
 			if err != nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("middleManagers").Child("podTemplate").Child("spec").Child("volumes"),
@@ -213,6 +229,22 @@ func (d *Druid) validateCreateOrUpdate() field.ErrorList {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("historicals").Child("replicas"),
 					d.Name,
 					"number of replicas can not be 0 or less"))
+			}
+
+			if d.Spec.StorageType == StorageTypeEphemeral && d.Spec.Topology.Historicals.Storage != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("historicals").Child("storage"),
+					d.Name,
+					"spec.topology.historicals.storage can not be set when storageType is Ephemeral"))
+			}
+			if d.Spec.StorageType == StorageTypeDurable && d.Spec.Topology.Historicals.EphemeralStorage != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("historicals").Child("ephemeralStorage"),
+					d.Name,
+					"spec.topology.historicals.ephemeralStorage can not be set when storageType is Durable"))
+			}
+			if d.Spec.StorageType == StorageTypeDurable && d.Spec.Topology.Historicals.Storage == nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("historicals").Child("storage"),
+					d.Name,
+					"spec.topology.historicals.storage needs to be set when storageType is Durable"))
 			}
 
 			err := druidValidateVolumes(&d.Spec.Topology.Historicals.PodTemplate, DruidNodeRoleHistoricals)

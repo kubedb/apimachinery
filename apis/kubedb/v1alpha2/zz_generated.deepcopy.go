@@ -479,6 +479,11 @@ func (in *DruidNode) DeepCopyInto(out *DruidNode) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.EphemeralStorage != nil {
+		in, out := &in.EphemeralStorage, &out.EphemeralStorage
+		*out = new(corev1.EmptyDirVolumeSource)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -530,7 +535,6 @@ func (in *DruidSpec) DeepCopyInto(out *DruidSpec) {
 		*out = new(ZookeeperRef)
 		(*in).DeepCopyInto(*out)
 	}
-	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	if in.ServiceTemplates != nil {
 		in, out := &in.ServiceTemplates, &out.ServiceTemplates
 		*out = make([]NamedServiceTemplateSpec, len(*in))
