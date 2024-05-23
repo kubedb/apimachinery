@@ -62,6 +62,6 @@ func (d *DruidAutoscaler) GetStatus() AutoscalerStatus {
 	return d.Status
 }
 
-func (k *DruidAutoscaler) SetStatus(s AutoscalerStatus) {
-	k.Status = s
+func (d *DruidAutoscaler) SetStatus(s AutoscalerStatus) {
+	d.Status = s
 }

@@ -3403,7 +3403,11 @@ func (in *StorageAutoscalerSpec) DeepCopyInto(out *StorageAutoscalerSpec) {
 		*out = make([]StorageScalingRule, len(*in))
 		copy(*out, *in)
 	}
-	out.UpperBound = in.UpperBound.DeepCopy()
+	if in.UpperBound != nil {
+		in, out := &in.UpperBound, &out.UpperBound
+		x := (*in).DeepCopy()
+		*out = &x
+	}
 	return
 }
 
