@@ -177,9 +177,11 @@ func (f *FerretDB) ValidateCreateOrUpdate() field.ErrorList {
 		} else {
 			if f.Spec.Backend.Postgres.URL == nil {
 				err := f.validateServiceRef(f.Spec.Backend.Postgres.Service)
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-					f.Name,
-					err.Error()))
+				if err != nil {
+					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
+						f.Name,
+						err.Error()))
+				}
 			}
 		}
 	} else {
