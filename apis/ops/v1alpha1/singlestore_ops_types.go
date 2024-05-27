@@ -74,6 +74,10 @@ type SinglestoreOpsRequestSpec struct {
 // ENUM(VerticalScaling, VolumeExpansion, Restart, Configuration)
 type SinglestoreOpsRequestType string
 
+// SinglestoreReplicaReadinessCriteria is the criteria for checking readiness of a Singlestore pod
+// after updating, horizontal scaling etc.
+type SinglestoreReplicaReadinessCriteria struct{}
+
 // SinglestoreVerticalScalingSpec contains the vertical scaling information of a Singlestore cluster
 type SinglestoreVerticalScalingSpec struct {
 	// Resource spec for standalone node
