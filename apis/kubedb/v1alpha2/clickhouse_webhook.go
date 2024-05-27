@@ -23,6 +23,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -92,11 +93,34 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 		}
 	}
 
-	// number of replicas can not be 0 or less
-	if r.Spec.Replicas != nil && *r.Spec.Replicas <= 0 {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			r.Name,
-			"number of replicas can not be 0 or less"))
+	if r.Spec.ClusterTopology != nil {
+		clusterName := map[string]bool{}
+		clusters := r.Spec.ClusterTopology.Cluster
+		for _, cluster := range clusters {
+			if cluster.Shards != nil && *cluster.Shards <= 0 {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("shards"),
+					r.Name,
+					"number of shards can not be 0 or less"))
+			}
+			if cluster.Replicas != nil && *cluster.Replicas <= 0 {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("replicas"),
+					r.Name,
+					"number of replicas can't be 0 or less"))
+			}
+			if clusterName[cluster.Name] == true {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child(cluster.Name),
+					r.Name,
+					"cluster name is duplicated, use different cluster name"))
+			}
+			clusterName[cluster.Name] = true
+		}
+	} else {
+		// number of replicas can not be 0 or less
+		if r.Spec.Replicas != nil && *r.Spec.Replicas <= 0 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
+				r.Name,
+				"number of replicas can't be 0 or less"))
+		}
 	}
 
 	if r.Spec.Version == "" {
@@ -126,16 +150,13 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 			err.Error()))
 	}
 
-	if r.Spec.StorageType == "" {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-			r.Name,
-			"StorageType can not be empty"))
-	} else {
-		if r.Spec.StorageType != StorageTypeDurable && r.Spec.StorageType != StorageTypeEphemeral {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-				r.Name,
-				"StorageType should be either durable or ephemeral"))
+	if r.Spec.ClusterTopology != nil {
+		clusters := r.Spec.ClusterTopology.Cluster
+		for _, cluster := range clusters {
+			allErr = r.validateClusterStorageType(cluster.StorageType, r.Spec.Storage, cluster.Name, allErr)
 		}
+	} else {
+		allErr = r.validateStandaloneStorageType(r.Spec.StorageType, r.Spec.Storage, allErr)
 	}
 
 	//if r.Spec.ConfigSecret != nil && r.Spec.ConfigSecret.Name == "" {
@@ -148,6 +169,48 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "ClickHouse.kubedb.com", Kind: "ClickHouse"}, r.Name, allErr)
+}
+
+func (c *ClickHouse) validateStandaloneStorageType(storageType StorageType, storage *core.PersistentVolumeClaimSpec, allErr field.ErrorList) field.ErrorList {
+	if storageType == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+			c.Name,
+			"StorageType can not be empty"))
+	} else {
+		if storageType != StorageTypeDurable && c.Spec.StorageType != StorageTypeEphemeral {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+				c.Name,
+				"StorageType should be either durable or ephemeral"))
+		}
+	}
+
+	if storage == nil && c.Spec.StorageType == StorageTypeDurable {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storage"),
+			c.Name,
+			"Storage can't be empty when StorageType is durable"))
+	}
+
+	return allErr
+}
+
+func (c *ClickHouse) validateClusterStorageType(storageType StorageType, storage *core.PersistentVolumeClaimSpec, cluster string, allErr field.ErrorList) field.ErrorList {
+	if storageType == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child(cluster).Child("storageType"),
+			c.Name,
+			"StorageType can not be empty"))
+	} else {
+		if storageType != StorageTypeDurable && storageType != StorageTypeEphemeral {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child(cluster).Child("storageType"),
+				storageType,
+				"StorageType should be either durable or ephemeral"))
+		}
+	}
+	if storage == nil && storageType == StorageTypeDurable {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child(cluster).Child("storage"),
+			c.Name,
+			"Storage can't be empty when StorageType is durable"))
+	}
+	return allErr
 }
 
 func (r *ClickHouse) ValidateVersion(db *ClickHouse) error {

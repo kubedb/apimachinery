@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis"
@@ -76,8 +77,18 @@ func (c *ClickHouse) OffshootName() string {
 	return c.Name
 }
 
+func (c *ClickHouse) OffshootClusterPetName(clusterName string, shardNo int) string {
+	shard := meta_util.NameWithSuffix("shard", strconv.Itoa(shardNo))
+	cluster := meta_util.NameWithSuffix(clusterName, shard)
+	return meta_util.NameWithSuffix(c.OffshootName(), cluster)
+}
+
 func (c *ClickHouse) OffshootLabels() map[string]string {
 	return c.offshootLabels(c.OffshootSelectors(), nil)
+}
+
+func (c *ClickHouse) OffshootClusterLabels(petName string) map[string]string {
+	return c.offshootLabels(c.OffshootClusterSelectors(petName), nil)
 }
 
 func (c *ClickHouse) offshootLabels(selector, override map[string]string) map[string]string {
@@ -94,6 +105,16 @@ func (c *ClickHouse) OffshootSelectors(extraSelectors ...map[string]string) map[
 	return meta_util.OverwriteKeys(selector, extraSelectors...)
 }
 
+func (c *ClickHouse) OffshootClusterSelectors(petName string, extraSelectors ...map[string]string) map[string]string {
+	selector := map[string]string{
+		meta_util.NameLabelKey:      c.ResourceFQN(),
+		meta_util.InstanceLabelKey:  c.Name,
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
+		meta_util.PartOfLabelKey:    petName,
+	}
+	return meta_util.OverwriteKeys(selector, extraSelectors...)
+}
+
 func (c *ClickHouse) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", c.ResourcePlural(), kubedb.GroupName)
 }
@@ -102,8 +123,20 @@ func (c *ClickHouse) ResourcePlural() string {
 	return ResourcePluralClickhouse
 }
 
+func (c *ClickHouse) PrimaryServiceDNS() string {
+	return fmt.Sprintf("%s.%s.svc", c.ServiceName(), c.Namespace)
+}
+
 func (c *ClickHouse) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(c.ServiceName(), "pods")
+}
+
+func (c *ClickHouse) ClusterGoverningServiceDNS(petName string, replicaNo int) string {
+	return fmt.Sprintf("%s-%d.%s.%s.svc", petName, replicaNo, c.ClusterGoverningServiceName(petName), c.GetNamespace())
+}
+
+func (c *ClickHouse) ClusterGoverningServiceName(name string) string {
+	return meta_util.NameWithSuffix(name, "pods")
 }
 
 func (c *ClickHouse) GetAuthSecretName() string {
@@ -111,6 +144,10 @@ func (c *ClickHouse) GetAuthSecretName() string {
 		return c.Spec.AuthSecret.Name
 	}
 	return c.DefaultUserCredSecretName("admin")
+}
+
+func (r *ClickHouse) ConfigSecretName() string {
+	return meta_util.NameWithSuffix(r.OffshootName(), "config")
 }
 
 func (c *ClickHouse) DefaultUserCredSecretName(username string) string {
@@ -147,10 +184,6 @@ func (c *ClickHouse) SetHealthCheckerDefaults() {
 	if c.Spec.HealthChecker.FailureThreshold == nil {
 		c.Spec.HealthChecker.FailureThreshold = pointer.Int32P(3)
 	}
-}
-
-func (c *ClickHouse) PrimaryServiceDNS() string {
-	return fmt.Sprintf("%s.%s.svc", c.ServiceName(), c.Namespace)
 }
 
 func (c *ClickHouse) Finalizer() string {
@@ -193,6 +226,41 @@ func (c *ClickHouse) SetDefaults() {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
 	}
 	c.SetHealthCheckerDefaults()
+
+	if c.Spec.ClusterTopology != nil {
+		clusterName := map[string]bool{}
+		clusters := c.Spec.ClusterTopology.Cluster
+		for index, cluster := range clusters {
+			if cluster.Shards == nil {
+				cluster.Shards = pointer.Int32P(1)
+			}
+			if cluster.Replicas == nil {
+				cluster.Replicas = pointer.Int32P(1)
+			}
+			if cluster.Name == "" {
+				for i := 1; ; i += 1 {
+					cluster.Name = fmt.Sprintf("cluster-%d", i)
+					if !clusterName[cluster.Name] {
+						clusterName[cluster.Name] = true
+						break
+					}
+				}
+			} else {
+				clusterName[cluster.Name] = true
+			}
+			if cluster.StorageType == "" {
+				cluster.StorageType = c.Spec.StorageType
+			}
+			if cluster.Storage == nil {
+				cluster.Storage = c.Spec.Storage
+			}
+			c.setDefaultContainerSecurityContext(&chVersion, &cluster.PodTemplate)
+			clusters[index] = cluster
+
+		}
+
+		c.Spec.ClusterTopology.Cluster = clusters
+	}
 }
 
 func (r *ClickHouse) setDefaultContainerSecurityContext(chVersion *catalog.ClickHouseVersion, podTemplate *ofst.PodTemplateSpec) {
@@ -270,9 +338,3 @@ func (r *ClickHouse) assignDefaultInitContainerSecurityContext(chVersion *catalo
 		rc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
 }
-
-// returns the CertSecretVolumeName
-// Values will be like: client-certs, server-certs etc.
-//func (r *ClickHouse) CertSecretVolumeName(alias ClickHouseCertificateAlias) string {
-//	return string(alias) + "-certs"
-//}

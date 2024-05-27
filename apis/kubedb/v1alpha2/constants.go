@@ -1229,11 +1229,29 @@ const (
 	ClickHouseNativeTLS   = 9440
 	ClickhousePromethues  = 9363
 
-	ClickHouseVolumeData = "data"
-	ClickHouseDataDir    = "/var/lib/clickhouse"
+	ClickHouseVolumeData         = "data"
+	ClickHouseDataDir            = "/var/lib/clickhouse"
+	ClickHouseConfigVolName      = "clickhouse-config"
+	ClickHouseConfigDir          = "/etc/clickhouse-server/config.d"
+	ClickHouseDefaultStorageSize = "2Gi"
+
+	ClickHouseClusterConfigVolName = "cluster-config"
+	ClickHouseClusterConfigDir     = "/etc/clickhouse-server/conf.d"
+
+	ClickHouseTempClusterConfigVolName = "temp-cluster-config"
 
 	ClickHouseContainerName     = "clickhouse"
 	ClickHouseInitContainerName = "clickhouse-init"
+
+	ClickHouseClusterConfigFileName = "cluster-config.yaml"
+	ClickHouseTempConfigDir         = "/ch-tmp/config"
+	ClickHouseTempDir               = "/ch-tmp"
+
+	ClickHouseUserConfigDir  = "/etc/clickhouse-server/user.d"
+	ClickHouseMacrosFileName = "macros.yaml"
+
+	ClickHouseStandalone = "standalone"
+	ClickHouseCluster    = "cluster"
 )
 
 // Resource kind related constants

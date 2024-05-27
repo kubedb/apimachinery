@@ -63,6 +63,10 @@ type ClickHouseSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
+	// Cluster
+	// +optional
+	ClusterTopology *ClusterTopology `json:"clusterTopology,omitempty"`
+
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
 
@@ -92,9 +96,6 @@ type ClickHouseSpec struct {
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
-
-	// +optional
-	ClickHousekeeper *ClickhousekeeperConfig `json:"clickhousekeeper,omitempty"`
 
 	// TerminationPolicy controls the delete operation for database
 	// +optional
@@ -144,7 +145,7 @@ type ClickHouseList struct {
 }
 
 type ClickhousekeeperConfig struct {
-	Node ClickHouseKeeperNode `json:"nodes,omitempty"`
+	Node ClickHouseKeeperNode `json:"node,omitempty"`
 }
 
 // ClickHouseKeeperNode defines item of nodes section of .spec.configuration.zookeeper
@@ -153,4 +154,38 @@ type ClickHouseKeeperNode struct {
 
 	// +optional
 	Port int32 `json:"port,omitempty"`
+}
+
+type ClusterTopology struct {
+	// Number of cluster.
+	// +optional
+	ClusterCount *int32 `json:"clusterCount,omitempty"`
+
+	// Clickhouse Cluster Structure
+	Cluster []Cluster `json:"cluster,omitempty"`
+
+	// ClickHouse Keeper server name
+	ClickHousekeeper *ClickhousekeeperConfig `json:"clickhousekeeper,omitempty"`
+}
+
+type Cluster struct {
+	// Cluster Name
+	Name string `json:"name,omitempty"`
+	// Number of instances to deploy for a cluster.
+	// +optional
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// Number of instances to deploy for a cluster.
+	// +optional
+	Shards *int32 `json:"shards,omitempty"`
+
+	// PodTemplate is an optional configuration for pods used to expose database
+	// +optional
+	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+
+	// Storage to specify how storage shall be used.
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+
+	// StorageType can be durable (default) or ephemeral
+	StorageType StorageType `json:"storageType,omitempty"`
 }
