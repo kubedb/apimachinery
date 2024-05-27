@@ -179,28 +179,40 @@ func (d *Druid) PetSetName(nodeRole DruidNodeRoleType) string {
 }
 
 func (d *Druid) PodLabels(nodeType DruidNodeRoleType, extraLabels ...map[string]string) map[string]string {
-	nodeSpec := d.GetNodeSpec(nodeType)
-	return d.offShootLabels(meta_util.OverwriteKeys(d.OffShootSelectors(), extraLabels...), nodeSpec.PodTemplate.Labels)
+	nodeSpec, dataNodeSpec := d.GetNodeSpec(nodeType)
+	var labels map[string]string
+	if nodeSpec != nil {
+		labels = nodeSpec.PodTemplate.Labels
+	} else {
+		labels = dataNodeSpec.PodTemplate.Labels
+	}
+	return d.offShootLabels(meta_util.OverwriteKeys(d.OffShootSelectors(), extraLabels...), labels)
 }
 
 func (d *Druid) PodControllerLabels(nodeType DruidNodeRoleType, extraLabels ...map[string]string) map[string]string {
-	nodeSpec := d.GetNodeSpec(nodeType)
-	return d.offShootLabels(meta_util.OverwriteKeys(d.OffShootSelectors(), extraLabels...), nodeSpec.PodTemplate.Controller.Labels)
+	nodeSpec, dataNodeSpec := d.GetNodeSpec(nodeType)
+	var labels map[string]string
+	if nodeSpec != nil {
+		labels = nodeSpec.PodTemplate.Controller.Labels
+	} else {
+		labels = dataNodeSpec.PodTemplate.Controller.Labels
+	}
+	return d.offShootLabels(meta_util.OverwriteKeys(d.OffShootSelectors(), extraLabels...), labels)
 }
 
-func (d *Druid) GetNodeSpec(nodeType DruidNodeRoleType) *DruidNode {
+func (d *Druid) GetNodeSpec(nodeType DruidNodeRoleType) (*DruidNode, *DruidDataNode) {
 	if nodeType == DruidNodeRoleCoordinators {
-		return d.Spec.Topology.Coordinators
+		return d.Spec.Topology.Coordinators, nil
 	} else if nodeType == DruidNodeRoleOverlords {
-		return d.Spec.Topology.Overlords
+		return d.Spec.Topology.Overlords, nil
 	} else if nodeType == DruidNodeRoleMiddleManagers {
-		return d.Spec.Topology.MiddleManagers
+		return nil, d.Spec.Topology.MiddleManagers
 	} else if nodeType == DruidNodeRoleHistoricals {
-		return d.Spec.Topology.Historicals
+		return nil, d.Spec.Topology.Historicals
 	} else if nodeType == DruidNodeRoleBrokers {
-		return d.Spec.Topology.Brokers
+		return d.Spec.Topology.Brokers, nil
 	} else if nodeType == DruidNodeRoleRouters {
-		return d.Spec.Topology.Routers
+		return d.Spec.Topology.Routers, nil
 	}
 
 	panic("Node role name does not match any known types")
@@ -361,10 +373,6 @@ func (d *Druid) SetDefaults() {
 		d.Spec.TerminationPolicy = TerminationPolicyDelete
 	}
 
-	if d.Spec.StorageType == "" {
-		d.Spec.StorageType = StorageTypeDurable
-	}
-
 	if d.Spec.DisableSecurity == nil {
 		d.Spec.DisableSecurity = pointer.BoolP(false)
 	}
@@ -397,6 +405,9 @@ func (d *Druid) SetDefaults() {
 			d.Spec.Topology.Coordinators = &DruidNode{}
 		}
 		if d.Spec.Topology.Coordinators != nil {
+			if d.Spec.Topology.Coordinators.Replicas == nil {
+				d.Spec.Topology.Coordinators.Replicas = pointer.Int32P(1)
+			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Coordinators.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
@@ -405,7 +416,11 @@ func (d *Druid) SetDefaults() {
 				d.setDefaultContainerResourceLimits(&d.Spec.Topology.Coordinators.PodTemplate, DruidNodeRoleCoordinators)
 			}
 		}
+
 		if d.Spec.Topology.Overlords != nil {
+			if d.Spec.Topology.Overlords.Replicas == nil {
+				d.Spec.Topology.Overlords.Replicas = pointer.Int32P(1)
+			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Overlords.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
@@ -416,12 +431,18 @@ func (d *Druid) SetDefaults() {
 		}
 
 		if d.Spec.Topology.MiddleManagers == nil {
-			d.Spec.Topology.MiddleManagers = &DruidNode{}
-		}
-		if d.Spec.Topology.MiddleManagers.Storage == nil && d.Spec.StorageType == StorageTypeDurable {
-			d.Spec.Topology.MiddleManagers.Storage = d.getDefaultPVC()
+			d.Spec.Topology.MiddleManagers = &DruidDataNode{}
 		}
 		if d.Spec.Topology.MiddleManagers != nil {
+			if d.Spec.Topology.MiddleManagers.Replicas == nil {
+				d.Spec.Topology.MiddleManagers.Replicas = pointer.Int32P(1)
+			}
+			if d.Spec.Topology.MiddleManagers.StorageType == "" {
+				d.Spec.Topology.MiddleManagers.StorageType = StorageTypeDurable
+			}
+			if d.Spec.Topology.MiddleManagers.Storage == nil && d.Spec.Topology.MiddleManagers.StorageType == StorageTypeDurable {
+				d.Spec.Topology.MiddleManagers.Storage = d.getDefaultPVC()
+			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
@@ -432,12 +453,18 @@ func (d *Druid) SetDefaults() {
 		}
 
 		if d.Spec.Topology.Historicals == nil {
-			d.Spec.Topology.Historicals = &DruidNode{}
-		}
-		if d.Spec.Topology.Historicals.Storage == nil && d.Spec.StorageType == StorageTypeDurable {
-			d.Spec.Topology.Historicals.Storage = d.getDefaultPVC()
+			d.Spec.Topology.Historicals = &DruidDataNode{}
 		}
 		if d.Spec.Topology.Historicals != nil {
+			if d.Spec.Topology.Historicals.Replicas == nil {
+				d.Spec.Topology.Historicals.Replicas = pointer.Int32P(1)
+			}
+			if d.Spec.Topology.Historicals.StorageType == "" {
+				d.Spec.Topology.Historicals.StorageType = StorageTypeDurable
+			}
+			if d.Spec.Topology.Historicals.Storage == nil && d.Spec.Topology.Historicals.StorageType == StorageTypeDurable {
+				d.Spec.Topology.Historicals.Storage = d.getDefaultPVC()
+			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
@@ -451,6 +478,9 @@ func (d *Druid) SetDefaults() {
 			d.Spec.Topology.Brokers = &DruidNode{}
 		}
 		if d.Spec.Topology.Brokers != nil {
+			if d.Spec.Topology.Brokers.Replicas == nil {
+				d.Spec.Topology.Brokers.Replicas = pointer.Int32P(1)
+			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Brokers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}
@@ -462,6 +492,9 @@ func (d *Druid) SetDefaults() {
 		}
 
 		if d.Spec.Topology.Routers != nil {
+			if d.Spec.Topology.Routers.Replicas == nil {
+				d.Spec.Topology.Routers.Replicas = pointer.Int32P(1)
+			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext == nil {
 					d.Spec.Topology.Routers.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{FSGroup: druidVersion.Spec.SecurityContext.RunAsUser}

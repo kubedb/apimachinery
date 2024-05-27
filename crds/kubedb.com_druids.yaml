@@ -370,11 +370,6 @@ spec:
                   - alias
                   type: object
                 type: array
-              storageType:
-                enum:
-                - Durable
-                - Ephemeral
-                type: string
               terminationPolicy:
                 enum:
                 - Halt
@@ -386,17 +381,6 @@ spec:
                 properties:
                   brokers:
                     properties:
-                      ephemeralStorage:
-                        properties:
-                          medium:
-                            type: string
-                          sizeLimit:
-                            anyOf:
-                            - type: integer
-                            - type: string
-                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                            x-kubernetes-int-or-string: true
-                        type: object
                       nodeSelector:
                         additionalProperties:
                           type: string
@@ -3306,91 +3290,6 @@ spec:
                         default: 1
                         format: int32
                         type: integer
-                      storage:
-                        properties:
-                          accessModes:
-                            items:
-                              type: string
-                            type: array
-                          dataSource:
-                            properties:
-                              apiGroup:
-                                type: string
-                              kind:
-                                type: string
-                              name:
-                                type: string
-                            required:
-                            - kind
-                            - name
-                            type: object
-                            x-kubernetes-map-type: atomic
-                          dataSourceRef:
-                            properties:
-                              apiGroup:
-                                type: string
-                              kind:
-                                type: string
-                              name:
-                                type: string
-                              namespace:
-                                type: string
-                            required:
-                            - kind
-                            - name
-                            type: object
-                          resources:
-                            properties:
-                              limits:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
-                              requests:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
-                            type: object
-                          selector:
-                            properties:
-                              matchExpressions:
-                                items:
-                                  properties:
-                                    key:
-                                      type: string
-                                    operator:
-                                      type: string
-                                    values:
-                                      items:
-                                        type: string
-                                      type: array
-                                  required:
-                                  - key
-                                  - operator
-                                  type: object
-                                type: array
-                              matchLabels:
-                                additionalProperties:
-                                  type: string
-                                type: object
-                            type: object
-                            x-kubernetes-map-type: atomic
-                          storageClassName:
-                            type: string
-                          volumeAttributesClassName:
-                            type: string
-                          volumeMode:
-                            type: string
-                          volumeName:
-                            type: string
-                        type: object
                       suffix:
                         type: string
                       tolerations:
@@ -3412,17 +3311,6 @@ spec:
                     type: object
                   coordinators:
                     properties:
-                      ephemeralStorage:
-                        properties:
-                          medium:
-                            type: string
-                          sizeLimit:
-                            anyOf:
-                            - type: integer
-                            - type: string
-                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                            x-kubernetes-int-or-string: true
-                        type: object
                       nodeSelector:
                         additionalProperties:
                           type: string
@@ -6332,91 +6220,6 @@ spec:
                         default: 1
                         format: int32
                         type: integer
-                      storage:
-                        properties:
-                          accessModes:
-                            items:
-                              type: string
-                            type: array
-                          dataSource:
-                            properties:
-                              apiGroup:
-                                type: string
-                              kind:
-                                type: string
-                              name:
-                                type: string
-                            required:
-                            - kind
-                            - name
-                            type: object
-                            x-kubernetes-map-type: atomic
-                          dataSourceRef:
-                            properties:
-                              apiGroup:
-                                type: string
-                              kind:
-                                type: string
-                              name:
-                                type: string
-                              namespace:
-                                type: string
-                            required:
-                            - kind
-                            - name
-                            type: object
-                          resources:
-                            properties:
-                              limits:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
-                              requests:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
-                            type: object
-                          selector:
-                            properties:
-                              matchExpressions:
-                                items:
-                                  properties:
-                                    key:
-                                      type: string
-                                    operator:
-                                      type: string
-                                    values:
-                                      items:
-                                        type: string
-                                      type: array
-                                  required:
-                                  - key
-                                  - operator
-                                  type: object
-                                type: array
-                              matchLabels:
-                                additionalProperties:
-                                  type: string
-                                type: object
-                            type: object
-                            x-kubernetes-map-type: atomic
-                          storageClassName:
-                            type: string
-                          volumeAttributesClassName:
-                            type: string
-                          volumeMode:
-                            type: string
-                          volumeName:
-                            type: string
-                        type: object
                       suffix:
                         type: string
                       tolerations:
@@ -9443,6 +9246,11 @@ spec:
                           volumeName:
                             type: string
                         type: object
+                      storageType:
+                        enum:
+                        - Durable
+                        - Ephemeral
+                        type: string
                       suffix:
                         type: string
                       tolerations:
@@ -12469,6 +12277,11 @@ spec:
                           volumeName:
                             type: string
                         type: object
+                      storageType:
+                        enum:
+                        - Durable
+                        - Ephemeral
+                        type: string
                       suffix:
                         type: string
                       tolerations:
@@ -12490,17 +12303,6 @@ spec:
                     type: object
                   overlords:
                     properties:
-                      ephemeralStorage:
-                        properties:
-                          medium:
-                            type: string
-                          sizeLimit:
-                            anyOf:
-                            - type: integer
-                            - type: string
-                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                            x-kubernetes-int-or-string: true
-                        type: object
                       nodeSelector:
                         additionalProperties:
                           type: string
@@ -15410,91 +15212,6 @@ spec:
                         default: 1
                         format: int32
                         type: integer
-                      storage:
-                        properties:
-                          accessModes:
-                            items:
-                              type: string
-                            type: array
-                          dataSource:
-                            properties:
-                              apiGroup:
-                                type: string
-                              kind:
-                                type: string
-                              name:
-                                type: string
-                            required:
-                            - kind
-                            - name
-                            type: object
-                            x-kubernetes-map-type: atomic
-                          dataSourceRef:
-                            properties:
-                              apiGroup:
-                                type: string
-                              kind:
-                                type: string
-                              name:
-                                type: string
-                              namespace:
-                                type: string
-                            required:
-                            - kind
-                            - name
-                            type: object
-                          resources:
-                            properties:
-                              limits:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
-                              requests:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
-                            type: object
-                          selector:
-                            properties:
-                              matchExpressions:
-                                items:
-                                  properties:
-                                    key:
-                                      type: string
-                                    operator:
-                                      type: string
-                                    values:
-                                      items:
-                                        type: string
-                                      type: array
-                                  required:
-                                  - key
-                                  - operator
-                                  type: object
-                                type: array
-                              matchLabels:
-                                additionalProperties:
-                                  type: string
-                                type: object
-                            type: object
-                            x-kubernetes-map-type: atomic
-                          storageClassName:
-                            type: string
-                          volumeAttributesClassName:
-                            type: string
-                          volumeMode:
-                            type: string
-                          volumeName:
-                            type: string
-                        type: object
                       suffix:
                         type: string
                       tolerations:
@@ -15516,17 +15233,6 @@ spec:
                     type: object
                   routers:
                     properties:
-                      ephemeralStorage:
-                        properties:
-                          medium:
-                            type: string
-                          sizeLimit:
-                            anyOf:
-                            - type: integer
-                            - type: string
-                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                            x-kubernetes-int-or-string: true
-                        type: object
                       nodeSelector:
                         additionalProperties:
                           type: string
@@ -18436,91 +18142,6 @@ spec:
                         default: 1
                         format: int32
                         type: integer
-                      storage:
-                        properties:
-                          accessModes:
-                            items:
-                              type: string
-                            type: array
-                          dataSource:
-                            properties:
-                              apiGroup:
-                                type: string
-                              kind:
-                                type: string
-                              name:
-                                type: string
-                            required:
-                            - kind
-                            - name
-                            type: object
-                            x-kubernetes-map-type: atomic
-                          dataSourceRef:
-                            properties:
-                              apiGroup:
-                                type: string
-                              kind:
-                                type: string
-                              name:
-                                type: string
-                              namespace:
-                                type: string
-                            required:
-                            - kind
-                            - name
-                            type: object
-                          resources:
-                            properties:
-                              limits:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
-                              requests:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                type: object
-                            type: object
-                          selector:
-                            properties:
-                              matchExpressions:
-                                items:
-                                  properties:
-                                    key:
-                                      type: string
-                                    operator:
-                                      type: string
-                                    values:
-                                      items:
-                                        type: string
-                                      type: array
-                                  required:
-                                  - key
-                                  - operator
-                                  type: object
-                                type: array
-                              matchLabels:
-                                additionalProperties:
-                                  type: string
-                                type: object
-                            type: object
-                            x-kubernetes-map-type: atomic
-                          storageClassName:
-                            type: string
-                          volumeAttributesClassName:
-                            type: string
-                          volumeMode:
-                            type: string
-                          volumeName:
-                            type: string
-                        type: object
                       suffix:
                         type: string
                       tolerations:

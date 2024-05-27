@@ -470,6 +470,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Druid":                            schema_apimachinery_apis_kubedb_v1alpha2_Druid(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidApp":                         schema_apimachinery_apis_kubedb_v1alpha2_DruidApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidClusterTopology":             schema_apimachinery_apis_kubedb_v1alpha2_DruidClusterTopology(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidDataNode":                    schema_apimachinery_apis_kubedb_v1alpha2_DruidDataNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidList":                        schema_apimachinery_apis_kubedb_v1alpha2_DruidList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidNode":                        schema_apimachinery_apis_kubedb_v1alpha2_DruidNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidSpec":                        schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref),
@@ -23357,12 +23358,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidClusterTopology(ref common.Re
 					},
 					"middleManagers": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidNode"),
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidDataNode"),
 						},
 					},
 					"historicals": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidNode"),
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidDataNode"),
 						},
 					},
 					"brokers": {
@@ -23379,7 +23380,102 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidClusterTopology(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidNode"},
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidDataNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidNode"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DruidDataNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas represents number of replicas for the specific type of node",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"suffix": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Suffix to append with node name",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+					"nodeSelector": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-map-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If specified, the pod's tolerations.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"podPlacementPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodPlacementPolicy is the reference of the podPlacementPolicy",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType specifies if the storage of this node is durable (default) or ephemeral.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"ephemeralStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EphemeralStorage spec to specify the configuration of ephemeral storage type.",
+							Ref:         ref("k8s.io/api/core/v1.EmptyDirVolumeSource"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.Toleration", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -23452,12 +23548,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidNode(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
-					"storage": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Storage to specify how storage shall be used.",
-							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
-						},
-					},
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
@@ -23506,17 +23596,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidNode(ref common.ReferenceCall
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"ephemeralStorage": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EphemeralStorage spec to specify the configuration of ephemeral storage type.",
-							Ref:         ref("k8s.io/api/core/v1.EmptyDirVolumeSource"),
-						},
-					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.Toleration", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.Toleration", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -23539,13 +23623,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 						SchemaProps: spec.SchemaProps{
 							Description: "Druid topology for node specification",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidClusterTopology"),
-						},
-					},
-					"storageType": {
-						SchemaProps: spec.SchemaProps{
-							Description: "StorageType can be durable (default) or ephemeral.",
-							Type:        []string{"string"},
-							Format:      "",
 						},
 					},
 					"disableSecurity": {
@@ -28573,13 +28650,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgBouncerStatus(ref common.Referen
 					"gateway": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Gateway"),
-						},
-					},
-					"resourceVersionOfBackendSecret": {
-						SchemaProps: spec.SchemaProps{
-							Description: "It is to decide if the Auth_file needs to get updated by comparing with the Resource Version of the Backend Secret",
-							Type:        []string{"string"},
-							Format:      "",
 						},
 					},
 				},

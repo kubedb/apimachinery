@@ -64,9 +64,6 @@ type DruidSpec struct {
 	// +optional
 	Topology *DruidClusterTopology `json:"topology,omitempty"`
 
-	// StorageType can be durable (default) or ephemeral.
-	StorageType StorageType `json:"storageType,omitempty"`
-
 	// disable security. It disables authentication security of user.
 	// If unset, default is false
 	// +optional
@@ -122,9 +119,9 @@ type DruidClusterTopology struct {
 	// +optional
 	Overlords *DruidNode `json:"overlords,omitempty"`
 
-	MiddleManagers *DruidNode `json:"middleManagers,omitempty"`
+	MiddleManagers *DruidDataNode `json:"middleManagers,omitempty"`
 
-	Historicals *DruidNode `json:"historicals,omitempty"`
+	Historicals *DruidDataNode `json:"historicals,omitempty"`
 
 	Brokers *DruidNode `json:"brokers,omitempty"`
 	// +optional
@@ -140,10 +137,6 @@ type DruidNode struct {
 	// Suffix to append with node name
 	// +optional
 	Suffix string `json:"suffix,omitempty"`
-
-	// Storage to specify how storage shall be used.
-	// +optional
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
@@ -163,6 +156,18 @@ type DruidNode struct {
 	// +kubebuilder:default={name: "default"}
 	// +optional
 	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
+}
+
+type DruidDataNode struct {
+	// DruidDataNode has all the characteristics of DruidNode
+	DruidNode `json:",inline"`
+
+	// StorageType specifies if the storage
+	// of this node is durable (default) or ephemeral.
+	StorageType StorageType `json:"storageType,omitempty"`
+
+	// Storage to specify how storage shall be used.
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
 	// EphemeralStorage spec to specify the configuration of ephemeral storage type.
 	EphemeralStorage *core.EmptyDirVolumeSource `json:"ephemeralStorage,omitempty"`
