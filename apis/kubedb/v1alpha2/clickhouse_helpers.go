@@ -254,11 +254,15 @@ func (c *ClickHouse) SetDefaults() {
 			if cluster.Storage == nil {
 				cluster.Storage = c.Spec.Storage
 			}
+
+			dbContainer = coreutil.GetContainerByName(cluster.PodTemplate.Spec.Containers, ClickHouseContainerName)
+			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+				apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
+			}
 			c.setDefaultContainerSecurityContext(&chVersion, &cluster.PodTemplate)
 			clusters[index] = cluster
 
 		}
-
 		c.Spec.ClusterTopology.Cluster = clusters
 	}
 }

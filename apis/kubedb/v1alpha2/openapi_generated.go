@@ -23116,7 +23116,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseKeeperNode(ref common.Re
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ClickHouseKeeperNode defines item of nodes section of .spec.configuration.zookeeper",
+				Description: "ClickHouseKeeperNode defines item of nodes section of .spec.clusterTopology.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"host": {
@@ -23400,14 +23400,14 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Cluster(ref common.ReferenceCallba
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for a cluster.",
+							Description: "Number of replica for each shard to deploy for a cluster.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"shards": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for a cluster.",
+							Description: "Number of shard to deploy for a cluster.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

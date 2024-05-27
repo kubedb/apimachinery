@@ -148,7 +148,7 @@ type ClickhousekeeperConfig struct {
 	Node ClickHouseKeeperNode `json:"node,omitempty"`
 }
 
-// ClickHouseKeeperNode defines item of nodes section of .spec.configuration.zookeeper
+// ClickHouseKeeperNode defines item of nodes section of .spec.clusterTopology.
 type ClickHouseKeeperNode struct {
 	Host string `json:"host,omitempty"`
 
@@ -171,11 +171,11 @@ type ClusterTopology struct {
 type Cluster struct {
 	// Cluster Name
 	Name string `json:"name,omitempty"`
-	// Number of instances to deploy for a cluster.
+	// Number of replica for each shard to deploy for a cluster.
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
-	// Number of instances to deploy for a cluster.
+	// Number of shard to deploy for a cluster.
 	// +optional
 	Shards *int32 `json:"shards,omitempty"`
 

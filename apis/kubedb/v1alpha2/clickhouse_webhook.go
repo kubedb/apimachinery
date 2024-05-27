@@ -107,7 +107,7 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 					r.Name,
 					"number of replicas can't be 0 or less"))
 			}
-			if clusterName[cluster.Name] == true {
+			if clusterName[cluster.Name] {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child(cluster.Name),
 					r.Name,
 					"cluster name is duplicated, use different cluster name"))
