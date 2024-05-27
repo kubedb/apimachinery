@@ -324,9 +324,6 @@ func (s *Singlestore) SetDefaults() {
 	}
 
 	if s.Spec.Topology == nil {
-		if s.Spec.Replicas == nil {
-			s.Spec.Replicas = pointer.Int32P(1)
-		}
 		if s.Spec.PodTemplate == nil {
 			s.Spec.PodTemplate = &ofst.PodTemplateSpec{}
 		}

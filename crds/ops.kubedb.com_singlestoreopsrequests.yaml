@@ -48,6 +48,54 @@ spec:
                 - IfReady
                 - Always
                 type: string
+              configuration:
+                properties:
+                  aggregator:
+                    properties:
+                      applyConfig:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      configSecret:
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
+                      removeCustomConfig:
+                        type: boolean
+                    type: object
+                  leaf:
+                    properties:
+                      applyConfig:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      configSecret:
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
+                      removeCustomConfig:
+                        type: boolean
+                    type: object
+                  node:
+                    properties:
+                      applyConfig:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      configSecret:
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
+                      removeCustomConfig:
+                        type: boolean
+                    type: object
+                type: object
               databaseRef:
                 properties:
                   name:
@@ -63,6 +111,7 @@ spec:
                 - VerticalScaling
                 - VolumeExpansion
                 - Restart
+                - Configuration
                 type: string
               verticalScaling:
                 properties:
