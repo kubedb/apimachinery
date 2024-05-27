@@ -61,6 +61,8 @@ type SinglestoreOpsRequestSpec struct {
 	VolumeExpansion *SinglestoreVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
+	// Specifies information necessary for custom configuration of Singlestore
+	Configuration *SinglestoreCustomConfigurationSpec `json:"configuration,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -68,8 +70,8 @@ type SinglestoreOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart
-// ENUM(VerticalScaling, VolumeExpansion, Restart)
+// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart;Configuration
+// ENUM(VerticalScaling, VolumeExpansion, Restart, Configuration)
 type SinglestoreOpsRequestType string
 
 // SinglestoreVerticalScalingSpec contains the vertical scaling information of a Singlestore cluster
@@ -93,6 +95,18 @@ type SinglestoreVolumeExpansionSpec struct {
 	Aggregator *resource.Quantity `json:"aggregator,omitempty"`
 	// Volume specification for Leaf
 	Leaf *resource.Quantity `json:"leaf,omitempty"`
+}
+
+// SinglestoreCustomConfigurationSpec is the spec for Singlestore reconfiguration
+type SinglestoreCustomConfigurationSpec struct {
+	Aggregator *SinglestoreCustomConfiguration `json:"aggregator,omitempty"`
+	Leaf       *SinglestoreCustomConfiguration `json:"leaf,omitempty"`
+}
+
+type SinglestoreCustomConfiguration struct {
+	ConfigSecret       *core.LocalObjectReference `json:"configSecret,omitempty"`
+	ApplyConfig        map[string]string          `json:"applyConfig,omitempty"`
+	RemoveCustomConfig bool                       `json:"removeCustomConfig,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
