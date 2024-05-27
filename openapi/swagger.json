@@ -23035,19 +23035,13 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Databases": {
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Database": {
       "type": "object",
       "required": [
-        "alias",
         "databaseRef",
         "databaseName"
       ],
       "properties": {
-        "alias": {
-          "description": "Alias to uniquely identify a target database running inside a specific Postgres instance.",
-          "type": "string",
-          "default": ""
-        },
         "databaseName": {
           "description": "DatabaseName is the name of the target database inside a Postgres instance.",
           "type": "string",
@@ -25181,13 +25175,10 @@
           "description": "ConnectionPoolConfig defines Connection pool configuration.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ConnectionPoolConfig"
         },
-        "databases": {
-          "description": "Databases to proxy by connection pooling.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Databases"
-          }
+        "database": {
+          "description": "Database to proxy by connection pooling.",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Database"
         },
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",
@@ -25256,6 +25247,10 @@
         },
         "phase": {
           "description": "Specifies the current phase of the database",
+          "type": "string"
+        },
+        "resourceVersionOfBackendSecret": {
+          "description": "It is to decide if the Auth_file needs to get updated by comparing with the Resource Version of the Backend Secret",
           "type": "string"
         }
       }
