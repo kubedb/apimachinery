@@ -83,9 +83,6 @@ type SinglestoreStorageAutoscalerSpec struct {
 }
 
 type SinglestoreOpsRequestOptions struct {
-	// Specifies the Readiness Criteria
-	ReadinessCriteria *opsapi.SinglestoreReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`
-
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 

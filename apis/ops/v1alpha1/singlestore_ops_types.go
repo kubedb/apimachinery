@@ -74,10 +74,6 @@ type SinglestoreOpsRequestSpec struct {
 // ENUM(VerticalScaling, VolumeExpansion, Restart, Configuration)
 type SinglestoreOpsRequestType string
 
-// SinglestoreReplicaReadinessCriteria is the criteria for checking readiness of a Singlestore pod
-// after updating, horizontal scaling etc.
-type SinglestoreReplicaReadinessCriteria struct{}
-
 // SinglestoreVerticalScalingSpec contains the vertical scaling information of a Singlestore cluster
 type SinglestoreVerticalScalingSpec struct {
 	// Resource spec for standalone node
@@ -103,8 +99,12 @@ type SinglestoreVolumeExpansionSpec struct {
 
 // SinglestoreCustomConfigurationSpec is the spec for Singlestore reconfiguration
 type SinglestoreCustomConfigurationSpec struct {
+	// Custom Configuration specification for standalone
+	Node *SinglestoreCustomConfiguration `json:"node,omitempty"`
+	// Custom Configuration specification for Aggregator
 	Aggregator *SinglestoreCustomConfiguration `json:"aggregator,omitempty"`
-	Leaf       *SinglestoreCustomConfiguration `json:"leaf,omitempty"`
+	// Custom Configuration specification for Leaf
+	Leaf *SinglestoreCustomConfiguration `json:"leaf,omitempty"`
 }
 
 type SinglestoreCustomConfiguration struct {

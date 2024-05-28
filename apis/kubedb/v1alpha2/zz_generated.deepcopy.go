@@ -4928,6 +4928,11 @@ func (in *SinglestoreSpec) DeepCopyInto(out *SinglestoreSpec) {
 		*out = new(corev1.PersistentVolumeClaimSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ConfigSecret != nil {
+		in, out := &in.ConfigSecret, &out.ConfigSecret
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	if in.Init != nil {
 		in, out := &in.Init, &out.Init
 		*out = new(InitSpec)

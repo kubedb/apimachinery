@@ -610,7 +610,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreOpsRequest":                      schema_apimachinery_apis_ops_v1alpha1_SinglestoreOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreOpsRequestList":                  schema_apimachinery_apis_ops_v1alpha1_SinglestoreOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreOpsRequestSpec":                  schema_apimachinery_apis_ops_v1alpha1_SinglestoreOpsRequestSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreReplicaReadinessCriteria":        schema_apimachinery_apis_ops_v1alpha1_SinglestoreReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreVerticalScalingSpec":             schema_apimachinery_apis_ops_v1alpha1_SinglestoreVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreVolumeExpansionSpec":             schema_apimachinery_apis_ops_v1alpha1_SinglestoreVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec":                                    schema_apimachinery_apis_ops_v1alpha1_TLSSpec(ref),
@@ -28523,14 +28522,22 @@ func schema_apimachinery_apis_ops_v1alpha1_SinglestoreCustomConfigurationSpec(re
 				Description: "SinglestoreCustomConfigurationSpec is the spec for Singlestore reconfiguration",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Custom Configuration specification for standalone",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfiguration"),
+						},
+					},
 					"aggregator": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfiguration"),
+							Description: "Custom Configuration specification for Aggregator",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfiguration"),
 						},
 					},
 					"leaf": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfiguration"),
+							Description: "Custom Configuration specification for Leaf",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfiguration"),
 						},
 					},
 				},

@@ -26819,12 +26819,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_SinglestoreOpsRequestOptions(
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"readinessCriteria": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the Readiness Criteria",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreReplicaReadinessCriteria"),
-						},
-					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -26842,7 +26836,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_SinglestoreOpsRequestOptions(
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreReplicaReadinessCriteria"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
