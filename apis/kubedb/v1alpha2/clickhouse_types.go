@@ -24,9 +24,9 @@ import (
 )
 
 const (
-	ResourceKindClickhouse     = "ClickHouse"
-	ResourceSingularClickhouse = "clickhouse"
-	ResourcePluralClickhouse   = "clickhouses"
+	ResourceKindClickHouse     = "ClickHouse"
+	ResourceSingularClickHouse = "clickhouse"
+	ResourcePluralClickHouse   = "clickhouses"
 )
 
 // +genclient
@@ -113,7 +113,7 @@ type ClickHouseStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 	// Specifies the current phase of the database
 	// +optional
-	Phase ClickHousePhase `json:"phase,omitempty"`
+	Phase DatabasePhase `json:"phase,omitempty"`
 	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
 	// resource's generation, which is updated on mutation by the API Server.
 	// +optional
@@ -125,16 +125,6 @@ type ClickHouseStatus struct {
 	Gateway *Gateway `json:"gateway,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Provisioning;Ready;NotReady;Critical
-type ClickHousePhase string
-
-const (
-	ClickHouseProvisioning ClickHousePhase = "Provisioning"
-	ClickHouseReady        ClickHousePhase = "Ready"
-	ClickHouseNotReady     ClickHousePhase = "NotReady"
-	ClickHouseCritical     ClickHousePhase = "Critical"
-)
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ClickHouseList contains a list of ClickHouse
@@ -144,7 +134,7 @@ type ClickHouseList struct {
 	Items           []ClickHouse `json:"items"`
 }
 
-type ClickhousekeeperConfig struct {
+type ClickHouseKeeperConfig struct {
 	Node ClickHouseKeeperNode `json:"node,omitempty"`
 }
 
@@ -162,13 +152,13 @@ type ClusterTopology struct {
 	ClusterCount *int32 `json:"clusterCount,omitempty"`
 
 	// Clickhouse Cluster Structure
-	Cluster []Cluster `json:"cluster,omitempty"`
+	Cluster []ClusterSpec `json:"cluster,omitempty"`
 
 	// ClickHouse Keeper server name
-	ClickHousekeeper *ClickhousekeeperConfig `json:"clickhousekeeper,omitempty"`
+	ClickHouseKeeper *ClickHouseKeeperConfig `json:"clickHouseKeeper,omitempty"`
 }
 
-type Cluster struct {
+type ClusterSpec struct {
 	// Cluster Name
 	Name string `json:"name,omitempty"`
 	// Number of replica for each shard to deploy for a cluster.

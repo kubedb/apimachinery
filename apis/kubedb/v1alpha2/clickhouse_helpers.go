@@ -45,7 +45,7 @@ type ClickhouseApp struct {
 }
 
 func (r *ClickHouse) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralClickhouse))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralClickHouse))
 }
 
 func (c *ClickHouse) AppBindingMeta() appcat.AppBindingMeta {
@@ -57,7 +57,7 @@ func (r ClickhouseApp) Name() string {
 }
 
 func (r ClickhouseApp) Type() appcat.AppType {
-	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularClickhouse))
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularClickHouse))
 }
 
 // Owner returns owner reference to resources
@@ -66,7 +66,7 @@ func (c *ClickHouse) Owner() *meta.OwnerReference {
 }
 
 func (c *ClickHouse) ResourceKind() string {
-	return ResourceKindClickhouse
+	return ResourceKindClickHouse
 }
 
 func (c *ClickHouse) ServiceName() string {
@@ -120,7 +120,7 @@ func (c *ClickHouse) ResourceFQN() string {
 }
 
 func (c *ClickHouse) ResourcePlural() string {
-	return ResourcePluralClickhouse
+	return ResourcePluralClickHouse
 }
 
 func (c *ClickHouse) PrimaryServiceDNS() string {
@@ -191,7 +191,7 @@ func (c *ClickHouse) Finalizer() string {
 }
 
 func (c *ClickHouse) ResourceSingular() string {
-	return ResourceSingularClickhouse
+	return ResourceSingularClickHouse
 }
 
 func (c *ClickHouse) GetPersistentSecrets() []string {
@@ -299,30 +299,10 @@ func (r *ClickHouse) setDefaultContainerSecurityContext(chVersion *catalog.Click
 	if initContainer.SecurityContext == nil {
 		initContainer.SecurityContext = &core.SecurityContext{}
 	}
-	r.assignDefaultInitContainerSecurityContext(chVersion, initContainer.SecurityContext)
+	r.assignDefaultContainerSecurityContext(chVersion, initContainer.SecurityContext)
 }
 
 func (r *ClickHouse) assignDefaultContainerSecurityContext(chVersion *catalog.ClickHouseVersion, rc *core.SecurityContext) {
-	if rc.AllowPrivilegeEscalation == nil {
-		rc.AllowPrivilegeEscalation = pointer.BoolP(false)
-	}
-	if rc.Capabilities == nil {
-		rc.Capabilities = &core.Capabilities{
-			Drop: []core.Capability{"ALL"},
-		}
-	}
-	if rc.RunAsNonRoot == nil {
-		rc.RunAsNonRoot = pointer.BoolP(true)
-	}
-	if rc.RunAsUser == nil {
-		rc.RunAsUser = chVersion.Spec.SecurityContext.RunAsUser
-	}
-	if rc.SeccompProfile == nil {
-		rc.SeccompProfile = secomp.DefaultSeccompProfile()
-	}
-}
-
-func (r *ClickHouse) assignDefaultInitContainerSecurityContext(chVersion *catalog.ClickHouseVersion, rc *core.SecurityContext) {
 	if rc.AllowPrivilegeEscalation == nil {
 		rc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
