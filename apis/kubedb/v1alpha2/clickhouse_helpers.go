@@ -69,15 +69,15 @@ func (c *ClickHouse) ResourceKind() string {
 	return ResourceKindClickHouse
 }
 
-func (c *ClickHouse) ServiceName() string {
-	return c.OffshootName()
-}
-
 func (c *ClickHouse) OffshootName() string {
 	return c.Name
 }
 
-func (c *ClickHouse) OffshootClusterPetName(clusterName string, shardNo int) string {
+func (c *ClickHouse) OffshootClusterName(value string) string {
+	return meta_util.NameWithSuffix(c.OffshootName(), value)
+}
+
+func (c *ClickHouse) OffshootClusterPetSetName(clusterName string, shardNo int) string {
 	shard := meta_util.NameWithSuffix("shard", strconv.Itoa(shardNo))
 	cluster := meta_util.NameWithSuffix(clusterName, shard)
 	return meta_util.NameWithSuffix(c.OffshootName(), cluster)
@@ -87,8 +87,8 @@ func (c *ClickHouse) OffshootLabels() map[string]string {
 	return c.offshootLabels(c.OffshootSelectors(), nil)
 }
 
-func (c *ClickHouse) OffshootClusterLabels(petName string) map[string]string {
-	return c.offshootLabels(c.OffshootClusterSelectors(petName), nil)
+func (c *ClickHouse) OffshootClusterLabels(petSetName string) map[string]string {
+	return c.offshootLabels(c.OffshootClusterSelectors(petSetName), nil)
 }
 
 func (c *ClickHouse) offshootLabels(selector, override map[string]string) map[string]string {
@@ -105,12 +105,12 @@ func (c *ClickHouse) OffshootSelectors(extraSelectors ...map[string]string) map[
 	return meta_util.OverwriteKeys(selector, extraSelectors...)
 }
 
-func (c *ClickHouse) OffshootClusterSelectors(petName string, extraSelectors ...map[string]string) map[string]string {
+func (c *ClickHouse) OffshootClusterSelectors(petSetName string, extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
 		meta_util.NameLabelKey:      c.ResourceFQN(),
 		meta_util.InstanceLabelKey:  c.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
-		meta_util.PartOfLabelKey:    petName,
+		meta_util.PartOfLabelKey:    petSetName,
 	}
 	return meta_util.OverwriteKeys(selector, extraSelectors...)
 }
@@ -123,6 +123,10 @@ func (c *ClickHouse) ResourcePlural() string {
 	return ResourcePluralClickHouse
 }
 
+func (c *ClickHouse) ServiceName() string {
+	return c.OffshootName()
+}
+
 func (c *ClickHouse) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", c.ServiceName(), c.Namespace)
 }
@@ -131,12 +135,12 @@ func (c *ClickHouse) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(c.ServiceName(), "pods")
 }
 
-func (c *ClickHouse) ClusterGoverningServiceDNS(petName string, replicaNo int) string {
-	return fmt.Sprintf("%s-%d.%s.%s.svc", petName, replicaNo, c.ClusterGoverningServiceName(petName), c.GetNamespace())
-}
-
 func (c *ClickHouse) ClusterGoverningServiceName(name string) string {
 	return meta_util.NameWithSuffix(name, "pods")
+}
+
+func (c *ClickHouse) ClusterGoverningServiceDNS(petSetName string, replicaNo int) string {
+	return fmt.Sprintf("%s-%d.%s.%s.svc", petSetName, replicaNo, c.ClusterGoverningServiceName(petSetName), c.GetNamespace())
 }
 
 func (c *ClickHouse) GetAuthSecretName() string {
@@ -168,9 +172,6 @@ func (c *ClickHouse) PodLabels(extraLabels ...map[string]string) map[string]stri
 
 func (c *ClickHouse) GetConnectionScheme() string {
 	scheme := "http"
-	if c.Spec.EnableSSL {
-		scheme = "https"
-	}
 	return scheme
 }
 
@@ -194,12 +195,6 @@ func (c *ClickHouse) ResourceSingular() string {
 	return ResourceSingularClickHouse
 }
 
-func (c *ClickHouse) GetPersistentSecrets() []string {
-	var secrets []string
-	secrets = append(secrets, c.GetAuthSecretName())
-	return secrets
-}
-
 func (c *ClickHouse) SetDefaults() {
 	if c.Spec.Replicas == nil {
 		c.Spec.Replicas = pointer.Int32P(1)
@@ -219,13 +214,6 @@ func (c *ClickHouse) SetDefaults() {
 		klog.Errorf("can't get the clickhouse version object %s for %s \n", err.Error(), c.Spec.Version)
 		return
 	}
-	c.setDefaultContainerSecurityContext(&chVersion, &c.Spec.PodTemplate)
-
-	dbContainer := coreutil.GetContainerByName(c.Spec.PodTemplate.Spec.Containers, ClickHouseContainerName)
-	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
-	}
-	c.SetHealthCheckerDefaults()
 
 	if c.Spec.ClusterTopology != nil {
 		clusterName := map[string]bool{}
@@ -239,7 +227,7 @@ func (c *ClickHouse) SetDefaults() {
 			}
 			if cluster.Name == "" {
 				for i := 1; ; i += 1 {
-					cluster.Name = fmt.Sprintf("cluster-%d", i)
+					cluster.Name = c.OffshootClusterName(strconv.Itoa(i))
 					if !clusterName[cluster.Name] {
 						clusterName[cluster.Name] = true
 						break
@@ -249,20 +237,31 @@ func (c *ClickHouse) SetDefaults() {
 				clusterName[cluster.Name] = true
 			}
 			if cluster.StorageType == "" {
-				cluster.StorageType = c.Spec.StorageType
-			}
-			if cluster.Storage == nil {
-				cluster.Storage = c.Spec.Storage
+				cluster.StorageType = StorageTypeDurable
 			}
 
-			dbContainer = coreutil.GetContainerByName(cluster.PodTemplate.Spec.Containers, ClickHouseContainerName)
+			if cluster.PodTemplate == nil {
+				cluster.PodTemplate = &ofst.PodTemplateSpec{}
+			}
+
+			dbContainer := coreutil.GetContainerByName(cluster.PodTemplate.Spec.Containers, ClickHouseContainerName)
 			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
 			}
-			c.setDefaultContainerSecurityContext(&chVersion, &cluster.PodTemplate)
+			c.setDefaultContainerSecurityContext(&chVersion, cluster.PodTemplate)
 			clusters[index] = cluster
 		}
 		c.Spec.ClusterTopology.Cluster = clusters
+	} else {
+		if c.Spec.PodTemplate == nil {
+			c.Spec.PodTemplate = &ofst.PodTemplateSpec{}
+		}
+		c.setDefaultContainerSecurityContext(&chVersion, c.Spec.PodTemplate)
+		dbContainer := coreutil.GetContainerByName(c.Spec.PodTemplate.Spec.Containers, ClickHouseContainerName)
+		if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+			apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
+		}
+		c.SetHealthCheckerDefaults()
 	}
 }
 

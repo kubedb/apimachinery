@@ -27,6 +27,7 @@ const (
 	ResourceKindClickHouse     = "ClickHouse"
 	ResourceSingularClickHouse = "clickhouse"
 	ResourcePluralClickHouse   = "clickhouses"
+	ResourceCodeClickHouse     = "ch"
 )
 
 // +genclient
@@ -78,20 +79,13 @@ type ClickHouseSpec struct {
 	// +optional
 	DisableSecurity bool `json:"disableSecurity,omitempty"`
 
-	// To enable ssl for http layer
-	EnableSSL bool `json:"enableSSL,omitempty"`
-
 	// Database authentication secret
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
-	// TLS contains tls configurations
-	// +optional
-	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
-
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
@@ -105,6 +99,48 @@ type ClickHouseSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 20, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+}
+
+type ClusterTopology struct {
+	// Clickhouse Cluster Structure
+	Cluster []ClusterSpec `json:"cluster,omitempty"`
+
+	// ClickHouse Keeper server name
+	ClickHouseKeeper *ClickHouseKeeperConfig `json:"clickHouseKeeper,omitempty"`
+}
+
+type ClusterSpec struct {
+	// Cluster Name
+	Name string `json:"name,omitempty"`
+	// Number of replica for each shard to deploy for a cluster.
+	// +optional
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// Number of shard to deploy for a cluster.
+	// +optional
+	Shards *int32 `json:"shards,omitempty"`
+
+	// PodTemplate is an optional configuration for pods used to expose database
+	// +optional
+	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+
+	// Storage to specify how storage shall be used.
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+
+	// StorageType can be durable (default) or ephemeral
+	StorageType StorageType `json:"storageType,omitempty"`
+}
+
+type ClickHouseKeeperConfig struct {
+	Node ClickHouseKeeperNode `json:"node,omitempty"`
+}
+
+// ClickHouseKeeperNode defines item of nodes section of .spec.clusterTopology.
+type ClickHouseKeeperNode struct {
+	Host string `json:"host,omitempty"`
+
+	// +optional
+	Port int32 `json:"port,omitempty"`
 }
 
 // ClickHouseStatus defines the observed state of ClickHouse
@@ -132,50 +168,4 @@ type ClickHouseList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ClickHouse `json:"items"`
-}
-
-type ClickHouseKeeperConfig struct {
-	Node ClickHouseKeeperNode `json:"node,omitempty"`
-}
-
-// ClickHouseKeeperNode defines item of nodes section of .spec.clusterTopology.
-type ClickHouseKeeperNode struct {
-	Host string `json:"host,omitempty"`
-
-	// +optional
-	Port int32 `json:"port,omitempty"`
-}
-
-type ClusterTopology struct {
-	// Number of cluster.
-	// +optional
-	ClusterCount *int32 `json:"clusterCount,omitempty"`
-
-	// Clickhouse Cluster Structure
-	Cluster []ClusterSpec `json:"cluster,omitempty"`
-
-	// ClickHouse Keeper server name
-	ClickHouseKeeper *ClickHouseKeeperConfig `json:"clickHouseKeeper,omitempty"`
-}
-
-type ClusterSpec struct {
-	// Cluster Name
-	Name string `json:"name,omitempty"`
-	// Number of replica for each shard to deploy for a cluster.
-	// +optional
-	Replicas *int32 `json:"replicas,omitempty"`
-
-	// Number of shard to deploy for a cluster.
-	// +optional
-	Shards *int32 `json:"shards,omitempty"`
-
-	// PodTemplate is an optional configuration for pods used to expose database
-	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
-
-	// Storage to specify how storage shall be used.
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
-
-	// StorageType can be durable (default) or ephemeral
-	StorageType StorageType `json:"storageType,omitempty"`
 }

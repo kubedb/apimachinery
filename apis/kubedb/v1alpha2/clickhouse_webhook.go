@@ -79,20 +79,6 @@ func (r *ClickHouse) ValidateDelete() (admission.Warnings, error) {
 
 func (r *ClickHouse) ValidateCreateOrUpdate() error {
 	var allErr field.ErrorList
-	if r.Spec.EnableSSL {
-		if r.Spec.TLS == nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSSL"),
-				r.Name,
-				".spec.tls can't be nil, if .spec.enableSSL is true"))
-		}
-	} else {
-		if r.Spec.TLS != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSSL"),
-				r.Name,
-				".spec.tls must be nil, if .spec.enableSSL is disabled"))
-		}
-	}
-
 	if r.Spec.ClusterTopology != nil {
 		clusterName := map[string]bool{}
 		clusters := r.Spec.ClusterTopology.Cluster
@@ -114,6 +100,11 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 			}
 			clusterName[cluster.Name] = true
 		}
+		if r.Spec.PodTemplate != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
+				r.Name,
+				"PodTemplate should be nil in clusterTopology"))
+		}
 	} else {
 		// number of replicas can not be 0 or less
 		if r.Spec.Replicas != nil && *r.Spec.Replicas <= 0 {
@@ -121,6 +112,14 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 				r.Name,
 				"number of replicas can't be 0 or less"))
 		}
+
+		// number of replicas can not be greater than 1
+		if r.Spec.Replicas != nil && *r.Spec.Replicas > 1 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
+				r.Name,
+				"number of replicas can't be greater than 1 in standalone mode"))
+		}
+
 	}
 
 	if r.Spec.Version == "" {
@@ -143,7 +142,7 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 			err.Error()))
 	}
 
-	err = r.validateVolumesMountPaths(&r.Spec.PodTemplate)
+	err = r.validateVolumesMountPaths(r.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumeMounts"),
 			r.Name,

@@ -51,7 +51,7 @@ spec:
                 x-kubernetes-map-type: atomic
               clusterTopology:
                 properties:
-                  clickhousekeeper:
+                  clickHouseKeeper:
                     properties:
                       node:
                         properties:
@@ -3057,13 +3057,8 @@ spec:
                           type: string
                       type: object
                     type: array
-                  clusterCount:
-                    format: int32
-                    type: integer
                 type: object
               disableSecurity:
-                type: boolean
-              enableSSL:
                 type: boolean
               healthChecker:
                 default:
@@ -6148,107 +6143,6 @@ spec:
                 - WipeOut
                 - DoNotTerminate
                 type: string
-              tls:
-                properties:
-                  certificates:
-                    items:
-                      properties:
-                        alias:
-                          type: string
-                        dnsNames:
-                          items:
-                            type: string
-                          type: array
-                        duration:
-                          type: string
-                        emailAddresses:
-                          items:
-                            type: string
-                          type: array
-                        ipAddresses:
-                          items:
-                            type: string
-                          type: array
-                        issuerRef:
-                          properties:
-                            apiGroup:
-                              type: string
-                            kind:
-                              type: string
-                            name:
-                              type: string
-                          required:
-                          - kind
-                          - name
-                          type: object
-                          x-kubernetes-map-type: atomic
-                        privateKey:
-                          properties:
-                            encoding:
-                              enum:
-                              - PKCS1
-                              - PKCS8
-                              type: string
-                          type: object
-                        renewBefore:
-                          type: string
-                        secretName:
-                          type: string
-                        subject:
-                          properties:
-                            countries:
-                              items:
-                                type: string
-                              type: array
-                            localities:
-                              items:
-                                type: string
-                              type: array
-                            organizationalUnits:
-                              items:
-                                type: string
-                              type: array
-                            organizations:
-                              items:
-                                type: string
-                              type: array
-                            postalCodes:
-                              items:
-                                type: string
-                              type: array
-                            provinces:
-                              items:
-                                type: string
-                              type: array
-                            serialNumber:
-                              type: string
-                            streetAddresses:
-                              items:
-                                type: string
-                              type: array
-                          type: object
-                        uris:
-                          items:
-                            type: string
-                          type: array
-                      required:
-                      - alias
-                      type: object
-                    type: array
-                  issuerRef:
-                    properties:
-                      apiGroup:
-                        type: string
-                      kind:
-                        type: string
-                      name:
-                        type: string
-                    required:
-                    - kind
-                    - name
-                    type: object
-                    x-kubernetes-map-type: atomic
-                type: object
               version:
                 type: string
             required:
@@ -6367,9 +6261,12 @@ spec:
               phase:
                 enum:
                 - Provisioning
+                - DataRestoring
                 - Ready
-                - NotReady
                 - Critical
+                - NotReady
+                - Halted
+                - Unknown
                 type: string
             type: object
         type: object
