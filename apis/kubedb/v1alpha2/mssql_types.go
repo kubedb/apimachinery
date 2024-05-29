@@ -38,6 +38,15 @@ const (
 	MSSQLServerModeRemoteReplica     MSSQLServerMode = "RemoteReplica"
 )
 
+// +kubebuilder:validation:Enum=server;client;metrics-exporter
+type MSSQLServerCertificateAlias string
+
+const (
+	MSSQLServerServerCert MSSQLServerCertificateAlias = "server"
+	MSSQLServerClientCert MSSQLServerCertificateAlias = "client"
+	MSSQLServerEndpoint   MSSQLServerCertificateAlias = "endpoint"
+)
+
 // MSSQLServer defines a MSSQLServer database.
 
 // +genclient
@@ -93,6 +102,9 @@ type MSSQLServerSpec struct {
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
+	// TLS contains tls configurations for client and server.
+	TLS *SQLServerTLSConfig `json:"tls,omitempty"`
+
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
@@ -128,6 +140,11 @@ type MSSQLServerSpec struct {
 type InternalAuthentication struct {
 	// EndpointCert is used for endpoint authentication of MSSql Server
 	EndpointCert *kmapi.TLSConfig `json:"endpointCert"`
+}
+
+type SQLServerTLSConfig struct {
+	kmapi.TLSConfig `json:",inline"`
+	ClientTLS       bool `json:"clientTLS"`
 }
 
 type MSSQLServerTopology struct {
