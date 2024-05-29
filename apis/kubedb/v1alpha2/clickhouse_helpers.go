@@ -170,6 +170,10 @@ func (c *ClickHouse) PodLabels(extraLabels ...map[string]string) map[string]stri
 	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootSelectors(), extraLabels...), c.Spec.PodTemplate.Labels)
 }
 
+func (c *ClickHouse) ClusterPodLabels(petSetName string, labels map[string]string, extraLabels ...map[string]string) map[string]string {
+	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootClusterSelectors(petSetName), extraLabels...), labels)
+}
+
 func (c *ClickHouse) GetConnectionScheme() string {
 	scheme := "http"
 	return scheme
