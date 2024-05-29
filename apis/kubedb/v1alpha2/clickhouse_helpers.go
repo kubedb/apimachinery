@@ -261,7 +261,6 @@ func (c *ClickHouse) SetDefaults() {
 			}
 			c.setDefaultContainerSecurityContext(&chVersion, &cluster.PodTemplate)
 			clusters[index] = cluster
-
 		}
 		c.Spec.ClusterTopology.Cluster = clusters
 	}
