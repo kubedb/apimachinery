@@ -25248,10 +25248,6 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
-        },
-        "resourceVersionOfBackendSecret": {
-          "description": "It is to decide if the Auth_file needs to get updated by comparing with the Resource Version of the Backend Secret",
-          "type": "string"
         }
       }
     },
