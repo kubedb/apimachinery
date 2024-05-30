@@ -25248,10 +25248,6 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
-        },
-        "resourceVersionOfBackendSecret": {
-          "description": "It is to decide if the Auth_file needs to get updated by comparing with the Resource Version of the Backend Secret",
-          "type": "string"
         }
       }
     },
@@ -26685,7 +26681,22 @@
       }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedCustomConfigurationSpec": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "applyConfig": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "configSecret": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "removeCustomConfig": {
+          "type": "boolean"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for Memcached horizontal scaling",
@@ -26785,6 +26796,10 @@
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
         },
+        "timeout": {
+          "description": "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
         "tls": {
           "description": "Specifies information necessary for configuring TLS",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec"
@@ -26828,6 +26843,9 @@
       "description": "MemcachedVerticalScalingSpec is the spec for Memcached vertical scaling",
       "type": "object",
       "properties": {
+        "memcached": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
         "readinessCriteria": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedReplicaReadinessCriteria"
         }

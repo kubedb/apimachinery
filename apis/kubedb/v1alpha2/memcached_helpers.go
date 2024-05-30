@@ -111,6 +111,14 @@ func (m Memcached) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(m.ServiceName(), "pods")
 }
 
+func (m Memcached) ConfigSecretName() string {
+	return meta_util.NameWithSuffix(m.OffshootName(), "config")
+}
+
+func (m Memcached) CustomConfigSecretName() string {
+	return meta_util.NameWithSuffix(m.OffshootName(), "custom-config")
+}
+
 type memcachedApp struct {
 	*Memcached
 }

@@ -64,9 +64,6 @@ type DruidSpec struct {
 	// +optional
 	Topology *DruidClusterTopology `json:"topology,omitempty"`
 
-	// StorageType can be durable (default) or ephemeral.
-	StorageType StorageType `json:"storageType,omitempty"`
-
 	// disable security. It disables authentication security of user.
 	// If unset, default is false
 	// +optional
@@ -95,10 +92,6 @@ type DruidSpec struct {
 	// +optional
 	ZookeeperRef *ZookeeperRef `json:"zookeeperRef,omitempty"`
 
-	// PodTemplate is an optional configuration
-	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
-
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
@@ -122,31 +115,28 @@ type DruidSpec struct {
 }
 
 type DruidClusterTopology struct {
-	Coordinators *DruidNode `json:"coordinators"`
+	Coordinators *DruidNode `json:"coordinators,omitempty"`
 	// +optional
 	Overlords *DruidNode `json:"overlords,omitempty"`
 
-	MiddleManagers *DruidNode `json:"middleManagers"`
+	MiddleManagers *DruidDataNode `json:"middleManagers,omitempty"`
 
-	Historicals *DruidNode `json:"historicals"`
+	Historicals *DruidDataNode `json:"historicals,omitempty"`
 
-	Brokers *DruidNode `json:"brokers"`
+	Brokers *DruidNode `json:"brokers,omitempty"`
 	// +optional
 	Routers *DruidNode `json:"routers,omitempty"`
 }
 
 type DruidNode struct {
-	// Replicas represents number of replica for the specific type of node
+	// Replicas represents number of replicas for the specific type of node
+	// +kubebuilder:default=1
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
 	// Suffix to append with node name
 	// +optional
 	Suffix string `json:"suffix,omitempty"`
-
-	// Storage to specify how storage shall be used.
-	// +optional
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
@@ -166,6 +156,21 @@ type DruidNode struct {
 	// +kubebuilder:default={name: "default"}
 	// +optional
 	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
+}
+
+type DruidDataNode struct {
+	// DruidDataNode has all the characteristics of DruidNode
+	DruidNode `json:",inline"`
+
+	// StorageType specifies if the storage
+	// of this node is durable (default) or ephemeral.
+	StorageType StorageType `json:"storageType,omitempty"`
+
+	// Storage to specify how storage shall be used.
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+
+	// EphemeralStorage spec to specify the configuration of ephemeral storage type.
+	EphemeralStorage *core.EmptyDirVolumeSource `json:"ephemeralStorage,omitempty"`
 }
 
 type MetadataStorage struct {
