@@ -148,6 +148,14 @@ func (m *MSSQLServer) ValidateCreateOrUpdate() field.ErrorList {
 		}
 	}
 
+	if m.Spec.TLS == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
+			m.Name, "spec.tls is missing"))
+	} else if m.Spec.TLS.IssuerRef == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls").Child("issuerRef"),
+			m.Name, "spec.tls.issuerRef' is missing"))
+	}
+
 	err = mssqlValidateVolumes(m.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
@@ -187,6 +195,9 @@ var mssqlReservedVolumes = []string{
 	MSSQLVolumeNameInitScript,
 	MSSQLVolumeNameEndpointCert,
 	MSSQLVolumeNameCerts,
+	MSSQLVolumeNameTLS,
+	MSSQLVolumeNameSecurityCACertificates,
+	MSSQLVolumeNameCACerts,
 }
 
 var mssqlReservedVolumesMountPaths = []string{
@@ -194,6 +205,9 @@ var mssqlReservedVolumesMountPaths = []string{
 	MSSQLVolumeMountPathInitScript,
 	MSSQLVolumeMountPathEndpointCert,
 	MSSQLVolumeMountPathCerts,
+	MSSQLVolumeMountPathTLS,
+	MSSQLVolumeMountPathSecurityCACertificates,
+	MSSQLVolumeMountPathCACerts,
 }
 
 func mssqlValidateVersion(m *MSSQLServer) error {
