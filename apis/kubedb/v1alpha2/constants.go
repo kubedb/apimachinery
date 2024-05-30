@@ -783,6 +783,9 @@ const (
 	KafkaKeystorePassword    = "ssl.keystore.password"
 	KafkaTruststorePassword  = "ssl.truststore.password"
 	KafkaKeyPassword         = "ssl.key.password"
+	KafkaTruststoreType      = "ssl.truststore.type"
+	KafkaKeystoreType        = "ssl.keystore.type"
+	KafkaTruststoreTypeJKS   = "JKS"
 	KafkaKeystoreDefaultPass = "changeit"
 
 	KafkaMetricReporters       = "metric.reporters"

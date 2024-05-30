@@ -74,6 +74,7 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 		"/apis/mutators.kafka.kubedb.com/v1alpha1",
 		"/apis/mutators.kafka.kubedb.com/v1alpha1/connectclusterwebhooks",
 		"/apis/mutators.kafka.kubedb.com/v1alpha1/connectorwebhooks",
+		"/apis/mutators.kafka.kubedb.com/v1alpha1/schemaregistrywebhooks",
 
 		"/apis/mutators.schema.kubedb.com/v1alpha1",
 		"/apis/mutators.schema.kubedb.com/v1alpha1/mariadbdatabasewebhooks",
@@ -135,6 +136,7 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 		"/apis/validators.kafka.kubedb.com/v1alpha1",
 		"/apis/validators.kafka.kubedb.com/v1alpha1/connectclusterwebhooks",
 		"/apis/validators.kafka.kubedb.com/v1alpha1/connectorwebhooks",
+		"/apis/validators.kafka.kubedb.com/v1alpha1/schemaregistrywebhooks",
 
 		"/apis/validators.schema.kubedb.com/v1alpha1",
 		"/apis/validators.schema.kubedb.com/v1alpha1/mariadbdatabasewebhooks",

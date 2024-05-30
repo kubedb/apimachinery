@@ -94,6 +94,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ZooKeeperVersionList{},
 		&MSSQLServerVersion{},
 		&MSSQLServerVersionList{},
+		&SchemaRegistryVersion{},
+		&SchemaRegistryVersionList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

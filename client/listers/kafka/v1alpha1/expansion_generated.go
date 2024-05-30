@@ -33,3 +33,11 @@ type ConnectorListerExpansion interface{}
 // ConnectorNamespaceListerExpansion allows custom methods to be added to
 // ConnectorNamespaceLister.
 type ConnectorNamespaceListerExpansion interface{}
+
+// SchemaRegistryListerExpansion allows custom methods to be added to
+// SchemaRegistryLister.
+type SchemaRegistryListerExpansion interface{}
+
+// SchemaRegistryNamespaceListerExpansion allows custom methods to be added to
+// SchemaRegistryNamespaceLister.
+type SchemaRegistryNamespaceListerExpansion interface{}
