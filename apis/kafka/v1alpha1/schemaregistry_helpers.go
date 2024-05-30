@@ -261,9 +261,6 @@ func (k *SchemaRegistry) assignDefaultContainerSecurityContext(ksrVersion *catal
 	if sc.RunAsUser == nil {
 		sc.RunAsUser = ksrVersion.Spec.SecurityContext.RunAsUser
 	}
-	if sc.RunAsGroup == nil {
-		sc.RunAsGroup = ksrVersion.Spec.SecurityContext.RunAsUser
-	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
