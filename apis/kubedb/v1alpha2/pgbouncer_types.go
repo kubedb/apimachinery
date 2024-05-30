@@ -210,9 +210,6 @@ type PgBouncerStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 	// +optional
 	Gateway *Gateway `json:"gateway,omitempty"`
-	// It is to decide if the Auth_file needs to get updated by comparing with the Resource Version of the Backend Secret
-	// +optional
-	ResourceVersionOfBackendSecret string `json:"resourceVersionOfBackendSecret,omitempty" protobuf:"bytes,6,opt,name=resourceVersionOfBackendSecret"`
 }
 
 // +kubebuilder:validation:Enum=disable;allow;prefer;require;verify-ca;verify-full
