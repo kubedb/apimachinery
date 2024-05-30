@@ -64,15 +64,7 @@ func (s *Singlestore) ValidateCreate() (admission.Warnings, error) {
 func (s *Singlestore) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 	singlestorelog.Info("validate update", "name", s.Name)
 
-	oldConnect := old.(*Singlestore)
 	allErr := s.ValidateCreateOrUpdate()
-
-	if s.Spec.Topology == nil && *oldConnect.Spec.Replicas == 1 && *s.Spec.Replicas > 1 {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			s.Name,
-			"Cannot scale up from 1 to more than 1 in standalone mode"))
-	}
-
 	if len(allErr) == 0 {
 		return nil, nil
 	}
@@ -111,11 +103,6 @@ func (s *Singlestore) ValidateCreateOrUpdate() field.ErrorList {
 	}
 
 	if s.Spec.Topology == nil {
-		if *s.Spec.Replicas != 1 {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-				s.Name,
-				"number of replicas for standalone must be one "))
-		}
 		err := sdbValidateVolumes(s.Spec.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),

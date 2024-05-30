@@ -43,6 +43,7 @@ type OpsV1alpha1Interface interface {
 	RabbitMQOpsRequestsGetter
 	RedisOpsRequestsGetter
 	RedisSentinelOpsRequestsGetter
+	SinglestoreOpsRequestsGetter
 }
 
 // OpsV1alpha1Client is used to interact with features provided by the ops.kubedb.com group.
@@ -104,6 +105,10 @@ func (c *OpsV1alpha1Client) RedisOpsRequests(namespace string) RedisOpsRequestIn
 
 func (c *OpsV1alpha1Client) RedisSentinelOpsRequests(namespace string) RedisSentinelOpsRequestInterface {
 	return newRedisSentinelOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) SinglestoreOpsRequests(namespace string) SinglestoreOpsRequestInterface {
+	return newSinglestoreOpsRequests(c, namespace)
 }
 
 // NewForConfig creates a new OpsV1alpha1Client for the given config.

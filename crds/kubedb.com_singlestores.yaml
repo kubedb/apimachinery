@@ -4138,9 +4138,6 @@ spec:
                         type: array
                     type: object
                 type: object
-              replicas:
-                format: int32
-                type: integer
               serviceTemplates:
                 items:
                   properties:
@@ -4413,6 +4410,12 @@ spec:
                 properties:
                   aggregator:
                     properties:
+                      configSecret:
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       podPlacementPolicy:
                         default:
                           name: default
@@ -7406,6 +7409,12 @@ spec:
                     type: object
                   leaf:
                     properties:
+                      configSecret:
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       podPlacementPolicy:
                         default:
                           name: default
