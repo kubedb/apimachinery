@@ -129,3 +129,11 @@ type RedisSentinelAutoscalerListerExpansion interface{}
 // RedisSentinelAutoscalerNamespaceListerExpansion allows custom methods to be added to
 // RedisSentinelAutoscalerNamespaceLister.
 type RedisSentinelAutoscalerNamespaceListerExpansion interface{}
+
+// SinglestoreAutoscalerListerExpansion allows custom methods to be added to
+// SinglestoreAutoscalerLister.
+type SinglestoreAutoscalerListerExpansion interface{}
+
+// SinglestoreAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// SinglestoreAutoscalerNamespaceLister.
+type SinglestoreAutoscalerNamespaceListerExpansion interface{}
