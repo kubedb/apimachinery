@@ -124,10 +124,13 @@ const (
 	ElasticsearchMinHeapSize = 128 * 1024 * 1024
 
 	// =========================== Memcached Constants ============================
+	MemcachedConfigKey              = "memcached.conf" // MemcachedConfigKey is going to create for the customize redis configuration
 	MemcachedDatabasePortName       = "db"
 	MemcachedPrimaryServicePortName = "primary"
 	MemcachedDatabasePort           = 11211
 	MemcachedShardKey               = MemcachedKey + "/shard"
+	MemcachedContainerName          = ResourceSingularMemcached
+	MemcachedConfigVolumePath       = "/etc/memcached/"
 	// =========================== MongoDB Constants ============================
 
 	MongoDBDatabasePortName       = "db"
