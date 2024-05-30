@@ -38,7 +38,7 @@ const (
 	MSSQLServerModeRemoteReplica     MSSQLServerMode = "RemoteReplica"
 )
 
-// +kubebuilder:validation:Enum=server;client;metrics-exporter
+// +kubebuilder:validation:Enum=server;client;endpoint
 type MSSQLServerCertificateAlias string
 
 const (

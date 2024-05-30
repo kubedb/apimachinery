@@ -146,15 +146,14 @@ func (m *MSSQLServer) ValidateCreateOrUpdate() field.ErrorList {
 					m.Name, "spec.internalAuth.endpointCert.certificates' can have only one certificate"))
 			}
 		}
+	}
 
-		if m.Spec.TLS == nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
-				m.Name, "spec.tls, spec.tls.issuerRef is missing"))
-		} else if m.Spec.TLS.IssuerRef == nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls").Child("issuerRef"),
-				m.Name, "spec.tls.issuerRef' is missing"))
-		}
-
+	if m.Spec.TLS == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
+			m.Name, "spec.tls is missing"))
+	} else if m.Spec.TLS.IssuerRef == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls").Child("issuerRef"),
+			m.Name, "spec.tls.issuerRef' is missing"))
 	}
 
 	err = mssqlValidateVolumes(m.Spec.PodTemplate)
@@ -198,6 +197,7 @@ var mssqlReservedVolumes = []string{
 	MSSQLVolumeNameCerts,
 	MSSQLVolumeNameTLS,
 	MSSQLVolumeNameSecurityCACertificates,
+	MSSQLVolumeNameCACerts,
 }
 
 var mssqlReservedVolumesMountPaths = []string{
@@ -207,6 +207,7 @@ var mssqlReservedVolumesMountPaths = []string{
 	MSSQLVolumeMountPathCerts,
 	MSSQLVolumeMountPathTLS,
 	MSSQLVolumeMountPathSecurityCACertificates,
+	MSSQLVolumeMountPathCACerts,
 }
 
 func mssqlValidateVersion(m *MSSQLServer) error {
