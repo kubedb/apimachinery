@@ -43,6 +43,7 @@ type AutoscalingV1alpha1Interface interface {
 	RabbitMQAutoscalersGetter
 	RedisAutoscalersGetter
 	RedisSentinelAutoscalersGetter
+	SinglestoreAutoscalersGetter
 }
 
 // AutoscalingV1alpha1Client is used to interact with features provided by the autoscaling.kubedb.com group.
@@ -104,6 +105,10 @@ func (c *AutoscalingV1alpha1Client) RedisAutoscalers(namespace string) RedisAuto
 
 func (c *AutoscalingV1alpha1Client) RedisSentinelAutoscalers(namespace string) RedisSentinelAutoscalerInterface {
 	return newRedisSentinelAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) SinglestoreAutoscalers(namespace string) SinglestoreAutoscalerInterface {
+	return newSinglestoreAutoscalers(c, namespace)
 }
 
 // NewForConfig creates a new AutoscalingV1alpha1Client for the given config.

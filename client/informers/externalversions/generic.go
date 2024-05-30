@@ -100,6 +100,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().RedisAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("redissentinelautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().RedisSentinelAutoscalers().Informer()}, nil
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("singlestoreautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().SinglestoreAutoscalers().Informer()}, nil
 
 		// Group=catalog.kubedb.com, Version=v1alpha1
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("druidversions"):

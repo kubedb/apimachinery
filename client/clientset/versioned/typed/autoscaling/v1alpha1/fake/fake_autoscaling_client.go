@@ -85,6 +85,10 @@ func (c *FakeAutoscalingV1alpha1) RedisSentinelAutoscalers(namespace string) v1a
 	return &FakeRedisSentinelAutoscalers{c, namespace}
 }
 
+func (c *FakeAutoscalingV1alpha1) SinglestoreAutoscalers(namespace string) v1alpha1.SinglestoreAutoscalerInterface {
+	return &FakeSinglestoreAutoscalers{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeAutoscalingV1alpha1) RESTClient() rest.Interface {
