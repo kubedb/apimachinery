@@ -303,6 +303,8 @@ func (r *RabbitMQ) SetDefaults() {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
 	}
 
+	r.SetTLSDefaults()
+
 	r.SetHealthCheckerDefaults()
 	if r.Spec.Monitor != nil {
 		if r.Spec.Monitor.Prometheus == nil {
