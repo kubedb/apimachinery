@@ -24,6 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// DruidAutoscalers returns a DruidAutoscalerInformer.
+	DruidAutoscalers() DruidAutoscalerInformer
 	// ElasticsearchAutoscalers returns a ElasticsearchAutoscalerInformer.
 	ElasticsearchAutoscalers() ElasticsearchAutoscalerInformer
 	// EtcdAutoscalers returns a EtcdAutoscalerInformer.
@@ -67,6 +69,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// DruidAutoscalers returns a DruidAutoscalerInformer.
+func (v *version) DruidAutoscalers() DruidAutoscalerInformer {
+	return &druidAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ElasticsearchAutoscalers returns a ElasticsearchAutoscalerInformer.
