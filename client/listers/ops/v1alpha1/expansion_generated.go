@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// DruidOpsRequestListerExpansion allows custom methods to be added to
+// DruidOpsRequestLister.
+type DruidOpsRequestListerExpansion interface{}
+
+// DruidOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// DruidOpsRequestNamespaceLister.
+type DruidOpsRequestNamespaceListerExpansion interface{}
+
 // ElasticsearchOpsRequestListerExpansion allows custom methods to be added to
 // ElasticsearchOpsRequestLister.
 type ElasticsearchOpsRequestListerExpansion interface{}

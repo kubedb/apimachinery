@@ -29,6 +29,10 @@ type FakeOpsV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeOpsV1alpha1) DruidOpsRequests(namespace string) v1alpha1.DruidOpsRequestInterface {
+	return &FakeDruidOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) ElasticsearchOpsRequests(namespace string) v1alpha1.ElasticsearchOpsRequestInterface {
 	return &FakeElasticsearchOpsRequests{c, namespace}
 }
