@@ -120,10 +120,8 @@ type RabbitMQCustomConfigurationSpec struct {
 	// following naming convention: {db-name}-user-config .
 	// Expected input format:
 	//	applyConfig:
-	//		file-name.properties: |
+	//		rabbitmq.conf: |
 	//			key=value
-	//		server.properties: |
-	//			log.retention.ms=10000
 	// +optional
 	ApplyConfig map[string]string `json:"applyConfig,omitempty"`
 	// If set to "true", the user provided configuration will be removed.
