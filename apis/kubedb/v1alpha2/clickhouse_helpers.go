@@ -200,16 +200,6 @@ func (c *ClickHouse) ResourceSingular() string {
 }
 
 func (c *ClickHouse) SetDefaults() {
-	if c.Spec.Replicas == nil {
-		c.Spec.Replicas = pointer.Int32P(1)
-	}
-	if c.Spec.TerminationPolicy == "" {
-		c.Spec.TerminationPolicy = TerminationPolicyDelete
-	}
-	if c.Spec.StorageType == "" {
-		c.Spec.StorageType = StorageTypeDurable
-	}
-
 	var chVersion catalog.ClickHouseVersion
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: c.Spec.Version,
@@ -257,6 +247,16 @@ func (c *ClickHouse) SetDefaults() {
 		}
 		c.Spec.ClusterTopology.Cluster = clusters
 	} else {
+		if c.Spec.Replicas == nil {
+			c.Spec.Replicas = pointer.Int32P(1)
+		}
+		if c.Spec.TerminationPolicy == "" {
+			c.Spec.TerminationPolicy = TerminationPolicyDelete
+		}
+		if c.Spec.StorageType == "" {
+			c.Spec.StorageType = StorageTypeDurable
+		}
+
 		if c.Spec.PodTemplate == nil {
 			c.Spec.PodTemplate = &ofst.PodTemplateSpec{}
 		}

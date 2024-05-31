@@ -79,6 +79,22 @@ func (r *ClickHouse) ValidateDelete() (admission.Warnings, error) {
 
 func (r *ClickHouse) ValidateCreateOrUpdate() error {
 	var allErr field.ErrorList
+
+	if r.Spec.Version == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
+			r.Name,
+			"spec.version' is missing"))
+		return apierrors.NewInvalid(schema.GroupKind{Group: "ClickHouse.kubedb.com", Kind: "ClickHouse"}, r.Name, allErr)
+	} else {
+		err := r.ValidateVersion(r)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
+				r.Spec.Version,
+				err.Error()))
+			return apierrors.NewInvalid(schema.GroupKind{Group: "ClickHouse.kubedb.com", Kind: "ClickHouse"}, r.Name, allErr)
+		}
+	}
+
 	if r.Spec.ClusterTopology != nil {
 		clusterName := map[string]bool{}
 		clusters := r.Spec.ClusterTopology.Cluster
@@ -99,11 +115,38 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 					"cluster name is duplicated, use different cluster name"))
 			}
 			clusterName[cluster.Name] = true
+
+			allErr = r.validateClusterStorageType(cluster, allErr)
+
+			err := r.validateVolumes(cluster.PodTemplate)
+			if err != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("podTemplate").Child("spec").Child("volumes"),
+					r.Name,
+					err.Error()))
+			}
+			err = r.validateVolumesMountPaths(cluster.PodTemplate)
+			if err != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("podTemplate").Child("spec").Child("volumeMounts"),
+					r.Name,
+					err.Error()))
+			}
 		}
 		if r.Spec.PodTemplate != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
 				r.Name,
 				"PodTemplate should be nil in clusterTopology"))
+		}
+
+		if r.Spec.Replicas != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replica"),
+				r.Name,
+				"replica should be nil in clusterTopology"))
+		}
+
+		if r.Spec.StorageType != "" {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+				r.Name,
+				"StorageType should be empty in clusterTopology"))
 		}
 
 		if r.Spec.Storage != nil {
@@ -126,22 +169,6 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 				r.Name,
 				"number of replicas can't be greater than 1 in standalone mode"))
 		}
-
-	}
-
-	if r.Spec.Version == "" {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			r.Name,
-			"spec.version' is missing"))
-	} else {
-		err := r.ValidateVersion(r)
-		if err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-				r.Spec.Version,
-				err.Error()))
-		}
-	}
-	if r.Spec.ClusterTopology == nil {
 		err := r.validateVolumes(r.Spec.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
@@ -154,35 +181,9 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 				r.Name,
 				err.Error()))
 		}
-	}
 
-	if r.Spec.ClusterTopology != nil {
-		clusters := r.Spec.ClusterTopology.Cluster
-		for _, cluster := range clusters {
-			allErr = r.validateClusterStorageType(cluster, allErr)
-
-			err := r.validateVolumes(cluster.PodTemplate)
-			if err != nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("podTemplate").Child("spec").Child("volumes"),
-					r.Name,
-					err.Error()))
-			}
-			err = r.validateVolumesMountPaths(cluster.PodTemplate)
-			if err != nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("podTemplate").Child("spec").Child("volumeMounts"),
-					r.Name,
-					err.Error()))
-			}
-		}
-	} else {
 		allErr = r.validateStandaloneStorageType(r.Spec.StorageType, r.Spec.Storage, allErr)
 	}
-
-	//if r.Spec.ConfigSecret != nil && r.Spec.ConfigSecret.Name == "" {
-	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configSecret").Child("name"),
-	//		r.Name,
-	//		"ConfigSecret Name can not be empty"))
-	//}
 
 	if len(allErr) == 0 {
 		return nil
@@ -302,6 +303,5 @@ func (r *ClickHouse) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec
 			}
 		}
 	}
-
 	return nil
 }
