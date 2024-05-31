@@ -1254,15 +1254,21 @@ const (
 	ClickHouseContainerName     = "clickhouse"
 	ClickHouseInitContainerName = "clickhouse-init"
 
-	ClickHouseClusterConfigFileName = "cluster-config.yaml"
-	ClickHouseTempConfigDir         = "/ch-tmp/config"
-	ClickHouseTempDir               = "/ch-tmp"
+	ClickHouseClusterConfigFile = "cluster-config.yaml"
+	ClickHouseTempConfigDir     = "/ch-tmp/config"
+	ClickHouseTempDir           = "/ch-tmp"
 
 	ClickHouseUserConfigDir  = "/etc/clickhouse-server/user.d"
 	ClickHouseMacrosFileName = "macros.yaml"
 
 	ClickHouseStandalone = "standalone"
 	ClickHouseCluster    = "cluster"
+
+	ClickHouseHealthCheckerDatabase = "kubedb_system_db"
+	ClickHouseHealthCheckerTable    = "kubedb_system_table"
+
+	ClickHouseServerConfigFile = "server-config.yaml"
+	ClickHouseKeeperFileConfig = "keeper-config.yaml"
 )
 
 // Resource kind related constants
