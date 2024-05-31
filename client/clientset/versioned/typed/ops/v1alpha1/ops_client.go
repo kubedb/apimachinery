@@ -38,6 +38,7 @@ type OpsV1alpha1Interface interface {
 	MySQLOpsRequestsGetter
 	PerconaXtraDBOpsRequestsGetter
 	PgBouncerOpsRequestsGetter
+	PgpoolOpsRequestsGetter
 	PostgresOpsRequestsGetter
 	ProxySQLOpsRequestsGetter
 	RabbitMQOpsRequestsGetter
@@ -85,6 +86,10 @@ func (c *OpsV1alpha1Client) PerconaXtraDBOpsRequests(namespace string) PerconaXt
 
 func (c *OpsV1alpha1Client) PgBouncerOpsRequests(namespace string) PgBouncerOpsRequestInterface {
 	return newPgBouncerOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) PgpoolOpsRequests(namespace string) PgpoolOpsRequestInterface {
+	return newPgpoolOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) PostgresOpsRequests(namespace string) PostgresOpsRequestInterface {

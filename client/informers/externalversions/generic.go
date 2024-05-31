@@ -228,6 +228,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().PerconaXtraDBOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("pgbounceropsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().PgBouncerOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("pgpoolopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().PgpoolOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("postgresopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().PostgresOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("proxysqlopsrequests"):

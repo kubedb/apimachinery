@@ -121,6 +121,36 @@ func (p *Pgpool) ValidateCreateOrUpdate() field.ErrorList {
 		))
 	}
 
+	if p.Spec.ConfigSecret != nil && (p.Spec.InitConfiguration != nil && p.Spec.InitConfiguration.PgpoolConfig != nil) {
+		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configSecret"),
+			p.Name,
+			"use either `spec.configSecret` or `spec.initConfig`"))
+		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("initConfig"),
+			p.Name,
+			"use either `spec.configSecret` or `spec.initConfig`"))
+	}
+
+	if p.Spec.ConfigSecret != nil {
+		secret := core.Secret{}
+		err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      p.Spec.ConfigSecret.Name,
+			Namespace: p.Namespace,
+		}, &secret)
+		if err != nil {
+			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configSecret"),
+				p.Name,
+				err.Error(),
+			))
+		}
+		_, ok := secret.Data[PgpoolCustomConfigFile]
+		if !ok {
+			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configSecret"),
+				p.Name,
+				fmt.Sprintf("`%v` is missing", PgpoolCustomConfigFile),
+			))
+		}
+	}
+
 	apb := appcat.AppBinding{}
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      p.Spec.PostgresRef.Name,
