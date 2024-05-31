@@ -26,11 +26,10 @@ import (
 )
 
 const (
-	ResourceCodePgBouncer        = "pb"
-	ResourceKindPgBouncer        = "PgBouncer"
-	ResourceSingularPgBouncer    = "pgbouncer"
-	ResourcePluralPgBouncer      = "pgbouncers"
-	BackendSecretResourceVersion = "backend-secret-resource-version"
+	ResourceCodePgBouncer     = "pb"
+	ResourceKindPgBouncer     = "PgBouncer"
+	ResourceSingularPgBouncer = "pgbouncer"
+	ResourcePluralPgBouncer   = "pgbouncers"
 )
 
 // PgBouncer defines a PgBouncer Server.

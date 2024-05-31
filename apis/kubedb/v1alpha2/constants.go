@@ -565,6 +565,7 @@ const (
 	PgBouncerAdminUsername                  = "pgbouncer"
 	PgBouncerDefaultPoolMode                = "session"
 	PgBouncerDefaultIgnoreStartupParameters = "empty"
+	BackendSecretResourceVersion            = "backend-secret-resource-version"
 
 	// =========================== Pgpool Constants ============================
 	EnvPostgresUsername                = "POSTGRES_USERNAME"
