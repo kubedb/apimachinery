@@ -90,6 +90,14 @@ type PgBouncerAutoscalerListerExpansion interface{}
 // PgBouncerAutoscalerNamespaceLister.
 type PgBouncerAutoscalerNamespaceListerExpansion interface{}
 
+// PgpoolAutoscalerListerExpansion allows custom methods to be added to
+// PgpoolAutoscalerLister.
+type PgpoolAutoscalerListerExpansion interface{}
+
+// PgpoolAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// PgpoolAutoscalerNamespaceLister.
+type PgpoolAutoscalerNamespaceListerExpansion interface{}
+
 // PostgresAutoscalerListerExpansion allows custom methods to be added to
 // PostgresAutoscalerLister.
 type PostgresAutoscalerListerExpansion interface{}

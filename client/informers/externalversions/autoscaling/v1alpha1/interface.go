@@ -42,6 +42,8 @@ type Interface interface {
 	PerconaXtraDBAutoscalers() PerconaXtraDBAutoscalerInformer
 	// PgBouncerAutoscalers returns a PgBouncerAutoscalerInformer.
 	PgBouncerAutoscalers() PgBouncerAutoscalerInformer
+	// PgpoolAutoscalers returns a PgpoolAutoscalerInformer.
+	PgpoolAutoscalers() PgpoolAutoscalerInformer
 	// PostgresAutoscalers returns a PostgresAutoscalerInformer.
 	PostgresAutoscalers() PostgresAutoscalerInformer
 	// ProxySQLAutoscalers returns a ProxySQLAutoscalerInformer.
@@ -110,6 +112,11 @@ func (v *version) PerconaXtraDBAutoscalers() PerconaXtraDBAutoscalerInformer {
 // PgBouncerAutoscalers returns a PgBouncerAutoscalerInformer.
 func (v *version) PgBouncerAutoscalers() PgBouncerAutoscalerInformer {
 	return &pgBouncerAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// PgpoolAutoscalers returns a PgpoolAutoscalerInformer.
+func (v *version) PgpoolAutoscalers() PgpoolAutoscalerInformer {
+	return &pgpoolAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PostgresAutoscalers returns a PostgresAutoscalerInformer.

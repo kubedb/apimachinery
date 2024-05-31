@@ -90,6 +90,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().PerconaXtraDBAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("pgbouncerautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().PgBouncerAutoscalers().Informer()}, nil
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("pgpoolautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().PgpoolAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("postgresautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().PostgresAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("proxysqlautoscalers"):
