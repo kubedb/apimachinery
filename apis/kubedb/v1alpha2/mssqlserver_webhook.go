@@ -132,11 +132,11 @@ func (m *MSSQLServer) ValidateCreateOrUpdate() field.ErrorList {
 
 		if m.Spec.InternalAuth == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("internalAuth"),
-				m.Name, "spec.internalAuth, spec.internalAuth.endpointCert, spec.internalAuth.endpointCert.issuerRef' is missing"))
+				m.Name, "spec.internalAuth is missing"))
 		} else if m.Spec.InternalAuth.EndpointCert == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("internalAuth").Child("endpointCert"),
-				m.Name, "spec.internalAuth.endpointCert, spec.internalAuth.endpointCert.issuerRef' is missing"))
-		} else if m.Spec.InternalAuth.EndpointCert != nil {
+				m.Name, "spec.internalAuth.endpointCert is missing"))
+		} else {
 			if m.Spec.InternalAuth.EndpointCert.IssuerRef == nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("internalAuth").Child("endpointCert").Child("issuerRef"),
 					m.Name, "spec.internalAuth.endpointCert.issuerRef' is missing"))
