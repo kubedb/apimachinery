@@ -40,6 +40,7 @@ const (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=memcacheds,singular=memcached,shortName=mc,categories={datastore,kubedb,appscode,all}
 // +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"

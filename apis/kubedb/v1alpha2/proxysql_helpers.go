@@ -39,6 +39,8 @@ func (_ ProxySQL) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralProxySQL))
 }
 
+func (*ProxySQL) Hub() {}
+
 func (p *ProxySQL) AsOwner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(p, SchemeGroupVersion.WithKind(ResourceKindProxySQL))
 }

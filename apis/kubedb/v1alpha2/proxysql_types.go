@@ -49,6 +49,7 @@ const (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=proxysqls,singular=proxysql,shortName=prx,categories={datastore,kubedb,appscode,all}
 // +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"

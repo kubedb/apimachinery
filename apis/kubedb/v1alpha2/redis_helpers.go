@@ -48,6 +48,8 @@ func (r Redis) CustomResourceDefinition() *apiextensions.CustomResourceDefinitio
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralRedis))
 }
 
+func (*Redis) Hub() {}
+
 func (r *Redis) AsOwner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(r, SchemeGroupVersion.WithKind(ResourceKindRedis))
 }

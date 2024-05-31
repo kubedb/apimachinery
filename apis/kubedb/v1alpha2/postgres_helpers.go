@@ -49,6 +49,8 @@ func (_ Postgres) CustomResourceDefinition() *apiextensions.CustomResourceDefini
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralPostgres))
 }
 
+func (*Postgres) Hub() {}
+
 func (p *Postgres) AsOwner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(p, SchemeGroupVersion.WithKind(ResourceKindPostgres))
 }

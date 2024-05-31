@@ -27,6 +27,7 @@ import (
 	kafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 	kubedbv1alpha1 "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1beta1 "kubedb.dev/apimachinery/apis/kubedb/v1beta1"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	postgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
 	schemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
@@ -51,6 +52,7 @@ var localSchemeBuilder = runtime.SchemeBuilder{
 	kafkav1alpha1.AddToScheme,
 	kubedbv1alpha1.AddToScheme,
 	kubedbv1alpha2.AddToScheme,
+	kubedbv1beta1.AddToScheme,
 	opsv1alpha1.AddToScheme,
 	postgresv1alpha1.AddToScheme,
 	schemav1alpha1.AddToScheme,

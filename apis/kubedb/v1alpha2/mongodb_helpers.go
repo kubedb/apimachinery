@@ -47,6 +47,8 @@ func (_ MongoDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinit
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMongoDB))
 }
 
+func (*MongoDB) Hub() {}
+
 func (m *MongoDB) AsOwner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(m, SchemeGroupVersion.WithKind(ResourceKindMongoDB))
 }

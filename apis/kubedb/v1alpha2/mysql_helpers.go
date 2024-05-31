@@ -44,6 +44,8 @@ func (_ MySQL) CustomResourceDefinition() *apiextensions.CustomResourceDefinitio
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMySQL))
 }
 
+func (*MySQL) Hub() {}
+
 func (m *MySQL) AsOwner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(m, SchemeGroupVersion.WithKind(ResourceKindMySQL))
 }

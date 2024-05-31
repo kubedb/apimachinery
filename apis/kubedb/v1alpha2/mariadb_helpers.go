@@ -45,6 +45,8 @@ func (_ MariaDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinit
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMariaDB))
 }
 
+func (*MariaDB) Hub() {}
+
 func (m *MariaDB) AsOwner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(m, SchemeGroupVersion.WithKind(ResourceKindMariaDB))
 }

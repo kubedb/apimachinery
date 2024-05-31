@@ -54,6 +54,8 @@ func (_ Elasticsearch) CustomResourceDefinition() *apiextensions.CustomResourceD
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralElasticsearch))
 }
 
+func (*Elasticsearch) Hub() {}
+
 func (e *Elasticsearch) AsOwner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(e, SchemeGroupVersion.WithKind(ResourceKindElasticsearch))
 }

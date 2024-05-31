@@ -27,6 +27,7 @@ import (
 	elasticsearchv1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
 	kafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	v1beta1 "kubedb.dev/apimachinery/apis/kubedb/v1beta1"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	postgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
 	schemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
@@ -212,6 +213,30 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Solrs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("zookeepers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ZooKeepers().Informer()}, nil
+
+		// Group=kubedb.com, Version=v1beta1
+	case v1beta1.SchemeGroupVersion.WithResource("elasticsearches"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1beta1().Elasticsearches().Informer()}, nil
+	case v1beta1.SchemeGroupVersion.WithResource("mariadbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1beta1().MariaDBs().Informer()}, nil
+	case v1beta1.SchemeGroupVersion.WithResource("memcacheds"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1beta1().Memcacheds().Informer()}, nil
+	case v1beta1.SchemeGroupVersion.WithResource("mongodbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1beta1().MongoDBs().Informer()}, nil
+	case v1beta1.SchemeGroupVersion.WithResource("mysqls"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1beta1().MySQLs().Informer()}, nil
+	case v1beta1.SchemeGroupVersion.WithResource("perconaxtradbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1beta1().PerconaXtraDBs().Informer()}, nil
+	case v1beta1.SchemeGroupVersion.WithResource("pgbouncers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1beta1().PgBouncers().Informer()}, nil
+	case v1beta1.SchemeGroupVersion.WithResource("postgreses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1beta1().Postgreses().Informer()}, nil
+	case v1beta1.SchemeGroupVersion.WithResource("proxysqls"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1beta1().ProxySQLs().Informer()}, nil
+	case v1beta1.SchemeGroupVersion.WithResource("redises"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1beta1().Redises().Informer()}, nil
+	case v1beta1.SchemeGroupVersion.WithResource("redissentinels"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1beta1().RedisSentinels().Informer()}, nil
 
 		// Group=ops.kubedb.com, Version=v1alpha1
 	case opsv1alpha1.SchemeGroupVersion.WithResource("druidopsrequests"):

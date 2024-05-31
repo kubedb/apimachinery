@@ -41,6 +41,8 @@ func (p PgBouncer) CustomResourceDefinition() *apiextensions.CustomResourceDefin
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralPgBouncer))
 }
 
+func (*PgBouncer) Hub() {}
+
 func (p *PgBouncer) AsOwner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(p, SchemeGroupVersion.WithKind(ResourceKindPgBouncer))
 }

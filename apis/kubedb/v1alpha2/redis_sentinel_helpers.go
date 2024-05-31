@@ -44,6 +44,8 @@ func (rs RedisSentinel) CustomResourceDefinition() *apiextensions.CustomResource
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralRedisSentinel))
 }
 
+func (*RedisSentinel) Hub() {}
+
 func (rs *RedisSentinel) AsOwner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(rs, SchemeGroupVersion.WithKind(ResourceKindRedisSentinel))
 }
