@@ -42,9 +42,9 @@ const (
 type MSSQLServerCertificateAlias string
 
 const (
-	MSSQLServerServerCert MSSQLServerCertificateAlias = "server"
-	MSSQLServerClientCert MSSQLServerCertificateAlias = "client"
-	MSSQLServerEndpoint   MSSQLServerCertificateAlias = "endpoint"
+	MSSQLServerServerCert   MSSQLServerCertificateAlias = "server"
+	MSSQLServerClientCert   MSSQLServerCertificateAlias = "client"
+	MSSQLServerEndpointCert MSSQLServerCertificateAlias = "endpoint"
 )
 
 // MSSQLServer defines a MSSQLServer database.

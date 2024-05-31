@@ -247,24 +247,24 @@ func (m *MSSQLServer) EndpointCertSecretName() string {
 }
 
 // CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
-func (s *MSSQLServer) CertificateName(alias MSSQLServerCertificateAlias) string {
-	return metautil.NameWithSuffix(s.Name, fmt.Sprintf("%s-cert", string(alias)))
+func (m *MSSQLServer) CertificateName(alias MSSQLServerCertificateAlias) string {
+	return metautil.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
-func (s *MSSQLServer) SecretName(alias MSSQLServerCertificateAlias) string {
-	return metautil.NameWithSuffix(s.Name, string(alias))
+func (m *MSSQLServer) SecretName(alias MSSQLServerCertificateAlias) string {
+	return metautil.NameWithSuffix(m.Name, string(alias))
 }
 
 // GetCertSecretName returns the secret name for a certificate alias if any
 // otherwise returns default certificate secret name for the given alias.
-func (s *MSSQLServer) GetCertSecretName(alias MSSQLServerCertificateAlias) string {
-	if s.Spec.TLS != nil {
-		name, ok := kmapi.GetCertificateSecretName(s.Spec.TLS.Certificates, string(alias))
+func (m *MSSQLServer) GetCertSecretName(alias MSSQLServerCertificateAlias) string {
+	if m.Spec.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(m.Spec.TLS.Certificates, string(alias))
 		if ok {
 			return name
 		}
 	}
-	return s.CertificateName(alias)
+	return m.CertificateName(alias)
 }
 
 func (m *MSSQLServer) GetNameSpacedName() string {
@@ -329,6 +329,8 @@ func (m *MSSQLServer) SetDefaults() {
 	}
 
 	m.setDefaultContainerSecurityContext(&mssqlVersion, m.Spec.PodTemplate)
+
+	m.SetTLSDefaults()
 
 	m.SetHealthCheckerDefaults()
 
@@ -434,6 +436,85 @@ func (m *MSSQLServer) setDefaultContainerResourceLimits(podTemplate *ofst.PodTem
 			apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, CoordinatorDefaultResources)
 		}
 	}
+}
+
+func (m *MSSQLServer) SetTLSDefaults() {
+	m.SetTLSDefaultsForInternalAuth()
+
+	if m.Spec.TLS == nil || m.Spec.TLS.IssuerRef == nil {
+		return
+	}
+
+	// Server-cert
+	defaultServerOrg := []string{KubeDBOrganization}
+	defaultServerOrgUnit := []string{string(MSSQLServerServerCert)}
+	_, cert := kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MSSQLServerServerCert))
+	if cert != nil && cert.Subject != nil {
+		if cert.Subject.Organizations != nil {
+			defaultServerOrg = cert.Subject.Organizations
+		}
+		if cert.Subject.OrganizationalUnits != nil {
+			defaultServerOrgUnit = cert.Subject.OrganizationalUnits
+		}
+	}
+
+	m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
+		Alias:      string(MSSQLServerServerCert),
+		SecretName: m.GetCertSecretName(MSSQLServerServerCert),
+		Subject: &kmapi.X509Subject{
+			Organizations:       defaultServerOrg,
+			OrganizationalUnits: defaultServerOrgUnit,
+		},
+	})
+
+	// Client-cert
+	defaultClientOrg := []string{KubeDBOrganization}
+	defaultClientOrgUnit := []string{string(MSSQLServerClientCert)}
+	_, cert = kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MSSQLServerClientCert))
+	if cert != nil && cert.Subject != nil {
+		if cert.Subject.Organizations != nil {
+			defaultClientOrg = cert.Subject.Organizations
+		}
+		if cert.Subject.OrganizationalUnits != nil {
+			defaultClientOrgUnit = cert.Subject.OrganizationalUnits
+		}
+	}
+	m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
+		Alias:      string(MSSQLServerClientCert),
+		SecretName: m.GetCertSecretName(MSSQLServerClientCert),
+		Subject: &kmapi.X509Subject{
+			Organizations:       defaultClientOrg,
+			OrganizationalUnits: defaultClientOrgUnit,
+		},
+	})
+}
+
+func (m *MSSQLServer) SetTLSDefaultsForInternalAuth() {
+	if m.Spec.InternalAuth == nil || m.Spec.InternalAuth.EndpointCert == nil || m.Spec.InternalAuth.EndpointCert.IssuerRef == nil {
+		return
+	}
+
+	// Endpoint-cert
+	defaultServerOrg := []string{KubeDBOrganization}
+	defaultServerOrgUnit := []string{string(MSSQLServerEndpointCert)}
+	_, cert := kmapi.GetCertificate(m.Spec.InternalAuth.EndpointCert.Certificates, string(MSSQLServerEndpointCert))
+	if cert != nil && cert.Subject != nil {
+		if cert.Subject.Organizations != nil {
+			defaultServerOrg = cert.Subject.Organizations
+		}
+		if cert.Subject.OrganizationalUnits != nil {
+			defaultServerOrgUnit = cert.Subject.OrganizationalUnits
+		}
+	}
+
+	m.Spec.InternalAuth.EndpointCert.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.InternalAuth.EndpointCert.Certificates, kmapi.CertificateSpec{
+		Alias:      string(MSSQLServerEndpointCert),
+		SecretName: m.GetCertSecretName(MSSQLServerEndpointCert),
+		Subject: &kmapi.X509Subject{
+			Organizations:       defaultServerOrg,
+			OrganizationalUnits: defaultServerOrgUnit,
+		},
+	})
 }
 
 func (m *MSSQLServer) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
