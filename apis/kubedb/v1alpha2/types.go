@@ -131,7 +131,6 @@ const (
 	PrimaryServiceAlias ServiceAlias = "primary"
 	StandbyServiceAlias ServiceAlias = "standby"
 	StatsServiceAlias   ServiceAlias = "stats"
-	PcpServiceAlias     ServiceAlias = "pcp"
 )
 
 // +kubebuilder:validation:Enum=DNS;IP;IPv4;IPv6

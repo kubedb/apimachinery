@@ -579,7 +579,7 @@ const (
 	PgpoolContainerName                = "pgpool"
 	PgpoolDefaultServicePort           = 9999
 	PgpoolMonitoringDefaultServicePort = 9719
-	PgpoolPcpServicePort               = 9595
+	PgpoolPcpPort                      = 9595
 	PgpoolExporterDatabase             = "postgres"
 	EnvPgpoolExporterDatabase          = "POSTGRES_DATABASE"
 	EnvPgpoolService                   = "PGPOOL_SERVICE"
@@ -597,7 +597,7 @@ const (
 	PgpoolRootUser                     = "postgres"
 	PgpoolPrimaryServicePortName       = "primary"
 	PgpoolDatabasePortName             = "db"
-	PgpoolPcpServicePortName           = "pcp"
+	PgpoolPcpPortName                  = "pcp"
 	PgpoolCustomConfigFile             = "pgpool.conf"
 	// ========================================== ZooKeeper Constants =================================================//
 
