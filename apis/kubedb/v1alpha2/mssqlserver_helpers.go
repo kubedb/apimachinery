@@ -439,6 +439,8 @@ func (m *MSSQLServer) setDefaultContainerResourceLimits(podTemplate *ofst.PodTem
 }
 
 func (m *MSSQLServer) SetTLSDefaults() {
+	m.SetTLSDefaultsForInternalAuth()
+
 	if m.Spec.TLS == nil || m.Spec.TLS.IssuerRef == nil {
 		return
 	}
@@ -483,6 +485,34 @@ func (m *MSSQLServer) SetTLSDefaults() {
 		Subject: &kmapi.X509Subject{
 			Organizations:       defaultClientOrg,
 			OrganizationalUnits: defaultClientOrgUnit,
+		},
+	})
+}
+
+func (m *MSSQLServer) SetTLSDefaultsForInternalAuth() {
+	if m.Spec.InternalAuth == nil || m.Spec.InternalAuth.EndpointCert == nil || m.Spec.InternalAuth.EndpointCert.IssuerRef == nil {
+		return
+	}
+
+	// Endpoint-cert
+	defaultServerOrg := []string{KubeDBOrganization}
+	defaultServerOrgUnit := []string{string(MSSQLServerEndpointCert)}
+	_, cert := kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MSSQLServerEndpointCert))
+	if cert != nil && cert.Subject != nil {
+		if cert.Subject.Organizations != nil {
+			defaultServerOrg = cert.Subject.Organizations
+		}
+		if cert.Subject.OrganizationalUnits != nil {
+			defaultServerOrgUnit = cert.Subject.OrganizationalUnits
+		}
+	}
+
+	m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
+		Alias:      string(MSSQLServerEndpointCert),
+		SecretName: m.GetCertSecretName(MSSQLServerEndpointCert),
+		Subject: &kmapi.X509Subject{
+			Organizations:       defaultServerOrg,
+			OrganizationalUnits: defaultServerOrgUnit,
 		},
 	})
 }
