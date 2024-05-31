@@ -497,7 +497,7 @@ func (m *MSSQLServer) SetTLSDefaultsForInternalAuth() {
 	// Endpoint-cert
 	defaultServerOrg := []string{KubeDBOrganization}
 	defaultServerOrgUnit := []string{string(MSSQLServerEndpointCert)}
-	_, cert := kmapi.GetCertificate(m.Spec.TLS.Certificates, string(MSSQLServerEndpointCert))
+	_, cert := kmapi.GetCertificate(m.Spec.InternalAuth.EndpointCert.Certificates, string(MSSQLServerEndpointCert))
 	if cert != nil && cert.Subject != nil {
 		if cert.Subject.Organizations != nil {
 			defaultServerOrg = cert.Subject.Organizations
@@ -507,7 +507,7 @@ func (m *MSSQLServer) SetTLSDefaultsForInternalAuth() {
 		}
 	}
 
-	m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
+	m.Spec.InternalAuth.EndpointCert.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.InternalAuth.EndpointCert.Certificates, kmapi.CertificateSpec{
 		Alias:      string(MSSQLServerEndpointCert),
 		SecretName: m.GetCertSecretName(MSSQLServerEndpointCert),
 		Subject: &kmapi.X509Subject{
