@@ -54,9 +54,6 @@ type Druid struct {
 
 // DruidSpec defines the desired state of Druid
 type DruidSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// Version of Druid to be deployed.
 	Version string `json:"version"`
 
@@ -141,21 +138,6 @@ type DruidNode struct {
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
-
-	// NodeSelector is a selector which must be true for the pod to fit on a node.
-	// Selector which must match a node's labels for the pod to be scheduled on that node.
-	// More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-	// +optional
-	// +mapType=atomic
-	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
-	// If specified, the pod's tolerations.
-	// +optional
-	Tolerations []core.Toleration `json:"tolerations,omitempty"`
-
-	// PodPlacementPolicy is the reference of the podPlacementPolicy
-	// +kubebuilder:default={name: "default"}
-	// +optional
-	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 }
 
 type DruidDataNode struct {
@@ -210,8 +192,6 @@ type ZookeeperRef struct {
 
 // DruidStatus defines the observed state of Druid
 type DruidStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 	// Specifies the current phase of the database
 	// +optional
 	Phase DruidPhase `json:"phase,omitempty"`

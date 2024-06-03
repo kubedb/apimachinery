@@ -103,11 +103,6 @@ type FerretDBSpec struct {
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 
 	Backend *FerretDBBackend `json:"backend"`
-
-	// PodPlacementPolicy is the reference of the podPlacementPolicy
-	// +kubebuilder:default={name: "default"}
-	// +optional
-	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 }
 
 type FerretDBStatus struct {

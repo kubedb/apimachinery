@@ -272,14 +272,6 @@ spec:
                         type: object
                     type: object
                 type: object
-              podPlacementPolicy:
-                default:
-                  name: default
-                properties:
-                  name:
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
               podTemplate:
                 properties:
                   controller:
@@ -2294,6 +2286,14 @@ spec:
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
                         type: object
+                      podPlacementPolicy:
+                        default:
+                          name: default
+                        properties:
+                          name:
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       preemptionPolicy:
                         type: string
                       priority:
@@ -3455,19 +3455,6 @@ spec:
                 properties:
                   coordinator:
                     properties:
-                      nodeSelector:
-                        additionalProperties:
-                          type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
-                      podPlacementPolicy:
-                        default:
-                          name: default
-                        properties:
-                          name:
-                            type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
                       podTemplate:
                         properties:
                           controller:
@@ -5482,6 +5469,14 @@ spec:
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true
                                 type: object
+                              podPlacementPolicy:
+                                default:
+                                  name: default
+                                properties:
+                                  name:
+                                    type: string
+                                type: object
+                                x-kubernetes-map-type: atomic
                               preemptionPolicy:
                                 type: string
                               priority:
@@ -6450,38 +6445,9 @@ spec:
                         type: object
                       suffix:
                         type: string
-                      tolerations:
-                        items:
-                          properties:
-                            effect:
-                              type: string
-                            key:
-                              type: string
-                            operator:
-                              type: string
-                            tolerationSeconds:
-                              format: int64
-                              type: integer
-                            value:
-                              type: string
-                          type: object
-                        type: array
                     type: object
                   data:
                     properties:
-                      nodeSelector:
-                        additionalProperties:
-                          type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
-                      podPlacementPolicy:
-                        default:
-                          name: default
-                        properties:
-                          name:
-                            type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
                       podTemplate:
                         properties:
                           controller:
@@ -8496,6 +8462,14 @@ spec:
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true
                                 type: object
+                              podPlacementPolicy:
+                                default:
+                                  name: default
+                                properties:
+                                  name:
+                                    type: string
+                                type: object
+                                x-kubernetes-map-type: atomic
                               preemptionPolicy:
                                 type: string
                               priority:
@@ -9464,38 +9438,9 @@ spec:
                         type: object
                       suffix:
                         type: string
-                      tolerations:
-                        items:
-                          properties:
-                            effect:
-                              type: string
-                            key:
-                              type: string
-                            operator:
-                              type: string
-                            tolerationSeconds:
-                              format: int64
-                              type: integer
-                            value:
-                              type: string
-                          type: object
-                        type: array
                     type: object
                   overseer:
                     properties:
-                      nodeSelector:
-                        additionalProperties:
-                          type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
-                      podPlacementPolicy:
-                        default:
-                          name: default
-                        properties:
-                          name:
-                            type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
                       podTemplate:
                         properties:
                           controller:
@@ -11510,6 +11455,14 @@ spec:
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true
                                 type: object
+                              podPlacementPolicy:
+                                default:
+                                  name: default
+                                properties:
+                                  name:
+                                    type: string
+                                type: object
+                                x-kubernetes-map-type: atomic
                               preemptionPolicy:
                                 type: string
                               priority:
@@ -12478,22 +12431,6 @@ spec:
                         type: object
                       suffix:
                         type: string
-                      tolerations:
-                        items:
-                          properties:
-                            effect:
-                              type: string
-                            key:
-                              type: string
-                            operator:
-                              type: string
-                            tolerationSeconds:
-                              format: int64
-                              type: integer
-                            value:
-                              type: string
-                          type: object
-                        type: array
                     type: object
                 type: object
               version:
