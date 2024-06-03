@@ -49,14 +49,8 @@ type ClickHouse struct {
 	Status ClickHouseStatus `json:"status,omitempty"`
 }
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // ClickHouseSpec defines the desired state of ClickHouse
 type ClickHouseSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// Version of ClickHouse to be deployed.
 	Version string `json:"version"`
 
@@ -145,8 +139,6 @@ type ClickHouseKeeperNode struct {
 
 // ClickHouseStatus defines the observed state of ClickHouse
 type ClickHouseStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 	// Specifies the current phase of the database
 	// +optional
 	Phase DatabasePhase `json:"phase,omitempty"`
