@@ -100,6 +100,12 @@ type FunctionSpec struct {
 	// RuntimeSettings allow to specify Resources, LivenessProbe, ReadinessProbe, Lifecycle, SecurityContext etc.
 	// +optional
 	RuntimeSettings *ofst.ContainerRuntimeSettings `json:"runtimeSettings,omitempty"`
+
+	// AvailableVersions is the list of available addon versions
+	// This is needed for the KubeStash resolver, if Image has some variables in it.
+	// For example, `image: ghcr.io/kubedb/mongodb-restic-plugin:v0.7.0_${DB_VERSION}`
+	// +optional
+	AvailableVersions []string `json:"availableVersions,omitempty"`
 }
 
 //+kubebuilder:object:root=true
