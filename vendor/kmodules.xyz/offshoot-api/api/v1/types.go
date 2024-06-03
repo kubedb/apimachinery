@@ -270,6 +270,10 @@ type PodSpec struct {
 	// +patchMergeKey=mountPath
 	// +patchStrategy=merge
 	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty" patchStrategy:"merge" patchMergeKey:"mountPath"`
+
+	// PodPlacementPolicy is the reference of the podPlacementPolicy
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 }
 
 // ServiceTemplateSpec describes the data a service should have when created from a template
