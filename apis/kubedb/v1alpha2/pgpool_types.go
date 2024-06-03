@@ -97,9 +97,9 @@ type PgpoolSpec struct {
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 
-	// TerminationPolicy controls the delete operation for Pgpool
+	// DeletionPolicy controls the delete operation for database
 	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
+	DeletionPolicy TerminationPolicy `json:"deletionPolicy,omitempty"`
 
 	// SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]
 	SSLMode PgpoolSSLMode `json:"sslMode,omitempty"`

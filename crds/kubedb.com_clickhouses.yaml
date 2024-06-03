@@ -3066,6 +3066,13 @@ spec:
                       type: object
                     type: array
                 type: object
+              deletionPolicy:
+                enum:
+                - Halt
+                - Delete
+                - WipeOut
+                - DoNotTerminate
+                type: string
               disableSecurity:
                 type: boolean
               healthChecker:
@@ -6151,13 +6158,6 @@ spec:
                 enum:
                 - Durable
                 - Ephemeral
-                type: string
-              terminationPolicy:
-                enum:
-                - Halt
-                - Delete
-                - WipeOut
-                - DoNotTerminate
                 type: string
               version:
                 type: string
