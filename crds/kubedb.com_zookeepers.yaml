@@ -59,6 +59,13 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              deletionPolicy:
+                enum:
+                - Halt
+                - Delete
+                - WipeOut
+                - DoNotTerminate
+                type: string
               disableAuth:
                 type: boolean
               halted:
@@ -3330,13 +3337,6 @@ spec:
                   volumeName:
                     type: string
                 type: object
-              terminationPolicy:
-                enum:
-                - Halt
-                - Delete
-                - WipeOut
-                - DoNotTerminate
-                type: string
               version:
                 type: string
             required:

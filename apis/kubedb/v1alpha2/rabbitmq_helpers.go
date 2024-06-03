@@ -279,8 +279,8 @@ func (r *RabbitMQ) SetDefaults() {
 		r.Spec.Replicas = pointer.Int32P(1)
 	}
 
-	if r.Spec.TerminationPolicy == "" {
-		r.Spec.TerminationPolicy = TerminationPolicyDelete
+	if r.Spec.DeletionPolicy == "" {
+		r.Spec.DeletionPolicy = TerminationPolicyDelete
 	}
 
 	if r.Spec.StorageType == "" {

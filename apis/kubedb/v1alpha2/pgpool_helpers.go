@@ -347,8 +347,8 @@ func (p *Pgpool) SetDefaults() {
 	if p.Spec.Replicas == nil {
 		p.Spec.Replicas = pointer.Int32P(1)
 	}
-	if p.Spec.TerminationPolicy == "" {
-		p.Spec.TerminationPolicy = TerminationPolicyDelete
+	if p.Spec.DeletionPolicy == "" {
+		p.Spec.DeletionPolicy = TerminationPolicyDelete
 	}
 	if p.Spec.PodTemplate == nil {
 		p.Spec.PodTemplate = &ofst.PodTemplateSpec{}

@@ -325,8 +325,8 @@ func (s *Singlestore) SetDefaults() {
 	if s.Spec.StorageType == "" {
 		s.Spec.StorageType = StorageTypeDurable
 	}
-	if s.Spec.TerminationPolicy == "" {
-		s.Spec.TerminationPolicy = TerminationPolicyDelete
+	if s.Spec.DeletionPolicy == "" {
+		s.Spec.DeletionPolicy = TerminationPolicyDelete
 	}
 
 	if s.Spec.Topology == nil {

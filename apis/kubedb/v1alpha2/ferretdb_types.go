@@ -89,9 +89,9 @@ type FerretDBSpec struct {
 	// Storage to specify how storage shall be used for KubeDB Backend.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
-	// TerminationPolicy controls the delete operation for database and KubeDB Backend
+	// DeletionPolicy controls the delete operation for database
 	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
+	DeletionPolicy TerminationPolicy `json:"deletionPolicy,omitempty"`
 
 	// HealthChecker defines attributes of the health checker
 	// +optional
