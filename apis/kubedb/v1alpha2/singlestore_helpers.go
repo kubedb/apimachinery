@@ -33,6 +33,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
+	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
@@ -145,7 +146,7 @@ func (s singlestoreStatsService) TLSConfig() *promapi.TLSConfig {
 				},
 				Key: core.TLSPrivateKeyKey,
 			},
-			InsecureSkipVerify: false,
+			InsecureSkipVerify: ptr.To(false),
 		},
 	}
 }

@@ -34,10 +34,10 @@ const (
 // +kubebuilder:resource:path=addons,singular=addon,scope=Cluster,categories={kubestash,appscode,all}
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
-// Addon specifies the backup and restore capabilities for a particular resource.
+// Addon specifies the backup and restore capabilities for a specific type of target.
 // For example, MySQL addon specifies the backup and restore capabilities of MySQL database where
 // Postgres addon specifies backup and restore capabilities for PostgreSQL database.
-// An Addon CR defines the backup and restore tasks that can be performed by this addon.
+// An Addon CR defines these capabilities as tasks for backup and restore.
 type Addon struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -76,10 +76,10 @@ type Task struct {
 	// a sidecar container, an ephemeral container, or a Job that creates additional Jobs/Pods
 	// for executing the backup/restore logic.
 	// Valid values are:
-	// - "Job": Stash will create a Job to execute the backup/restore task.
-	// - "Sidecar": Stash will inject a sidecar container into the application to execute the backup/restore task.
-	// - "EphemeralContainer": Stash will attach an ephemeral container to the respective Pods to execute the backup/restore task.
-	// - "MultiLevelJob": Stash will create a Job that will create additional Jobs/Pods to execute the backup/restore task.
+	// - "Job": KubeStash will create a Job to execute the backup/restore task.
+	// - "Sidecar": KubeStash will inject a sidecar container into the application to execute the backup/restore task.
+	// - "EphemeralContainer": KubeStash will attach an ephemeral container to the respective Pods to execute the backup/restore task.
+	// - "MultiLevelJob": KubeStash will create a Job that will create additional Jobs/Pods to execute the backup/restore task.
 	Executor TaskExecutor `json:"executor,omitempty"`
 
 	// Singleton specifies whether this task will be executed on a single job or across multiple jobs.
@@ -96,8 +96,8 @@ type Task struct {
 	VolumeTemplate []VolumeTemplate `json:"volumeTemplate,omitempty"`
 
 	// VolumeMounts specifies the mount path of the volumes specified in the VolumeTemplate section.
-	// These volumes will be mounted directly on the Job/Container created/injected by Stash operator.
-	// If the volume type is VolumeClaimTemplate, then Stash operator is responsible for creating the volume.
+	// These volumes will be mounted directly on the Job/Container created/injected by KubeStash operator.
+	// If the volume type is VolumeClaimTemplate, then KubeStash operator is responsible for creating the volume.
 	// +optional
 	VolumeMounts []core.VolumeMount `json:"volumeMounts,omitempty"`
 
@@ -107,7 +107,7 @@ type Task struct {
 	// mount in both VolumeMounts and PassThroughMounts section.
 	// If the volume type is VolumeClaimTemplate, then the first level job is responsible for creating the volume.
 	// +optional
-	PassThroughMounts []core.VolumeMount `json:"passThroughMounts,omitempty"`
+	// PassThroughMounts []core.VolumeMount `json:"passThroughMounts,omitempty"`
 }
 
 // TaskExecutor defines the type of the executor that will execute the backup/restore task.
