@@ -197,8 +197,8 @@ func (k *SchemaRegistry) SetHealthCheckerDefaults() {
 }
 
 func (k *SchemaRegistry) SetDefaults() {
-	if k.Spec.TerminationPolicy == "" {
-		k.Spec.TerminationPolicy = api.TerminationPolicyDelete
+	if k.Spec.DeletionPolicy == "" {
+		k.Spec.DeletionPolicy = api.TerminationPolicyDelete
 	}
 
 	if k.Spec.Replicas == nil {

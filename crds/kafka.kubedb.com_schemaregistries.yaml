@@ -41,6 +41,13 @@ spec:
             type: object
           spec:
             properties:
+              deletionPolicy:
+                enum:
+                - Halt
+                - Delete
+                - WipeOut
+                - DoNotTerminate
+                type: string
               healthChecker:
                 default:
                   failureThreshold: 3
@@ -3044,13 +3051,6 @@ spec:
                   - alias
                   type: object
                 type: array
-              terminationPolicy:
-                enum:
-                - Halt
-                - Delete
-                - WipeOut
-                - DoNotTerminate
-                type: string
               version:
                 type: string
             required:

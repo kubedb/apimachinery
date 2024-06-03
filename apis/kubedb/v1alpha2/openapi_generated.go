@@ -23282,7 +23282,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseSpec(ref common.Referenc
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -24012,7 +24012,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -25316,7 +25316,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref common.ReferenceC
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database and KubeDB Backend",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26003,7 +26003,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaSpec(ref common.ReferenceCall
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26412,7 +26412,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.Referen
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -29177,7 +29177,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref common.ReferenceCal
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for Pgpool",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -30318,7 +30318,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQSpec(ref common.ReferenceC
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -31638,7 +31638,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SinglestoreSpec(ref common.Referen
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -32066,7 +32066,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -32383,7 +32383,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperSpec(ref common.Reference
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},

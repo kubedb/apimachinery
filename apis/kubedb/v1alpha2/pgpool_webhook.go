@@ -89,7 +89,7 @@ func (p *Pgpool) ValidateDelete() (admission.Warnings, error) {
 	pgpoollog.Info("validate delete", "name", p.Name)
 
 	var errorList field.ErrorList
-	if p.Spec.TerminationPolicy == TerminationPolicyDoNotTerminate {
+	if p.Spec.DeletionPolicy == TerminationPolicyDoNotTerminate {
 		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			p.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))

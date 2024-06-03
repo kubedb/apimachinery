@@ -369,8 +369,8 @@ func (e Druid) offshootLabels(selector, override map[string]string) map[string]s
 }
 
 func (d *Druid) SetDefaults() {
-	if d.Spec.TerminationPolicy == "" {
-		d.Spec.TerminationPolicy = TerminationPolicyDelete
+	if d.Spec.DeletionPolicy == "" {
+		d.Spec.DeletionPolicy = TerminationPolicyDelete
 	}
 
 	if d.Spec.DisableSecurity == nil {
