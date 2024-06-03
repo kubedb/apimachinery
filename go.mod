@@ -36,7 +36,7 @@ require (
 	kmodules.xyz/custom-resources v0.29.1
 	kmodules.xyz/monitoring-agent-api v0.29.0
 	kmodules.xyz/objectstore-api v0.29.1
-	kmodules.xyz/offshoot-api v0.29.3
+	kmodules.xyz/offshoot-api v0.29.4
 	kmodules.xyz/resource-metadata v0.18.5
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/petset v0.0.6

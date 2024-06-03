@@ -1660,6 +1660,13 @@ spec:
                               type: string
                             type: object
                             x-kubernetes-map-type: atomic
+                          podPlacementPolicy:
+                            properties:
+                              name:
+                                default: ""
+                                type: string
+                            type: object
+                            x-kubernetes-map-type: atomic
                           priority:
                             format: int32
                             type: integer
@@ -4478,6 +4485,13 @@ spec:
                           nodeSelector:
                             additionalProperties:
                               type: string
+                            type: object
+                            x-kubernetes-map-type: atomic
+                          podPlacementPolicy:
+                            properties:
+                              name:
+                                default: ""
+                                type: string
                             type: object
                             x-kubernetes-map-type: atomic
                           priority:
@@ -8414,6 +8428,13 @@ spec:
                           type: string
                         type: object
                         x-kubernetes-map-type: atomic
+                      podPlacementPolicy:
+                        properties:
+                          name:
+                            default: ""
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                       priority:
                         format: int32
                         type: integer
@@ -11139,6 +11160,13 @@ spec:
                               nodeSelector:
                                 additionalProperties:
                                   type: string
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              podPlacementPolicy:
+                                properties:
+                                  name:
+                                    default: ""
+                                    type: string
                                 type: object
                                 x-kubernetes-map-type: atomic
                               priority:
@@ -13871,6 +13899,13 @@ spec:
                                   type: string
                                 type: object
                                 x-kubernetes-map-type: atomic
+                              podPlacementPolicy:
+                                properties:
+                                  name:
+                                    default: ""
+                                    type: string
+                                type: object
+                                x-kubernetes-map-type: atomic
                               priority:
                                 format: int32
                                 type: integer
@@ -16522,6 +16557,13 @@ spec:
                               nodeSelector:
                                 additionalProperties:
                                   type: string
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              podPlacementPolicy:
+                                properties:
+                                  name:
+                                    default: ""
+                                    type: string
                                 type: object
                                 x-kubernetes-map-type: atomic
                               priority:
