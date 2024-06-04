@@ -41,7 +41,7 @@ require (
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/petset v0.0.6
 	kubeops.dev/sidekick v0.0.7
-	kubestash.dev/apimachinery v0.8.0
+	kubestash.dev/apimachinery v0.9.0
 	sigs.k8s.io/controller-runtime v0.18.3
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.34.0
