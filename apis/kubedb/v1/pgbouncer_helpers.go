@@ -268,10 +268,10 @@ func (p *PgBouncer) GetCertSecretName(alias PgBouncerCertificateAlias) string {
 	return p.CertificateName(alias)
 }
 
-func (p *PgBouncer) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
+func (p *PgBouncer) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
-	return checkReplicas(lister.StatefulSets(p.Namespace), labels.SelectorFromSet(p.OffshootLabels()), expectedItems)
+	return checkReplicas(lister.PetSets(p.Namespace), labels.SelectorFromSet(p.OffshootLabels()), expectedItems)
 }
 
 func (p *PgBouncer) SetHealthCheckerDefaults() {

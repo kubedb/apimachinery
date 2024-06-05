@@ -375,7 +375,7 @@ func (m MongoDB) ServiceName() string {
 // OffshootName, ShardNodeName, ConfigSvrNodeName , ArbiterNodeName or HiddenNodeName
 func (m MongoDB) GoverningServiceName(name string) string {
 	if name == "" {
-		panic(fmt.Sprintf("StatefulSet name is missing for MongoDB %s/%s", m.Namespace, m.Name))
+		panic(fmt.Sprintf("PetSet name is missing for MongoDB %s/%s", m.Namespace, m.Name))
 	}
 	if strings.HasSuffix(name, "-"+kubedb.NodeTypeArbiter) {
 		name = m.GetCorrespondingReplicaStsName(name)
@@ -515,17 +515,17 @@ func (m MongoDB) MongosHosts() []string {
 	return hosts
 }
 
-func (m *MongoDB) GetURL(stsName string) string {
+func (m *MongoDB) GetURL(psName string) string {
 	if m.Spec.ShardTopology != nil {
-		if strings.HasSuffix(stsName, kubedb.NodeTypeConfig) {
+		if strings.HasSuffix(psName, kubedb.NodeTypeConfig) {
 			return strings.Join(m.ConfigSvrHosts(), ",")
 		}
-		if strings.HasSuffix(stsName, kubedb.NodeTypeMongos) {
+		if strings.HasSuffix(psName, kubedb.NodeTypeMongos) {
 			return strings.Join(m.MongosHosts(), ",")
 		}
 		shardStr := func() string {
-			idx := strings.LastIndex(stsName, kubedb.NodeTypeShard)
-			return stsName[idx+len(kubedb.NodeTypeShard):]
+			idx := strings.LastIndex(psName, kubedb.NodeTypeShard)
+			return psName[idx+len(kubedb.NodeTypeShard):]
 		}()
 		shardNum := func() int32 {
 			num := int32(0)
@@ -534,8 +534,8 @@ func (m *MongoDB) GetURL(stsName string) string {
 			}
 			return num
 		}()
-		// if stsName="shard12", shardStr will be "12", & shardNum will be 12
-		if strings.HasSuffix(stsName, kubedb.NodeTypeShard+shardStr) {
+		// if psName="shard12", shardStr will be "12", & shardNum will be 12
+		if strings.HasSuffix(psName, kubedb.NodeTypeShard+shardStr) {
 			return strings.Join(m.ShardHosts(shardNum), ",")
 		}
 	}
@@ -837,7 +837,7 @@ func (m *MongoDB) SetTLSDefaults() {
 				OrganizationalUnits: defaultServerOrgUnit,
 			},
 		})
-		// reset secret name to empty string, since multiple secrets will be created for each StatefulSet.
+		// reset secret name to empty string, since multiple secrets will be created for each PetSet.
 		m.Spec.TLS.Certificates = kmapi.SetSecretNameForCertificate(m.Spec.TLS.Certificates, string(MongoDBServerCert), "")
 	} else {
 		m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
@@ -968,7 +968,7 @@ func (m *MongoDB) GetDefaultReadinessProbeSpec(mgVersion *v1alpha1.MongoDBVersio
 
 // setDefaultProbes sets defaults only when probe fields are nil.
 // In operator, check if the value of probe fields is "{}".
-// For "{}", ignore readinessprobe or livenessprobe in statefulset.
+// For "{}", ignore readinessprobe or livenessprobe in petset.
 // ref: https://github.com/helm/charts/blob/345ba987722350ffde56ec34d2928c0b383940aa/stable/mongodb/templates/deployment-standalone.yaml#L93
 func (m *MongoDB) setDefaultProbes(podTemplate *ofstv2.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) {
 	if podTemplate == nil {
@@ -1048,39 +1048,39 @@ func (m *MongoDB) KeyFileRequired() bool {
 }
 
 // CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
-func (m *MongoDB) CertificateName(alias MongoDBCertificateAlias, stsName string) string {
+func (m *MongoDB) CertificateName(alias MongoDBCertificateAlias, psName string) string {
 	if m.Spec.ShardTopology != nil && alias == MongoDBServerCert {
-		if stsName == "" {
-			panic(fmt.Sprintf("StatefulSet name required to compute %s certificate name for MongoDB %s/%s", alias, m.Namespace, m.Name))
+		if psName == "" {
+			panic(fmt.Sprintf("PetSet name required to compute %s certificate name for MongoDB %s/%s", alias, m.Namespace, m.Name))
 		}
-		return meta_util.NameWithSuffix(stsName, fmt.Sprintf("%s-cert", string(alias)))
+		return meta_util.NameWithSuffix(psName, fmt.Sprintf("%s-cert", string(alias)))
 	} else if m.Spec.ReplicaSet != nil && alias == MongoDBServerCert {
-		if stsName == "" {
+		if psName == "" {
 			return meta_util.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias))) // for general replica
 		}
-		return meta_util.NameWithSuffix(stsName, fmt.Sprintf("%s-cert", string(alias))) // for arbiter
+		return meta_util.NameWithSuffix(psName, fmt.Sprintf("%s-cert", string(alias))) // for arbiter
 	}
-	// for standAlone server-cert. And for client-cert & metrics-exporter-cert of all type of replica & shard, stsName is not needed.
+	// for standAlone server-cert. And for client-cert & metrics-exporter-cert of all type of replica & shard, psName is not needed.
 	return meta_util.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
 // GetCertSecretName returns the secret name for a certificate alias
-func (m *MongoDB) GetCertSecretName(alias MongoDBCertificateAlias, stsName string) string {
+func (m *MongoDB) GetCertSecretName(alias MongoDBCertificateAlias, psName string) string {
 	if m.Spec.ShardTopology != nil && alias == MongoDBServerCert {
-		if stsName == "" {
-			panic(fmt.Sprintf("StatefulSet name required to compute %s certificate name for MongoDB %s/%s", alias, m.Namespace, m.Name))
+		if psName == "" {
+			panic(fmt.Sprintf("PetSet name required to compute %s certificate name for MongoDB %s/%s", alias, m.Namespace, m.Name))
 		}
-		return m.CertificateName(alias, stsName)
+		return m.CertificateName(alias, psName)
 	}
 	name, ok := kmapi.GetCertificateSecretName(m.Spec.TLS.Certificates, string(alias))
 	if ok {
 		return name
 	}
 
-	return m.CertificateName(alias, stsName)
+	return m.CertificateName(alias, psName)
 }
 
-func (m *MongoDB) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
+func (m *MongoDB) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
 	if m.Spec.ShardTopology != nil {
@@ -1092,7 +1092,7 @@ func (m *MongoDB) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, s
 	if m.Spec.Hidden != nil {
 		expectedItems++
 	}
-	return checkReplicas(lister.StatefulSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
+	return checkReplicas(lister.PetSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
 }
 
 // ConfigSecretName returns the secret name for different nodetype

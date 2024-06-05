@@ -394,10 +394,10 @@ func (m *MySQL) GetCertSecretName(alias MySQLCertificateAlias) string {
 	return m.CertificateName(alias)
 }
 
-func (m *MySQL) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
+func (m *MySQL) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
-	return checkReplicas(lister.StatefulSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
+	return checkReplicas(lister.PetSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
 }
 
 func MySQLRequireSSLArg() string {

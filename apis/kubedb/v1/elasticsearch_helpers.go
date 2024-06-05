@@ -228,81 +228,81 @@ func (e *Elasticsearch) GetConnectionURL() string {
 	return fmt.Sprintf("%v://%s.%s:%d", e.GetConnectionScheme(), e.OffshootName(), e.Namespace, kubedb.ElasticsearchRestPort)
 }
 
-func (e *Elasticsearch) CombinedStatefulSetName() string {
+func (e *Elasticsearch) CombinedPetSetName() string {
 	return e.OffshootName()
 }
 
-func (e *Elasticsearch) MasterStatefulSetName() string {
+func (e *Elasticsearch) MasterPetSetName() string {
 	if e.Spec.Topology.Master.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.Master.Suffix)
 	}
 	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeMaster))
 }
 
-func (e *Elasticsearch) DataStatefulSetName() string {
+func (e *Elasticsearch) DataPetSetName() string {
 	if e.Spec.Topology.Data.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.Data.Suffix)
 	}
 	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeData))
 }
 
-func (e *Elasticsearch) IngestStatefulSetName() string {
+func (e *Elasticsearch) IngestPetSetName() string {
 	if e.Spec.Topology.Ingest.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.Ingest.Suffix)
 	}
 	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeIngest))
 }
 
-func (e *Elasticsearch) DataContentStatefulSetName() string {
+func (e *Elasticsearch) DataContentPetSetName() string {
 	if e.Spec.Topology.DataContent.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.DataContent.Suffix)
 	}
 	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeDataContent))
 }
 
-func (e *Elasticsearch) DataFrozenStatefulSetName() string {
+func (e *Elasticsearch) DataFrozenPetSetName() string {
 	if e.Spec.Topology.DataFrozen.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.DataFrozen.Suffix)
 	}
 	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeDataFrozen))
 }
 
-func (e *Elasticsearch) DataColdStatefulSetName() string {
+func (e *Elasticsearch) DataColdPetSetName() string {
 	if e.Spec.Topology.DataCold.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.DataCold.Suffix)
 	}
 	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeDataCold))
 }
 
-func (e *Elasticsearch) DataHotStatefulSetName() string {
+func (e *Elasticsearch) DataHotPetSetName() string {
 	if e.Spec.Topology.DataHot.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.DataHot.Suffix)
 	}
 	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeDataHot))
 }
 
-func (e *Elasticsearch) DataWarmStatefulSetName() string {
+func (e *Elasticsearch) DataWarmPetSetName() string {
 	if e.Spec.Topology.DataWarm.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.DataWarm.Suffix)
 	}
 	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeDataWarm))
 }
 
-func (e *Elasticsearch) MLStatefulSetName() string {
+func (e *Elasticsearch) MLPetSetName() string {
 	if e.Spec.Topology.ML.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.ML.Suffix)
 	}
 	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeML))
 }
 
-func (e *Elasticsearch) TransformStatefulSetName() string {
+func (e *Elasticsearch) TransformPetSetName() string {
 	if e.Spec.Topology.Transform.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.Transform.Suffix)
 	}
 	return meta_util.NameWithSuffix(e.OffshootName(), string(ElasticsearchNodeRoleTypeTransform))
 }
 
-func (e *Elasticsearch) CoordinatingStatefulSetName() string {
+func (e *Elasticsearch) CoordinatingPetSetName() string {
 	if e.Spec.Topology.Coordinating.Suffix != "" {
 		return meta_util.NameWithSuffix(e.OffshootName(), e.Spec.Topology.Coordinating.Suffix)
 	}
@@ -311,7 +311,7 @@ func (e *Elasticsearch) CoordinatingStatefulSetName() string {
 
 func (e *Elasticsearch) InitialMasterNodes() []string {
 	// For combined clusters
-	stsName := e.CombinedStatefulSetName()
+	psName := e.CombinedPetSetName()
 	replicas := int32(1)
 	if e.Spec.Replicas != nil {
 		replicas = pointer.Int32(e.Spec.Replicas)
@@ -319,7 +319,7 @@ func (e *Elasticsearch) InitialMasterNodes() []string {
 
 	// For topology cluster, overwrite the values
 	if e.Spec.Topology != nil {
-		stsName = e.MasterStatefulSetName()
+		psName = e.MasterPetSetName()
 		if e.Spec.Topology.Master.Replicas != nil {
 			replicas = pointer.Int32(e.Spec.Topology.Master.Replicas)
 		}
@@ -327,7 +327,7 @@ func (e *Elasticsearch) InitialMasterNodes() []string {
 
 	var nodeNames []string
 	for i := int32(0); i < replicas; i++ {
-		nodeNames = append(nodeNames, fmt.Sprintf("%s-%d", stsName, i))
+		nodeNames = append(nodeNames, fmt.Sprintf("%s-%d", psName, i))
 	}
 
 	return nodeNames
@@ -985,13 +985,13 @@ func (e *Elasticsearch) GetPersistentSecrets() []string {
 	return secrets
 }
 
-func (e *Elasticsearch) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
+func (e *Elasticsearch) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
 	if e.Spec.Topology != nil {
 		expectedItems = 3
 	}
-	return checkReplicas(lister.StatefulSets(e.Namespace), labels.SelectorFromSet(e.OffshootLabels()), expectedItems)
+	return checkReplicas(lister.PetSets(e.Namespace), labels.SelectorFromSet(e.OffshootLabels()), expectedItems)
 }
 
 // returns true if the user exists.
