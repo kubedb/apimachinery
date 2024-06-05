@@ -20,6 +20,7 @@ package kubedb
 
 import (
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
+	v1 "kubedb.dev/apimachinery/client/informers/externalversions/kubedb/v1"
 	v1alpha2 "kubedb.dev/apimachinery/client/informers/externalversions/kubedb/v1alpha2"
 )
 
@@ -27,6 +28,8 @@ import (
 type Interface interface {
 	// V1alpha2 provides access to shared informers for resources in V1alpha2.
 	V1alpha2() v1alpha2.Interface
+	// V1 provides access to shared informers for resources in V1.
+	V1() v1.Interface
 }
 
 type group struct {
@@ -43,4 +46,9 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // V1alpha2 returns a new v1alpha2.Interface.
 func (g *group) V1alpha2() v1alpha2.Interface {
 	return v1alpha2.New(g.factory, g.namespace, g.tweakListOptions)
+}
+
+// V1 returns a new v1.Interface.
+func (g *group) V1() v1.Interface {
+	return v1.New(g.factory, g.namespace, g.tweakListOptions)
 }

@@ -14,12 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+package kubedb
 
 import (
 	"time"
-
-	"kubedb.dev/apimachinery/apis/kubedb"
 
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -31,8 +29,8 @@ const (
 
 	KubeDBOrganization = "kubedb"
 
-	LabelRole   = kubedb.GroupName + "/role"
-	LabelPetSet = kubedb.GroupName + "/petset"
+	LabelRole   = GroupName + "/role"
+	LabelPetSet = GroupName + "/petset"
 
 	ReplicationModeDetectorContainerName = "replication-mode-detector"
 	DatabasePodPrimary                   = "primary"
@@ -58,16 +56,16 @@ const (
 	CACert = "ca.crt"
 
 	// =========================== Database key Constants ============================
-	PostgresKey      = ResourceSingularPostgres + "." + kubedb.GroupName
-	ElasticsearchKey = ResourceSingularElasticsearch + "." + kubedb.GroupName
-	MySQLKey         = ResourceSingularMySQL + "." + kubedb.GroupName
-	MariaDBKey       = ResourceSingularMariaDB + "." + kubedb.GroupName
-	PerconaXtraDBKey = ResourceSingularPerconaXtraDB + "." + kubedb.GroupName
-	MongoDBKey       = ResourceSingularMongoDB + "." + kubedb.GroupName
-	RedisKey         = ResourceSingularRedis + "." + kubedb.GroupName
-	MemcachedKey     = ResourceSingularMemcached + "." + kubedb.GroupName
-	EtcdKey          = ResourceSingularEtcd + "." + kubedb.GroupName
-	ProxySQLKey      = ResourceSingularProxySQL + "." + kubedb.GroupName
+	PostgresKey      = "postgres" + "." + GroupName
+	ElasticsearchKey = "elasticsearch" + "." + GroupName
+	MySQLKey         = "mysql" + "." + GroupName
+	MariaDBKey       = "mariadb" + "." + GroupName
+	PerconaXtraDBKey = "perconaxtradb" + "." + GroupName
+	MongoDBKey       = "mongodb" + "." + GroupName
+	RedisKey         = "redis" + "." + GroupName
+	MemcachedKey     = "memcached" + "." + GroupName
+	EtcdKey          = "etcd" + "." + GroupName
+	ProxySQLKey      = "proxysql" + "." + GroupName
 
 	// =========================== Elasticsearch Constants ============================
 	ElasticsearchRestPort                        = 9200
@@ -130,7 +128,7 @@ const (
 	MemcachedPrimaryServicePortName = "primary"
 	MemcachedDatabasePort           = 11211
 	MemcachedShardKey               = MemcachedKey + "/shard"
-	MemcachedContainerName          = ResourceSingularMemcached
+	MemcachedContainerName          = "memcached"
 	MemcachedConfigVolumePath       = "/etc/memcached/"
 	// =========================== MongoDB Constants ============================
 
@@ -182,7 +180,7 @@ const (
 	MongoDBInitialKeyDirectoryName = "keydir"
 	MongoDBInitialKeyDirectoryPath = "/keydir-readonly"
 
-	MongoDBContainerName = ResourceSingularMongoDB
+	MongoDBContainerName = "mongodb"
 
 	MongoDBDefaultVolumeClaimTemplateName = MongoDBDataDirectoryName
 
@@ -285,7 +283,7 @@ const (
 	PerconaXtraDBRunScriptVolumeMountPath      = "/run-script"
 	PerconaXtraDBInitScriptVolumeName          = "init-scripts"
 	PerconaXtraDBInitScriptVolumeMountPath     = "/scripts"
-	PerconaXtraDBContainerName                 = ResourceSingularPerconaXtraDB
+	PerconaXtraDBContainerName                 = "perconaxtradb"
 	PerconaXtraDBCertMountPath                 = "/etc/mysql/certs"
 	PerconaXtraDBExporterConfigFileName        = "exporter.cnf"
 	PerconaXtraDBGaleraClusterPrimaryComponent = "Primary"
@@ -315,7 +313,7 @@ const (
 	MariaDBRunScriptVolumeMountPath      = "/run-script"
 	MariaDBInitScriptVolumeName          = "init-scripts"
 	MariaDBInitScriptVolumeMountPath     = "/scripts"
-	MariaDBContainerName                 = ResourceSingularMariaDB
+	MariaDBContainerName                 = "mariadb"
 	MariaDBCertMountPath                 = "/etc/mysql/certs"
 	MariaDBExporterConfigFileName        = "exporter.cnf"
 	MariaDBGaleraClusterPrimaryComponent = "Primary"
@@ -431,7 +429,7 @@ const (
 	PostgresCoordinatorContainerName  = "pg-coordinator"
 	PostgresCoordinatorPort           = 2380
 	PostgresCoordinatorPortName       = "coordinator"
-	PostgresContainerName             = ResourceSingularPostgres
+	PostgresContainerName             = "postgres"
 	PostgresInitContainerName         = "postgres-init-container"
 	PostgresCoordinatorClientPort     = 2379
 	PostgresCoordinatorClientPortName = "coordinatclient"
@@ -484,7 +482,7 @@ const (
 	LabelProxySQLLoadBalance           = ProxySQLKey + "/load-balance"
 	LabelProxySQLLoadBalanceStandalone = "Standalone"
 
-	ProxySQLContainerName          = ResourceSingularProxySQL
+	ProxySQLContainerName          = "proxysql"
 	ProxySQLDatabasePort           = 6033
 	ProxySQLDatabasePortName       = "db"
 	ProxySQLPrimaryServicePortName = "db"
@@ -507,7 +505,7 @@ const (
 	// =========================== Redis Constants ============================
 	RedisConfigKey = "redis.conf" // RedisConfigKey is going to create for the customize redis configuration
 	// DefaultConfigKey is going to create for the default redis configuration
-	RedisContainerName             = ResourceSingularRedis
+	RedisContainerName             = "redis"
 	RedisSentinelContainerName     = "redissentinel"
 	DefaultConfigKey               = "default.conf"
 	RedisShardKey                  = RedisKey + "/shard"
@@ -621,8 +619,8 @@ const (
 	ZooKeeperDataVolumePath         = "/data"
 	ZooKeeperScriptVolumeName       = "script-vol"
 	ZooKeeperScriptVolumePath       = "/scripts"
-	ZooKeeperContainerName          = ResourceSingularZooKeeper
-	ZooKeeperInitContainerName      = ResourceSingularZooKeeper + "-init"
+	ZooKeeperContainerName          = "zookeeper"
+	ZooKeeperInitContainerName      = "zookeeper" + "-init"
 
 	ZooKeeperConfigFileName               = "zoo.cfg"
 	ZooKeeperLog4jPropertiesFileName      = "log4j.properties"

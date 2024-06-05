@@ -32,6 +32,8 @@ import (
 	fakeelasticsearchv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/elasticsearch/v1alpha1/fake"
 	kafkav1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kafka/v1alpha1"
 	fakekafkav1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kafka/v1alpha1/fake"
+	kubedbv1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1"
+	fakekubedbv1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1/fake"
 	kubedbv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1"
 	fakekubedbv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/fake"
 	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
@@ -140,6 +142,11 @@ func (c *Clientset) KubedbV1alpha1() kubedbv1alpha1.KubedbV1alpha1Interface {
 // KubedbV1alpha2 retrieves the KubedbV1alpha2Client
 func (c *Clientset) KubedbV1alpha2() kubedbv1alpha2.KubedbV1alpha2Interface {
 	return &fakekubedbv1alpha2.FakeKubedbV1alpha2{Fake: &c.Fake}
+}
+
+// KubedbV1 retrieves the KubedbV1Client
+func (c *Clientset) KubedbV1() kubedbv1.KubedbV1Interface {
+	return &fakekubedbv1.FakeKubedbV1{Fake: &c.Fake}
 }
 
 // OpsV1alpha1 retrieves the OpsV1alpha1Client
