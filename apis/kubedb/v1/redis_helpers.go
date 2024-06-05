@@ -142,7 +142,7 @@ func (r Redis) BaseNameForShard() string {
 	return fmt.Sprintf("%s-shard", r.OffshootName())
 }
 
-func (r Redis) StatefulSetNameWithShard(i int) string {
+func (r Redis) PetSetNameWithShard(i int) string {
 	return fmt.Sprintf("%s%d", r.BaseNameForShard(), i)
 }
 
@@ -391,11 +391,11 @@ func (r *Redis) GetCertSecretName(alias RedisCertificateAlias) string {
 	return r.CertificateName(alias)
 }
 
-func (r *Redis) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
+func (r *Redis) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
 	if r.Spec.Cluster != nil {
 		expectedItems = int(pointer.Int32(r.Spec.Cluster.Master))
 	}
-	return checkReplicas(lister.StatefulSets(r.Namespace), labels.SelectorFromSet(r.OffshootLabels()), expectedItems)
+	return checkReplicas(lister.PetSets(r.Namespace), labels.SelectorFromSet(r.OffshootLabels()), expectedItems)
 }

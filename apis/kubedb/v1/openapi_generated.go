@@ -55,14 +55,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"k8s.io/api/apps/v1.ReplicaSetStatus":                                         schema_k8sio_api_apps_v1_ReplicaSetStatus(ref),
 		"k8s.io/api/apps/v1.RollingUpdateDaemonSet":                                   schema_k8sio_api_apps_v1_RollingUpdateDaemonSet(ref),
 		"k8s.io/api/apps/v1.RollingUpdateDeployment":                                  schema_k8sio_api_apps_v1_RollingUpdateDeployment(ref),
-		"k8s.io/api/apps/v1.RollingUpdateStatefulSetStrategy":                         schema_k8sio_api_apps_v1_RollingUpdateStatefulSetStrategy(ref),
-		"k8s.io/api/apps/v1.StatefulSet":                                              schema_k8sio_api_apps_v1_StatefulSet(ref),
-		"k8s.io/api/apps/v1.StatefulSetCondition":                                     schema_k8sio_api_apps_v1_StatefulSetCondition(ref),
-		"k8s.io/api/apps/v1.StatefulSetList":                                          schema_k8sio_api_apps_v1_StatefulSetList(ref),
-		"k8s.io/api/apps/v1.StatefulSetOrdinals":                                      schema_k8sio_api_apps_v1_StatefulSetOrdinals(ref),
-		"k8s.io/api/apps/v1.StatefulSetPersistentVolumeClaimRetentionPolicy":          schema_k8sio_api_apps_v1_StatefulSetPersistentVolumeClaimRetentionPolicy(ref),
-		"k8s.io/api/apps/v1.StatefulSetSpec":                                          schema_k8sio_api_apps_v1_StatefulSetSpec(ref),
-		"k8s.io/api/apps/v1.StatefulSetStatus":                                        schema_k8sio_api_apps_v1_StatefulSetStatus(ref),
+		"k8s.io/api/apps/v1.RollingUpdatePetSetStrategy":                         schema_k8sio_api_apps_v1_RollingUpdatePetSetStrategy(ref),
+		"k8s.io/api/apps/v1.PetSet":                                              schema_k8sio_api_apps_v1_PetSet(ref),
+		"k8s.io/api/apps/v1.PetSetCondition":                                     schema_k8sio_api_apps_v1_PetSetCondition(ref),
+		"k8s.io/api/apps/v1.PetSetList":                                          schema_k8sio_api_apps_v1_PetSetList(ref),
+		"k8s.io/api/apps/v1.PetSetOrdinals":                                      schema_k8sio_api_apps_v1_PetSetOrdinals(ref),
+		"k8s.io/api/apps/v1.PetSetPersistentVolumeClaimRetentionPolicy":          schema_k8sio_api_apps_v1_PetSetPersistentVolumeClaimRetentionPolicy(ref),
+		"k8s.io/api/apps/v1.PetSetSpec":                                          schema_k8sio_api_apps_v1_PetSetSpec(ref),
+		"k8s.io/api/apps/v1.PetSetStatus":                                        schema_k8sio_api_apps_v1_PetSetStatus(ref),
 		"k8s.io/api/apps/v1.StatefulSetUpdateStrategy":                                schema_k8sio_api_apps_v1_StatefulSetUpdateStrategy(ref),
 		"k8s.io/api/autoscaling/v2beta2.ContainerResourceMetricSource":                schema_k8sio_api_autoscaling_v2beta2_ContainerResourceMetricSource(ref),
 		"k8s.io/api/autoscaling/v2beta2.ContainerResourceMetricStatus":                schema_k8sio_api_autoscaling_v2beta2_ContainerResourceMetricStatus(ref),
@@ -577,7 +577,7 @@ func schema_k8sio_api_apps_v1_ControllerRevision(ref common.ReferenceCallback) c
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ControllerRevision implements an immutable snapshot of state data. Clients are responsible for serializing and deserializing the objects that contain their internal state. Once a ControllerRevision has been successfully created, it can not be updated. The API Server will fail validation of all requests that attempt to mutate the Data field. ControllerRevisions may, however, be deleted. Note that, due to its use by both the DaemonSet and StatefulSet controllers for update and rollback, this object is beta. However, it may be subject to name and representation changes in future releases, and clients should not depend on its stability. It is primarily for internal use by controllers.",
+				Description: "ControllerRevision implements an immutable snapshot of state data. Clients are responsible for serializing and deserializing the objects that contain their internal state. Once a ControllerRevision has been successfully created, it can not be updated. The API Server will fail validation of all requests that attempt to mutate the Data field. ControllerRevisions may, however, be deleted. Note that, due to its use by both the DaemonSet and PetSet controllers for update and rollback, this object is beta. However, it may be subject to name and representation changes in future releases, and clients should not depend on its stability. It is primarily for internal use by controllers.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -1692,23 +1692,23 @@ func schema_k8sio_api_apps_v1_RollingUpdateDeployment(ref common.ReferenceCallba
 	}
 }
 
-func schema_k8sio_api_apps_v1_RollingUpdateStatefulSetStrategy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_k8sio_api_apps_v1_RollingUpdatePetSetStrategy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "RollingUpdateStatefulSetStrategy is used to communicate parameter for RollingUpdateStatefulSetStrategyType.",
+				Description: "RollingUpdatePetSetStrategy is used to communicate parameter for RollingUpdateStatefulSetStrategyType.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"partition": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Partition indicates the ordinal at which the StatefulSet should be partitioned for updates. During a rolling update, all pods from ordinal Replicas-1 to Partition are updated. All pods from ordinal Partition-1 to 0 remain untouched. This is helpful in being able to do a canary based deployment. The default value is 0.",
+							Description: "Partition indicates the ordinal at which the PetSet should be partitioned for updates. During a rolling update, all pods from ordinal Replicas-1 to Partition are updated. All pods from ordinal Partition-1 to 0 remain untouched. This is helpful in being able to do a canary based deployment. The default value is 0.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"maxUnavailable": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The maximum number of pods that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%). Absolute number is calculated from percentage by rounding up. This can not be 0. Defaults to 1. This field is alpha-level and is only honored by servers that enable the MaxUnavailableStatefulSet feature. The field applies to all pods in the range 0 to Replicas-1. That means if there is any unavailable pod in the range 0 to Replicas-1, it will be counted towards MaxUnavailable.",
+							Description: "The maximum number of pods that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%). Absolute number is calculated from percentage by rounding up. This can not be 0. Defaults to 1. This field is alpha-level and is only honored by servers that enable the MaxUnavailablePetSet feature. The field applies to all pods in the range 0 to Replicas-1. That means if there is any unavailable pod in the range 0 to Replicas-1, it will be counted towards MaxUnavailable.",
 							Ref:         ref("k8s.io/apimachinery/pkg/util/intstr.IntOrString"),
 						},
 					},
@@ -1720,11 +1720,11 @@ func schema_k8sio_api_apps_v1_RollingUpdateStatefulSetStrategy(ref common.Refere
 	}
 }
 
-func schema_k8sio_api_apps_v1_StatefulSet(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_k8sio_api_apps_v1_PetSet(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "StatefulSet represents a set of pods with consistent identities. Identities are defined as:\n  - Network: A single stable DNS and hostname.\n  - Storage: As many VolumeClaims as requested.\n\nThe StatefulSet guarantees that a given network identity will always map to the same storage identity.",
+				Description: "PetSet represents a set of pods with consistent identities. Identities are defined as:\n  - Network: A single stable DNS and hostname.\n  - Storage: As many VolumeClaims as requested.\n\nThe PetSet guarantees that a given network identity will always map to the same storage identity.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -1752,34 +1752,34 @@ func schema_k8sio_api_apps_v1_StatefulSet(ref common.ReferenceCallback) common.O
 						SchemaProps: spec.SchemaProps{
 							Description: "Spec defines the desired identities of pods in this set.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/api/apps/v1.StatefulSetSpec"),
+							Ref:         ref("k8s.io/api/apps/v1.PetSetSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status is the current status of Pods in this StatefulSet. This data may be out of date by some window of time.",
+							Description: "Status is the current status of Pods in this PetSet. This data may be out of date by some window of time.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/api/apps/v1.StatefulSetStatus"),
+							Ref:         ref("k8s.io/api/apps/v1.PetSetStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetSpec", "k8s.io/api/apps/v1.StatefulSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"k8s.io/api/apps/v1.PetSetSpec", "k8s.io/api/apps/v1.PetSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
-func schema_k8sio_api_apps_v1_StatefulSetCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_k8sio_api_apps_v1_PetSetCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "StatefulSetCondition describes the state of a statefulset at a certain point.",
+				Description: "PetSetCondition describes the state of a petset at a certain point.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type of statefulset condition.",
+							Description: "Type of petset condition.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -1822,11 +1822,11 @@ func schema_k8sio_api_apps_v1_StatefulSetCondition(ref common.ReferenceCallback)
 	}
 }
 
-func schema_k8sio_api_apps_v1_StatefulSetList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_k8sio_api_apps_v1_PetSetList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "StatefulSetList is a collection of StatefulSets.",
+				Description: "PetSetList is a collection of PetSets.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -1858,7 +1858,7 @@ func schema_k8sio_api_apps_v1_StatefulSetList(ref common.ReferenceCallback) comm
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/apps/v1.StatefulSet"),
+										Ref:     ref("k8s.io/api/apps/v1.PetSet"),
 									},
 								},
 							},
@@ -1869,20 +1869,20 @@ func schema_k8sio_api_apps_v1_StatefulSetList(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+			"k8s.io/api/apps/v1.PetSet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
-func schema_k8sio_api_apps_v1_StatefulSetOrdinals(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_k8sio_api_apps_v1_PetSetOrdinals(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "StatefulSetOrdinals describes the policy used for replica ordinal assignment in this StatefulSet.",
+				Description: "PetSetOrdinals describes the policy used for replica ordinal assignment in this PetSet.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"start": {
 						SchemaProps: spec.SchemaProps{
-							Description: "start is the number representing the first replica's index. It may be used to number replicas from an alternate index (eg: 1-indexed) over the default 0-indexed names, or to orchestrate progressive movement of replicas from one StatefulSet to another. If set, replica indices will be in the range:\n  [.spec.ordinals.start, .spec.ordinals.start + .spec.replicas).\nIf unset, defaults to 0. Replica indices will be in the range:\n  [0, .spec.replicas).",
+							Description: "start is the number representing the first replica's index. It may be used to number replicas from an alternate index (eg: 1-indexed) over the default 0-indexed names, or to orchestrate progressive movement of replicas from one PetSet to another. If set, replica indices will be in the range:\n  [.spec.ordinals.start, .spec.ordinals.start + .spec.replicas).\nIf unset, defaults to 0. Replica indices will be in the range:\n  [0, .spec.replicas).",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -1894,23 +1894,23 @@ func schema_k8sio_api_apps_v1_StatefulSetOrdinals(ref common.ReferenceCallback) 
 	}
 }
 
-func schema_k8sio_api_apps_v1_StatefulSetPersistentVolumeClaimRetentionPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_k8sio_api_apps_v1_PetSetPersistentVolumeClaimRetentionPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "StatefulSetPersistentVolumeClaimRetentionPolicy describes the policy used for PVCs created from the StatefulSet VolumeClaimTemplates.",
+				Description: "PetSetPersistentVolumeClaimRetentionPolicy describes the policy used for PVCs created from the PetSet VolumeClaimTemplates.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"whenDeleted": {
 						SchemaProps: spec.SchemaProps{
-							Description: "WhenDeleted specifies what happens to PVCs created from StatefulSet VolumeClaimTemplates when the StatefulSet is deleted. The default policy of `Retain` causes PVCs to not be affected by StatefulSet deletion. The `Delete` policy causes those PVCs to be deleted.",
+							Description: "WhenDeleted specifies what happens to PVCs created from PetSet VolumeClaimTemplates when the PetSet is deleted. The default policy of `Retain` causes PVCs to not be affected by PetSet deletion. The `Delete` policy causes those PVCs to be deleted.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"whenScaled": {
 						SchemaProps: spec.SchemaProps{
-							Description: "WhenScaled specifies what happens to PVCs created from StatefulSet VolumeClaimTemplates when the StatefulSet is scaled down. The default policy of `Retain` causes PVCs to not be affected by a scaledown. The `Delete` policy causes the associated PVCs for any excess pods above the replica count to be deleted.",
+							Description: "WhenScaled specifies what happens to PVCs created from PetSet VolumeClaimTemplates when the PetSet is scaled down. The default policy of `Retain` causes PVCs to not be affected by a scaledown. The `Delete` policy causes the associated PVCs for any excess pods above the replica count to be deleted.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -1921,11 +1921,11 @@ func schema_k8sio_api_apps_v1_StatefulSetPersistentVolumeClaimRetentionPolicy(re
 	}
 }
 
-func schema_k8sio_api_apps_v1_StatefulSetSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_k8sio_api_apps_v1_PetSetSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "A StatefulSetSpec is the specification of a StatefulSet.",
+				Description: "A PetSetSpec is the specification of a PetSet.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"replicas": {
@@ -1943,7 +1943,7 @@ func schema_k8sio_api_apps_v1_StatefulSetSpec(ref common.ReferenceCallback) comm
 					},
 					"template": {
 						SchemaProps: spec.SchemaProps{
-							Description: "template is the object that describes the pod that will be created if insufficient replicas are detected. Each pod stamped out by the StatefulSet will fulfill this Template, but have a unique identity from the rest of the StatefulSet. Each pod will be named with the format <statefulsetname>-<podindex>. For example, a pod in a StatefulSet named \"web\" with index number \"3\" would be named \"web-3\". The only allowed template.spec.restartPolicy value is \"Always\".",
+							Description: "template is the object that describes the pod that will be created if insufficient replicas are detected. Each pod stamped out by the PetSet will fulfill this Template, but have a unique identity from the rest of the PetSet. Each pod will be named with the format <petsetname>-<podindex>. For example, a pod in a PetSet named \"web\" with index number \"3\" would be named \"web-3\". The only allowed template.spec.restartPolicy value is \"Always\".",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.PodTemplateSpec"),
 						},
@@ -1955,7 +1955,7 @@ func schema_k8sio_api_apps_v1_StatefulSetSpec(ref common.ReferenceCallback) comm
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "volumeClaimTemplates is a list of claims that pods are allowed to reference. The StatefulSet controller is responsible for mapping network identities to claims in a way that maintains the identity of a pod. Every claim in this list must have at least one matching (by name) volumeMount in one container in the template. A claim in this list takes precedence over any volumes in the template, with the same name.",
+							Description: "volumeClaimTemplates is a list of claims that pods are allowed to reference. The PetSet controller is responsible for mapping network identities to claims in a way that maintains the identity of a pod. Every claim in this list must have at least one matching (by name) volumeMount in one container in the template. A claim in this list takes precedence over any volumes in the template, with the same name.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -1969,7 +1969,7 @@ func schema_k8sio_api_apps_v1_StatefulSetSpec(ref common.ReferenceCallback) comm
 					},
 					"serviceName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "serviceName is the name of the service that governs this StatefulSet. This service must exist before the StatefulSet, and is responsible for the network identity of the set. Pods get DNS/hostnames that follow the pattern: pod-specific-string.serviceName.default.svc.cluster.local where \"pod-specific-string\" is managed by the StatefulSet controller.",
+							Description: "serviceName is the name of the service that governs this PetSet. This service must exist before the PetSet, and is responsible for the network identity of the set. Pods get DNS/hostnames that follow the pattern: pod-specific-string.serviceName.default.svc.cluster.local where \"pod-specific-string\" is managed by the PetSet controller.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -1985,14 +1985,14 @@ func schema_k8sio_api_apps_v1_StatefulSetSpec(ref common.ReferenceCallback) comm
 					},
 					"updateStrategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the StatefulSet when a revision is made to Template.",
+							Description: "updateStrategy indicates the StatefulSetUpdateStrategy that will be employed to update Pods in the PetSet when a revision is made to Template.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/apps/v1.StatefulSetUpdateStrategy"),
 						},
 					},
 					"revisionHistoryLimit": {
 						SchemaProps: spec.SchemaProps{
-							Description: "revisionHistoryLimit is the maximum number of revisions that will be maintained in the StatefulSet's revision history. The revision history consists of all revisions not represented by a currently applied StatefulSetSpec version. The default value is 10.",
+							Description: "revisionHistoryLimit is the maximum number of revisions that will be maintained in the PetSet's revision history. The revision history consists of all revisions not represented by a currently applied PetSetSpec version. The default value is 10.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -2006,14 +2006,14 @@ func schema_k8sio_api_apps_v1_StatefulSetSpec(ref common.ReferenceCallback) comm
 					},
 					"persistentVolumeClaimRetentionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "persistentVolumeClaimRetentionPolicy describes the lifecycle of persistent volume claims created from volumeClaimTemplates. By default, all persistent volume claims are created as needed and retained until manually deleted. This policy allows the lifecycle to be altered, for example by deleting persistent volume claims when their stateful set is deleted, or when their pod is scaled down. This requires the StatefulSetAutoDeletePVC feature gate to be enabled, which is alpha.  +optional",
-							Ref:         ref("k8s.io/api/apps/v1.StatefulSetPersistentVolumeClaimRetentionPolicy"),
+							Description: "persistentVolumeClaimRetentionPolicy describes the lifecycle of persistent volume claims created from volumeClaimTemplates. By default, all persistent volume claims are created as needed and retained until manually deleted. This policy allows the lifecycle to be altered, for example by deleting persistent volume claims when their stateful set is deleted, or when their pod is scaled down. This requires the PetSetAutoDeletePVC feature gate to be enabled, which is alpha.  +optional",
+							Ref:         ref("k8s.io/api/apps/v1.PetSetPersistentVolumeClaimRetentionPolicy"),
 						},
 					},
 					"ordinals": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ordinals controls the numbering of replica indices in a StatefulSet. The default ordinals behavior assigns a \"0\" index to the first replica and increments the index by one for each additional replica requested. Using the ordinals field requires the StatefulSetStartOrdinal feature gate to be enabled, which is beta.",
-							Ref:         ref("k8s.io/api/apps/v1.StatefulSetOrdinals"),
+							Description: "ordinals controls the numbering of replica indices in a PetSet. The default ordinals behavior assigns a \"0\" index to the first replica and increments the index by one for each additional replica requested. Using the ordinals field requires the PetSetStartOrdinal feature gate to be enabled, which is beta.",
+							Ref:         ref("k8s.io/api/apps/v1.PetSetOrdinals"),
 						},
 					},
 				},
@@ -2021,27 +2021,27 @@ func schema_k8sio_api_apps_v1_StatefulSetSpec(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetOrdinals", "k8s.io/api/apps/v1.StatefulSetPersistentVolumeClaimRetentionPolicy", "k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/api/core/v1.PodTemplateSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+			"k8s.io/api/apps/v1.PetSetOrdinals", "k8s.io/api/apps/v1.PetSetPersistentVolumeClaimRetentionPolicy", "k8s.io/api/apps/v1.StatefulSetUpdateStrategy", "k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/api/core/v1.PodTemplateSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
-func schema_k8sio_api_apps_v1_StatefulSetStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_k8sio_api_apps_v1_PetSetStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "StatefulSetStatus represents the current state of a StatefulSet.",
+				Description: "PetSetStatus represents the current state of a PetSet.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"observedGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed for this StatefulSet. It corresponds to the StatefulSet's generation, which is updated on mutation by the API Server.",
+							Description: "observedGeneration is the most recent generation observed for this PetSet. It corresponds to the PetSet's generation, which is updated on mutation by the API Server.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "replicas is the number of Pods created by the StatefulSet controller.",
+							Description: "replicas is the number of Pods created by the PetSet controller.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -2049,42 +2049,42 @@ func schema_k8sio_api_apps_v1_StatefulSetStatus(ref common.ReferenceCallback) co
 					},
 					"readyReplicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "readyReplicas is the number of pods created for this StatefulSet with a Ready Condition.",
+							Description: "readyReplicas is the number of pods created for this PetSet with a Ready Condition.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"currentReplicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "currentReplicas is the number of Pods created by the StatefulSet controller from the StatefulSet version indicated by currentRevision.",
+							Description: "currentReplicas is the number of Pods created by the PetSet controller from the PetSet version indicated by currentRevision.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"updatedReplicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "updatedReplicas is the number of Pods created by the StatefulSet controller from the StatefulSet version indicated by updateRevision.",
+							Description: "updatedReplicas is the number of Pods created by the PetSet controller from the PetSet version indicated by updateRevision.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"currentRevision": {
 						SchemaProps: spec.SchemaProps{
-							Description: "currentRevision, if not empty, indicates the version of the StatefulSet used to generate Pods in the sequence [0,currentReplicas).",
+							Description: "currentRevision, if not empty, indicates the version of the PetSet used to generate Pods in the sequence [0,currentReplicas).",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"updateRevision": {
 						SchemaProps: spec.SchemaProps{
-							Description: "updateRevision, if not empty, indicates the version of the StatefulSet used to generate Pods in the sequence [replicas-updatedReplicas,replicas)",
+							Description: "updateRevision, if not empty, indicates the version of the PetSet used to generate Pods in the sequence [replicas-updatedReplicas,replicas)",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"collisionCount": {
 						SchemaProps: spec.SchemaProps{
-							Description: "collisionCount is the count of hash collisions for the StatefulSet. The StatefulSet controller uses this field as a collision avoidance mechanism when it needs to create the name for the newest ControllerRevision.",
+							Description: "collisionCount is the count of hash collisions for the PetSet. The PetSet controller uses this field as a collision avoidance mechanism when it needs to create the name for the newest ControllerRevision.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -2101,13 +2101,13 @@ func schema_k8sio_api_apps_v1_StatefulSetStatus(ref common.ReferenceCallback) co
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Represents the latest available observations of a statefulset's current state.",
+							Description: "Represents the latest available observations of a petset's current state.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/apps/v1.StatefulSetCondition"),
+										Ref:     ref("k8s.io/api/apps/v1.PetSetCondition"),
 									},
 								},
 							},
@@ -2115,7 +2115,7 @@ func schema_k8sio_api_apps_v1_StatefulSetStatus(ref common.ReferenceCallback) co
 					},
 					"availableReplicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Total number of available pods (ready for at least minReadySeconds) targeted by this statefulset.",
+							Description: "Total number of available pods (ready for at least minReadySeconds) targeted by this petset.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -2126,7 +2126,7 @@ func schema_k8sio_api_apps_v1_StatefulSetStatus(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.StatefulSetCondition"},
+			"k8s.io/api/apps/v1.PetSetCondition"},
 	}
 }
 
@@ -2134,12 +2134,12 @@ func schema_k8sio_api_apps_v1_StatefulSetUpdateStrategy(ref common.ReferenceCall
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "StatefulSetUpdateStrategy indicates the strategy that the StatefulSet controller will use to perform updates. It includes any additional parameters necessary to perform the update for the indicated strategy.",
+				Description: "StatefulSetUpdateStrategy indicates the strategy that the PetSet controller will use to perform updates. It includes any additional parameters necessary to perform the update for the indicated strategy.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type indicates the type of the StatefulSetUpdateStrategy. Default is RollingUpdate.\n\nPossible enum values:\n - `\"OnDelete\"` triggers the legacy behavior. Version tracking and ordered rolling restarts are disabled. Pods are recreated from the StatefulSetSpec when they are manually deleted. When a scale operation is performed with this strategy,specification version indicated by the StatefulSet's currentRevision.\n - `\"RollingUpdate\"` indicates that update will be applied to all Pods in the StatefulSet with respect to the StatefulSet ordering constraints. When a scale operation is performed with this strategy, new Pods will be created from the specification version indicated by the StatefulSet's updateRevision.",
+							Description: "Type indicates the type of the StatefulSetUpdateStrategy. Default is RollingUpdate.\n\nPossible enum values:\n - `\"OnDelete\"` triggers the legacy behavior. Version tracking and ordered rolling restarts are disabled. Pods are recreated from the PetSetSpec when they are manually deleted. When a scale operation is performed with this strategy,specification version indicated by the PetSet's currentRevision.\n - `\"RollingUpdate\"` indicates that update will be applied to all Pods in the PetSet with respect to the PetSet ordering constraints. When a scale operation is performed with this strategy, new Pods will be created from the specification version indicated by the PetSet's updateRevision.",
 							Type:        []string{"string"},
 							Format:      "",
 							Enum:        []interface{}{"OnDelete", "RollingUpdate"},
@@ -2148,14 +2148,14 @@ func schema_k8sio_api_apps_v1_StatefulSetUpdateStrategy(ref common.ReferenceCall
 					"rollingUpdate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "RollingUpdate is used to communicate parameters when Type is RollingUpdateStatefulSetStrategyType.",
-							Ref:         ref("k8s.io/api/apps/v1.RollingUpdateStatefulSetStrategy"),
+							Ref:         ref("k8s.io/api/apps/v1.RollingUpdatePetSetStrategy"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/apps/v1.RollingUpdateStatefulSetStrategy"},
+			"k8s.io/api/apps/v1.RollingUpdatePetSetStrategy"},
 	}
 }
 
@@ -4577,7 +4577,7 @@ func schema_k8sio_api_core_v1_Container(ref common.ReferenceCallback) common.Ope
 					},
 					"image": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Container image name. More info: https://kubernetes.io/docs/concepts/containers/images This field is optional to allow higher level config management to default or override container images in workload controllers like Deployments and StatefulSets.",
+							Description: "Container image name. More info: https://kubernetes.io/docs/concepts/containers/images This field is optional to allow higher level config management to default or override container images in workload controllers like Deployments and PetSets.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -14859,7 +14859,7 @@ func schema_k8sio_api_core_v1_ServiceSpec(ref common.ReferenceCallback) common.O
 					},
 					"publishNotReadyAddresses": {
 						SchemaProps: spec.SchemaProps{
-							Description: "publishNotReadyAddresses indicates that any agent which deals with endpoints for this Service should disregard any indications of ready/not-ready. The primary use case for setting this field is for a StatefulSet's Headless Service to propagate SRV DNS records for its Pods for the purpose of peer discovery. The Kubernetes controllers that generate Endpoints and EndpointSlice resources for Services interpret this to mean that all endpoints are considered \"ready\" even if the Pods themselves are not. Agents which consume only Kubernetes generated endpoints through the Endpoints or EndpointSlice resources can safely assume this behavior.",
+							Description: "publishNotReadyAddresses indicates that any agent which deals with endpoints for this Service should disregard any indications of ready/not-ready. The primary use case for setting this field is for a PetSet's Headless Service to propagate SRV DNS records for its Pods for the purpose of peer discovery. The Kubernetes controllers that generate Endpoints and EndpointSlice resources for Services interpret this to mean that all endpoints are considered \"ready\" even if the Pods themselves are not. Agents which consume only Kubernetes generated endpoints through the Endpoints or EndpointSlice resources can safely assume this behavior.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},

@@ -383,10 +383,10 @@ func (p *PerconaXtraDB) GetCertSecretName(alias PerconaXtraDBCertificateAlias) s
 	return p.CertificateName(alias)
 }
 
-func (p *PerconaXtraDB) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
+func (p *PerconaXtraDB) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
-	return checkReplicas(lister.StatefulSets(p.Namespace), labels.SelectorFromSet(p.OffshootLabels()), expectedItems)
+	return checkReplicas(lister.PetSets(p.Namespace), labels.SelectorFromSet(p.OffshootLabels()), expectedItems)
 }
 
 func (p *PerconaXtraDB) CertMountPath(alias PerconaXtraDBCertificateAlias) string {

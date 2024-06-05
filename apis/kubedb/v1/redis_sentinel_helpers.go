@@ -342,8 +342,8 @@ func (rs *RedisSentinel) GetCertSecretName(alias RedisCertificateAlias) string {
 	return rs.CertificateName(alias)
 }
 
-func (rs *RedisSentinel) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, string, error) {
+func (rs *RedisSentinel) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
-	return checkReplicas(lister.StatefulSets(rs.Namespace), labels.SelectorFromSet(rs.OffshootLabels()), expectedItems)
+	return checkReplicas(lister.PetSets(rs.Namespace), labels.SelectorFromSet(rs.OffshootLabels()), expectedItems)
 }
