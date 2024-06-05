@@ -55,11 +55,11 @@ func (m MySQL) OffshootName() string {
 }
 
 func (m MySQL) OffshootSelectors() map[string]string {
-	return m.offshootSelectors(MySQLComponentDB)
+	return m.offshootSelectors(kubedb.MySQLComponentDB)
 }
 
 func (m MySQL) RouterOffshootSelectors() map[string]string {
-	return m.offshootSelectors(MySQLComponentRouter)
+	return m.offshootSelectors(kubedb.MySQLComponentRouter)
 }
 
 func (m MySQL) offshootSelectors(component string) map[string]string {
@@ -69,7 +69,7 @@ func (m MySQL) offshootSelectors(component string) map[string]string {
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
 	if m.IsInnoDBCluster() {
-		selectors[MySQLComponentKey] = component
+		selectors[kubedb.MySQLComponentKey] = component
 	}
 	return selectors
 }
@@ -104,7 +104,7 @@ func (m MySQL) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]strin
 }
 
 func (m MySQL) offshootLabels(selector, override map[string]string) map[string]string {
-	selector[meta_util.ComponentLabelKey] = ComponentDatabase
+	selector[meta_util.ComponentLabelKey] = kubedb.ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, m.Labels, override))
 }
 
@@ -212,7 +212,7 @@ func (m mysqlStatsService) ServiceMonitorAdditionalLabels() map[string]string {
 }
 
 func (m mysqlStatsService) Path() string {
-	return DefaultStatsPath
+	return kubedb.DefaultStatsPath
 }
 
 func (m mysqlStatsService) Scheme() string {
@@ -228,7 +228,7 @@ func (m MySQL) StatsService() mona.StatsAccessor {
 }
 
 func (m MySQL) StatsServiceLabels() map[string]string {
-	return m.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
+	return m.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
 
 func (m *MySQL) UsesGroupReplication() bool {
@@ -268,7 +268,7 @@ func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion, topology *core_uti
 
 	if m.UsesGroupReplication() || m.IsInnoDBCluster() || m.IsSemiSync() {
 		if m.Spec.Replicas == nil {
-			m.Spec.Replicas = pointer.Int32P(MySQLDefaultGroupSize)
+			m.Spec.Replicas = pointer.Int32P(kubedb.MySQLDefaultGroupSize)
 		} else {
 			if m.Spec.Coordinator.SecurityContext == nil {
 				m.Spec.Coordinator.SecurityContext = &core.SecurityContext{}
@@ -290,7 +290,7 @@ func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion, topology *core_uti
 	m.setDefaultAffinity(&m.Spec.PodTemplate, m.OffshootSelectors(), topology)
 	m.SetTLSDefaults()
 	m.SetHealthCheckerDefaults()
-	apis.SetDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, DefaultResources)
+	apis.SetDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, kubedb.DefaultResources)
 	m.Spec.Monitor.SetDefaults()
 	if m.Spec.Monitor != nil && m.Spec.Monitor.Prometheus != nil {
 		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {

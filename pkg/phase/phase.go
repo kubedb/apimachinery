@@ -18,6 +18,7 @@ package phase
 
 import (
 	dapi "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -75,20 +76,20 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 	// ================================= Handling "HealthCheckPaused" condition ==========================
 	// If the condition is present and its "true", then the phase should be "Unknown".
 	// Skip if the database isn't provisioned yet.
-	if cutil.IsConditionTrue(conditions, api.DatabaseHealthCheckPaused) {
+	if cutil.IsConditionTrue(conditions, kubedb.DatabaseHealthCheckPaused) {
 		return api.DatabasePhaseUnknown
 	}
 
 	// ==================================  Handling "ProvisioningStarted" condition  ========================
 	// If the condition is present and its "true", then the phase should be "Provisioning".
-	if cutil.IsConditionTrue(conditions, api.DatabaseProvisioningStarted) {
+	if cutil.IsConditionTrue(conditions, kubedb.DatabaseProvisioningStarted) {
 		phase = api.DatabasePhaseProvisioning
 	}
 
 	// ================================== Handling "Halted" condition =======================================
 	// The "Halted" condition has higher priority, that's why it is placed at the top.
 	// If the condition is present and its "true", then the phase should be "Halted".
-	if cutil.IsConditionTrue(conditions, api.DatabaseHalted) {
+	if cutil.IsConditionTrue(conditions, kubedb.DatabaseHalted) {
 		return api.DatabasePhaseHalted
 	}
 
@@ -98,44 +99,44 @@ func PhaseFromCondition(conditions []kmapi.Condition) api.DatabasePhase {
 	//		And there will be no "false" status for "DataRestoreStarted" type.
 	// 2. if condition["DataRestored"] = false, the phase should be "NotReady".
 	//		if the status is "true", the phase should depend on the rest of checks.
-	if cutil.IsConditionTrue(conditions, api.DatabaseDataRestoreStarted) {
+	if cutil.IsConditionTrue(conditions, kubedb.DatabaseDataRestoreStarted) {
 		// TODO:
 		// 		- remove these conditions.
 		//		- It is here for backward compatibility.
 		//		- Just return "Restoring" in future.
-		if cutil.HasCondition(conditions, api.DatabaseDataRestored) {
-			if cutil.IsConditionFalse(conditions, api.DatabaseDataRestored) {
+		if cutil.HasCondition(conditions, kubedb.DatabaseDataRestored) {
+			if cutil.IsConditionFalse(conditions, kubedb.DatabaseDataRestored) {
 				return api.DatabasePhaseNotReady
 			}
 		} else {
 			return api.DatabasePhaseDataRestoring
 		}
 	}
-	if cutil.IsConditionFalse(conditions, api.DatabaseDataRestored) {
+	if cutil.IsConditionFalse(conditions, kubedb.DatabaseDataRestored) {
 		return api.DatabasePhaseNotReady
 	}
 
 	// ================================= Handling "AcceptingConnection" condition ==========================
 	// If the condition is present and its "false", then the phase should be "NotReady".
 	// Skip if the database isn't provisioned yet.
-	if cutil.IsConditionFalse(conditions, api.DatabaseAcceptingConnection) && cutil.IsConditionTrue(conditions, api.DatabaseProvisioned) {
+	if cutil.IsConditionFalse(conditions, kubedb.DatabaseAcceptingConnection) && cutil.IsConditionTrue(conditions, kubedb.DatabaseProvisioned) {
 		return api.DatabasePhaseNotReady
 	}
 
 	// ================================= Handling "ReplicaReady" condition ==========================
 	// If the condition is present and its "false", then the phase should be "Critical".
 	// Skip if the database isn't provisioned yet.
-	if cutil.IsConditionFalse(conditions, api.DatabaseReplicaReady) && cutil.IsConditionTrue(conditions, api.DatabaseProvisioned) {
+	if cutil.IsConditionFalse(conditions, kubedb.DatabaseReplicaReady) && cutil.IsConditionTrue(conditions, kubedb.DatabaseProvisioned) {
 		return api.DatabasePhaseCritical
 	}
 
 	// ================================= Handling "Ready" condition ==========================
 	// Skip if the database isn't provisioned yet.
-	if cutil.IsConditionFalse(conditions, api.DatabaseReady) && cutil.IsConditionTrue(conditions, api.DatabaseProvisioned) {
+	if cutil.IsConditionFalse(conditions, kubedb.DatabaseReady) && cutil.IsConditionTrue(conditions, kubedb.DatabaseProvisioned) {
 		return api.DatabasePhaseCritical
 	}
 	// Ready, if the database is provisioned and readinessProbe passed.
-	if cutil.IsConditionTrue(conditions, api.DatabaseReady) && cutil.IsConditionTrue(conditions, api.DatabaseProvisioned) {
+	if cutil.IsConditionTrue(conditions, kubedb.DatabaseReady) && cutil.IsConditionTrue(conditions, kubedb.DatabaseProvisioned) {
 		return api.DatabasePhaseReady
 	}
 

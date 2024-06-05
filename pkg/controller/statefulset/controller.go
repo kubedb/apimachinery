@@ -20,7 +20,6 @@ import (
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	db_cs "kubedb.dev/apimachinery/client/clientset/versioned"
 	amc "kubedb.dev/apimachinery/pkg/controller"
 
@@ -66,7 +65,7 @@ func (c *Controller) InitStsWatcher() {
 	klog.Infoln("Initializing StatefulSet watcher.....")
 	// Initialize RestoreSession Watcher
 	c.StsInformer = c.KubeInformerFactory.Apps().V1().StatefulSets().Informer()
-	c.StsQueue = queue.New(api.ResourceKindStatefulSet, c.MaxNumRequeues, c.NumThreads, c.processStatefulSet)
+	c.StsQueue = queue.New(kubedb.ResourceKindStatefulSet, c.MaxNumRequeues, c.NumThreads, c.processStatefulSet)
 	c.StsLister = c.KubeInformerFactory.Apps().V1().StatefulSets().Lister()
 	_, _ = c.StsInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {

@@ -25,6 +25,7 @@ import (
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kafka"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/crds"
 
@@ -260,7 +261,7 @@ func (k *ConnectCluster) SetDefaults() {
 
 	dbContainer := coreutil.GetContainerByName(k.Spec.PodTemplate.Spec.Containers, ConnectClusterContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, api.DefaultResources)
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
 
 	k.Spec.Monitor.SetDefaults()
@@ -316,7 +317,7 @@ func (k *ConnectCluster) setDefaultInitContainerSecurityContext(podTemplate *ofs
 		}
 
 		if initContainer != nil && (initContainer.Resources.Requests == nil && initContainer.Resources.Limits == nil) {
-			apis.SetDefaultResourceLimits(&initContainer.Resources, api.DefaultInitContainerResource)
+			apis.SetDefaultResourceLimits(&initContainer.Resources, kubedb.DefaultInitContainerResource)
 		}
 		if initContainer.SecurityContext == nil {
 			initContainer.SecurityContext = &core.SecurityContext{}

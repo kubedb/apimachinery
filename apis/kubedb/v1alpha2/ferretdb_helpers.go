@@ -103,7 +103,7 @@ func (r *FerretDB) PetSetName() string {
 }
 
 func (f *FerretDB) offshootLabels(selector, override map[string]string) map[string]string {
-	selector[meta_util.ComponentLabelKey] = ComponentDatabase
+	selector[meta_util.ComponentLabelKey] = kubedb.ComponentDatabase
 	return meta_util.FilterKeys("kubedb.com", selector, meta_util.OverwriteKeys(nil, f.Labels, override))
 }
 
@@ -204,15 +204,15 @@ func (f *FerretDB) SetDefaults() {
 		klog.Errorf("can't get the FerretDB version object %s for %s \n", err.Error(), f.Spec.Version)
 		return
 	}
-	dbContainer := coreutil.GetContainerByName(f.Spec.PodTemplate.Spec.Containers, FerretDBContainerName)
+	dbContainer := coreutil.GetContainerByName(f.Spec.PodTemplate.Spec.Containers, kubedb.FerretDBContainerName)
 	if dbContainer == nil {
 		dbContainer = &core.Container{
-			Name: FerretDBContainerName,
+			Name: kubedb.FerretDBContainerName,
 		}
 		f.Spec.PodTemplate.Spec.Containers = append(f.Spec.PodTemplate.Spec.Containers, *dbContainer)
 	}
 	if structs.IsZero(dbContainer.Resources) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
 	if dbContainer.SecurityContext == nil {
 		dbContainer.SecurityContext = &core.SecurityContext{}
@@ -294,7 +294,7 @@ func (f *FerretDB) SetTLSDefaults() {
 		return
 	}
 
-	defaultServerOrg := []string{KubeDBOrganization}
+	defaultServerOrg := []string{kubedb.KubeDBOrganization}
 	defaultServerOrgUnit := []string{string(FerretDBServerCert)}
 
 	_, cert := kmapi.GetCertificate(f.Spec.TLS.Certificates, string(FerretDBServerCert))
@@ -316,7 +316,7 @@ func (f *FerretDB) SetTLSDefaults() {
 	})
 
 	// Client-cert
-	defaultClientOrg := []string{KubeDBOrganization}
+	defaultClientOrg := []string{kubedb.KubeDBOrganization}
 	defaultClientOrgUnit := []string{string(FerretDBClientCert)}
 	_, cert = kmapi.GetCertificate(f.Spec.TLS.Certificates, string(FerretDBClientCert))
 	if cert != nil && cert.Subject != nil {
@@ -350,7 +350,7 @@ func (fs FerretDBStatsService) ServiceMonitorAdditionalLabels() map[string]strin
 }
 
 func (fs FerretDBStatsService) Path() string {
-	return FerretDBMetricsPath
+	return kubedb.FerretDBMetricsPath
 }
 
 func (fs FerretDBStatsService) Scheme() string {
@@ -375,7 +375,7 @@ func (f *FerretDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]s
 }
 
 func (f *FerretDB) StatsServiceLabels() map[string]string {
-	return f.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
+	return f.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
 
 func (f *FerretDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {

@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 
+	"kubedb.dev/apimachinery/apis/kubedb"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	apps "k8s.io/api/apps/v1"
@@ -259,8 +260,8 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case api.ResourceKindSolr:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralSolr
+	case kubedb.ResourceKindSolr:
+		dbInfo.opts.GVR.Resource = kubedb.ResourcePluralSolr
 		sl, err := c.DBClient.KubedbV1alpha2().Solrs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -289,16 +290,16 @@ func (c *Controller) extractDatabaseInfo(sts *apps.StatefulSet) (*databaseInfo, 
 
 func (c *Controller) ensureReadyReplicasCond(dbInfo *databaseInfo) error {
 	dbCond := kmapi.Condition{
-		Type:    api.DatabaseReplicaReady,
+		Type:    kubedb.DatabaseReplicaReady,
 		Message: dbInfo.msg,
 	}
 
 	if dbInfo.replicasReady {
 		dbCond.Status = metav1.ConditionTrue
-		dbCond.Reason = api.AllReplicasAreReady
+		dbCond.Reason = kubedb.AllReplicasAreReady
 	} else {
 		dbCond.Status = metav1.ConditionFalse
-		dbCond.Reason = api.SomeReplicasAreNotReady
+		dbCond.Reason = kubedb.SomeReplicasAreNotReady
 	}
 
 	// Add "ReplicasReady" condition to the respective database CR
