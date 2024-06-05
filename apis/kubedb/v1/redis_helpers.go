@@ -37,7 +37,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 const (
@@ -289,7 +289,7 @@ func (r *RedisSpec) GetPersistentSecrets() []string {
 	return secrets
 }
 
-func (r *Redis) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
+func (r *Redis) setDefaultAffinity(podTemplate *ofstv2.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
 	if podTemplate == nil {
 		return
 	} else if podTemplate.Spec.Affinity != nil {
@@ -328,7 +328,7 @@ func (r *Redis) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map
 	}
 }
 
-func (r *Redis) setDefaultContainerSecurityContext(rdVersion *catalog.RedisVersion, podTemplate *ofst.PodTemplateSpec) {
+func (r *Redis) setDefaultContainerSecurityContext(rdVersion *catalog.RedisVersion, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}

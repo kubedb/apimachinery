@@ -22,7 +22,7 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 const (
@@ -70,7 +70,7 @@ type PgBouncerSpec struct {
 
 	// PodTemplate is an optional configuration for pods.
 	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// Database to proxy by connection pooling.
 	Database Database `json:"database,omitempty"`

@@ -43,7 +43,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 const (
@@ -389,7 +389,7 @@ func (e Elasticsearch) StatsServiceLabels() map[string]string {
 	return e.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
 
-func (e Elasticsearch) setContainerSecurityContextDefaults(esVersion *catalog.ElasticsearchVersion, podTemplate *ofst.PodTemplateSpec) {
+func (e Elasticsearch) setContainerSecurityContextDefaults(esVersion *catalog.ElasticsearchVersion, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -652,7 +652,7 @@ func (e *Elasticsearch) SetMetricsExporterDefaults(esVersion *catalog.Elasticsea
 }
 
 // setDefaultAffinity
-func (e *Elasticsearch) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
+func (e *Elasticsearch) setDefaultAffinity(podTemplate *ofstv2.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
 	if podTemplate == nil {
 		return
 	} else if podTemplate.Spec.Affinity != nil {

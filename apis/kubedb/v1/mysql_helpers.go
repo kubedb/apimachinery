@@ -37,7 +37,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 func (*MySQL) Hub() {}
@@ -305,7 +305,7 @@ func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion, topology *core_uti
 }
 
 // setDefaultAffinity
-func (m *MySQL) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
+func (m *MySQL) setDefaultAffinity(podTemplate *ofstv2.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
 	if podTemplate == nil {
 		return
 	} else if podTemplate.Spec.Affinity != nil {
@@ -425,7 +425,7 @@ func (m *MySQL) GetRouterName() string {
 	return fmt.Sprintf("%s-router", m.Name)
 }
 
-func (m *MySQL) setDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLVersion, podTemplate *ofst.PodTemplateSpec) {
+func (m *MySQL) setDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLVersion, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}

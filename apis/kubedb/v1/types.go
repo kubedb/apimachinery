@@ -22,7 +22,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -156,7 +156,7 @@ type NamedServiceTemplateSpec struct {
 
 	// ServiceTemplate is an optional configuration for a service used to expose database
 	// +optional
-	ofst.ServiceTemplateSpec `json:",inline,omitempty"`
+	ofstv1.ServiceTemplateSpec `json:",inline,omitempty"`
 }
 
 type KernelSettings struct {
@@ -251,7 +251,7 @@ type NamedServiceStatus struct {
 	// Alias represents the identifier of the service.
 	Alias ServiceAlias `json:"alias"`
 
-	Ports []ofst.GatewayPort `json:"ports"`
+	Ports []ofstv1.GatewayPort `json:"ports"`
 }
 
 type NamedURL struct {
@@ -263,7 +263,7 @@ type NamedURL struct {
 	URL string `json:"url"`
 
 	// +optional
-	Port ofst.GatewayPort `json:"port,omitempty"`
+	Port ofstv1.GatewayPort `json:"port,omitempty"`
 
 	// HelmRelease is the name of the helm release used to deploy this ui
 	// The name format is typically <alias>-<db-name>

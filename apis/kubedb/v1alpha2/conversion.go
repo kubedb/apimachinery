@@ -17,11 +17,12 @@ limitations under the License.
 package v1alpha2
 
 import (
+	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+
 	"k8s.io/apimachinery/pkg/conversion"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 	ofstconv "kmodules.xyz/offshoot-api/api/v1/conversion"
 	v2 "kmodules.xyz/offshoot-api/api/v2"
-	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	rtconv "sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 

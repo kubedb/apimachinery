@@ -38,7 +38,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 func (*PerconaXtraDB) Hub() {}
@@ -247,7 +247,7 @@ func (p *PerconaXtraDB) SetDefaults(pVersion *v1alpha1.PerconaXtraDBVersion, top
 	}
 }
 
-func (p *PerconaXtraDB) setDefaultContainerSecurityContext(pVersion *v1alpha1.PerconaXtraDBVersion, podTemplate *ofst.PodTemplateSpec) {
+func (p *PerconaXtraDB) setDefaultContainerSecurityContext(pVersion *v1alpha1.PerconaXtraDBVersion, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -287,7 +287,7 @@ func (p *PerconaXtraDB) assignDefaultContainerSecurityContext(pVersion *v1alpha1
 }
 
 // setDefaultAffinity
-func (p *PerconaXtraDB) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
+func (p *PerconaXtraDB) setDefaultAffinity(podTemplate *ofstv2.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
 	if podTemplate == nil {
 		return
 	} else if podTemplate.Spec.Affinity != nil {

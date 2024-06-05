@@ -22,7 +22,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 const (
@@ -155,7 +155,7 @@ type ProxySQLSpec struct {
 
 	// PodTemplate is an optional configuration for pods used to expose proxysql
 	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional

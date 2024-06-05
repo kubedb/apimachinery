@@ -21,7 +21,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 const (
@@ -103,7 +103,7 @@ type MongoDBSpec struct {
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
@@ -284,7 +284,7 @@ type MongoArbiterNode struct {
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 }
 
 type MongoHiddenNode struct {
@@ -294,7 +294,7 @@ type MongoHiddenNode struct {
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// Replicas represents number of replicas of this specific node.
 	// If current node has replicaset enabled, then replicas is the amount of replicaset nodes.
@@ -318,7 +318,7 @@ type MongoDBNode struct {
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 }
 
 type MongoDBStatus struct {

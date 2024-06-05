@@ -42,7 +42,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 func (*Postgres) Hub() {}
@@ -325,7 +325,7 @@ func (p *Postgres) SetArbiterDefault() {
 	apis.SetDefaultResourceLimits(&p.Spec.Arbiter.Resources, kubedb.DefaultArbiter(false))
 }
 
-func (p *Postgres) setDefaultInitContainerSecurityContext(podTemplate *ofst.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
+func (p *Postgres) setDefaultInitContainerSecurityContext(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
 	if podTemplate == nil {
 		return
 	}
@@ -353,7 +353,7 @@ func (p *Postgres) setDefaultCoordinatorSecurityContext(coordinatorTemplate *Coo
 	p.assignDefaultContainerSecurityContext(coordinatorTemplate.SecurityContext, pgVersion)
 }
 
-func (p *Postgres) setDefaultContainerSecurityContext(podTemplate *ofst.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
+func (p *Postgres) setDefaultContainerSecurityContext(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
 	if podTemplate == nil {
 		return
 	}
@@ -393,7 +393,7 @@ func (p *Postgres) assignDefaultContainerSecurityContext(sc *core.SecurityContex
 }
 
 // setDefaultAffinity
-func (p *Postgres) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
+func (p *Postgres) setDefaultAffinity(podTemplate *ofstv2.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
 	if podTemplate == nil {
 		return
 	} else if podTemplate.Spec.Affinity != nil {
