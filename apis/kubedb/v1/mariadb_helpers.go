@@ -38,7 +38,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 func (*MariaDB) Hub() {}
@@ -237,7 +237,7 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion, topology *core
 	}
 }
 
-func (m *MariaDB) setDefaultContainerSecurityContext(mdVersion *v1alpha1.MariaDBVersion, podTemplate *ofst.PodTemplateSpec) {
+func (m *MariaDB) setDefaultContainerSecurityContext(mdVersion *v1alpha1.MariaDBVersion, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -277,7 +277,7 @@ func (m *MariaDB) assignDefaultContainerSecurityContext(mdVersion *v1alpha1.Mari
 }
 
 // setDefaultAffinity
-func (m *MariaDB) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
+func (m *MariaDB) setDefaultAffinity(podTemplate *ofstv2.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
 	if podTemplate == nil {
 		return
 	} else if podTemplate.Spec.Affinity != nil {

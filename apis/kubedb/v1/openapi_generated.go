@@ -441,24 +441,24 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/objectstore-api/api/v1.RestServerSpec":                          schema_kmodulesxyz_objectstore_api_api_v1_RestServerSpec(ref),
 		"kmodules.xyz/objectstore-api/api/v1.S3Spec":                                  schema_kmodulesxyz_objectstore_api_api_v1_S3Spec(ref),
 		"kmodules.xyz/objectstore-api/api/v1.SwiftSpec":                               schema_kmodulesxyz_objectstore_api_api_v1_SwiftSpec(ref),
-		"kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings":                   schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref),
-		"kmodules.xyz/offshoot-api/api/v1.EphemeralVolumeSource":                      schema_kmodulesxyz_offshoot_api_api_v1_EphemeralVolumeSource(ref),
-		"kmodules.xyz/offshoot-api/api/v1.GatewayPort":                                schema_kmodulesxyz_offshoot_api_api_v1_GatewayPort(ref),
-		"kmodules.xyz/offshoot-api/api/v1.IONiceSettings":                             schema_kmodulesxyz_offshoot_api_api_v1_IONiceSettings(ref),
-		"kmodules.xyz/offshoot-api/api/v1.NiceSettings":                               schema_kmodulesxyz_offshoot_api_api_v1_NiceSettings(ref),
-		"kmodules.xyz/offshoot-api/api/v1.ObjectMeta":                                 schema_kmodulesxyz_offshoot_api_api_v1_ObjectMeta(ref),
-		"kmodules.xyz/offshoot-api/api/v1.PartialObjectMeta":                          schema_kmodulesxyz_offshoot_api_api_v1_PartialObjectMeta(ref),
-		"kmodules.xyz/offshoot-api/api/v1.PersistentVolumeClaim":                      schema_kmodulesxyz_offshoot_api_api_v1_PersistentVolumeClaim(ref),
-		"kmodules.xyz/offshoot-api/api/v1.PersistentVolumeClaimTemplate":              schema_kmodulesxyz_offshoot_api_api_v1_PersistentVolumeClaimTemplate(ref),
-		"kmodules.xyz/offshoot-api/api/v1.PodRuntimeSettings":                         schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref),
-		"kmodules.xyz/offshoot-api/api/v1.PodSpec":                                    schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref),
-		"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec":                            schema_kmodulesxyz_offshoot_api_api_v1_PodTemplateSpec(ref),
-		"kmodules.xyz/offshoot-api/api/v1.RuntimeSettings":                            schema_kmodulesxyz_offshoot_api_api_v1_RuntimeSettings(ref),
-		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
-		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
-		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
-		"kmodules.xyz/offshoot-api/api/v1.Volume":                                     schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref),
-		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                               schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
+		"kmodules.xyz/offshoot-api/api/v2.ContainerRuntimeSettings":                   schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref),
+		"kmodules.xyz/offshoot-api/api/v2.EphemeralVolumeSource":                      schema_kmodulesxyz_offshoot_api_api_v1_EphemeralVolumeSource(ref),
+		"kmodules.xyz/offshoot-api/api/v2.GatewayPort":                                schema_kmodulesxyz_offshoot_api_api_v1_GatewayPort(ref),
+		"kmodules.xyz/offshoot-api/api/v2.IONiceSettings":                             schema_kmodulesxyz_offshoot_api_api_v1_IONiceSettings(ref),
+		"kmodules.xyz/offshoot-api/api/v2.NiceSettings":                               schema_kmodulesxyz_offshoot_api_api_v1_NiceSettings(ref),
+		"kmodules.xyz/offshoot-api/api/v2.ObjectMeta":                                 schema_kmodulesxyz_offshoot_api_api_v1_ObjectMeta(ref),
+		"kmodules.xyz/offshoot-api/api/v2.PartialObjectMeta":                          schema_kmodulesxyz_offshoot_api_api_v1_PartialObjectMeta(ref),
+		"kmodules.xyz/offshoot-api/api/v2.PersistentVolumeClaim":                      schema_kmodulesxyz_offshoot_api_api_v1_PersistentVolumeClaim(ref),
+		"kmodules.xyz/offshoot-api/api/v2.PersistentVolumeClaimTemplate":              schema_kmodulesxyz_offshoot_api_api_v1_PersistentVolumeClaimTemplate(ref),
+		"kmodules.xyz/offshoot-api/api/v2.PodRuntimeSettings":                         schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref),
+		"kmodules.xyz/offshoot-api/api/v2.PodSpec":                                    schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref),
+		"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec":                            schema_kmodulesxyz_offshoot_api_api_v1_PodTemplateSpec(ref),
+		"kmodules.xyz/offshoot-api/api/v2.RuntimeSettings":                            schema_kmodulesxyz_offshoot_api_api_v1_RuntimeSettings(ref),
+		"kmodules.xyz/offshoot-api/api/v2.ServicePort":                                schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
+		"kmodules.xyz/offshoot-api/api/v2.ServiceSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
+		"kmodules.xyz/offshoot-api/api/v2.ServiceTemplateSpec":                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
+		"kmodules.xyz/offshoot-api/api/v2.Volume":                                     schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref),
+		"kmodules.xyz/offshoot-api/api/v2.VolumeSource":                               schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Age":                                  schema_apimachinery_apis_kubedb_v1_Age(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers":                     schema_apimachinery_apis_kubedb_v1_AllowedConsumers(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ArbiterSpec":                          schema_apimachinery_apis_kubedb_v1_ArbiterSpec(ref),
@@ -22150,13 +22150,13 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref common.
 					"nice": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Settings to configure `nice` to throttle the load on cpu. More info: http://kennystechtalk.blogspot.com/2015/04/throttling-cpu-usage-with-linux-cgroups.html More info: https://oakbytes.wordpress.com/2012/06/06/linux-scheduler-cfs-and-nice/",
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.NiceSettings"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.NiceSettings"),
 						},
 					},
 					"ionice": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Settings to configure `ionice` to throttle the load on disk. More info: http://kennystechtalk.blogspot.com/2015/04/throttling-cpu-usage-with-linux-cgroups.html More info: https://oakbytes.wordpress.com/2012/06/06/linux-scheduler-cfs-and-nice/",
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.IONiceSettings"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.IONiceSettings"),
 						},
 					},
 					"envFrom": {
@@ -22197,7 +22197,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EnvFromSource", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "kmodules.xyz/offshoot-api/api/v1.IONiceSettings", "kmodules.xyz/offshoot-api/api/v1.NiceSettings"},
+			"k8s.io/api/core/v1.EnvFromSource", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "kmodules.xyz/offshoot-api/api/v2.IONiceSettings", "kmodules.xyz/offshoot-api/api/v2.NiceSettings"},
 	}
 }
 
@@ -22211,14 +22211,14 @@ func schema_kmodulesxyz_offshoot_api_api_v1_EphemeralVolumeSource(ref common.Ref
 					"volumeClaimTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Will be used to create a stand-alone PVC to provision the volume. The pod in which this EphemeralVolumeSource is embedded will be the owner of the PVC, i.e. the PVC will be deleted together with the pod.  The name of the PVC will be `<pod name>-<volume name>` where `<volume name>` is the name from the `PodSpec.Volumes` array entry. Pod validation will reject the pod if the concatenated name is not valid for a PVC (for example, too long).\n\nAn existing PVC with that name that is not owned by the pod will *not* be used for the pod to avoid using an unrelated volume by mistake. Starting the pod is then blocked until the unrelated PVC is removed. If such a pre-created PVC is meant to be used by the pod, the PVC has to updated with an owner reference to the pod once the pod exists. Normally this should not be necessary, but it may be useful when manually reconstructing a broken cluster.\n\nThis field is read-only and no changes will be made by Kubernetes to the PVC after it has been created.\n\nRequired, must not be nil.",
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PersistentVolumeClaimTemplate"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PersistentVolumeClaimTemplate"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.PersistentVolumeClaimTemplate"},
+			"kmodules.xyz/offshoot-api/api/v2.PersistentVolumeClaimTemplate"},
 	}
 }
 
@@ -22467,7 +22467,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PersistentVolumeClaim(ref common.Ref
 						SchemaProps: spec.SchemaProps{
 							Description: "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PartialObjectMeta"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PartialObjectMeta"),
 						},
 					},
 					"spec": {
@@ -22488,7 +22488,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PersistentVolumeClaim(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.PersistentVolumeClaimStatus", "kmodules.xyz/offshoot-api/api/v1.PartialObjectMeta"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.PersistentVolumeClaimStatus", "kmodules.xyz/offshoot-api/api/v2.PartialObjectMeta"},
 	}
 }
 
@@ -22503,7 +22503,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PersistentVolumeClaimTemplate(ref co
 						SchemaProps: spec.SchemaProps{
 							Description: "May contain labels and annotations that will be copied into the PVC when creating it. No other fields are allowed and will be rejected during validation.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PartialObjectMeta"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PartialObjectMeta"),
 						},
 					},
 					"spec": {
@@ -22518,7 +22518,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PersistentVolumeClaimTemplate(ref co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v1.PartialObjectMeta"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PartialObjectMeta"},
 	}
 }
 
@@ -22755,7 +22755,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref common.ReferenceCallback
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/offshoot-api/api/v1.Volume"),
+										Ref:     ref("kmodules.xyz/offshoot-api/api/v2.Volume"),
 									},
 								},
 							},
@@ -23054,7 +23054,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodDNSConfig", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint", "k8s.io/api/core/v1.VolumeMount", "kmodules.xyz/offshoot-api/api/v1.Volume"},
+			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodDNSConfig", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint", "k8s.io/api/core/v1.VolumeMount", "kmodules.xyz/offshoot-api/api/v2.Volume"},
 	}
 }
 
@@ -23069,28 +23069,28 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodTemplateSpec(ref common.Reference
 						SchemaProps: spec.SchemaProps{
 							Description: "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ObjectMeta"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.ObjectMeta"),
 						},
 					},
 					"controller": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Workload controller's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ObjectMeta"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specification of the desired behavior of the pod. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.ObjectMeta", "kmodules.xyz/offshoot-api/api/v1.PodSpec"},
+			"kmodules.xyz/offshoot-api/api/v2.ObjectMeta", "kmodules.xyz/offshoot-api/api/v2.PodSpec"},
 	}
 }
 
@@ -23102,19 +23102,19 @@ func schema_kmodulesxyz_offshoot_api_api_v1_RuntimeSettings(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"pod": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/offshoot-api/api/v1.PodRuntimeSettings"),
+							Ref: ref("kmodules.xyz/offshoot-api/api/v2.PodRuntimeSettings"),
 						},
 					},
 					"container": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings"),
+							Ref: ref("kmodules.xyz/offshoot-api/api/v2.ContainerRuntimeSettings"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v1.PodRuntimeSettings"},
+			"kmodules.xyz/offshoot-api/api/v2.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v2.PodRuntimeSettings"},
 	}
 }
 
@@ -23175,7 +23175,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/offshoot-api/api/v1.ServicePort"),
+										Ref:     ref("kmodules.xyz/offshoot-api/api/v2.ServicePort"),
 									},
 								},
 							},
@@ -23258,7 +23258,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.SessionAffinityConfig", "kmodules.xyz/offshoot-api/api/v1.ServicePort"},
+			"k8s.io/api/core/v1.SessionAffinityConfig", "kmodules.xyz/offshoot-api/api/v2.ServicePort"},
 	}
 }
 
@@ -23273,21 +23273,21 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 						SchemaProps: spec.SchemaProps{
 							Description: "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ObjectMeta"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ServiceSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.ServiceSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.ObjectMeta", "kmodules.xyz/offshoot-api/api/v1.ServiceSpec"},
+			"kmodules.xyz/offshoot-api/api/v2.ObjectMeta", "kmodules.xyz/offshoot-api/api/v2.ServiceSpec"},
 	}
 }
 
@@ -23471,7 +23471,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref common.ReferenceCallback)
 					"ephemeral": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ephemeral represents a volume that is handled by a cluster storage driver. The volume's lifecycle is tied to the pod that defines it - it will be created before the pod starts, and deleted when the pod is removed.\n\nUse this if: a) the volume is only needed while the pod runs, b) features of normal volumes like restoring from snapshot or capacity\n   tracking are needed,\nc) the storage driver is specified through a storage class, and d) the storage driver supports dynamic volume provisioning through\n   a PersistentVolumeClaim (see EphemeralVolumeSource for more\n   information on the connection between this volume type\n   and PersistentVolumeClaim).\n\nUse PersistentVolumeClaim or one of the vendor-specific APIs for volumes that persist for longer than the lifecycle of an individual pod.\n\nUse CSI for light-weight local ephemeral volumes if the CSI driver is meant to be used that way - see the documentation of the driver for more information.\n\nA pod can use both types of ephemeral volumes and persistent volumes at the same time.",
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.EphemeralVolumeSource"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.EphemeralVolumeSource"),
 						},
 					},
 				},
@@ -23479,7 +23479,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFileVolumeSource", "k8s.io/api/core/v1.CSIVolumeSource", "k8s.io/api/core/v1.CephFSVolumeSource", "k8s.io/api/core/v1.CinderVolumeSource", "k8s.io/api/core/v1.ConfigMapVolumeSource", "k8s.io/api/core/v1.DownwardAPIVolumeSource", "k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GlusterfsVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.PersistentVolumeClaimVolumeSource", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.ProjectedVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDVolumeSource", "k8s.io/api/core/v1.ScaleIOVolumeSource", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.StorageOSVolumeSource", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource", "kmodules.xyz/offshoot-api/api/v1.EphemeralVolumeSource"},
+			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFileVolumeSource", "k8s.io/api/core/v1.CSIVolumeSource", "k8s.io/api/core/v1.CephFSVolumeSource", "k8s.io/api/core/v1.CinderVolumeSource", "k8s.io/api/core/v1.ConfigMapVolumeSource", "k8s.io/api/core/v1.DownwardAPIVolumeSource", "k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GlusterfsVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.PersistentVolumeClaimVolumeSource", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.ProjectedVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDVolumeSource", "k8s.io/api/core/v1.ScaleIOVolumeSource", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.StorageOSVolumeSource", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource", "kmodules.xyz/offshoot-api/api/v2.EphemeralVolumeSource"},
 	}
 }
 
@@ -23655,14 +23655,14 @@ func schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref common.ReferenceCal
 					"ephemeral": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ephemeral represents a volume that is handled by a cluster storage driver. The volume's lifecycle is tied to the pod that defines it - it will be created before the pod starts, and deleted when the pod is removed.\n\nUse this if: a) the volume is only needed while the pod runs, b) features of normal volumes like restoring from snapshot or capacity\n   tracking are needed,\nc) the storage driver is specified through a storage class, and d) the storage driver supports dynamic volume provisioning through\n   a PersistentVolumeClaim (see EphemeralVolumeSource for more\n   information on the connection between this volume type\n   and PersistentVolumeClaim).\n\nUse PersistentVolumeClaim or one of the vendor-specific APIs for volumes that persist for longer than the lifecycle of an individual pod.\n\nUse CSI for light-weight local ephemeral volumes if the CSI driver is meant to be used that way - see the documentation of the driver for more information.\n\nA pod can use both types of ephemeral volumes and persistent volumes at the same time.",
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.EphemeralVolumeSource"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.EphemeralVolumeSource"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFileVolumeSource", "k8s.io/api/core/v1.CSIVolumeSource", "k8s.io/api/core/v1.CephFSVolumeSource", "k8s.io/api/core/v1.CinderVolumeSource", "k8s.io/api/core/v1.ConfigMapVolumeSource", "k8s.io/api/core/v1.DownwardAPIVolumeSource", "k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GlusterfsVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.PersistentVolumeClaimVolumeSource", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.ProjectedVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDVolumeSource", "k8s.io/api/core/v1.ScaleIOVolumeSource", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.StorageOSVolumeSource", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource", "kmodules.xyz/offshoot-api/api/v1.EphemeralVolumeSource"},
+			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFileVolumeSource", "k8s.io/api/core/v1.CSIVolumeSource", "k8s.io/api/core/v1.CephFSVolumeSource", "k8s.io/api/core/v1.CinderVolumeSource", "k8s.io/api/core/v1.ConfigMapVolumeSource", "k8s.io/api/core/v1.DownwardAPIVolumeSource", "k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GlusterfsVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.PersistentVolumeClaimVolumeSource", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.ProjectedVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDVolumeSource", "k8s.io/api/core/v1.ScaleIOVolumeSource", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.StorageOSVolumeSource", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource", "kmodules.xyz/offshoot-api/api/v2.EphemeralVolumeSource"},
 	}
 }
 
@@ -24479,7 +24479,7 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchSpec(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -24577,7 +24577,7 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchRoleMapSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.KernelSettings", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchRoleMapSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.KernelSettings", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -25162,7 +25162,7 @@ func schema_apimachinery_apis_kubedb_v1_MariaDBSpec(ref common.ReferenceCallback
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -25237,7 +25237,7 @@ func schema_apimachinery_apis_kubedb_v1_MariaDBSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -25430,7 +25430,7 @@ func schema_apimachinery_apis_kubedb_v1_MemcachedSpec(ref common.ReferenceCallba
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -25479,7 +25479,7 @@ func schema_apimachinery_apis_kubedb_v1_MemcachedSpec(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec"},
 	}
 }
 
@@ -25546,14 +25546,14 @@ func schema_apimachinery_apis_kubedb_v1_MongoArbiterNode(ref common.ReferenceCal
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -25634,7 +25634,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBConfigNode(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"storage": {
@@ -25654,7 +25654,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBConfigNode(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -25737,7 +25737,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBMongosNode(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 				},
@@ -25745,7 +25745,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBMongosNode(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -25780,7 +25780,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBNode(ref common.ReferenceCallback
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 				},
@@ -25788,7 +25788,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBNode(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -25852,7 +25852,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBShardNode(ref common.ReferenceCal
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"storage": {
@@ -25872,7 +25872,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBShardNode(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -26012,7 +26012,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBSpec(ref common.ReferenceCallback
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -26105,7 +26105,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoArbiterNode", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoDBReplicaSet", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoDBShardingTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoHiddenNode", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoArbiterNode", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoDBReplicaSet", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoDBShardingTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoHiddenNode", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -26177,7 +26177,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoHiddenNode(ref common.ReferenceCall
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"replicas": {
@@ -26200,7 +26200,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoHiddenNode(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -26365,14 +26365,14 @@ func schema_apimachinery_apis_kubedb_v1_MySQLRouterSpec(ref common.ReferenceCall
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose MySQL router",
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
+			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -26451,7 +26451,7 @@ func schema_apimachinery_apis_kubedb_v1_MySQLSpec(ref common.ReferenceCallback) 
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -26540,7 +26540,7 @@ func schema_apimachinery_apis_kubedb_v1_MySQLSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -26753,7 +26753,7 @@ func schema_apimachinery_apis_kubedb_v1_NamedServiceStatus(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/offshoot-api/api/v1.GatewayPort"),
+										Ref:     ref("kmodules.xyz/offshoot-api/api/v2.GatewayPort"),
 									},
 								},
 							},
@@ -26764,7 +26764,7 @@ func schema_apimachinery_apis_kubedb_v1_NamedServiceStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.GatewayPort"},
+			"kmodules.xyz/offshoot-api/api/v2.GatewayPort"},
 	}
 }
 
@@ -26786,14 +26786,14 @@ func schema_apimachinery_apis_kubedb_v1_NamedServiceTemplateSpec(ref common.Refe
 						SchemaProps: spec.SchemaProps{
 							Description: "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ObjectMeta"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ServiceSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.ServiceSpec"),
 						},
 					},
 				},
@@ -26801,7 +26801,7 @@ func schema_apimachinery_apis_kubedb_v1_NamedServiceTemplateSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.ObjectMeta", "kmodules.xyz/offshoot-api/api/v1.ServiceSpec"},
+			"kmodules.xyz/offshoot-api/api/v2.ObjectMeta", "kmodules.xyz/offshoot-api/api/v2.ServiceSpec"},
 	}
 }
 
@@ -26830,7 +26830,7 @@ func schema_apimachinery_apis_kubedb_v1_NamedURL(ref common.ReferenceCallback) c
 					"port": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("kmodules.xyz/offshoot-api/api/v1.GatewayPort"),
+							Ref:     ref("kmodules.xyz/offshoot-api/api/v2.GatewayPort"),
 						},
 					},
 					"helmRelease": {
@@ -26844,7 +26844,7 @@ func schema_apimachinery_apis_kubedb_v1_NamedURL(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/offshoot-api/api/v1.GatewayPort"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/offshoot-api/api/v2.GatewayPort"},
 	}
 }
 
@@ -27011,7 +27011,7 @@ func schema_apimachinery_apis_kubedb_v1_PerconaXtraDBSpec(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -27086,7 +27086,7 @@ func schema_apimachinery_apis_kubedb_v1_PerconaXtraDBSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1.SystemUserSecretsSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1.SystemUserSecretsSpec"},
 	}
 }
 
@@ -27282,7 +27282,7 @@ func schema_apimachinery_apis_kubedb_v1_PgBouncerSpec(ref common.ReferenceCallba
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"database": {
@@ -27348,7 +27348,7 @@ func schema_apimachinery_apis_kubedb_v1_PgBouncerSpec(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConnectionPoolConfig", "kubedb.dev/apimachinery/apis/kubedb/v1.Database", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConnectionPoolConfig", "kubedb.dev/apimachinery/apis/kubedb/v1.Database", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -27724,7 +27724,7 @@ func schema_apimachinery_apis_kubedb_v1_PostgresSpec(ref common.ReferenceCallbac
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -27810,7 +27810,7 @@ func schema_apimachinery_apis_kubedb_v1_PostgresSpec(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.ArbiterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgreLeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgresReplication", "kubedb.dev/apimachinery/apis/kubedb/v1.RemoteReplicaSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.ArbiterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgreLeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgresReplication", "kubedb.dev/apimachinery/apis/kubedb/v1.RemoteReplicaSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -28078,7 +28078,7 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose proxysql",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -28120,7 +28120,7 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -28488,7 +28488,7 @@ func schema_apimachinery_apis_kubedb_v1_RedisSentinelSpec(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -28569,7 +28569,7 @@ func schema_apimachinery_apis_kubedb_v1_RedisSentinelSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -28714,7 +28714,7 @@ func schema_apimachinery_apis_kubedb_v1_RedisSpec(ref common.ReferenceCallback) 
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -28776,7 +28776,7 @@ func schema_apimachinery_apis_kubedb_v1_RedisSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisSentinelRef", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisSentinelRef", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 

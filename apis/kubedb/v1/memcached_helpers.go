@@ -36,7 +36,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 func (*Memcached) Hub() {}
@@ -212,7 +212,7 @@ func (m *Memcached) SetHealthCheckerDefaults() {
 	}
 }
 
-func (m *Memcached) setDefaultContainerSecurityContext(mcVersion *catalog.MemcachedVersion, podTemplate *ofst.PodTemplateSpec) {
+func (m *Memcached) setDefaultContainerSecurityContext(mcVersion *catalog.MemcachedVersion, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}

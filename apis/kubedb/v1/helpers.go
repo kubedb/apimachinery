@@ -28,7 +28,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
 	apps_util "kmodules.xyz/client-go/apps/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
 	petsetutil "kubeops.dev/petset/client/clientset/versioned/typed/apps/v1"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -74,14 +74,14 @@ func HasServiceTemplate(templates []NamedServiceTemplateSpec, alias ServiceAlias
 }
 
 // GetServiceTemplate returns a pointer to the desired serviceTemplate referred by "aliaS". Otherwise, it returns nil.
-func GetServiceTemplate(templates []NamedServiceTemplateSpec, alias ServiceAlias) ofst.ServiceTemplateSpec {
+func GetServiceTemplate(templates []NamedServiceTemplateSpec, alias ServiceAlias) ofstv1.ServiceTemplateSpec {
 	for i := range templates {
 		c := templates[i]
 		if c.Alias == alias {
 			return c.ServiceTemplateSpec
 		}
 	}
-	return ofst.ServiceTemplateSpec{}
+	return ofstv1.ServiceTemplateSpec{}
 }
 
 func GetDatabasePods(db metav1.Object, stsLister appslister.StatefulSetLister, pods []core.Pod) ([]core.Pod, error) {

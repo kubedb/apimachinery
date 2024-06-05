@@ -40,7 +40,8 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 func (*MongoDB) Hub() {}
@@ -707,7 +708,7 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		}
 
 		if m.Spec.PodTemplate == nil {
-			m.Spec.PodTemplate = new(ofst.PodTemplateSpec)
+			m.Spec.PodTemplate = new(ofstv2.PodTemplateSpec)
 		}
 		if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 			m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
@@ -754,7 +755,7 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 	}
 }
 
-func (m *MongoDB) setDefaultSecurityContext(mgVersion *v1alpha1.MongoDBVersion, podTemplate *ofst.PodTemplateSpec) {
+func (m *MongoDB) setDefaultSecurityContext(mgVersion *v1alpha1.MongoDBVersion, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -969,7 +970,7 @@ func (m *MongoDB) GetDefaultReadinessProbeSpec(mgVersion *v1alpha1.MongoDBVersio
 // In operator, check if the value of probe fields is "{}".
 // For "{}", ignore readinessprobe or livenessprobe in statefulset.
 // ref: https://github.com/helm/charts/blob/345ba987722350ffde56ec34d2928c0b383940aa/stable/mongodb/templates/deployment-standalone.yaml#L93
-func (m *MongoDB) setDefaultProbes(podTemplate *ofst.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) {
+func (m *MongoDB) setDefaultProbes(podTemplate *ofstv2.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) {
 	if podTemplate == nil {
 		return
 	}
@@ -983,7 +984,7 @@ func (m *MongoDB) setDefaultProbes(podTemplate *ofst.PodTemplateSpec, mgVersion 
 }
 
 // setDefaultAffinity
-func (m *MongoDB) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
+func (m *MongoDB) setDefaultAffinity(podTemplate *ofstv1.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
 	if podTemplate == nil {
 		return
 	} else if podTemplate.Spec.Affinity != nil {
