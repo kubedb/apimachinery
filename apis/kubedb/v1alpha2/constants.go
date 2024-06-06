@@ -677,6 +677,8 @@ const (
 	DatabaseReadAccess = "DatabaseReadAccess"
 	// user for databases that have write access
 	DatabaseWriteAccess = "DatabaseWriteAccess"
+	// check dependencies are ready
+	DatabaseDependencyReady = "DatabaseDependencyReady"
 
 	// Condition reasons
 	DataRestoreStartedByExternalInitializer    = "DataRestoreStartedByExternalInitializer"
@@ -698,6 +700,7 @@ const (
 	DatabaseWriteAccessCheckFailed             = "DatabaseWriteAccessCheckFailed"
 	InternalUsersCredentialSyncFailed          = "InternalUsersCredentialsSyncFailed"
 	InternalUsersCredentialsSyncedSuccessfully = "InternalUsersCredentialsSyncedSuccessfully"
+	FailedToEnsureDependency                   = "FailedToEnsureDependency"
 )
 
 const (
@@ -966,7 +969,7 @@ const (
 	DruidExporterPort       = 9104
 
 	// Common Runtime Configurations Properties
-	// ZooKeeperSpec
+	// ZooKeeper
 	DruidZKServiceHost              = "druid.zk.service.host"
 	DruidZKPathsBase                = "druid.zk.paths.base"
 	DruidZKServiceCompress          = "druid.zk.service.compress"
@@ -983,6 +986,25 @@ const (
 	DruidMetadataStorageConnectorPassword          = "druid.metadata.storage.connector.password"
 	DruidMetadataStorageConnectorPasswordEnvConfig = "{\"type\": \"environment\", \"variable\": \"DRUID_METADATA_STORAGE_PASSWORD\"}"
 	DruidMetadataStorageCreateTables               = "druid.metadata.storage.connector.createTables"
+
+	// MySQL TLS
+	DruidMetadataMySQLUseSSL                          = "druid.metadata.mysql.ssl.useSSL"
+	DruidMetadataMySQLClientCertKeyStoreURL           = "druid.metadata.mysql.ssl.clientCertificateKeyStoreUrl"
+	DruidMetadataMySQLClientCertKeyStorePath          = "/opt/druid/conf/tls/metadatakeystore.jks"
+	DruidMetadataMySQLClientCertKeyStoreType          = "druid.metadata.mysql.ssl.clientCertificateKeyStoreType"
+	DruidMetadataMySQLClientCertKeyStoreTypeJKS       = "JKS"
+	DruidMetadataMySQLClientCertKeyStorePassword      = "druid.metadata.mysql.ssl.clientCertificateKeyStorePassword"
+	DruidMetadataMySQLClientCertKeyStorePasswordValue = "password"
+
+	// Postgres TLS
+	DruidMetadataPostgresUseSSL    = "druid.metadata.postgres.ssl.useSSL"
+	DruidMetadataPGUseSSLMode      = "druid.metadata.postgres.ssl.sslMode"
+	DruidMetadataPGSSLCert         = "druid.metadata.postgres.ssl.sslCert"
+	DruidMetadataPGSSLCertPath     = "/opt/druid/conf/tls/tls.crt"
+	DruidMetadataPGSSLKey          = "druid.metadata.postgres.ssl.sslKey"
+	DruidMetadataPGSSLKeyPath      = "/opt/druid/conf/tls/tls.key"
+	DruidMetadataPGSSLRootCert     = "druid.metadata.postgres.ssl.sslRootCert"
+	DruidMetadataPGSSLRootCertPath = "/opt/druid/conf/tls/ca.cert"
 
 	// Deep Storage
 	DruidDeepStorageTypeKey      = "druid.storage.type"

@@ -24904,7 +24904,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 						},
 					},
 				},
-				Required: []string{"version", "metadataStorage", "deepStorage"},
+				Required: []string{"version", "deepStorage"},
 			},
 		},
 		Dependencies: []string{
@@ -27984,6 +27984,25 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MetadataStorage(ref common.Referen
 						SchemaProps: spec.SchemaProps{
 							Description: "If Druid has the permission to create new tables",
 							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"linkedDB": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"externallyManaged": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version of the MySQL/PG used",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
@@ -33297,6 +33316,19 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZookeeperRef(ref common.ReferenceC
 					"pathsBase": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Base ZooKeeperSpec path",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"externallyManaged": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version of the ZK used",
 							Type:        []string{"string"},
 							Format:      "",
 						},
