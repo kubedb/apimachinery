@@ -31,9 +31,10 @@ import (
 	conversion "k8s.io/apimachinery/pkg/conversion"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	intstr "k8s.io/apimachinery/pkg/util/intstr"
-	apiv1 "kmodules.xyz/client-go/api/v1"
+	clientgoapiv1 "kmodules.xyz/client-go/api/v1"
 	monitoringagentapiapiv1 "kmodules.xyz/monitoring-agent-api/api/v1"
-	offshootapiapiv1 "kmodules.xyz/offshoot-api/api/v1"
+	apiv1 "kmodules.xyz/offshoot-api/api/v1"
+	v2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 func init() {
@@ -933,6 +934,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*apiv1.PodTemplateSpec)(nil), (*v2.PodTemplateSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(a.(*apiv1.PodTemplateSpec), b.(*v2.PodTemplateSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v2.PodTemplateSpec)(nil), (*apiv1.PodTemplateSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(a.(*v2.PodTemplateSpec), b.(*apiv1.PodTemplateSpec), scope)
+	}); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -1026,9 +1037,9 @@ func Convert_v1_Archiver_To_v1alpha2_Archiver(in *v1.Archiver, out *Archiver, s 
 
 func autoConvert_v1alpha2_ArchiverRecovery_To_v1_ArchiverRecovery(in *ArchiverRecovery, out *v1.ArchiverRecovery, s conversion.Scope) error {
 	out.RecoveryTimestamp = in.RecoveryTimestamp
-	out.EncryptionSecret = (*apiv1.ObjectReference)(unsafe.Pointer(in.EncryptionSecret))
-	out.ManifestRepository = (*apiv1.ObjectReference)(unsafe.Pointer(in.ManifestRepository))
-	out.FullDBRepository = (*apiv1.ObjectReference)(unsafe.Pointer(in.FullDBRepository))
+	out.EncryptionSecret = (*clientgoapiv1.ObjectReference)(unsafe.Pointer(in.EncryptionSecret))
+	out.ManifestRepository = (*clientgoapiv1.ObjectReference)(unsafe.Pointer(in.ManifestRepository))
+	out.FullDBRepository = (*clientgoapiv1.ObjectReference)(unsafe.Pointer(in.FullDBRepository))
 	return nil
 }
 
@@ -1039,9 +1050,9 @@ func Convert_v1alpha2_ArchiverRecovery_To_v1_ArchiverRecovery(in *ArchiverRecove
 
 func autoConvert_v1_ArchiverRecovery_To_v1alpha2_ArchiverRecovery(in *v1.ArchiverRecovery, out *ArchiverRecovery, s conversion.Scope) error {
 	out.RecoveryTimestamp = in.RecoveryTimestamp
-	out.EncryptionSecret = (*apiv1.ObjectReference)(unsafe.Pointer(in.EncryptionSecret))
-	out.ManifestRepository = (*apiv1.ObjectReference)(unsafe.Pointer(in.ManifestRepository))
-	out.FullDBRepository = (*apiv1.ObjectReference)(unsafe.Pointer(in.FullDBRepository))
+	out.EncryptionSecret = (*clientgoapiv1.ObjectReference)(unsafe.Pointer(in.EncryptionSecret))
+	out.ManifestRepository = (*clientgoapiv1.ObjectReference)(unsafe.Pointer(in.ManifestRepository))
+	out.FullDBRepository = (*clientgoapiv1.ObjectReference)(unsafe.Pointer(in.FullDBRepository))
 	return nil
 }
 
@@ -1262,7 +1273,17 @@ func Convert_v1_ElasticsearchClusterTopology_To_v1alpha2_ElasticsearchClusterTop
 
 func autoConvert_v1alpha2_ElasticsearchList_To_v1_ElasticsearchList(in *ElasticsearchList, out *v1.ElasticsearchList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]v1.Elasticsearch)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]v1.Elasticsearch, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha2_Elasticsearch_To_v1_Elasticsearch(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -1273,7 +1294,17 @@ func Convert_v1alpha2_ElasticsearchList_To_v1_ElasticsearchList(in *Elasticsearc
 
 func autoConvert_v1_ElasticsearchList_To_v1alpha2_ElasticsearchList(in *v1.ElasticsearchList, out *ElasticsearchList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]Elasticsearch)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]Elasticsearch, len(*in))
+		for i := range *in {
+			if err := Convert_v1_Elasticsearch_To_v1alpha2_Elasticsearch(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -1362,10 +1393,12 @@ func autoConvert_v1alpha2_ElasticsearchSpec_To_v1_ElasticsearchSpec(in *Elastics
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
 	out.SecureConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.SecureConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.MaxUnavailable = (*intstr.IntOrString)(unsafe.Pointer(in.MaxUnavailable))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.InternalUsers = *(*map[string]v1.ElasticsearchUserSpec)(unsafe.Pointer(&in.InternalUsers))
 	out.RolesMapping = *(*map[string]v1.ElasticsearchRoleMapSpec)(unsafe.Pointer(&in.RolesMapping))
 	out.Halted = in.Halted
@@ -1397,10 +1430,12 @@ func autoConvert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(in *v1.Elast
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
 	out.SecureConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.SecureConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.MaxUnavailable = (*intstr.IntOrString)(unsafe.Pointer(in.MaxUnavailable))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.InternalUsers = *(*map[string]ElasticsearchUserSpec)(unsafe.Pointer(&in.InternalUsers))
 	out.RolesMapping = *(*map[string]ElasticsearchRoleMapSpec)(unsafe.Pointer(&in.RolesMapping))
 	out.Halted = in.Halted
@@ -1419,7 +1454,7 @@ func Convert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(in *v1.Elasticse
 func autoConvert_v1alpha2_ElasticsearchStatus_To_v1_ElasticsearchStatus(in *ElasticsearchStatus, out *v1.ElasticsearchStatus, s conversion.Scope) error {
 	out.Phase = v1.DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*v1.Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*v1.Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -1433,7 +1468,7 @@ func Convert_v1alpha2_ElasticsearchStatus_To_v1_ElasticsearchStatus(in *Elastics
 func autoConvert_v1_ElasticsearchStatus_To_v1alpha2_ElasticsearchStatus(in *v1.ElasticsearchStatus, out *ElasticsearchStatus, s conversion.Scope) error {
 	out.Phase = DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -1630,7 +1665,17 @@ func Convert_v1_MariaDB_To_v1alpha2_MariaDB(in *v1.MariaDB, out *MariaDB, s conv
 
 func autoConvert_v1alpha2_MariaDBList_To_v1_MariaDBList(in *MariaDBList, out *v1.MariaDBList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]v1.MariaDB)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]v1.MariaDB, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha2_MariaDB_To_v1_MariaDB(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -1641,7 +1686,17 @@ func Convert_v1alpha2_MariaDBList_To_v1_MariaDBList(in *MariaDBList, out *v1.Mar
 
 func autoConvert_v1_MariaDBList_To_v1alpha2_MariaDBList(in *v1.MariaDBList, out *MariaDBList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]MariaDB)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]MariaDB, len(*in))
+		for i := range *in {
+			if err := Convert_v1_MariaDB_To_v1alpha2_MariaDB(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -1663,10 +1718,12 @@ func autoConvert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in *MariaDBSpec, out *v1
 	out.Init = (*v1.InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.RequireSSL = in.RequireSSL
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
@@ -1696,10 +1753,12 @@ func autoConvert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(in *v1.MariaDBSpec, out 
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.RequireSSL = in.RequireSSL
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
@@ -1719,7 +1778,7 @@ func Convert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(in *v1.MariaDBSpec, out *Mar
 func autoConvert_v1alpha2_MariaDBStatus_To_v1_MariaDBStatus(in *MariaDBStatus, out *v1.MariaDBStatus, s conversion.Scope) error {
 	out.Phase = v1.DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*v1.Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*v1.Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -1733,7 +1792,7 @@ func Convert_v1alpha2_MariaDBStatus_To_v1_MariaDBStatus(in *MariaDBStatus, out *
 func autoConvert_v1_MariaDBStatus_To_v1alpha2_MariaDBStatus(in *v1.MariaDBStatus, out *MariaDBStatus, s conversion.Scope) error {
 	out.Phase = DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -1778,7 +1837,17 @@ func Convert_v1_Memcached_To_v1alpha2_Memcached(in *v1.Memcached, out *Memcached
 
 func autoConvert_v1alpha2_MemcachedList_To_v1_MemcachedList(in *MemcachedList, out *v1.MemcachedList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]v1.Memcached)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]v1.Memcached, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha2_Memcached_To_v1_Memcached(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -1789,7 +1858,17 @@ func Convert_v1alpha2_MemcachedList_To_v1_MemcachedList(in *MemcachedList, out *
 
 func autoConvert_v1_MemcachedList_To_v1alpha2_MemcachedList(in *v1.MemcachedList, out *MemcachedList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]Memcached)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]Memcached, len(*in))
+		for i := range *in {
+			if err := Convert_v1_Memcached_To_v1alpha2_Memcached(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -1804,9 +1883,11 @@ func autoConvert_v1alpha2_MemcachedSpec_To_v1_MemcachedSpec(in *MemcachedSpec, o
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
 	out.DataVolume = (*corev1.VolumeSource)(unsafe.Pointer(in.DataVolume))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	out.HealthChecker = in.HealthChecker
@@ -1824,9 +1905,11 @@ func autoConvert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec(in *v1.MemcachedSpec
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
 	out.DataVolume = (*corev1.VolumeSource)(unsafe.Pointer(in.DataVolume))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	out.HealthChecker = in.HealthChecker
@@ -1841,7 +1924,7 @@ func Convert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec(in *v1.MemcachedSpec, ou
 func autoConvert_v1alpha2_MemcachedStatus_To_v1_MemcachedStatus(in *MemcachedStatus, out *v1.MemcachedStatus, s conversion.Scope) error {
 	out.Phase = v1.DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.Gateway = (*v1.Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
 }
@@ -1854,7 +1937,7 @@ func Convert_v1alpha2_MemcachedStatus_To_v1_MemcachedStatus(in *MemcachedStatus,
 func autoConvert_v1_MemcachedStatus_To_v1alpha2_MemcachedStatus(in *v1.MemcachedStatus, out *MemcachedStatus, s conversion.Scope) error {
 	out.Phase = DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.Gateway = (*Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
 }
@@ -1866,7 +1949,9 @@ func Convert_v1_MemcachedStatus_To_v1alpha2_MemcachedStatus(in *v1.MemcachedStat
 
 func autoConvert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode(in *MongoArbiterNode, out *v1.MongoArbiterNode, s conversion.Scope) error {
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -1877,7 +1962,9 @@ func Convert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode(in *MongoArbiterNo
 
 func autoConvert_v1_MongoArbiterNode_To_v1alpha2_MongoArbiterNode(in *v1.MongoArbiterNode, out *MongoArbiterNode, s conversion.Scope) error {
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -1948,7 +2035,17 @@ func Convert_v1_MongoDBConfigNode_To_v1alpha2_MongoDBConfigNode(in *v1.MongoDBCo
 
 func autoConvert_v1alpha2_MongoDBList_To_v1_MongoDBList(in *MongoDBList, out *v1.MongoDBList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]v1.MongoDB)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]v1.MongoDB, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha2_MongoDB_To_v1_MongoDB(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -1959,7 +2056,17 @@ func Convert_v1alpha2_MongoDBList_To_v1_MongoDBList(in *MongoDBList, out *v1.Mon
 
 func autoConvert_v1_MongoDBList_To_v1alpha2_MongoDBList(in *v1.MongoDBList, out *MongoDBList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]MongoDB)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]MongoDB, len(*in))
+		for i := range *in {
+			if err := Convert_v1_MongoDB_To_v1alpha2_MongoDB(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -1996,7 +2103,9 @@ func autoConvert_v1alpha2_MongoDBNode_To_v1_MongoDBNode(in *MongoDBNode, out *v1
 	out.Replicas = in.Replicas
 	out.Prefix = in.Prefix
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -2009,7 +2118,9 @@ func autoConvert_v1_MongoDBNode_To_v1alpha2_MongoDBNode(in *v1.MongoDBNode, out 
 	out.Replicas = in.Replicas
 	out.Prefix = in.Prefix
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -2111,7 +2222,15 @@ func autoConvert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.ReplicaSet = (*v1.MongoDBReplicaSet)(unsafe.Pointer(in.ReplicaSet))
-	out.ShardTopology = (*v1.MongoDBShardingTopology)(unsafe.Pointer(in.ShardTopology))
+	if in.ShardTopology != nil {
+		in, out := &in.ShardTopology, &out.ShardTopology
+		*out = new(v1.MongoDBShardingTopology)
+		if err := Convert_v1alpha2_MongoDBShardingTopology_To_v1_MongoDBShardingTopology(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.ShardTopology = nil
+	}
 	out.StorageType = v1.StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.EphemeralStorage = (*corev1.EmptyDirVolumeSource)(unsafe.Pointer(in.EphemeralStorage))
@@ -2121,9 +2240,17 @@ func autoConvert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1
 	out.Init = (*v1.InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = (*offshootapiapiv1.PodTemplateSpec)(unsafe.Pointer(in.PodTemplate))
+	if in.PodTemplate != nil {
+		in, out := &in.PodTemplate, &out.PodTemplate
+		*out = new(v2.PodTemplateSpec)
+		if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.PodTemplate = nil
+	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.KeyFileSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.KeyFileSecret))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
@@ -2132,8 +2259,24 @@ func autoConvert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1
 		return err
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
-	out.Arbiter = (*v1.MongoArbiterNode)(unsafe.Pointer(in.Arbiter))
-	out.Hidden = (*v1.MongoHiddenNode)(unsafe.Pointer(in.Hidden))
+	if in.Arbiter != nil {
+		in, out := &in.Arbiter, &out.Arbiter
+		*out = new(v1.MongoArbiterNode)
+		if err := Convert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Arbiter = nil
+	}
+	if in.Hidden != nil {
+		in, out := &in.Hidden, &out.Hidden
+		*out = new(v1.MongoHiddenNode)
+		if err := Convert_v1alpha2_MongoHiddenNode_To_v1_MongoHiddenNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Hidden = nil
+	}
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*v1.Archiver)(unsafe.Pointer(in.Archiver))
 	return nil
@@ -2151,7 +2294,15 @@ func autoConvert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out 
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.ReplicaSet = (*MongoDBReplicaSet)(unsafe.Pointer(in.ReplicaSet))
-	out.ShardTopology = (*MongoDBShardingTopology)(unsafe.Pointer(in.ShardTopology))
+	if in.ShardTopology != nil {
+		in, out := &in.ShardTopology, &out.ShardTopology
+		*out = new(MongoDBShardingTopology)
+		if err := Convert_v1_MongoDBShardingTopology_To_v1alpha2_MongoDBShardingTopology(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.ShardTopology = nil
+	}
 	out.StorageType = StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.EphemeralStorage = (*corev1.EmptyDirVolumeSource)(unsafe.Pointer(in.EphemeralStorage))
@@ -2161,9 +2312,17 @@ func autoConvert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out 
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = (*offshootapiapiv1.PodTemplateSpec)(unsafe.Pointer(in.PodTemplate))
+	if in.PodTemplate != nil {
+		in, out := &in.PodTemplate, &out.PodTemplate
+		*out = new(apiv1.PodTemplateSpec)
+		if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.PodTemplate = nil
+	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.KeyFileSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.KeyFileSecret))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
@@ -2172,8 +2331,24 @@ func autoConvert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out 
 		return err
 	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
-	out.Arbiter = (*MongoArbiterNode)(unsafe.Pointer(in.Arbiter))
-	out.Hidden = (*MongoHiddenNode)(unsafe.Pointer(in.Hidden))
+	if in.Arbiter != nil {
+		in, out := &in.Arbiter, &out.Arbiter
+		*out = new(MongoArbiterNode)
+		if err := Convert_v1_MongoArbiterNode_To_v1alpha2_MongoArbiterNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Arbiter = nil
+	}
+	if in.Hidden != nil {
+		in, out := &in.Hidden, &out.Hidden
+		*out = new(MongoHiddenNode)
+		if err := Convert_v1_MongoHiddenNode_To_v1alpha2_MongoHiddenNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Hidden = nil
+	}
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*Archiver)(unsafe.Pointer(in.Archiver))
 	return nil
@@ -2187,7 +2362,7 @@ func Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out *Mon
 func autoConvert_v1alpha2_MongoDBStatus_To_v1_MongoDBStatus(in *MongoDBStatus, out *v1.MongoDBStatus, s conversion.Scope) error {
 	out.Phase = v1.DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*v1.Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*v1.Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -2201,7 +2376,7 @@ func Convert_v1alpha2_MongoDBStatus_To_v1_MongoDBStatus(in *MongoDBStatus, out *
 func autoConvert_v1_MongoDBStatus_To_v1alpha2_MongoDBStatus(in *v1.MongoDBStatus, out *MongoDBStatus, s conversion.Scope) error {
 	out.Phase = DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -2214,7 +2389,9 @@ func Convert_v1_MongoDBStatus_To_v1alpha2_MongoDBStatus(in *v1.MongoDBStatus, ou
 
 func autoConvert_v1alpha2_MongoHiddenNode_To_v1_MongoHiddenNode(in *MongoHiddenNode, out *v1.MongoHiddenNode, s conversion.Scope) error {
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.Replicas = in.Replicas
 	out.Storage = in.Storage
 	return nil
@@ -2227,7 +2404,9 @@ func Convert_v1alpha2_MongoHiddenNode_To_v1_MongoHiddenNode(in *MongoHiddenNode,
 
 func autoConvert_v1_MongoHiddenNode_To_v1alpha2_MongoHiddenNode(in *v1.MongoHiddenNode, out *MongoHiddenNode, s conversion.Scope) error {
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.Replicas = in.Replicas
 	out.Storage = in.Storage
 	return nil
@@ -2320,7 +2499,17 @@ func Convert_v1_MySQLInnoDBClusterSpec_To_v1alpha2_MySQLInnoDBClusterSpec(in *v1
 
 func autoConvert_v1alpha2_MySQLList_To_v1_MySQLList(in *MySQLList, out *v1.MySQLList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]v1.MySQL)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]v1.MySQL, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha2_MySQL_To_v1_MySQL(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -2331,7 +2520,17 @@ func Convert_v1alpha2_MySQLList_To_v1_MySQLList(in *MySQLList, out *v1.MySQLList
 
 func autoConvert_v1_MySQLList_To_v1alpha2_MySQLList(in *v1.MySQLList, out *MySQLList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]MySQL)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]MySQL, len(*in))
+		for i := range *in {
+			if err := Convert_v1_MySQL_To_v1alpha2_MySQL(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -2342,7 +2541,15 @@ func Convert_v1_MySQLList_To_v1alpha2_MySQLList(in *v1.MySQLList, out *MySQLList
 
 func autoConvert_v1alpha2_MySQLRouterSpec_To_v1_MySQLRouterSpec(in *MySQLRouterSpec, out *v1.MySQLRouterSpec, s conversion.Scope) error {
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.PodTemplate = (*offshootapiapiv1.PodTemplateSpec)(unsafe.Pointer(in.PodTemplate))
+	if in.PodTemplate != nil {
+		in, out := &in.PodTemplate, &out.PodTemplate
+		*out = new(v2.PodTemplateSpec)
+		if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.PodTemplate = nil
+	}
 	return nil
 }
 
@@ -2353,7 +2560,15 @@ func Convert_v1alpha2_MySQLRouterSpec_To_v1_MySQLRouterSpec(in *MySQLRouterSpec,
 
 func autoConvert_v1_MySQLRouterSpec_To_v1alpha2_MySQLRouterSpec(in *v1.MySQLRouterSpec, out *MySQLRouterSpec, s conversion.Scope) error {
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.PodTemplate = (*offshootapiapiv1.PodTemplateSpec)(unsafe.Pointer(in.PodTemplate))
+	if in.PodTemplate != nil {
+		in, out := &in.PodTemplate, &out.PodTemplate
+		*out = new(apiv1.PodTemplateSpec)
+		if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.PodTemplate = nil
+	}
 	return nil
 }
 
@@ -2368,17 +2583,27 @@ func autoConvert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(in *MySQLSpec, out *v1.MySQL
 	}
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.Topology = (*v1.MySQLTopology)(unsafe.Pointer(in.Topology))
+	if in.Topology != nil {
+		in, out := &in.Topology, &out.Topology
+		*out = new(v1.MySQLTopology)
+		if err := Convert_v1alpha2_MySQLTopology_To_v1_MySQLTopology(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Topology = nil
+	}
 	out.StorageType = v1.StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
 	out.Init = (*v1.InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.RequireSSL = in.RequireSSL
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	out.UseAddressType = v1.AddressType(in.UseAddressType)
@@ -2403,17 +2628,27 @@ func autoConvert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(in *v1.MySQLSpec, out *MySQL
 	}
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.Topology = (*MySQLTopology)(unsafe.Pointer(in.Topology))
+	if in.Topology != nil {
+		in, out := &in.Topology, &out.Topology
+		*out = new(MySQLTopology)
+		if err := Convert_v1_MySQLTopology_To_v1alpha2_MySQLTopology(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Topology = nil
+	}
 	out.StorageType = StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.RequireSSL = in.RequireSSL
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	out.UseAddressType = AddressType(in.UseAddressType)
@@ -2435,7 +2670,7 @@ func Convert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(in *v1.MySQLSpec, out *MySQLSpec
 func autoConvert_v1alpha2_MySQLStatus_To_v1_MySQLStatus(in *MySQLStatus, out *v1.MySQLStatus, s conversion.Scope) error {
 	out.Phase = v1.DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*v1.Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*v1.Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -2449,7 +2684,7 @@ func Convert_v1alpha2_MySQLStatus_To_v1_MySQLStatus(in *MySQLStatus, out *v1.MyS
 func autoConvert_v1_MySQLStatus_To_v1alpha2_MySQLStatus(in *v1.MySQLStatus, out *MySQLStatus, s conversion.Scope) error {
 	out.Phase = DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -2463,7 +2698,15 @@ func Convert_v1_MySQLStatus_To_v1alpha2_MySQLStatus(in *v1.MySQLStatus, out *MyS
 func autoConvert_v1alpha2_MySQLTopology_To_v1_MySQLTopology(in *MySQLTopology, out *v1.MySQLTopology, s conversion.Scope) error {
 	out.Mode = (*v1.MySQLMode)(unsafe.Pointer(in.Mode))
 	out.Group = (*v1.MySQLGroupSpec)(unsafe.Pointer(in.Group))
-	out.InnoDBCluster = (*v1.MySQLInnoDBClusterSpec)(unsafe.Pointer(in.InnoDBCluster))
+	if in.InnoDBCluster != nil {
+		in, out := &in.InnoDBCluster, &out.InnoDBCluster
+		*out = new(v1.MySQLInnoDBClusterSpec)
+		if err := Convert_v1alpha2_MySQLInnoDBClusterSpec_To_v1_MySQLInnoDBClusterSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.InnoDBCluster = nil
+	}
 	out.RemoteReplica = (*v1.RemoteReplicaSpec)(unsafe.Pointer(in.RemoteReplica))
 	out.SemiSync = (*v1.SemiSyncSpec)(unsafe.Pointer(in.SemiSync))
 	return nil
@@ -2477,7 +2720,15 @@ func Convert_v1alpha2_MySQLTopology_To_v1_MySQLTopology(in *MySQLTopology, out *
 func autoConvert_v1_MySQLTopology_To_v1alpha2_MySQLTopology(in *v1.MySQLTopology, out *MySQLTopology, s conversion.Scope) error {
 	out.Mode = (*MySQLMode)(unsafe.Pointer(in.Mode))
 	out.Group = (*MySQLGroupSpec)(unsafe.Pointer(in.Group))
-	out.InnoDBCluster = (*MySQLInnoDBClusterSpec)(unsafe.Pointer(in.InnoDBCluster))
+	if in.InnoDBCluster != nil {
+		in, out := &in.InnoDBCluster, &out.InnoDBCluster
+		*out = new(MySQLInnoDBClusterSpec)
+		if err := Convert_v1_MySQLInnoDBClusterSpec_To_v1alpha2_MySQLInnoDBClusterSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.InnoDBCluster = nil
+	}
 	out.RemoteReplica = (*RemoteReplicaSpec)(unsafe.Pointer(in.RemoteReplica))
 	out.SemiSync = (*SemiSyncSpec)(unsafe.Pointer(in.SemiSync))
 	return nil
@@ -2534,7 +2785,7 @@ func Convert_v1_MySQLUser_To_v1alpha2_MySQLUser(in *v1.MySQLUser, out *MySQLUser
 
 func autoConvert_v1alpha2_NamedServiceStatus_To_v1_NamedServiceStatus(in *NamedServiceStatus, out *v1.NamedServiceStatus, s conversion.Scope) error {
 	out.Alias = v1.ServiceAlias(in.Alias)
-	out.Ports = *(*[]offshootapiapiv1.GatewayPort)(unsafe.Pointer(&in.Ports))
+	out.Ports = *(*[]apiv1.GatewayPort)(unsafe.Pointer(&in.Ports))
 	return nil
 }
 
@@ -2545,7 +2796,7 @@ func Convert_v1alpha2_NamedServiceStatus_To_v1_NamedServiceStatus(in *NamedServi
 
 func autoConvert_v1_NamedServiceStatus_To_v1alpha2_NamedServiceStatus(in *v1.NamedServiceStatus, out *NamedServiceStatus, s conversion.Scope) error {
 	out.Alias = ServiceAlias(in.Alias)
-	out.Ports = *(*[]offshootapiapiv1.GatewayPort)(unsafe.Pointer(&in.Ports))
+	out.Ports = *(*[]apiv1.GatewayPort)(unsafe.Pointer(&in.Ports))
 	return nil
 }
 
@@ -2636,7 +2887,17 @@ func Convert_v1_PerconaXtraDB_To_v1alpha2_PerconaXtraDB(in *v1.PerconaXtraDB, ou
 
 func autoConvert_v1alpha2_PerconaXtraDBList_To_v1_PerconaXtraDBList(in *PerconaXtraDBList, out *v1.PerconaXtraDBList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]v1.PerconaXtraDB)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]v1.PerconaXtraDB, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha2_PerconaXtraDB_To_v1_PerconaXtraDB(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -2647,7 +2908,17 @@ func Convert_v1alpha2_PerconaXtraDBList_To_v1_PerconaXtraDBList(in *PerconaXtraD
 
 func autoConvert_v1_PerconaXtraDBList_To_v1alpha2_PerconaXtraDBList(in *v1.PerconaXtraDBList, out *PerconaXtraDBList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]PerconaXtraDB)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]PerconaXtraDB, len(*in))
+		for i := range *in {
+			if err := Convert_v1_PerconaXtraDB_To_v1alpha2_PerconaXtraDB(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -2668,10 +2939,12 @@ func autoConvert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec(in *PerconaX
 	out.Init = (*v1.InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.RequireSSL = in.RequireSSL
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
@@ -2700,10 +2973,12 @@ func autoConvert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(in *v1.Perco
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.RequireSSL = in.RequireSSL
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
@@ -2723,7 +2998,7 @@ func Convert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(in *v1.PerconaXt
 func autoConvert_v1alpha2_PerconaXtraDBStatus_To_v1_PerconaXtraDBStatus(in *PerconaXtraDBStatus, out *v1.PerconaXtraDBStatus, s conversion.Scope) error {
 	out.Phase = v1.DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*v1.Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*v1.Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -2737,7 +3012,7 @@ func Convert_v1alpha2_PerconaXtraDBStatus_To_v1_PerconaXtraDBStatus(in *PerconaX
 func autoConvert_v1_PerconaXtraDBStatus_To_v1alpha2_PerconaXtraDBStatus(in *v1.PerconaXtraDBStatus, out *PerconaXtraDBStatus, s conversion.Scope) error {
 	out.Phase = DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -2782,7 +3057,17 @@ func Convert_v1_PgBouncer_To_v1alpha2_PgBouncer(in *v1.PgBouncer, out *PgBouncer
 
 func autoConvert_v1alpha2_PgBouncerList_To_v1_PgBouncerList(in *PgBouncerList, out *v1.PgBouncerList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]v1.PgBouncer)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]v1.PgBouncer, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha2_PgBouncer_To_v1_PgBouncer(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -2793,7 +3078,17 @@ func Convert_v1alpha2_PgBouncerList_To_v1_PgBouncerList(in *PgBouncerList, out *
 
 func autoConvert_v1_PgBouncerList_To_v1alpha2_PgBouncerList(in *v1.PgBouncerList, out *PgBouncerList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]PgBouncer)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]PgBouncer, len(*in))
+		for i := range *in {
+			if err := Convert_v1_PgBouncer_To_v1alpha2_PgBouncer(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -2809,7 +3104,9 @@ func autoConvert_v1alpha2_PgBouncerSpec_To_v1_PgBouncerSpec(in *PgBouncerSpec, o
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	if err := Convert_v1alpha2_Database_To_v1_Database(&in.Database, &out.Database, s); err != nil {
 		return err
 	}
@@ -2818,7 +3115,7 @@ func autoConvert_v1alpha2_PgBouncerSpec_To_v1_PgBouncerSpec(in *PgBouncerSpec, o
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.SSLMode = v1.PgBouncerSSLMode(in.SSLMode)
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.TerminationPolicy = v1.PgBouncerTerminationPolicy(in.TerminationPolicy)
 	out.HealthChecker = in.HealthChecker
 	return nil
@@ -2836,7 +3133,9 @@ func autoConvert_v1_PgBouncerSpec_To_v1alpha2_PgBouncerSpec(in *v1.PgBouncerSpec
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	if err := Convert_v1_Database_To_v1alpha2_Database(&in.Database, &out.Database, s); err != nil {
 		return err
 	}
@@ -2845,7 +3144,7 @@ func autoConvert_v1_PgBouncerSpec_To_v1alpha2_PgBouncerSpec(in *v1.PgBouncerSpec
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.SSLMode = PgBouncerSSLMode(in.SSLMode)
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.TerminationPolicy = PgBouncerTerminationPolicy(in.TerminationPolicy)
 	out.HealthChecker = in.HealthChecker
 	return nil
@@ -2859,7 +3158,7 @@ func Convert_v1_PgBouncerSpec_To_v1alpha2_PgBouncerSpec(in *v1.PgBouncerSpec, ou
 func autoConvert_v1alpha2_PgBouncerStatus_To_v1_PgBouncerStatus(in *PgBouncerStatus, out *v1.PgBouncerStatus, s conversion.Scope) error {
 	out.Phase = v1.DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.Gateway = (*v1.Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
 }
@@ -2872,7 +3171,7 @@ func Convert_v1alpha2_PgBouncerStatus_To_v1_PgBouncerStatus(in *PgBouncerStatus,
 func autoConvert_v1_PgBouncerStatus_To_v1alpha2_PgBouncerStatus(in *v1.PgBouncerStatus, out *PgBouncerStatus, s conversion.Scope) error {
 	out.Phase = DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.Gateway = (*Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
 }
@@ -2952,7 +3251,17 @@ func Convert_v1_Postgres_To_v1alpha2_Postgres(in *v1.Postgres, out *Postgres, s 
 
 func autoConvert_v1alpha2_PostgresList_To_v1_PostgresList(in *PostgresList, out *v1.PostgresList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]v1.Postgres)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]v1.Postgres, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha2_Postgres_To_v1_Postgres(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -2963,7 +3272,17 @@ func Convert_v1alpha2_PostgresList_To_v1_PostgresList(in *PostgresList, out *v1.
 
 func autoConvert_v1_PostgresList_To_v1alpha2_PostgresList(in *v1.PostgresList, out *PostgresList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]Postgres)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]Postgres, len(*in))
+		for i := range *in {
+			if err := Convert_v1_Postgres_To_v1alpha2_Postgres(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -3017,9 +3336,11 @@ func autoConvert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out 
 	out.Init = (*v1.InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
@@ -3058,9 +3379,11 @@ func autoConvert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, o
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
@@ -3083,7 +3406,7 @@ func Convert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, out *
 func autoConvert_v1alpha2_PostgresStatus_To_v1_PostgresStatus(in *PostgresStatus, out *v1.PostgresStatus, s conversion.Scope) error {
 	out.Phase = v1.DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*v1.Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*v1.Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -3097,7 +3420,7 @@ func Convert_v1alpha2_PostgresStatus_To_v1_PostgresStatus(in *PostgresStatus, ou
 func autoConvert_v1_PostgresStatus_To_v1alpha2_PostgresStatus(in *v1.PostgresStatus, out *PostgresStatus, s conversion.Scope) error {
 	out.Phase = DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -3168,7 +3491,17 @@ func Convert_v1_ProxySQLConfiguration_To_v1alpha2_ProxySQLConfiguration(in *v1.P
 
 func autoConvert_v1alpha2_ProxySQLList_To_v1_ProxySQLList(in *ProxySQLList, out *v1.ProxySQLList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]v1.ProxySQL)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]v1.ProxySQL, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha2_ProxySQL_To_v1_ProxySQL(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -3179,7 +3512,17 @@ func Convert_v1alpha2_ProxySQLList_To_v1_ProxySQLList(in *ProxySQLList, out *v1.
 
 func autoConvert_v1_ProxySQLList_To_v1alpha2_ProxySQLList(in *v1.ProxySQLList, out *ProxySQLList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]ProxySQL)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]ProxySQL, len(*in))
+		for i := range *in {
+			if err := Convert_v1_ProxySQL_To_v1alpha2_ProxySQL(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -3200,9 +3543,11 @@ func autoConvert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec(in *ProxySQLSpec, out 
 	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	out.HealthChecker = in.HealthChecker
 	return nil
@@ -3225,9 +3570,11 @@ func autoConvert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in *v1.ProxySQLSpec, o
 	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	out.HealthChecker = in.HealthChecker
 	return nil
@@ -3241,7 +3588,7 @@ func Convert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in *v1.ProxySQLSpec, out *
 func autoConvert_v1alpha2_ProxySQLStatus_To_v1_ProxySQLStatus(in *ProxySQLStatus, out *v1.ProxySQLStatus, s conversion.Scope) error {
 	out.Phase = v1.DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*v1.Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*v1.Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -3255,7 +3602,7 @@ func Convert_v1alpha2_ProxySQLStatus_To_v1_ProxySQLStatus(in *ProxySQLStatus, ou
 func autoConvert_v1_ProxySQLStatus_To_v1alpha2_ProxySQLStatus(in *v1.ProxySQLStatus, out *ProxySQLStatus, s conversion.Scope) error {
 	out.Phase = DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -3348,7 +3695,17 @@ func Convert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(in *v1.RedisCluste
 
 func autoConvert_v1alpha2_RedisList_To_v1_RedisList(in *RedisList, out *v1.RedisList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]v1.Redis)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]v1.Redis, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha2_Redis_To_v1_Redis(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -3359,7 +3716,17 @@ func Convert_v1alpha2_RedisList_To_v1_RedisList(in *RedisList, out *v1.RedisList
 
 func autoConvert_v1_RedisList_To_v1alpha2_RedisList(in *v1.RedisList, out *RedisList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]Redis)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]Redis, len(*in))
+		for i := range *in {
+			if err := Convert_v1_Redis_To_v1alpha2_Redis(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -3402,7 +3769,17 @@ func Convert_v1_RedisSentinel_To_v1alpha2_RedisSentinel(in *v1.RedisSentinel, ou
 
 func autoConvert_v1alpha2_RedisSentinelList_To_v1_RedisSentinelList(in *RedisSentinelList, out *v1.RedisSentinelList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]v1.RedisSentinel)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]v1.RedisSentinel, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha2_RedisSentinel_To_v1_RedisSentinel(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -3413,7 +3790,17 @@ func Convert_v1alpha2_RedisSentinelList_To_v1_RedisSentinelList(in *RedisSentine
 
 func autoConvert_v1_RedisSentinelList_To_v1alpha2_RedisSentinelList(in *v1.RedisSentinelList, out *RedisSentinelList, s conversion.Scope) error {
 	out.ListMeta = in.ListMeta
-	out.Items = *(*[]RedisSentinel)(unsafe.Pointer(&in.Items))
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]RedisSentinel, len(*in))
+		for i := range *in {
+			if err := Convert_v1_RedisSentinel_To_v1alpha2_RedisSentinel(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
 	return nil
 }
 
@@ -3450,9 +3837,11 @@ func autoConvert_v1alpha2_RedisSentinelSpec_To_v1_RedisSentinelSpec(in *RedisSen
 	}
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.StorageType = v1.StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
@@ -3475,9 +3864,11 @@ func autoConvert_v1_RedisSentinelSpec_To_v1alpha2_RedisSentinelSpec(in *v1.Redis
 	}
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.StorageType = StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
@@ -3497,7 +3888,7 @@ func Convert_v1_RedisSentinelSpec_To_v1alpha2_RedisSentinelSpec(in *v1.RedisSent
 func autoConvert_v1alpha2_RedisSentinelStatus_To_v1_RedisSentinelStatus(in *RedisSentinelStatus, out *v1.RedisSentinelStatus, s conversion.Scope) error {
 	out.Phase = v1.DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*v1.Age)(unsafe.Pointer(in.AuthSecret))
 	return nil
 }
@@ -3510,7 +3901,7 @@ func Convert_v1alpha2_RedisSentinelStatus_To_v1_RedisSentinelStatus(in *RedisSen
 func autoConvert_v1_RedisSentinelStatus_To_v1alpha2_RedisSentinelStatus(in *v1.RedisSentinelStatus, out *RedisSentinelStatus, s conversion.Scope) error {
 	out.Phase = DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*Age)(unsafe.Pointer(in.AuthSecret))
 	return nil
 }
@@ -3536,9 +3927,11 @@ func autoConvert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.Redis
 	out.Init = (*v1.InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
@@ -3570,9 +3963,11 @@ func autoConvert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *Redis
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.PodTemplate = in.PodTemplate
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*apiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
@@ -3591,7 +3986,7 @@ func Convert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *RedisSpec
 func autoConvert_v1alpha2_RedisStatus_To_v1_RedisStatus(in *RedisStatus, out *v1.RedisStatus, s conversion.Scope) error {
 	out.Phase = v1.DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*v1.Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*v1.Gateway)(unsafe.Pointer(in.Gateway))
 	return nil
@@ -3605,7 +4000,7 @@ func Convert_v1alpha2_RedisStatus_To_v1_RedisStatus(in *RedisStatus, out *v1.Red
 func autoConvert_v1_RedisStatus_To_v1alpha2_RedisStatus(in *v1.RedisStatus, out *RedisStatus, s conversion.Scope) error {
 	out.Phase = DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
-	out.Conditions = *(*[]apiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
 	out.AuthSecret = (*Age)(unsafe.Pointer(in.AuthSecret))
 	out.Gateway = (*Gateway)(unsafe.Pointer(in.Gateway))
 	return nil

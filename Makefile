@@ -134,7 +134,7 @@ gen-conversion:
 		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
 		$(CODE_GENERATOR_IMAGE)                          \
 		/go/bin/conversion-gen --go-header-file ./hack/license/go.txt \
-			--input-dirs $(GO_PKG)/$(REPO)/apis/kubedb/v1alpha2 \
+			--input-dirs ./apis/kubedb/v1alpha2 \
 			--extra-peer-dirs "kmodules.xyz/monitoring-agent-api/api/v1" \
 			-O zz_generated.conversion
 
@@ -280,7 +280,7 @@ gen-enum: $(BUILD_DIRS)
 manifests: gen-crds patch-crds label-crds
 
 .PHONY: gen
-gen: clientset gen-conversion gen-enum manifests openapi #gen-crd-protos
+gen: clientset gen-enum manifests openapi #gen-crd-protos
 
 fmt: $(BUILD_DIRS)
 	@docker run                                                 \
