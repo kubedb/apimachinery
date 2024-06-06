@@ -100,7 +100,7 @@ type ClusterTopology struct {
 	Cluster []ClusterSpec `json:"cluster,omitempty"`
 
 	// ClickHouse Keeper server name
-	ClickHouseKeeper *ClickHouseKeeperConfig `json:"clickHouseKeeper,omitempty"`
+	ClickHouseKeeper *ClickHouseKeeper `json:"clickHouseKeeper,omitempty"`
 }
 
 type ClusterSpec struct {
@@ -125,8 +125,28 @@ type ClusterSpec struct {
 	StorageType StorageType `json:"storageType,omitempty"`
 }
 
-type ClickHouseKeeperConfig struct {
+type ClickHouseKeeper struct {
+	ExternallyManaged bool `json:"externallyManaged"`
+
 	Node ClickHouseKeeperNode `json:"node,omitempty"`
+
+	Spec ClickHouseKeeperSpec `json:"spec,omitempty"`
+}
+
+type ClickHouseKeeperSpec struct {
+	// Number of replica for each shard to deploy for a cluster.
+	// +optional
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// PodTemplate is an optional configuration for pods used to expose database
+	// +optional
+	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+
+	// Storage to specify how storage shall be used.
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+
+	// StorageType can be durable (default) or ephemeral
+	StorageType StorageType `json:"storageType,omitempty"`
 }
 
 // ClickHouseKeeperNode defines item of nodes section of .spec.clusterTopology.
