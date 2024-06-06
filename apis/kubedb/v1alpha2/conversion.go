@@ -37,7 +37,15 @@ func Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(in *ofstv2.PodTemplateSpec
 }
 
 func (src *Elasticsearch) ConvertTo(dstRaw rtconv.Hub) error {
-	return Convert_v1alpha2_Elasticsearch_To_v1_Elasticsearch(src, dstRaw.(*v1.Elasticsearch), nil)
+	dst := dstRaw.(*v1.Elasticsearch)
+	err := Convert_v1alpha2_Elasticsearch_To_v1_Elasticsearch(src, dst, nil)
+	if err != nil {
+		return err
+	}
+	if len(dst.Spec.PodTemplate.Spec.Containers) > 0 {
+		dst.Spec.PodTemplate.Spec.Containers[0].Name = "elasticsearch" // db container name used in sts
+	}
+	return nil
 }
 
 func (dst *Elasticsearch) ConvertFrom(srcRaw rtconv.Hub) error {
@@ -45,7 +53,15 @@ func (dst *Elasticsearch) ConvertFrom(srcRaw rtconv.Hub) error {
 }
 
 func (src *MariaDB) ConvertTo(dstRaw rtconv.Hub) error {
-	return Convert_v1alpha2_MariaDB_To_v1_MariaDB(src, dstRaw.(*v1.MariaDB), nil)
+	dst := dstRaw.(*v1.MariaDB)
+	err := Convert_v1alpha2_MariaDB_To_v1_MariaDB(src, dst, nil)
+	if err != nil {
+		return err
+	}
+	if len(dst.Spec.PodTemplate.Spec.Containers) > 0 {
+		dst.Spec.PodTemplate.Spec.Containers[0].Name = "mariadb" // db container name used in sts
+	}
+	return nil
 }
 
 func (dst *MariaDB) ConvertFrom(srcRaw rtconv.Hub) error {
