@@ -26,15 +26,13 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	appslister "k8s.io/client-go/listers/apps/v1"
-	apps_util "kmodules.xyz/client-go/apps/v1"
 	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
 	petsetutil "kubeops.dev/petset/client/clientset/versioned/typed/apps/v1"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func checkReplicas(lister appslister.PetSetNamespaceLister, selector labels.Selector, expectedItems int) (bool, string, error) {
+func checkReplicas(lister pslister.PetSetNamespaceLister, selector labels.Selector, expectedItems int) (bool, string, error) {
 	items, err := lister.List(selector)
 	if err != nil {
 		return false, "", err
@@ -44,7 +42,7 @@ func checkReplicas(lister appslister.PetSetNamespaceLister, selector labels.Sele
 	}
 
 	// return isReplicasReady, message, error
-	ready, msg := apps_util.PetSetsAreReady(items)
+	ready, msg := petsetutil.PetSetsAreReady(items)
 	return ready, msg, nil
 }
 
@@ -84,7 +82,7 @@ func GetServiceTemplate(templates []NamedServiceTemplateSpec, alias ServiceAlias
 	return ofstv1.ServiceTemplateSpec{}
 }
 
-func GetDatabasePods(db metav1.Object, psLister appslister.PetSetLister, pods []core.Pod) ([]core.Pod, error) {
+func GetDatabasePods(db metav1.Object, psLister pslister.PetSetLister, pods []core.Pod) ([]core.Pod, error) {
 	var dbPods []core.Pod
 
 	for i := range pods {

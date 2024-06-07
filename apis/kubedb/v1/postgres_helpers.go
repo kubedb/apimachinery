@@ -34,7 +34,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
@@ -43,6 +42,7 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 func (*Postgres) Hub() {}
@@ -223,7 +223,6 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topolog
 	if p.Spec.LeaderElection.TransferLeadershipTimeout == nil {
 		p.Spec.LeaderElection.TransferLeadershipTimeout = &metav1.Duration{Duration: 60 * time.Second}
 	}
-	apis.SetDefaultResourceLimits(&p.Spec.Coordinator.Resources, kubedb.CoordinatorDefaultResources)
 
 	if p.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		p.Spec.PodTemplate.Spec.ServiceAccountName = p.OffshootName()
@@ -245,32 +244,18 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topolog
 		}
 	}
 
-	p.setDefaultContainerSecurityContext(&p.Spec.PodTemplate, postgresVersion)
-	p.setDefaultCoordinatorSecurityContext(&p.Spec.Coordinator, postgresVersion)
-	p.setDefaultInitContainerSecurityContext(&p.Spec.PodTemplate, postgresVersion)
-	if p.Spec.PodTemplate.Spec.SecurityContext == nil {
-		p.Spec.PodTemplate.Spec.SecurityContext = &core.PodSecurityContext{
-			RunAsUser:  p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser,
-			RunAsGroup: p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup,
-		}
-	} else {
-		if p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser == nil {
-			p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser
-		}
-		if p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup == nil {
-			p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup
-		}
-	}
+	p.setDefaultPodSecurityContext(&p.Spec.PodTemplate, postgresVersion)
+	p.setPostgresContainerDefaults(&p.Spec.PodTemplate, postgresVersion)
+	p.setCoordinatorContainerDefaults(&p.Spec.PodTemplate, postgresVersion)
+	p.setInitContainerDefaults(&p.Spec.PodTemplate, postgresVersion)
+
 	// Need to set FSGroup equal to  p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup.
 	// So that /var/pv directory have the group permission for the RunAsGroup user GID.
 	// Otherwise, We will get write permission denied.
-	p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup
 	p.SetDefaultReplicationMode(postgresVersion)
 	p.SetArbiterDefault()
 	p.SetTLSDefaults()
 	p.SetHealthCheckerDefaults()
-	apis.SetDefaultResourceLimits(&p.Spec.PodTemplate.Spec.Resources, kubedb.DefaultResources)
-	p.setDefaultAffinity(&p.Spec.PodTemplate, p.OffshootSelectors(), topology)
 
 	p.Spec.Monitor.SetDefaults()
 	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil {
@@ -325,48 +310,76 @@ func (p *Postgres) SetArbiterDefault() {
 	apis.SetDefaultResourceLimits(&p.Spec.Arbiter.Resources, kubedb.DefaultArbiter(false))
 }
 
-func (p *Postgres) setDefaultInitContainerSecurityContext(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
+func (p *Postgres) setDefaultPodSecurityContext(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
 	if podTemplate == nil {
 		return
 	}
-	container := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.InitContainers, kubedb.PostgresInitContainerName)
-	if container == nil {
-		container = &core.Container{
-			Name:            kubedb.PostgresInitContainerName,
-			SecurityContext: &core.SecurityContext{},
-			Resources:       kubedb.DefaultInitContainerResource,
-		}
-	} else if container.SecurityContext == nil {
-		container.SecurityContext = &core.SecurityContext{}
-	}
-	p.assignDefaultContainerSecurityContext(container.SecurityContext, pgVersion)
-	podTemplate.Spec.InitContainers = core_util.UpsertContainer(podTemplate.Spec.InitContainers, *container)
-}
 
-func (p *Postgres) setDefaultCoordinatorSecurityContext(coordinatorTemplate *CoordinatorSpec, pgVersion *catalog.PostgresVersion) {
-	if coordinatorTemplate == nil {
-		return
-	}
-	if coordinatorTemplate.SecurityContext == nil {
-		coordinatorTemplate.SecurityContext = &core.SecurityContext{}
-	}
-	p.assignDefaultContainerSecurityContext(coordinatorTemplate.SecurityContext, pgVersion)
-}
-
-func (p *Postgres) setDefaultContainerSecurityContext(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
-	if podTemplate == nil {
-		return
-	}
-	if podTemplate.Spec.ContainerSecurityContext == nil {
-		podTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{}
-	}
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = pgVersion.Spec.SecurityContext.RunAsUser
 	}
-	p.assignDefaultContainerSecurityContext(podTemplate.Spec.ContainerSecurityContext, pgVersion)
+	if podTemplate.Spec.SecurityContext.RunAsUser == nil {
+		podTemplate.Spec.SecurityContext.RunAsUser = pgVersion.Spec.SecurityContext.RunAsUser
+	}
+	if podTemplate.Spec.SecurityContext.RunAsGroup == nil {
+		podTemplate.Spec.SecurityContext.RunAsGroup = pgVersion.Spec.SecurityContext.RunAsUser
+	}
+}
+
+// EnsureContainerExists ensures that given container either exits by default else
+// it creates the container and insert it to the podtemplate
+func (p *Postgres) EnsureContainerExists(podTemplate *ofstv2.PodTemplateSpec, containerName string) *core.Container {
+	container := core_util.GetContainerByName(podTemplate.Spec.Containers, containerName)
+	if container == nil {
+		container = &core.Container{
+			Name: containerName,
+		}
+	}
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *container)
+	return container
+}
+
+func (p *Postgres) setInitContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
+	if podTemplate == nil {
+		return
+	}
+	container := p.EnsureContainerExists(podTemplate, kubedb.PostgresInitContainerName)
+	p.setContainerDefaultSecurityContext(container, pgVersion)
+	p.setContainerDefaultResources(container, *kubedb.DefaultInitContainerResource.DeepCopy())
+}
+
+func (p *Postgres) setPostgresContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
+	if podTemplate == nil {
+		return
+	}
+	container := p.EnsureContainerExists(podTemplate, kubedb.PostgresContainerName)
+	p.setContainerDefaultSecurityContext(container, pgVersion)
+	p.setContainerDefaultResources(container, *kubedb.DefaultResources.DeepCopy())
+}
+
+func (p *Postgres) setCoordinatorContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
+	if podTemplate == nil {
+		return
+	}
+	container := p.EnsureContainerExists(podTemplate, kubedb.PostgresCoordinatorContainerName)
+	p.setContainerDefaultSecurityContext(container, pgVersion)
+	p.setContainerDefaultResources(container, *kubedb.CoordinatorDefaultResources.DeepCopy())
+}
+
+func (p *Postgres) setContainerDefaultSecurityContext(container *core.Container, pgVersion *catalog.PostgresVersion) {
+	if container.SecurityContext == nil {
+		container.SecurityContext = &core.SecurityContext{}
+	}
+	p.assignDefaultContainerSecurityContext(container.SecurityContext, pgVersion)
+}
+
+func (p *Postgres) setContainerDefaultResources(container *core.Container, defaultResources core.ResourceRequirements) {
+	if container.Resources.Requests == nil && container.Resources.Limits == nil {
+		apis.SetDefaultResourceLimits(&container.Resources, defaultResources)
+	}
 }
 
 func (p *Postgres) assignDefaultContainerSecurityContext(sc *core.SecurityContext, pgVersion *catalog.PostgresVersion) {
@@ -392,46 +405,6 @@ func (p *Postgres) assignDefaultContainerSecurityContext(sc *core.SecurityContex
 	}
 }
 
-// setDefaultAffinity
-func (p *Postgres) setDefaultAffinity(podTemplate *ofstv2.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
-	if podTemplate == nil {
-		return
-	} else if podTemplate.Spec.Affinity != nil {
-		// Update topologyKey fields according to Kubernetes version
-		topology.ConvertAffinity(podTemplate.Spec.Affinity)
-		return
-	}
-
-	podTemplate.Spec.Affinity = &core.Affinity{
-		PodAntiAffinity: &core.PodAntiAffinity{
-			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
-				// Prefer to not schedule multiple pods on the same node
-				{
-					Weight: 100,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{p.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-						TopologyKey: core.LabelHostname,
-					},
-				},
-				// Prefer to not schedule multiple pods on the node with same zone
-				{
-					Weight: 50,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{p.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-						TopologyKey: topology.LabelZone,
-					},
-				},
-			},
-		},
-	}
-}
-
 func (p *Postgres) SetTLSDefaults() {
 	if p.Spec.TLS == nil || p.Spec.TLS.IssuerRef == nil {
 		return
@@ -453,8 +426,8 @@ func (p *PostgresSpec) GetPersistentSecrets() []string {
 	return secrets
 }
 
-func (p *Postgres) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
-	// Desire number of statefulSets
+func (p *Postgres) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
+	// Desire number of petSets
 	expectedItems := 1
 	return checkReplicas(lister.PetSets(p.Namespace), labels.SelectorFromSet(p.OffshootLabels()), expectedItems)
 }
