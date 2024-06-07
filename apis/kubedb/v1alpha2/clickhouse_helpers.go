@@ -88,6 +88,9 @@ func (c *ClickHouse) OffshootClusterPetSetName(clusterName string, shardNo int) 
 func (c *ClickHouse) OffshootLabels() map[string]string {
 	return c.offshootLabels(c.OffshootSelectors(), nil)
 }
+func (c *ClickHouse) OffshootKeeperLabels() map[string]string {
+	return c.offshootKeeperLabels(c.OffshootKeeperSelectors(), nil)
+}
 
 func (c *ClickHouse) OffshootClusterLabels(petSetName string) map[string]string {
 	return c.offshootLabels(c.OffshootClusterSelectors(petSetName), nil)
@@ -97,11 +100,25 @@ func (c *ClickHouse) offshootLabels(selector, override map[string]string) map[st
 	selector[meta_util.ComponentLabelKey] = kubedb.ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, c.Labels, override))
 }
+func (c *ClickHouse) offshootKeeperLabels(selector, override map[string]string) map[string]string {
+	selector[meta_util.ComponentLabelKey] = ComponentCoOrdinator
+	return meta_util.OverwriteKeys(selector, override)
+	//return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, c.Labels, override))
+}
 
 func (c *ClickHouse) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
 		meta_util.NameLabelKey:      c.ResourceFQN(),
 		meta_util.InstanceLabelKey:  c.Name,
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
+	}
+	return meta_util.OverwriteKeys(selector, extraSelectors...)
+}
+
+func (c *ClickHouse) OffshootKeeperSelectors(extraSelectors ...map[string]string) map[string]string {
+	selector := map[string]string{
+		meta_util.NameLabelKey:      c.ResourceFQN(),
+		meta_util.InstanceLabelKey:  c.OffshootKeeperName(),
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
 	return meta_util.OverwriteKeys(selector, extraSelectors...)
@@ -128,13 +145,23 @@ func (c *ClickHouse) ResourcePlural() string {
 func (c *ClickHouse) ServiceName() string {
 	return c.OffshootName()
 }
+func (c *ClickHouse) KeeperServiceName() string {
+	return meta_util.NameWithSuffix(c.OffshootName(), "keeper")
+}
 
 func (c *ClickHouse) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", c.ServiceName(), c.Namespace)
 }
+func (c *ClickHouse) KeeperPrimaryServiceDNS() string {
+	return fmt.Sprintf("%s.%s.svc", c.KeeperServiceName(), c.Namespace)
+}
 
 func (c *ClickHouse) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(c.ServiceName(), "pods")
+}
+
+func (c *ClickHouse) KeeperGoverningServiceName() string {
+	return meta_util.NameWithSuffix(c.KeeperServiceName(), "pods")
 }
 
 func (c *ClickHouse) ClusterGoverningServiceName(name string) string {
@@ -156,8 +183,16 @@ func (r *ClickHouse) ConfigSecretName() string {
 	return meta_util.NameWithSuffix(r.OffshootName(), "config")
 }
 
+func (r *ClickHouse) KeeperConfigSecretName() string {
+	return meta_util.NameWithSuffix(r.OffshootKeeperName(), "config")
+}
+
 func (c *ClickHouse) DefaultUserCredSecretName(username string) string {
 	return meta_util.NameWithSuffix(c.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", username), "_", "-"))
+}
+
+func (c *ClickHouse) GetInternalAuthTokenName() string {
+	return meta_util.NameWithSuffix(c.OffshootName(), "internal-auth-token")
 }
 
 func (c *ClickHouse) PVCName(alias string) string {
@@ -170,6 +205,10 @@ func (c *ClickHouse) PetSetName() string {
 
 func (c *ClickHouse) PodLabels(extraLabels ...map[string]string) map[string]string {
 	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootSelectors(), extraLabels...), c.Spec.PodTemplate.Labels)
+}
+
+func (c *ClickHouse) KeeperPodLabels(extraLabels ...map[string]string) map[string]string {
+	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootKeeperSelectors(), extraLabels...), c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate.Labels)
 }
 
 func (c *ClickHouse) ClusterPodLabels(petSetName string, labels map[string]string, extraLabels ...map[string]string) map[string]string {
@@ -248,6 +287,27 @@ func (c *ClickHouse) SetDefaults() {
 			clusters[index] = cluster
 		}
 		c.Spec.ClusterTopology.Cluster = clusters
+
+		if c.Spec.ClusterTopology.ClickHouseKeeper != nil && c.Spec.ClusterTopology.ClickHouseKeeper.Spec != nil {
+			if c.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas == nil {
+				c.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas = pointer.Int32P(1)
+			}
+
+			if c.Spec.ClusterTopology.ClickHouseKeeper.Spec.StorageType == "" {
+				c.Spec.ClusterTopology.ClickHouseKeeper.Spec.StorageType = StorageTypeDurable
+			}
+
+			if c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate == nil {
+				c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate = &ofst.PodTemplateSpec{}
+			}
+			//c.setKeeperDefaultContainerSecurityContext(&chVersion, c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate)
+			//dbContainer := coreutil.GetContainerByName(c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate.Spec.Containers, ClickHouseKeeperContainerName)
+			//if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+			//	apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
+			//}
+			//c.SetHealthCheckerDefaults()
+		}
+
 	} else {
 		if c.Spec.Replicas == nil {
 			c.Spec.Replicas = pointer.Int32P(1)
@@ -305,6 +365,42 @@ func (c *ClickHouse) setDefaultContainerSecurityContext(chVersion *catalog.Click
 		initContainer.SecurityContext = &core.SecurityContext{}
 	}
 	c.assignDefaultContainerSecurityContext(chVersion, initContainer.SecurityContext)
+}
+
+func (r *ClickHouse) setKeeperDefaultContainerSecurityContext(chVersion *catalog.ClickHouseVersion, podTemplate *ofst.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
+	}
+	if podTemplate.Spec.SecurityContext == nil {
+		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
+	}
+	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+		podTemplate.Spec.SecurityContext.FSGroup = chVersion.Spec.SecurityContext.RunAsUser
+	}
+
+	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, ClickHouseKeeperContainerName)
+	if container == nil {
+		container = &core.Container{
+			Name: ClickHouseKeeperContainerName,
+		}
+		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
+	}
+	if container.SecurityContext == nil {
+		container.SecurityContext = &core.SecurityContext{}
+	}
+	r.assignDefaultContainerSecurityContext(chVersion, container.SecurityContext)
+
+	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, ClickHouseInitContainerName)
+	if initContainer == nil {
+		initContainer = &core.Container{
+			Name: ClickHouseInitContainerName,
+		}
+		podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
+	}
+	if initContainer.SecurityContext == nil {
+		initContainer.SecurityContext = &core.SecurityContext{}
+	}
+	r.assignDefaultContainerSecurityContext(chVersion, initContainer.SecurityContext)
 }
 
 func (c *ClickHouse) assignDefaultContainerSecurityContext(chVersion *catalog.ClickHouseVersion, rc *core.SecurityContext) {
