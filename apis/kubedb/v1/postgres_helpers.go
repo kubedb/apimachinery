@@ -329,24 +329,11 @@ func (p *Postgres) setDefaultPodSecurityContext(podTemplate *ofstv2.PodTemplateS
 	}
 }
 
-// EnsureContainerExists ensures that given container either exits by default else
-// it creates the container and insert it to the podtemplate
-func (p *Postgres) EnsureContainerExists(podTemplate *ofstv2.PodTemplateSpec, containerName string) *core.Container {
-	container := core_util.GetContainerByName(podTemplate.Spec.Containers, containerName)
-	if container == nil {
-		container = &core.Container{
-			Name: containerName,
-		}
-	}
-	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *container)
-	return container
-}
-
 func (p *Postgres) setInitContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
 	if podTemplate == nil {
 		return
 	}
-	container := p.EnsureContainerExists(podTemplate, kubedb.PostgresInitContainerName)
+	container := EnsureContainerExists(podTemplate, kubedb.PostgresInitContainerName)
 	p.setContainerDefaultSecurityContext(container, pgVersion)
 	p.setContainerDefaultResources(container, *kubedb.DefaultInitContainerResource.DeepCopy())
 }
@@ -355,7 +342,7 @@ func (p *Postgres) setPostgresContainerDefaults(podTemplate *ofstv2.PodTemplateS
 	if podTemplate == nil {
 		return
 	}
-	container := p.EnsureContainerExists(podTemplate, kubedb.PostgresContainerName)
+	container := EnsureContainerExists(podTemplate, kubedb.PostgresContainerName)
 	p.setContainerDefaultSecurityContext(container, pgVersion)
 	p.setContainerDefaultResources(container, *kubedb.DefaultResources.DeepCopy())
 }
@@ -364,7 +351,7 @@ func (p *Postgres) setCoordinatorContainerDefaults(podTemplate *ofstv2.PodTempla
 	if podTemplate == nil {
 		return
 	}
-	container := p.EnsureContainerExists(podTemplate, kubedb.PostgresCoordinatorContainerName)
+	container := EnsureContainerExists(podTemplate, kubedb.PostgresCoordinatorContainerName)
 	p.setContainerDefaultSecurityContext(container, pgVersion)
 	p.setContainerDefaultResources(container, *kubedb.CoordinatorDefaultResources.DeepCopy())
 }
