@@ -48,20 +48,6 @@ func checkReplicas(lister pslister.PetSetNamespaceLister, selector labels.Select
 	return ready, msg, nil
 }
 
-func checkReplicasOfPetSet(lister pslister.PetSetNamespaceLister, selector labels.Selector, expectedItems int) (bool, string, error) {
-	items, err := lister.List(selector)
-	if err != nil {
-		return false, "", err
-	}
-	if len(items) < expectedItems {
-		return false, fmt.Sprintf("All PetSets are not available. Desire number of PetSet: %d, Available: %d", expectedItems, len(items)), nil
-	}
-
-	// return isReplicasReady, message, error
-	ready, msg := petsetutil.PetSetsAreReady(items)
-	return ready, msg, nil
-}
-
 // HasServiceTemplate returns "true" if the desired serviceTemplate provided in "aliaS" is present in the serviceTemplate list.
 // Otherwise, it returns "false".
 func HasServiceTemplate(templates []NamedServiceTemplateSpec, alias ServiceAlias) bool {
