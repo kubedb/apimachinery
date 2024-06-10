@@ -18,6 +18,7 @@ package v1
 
 import (
 	"fmt"
+
 	core_util "kmodules.xyz/client-go/core/v1"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 
@@ -333,37 +334,53 @@ func (p *PgBouncer) setConnectionPoolConfigDefaults() {
 }
 
 func (p *PgBouncer) SetSecurityContext(pgBouncerVersion *catalog.PgBouncerVersion) {
-	if p.Spec.PodTemplate.Spec.ContainerSecurityContext == nil {
-		p.Spec.PodTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{
-			RunAsUser:  pgBouncerVersion.Spec.SecurityContext.RunAsUser,
-			RunAsGroup: pgBouncerVersion.Spec.SecurityContext.RunAsUser,
+	container := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, kubedb.PgBouncerContainerName)
+	if container == nil {
+		container = &core.Container{
+			Name: kubedb.PgBouncerContainerName,
+		}
+	}
+	if container.SecurityContext == nil {
+		container.SecurityContext = &core.SecurityContext{
+			RunAsUser: func() *int64 {
+				if p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser == nil {
+					return pgBouncerVersion.Spec.SecurityContext.RunAsUser
+				}
+				return p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser
+			}(),
+			RunAsGroup: func() *int64 {
+				if p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup == nil {
+					return pgBouncerVersion.Spec.SecurityContext.RunAsUser
+				}
+				return p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup
+			}(),
 			Privileged: pointer.BoolP(false),
 		}
 	} else {
-		if p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser == nil {
-			p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser = pgBouncerVersion.Spec.SecurityContext.RunAsUser
+		if container.SecurityContext.RunAsUser == nil {
+			container.SecurityContext.RunAsUser = pgBouncerVersion.Spec.SecurityContext.RunAsUser
 		}
-		if p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup == nil {
-			p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser
+		if container.SecurityContext.RunAsGroup == nil {
+			container.SecurityContext.RunAsGroup = container.SecurityContext.RunAsUser
 		}
 	}
 
 	if p.Spec.PodTemplate.Spec.SecurityContext == nil {
 		p.Spec.PodTemplate.Spec.SecurityContext = &core.PodSecurityContext{
-			RunAsUser:  p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser,
-			RunAsGroup: p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup,
+			RunAsUser:  container.SecurityContext.RunAsUser,
+			RunAsGroup: container.SecurityContext.RunAsGroup,
 		}
 	} else {
 		if p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser == nil {
-			p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsUser
+			p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser = container.SecurityContext.RunAsUser
 		}
 		if p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup == nil {
-			p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup
+			p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup = container.SecurityContext.RunAsGroup
 		}
 	}
 
 	// Need to set FSGroup equal to  p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup.
 	// So that /var/pv directory have the group permission for the RunAsGroup user GID.
 	// Otherwise, We will get write permission denied.
-	p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup
+	p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = container.SecurityContext.RunAsGroup
 }
