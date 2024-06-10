@@ -26,6 +26,7 @@ import (
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	v1 "kmodules.xyz/client-go/api/v1"
 	apiv1 "kmodules.xyz/offshoot-api/api/v1"
+	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	corev1alpha1 "kubestash.dev/apimachinery/apis/core/v1alpha1"
 )
@@ -657,7 +658,7 @@ func (in *PostgresArchiverSpec) DeepCopyInto(out *PostgresArchiverSpec) {
 	*out = *in
 	if in.Databases != nil {
 		in, out := &in.Databases, &out.Databases
-		*out = new(v1alpha2.AllowedConsumers)
+		*out = new(kubedbv1.AllowedConsumers)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.RetentionPolicy != nil {

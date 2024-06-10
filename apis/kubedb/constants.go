@@ -561,6 +561,7 @@ const (
 	PgBouncerDatabasePort                   = 5432
 	PgBouncerConfigFile                     = "pgbouncer.ini"
 	PgBouncerAdminUsername                  = "pgbouncer"
+	PgBouncerContainerName                  = "pgbouncer"
 	PgBouncerDefaultPoolMode                = "session"
 	PgBouncerDefaultIgnoreStartupParameters = "empty"
 	BackendSecretResourceVersion            = "backend-secret-resource-version"

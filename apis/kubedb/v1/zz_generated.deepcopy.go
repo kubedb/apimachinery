@@ -589,11 +589,6 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 		*out = new(KernelSettings)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Affinity != nil {
-		in, out := &in.Affinity, &out.Affinity
-		*out = new(corev1.Affinity)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.HeapSizePercentage != nil {
 		in, out := &in.HeapSizePercentage, &out.HeapSizePercentage
 		*out = new(int32)
@@ -2380,7 +2375,6 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		*out = new(apiv1.TLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
-	in.Coordinator.DeepCopyInto(&out.Coordinator)
 	if in.AllowedSchemas != nil {
 		in, out := &in.AllowedSchemas, &out.AllowedSchemas
 		*out = new(AllowedConsumers)
