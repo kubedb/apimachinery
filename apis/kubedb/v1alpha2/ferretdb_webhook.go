@@ -20,6 +20,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	"net/url"
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
@@ -145,11 +147,6 @@ func (f *FerretDB) ValidateCreateOrUpdate() field.ErrorList {
 	}
 
 	// Auth secret related
-	if f.Spec.AuthSecret != nil && f.Spec.AuthSecret.ExternallyManaged != f.Spec.Backend.ExternallyManaged {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authSecret"),
-			f.Name,
-			`when 'spec.backend' is internally managed, 'spec.authSecret' can't be externally managed and vice versa`))
-	}
 	if f.Spec.AuthSecret != nil && f.Spec.AuthSecret.ExternallyManaged && f.Spec.AuthSecret.Name == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authSecret"),
 			f.Name,
@@ -157,49 +154,121 @@ func (f *FerretDB) ValidateCreateOrUpdate() field.ErrorList {
 	}
 
 	// Termination policy related
-	if f.Spec.StorageType == StorageTypeEphemeral && f.Spec.DeletionPolicy == TerminationPolicyHalt {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-			f.Name,
-			`'spec.terminationPolicy: Halt' can not be used for 'Ephemeral' storage`))
-	}
-	if f.Spec.DeletionPolicy == TerminationPolicyHalt || f.Spec.DeletionPolicy == TerminationPolicyDelete {
+	if f.Spec.DeletionPolicy == TerminationPolicyHalt {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			f.Name,
-			`'spec.terminationPolicy' value 'Halt' or 'Delete' is not supported yet for FerretDB`))
+			`'spec.terminationPolicy' value 'Halt' is not supported yet for FerretDB`))
 	}
 
 	// FerretDBBackend related
 	if f.Spec.Backend.ExternallyManaged {
-		if f.Spec.Backend.Postgres == nil {
+		if f.Spec.Backend.PostgresRef == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
 				f.Name,
-				`'spec.postgres' is missing when backend is externally managed`))
+				`'backend.postgresRef' is missing when backend is externally managed`))
 		} else {
-			if f.Spec.Backend.Postgres.URL == nil {
-				err := f.validateServiceRef(f.Spec.Backend.Postgres.Service)
-				if err != nil {
-					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-						f.Name,
-						err.Error()))
-				}
-			}
-		}
-	} else {
-		if f.Spec.Backend.Postgres != nil && f.Spec.Backend.Postgres.Version != nil {
-			err := f.validatePostgresVersion()
+			apb := appcat.AppBinding{}
+			err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+				Name:      f.Spec.Backend.PostgresRef.Name,
+				Namespace: f.Spec.Backend.PostgresRef.Namespace,
+			}, &apb)
 			if err != nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
 					f.Name,
-					err.Error()))
+					err.Error(),
+				))
 			}
+			if apb.Spec.ClientConfig.Service == nil && apb.Spec.ClientConfig.URL == nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
+					f.Name,
+					`'clientConfig.url' or 'clientConfig.service' needed in the external pg appbinding`,
+				))
+			}
+			var sslMode string
+			if apb.Spec.ClientConfig.Service == nil {
+				parsedURL, err := url.Parse(*apb.Spec.ClientConfig.URL)
+				if err != nil {
+					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
+						f.Name,
+						fmt.Sprintf("invalid URL in provided appbinding. error: %v", err),
+					))
+				}
+				if parsedURL.Scheme != "postgres" && parsedURL.Scheme != "postgresql" {
+					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
+						f.Name,
+						fmt.Sprintf("invalid scheme provided in URL in provided appbinding"),
+					))
+				}
+				sslMode = parsedURL.Query().Get("sslMode")
+			} else {
+
+			}
+			//if f.Spec.Backend.Postgres.URL == nil {
+			//	err := f.validateServiceRef(f.Spec.Backend.Postgres.Service)
+			//	if err != nil {
+			//		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
+			//			f.Name,
+			//			err.Error()))
+			//	}
+			//}
+			//if f.Spec.Backend.Postgres.SSLMode == "" {
+			//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
+			//		f.Name,
+			//		`'backend.postgres.sslMode' is missing when backend is externally managed`))
+			//}
+			//
+			//if f.Spec.Backend.Postgres.ClientAuthMode == "" {
+			//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
+			//		f.Name,
+			//		`'backend.postgres.clientAuthMode' is missing when backend is externally managed`))
+			//}
+			//
+			//if f.Spec.Backend.Postgres.SSLMode == PostgresSSLModeDisable &&
+			//	f.Spec.Backend.Postgres.ClientAuthMode == ClientAuthModeCert {
+			//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
+			//		f.Name,
+			//		`can't have sslMode 'disable' and clientAuthMode to 'cert'`))
+			//}
+			//
+			//if f.Spec.Backend.Postgres.SSLMode == PostgresSSLModeRequire ||
+			//	f.Spec.Backend.Postgres.SSLMode == PostgresSSLModeVerifyCA ||
+			//	f.Spec.Backend.Postgres.SSLMode == PostgresSSLModeVerifyFull {
+			//
+			//	err := f.validateExternalSSLSecrets(f.Spec.Backend.Postgres)
+			//	if err != nil {
+			//		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
+			//			f.Name,
+			//			err.Error()))
+			//	}
+			//}
 		}
 	}
+	//else {
+	//	if f.Spec.Backend.Postgres != nil && f.Spec.Backend.Postgres.Version != nil {
+	//		err := f.validatePostgresVersion()
+	//		if err != nil {
+	//			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
+	//				f.Name,
+	//				err.Error()))
+	//		}
+	//	}
+	//}
 
 	// TLS related
 	if f.Spec.SSLMode == SSLModeAllowSSL || f.Spec.SSLMode == SSLModePreferSSL {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("sslMode"),
 			f.Name,
 			`'spec.sslMode' value 'allowSSL' or 'preferSSL' is not supported yet for FerretDB`))
+	}
+	if f.Spec.SSLMode == SSLModeRequireSSL && f.Spec.TLS == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("sslMode"),
+			f.Name,
+			`'spec.sslMode' is requireSSL but 'spec.tls' is not set`))
+	}
+	if f.Spec.SSLMode == SSLModeDisabled && f.Spec.TLS != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("sslMode"),
+			f.Name,
+			`'spec.tls' is can't set when 'spec.sslMode' is disabled`))
 	}
 
 	return allErr
@@ -254,6 +323,16 @@ func (f *FerretDB) validateServiceRef(ref *PostgresServiceRef) error {
 	// port needs to be 0 < x < 65536
 	if ref.Namespace == "" || ref.Name == "" || ref.PgPort <= 0 || ref.PgPort >= 65536 {
 		return errors.New("pg service reference name, namespace and port(0<x<65536) needs to specify properly")
+	}
+	return nil
+}
+
+func (f *FerretDB) validateExternalSSLSecrets(pgRef *PostgresRef) error {
+	if pgRef.CertSecrets == nil {
+		return errors.New(`'backend.postgres.sslSecrets' is needed when `)
+	}
+	if pgRef.ClientAuthMode == ClientAuthModeCert && pgRef.CertSecrets.ClientSecret == nil {
+		return errors.New(`'backend.postgres.sslSecrets.clientSecretName' is needed when clientAuthMode set to 'cert'`)
 	}
 	return nil
 }

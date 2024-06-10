@@ -121,37 +121,62 @@ type FerretDBStatus struct {
 }
 
 type FerretDBBackend struct {
-	// +optional
-	Postgres *PostgresRef `json:"postgres,omitempty"`
+	// PostgresRef refers to the AppBinding of the backend Postgres server
+	PostgresRef *kmapi.ObjectReference `json:"postgresRef"`
 	// A DB inside backend specifically made for ferretdb
 	// +optional
 	LinkedDB          string `json:"linkedDB,omitempty"`
 	ExternallyManaged bool   `json:"externallyManaged"`
 }
 
-type PostgresRef struct {
-	// Postgres URL address
-	// +optional
-	URL *string `json:"url,omitempty"`
-	// Service information for Postgres
-	// +optional
-	Service *PostgresServiceRef `json:"service,omitempty"`
-	// Which versions pg will be used as backend of ferretdb
-	// +optional
-	Version *string `json:"version,omitempty"`
-}
-
-type PostgresServiceRef struct {
-	// +optional
-	Name string `json:"name,omitempty"`
-	// +optional
-	Namespace string `json:"namespace,omitempty"`
-	// PgPort is used because the service referred to the
-	// pg pod can have any port between 1 and 65535, inclusive
-	// but targetPort is fixed to 5432
-	// +optional
-	PgPort int32 `json:"pgPort,omitempty"`
-}
+//type PostgresRef struct {
+//	// Postgres URL address
+//	// +optional
+//	URL *string `json:"url,omitempty"`
+//	// Service information for Postgres
+//	// +optional
+//	Service *PostgresServiceRef `json:"service,omitempty"`
+//	// Which versions pg will be used as backend of ferretdb
+//	// +optional
+//	Version *string `json:"version,omitempty"`
+//
+//	// SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]
+//	// +optional
+//	SSLMode PostgresSSLMode `json:"sslMode,omitempty"`
+//
+//	// SSL Configuration of external Postgres
+//	// +optional
+//	CertSecrets *PostgresCertSecrets `json:"certSecrets,omitempty"`
+//
+//	// ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
+//	// +optional
+//	ClientAuthMode PostgresClientAuthMode `json:"clientAuthMode,omitempty"`
+//}
+//
+//type PostgresCertSecrets struct {
+//	// SSLSecretName is the name of a kubernetes.io/tls type secret.
+//	// It must contain tls.crt(client cert), tls.key(client key) and ca.crt(ca cert) of
+//	// backend external Postgres.
+//	// +optional
+//	ClientSecret *kmapi.ObjectReference `json:"clientSecret,omitempty"`
+//
+//	// CASecretName is the name of a secret providing ca.cert.
+//	// If External Postgres only needs ca.crt to get connect with FerretDB
+//	// +optional
+//	CASecret *kmapi.ObjectReference `json:"caSecret,omitempty"`
+//}
+//
+//type PostgresServiceRef struct {
+//	// +optional
+//	Name string `json:"name,omitempty"`
+//	// +optional
+//	Namespace string `json:"namespace,omitempty"`
+//	// PgPort is used because the service referred to the
+//	// pg pod can have any port between 1 and 65535, inclusive
+//	// but targetPort is fixed to 5432
+//	// +optional
+//	PgPort int32 `json:"pgPort,omitempty"`
+//}
 
 // +kubebuilder:validation:Enum=server;client
 type FerretDBCertificateAlias string

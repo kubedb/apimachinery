@@ -142,6 +142,12 @@ func (f *FerretDB) GetCertSecretName(alias FerretDBCertificateAlias) string {
 
 	return f.CertificateName(alias)
 }
+func (f *FerretDB) GetExternalBackendClientSecretName() string {
+	return f.Name + "ext-pg-client-cert"
+}
+func (f *FerretDB) GetExternalBackendCASecretName() string {
+	return f.Name + "ext-pg-ca-cert"
+}
 
 func (f *FerretDB) SetHealthCheckerDefaults() {
 	if f.Spec.HealthChecker.PeriodSeconds == nil {
@@ -225,18 +231,18 @@ func (f *FerretDB) SetDefaults() {
 		}
 	}
 
-	defaultVersion := "13.13"
-	if !f.Spec.Backend.ExternallyManaged {
-		if f.Spec.Backend.Postgres == nil {
-			f.Spec.Backend.Postgres = &PostgresRef{
-				Version: &defaultVersion,
-			}
-		} else {
-			if f.Spec.Backend.Postgres.Version == nil {
-				f.Spec.Backend.Postgres.Version = &defaultVersion
-			}
-		}
-	}
+	//defaultVersion := "13.13"
+	//if !f.Spec.Backend.ExternallyManaged {
+	//	if f.Spec.Backend.Postgres == nil {
+	//		f.Spec.Backend.Postgres = &PostgresRef{
+	//			Version: &defaultVersion,
+	//		}
+	//	} else {
+	//		if f.Spec.Backend.Postgres.Version == nil {
+	//			f.Spec.Backend.Postgres.Version = &defaultVersion
+	//		}
+	//	}
+	//}
 	f.SetTLSDefaults()
 	f.SetHealthCheckerDefaults()
 }
@@ -369,4 +375,7 @@ func (f *FerretDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string,
 	// Desire number of petSets
 	expectedItems := 1
 	return checkReplicasOfPetSet(lister.PetSets(f.Namespace), labels.SelectorFromSet(f.OffshootLabels()), expectedItems)
+}
+func (f *FerretDB) GetSSLModeFromAppBinding(apb *appcat.AppBinding) (PostgresSSLMode, error) {
+
 }

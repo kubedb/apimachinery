@@ -1223,11 +1223,15 @@ const (
 
 	FerretDBServerPath = "/etc/certs/server"
 
+	FerretDBExternalCAPath     = "/etc/certs/ext"
+	FerretDBExternalClientPath = "/etc/certs/ext/client"
+
 	FerretDBDefaultPort = 27017
 	FerretDBMetricsPort = 8080
 	FerretDBTLSPort     = 27018
 
-	FerretDBMetricsPath = "/debug/metrics"
+	FerretDBMetricsPath     = "/debug/metrics"
+	FerretDBMetricsPortName = "metrics"
 )
 
 // =========================== ClickHouse Constants ============================
