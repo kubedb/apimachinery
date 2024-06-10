@@ -40,7 +40,6 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
@@ -636,110 +635,30 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		}
 	}
 
-	defaultResource := kubedb.DefaultResources
-	if m.isVersion6OrLater(mgVersion) {
-		defaultResource = kubedb.DefaultResourcesCPUIntensive
-	}
-
 	if m.Spec.ShardTopology != nil {
-		apis.SetDefaultResourceLimits(&m.Spec.ShardTopology.Mongos.PodTemplate.Spec.Resources, defaultResource)
-		apis.SetDefaultResourceLimits(&m.Spec.ShardTopology.Shard.PodTemplate.Spec.Resources, defaultResource)
-		apis.SetDefaultResourceLimits(&m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.Resources, defaultResource)
-		if m.Spec.Arbiter != nil {
-			apis.SetDefaultResourceLimits(&m.Spec.Arbiter.PodTemplate.Spec.Resources, defaultResource)
-		}
-		if m.Spec.Hidden != nil {
-			apis.SetDefaultResourceLimits(&m.Spec.Hidden.PodTemplate.Spec.Resources, defaultResource)
-		}
-
-		if m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName == "" {
-			m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
-		}
-		if m.Spec.ShardTopology.Mongos.PodTemplate.Spec.ServiceAccountName == "" {
-			m.Spec.ShardTopology.Mongos.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
-		}
-		if m.Spec.ShardTopology.Shard.PodTemplate.Spec.ServiceAccountName == "" {
-			m.Spec.ShardTopology.Shard.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
-		}
-
-		// set default probes
-		m.setDefaultProbes(&m.Spec.ShardTopology.Shard.PodTemplate, mgVersion)
-		m.setDefaultProbes(&m.Spec.ShardTopology.ConfigServer.PodTemplate, mgVersion)
-		m.setDefaultProbes(&m.Spec.ShardTopology.Mongos.PodTemplate, mgVersion)
-		if m.Spec.Arbiter != nil {
-			m.setDefaultProbes(&m.Spec.Arbiter.PodTemplate, mgVersion, true)
-		}
-		if m.Spec.Hidden != nil {
-			m.setDefaultProbes(&m.Spec.Hidden.PodTemplate, mgVersion)
-		}
-
-		// set default affinity (PodAntiAffinity)
-		shardLabels := m.OffshootSelectors()
-		shardLabels[MongoDBShardLabelKey] = m.ShardNodeTemplate()
-		m.setDefaultAffinity(&m.Spec.ShardTopology.Shard.PodTemplate, shardLabels, topology)
-		if m.Spec.Arbiter != nil {
-			// the labels are same as the shard
-			m.setDefaultAffinity(&m.Spec.Arbiter.PodTemplate, shardLabels, topology)
-		}
-		if m.Spec.Hidden != nil {
-			m.setDefaultAffinity(&m.Spec.Hidden.PodTemplate, shardLabels, topology)
-		}
-
-		configServerLabels := m.OffshootSelectors()
-		configServerLabels[MongoDBConfigLabelKey] = m.ConfigSvrNodeName()
-		m.setDefaultAffinity(&m.Spec.ShardTopology.ConfigServer.PodTemplate, configServerLabels, topology)
-
-		mongosLabels := m.OffshootSelectors()
-		mongosLabels[MongoDBMongosLabelKey] = m.MongosNodeName()
-		m.setDefaultAffinity(&m.Spec.ShardTopology.Mongos.PodTemplate, mongosLabels, topology)
-
-		m.setDefaultSecurityContext(mgVersion, &m.Spec.ShardTopology.Shard.PodTemplate)
-		m.setDefaultSecurityContext(mgVersion, &m.Spec.ShardTopology.Mongos.PodTemplate)
-		m.setDefaultSecurityContext(mgVersion, &m.Spec.ShardTopology.ConfigServer.PodTemplate)
-		if m.Spec.Arbiter != nil {
-			m.setDefaultSecurityContext(mgVersion, &m.Spec.Arbiter.PodTemplate)
-		}
-		if m.Spec.Hidden != nil {
-			m.setDefaultSecurityContext(mgVersion, &m.Spec.Hidden.PodTemplate)
-		}
+		m.setPodTemplateDefaultValues(&m.Spec.ShardTopology.Mongos.PodTemplate, mgVersion)
+		m.setPodTemplateDefaultValues(&m.Spec.ShardTopology.Shard.PodTemplate, mgVersion)
+		m.setPodTemplateDefaultValues(&m.Spec.ShardTopology.ConfigServer.PodTemplate, mgVersion)
 	} else {
 		if m.Spec.Replicas == nil {
 			m.Spec.Replicas = pointer.Int32P(1)
 		}
 
-		if m.Spec.PodTemplate == nil {
-			m.Spec.PodTemplate = new(ofstv2.PodTemplateSpec)
-		}
-		if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
-			m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
-		}
+		m.setPodTemplateDefaultValues(m.Spec.PodTemplate, mgVersion)
 
-		// set default probes
-		m.setDefaultProbes(m.Spec.PodTemplate, mgVersion)
-		// set default affinity (PodAntiAffinity)
-		m.setDefaultAffinity(m.Spec.PodTemplate, m.OffshootSelectors(), topology)
-
-		apis.SetDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, defaultResource)
-		m.setDefaultSecurityContext(mgVersion, m.Spec.PodTemplate)
-
-		if m.Spec.Arbiter != nil {
-			m.setDefaultProbes(&m.Spec.Arbiter.PodTemplate, mgVersion, true)
-			m.setDefaultAffinity(&m.Spec.Arbiter.PodTemplate, m.OffshootSelectors(), topology)
-			apis.SetDefaultResourceLimits(&m.Spec.Arbiter.PodTemplate.Spec.Resources, defaultResource)
-			m.setDefaultSecurityContext(mgVersion, &m.Spec.Arbiter.PodTemplate)
-		}
-		if m.Spec.Hidden != nil {
-			m.setDefaultProbes(&m.Spec.Hidden.PodTemplate, mgVersion)
-			m.setDefaultAffinity(&m.Spec.Hidden.PodTemplate, m.OffshootSelectors(), topology)
-			apis.SetDefaultResourceLimits(&m.Spec.Hidden.PodTemplate.Spec.Resources, defaultResource)
-			m.setDefaultSecurityContext(mgVersion, &m.Spec.Hidden.PodTemplate)
-		}
 		if m.Spec.ReplicaSet != nil {
 			if m.Spec.Coordinator.SecurityContext == nil {
 				m.Spec.Coordinator.SecurityContext = &core.SecurityContext{}
 			}
 			m.assignDefaultContainerSecurityContext(mgVersion, m.Spec.Coordinator.SecurityContext) // modeDetector container
 		}
+	}
+
+	if m.Spec.Arbiter != nil {
+		m.setPodTemplateDefaultValues(&m.Spec.Arbiter.PodTemplate, mgVersion, true)
+	}
+	if m.Spec.Hidden != nil {
+		m.setPodTemplateDefaultValues(&m.Spec.Hidden.PodTemplate, mgVersion)
 	}
 
 	m.SetTLSDefaults()
@@ -755,31 +674,58 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 	}
 }
 
-func (m *MongoDB) setDefaultSecurityContext(mgVersion *v1alpha1.MongoDBVersion, podTemplate *ofstv2.PodTemplateSpec) {
+func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) {
+
+	if m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName == "" {
+		m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
+	}
+	if m.Spec.ShardTopology.Mongos.PodTemplate.Spec.ServiceAccountName == "" {
+		m.Spec.ShardTopology.Mongos.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
+	}
+	if m.Spec.ShardTopology.Shard.PodTemplate.Spec.ServiceAccountName == "" {
+		m.Spec.ShardTopology.Shard.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
+	}
+
+	m.setDefaultPodSecurityContext(mgVersion, podTemplate)
+
+	defaultResource := kubedb.DefaultResources
+	if m.isVersion6OrLater(mgVersion) {
+		defaultResource = kubedb.DefaultResourcesCPUIntensive
+	}
+
+	container := EnsureContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
+	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
+
+	container = EnsureContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
+	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
+
+	container = EnsureContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
+	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
+}
+
+func (m *MongoDB) setContainerDefaultValues(container *core.Container, mgVersion *v1alpha1.MongoDBVersion,
+	defaultResource core.ResourceRequirements, isArbiter ...bool) {
+	m.setContainerDefaultResources(container, defaultResource)
+	m.assignDefaultContainerSecurityContext(mgVersion, container.SecurityContext)
+	m.setDefaultProbes(container, mgVersion, isArbiter...)
+}
+
+func (m *MongoDB) setDefaultPodSecurityContext(mgVersion *v1alpha1.MongoDBVersion, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
-
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = mgVersion.Spec.SecurityContext.RunAsUser
 	}
-	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MongoDBContainerName)
-	if dbContainer == nil {
-		dbContainer = &core.Container{
-			Name: kubedb.MongoDBContainerName,
-		}
-	}
-	if dbContainer.SecurityContext == nil {
-		dbContainer.SecurityContext = &core.SecurityContext{}
-	}
-	m.assignDefaultContainerSecurityContext(mgVersion, dbContainer.SecurityContext)
-	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
 }
 
 func (m *MongoDB) assignDefaultContainerSecurityContext(mgVersion *v1alpha1.MongoDBVersion, sc *core.SecurityContext) {
+	if sc == nil {
+		sc = &core.SecurityContext{}
+	}
 	if sc.AllowPrivilegeEscalation == nil {
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
@@ -799,6 +745,12 @@ func (m *MongoDB) assignDefaultContainerSecurityContext(mgVersion *v1alpha1.Mong
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
+
+func (m *MongoDB) setContainerDefaultResources(container *core.Container, defaultResources core.ResourceRequirements) {
+	if container.Resources.Requests == nil && container.Resources.Limits == nil {
+		apis.SetDefaultResourceLimits(&container.Resources, defaultResources)
 	}
 }
 
@@ -978,56 +930,16 @@ func (m *MongoDB) GetDefaultReadinessProbeSpec(mgVersion *v1alpha1.MongoDBVersio
 // In operator, check if the value of probe fields is "{}".
 // For "{}", ignore readinessprobe or livenessprobe in petset.
 // ref: https://github.com/helm/charts/blob/345ba987722350ffde56ec34d2928c0b383940aa/stable/mongodb/templates/deployment-standalone.yaml#L93
-func (m *MongoDB) setDefaultProbes(podTemplate *ofstv2.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) {
-	if podTemplate == nil {
+func (m *MongoDB) setDefaultProbes(container *core.Container, mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) {
+	if container == nil {
 		return
 	}
 
-	if podTemplate.Spec.LivenessProbe == nil {
-		podTemplate.Spec.LivenessProbe = m.GetDefaultLivenessProbeSpec(mgVersion, isArbiter...)
+	if container.LivenessProbe == nil {
+		container.LivenessProbe = m.GetDefaultLivenessProbeSpec(mgVersion, isArbiter...)
 	}
-	if podTemplate.Spec.ReadinessProbe == nil {
-		podTemplate.Spec.ReadinessProbe = m.GetDefaultReadinessProbeSpec(mgVersion, isArbiter...)
-	}
-}
-
-// setDefaultAffinity
-func (m *MongoDB) setDefaultAffinity(podTemplate *ofstv1.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
-	if podTemplate == nil {
-		return
-	} else if podTemplate.Spec.Affinity != nil {
-		// Update topologyKey fields according to Kubernetes version
-		topology.ConvertAffinity(podTemplate.Spec.Affinity)
-		return
-	}
-
-	podTemplate.Spec.Affinity = &core.Affinity{
-		PodAntiAffinity: &core.PodAntiAffinity{
-			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
-				// Prefer to not schedule multiple pods on the same node
-				{
-					Weight: 100,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{m.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-						TopologyKey: core.LabelHostname,
-					},
-				},
-				// Prefer to not schedule multiple pods on the node with same zone
-				{
-					Weight: 50,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{m.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-						TopologyKey: topology.LabelZone,
-					},
-				},
-			},
-		},
+	if container.ReadinessProbe == nil {
+		container.ReadinessProbe = m.GetDefaultReadinessProbeSpec(mgVersion, isArbiter...)
 	}
 }
 
@@ -1089,7 +1001,7 @@ func (m *MongoDB) GetCertSecretName(alias MongoDBCertificateAlias, psName string
 }
 
 func (m *MongoDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
-	// Desire number of statefulSets
+	// Desire number of petSets
 	expectedItems := 1
 	if m.Spec.ShardTopology != nil {
 		expectedItems = 2 + int(m.Spec.ShardTopology.Shard.Shards)

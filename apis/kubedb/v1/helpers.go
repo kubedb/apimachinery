@@ -19,6 +19,8 @@ package v1
 import (
 	"context"
 	"fmt"
+	core_util "kmodules.xyz/client-go/core/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
 
@@ -134,6 +136,19 @@ func GetDatabasePodsByPetSetLister(db metav1.Object, psLister pslister.PetSetLis
 	}
 
 	return dbPods, nil
+}
+
+// EnsureContainerExists ensures that given container either exits by default else
+// it creates the container and insert it to the podtemplate
+func EnsureContainerExists(podTemplate *ofstv2.PodTemplateSpec, containerName string) *core.Container {
+	container := core_util.GetContainerByName(podTemplate.Spec.Containers, containerName)
+	if container == nil {
+		container = &core.Container{
+			Name: containerName,
+		}
+	}
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *container)
+	return container
 }
 
 // Upsert elements to string slice
