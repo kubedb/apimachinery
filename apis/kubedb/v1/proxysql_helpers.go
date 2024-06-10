@@ -18,8 +18,6 @@ package v1
 
 import (
 	"fmt"
-	core_util "kmodules.xyz/client-go/core/v1"
-	pslister "kubeops.dev/petset/client/listers/apps/v1"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -31,9 +29,11 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 func (*ProxySQL) Hub() {}

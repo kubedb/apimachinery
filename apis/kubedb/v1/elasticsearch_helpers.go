@@ -20,7 +20,6 @@ package v1
 import (
 	"errors"
 	"fmt"
-	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"path/filepath"
 	"strings"
 
@@ -44,6 +43,7 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 const (

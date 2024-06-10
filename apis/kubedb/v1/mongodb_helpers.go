@@ -18,7 +18,6 @@ package v1
 
 import (
 	"fmt"
-	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"strconv"
 	"strings"
 
@@ -41,6 +40,7 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 func (*MongoDB) Hub() {}
@@ -675,7 +675,6 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 }
 
 func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) {
-
 	if m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
@@ -704,7 +703,8 @@ func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpe
 }
 
 func (m *MongoDB) setContainerDefaultValues(container *core.Container, mgVersion *v1alpha1.MongoDBVersion,
-	defaultResource core.ResourceRequirements, isArbiter ...bool) {
+	defaultResource core.ResourceRequirements, isArbiter ...bool,
+) {
 	m.setContainerDefaultResources(container, defaultResource)
 	m.assignDefaultContainerSecurityContext(mgVersion, container.SecurityContext)
 	m.setDefaultProbes(container, mgVersion, isArbiter...)
