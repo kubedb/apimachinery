@@ -198,8 +198,6 @@ func (rs *RedisSentinel) SetDefaults(rdVersion *catalog.RedisVersion, topology *
 		rs.Spec.PodTemplate.Spec.ServiceAccountName = rs.OffshootName()
 	}
 
-	rs.setDefaultAffinity(rs.OffshootSelectors(), topology)
-
 	rs.Spec.Monitor.SetDefaults()
 	if rs.Spec.Monitor != nil && rs.Spec.Monitor.Prometheus != nil {
 		if rs.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
@@ -248,43 +246,6 @@ func (rs *RedisSentinel) GetPersistentSecrets() []string {
 		secrets = append(secrets, rs.Spec.AuthSecret.Name)
 	}
 	return secrets
-}
-
-func (rs *RedisSentinel) setDefaultAffinity(labels map[string]string, topology *core_util.Topology) {
-	if rs.Spec.Affinity != nil {
-		topology.ConvertAffinity(rs.Spec.Affinity)
-		return
-	}
-
-	rs.Spec.Affinity = &core.Affinity{
-		PodAntiAffinity: &core.PodAntiAffinity{
-			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
-				// Prefer to not schedule multiple pods on the same node
-				{
-					Weight: 100,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{rs.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-
-						TopologyKey: core.LabelHostname,
-					},
-				},
-				// Prefer to not schedule multiple pods on the node with same zone
-				{
-					Weight: 50,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{rs.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-						TopologyKey: topology.LabelZone,
-					},
-				},
-			},
-		},
-	}
 }
 
 func (rs *RedisSentinel) setDefaultContainerSecurityContext(rdVersion *catalog.RedisVersion, podTemplate *ofstv2.PodTemplateSpec) {

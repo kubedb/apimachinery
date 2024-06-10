@@ -220,8 +220,6 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion, topology *core
 	}
 
 	m.setDefaultContainerSecurityContext(mdVersion, &m.Spec.PodTemplate)
-
-	m.setDefaultAffinity(m.OffshootSelectors(), topology)
 	m.SetTLSDefaults()
 	m.SetHealthCheckerDefaults()
 	dbContainer := core_util.GetContainerByName(m.Spec.PodTemplate.Spec.Containers, kubedb.MariaDBContainerName)
@@ -284,44 +282,6 @@ func (m *MariaDB) assignDefaultContainerSecurityContext(mdVersion *v1alpha1.Mari
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
-	}
-}
-
-// setDefaultAffinity
-func (m *MariaDB) setDefaultAffinity(labels map[string]string, topology *core_util.Topology) {
-	if m.Spec.Affinity != nil {
-		// Update topologyKey fields according to Kubernetes version
-		topology.ConvertAffinity(m.Spec.Affinity)
-		return
-	}
-
-	m.Spec.Affinity = &core.Affinity{
-		PodAntiAffinity: &core.PodAntiAffinity{
-			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
-				// Prefer to not schedule multiple pods on the same node
-				{
-					Weight: 100,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{m.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-						TopologyKey: core.LabelHostname,
-					},
-				},
-				// Prefer to not schedule multiple pods on the node with same zone
-				{
-					Weight: 50,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{m.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-						TopologyKey: topology.LabelZone,
-					},
-				},
-			},
-		},
 	}
 }
 

@@ -673,7 +673,6 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		}
 	}
 
-	e.setDefaultAffinity(e.OffshootSelectors(), topology)
 	e.setContainerSecurityContextDefaults(esVersion, &e.Spec.PodTemplate)
 	e.setDefaultInternalUsersAndRoleMappings(esVersion)
 	e.SetMetricsExporterDefaults(esVersion)
@@ -689,47 +688,6 @@ func (e *Elasticsearch) SetMetricsExporterDefaults(esVersion *catalog.Elasticsea
 		if e.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
 			e.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = esVersion.Spec.SecurityContext.RunAsUser
 		}
-	}
-}
-
-// setDefaultAffinity
-func (e *Elasticsearch) setDefaultAffinity(labels map[string]string, topology *core_util.Topology) {
-	if e.Spec.Affinity != nil {
-		// Update topologyKey fields according to Kubernetes version
-		topology.ConvertAffinity(e.Spec.Affinity)
-		return
-	}
-
-	e.Spec.Affinity = &core.Affinity{
-		PodAntiAffinity: &core.PodAntiAffinity{
-			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
-				// Prefer to not schedule multiple pods on the same node
-				{
-					Weight: 100,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{e.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels:      labels,
-							MatchExpressions: e.GetMatchExpressions(),
-						},
-
-						TopologyKey: core.LabelHostname,
-					},
-				},
-				// Prefer to not schedule multiple pods on the node with same zone
-				{
-					Weight: 50,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{e.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels:      labels,
-							MatchExpressions: e.GetMatchExpressions(),
-						},
-						TopologyKey: topology.LabelZone,
-					},
-				},
-			},
-		},
 	}
 }
 
