@@ -93,10 +93,6 @@ type RedisSentinelSpec struct {
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
 
-	// If specified, the pod's scheduling constraints
-	// +optional
-	Affinity *core.Affinity `json:"affinity,omitempty"`
-
 	// HealthChecker defines attributes of the health checker
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 1}

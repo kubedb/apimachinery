@@ -232,8 +232,6 @@ func (p *PerconaXtraDB) SetDefaults(pVersion *v1alpha1.PerconaXtraDBVersion, top
 	// So that /var/pv directory have the group permission for the RunAsGroup user GID.
 	// Otherwise, We will get write permission denied.
 	p.setDefaultContainerSecurityContext(pVersion, &p.Spec.PodTemplate)
-
-	p.setDefaultAffinity(p.OffshootSelectors(), topology)
 	p.SetTLSDefaults()
 	dbContainer := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, kubedb.PerconaXtraDBContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
@@ -294,44 +292,6 @@ func (p *PerconaXtraDB) assignDefaultContainerSecurityContext(pVersion *v1alpha1
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
-	}
-}
-
-// setDefaultAffinity
-func (p *PerconaXtraDB) setDefaultAffinity(labels map[string]string, topology *core_util.Topology) {
-	if p.Spec.Affinity != nil {
-		// Update topologyKey fields according to Kubernetes version
-		topology.ConvertAffinity(p.Spec.Affinity)
-		return
-	}
-
-	p.Spec.Affinity = &core.Affinity{
-		PodAntiAffinity: &core.PodAntiAffinity{
-			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
-				// Prefer to not schedule multiple pods on the same node
-				{
-					Weight: 100,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{p.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-						TopologyKey: core.LabelHostname,
-					},
-				},
-				// Prefer to not schedule multiple pods on the node with same zone
-				{
-					Weight: 50,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{p.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-						TopologyKey: topology.LabelZone,
-					},
-				},
-			},
-		},
 	}
 }
 

@@ -163,10 +163,6 @@ type ElasticsearchSpec struct {
 	// +optional
 	KernelSettings *KernelSettings `json:"kernelSettings,omitempty"`
 
-	// If specified, the pod's scheduling constraints
-	// +optional
-	Affinity *core.Affinity `json:"affinity,omitempty"`
-
 	// HeapSizePercentage specifies both the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage.
 	// Elasticsearch bootstrap fails, if -Xms and -Xmx are not equal.
 	// Error: initial heap size [X] not equal to maximum heap size [Y]; this can cause resize pauses.

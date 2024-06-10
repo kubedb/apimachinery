@@ -240,7 +240,6 @@ func (r *Redis) SetDefaults(rdVersion *catalog.RedisVersion, topology *core_util
 	if r.Spec.Mode == RedisModeCluster {
 		labels[kubedb.RedisShardKey] = r.ShardNodeTemplate()
 	}
-	r.setDefaultAffinity(labels, topology)
 
 	r.Spec.Monitor.SetDefaults()
 	if r.Spec.Monitor != nil && r.Spec.Monitor.Prometheus != nil {
@@ -290,43 +289,6 @@ func (r *RedisSpec) GetPersistentSecrets() []string {
 		secrets = append(secrets, r.AuthSecret.Name)
 	}
 	return secrets
-}
-
-func (r *Redis) setDefaultAffinity(labels map[string]string, topology *core_util.Topology) {
-	if r.Spec.Affinity != nil {
-		topology.ConvertAffinity(r.Spec.Affinity)
-		return
-	}
-
-	r.Spec.Affinity = &core.Affinity{
-		PodAntiAffinity: &core.PodAntiAffinity{
-			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
-				// Prefer to not schedule multiple pods on the same node
-				{
-					Weight: 100,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{r.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-
-						TopologyKey: core.LabelHostname,
-					},
-				},
-				// Prefer to not schedule multiple pods on the node with same zone
-				{
-					Weight: 50,
-					PodAffinityTerm: core.PodAffinityTerm{
-						Namespaces: []string{r.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-						TopologyKey: topology.LabelZone,
-					},
-				},
-			},
-		},
-	}
 }
 
 func (r *Redis) setDefaultContainerSecurityContext(rdVersion *catalog.RedisVersion, podTemplate *ofstv2.PodTemplateSpec) {
