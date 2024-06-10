@@ -18,6 +18,7 @@ package v1
 
 import (
 	"fmt"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -26,10 +27,9 @@ import (
 
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
-	corev1 "k8s.io/api/core/v1"
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
@@ -198,7 +198,7 @@ func (rs *RedisSentinel) SetDefaults(rdVersion *catalog.RedisVersion, topology *
 		rs.Spec.PodTemplate.Spec.ServiceAccountName = rs.OffshootName()
 	}
 
-	rs.setDefaultAffinity(&rs.Spec.PodTemplate, rs.OffshootSelectors(), topology)
+	rs.setDefaultAffinity(rs.OffshootSelectors(), topology)
 
 	rs.Spec.Monitor.SetDefaults()
 	if rs.Spec.Monitor != nil && rs.Spec.Monitor.Prometheus != nil {
@@ -211,7 +211,10 @@ func (rs *RedisSentinel) SetDefaults(rdVersion *catalog.RedisVersion, topology *
 	}
 	rs.SetTLSDefaults()
 	rs.SetHealthCheckerDefaults()
-	apis.SetDefaultResourceLimits(&rs.Spec.PodTemplate.Spec.Resources, kubedb.DefaultResources)
+	dbContainer := core_util.GetContainerByName(rs.Spec.PodTemplate.Spec.Containers, kubedb.RedisSentinelContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+	}
 }
 
 func (rs *RedisSentinel) SetHealthCheckerDefaults() {
@@ -247,33 +250,31 @@ func (rs *RedisSentinel) GetPersistentSecrets() []string {
 	return secrets
 }
 
-func (rs *RedisSentinel) setDefaultAffinity(podTemplate *ofstv2.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
-	if podTemplate == nil {
-		return
-	} else if podTemplate.Spec.Affinity != nil {
-		topology.ConvertAffinity(podTemplate.Spec.Affinity)
+func (rs *RedisSentinel) setDefaultAffinity(labels map[string]string, topology *core_util.Topology) {
+	if rs.Spec.Affinity != nil {
+		topology.ConvertAffinity(rs.Spec.Affinity)
 		return
 	}
 
-	podTemplate.Spec.Affinity = &corev1.Affinity{
-		PodAntiAffinity: &corev1.PodAntiAffinity{
-			PreferredDuringSchedulingIgnoredDuringExecution: []corev1.WeightedPodAffinityTerm{
+	rs.Spec.Affinity = &core.Affinity{
+		PodAntiAffinity: &core.PodAntiAffinity{
+			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
 				// Prefer to not schedule multiple pods on the same node
 				{
 					Weight: 100,
-					PodAffinityTerm: corev1.PodAffinityTerm{
+					PodAffinityTerm: core.PodAffinityTerm{
 						Namespaces: []string{rs.Namespace},
 						LabelSelector: &metav1.LabelSelector{
 							MatchLabels: labels,
 						},
 
-						TopologyKey: corev1.LabelHostname,
+						TopologyKey: core.LabelHostname,
 					},
 				},
 				// Prefer to not schedule multiple pods on the node with same zone
 				{
 					Weight: 50,
-					PodAffinityTerm: corev1.PodAffinityTerm{
+					PodAffinityTerm: core.PodAffinityTerm{
 						Namespaces: []string{rs.Namespace},
 						LabelSelector: &metav1.LabelSelector{
 							MatchLabels: labels,
@@ -290,25 +291,33 @@ func (rs *RedisSentinel) setDefaultContainerSecurityContext(rdVersion *catalog.R
 	if podTemplate == nil {
 		return
 	}
-	if podTemplate.Spec.ContainerSecurityContext == nil {
-		podTemplate.Spec.ContainerSecurityContext = &corev1.SecurityContext{}
-	}
+
 	if podTemplate.Spec.SecurityContext == nil {
-		podTemplate.Spec.SecurityContext = &corev1.PodSecurityContext{}
+		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = rdVersion.Spec.SecurityContext.RunAsUser
 	}
-	rs.assignDefaultContainerSecurityContext(rdVersion, podTemplate.Spec.ContainerSecurityContext)
+	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.RedisSentinelContainerName)
+	if dbContainer == nil {
+		dbContainer = &core.Container{
+			Name: kubedb.RedisSentinelContainerName,
+		}
+	}
+	if dbContainer.SecurityContext == nil {
+		dbContainer.SecurityContext = &core.SecurityContext{}
+	}
+	rs.assignDefaultContainerSecurityContext(rdVersion, dbContainer.SecurityContext)
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
 }
 
-func (rs *RedisSentinel) assignDefaultContainerSecurityContext(rdVersion *catalog.RedisVersion, sc *corev1.SecurityContext) {
+func (rs *RedisSentinel) assignDefaultContainerSecurityContext(rdVersion *catalog.RedisVersion, sc *core.SecurityContext) {
 	if sc.AllowPrivilegeEscalation == nil {
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
 	if sc.Capabilities == nil {
-		sc.Capabilities = &corev1.Capabilities{
-			Drop: []corev1.Capability{"ALL"},
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
 		}
 	}
 	if sc.RunAsNonRoot == nil {
@@ -342,7 +351,7 @@ func (rs *RedisSentinel) GetCertSecretName(alias RedisCertificateAlias) string {
 	return rs.CertificateName(alias)
 }
 
-func (rs *RedisSentinel) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
+func (rs *RedisSentinel) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
 	return checkReplicas(lister.PetSets(rs.Namespace), labels.SelectorFromSet(rs.OffshootLabels()), expectedItems)

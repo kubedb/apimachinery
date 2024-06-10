@@ -18,6 +18,8 @@ package v1
 
 import (
 	"fmt"
+	core_util "kmodules.xyz/client-go/core/v1"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -30,7 +32,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
@@ -197,7 +198,10 @@ func (m *Memcached) SetDefaults(mcVersion *catalog.MemcachedVersion) {
 
 	m.Spec.Monitor.SetDefaults()
 	m.SetHealthCheckerDefaults()
-	apis.SetDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, kubedb.DefaultResources)
+	dbContainer := core_util.GetContainerByName(m.Spec.PodTemplate.Spec.Containers, kubedb.MemcachedContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+	}
 }
 
 func (m *Memcached) SetHealthCheckerDefaults() {
@@ -216,16 +220,24 @@ func (m *Memcached) setDefaultContainerSecurityContext(mcVersion *catalog.Memcac
 	if podTemplate == nil {
 		return
 	}
-	if podTemplate.Spec.ContainerSecurityContext == nil {
-		podTemplate.Spec.ContainerSecurityContext = &corev1.SecurityContext{}
-	}
+
 	if podTemplate.Spec.SecurityContext == nil {
-		podTemplate.Spec.SecurityContext = &corev1.PodSecurityContext{}
+		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = mcVersion.Spec.SecurityContext.RunAsUser
 	}
-	m.assignDefaultContainerSecurityContext(mcVersion, podTemplate.Spec.ContainerSecurityContext)
+	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MemcachedContainerName)
+	if dbContainer == nil {
+		dbContainer = &core.Container{
+			Name: kubedb.MemcachedContainerName,
+		}
+	}
+	if dbContainer.SecurityContext == nil {
+		dbContainer.SecurityContext = &core.SecurityContext{}
+	}
+	m.assignDefaultContainerSecurityContext(mcVersion, dbContainer.SecurityContext)
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
 }
 
 func (m *Memcached) assignDefaultContainerSecurityContext(mcVersion *catalog.MemcachedVersion, sc *core.SecurityContext) {
@@ -255,7 +267,7 @@ func (m *MemcachedSpec) GetPersistentSecrets() []string {
 	return nil
 }
 
-func (m *Memcached) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
+func (m *Memcached) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
 	return checkReplicas(lister.PetSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)

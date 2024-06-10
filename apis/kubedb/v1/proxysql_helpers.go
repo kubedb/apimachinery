@@ -18,6 +18,8 @@ package v1
 
 import (
 	"fmt"
+	core_util "kmodules.xyz/client-go/core/v1"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -27,7 +29,6 @@ import (
 	"gomodules.xyz/pointer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -188,7 +189,10 @@ func (p *ProxySQL) SetDefaults(usesAcme bool) {
 	p.Spec.Monitor.SetDefaults()
 	p.SetTLSDefaults(usesAcme)
 	p.SetHealthCheckerDefaults()
-	apis.SetDefaultResourceLimits(&p.Spec.PodTemplate.Spec.Resources, kubedb.DefaultResources)
+	dbContainer := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, kubedb.ProxySQLContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+	}
 }
 
 func (p *ProxySQL) SetHealthCheckerDefaults() {
@@ -227,7 +231,7 @@ func (p *ProxySQLSpec) GetPersistentSecrets() []string {
 	return secrets
 }
 
-func (p *ProxySQL) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
+func (p *ProxySQL) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
 	return checkReplicas(lister.PetSets(p.Namespace), labels.SelectorFromSet(p.OffshootLabels()), expectedItems)

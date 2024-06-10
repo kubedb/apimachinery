@@ -24241,11 +24241,11 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchNode(ref common.ReferenceCa
 							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 						},
 					},
-					"resources": {
+					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Compute Resources required by the sidecar container.",
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"maxUnavailable": {
@@ -24293,7 +24293,7 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchNode(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.Toleration", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -24558,6 +24558,12 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchSpec(ref common.ReferenceCa
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.KernelSettings"),
 						},
 					},
+					"affinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If specified, the pod's scheduling constraints",
+							Ref:         ref("k8s.io/api/core/v1.Affinity"),
+						},
+					},
 					"heapSizePercentage": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HeapSizePercentage specifies both the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage. Elasticsearch bootstrap fails, if -Xms and -Xmx are not equal. Error: initial heap size [X] not equal to maximum heap size [Y]; this can cause resize pauses. It will be applied to all nodes. If the node level `heapSizePercentage` is specified,  this global value will be overwritten. It defaults to 50% of memory limit.",
@@ -24577,7 +24583,7 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchRoleMapSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.KernelSettings", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchRoleMapSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.KernelSettings", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
