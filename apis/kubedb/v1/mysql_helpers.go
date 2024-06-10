@@ -18,6 +18,7 @@ package v1
 
 import (
 	"fmt"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -29,7 +30,6 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
@@ -289,10 +289,13 @@ func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion, topology *core_uti
 
 	m.setDefaultContainerSecurityContext(myVersion, &m.Spec.PodTemplate)
 
-	m.setDefaultAffinity(&m.Spec.PodTemplate, m.OffshootSelectors(), topology)
+	m.setDefaultAffinity(m.OffshootSelectors(), topology)
 	m.SetTLSDefaults()
 	m.SetHealthCheckerDefaults()
-	apis.SetDefaultResourceLimits(&m.Spec.PodTemplate.Spec.Resources, kubedb.DefaultResources)
+	dbContainer := core_util.GetContainerByName(m.Spec.PodTemplate.Spec.Containers, kubedb.MySQLContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+	}
 	m.Spec.Monitor.SetDefaults()
 	if m.Spec.Monitor != nil && m.Spec.Monitor.Prometheus != nil {
 		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
@@ -305,16 +308,14 @@ func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion, topology *core_uti
 }
 
 // setDefaultAffinity
-func (m *MySQL) setDefaultAffinity(podTemplate *ofstv2.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
-	if podTemplate == nil {
-		return
-	} else if podTemplate.Spec.Affinity != nil {
+func (m *MySQL) setDefaultAffinity(labels map[string]string, topology *core_util.Topology) {
+	if m.Spec.Affinity != nil {
 		// Update topologyKey fields according to Kubernetes version
-		topology.ConvertAffinity(podTemplate.Spec.Affinity)
+		topology.ConvertAffinity(m.Spec.Affinity)
 		return
 	}
 
-	podTemplate.Spec.Affinity = &core.Affinity{
+	m.Spec.Affinity = &core.Affinity{
 		PodAntiAffinity: &core.PodAntiAffinity{
 			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
 				// Prefer to not schedule multiple pods on the same node
@@ -394,7 +395,7 @@ func (m *MySQL) GetCertSecretName(alias MySQLCertificateAlias) string {
 	return m.CertificateName(alias)
 }
 
-func (m *MySQL) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
+func (m *MySQL) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
 	return checkReplicas(lister.PetSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
@@ -429,16 +430,24 @@ func (m *MySQL) setDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLVers
 	if podTemplate == nil {
 		return
 	}
-	if podTemplate.Spec.ContainerSecurityContext == nil {
-		podTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{}
-	}
+
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = myVersion.Spec.SecurityContext.RunAsUser
 	}
-	m.assignDefaultContainerSecurityContext(myVersion, podTemplate.Spec.ContainerSecurityContext)
+	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MySQLContainerName)
+	if dbContainer == nil {
+		dbContainer = &core.Container{
+			Name: kubedb.MySQLContainerName,
+		}
+	}
+	if dbContainer.SecurityContext == nil {
+		dbContainer.SecurityContext = &core.SecurityContext{}
+	}
+	m.assignDefaultContainerSecurityContext(myVersion, dbContainer.SecurityContext)
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
 }
 
 func (m *MySQL) assignDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLVersion, sc *core.SecurityContext) {

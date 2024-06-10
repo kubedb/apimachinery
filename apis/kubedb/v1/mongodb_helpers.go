@@ -18,6 +18,7 @@ package v1
 
 import (
 	"fmt"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"strconv"
 	"strings"
 
@@ -32,7 +33,6 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
@@ -759,16 +759,24 @@ func (m *MongoDB) setDefaultSecurityContext(mgVersion *v1alpha1.MongoDBVersion, 
 	if podTemplate == nil {
 		return
 	}
-	if podTemplate.Spec.ContainerSecurityContext == nil {
-		podTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{}
-	}
+
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = mgVersion.Spec.SecurityContext.RunAsGroup
+		podTemplate.Spec.SecurityContext.FSGroup = mgVersion.Spec.SecurityContext.RunAsUser
 	}
-	m.assignDefaultContainerSecurityContext(mgVersion, podTemplate.Spec.ContainerSecurityContext)
+	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MongoDBContainerName)
+	if dbContainer == nil {
+		dbContainer = &core.Container{
+			Name: kubedb.MongoDBContainerName,
+		}
+	}
+	if dbContainer.SecurityContext == nil {
+		dbContainer.SecurityContext = &core.SecurityContext{}
+	}
+	m.assignDefaultContainerSecurityContext(mgVersion, dbContainer.SecurityContext)
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
 }
 
 func (m *MongoDB) assignDefaultContainerSecurityContext(mgVersion *v1alpha1.MongoDBVersion, sc *core.SecurityContext) {
@@ -1080,7 +1088,7 @@ func (m *MongoDB) GetCertSecretName(alias MongoDBCertificateAlias, psName string
 	return m.CertificateName(alias, psName)
 }
 
-func (m *MongoDB) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
+func (m *MongoDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
 	if m.Spec.ShardTopology != nil {

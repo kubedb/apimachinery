@@ -163,6 +163,10 @@ type ElasticsearchSpec struct {
 	// +optional
 	KernelSettings *KernelSettings `json:"kernelSettings,omitempty"`
 
+	// If specified, the pod's scheduling constraints
+	// +optional
+	Affinity *core.Affinity `json:"affinity,omitempty"`
+
 	// HeapSizePercentage specifies both the initial heap allocation (xms) percentage and the maximum heap allocation (xmx) percentage.
 	// Elasticsearch bootstrap fails, if -Xms and -Xmx are not equal.
 	// Error: initial heap size [X] not equal to maximum heap size [Y]; this can cause resize pauses.
@@ -205,16 +209,15 @@ type ElasticsearchNode struct {
 	// Storage to specify how storage shall be used.
 	// +optional
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
-	// Compute Resources required by the sidecar container.
+	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	Resources core.ResourceRequirements `json:"resources,omitempty"`
+	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 	// An eviction is allowed if at most "maxUnavailable" pods selected by
 	// "selector" are unavailable after the eviction, i.e. even in absence of
 	// the evicted pod. For example, one can prevent all voluntary evictions
 	// by specifying 0. This is a mutually exclusive setting with "minAvailable".
 	// +optional
 	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty"`
-
 	// NodeSelector is a selector which must be true for the pod to fit on a node.
 	// Selector which must match a node's labels for the pod to be scheduled on that node.
 	// More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/

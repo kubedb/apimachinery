@@ -439,7 +439,7 @@ func (in *ElasticsearchNode) DeepCopyInto(out *ElasticsearchNode) {
 		*out = new(corev1.PersistentVolumeClaimSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	in.Resources.DeepCopyInto(&out.Resources)
+	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	if in.MaxUnavailable != nil {
 		in, out := &in.MaxUnavailable, &out.MaxUnavailable
 		*out = new(intstr.IntOrString)
@@ -587,6 +587,11 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 	if in.KernelSettings != nil {
 		in, out := &in.KernelSettings, &out.KernelSettings
 		*out = new(KernelSettings)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Affinity != nil {
+		in, out := &in.Affinity, &out.Affinity
+		*out = new(corev1.Affinity)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.HeapSizePercentage != nil {

@@ -18,6 +18,7 @@ package v1
 
 import (
 	"fmt"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"path/filepath"
 
 	"kubedb.dev/apimachinery/apis"
@@ -30,7 +31,6 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
@@ -233,9 +233,12 @@ func (p *PerconaXtraDB) SetDefaults(pVersion *v1alpha1.PerconaXtraDBVersion, top
 	// Otherwise, We will get write permission denied.
 	p.setDefaultContainerSecurityContext(pVersion, &p.Spec.PodTemplate)
 
-	p.setDefaultAffinity(&p.Spec.PodTemplate, p.OffshootSelectors(), topology)
+	p.setDefaultAffinity(p.OffshootSelectors(), topology)
 	p.SetTLSDefaults()
-	apis.SetDefaultResourceLimits(&p.Spec.PodTemplate.Spec.Resources, kubedb.DefaultResources)
+	dbContainer := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, kubedb.PerconaXtraDBContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+	}
 	p.Spec.Monitor.SetDefaults()
 	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil {
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
@@ -251,16 +254,24 @@ func (p *PerconaXtraDB) setDefaultContainerSecurityContext(pVersion *v1alpha1.Pe
 	if podTemplate == nil {
 		return
 	}
-	if podTemplate.Spec.ContainerSecurityContext == nil {
-		podTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{}
-	}
+
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = pVersion.Spec.SecurityContext.RunAsUser
 	}
-	p.assignDefaultContainerSecurityContext(pVersion, podTemplate.Spec.ContainerSecurityContext)
+	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.PerconaXtraDBContainerName)
+	if dbContainer == nil {
+		dbContainer = &core.Container{
+			Name: kubedb.PerconaXtraDBContainerName,
+		}
+	}
+	if dbContainer.SecurityContext == nil {
+		dbContainer.SecurityContext = &core.SecurityContext{}
+	}
+	p.assignDefaultContainerSecurityContext(pVersion, dbContainer.SecurityContext)
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
 }
 
 func (p *PerconaXtraDB) assignDefaultContainerSecurityContext(pVersion *v1alpha1.PerconaXtraDBVersion, sc *core.SecurityContext) {
@@ -287,16 +298,14 @@ func (p *PerconaXtraDB) assignDefaultContainerSecurityContext(pVersion *v1alpha1
 }
 
 // setDefaultAffinity
-func (p *PerconaXtraDB) setDefaultAffinity(podTemplate *ofstv2.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
-	if podTemplate == nil {
-		return
-	} else if podTemplate.Spec.Affinity != nil {
+func (p *PerconaXtraDB) setDefaultAffinity(labels map[string]string, topology *core_util.Topology) {
+	if p.Spec.Affinity != nil {
 		// Update topologyKey fields according to Kubernetes version
-		topology.ConvertAffinity(podTemplate.Spec.Affinity)
+		topology.ConvertAffinity(p.Spec.Affinity)
 		return
 	}
 
-	podTemplate.Spec.Affinity = &core.Affinity{
+	p.Spec.Affinity = &core.Affinity{
 		PodAntiAffinity: &core.PodAntiAffinity{
 			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
 				// Prefer to not schedule multiple pods on the same node
@@ -383,7 +392,7 @@ func (p *PerconaXtraDB) GetCertSecretName(alias PerconaXtraDBCertificateAlias) s
 	return p.CertificateName(alias)
 }
 
-func (p *PerconaXtraDB) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
+func (p *PerconaXtraDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
 	return checkReplicas(lister.PetSets(p.Namespace), labels.SelectorFromSet(p.OffshootLabels()), expectedItems)

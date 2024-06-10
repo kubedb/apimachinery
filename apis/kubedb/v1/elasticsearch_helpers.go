@@ -20,6 +20,7 @@ package v1
 import (
 	"errors"
 	"fmt"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"path/filepath"
 	"strings"
 
@@ -35,7 +36,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
@@ -393,16 +393,24 @@ func (e Elasticsearch) setContainerSecurityContextDefaults(esVersion *catalog.El
 	if podTemplate == nil {
 		return
 	}
-	if podTemplate.Spec.ContainerSecurityContext == nil {
-		podTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{}
-	}
+
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = esVersion.Spec.SecurityContext.RunAsUser
 	}
-	e.assignDefaultContainerSecurityContext(esVersion, podTemplate.Spec.ContainerSecurityContext)
+	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+	if dbContainer == nil {
+		dbContainer = &core.Container{
+			Name: kubedb.ElasticsearchContainerName,
+		}
+	}
+	if dbContainer.SecurityContext == nil {
+		dbContainer.SecurityContext = &core.SecurityContext{}
+	}
+	e.assignDefaultContainerSecurityContext(esVersion, dbContainer.SecurityContext)
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
 }
 
 func (e Elasticsearch) assignDefaultContainerSecurityContext(esVersion *catalog.ElasticsearchVersion, sc *core.SecurityContext) {
@@ -452,7 +460,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		if e.Spec.Topology.Ingest.Suffix == "" {
 			e.Spec.Topology.Ingest.Suffix = string(ElasticsearchNodeRoleTypeIngest)
 		}
-		apis.SetDefaultResourceLimits(&e.Spec.Topology.Ingest.Resources, kubedb.DefaultResourcesMemoryIntensive)
+		dbContainer := core_util.GetContainerByName(e.Spec.Topology.Ingest.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+		if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
+		}
 		if e.Spec.Topology.Ingest.Replicas == nil {
 			e.Spec.Topology.Ingest.Replicas = pointer.Int32P(1)
 		}
@@ -465,7 +476,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		if e.Spec.Topology.Master.Suffix == "" {
 			e.Spec.Topology.Master.Suffix = string(ElasticsearchNodeRoleTypeMaster)
 		}
-		apis.SetDefaultResourceLimits(&e.Spec.Topology.Master.Resources, kubedb.DefaultResourcesMemoryIntensive)
+		dbContainer = core_util.GetContainerByName(e.Spec.Topology.Master.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+		if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
+		}
 		if e.Spec.Topology.Master.Replicas == nil {
 			e.Spec.Topology.Master.Replicas = pointer.Int32P(1)
 		}
@@ -480,7 +494,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.Data.Suffix == "" {
 				e.Spec.Topology.Data.Suffix = string(ElasticsearchNodeRoleTypeData)
 			}
-			apis.SetDefaultResourceLimits(&e.Spec.Topology.Data.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			dbContainer = core_util.GetContainerByName(e.Spec.Topology.Data.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			}
 			if e.Spec.Topology.Data.Replicas == nil {
 				e.Spec.Topology.Data.Replicas = pointer.Int32P(1)
 			}
@@ -495,7 +512,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.DataHot.Suffix == "" {
 				e.Spec.Topology.DataHot.Suffix = string(ElasticsearchNodeRoleTypeDataHot)
 			}
-			apis.SetDefaultResourceLimits(&e.Spec.Topology.DataHot.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			dbContainer = core_util.GetContainerByName(e.Spec.Topology.DataHot.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			}
 			if e.Spec.Topology.DataHot.Replicas == nil {
 				e.Spec.Topology.DataHot.Replicas = pointer.Int32P(1)
 			}
@@ -510,7 +530,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.DataWarm.Suffix == "" {
 				e.Spec.Topology.DataWarm.Suffix = string(ElasticsearchNodeRoleTypeDataWarm)
 			}
-			apis.SetDefaultResourceLimits(&e.Spec.Topology.DataWarm.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			dbContainer = core_util.GetContainerByName(e.Spec.Topology.DataWarm.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			}
 			if e.Spec.Topology.DataWarm.Replicas == nil {
 				e.Spec.Topology.DataWarm.Replicas = pointer.Int32P(1)
 			}
@@ -525,7 +548,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.DataCold.Suffix == "" {
 				e.Spec.Topology.DataCold.Suffix = string(ElasticsearchNodeRoleTypeDataCold)
 			}
-			apis.SetDefaultResourceLimits(&e.Spec.Topology.DataCold.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			dbContainer = core_util.GetContainerByName(e.Spec.Topology.DataCold.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			}
 			if e.Spec.Topology.DataCold.Replicas == nil {
 				e.Spec.Topology.DataCold.Replicas = pointer.Int32P(1)
 			}
@@ -540,7 +566,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.DataFrozen.Suffix == "" {
 				e.Spec.Topology.DataFrozen.Suffix = string(ElasticsearchNodeRoleTypeDataFrozen)
 			}
-			apis.SetDefaultResourceLimits(&e.Spec.Topology.DataFrozen.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			dbContainer = core_util.GetContainerByName(e.Spec.Topology.DataFrozen.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			}
 			if e.Spec.Topology.DataFrozen.Replicas == nil {
 				e.Spec.Topology.DataFrozen.Replicas = pointer.Int32P(1)
 			}
@@ -555,7 +584,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.DataContent.Suffix == "" {
 				e.Spec.Topology.DataContent.Suffix = string(ElasticsearchNodeRoleTypeDataContent)
 			}
-			apis.SetDefaultResourceLimits(&e.Spec.Topology.DataContent.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			dbContainer = core_util.GetContainerByName(e.Spec.Topology.DataContent.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			}
 			if e.Spec.Topology.DataContent.Replicas == nil {
 				e.Spec.Topology.DataContent.Replicas = pointer.Int32P(1)
 			}
@@ -570,7 +602,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.ML.Suffix == "" {
 				e.Spec.Topology.ML.Suffix = string(ElasticsearchNodeRoleTypeML)
 			}
-			apis.SetDefaultResourceLimits(&e.Spec.Topology.ML.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			dbContainer = core_util.GetContainerByName(e.Spec.Topology.ML.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			}
 			if e.Spec.Topology.ML.Replicas == nil {
 				e.Spec.Topology.ML.Replicas = pointer.Int32P(1)
 			}
@@ -585,7 +620,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.Transform.Suffix == "" {
 				e.Spec.Topology.Transform.Suffix = string(ElasticsearchNodeRoleTypeTransform)
 			}
-			apis.SetDefaultResourceLimits(&e.Spec.Topology.Transform.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			dbContainer = core_util.GetContainerByName(e.Spec.Topology.Transform.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
+			}
 			if e.Spec.Topology.Transform.Replicas == nil {
 				e.Spec.Topology.Transform.Replicas = pointer.Int32P(1)
 			}
@@ -595,7 +633,10 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		}
 
 	} else {
-		apis.SetDefaultResourceLimits(&e.Spec.PodTemplate.Spec.Resources, kubedb.DefaultResourcesMemoryIntensive)
+		dbContainer := core_util.GetContainerByName(e.Spec.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+		if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
+		}
 		if e.Spec.Replicas == nil {
 			e.Spec.Replicas = pointer.Int32P(1)
 		}
@@ -632,7 +673,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		}
 	}
 
-	e.setDefaultAffinity(&e.Spec.PodTemplate, e.OffshootSelectors(), topology)
+	e.setDefaultAffinity(e.OffshootSelectors(), topology)
 	e.setContainerSecurityContextDefaults(esVersion, &e.Spec.PodTemplate)
 	e.setDefaultInternalUsersAndRoleMappings(esVersion)
 	e.SetMetricsExporterDefaults(esVersion)
@@ -652,16 +693,14 @@ func (e *Elasticsearch) SetMetricsExporterDefaults(esVersion *catalog.Elasticsea
 }
 
 // setDefaultAffinity
-func (e *Elasticsearch) setDefaultAffinity(podTemplate *ofstv2.PodTemplateSpec, labels map[string]string, topology *core_util.Topology) {
-	if podTemplate == nil {
-		return
-	} else if podTemplate.Spec.Affinity != nil {
+func (e *Elasticsearch) setDefaultAffinity(labels map[string]string, topology *core_util.Topology) {
+	if e.Spec.Affinity != nil {
 		// Update topologyKey fields according to Kubernetes version
-		topology.ConvertAffinity(podTemplate.Spec.Affinity)
+		topology.ConvertAffinity(e.Spec.Affinity)
 		return
 	}
 
-	podTemplate.Spec.Affinity = &core.Affinity{
+	e.Spec.Affinity = &core.Affinity{
 		PodAntiAffinity: &core.PodAntiAffinity{
 			PreferredDuringSchedulingIgnoredDuringExecution: []core.WeightedPodAffinityTerm{
 				// Prefer to not schedule multiple pods on the same node
@@ -985,7 +1024,7 @@ func (e *Elasticsearch) GetPersistentSecrets() []string {
 	return secrets
 }
 
-func (e *Elasticsearch) ReplicasAreReady(lister appslister.PetSetLister) (bool, string, error) {
+func (e *Elasticsearch) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
 	// Desire number of statefulSets
 	expectedItems := 1
 	if e.Spec.Topology != nil {
