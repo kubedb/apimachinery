@@ -281,11 +281,11 @@ func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion, topology *core_uti
 		}
 	}
 
+	m.setDefaultContainerSecurityContext(myVersion, &m.Spec.PodTemplate)
+
 	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
-
-	m.setDefaultContainerSecurityContext(myVersion, &m.Spec.PodTemplate)
 
 	m.setDefaultAffinity(&m.Spec.PodTemplate, m.OffshootSelectors(), topology)
 	m.SetTLSDefaults()
@@ -425,7 +425,7 @@ func (m *MySQL) GetRouterName() string {
 
 func (m *MySQL) setDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLVersion, podTemplate *ofst.PodTemplateSpec) {
 	if podTemplate == nil {
-		return
+		podTemplate = &ofst.PodTemplateSpec{}
 	}
 	if podTemplate.Spec.ContainerSecurityContext == nil {
 		podTemplate.Spec.ContainerSecurityContext = &core.SecurityContext{}
@@ -437,6 +437,18 @@ func (m *MySQL) setDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLVers
 		podTemplate.Spec.SecurityContext.FSGroup = myVersion.Spec.SecurityContext.RunAsUser
 	}
 	m.assignDefaultContainerSecurityContext(myVersion, podTemplate.Spec.ContainerSecurityContext)
+
+	initContainer := core_util.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.MySQLInitContainerName)
+	if initContainer == nil {
+		initContainer = &core.Container{
+			Name: kubedb.MySQLInitContainerName,
+		}
+	}
+	if initContainer.SecurityContext == nil {
+		initContainer.SecurityContext = &core.SecurityContext{}
+	}
+	m.assignDefaultContainerSecurityContext(myVersion, initContainer.SecurityContext)
+	podTemplate.Spec.InitContainers = core_util.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 }
 
 func (m *MySQL) assignDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLVersion, sc *core.SecurityContext) {
