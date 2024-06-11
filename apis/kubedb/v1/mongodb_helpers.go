@@ -675,7 +675,9 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 }
 
 func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) {
-
+	if podTemplate == nil {
+		return
+	}
 	if podTemplate.Spec.ServiceAccountName == "" {
 		podTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
