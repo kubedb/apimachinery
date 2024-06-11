@@ -675,14 +675,9 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 }
 
 func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) {
-	if m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName == "" {
-		m.Spec.ShardTopology.ConfigServer.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
-	}
-	if m.Spec.ShardTopology.Mongos.PodTemplate.Spec.ServiceAccountName == "" {
-		m.Spec.ShardTopology.Mongos.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
-	}
-	if m.Spec.ShardTopology.Shard.PodTemplate.Spec.ServiceAccountName == "" {
-		m.Spec.ShardTopology.Shard.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
+
+	if podTemplate.Spec.ServiceAccountName == "" {
+		podTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
 
 	m.setDefaultPodSecurityContext(mgVersion, podTemplate)
