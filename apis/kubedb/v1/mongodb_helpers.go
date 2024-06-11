@@ -689,7 +689,7 @@ func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpe
 		defaultResource = kubedb.DefaultResourcesCPUIntensive
 	}
 
-	container := EnsureContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
+	container := EnsureInitContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
 	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
 
 	container = EnsureContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
