@@ -333,7 +333,7 @@ func (p *Postgres) setInitContainerDefaults(podTemplate *ofstv2.PodTemplateSpec,
 	if podTemplate == nil {
 		return
 	}
-	container := EnsureContainerExists(podTemplate, kubedb.PostgresInitContainerName)
+	container := EnsureInitContainerExists(podTemplate, kubedb.PostgresInitContainerName)
 	p.setContainerDefaultSecurityContext(container, pgVersion)
 	p.setContainerDefaultResources(container, *kubedb.DefaultInitContainerResource.DeepCopy())
 }

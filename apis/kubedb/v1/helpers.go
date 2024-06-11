@@ -134,6 +134,28 @@ func EnsureContainerExists(podTemplate *ofstv2.PodTemplateSpec, containerName st
 		}
 	}
 	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *container)
+	for i := range podTemplate.Spec.Containers {
+		if podTemplate.Spec.Containers[i].Name == containerName {
+			container = &podTemplate.Spec.Containers[i]
+		}
+	}
+	return container
+}
+
+// it creates the container and insert it to the podtemplate
+func EnsureInitContainerExists(podTemplate *ofstv2.PodTemplateSpec, containerName string) *core.Container {
+	container := core_util.GetContainerByName(podTemplate.Spec.InitContainers, containerName)
+	if container == nil {
+		container = &core.Container{
+			Name: containerName,
+		}
+	}
+	podTemplate.Spec.InitContainers = core_util.UpsertContainer(podTemplate.Spec.InitContainers, *container)
+	for i := range podTemplate.Spec.InitContainers {
+		if podTemplate.Spec.InitContainers[i].Name == containerName {
+			container = &podTemplate.Spec.InitContainers[i]
+		}
+	}
 	return container
 }
 
