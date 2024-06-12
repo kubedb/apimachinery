@@ -20,13 +20,14 @@ import (
 	"context"
 	"fmt"
 
+	"kubedb.dev/apimachinery/apis/kubedb"
+	apiv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	dmcond "kmodules.xyz/client-go/dynamic/conditions"
-	"kubedb.dev/apimachinery/apis/kubedb"
-	apiv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	petsetapps "kubeops.dev/petset/apis/apps/v1"
 )
 
