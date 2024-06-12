@@ -565,6 +565,12 @@ const (
 	PgBouncerDefaultPoolMode                = "session"
 	PgBouncerDefaultIgnoreStartupParameters = "empty"
 	BackendSecretResourceVersion            = "backend-secret-resource-version"
+	PgBouncerAdminDatabase                  = "pgbouncer"
+	PgBouncerUserDataKey                    = "userlist"
+	PgBouncerAuthSecretVolume               = "user-secret"
+	PgBouncerConfigMountPath                = "/etc/config"
+	PgBouncerSecretMountPath                = "/var/run/pgbouncer/secret"
+	PgBouncerServingCertMountPath           = "/var/run/pgbouncer/tls/serving"
 
 	// =========================== Pgpool Constants ============================
 	EnvPostgresUsername                = "POSTGRES_USERNAME"
