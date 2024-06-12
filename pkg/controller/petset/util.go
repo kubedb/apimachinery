@@ -20,13 +20,13 @@ import (
 	"context"
 	"fmt"
 
-	"kubedb.dev/apimachinery/apis/kubedb"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	dmcond "kmodules.xyz/client-go/dynamic/conditions"
+	"kubedb.dev/apimachinery/apis/kubedb"
+	apiv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	petsetapps "kubeops.dev/petset/apis/apps/v1"
 )
 
@@ -62,6 +62,16 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		Version: gv.Version,
 	}
 	switch owner.Kind {
+	case apiv1.ResourceKindPostgres:
+		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralPostgres
+		pg, err := c.DBClient.KubedbV1().Postgreses(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
+		dbInfo.replicasReady, dbInfo.msg, err = pg.ReplicasAreReady(c.PSLister)
+		if err != nil {
+			return nil, err
+		}
 	case api.ResourceKindDruid:
 		dbInfo.opts.GVR.Resource = api.ResourcePluralDruid
 		dr, err := c.DBClient.KubedbV1alpha2().Druids(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
