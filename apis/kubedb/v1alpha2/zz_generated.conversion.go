@@ -125,12 +125,12 @@ func RegisterConversions(s *runtime.Scheme) error {
 		return err
 	}
 	if err := s.AddGeneratedConversionFunc((*CoordinatorSpec)(nil), (*[]corev1.Container)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(a.(*CoordinatorSpec), b.(*[]corev1.Container), scope)
+		return Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(a.(*CoordinatorSpec), b.(*[]corev1.Container), scope)
 	}); err != nil {
 		return err
 	}
 	if err := s.AddGeneratedConversionFunc((*[]corev1.Container)(nil), (*CoordinatorSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(a.(*[]corev1.Container), b.(*CoordinatorSpec), scope)
+		return Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(a.(*[]corev1.Container), b.(*CoordinatorSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -1704,7 +1704,7 @@ func autoConvert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in *MariaDBSpec, out *v1
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -1739,7 +1739,7 @@ func autoConvert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(in *v1.MariaDBSpec, out 
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2233,7 +2233,7 @@ func autoConvert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	out.StorageEngine = v1.StorageEngine(in.StorageEngine)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2305,7 +2305,7 @@ func autoConvert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out 
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	out.StorageEngine = StorageEngine(in.StorageEngine)
-	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2585,7 +2585,7 @@ func autoConvert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(in *MySQLSpec, out *v1.MySQL
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	out.UseAddressType = v1.AddressType(in.UseAddressType)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2630,7 +2630,7 @@ func autoConvert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(in *v1.MySQLSpec, out *MySQL
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	out.UseAddressType = AddressType(in.UseAddressType)
-	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2925,7 +2925,7 @@ func autoConvert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec(in *PerconaX
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2959,7 +2959,7 @@ func autoConvert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(in *v1.Perco
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -3321,7 +3321,7 @@ func autoConvert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out 
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
 	}
 	out.EnforceFsGroup = in.EnforceFsGroup
@@ -3364,7 +3364,7 @@ func autoConvert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, o
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.EnforceFsGroup = in.EnforceFsGroup
@@ -3912,7 +3912,7 @@ func autoConvert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.Redis
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -3948,7 +3948,7 @@ func autoConvert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *Redis
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
