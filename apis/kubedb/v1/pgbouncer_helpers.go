@@ -342,13 +342,13 @@ func (p *PgBouncer) SetSecurityContext(pgBouncerVersion *catalog.PgBouncerVersio
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{
 			RunAsUser: func() *int64 {
-				if p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser == nil {
+				if p.Spec.PodTemplate.Spec.SecurityContext == nil || p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser == nil {
 					return pgBouncerVersion.Spec.SecurityContext.RunAsUser
 				}
 				return p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser
 			}(),
 			RunAsGroup: func() *int64 {
-				if p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup == nil {
+				if p.Spec.PodTemplate.Spec.SecurityContext == nil || p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup == nil {
 					return pgBouncerVersion.Spec.SecurityContext.RunAsUser
 				}
 				return p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup
