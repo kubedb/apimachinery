@@ -20,7 +20,7 @@ import (
 	"context"
 	"fmt"
 
-	kdm "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kdm "kubedb.dev/apimachinery/apis/kubedb/v1"
 	"kubedb.dev/apimachinery/crds"
 	"kubedb.dev/apimachinery/pkg/double_optin"
 

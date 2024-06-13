@@ -245,7 +245,7 @@ func (in *MariaDBArchiverSpec) DeepCopyInto(out *MariaDBArchiverSpec) {
 	*out = *in
 	if in.Databases != nil {
 		in, out := &in.Databases, &out.Databases
-		*out = new(v1alpha2.AllowedConsumers)
+		*out = new(kubedbv1.AllowedConsumers)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.RetentionPolicy != nil {
@@ -521,7 +521,7 @@ func (in *MySQLArchiverSpec) DeepCopyInto(out *MySQLArchiverSpec) {
 	*out = *in
 	if in.Databases != nil {
 		in, out := &in.Databases, &out.Databases
-		*out = new(v1alpha2.AllowedConsumers)
+		*out = new(kubedbv1.AllowedConsumers)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.RetentionPolicy != nil {
