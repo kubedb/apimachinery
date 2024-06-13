@@ -17,7 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
