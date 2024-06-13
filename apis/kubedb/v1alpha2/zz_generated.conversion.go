@@ -124,13 +124,13 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*CoordinatorSpec)(nil), (*[]corev1.Container)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(a.(*CoordinatorSpec), b.(*[]corev1.Container), scope)
+	if err := s.AddGeneratedConversionFunc((*CoordinatorSpec)(nil), (*v1.CoordinatorSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(a.(*CoordinatorSpec), b.(*v1.CoordinatorSpec), scope)
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*[]corev1.Container)(nil), (*CoordinatorSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(a.(*[]corev1.Container), b.(*CoordinatorSpec), scope)
+	if err := s.AddGeneratedConversionFunc((*v1.CoordinatorSpec)(nil), (*CoordinatorSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(a.(*v1.CoordinatorSpec), b.(*CoordinatorSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -171,16 +171,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*v1.ElasticsearchList)(nil), (*ElasticsearchList)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_ElasticsearchList_To_v1alpha2_ElasticsearchList(a.(*v1.ElasticsearchList), b.(*ElasticsearchList), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*ElasticsearchNode)(nil), (*v1.ElasticsearchNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(a.(*ElasticsearchNode), b.(*v1.ElasticsearchNode), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.ElasticsearchNode)(nil), (*ElasticsearchNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(a.(*v1.ElasticsearchNode), b.(*ElasticsearchNode), scope)
 	}); err != nil {
 		return err
 	}
@@ -704,11 +694,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*PostgresSpec)(nil), (*v1.PostgresSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(a.(*PostgresSpec), b.(*v1.PostgresSpec), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*v1.PostgresSpec)(nil), (*PostgresSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(a.(*v1.PostgresSpec), b.(*PostgresSpec), scope)
 	}); err != nil {
@@ -934,8 +919,33 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*[]corev1.Container)(nil), (*CoordinatorSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(a.(*[]corev1.Container), b.(*CoordinatorSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.ElasticsearchNode)(nil), (*ElasticsearchNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(a.(*v1.ElasticsearchNode), b.(*ElasticsearchNode), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*apiv1.PodTemplateSpec)(nil), (*v2.PodTemplateSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(a.(*apiv1.PodTemplateSpec), b.(*v2.PodTemplateSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*CoordinatorSpec)(nil), (*[]corev1.Container)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(a.(*CoordinatorSpec), b.(*[]corev1.Container), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*ElasticsearchNode)(nil), (*v1.ElasticsearchNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(a.(*ElasticsearchNode), b.(*v1.ElasticsearchNode), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*PostgresSpec)(nil), (*v1.PostgresSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(a.(*PostgresSpec), b.(*v1.PostgresSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -1145,6 +1155,28 @@ func Convert_v1_ConsumerNamespaces_To_v1alpha2_ConsumerNamespaces(in *v1.Consume
 	return autoConvert_v1_ConsumerNamespaces_To_v1alpha2_ConsumerNamespaces(in, out, s)
 }
 
+func autoConvert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(in *CoordinatorSpec, out *v1.CoordinatorSpec, s conversion.Scope) error {
+	out.Resources = in.Resources
+	out.SecurityContext = (*corev1.SecurityContext)(unsafe.Pointer(in.SecurityContext))
+	return nil
+}
+
+// Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec is an autogenerated conversion function.
+func Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(in *CoordinatorSpec, out *v1.CoordinatorSpec, s conversion.Scope) error {
+	return autoConvert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(in, out, s)
+}
+
+func autoConvert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(in *v1.CoordinatorSpec, out *CoordinatorSpec, s conversion.Scope) error {
+	out.Resources = in.Resources
+	out.SecurityContext = (*corev1.SecurityContext)(unsafe.Pointer(in.SecurityContext))
+	return nil
+}
+
+// Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec is an autogenerated conversion function.
+func Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(in *v1.CoordinatorSpec, out *CoordinatorSpec, s conversion.Scope) error {
+	return autoConvert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(in, out, s)
+}
+
 func autoConvert_v1alpha2_Database_To_v1_Database(in *Database, out *v1.Database, s conversion.Scope) error {
 	out.SyncUsers = in.SyncUsers
 	out.DatabaseRef = in.DatabaseRef
@@ -1208,15 +1240,87 @@ func autoConvert_v1alpha2_ElasticsearchClusterTopology_To_v1_ElasticsearchCluste
 	if err := Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(&in.Ingest, &out.Ingest, s); err != nil {
 		return err
 	}
-	out.Data = (*v1.ElasticsearchNode)(unsafe.Pointer(in.Data))
-	out.DataContent = (*v1.ElasticsearchNode)(unsafe.Pointer(in.DataContent))
-	out.DataHot = (*v1.ElasticsearchNode)(unsafe.Pointer(in.DataHot))
-	out.DataWarm = (*v1.ElasticsearchNode)(unsafe.Pointer(in.DataWarm))
-	out.DataCold = (*v1.ElasticsearchNode)(unsafe.Pointer(in.DataCold))
-	out.DataFrozen = (*v1.ElasticsearchNode)(unsafe.Pointer(in.DataFrozen))
-	out.ML = (*v1.ElasticsearchNode)(unsafe.Pointer(in.ML))
-	out.Transform = (*v1.ElasticsearchNode)(unsafe.Pointer(in.Transform))
-	out.Coordinating = (*v1.ElasticsearchNode)(unsafe.Pointer(in.Coordinating))
+	if in.Data != nil {
+		in, out := &in.Data, &out.Data
+		*out = new(v1.ElasticsearchNode)
+		if err := Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Data = nil
+	}
+	if in.DataContent != nil {
+		in, out := &in.DataContent, &out.DataContent
+		*out = new(v1.ElasticsearchNode)
+		if err := Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.DataContent = nil
+	}
+	if in.DataHot != nil {
+		in, out := &in.DataHot, &out.DataHot
+		*out = new(v1.ElasticsearchNode)
+		if err := Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.DataHot = nil
+	}
+	if in.DataWarm != nil {
+		in, out := &in.DataWarm, &out.DataWarm
+		*out = new(v1.ElasticsearchNode)
+		if err := Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.DataWarm = nil
+	}
+	if in.DataCold != nil {
+		in, out := &in.DataCold, &out.DataCold
+		*out = new(v1.ElasticsearchNode)
+		if err := Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.DataCold = nil
+	}
+	if in.DataFrozen != nil {
+		in, out := &in.DataFrozen, &out.DataFrozen
+		*out = new(v1.ElasticsearchNode)
+		if err := Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.DataFrozen = nil
+	}
+	if in.ML != nil {
+		in, out := &in.ML, &out.ML
+		*out = new(v1.ElasticsearchNode)
+		if err := Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.ML = nil
+	}
+	if in.Transform != nil {
+		in, out := &in.Transform, &out.Transform
+		*out = new(v1.ElasticsearchNode)
+		if err := Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Transform = nil
+	}
+	if in.Coordinating != nil {
+		in, out := &in.Coordinating, &out.Coordinating
+		*out = new(v1.ElasticsearchNode)
+		if err := Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Coordinating = nil
+	}
 	return nil
 }
 
@@ -1232,15 +1336,87 @@ func autoConvert_v1_ElasticsearchClusterTopology_To_v1alpha2_ElasticsearchCluste
 	if err := Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(&in.Ingest, &out.Ingest, s); err != nil {
 		return err
 	}
-	out.Data = (*ElasticsearchNode)(unsafe.Pointer(in.Data))
-	out.DataContent = (*ElasticsearchNode)(unsafe.Pointer(in.DataContent))
-	out.DataHot = (*ElasticsearchNode)(unsafe.Pointer(in.DataHot))
-	out.DataWarm = (*ElasticsearchNode)(unsafe.Pointer(in.DataWarm))
-	out.DataCold = (*ElasticsearchNode)(unsafe.Pointer(in.DataCold))
-	out.DataFrozen = (*ElasticsearchNode)(unsafe.Pointer(in.DataFrozen))
-	out.ML = (*ElasticsearchNode)(unsafe.Pointer(in.ML))
-	out.Transform = (*ElasticsearchNode)(unsafe.Pointer(in.Transform))
-	out.Coordinating = (*ElasticsearchNode)(unsafe.Pointer(in.Coordinating))
+	if in.Data != nil {
+		in, out := &in.Data, &out.Data
+		*out = new(ElasticsearchNode)
+		if err := Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Data = nil
+	}
+	if in.DataContent != nil {
+		in, out := &in.DataContent, &out.DataContent
+		*out = new(ElasticsearchNode)
+		if err := Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.DataContent = nil
+	}
+	if in.DataHot != nil {
+		in, out := &in.DataHot, &out.DataHot
+		*out = new(ElasticsearchNode)
+		if err := Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.DataHot = nil
+	}
+	if in.DataWarm != nil {
+		in, out := &in.DataWarm, &out.DataWarm
+		*out = new(ElasticsearchNode)
+		if err := Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.DataWarm = nil
+	}
+	if in.DataCold != nil {
+		in, out := &in.DataCold, &out.DataCold
+		*out = new(ElasticsearchNode)
+		if err := Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.DataCold = nil
+	}
+	if in.DataFrozen != nil {
+		in, out := &in.DataFrozen, &out.DataFrozen
+		*out = new(ElasticsearchNode)
+		if err := Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.DataFrozen = nil
+	}
+	if in.ML != nil {
+		in, out := &in.ML, &out.ML
+		*out = new(ElasticsearchNode)
+		if err := Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.ML = nil
+	}
+	if in.Transform != nil {
+		in, out := &in.Transform, &out.Transform
+		*out = new(ElasticsearchNode)
+		if err := Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Transform = nil
+	}
+	if in.Coordinating != nil {
+		in, out := &in.Coordinating, &out.Coordinating
+		*out = new(ElasticsearchNode)
+		if err := Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Coordinating = nil
+	}
 	return nil
 }
 
@@ -1291,40 +1467,6 @@ func Convert_v1_ElasticsearchList_To_v1alpha2_ElasticsearchList(in *v1.Elasticse
 	return autoConvert_v1_ElasticsearchList_To_v1alpha2_ElasticsearchList(in, out, s)
 }
 
-func autoConvert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(in *ElasticsearchNode, out *v1.ElasticsearchNode, s conversion.Scope) error {
-	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.Suffix = in.Suffix
-	out.HeapSizePercentage = (*int32)(unsafe.Pointer(in.HeapSizePercentage))
-	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
-	// TODO: out.Resources = in.Resources
-	out.MaxUnavailable = (*intstr.IntOrString)(unsafe.Pointer(in.MaxUnavailable))
-	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
-	out.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.Tolerations))
-	return nil
-}
-
-// Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode is an autogenerated conversion function.
-func Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(in *ElasticsearchNode, out *v1.ElasticsearchNode, s conversion.Scope) error {
-	return autoConvert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(in, out, s)
-}
-
-func autoConvert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(in *v1.ElasticsearchNode, out *ElasticsearchNode, s conversion.Scope) error {
-	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.Suffix = in.Suffix
-	out.HeapSizePercentage = (*int32)(unsafe.Pointer(in.HeapSizePercentage))
-	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
-	// TODO: out.Resources = in.Resources
-	out.MaxUnavailable = (*intstr.IntOrString)(unsafe.Pointer(in.MaxUnavailable))
-	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
-	out.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.Tolerations))
-	return nil
-}
-
-// Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode is an autogenerated conversion function.
-func Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(in *v1.ElasticsearchNode, out *ElasticsearchNode, s conversion.Scope) error {
-	return autoConvert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(in, out, s)
-}
-
 func autoConvert_v1alpha2_ElasticsearchRoleMapSpec_To_v1_ElasticsearchRoleMapSpec(in *ElasticsearchRoleMapSpec, out *v1.ElasticsearchRoleMapSpec, s conversion.Scope) error {
 	out.Reserved = in.Reserved
 	out.Hidden = in.Hidden
@@ -1361,7 +1503,15 @@ func autoConvert_v1alpha2_ElasticsearchSpec_To_v1_ElasticsearchSpec(in *Elastics
 	}
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.Topology = (*v1.ElasticsearchClusterTopology)(unsafe.Pointer(in.Topology))
+	if in.Topology != nil {
+		in, out := &in.Topology, &out.Topology
+		*out = new(v1.ElasticsearchClusterTopology)
+		if err := Convert_v1alpha2_ElasticsearchClusterTopology_To_v1_ElasticsearchClusterTopology(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Topology = nil
+	}
 	out.EnableSSL = in.EnableSSL
 	out.DisableSecurity = in.DisableSecurity
 	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
@@ -1398,7 +1548,15 @@ func autoConvert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(in *v1.Elast
 	}
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.Topology = (*ElasticsearchClusterTopology)(unsafe.Pointer(in.Topology))
+	if in.Topology != nil {
+		in, out := &in.Topology, &out.Topology
+		*out = new(ElasticsearchClusterTopology)
+		if err := Convert_v1_ElasticsearchClusterTopology_To_v1alpha2_ElasticsearchClusterTopology(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Topology = nil
+	}
 	out.EnableSSL = in.EnableSSL
 	out.DisableSecurity = in.DisableSecurity
 	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
@@ -1704,7 +1862,7 @@ func autoConvert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in *MariaDBSpec, out *v1
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -1739,7 +1897,7 @@ func autoConvert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(in *v1.MariaDBSpec, out 
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2233,7 +2391,7 @@ func autoConvert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	out.StorageEngine = v1.StorageEngine(in.StorageEngine)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2305,7 +2463,7 @@ func autoConvert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out 
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	out.StorageEngine = StorageEngine(in.StorageEngine)
-	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2585,7 +2743,7 @@ func autoConvert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(in *MySQLSpec, out *v1.MySQL
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	out.UseAddressType = v1.AddressType(in.UseAddressType)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2630,7 +2788,7 @@ func autoConvert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(in *v1.MySQLSpec, out *MySQL
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	out.UseAddressType = AddressType(in.UseAddressType)
-	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2925,7 +3083,7 @@ func autoConvert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec(in *PerconaX
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2959,7 +3117,7 @@ func autoConvert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(in *v1.Perco
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -3295,49 +3453,6 @@ func Convert_v1_PostgresReplication_To_v1alpha2_PostgresReplication(in *v1.Postg
 	return autoConvert_v1_PostgresReplication_To_v1alpha2_PostgresReplication(in, out, s)
 }
 
-func autoConvert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out *v1.PostgresSpec, s conversion.Scope) error {
-	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
-		return err
-	}
-	out.Version = in.Version
-	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.StandbyMode = (*v1.PostgresStandbyMode)(unsafe.Pointer(in.StandbyMode))
-	out.StreamingMode = (*v1.PostgresStreamingMode)(unsafe.Pointer(in.StreamingMode))
-	out.Mode = (*v1.PostgreSQLMode)(unsafe.Pointer(in.Mode))
-	out.RemoteReplica = (*v1.RemoteReplicaSpec)(unsafe.Pointer(in.RemoteReplica))
-	out.LeaderElection = (*v1.PostgreLeaderElectionConfig)(unsafe.Pointer(in.LeaderElection))
-	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
-	out.StorageType = v1.StorageType(in.StorageType)
-	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
-	out.ClientAuthMode = v1.PostgresClientAuthMode(in.ClientAuthMode)
-	out.SSLMode = v1.PostgresSSLMode(in.SSLMode)
-	out.Init = (*v1.InitSpec)(unsafe.Pointer(in.Init))
-	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
-	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
-		return err
-	}
-	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
-	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
-		return err
-	}
-	out.EnforceFsGroup = in.EnforceFsGroup
-	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
-	out.HealthChecker = in.HealthChecker
-	out.Archiver = (*v1.Archiver)(unsafe.Pointer(in.Archiver))
-	out.Arbiter = (*v1.ArbiterSpec)(unsafe.Pointer(in.Arbiter))
-	out.Replication = (*v1.PostgresReplication)(unsafe.Pointer(in.Replication))
-	return nil
-}
-
-// Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec is an autogenerated conversion function.
-func Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out *v1.PostgresSpec, s conversion.Scope) error {
-	return autoConvert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in, out, s)
-}
-
 func autoConvert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, out *PostgresSpec, s conversion.Scope) error {
 	if err := Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
 		return err
@@ -3364,9 +3479,6 @@ func autoConvert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, o
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
-		return err
-	}
 	out.EnforceFsGroup = in.EnforceFsGroup
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
@@ -3912,7 +4024,7 @@ func autoConvert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.Redis
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_v1_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -3948,7 +4060,7 @@ func autoConvert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *Redis
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+	if err := Convert_v1_CoordinatorSpec_To_v1alpha2_CoordinatorSpec(&in.Coordinator, &out.Coordinator, s); err != nil {
 		return err
 	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
