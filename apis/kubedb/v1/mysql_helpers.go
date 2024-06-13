@@ -280,6 +280,17 @@ func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion, topology *core_uti
 
 	m.setDefaultContainerSecurityContext(myVersion, &m.Spec.PodTemplate)
 
+	if m.IsInnoDBCluster() {
+		if m.Spec.Topology != nil && m.Spec.Topology.InnoDBCluster != nil {
+			m.setDefaultInnoDBContainerSecurityContext(myVersion, m.Spec.Topology.InnoDBCluster.Router.PodTemplate)
+
+			routerContainer := core_util.GetContainerByName(m.Spec.Topology.InnoDBCluster.Router.PodTemplate.Spec.Containers, kubedb.MySQLRouterContainerName)
+			if routerContainer != nil && (routerContainer.Resources.Requests == nil && routerContainer.Resources.Limits == nil) {
+				apis.SetDefaultResourceLimits(&routerContainer.Resources, kubedb.CoordinatorDefaultResources)
+			}
+		}
+	}
+
 	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
@@ -429,6 +440,31 @@ func (m *MySQL) setDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLVers
 		m.assignDefaultContainerSecurityContext(myVersion, coordinatorContainer.SecurityContext)
 		podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *coordinatorContainer)
 	}
+}
+
+func (m *MySQL) setDefaultInnoDBContainerSecurityContext(myVersion *v1alpha1.MySQLVersion, podTemplate *ofstv2.PodTemplateSpec) {
+	if podTemplate == nil {
+		podTemplate = &ofstv2.PodTemplateSpec{}
+	}
+
+	if podTemplate.Spec.SecurityContext == nil {
+		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
+	}
+	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+		podTemplate.Spec.SecurityContext.FSGroup = myVersion.Spec.SecurityContext.RunAsUser
+	}
+
+	routerContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MySQLRouterContainerName)
+	if routerContainer == nil {
+		routerContainer = &core.Container{
+			Name: kubedb.MySQLRouterContainerName,
+		}
+	}
+	if routerContainer.SecurityContext == nil {
+		routerContainer.SecurityContext = &core.SecurityContext{}
+	}
+	m.assignDefaultContainerSecurityContext(myVersion, routerContainer.SecurityContext)
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *routerContainer)
 }
 
 func (m *MySQL) assignDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLVersion, sc *core.SecurityContext) {
