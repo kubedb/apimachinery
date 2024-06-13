@@ -73,6 +73,36 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+	case apiv1.ResourceKindRedis:
+		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralRedis
+		pg, err := c.DBClient.KubedbV1().Redises(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
+		dbInfo.replicasReady, dbInfo.msg, err = pg.ReplicasAreReady(c.PSLister)
+		if err != nil {
+			return nil, err
+		}
+	case api.ResourceKindRedisSentinel:
+		dbInfo.opts.GVR.Resource = api.ResourcePluralRedisSentinel
+		rd, err := c.DBClient.KubedbV1().RedisSentinels(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
+		dbInfo.replicasReady, dbInfo.msg, err = rd.ReplicasAreReady(c.PSLister)
+		if err != nil {
+			return nil, err
+		}
+	case api.ResourceKindMemcached:
+		dbInfo.opts.GVR.Resource = api.ResourcePluralMemcached
+		mc, err := c.DBClient.KubedbV1().Memcacheds(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
+		dbInfo.replicasReady, dbInfo.msg, err = mc.ReplicasAreReady(c.PSLister)
+		if err != nil {
+			return nil, err
+		}
 	case api.ResourceKindDruid:
 		dbInfo.opts.GVR.Resource = api.ResourcePluralDruid
 		dr, err := c.DBClient.KubedbV1alpha2().Druids(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
