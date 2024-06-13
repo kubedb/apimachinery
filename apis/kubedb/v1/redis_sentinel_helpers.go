@@ -194,10 +194,14 @@ func (rs *RedisSentinel) SetDefaults(rdVersion *catalog.RedisVersion, topology *
 	}
 
 	rs.setDefaultContainerSecurityContext(rdVersion, &rs.Spec.PodTemplate)
+	rs.setDefaultContainerResourceLimits(&rs.Spec.PodTemplate)
+
 	if rs.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		rs.Spec.PodTemplate.Spec.ServiceAccountName = rs.OffshootName()
 	}
 
+	rs.SetTLSDefaults()
+	rs.SetHealthCheckerDefaults()
 	rs.Spec.Monitor.SetDefaults()
 	if rs.Spec.Monitor != nil && rs.Spec.Monitor.Prometheus != nil {
 		if rs.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
@@ -206,12 +210,6 @@ func (rs *RedisSentinel) SetDefaults(rdVersion *catalog.RedisVersion, topology *
 		if rs.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
 			rs.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = rdVersion.Spec.SecurityContext.RunAsUser
 		}
-	}
-	rs.SetTLSDefaults()
-	rs.SetHealthCheckerDefaults()
-	dbContainer := core_util.GetContainerByName(rs.Spec.PodTemplate.Spec.Containers, kubedb.RedisSentinelContainerName)
-	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
 }
 
@@ -250,7 +248,7 @@ func (rs *RedisSentinel) GetPersistentSecrets() []string {
 
 func (rs *RedisSentinel) setDefaultContainerSecurityContext(rdVersion *catalog.RedisVersion, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
-		return
+		podTemplate = &ofstv2.PodTemplateSpec{}
 	}
 
 	if podTemplate.Spec.SecurityContext == nil {
@@ -270,6 +268,18 @@ func (rs *RedisSentinel) setDefaultContainerSecurityContext(rdVersion *catalog.R
 	}
 	rs.assignDefaultContainerSecurityContext(rdVersion, dbContainer.SecurityContext)
 	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
+
+	initContainer := core_util.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.RedisSentinelInitContainerName)
+	if initContainer == nil {
+		initContainer = &core.Container{
+			Name: kubedb.RedisSentinelInitContainerName,
+		}
+	}
+	if initContainer.SecurityContext == nil {
+		initContainer.SecurityContext = &core.SecurityContext{}
+	}
+	rs.assignDefaultContainerSecurityContext(rdVersion, initContainer.SecurityContext)
+	podTemplate.Spec.InitContainers = core_util.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 }
 
 func (rs *RedisSentinel) assignDefaultContainerSecurityContext(rdVersion *catalog.RedisVersion, sc *core.SecurityContext) {
@@ -292,6 +302,18 @@ func (rs *RedisSentinel) assignDefaultContainerSecurityContext(rdVersion *catalo
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
+
+func (rs *RedisSentinel) setDefaultContainerResourceLimits(podTemplate *ofstv2.PodTemplateSpec) {
+	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.RedisSentinelContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+	}
+
+	initContainer := core_util.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.RedisSentinelInitContainerName)
+	if initContainer != nil && (initContainer.Resources.Requests == nil && initContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&initContainer.Resources, kubedb.DefaultInitContainerResource)
 	}
 }
 
