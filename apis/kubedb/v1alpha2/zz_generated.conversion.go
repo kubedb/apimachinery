@@ -124,7 +124,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-
 	if err := s.AddGeneratedConversionFunc((*Database)(nil), (*v1.Database)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_Database_To_v1_Database(a.(*Database), b.(*v1.Database), scope)
 	}); err != nil {
@@ -262,16 +261,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*v1.MariaDBList)(nil), (*MariaDBList)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_MariaDBList_To_v1alpha2_MariaDBList(a.(*v1.MariaDBList), b.(*MariaDBList), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*MariaDBSpec)(nil), (*v1.MariaDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(a.(*MariaDBSpec), b.(*v1.MariaDBSpec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.MariaDBSpec)(nil), (*MariaDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(a.(*v1.MariaDBSpec), b.(*MariaDBSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -415,16 +404,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*MongoDBSpec)(nil), (*v1.MongoDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(a.(*MongoDBSpec), b.(*v1.MongoDBSpec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.MongoDBSpec)(nil), (*MongoDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(a.(*v1.MongoDBSpec), b.(*MongoDBSpec), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*MongoDBStatus)(nil), (*v1.MongoDBStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_MongoDBStatus_To_v1_MongoDBStatus(a.(*MongoDBStatus), b.(*v1.MongoDBStatus), scope)
 	}); err != nil {
@@ -492,16 +471,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*v1.MySQLRouterSpec)(nil), (*MySQLRouterSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_MySQLRouterSpec_To_v1alpha2_MySQLRouterSpec(a.(*v1.MySQLRouterSpec), b.(*MySQLRouterSpec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*MySQLSpec)(nil), (*v1.MySQLSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(a.(*MySQLSpec), b.(*v1.MySQLSpec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.MySQLSpec)(nil), (*MySQLSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(a.(*v1.MySQLSpec), b.(*MySQLSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -582,16 +551,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*v1.PerconaXtraDBList)(nil), (*PerconaXtraDBList)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_PerconaXtraDBList_To_v1alpha2_PerconaXtraDBList(a.(*v1.PerconaXtraDBList), b.(*PerconaXtraDBList), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*PerconaXtraDBSpec)(nil), (*v1.PerconaXtraDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec(a.(*PerconaXtraDBSpec), b.(*v1.PerconaXtraDBSpec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.PerconaXtraDBSpec)(nil), (*PerconaXtraDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(a.(*v1.PerconaXtraDBSpec), b.(*PerconaXtraDBSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -835,16 +794,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*RedisSpec)(nil), (*v1.RedisSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(a.(*RedisSpec), b.(*v1.RedisSpec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.RedisSpec)(nil), (*RedisSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_RedisSpec_To_v1alpha2_RedisSpec(a.(*v1.RedisSpec), b.(*RedisSpec), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*RedisStatus)(nil), (*v1.RedisStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_RedisStatus_To_v1_RedisStatus(a.(*RedisStatus), b.(*v1.RedisStatus), scope)
 	}); err != nil {
@@ -915,6 +864,26 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*v1.MariaDBSpec)(nil), (*MariaDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(a.(*v1.MariaDBSpec), b.(*MariaDBSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.MongoDBSpec)(nil), (*MongoDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(a.(*v1.MongoDBSpec), b.(*MongoDBSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.MySQLSpec)(nil), (*MySQLSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(a.(*v1.MySQLSpec), b.(*MySQLSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.PerconaXtraDBSpec)(nil), (*PerconaXtraDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(a.(*v1.PerconaXtraDBSpec), b.(*PerconaXtraDBSpec), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*apiv1.PodTemplateSpec)(nil), (*v2.PodTemplateSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(a.(*apiv1.PodTemplateSpec), b.(*v2.PodTemplateSpec), scope)
 	}); err != nil {
@@ -922,6 +891,11 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddConversionFunc((*v1.PostgresSpec)(nil), (*PostgresSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(a.(*v1.PostgresSpec), b.(*PostgresSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.RedisSpec)(nil), (*RedisSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_RedisSpec_To_v1alpha2_RedisSpec(a.(*v1.RedisSpec), b.(*RedisSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -935,8 +909,33 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*MariaDBSpec)(nil), (*v1.MariaDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(a.(*MariaDBSpec), b.(*v1.MariaDBSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*MongoDBSpec)(nil), (*v1.MongoDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(a.(*MongoDBSpec), b.(*v1.MongoDBSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*MySQLSpec)(nil), (*v1.MySQLSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(a.(*MySQLSpec), b.(*v1.MySQLSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*PerconaXtraDBSpec)(nil), (*v1.PerconaXtraDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec(a.(*PerconaXtraDBSpec), b.(*v1.PerconaXtraDBSpec), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*PostgresSpec)(nil), (*v1.PostgresSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(a.(*PostgresSpec), b.(*v1.PostgresSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*RedisSpec)(nil), (*v1.RedisSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(a.(*RedisSpec), b.(*v1.RedisSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -1855,18 +1854,11 @@ func autoConvert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in *MariaDBSpec, out *v1
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
-		return err
-	}
+	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*v1.Archiver)(unsafe.Pointer(in.Archiver))
 	return nil
-}
-
-// Convert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec is an autogenerated conversion function.
-func Convert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in *MariaDBSpec, out *v1.MariaDBSpec, s conversion.Scope) error {
-	return autoConvert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in, out, s)
 }
 
 func autoConvert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(in *v1.MariaDBSpec, out *MariaDBSpec, s conversion.Scope) error {
@@ -1890,18 +1882,10 @@ func autoConvert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(in *v1.MariaDBSpec, out 
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
-		return err
-	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*Archiver)(unsafe.Pointer(in.Archiver))
 	return nil
-}
-
-// Convert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec is an autogenerated conversion function.
-func Convert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(in *v1.MariaDBSpec, out *MariaDBSpec, s conversion.Scope) error {
-	return autoConvert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(in, out, s)
 }
 
 func autoConvert_v1alpha2_MariaDBStatus_To_v1_MariaDBStatus(in *MariaDBStatus, out *v1.MariaDBStatus, s conversion.Scope) error {
@@ -2384,9 +2368,7 @@ func autoConvert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	out.StorageEngine = v1.StorageEngine(in.StorageEngine)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
-		return err
-	}
+	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	if in.Arbiter != nil {
 		in, out := &in.Arbiter, &out.Arbiter
@@ -2409,11 +2391,6 @@ func autoConvert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*v1.Archiver)(unsafe.Pointer(in.Archiver))
 	return nil
-}
-
-// Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec is an autogenerated conversion function.
-func Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1.MongoDBSpec, s conversion.Scope) error {
-	return autoConvert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in, out, s)
 }
 
 func autoConvert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out *MongoDBSpec, s conversion.Scope) error {
@@ -2456,9 +2433,6 @@ func autoConvert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out 
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	out.StorageEngine = StorageEngine(in.StorageEngine)
-	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
-		return err
-	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	if in.Arbiter != nil {
 		in, out := &in.Arbiter, &out.Arbiter
@@ -2481,11 +2455,6 @@ func autoConvert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out 
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*Archiver)(unsafe.Pointer(in.Archiver))
 	return nil
-}
-
-// Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec is an autogenerated conversion function.
-func Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out *MongoDBSpec, s conversion.Scope) error {
-	return autoConvert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in, out, s)
 }
 
 func autoConvert_v1alpha2_MongoDBStatus_To_v1_MongoDBStatus(in *MongoDBStatus, out *v1.MongoDBStatus, s conversion.Scope) error {
@@ -2736,19 +2705,12 @@ func autoConvert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(in *MySQLSpec, out *v1.MySQL
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	out.UseAddressType = v1.AddressType(in.UseAddressType)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
-		return err
-	}
+	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.AllowedReadReplicas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedReadReplicas))
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*v1.Archiver)(unsafe.Pointer(in.Archiver))
 	return nil
-}
-
-// Convert_v1alpha2_MySQLSpec_To_v1_MySQLSpec is an autogenerated conversion function.
-func Convert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(in *MySQLSpec, out *v1.MySQLSpec, s conversion.Scope) error {
-	return autoConvert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(in, out, s)
 }
 
 func autoConvert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(in *v1.MySQLSpec, out *MySQLSpec, s conversion.Scope) error {
@@ -2781,19 +2743,11 @@ func autoConvert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(in *v1.MySQLSpec, out *MySQL
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
 	out.UseAddressType = AddressType(in.UseAddressType)
-	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
-		return err
-	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.AllowedReadReplicas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedReadReplicas))
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*Archiver)(unsafe.Pointer(in.Archiver))
 	return nil
-}
-
-// Convert_v1_MySQLSpec_To_v1alpha2_MySQLSpec is an autogenerated conversion function.
-func Convert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(in *v1.MySQLSpec, out *MySQLSpec, s conversion.Scope) error {
-	return autoConvert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(in, out, s)
 }
 
 func autoConvert_v1alpha2_MySQLStatus_To_v1_MySQLStatus(in *MySQLStatus, out *v1.MySQLStatus, s conversion.Scope) error {
@@ -3076,18 +3030,11 @@ func autoConvert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec(in *PerconaX
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
-		return err
-	}
+	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	out.SystemUserSecrets = (*v1.SystemUserSecretsSpec)(unsafe.Pointer(in.SystemUserSecrets))
 	return nil
-}
-
-// Convert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec is an autogenerated conversion function.
-func Convert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec(in *PerconaXtraDBSpec, out *v1.PerconaXtraDBSpec, s conversion.Scope) error {
-	return autoConvert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec(in, out, s)
 }
 
 func autoConvert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(in *v1.PerconaXtraDBSpec, out *PerconaXtraDBSpec, s conversion.Scope) error {
@@ -3110,18 +3057,10 @@ func autoConvert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(in *v1.Perco
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
-		return err
-	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	out.SystemUserSecrets = (*SystemUserSecretsSpec)(unsafe.Pointer(in.SystemUserSecrets))
 	return nil
-}
-
-// Convert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec is an autogenerated conversion function.
-func Convert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(in *v1.PerconaXtraDBSpec, out *PerconaXtraDBSpec, s conversion.Scope) error {
-	return autoConvert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(in, out, s)
 }
 
 func autoConvert_v1alpha2_PerconaXtraDBStatus_To_v1_PerconaXtraDBStatus(in *PerconaXtraDBStatus, out *v1.PerconaXtraDBStatus, s conversion.Scope) error {
@@ -4048,17 +3987,10 @@ func autoConvert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.Redis
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
-		return err
-	}
+	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	return nil
-}
-
-// Convert_v1alpha2_RedisSpec_To_v1_RedisSpec is an autogenerated conversion function.
-func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec, s conversion.Scope) error {
-	return autoConvert_v1alpha2_RedisSpec_To_v1_RedisSpec(in, out, s)
 }
 
 func autoConvert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *RedisSpec, s conversion.Scope) error {
@@ -4084,17 +4016,9 @@ func autoConvert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *Redis
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
-	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
-		return err
-	}
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	return nil
-}
-
-// Convert_v1_RedisSpec_To_v1alpha2_RedisSpec is an autogenerated conversion function.
-func Convert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *RedisSpec, s conversion.Scope) error {
-	return autoConvert_v1_RedisSpec_To_v1alpha2_RedisSpec(in, out, s)
 }
 
 func autoConvert_v1alpha2_RedisStatus_To_v1_RedisStatus(in *RedisStatus, out *v1.RedisStatus, s conversion.Scope) error {
