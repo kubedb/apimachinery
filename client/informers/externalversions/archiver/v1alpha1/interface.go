@@ -24,6 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// MSSQLServerArchivers returns a MSSQLServerArchiverInformer.
+	MSSQLServerArchivers() MSSQLServerArchiverInformer
 	// MariaDBArchivers returns a MariaDBArchiverInformer.
 	MariaDBArchivers() MariaDBArchiverInformer
 	// MongoDBArchivers returns a MongoDBArchiverInformer.
@@ -43,6 +45,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// MSSQLServerArchivers returns a MSSQLServerArchiverInformer.
+func (v *version) MSSQLServerArchivers() MSSQLServerArchiverInformer {
+	return &mSSQLServerArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MariaDBArchivers returns a MariaDBArchiverInformer.
