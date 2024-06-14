@@ -209,24 +209,15 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion, topology *core
 	if m.Spec.Replicas == nil {
 		m.Spec.Replicas = pointer.Int32P(1)
 	}
-	//else {
-	//	if m.Spec.Coordinator.SecurityContext == nil {
-	//		m.Spec.Coordinator.SecurityContext = &core.SecurityContext{}
-	//	}
-	//	m.assignDefaultContainerSecurityContext(mdVersion, m.Spec.Coordinator.SecurityContext)
-	//}
 
 	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
 
 	m.setDefaultContainerSecurityContext(mdVersion, &m.Spec.PodTemplate)
+	m.setDefaultContainerResourceLimits(&m.Spec.PodTemplate)
 	m.SetTLSDefaults()
 	m.SetHealthCheckerDefaults()
-	dbContainer := core_util.GetContainerByName(m.Spec.PodTemplate.Spec.Containers, kubedb.MariaDBContainerName)
-	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
-	}
 
 	m.Spec.Monitor.SetDefaults()
 	if m.Spec.Monitor != nil && m.Spec.Monitor.Prometheus != nil {
@@ -273,6 +264,20 @@ func (m *MariaDB) setDefaultContainerSecurityContext(mdVersion *v1alpha1.MariaDB
 	}
 	m.assignDefaultContainerSecurityContext(mdVersion, initContainer.SecurityContext)
 	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *initContainer)
+
+	if m.IsCluster() {
+		coordinatorContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MariaDBCoordinatorContainerName)
+		if coordinatorContainer == nil {
+			coordinatorContainer = &core.Container{
+				Name: kubedb.MariaDBCoordinatorContainerName,
+			}
+		}
+		if coordinatorContainer.SecurityContext == nil {
+			coordinatorContainer.SecurityContext = &core.SecurityContext{}
+		}
+		m.assignDefaultContainerSecurityContext(mdVersion, coordinatorContainer.SecurityContext)
+		podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *coordinatorContainer)
+	}
 }
 
 func (m *MariaDB) assignDefaultContainerSecurityContext(mdVersion *v1alpha1.MariaDBVersion, sc *core.SecurityContext) {
@@ -295,6 +300,24 @@ func (m *MariaDB) assignDefaultContainerSecurityContext(mdVersion *v1alpha1.Mari
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
+
+func (m *MariaDB) setDefaultContainerResourceLimits(podTemplate *ofstv2.PodTemplateSpec) {
+	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MariaDBContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+	}
+
+	initContainer := core_util.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.MariaDBInitContainerName)
+	if initContainer != nil && (initContainer.Resources.Requests == nil && initContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&initContainer.Resources, kubedb.DefaultInitContainerResource)
+	}
+	if m.IsCluster() {
+		coordinatorContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MariaDBCoordinatorContainerName)
+		if coordinatorContainer != nil && (coordinatorContainer.Resources.Requests == nil && coordinatorContainer.Resources.Limits == nil) {
+			apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, kubedb.CoordinatorDefaultResources)
+		}
 	}
 }
 
