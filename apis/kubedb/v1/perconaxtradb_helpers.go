@@ -232,11 +232,8 @@ func (p *PerconaXtraDB) SetDefaults(pVersion *v1alpha1.PerconaXtraDBVersion, top
 	// So that /var/pv directory have the group permission for the RunAsGroup user GID.
 	// Otherwise, We will get write permission denied.
 	p.setDefaultContainerSecurityContext(pVersion, &p.Spec.PodTemplate)
+	p.setDefaultContainerResourceLimits(&p.Spec.PodTemplate)
 	p.SetTLSDefaults()
-	dbContainer := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, kubedb.PerconaXtraDBContainerName)
-	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
-	}
 	p.Spec.Monitor.SetDefaults()
 	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil {
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
@@ -270,6 +267,31 @@ func (p *PerconaXtraDB) setDefaultContainerSecurityContext(pVersion *v1alpha1.Pe
 	}
 	p.assignDefaultContainerSecurityContext(pVersion, dbContainer.SecurityContext)
 	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
+
+	initContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.PerconaXtraDBInitContainerName)
+	if initContainer == nil {
+		initContainer = &core.Container{
+			Name: kubedb.PerconaXtraDBInitContainerName,
+		}
+	}
+	if initContainer.SecurityContext == nil {
+		initContainer.SecurityContext = &core.SecurityContext{}
+	}
+	p.assignDefaultContainerSecurityContext(pVersion, initContainer.SecurityContext)
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *initContainer)
+
+	coordinatorContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.PerconaXtraDBCoordinatorContainerName)
+	if coordinatorContainer == nil {
+		coordinatorContainer = &core.Container{
+			Name: kubedb.PerconaXtraDBCoordinatorContainerName,
+		}
+	}
+	if coordinatorContainer.SecurityContext == nil {
+		coordinatorContainer.SecurityContext = &core.SecurityContext{}
+	}
+	p.assignDefaultContainerSecurityContext(pVersion, coordinatorContainer.SecurityContext)
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *coordinatorContainer)
+
 }
 
 func (p *PerconaXtraDB) assignDefaultContainerSecurityContext(pVersion *v1alpha1.PerconaXtraDBVersion, sc *core.SecurityContext) {
@@ -292,6 +314,23 @@ func (p *PerconaXtraDB) assignDefaultContainerSecurityContext(pVersion *v1alpha1
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
+
+func (p *PerconaXtraDB) setDefaultContainerResourceLimits(podTemplate *ofstv2.PodTemplateSpec) {
+	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.PerconaXtraDBContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+	}
+
+	initContainer := core_util.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.PerconaXtraDBInitContainerName)
+	if initContainer != nil && (initContainer.Resources.Requests == nil && initContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&initContainer.Resources, kubedb.DefaultInitContainerResource)
+	}
+
+	coordinatorContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.PerconaXtraDBCoordinatorContainerName)
+	if coordinatorContainer != nil && (coordinatorContainer.Resources.Requests == nil && coordinatorContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, kubedb.CoordinatorDefaultResources)
 	}
 }
 
