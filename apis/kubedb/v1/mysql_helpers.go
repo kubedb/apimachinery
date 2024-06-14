@@ -427,7 +427,7 @@ func (m *MySQL) setDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLVers
 	m.assignDefaultContainerSecurityContext(myVersion, initContainer.SecurityContext)
 	podTemplate.Spec.InitContainers = core_util.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 
-	if m.IsInnoDBCluster() || m.IsSemiSync() || m.IsRemoteReplica() {
+	if m.IsInnoDBCluster() || m.IsSemiSync() || m.UsesGroupReplication() {
 		coordinatorContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MySQLCoordinatorContainerName)
 		if coordinatorContainer == nil {
 			coordinatorContainer = &core.Container{
@@ -501,7 +501,7 @@ func (m *MySQL) setDefaultContainerResourceLimits(podTemplate *ofstv2.PodTemplat
 		apis.SetDefaultResourceLimits(&initContainer.Resources, kubedb.DefaultInitContainerResource)
 	}
 
-	if m.IsInnoDBCluster() || m.IsSemiSync() || m.IsRemoteReplica() {
+	if m.IsInnoDBCluster() || m.IsSemiSync() || m.UsesGroupReplication() {
 		coordinatorContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MySQLCoordinatorContainerName)
 		if coordinatorContainer != nil && (coordinatorContainer.Resources.Requests == nil && coordinatorContainer.Resources.Limits == nil) {
 			apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, kubedb.CoordinatorDefaultResources)
