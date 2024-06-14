@@ -1223,8 +1223,7 @@ const (
 
 	FerretDBServerPath = "/etc/certs/server"
 
-	FerretDBExternalCAPath     = "/etc/certs/ext"
-	FerretDBExternalClientPath = "/etc/certs/ext/client"
+	FerretDBExternalClientPath = "/etc/certs/ext"
 
 	FerretDBDefaultPort = 27017
 	FerretDBMetricsPort = 8080

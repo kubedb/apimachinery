@@ -577,9 +577,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgreLeaderElectionConfig":      schema_apimachinery_apis_kubedb_v1alpha2_PostgreLeaderElectionConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Postgres":                         schema_apimachinery_apis_kubedb_v1alpha2_Postgres(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresList":                     schema_apimachinery_apis_kubedb_v1alpha2_PostgresList(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresRef":                      schema_apimachinery_apis_kubedb_v1alpha2_PostgresRef(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresReplication":              schema_apimachinery_apis_kubedb_v1alpha2_PostgresReplication(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresServiceRef":               schema_apimachinery_apis_kubedb_v1alpha2_PostgresServiceRef(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresSpec":                     schema_apimachinery_apis_kubedb_v1alpha2_PostgresSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresStatus":                   schema_apimachinery_apis_kubedb_v1alpha2_PostgresStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQL":                         schema_apimachinery_apis_kubedb_v1alpha2_ProxySQL(ref),
@@ -25158,9 +25156,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBBackend(ref common.Referen
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"postgres": {
+					"postgresRef": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresRef"),
+							Description: "PostgresRef refers to the AppBinding of the backend Postgres server",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Which versions pg will be used as backend of ferretdb. default 13.13 when backend internally managed",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"linkedDB": {
@@ -25182,7 +25188,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBBackend(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresRef"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference"},
 	}
 }
 
@@ -25257,7 +25263,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref common.ReferenceC
 					},
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Database authentication secret. If authSecret is nil, authSecret.externallyManaged will set to backend.externallyManaged",
+							Description: "Database authentication secret. Use this only when backend is internally managed. For externally managed backend, we will get the authSecret from AppBinding",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
@@ -29451,40 +29457,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresList(ref common.ReferenceC
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_PostgresRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"url": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Postgres URL address",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"service": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Service information for Postgres",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresServiceRef"),
-						},
-					},
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Which versions pg will be used as backend of ferretdb",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresServiceRef"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_PostgresReplication(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -29518,37 +29490,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresReplication(ref common.Ref
 					},
 				},
 				Required: []string{"walLimitPolicy"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_PostgresServiceRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"namespace": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"pgPort": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PgPort is used because the service referred to the pg pod can have any port between 1 and 65535, inclusive but targetPort is fixed to 5432",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-				},
 			},
 		},
 	}
