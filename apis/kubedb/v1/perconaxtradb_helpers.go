@@ -291,7 +291,6 @@ func (p *PerconaXtraDB) setDefaultContainerSecurityContext(pVersion *v1alpha1.Pe
 	}
 	p.assignDefaultContainerSecurityContext(pVersion, coordinatorContainer.SecurityContext)
 	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *coordinatorContainer)
-
 }
 
 func (p *PerconaXtraDB) assignDefaultContainerSecurityContext(pVersion *v1alpha1.PerconaXtraDBVersion, sc *core.SecurityContext) {
