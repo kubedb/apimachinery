@@ -139,13 +139,53 @@ func Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out *v1.
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
-	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
+	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+		return err
+	}
 	out.EnforceFsGroup = in.EnforceFsGroup
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*v1.Archiver)(unsafe.Pointer(in.Archiver))
 	out.Arbiter = (*v1.ArbiterSpec)(unsafe.Pointer(in.Arbiter))
 	out.Replication = (*v1.PostgresReplication)(unsafe.Pointer(in.Replication))
+	return nil
+}
+
+func Convert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, out *PostgresSpec, s conversion.Scope) error {
+	if err := Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
+		return err
+	}
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.StandbyMode = (*PostgresStandbyMode)(unsafe.Pointer(in.StandbyMode))
+	out.StreamingMode = (*PostgresStreamingMode)(unsafe.Pointer(in.StreamingMode))
+	out.Mode = (*PostgreSQLMode)(unsafe.Pointer(in.Mode))
+	out.RemoteReplica = (*RemoteReplicaSpec)(unsafe.Pointer(in.RemoteReplica))
+	out.LeaderElection = (*PostgreLeaderElectionConfig)(unsafe.Pointer(in.LeaderElection))
+	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.StorageType = StorageType(in.StorageType)
+	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	out.ClientAuthMode = PostgresClientAuthMode(in.ClientAuthMode)
+	out.SSLMode = PostgresSSLMode(in.SSLMode)
+	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
+	if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+		return err
+	}
+	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.Halted = in.Halted
+	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	out.EnforceFsGroup = in.EnforceFsGroup
+	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
+	out.HealthChecker = in.HealthChecker
+	out.Archiver = (*Archiver)(unsafe.Pointer(in.Archiver))
+	out.Arbiter = (*ArbiterSpec)(unsafe.Pointer(in.Arbiter))
+	out.Replication = (*PostgresReplication)(unsafe.Pointer(in.Replication))
 	return nil
 }
 
@@ -214,7 +254,16 @@ func (dst *PgBouncer) ConvertFrom(srcRaw rtconv.Hub) error {
 }
 
 func (src *Postgres) ConvertTo(dstRaw rtconv.Hub) error {
-	return Convert_v1alpha2_Postgres_To_v1_Postgres(src, dstRaw.(*v1.Postgres), nil)
+	// return Convert_v1alpha2_Postgres_To_v1_Postgres(src, dstRaw.(*v1.Postgres), nil)
+	dst := dstRaw.(*v1.Postgres)
+	err := Convert_v1alpha2_Postgres_To_v1_Postgres(src, dst, nil)
+	if err != nil {
+		return err
+	}
+	if len(dst.Spec.PodTemplate.Spec.Containers) > 0 {
+		dst.Spec.PodTemplate.Spec.Containers[0].Name = "postgres" // db container name used in sts
+	}
+	return nil
 }
 
 func (dst *Postgres) ConvertFrom(srcRaw rtconv.Hub) error {
