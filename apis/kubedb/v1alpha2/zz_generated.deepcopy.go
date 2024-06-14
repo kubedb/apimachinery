@@ -2182,6 +2182,11 @@ func (in *MSSQLServerSpec) DeepCopyInto(out *MSSQLServerSpec) {
 		(*in).DeepCopyInto(*out)
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
+	if in.Archiver != nil {
+		in, out := &in.Archiver, &out.Archiver
+		*out = new(Archiver)
+		**out = **in
+	}
 	return
 }
 

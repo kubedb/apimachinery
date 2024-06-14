@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// MSSQLServerArchiverListerExpansion allows custom methods to be added to
+// MSSQLServerArchiverLister.
+type MSSQLServerArchiverListerExpansion interface{}
+
+// MSSQLServerArchiverNamespaceListerExpansion allows custom methods to be added to
+// MSSQLServerArchiverNamespaceLister.
+type MSSQLServerArchiverNamespaceListerExpansion interface{}
+
 // MariaDBArchiverListerExpansion allows custom methods to be added to
 // MariaDBArchiverLister.
 type MariaDBArchiverListerExpansion interface{}

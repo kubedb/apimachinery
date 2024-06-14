@@ -1,9 +1,10 @@
 package v1alpha1
 
 import (
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 )
 
 const (
@@ -74,6 +75,6 @@ type MSSQLServerArchiverList struct {
 	Items           []MSSQLServerArchiver `json:"items"`
 }
 
-//func init() {
-//	SchemeBuilder.Register(&MSSQLServerArchiver{}, &MSSQLServerArchiverList{})
-//}
+func init() {
+	SchemeBuilder.Register(&MSSQLServerArchiver{}, &MSSQLServerArchiverList{})
+}
