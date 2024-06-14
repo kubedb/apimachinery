@@ -113,6 +113,17 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+
+	case apiv1.ResourceKindMySQL:
+		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralMySQL
+		pg, err := c.DBClient.KubedbV1().MySQLs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
+		dbInfo.replicasReady, dbInfo.msg, err = pg.ReplicasAreReady(c.PSLister)
+		if err != nil {
+			return nil, err
+		}
 	case api.ResourceKindDruid:
 		dbInfo.opts.GVR.Resource = api.ResourcePluralDruid
 		dr, err := c.DBClient.KubedbV1alpha2().Druids(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
