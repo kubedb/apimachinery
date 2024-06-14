@@ -114,10 +114,6 @@ type MariaDBSpec struct {
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
 
-	// Coordinator defines attributes of the coordinator container
-	// +optional
-	Coordinator CoordinatorSpec `json:"coordinator,omitempty"`
-
 	// AllowedSchemas defines the types of database schemas that MAY refer to
 	// a database instance and the trusted namespaces where those schema resources MAY be
 	// present.

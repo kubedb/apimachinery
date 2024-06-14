@@ -171,21 +171,6 @@ type KernelSettings struct {
 	Sysctls []core.Sysctl `json:"sysctls,omitempty"`
 }
 
-// CoordinatorSpec defines attributes of the coordinator container
-type CoordinatorSpec struct {
-	// Compute Resources required by coordinator container.
-	// Cannot be updated.
-	// More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-	// +optional
-	Resources core.ResourceRequirements `json:"resources,omitempty"`
-
-	// Security options the coordinator container should run with.
-	// More info: https://kubernetes.io/docs/concepts/policy/security-context/
-	// More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
-	// +optional
-	SecurityContext *core.SecurityContext `json:"securityContext,omitempty"`
-}
-
 // AutoOpsSpec defines the specifications of automatic ops-request recommendation generation
 type AutoOpsSpec struct {
 	// Disabled specifies whether the ops-request recommendation generation will be disabled or not.

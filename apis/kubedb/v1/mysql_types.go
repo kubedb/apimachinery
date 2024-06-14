@@ -138,10 +138,6 @@ type MySQLSpec struct {
 	// +default="DNS"
 	UseAddressType AddressType `json:"useAddressType,omitempty"`
 
-	// Coordinator defines attributes of the coordinator container
-	// +optional
-	Coordinator CoordinatorSpec `json:"coordinator,omitempty"`
-
 	// AllowedSchemas defines the types of database schemas that may refer to
 	// a database instance and the trusted namespaces where those schema resources may be
 	// present.
