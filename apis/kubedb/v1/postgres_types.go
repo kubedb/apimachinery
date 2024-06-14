@@ -134,10 +134,6 @@ type PostgresSpec struct {
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
 
-	// Coordinator defines attributes of the coordinator container
-	// +optional
-	// Coordinator CoordinatorSpec `json:"coordinator,omitempty"`
-
 	// EnforceFsGroup Is Used when the storageClass's CSI Driver doesn't support FsGroup properties properly.
 	// If It's true then The Init Container will run as RootUser and
 	// the init-container will set user's permission for the mounted pvc volume with which coordinator and postgres containers are going to run.

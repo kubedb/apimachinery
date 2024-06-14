@@ -467,7 +467,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec":                          schema_apimachinery_apis_kubedb_v1_AutoOpsSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ConnectionPoolConfig":                 schema_apimachinery_apis_kubedb_v1_ConnectionPoolConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ConsumerNamespaces":                   schema_apimachinery_apis_kubedb_v1_ConsumerNamespaces(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec":                      schema_apimachinery_apis_kubedb_v1_CoordinatorSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Database":                             schema_apimachinery_apis_kubedb_v1_Database(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Elasticsearch":                        schema_apimachinery_apis_kubedb_v1_Elasticsearch(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchClusterTopology":         schema_apimachinery_apis_kubedb_v1_ElasticsearchClusterTopology(ref),
@@ -23978,34 +23977,6 @@ func schema_apimachinery_apis_kubedb_v1_ConsumerNamespaces(ref common.ReferenceC
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1_CoordinatorSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CoordinatorSpec defines attributes of the coordinator container",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"resources": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Compute Resources required by coordinator container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Security options the coordinator container should run with. More info: https://kubernetes.io/docs/concepts/policy/security-context/ More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
-							Ref:         ref("k8s.io/api/core/v1.SecurityContext"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1_Database(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -25206,13 +25177,6 @@ func schema_apimachinery_apis_kubedb_v1_MariaDBSpec(ref common.ReferenceCallback
 							Format:      "",
 						},
 					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator defines attributes of the coordinator container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec"),
-						},
-					},
 					"allowedSchemas": {
 						SchemaProps: spec.SchemaProps{
 							Description: "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
@@ -25237,7 +25201,7 @@ func schema_apimachinery_apis_kubedb_v1_MariaDBSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -26062,13 +26026,6 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBSpec(ref common.ReferenceCallback
 							Format:      "",
 						},
 					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator defines attributes of the coordinator container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec"),
-						},
-					},
 					"allowedSchemas": {
 						SchemaProps: spec.SchemaProps{
 							Description: "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
@@ -26105,7 +26062,7 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoArbiterNode", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoDBReplicaSet", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoDBShardingTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoHiddenNode", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoArbiterNode", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoDBReplicaSet", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoDBShardingTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.MongoHiddenNode", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -26503,13 +26460,6 @@ func schema_apimachinery_apis_kubedb_v1_MySQLSpec(ref common.ReferenceCallback) 
 							Format:      "",
 						},
 					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator defines attributes of the coordinator container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec"),
-						},
-					},
 					"allowedSchemas": {
 						SchemaProps: spec.SchemaProps{
 							Description: "AllowedSchemas defines the types of database schemas that may refer to a database instance and the trusted namespaces where those schema resources may be present.",
@@ -26540,7 +26490,7 @@ func schema_apimachinery_apis_kubedb_v1_MySQLSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -27055,13 +27005,6 @@ func schema_apimachinery_apis_kubedb_v1_PerconaXtraDBSpec(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator defines attributes of the coordinator container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec"),
-						},
-					},
 					"allowedSchemas": {
 						SchemaProps: spec.SchemaProps{
 							Description: "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
@@ -27086,7 +27029,7 @@ func schema_apimachinery_apis_kubedb_v1_PerconaXtraDBSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1.SystemUserSecretsSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1.SystemUserSecretsSpec"},
 	}
 }
 
@@ -28744,13 +28687,6 @@ func schema_apimachinery_apis_kubedb_v1_RedisSpec(ref common.ReferenceCallback) 
 							Format:      "",
 						},
 					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator defines attributes of the coordinator container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec"),
-						},
-					},
 					"allowedSchemas": {
 						SchemaProps: spec.SchemaProps{
 							Description: "AllowedSchemas defines the types of database schemas that MAY refer to a database instance and the trusted namespaces where those schema resources MAY be present.",
@@ -28769,7 +28705,7 @@ func schema_apimachinery_apis_kubedb_v1_RedisSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisSentinelRef", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisSentinelRef", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 

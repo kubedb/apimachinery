@@ -645,13 +645,6 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		}
 
 		m.setPodTemplateDefaultValues(m.Spec.PodTemplate, mgVersion)
-
-		if m.Spec.ReplicaSet != nil {
-			if m.Spec.Coordinator.SecurityContext == nil {
-				m.Spec.Coordinator.SecurityContext = &core.SecurityContext{}
-			}
-			m.assignDefaultContainerSecurityContext(mgVersion, m.Spec.Coordinator.SecurityContext) // modeDetector container
-		}
 	}
 
 	if m.Spec.Arbiter != nil {
@@ -692,10 +685,10 @@ func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpe
 	container := EnsureInitContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
 	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
 
-	container = EnsureContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
+	container = EnsureContainerExists(podTemplate, kubedb.MongoDBContainerName)
 	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
 
-	container = EnsureContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
+	container = EnsureContainerExists(podTemplate, kubedb.ReplicationModeDetectorContainerName)
 	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
 }
 
