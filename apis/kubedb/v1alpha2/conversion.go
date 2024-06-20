@@ -632,6 +632,14 @@ func (dst *MongoDB) ConvertFrom(srcRaw rtconv.Hub) error {
 	return Convert_v1_MongoDB_To_v1alpha2_MongoDB(srcRaw.(*v1.MongoDB), dst, nil)
 }
 
+func (src *Memcached) ConvertTo(dstRaw rtconv.Hub) error {
+	return Convert_v1alpha2_Memcached_To_v1_Memcached(src, dstRaw.(*v1.Memcached), nil)
+}
+
+func (dst *Memcached) ConvertFrom(srcRaw rtconv.Hub) error {
+	return Convert_v1_Memcached_To_v1alpha2_Memcached(srcRaw.(*v1.Memcached), dst, nil)
+}
+
 func (src *MySQL) ConvertTo(dstRaw rtconv.Hub) error {
 	return Convert_v1alpha2_MySQL_To_v1_MySQL(src, dstRaw.(*v1.MySQL), nil)
 }
