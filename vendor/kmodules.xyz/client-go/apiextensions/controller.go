@@ -20,21 +20,28 @@ import (
 	"context"
 	"sync"
 
-	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
-type SetupFn func(ctx context.Context, mgr ctrl.Manager)
+type (
+	SetupFn func(ctx context.Context, mgr ctrl.Manager)
+	TestFn  func(*apiextensionsv1.CustomResourceDefinition) bool
+)
 
-var setupFns = map[schema.GroupKind]SetupFn{
-	// schema.GroupKind{"compute.gcp.kubedb.com", "Firewall"}:                 firewall.Setup,
+type setupGroup struct {
+	gks []schema.GroupKind
+	fn  SetupFn
 }
 
 var (
+	setupFns  = make(map[schema.GroupKind]setupGroup)
+	testFns   = make(map[schema.GroupKind]TestFn)
 	setupDone = map[schema.GroupKind]bool{}
+	CRDParam  = struct{}{}
 	mu        sync.Mutex
 )
 
@@ -49,7 +56,7 @@ func NewReconciler(ctx context.Context, mgr ctrl.Manager) *Reconciler {
 
 func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
-	var crd apiextensions.CustomResourceDefinition
+	var crd apiextensionsv1.CustomResourceDefinition
 	if err := r.mgr.GetClient().Get(ctx, req.NamespacedName, &crd); err != nil {
 		log.Error(err, "unable to fetch CustomResourceDefinition")
 		return ctrl.Result{}, client.IgnoreNotFound(err)
@@ -65,9 +72,19 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	if found {
 		return ctrl.Result{}, nil
 	}
-	setup, found := setupFns[gk]
-	if found {
-		setup(r.ctx, r.mgr)
+
+	setup, setupFnExists := setupFns[gk]
+	if !setupFnExists {
+		return ctrl.Result{}, nil
+	}
+	if !testFns[gk](&crd) {
+		return ctrl.Result{}, nil
+	}
+
+	ctxSetup := context.WithValue(r.ctx, CRDParam, &crd)
+	setup.fn(ctxSetup, r.mgr)
+
+	for _, gk := range setup.gks {
 		setupDone[gk] = true
 	}
 	return ctrl.Result{}, nil
@@ -75,13 +92,42 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 
 func (r *Reconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&apiextensions.CustomResourceDefinition{}).
+		For(&apiextensionsv1.CustomResourceDefinition{}).
 		Complete(r)
 }
 
-func RegisterSetup(gk schema.GroupKind, fn SetupFn) {
+func RegisterSetup(gk schema.GroupKind, fn SetupFn, tn ...TestFn) {
 	mu.Lock()
 	defer mu.Unlock()
 
-	setupFns[gk] = fn
+	setupFns[gk] = setupGroup{
+		gks: []schema.GroupKind{gk},
+		fn:  fn,
+	}
+	testFns[gk] = andTestFn(tn...)
+}
+
+func MultiRegisterSetup(gks []schema.GroupKind, fn SetupFn, tn ...TestFn) {
+	mu.Lock()
+	defer mu.Unlock()
+
+	testFN := andTestFn(tn...)
+	for _, gk := range gks {
+		setupFns[gk] = setupGroup{
+			gks: gks,
+			fn:  fn,
+		}
+		testFns[gk] = testFN
+	}
+}
+
+func andTestFn(fns ...TestFn) TestFn {
+	return func(crd *apiextensionsv1.CustomResourceDefinition) bool {
+		for _, fn := range fns {
+			if !fn(crd) {
+				return false
+			}
+		}
+		return true
+	}
 }
