@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis"
@@ -110,16 +111,13 @@ func (s *Solr) Merge(opt map[string]string) map[string]string {
 }
 
 func (s *Solr) Append(opt map[string]string) string {
-	fl := 0
+	arr := make([]string, 0)
 	as := ""
 	for x, y := range opt {
-		if fl == 1 {
-			as += " "
-		}
-		as += fmt.Sprintf("%s=%s", x, y)
-		fl = 1
-
+		arr = append(arr, fmt.Sprintf("%s=%s", x, y))
 	}
+	sort.Strings(arr)
+	as = strings.Join(arr, " ")
 	return as
 }
 
