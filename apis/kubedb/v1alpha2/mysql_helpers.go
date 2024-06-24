@@ -24,6 +24,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	"github.com/google/uuid"
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
@@ -264,6 +265,17 @@ func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion, topology *core_uti
 	}
 	if m.Spec.TerminationPolicy == "" {
 		m.Spec.TerminationPolicy = TerminationPolicyDelete
+	}
+
+	if m.UsesGroupReplication() {
+		if m.Spec.Topology.Group == nil {
+			m.Spec.Topology.Group = &MySQLGroupSpec{}
+		}
+
+		if m.Spec.Topology.Group.Name == "" {
+			grName, _ := uuid.NewRandom()
+			m.Spec.Topology.Group.Name = grName.String()
+		}
 	}
 
 	if m.UsesGroupReplication() || m.IsInnoDBCluster() || m.IsSemiSync() {
