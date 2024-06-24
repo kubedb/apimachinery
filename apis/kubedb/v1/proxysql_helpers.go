@@ -18,6 +18,10 @@ package v1
 
 import (
 	"fmt"
+	core "k8s.io/api/core/v1"
+	"kmodules.xyz/client-go/policy/secomp"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
+	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -173,7 +177,7 @@ func (p ProxySQL) StatsServiceLabels() map[string]string {
 	return p.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
 
-func (p *ProxySQL) SetDefaults(usesAcme bool) {
+func (p *ProxySQL) SetDefaults(psVersion *v1alpha1.ProxySQLVersion, usesAcme bool) {
 	if p == nil {
 		return
 	}
@@ -186,12 +190,62 @@ func (p *ProxySQL) SetDefaults(usesAcme bool) {
 		p.Spec.Replicas = pointer.Int32P(1)
 	}
 
+	p.setDefaultContainerSecurityContext(psVersion, &p.Spec.PodTemplate)
+
 	p.Spec.Monitor.SetDefaults()
 	p.SetTLSDefaults(usesAcme)
 	p.SetHealthCheckerDefaults()
 	dbContainer := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, kubedb.ProxySQLContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+	}
+}
+
+func (p *ProxySQL) setDefaultContainerSecurityContext(proxyVersion *v1alpha1.ProxySQLVersion, podTemplate *ofstv2.PodTemplateSpec) {
+	if podTemplate == nil {
+		podTemplate = &ofstv2.PodTemplateSpec{}
+	}
+
+	if podTemplate.Spec.SecurityContext == nil {
+		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
+	}
+	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+		podTemplate.Spec.SecurityContext.FSGroup = proxyVersion.Spec.SecurityContext.RunAsUser
+	}
+
+	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.ProxySQLContainerName)
+	if dbContainer == nil {
+		dbContainer = &core.Container{
+			Name: kubedb.ProxySQLContainerName,
+		}
+	}
+	if dbContainer.SecurityContext == nil {
+		dbContainer.SecurityContext = &core.SecurityContext{}
+	}
+	p.assignDefaultContainerSecurityContext(proxyVersion, dbContainer.SecurityContext)
+	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
+}
+
+func (p *ProxySQL) assignDefaultContainerSecurityContext(proxyVersion *v1alpha1.ProxySQLVersion, sc *core.SecurityContext) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = proxyVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.RunAsGroup == nil {
+		sc.RunAsGroup = proxyVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
 }
 
