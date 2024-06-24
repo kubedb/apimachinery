@@ -18,25 +18,25 @@ package v1
 
 import (
 	"fmt"
-	core "k8s.io/api/core/v1"
-	"kmodules.xyz/client-go/policy/secomp"
-	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
-	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
 	"kubedb.dev/apimachinery/apis"
+	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
