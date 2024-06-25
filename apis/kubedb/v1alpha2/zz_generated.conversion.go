@@ -24,8 +24,6 @@ package v1alpha2
 import (
 	unsafe "unsafe"
 
-	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
-
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
@@ -35,6 +33,7 @@ import (
 	monitoringagentapiapiv1 "kmodules.xyz/monitoring-agent-api/api/v1"
 	apiv1 "kmodules.xyz/offshoot-api/api/v1"
 	v2 "kmodules.xyz/offshoot-api/api/v2"
+	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 )
 
 func init() {
@@ -231,6 +230,86 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*v1.InitSpec)(nil), (*InitSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_InitSpec_To_v1alpha2_InitSpec(a.(*v1.InitSpec), b.(*InitSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*Kafka)(nil), (*v1.Kafka)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_Kafka_To_v1_Kafka(a.(*Kafka), b.(*v1.Kafka), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.Kafka)(nil), (*Kafka)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_Kafka_To_v1alpha2_Kafka(a.(*v1.Kafka), b.(*Kafka), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*KafkaApp)(nil), (*v1.KafkaApp)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_KafkaApp_To_v1_KafkaApp(a.(*KafkaApp), b.(*v1.KafkaApp), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.KafkaApp)(nil), (*KafkaApp)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_KafkaApp_To_v1alpha2_KafkaApp(a.(*v1.KafkaApp), b.(*KafkaApp), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*KafkaBrokerCapacity)(nil), (*v1.KafkaBrokerCapacity)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_KafkaBrokerCapacity_To_v1_KafkaBrokerCapacity(a.(*KafkaBrokerCapacity), b.(*v1.KafkaBrokerCapacity), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.KafkaBrokerCapacity)(nil), (*KafkaBrokerCapacity)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_KafkaBrokerCapacity_To_v1alpha2_KafkaBrokerCapacity(a.(*v1.KafkaBrokerCapacity), b.(*KafkaBrokerCapacity), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*KafkaClusterTopology)(nil), (*v1.KafkaClusterTopology)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_KafkaClusterTopology_To_v1_KafkaClusterTopology(a.(*KafkaClusterTopology), b.(*v1.KafkaClusterTopology), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.KafkaClusterTopology)(nil), (*KafkaClusterTopology)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_KafkaClusterTopology_To_v1alpha2_KafkaClusterTopology(a.(*v1.KafkaClusterTopology), b.(*KafkaClusterTopology), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*KafkaCruiseControl)(nil), (*v1.KafkaCruiseControl)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_KafkaCruiseControl_To_v1_KafkaCruiseControl(a.(*KafkaCruiseControl), b.(*v1.KafkaCruiseControl), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.KafkaCruiseControl)(nil), (*KafkaCruiseControl)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_KafkaCruiseControl_To_v1alpha2_KafkaCruiseControl(a.(*v1.KafkaCruiseControl), b.(*KafkaCruiseControl), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*KafkaList)(nil), (*v1.KafkaList)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_KafkaList_To_v1_KafkaList(a.(*KafkaList), b.(*v1.KafkaList), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.KafkaList)(nil), (*KafkaList)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_KafkaList_To_v1alpha2_KafkaList(a.(*v1.KafkaList), b.(*KafkaList), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*KafkaSpec)(nil), (*v1.KafkaSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_KafkaSpec_To_v1_KafkaSpec(a.(*KafkaSpec), b.(*v1.KafkaSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.KafkaSpec)(nil), (*KafkaSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_KafkaSpec_To_v1alpha2_KafkaSpec(a.(*v1.KafkaSpec), b.(*KafkaSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*KafkaStatus)(nil), (*v1.KafkaStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_KafkaStatus_To_v1_KafkaStatus(a.(*KafkaStatus), b.(*v1.KafkaStatus), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.KafkaStatus)(nil), (*KafkaStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_KafkaStatus_To_v1alpha2_KafkaStatus(a.(*v1.KafkaStatus), b.(*KafkaStatus), scope)
 	}); err != nil {
 		return err
 	}
@@ -864,6 +943,11 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*v1.KafkaNode)(nil), (*KafkaNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_KafkaNode_To_v1alpha2_KafkaNode(a.(*v1.KafkaNode), b.(*KafkaNode), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*v1.MariaDBSpec)(nil), (*MariaDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(a.(*v1.MariaDBSpec), b.(*MariaDBSpec), scope)
 	}); err != nil {
@@ -906,6 +990,11 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddConversionFunc((*ElasticsearchNode)(nil), (*v1.ElasticsearchNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(a.(*ElasticsearchNode), b.(*v1.ElasticsearchNode), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*KafkaNode)(nil), (*v1.KafkaNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_KafkaNode_To_v1_KafkaNode(a.(*KafkaNode), b.(*v1.KafkaNode), scope)
 	}); err != nil {
 		return err
 	}
@@ -1733,6 +1822,334 @@ func autoConvert_v1_InitSpec_To_v1alpha2_InitSpec(in *v1.InitSpec, out *InitSpec
 // Convert_v1_InitSpec_To_v1alpha2_InitSpec is an autogenerated conversion function.
 func Convert_v1_InitSpec_To_v1alpha2_InitSpec(in *v1.InitSpec, out *InitSpec, s conversion.Scope) error {
 	return autoConvert_v1_InitSpec_To_v1alpha2_InitSpec(in, out, s)
+}
+
+func autoConvert_v1alpha2_Kafka_To_v1_Kafka(in *Kafka, out *v1.Kafka, s conversion.Scope) error {
+	out.ObjectMeta = in.ObjectMeta
+	if err := Convert_v1alpha2_KafkaSpec_To_v1_KafkaSpec(&in.Spec, &out.Spec, s); err != nil {
+		return err
+	}
+	if err := Convert_v1alpha2_KafkaStatus_To_v1_KafkaStatus(&in.Status, &out.Status, s); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Convert_v1alpha2_Kafka_To_v1_Kafka is an autogenerated conversion function.
+func Convert_v1alpha2_Kafka_To_v1_Kafka(in *Kafka, out *v1.Kafka, s conversion.Scope) error {
+	return autoConvert_v1alpha2_Kafka_To_v1_Kafka(in, out, s)
+}
+
+func autoConvert_v1_Kafka_To_v1alpha2_Kafka(in *v1.Kafka, out *Kafka, s conversion.Scope) error {
+	out.ObjectMeta = in.ObjectMeta
+	if err := Convert_v1_KafkaSpec_To_v1alpha2_KafkaSpec(&in.Spec, &out.Spec, s); err != nil {
+		return err
+	}
+	if err := Convert_v1_KafkaStatus_To_v1alpha2_KafkaStatus(&in.Status, &out.Status, s); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Convert_v1_Kafka_To_v1alpha2_Kafka is an autogenerated conversion function.
+func Convert_v1_Kafka_To_v1alpha2_Kafka(in *v1.Kafka, out *Kafka, s conversion.Scope) error {
+	return autoConvert_v1_Kafka_To_v1alpha2_Kafka(in, out, s)
+}
+
+func autoConvert_v1alpha2_KafkaApp_To_v1_KafkaApp(in *KafkaApp, out *v1.KafkaApp, s conversion.Scope) error {
+	if in.Kafka != nil {
+		in, out := &in.Kafka, &out.Kafka
+		*out = new(v1.Kafka)
+		if err := Convert_v1alpha2_Kafka_To_v1_Kafka(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Kafka = nil
+	}
+	return nil
+}
+
+// Convert_v1alpha2_KafkaApp_To_v1_KafkaApp is an autogenerated conversion function.
+func Convert_v1alpha2_KafkaApp_To_v1_KafkaApp(in *KafkaApp, out *v1.KafkaApp, s conversion.Scope) error {
+	return autoConvert_v1alpha2_KafkaApp_To_v1_KafkaApp(in, out, s)
+}
+
+func autoConvert_v1_KafkaApp_To_v1alpha2_KafkaApp(in *v1.KafkaApp, out *KafkaApp, s conversion.Scope) error {
+	if in.Kafka != nil {
+		in, out := &in.Kafka, &out.Kafka
+		*out = new(Kafka)
+		if err := Convert_v1_Kafka_To_v1alpha2_Kafka(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Kafka = nil
+	}
+	return nil
+}
+
+// Convert_v1_KafkaApp_To_v1alpha2_KafkaApp is an autogenerated conversion function.
+func Convert_v1_KafkaApp_To_v1alpha2_KafkaApp(in *v1.KafkaApp, out *KafkaApp, s conversion.Scope) error {
+	return autoConvert_v1_KafkaApp_To_v1alpha2_KafkaApp(in, out, s)
+}
+
+func autoConvert_v1alpha2_KafkaBrokerCapacity_To_v1_KafkaBrokerCapacity(in *KafkaBrokerCapacity, out *v1.KafkaBrokerCapacity, s conversion.Scope) error {
+	out.InBoundNetwork = in.InBoundNetwork
+	out.OutBoundNetwork = in.OutBoundNetwork
+	return nil
+}
+
+// Convert_v1alpha2_KafkaBrokerCapacity_To_v1_KafkaBrokerCapacity is an autogenerated conversion function.
+func Convert_v1alpha2_KafkaBrokerCapacity_To_v1_KafkaBrokerCapacity(in *KafkaBrokerCapacity, out *v1.KafkaBrokerCapacity, s conversion.Scope) error {
+	return autoConvert_v1alpha2_KafkaBrokerCapacity_To_v1_KafkaBrokerCapacity(in, out, s)
+}
+
+func autoConvert_v1_KafkaBrokerCapacity_To_v1alpha2_KafkaBrokerCapacity(in *v1.KafkaBrokerCapacity, out *KafkaBrokerCapacity, s conversion.Scope) error {
+	out.InBoundNetwork = in.InBoundNetwork
+	out.OutBoundNetwork = in.OutBoundNetwork
+	return nil
+}
+
+// Convert_v1_KafkaBrokerCapacity_To_v1alpha2_KafkaBrokerCapacity is an autogenerated conversion function.
+func Convert_v1_KafkaBrokerCapacity_To_v1alpha2_KafkaBrokerCapacity(in *v1.KafkaBrokerCapacity, out *KafkaBrokerCapacity, s conversion.Scope) error {
+	return autoConvert_v1_KafkaBrokerCapacity_To_v1alpha2_KafkaBrokerCapacity(in, out, s)
+}
+
+func autoConvert_v1alpha2_KafkaClusterTopology_To_v1_KafkaClusterTopology(in *KafkaClusterTopology, out *v1.KafkaClusterTopology, s conversion.Scope) error {
+	if in.Controller != nil {
+		in, out := &in.Controller, &out.Controller
+		*out = new(v1.KafkaNode)
+		if err := Convert_v1alpha2_KafkaNode_To_v1_KafkaNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Controller = nil
+	}
+	if in.Broker != nil {
+		in, out := &in.Broker, &out.Broker
+		*out = new(v1.KafkaNode)
+		if err := Convert_v1alpha2_KafkaNode_To_v1_KafkaNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Broker = nil
+	}
+	return nil
+}
+
+// Convert_v1alpha2_KafkaClusterTopology_To_v1_KafkaClusterTopology is an autogenerated conversion function.
+func Convert_v1alpha2_KafkaClusterTopology_To_v1_KafkaClusterTopology(in *KafkaClusterTopology, out *v1.KafkaClusterTopology, s conversion.Scope) error {
+	return autoConvert_v1alpha2_KafkaClusterTopology_To_v1_KafkaClusterTopology(in, out, s)
+}
+
+func autoConvert_v1_KafkaClusterTopology_To_v1alpha2_KafkaClusterTopology(in *v1.KafkaClusterTopology, out *KafkaClusterTopology, s conversion.Scope) error {
+	if in.Controller != nil {
+		in, out := &in.Controller, &out.Controller
+		*out = new(KafkaNode)
+		if err := Convert_v1_KafkaNode_To_v1alpha2_KafkaNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Controller = nil
+	}
+	if in.Broker != nil {
+		in, out := &in.Broker, &out.Broker
+		*out = new(KafkaNode)
+		if err := Convert_v1_KafkaNode_To_v1alpha2_KafkaNode(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Broker = nil
+	}
+	return nil
+}
+
+// Convert_v1_KafkaClusterTopology_To_v1alpha2_KafkaClusterTopology is an autogenerated conversion function.
+func Convert_v1_KafkaClusterTopology_To_v1alpha2_KafkaClusterTopology(in *v1.KafkaClusterTopology, out *KafkaClusterTopology, s conversion.Scope) error {
+	return autoConvert_v1_KafkaClusterTopology_To_v1alpha2_KafkaClusterTopology(in, out, s)
+}
+
+func autoConvert_v1alpha2_KafkaCruiseControl_To_v1_KafkaCruiseControl(in *KafkaCruiseControl, out *v1.KafkaCruiseControl, s conversion.Scope) error {
+	out.ConfigSecret = (*v1.SecretReference)(unsafe.Pointer(in.ConfigSecret))
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.Suffix = in.Suffix
+	out.Resources = in.Resources
+	out.PodTemplate = in.PodTemplate
+	out.BrokerCapacity = (*v1.KafkaBrokerCapacity)(unsafe.Pointer(in.BrokerCapacity))
+	return nil
+}
+
+// Convert_v1alpha2_KafkaCruiseControl_To_v1_KafkaCruiseControl is an autogenerated conversion function.
+func Convert_v1alpha2_KafkaCruiseControl_To_v1_KafkaCruiseControl(in *KafkaCruiseControl, out *v1.KafkaCruiseControl, s conversion.Scope) error {
+	return autoConvert_v1alpha2_KafkaCruiseControl_To_v1_KafkaCruiseControl(in, out, s)
+}
+
+func autoConvert_v1_KafkaCruiseControl_To_v1alpha2_KafkaCruiseControl(in *v1.KafkaCruiseControl, out *KafkaCruiseControl, s conversion.Scope) error {
+	out.ConfigSecret = (*SecretReference)(unsafe.Pointer(in.ConfigSecret))
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.Suffix = in.Suffix
+	out.Resources = in.Resources
+	out.PodTemplate = in.PodTemplate
+	out.BrokerCapacity = (*KafkaBrokerCapacity)(unsafe.Pointer(in.BrokerCapacity))
+	return nil
+}
+
+// Convert_v1_KafkaCruiseControl_To_v1alpha2_KafkaCruiseControl is an autogenerated conversion function.
+func Convert_v1_KafkaCruiseControl_To_v1alpha2_KafkaCruiseControl(in *v1.KafkaCruiseControl, out *KafkaCruiseControl, s conversion.Scope) error {
+	return autoConvert_v1_KafkaCruiseControl_To_v1alpha2_KafkaCruiseControl(in, out, s)
+}
+
+func autoConvert_v1alpha2_KafkaList_To_v1_KafkaList(in *KafkaList, out *v1.KafkaList, s conversion.Scope) error {
+	out.ListMeta = in.ListMeta
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]v1.Kafka, len(*in))
+		for i := range *in {
+			if err := Convert_v1alpha2_Kafka_To_v1_Kafka(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
+	return nil
+}
+
+// Convert_v1alpha2_KafkaList_To_v1_KafkaList is an autogenerated conversion function.
+func Convert_v1alpha2_KafkaList_To_v1_KafkaList(in *KafkaList, out *v1.KafkaList, s conversion.Scope) error {
+	return autoConvert_v1alpha2_KafkaList_To_v1_KafkaList(in, out, s)
+}
+
+func autoConvert_v1_KafkaList_To_v1alpha2_KafkaList(in *v1.KafkaList, out *KafkaList, s conversion.Scope) error {
+	out.ListMeta = in.ListMeta
+	if in.Items != nil {
+		in, out := &in.Items, &out.Items
+		*out = make([]Kafka, len(*in))
+		for i := range *in {
+			if err := Convert_v1_Kafka_To_v1alpha2_Kafka(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.Items = nil
+	}
+	return nil
+}
+
+// Convert_v1_KafkaList_To_v1alpha2_KafkaList is an autogenerated conversion function.
+func Convert_v1_KafkaList_To_v1alpha2_KafkaList(in *v1.KafkaList, out *KafkaList, s conversion.Scope) error {
+	return autoConvert_v1_KafkaList_To_v1alpha2_KafkaList(in, out, s)
+}
+
+func autoConvert_v1alpha2_KafkaNode_To_v1_KafkaNode(in *KafkaNode, out *v1.KafkaNode, s conversion.Scope) error {
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.Suffix = in.Suffix
+	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	// WARNING: in.Resources requires manual conversion: does not exist in peer-type
+	// WARNING: in.NodeSelector requires manual conversion: does not exist in peer-type
+	// WARNING: in.Tolerations requires manual conversion: does not exist in peer-type
+	return nil
+}
+
+func autoConvert_v1_KafkaNode_To_v1alpha2_KafkaNode(in *v1.KafkaNode, out *KafkaNode, s conversion.Scope) error {
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.Suffix = in.Suffix
+	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	// WARNING: in.PodTemplate requires manual conversion: does not exist in peer-type
+	return nil
+}
+
+func autoConvert_v1alpha2_KafkaSpec_To_v1_KafkaSpec(in *KafkaSpec, out *v1.KafkaSpec, s conversion.Scope) error {
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	if in.Topology != nil {
+		in, out := &in.Topology, &out.Topology
+		*out = new(v1.KafkaClusterTopology)
+		if err := Convert_v1alpha2_KafkaClusterTopology_To_v1_KafkaClusterTopology(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Topology = nil
+	}
+	out.StorageType = v1.StorageType(in.StorageType)
+	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	out.EnableSSL = in.EnableSSL
+	out.DisableSecurity = in.DisableSecurity
+	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	out.KeystoreCredSecret = (*v1.SecretReference)(unsafe.Pointer(in.KeystoreCredSecret))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.PodTemplate = in.PodTemplate
+	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.DeletionPolicy = v1.TerminationPolicy(in.DeletionPolicy)
+	out.HealthChecker = in.HealthChecker
+	out.CruiseControl = (*v1.KafkaCruiseControl)(unsafe.Pointer(in.CruiseControl))
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	return nil
+}
+
+// Convert_v1alpha2_KafkaSpec_To_v1_KafkaSpec is an autogenerated conversion function.
+func Convert_v1alpha2_KafkaSpec_To_v1_KafkaSpec(in *KafkaSpec, out *v1.KafkaSpec, s conversion.Scope) error {
+	return autoConvert_v1alpha2_KafkaSpec_To_v1_KafkaSpec(in, out, s)
+}
+
+func autoConvert_v1_KafkaSpec_To_v1alpha2_KafkaSpec(in *v1.KafkaSpec, out *KafkaSpec, s conversion.Scope) error {
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	if in.Topology != nil {
+		in, out := &in.Topology, &out.Topology
+		*out = new(KafkaClusterTopology)
+		if err := Convert_v1_KafkaClusterTopology_To_v1alpha2_KafkaClusterTopology(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Topology = nil
+	}
+	out.StorageType = StorageType(in.StorageType)
+	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	out.EnableSSL = in.EnableSSL
+	out.DisableSecurity = in.DisableSecurity
+	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	out.KeystoreCredSecret = (*SecretReference)(unsafe.Pointer(in.KeystoreCredSecret))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.PodTemplate = in.PodTemplate
+	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.DeletionPolicy = TerminationPolicy(in.DeletionPolicy)
+	out.HealthChecker = in.HealthChecker
+	out.CruiseControl = (*KafkaCruiseControl)(unsafe.Pointer(in.CruiseControl))
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	return nil
+}
+
+// Convert_v1_KafkaSpec_To_v1alpha2_KafkaSpec is an autogenerated conversion function.
+func Convert_v1_KafkaSpec_To_v1alpha2_KafkaSpec(in *v1.KafkaSpec, out *KafkaSpec, s conversion.Scope) error {
+	return autoConvert_v1_KafkaSpec_To_v1alpha2_KafkaSpec(in, out, s)
+}
+
+func autoConvert_v1alpha2_KafkaStatus_To_v1_KafkaStatus(in *KafkaStatus, out *v1.KafkaStatus, s conversion.Scope) error {
+	out.Phase = v1.DatabasePhase(in.Phase)
+	out.ObservedGeneration = in.ObservedGeneration
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Gateway = (*v1.Gateway)(unsafe.Pointer(in.Gateway))
+	return nil
+}
+
+// Convert_v1alpha2_KafkaStatus_To_v1_KafkaStatus is an autogenerated conversion function.
+func Convert_v1alpha2_KafkaStatus_To_v1_KafkaStatus(in *KafkaStatus, out *v1.KafkaStatus, s conversion.Scope) error {
+	return autoConvert_v1alpha2_KafkaStatus_To_v1_KafkaStatus(in, out, s)
+}
+
+func autoConvert_v1_KafkaStatus_To_v1alpha2_KafkaStatus(in *v1.KafkaStatus, out *KafkaStatus, s conversion.Scope) error {
+	out.Phase = KafkaPhase(in.Phase)
+	out.ObservedGeneration = in.ObservedGeneration
+	out.Conditions = *(*[]clientgoapiv1.Condition)(unsafe.Pointer(&in.Conditions))
+	out.Gateway = (*Gateway)(unsafe.Pointer(in.Gateway))
+	return nil
+}
+
+// Convert_v1_KafkaStatus_To_v1alpha2_KafkaStatus is an autogenerated conversion function.
+func Convert_v1_KafkaStatus_To_v1alpha2_KafkaStatus(in *v1.KafkaStatus, out *KafkaStatus, s conversion.Scope) error {
+	return autoConvert_v1_KafkaStatus_To_v1alpha2_KafkaStatus(in, out, s)
 }
 
 func autoConvert_v1alpha2_KernelSettings_To_v1_KernelSettings(in *KernelSettings, out *v1.KernelSettings, s conversion.Scope) error {

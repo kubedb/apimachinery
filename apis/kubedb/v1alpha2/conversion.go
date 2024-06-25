@@ -592,6 +592,53 @@ func Convert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(in *v1.PerconaXt
 	return nil
 }
 
+func Convert_v1alpha2_KafkaNode_To_v1_KafkaNode(in *KafkaNode, out *v1.KafkaNode, s conversion.Scope) error {
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.Suffix = in.Suffix
+	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	out.PodTemplate.Spec.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
+	out.PodTemplate.Spec.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.Tolerations))
+
+	found := false
+	containers := &out.PodTemplate.Spec.Containers
+	for i := range out.PodTemplate.Spec.Containers {
+		if (*containers)[i].Name == "kafka" {
+			if in.Resources.Limits != nil || in.Resources.Requests != nil {
+				(*containers)[i].Resources = *in.Resources.DeepCopy()
+			}
+			found = true
+		}
+	}
+	if !found && (in.Resources.Limits != nil || in.Resources.Requests != nil) {
+		*containers = append(*containers, corev1.Container{
+			Name:      "kafka",
+			Resources: in.Resources,
+		})
+	}
+	// WARNING: in.Resources requires manual conversion: does not exist in peer-type
+	// WARNING: in.NodeSelector requires manual conversion: does not exist in peer-type
+	// WARNING: in.Tolerations requires manual conversion: does not exist in peer-type
+	return nil
+}
+
+func Convert_v1_KafkaNode_To_v1alpha2_KafkaNode(in *v1.KafkaNode, out *KafkaNode, s conversion.Scope) error {
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.Suffix = in.Suffix
+	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.PodTemplate.Spec.NodeSelector))
+	out.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.PodTemplate.Spec.Tolerations))
+
+	containers := &in.PodTemplate.Spec.Containers
+	for i := range *containers {
+		if (*containers)[i].Name == "kafka" {
+			out.Resources = (*containers)[i].Resources
+		}
+	}
+
+	// WARNING: in.PodTemplate requires manual conversion: does not exist in peer-type
+	return nil
+}
+
 func (src *Elasticsearch) ConvertTo(dstRaw rtconv.Hub) error {
 	dst := dstRaw.(*v1.Elasticsearch)
 	err := Convert_v1alpha2_Elasticsearch_To_v1_Elasticsearch(src, dst, nil)
@@ -703,4 +750,12 @@ func (src *Redis) ConvertTo(dstRaw rtconv.Hub) error {
 
 func (dst *Redis) ConvertFrom(srcRaw rtconv.Hub) error {
 	return Convert_v1_Redis_To_v1alpha2_Redis(srcRaw.(*v1.Redis), dst, nil)
+}
+
+func (src *Kafka) ConvertTo(dstRaw rtconv.Hub) error {
+	return Convert_v1alpha2_Kafka_To_v1_Kafka(src, dstRaw.(*v1.Kafka), nil)
+}
+
+func (dst *Kafka) ConvertFrom(srcRaw rtconv.Hub) error {
+	return Convert_v1_Kafka_To_v1alpha2_Kafka(srcRaw.(*v1.Kafka), dst, nil)
 }

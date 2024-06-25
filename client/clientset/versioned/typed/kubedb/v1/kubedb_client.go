@@ -30,6 +30,7 @@ import (
 type KubedbV1Interface interface {
 	RESTClient() rest.Interface
 	ElasticsearchesGetter
+	KafkasGetter
 	MariaDBsGetter
 	MemcachedsGetter
 	MongoDBsGetter
@@ -49,6 +50,10 @@ type KubedbV1Client struct {
 
 func (c *KubedbV1Client) Elasticsearches(namespace string) ElasticsearchInterface {
 	return newElasticsearches(c, namespace)
+}
+
+func (c *KubedbV1Client) Kafkas(namespace string) KafkaInterface {
+	return newKafkas(c, namespace)
 }
 
 func (c *KubedbV1Client) MariaDBs(namespace string) MariaDBInterface {

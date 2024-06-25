@@ -33,6 +33,10 @@ func (c *FakeKubedbV1) Elasticsearches(namespace string) v1.ElasticsearchInterfa
 	return &FakeElasticsearches{c, namespace}
 }
 
+func (c *FakeKubedbV1) Kafkas(namespace string) v1.KafkaInterface {
+	return &FakeKafkas{c, namespace}
+}
+
 func (c *FakeKubedbV1) MariaDBs(namespace string) v1.MariaDBInterface {
 	return &FakeMariaDBs{c, namespace}
 }
