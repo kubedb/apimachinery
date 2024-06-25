@@ -97,6 +97,10 @@ func (c *FakeOpsV1alpha1) SinglestoreOpsRequests(namespace string) v1alpha1.Sing
 	return &FakeSinglestoreOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) SolrOpsRequests(namespace string) v1alpha1.SolrOpsRequestInterface {
+	return &FakeSolrOpsRequests{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeOpsV1alpha1) RESTClient() rest.Interface {

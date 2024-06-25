@@ -153,3 +153,11 @@ type SinglestoreOpsRequestListerExpansion interface{}
 // SinglestoreOpsRequestNamespaceListerExpansion allows custom methods to be added to
 // SinglestoreOpsRequestNamespaceLister.
 type SinglestoreOpsRequestNamespaceListerExpansion interface{}
+
+// SolrOpsRequestListerExpansion allows custom methods to be added to
+// SolrOpsRequestLister.
+type SolrOpsRequestListerExpansion interface{}
+
+// SolrOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// SolrOpsRequestNamespaceLister.
+type SolrOpsRequestNamespaceListerExpansion interface{}
