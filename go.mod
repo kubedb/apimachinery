@@ -11,6 +11,7 @@ require (
 	github.com/fatih/structs v1.1.0
 	github.com/google/go-cmp v0.6.0
 	github.com/google/gofuzz v1.2.0
+	github.com/google/uuid v1.6.0
 	github.com/iancoleman/orderedmap v0.3.0
 	github.com/json-iterator/go v1.1.12
 	github.com/kubernetes-csi/external-snapshotter/client/v7 v7.0.0
@@ -102,7 +103,6 @@ require (
 	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/go-containerregistry v0.19.1 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.4 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
