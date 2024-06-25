@@ -116,11 +116,11 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 
 	case apiv1.ResourceKindMySQL:
 		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralMySQL
-		pg, err := c.DBClient.KubedbV1().MySQLs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
+		my, err := c.DBClient.KubedbV1().MySQLs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
-		dbInfo.replicasReady, dbInfo.msg, err = pg.ReplicasAreReady(c.PSLister)
+		dbInfo.replicasReady, dbInfo.msg, err = my.ReplicasAreReady(c.PSLister)
 		if err != nil {
 			return nil, err
 		}
@@ -131,6 +131,16 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 		dbInfo.replicasReady, dbInfo.msg, err = pg.ReplicasAreReady(c.PSLister)
+		if err != nil {
+			return nil, err
+		}
+	case apiv1.ResourceKindProxySQL:
+		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralProxySQL
+		ps, err := c.DBClient.KubedbV1().ProxySQLs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
+		dbInfo.replicasReady, dbInfo.msg, err = ps.ReplicasAreReady(c.PSLister)
 		if err != nil {
 			return nil, err
 		}
@@ -181,17 +191,6 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 	case api.ResourceKindPgBouncer:
 		dbInfo.opts.GVR.Resource = api.ResourcePluralPgBouncer
 		pp, err := c.DBClient.KubedbV1().PgBouncers(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = pp.ReplicasAreReady(c.PSLister)
-		if err != nil {
-			return nil, err
-		}
-
-	case api.ResourceKindProxySQL:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralProxySQL
-		pp, err := c.DBClient.KubedbV1().ProxySQLs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
