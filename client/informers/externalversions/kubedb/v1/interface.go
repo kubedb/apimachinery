@@ -26,6 +26,8 @@ import (
 type Interface interface {
 	// Elasticsearches returns a ElasticsearchInformer.
 	Elasticsearches() ElasticsearchInformer
+	// Kafkas returns a KafkaInformer.
+	Kafkas() KafkaInformer
 	// MariaDBs returns a MariaDBInformer.
 	MariaDBs() MariaDBInformer
 	// Memcacheds returns a MemcachedInformer.
@@ -62,6 +64,11 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // Elasticsearches returns a ElasticsearchInformer.
 func (v *version) Elasticsearches() ElasticsearchInformer {
 	return &elasticsearchInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Kafkas returns a KafkaInformer.
+func (v *version) Kafkas() KafkaInformer {
+	return &kafkaInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MariaDBs returns a MariaDBInformer.

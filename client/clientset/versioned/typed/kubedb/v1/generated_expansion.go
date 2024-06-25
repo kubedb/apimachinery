@@ -20,6 +20,8 @@ package v1
 
 type ElasticsearchExpansion interface{}
 
+type KafkaExpansion interface{}
+
 type MariaDBExpansion interface{}
 
 type MemcachedExpansion interface{}

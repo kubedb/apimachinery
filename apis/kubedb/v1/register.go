@@ -56,6 +56,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
 		&Elasticsearch{},
 		&ElasticsearchList{},
+		&Kafka{},
+		&KafkaList{},
 		&MariaDB{},
 		&MariaDBList{},
 		&Memcached{},
