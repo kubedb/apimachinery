@@ -23,7 +23,6 @@ package v1alpha1
 
 import (
 	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -383,7 +382,7 @@ func (in *MongoDBArchiverSpec) DeepCopyInto(out *MongoDBArchiverSpec) {
 	*out = *in
 	if in.Databases != nil {
 		in, out := &in.Databases, &out.Databases
-		*out = new(v1alpha2.AllowedConsumers)
+		*out = new(kubedbv1.AllowedConsumers)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.RetentionPolicy != nil {
