@@ -27,6 +27,7 @@ import (
 	"k8s.io/apimachinery/pkg/conversion"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	clientgoapiv1 "kmodules.xyz/client-go/api/v1"
+	core_util "kmodules.xyz/client-go/core/v1"
 	monitoringagentapiapiv1 "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
 	ofstconv "kmodules.xyz/offshoot-api/api/v1/conversion"
@@ -124,10 +125,11 @@ func Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(in *v1.Elasticse
 	out.Suffix = in.Suffix
 	out.HeapSizePercentage = (*int32)(unsafe.Pointer(in.HeapSizePercentage))
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
-	// WARNING: in.PodTemplate requires manual conversion: does not exist in peer-type
+	dbContainer := core_util.GetContainerByName(in.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+	out.Resources = *(*corev1.ResourceRequirements)(unsafe.Pointer(&dbContainer.Resources))
 	out.MaxUnavailable = (*intstr.IntOrString)(unsafe.Pointer(in.MaxUnavailable))
-	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
-	out.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.Tolerations))
+	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.PodTemplate.Spec.NodeSelector))
+	out.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.PodTemplate.Spec.Tolerations))
 	return nil
 }
 
@@ -136,10 +138,11 @@ func Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(in *Elasticsearc
 	out.Suffix = in.Suffix
 	out.HeapSizePercentage = (*int32)(unsafe.Pointer(in.HeapSizePercentage))
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
-	// WARNING: in.Resources requires manual conversion: does not exist in peer-type
+	containerID := core_util.GetContainerIdByName(out.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+	out.PodTemplate.Spec.Containers[containerID].Resources = *(*corev1.ResourceRequirements)(unsafe.Pointer(&in.Resources))
 	out.MaxUnavailable = (*intstr.IntOrString)(unsafe.Pointer(in.MaxUnavailable))
-	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
-	out.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.Tolerations))
+	out.PodTemplate.Spec.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
+	out.PodTemplate.Spec.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.Tolerations))
 	return nil
 }
 
