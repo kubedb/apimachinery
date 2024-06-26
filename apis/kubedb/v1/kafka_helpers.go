@@ -190,26 +190,26 @@ func (k *Kafka) PodLabels(extraLabels ...map[string]string) map[string]string {
 	return k.offshootLabels(meta_util.OverwriteKeys(k.OffshootSelectors(), extraLabels...), k.Spec.PodTemplate.Labels)
 }
 
-func (k *Kafka) StatefulSetName() string {
+func (k *Kafka) PetSetName() string {
 	return k.OffshootName()
 }
 
-func (k *Kafka) CombinedStatefulSetName() string {
-	return k.StatefulSetName()
+func (k *Kafka) CombinedPetSetName() string {
+	return k.PetSetName()
 }
 
-func (k *Kafka) ControllerStatefulSetName() string {
+func (k *Kafka) ControllerPetSetName() string {
 	if k.Spec.Topology.Controller.Suffix != "" {
-		return meta_util.NameWithSuffix(k.StatefulSetName(), k.Spec.Topology.Controller.Suffix)
+		return meta_util.NameWithSuffix(k.PetSetName(), k.Spec.Topology.Controller.Suffix)
 	}
-	return meta_util.NameWithSuffix(k.StatefulSetName(), string(KafkaNodeRoleController))
+	return meta_util.NameWithSuffix(k.PetSetName(), string(KafkaNodeRoleController))
 }
 
-func (k *Kafka) BrokerStatefulSetName() string {
+func (k *Kafka) BrokerPetSetName() string {
 	if k.Spec.Topology.Broker.Suffix != "" {
-		return meta_util.NameWithSuffix(k.StatefulSetName(), k.Spec.Topology.Broker.Suffix)
+		return meta_util.NameWithSuffix(k.PetSetName(), k.Spec.Topology.Broker.Suffix)
 	}
-	return meta_util.NameWithSuffix(k.StatefulSetName(), string(KafkaNodeRoleBroker))
+	return meta_util.NameWithSuffix(k.PetSetName(), string(KafkaNodeRoleBroker))
 }
 
 func (k *Kafka) NodeRoleSpecificLabelKey(role KafkaNodeRoleType) string {
@@ -472,7 +472,7 @@ func (k *Kafka) GetCruiseControlClientID() string {
 }
 
 func (k *Kafka) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
-	// Desire number of statefulSets
+	// Desire number of petSets
 	expectedItems := 1
 	if k.Spec.Topology != nil {
 		expectedItems = 2
