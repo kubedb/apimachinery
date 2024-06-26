@@ -18,6 +18,7 @@ package v1
 
 import (
 	"fmt"
+	"k8s.io/klog/v2"
 	"strconv"
 	"strings"
 
@@ -926,6 +927,7 @@ func (m *MongoDB) setDefaultProbes(container *core.Container, mgVersion *v1alpha
 	if container == nil {
 		return
 	}
+	klog.Infoln("heloooooooooooooooooooooooooooo", container.Name)
 
 	if container.LivenessProbe == nil {
 		container.LivenessProbe = m.GetDefaultLivenessProbeSpec(mgVersion, isArbiter...)
