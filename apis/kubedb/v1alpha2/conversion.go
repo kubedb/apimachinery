@@ -73,7 +73,7 @@ func Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(in *CoordinatorSpec,
 	found := false
 
 	for i := range *out {
-		if strings.HasSuffix((*out)[i].Name, "coordinator") {
+		if strings.HasSuffix((*out)[i].Name, "coordinator") || (*out)[i].Name == kubedb.ReplicationModeDetectorContainerName {
 			if container.SecurityContext != nil {
 				(*out)[i].SecurityContext = container.SecurityContext
 			}
@@ -84,36 +84,6 @@ func Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(in *CoordinatorSpec,
 		}
 	}
 	if !found && (container.SecurityContext != nil || container.Resources.Limits != nil || container.Resources.Requests != nil) {
-		container.Name = "pg-coordinator"
-		*out = append(*out, container)
-	}
-
-	return nil
-}
-
-func Convert_v1alpha2_MongoDB_CoordinatorSpec_To_Slice_v1_MongoDB_Container(in *CoordinatorSpec, out *[]corev1.Container, s conversion.Scope) error {
-	if in == nil {
-		return nil
-	}
-
-	var container corev1.Container
-	container.SecurityContext = (*corev1.SecurityContext)(unsafe.Pointer(in.SecurityContext))
-	container.Resources = *in.Resources.DeepCopy()
-	found := false
-
-	for i := range *out {
-		if strings.HasSuffix((*out)[i].Name, kubedb.ReplicationModeDetectorContainerName) {
-			if container.SecurityContext != nil {
-				(*out)[i].SecurityContext = container.SecurityContext
-			}
-			if container.Resources.Limits != nil || container.Resources.Requests != nil {
-				(*out)[i].Resources = *container.Resources.DeepCopy()
-			}
-			found = true
-		}
-	}
-	if !found && (container.SecurityContext != nil || container.Resources.Limits != nil || container.Resources.Requests != nil) {
-		container.Name = kubedb.ReplicationModeDetectorContainerName
 		*out = append(*out, container)
 	}
 
@@ -171,7 +141,11 @@ func Convert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in *MariaDBSpec, out *v1.Mar
 	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
 	}
-
+	for i := range out.PodTemplate.Spec.Containers {
+		if out.PodTemplate.Spec.Containers[i].Name == "" {
+			out.PodTemplate.Spec.Containers[i].Name = kubedb.MariaDBCoordinatorContainerName
+		}
+	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*v1.Archiver)(unsafe.Pointer(in.Archiver))
@@ -237,7 +211,11 @@ func Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out *v1.
 	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
 	}
-
+	for i := range out.PodTemplate.Spec.Containers {
+		if out.PodTemplate.Spec.Containers[i].Name == "" {
+			out.PodTemplate.Spec.Containers[i].Name = kubedb.PostgresCoordinatorContainerName
+		}
+	}
 	out.EnforceFsGroup = in.EnforceFsGroup
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
@@ -318,6 +296,11 @@ func Convert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(in *MySQLSpec, out *v1.MySQLSpec
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
+	}
+	for i := range out.PodTemplate.Spec.Containers {
+		if out.PodTemplate.Spec.Containers[i].Name == "" {
+			out.PodTemplate.Spec.Containers[i].Name = kubedb.MySQLCoordinatorContainerName
+		}
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.AllowedReadReplicas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedReadReplicas))
@@ -410,10 +393,14 @@ func Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1.Mon
 	if out.PodTemplate == nil {
 		out.PodTemplate = &ofstv2.PodTemplateSpec{}
 	}
-	if err := Convert_v1alpha2_MongoDB_CoordinatorSpec_To_Slice_v1_MongoDB_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
 	}
-
+	for i := range out.PodTemplate.Spec.Containers {
+		if out.PodTemplate.Spec.Containers[i].Name == "" {
+			out.PodTemplate.Spec.Containers[i].Name = kubedb.ReplicationModeDetectorContainerName
+		}
+	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	if in.Arbiter != nil {
 		in, out := &in.Arbiter, &out.Arbiter
@@ -532,6 +519,11 @@ func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec
 	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
 	}
+	for i := range out.PodTemplate.Spec.Containers {
+		if out.PodTemplate.Spec.Containers[i].Name == "" {
+			out.PodTemplate.Spec.Containers[i].Name = kubedb.RedisCoordinatorContainerName
+		}
+	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	return nil
@@ -591,6 +583,11 @@ func Convert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec(in *PerconaXtraD
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
+	}
+	for i := range out.PodTemplate.Spec.Containers {
+		if out.PodTemplate.Spec.Containers[i].Name == "" {
+			out.PodTemplate.Spec.Containers[i].Name = kubedb.PerconaXtraDBCoordinatorContainerName
+		}
 	}
 
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
