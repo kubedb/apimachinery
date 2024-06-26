@@ -17,10 +17,10 @@ limitations under the License.
 package v1alpha2
 
 import (
-	"kubedb.dev/apimachinery/apis/kubedb"
 	"strings"
 	"unsafe"
 
+	"kubedb.dev/apimachinery/apis/kubedb"
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 
 	corev1 "k8s.io/api/core/v1"

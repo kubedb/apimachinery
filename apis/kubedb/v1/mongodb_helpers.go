@@ -697,7 +697,9 @@ func (m *MongoDB) setContainerDefaultValues(container *core.Container, mgVersion
 ) {
 	m.setContainerDefaultResources(container, defaultResource)
 	m.assignDefaultContainerSecurityContext(mgVersion, container.SecurityContext)
-	m.setDefaultProbes(container, mgVersion, isArbiter...)
+	if container.Name == kubedb.MongoDBContainerName {
+		m.setDefaultProbes(container, mgVersion, isArbiter...)
+	}
 }
 
 func (m *MongoDB) setDefaultPodSecurityContext(mgVersion *v1alpha1.MongoDBVersion, podTemplate *ofstv2.PodTemplateSpec) {
