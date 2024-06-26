@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"kubedb.dev/apimachinery/apis/kubedb"
 	"strings"
 	"unsafe"
 
@@ -83,6 +84,35 @@ func Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(in *CoordinatorSpec,
 	}
 	if !found && (container.SecurityContext != nil || container.Resources.Limits != nil || container.Resources.Requests != nil) {
 		container.Name = "pg-coordinator"
+		*out = append(*out, container)
+	}
+
+	return nil
+}
+
+func Convert_v1alpha2_MongoDB_CoordinatorSpec_To_Slice_v1_MongoDB_Container(in *CoordinatorSpec, out *[]corev1.Container, s conversion.Scope) error {
+	if in == nil {
+		return nil
+	}
+
+	var container corev1.Container
+	container.SecurityContext = (*corev1.SecurityContext)(unsafe.Pointer(in.SecurityContext))
+	container.Resources = *in.Resources.DeepCopy()
+	found := false
+
+	for i := range *out {
+		if strings.HasSuffix((*out)[i].Name, kubedb.ReplicationModeDetectorContainerName) {
+			if container.SecurityContext != nil {
+				(*out)[i].SecurityContext = container.SecurityContext
+			}
+			if container.Resources.Limits != nil || container.Resources.Requests != nil {
+				(*out)[i].Resources = *container.Resources.DeepCopy()
+			}
+			found = true
+		}
+	}
+	if !found && (container.SecurityContext != nil || container.Resources.Limits != nil || container.Resources.Requests != nil) {
+		container.Name = kubedb.ReplicationModeDetectorContainerName
 		*out = append(*out, container)
 	}
 
@@ -373,7 +403,10 @@ func Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1.Mon
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	out.StorageEngine = v1.StorageEngine(in.StorageEngine)
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
+	if out.PodTemplate == nil {
+		out.PodTemplate = &ofstv2.PodTemplateSpec{}
+	}
+	if err := Convert_v1alpha2_MongoDB_CoordinatorSpec_To_Slice_v1_MongoDB_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
 	}
 
