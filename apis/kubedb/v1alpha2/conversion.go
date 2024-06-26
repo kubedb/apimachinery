@@ -125,11 +125,13 @@ func Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(in *v1.Elasticse
 	out.Suffix = in.Suffix
 	out.HeapSizePercentage = (*int32)(unsafe.Pointer(in.HeapSizePercentage))
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
-	dbContainer := core_util.GetContainerByName(in.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
-	out.Resources = *(*corev1.ResourceRequirements)(unsafe.Pointer(&dbContainer.Resources))
 	out.MaxUnavailable = (*intstr.IntOrString)(unsafe.Pointer(in.MaxUnavailable))
 	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.PodTemplate.Spec.NodeSelector))
 	out.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.PodTemplate.Spec.Tolerations))
+	dbContainer := core_util.GetContainerByName(in.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
+	if dbContainer != nil {
+		out.Resources = *(*corev1.ResourceRequirements)(unsafe.Pointer(&dbContainer.Resources))
+	}
 	return nil
 }
 
@@ -138,8 +140,6 @@ func Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(in *Elasticsearc
 	out.Suffix = in.Suffix
 	out.HeapSizePercentage = (*int32)(unsafe.Pointer(in.HeapSizePercentage))
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
-	containerID := core_util.GetContainerIdByName(out.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
-	out.PodTemplate.Spec.Containers[containerID].Resources = *(*corev1.ResourceRequirements)(unsafe.Pointer(&in.Resources))
 	out.MaxUnavailable = (*intstr.IntOrString)(unsafe.Pointer(in.MaxUnavailable))
 	out.PodTemplate.Spec.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
 	out.PodTemplate.Spec.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.Tolerations))
@@ -634,26 +634,10 @@ func Convert_v1alpha2_KafkaNode_To_v1_KafkaNode(in *KafkaNode, out *v1.KafkaNode
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.PodTemplate.Spec.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
 	out.PodTemplate.Spec.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.Tolerations))
-
-	found := false
-	containers := &out.PodTemplate.Spec.Containers
-	for i := range out.PodTemplate.Spec.Containers {
-		if (*containers)[i].Name == "kafka" {
-			if in.Resources.Limits != nil || in.Resources.Requests != nil {
-				(*containers)[i].Resources = *in.Resources.DeepCopy()
-			}
-			found = true
-		}
-	}
-	if !found && (in.Resources.Limits != nil || in.Resources.Requests != nil) {
-		*containers = append(*containers, corev1.Container{
-			Name:      "kafka",
-			Resources: in.Resources,
-		})
-	}
-	// WARNING: in.Resources requires manual conversion: does not exist in peer-type
-	// WARNING: in.NodeSelector requires manual conversion: does not exist in peer-type
-	// WARNING: in.Tolerations requires manual conversion: does not exist in peer-type
+	out.PodTemplate.Spec.Containers = core_util.UpsertContainer(out.PodTemplate.Spec.Containers, corev1.Container{
+		Name:      kubedb.KafkaContainerName,
+		Resources: in.Resources,
+	})
 	return nil
 }
 
@@ -663,15 +647,10 @@ func Convert_v1_KafkaNode_To_v1alpha2_KafkaNode(in *v1.KafkaNode, out *KafkaNode
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.PodTemplate.Spec.NodeSelector))
 	out.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.PodTemplate.Spec.Tolerations))
-
-	containers := &in.PodTemplate.Spec.Containers
-	for i := range *containers {
-		if (*containers)[i].Name == "kafka" {
-			out.Resources = (*containers)[i].Resources
-		}
+	dbContainer := core_util.GetContainerByName(in.PodTemplate.Spec.Containers, kubedb.KafkaContainerName)
+	if dbContainer != nil {
+		out.Resources = *(*corev1.ResourceRequirements)(unsafe.Pointer(&dbContainer.Resources))
 	}
-
-	// WARNING: in.PodTemplate requires manual conversion: does not exist in peer-type
 	return nil
 }
 
