@@ -637,22 +637,21 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 	}
 
 	if m.Spec.ShardTopology != nil {
-		m.setPodTemplateDefaultValues(&m.Spec.ShardTopology.Mongos.PodTemplate, mgVersion)
-		m.setPodTemplateDefaultValues(&m.Spec.ShardTopology.Shard.PodTemplate, mgVersion)
-		m.setPodTemplateDefaultValues(&m.Spec.ShardTopology.ConfigServer.PodTemplate, mgVersion)
+		m.setPodTemplateDefaultValues(&m.Spec.ShardTopology.Mongos.PodTemplate, mgVersion, false)
+		m.setPodTemplateDefaultValues(&m.Spec.ShardTopology.Shard.PodTemplate, mgVersion, true)
+		m.setPodTemplateDefaultValues(&m.Spec.ShardTopology.ConfigServer.PodTemplate, mgVersion, true)
 	} else {
 		if m.Spec.Replicas == nil {
 			m.Spec.Replicas = pointer.Int32P(1)
 		}
-
-		m.setPodTemplateDefaultValues(m.Spec.PodTemplate, mgVersion)
+		m.setPodTemplateDefaultValues(m.Spec.PodTemplate, mgVersion, m.Spec.ReplicaSet != nil)
 	}
 
 	if m.Spec.Arbiter != nil {
-		m.setPodTemplateDefaultValues(&m.Spec.Arbiter.PodTemplate, mgVersion, true)
+		m.setPodTemplateDefaultValues(&m.Spec.Arbiter.PodTemplate, mgVersion, false, true)
 	}
 	if m.Spec.Hidden != nil {
-		m.setPodTemplateDefaultValues(&m.Spec.Hidden.PodTemplate, mgVersion)
+		m.setPodTemplateDefaultValues(&m.Spec.Hidden.PodTemplate, mgVersion, false)
 	}
 
 	m.SetTLSDefaults()
@@ -668,7 +667,8 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 	}
 }
 
-func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) {
+func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpec, mgVersion *v1alpha1.MongoDBVersion,
+	moodDetectorNeeded bool, isArbiter ...bool) {
 	if podTemplate == nil {
 		return
 	}
@@ -689,8 +689,10 @@ func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpe
 	container = EnsureContainerExists(podTemplate, kubedb.MongoDBContainerName)
 	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
 
-	container = EnsureContainerExists(podTemplate, kubedb.ReplicationModeDetectorContainerName)
-	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
+	if moodDetectorNeeded {
+		container = EnsureContainerExists(podTemplate, kubedb.ReplicationModeDetectorContainerName)
+		m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
+	}
 }
 
 func (m *MongoDB) setContainerDefaultValues(container *core.Container, mgVersion *v1alpha1.MongoDBVersion,
@@ -927,7 +929,6 @@ func (m *MongoDB) setDefaultProbes(container *core.Container, mgVersion *v1alpha
 	if container == nil {
 		return
 	}
-	klog.Infoln("heloooooooooooooooooooooooooooo", container.Name)
 
 	if container.LivenessProbe == nil {
 		container.LivenessProbe = m.GetDefaultLivenessProbeSpec(mgVersion, isArbiter...)
