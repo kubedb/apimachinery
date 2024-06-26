@@ -35,7 +35,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20240521193020-835d969ad83a
 	k8s.io/metrics v0.30.1
 	k8s.io/utils v0.0.0-20240502163921-fe8a2dddb1d0
-	kmodules.xyz/client-go v0.30.7
+	kmodules.xyz/client-go v0.30.9-0.20240624102451-7ed2c992c3e1
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.30.0
 	kmodules.xyz/monitoring-agent-api v0.29.0
