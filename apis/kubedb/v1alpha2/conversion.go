@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"reflect"
 	"strings"
 	"unsafe"
 
@@ -382,7 +383,6 @@ func Convert_v1_MongoHiddenNode_To_v1alpha2_MongoHiddenNode(in *v1.MongoHiddenNo
 			return err
 		}
 	}
-	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (*kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec vs kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec)
 	out.Replicas = in.Replicas
 	out.Storage = in.Storage
 	return nil
@@ -397,7 +397,6 @@ func Convert_v1_MongoDBNode_To_v1alpha2_MongoDBNode(in *v1.MongoDBNode, out *Mon
 			return err
 		}
 	}
-	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (*kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec vs kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec)
 	return nil
 }
 
@@ -411,13 +410,11 @@ func Convert_v1alpha2_MongoDBNode_To_v1_MongoDBNode(in *MongoDBNode, out *v1.Mon
 	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, out.PodTemplate, s); err != nil {
 		return err
 	}
-	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec vs *kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec)
 	return nil
 }
 
 func Convert_v1_MongoArbiterNode_To_v1alpha2_MongoArbiterNode(in *v1.MongoArbiterNode, out *MongoArbiterNode, s conversion.Scope) error {
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (*kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec vs kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec)
 	if in.PodTemplate != nil {
 		if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(in.PodTemplate, &out.PodTemplate, s); err != nil {
 			return err
@@ -428,12 +425,23 @@ func Convert_v1_MongoArbiterNode_To_v1alpha2_MongoArbiterNode(in *v1.MongoArbite
 
 func Convert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode(in *MongoArbiterNode, out *v1.MongoArbiterNode, s conversion.Scope) error {
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec vs *kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec)
 	if out.PodTemplate == nil {
 		out.PodTemplate = &ofstv2.PodTemplateSpec{}
 	}
 	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, out.PodTemplate, s); err != nil {
 		return err
+	}
+	return nil
+}
+
+func initializeMongoDBReplicationModeDetectorContainer(in *CoordinatorSpec, podTemplate *ofstv2.PodTemplateSpec, s conversion.Scope) error {
+	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(in, &podTemplate.Spec.Containers, s); err != nil {
+		return err
+	}
+	for i := range podTemplate.Spec.Containers {
+		if podTemplate.Spec.Containers[i].Name == "" {
+			podTemplate.Spec.Containers[i].Name = kubedb.ReplicationModeDetectorContainerName
+		}
 	}
 	return nil
 }
@@ -482,15 +490,28 @@ func Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1.Mon
 	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
 	out.StorageEngine = v1.StorageEngine(in.StorageEngine)
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
-	if out.PodTemplate == nil {
-		out.PodTemplate = &ofstv2.PodTemplateSpec{}
-	}
-	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
-		return err
-	}
-	for i := range out.PodTemplate.Spec.Containers {
-		if out.PodTemplate.Spec.Containers[i].Name == "" {
-			out.PodTemplate.Spec.Containers[i].Name = kubedb.ReplicationModeDetectorContainerName
+
+	if !reflect.ValueOf(in.Coordinator).IsZero() {
+		if out.ShardTopology != nil {
+			if out.ShardTopology.Shard.PodTemplate == nil {
+				out.ShardTopology.Shard.PodTemplate = new(ofstv2.PodTemplateSpec)
+			}
+			if err := initializeMongoDBReplicationModeDetectorContainer(&in.Coordinator, out.ShardTopology.Shard.PodTemplate, s); err != nil {
+				return err
+			}
+			if out.ShardTopology.ConfigServer.PodTemplate == nil {
+				out.ShardTopology.ConfigServer.PodTemplate = new(ofstv2.PodTemplateSpec)
+			}
+			if err := initializeMongoDBReplicationModeDetectorContainer(&in.Coordinator, out.ShardTopology.ConfigServer.PodTemplate, s); err != nil {
+				return err
+			}
+		} else {
+			if out.PodTemplate == nil {
+				out.PodTemplate = new(ofstv2.PodTemplateSpec)
+			}
+			if err := initializeMongoDBReplicationModeDetectorContainer(&in.Coordinator, out.PodTemplate, s); err != nil {
+				return err
+			}
 		}
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
