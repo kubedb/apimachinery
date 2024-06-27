@@ -113,6 +113,10 @@ func Convert_v1alpha2_ElasticsearchNode_To_v1_ElasticsearchNode(in *Elasticsearc
 	out.MaxUnavailable = (*intstr.IntOrString)(unsafe.Pointer(in.MaxUnavailable))
 	out.PodTemplate.Spec.NodeSelector = *(*map[string]string)(unsafe.Pointer(&in.NodeSelector))
 	out.PodTemplate.Spec.Tolerations = *(*[]corev1.Toleration)(unsafe.Pointer(&in.Tolerations))
+	out.PodTemplate.Spec.Containers = core_util.UpsertContainer(out.PodTemplate.Spec.Containers, corev1.Container{
+		Name:      kubedb.ElasticsearchContainerName,
+		Resources: in.Resources,
+	})
 	return nil
 }
 
@@ -131,6 +135,9 @@ func Convert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in *MariaDBSpec, out *v1.Mar
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
 	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
 		return err
+	}
+	if len(out.PodTemplate.Spec.Containers) > 0 {
+		out.PodTemplate.Spec.Containers[0].Name = "mariadb" // db container name used in sts
 	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.RequireSSL = in.RequireSSL
@@ -203,6 +210,9 @@ func Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out *v1.
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
 	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
 		return err
+	}
+	if len(out.PodTemplate.Spec.Containers) > 0 {
+		out.PodTemplate.Spec.Containers[0].Name = kubedb.PostgresContainerName
 	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
@@ -286,6 +296,9 @@ func Convert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(in *MySQLSpec, out *v1.MySQLSpec
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
 	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
 		return err
+	}
+	if len(out.PodTemplate.Spec.Containers) > 0 {
+		out.PodTemplate.Spec.Containers[0].Name = kubedb.MySQLContainerName
 	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.RequireSSL = in.RequireSSL
@@ -379,6 +392,9 @@ func Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1.Mon
 		*out = new(ofstv2.PodTemplateSpec)
 		if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(*in, *out, s); err != nil {
 			return err
+		}
+		if len((*out).Spec.Containers) > 0 {
+			(*out).Spec.Containers[0].Name = "mongodb" // db container name used in sts
 		}
 	} else {
 		out.PodTemplate = nil
@@ -513,6 +529,9 @@ func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec
 	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
 		return err
 	}
+	if len(out.PodTemplate.Spec.Containers) > 0 {
+		out.PodTemplate.Spec.Containers[0].Name = kubedb.RedisContainerName
+	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
@@ -577,6 +596,9 @@ func Convert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec(in *PerconaXtraD
 	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
 		return err
 	}
+	if len(out.PodTemplate.Spec.Containers) > 0 {
+		out.PodTemplate.Spec.Containers[0].Name = kubedb.PerconaXtraDBContainerName
+	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
@@ -628,6 +650,49 @@ func Convert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(in *v1.PerconaXt
 	return nil
 }
 
+func Convert_v1alpha2_ElasticsearchSpec_To_v1_ElasticsearchSpec(in *ElasticsearchSpec, out *v1.ElasticsearchSpec, s conversion.Scope) error {
+	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
+		return err
+	}
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	if in.Topology != nil {
+		in, out := &in.Topology, &out.Topology
+		*out = new(v1.ElasticsearchClusterTopology)
+		if err := Convert_v1alpha2_ElasticsearchClusterTopology_To_v1_ElasticsearchClusterTopology(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Topology = nil
+	}
+	out.EnableSSL = in.EnableSSL
+	out.DisableSecurity = in.DisableSecurity
+	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.StorageType = v1.StorageType(in.StorageType)
+	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	out.Init = (*v1.InitSpec)(unsafe.Pointer(in.Init))
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	out.SecureConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.SecureConfigSecret))
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
+	if len(out.PodTemplate.Spec.Containers) > 0 {
+		out.PodTemplate.Spec.Containers[0].Name = kubedb.ElasticsearchContainerName
+	}
+	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.MaxUnavailable = (*intstr.IntOrString)(unsafe.Pointer(in.MaxUnavailable))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.InternalUsers = *(*map[string]v1.ElasticsearchUserSpec)(unsafe.Pointer(&in.InternalUsers))
+	out.RolesMapping = *(*map[string]v1.ElasticsearchRoleMapSpec)(unsafe.Pointer(&in.RolesMapping))
+	out.Halted = in.Halted
+	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	out.KernelSettings = (*v1.KernelSettings)(unsafe.Pointer(in.KernelSettings))
+	out.HeapSizePercentage = (*int32)(unsafe.Pointer(in.HeapSizePercentage))
+	out.HealthChecker = in.HealthChecker
+	return nil
+}
+
 func Convert_v1alpha2_KafkaNode_To_v1_KafkaNode(in *KafkaNode, out *v1.KafkaNode, s conversion.Scope) error {
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.Suffix = in.Suffix
@@ -654,14 +719,31 @@ func Convert_v1_KafkaNode_To_v1alpha2_KafkaNode(in *v1.KafkaNode, out *KafkaNode
 	return nil
 }
 
+func Convert_v1alpha2_MemcachedSpec_To_v1_MemcachedSpec(in *MemcachedSpec, out *v1.MemcachedSpec, s conversion.Scope) error {
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	out.DataVolume = (*corev1.VolumeSource)(unsafe.Pointer(in.DataVolume))
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
+	if len(out.PodTemplate.Spec.Containers) > 0 {
+		out.PodTemplate.Spec.Containers[0].Name = kubedb.MemcachedContainerName
+	}
+	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.Halted = in.Halted
+	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	out.HealthChecker = in.HealthChecker
+	return nil
+}
+
 func (src *Elasticsearch) ConvertTo(dstRaw rtconv.Hub) error {
 	dst := dstRaw.(*v1.Elasticsearch)
 	err := Convert_v1alpha2_Elasticsearch_To_v1_Elasticsearch(src, dst, nil)
 	if err != nil {
 		return err
-	}
-	if len(dst.Spec.PodTemplate.Spec.Containers) > 0 {
-		dst.Spec.PodTemplate.Spec.Containers[0].Name = "elasticsearch" // db container name used in sts
 	}
 	return nil
 }
@@ -675,9 +757,6 @@ func (src *MariaDB) ConvertTo(dstRaw rtconv.Hub) error {
 	err := Convert_v1alpha2_MariaDB_To_v1_MariaDB(src, dst, nil)
 	if err != nil {
 		return err
-	}
-	if len(dst.Spec.PodTemplate.Spec.Containers) > 0 {
-		dst.Spec.PodTemplate.Spec.Containers[0].Name = "mariadb" // db container name used in sts
 	}
 	return nil
 }
@@ -719,7 +798,14 @@ func (dst *PerconaXtraDB) ConvertFrom(srcRaw rtconv.Hub) error {
 }
 
 func (src *PgBouncer) ConvertTo(dstRaw rtconv.Hub) error {
-	return Convert_v1alpha2_PgBouncer_To_v1_PgBouncer(src, dstRaw.(*v1.PgBouncer), nil)
+	dst := dstRaw.(*v1.PgBouncer)
+	if err := Convert_v1alpha2_PgBouncer_To_v1_PgBouncer(src, dst, nil); err != nil {
+		return err
+	}
+	if len(dst.Spec.PodTemplate.Spec.Containers) > 0 {
+		dst.Spec.PodTemplate.Spec.Containers[0].Name = kubedb.PgBouncerContainerName
+	}
+	return nil
 }
 
 func (dst *PgBouncer) ConvertFrom(srcRaw rtconv.Hub) error {
@@ -733,9 +819,6 @@ func (src *Postgres) ConvertTo(dstRaw rtconv.Hub) error {
 	if err != nil {
 		return err
 	}
-	if len(dst.Spec.PodTemplate.Spec.Containers) > 0 {
-		dst.Spec.PodTemplate.Spec.Containers[0].Name = "postgres" // db container name used in sts
-	}
 	return nil
 }
 
@@ -744,7 +827,14 @@ func (dst *Postgres) ConvertFrom(srcRaw rtconv.Hub) error {
 }
 
 func (src *ProxySQL) ConvertTo(dstRaw rtconv.Hub) error {
-	return Convert_v1alpha2_ProxySQL_To_v1_ProxySQL(src, dstRaw.(*v1.ProxySQL), nil)
+	dst := dstRaw.(*v1.ProxySQL)
+	if err := Convert_v1alpha2_ProxySQL_To_v1_ProxySQL(src, dst, nil); err != nil {
+		return err
+	}
+	if len(dst.Spec.PodTemplate.Spec.Containers) > 0 {
+		dst.Spec.PodTemplate.Spec.Containers[0].Name = kubedb.ProxySQLContainerName
+	}
+	return nil
 }
 
 func (dst *ProxySQL) ConvertFrom(srcRaw rtconv.Hub) error {
@@ -752,7 +842,14 @@ func (dst *ProxySQL) ConvertFrom(srcRaw rtconv.Hub) error {
 }
 
 func (src *RedisSentinel) ConvertTo(dstRaw rtconv.Hub) error {
-	return Convert_v1alpha2_RedisSentinel_To_v1_RedisSentinel(src, dstRaw.(*v1.RedisSentinel), nil)
+	dst := dstRaw.(*v1.RedisSentinel)
+	if err := Convert_v1alpha2_RedisSentinel_To_v1_RedisSentinel(src, dst, nil); err != nil {
+		return err
+	}
+	if len(dst.Spec.PodTemplate.Spec.Containers) > 0 {
+		dst.Spec.PodTemplate.Spec.Containers[0].Name = kubedb.RedisSentinelContainerName
+	}
+	return nil
 }
 
 func (dst *RedisSentinel) ConvertFrom(srcRaw rtconv.Hub) error {
