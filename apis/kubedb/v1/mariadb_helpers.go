@@ -253,7 +253,7 @@ func (m *MariaDB) setDefaultContainerSecurityContext(mdVersion *v1alpha1.MariaDB
 	m.assignDefaultContainerSecurityContext(mdVersion, dbContainer.SecurityContext)
 	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
 
-	initContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MariaDBInitContainerName)
+	initContainer := core_util.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.MariaDBInitContainerName)
 	if initContainer == nil {
 		initContainer = &core.Container{
 			Name: kubedb.MariaDBInitContainerName,
