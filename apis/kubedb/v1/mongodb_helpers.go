@@ -674,13 +674,13 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 func (m *MongoDB) initializePodTemplates() {
 	if m.Spec.ShardTopology != nil {
 		if m.Spec.ShardTopology.Shard.PodTemplate == nil {
-			m.Spec.PodTemplate = new(ofstv2.PodTemplateSpec)
+			m.Spec.ShardTopology.Shard.PodTemplate = new(ofstv2.PodTemplateSpec)
 		}
 		if m.Spec.ShardTopology.Mongos.PodTemplate == nil {
-			m.Spec.PodTemplate = new(ofstv2.PodTemplateSpec)
+			m.Spec.ShardTopology.Mongos.PodTemplate = new(ofstv2.PodTemplateSpec)
 		}
 		if m.Spec.ShardTopology.ConfigServer.PodTemplate == nil {
-			m.Spec.PodTemplate = new(ofstv2.PodTemplateSpec)
+			m.Spec.ShardTopology.ConfigServer.PodTemplate = new(ofstv2.PodTemplateSpec)
 		}
 	} else {
 		if m.Spec.PodTemplate == nil {
