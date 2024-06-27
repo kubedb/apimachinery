@@ -1365,7 +1365,11 @@ func (in *MongoArbiterNode) DeepCopyInto(out *MongoArbiterNode) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
-	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
+	if in.PodTemplate != nil {
+		in, out := &in.PodTemplate, &out.PodTemplate
+		*out = new(v2.PodTemplateSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -1492,7 +1496,11 @@ func (in *MongoDBNode) DeepCopyInto(out *MongoDBNode) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
-	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
+	if in.PodTemplate != nil {
+		in, out := &in.PodTemplate, &out.PodTemplate
+		*out = new(v2.PodTemplateSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -1714,7 +1722,11 @@ func (in *MongoHiddenNode) DeepCopyInto(out *MongoHiddenNode) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
-	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
+	if in.PodTemplate != nil {
+		in, out := &in.PodTemplate, &out.PodTemplate
+		*out = new(v2.PodTemplateSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	in.Storage.DeepCopyInto(&out.Storage)
 	return
 }

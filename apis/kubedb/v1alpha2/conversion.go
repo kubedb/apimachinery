@@ -362,6 +362,82 @@ func Convert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(in *v1.MySQLSpec, out *MySQLSpec
 	return nil
 }
 
+func Convert_v1alpha2_MongoHiddenNode_To_v1_MongoHiddenNode(in *MongoHiddenNode, out *v1.MongoHiddenNode, s conversion.Scope) error {
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	if out.PodTemplate == nil {
+		out.PodTemplate = &ofstv2.PodTemplateSpec{}
+	}
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, out.PodTemplate, s); err != nil {
+		return err
+	}
+	out.Replicas = in.Replicas
+	out.Storage = in.Storage
+	return nil
+}
+
+func Convert_v1_MongoHiddenNode_To_v1alpha2_MongoHiddenNode(in *v1.MongoHiddenNode, out *MongoHiddenNode, s conversion.Scope) error {
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	if in.PodTemplate != nil {
+		if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(in.PodTemplate, &out.PodTemplate, s); err != nil {
+			return err
+		}
+	}
+	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (*kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec vs kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec)
+	out.Replicas = in.Replicas
+	out.Storage = in.Storage
+	return nil
+}
+
+func Convert_v1_MongoDBNode_To_v1alpha2_MongoDBNode(in *v1.MongoDBNode, out *MongoDBNode, s conversion.Scope) error {
+	out.Replicas = in.Replicas
+	out.Prefix = in.Prefix
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	if in.PodTemplate != nil {
+		if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(in.PodTemplate, &out.PodTemplate, s); err != nil {
+			return err
+		}
+	}
+	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (*kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec vs kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec)
+	return nil
+}
+
+func Convert_v1alpha2_MongoDBNode_To_v1_MongoDBNode(in *MongoDBNode, out *v1.MongoDBNode, s conversion.Scope) error {
+	out.Replicas = in.Replicas
+	out.Prefix = in.Prefix
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	if out.PodTemplate == nil {
+		out.PodTemplate = &ofstv2.PodTemplateSpec{}
+	}
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, out.PodTemplate, s); err != nil {
+		return err
+	}
+	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec vs *kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec)
+	return nil
+}
+
+func Convert_v1_MongoArbiterNode_To_v1alpha2_MongoArbiterNode(in *v1.MongoArbiterNode, out *MongoArbiterNode, s conversion.Scope) error {
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (*kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec vs kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec)
+	if in.PodTemplate != nil {
+		if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(in.PodTemplate, &out.PodTemplate, s); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func Convert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode(in *MongoArbiterNode, out *v1.MongoArbiterNode, s conversion.Scope) error {
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec vs *kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec)
+	if out.PodTemplate == nil {
+		out.PodTemplate = &ofstv2.PodTemplateSpec{}
+	}
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, out.PodTemplate, s); err != nil {
+		return err
+	}
+	return nil
+}
+
 func Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1.MongoDBSpec, s conversion.Scope) error {
 	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
 		return err

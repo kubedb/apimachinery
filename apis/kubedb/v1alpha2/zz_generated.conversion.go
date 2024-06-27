@@ -384,16 +384,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*MongoArbiterNode)(nil), (*v1.MongoArbiterNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode(a.(*MongoArbiterNode), b.(*v1.MongoArbiterNode), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.MongoArbiterNode)(nil), (*MongoArbiterNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_MongoArbiterNode_To_v1alpha2_MongoArbiterNode(a.(*v1.MongoArbiterNode), b.(*MongoArbiterNode), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*MongoDB)(nil), (*v1.MongoDB)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_MongoDB_To_v1_MongoDB(a.(*MongoDB), b.(*v1.MongoDB), scope)
 	}); err != nil {
@@ -434,16 +424,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*MongoDBNode)(nil), (*v1.MongoDBNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_MongoDBNode_To_v1_MongoDBNode(a.(*MongoDBNode), b.(*v1.MongoDBNode), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.MongoDBNode)(nil), (*MongoDBNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_MongoDBNode_To_v1alpha2_MongoDBNode(a.(*v1.MongoDBNode), b.(*MongoDBNode), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*MongoDBReplicaSet)(nil), (*v1.MongoDBReplicaSet)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_MongoDBReplicaSet_To_v1_MongoDBReplicaSet(a.(*MongoDBReplicaSet), b.(*v1.MongoDBReplicaSet), scope)
 	}); err != nil {
@@ -481,16 +461,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*v1.MongoDBStatus)(nil), (*MongoDBStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_MongoDBStatus_To_v1alpha2_MongoDBStatus(a.(*v1.MongoDBStatus), b.(*MongoDBStatus), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*MongoHiddenNode)(nil), (*v1.MongoHiddenNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_MongoHiddenNode_To_v1_MongoHiddenNode(a.(*MongoHiddenNode), b.(*v1.MongoHiddenNode), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.MongoHiddenNode)(nil), (*MongoHiddenNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_MongoHiddenNode_To_v1alpha2_MongoHiddenNode(a.(*v1.MongoHiddenNode), b.(*MongoHiddenNode), scope)
 	}); err != nil {
 		return err
 	}
@@ -944,8 +914,23 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*v1.MongoArbiterNode)(nil), (*MongoArbiterNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_MongoArbiterNode_To_v1alpha2_MongoArbiterNode(a.(*v1.MongoArbiterNode), b.(*MongoArbiterNode), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.MongoDBNode)(nil), (*MongoDBNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_MongoDBNode_To_v1alpha2_MongoDBNode(a.(*v1.MongoDBNode), b.(*MongoDBNode), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*v1.MongoDBSpec)(nil), (*MongoDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(a.(*v1.MongoDBSpec), b.(*MongoDBSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.MongoHiddenNode)(nil), (*MongoHiddenNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_MongoHiddenNode_To_v1alpha2_MongoHiddenNode(a.(*v1.MongoHiddenNode), b.(*MongoHiddenNode), scope)
 	}); err != nil {
 		return err
 	}
@@ -1004,8 +989,23 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*MongoArbiterNode)(nil), (*v1.MongoArbiterNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode(a.(*MongoArbiterNode), b.(*v1.MongoArbiterNode), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*MongoDBNode)(nil), (*v1.MongoDBNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_MongoDBNode_To_v1_MongoDBNode(a.(*MongoDBNode), b.(*v1.MongoDBNode), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*MongoDBSpec)(nil), (*v1.MongoDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(a.(*MongoDBSpec), b.(*v1.MongoDBSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*MongoHiddenNode)(nil), (*v1.MongoHiddenNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_MongoHiddenNode_To_v1_MongoHiddenNode(a.(*MongoHiddenNode), b.(*v1.MongoHiddenNode), scope)
 	}); err != nil {
 		return err
 	}
@@ -2468,28 +2468,14 @@ func Convert_v1_MemcachedStatus_To_v1alpha2_MemcachedStatus(in *v1.MemcachedStat
 
 func autoConvert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode(in *MongoArbiterNode, out *v1.MongoArbiterNode, s conversion.Scope) error {
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
-		return err
-	}
+	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec vs *kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec)
 	return nil
-}
-
-// Convert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode is an autogenerated conversion function.
-func Convert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode(in *MongoArbiterNode, out *v1.MongoArbiterNode, s conversion.Scope) error {
-	return autoConvert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode(in, out, s)
 }
 
 func autoConvert_v1_MongoArbiterNode_To_v1alpha2_MongoArbiterNode(in *v1.MongoArbiterNode, out *MongoArbiterNode, s conversion.Scope) error {
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
-		return err
-	}
+	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (*kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec vs kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec)
 	return nil
-}
-
-// Convert_v1_MongoArbiterNode_To_v1alpha2_MongoArbiterNode is an autogenerated conversion function.
-func Convert_v1_MongoArbiterNode_To_v1alpha2_MongoArbiterNode(in *v1.MongoArbiterNode, out *MongoArbiterNode, s conversion.Scope) error {
-	return autoConvert_v1_MongoArbiterNode_To_v1alpha2_MongoArbiterNode(in, out, s)
 }
 
 func autoConvert_v1alpha2_MongoDB_To_v1_MongoDB(in *MongoDB, out *v1.MongoDB, s conversion.Scope) error {
@@ -2622,30 +2608,16 @@ func autoConvert_v1alpha2_MongoDBNode_To_v1_MongoDBNode(in *MongoDBNode, out *v1
 	out.Replicas = in.Replicas
 	out.Prefix = in.Prefix
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
-		return err
-	}
+	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec vs *kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec)
 	return nil
-}
-
-// Convert_v1alpha2_MongoDBNode_To_v1_MongoDBNode is an autogenerated conversion function.
-func Convert_v1alpha2_MongoDBNode_To_v1_MongoDBNode(in *MongoDBNode, out *v1.MongoDBNode, s conversion.Scope) error {
-	return autoConvert_v1alpha2_MongoDBNode_To_v1_MongoDBNode(in, out, s)
 }
 
 func autoConvert_v1_MongoDBNode_To_v1alpha2_MongoDBNode(in *v1.MongoDBNode, out *MongoDBNode, s conversion.Scope) error {
 	out.Replicas = in.Replicas
 	out.Prefix = in.Prefix
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
-		return err
-	}
+	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (*kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec vs kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec)
 	return nil
-}
-
-// Convert_v1_MongoDBNode_To_v1alpha2_MongoDBNode is an autogenerated conversion function.
-func Convert_v1_MongoDBNode_To_v1alpha2_MongoDBNode(in *v1.MongoDBNode, out *MongoDBNode, s conversion.Scope) error {
-	return autoConvert_v1_MongoDBNode_To_v1alpha2_MongoDBNode(in, out, s)
 }
 
 func autoConvert_v1alpha2_MongoDBReplicaSet_To_v1_MongoDBReplicaSet(in *MongoDBReplicaSet, out *v1.MongoDBReplicaSet, s conversion.Scope) error {
@@ -2893,32 +2865,18 @@ func Convert_v1_MongoDBStatus_To_v1alpha2_MongoDBStatus(in *v1.MongoDBStatus, ou
 
 func autoConvert_v1alpha2_MongoHiddenNode_To_v1_MongoHiddenNode(in *MongoHiddenNode, out *v1.MongoHiddenNode, s conversion.Scope) error {
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
-		return err
-	}
+	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec vs *kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec)
 	out.Replicas = in.Replicas
 	out.Storage = in.Storage
 	return nil
-}
-
-// Convert_v1alpha2_MongoHiddenNode_To_v1_MongoHiddenNode is an autogenerated conversion function.
-func Convert_v1alpha2_MongoHiddenNode_To_v1_MongoHiddenNode(in *MongoHiddenNode, out *v1.MongoHiddenNode, s conversion.Scope) error {
-	return autoConvert_v1alpha2_MongoHiddenNode_To_v1_MongoHiddenNode(in, out, s)
 }
 
 func autoConvert_v1_MongoHiddenNode_To_v1alpha2_MongoHiddenNode(in *v1.MongoHiddenNode, out *MongoHiddenNode, s conversion.Scope) error {
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
-		return err
-	}
+	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (*kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec vs kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec)
 	out.Replicas = in.Replicas
 	out.Storage = in.Storage
 	return nil
-}
-
-// Convert_v1_MongoHiddenNode_To_v1alpha2_MongoHiddenNode is an autogenerated conversion function.
-func Convert_v1_MongoHiddenNode_To_v1alpha2_MongoHiddenNode(in *v1.MongoHiddenNode, out *MongoHiddenNode, s conversion.Scope) error {
-	return autoConvert_v1_MongoHiddenNode_To_v1alpha2_MongoHiddenNode(in, out, s)
 }
 
 func autoConvert_v1alpha2_MySQL_To_v1_MySQL(in *MySQL, out *v1.MySQL, s conversion.Scope) error {
