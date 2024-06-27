@@ -280,7 +280,7 @@ type MongoArbiterNode struct {
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 }
 
 type MongoHiddenNode struct {
@@ -290,7 +290,7 @@ type MongoHiddenNode struct {
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// Replicas represents number of replicas of this specific node.
 	// If current node has replicaset enabled, then replicas is the amount of replicaset nodes.
@@ -314,7 +314,7 @@ type MongoDBNode struct {
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 }
 
 type MongoDBStatus struct {

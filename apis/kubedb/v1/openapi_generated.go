@@ -25950,7 +25950,6 @@ func schema_apimachinery_apis_kubedb_v1_MongoArbiterNode(ref common.ReferenceCal
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
@@ -26038,7 +26037,6 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBConfigNode(ref common.ReferenceCa
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
@@ -26141,7 +26139,6 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBMongosNode(ref common.ReferenceCa
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
@@ -26184,7 +26181,6 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBNode(ref common.ReferenceCallback
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
@@ -26256,7 +26252,6 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBShardNode(ref common.ReferenceCal
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
@@ -26574,7 +26569,6 @@ func schema_apimachinery_apis_kubedb_v1_MongoHiddenNode(ref common.ReferenceCall
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},

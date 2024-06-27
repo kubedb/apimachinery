@@ -635,22 +635,27 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		}
 	}
 
+	m.initializePodTemplates()
+
 	if m.Spec.ShardTopology != nil {
-		m.setPodTemplateDefaultValues(&m.Spec.ShardTopology.Mongos.PodTemplate, mgVersion, false)
-		m.setPodTemplateDefaultValues(&m.Spec.ShardTopology.Shard.PodTemplate, mgVersion, true)
-		m.setPodTemplateDefaultValues(&m.Spec.ShardTopology.ConfigServer.PodTemplate, mgVersion, true)
+		m.setPodTemplateDefaultValues(m.Spec.ShardTopology.Mongos.PodTemplate, mgVersion, false)
+		m.setPodTemplateDefaultValues(m.Spec.ShardTopology.Shard.PodTemplate, mgVersion, true)
+		m.setPodTemplateDefaultValues(m.Spec.ShardTopology.ConfigServer.PodTemplate, mgVersion, true)
 	} else {
 		if m.Spec.Replicas == nil {
 			m.Spec.Replicas = pointer.Int32P(1)
+		}
+		if m.Spec.PodTemplate == nil {
+			m.Spec.PodTemplate = new(ofstv2.PodTemplateSpec)
 		}
 		m.setPodTemplateDefaultValues(m.Spec.PodTemplate, mgVersion, m.Spec.ReplicaSet != nil)
 	}
 
 	if m.Spec.Arbiter != nil {
-		m.setPodTemplateDefaultValues(&m.Spec.Arbiter.PodTemplate, mgVersion, false, true)
+		m.setPodTemplateDefaultValues(m.Spec.Arbiter.PodTemplate, mgVersion, false, true)
 	}
 	if m.Spec.Hidden != nil {
-		m.setPodTemplateDefaultValues(&m.Spec.Hidden.PodTemplate, mgVersion, false)
+		m.setPodTemplateDefaultValues(m.Spec.Hidden.PodTemplate, mgVersion, false)
 	}
 
 	m.SetTLSDefaults()
@@ -663,6 +668,31 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
 			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = mgVersion.Spec.SecurityContext.RunAsGroup
 		}
+	}
+}
+
+func (m *MongoDB) initializePodTemplates() {
+	if m.Spec.ShardTopology != nil {
+		if m.Spec.ShardTopology.Shard.PodTemplate == nil {
+			m.Spec.PodTemplate = new(ofstv2.PodTemplateSpec)
+		}
+		if m.Spec.ShardTopology.Mongos.PodTemplate == nil {
+			m.Spec.PodTemplate = new(ofstv2.PodTemplateSpec)
+		}
+		if m.Spec.ShardTopology.ConfigServer.PodTemplate == nil {
+			m.Spec.PodTemplate = new(ofstv2.PodTemplateSpec)
+		}
+	} else {
+		if m.Spec.PodTemplate == nil {
+			m.Spec.PodTemplate = new(ofstv2.PodTemplateSpec)
+		}
+	}
+
+	if m.Spec.Arbiter != nil && m.Spec.Arbiter.PodTemplate == nil {
+		m.Spec.Arbiter.PodTemplate = new(ofstv2.PodTemplateSpec)
+	}
+	if m.Spec.Hidden != nil && m.Spec.Hidden.PodTemplate == nil {
+		m.Spec.Hidden.PodTemplate = new(ofstv2.PodTemplateSpec)
 	}
 }
 
