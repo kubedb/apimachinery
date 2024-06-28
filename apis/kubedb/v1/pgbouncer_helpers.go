@@ -18,6 +18,7 @@ package v1
 
 import (
 	"fmt"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -210,6 +211,8 @@ func (p *PgBouncer) SetDefaults(pgBouncerVersion *catalog.PgBouncerVersion, uses
 		}
 	}
 
+	p.setPgBouncerContainerDefaults(&p.Spec.PodTemplate)
+
 	p.SetSecurityContext(pgBouncerVersion)
 	if p.Spec.TLS != nil {
 		p.SetTLSDefaults(usesAcme)
@@ -227,6 +230,20 @@ func (p *PgBouncer) SetDefaults(pgBouncerVersion *catalog.PgBouncerVersion, uses
 	dbContainer := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, ResourceSingularPgBouncer)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
+	}
+}
+
+func (p *PgBouncer) setPgBouncerContainerDefaults(podTemplate *ofstv2.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
+	}
+	container := EnsureContainerExists(podTemplate, kubedb.PgBouncerContainerName)
+	p.setContainerDefaultResources(container, *kubedb.DefaultResources.DeepCopy())
+}
+
+func (p *PgBouncer) setContainerDefaultResources(container *core.Container, defaultResources core.ResourceRequirements) {
+	if container.Resources.Requests == nil && container.Resources.Limits == nil {
+		apis.SetDefaultResourceLimits(&container.Resources, defaultResources)
 	}
 }
 
