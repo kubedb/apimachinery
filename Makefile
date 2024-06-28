@@ -22,7 +22,7 @@ BIN      := apimachinery
 CRD_OPTIONS          ?= "crd:maxDescLen=0,generateEmbeddedObjectMeta=true,allowDangerousTypes=true"
 # https://github.com/appscodelabs/gengo-builder
 CODE_GENERATOR_IMAGE ?= ghcr.io/appscode/gengo:release-1.29
-CORE_API_GROUPS      ?= kubedb:v1alpha1 kubedb:v1alpha2 postgres:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1 elasticsearch:v1alpha1 schema:v1alpha1 archiver:v1alpha1 kafka:v1alpha1
+CORE_API_GROUPS      ?= kubedb:v1alpha1 kubedb:v1alpha2 kubedb:v1 postgres:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1 elasticsearch:v1alpha1 schema:v1alpha1 archiver:v1alpha1 kafka:v1alpha1
 API_GROUPS           ?= $(CORE_API_GROUPS) ui:v1alpha1
 
 # This version-strategy uses git tags to set the version string
@@ -125,7 +125,6 @@ clientset:
 
 .PHONY: gen-conversion
 gen-conversion:
-	rm -rf ./apis/kubedb/v1alpha1/zz_generated.conversion.go
 	@docker run --rm                                   \
 		-u $$(id -u):$$(id -g)                           \
 		-v /tmp:/.cache                                  \
@@ -135,7 +134,7 @@ gen-conversion:
 		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
 		$(CODE_GENERATOR_IMAGE)                          \
 		/go/bin/conversion-gen --go-header-file ./hack/license/go.txt \
-			--input-dirs $(GO_PKG)/$(REPO)/apis/kubedb/v1alpha1 \
+			--input-dirs ./apis/kubedb/v1alpha2 \
 			--extra-peer-dirs "kmodules.xyz/monitoring-agent-api/api/v1" \
 			-O zz_generated.conversion
 
@@ -373,7 +372,7 @@ lint: $(BUILD_DIRS)
 	    --env GO111MODULE=on                                    \
 	    --env GOFLAGS="-mod=vendor"                             \
 	    $(BUILD_IMAGE)                                          \
-	    golangci-lint run --enable $(ADDTL_LINTERS) --max-same-issues=100 --timeout=10m --skip-files="generated.*\.go$\" --skip-dirs-use-default --skip-dirs=vendor
+	    golangci-lint run --enable $(ADDTL_LINTERS) --max-same-issues=100 --timeout=10m --exclude-files="generated.*\.go$\" --exclude-dirs-use-default --exclude-dirs=vendor
 
 $(BUILD_DIRS):
 	@mkdir -p $@

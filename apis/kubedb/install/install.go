@@ -17,6 +17,7 @@ limitations under the License.
 package install
 
 import (
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	"kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -26,5 +27,6 @@ import (
 // Install registers the API group and adds types to a scheme
 func Install(scheme *runtime.Scheme) {
 	utilruntime.Must(v1alpha2.AddToScheme(scheme))
-	utilruntime.Must(scheme.SetVersionPriority(v1alpha2.SchemeGroupVersion))
+	utilruntime.Must(dbapi.AddToScheme(scheme))
+	utilruntime.Must(scheme.SetVersionPriority(dbapi.SchemeGroupVersion, v1alpha2.SchemeGroupVersion))
 }

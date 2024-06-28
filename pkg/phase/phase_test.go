@@ -20,6 +20,7 @@ import (
 	"testing"
 	"time"
 
+	"kubedb.dev/apimachinery/apis/kubedb"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -46,7 +47,7 @@ func TestPhaseForCondition(t *testing.T) {
 			name: "Provisioning just started",
 			conditions: []kmapi.Condition{
 				{
-					Type:   api.DatabaseProvisioningStarted,
+					Type:   kubedb.DatabaseProvisioningStarted,
 					Status: metav1.ConditionTrue,
 				},
 			},
@@ -56,11 +57,11 @@ func TestPhaseForCondition(t *testing.T) {
 			name: "Some replicas are not ready",
 			conditions: []kmapi.Condition{
 				{
-					Type:   api.DatabaseProvisioningStarted,
+					Type:   kubedb.DatabaseProvisioningStarted,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReplicaReady,
+					Type:   kubedb.DatabaseReplicaReady,
 					Status: metav1.ConditionFalse,
 				},
 			},
@@ -70,11 +71,11 @@ func TestPhaseForCondition(t *testing.T) {
 			name: "All replicas are ready but no other conditions present yet",
 			conditions: []kmapi.Condition{
 				{
-					Type:   api.DatabaseProvisioningStarted,
+					Type:   kubedb.DatabaseProvisioningStarted,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReplicaReady,
+					Type:   kubedb.DatabaseReplicaReady,
 					Status: metav1.ConditionTrue,
 				},
 			},
@@ -84,19 +85,19 @@ func TestPhaseForCondition(t *testing.T) {
 			name: "Database is not accepting connection",
 			conditions: []kmapi.Condition{
 				{
-					Type:   api.DatabaseProvisioningStarted,
+					Type:   kubedb.DatabaseProvisioningStarted,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReplicaReady,
+					Type:   kubedb.DatabaseReplicaReady,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseAcceptingConnection,
+					Type:   kubedb.DatabaseAcceptingConnection,
 					Status: metav1.ConditionFalse,
 				},
 				{
-					Type:   api.DatabaseProvisioned,
+					Type:   kubedb.DatabaseProvisioned,
 					Status: metav1.ConditionTrue,
 				},
 			},
@@ -106,15 +107,15 @@ func TestPhaseForCondition(t *testing.T) {
 			name: "Database is accepting connection",
 			conditions: []kmapi.Condition{
 				{
-					Type:   api.DatabaseProvisioningStarted,
+					Type:   kubedb.DatabaseProvisioningStarted,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReplicaReady,
+					Type:   kubedb.DatabaseReplicaReady,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseAcceptingConnection,
+					Type:   kubedb.DatabaseAcceptingConnection,
 					Status: metav1.ConditionTrue,
 				},
 			},
@@ -124,19 +125,19 @@ func TestPhaseForCondition(t *testing.T) {
 			name: "1st restore: didn't completed yet",
 			conditions: []kmapi.Condition{
 				{
-					Type:   api.DatabaseProvisioningStarted,
+					Type:   kubedb.DatabaseProvisioningStarted,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReplicaReady,
+					Type:   kubedb.DatabaseReplicaReady,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseAcceptingConnection,
+					Type:   kubedb.DatabaseAcceptingConnection,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:               api.DatabaseDataRestoreStarted,
+					Type:               kubedb.DatabaseDataRestoreStarted,
 					Status:             metav1.ConditionTrue,
 					LastTransitionTime: lastTransactionTime,
 				},
@@ -147,19 +148,19 @@ func TestPhaseForCondition(t *testing.T) {
 			name: "1st restore: completed successfully",
 			conditions: []kmapi.Condition{
 				{
-					Type:   api.DatabaseProvisioningStarted,
+					Type:   kubedb.DatabaseProvisioningStarted,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReplicaReady,
+					Type:   kubedb.DatabaseReplicaReady,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseAcceptingConnection,
+					Type:   kubedb.DatabaseAcceptingConnection,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:               api.DatabaseDataRestored,
+					Type:               kubedb.DatabaseDataRestored,
 					Status:             metav1.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
@@ -170,19 +171,19 @@ func TestPhaseForCondition(t *testing.T) {
 			name: "1st restore: failed to complete",
 			conditions: []kmapi.Condition{
 				{
-					Type:   api.DatabaseProvisioningStarted,
+					Type:   kubedb.DatabaseProvisioningStarted,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReplicaReady,
+					Type:   kubedb.DatabaseReplicaReady,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseAcceptingConnection,
+					Type:   kubedb.DatabaseAcceptingConnection,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:               api.DatabaseDataRestored,
+					Type:               kubedb.DatabaseDataRestored,
 					Status:             metav1.ConditionFalse,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
@@ -193,28 +194,28 @@ func TestPhaseForCondition(t *testing.T) {
 			name: "Database is not ready",
 			conditions: []kmapi.Condition{
 				{
-					Type:   api.DatabaseProvisioningStarted,
+					Type:   kubedb.DatabaseProvisioningStarted,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReplicaReady,
+					Type:   kubedb.DatabaseReplicaReady,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseAcceptingConnection,
+					Type:   kubedb.DatabaseAcceptingConnection,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:               api.DatabaseDataRestored,
+					Type:               kubedb.DatabaseDataRestored,
 					Status:             metav1.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
-					Type:   api.DatabaseProvisioned,
+					Type:   kubedb.DatabaseProvisioned,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReady,
+					Type:   kubedb.DatabaseReady,
 					Status: metav1.ConditionFalse,
 				},
 			},
@@ -224,28 +225,28 @@ func TestPhaseForCondition(t *testing.T) {
 			name: "Database is ready",
 			conditions: []kmapi.Condition{
 				{
-					Type:   api.DatabaseProvisioningStarted,
+					Type:   kubedb.DatabaseProvisioningStarted,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReplicaReady,
+					Type:   kubedb.DatabaseReplicaReady,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseAcceptingConnection,
+					Type:   kubedb.DatabaseAcceptingConnection,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:               api.DatabaseDataRestored,
+					Type:               kubedb.DatabaseDataRestored,
 					Status:             metav1.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
-					Type:   api.DatabaseProvisioned,
+					Type:   kubedb.DatabaseProvisioned,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReady,
+					Type:   kubedb.DatabaseReady,
 					Status: metav1.ConditionTrue,
 				},
 			},
@@ -255,28 +256,28 @@ func TestPhaseForCondition(t *testing.T) {
 			name: "Database is ready but not accepting connection",
 			conditions: []kmapi.Condition{
 				{
-					Type:   api.DatabaseProvisioningStarted,
+					Type:   kubedb.DatabaseProvisioningStarted,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReplicaReady,
+					Type:   kubedb.DatabaseReplicaReady,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseAcceptingConnection,
+					Type:   kubedb.DatabaseAcceptingConnection,
 					Status: metav1.ConditionFalse,
 				},
 				{
-					Type:               api.DatabaseDataRestored,
+					Type:               kubedb.DatabaseDataRestored,
 					Status:             metav1.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
-					Type:   api.DatabaseProvisioned,
+					Type:   kubedb.DatabaseProvisioned,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReady,
+					Type:   kubedb.DatabaseReady,
 					Status: metav1.ConditionTrue,
 				},
 			},
@@ -286,32 +287,32 @@ func TestPhaseForCondition(t *testing.T) {
 			name: "With conditions that does not have effect on phase",
 			conditions: []kmapi.Condition{
 				{
-					Type:   api.DatabaseProvisioningStarted,
+					Type:   kubedb.DatabaseProvisioningStarted,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseReplicaReady,
+					Type:   kubedb.DatabaseReplicaReady,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseAcceptingConnection,
+					Type:   kubedb.DatabaseAcceptingConnection,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:               api.DatabaseDataRestored,
+					Type:               kubedb.DatabaseDataRestored,
 					Status:             metav1.ConditionTrue,
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 				{
-					Type:   api.DatabaseReady,
+					Type:   kubedb.DatabaseReady,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabaseProvisioned,
+					Type:   kubedb.DatabaseProvisioned,
 					Status: metav1.ConditionTrue,
 				},
 				{
-					Type:   api.DatabasePaused,
+					Type:   kubedb.DatabasePaused,
 					Status: metav1.ConditionTrue,
 				},
 			},
