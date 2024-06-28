@@ -158,7 +158,6 @@ func (c *Controller) enqueueOnlyKubeDBPS(ps *petsetapps.PetSet) {
 }
 
 func (c *Controller) processPetSet(key string) error {
-	klog.Infof("Started processing, key: %v", key)
 	obj, exists, err := c.PSInformer.GetIndexer().GetByKey(key)
 	if err != nil {
 		klog.Errorf("Fetching object with key %s from store failed with %v", key, err)
