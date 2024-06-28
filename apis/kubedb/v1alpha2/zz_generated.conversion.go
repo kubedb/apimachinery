@@ -24,8 +24,6 @@ package v1alpha2
 import (
 	unsafe "unsafe"
 
-	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
-
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
@@ -35,6 +33,7 @@ import (
 	monitoringagentapiapiv1 "kmodules.xyz/monitoring-agent-api/api/v1"
 	apiv1 "kmodules.xyz/offshoot-api/api/v1"
 	v2 "kmodules.xyz/offshoot-api/api/v2"
+	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 )
 
 func init() {
@@ -764,16 +763,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*RedisClusterSpec)(nil), (*v1.RedisClusterSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(a.(*RedisClusterSpec), b.(*v1.RedisClusterSpec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.RedisClusterSpec)(nil), (*RedisClusterSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(a.(*v1.RedisClusterSpec), b.(*RedisClusterSpec), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*RedisList)(nil), (*v1.RedisList)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_RedisList_To_v1_RedisList(a.(*RedisList), b.(*v1.RedisList), scope)
 	}); err != nil {
@@ -954,6 +943,11 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*v1.RedisClusterSpec)(nil), (*RedisClusterSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(a.(*v1.RedisClusterSpec), b.(*RedisClusterSpec), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*v1.RedisSpec)(nil), (*RedisSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_RedisSpec_To_v1alpha2_RedisSpec(a.(*v1.RedisSpec), b.(*RedisSpec), scope)
 	}); err != nil {
@@ -1021,6 +1015,11 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddConversionFunc((*PostgresSpec)(nil), (*v1.PostgresSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(a.(*PostgresSpec), b.(*v1.PostgresSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*RedisClusterSpec)(nil), (*v1.RedisClusterSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(a.(*RedisClusterSpec), b.(*v1.RedisClusterSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -4089,13 +4088,13 @@ func Convert_v1_Redis_To_v1alpha2_Redis(in *v1.Redis, out *Redis, s conversion.S
 }
 
 func autoConvert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(in *RedisClusterSpec, out *v1.RedisClusterSpec, s conversion.Scope) error {
-	out.Shards = (*int32)(unsafe.Pointer(in.Master))
+	// WARNING: in.Master requires manual conversion: does not exist in peer-type
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	return nil
 }
 
 func autoConvert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(in *v1.RedisClusterSpec, out *RedisClusterSpec, s conversion.Scope) error {
-	out.Master = (*int32)(unsafe.Pointer(in.Shards))
+	// WARNING: in.Shards requires manual conversion: does not exist in peer-type
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	return nil
 }
@@ -4326,7 +4325,15 @@ func autoConvert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.Redis
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.Mode = v1.RedisMode(in.Mode)
 	out.SentinelRef = (*v1.RedisSentinelRef)(unsafe.Pointer(in.SentinelRef))
-	out.Cluster = (*v1.RedisClusterSpec)(unsafe.Pointer(in.Cluster))
+	if in.Cluster != nil {
+		in, out := &in.Cluster, &out.Cluster
+		*out = new(v1.RedisClusterSpec)
+		if err := Convert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Cluster = nil
+	}
 	out.StorageType = v1.StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
@@ -4355,7 +4362,15 @@ func autoConvert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *Redis
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.Mode = RedisMode(in.Mode)
 	out.SentinelRef = (*RedisSentinelRef)(unsafe.Pointer(in.SentinelRef))
-	out.Cluster = (*RedisClusterSpec)(unsafe.Pointer(in.Cluster))
+	if in.Cluster != nil {
+		in, out := &in.Cluster, &out.Cluster
+		*out = new(RedisClusterSpec)
+		if err := Convert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Cluster = nil
+	}
 	out.StorageType = StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
