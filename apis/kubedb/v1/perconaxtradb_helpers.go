@@ -278,7 +278,7 @@ func (p *PerconaXtraDB) setDefaultContainerSecurityContext(pVersion *v1alpha1.Pe
 		initContainer.SecurityContext = &core.SecurityContext{}
 	}
 	p.assignDefaultContainerSecurityContext(pVersion, initContainer.SecurityContext)
-	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *initContainer)
+	podTemplate.Spec.InitContainers = core_util.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 
 	coordinatorContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.PerconaXtraDBCoordinatorContainerName)
 	if coordinatorContainer == nil {

@@ -263,7 +263,7 @@ func (m *MariaDB) setDefaultContainerSecurityContext(mdVersion *v1alpha1.MariaDB
 		initContainer.SecurityContext = &core.SecurityContext{}
 	}
 	m.assignDefaultContainerSecurityContext(mdVersion, initContainer.SecurityContext)
-	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *initContainer)
+	podTemplate.Spec.InitContainers = core_util.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 
 	if m.IsCluster() {
 		coordinatorContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MariaDBCoordinatorContainerName)
