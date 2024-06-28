@@ -607,8 +607,17 @@ func Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out *Mon
 	return nil
 }
 
+func Convert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(in *RedisClusterSpec, out *v1.RedisClusterSpec, s conversion.Scope) error {
+	out.Shards = (*int32)(unsafe.Pointer(in.Master))
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	return nil
+}
+
 func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec, s conversion.Scope) error {
 	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
+		return err
+	}
+	if err := Convert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(in.Cluster, out.Cluster, s); err != nil {
 		return err
 	}
 	out.Version = in.Version
@@ -647,8 +656,17 @@ func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec
 	return nil
 }
 
+func Convert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(in *v1.RedisClusterSpec, out *RedisClusterSpec, s conversion.Scope) error {
+	out.Master = (*int32)(unsafe.Pointer(in.Shards))
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	return nil
+}
+
 func Convert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *RedisSpec, s conversion.Scope) error {
 	if err := Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
+		return err
+	}
+	if err := Convert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(in.Cluster, out.Cluster, s); err != nil {
 		return err
 	}
 	out.Version = in.Version
