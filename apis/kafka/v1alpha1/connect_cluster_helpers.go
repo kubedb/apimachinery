@@ -26,7 +26,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kafka"
 	"kubedb.dev/apimachinery/apis/kubedb"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	"kubedb.dev/apimachinery/crds"
 
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
@@ -110,7 +110,7 @@ func (k *ConnectCluster) OffshootLabels() map[string]string {
 }
 
 // GetServiceTemplate returns a pointer to the desired serviceTemplate referred by "aliaS". Otherwise, it returns nil.
-func (k *ConnectCluster) GetServiceTemplate(templates []api.NamedServiceTemplateSpec, alias api.ServiceAlias) ofst.ServiceTemplateSpec {
+func (k *ConnectCluster) GetServiceTemplate(templates []dbapi.NamedServiceTemplateSpec, alias dbapi.ServiceAlias) ofst.ServiceTemplateSpec {
 	for i := range templates {
 		c := templates[i]
 		if c.Alias == alias {
@@ -120,7 +120,7 @@ func (k *ConnectCluster) GetServiceTemplate(templates []api.NamedServiceTemplate
 	return ofst.ServiceTemplateSpec{}
 }
 
-func (k *ConnectCluster) ServiceLabels(alias api.ServiceAlias, extraLabels ...map[string]string) map[string]string {
+func (k *ConnectCluster) ServiceLabels(alias dbapi.ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := k.GetServiceTemplate(k.Spec.ServiceTemplates, alias)
 	return k.offshootLabels(meta_util.OverwriteKeys(k.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
@@ -166,7 +166,7 @@ func (k *ConnectCluster) StatsService() mona.StatsAccessor {
 }
 
 func (k *ConnectCluster) StatsServiceLabels() map[string]string {
-	return k.ServiceLabels(api.StatsServiceAlias, map[string]string{LabelRole: RoleStats})
+	return k.ServiceLabels(dbapi.StatsServiceAlias, map[string]string{LabelRole: RoleStats})
 }
 
 func (k *ConnectCluster) PodLabels(extraLabels ...map[string]string) map[string]string {
@@ -242,7 +242,7 @@ func (k *ConnectCluster) SetHealthCheckerDefaults() {
 
 func (k *ConnectCluster) SetDefaults() {
 	if k.Spec.DeletionPolicy == "" {
-		k.Spec.DeletionPolicy = api.TerminationPolicyDelete
+		k.Spec.DeletionPolicy = dbapi.TerminationPolicyDelete
 	}
 
 	if k.Spec.Replicas == nil {
