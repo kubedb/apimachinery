@@ -513,6 +513,9 @@ func (d *Druid) SetDefaults() {
 	if d.Spec.MetadataStorage == nil {
 		d.Spec.MetadataStorage = &MetadataStorage{}
 	}
+	if d.Spec.MetadataStorage.Namespace == "" {
+		d.Spec.MetadataStorage.Namespace = d.Namespace
+	}
 	if d.Spec.MetadataStorage.LinkedDB == "" {
 		d.Spec.MetadataStorage.LinkedDB = "druid"
 	}
@@ -535,15 +538,9 @@ func (d *Druid) SetDefaults() {
 		if d.Spec.MetadataStorage.ObjectReference == nil {
 			d.Spec.MetadataStorage.ObjectReference = &kmapi.ObjectReference{}
 		}
-		if d.Spec.MetadataStorage.Type == DruidMetadataStorageMySQL {
-			d.Spec.MetadataStorage.Name = d.GetMySQLName()
-		} else {
-			d.Spec.MetadataStorage.Name = d.GetPostgresName()
-		}
-		if d.Spec.MetadataStorage.Namespace == "" {
-			d.Spec.MetadataStorage.Namespace = d.Namespace
-		}
+		d.Spec.MetadataStorage.Name = d.GetMetadataStorageName()
 	}
+
 	if d.Spec.MetadataStorage.Version == nil {
 		var defaultVersion string
 		if d.Spec.MetadataStorage.Type == DruidMetadataStorageMySQL {
@@ -696,12 +693,11 @@ func (d *Druid) GetAppBinding(name string, namespace string) (*appcat.AppBinding
 	return appbinding, nil
 }
 
-func (d *Druid) GetMySQLName() string {
+func (d *Druid) GetMetadataStorageName() string {
+	if d.Spec.MetadataStorage.Type == DruidMetadataStoragePostgreSQL {
+		return d.OffShootName() + "-pg-metadata"
+	}
 	return d.OffShootName() + "-mysql-metadata"
-}
-
-func (d *Druid) GetPostgresName() string {
-	return d.OffShootName() + "-pg-metadata"
 }
 
 func (d *Druid) GetZooKeeperName() string {
