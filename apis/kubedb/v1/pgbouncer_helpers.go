@@ -18,7 +18,6 @@ package v1
 
 import (
 	"fmt"
-	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -36,6 +35,7 @@ import (
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
