@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"net/url"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -110,7 +111,15 @@ func (f *FerretDB) GetAuthSecretName() string {
 	if f.Spec.AuthSecret != nil && f.Spec.AuthSecret.Name != "" {
 		return f.Spec.AuthSecret.Name
 	}
-	return meta_util.NameWithSuffix(f.PgBackendName(), "auth")
+	return meta_util.NameWithSuffix(f.OffshootName(), "auth")
+}
+
+func (f *FerretDB) GetPersistentSecrets() []string {
+	var secrets []string
+	if f.Spec.AuthSecret != nil {
+		secrets = append(secrets, f.Spec.AuthSecret.Name)
+	}
+	return secrets
 }
 
 // AsOwner returns owner reference to resources
@@ -141,6 +150,14 @@ func (f *FerretDB) GetCertSecretName(alias FerretDBCertificateAlias) string {
 	}
 
 	return f.CertificateName(alias)
+}
+
+func (f *FerretDB) GetExternalBackendClientSecretName() string {
+	return f.Name + "-ext-pg-client-cert"
+}
+
+func (f *FerretDB) GetSecretVolumeName(secretName string) string {
+	return secretName + "-vol"
 }
 
 func (f *FerretDB) SetHealthCheckerDefaults() {
@@ -210,11 +227,13 @@ func (f *FerretDB) SetDefaults() {
 			f.Spec.Backend.LinkedDB = "ferretdb"
 		}
 	}
+
 	if f.Spec.AuthSecret == nil {
 		f.Spec.AuthSecret = &SecretReference{
-			ExternallyManaged: f.Spec.Backend.ExternallyManaged,
+			ExternallyManaged: false,
 		}
 	}
+
 	f.Spec.Monitor.SetDefaults()
 	if f.Spec.Monitor != nil && f.Spec.Monitor.Prometheus != nil {
 		if f.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
@@ -227,14 +246,8 @@ func (f *FerretDB) SetDefaults() {
 
 	defaultVersion := "13.13"
 	if !f.Spec.Backend.ExternallyManaged {
-		if f.Spec.Backend.Postgres == nil {
-			f.Spec.Backend.Postgres = &PostgresRef{
-				Version: &defaultVersion,
-			}
-		} else {
-			if f.Spec.Backend.Postgres.Version == nil {
-				f.Spec.Backend.Postgres.Version = &defaultVersion
-			}
+		if f.Spec.Backend.Version == nil {
+			f.Spec.Backend.Version = &defaultVersion
 		}
 	}
 	f.SetTLSDefaults()
@@ -369,4 +382,33 @@ func (f *FerretDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string,
 	// Desire number of petSets
 	expectedItems := 1
 	return checkReplicasOfPetSet(lister.PetSets(f.Namespace), labels.SelectorFromSet(f.OffshootLabels()), expectedItems)
+}
+
+func (f *FerretDB) GetSSLModeFromAppBinding(apb *appcat.AppBinding) (PostgresSSLMode, error) {
+	var sslMode string
+	if apb.Spec.ClientConfig.URL != nil {
+		parsedURL, err := url.Parse(*apb.Spec.ClientConfig.URL)
+		if err != nil {
+			return "", fmt.Errorf("parse error in appbinding %s/%s 'spec.clientConfig.url'. error: %v", apb.Namespace, apb.Name, err)
+		}
+		if parsedURL.Scheme != "postgres" && parsedURL.Scheme != "postgresql" {
+			return "", fmt.Errorf("invalid scheme provided in URL in provided appbinding %s/%s", apb.Namespace, apb.Name)
+		}
+		sslMode = parsedURL.Query().Get("sslmode")
+	}
+	if apb.Spec.ClientConfig.Service != nil {
+		values, err := url.ParseQuery(apb.Spec.ClientConfig.Service.Query)
+		if err != nil {
+			return "", fmt.Errorf("parse error in appbinding %s/%s 'spec.clientConfig.service.query'. error: %v", apb.Namespace, apb.Name, err)
+		}
+		if sslMode != "" && sslMode != values.Get("sslmode") {
+			return "", fmt.Errorf("sslMode is not same in 'spec.clientConfig.service.query' and 'spec.clientConfig.url' of appbinding %s/%s", apb.Namespace, apb.Name)
+		}
+		sslMode = values.Get("sslmode")
+	}
+	// If sslMode is not specified anywhere, it will be disabled
+	if sslMode == "" {
+		sslMode = "disable"
+	}
+	return PostgresSSLMode(sslMode), nil
 }
