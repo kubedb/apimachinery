@@ -131,10 +131,10 @@ func (d *Druid) validateCreateOrUpdate() field.ErrorList {
 			d.Name,
 			"spec.metadataStorage is missing"))
 	} else {
-		if d.Spec.MetadataStorage.Name == "" && d.Spec.MetadataStorage.Type == "" {
+		if d.Spec.MetadataStorage.ExternallyManaged && d.Spec.MetadataStorage.Name == "" {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("metadataStorage").Child("name"),
 				d.Name,
-				"spec.metadataStorage.type and spec.metadataStorage.name both can not be empty simultaneously"))
+				"spec.metadataStorage.name can not be empty when d.Spec.MetadataStorage.ExternallyManaged is true"))
 		}
 	}
 

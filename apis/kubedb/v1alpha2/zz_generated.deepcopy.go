@@ -2638,6 +2638,11 @@ func (in *MetadataStorage) DeepCopyInto(out *MetadataStorage) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.Version != nil {
+		in, out := &in.Version, &out.Version
+		*out = new(string)
+		**out = **in
+	}
 	return
 }
 
@@ -5722,6 +5727,11 @@ func (in *ZookeeperRef) DeepCopyInto(out *ZookeeperRef) {
 	if in.ObjectReference != nil {
 		in, out := &in.ObjectReference, &out.ObjectReference
 		*out = new(apiv1.ObjectReference)
+		**out = **in
+	}
+	if in.Version != nil {
+		in, out := &in.Version, &out.Version
+		*out = new(string)
 		**out = **in
 	}
 	return

@@ -37,6 +37,8 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
+	"k8s.io/utils/ptr"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -45,6 +47,7 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func (d *Druid) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -313,8 +316,10 @@ func (d *Druid) AddDruidExtensionLoadList(druidExtensionLoadList string, extensi
 func (d *Druid) GetMetadataStorageType(metadataStorage string) DruidMetadataStorageType {
 	if metadataStorage == string(DruidMetadataStorageMySQL) || metadataStorage == strings.ToLower(string(DruidMetadataStorageMySQL)) {
 		return DruidMetadataStorageMySQL
-	} else {
+	} else if metadataStorage == string(DruidMetadataStoragePostgreSQL) || metadataStorage == strings.ToLower(string(DruidMetadataStoragePostgreSQL)) {
 		return DruidMetadataStoragePostgreSQL
+	} else {
+		panic(fmt.Sprintf("Unknown metadata storage type: %s", metadataStorage))
 	}
 }
 
@@ -441,7 +446,7 @@ func (d *Druid) SetDefaults() {
 				d.Spec.Topology.MiddleManagers.StorageType = StorageTypeDurable
 			}
 			if d.Spec.Topology.MiddleManagers.Storage == nil && d.Spec.Topology.MiddleManagers.StorageType == StorageTypeDurable {
-				d.Spec.Topology.MiddleManagers.Storage = d.getDefaultPVC()
+				d.Spec.Topology.MiddleManagers.Storage = d.GetDefaultPVC()
 			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.MiddleManagers.PodTemplate.Spec.SecurityContext == nil {
@@ -463,7 +468,7 @@ func (d *Druid) SetDefaults() {
 				d.Spec.Topology.Historicals.StorageType = StorageTypeDurable
 			}
 			if d.Spec.Topology.Historicals.Storage == nil && d.Spec.Topology.Historicals.StorageType == StorageTypeDurable {
-				d.Spec.Topology.Historicals.Storage = d.getDefaultPVC()
+				d.Spec.Topology.Historicals.Storage = d.GetDefaultPVC()
 			}
 			if version.Major() > 25 {
 				if d.Spec.Topology.Historicals.PodTemplate.Spec.SecurityContext == nil {
@@ -504,11 +509,65 @@ func (d *Druid) SetDefaults() {
 			}
 		}
 	}
-	if d.Spec.MetadataStorage != nil {
-		if d.Spec.MetadataStorage.Name != "" && d.Spec.MetadataStorage.Namespace == "" {
-			d.Spec.MetadataStorage.Namespace = d.Namespace
+
+	if d.Spec.MetadataStorage == nil {
+		d.Spec.MetadataStorage = &MetadataStorage{}
+	}
+	if d.Spec.MetadataStorage.Namespace == "" {
+		d.Spec.MetadataStorage.Namespace = d.Namespace
+	}
+	if d.Spec.MetadataStorage.LinkedDB == "" {
+		d.Spec.MetadataStorage.LinkedDB = "druid"
+	}
+	if d.Spec.MetadataStorage.CreateTables == nil {
+		d.Spec.MetadataStorage.CreateTables = ptr.To(true)
+	}
+
+	if d.Spec.MetadataStorage.Type == "" {
+		if d.Spec.MetadataStorage.ExternallyManaged {
+			appBinding, err := d.GetAppBinding(d.Spec.MetadataStorage.Name, d.Spec.MetadataStorage.Namespace)
+			if err != nil {
+				return
+			}
+			d.Spec.MetadataStorage.Type = d.GetMetadataStorageType(appBinding.Spec.AppRef.Kind)
+		} else {
+			d.Spec.MetadataStorage.Type = DruidMetadataStorageMySQL
 		}
 	}
+	if !d.Spec.MetadataStorage.ExternallyManaged {
+		if d.Spec.MetadataStorage.ObjectReference == nil {
+			d.Spec.MetadataStorage.ObjectReference = &kmapi.ObjectReference{}
+		}
+		d.Spec.MetadataStorage.Name = d.GetMetadataStorageName()
+	}
+
+	if d.Spec.MetadataStorage.Version == nil {
+		var defaultVersion string
+		if d.Spec.MetadataStorage.Type == DruidMetadataStorageMySQL {
+			defaultVersion = "8.0.35"
+		} else {
+			defaultVersion = "13.13"
+		}
+		d.Spec.MetadataStorage.Version = &defaultVersion
+	}
+
+	if d.Spec.ZookeeperRef == nil {
+		d.Spec.ZookeeperRef = &ZookeeperRef{}
+	}
+	if !d.Spec.ZookeeperRef.ExternallyManaged {
+		if d.Spec.ZookeeperRef.ObjectReference == nil {
+			d.Spec.ZookeeperRef.ObjectReference = &kmapi.ObjectReference{}
+		}
+		if d.Spec.ZookeeperRef.Name == "" {
+			d.Spec.ZookeeperRef.Name = d.GetZooKeeperName()
+		}
+		if d.Spec.ZookeeperRef.Namespace == "" {
+			d.Spec.ZookeeperRef.Namespace = d.Namespace
+		}
+		defaultVersion := "3.7.2"
+		d.Spec.ZookeeperRef.Version = &defaultVersion
+	}
+
 	if d.Spec.Monitor != nil {
 		if d.Spec.Monitor.Prometheus == nil {
 			d.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
@@ -520,8 +579,11 @@ func (d *Druid) SetDefaults() {
 	}
 }
 
-func (d *Druid) getDefaultPVC() *core.PersistentVolumeClaimSpec {
+func (d *Druid) GetDefaultPVC() *core.PersistentVolumeClaimSpec {
 	return &core.PersistentVolumeClaimSpec{
+		AccessModes: []core.PersistentVolumeAccessMode{
+			core.ReadWriteOnce,
+		},
 		Resources: core.VolumeResourceRequirements{
 			Requests: core.ResourceList{
 				core.ResourceStorage: resource.MustParse("1Gi"),
@@ -617,4 +679,31 @@ func (d *Druid) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, er
 		expectedItems++
 	}
 	return checkReplicasOfPetSet(lister.PetSets(d.Namespace), labels.SelectorFromSet(d.OffshootLabels()), expectedItems)
+}
+
+func (d *Druid) GetAppBinding(name string, namespace string) (*appcat.AppBinding, error) {
+	appbinding := &appcat.AppBinding{}
+	appbinding.Namespace = namespace
+	appbinding.Name = name
+
+	if err := DefaultClient.Get(context.TODO(), client.ObjectKeyFromObject(appbinding), appbinding); err != nil {
+		klog.Error(err, fmt.Sprintf("failed to get appbinding for metadata storage %s/%s", name, namespace))
+		return nil, err
+	}
+	return appbinding, nil
+}
+
+func (d *Druid) GetMetadataStorageName() string {
+	if d.Spec.MetadataStorage.Type == DruidMetadataStoragePostgreSQL {
+		return d.OffShootName() + "-pg-metadata"
+	}
+	return d.OffShootName() + "-mysql-metadata"
+}
+
+func (d *Druid) GetZooKeeperName() string {
+	return d.OffShootName() + "-zk"
+}
+
+func (d *Druid) GetInitConfigMapName() string {
+	return d.OffShootName() + "-init-script"
 }
