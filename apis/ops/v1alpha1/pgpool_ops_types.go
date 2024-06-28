@@ -18,7 +18,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	apis "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	"kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -80,11 +80,11 @@ type PgpoolTLSSpec struct {
 
 	// SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]
 	// +optional
-	SSLMode apis.PgpoolSSLMode `json:"sslMode,omitempty"`
+	SSLMode v1alpha2.PgpoolSSLMode `json:"sslMode,omitempty"`
 
 	// ClientAuthMode for both standalone and clusters. (default will be md5. [md5;scram;cert])
 	// +optional
-	ClientAuthMode apis.PgpoolClientAuthMode `json:"clientAuthMode,omitempty"`
+	ClientAuthMode v1alpha2.PgpoolClientAuthMode `json:"clientAuthMode,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;Reconfigure;Restart;HorizontalScaling;ReconfigureTLS
