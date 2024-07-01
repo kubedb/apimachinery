@@ -513,6 +513,12 @@ func (d *Druid) SetDefaults() {
 	if d.Spec.MetadataStorage == nil {
 		d.Spec.MetadataStorage = &MetadataStorage{}
 	}
+	if !d.Spec.MetadataStorage.ExternallyManaged {
+		if d.Spec.MetadataStorage.ObjectReference == nil {
+			d.Spec.MetadataStorage.ObjectReference = &kmapi.ObjectReference{}
+		}
+		d.Spec.MetadataStorage.Name = d.GetMetadataStorageName()
+	}
 	if d.Spec.MetadataStorage.Namespace == "" {
 		d.Spec.MetadataStorage.Namespace = d.Namespace
 	}
