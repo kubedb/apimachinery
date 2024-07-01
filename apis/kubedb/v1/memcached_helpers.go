@@ -196,11 +196,19 @@ func (m *Memcached) SetDefaults(mcVersion *catalog.MemcachedVersion) {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
 
-	m.Spec.Monitor.SetDefaults()
+	m.setDefaultContainerSecurityContext(mcVersion, &m.Spec.PodTemplate)
+	m.setDefaultContainerResourceLimits(&m.Spec.PodTemplate)
+
 	m.SetHealthCheckerDefaults()
-	dbContainer := core_util.GetContainerByName(m.Spec.PodTemplate.Spec.Containers, kubedb.MemcachedContainerName)
-	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+	m.Spec.Monitor.SetDefaults()
+
+	if m.Spec.Monitor != nil && m.Spec.Monitor.Prometheus != nil {
+		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = mcVersion.Spec.SecurityContext.RunAsUser
+		}
+		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = mcVersion.Spec.SecurityContext.RunAsUser
+		}
 	}
 }
 
@@ -212,13 +220,13 @@ func (m *Memcached) SetHealthCheckerDefaults() {
 		m.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)
 	}
 	if m.Spec.HealthChecker.FailureThreshold == nil {
-		m.Spec.HealthChecker.FailureThreshold = pointer.Int32P(10)
+		m.Spec.HealthChecker.FailureThreshold = pointer.Int32P(1)
 	}
 }
 
 func (m *Memcached) setDefaultContainerSecurityContext(mcVersion *catalog.MemcachedVersion, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
-		return
+		podTemplate = &ofstv2.PodTemplateSpec{}
 	}
 
 	if podTemplate.Spec.SecurityContext == nil {
@@ -227,6 +235,7 @@ func (m *Memcached) setDefaultContainerSecurityContext(mcVersion *catalog.Memcac
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = mcVersion.Spec.SecurityContext.RunAsUser
 	}
+
 	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MemcachedContainerName)
 	if dbContainer == nil {
 		dbContainer = &core.Container{
@@ -260,6 +269,13 @@ func (m *Memcached) assignDefaultContainerSecurityContext(mcVersion *catalog.Mem
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
+
+func (m *Memcached) setDefaultContainerResourceLimits(podTemplate *ofstv2.PodTemplateSpec) {
+	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MemcachedContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
 }
 
