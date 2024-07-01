@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package meta
+package cluster
 
 import (
 	"crypto/x509"
@@ -67,8 +67,6 @@ func TestGKE() (string, error) {
 	return v.(string), nil
 }
 
-const aksDomain = ".azmk8s.io"
-
 func TestAKS(cert *x509.Certificate) (string, error) {
 	for _, host := range cert.DNSNames {
 		if strings.HasSuffix(host, aksDomain) && isAKS() == nil {
@@ -97,8 +95,6 @@ func isAKS() error {
 	}
 	return nil
 }
-
-const eksDomain = ".eks.amazonaws.com"
 
 func TestEKS(cert *x509.Certificate) (string, error) {
 	for _, host := range cert.DNSNames {
