@@ -20,7 +20,6 @@ import (
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	db_cs "kubedb.dev/apimachinery/client/clientset/versioned"
 	amc "kubedb.dev/apimachinery/pkg/controller"
 
@@ -71,7 +70,7 @@ func (c *Controller) InitPetSetWatcher() {
 	klog.Infoln("Initializing PetSet watcher.....")
 	// Initialize PetSet Watcher
 	c.PSInformer = c.PetSetInformerFactory.Apps().V1().PetSets().Informer()
-	c.PSQueue = queue.New(api.ResourceKindPetSet, c.MaxNumRequeues, c.NumThreads, c.processPetSet)
+	c.PSQueue = queue.New(kubedb.ResourceKindPetSet, c.MaxNumRequeues, c.NumThreads, c.processPetSet)
 	c.PSLister = c.PetSetInformerFactory.Apps().V1().PetSets().Lister()
 	_, _ = c.PSInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
@@ -159,7 +158,6 @@ func (c *Controller) enqueueOnlyKubeDBPS(ps *petsetapps.PetSet) {
 }
 
 func (c *Controller) processPetSet(key string) error {
-	klog.Infof("Started processing, key: %v", key)
 	obj, exists, err := c.PSInformer.GetIndexer().GetByKey(key)
 	if err != nil {
 		klog.Errorf("Fetching object with key %s from store failed with %v", key, err)

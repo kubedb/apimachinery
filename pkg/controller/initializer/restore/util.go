@@ -23,7 +23,6 @@ import (
 	"time"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 
 	"gomodules.xyz/pointer"
@@ -139,15 +138,15 @@ func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
 		if err != nil {
 			return fmt.Errorf("failed to read conditions with %s", err.Error())
 		}
-		_, dbCond := cutil.GetCondition(conditions, api.DatabaseDataRestored)
+		_, dbCond := cutil.GetCondition(conditions, kubedb.DatabaseDataRestored)
 		if dbCond == nil {
 			dbCond = &kmapi.Condition{
-				Type: api.DatabaseDataRestored,
+				Type: kubedb.DatabaseDataRestored,
 			}
 		}
 		if dbCond.Status != metav1.ConditionFalse {
 			dbCond.Status = metav1.ConditionFalse
-			dbCond.Reason = api.DataRestoreInterrupted
+			dbCond.Reason = kubedb.DataRestoreInterrupted
 			dbCond.Message = fmt.Sprintf("Data initializer %s %s/%s with UID %s has been deleted",
 				ri.invoker.Kind,
 				ri.do.Namespace,
@@ -156,7 +155,7 @@ func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
 			)
 		}
 
-		conditions = cutil.RemoveCondition(conditions, api.DatabaseDataRestoreStarted)
+		conditions = cutil.RemoveCondition(conditions, kubedb.DatabaseDataRestoreStarted)
 		conditions = cutil.SetCondition(conditions, *dbCond)
 		return ri.do.UpdateConditions(conditions)
 	}
@@ -177,11 +176,11 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 	// Add: condition.Type="DataRestored" --> true/false
 	if isDataRestoreCompleted(ri) {
 		dbCond := kmapi.Condition{
-			Type: api.DatabaseDataRestored,
+			Type: kubedb.DatabaseDataRestored,
 		}
 		if (ri.stash != nil && ri.stash.phase == v1beta1.RestoreSucceeded) || (ri.kubestash != nil && ri.kubestash.phase == coreapi.RestoreSucceeded) {
 			dbCond.Status = metav1.ConditionTrue
-			dbCond.Reason = api.DatabaseSuccessfullyRestored
+			dbCond.Reason = kubedb.DatabaseSuccessfullyRestored
 			dbCond.Message = fmt.Sprintf("Successfully restored data by initializer %s %s/%s with UID %s",
 				ri.invoker.Kind,
 				ri.do.Namespace,
@@ -190,7 +189,7 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 			)
 		} else {
 			dbCond.Status = metav1.ConditionFalse
-			dbCond.Reason = api.FailedToRestoreData
+			dbCond.Reason = kubedb.FailedToRestoreData
 			dbCond.Message = fmt.Sprintf("Failed to restore data by initializer %s %s/%s with UID %s."+
 				"\nRun 'kubectl describe %s %s -n %s' for more details.",
 				ri.invoker.Kind,
@@ -207,7 +206,7 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 		if err != nil {
 			return fmt.Errorf("failed to read conditions with %s", err.Error())
 		}
-		conditions = cutil.RemoveCondition(conditions, api.DatabaseDataRestoreStarted)
+		conditions = cutil.RemoveCondition(conditions, kubedb.DatabaseDataRestoreStarted)
 		conditions = cutil.SetCondition(conditions, dbCond)
 		err = ri.do.UpdateConditions(conditions)
 		if err != nil {
@@ -222,16 +221,16 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 	// Add: "DataRestoreStarted" condition to the respective database CR.
 	// Remove: "DataRestored" condition, if any.
 	dbCond := kmapi.Condition{
-		Type:    api.DatabaseDataRestoreStarted,
+		Type:    kubedb.DatabaseDataRestoreStarted,
 		Status:  metav1.ConditionTrue,
-		Reason:  api.DataRestoreStartedByExternalInitializer,
+		Reason:  kubedb.DataRestoreStartedByExternalInitializer,
 		Message: fmt.Sprintf("Data restore started by initializer: %s/%s/%s with UID %s.", *ri.invoker.APIGroup, ri.invoker.Kind, ri.invoker.Name, ri.invokerUID),
 	}
 	_, conditions, err := ri.do.ReadConditions()
 	if err != nil {
 		return fmt.Errorf("failed to read conditions with %s", err.Error())
 	}
-	conditions = cutil.RemoveCondition(conditions, api.DatabaseDataRestored)
+	conditions = cutil.RemoveCondition(conditions, kubedb.DatabaseDataRestored)
 	conditions = cutil.SetCondition(conditions, dbCond)
 	return ri.do.UpdateConditions(conditions)
 }

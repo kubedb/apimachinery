@@ -22,6 +22,7 @@ import (
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -260,13 +261,13 @@ func FerretDBValidateEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resource
 }
 
 var forbiddenEnvVars = []string{
-	EnvFerretDBUser, EnvFerretDBPassword, EnvFerretDBHandler, EnvFerretDBPgURL,
-	EnvFerretDBTLSPort, EnvFerretDBCAPath, EnvFerretDBCertPath, EnvFerretDBKeyPath,
+	kubedb.EnvFerretDBUser, kubedb.EnvFerretDBPassword, kubedb.EnvFerretDBHandler, kubedb.EnvFerretDBPgURL,
+	kubedb.EnvFerretDBTLSPort, kubedb.EnvFerretDBCAPath, kubedb.EnvFerretDBCertPath, kubedb.EnvFerretDBKeyPath,
 }
 
 func getMainContainerEnvs(f *FerretDB) []core.EnvVar {
 	for _, container := range f.Spec.PodTemplate.Spec.Containers {
-		if container.Name == FerretDBContainerName {
+		if container.Name == kubedb.FerretDBContainerName {
 			return container.Env
 		}
 	}
