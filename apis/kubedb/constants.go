@@ -129,7 +129,12 @@ const (
 	MemcachedDatabasePort           = 11211
 	MemcachedShardKey               = MemcachedKey + "/shard"
 	MemcachedContainerName          = "memcached"
-	MemcachedConfigVolumePath       = "/etc/memcached/"
+
+	MemcachedConfigVolumeName = "memcached-config"
+	MemcachedConfigVolumePath = "/etc/memcached/"
+
+	MemcachedDataVolumeName = "data"
+	MemcachedDataVolumePath = "/data"
 	// =========================== MongoDB Constants ============================
 
 	MongoDBDatabasePortName       = "db"
