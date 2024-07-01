@@ -71,8 +71,8 @@ type PgBouncerOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;Restart;Reconfigure;ReconfigureTLS
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, Restart, Reconfigure, ReconfigureTLS)
+// +kubebuilder:validation:Enum=HorizontalScaling;VerticalScaling
+// ENUM(HorizontalScaling, VerticalScaling)
 type PgBouncerOpsRequestType string
 
 // PgBouncerReplicaReadinessCriteria is the criteria for checking readiness of a PgBouncer pod
@@ -86,11 +86,14 @@ type PgBouncerUpdateVersionSpec struct {
 }
 
 // HorizontalScaling is the spec for PgBouncer horizontal scaling
-type PgBouncerHorizontalScalingSpec struct{}
+type PgBouncerHorizontalScalingSpec struct {
+	Replicas *int32 `json:"replicas,omitempty"`
+}
 
 // PgBouncerVerticalScalingSpec is the spec for PgBouncer vertical scaling
 type PgBouncerVerticalScalingSpec struct {
-	ReadinessCriteria *PgBouncerReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`
+	PgBouncer *PodResources       `json:"pgbouncer,omitempty"`
+	Exporter  *ContainerResources `json:"exporter,omitempty"`
 }
 
 type PgBouncerCustomConfigurationSpec struct{}
