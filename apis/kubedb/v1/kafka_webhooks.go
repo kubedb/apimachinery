@@ -124,7 +124,7 @@ func (k *Kafka) ValidateCreateOrUpdate() error {
 				k.Name,
 				"doesn't support spec.storage when spec.topology is set"))
 		}
-		if k.Spec.PodTemplate.Spec.Containers[0].Resources.Size() != 0 {
+		if len(k.Spec.PodTemplate.Spec.Containers) > 0 && k.Spec.PodTemplate.Spec.Containers[0].Resources.Size() != 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("resources"),
 				k.Name,
 				"doesn't support spec.podTemplate.spec.resources when spec.topology is set"))
