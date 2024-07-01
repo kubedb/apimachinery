@@ -138,7 +138,7 @@ func Convert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in *MariaDBSpec, out *v1.Mar
 		return err
 	}
 	if len(out.PodTemplate.Spec.Containers) > 0 {
-		out.PodTemplate.Spec.Containers[0].Name = "mariadb" // db container name used in sts
+		out.PodTemplate.Spec.Containers[0].Name = kubedb.MariaDBContainerName // db container name used in sts
 	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.RequireSSL = in.RequireSSL
@@ -371,6 +371,9 @@ func Convert_v1alpha2_MongoHiddenNode_To_v1_MongoHiddenNode(in *MongoHiddenNode,
 	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, out.PodTemplate, s); err != nil {
 		return err
 	}
+	if len(out.PodTemplate.Spec.Containers) > 0 {
+		out.PodTemplate.Spec.Containers[0].Name = kubedb.MongoDBContainerName
+	}
 	out.Replicas = in.Replicas
 	out.Storage = in.Storage
 	return nil
@@ -410,6 +413,9 @@ func Convert_v1alpha2_MongoDBNode_To_v1_MongoDBNode(in *MongoDBNode, out *v1.Mon
 	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, out.PodTemplate, s); err != nil {
 		return err
 	}
+	if len(out.PodTemplate.Spec.Containers) > 0 {
+		out.PodTemplate.Spec.Containers[0].Name = kubedb.MongoDBContainerName
+	}
 	return nil
 }
 
@@ -430,6 +436,9 @@ func Convert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode(in *MongoArbiterNo
 	}
 	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, out.PodTemplate, s); err != nil {
 		return err
+	}
+	if len(out.PodTemplate.Spec.Containers) > 0 {
+		out.PodTemplate.Spec.Containers[0].Name = kubedb.MongoDBContainerName
 	}
 	return nil
 }
@@ -478,7 +487,7 @@ func Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1.Mon
 			return err
 		}
 		if len((*out).Spec.Containers) > 0 {
-			(*out).Spec.Containers[0].Name = "mongodb" // db container name used in sts
+			(*out).Spec.Containers[0].Name = kubedb.MongoDBContainerName // db container name used in sts
 		}
 	} else {
 		out.PodTemplate = nil
