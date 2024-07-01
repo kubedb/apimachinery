@@ -50,11 +50,11 @@ func Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(in *ofstv2.PodTemplateSpec
 func Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(in *[]corev1.Container, out *CoordinatorSpec, s conversion.Scope) error {
 	var container *corev1.Container
 	for i := range *in {
-		if strings.HasSuffix((*in)[i].Name, "coordinator") {
+		if strings.HasSuffix((*in)[i].Name, "coordinator") || (*in)[i].Name == kubedb.ReplicationModeDetectorContainerName {
 			container = &(*in)[i]
 		}
 	}
-	if container == nil || !(container.Resources.Requests != nil || container.Resources.Limits != nil) {
+	if container == nil || (container.Resources.Requests == nil && container.Resources.Limits == nil) {
 		return nil
 	}
 	out.Resources = *container.Resources.DeepCopy()
@@ -546,10 +546,15 @@ func Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out *Mon
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.ReplicaSet = (*MongoDBReplicaSet)(unsafe.Pointer(in.ReplicaSet))
 	if in.ShardTopology != nil {
-		in, out := &in.ShardTopology, &out.ShardTopology
-		*out = new(MongoDBShardingTopology)
-		if err := Convert_v1_MongoDBShardingTopology_To_v1alpha2_MongoDBShardingTopology(*in, *out, s); err != nil {
+		inSt, outSt := &in.ShardTopology, &out.ShardTopology
+		*outSt = new(MongoDBShardingTopology)
+		if err := Convert_v1_MongoDBShardingTopology_To_v1alpha2_MongoDBShardingTopology(*inSt, *outSt, s); err != nil {
 			return err
+		}
+		if in.ShardTopology.Shard.PodTemplate != nil {
+			if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.ShardTopology.Shard.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
+				return err
+			}
 		}
 	} else {
 		out.ShardTopology = nil
