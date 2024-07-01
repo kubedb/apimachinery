@@ -932,10 +932,12 @@ const (
 	DruidVolumeOperatorConfig = "operator-config-volume"
 	DruidVolumeMainConfig     = "main-config-volume"
 	DruidVolumeCustomConfig   = "custom-config"
+	DruidMetadataTLSVolume    = "metadata-tls-volume"
 
-	DruidOperatorConfigDir = "/tmp/config/operator-config"
-	DruidMainConfigDir     = "/opt/druid/conf"
-	DruidCustomConfigDir   = "/tmp/config/custom-config"
+	DruidOperatorConfigDir    = "/tmp/config/operator-config"
+	DruidMainConfigDir        = "/opt/druid/conf"
+	DruidCustomConfigDir      = "/tmp/config/custom-config"
+	DruidMetadataTLSConfigDir = "/tmp/metadata-tls"
 
 	DruidVolumeCommonConfig          = "common-config-volume"
 	DruidCommonConfigFile            = "common.runtime.properties"
@@ -959,6 +961,8 @@ const (
 	EnvDruidMetdataStoragePassword = "DRUID_METADATA_STORAGE_PASSWORD"
 	EnvDruidZKServicePassword      = "DRUID_ZK_SERVICE_PASSWORD"
 	EnvDruidCoordinatorAsOverlord  = "DRUID_COORDINATOR_AS_OVERLORD"
+	EnvDruidMetadataTLSEnable      = "DRUID_METADATA_TLS_ENABLE"
+	EnvDruidMetadataStorageType    = "DRUID_METADATA_STORAGE_TYPE"
 
 	DruidPortCoordinators   = 8081
 	DruidPortOverlords      = 8090
