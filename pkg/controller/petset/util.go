@@ -63,6 +63,16 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		Version: gv.Version,
 	}
 	switch owner.Kind {
+	case apiv1.ResourceKindElasticsearch:
+		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralElasticsearch
+		es, err := c.DBClient.KubedbV1().Elasticsearches(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
+		dbInfo.replicasReady, dbInfo.msg, err = es.ReplicasAreReady(c.PSLister)
+		if err != nil {
+			return nil, err
+		}
 	case apiv1.ResourceKindPostgres:
 		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralPostgres
 		pg, err := c.DBClient.KubedbV1().Postgreses(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
