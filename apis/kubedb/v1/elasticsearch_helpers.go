@@ -460,6 +460,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		if e.Spec.Topology.Ingest.Suffix == "" {
 			e.Spec.Topology.Ingest.Suffix = string(ElasticsearchNodeRoleTypeIngest)
 		}
+		e.setContainerSecurityContextDefaults(esVersion, &e.Spec.Topology.Ingest.PodTemplate)
 		dbContainer := core_util.GetContainerByName(e.Spec.Topology.Ingest.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 		if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
@@ -476,6 +477,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		if e.Spec.Topology.Master.Suffix == "" {
 			e.Spec.Topology.Master.Suffix = string(ElasticsearchNodeRoleTypeMaster)
 		}
+		e.setContainerSecurityContextDefaults(esVersion, &e.Spec.Topology.Master.PodTemplate)
 		dbContainer = core_util.GetContainerByName(e.Spec.Topology.Master.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 		if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
@@ -494,6 +496,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.Data.Suffix == "" {
 				e.Spec.Topology.Data.Suffix = string(ElasticsearchNodeRoleTypeData)
 			}
+			e.setContainerSecurityContextDefaults(esVersion, &e.Spec.Topology.Data.PodTemplate)
 			dbContainer = core_util.GetContainerByName(e.Spec.Topology.Data.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
@@ -512,6 +515,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.DataHot.Suffix == "" {
 				e.Spec.Topology.DataHot.Suffix = string(ElasticsearchNodeRoleTypeDataHot)
 			}
+			e.setContainerSecurityContextDefaults(esVersion, &e.Spec.Topology.DataHot.PodTemplate)
 			dbContainer = core_util.GetContainerByName(e.Spec.Topology.DataHot.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
@@ -530,6 +534,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.DataWarm.Suffix == "" {
 				e.Spec.Topology.DataWarm.Suffix = string(ElasticsearchNodeRoleTypeDataWarm)
 			}
+			e.setContainerSecurityContextDefaults(esVersion, &e.Spec.Topology.DataWarm.PodTemplate)
 			dbContainer = core_util.GetContainerByName(e.Spec.Topology.DataWarm.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
@@ -548,6 +553,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.DataCold.Suffix == "" {
 				e.Spec.Topology.DataCold.Suffix = string(ElasticsearchNodeRoleTypeDataCold)
 			}
+			e.setContainerSecurityContextDefaults(esVersion, &e.Spec.Topology.DataCold.PodTemplate)
 			dbContainer = core_util.GetContainerByName(e.Spec.Topology.DataCold.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
@@ -566,6 +572,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.DataFrozen.Suffix == "" {
 				e.Spec.Topology.DataFrozen.Suffix = string(ElasticsearchNodeRoleTypeDataFrozen)
 			}
+			e.setContainerSecurityContextDefaults(esVersion, &e.Spec.Topology.DataFrozen.PodTemplate)
 			dbContainer = core_util.GetContainerByName(e.Spec.Topology.DataFrozen.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
@@ -584,6 +591,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.DataContent.Suffix == "" {
 				e.Spec.Topology.DataContent.Suffix = string(ElasticsearchNodeRoleTypeDataContent)
 			}
+			e.setContainerSecurityContextDefaults(esVersion, &e.Spec.Topology.DataContent.PodTemplate)
 			dbContainer = core_util.GetContainerByName(e.Spec.Topology.DataContent.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
@@ -602,6 +610,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.ML.Suffix == "" {
 				e.Spec.Topology.ML.Suffix = string(ElasticsearchNodeRoleTypeML)
 			}
+			e.setContainerSecurityContextDefaults(esVersion, &e.Spec.Topology.ML.PodTemplate)
 			dbContainer = core_util.GetContainerByName(e.Spec.Topology.ML.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
@@ -620,6 +629,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 			if e.Spec.Topology.Transform.Suffix == "" {
 				e.Spec.Topology.Transform.Suffix = string(ElasticsearchNodeRoleTypeTransform)
 			}
+			e.setContainerSecurityContextDefaults(esVersion, &e.Spec.Topology.Transform.PodTemplate)
 			dbContainer = core_util.GetContainerByName(e.Spec.Topology.Transform.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
@@ -633,6 +643,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		}
 
 	} else {
+		e.setContainerSecurityContextDefaults(esVersion, &e.Spec.PodTemplate)
 		dbContainer := core_util.GetContainerByName(e.Spec.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 		if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensive)
@@ -673,7 +684,6 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		}
 	}
 
-	e.setContainerSecurityContextDefaults(esVersion, &e.Spec.PodTemplate)
 	e.setDefaultInternalUsersAndRoleMappings(esVersion)
 	e.SetMetricsExporterDefaults(esVersion)
 	e.SetTLSDefaults(esVersion)
@@ -744,10 +754,8 @@ func (e *Elasticsearch) setDefaultInternalUsersAndRoleMappings(esVersion *catalo
 		e.Spec.InternalUsers = inUsers
 	}
 
-	// set missing internal users and roles for OpenDistro, SearchGuard & OpenSearch
-	if esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginOpenDistro ||
-		esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginSearchGuard ||
-		esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginOpenSearch {
+	// set missing internal users and roles for OpenSearch
+	if esVersion.Spec.AuthPlugin == catalog.ElasticsearchAuthPluginOpenSearch {
 
 		inUsers := e.Spec.InternalUsers
 		// If not set, create empty map
