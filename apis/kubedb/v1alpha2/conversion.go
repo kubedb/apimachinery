@@ -462,15 +462,6 @@ func Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1.Mon
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.ReplicaSet = (*v1.MongoDBReplicaSet)(unsafe.Pointer(in.ReplicaSet))
-	if in.ShardTopology != nil {
-		in, out := &in.ShardTopology, &out.ShardTopology
-		*out = new(v1.MongoDBShardingTopology)
-		if err := Convert_v1alpha2_MongoDBShardingTopology_To_v1_MongoDBShardingTopology(*in, *out, s); err != nil {
-			return err
-		}
-	} else {
-		out.ShardTopology = nil
-	}
 	out.StorageType = v1.StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.EphemeralStorage = (*corev1.EmptyDirVolumeSource)(unsafe.Pointer(in.EphemeralStorage))
@@ -480,17 +471,29 @@ func Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1.Mon
 	out.Init = (*v1.InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	if in.PodTemplate != nil {
-		in, out := &in.PodTemplate, &out.PodTemplate
-		*out = new(ofstv2.PodTemplateSpec)
-		if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(*in, *out, s); err != nil {
+	if in.ShardTopology != nil {
+		in, out := &in.ShardTopology, &out.ShardTopology
+		*out = new(v1.MongoDBShardingTopology)
+		if err := Convert_v1alpha2_MongoDBShardingTopology_To_v1_MongoDBShardingTopology(*in, *out, s); err != nil {
 			return err
 		}
-		if len((*out).Spec.Containers) > 0 {
-			(*out).Spec.Containers[0].Name = kubedb.MongoDBContainerName // db container name used in sts
-		}
 	} else {
-		out.PodTemplate = nil
+		if in.PodTemplate != nil {
+			in, out := &in.PodTemplate, &out.PodTemplate
+			*out = new(ofstv2.PodTemplateSpec)
+			if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(*in, *out, s); err != nil {
+				return err
+			}
+			if len((*out).Spec.Containers) > 0 {
+				(*out).Spec.Containers[0].Name = kubedb.MongoDBContainerName // db container name used in sts
+			}
+		} else {
+			out := &out.PodTemplate
+			*out = new(ofstv2.PodTemplateSpec)
+			(*out).Spec.Containers = append((*out).Spec.Containers, corev1.Container{
+				Name: kubedb.MongoDBContainerName,
+			})
+		}
 	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
@@ -578,18 +581,16 @@ func Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out *Mon
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
 	if in.PodTemplate != nil {
-		in, out := &in.PodTemplate, &out.PodTemplate
-		*out = new(ofstv1.PodTemplateSpec)
-		if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(*in, *out, s); err != nil {
+		inPt, outPt := &in.PodTemplate, &out.PodTemplate
+		*outPt = new(ofstv1.PodTemplateSpec)
+		if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(*inPt, *outPt, s); err != nil {
+			return err
+		}
+		if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
 			return err
 		}
 	} else {
 		out.PodTemplate = nil
-	}
-	if in.PodTemplate != nil {
-		if err := Convert_Slice_v1_Container_To_v1alpha2_CoordinatorSpec(&in.PodTemplate.Spec.Containers, &out.Coordinator, s); err != nil {
-			return err
-		}
 	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
