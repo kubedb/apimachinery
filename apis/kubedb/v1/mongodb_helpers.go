@@ -729,6 +729,9 @@ func (m *MongoDB) setContainerDefaultValues(container *core.Container, mgVersion
 	defaultResource core.ResourceRequirements, isArbiter ...bool,
 ) {
 	m.setContainerDefaultResources(container, defaultResource)
+	if container.SecurityContext == nil {
+		container.SecurityContext = &core.SecurityContext{}
+	}
 	m.assignDefaultContainerSecurityContext(mgVersion, container.SecurityContext)
 	if container.Name == kubedb.MongoDBContainerName {
 		m.setDefaultProbes(container, mgVersion, isArbiter...)
@@ -748,9 +751,6 @@ func (m *MongoDB) setDefaultPodSecurityContext(mgVersion *v1alpha1.MongoDBVersio
 }
 
 func (m *MongoDB) assignDefaultContainerSecurityContext(mgVersion *v1alpha1.MongoDBVersion, sc *core.SecurityContext) {
-	if sc == nil {
-		sc = &core.SecurityContext{}
-	}
 	if sc.AllowPrivilegeEscalation == nil {
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
