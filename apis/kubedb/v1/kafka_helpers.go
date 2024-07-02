@@ -301,7 +301,7 @@ func (k *Kafka) SetHealthCheckerDefaults() {
 
 func (k *Kafka) SetDefaults() {
 	if k.Spec.DeletionPolicy == "" {
-		k.Spec.DeletionPolicy = TerminationPolicyDelete
+		k.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
 
 	if k.Spec.StorageType == "" {

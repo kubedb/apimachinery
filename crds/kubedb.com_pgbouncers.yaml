@@ -145,6 +145,12 @@ spec:
                 - databaseName
                 - databaseRef
                 type: object
+              deletionPolicy:
+                enum:
+                - Delete
+                - WipeOut
+                - DoNotTerminate
+                type: string
               healthChecker:
                 default:
                   failureThreshold: 1
@@ -3512,12 +3518,6 @@ spec:
                 - require
                 - verify-ca
                 - verify-full
-                type: string
-              terminationPolicy:
-                enum:
-                - Delete
-                - WipeOut
-                - DoNotTerminate
                 type: string
               tls:
                 properties:

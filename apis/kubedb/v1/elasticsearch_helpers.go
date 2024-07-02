@@ -445,8 +445,8 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, top
 		e.Spec.StorageType = StorageTypeDurable
 	}
 
-	if e.Spec.TerminationPolicy == "" {
-		e.Spec.TerminationPolicy = TerminationPolicyDelete
+	if e.Spec.DeletionPolicy == "" {
+		e.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
 
 	if e.Spec.PodTemplate.Spec.ServiceAccountName == "" {

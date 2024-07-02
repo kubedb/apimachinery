@@ -189,8 +189,8 @@ func (rs *RedisSentinel) SetDefaults(rdVersion *catalog.RedisVersion, topology *
 	if rs.Spec.StorageType == "" {
 		rs.Spec.StorageType = StorageTypeDurable
 	}
-	if rs.Spec.TerminationPolicy == "" {
-		rs.Spec.TerminationPolicy = TerminationPolicyDelete
+	if rs.Spec.DeletionPolicy == "" {
+		rs.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
 
 	rs.setDefaultContainerSecurityContext(rdVersion, &rs.Spec.PodTemplate)

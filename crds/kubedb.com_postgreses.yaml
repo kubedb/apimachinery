@@ -216,6 +216,13 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              deletionPolicy:
+                enum:
+                - Halt
+                - Delete
+                - WipeOut
+                - DoNotTerminate
+                type: string
               enforceFsGroup:
                 type: boolean
               halted:
@@ -4770,13 +4777,6 @@ spec:
                 enum:
                 - Synchronous
                 - Asynchronous
-                type: string
-              terminationPolicy:
-                enum:
-                - Halt
-                - Delete
-                - WipeOut
-                - DoNotTerminate
                 type: string
               tls:
                 properties:

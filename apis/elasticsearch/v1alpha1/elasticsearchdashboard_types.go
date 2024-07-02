@@ -66,7 +66,7 @@ type ElasticsearchDashboardSpec struct {
 
 	// TerminationPolicy controls the delete operation for Dashboard
 	// +optional
-	TerminationPolicy dbapi.TerminationPolicy `json:"terminationPolicy,omitempty"`
+	TerminationPolicy dbapi.DeletionPolicy `json:"terminationPolicy,omitempty"`
 }
 
 // ElasticsearchDashboardStatus defines the observed state of ElasticsearchDashboard

@@ -599,7 +599,7 @@ func (m MongoDB) StatsServiceLabels() map[string]string {
 
 // StorageType = Durable
 // storageEngine = wiredTiger
-// TerminationPolicy = Delete
+// DeletionPolicy = Delete
 // SSLMode = disabled
 // clusterAuthMode = keyFile if sslMode is disabled or allowSSL.  & x509 otherwise
 //
@@ -619,8 +619,8 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 	if m.Spec.StorageEngine == "" {
 		m.Spec.StorageEngine = StorageEngineWiredTiger
 	}
-	if m.Spec.TerminationPolicy == "" {
-		m.Spec.TerminationPolicy = TerminationPolicyDelete
+	if m.Spec.DeletionPolicy == "" {
+		m.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
 
 	if m.Spec.SSLMode == "" {

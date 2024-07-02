@@ -832,6 +832,13 @@ spec:
                     - volumePath
                     type: object
                 type: object
+              deletionPolicy:
+                enum:
+                - Halt
+                - Delete
+                - WipeOut
+                - DoNotTerminate
+                type: string
               halted:
                 type: boolean
               healthChecker:
@@ -4193,13 +4200,6 @@ spec:
                   - alias
                   type: object
                 type: array
-              terminationPolicy:
-                enum:
-                - Halt
-                - Delete
-                - WipeOut
-                - DoNotTerminate
-                type: string
               tls:
                 properties:
                   certificates:

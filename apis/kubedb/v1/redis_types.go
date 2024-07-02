@@ -122,9 +122,9 @@ type RedisSpec struct {
 	// +optional
 	Halted bool `json:"halted,omitempty"`
 
-	// TerminationPolicy controls the delete operation for database
+	// DeletionPolicy controls the delete operation for database
 	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 
 	// AllowedSchemas defines the types of database schemas that MAY refer to
 	// a database instance and the trusted namespaces where those schema resources MAY be

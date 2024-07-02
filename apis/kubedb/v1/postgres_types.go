@@ -130,9 +130,9 @@ type PostgresSpec struct {
 	// +optional
 	Halted bool `json:"halted,omitempty"`
 
-	// TerminationPolicy controls the delete operation for database
+	// DeletionPolicy controls the delete operation for database
 	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 
 	// EnforceFsGroup Is Used when the storageClass's CSI Driver doesn't support FsGroup properties properly.
 	// If It's true then The Init Container will run as RootUser and

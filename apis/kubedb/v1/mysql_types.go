@@ -127,9 +127,9 @@ type MySQLSpec struct {
 	// +optional
 	Halted bool `json:"halted,omitempty"`
 
-	// TerminationPolicy controls the delete operation for database
+	// DeletionPolicy controls the delete operation for database
 	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 
 	// Indicated whether to use DNS or IP address to address pods in a db cluster.
 	// If IP address is used, HostNetwork will be used. Defaults to DNS.

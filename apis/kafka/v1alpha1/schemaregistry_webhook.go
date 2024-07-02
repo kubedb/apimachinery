@@ -84,7 +84,7 @@ func (k *SchemaRegistry) ValidateDelete() (admission.Warnings, error) {
 	schemaregistrylog.Info("validate delete", "name", k.Name)
 
 	var allErr field.ErrorList
-	if k.Spec.DeletionPolicy == dbapi.TerminationPolicyDoNotTerminate {
+	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			k.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
@@ -96,10 +96,10 @@ func (k *SchemaRegistry) ValidateDelete() (admission.Warnings, error) {
 func (k *SchemaRegistry) ValidateCreateOrUpdate() field.ErrorList {
 	var allErr field.ErrorList
 
-	if k.Spec.DeletionPolicy == dbapi.TerminationPolicyHalt {
+	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			k.Name,
-			"TerminationPolicyHalt is not supported for SchemaRegistry"))
+			"DeletionPolicyHalt is not supported for SchemaRegistry"))
 	}
 
 	// number of replicas can not be 0 or less

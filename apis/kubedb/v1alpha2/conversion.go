@@ -144,7 +144,7 @@ func Convert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in *MariaDBSpec, out *v1.Mar
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	out.DeletionPolicy = v1.DeletionPolicy(in.TerminationPolicy)
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
@@ -183,7 +183,7 @@ func Convert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(in *v1.MariaDBSpec, out *Mar
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	out.TerminationPolicy = TerminationPolicy(in.DeletionPolicy)
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*Archiver)(unsafe.Pointer(in.Archiver))
@@ -218,7 +218,7 @@ func Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out *v1.
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	out.DeletionPolicy = v1.DeletionPolicy(in.TerminationPolicy)
 	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
 	}
@@ -264,7 +264,7 @@ func Convert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, out *
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	out.TerminationPolicy = TerminationPolicy(in.DeletionPolicy)
 	out.EnforceFsGroup = in.EnforceFsGroup
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
@@ -305,7 +305,7 @@ func Convert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(in *MySQLSpec, out *v1.MySQLSpec
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	out.DeletionPolicy = v1.DeletionPolicy(in.TerminationPolicy)
 	out.UseAddressType = v1.AddressType(in.UseAddressType)
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
@@ -354,7 +354,7 @@ func Convert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(in *v1.MySQLSpec, out *MySQLSpec
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	out.TerminationPolicy = TerminationPolicy(in.DeletionPolicy)
 	out.UseAddressType = AddressType(in.UseAddressType)
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.AllowedReadReplicas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedReadReplicas))
@@ -499,7 +499,7 @@ func Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1.Mon
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.KeyFileSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.KeyFileSecret))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	out.DeletionPolicy = v1.DeletionPolicy(in.TerminationPolicy)
 	out.StorageEngine = v1.StorageEngine(in.StorageEngine)
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 
@@ -596,7 +596,7 @@ func Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out *Mon
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.KeyFileSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.KeyFileSecret))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	out.TerminationPolicy = TerminationPolicy(in.DeletionPolicy)
 	out.StorageEngine = StorageEngine(in.StorageEngine)
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	if in.Arbiter != nil {
@@ -647,7 +647,7 @@ func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	out.DeletionPolicy = v1.DeletionPolicy(in.TerminationPolicy)
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
@@ -687,7 +687,7 @@ func Convert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *RedisSpec
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	out.TerminationPolicy = TerminationPolicy(in.DeletionPolicy)
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	return nil
@@ -715,7 +715,7 @@ func Convert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec(in *PerconaXtraD
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	out.DeletionPolicy = v1.DeletionPolicy(in.TerminationPolicy)
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	if err := Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(&in.Coordinator, &out.PodTemplate.Spec.Containers, s); err != nil {
 		return err
@@ -755,7 +755,7 @@ func Convert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(in *v1.PerconaXt
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	out.TerminationPolicy = TerminationPolicy(in.DeletionPolicy)
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	out.SystemUserSecrets = (*SystemUserSecretsSpec)(unsafe.Pointer(in.SystemUserSecrets))
@@ -798,7 +798,7 @@ func Convert_v1alpha2_ElasticsearchSpec_To_v1_ElasticsearchSpec(in *Elasticsearc
 	out.InternalUsers = *(*map[string]v1.ElasticsearchUserSpec)(unsafe.Pointer(&in.InternalUsers))
 	out.RolesMapping = *(*map[string]v1.ElasticsearchRoleMapSpec)(unsafe.Pointer(&in.RolesMapping))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	out.DeletionPolicy = v1.DeletionPolicy(in.TerminationPolicy)
 	out.KernelSettings = (*v1.KernelSettings)(unsafe.Pointer(in.KernelSettings))
 	out.HeapSizePercentage = (*int32)(unsafe.Pointer(in.HeapSizePercentage))
 	out.HealthChecker = in.HealthChecker
@@ -846,7 +846,200 @@ func Convert_v1alpha2_MemcachedSpec_To_v1_MemcachedSpec(in *MemcachedSpec, out *
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	out.DeletionPolicy = v1.DeletionPolicy(in.TerminationPolicy)
+	out.HealthChecker = in.HealthChecker
+	return nil
+}
+
+func Convert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(in *v1.ElasticsearchSpec, out *ElasticsearchSpec, s conversion.Scope) error {
+	if err := Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
+		return err
+	}
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	if in.Topology != nil {
+		in, out := &in.Topology, &out.Topology
+		*out = new(ElasticsearchClusterTopology)
+		if err := Convert_v1_ElasticsearchClusterTopology_To_v1alpha2_ElasticsearchClusterTopology(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Topology = nil
+	}
+	out.EnableSSL = in.EnableSSL
+	out.DisableSecurity = in.DisableSecurity
+	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.StorageType = StorageType(in.StorageType)
+	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	out.SecureConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.SecureConfigSecret))
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
+	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.MaxUnavailable = (*intstr.IntOrString)(unsafe.Pointer(in.MaxUnavailable))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.InternalUsers = *(*map[string]ElasticsearchUserSpec)(unsafe.Pointer(&in.InternalUsers))
+	out.RolesMapping = *(*map[string]ElasticsearchRoleMapSpec)(unsafe.Pointer(&in.RolesMapping))
+	out.Halted = in.Halted
+	out.TerminationPolicy = TerminationPolicy(in.DeletionPolicy)
+	out.KernelSettings = (*KernelSettings)(unsafe.Pointer(in.KernelSettings))
+	out.HeapSizePercentage = (*int32)(unsafe.Pointer(in.HeapSizePercentage))
+	out.HealthChecker = in.HealthChecker
+	return nil
+}
+
+func Convert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec(in *v1.MemcachedSpec, out *MemcachedSpec, s conversion.Scope) error {
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	out.DataVolume = (*corev1.VolumeSource)(unsafe.Pointer(in.DataVolume))
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
+	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.Halted = in.Halted
+	out.TerminationPolicy = TerminationPolicy(in.DeletionPolicy)
+	out.HealthChecker = in.HealthChecker
+	return nil
+}
+
+func Convert_v1alpha2_PgBouncerSpec_To_v1_PgBouncerSpec(in *PgBouncerSpec, out *v1.PgBouncerSpec, s conversion.Scope) error {
+	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
+		return err
+	}
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
+	if err := Convert_v1alpha2_Database_To_v1_Database(&in.Database, &out.Database, s); err != nil {
+		return err
+	}
+	out.ConnectionPool = (*v1.ConnectionPoolConfig)(unsafe.Pointer(in.ConnectionPool))
+	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	out.SSLMode = v1.PgBouncerSSLMode(in.SSLMode)
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.DeletionPolicy = v1.PgBouncerDeletionPolicy(in.TerminationPolicy)
+	out.HealthChecker = in.HealthChecker
+	return nil
+}
+
+func Convert_v1_PgBouncerSpec_To_v1alpha2_PgBouncerSpec(in *v1.PgBouncerSpec, out *PgBouncerSpec, s conversion.Scope) error {
+	if err := Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
+		return err
+	}
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
+	if err := Convert_v1_Database_To_v1alpha2_Database(&in.Database, &out.Database, s); err != nil {
+		return err
+	}
+	out.ConnectionPool = (*ConnectionPoolConfig)(unsafe.Pointer(in.ConnectionPool))
+	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	out.SSLMode = PgBouncerSSLMode(in.SSLMode)
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TerminationPolicy = PgBouncerTerminationPolicy(in.DeletionPolicy)
+	out.HealthChecker = in.HealthChecker
+	return nil
+}
+
+func Convert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec(in *ProxySQLSpec, out *v1.ProxySQLSpec, s conversion.Scope) error {
+	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
+		return err
+	}
+	out.SyncUsers = in.SyncUsers
+	out.InitConfiguration = (*v1.ProxySQLConfiguration)(unsafe.Pointer(in.InitConfiguration))
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.Backend = (*corev1.LocalObjectReference)(unsafe.Pointer(in.Backend))
+	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
+	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.DeletionPolicy = v1.DeletionPolicy(in.TerminationPolicy)
+	out.HealthChecker = in.HealthChecker
+	return nil
+}
+
+func Convert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in *v1.ProxySQLSpec, out *ProxySQLSpec, s conversion.Scope) error {
+	if err := Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
+		return err
+	}
+	out.SyncUsers = in.SyncUsers
+	out.InitConfiguration = (*ProxySQLConfiguration)(unsafe.Pointer(in.InitConfiguration))
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.Backend = (*corev1.LocalObjectReference)(unsafe.Pointer(in.Backend))
+	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
+	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.TerminationPolicy = TerminationPolicy(in.DeletionPolicy)
+	out.HealthChecker = in.HealthChecker
+	return nil
+}
+
+func Convert_v1alpha2_RedisSentinelSpec_To_v1_RedisSentinelSpec(in *RedisSentinelSpec, out *v1.RedisSentinelSpec, s conversion.Scope) error {
+	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
+		return err
+	}
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
+	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.StorageType = v1.StorageType(in.StorageType)
+	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.DisableAuth = in.DisableAuth
+	out.Halted = in.Halted
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	out.DeletionPolicy = v1.DeletionPolicy(in.TerminationPolicy)
+	out.HealthChecker = in.HealthChecker
+	return nil
+}
+
+func Convert_v1_RedisSentinelSpec_To_v1alpha2_RedisSentinelSpec(in *v1.RedisSentinelSpec, out *RedisSentinelSpec, s conversion.Scope) error {
+	if err := Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
+		return err
+	}
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
+		return err
+	}
+	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.StorageType = StorageType(in.StorageType)
+	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.DisableAuth = in.DisableAuth
+	out.Halted = in.Halted
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	out.TerminationPolicy = TerminationPolicy(in.DeletionPolicy)
 	out.HealthChecker = in.HealthChecker
 	return nil
 }

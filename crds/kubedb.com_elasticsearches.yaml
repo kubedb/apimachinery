@@ -69,6 +69,13 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              deletionPolicy:
+                enum:
+                - Halt
+                - Delete
+                - WipeOut
+                - DoNotTerminate
+                type: string
               disableSecurity:
                 type: boolean
               enableSSL:
@@ -4633,13 +4640,6 @@ spec:
                 enum:
                 - Durable
                 - Ephemeral
-                type: string
-              terminationPolicy:
-                enum:
-                - Halt
-                - Delete
-                - WipeOut
-                - DoNotTerminate
                 type: string
               tls:
                 properties:

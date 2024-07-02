@@ -63,7 +63,7 @@ type ConnectorSpec struct {
 
 	// DeletionPolicy controls the delete operation for database
 	// +optional
-	DeletionPolicy dbapi.TerminationPolicy `json:"deletionPolicy,omitempty"`
+	DeletionPolicy dbapi.DeletionPolicy `json:"deletionPolicy,omitempty"`
 }
 
 // ConnectorStatus defines the observed state of connectors

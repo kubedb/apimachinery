@@ -189,8 +189,8 @@ func (m *Memcached) SetDefaults(mcVersion *catalog.MemcachedVersion) {
 
 	m.setDefaultContainerSecurityContext(mcVersion, &m.Spec.PodTemplate)
 	// perform defaulting
-	if m.Spec.TerminationPolicy == "" {
-		m.Spec.TerminationPolicy = TerminationPolicyDelete
+	if m.Spec.DeletionPolicy == "" {
+		m.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
 	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()

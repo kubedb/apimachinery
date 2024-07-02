@@ -24515,9 +24515,9 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchSpec(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
-					"terminationPolicy": {
+					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -25611,9 +25611,9 @@ func schema_apimachinery_apis_kubedb_v1_MariaDBSpec(ref common.ReferenceCallback
 							Format:      "",
 						},
 					},
-					"terminationPolicy": {
+					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -25865,9 +25865,9 @@ func schema_apimachinery_apis_kubedb_v1_MemcachedSpec(ref common.ReferenceCallba
 							Format:      "",
 						},
 					},
-					"terminationPolicy": {
+					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26448,9 +26448,9 @@ func schema_apimachinery_apis_kubedb_v1_MongoDBSpec(ref common.ReferenceCallback
 							Format:      "",
 						},
 					},
-					"terminationPolicy": {
+					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26880,9 +26880,9 @@ func schema_apimachinery_apis_kubedb_v1_MySQLSpec(ref common.ReferenceCallback) 
 							Format:      "",
 						},
 					},
-					"terminationPolicy": {
+					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -27433,9 +27433,9 @@ func schema_apimachinery_apis_kubedb_v1_PerconaXtraDBSpec(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
-					"terminationPolicy": {
+					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -27707,9 +27707,9 @@ func schema_apimachinery_apis_kubedb_v1_PgBouncerSpec(ref common.ReferenceCallba
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
-					"terminationPolicy": {
+					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -28132,9 +28132,9 @@ func schema_apimachinery_apis_kubedb_v1_PostgresSpec(ref common.ReferenceCallbac
 							Format:      "",
 						},
 					},
-					"terminationPolicy": {
+					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -28472,9 +28472,9 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
-					"terminationPolicy": {
+					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -28921,9 +28921,9 @@ func schema_apimachinery_apis_kubedb_v1_RedisSentinelSpec(ref common.ReferenceCa
 							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
 						},
 					},
-					"terminationPolicy": {
+					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -29115,9 +29115,9 @@ func schema_apimachinery_apis_kubedb_v1_RedisSpec(ref common.ReferenceCallback) 
 							Format:      "",
 						},
 					},
-					"terminationPolicy": {
+					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TerminationPolicy controls the delete operation for database",
+							Description: "DeletionPolicy controls the delete operation for database",
 							Type:        []string{"string"},
 							Format:      "",
 						},

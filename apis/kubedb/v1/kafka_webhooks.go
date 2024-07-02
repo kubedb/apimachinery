@@ -69,7 +69,7 @@ func (k *Kafka) ValidateDelete() (admission.Warnings, error) {
 	kafkalog.Info("validate delete", "name", k.Name)
 
 	var allErr field.ErrorList
-	if k.Spec.DeletionPolicy == TerminationPolicyDoNotTerminate {
+	if k.Spec.DeletionPolicy == DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
 			k.Name,
 			"Can not delete as deletionPolicy is set to \"DoNotTerminate\""))

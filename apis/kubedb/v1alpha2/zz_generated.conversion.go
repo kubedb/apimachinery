@@ -174,11 +174,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*v1.ElasticsearchSpec)(nil), (*ElasticsearchSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(a.(*v1.ElasticsearchSpec), b.(*ElasticsearchSpec), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*ElasticsearchStatus)(nil), (*v1.ElasticsearchStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_ElasticsearchStatus_To_v1_ElasticsearchStatus(a.(*ElasticsearchStatus), b.(*v1.ElasticsearchStatus), scope)
 	}); err != nil {
@@ -366,11 +361,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*v1.MemcachedList)(nil), (*MemcachedList)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_MemcachedList_To_v1alpha2_MemcachedList(a.(*v1.MemcachedList), b.(*MemcachedList), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.MemcachedSpec)(nil), (*MemcachedSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec(a.(*v1.MemcachedSpec), b.(*MemcachedSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -624,16 +614,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*PgBouncerSpec)(nil), (*v1.PgBouncerSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_PgBouncerSpec_To_v1_PgBouncerSpec(a.(*PgBouncerSpec), b.(*v1.PgBouncerSpec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.PgBouncerSpec)(nil), (*PgBouncerSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_PgBouncerSpec_To_v1alpha2_PgBouncerSpec(a.(*v1.PgBouncerSpec), b.(*PgBouncerSpec), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*PgBouncerStatus)(nil), (*v1.PgBouncerStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_PgBouncerStatus_To_v1_PgBouncerStatus(a.(*PgBouncerStatus), b.(*v1.PgBouncerStatus), scope)
 	}); err != nil {
@@ -724,16 +704,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*ProxySQLSpec)(nil), (*v1.ProxySQLSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec(a.(*ProxySQLSpec), b.(*v1.ProxySQLSpec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.ProxySQLSpec)(nil), (*ProxySQLSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(a.(*v1.ProxySQLSpec), b.(*ProxySQLSpec), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*ProxySQLStatus)(nil), (*v1.ProxySQLStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_ProxySQLStatus_To_v1_ProxySQLStatus(a.(*ProxySQLStatus), b.(*v1.ProxySQLStatus), scope)
 	}); err != nil {
@@ -811,16 +781,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*v1.RedisSentinelRef)(nil), (*RedisSentinelRef)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_RedisSentinelRef_To_v1alpha2_RedisSentinelRef(a.(*v1.RedisSentinelRef), b.(*RedisSentinelRef), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*RedisSentinelSpec)(nil), (*v1.RedisSentinelSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1alpha2_RedisSentinelSpec_To_v1_RedisSentinelSpec(a.(*RedisSentinelSpec), b.(*v1.RedisSentinelSpec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.RedisSentinelSpec)(nil), (*RedisSentinelSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_RedisSentinelSpec_To_v1alpha2_RedisSentinelSpec(a.(*v1.RedisSentinelSpec), b.(*RedisSentinelSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -904,6 +864,11 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*v1.ElasticsearchSpec)(nil), (*ElasticsearchSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(a.(*v1.ElasticsearchSpec), b.(*ElasticsearchSpec), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*v1.KafkaNode)(nil), (*KafkaNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_KafkaNode_To_v1alpha2_KafkaNode(a.(*v1.KafkaNode), b.(*KafkaNode), scope)
 	}); err != nil {
@@ -911,6 +876,11 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddConversionFunc((*v1.MariaDBSpec)(nil), (*MariaDBSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(a.(*v1.MariaDBSpec), b.(*MariaDBSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.MemcachedSpec)(nil), (*MemcachedSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec(a.(*v1.MemcachedSpec), b.(*MemcachedSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -944,6 +914,11 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*v1.PgBouncerSpec)(nil), (*PgBouncerSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_PgBouncerSpec_To_v1alpha2_PgBouncerSpec(a.(*v1.PgBouncerSpec), b.(*PgBouncerSpec), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*apiv1.PodTemplateSpec)(nil), (*v2.PodTemplateSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(a.(*apiv1.PodTemplateSpec), b.(*v2.PodTemplateSpec), scope)
 	}); err != nil {
@@ -951,6 +926,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddConversionFunc((*v1.PostgresSpec)(nil), (*PostgresSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(a.(*v1.PostgresSpec), b.(*PostgresSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.ProxySQLSpec)(nil), (*ProxySQLSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(a.(*v1.ProxySQLSpec), b.(*ProxySQLSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.RedisSentinelSpec)(nil), (*RedisSentinelSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_RedisSentinelSpec_To_v1alpha2_RedisSentinelSpec(a.(*v1.RedisSentinelSpec), b.(*RedisSentinelSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -1019,8 +1004,23 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*PgBouncerSpec)(nil), (*v1.PgBouncerSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_PgBouncerSpec_To_v1_PgBouncerSpec(a.(*PgBouncerSpec), b.(*v1.PgBouncerSpec), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*PostgresSpec)(nil), (*v1.PostgresSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(a.(*PostgresSpec), b.(*v1.PostgresSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*ProxySQLSpec)(nil), (*v1.ProxySQLSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec(a.(*ProxySQLSpec), b.(*v1.ProxySQLSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*RedisSentinelSpec)(nil), (*v1.RedisSentinelSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_RedisSentinelSpec_To_v1_RedisSentinelSpec(a.(*RedisSentinelSpec), b.(*v1.RedisSentinelSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -1610,7 +1610,7 @@ func autoConvert_v1alpha2_ElasticsearchSpec_To_v1_ElasticsearchSpec(in *Elastics
 	out.InternalUsers = *(*map[string]v1.ElasticsearchUserSpec)(unsafe.Pointer(&in.InternalUsers))
 	out.RolesMapping = *(*map[string]v1.ElasticsearchRoleMapSpec)(unsafe.Pointer(&in.RolesMapping))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
 	out.KernelSettings = (*v1.KernelSettings)(unsafe.Pointer(in.KernelSettings))
 	out.HeapSizePercentage = (*int32)(unsafe.Pointer(in.HeapSizePercentage))
 	out.HealthChecker = in.HealthChecker
@@ -1650,16 +1650,11 @@ func autoConvert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(in *v1.Elast
 	out.InternalUsers = *(*map[string]ElasticsearchUserSpec)(unsafe.Pointer(&in.InternalUsers))
 	out.RolesMapping = *(*map[string]ElasticsearchRoleMapSpec)(unsafe.Pointer(&in.RolesMapping))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
 	out.KernelSettings = (*KernelSettings)(unsafe.Pointer(in.KernelSettings))
 	out.HeapSizePercentage = (*int32)(unsafe.Pointer(in.HeapSizePercentage))
 	out.HealthChecker = in.HealthChecker
 	return nil
-}
-
-// Convert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec is an autogenerated conversion function.
-func Convert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(in *v1.ElasticsearchSpec, out *ElasticsearchSpec, s conversion.Scope) error {
-	return autoConvert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(in, out, s)
 }
 
 func autoConvert_v1alpha2_ElasticsearchStatus_To_v1_ElasticsearchStatus(in *ElasticsearchStatus, out *v1.ElasticsearchStatus, s conversion.Scope) error {
@@ -2074,7 +2069,7 @@ func autoConvert_v1alpha2_KafkaSpec_To_v1_KafkaSpec(in *KafkaSpec, out *v1.Kafka
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.PodTemplate = in.PodTemplate
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.DeletionPolicy = v1.TerminationPolicy(in.DeletionPolicy)
+	out.DeletionPolicy = v1.DeletionPolicy(in.DeletionPolicy)
 	out.HealthChecker = in.HealthChecker
 	out.CruiseControl = (*v1.KafkaCruiseControl)(unsafe.Pointer(in.CruiseControl))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
@@ -2264,7 +2259,7 @@ func autoConvert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in *MariaDBSpec, out *v1
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
@@ -2292,7 +2287,7 @@ func autoConvert_v1_MariaDBSpec_To_v1alpha2_MariaDBSpec(in *v1.MariaDBSpec, out 
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*Archiver)(unsafe.Pointer(in.Archiver))
@@ -2413,7 +2408,7 @@ func autoConvert_v1alpha2_MemcachedSpec_To_v1_MemcachedSpec(in *MemcachedSpec, o
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
 	out.HealthChecker = in.HealthChecker
 	return nil
 }
@@ -2430,14 +2425,9 @@ func autoConvert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec(in *v1.MemcachedSpec
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
 	out.HealthChecker = in.HealthChecker
 	return nil
-}
-
-// Convert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec is an autogenerated conversion function.
-func Convert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec(in *v1.MemcachedSpec, out *MemcachedSpec, s conversion.Scope) error {
-	return autoConvert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec(in, out, s)
 }
 
 func autoConvert_v1alpha2_MemcachedStatus_To_v1_MemcachedStatus(in *MemcachedStatus, out *v1.MemcachedStatus, s conversion.Scope) error {
@@ -2744,7 +2734,7 @@ func autoConvert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.KeyFileSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.KeyFileSecret))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
 	out.StorageEngine = v1.StorageEngine(in.StorageEngine)
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -2809,7 +2799,7 @@ func autoConvert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out 
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.KeyFileSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.KeyFileSecret))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
 	out.StorageEngine = StorageEngine(in.StorageEngine)
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	if in.Arbiter != nil {
@@ -3067,7 +3057,7 @@ func autoConvert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(in *MySQLSpec, out *v1.MySQL
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
 	out.UseAddressType = v1.AddressType(in.UseAddressType)
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -3105,7 +3095,7 @@ func autoConvert_v1_MySQLSpec_To_v1alpha2_MySQLSpec(in *v1.MySQLSpec, out *MySQL
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
 	out.UseAddressType = AddressType(in.UseAddressType)
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.AllowedReadReplicas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedReadReplicas))
@@ -3393,7 +3383,7 @@ func autoConvert_v1alpha2_PerconaXtraDBSpec_To_v1_PerconaXtraDBSpec(in *PerconaX
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
@@ -3420,7 +3410,7 @@ func autoConvert_v1_PerconaXtraDBSpec_To_v1alpha2_PerconaXtraDBSpec(in *v1.Perco
 	out.RequireSSL = in.RequireSSL
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	out.SystemUserSecrets = (*SystemUserSecretsSpec)(unsafe.Pointer(in.SystemUserSecrets))
@@ -3548,14 +3538,9 @@ func autoConvert_v1alpha2_PgBouncerSpec_To_v1_PgBouncerSpec(in *PgBouncerSpec, o
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.SSLMode = v1.PgBouncerSSLMode(in.SSLMode)
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
-	out.TerminationPolicy = v1.PgBouncerTerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
 	out.HealthChecker = in.HealthChecker
 	return nil
-}
-
-// Convert_v1alpha2_PgBouncerSpec_To_v1_PgBouncerSpec is an autogenerated conversion function.
-func Convert_v1alpha2_PgBouncerSpec_To_v1_PgBouncerSpec(in *PgBouncerSpec, out *v1.PgBouncerSpec, s conversion.Scope) error {
-	return autoConvert_v1alpha2_PgBouncerSpec_To_v1_PgBouncerSpec(in, out, s)
 }
 
 func autoConvert_v1_PgBouncerSpec_To_v1alpha2_PgBouncerSpec(in *v1.PgBouncerSpec, out *PgBouncerSpec, s conversion.Scope) error {
@@ -3577,14 +3562,9 @@ func autoConvert_v1_PgBouncerSpec_To_v1alpha2_PgBouncerSpec(in *v1.PgBouncerSpec
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.SSLMode = PgBouncerSSLMode(in.SSLMode)
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
-	out.TerminationPolicy = PgBouncerTerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
 	out.HealthChecker = in.HealthChecker
 	return nil
-}
-
-// Convert_v1_PgBouncerSpec_To_v1alpha2_PgBouncerSpec is an autogenerated conversion function.
-func Convert_v1_PgBouncerSpec_To_v1alpha2_PgBouncerSpec(in *v1.PgBouncerSpec, out *PgBouncerSpec, s conversion.Scope) error {
-	return autoConvert_v1_PgBouncerSpec_To_v1alpha2_PgBouncerSpec(in, out, s)
 }
 
 func autoConvert_v1alpha2_PgBouncerStatus_To_v1_PgBouncerStatus(in *PgBouncerStatus, out *v1.PgBouncerStatus, s conversion.Scope) error {
@@ -3774,7 +3754,7 @@ func autoConvert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out 
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	out.EnforceFsGroup = in.EnforceFsGroup
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
@@ -3810,7 +3790,7 @@ func autoConvert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, o
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
 	out.EnforceFsGroup = in.EnforceFsGroup
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
@@ -3965,14 +3945,9 @@ func autoConvert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec(in *ProxySQLSpec, out 
 	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
 	out.HealthChecker = in.HealthChecker
 	return nil
-}
-
-// Convert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec is an autogenerated conversion function.
-func Convert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec(in *ProxySQLSpec, out *v1.ProxySQLSpec, s conversion.Scope) error {
-	return autoConvert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec(in, out, s)
 }
 
 func autoConvert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in *v1.ProxySQLSpec, out *ProxySQLSpec, s conversion.Scope) error {
@@ -3992,14 +3967,9 @@ func autoConvert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in *v1.ProxySQLSpec, o
 	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
 	out.HealthChecker = in.HealthChecker
 	return nil
-}
-
-// Convert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec is an autogenerated conversion function.
-func Convert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in *v1.ProxySQLSpec, out *ProxySQLSpec, s conversion.Scope) error {
-	return autoConvert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in, out, s)
 }
 
 func autoConvert_v1alpha2_ProxySQLStatus_To_v1_ProxySQLStatus(in *ProxySQLStatus, out *v1.ProxySQLStatus, s conversion.Scope) error {
@@ -4265,14 +4235,9 @@ func autoConvert_v1alpha2_RedisSentinelSpec_To_v1_RedisSentinelSpec(in *RedisSen
 	out.DisableAuth = in.DisableAuth
 	out.Halted = in.Halted
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
 	out.HealthChecker = in.HealthChecker
 	return nil
-}
-
-// Convert_v1alpha2_RedisSentinelSpec_To_v1_RedisSentinelSpec is an autogenerated conversion function.
-func Convert_v1alpha2_RedisSentinelSpec_To_v1_RedisSentinelSpec(in *RedisSentinelSpec, out *v1.RedisSentinelSpec, s conversion.Scope) error {
-	return autoConvert_v1alpha2_RedisSentinelSpec_To_v1_RedisSentinelSpec(in, out, s)
 }
 
 func autoConvert_v1_RedisSentinelSpec_To_v1alpha2_RedisSentinelSpec(in *v1.RedisSentinelSpec, out *RedisSentinelSpec, s conversion.Scope) error {
@@ -4292,14 +4257,9 @@ func autoConvert_v1_RedisSentinelSpec_To_v1alpha2_RedisSentinelSpec(in *v1.Redis
 	out.DisableAuth = in.DisableAuth
 	out.Halted = in.Halted
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
 	out.HealthChecker = in.HealthChecker
 	return nil
-}
-
-// Convert_v1_RedisSentinelSpec_To_v1alpha2_RedisSentinelSpec is an autogenerated conversion function.
-func Convert_v1_RedisSentinelSpec_To_v1alpha2_RedisSentinelSpec(in *v1.RedisSentinelSpec, out *RedisSentinelSpec, s conversion.Scope) error {
-	return autoConvert_v1_RedisSentinelSpec_To_v1alpha2_RedisSentinelSpec(in, out, s)
 }
 
 func autoConvert_v1alpha2_RedisSentinelStatus_To_v1_RedisSentinelStatus(in *RedisSentinelStatus, out *v1.RedisSentinelStatus, s conversion.Scope) error {
@@ -4350,7 +4310,7 @@ func autoConvert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.Redis
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = v1.TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
 	// WARNING: in.Coordinator requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
@@ -4379,7 +4339,7 @@ func autoConvert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *Redis
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
-	out.TerminationPolicy = TerminationPolicy(in.TerminationPolicy)
+	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	return nil

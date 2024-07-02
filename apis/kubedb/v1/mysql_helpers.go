@@ -264,8 +264,8 @@ func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion, topology *core_uti
 	if m.Spec.StorageType == "" {
 		m.Spec.StorageType = StorageTypeDurable
 	}
-	if m.Spec.TerminationPolicy == "" {
-		m.Spec.TerminationPolicy = TerminationPolicyDelete
+	if m.Spec.DeletionPolicy == "" {
+		m.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
 
 	if m.UsesGroupReplication() || m.IsInnoDBCluster() || m.IsSemiSync() {

@@ -40,7 +40,7 @@ func (k *Connector) Default() {
 	}
 	connectClusterLog.Info("default", "name", k.Name)
 	if k.Spec.DeletionPolicy == "" {
-		k.Spec.DeletionPolicy = dbapi.TerminationPolicyDelete
+		k.Spec.DeletionPolicy = dbapi.DeletionPolicyDelete
 	}
 }
 
@@ -63,7 +63,7 @@ func (k *Connector) ValidateDelete() (admission.Warnings, error) {
 	connectorlog.Info("validate delete", "name", k.Name)
 
 	var allErr field.ErrorList
-	if k.Spec.DeletionPolicy == dbapi.TerminationPolicyDoNotTerminate {
+	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			k.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
@@ -74,10 +74,10 @@ func (k *Connector) ValidateDelete() (admission.Warnings, error) {
 
 func (k *Connector) ValidateCreateOrUpdate() error {
 	var allErr field.ErrorList
-	if k.Spec.DeletionPolicy == dbapi.TerminationPolicyHalt {
+	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			k.Name,
-			"TerminationPolicyHalt isn't supported for Connector"))
+			"DeletionPolicyHalt isn't supported for Connector"))
 	}
 	if len(allErr) == 0 {
 		return nil

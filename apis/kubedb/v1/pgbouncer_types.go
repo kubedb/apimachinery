@@ -98,9 +98,9 @@ type PgBouncerSpec struct {
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 
-	// TerminationPolicy controls the delete operation for database
+	// DeletionPolicy controls the delete operation for database
 	// +optional
-	TerminationPolicy PgBouncerTerminationPolicy `json:"terminationPolicy,omitempty"`
+	DeletionPolicy PgBouncerDeletionPolicy `json:"deletionPolicy,omitempty"`
 
 	// HealthChecker defines attributes of the health checker
 	// +optional
@@ -266,13 +266,13 @@ const (
 )
 
 // +kubebuilder:validation:Enum=Delete;WipeOut;DoNotTerminate
-type PgBouncerTerminationPolicy string
+type PgBouncerDeletionPolicy string
 
 const (
 	// Deletes database pods, service, pvcs but leave the stash backup data intact.
-	PgBouncerTerminationPolicyDelete PgBouncerTerminationPolicy = "Delete"
+	PgBouncerDeletionPolicyDelete PgBouncerDeletionPolicy = "Delete"
 	// Deletes database pods, service, pvcs and stash backup data.
-	PgBouncerTerminationPolicyWipeOut PgBouncerTerminationPolicy = "WipeOut"
+	PgBouncerDeletionPolicyWipeOut PgBouncerDeletionPolicy = "WipeOut"
 	// Rejects attempt to delete database using ValidationWebhook.
-	PgBouncerTerminationPolicyDoNotTerminate PgBouncerTerminationPolicy = "DoNotTerminate"
+	PgBouncerDeletionPolicyDoNotTerminate PgBouncerDeletionPolicy = "DoNotTerminate"
 )
