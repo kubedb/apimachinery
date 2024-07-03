@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+<<<<<<<< HEAD:vendor/go.etcd.io/etcd/client/pkg/v3/transport/keepalive_listener_openbsd.go
 //go:build openbsd
 
 package transport
@@ -24,3 +25,11 @@ func (l *keepAliveConn) SetKeepAlivePeriod(d time.Duration) error {
 	// Refer to https://github.com/etcd-io/etcd/issues/15811.
 	return nil
 }
+========
+// Package semconv implements OpenTelemetry semantic conventions.
+//
+// OpenTelemetry semantic conventions are agreed standardized naming
+// patterns for OpenTelemetry things. This package represents the conventions
+// as of the v1.20.0 version of the OpenTelemetry specification.
+package semconv // import "go.opentelemetry.io/otel/semconv/v1.20.0"
+>>>>>>>> origin/master:vendor/go.opentelemetry.io/otel/semconv/v1.20.0/doc.go
