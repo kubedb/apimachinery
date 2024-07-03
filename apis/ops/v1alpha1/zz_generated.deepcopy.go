@@ -3048,6 +3048,11 @@ func (in *PgBouncerOpsRequestSpec) DeepCopyInto(out *PgBouncerOpsRequestSpec) {
 		*out = new(RestartSpec)
 		**out = **in
 	}
+	if in.Timeout != nil {
+		in, out := &in.Timeout, &out.Timeout
+		*out = new(v1.Duration)
+		**out = **in
+	}
 	return
 }
 
