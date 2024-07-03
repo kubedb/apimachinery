@@ -194,7 +194,7 @@ func (m MariaDB) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
 }
 
-func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion, topology *core_util.Topology) {
+func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
 	if m == nil {
 		return
 	}

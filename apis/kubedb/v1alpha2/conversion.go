@@ -138,7 +138,7 @@ func Convert_v1alpha2_MariaDBSpec_To_v1_MariaDBSpec(in *MariaDBSpec, out *v1.Mar
 		return err
 	}
 	if len(out.PodTemplate.Spec.Containers) > 0 {
-		out.PodTemplate.Spec.Containers[0].Name = kubedb.MariaDBContainerName // db container name used in sts
+		out.PodTemplate.Spec.Containers[0].Name = kubedb.MariaDBContainerName // db container name used in petSet
 	}
 	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.RequireSSL = in.RequireSSL
@@ -485,7 +485,7 @@ func Convert_v1alpha2_MongoDBSpec_To_v1_MongoDBSpec(in *MongoDBSpec, out *v1.Mon
 				return err
 			}
 			if len((*out).Spec.Containers) > 0 {
-				(*out).Spec.Containers[0].Name = kubedb.MongoDBContainerName // db container name used in sts
+				(*out).Spec.Containers[0].Name = kubedb.MongoDBContainerName // db container name used in petSet
 			}
 		} else {
 			out := &out.PodTemplate

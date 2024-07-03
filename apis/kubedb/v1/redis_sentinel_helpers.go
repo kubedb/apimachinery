@@ -181,7 +181,7 @@ func (rs RedisSentinel) StatsServiceLabels() map[string]string {
 	return rs.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
 
-func (rs *RedisSentinel) SetDefaults(rdVersion *catalog.RedisVersion, topology *core_util.Topology) {
+func (rs *RedisSentinel) SetDefaults(rdVersion *catalog.RedisVersion) {
 	if rs == nil {
 		return
 	}

@@ -208,7 +208,7 @@ func (p PerconaXtraDB) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", p.ServiceName(), p.Namespace)
 }
 
-func (p *PerconaXtraDB) SetDefaults(pVersion *v1alpha1.PerconaXtraDBVersion, topology *core_util.Topology) {
+func (p *PerconaXtraDB) SetDefaults(pVersion *v1alpha1.PerconaXtraDBVersion) {
 	if p == nil {
 		return
 	}

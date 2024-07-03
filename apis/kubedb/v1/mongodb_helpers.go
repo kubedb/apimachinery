@@ -34,7 +34,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
-	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
@@ -608,7 +607,7 @@ func (m MongoDB) StatsServiceLabels() map[string]string {
 // it sets default ReadinessProbe, livelinessProbe, affinity, ResourceLimits & securityContext
 // then set TLSDefaults & monitor Defaults
 
-func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core_util.Topology) {
+func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion) {
 	if m == nil {
 		return
 	}

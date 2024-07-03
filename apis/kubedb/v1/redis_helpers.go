@@ -206,7 +206,7 @@ func (r Redis) StatsServiceLabels() map[string]string {
 	return r.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
 
-func (r *Redis) SetDefaults(rdVersion *catalog.RedisVersion, topology *core_util.Topology) {
+func (r *Redis) SetDefaults(rdVersion *catalog.RedisVersion) {
 	if r == nil {
 		return
 	}

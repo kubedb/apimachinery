@@ -257,7 +257,7 @@ func (m *MySQL) IsSemiSync() bool {
 		*m.Spec.Topology.Mode == MySQLModeSemiSync
 }
 
-func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion, topology *core_util.Topology) {
+func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion) {
 	if m == nil {
 		return
 	}

@@ -28,7 +28,7 @@ import (
 	core_util "kmodules.xyz/client-go/core/v1"
 )
 
-var testTopology = &core_util.Topology{
+var TestTopology = &core_util.Topology{
 	Regions: map[string][]string{
 		"us-east-1": {"us-east-1a", "us-east-1b", "us-east-1c"},
 	},
@@ -98,7 +98,7 @@ func TestMongoDB_HostAddress(t *testing.T) {
 		},
 	}
 
-	mongodb.SetDefaults(&mongodbVersion, testTopology)
+	mongodb.SetDefaults(&mongodbVersion)
 
 	shardDSN := mongodb.HostAddress()
 	t.Log(shardDSN)
@@ -164,7 +164,7 @@ func TestMongoDB_ShardDSN(t *testing.T) {
 	shardDSN := mongodb.ShardDSN(0)
 	t.Log(shardDSN)
 
-	mongodb.SetDefaults(&mongodbVersion, testTopology)
+	mongodb.SetDefaults(&mongodbVersion)
 }
 
 func TestMongoDB_ConfigSvrDSN(t *testing.T) {
@@ -238,5 +238,5 @@ func TestMongoDB_SetDefaults(t *testing.T) {
 		},
 	}
 
-	mongodb.SetDefaults(&mongodbVersion, testTopology)
+	mongodb.SetDefaults(&mongodbVersion)
 }

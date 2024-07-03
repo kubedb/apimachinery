@@ -436,7 +436,7 @@ func (e Elasticsearch) assignDefaultContainerSecurityContext(esVersion *catalog.
 	}
 }
 
-func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion, topology *core_util.Topology) {
+func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion) {
 	if e == nil {
 		return
 	}
