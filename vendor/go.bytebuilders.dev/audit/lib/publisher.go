@@ -41,8 +41,8 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/discovery"
 	"kmodules.xyz/client-go/tools/clusterid"
-	auditorapi "kmodules.xyz/custom-resources/apis/auditor/v1alpha1"
-	"kmodules.xyz/custom-resources/util/siteinfo"
+	identityapi "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
+	identitylib "kmodules.xyz/resource-metadata/pkg/identity"
 	cachex "sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
@@ -71,7 +71,7 @@ type EventPublisher struct {
 	createEvent EventCreator
 
 	siMutex gosync.Mutex
-	si      *auditorapi.SiteInfo
+	si      *identityapi.SiteInfo
 }
 
 func NewEventPublisher(
@@ -232,16 +232,16 @@ func (p *EventPublisher) SetupSiteInfoPublisherWithManager(mgr manager.Manager) 
 
 func (p *EventPublisher) setupSiteInfoPublisher(cfg *rest.Config, kc kubernetes.Interface, nodeInformer cachex.Informer, listNodes funcNodeLister) error {
 	var err error
-	p.si, err = siteinfo.GetSiteInfo(cfg, kc, nil, "")
+	p.si, err = identitylib.GetSiteInfo(cfg, kc, nil, "")
 	if err != nil {
 		return err
 	}
 	if p.si.Product == nil {
-		p.si.Product = new(auditorapi.ProductInfo)
+		p.si.Product = new(identityapi.ProductInfo)
 	}
 
 	event := func(_ client.Object) (*api.Event, error) {
-		cmeta, err := clusterid.ClusterMetadata(kc.CoreV1().Namespaces())
+		cmeta, err := clusterid.ClusterMetadata(kc)
 		if err != nil {
 			return nil, err
 		}
@@ -252,7 +252,7 @@ func (p *EventPublisher) setupSiteInfoPublisher(cfg *rest.Config, kc kubernetes.
 
 		p.siMutex.Lock()
 		p.si.Kubernetes.Cluster = cmeta
-		siteinfo.RefreshNodeStats(p.si, nodes)
+		identitylib.RefreshNodeStats(p.si, nodes)
 		p.siMutex.Unlock()
 
 		p.once.Do(p.connect)
@@ -266,10 +266,10 @@ func (p *EventPublisher) setupSiteInfoPublisher(cfg *rest.Config, kc kubernetes.
 		ev := &api.Event{
 			Resource: p.si,
 			ResourceID: kmapi.ResourceID{
-				Group:   auditorapi.SchemeGroupVersion.Group,
-				Version: auditorapi.SchemeGroupVersion.Version,
-				Name:    auditorapi.ResourceSiteInfos,
-				Kind:    auditorapi.ResourceKindSiteInfo,
+				Group:   identityapi.SchemeGroupVersion.Group,
+				Version: identityapi.SchemeGroupVersion.Version,
+				Name:    identityapi.ResourceSiteInfos,
+				Kind:    identityapi.ResourceKindSiteInfo,
 				Scope:   kmapi.ClusterScoped,
 			},
 			LicenseID: licenseID,

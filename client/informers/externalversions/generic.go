@@ -26,6 +26,7 @@ import (
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	elasticsearchv1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
 	kafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
+	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	postgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
@@ -166,6 +167,32 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kafka().V1alpha1().Connectors().Informer()}, nil
 	case kafkav1alpha1.SchemeGroupVersion.WithResource("schemaregistries"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kafka().V1alpha1().SchemaRegistries().Informer()}, nil
+
+		// Group=kubedb.com, Version=v1
+	case v1.SchemeGroupVersion.WithResource("elasticsearches"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().Elasticsearches().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("kafkas"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().Kafkas().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("mariadbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().MariaDBs().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("memcacheds"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().Memcacheds().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("mongodbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().MongoDBs().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("mysqls"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().MySQLs().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("perconaxtradbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().PerconaXtraDBs().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("pgbouncers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().PgBouncers().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("postgreses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().Postgreses().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("proxysqls"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().ProxySQLs().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("redises"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().Redises().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("redissentinels"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().RedisSentinels().Informer()}, nil
 
 		// Group=kubedb.com, Version=v1alpha2
 	case v1alpha2.SchemeGroupVersion.WithResource("clickhouses"):

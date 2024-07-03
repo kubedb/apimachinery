@@ -17,7 +17,7 @@ limitations under the License.
 package openapi
 
 import (
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	openapinamer "k8s.io/apiserver/pkg/endpoints/openapi"
@@ -145,13 +145,13 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 		"/apis/validators.schema.kubedb.com/v1alpha1/postgresdatabasewebhooks",
 	}
 
-	serverConfig.OpenAPIConfig = genericapiserver.DefaultOpenAPIConfig(dbapi.GetOpenAPIDefinitions, openapinamer.NewDefinitionNamer(scheme))
+	serverConfig.OpenAPIConfig = genericapiserver.DefaultOpenAPIConfig(olddbapi.GetOpenAPIDefinitions, openapinamer.NewDefinitionNamer(scheme))
 	serverConfig.OpenAPIConfig.Info.Title = "kubedb-webhook-server"
-	serverConfig.OpenAPIConfig.Info.Version = dbapi.SchemeGroupVersion.Version
+	serverConfig.OpenAPIConfig.Info.Version = olddbapi.SchemeGroupVersion.Version
 	serverConfig.OpenAPIConfig.IgnorePrefixes = ignorePrefixes
 
-	serverConfig.OpenAPIV3Config = genericapiserver.DefaultOpenAPIV3Config(dbapi.GetOpenAPIDefinitions, openapinamer.NewDefinitionNamer(scheme))
+	serverConfig.OpenAPIV3Config = genericapiserver.DefaultOpenAPIV3Config(olddbapi.GetOpenAPIDefinitions, openapinamer.NewDefinitionNamer(scheme))
 	serverConfig.OpenAPIV3Config.Info.Title = "kubedb-webhook-server"
-	serverConfig.OpenAPIV3Config.Info.Version = dbapi.SchemeGroupVersion.Version
+	serverConfig.OpenAPIV3Config.Info.Version = olddbapi.SchemeGroupVersion.Version
 	serverConfig.OpenAPIV3Config.IgnorePrefixes = ignorePrefixes
 }

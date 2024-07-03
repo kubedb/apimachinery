@@ -21,7 +21,7 @@ import (
 	"testing"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 
 	admission "k8s.io/api/admission/v1"
@@ -49,7 +49,7 @@ func TestNamespaceValidator_Admit(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c.testName, func(t *testing.T) {
 			validator := NamespaceValidator{
-				Resources: []string{api.ResourcePluralPostgres},
+				Resources: []string{olddbapi.ResourcePluralPostgres},
 			}
 			validator.initialized = true
 
@@ -111,7 +111,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]runtime.Object{setTerminationPolicy(sampleDatabase(), api.TerminationPolicyDoNotTerminate)},
+		[]runtime.Object{setTerminationPolicy(sampleDatabase(), olddbapi.TerminationPolicyDoNotTerminate)},
 		false,
 	},
 	{
@@ -120,7 +120,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]runtime.Object{setTerminationPolicy(sampleDatabase(), api.TerminationPolicyHalt)},
+		[]runtime.Object{setTerminationPolicy(sampleDatabase(), olddbapi.TerminationPolicyHalt)},
 		false,
 	},
 	{
@@ -129,7 +129,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]runtime.Object{setTerminationPolicy(sampleDatabase(), api.TerminationPolicyDelete)},
+		[]runtime.Object{setTerminationPolicy(sampleDatabase(), olddbapi.TerminationPolicyDelete)},
 		true,
 	},
 	{
@@ -138,7 +138,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]runtime.Object{setTerminationPolicy(sampleDatabase(), api.TerminationPolicyWipeOut)},
+		[]runtime.Object{setTerminationPolicy(sampleDatabase(), olddbapi.TerminationPolicyWipeOut)},
 		true,
 	},
 	{
@@ -164,10 +164,10 @@ func sampleNamespace() *core.Namespace {
 	}
 }
 
-func sampleDatabase() *api.Postgres {
-	return &api.Postgres{
+func sampleDatabase() *olddbapi.Postgres {
+	return &olddbapi.Postgres{
 		TypeMeta: metav1.TypeMeta{
-			APIVersion: api.SchemeGroupVersion.String(),
+			APIVersion: olddbapi.SchemeGroupVersion.String(),
 			Kind:       "Postgres",
 		},
 		ObjectMeta: metav1.ObjectMeta{
@@ -177,20 +177,20 @@ func sampleDatabase() *api.Postgres {
 				meta_util.ManagedByLabelKey: kubedb.GroupName,
 			},
 		},
-		Spec: api.PostgresSpec{
-			TerminationPolicy: api.TerminationPolicyDelete,
+		Spec: olddbapi.PostgresSpec{
+			TerminationPolicy: olddbapi.TerminationPolicyDelete,
 		},
 	}
 }
 
-func setTerminationPolicy(obj runtime.Object, terminationPolicy api.TerminationPolicy) runtime.Object {
-	db := obj.(*api.Postgres)
+func setTerminationPolicy(obj runtime.Object, terminationPolicy olddbapi.TerminationPolicy) runtime.Object {
+	db := obj.(*olddbapi.Postgres)
 	db.Spec.TerminationPolicy = terminationPolicy
 	return obj
 }
 
 func deleteTerminationPolicy(obj runtime.Object) runtime.Object {
-	db := obj.(*api.Postgres)
+	db := obj.(*olddbapi.Postgres)
 	db.Spec.TerminationPolicy = ""
 	return obj
 }

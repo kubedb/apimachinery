@@ -27,7 +27,6 @@ import (
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
-	appslister "k8s.io/client-go/listers/apps/v1"
 	corelisters "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
@@ -81,11 +80,6 @@ type Config struct {
 	// Secret
 	SecretInformer cache.SharedIndexInformer
 	SecretLister   corelisters.SecretLister
-
-	// StatefulSet Watcher
-	StsQueue    *queue.Worker
-	StsInformer cache.SharedIndexInformer
-	StsLister   appslister.StatefulSetLister
 
 	// PetSet Watcher
 	PSQueue    *queue.Worker
