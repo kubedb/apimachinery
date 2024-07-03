@@ -12,11 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-<<<<<<<< HEAD:vendor/go.etcd.io/etcd/client/pkg/v3/transport/keepalive_listener_unix.go
 //go:build !openbsd
-========
-package semconv // import "go.opentelemetry.io/otel/semconv/v1.20.0"
->>>>>>>> origin/master:vendor/go.opentelemetry.io/otel/semconv/v1.20.0/exception.go
 
 package transport
 
