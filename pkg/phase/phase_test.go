@@ -21,7 +21,7 @@ import (
 	"time"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -36,7 +36,7 @@ func TestPhaseForCondition(t *testing.T) {
 	testCases := []struct {
 		name          string
 		conditions    []kmapi.Condition
-		expectedPhase api.DatabasePhase
+		expectedPhase olddbapi.DatabasePhase
 	}{
 		{
 			name:          "No condition present yet",
@@ -51,7 +51,7 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: metav1.ConditionTrue,
 				},
 			},
-			expectedPhase: api.DatabasePhaseProvisioning,
+			expectedPhase: olddbapi.DatabasePhaseProvisioning,
 		},
 		{
 			name: "Some replicas are not ready",
@@ -65,7 +65,7 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: metav1.ConditionFalse,
 				},
 			},
-			expectedPhase: api.DatabasePhaseProvisioning,
+			expectedPhase: olddbapi.DatabasePhaseProvisioning,
 		},
 		{
 			name: "All replicas are ready but no other conditions present yet",
@@ -79,7 +79,7 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: metav1.ConditionTrue,
 				},
 			},
-			expectedPhase: api.DatabasePhaseProvisioning,
+			expectedPhase: olddbapi.DatabasePhaseProvisioning,
 		},
 		{
 			name: "Database is not accepting connection",
@@ -101,7 +101,7 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: metav1.ConditionTrue,
 				},
 			},
-			expectedPhase: api.DatabasePhaseNotReady,
+			expectedPhase: olddbapi.DatabasePhaseNotReady,
 		},
 		{
 			name: "Database is accepting connection",
@@ -119,7 +119,7 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: metav1.ConditionTrue,
 				},
 			},
-			expectedPhase: api.DatabasePhaseProvisioning,
+			expectedPhase: olddbapi.DatabasePhaseProvisioning,
 		},
 		{
 			name: "1st restore: didn't completed yet",
@@ -142,7 +142,7 @@ func TestPhaseForCondition(t *testing.T) {
 					LastTransitionTime: lastTransactionTime,
 				},
 			},
-			expectedPhase: api.DatabasePhaseDataRestoring,
+			expectedPhase: olddbapi.DatabasePhaseDataRestoring,
 		},
 		{
 			name: "1st restore: completed successfully",
@@ -165,7 +165,7 @@ func TestPhaseForCondition(t *testing.T) {
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 			},
-			expectedPhase: api.DatabasePhaseProvisioning,
+			expectedPhase: olddbapi.DatabasePhaseProvisioning,
 		},
 		{
 			name: "1st restore: failed to complete",
@@ -188,7 +188,7 @@ func TestPhaseForCondition(t *testing.T) {
 					LastTransitionTime: lastTransactionTimePlusOne,
 				},
 			},
-			expectedPhase: api.DatabasePhaseNotReady,
+			expectedPhase: olddbapi.DatabasePhaseNotReady,
 		},
 		{
 			name: "Database is not ready",
@@ -219,7 +219,7 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: metav1.ConditionFalse,
 				},
 			},
-			expectedPhase: api.DatabasePhaseCritical,
+			expectedPhase: olddbapi.DatabasePhaseCritical,
 		},
 		{
 			name: "Database is ready",
@@ -250,7 +250,7 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: metav1.ConditionTrue,
 				},
 			},
-			expectedPhase: api.DatabasePhaseReady,
+			expectedPhase: olddbapi.DatabasePhaseReady,
 		},
 		{
 			name: "Database is ready but not accepting connection",
@@ -281,7 +281,7 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: metav1.ConditionTrue,
 				},
 			},
-			expectedPhase: api.DatabasePhaseNotReady,
+			expectedPhase: olddbapi.DatabasePhaseNotReady,
 		},
 		{
 			name: "With conditions that does not have effect on phase",
@@ -316,7 +316,7 @@ func TestPhaseForCondition(t *testing.T) {
 					Status: metav1.ConditionTrue,
 				},
 			},
-			expectedPhase: api.DatabasePhaseReady,
+			expectedPhase: olddbapi.DatabasePhaseReady,
 		},
 	}
 	for _, tc := range testCases {

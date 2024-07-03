@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"sync"
 
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	admission "k8s.io/api/admission/v1"
 	core "k8s.io/api/core/v1"
@@ -99,7 +99,7 @@ func (a *NamespaceValidator) Admit(req *admission.AdmissionRequest) *admission.A
 					defer wg.Done()
 
 					list, err := a.dc.
-						Resource(api.SchemeGroupVersion.WithResource(resource)).
+						Resource(olddbapi.SchemeGroupVersion.WithResource(resource)).
 						Namespace(req.Name).
 						List(context.TODO(), metav1.ListOptions{})
 					if err != nil {
@@ -114,8 +114,8 @@ func (a *NamespaceValidator) Admit(req *admission.AdmissionRequest) *admission.A
 							return err
 						}
 						if found &&
-							(terminationPolicy == string(api.TerminationPolicyHalt) ||
-								terminationPolicy == string(api.TerminationPolicyDoNotTerminate)) {
+							(terminationPolicy == string(olddbapi.TerminationPolicyHalt) ||
+								terminationPolicy == string(olddbapi.TerminationPolicyDoNotTerminate)) {
 							return fmt.Errorf("%s %s/%s has termination policy `%s`", u.GetKind(), u.GetNamespace(), u.GetName(), terminationPolicy)
 						}
 						return nil

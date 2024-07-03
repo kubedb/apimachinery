@@ -21,8 +21,8 @@ import (
 	"fmt"
 	"strings"
 
-	apiv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
-	apiv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
@@ -34,8 +34,8 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
-func ValidateStorage(client kubernetes.Interface, storageType apiv1alpha2.StorageType, spec *core.PersistentVolumeClaimSpec, storageSpecPath ...string) error {
-	if storageType == apiv1alpha2.StorageTypeEphemeral {
+func ValidateStorage(client kubernetes.Interface, storageType olddbapi.StorageType, spec *core.PersistentVolumeClaimSpec, storageSpecPath ...string) error {
+	if storageType == olddbapi.StorageTypeEphemeral {
 		return nil
 	}
 
@@ -68,8 +68,8 @@ func ValidateStorage(client kubernetes.Interface, storageType apiv1alpha2.Storag
 	return nil
 }
 
-func ValidateStorageV1(client kubernetes.Interface, storageType apiv1.StorageType, spec *core.PersistentVolumeClaimSpec, storageSpecPath ...string) error {
-	if storageType == apiv1.StorageTypeEphemeral {
+func ValidateStorageV1(client kubernetes.Interface, storageType dbapi.StorageType, spec *core.PersistentVolumeClaimSpec, storageSpecPath ...string) error {
+	if storageType == dbapi.StorageTypeEphemeral {
 		return nil
 	}
 
@@ -124,22 +124,22 @@ func ValidateMonitorSpec(agent *mona.AgentSpec) error {
 	return fmt.Errorf(`invalid 'Agent' in '%+v'`, agent)
 }
 
-func IsStorageTypeCompatibleWithSpec(storageType apiv1alpha2.StorageType, storage *core.PersistentVolumeClaimSpec, ephemeralStorage *core.EmptyDirVolumeSource) error {
-	if storageType == apiv1alpha2.StorageTypeEphemeral && storage != nil {
+func IsStorageTypeCompatibleWithSpec(storageType olddbapi.StorageType, storage *core.PersistentVolumeClaimSpec, ephemeralStorage *core.EmptyDirVolumeSource) error {
+	if storageType == olddbapi.StorageTypeEphemeral && storage != nil {
 		return fmt.Errorf("'spec.storage' is not supported for Ephemeral storage type, use 'spec.ephemeralStorage' to configure Ephemeral storage type")
 	}
-	if storageType == apiv1alpha2.StorageTypeDurable && ephemeralStorage != nil {
+	if storageType == olddbapi.StorageTypeDurable && ephemeralStorage != nil {
 		return fmt.Errorf("'spec.ephemeralStorage' is not supported for Durable storage type, use 'spec.storage' to configure Durable storage type")
 	}
 
 	return nil
 }
 
-func IsStorageTypeCompatibleWithSpecV1(storageType apiv1.StorageType, storage *core.PersistentVolumeClaimSpec, ephemeralStorage *core.EmptyDirVolumeSource) error {
-	if storageType == apiv1.StorageTypeEphemeral && storage != nil {
+func IsStorageTypeCompatibleWithSpecV1(storageType dbapi.StorageType, storage *core.PersistentVolumeClaimSpec, ephemeralStorage *core.EmptyDirVolumeSource) error {
+	if storageType == dbapi.StorageTypeEphemeral && storage != nil {
 		return fmt.Errorf("'spec.storage' is not supported for Ephemeral storage type, use 'spec.ephemeralStorage' to configure Ephemeral storage type")
 	}
-	if storageType == apiv1.StorageTypeDurable && ephemeralStorage != nil {
+	if storageType == dbapi.StorageTypeDurable && ephemeralStorage != nil {
 		return fmt.Errorf("'spec.ephemeralStorage' is not supported for Durable storage type, use 'spec.storage' to configure Durable storage type")
 	}
 
@@ -166,7 +166,7 @@ func ValidateEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resourceType str
 	return nil
 }
 
-func ValidateInternalUsers(users map[string]apiv1alpha2.ElasticsearchUserSpec, allowedInternalUsers []string, resourceType string) error {
+func ValidateInternalUsers(users map[string]olddbapi.ElasticsearchUserSpec, allowedInternalUsers []string, resourceType string) error {
 	for user := range users {
 		present, _ := arrays.Contains(allowedInternalUsers, user)
 		if !present {
@@ -176,7 +176,7 @@ func ValidateInternalUsers(users map[string]apiv1alpha2.ElasticsearchUserSpec, a
 	return nil
 }
 
-func ValidateInternalUsersV1(users map[string]apiv1.ElasticsearchUserSpec, allowedInternalUsers []string, resourceType string) error {
+func ValidateInternalUsersV1(users map[string]dbapi.ElasticsearchUserSpec, allowedInternalUsers []string, resourceType string) error {
 	for user := range users {
 		present, _ := arrays.Contains(allowedInternalUsers, user)
 		if !present {

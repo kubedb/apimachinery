@@ -21,8 +21,8 @@ import (
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
-	apiv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -47,7 +47,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 	if err != nil {
 		return nil, err
 	}
-	if gv.Group != api.SchemeGroupVersion.Group {
+	if gv.Group != olddbapi.SchemeGroupVersion.Group {
 		return nil, nil
 	}
 	dbInfo := &databaseInfo{
@@ -64,8 +64,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 	}
 	switch owner.Kind {
 
-	case api.ResourceKindDruid:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralDruid
+	case olddbapi.ResourceKindDruid:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralDruid
 		dr, err := c.DBClient.KubedbV1alpha2().Druids(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -75,8 +75,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case apiv1.ResourceKindElasticsearch:
-		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralElasticsearch
+	case dbapi.ResourceKindElasticsearch:
+		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralElasticsearch
 		es, err := c.DBClient.KubedbV1().Elasticsearches(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -86,8 +86,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case api.ResourceKindFerretDB:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralFerretDB
+	case olddbapi.ResourceKindFerretDB:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralFerretDB
 		fr, err := c.DBClient.KubedbV1alpha2().FerretDBs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -96,8 +96,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
-	case api.ResourceKindKafka:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralKafka
+	case olddbapi.ResourceKindKafka:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralKafka
 		kf, err := c.DBClient.KubedbV1().Kafkas(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -107,8 +107,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case apiv1.ResourceKindMariaDB:
-		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralMariaDB
+	case dbapi.ResourceKindMariaDB:
+		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralMariaDB
 		md, err := c.DBClient.KubedbV1().MariaDBs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -118,8 +118,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case api.ResourceKindMemcached:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralMemcached
+	case olddbapi.ResourceKindMemcached:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralMemcached
 		mc, err := c.DBClient.KubedbV1().Memcacheds(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -129,8 +129,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case apiv1.ResourceKindMongoDB:
-		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralMongoDB
+	case dbapi.ResourceKindMongoDB:
+		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralMongoDB
 		mg, err := c.DBClient.KubedbV1().MongoDBs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -140,8 +140,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case api.ResourceKindMSSQLServer:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralMSSQLServer
+	case olddbapi.ResourceKindMSSQLServer:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralMSSQLServer
 		ms, err := c.DBClient.KubedbV1alpha2().MSSQLServers(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -151,8 +151,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case apiv1.ResourceKindMySQL:
-		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralMySQL
+	case dbapi.ResourceKindMySQL:
+		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralMySQL
 		my, err := c.DBClient.KubedbV1().MySQLs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -162,8 +162,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case apiv1.ResourceKindPerconaXtraDB:
-		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralPerconaXtraDB
+	case dbapi.ResourceKindPerconaXtraDB:
+		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralPerconaXtraDB
 		px, err := c.DBClient.KubedbV1().PerconaXtraDBs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -173,8 +173,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case api.ResourceKindPgBouncer:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralPgBouncer
+	case olddbapi.ResourceKindPgBouncer:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralPgBouncer
 		pp, err := c.DBClient.KubedbV1().PgBouncers(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -184,8 +184,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case api.ResourceKindPgpool:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralPgpool
+	case olddbapi.ResourceKindPgpool:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralPgpool
 		pp, err := c.DBClient.KubedbV1alpha2().Pgpools(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -195,8 +195,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case apiv1.ResourceKindPostgres:
-		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralPostgres
+	case dbapi.ResourceKindPostgres:
+		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralPostgres
 		pg, err := c.DBClient.KubedbV1().Postgreses(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -206,8 +206,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case apiv1.ResourceKindProxySQL:
-		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralProxySQL
+	case dbapi.ResourceKindProxySQL:
+		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralProxySQL
 		psq, err := c.DBClient.KubedbV1().ProxySQLs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -217,8 +217,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case api.ResourceKindRabbitmq:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralRabbitmq
+	case olddbapi.ResourceKindRabbitmq:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralRabbitmq
 		mq, err := c.DBClient.KubedbV1alpha2().RabbitMQs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -228,8 +228,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case apiv1.ResourceKindRedis:
-		dbInfo.opts.GVR.Resource = apiv1.ResourcePluralRedis
+	case dbapi.ResourceKindRedis:
+		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralRedis
 		rd, err := c.DBClient.KubedbV1().Redises(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -239,8 +239,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case api.ResourceKindRedisSentinel:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralRedisSentinel
+	case olddbapi.ResourceKindRedisSentinel:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralRedisSentinel
 		rds, err := c.DBClient.KubedbV1().RedisSentinels(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -250,8 +250,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case api.ResourceKindSinglestore:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralSinglestore
+	case olddbapi.ResourceKindSinglestore:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralSinglestore
 		sdb, err := c.DBClient.KubedbV1alpha2().Singlestores(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
@@ -272,8 +272,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case api.ResourceKindZooKeeper:
-		dbInfo.opts.GVR.Resource = api.ResourcePluralZooKeeper
+	case olddbapi.ResourceKindZooKeeper:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralZooKeeper
 		zk, err := c.DBClient.KubedbV1alpha2().ZooKeepers(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
