@@ -261,8 +261,8 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 			return nil, err
 		}
 
-	case kubedb.ResourceKindSolr:
-		dbInfo.opts.GVR.Resource = kubedb.ResourcePluralSolr
+	case olddbapi.ResourceKindSolr:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralSolr
 		sl, err := c.DBClient.KubedbV1alpha2().Solrs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err

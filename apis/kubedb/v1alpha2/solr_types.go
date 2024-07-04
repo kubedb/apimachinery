@@ -24,6 +24,13 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
+const (
+	ResourceCodeSolr     = "sl"
+	ResourceKindSolr     = "Solr"
+	ResourceSingularSolr = "solr"
+	ResourcePluralSolr   = "solrs"
+)
+
 // Solr is the schema for the Sole API
 
 // +genclient
