@@ -856,10 +856,6 @@ const (
 	KafkaJMXMetricReporter        = "org.apache.kafka.common.metrics.JmxReporter"
 
 	// =========================== Solr Constants ============================
-	ResourceCodeSolr      = "sl"
-	ResourceKindSolr      = "Solr"
-	ResourceSingularSolr  = "solr"
-	ResourcePluralSolr    = "solrs"
 	SolrPortName          = "http"
 	SolrRestPort          = 8983
 	SolrExporterPort      = 9854
