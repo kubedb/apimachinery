@@ -978,6 +978,8 @@ const (
 	DruidPortRouters        = 8888
 	DruidExporterPort       = 9104
 
+	DruidMetadataStorageTypePostgres = "Postgres"
+
 	// Common Runtime Configurations Properties
 	// ZooKeeper
 	DruidZKServiceHost              = "druid.zk.service.host"
