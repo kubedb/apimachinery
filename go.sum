@@ -652,8 +652,8 @@ kmodules.xyz/monitoring-agent-api v0.29.0 h1:gpFl6OZrlMLb/ySMHdREI9EwGtnJ91oZBn9
 kmodules.xyz/monitoring-agent-api v0.29.0/go.mod h1:iNbvaMTgVFOI5q2LJtGK91j4Dmjv4ZRiRdasGmWLKQI=
 kmodules.xyz/objectstore-api v0.29.1 h1:uUsjf8KU0w4LYowSEOnl0AbHT3hsHIu1wNLHqGe1o6s=
 kmodules.xyz/objectstore-api v0.29.1/go.mod h1:xG+5awH1SXYKxwN/+k1FEQvzixd5tgNqEN/1LEiB2FE=
-kmodules.xyz/offshoot-api v0.29.5-0.20240705043904-bb118b293ce9 h1:untyw2D2PwFO6HpTCE2SU3ji48ZbU/u/I8ApTDRxumM=
-kmodules.xyz/offshoot-api v0.29.5-0.20240705043904-bb118b293ce9/go.mod h1:e+NQ0s4gW/YTPWBWEfdISZcmk+tlTq8IjvP5SLdqvko=
+kmodules.xyz/offshoot-api v0.29.5-0.20240705051633-9b964183cbd3 h1:FOP2DhOK23Hn2FRqK4WlOx6Y1CK8i2moNQWa3r4xiqI=
+kmodules.xyz/offshoot-api v0.29.5-0.20240705051633-9b964183cbd3/go.mod h1:e+NQ0s4gW/YTPWBWEfdISZcmk+tlTq8IjvP5SLdqvko=
 kmodules.xyz/prober v0.29.0 h1:Ex7m4F9rH7uWNNJlLgP63ROOM+nUATJkC2L5OQ7nwMg=
 kmodules.xyz/prober v0.29.0/go.mod h1:UtK+HKyI1lFLEKX+HFLyOCVju6TO93zv3kwGpzqmKOo=
 kmodules.xyz/resource-metadata v0.18.9 h1:W/39Blg0hCvZYl0rReDIPiOMQuMN//pKVqRjhWAUrKo=
