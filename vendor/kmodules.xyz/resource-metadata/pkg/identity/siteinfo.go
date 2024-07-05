@@ -23,7 +23,7 @@ import (
 
 	clustermeta "kmodules.xyz/client-go/cluster"
 	"kmodules.xyz/client-go/tools/clusterid"
-	auditorapi "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
+	identityapi "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
 	"kmodules.xyz/resource-metrics/api"
 
 	"go.bytebuilders.dev/license-verifier/info"
@@ -35,26 +35,26 @@ import (
 	"k8s.io/client-go/rest"
 )
 
-func GetSiteInfo(cfg *rest.Config, kc kubernetes.Interface, nodes []*core.Node, licenseID string) (*auditorapi.SiteInfo, error) {
-	si := auditorapi.SiteInfo{
+func GetSiteInfo(cfg *rest.Config, kc kubernetes.Interface, nodes []*core.Node, licenseID string) (*identityapi.SiteInfo, error) {
+	si := identityapi.SiteInfo{
 		TypeMeta: metav1.TypeMeta{
-			APIVersion: auditorapi.SchemeGroupVersion.String(),
+			APIVersion: identityapi.SchemeGroupVersion.String(),
 			Kind:       "SiteInfo",
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name: SelfName,
 		},
-		Kubernetes: &auditorapi.KubernetesInfo{},
+		Kubernetes: &identityapi.KubernetesInfo{},
 	}
 
 	if info.ProductName != "" || v.Version.Version != "" || licenseID != "" {
-		si.Product = &auditorapi.ProductInfo{}
+		si.Product = &identityapi.ProductInfo{}
 		si.Product.LicenseID = licenseID
 		si.Product.ProductOwnerName = info.ProductOwnerName
 		si.Product.ProductOwnerUID = info.ProductOwnerUID
 		si.Product.ProductName = info.ProductName
 		si.Product.ProductUID = info.ProductUID
-		si.Product.Version = auditorapi.Version{
+		si.Product.Version = identityapi.Version{
 			Version:         v.Version.Version,
 			VersionStrategy: v.Version.VersionStrategy,
 			CommitHash:      v.Version.CommitHash,
@@ -81,7 +81,7 @@ func GetSiteInfo(cfg *rest.Config, kc kubernetes.Interface, nodes []*core.Node, 
 	if err != nil {
 		return nil, err
 	} else {
-		si.Kubernetes.ControlPlane = &auditorapi.ControlPlaneInfo{
+		si.Kubernetes.ControlPlane = &identityapi.ControlPlaneInfo{
 			NotBefore: metav1.NewTime(cert.NotBefore),
 			NotAfter:  metav1.NewTime(cert.NotAfter),
 			// DNSNames:       cert.DNSNames,
@@ -143,20 +143,41 @@ func GetSiteInfo(cfg *rest.Config, kc kubernetes.Interface, nodes []*core.Node, 
 	return &si, nil
 }
 
-func RefreshNodeStats(si *auditorapi.SiteInfo, nodes []*core.Node) {
+func RefreshNodeStats(si *identityapi.SiteInfo, nodes []*core.Node) {
 	if len(nodes) == 0 {
 		return
 	}
-	si.Kubernetes.NodeStats.Count = len(nodes)
 
-	var capacity core.ResourceList
-	var allocatable core.ResourceList
+	var total, cp, w identityapi.NodeStats
 	for _, node := range nodes {
-		capacity = api.AddResourceList(capacity, node.Status.Capacity)
-		allocatable = api.AddResourceList(allocatable, node.Status.Allocatable)
+		total.Count++
+		total.Capacity = api.AddResourceList(total.Capacity, node.Status.Capacity)
+		total.Allocatable = api.AddResourceList(total.Allocatable, node.Status.Allocatable)
+
+		if isControlPlaneNode(node) {
+			cp.Count++
+			cp.Capacity = api.AddResourceList(cp.Capacity, node.Status.Capacity)
+			cp.Allocatable = api.AddResourceList(cp.Allocatable, node.Status.Allocatable)
+		} else {
+			w.Count++
+			w.Capacity = api.AddResourceList(w.Capacity, node.Status.Capacity)
+			w.Allocatable = api.AddResourceList(w.Allocatable, node.Status.Allocatable)
+		}
 	}
-	si.Kubernetes.NodeStats.Capacity = capacity
-	si.Kubernetes.NodeStats.Allocatable = allocatable
+
+	si.Kubernetes.NodeStats.NodeStats = total
+	if cp.Count > 0 {
+		si.Kubernetes.NodeStats.ControlPlane = &cp
+	}
+	if w.Count > 0 {
+		si.Kubernetes.NodeStats.Workers = &w
+	}
+}
+
+func isControlPlaneNode(node *core.Node) bool {
+	_, okCP := node.Labels["node-role.kubernetes.io/control-plane"]
+	_, okMaster := node.Labels["node-role.kubernetes.io/master"]
+	return okCP || okMaster
 }
 
 func skipIP(ip net.IP) bool {

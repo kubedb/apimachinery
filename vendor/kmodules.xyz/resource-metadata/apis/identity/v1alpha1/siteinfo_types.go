@@ -76,7 +76,7 @@ type KubernetesInfo struct {
 	Cluster      *kmapi.ClusterMetadata `json:"cluster,omitempty"`
 	Version      *version.Info          `json:"version,omitempty"`
 	ControlPlane *ControlPlaneInfo      `json:"controlPlane,omitempty"`
-	NodeStats    NodeStats              `json:"nodeStats"`
+	NodeStats    NodeInfo               `json:"nodeStats"`
 }
 
 // https://github.com/kmodules/client-go/blob/kubernetes-1.16.3/tools/analytics/analytics.go#L66
@@ -87,6 +87,12 @@ type ControlPlaneInfo struct {
 	URIs           []string    `json:"uris,omitempty"`
 	NotBefore      metav1.Time `json:"notBefore"`
 	NotAfter       metav1.Time `json:"notAfter"`
+}
+
+type NodeInfo struct {
+	NodeStats    `json:",inline"`
+	ControlPlane *NodeStats `json:"controlPlane,omitempty"`
+	Workers      *NodeStats `json:"workers,omitempty"`
 }
 
 type NodeStats struct {

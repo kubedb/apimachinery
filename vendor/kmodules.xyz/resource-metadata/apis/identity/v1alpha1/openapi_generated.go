@@ -340,6 +340,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/resource-metadata/apis/identity/v1alpha1.InboxTokenRequestRequest":             schema_resource_metadata_apis_identity_v1alpha1_InboxTokenRequestRequest(ref),
 		"kmodules.xyz/resource-metadata/apis/identity/v1alpha1.InboxTokenRequestResponse":            schema_resource_metadata_apis_identity_v1alpha1_InboxTokenRequestResponse(ref),
 		"kmodules.xyz/resource-metadata/apis/identity/v1alpha1.KubernetesInfo":                       schema_resource_metadata_apis_identity_v1alpha1_KubernetesInfo(ref),
+		"kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeInfo":                             schema_resource_metadata_apis_identity_v1alpha1_NodeInfo(ref),
 		"kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeStats":                            schema_resource_metadata_apis_identity_v1alpha1_NodeStats(ref),
 		"kmodules.xyz/resource-metadata/apis/identity/v1alpha1.ProductInfo":                          schema_resource_metadata_apis_identity_v1alpha1_ProductInfo(ref),
 		"kmodules.xyz/resource-metadata/apis/identity/v1alpha1.SelfSubjectNamespaceAccessReview":     schema_resource_metadata_apis_identity_v1alpha1_SelfSubjectNamespaceAccessReview(ref),
@@ -17249,7 +17250,7 @@ func schema_resource_metadata_apis_identity_v1alpha1_KubernetesInfo(ref common.R
 					"nodeStats": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeStats"),
+							Ref:     ref("kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeInfo"),
 						},
 					},
 				},
@@ -17257,7 +17258,65 @@ func schema_resource_metadata_apis_identity_v1alpha1_KubernetesInfo(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/version.Info", "kmodules.xyz/client-go/api/v1.ClusterMetadata", "kmodules.xyz/resource-metadata/apis/identity/v1alpha1.ControlPlaneInfo", "kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeStats"},
+			"k8s.io/apimachinery/pkg/version.Info", "kmodules.xyz/client-go/api/v1.ClusterMetadata", "kmodules.xyz/resource-metadata/apis/identity/v1alpha1.ControlPlaneInfo", "kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeInfo"},
+	}
+}
+
+func schema_resource_metadata_apis_identity_v1alpha1_NodeInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"count": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"capacity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Capacity represents the total resources of a node. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+									},
+								},
+							},
+						},
+					},
+					"allocatable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Allocatable represents the resources of a node that are available for scheduling. Defaults to Capacity.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+									},
+								},
+							},
+						},
+					},
+					"controlPlane": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeStats"),
+						},
+					},
+					"workers": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeStats"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity", "kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeStats"},
 	}
 }
 

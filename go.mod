@@ -18,7 +18,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.75.1
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.75.1
-	go.bytebuilders.dev/audit v0.0.37
+	go.bytebuilders.dev/audit v0.0.38
 	gomodules.xyz/encoding v0.0.8
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.3.0
@@ -41,7 +41,7 @@ require (
 	kmodules.xyz/monitoring-agent-api v0.29.0
 	kmodules.xyz/objectstore-api v0.29.1
 	kmodules.xyz/offshoot-api v0.29.4
-	kmodules.xyz/resource-metadata v0.18.9
+	kmodules.xyz/resource-metadata v0.18.10
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/petset v0.0.6
 	kubeops.dev/sidekick v0.0.7
@@ -123,7 +123,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
-	github.com/nats-io/nats.go v1.35.0 // indirect
+	github.com/nats-io/nats.go v1.36.0 // indirect
 	github.com/nats-io/nkeys v0.4.7 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/onsi/gomega v1.33.1 // indirect
@@ -144,7 +144,7 @@ require (
 	github.com/yudai/gojsondiff v1.0.0 // indirect
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
-	go.bytebuilders.dev/license-proxyserver v0.0.8 // indirect
+	go.bytebuilders.dev/license-proxyserver v0.0.11 // indirect
 	go.bytebuilders.dev/license-verifier v0.14.1 // indirect
 	go.bytebuilders.dev/license-verifier/kubernetes v0.14.1 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.13 // indirect
