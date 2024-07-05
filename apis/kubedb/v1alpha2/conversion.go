@@ -274,6 +274,21 @@ func Convert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, out *
 	return nil
 }
 
+func Convert_v1alpha2_MySQLRouterSpec_To_v1_MySQLRouterSpec(in *MySQLRouterSpec, out *v1.MySQLRouterSpec, s conversion.Scope) error {
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	if in.PodTemplate != nil {
+		in, out := &in.PodTemplate, &out.PodTemplate
+		*out = new(ofstv2.PodTemplateSpec)
+		if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(*in, *out, s); err != nil {
+			return err
+		}
+		(*out).Spec.Containers[0].Name = kubedb.MySQLRouterContainerName
+	} else {
+		out.PodTemplate = nil
+	}
+	return nil
+}
+
 func Convert_v1alpha2_MySQLSpec_To_v1_MySQLSpec(in *MySQLSpec, out *v1.MySQLSpec, s conversion.Scope) error {
 	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
 		return err
