@@ -638,10 +638,21 @@ func Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out *Mon
 }
 
 func Convert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(in *RedisClusterSpec, out *v1.RedisClusterSpec, s conversion.Scope) error {
-	out.Shards = (*int32)(unsafe.Pointer(in.Master))
+	if in.Master != nil {
+		out.Shards = new(int32)
+		*out.Shards = *in.Master
+	} else {
+		out.Shards = nil
+	}
+	// out.Shards = (*int32)(unsafe.Pointer(in.Master))
+
 	if in.Replicas != nil {
 		replicas := *in.Replicas + 1
-		out.Replicas = (*int32)(unsafe.Pointer(&replicas))
+		out.Replicas = new(int32)
+		*out.Replicas = replicas
+		// out.Replicas = (*int32)(unsafe.Pointer(&replicas))
+	} else {
+		out.Replicas = nil
 	}
 	return nil
 }
@@ -690,10 +701,21 @@ func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec
 }
 
 func Convert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(in *v1.RedisClusterSpec, out *RedisClusterSpec, s conversion.Scope) error {
-	out.Master = (*int32)(unsafe.Pointer(in.Shards))
+	if in.Shards != nil {
+		out.Master = new(int32)
+		*out.Master = *in.Shards
+	} else {
+		out.Master = nil
+	}
+	// out.Master = (*int32)(unsafe.Pointer(in.Shards))
+
 	if in.Replicas != nil {
 		replicas := *in.Replicas - 1
-		out.Replicas = (*int32)(unsafe.Pointer(&replicas))
+		out.Replicas = new(int32)
+		*out.Replicas = replicas
+		// out.Replicas = (*int32)(unsafe.Pointer(&replicas))
+	} else {
+		out.Replicas = nil
 	}
 	return nil
 }
