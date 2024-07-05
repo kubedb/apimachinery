@@ -28641,7 +28641,7 @@ func schema_apimachinery_apis_kubedb_v1_RedisClusterSpec(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"shards": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of master nodes. It must be >= 3. If not specified, defaults to 3.",
+							Description: "Number of shards. It must be >= 3. If not specified, defaults to 3.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
