@@ -731,12 +731,12 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 			apis.SetDefaultResourceLimits(&m.Spec.Hidden.PodTemplate.Spec.Resources, defaultResource)
 			m.setDefaultSecurityContext(mgVersion, &m.Spec.Hidden.PodTemplate)
 		}
-		if m.Spec.ReplicaSet != nil {
-			if m.Spec.Coordinator.SecurityContext == nil {
-				m.Spec.Coordinator.SecurityContext = &core.SecurityContext{}
-			}
-			m.assignDefaultContainerSecurityContext(mgVersion, m.Spec.Coordinator.SecurityContext) // modeDetector container
+	}
+	if m.Spec.ShardTopology != nil || m.Spec.ReplicaSet != nil {
+		if m.Spec.Coordinator.SecurityContext == nil {
+			m.Spec.Coordinator.SecurityContext = &core.SecurityContext{}
 		}
+		m.assignDefaultContainerSecurityContext(mgVersion, m.Spec.Coordinator.SecurityContext) // modeDetector container
 	}
 
 	m.SetTLSDefaults()
