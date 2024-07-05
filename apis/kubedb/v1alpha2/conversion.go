@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"k8s.io/klog/v2"
 	"reflect"
 	"strings"
 	"unsafe"
@@ -638,6 +639,16 @@ func Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out *Mon
 }
 
 func Convert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(in *RedisClusterSpec, out *v1.RedisClusterSpec, s conversion.Scope) error {
+	// Check for nil pointers
+	if in == nil {
+		klog.Errorln("input RedisClusterSpec is nil")
+		in = &RedisClusterSpec{}
+	}
+	if out == nil {
+		klog.Errorln("output RedisClusterSpec is nil")
+		out = &v1.RedisClusterSpec{}
+	}
+
 	if in.Master != nil {
 		out.Shards = new(int32)
 		*out.Shards = *in.Master
@@ -701,22 +712,31 @@ func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec
 }
 
 func Convert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(in *v1.RedisClusterSpec, out *RedisClusterSpec, s conversion.Scope) error {
+	// Check for nil pointers
+	if in == nil {
+		klog.Errorln("input RedisClusterSpec is nil")
+		in = &v1.RedisClusterSpec{}
+	}
+	if out == nil {
+		klog.Errorln("output RedisClusterSpec is nil")
+		out = &RedisClusterSpec{}
+	}
+
 	if in.Shards != nil {
 		out.Master = new(int32)
 		*out.Master = *in.Shards
 	} else {
 		out.Master = nil
 	}
-	// out.Master = (*int32)(unsafe.Pointer(in.Shards))
 
 	if in.Replicas != nil {
 		replicas := *in.Replicas - 1
 		out.Replicas = new(int32)
 		*out.Replicas = replicas
-		// out.Replicas = (*int32)(unsafe.Pointer(&replicas))
 	} else {
 		out.Replicas = nil
 	}
+
 	return nil
 }
 
