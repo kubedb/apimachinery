@@ -639,7 +639,10 @@ func Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out *Mon
 
 func Convert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(in *RedisClusterSpec, out *v1.RedisClusterSpec, s conversion.Scope) error {
 	out.Shards = (*int32)(unsafe.Pointer(in.Master))
-	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	if in.Replicas != nil {
+		replicas := *in.Replicas + 1
+		out.Replicas = (*int32)(unsafe.Pointer(&replicas))
+	}
 	return nil
 }
 
@@ -688,7 +691,10 @@ func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec
 
 func Convert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(in *v1.RedisClusterSpec, out *RedisClusterSpec, s conversion.Scope) error {
 	out.Master = (*int32)(unsafe.Pointer(in.Shards))
-	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	if in.Replicas != nil {
+		replicas := *in.Replicas - 1
+		out.Replicas = (*int32)(unsafe.Pointer(&replicas))
+	}
 	return nil
 }
 
