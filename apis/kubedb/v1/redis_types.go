@@ -150,7 +150,7 @@ const (
 )
 
 type RedisClusterSpec struct {
-	// Number of master nodes. It must be >= 3. If not specified, defaults to 3.
+	// Number of shards. It must be >= 3. If not specified, defaults to 3.
 	Shards *int32 `json:"shards,omitempty"`
 
 	// Number of replica(s) per shard. If not specified, defaults to 2.
