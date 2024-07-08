@@ -73,7 +73,7 @@ func (k *Kafka) ValidateDelete() (admission.Warnings, error) {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
 			k.Name,
 			"Can not delete as deletionPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, k.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: ResourceKindKafka}, k.Name, allErr)
 	}
 	return nil, nil
 }
@@ -86,7 +86,7 @@ func (k *Kafka) ValidateCreateOrUpdate() error {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 			k.Name,
 			err.Error()))
-		return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, k.Name, allErr)
+		return apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: ResourceKindKafka}, k.Name, allErr)
 	}
 
 	if k.Spec.EnableSSL {
@@ -195,7 +195,7 @@ func (k *Kafka) ValidateCreateOrUpdate() error {
 	if len(allErr) == 0 {
 		return nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, k.Name, allErr)
+	return apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: ResourceKindKafka}, k.Name, allErr)
 }
 
 func (k *Kafka) validateVersion(db *Kafka) error {
