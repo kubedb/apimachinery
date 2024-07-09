@@ -39,6 +39,7 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
+	ofst_util "kmodules.xyz/offshoot-api/util"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
@@ -712,14 +713,14 @@ func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpe
 		defaultResource = kubedb.DefaultResourcesCPUIntensive
 	}
 
-	container := EnsureInitContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
+	container := ofst_util.EnsureInitContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
 	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
 
-	container = EnsureContainerExists(podTemplate, kubedb.MongoDBContainerName)
+	container = ofst_util.EnsureContainerExists(podTemplate, kubedb.MongoDBContainerName)
 	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
 
 	if moodDetectorNeeded {
-		container = EnsureContainerExists(podTemplate, kubedb.ReplicationModeDetectorContainerName)
+		container = ofst_util.EnsureContainerExists(podTemplate, kubedb.ReplicationModeDetectorContainerName)
 		m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
 	}
 }
