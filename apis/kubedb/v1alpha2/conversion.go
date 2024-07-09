@@ -27,7 +27,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/conversion"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/klog/v2"
 	clientgoapiv1 "kmodules.xyz/client-go/api/v1"
 	core_util "kmodules.xyz/client-go/core/v1"
 	monitoringagentapiapiv1 "kmodules.xyz/monitoring-agent-api/api/v1"
@@ -702,7 +701,6 @@ func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec
 	}
 	out.AllowedSchemas = (*v1.AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
-	klog.Infof("Last Check on v1alpha2 -> v1 : %d %d \n", *out.Cluster.Shards, *out.Cluster.Replicas)
 	return nil
 }
 
