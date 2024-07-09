@@ -639,20 +639,8 @@ func Convert_v1_MongoDBSpec_To_v1alpha2_MongoDBSpec(in *v1.MongoDBSpec, out *Mon
 }
 
 func Convert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(in *RedisClusterSpec, out *v1.RedisClusterSpec, s conversion.Scope) error {
-	// Check for nil pointers
-	if in == nil {
-		klog.Errorln("input RedisClusterSpec is nil")
-		in = &RedisClusterSpec{}
-	}
-	if out == nil {
-		klog.Errorln("output RedisClusterSpec is nil")
-		out = &v1.RedisClusterSpec{}
-	}
-
 	if in.Master != nil {
 		out.Shards = (*int32)(unsafe.Pointer(in.Master))
-		//out.Shards = new(int32)
-		//*out.Shards = *in.Master
 	} else {
 		out.Shards = nil
 	}
@@ -664,13 +652,6 @@ func Convert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(in *RedisClusterSp
 			return p
 		}
 		out.Replicas = convert(*in.Replicas + 1)
-
-		//out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-		//*out.Replicas = *out.Replicas + 1
-		//replicas := *in.Replicas + 1
-		//out.Replicas = new(int32)
-		//*out.Replicas = replicas
-		// out.Replicas = (*int32)(unsafe.Pointer(&replicas))
 	} else {
 		out.Replicas = nil
 	}
@@ -681,26 +662,18 @@ func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec
 	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
 		return err
 	}
+
 	if out.Cluster == nil {
 		out.Cluster = &v1.RedisClusterSpec{}
 	}
 	if err := Convert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(in.Cluster, out.Cluster, s); err != nil {
 		return err
 	}
-	klog.Infof("v1alpha2 -> v1 : %d %d \n", *out.Cluster.Shards, *out.Cluster.Replicas)
-	//{
-	//	in, out := in.Cluster, out.Cluster
-	//	out = new(v1.RedisClusterSpec)
-	//	if err := Convert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(in, out, s); err != nil {
-	//		return err
-	//	}
-	//
-	//}
+
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.Mode = v1.RedisMode(in.Mode)
 	out.SentinelRef = (*v1.RedisSentinelRef)(unsafe.Pointer(in.SentinelRef))
-	// out.Cluster = (*v1.RedisClusterSpec)(unsafe.Pointer(in.Cluster))
 	out.StorageType = v1.StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
@@ -734,29 +707,13 @@ func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec
 }
 
 func Convert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(in *v1.RedisClusterSpec, out *RedisClusterSpec, s conversion.Scope) error {
-	// Check for nil pointers
-	if in == nil {
-		klog.Errorln("input RedisClusterSpec is nil")
-		in = &v1.RedisClusterSpec{}
-	}
-	if out == nil {
-		klog.Errorln("output RedisClusterSpec is nil")
-		out = &RedisClusterSpec{}
-	}
-
 	if in.Shards != nil {
-		//out.Master = new(int32)
-		//*out.Master = *in.Shards
 		out.Master = (*int32)(unsafe.Pointer(in.Shards))
 	} else {
 		out.Master = nil
 	}
 
 	if in.Replicas != nil {
-		//replicas := *in.Replicas - 1
-		//out.Replicas = new(int32)
-		//*out.Replicas = replicas
-
 		convert := func(i int32) *int32 {
 			p := new(int32)
 			*p = i
@@ -774,27 +731,18 @@ func Convert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *RedisSpec
 	if err := Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
 		return err
 	}
+
 	if out.Cluster == nil {
 		out.Cluster = &RedisClusterSpec{}
 	}
 	if err := Convert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(in.Cluster, out.Cluster, s); err != nil {
 		return err
 	}
-	klog.Infof("v1 -> v1alpha2 : %d %d \n", *out.Cluster.Master, *out.Cluster.Replicas)
 
-	//{
-	//	in, out := in.Cluster, out.Cluster
-	//	out = new(RedisClusterSpec)
-	//	if err := Convert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(in, out, s); err != nil {
-	//		return err
-	//	}
-	//	klog.Infof("v1 -> v1alpha2 : %d %d \n", *out.Master, *out.Replicas)
-	//}
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.Mode = RedisMode(in.Mode)
 	out.SentinelRef = (*RedisSentinelRef)(unsafe.Pointer(in.SentinelRef))
-	// out.Cluster = (*RedisClusterSpec)(unsafe.Pointer(in.Cluster))
 	out.StorageType = StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
