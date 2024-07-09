@@ -714,21 +714,25 @@ func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpe
 	}
 
 	container := ofst_util.EnsureInitContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
-	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
+	m.setContainerDefaultValues(container, mgVersion, kubedb.DefaultInitContainerResource, isArbiter...)
 
 	container = ofst_util.EnsureContainerExists(podTemplate, kubedb.MongoDBContainerName)
 	m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
 
 	if moodDetectorNeeded {
 		container = ofst_util.EnsureContainerExists(podTemplate, kubedb.ReplicationModeDetectorContainerName)
-		m.setContainerDefaultValues(container, mgVersion, defaultResource, isArbiter...)
+		m.setContainerDefaultValues(container, mgVersion, kubedb.CoordinatorDefaultResources, isArbiter...)
 	}
 }
 
 func (m *MongoDB) setContainerDefaultValues(container *core.Container, mgVersion *v1alpha1.MongoDBVersion,
 	defaultResource core.ResourceRequirements, isArbiter ...bool,
 ) {
-	m.setContainerDefaultResources(container, defaultResource)
+	if len(isArbiter) > 0 && isArbiter[0] {
+		m.setContainerDefaultResources(container, kubedb.DefaultArbiter(true))
+	} else {
+		m.setContainerDefaultResources(container, defaultResource)
+	}
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
