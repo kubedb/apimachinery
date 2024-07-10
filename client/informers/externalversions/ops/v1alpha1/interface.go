@@ -58,6 +58,8 @@ type Interface interface {
 	RedisSentinelOpsRequests() RedisSentinelOpsRequestInformer
 	// SinglestoreOpsRequests returns a SinglestoreOpsRequestInformer.
 	SinglestoreOpsRequests() SinglestoreOpsRequestInformer
+	// SolrOpsRequests returns a SolrOpsRequestInformer.
+	SolrOpsRequests() SolrOpsRequestInformer
 }
 
 type version struct {
@@ -154,4 +156,9 @@ func (v *version) RedisSentinelOpsRequests() RedisSentinelOpsRequestInformer {
 // SinglestoreOpsRequests returns a SinglestoreOpsRequestInformer.
 func (v *version) SinglestoreOpsRequests() SinglestoreOpsRequestInformer {
 	return &singlestoreOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// SolrOpsRequests returns a SolrOpsRequestInformer.
+func (v *version) SolrOpsRequests() SolrOpsRequestInformer {
+	return &solrOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
