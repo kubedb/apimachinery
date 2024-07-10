@@ -275,6 +275,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().RedisSentinelOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("singlestoreopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().SinglestoreOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("solropsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().SolrOpsRequests().Informer()}, nil
 
 		// Group=postgres.kubedb.com, Version=v1alpha1
 	case postgresv1alpha1.SchemeGroupVersion.WithResource("publishers"):
