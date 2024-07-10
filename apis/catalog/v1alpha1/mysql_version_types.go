@@ -90,6 +90,8 @@ type MySQLVersionSpec struct {
 
 	// Archiver defines the walg & kube-stash-addon related specifications
 	Archiver ArchiverSpec `json:"archiver,omitempty"`
+	// +optional
+	UI []ChartInfo `json:"ui,omitempty"`
 }
 
 // MySQLVersionDatabase is the MySQL Database image
