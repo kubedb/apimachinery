@@ -91,5 +91,5 @@ type ChartInfo struct {
 	Disable bool `json:"disable,omitempty"`
 	// Values holds the values for this Helm release.
 	// +optional
-	Values *apiextensionsv1.JSON `json:"values,omitempty"`
+	Values *apiextensionsv1.JSONSchemaProps `json:"values,omitempty"`
 }

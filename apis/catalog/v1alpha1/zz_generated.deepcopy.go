@@ -22,7 +22,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -101,8 +100,7 @@ func (in *ChartInfo) DeepCopyInto(out *ChartInfo) {
 	*out = *in
 	if in.Values != nil {
 		in, out := &in.Values, &out.Values
-		*out = new(v1.JSON)
-		(*in).DeepCopyInto(*out)
+		*out = (*in).DeepCopy()
 	}
 	return
 }
@@ -216,6 +214,13 @@ func (in *ClickHouseVersionSpec) DeepCopyInto(out *ClickHouseVersionSpec) {
 	out.DB = in.DB
 	out.InitContainer = in.InitContainer
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -391,6 +396,13 @@ func (in *DruidVersionSpec) DeepCopyInto(out *DruidVersionSpec) {
 	out.DB = in.DB
 	out.InitContainer = in.InitContainer
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -594,6 +606,13 @@ func (in *ElasticsearchVersionSpec) DeepCopyInto(out *ElasticsearchVersionSpec) 
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	out.GitSyncer = in.GitSyncer
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -802,6 +821,13 @@ func (in *FerretDBVersionSpec) DeepCopyInto(out *FerretDBVersionSpec) {
 	out.DB = in.DB
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -1011,6 +1037,13 @@ func (in *KafkaVersionSpec) DeepCopyInto(out *KafkaVersionSpec) {
 	in.Stash.DeepCopyInto(&out.Stash)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -1141,6 +1174,13 @@ func (in *MSSQLServerVersionSpec) DeepCopyInto(out *MSSQLServerVersionSpec) {
 	in.Stash.DeepCopyInto(&out.Stash)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -1339,6 +1379,13 @@ func (in *MariaDBVersionSpec) DeepCopyInto(out *MariaDBVersionSpec) {
 	out.GitSyncer = in.GitSyncer
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	out.Archiver = in.Archiver
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -1467,6 +1514,13 @@ func (in *MemcachedVersionSpec) DeepCopyInto(out *MemcachedVersionSpec) {
 	out.Exporter = in.Exporter
 	out.PodSecurityPolicies = in.PodSecurityPolicies
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -1643,6 +1697,13 @@ func (in *MongoDBVersionSpec) DeepCopyInto(out *MongoDBVersionSpec) {
 	out.GitSyncer = in.GitSyncer
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	out.Archiver = in.Archiver
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -1914,6 +1975,13 @@ func (in *MySQLVersionSpec) DeepCopyInto(out *MySQLVersionSpec) {
 	out.GitSyncer = in.GitSyncer
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	out.Archiver = in.Archiver
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -2079,6 +2147,13 @@ func (in *PerconaXtraDBVersionSpec) DeepCopyInto(out *PerconaXtraDBVersionSpec) 
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	out.GitSyncer = in.GitSyncer
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -2228,6 +2303,13 @@ func (in *PgBouncerVersionSpec) DeepCopyInto(out *PgBouncerVersionSpec) {
 	out.Exporter = in.Exporter
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -2376,6 +2458,13 @@ func (in *PgpoolVersionSpec) DeepCopyInto(out *PgpoolVersionSpec) {
 	out.Pgpool = in.Pgpool
 	out.Exporter = in.Exporter
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -2703,6 +2792,13 @@ func (in *ProxySQLVersionSpec) DeepCopyInto(out *ProxySQLVersionSpec) {
 	out.PodSecurityPolicies = in.PodSecurityPolicies
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -2814,6 +2910,13 @@ func (in *RabbitMQVersionSpec) DeepCopyInto(out *RabbitMQVersionSpec) {
 	out.DB = in.DB
 	out.InitContainer = in.InitContainer
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
@@ -2979,6 +3082,13 @@ func (in *RedisVersionSpec) DeepCopyInto(out *RedisVersionSpec) {
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	out.GitSyncer = in.GitSyncer
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	if in.UI != nil {
+		in, out := &in.UI, &out.UI
+		*out = make([]ChartInfo, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 
