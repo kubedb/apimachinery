@@ -30894,16 +30894,16 @@ func schema_apimachinery_apis_ops_v1alpha1_RedisHorizontalScalingSpec(ref common
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"master": {
+					"shards": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of Masters in the cluster",
+							Description: "Number of shards in the cluster",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "specifies the number of replica for the master",
+							Description: "specifies the number of replica of the shards",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
