@@ -28088,13 +28088,13 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisHorizontalScalingSpec": {
       "type": "object",
       "properties": {
-        "master": {
-          "description": "Number of Masters in the cluster",
+        "replicas": {
+          "description": "specifies the number of replica of the shards",
           "type": "integer",
           "format": "int32"
         },
-        "replicas": {
-          "description": "specifies the number of replica for the master",
+        "shards": {
+          "description": "Number of shards in the cluster",
           "type": "integer",
           "format": "int32"
         }
