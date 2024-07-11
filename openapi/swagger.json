@@ -20980,6 +20980,31 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ChartInfo": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "disable": {
+          "description": "Disable installing this chart",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name specifies the name of the chart",
+          "type": "string",
+          "default": ""
+        },
+        "values": {
+          "description": "Values holds the values for this Helm release.",
+          "$ref": "#/definitions/io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.JSON"
+        },
+        "version": {
+          "description": "Version specifies the version of the chart.",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchDashboardVersionDatabase": {
       "description": "ElasticsearchDashboardVersionDatabase is the Elasticsearch Dashboard image",
       "type": "object",
@@ -21207,6 +21232,13 @@
           "description": "Stash defines backup and restore task definitions.",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
+        },
+        "ui": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ChartInfo"
+          }
         },
         "updateConstraints": {
           "description": "update constraints",
@@ -21522,6 +21554,13 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.SecurityContext"
         },
+        "ui": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ChartInfo"
+          }
+        },
         "version": {
           "description": "Version",
           "type": "string",
@@ -21721,6 +21760,13 @@
           "description": "Stash defines backup and restore task definitions.",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
+        },
+        "ui": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ChartInfo"
+          }
         },
         "updateConstraints": {
           "description": "update constraints",
@@ -22020,6 +22066,13 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
+        "ui": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ChartInfo"
+          }
+        },
         "updateConstraints": {
           "description": "update constraints",
           "default": {},
@@ -22211,6 +22264,13 @@
           "description": "Stash defines backup and restore task definitions.",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
+        },
+        "ui": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ChartInfo"
+          }
         },
         "updateConstraints": {
           "description": "update constraints",
@@ -22430,6 +22490,13 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
+        "ui": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ChartInfo"
+          }
+        },
         "updateConstraints": {
           "description": "update constraints",
           "default": {},
@@ -22573,6 +22640,13 @@
           "description": "SecurityContext is for the additional config for the DB container",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.SecurityContext"
+        },
+        "ui": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ChartInfo"
+          }
         },
         "updateConstraints": {
           "description": "update constraints",
@@ -22764,6 +22838,13 @@
           "description": "Stash defines backup and restore task definitions.",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
+        },
+        "ui": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ChartInfo"
+          }
         },
         "updateConstraints": {
           "description": "update constraints",
@@ -23396,9 +23477,6 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
-        "gateway": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -23629,9 +23707,6 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
-        "gateway": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -23640,45 +23715,6 @@
         "phase": {
           "description": "Specifies the current phase of the database",
           "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway": {
-      "type": "object",
-      "required": [
-        "name",
-        "namespace"
-      ],
-      "properties": {
-        "hostname": {
-          "type": "string"
-        },
-        "ip": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string",
-          "default": ""
-        },
-        "namespace": {
-          "type": "string",
-          "default": ""
-        },
-        "services": {
-          "description": "Services is an optional configuration for services used to expose database",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceStatus"
-          }
-        },
-        "ui": {
-          "description": "UI is an optional list of database web uis",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedURL"
-          }
         }
       }
     },
@@ -23935,9 +23971,6 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
-        "gateway": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -24096,9 +24129,6 @@
             "default": {},
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
-        },
-        "gateway": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
         },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
@@ -24470,9 +24500,6 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
-        "gateway": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -24736,9 +24763,6 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
-        "gateway": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -24831,27 +24855,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceStatus": {
-      "type": "object",
-      "required": [
-        "alias",
-        "ports"
-      ],
-      "properties": {
-        "alias": {
-          "description": "Alias represents the identifier of the service.",
-          "type": "string",
-          "default": ""
-        },
-        "ports": {
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.GatewayPort"
-          }
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec": {
       "type": "object",
       "required": [
@@ -24872,33 +24875,6 @@
           "description": "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceSpec"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedURL": {
-      "type": "object",
-      "required": [
-        "alias",
-        "url"
-      ],
-      "properties": {
-        "alias": {
-          "description": "Alias represents the identifier of the service. This should match the db ui chart name",
-          "type": "string",
-          "default": ""
-        },
-        "helmRelease": {
-          "description": "HelmRelease is the name of the helm release used to deploy this ui The name format is typically \u003calias\u003e-\u003cdb-name\u003e",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
-        },
-        "port": {
-          "default": {},
-          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.GatewayPort"
-        },
-        "url": {
-          "description": "URL of the database ui",
-          "type": "string",
-          "default": ""
         }
       }
     },
@@ -25074,9 +25050,6 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
-        "gateway": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -25236,9 +25209,6 @@
             "default": {},
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
-        },
-        "gateway": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
         },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
@@ -25532,9 +25502,6 @@
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
         },
-        "gateway": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
           "type": "integer",
@@ -25720,9 +25687,6 @@
             "default": {},
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
-        },
-        "gateway": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
         },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
@@ -25941,9 +25905,6 @@
             "default": {},
             "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
           }
-        },
-        "gateway": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Gateway"
         },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
@@ -31203,6 +31164,9 @@
         }
       }
     },
+    "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.JSON": {
+      "description": "JSON represents any valid JSON value. These types are supported: bool, int64, float64, string, []interface{}, map[string]interface{} and nil."
+    },
     "io.k8s.apimachinery.pkg.api.resource.Quantity": {
       "description": "Quantity is a fixed-point representation of a number. It provides convenient marshaling/unmarshaling in JSON and YAML, in addition to String() and AsInt64() accessors.\n\nThe serialization format is:\n\n``` \u003cquantity\u003e        ::= \u003csignedNumber\u003e\u003csuffix\u003e\n\n\t(Note that \u003csuffix\u003e may be empty, from the \"\" case in \u003cdecimalSI\u003e.)\n\n\u003cdigit\u003e           ::= 0 | 1 | ... | 9 \u003cdigits\u003e          ::= \u003cdigit\u003e | \u003cdigit\u003e\u003cdigits\u003e \u003cnumber\u003e          ::= \u003cdigits\u003e | \u003cdigits\u003e.\u003cdigits\u003e | \u003cdigits\u003e. | .\u003cdigits\u003e \u003csign\u003e            ::= \"+\" | \"-\" \u003csignedNumber\u003e    ::= \u003cnumber\u003e | \u003csign\u003e\u003cnumber\u003e \u003csuffix\u003e          ::= \u003cbinarySI\u003e | \u003cdecimalExponent\u003e | \u003cdecimalSI\u003e \u003cbinarySI\u003e        ::= Ki | Mi | Gi | Ti | Pi | Ei\n\n\t(International System of units; See: http://physics.nist.gov/cuu/Units/binary.html)\n\n\u003cdecimalSI\u003e       ::= m | \"\" | k | M | G | T | P | E\n\n\t(Note that 1024 = 1Ki but 1000 = 1k; I didn't choose the capitalization.)\n\n\u003cdecimalExponent\u003e ::= \"e\" \u003csignedNumber\u003e | \"E\" \u003csignedNumber\u003e ```\n\nNo matter which of the three exponent forms is used, no quantity may represent a number greater than 2^63-1 in magnitude, nor may it have more than 3 decimal places. Numbers larger or more precise will be capped or rounded up. (E.g.: 0.1m will rounded up to 1m.) This may be extended in the future if we require larger or smaller quantities.\n\nWhen a Quantity is parsed from a string, it will remember the type of suffix it had, and will use the same type again when it is serialized.\n\nBefore serializing, Quantity will be put in \"canonical form\". This means that Exponent/suffix will be adjusted up or down (with a corresponding increase or decrease in Mantissa) such that:\n\n- No precision is lost - No fractional digits will be emitted - The exponent (or suffix) is as large as possible.\n\nThe sign will be omitted unless the number is negative.\n\nExamples:\n\n- 1.5 will be serialized as \"1500m\" - 1.5Gi will be serialized as \"1536Mi\"\n\nNote that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.\n\nNon-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)\n\nThis format is intended to make it difficult to use these numbers without writing some sort of special handling code in the hopes that that will cause implementors to also use a fixed point implementation.",
       "type": "string"
@@ -32411,35 +32375,6 @@
         "volumeClaimTemplate": {
           "description": "Will be used to create a stand-alone PVC to provision the volume. The pod in which this EphemeralVolumeSource is embedded will be the owner of the PVC, i.e. the PVC will be deleted together with the pod.  The name of the PVC will be `\u003cpod name\u003e-\u003cvolume name\u003e` where `\u003cvolume name\u003e` is the name from the `PodSpec.Volumes` array entry. Pod validation will reject the pod if the concatenated name is not valid for a PVC (for example, too long).\n\nAn existing PVC with that name that is not owned by the pod will *not* be used for the pod to avoid using an unrelated volume by mistake. Starting the pod is then blocked until the unrelated PVC is removed. If such a pre-created PVC is meant to be used by the pod, the PVC has to updated with an owner reference to the pod once the pod exists. Normally this should not be necessary, but it may be useful when manually reconstructing a broken cluster.\n\nThis field is read-only and no changes will be made by Kubernetes to the PVC after it has been created.\n\nRequired, must not be nil.",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PersistentVolumeClaimTemplate"
-        }
-      }
-    },
-    "xyz.kmodules.offshoot-api.api.v1.GatewayPort": {
-      "description": "GatewayPort contains information on Gateway service's port.",
-      "type": "object",
-      "required": [
-        "port"
-      ],
-      "properties": {
-        "backendServicePort": {
-          "description": "Number of the port to access the backend service.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "name": {
-          "description": "The name of this port within the gateway service.",
-          "type": "string"
-        },
-        "nodePort": {
-          "description": "The port on each node on which this gateway service is exposed when type is NodePort or LoadBalancer.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "port": {
-          "description": "The port that will be exposed by the gateway service.",
-          "type": "integer",
-          "format": "int32",
-          "default": 0
         }
       }
     },
