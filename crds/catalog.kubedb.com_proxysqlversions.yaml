@@ -80,7 +80,6 @@ spec:
                     name:
                       type: string
                     values:
-                      type: object
                       x-kubernetes-preserve-unknown-fields: true
                     version:
                       type: string

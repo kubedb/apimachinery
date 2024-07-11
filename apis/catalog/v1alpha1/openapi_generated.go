@@ -25391,7 +25391,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ChartInfo(ref common.ReferenceCal
 					"values": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Values holds the values for this Helm release.",
-							Ref:         ref("k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.JSONSchemaProps"),
+							Ref:         ref("k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.JSON"),
 						},
 					},
 				},
@@ -25399,7 +25399,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ChartInfo(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.JSONSchemaProps"},
+			"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.JSON"},
 	}
 }
 

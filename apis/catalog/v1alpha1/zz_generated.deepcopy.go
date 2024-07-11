@@ -22,6 +22,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	v1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -100,7 +101,8 @@ func (in *ChartInfo) DeepCopyInto(out *ChartInfo) {
 	*out = *in
 	if in.Values != nil {
 		in, out := &in.Values, &out.Values
-		*out = (*in).DeepCopy()
+		*out = new(v1.JSON)
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }
