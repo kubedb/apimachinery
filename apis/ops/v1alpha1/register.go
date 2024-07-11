@@ -76,6 +76,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PostgresOpsRequestList{},
 		&PgpoolOpsRequest{},
 		&PgpoolOpsRequestList{},
+		&PgBouncerOpsRequest{},
+		&PgBouncerOpsRequestList{},
 		&ProxySQLOpsRequest{},
 		&ProxySQLOpsRequestList{},
 		&RabbitMQOpsRequest{},
