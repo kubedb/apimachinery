@@ -32,7 +32,7 @@ require (
 	k8s.io/component-base v0.30.2
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/kube-aggregator v0.30.2
-	k8s.io/kube-openapi v0.0.0-20240620174524-b456828f718b
+	k8s.io/kube-openapi v0.0.0-20240703190633-0aa61b46e8c2
 	k8s.io/metrics v0.30.2
 	k8s.io/utils v0.0.0-20240502163921-fe8a2dddb1d0
 	kmodules.xyz/client-go v0.30.9
@@ -40,7 +40,7 @@ require (
 	kmodules.xyz/custom-resources v0.30.0
 	kmodules.xyz/monitoring-agent-api v0.29.0
 	kmodules.xyz/objectstore-api v0.29.1
-	kmodules.xyz/offshoot-api v0.29.5-0.20240705043904-bb118b293ce9
+	kmodules.xyz/offshoot-api v0.30.0
 	kmodules.xyz/resource-metadata v0.18.10
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/petset v0.0.6
