@@ -90,7 +90,10 @@ type MemcachedUpdateVersionSpec struct {
 }
 
 // HorizontalScaling is the spec for Memcached horizontal scaling
-type MemcachedHorizontalScalingSpec struct{}
+type MemcachedHorizontalScalingSpec struct {
+	// specifies the number of replica
+	Replicas *int32 `json:"replicas,omitempty"`
+}
 
 // MemcachedVerticalScalingSpec is the spec for Memcached vertical scaling
 type MemcachedVerticalScalingSpec struct {

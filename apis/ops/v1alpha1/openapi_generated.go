@@ -27380,6 +27380,15 @@ func schema_apimachinery_apis_ops_v1alpha1_MemcachedHorizontalScalingSpec(ref co
 			SchemaProps: spec.SchemaProps{
 				Description: "HorizontalScaling is the spec for Memcached horizontal scaling",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "specifies the number of replica",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
 			},
 		},
 	}

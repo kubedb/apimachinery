@@ -26662,7 +26662,14 @@
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for Memcached horizontal scaling",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "replicas": {
+          "description": "specifies the number of replica",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedOpsRequest": {
       "type": "object",
