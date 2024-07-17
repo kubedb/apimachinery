@@ -55,6 +55,8 @@ type SinglestoreOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type SinglestoreOpsRequestType `json:"type"`
+	// Specifies information necessary for horizontal scaling
+	HorizontalScaling *SinglestoreHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *SinglestoreVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for volume expansion
@@ -70,9 +72,17 @@ type SinglestoreOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart;Configuration
-// ENUM(VerticalScaling, VolumeExpansion, Restart, Configuration)
+// +kubebuilder:validation:Enum=HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Configuration
+// ENUM(HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Configuration)
 type SinglestoreOpsRequestType string
+
+// SinglestoreHorizontalScalingSpec contains the horizontal scaling information of a Singlestore cluster
+type SinglestoreHorizontalScalingSpec struct {
+	// number of Aggregator node
+	Aggregator *int32 `json:"aggregator,omitempty"`
+	// number of Leaf node
+	Leaf *int32 `json:"leaf,omitempty"`
+}
 
 // SinglestoreVerticalScalingSpec contains the vertical scaling information of a Singlestore cluster
 type SinglestoreVerticalScalingSpec struct {
