@@ -111,3 +111,13 @@ const (
 	SchemaRegistryOperatorVolumeConfig = "registry-operator-config"
 	SchemaRegistryOperatorConfigPath   = "/deployments/config"
 )
+
+// RestProxy constants
+
+const (
+	RestProxyPrimaryPortName = "primary"
+	RestProxyPortName        = "restproxy"
+	RestProxyRESTPort        = 8082
+	RestProxyContainerName   = "rest-proxy"
+	RestProxyConfigFileName  = "karapace.config.json"
+)

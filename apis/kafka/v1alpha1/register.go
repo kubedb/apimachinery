@@ -60,6 +60,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ConnectorList{},
 		&SchemaRegistry{},
 		&SchemaRegistryList{},
+		&RestProxy{},
+		&RestProxyList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

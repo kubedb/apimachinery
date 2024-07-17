@@ -37,6 +37,10 @@ func (c *FakeKafkaV1alpha1) Connectors(namespace string) v1alpha1.ConnectorInter
 	return &FakeConnectors{c, namespace}
 }
 
+func (c *FakeKafkaV1alpha1) RestProxies(namespace string) v1alpha1.RestProxyInterface {
+	return &FakeRestProxies{c, namespace}
+}
+
 func (c *FakeKafkaV1alpha1) SchemaRegistries(namespace string) v1alpha1.SchemaRegistryInterface {
 	return &FakeSchemaRegistries{c, namespace}
 }
