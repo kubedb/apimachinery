@@ -932,6 +932,7 @@ const (
 	ProxyServiceName    = "proxy-svc"
 	ProxySecretName     = "proxy-env"
 	ProxyImage          = "andrewgaul/s3proxy"
+	ProxyPortName       = "http"
 	ProxyPortNumber     = 80
 	ProxyContainerName  = "proxy"
 	ProxyLabelsApp      = "app"
