@@ -927,6 +927,12 @@ const (
 	SolrConfAllowPathsValue        = ""
 	SolrConfSolrCloudKey           = "solrcloud"
 	SolrConfShardHandlerFactoryKey = "shardHandlerFactory"
+
+	ProxyDeploymentName = "s3proxy"
+	ProxyServiceName    = "proxy-svc"
+	ProxySecretName     = "proxy-env"
+	ProxyPortNumber     = 80
+	ProxyContainerName  = "proxy"
 )
 
 // =========================== Druid Constants ============================
