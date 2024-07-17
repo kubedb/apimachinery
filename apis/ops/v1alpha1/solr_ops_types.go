@@ -19,6 +19,7 @@ package v1alpha1
 
 import (
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -48,8 +49,8 @@ type SolrOpsRequest struct {
 	Status            OpsRequestStatus   `json:"status,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart
-// ENUM(Restart)
+// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart
+// ENUM(VerticalScaling, VolumeExpansion, Restart)
 type SolrOpsRequestType string
 
 // DruidOpsRequestSpec is the spec for DruidOpsRequest
@@ -58,6 +59,10 @@ type SolrOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type SolrOpsRequestType `json:"type"`
+	// Specifies information necessary for vertical scaling
+	VerticalScaling *SolrVerticalScalingSpec `json:"verticalScaling,omitempty"`
+	// Specifies information necessary for volume expansion
+	VolumeExpansion *SolrVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
@@ -65,6 +70,29 @@ type SolrOpsRequestSpec struct {
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
 	// +kubebuilder:default="IfReady"
 	Apply ApplyOption `json:"apply,omitempty"`
+}
+
+type SolrVerticalScalingSpec struct {
+	// Resource spec for combined nodes
+	Node *PodResources `json:"node,omitempty"`
+	// Resource spec for data nodes
+	Data *PodResources `json:"data,omitempty"`
+	// Resource spec for overseer nodes
+	Overseer *PodResources `json:"overseer,omitempty"`
+	// Resource spec for overseer nodes
+	Coordinator *PodResources `json:"coordinator,omitempty"`
+}
+
+type SolrVolumeExpansionSpec struct {
+	Mode VolumeExpansionMode `json:"mode"`
+	// volume specification for combined nodes
+	Node *resource.Quantity `json:"node,omitempty"`
+	// volume specification for data nodes
+	Data *resource.Quantity `json:"data,omitempty"`
+	// volume specification for overseer nodes
+	Overseer *resource.Quantity `json:"overseer,omitempty"`
+	// volume specification for overseer nodes
+	Coordinator *resource.Quantity `json:"coordinator,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
