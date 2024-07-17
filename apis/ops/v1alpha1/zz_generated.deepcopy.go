@@ -1811,6 +1811,11 @@ func (in *MemcachedVerticalScalingSpec) DeepCopyInto(out *MemcachedVerticalScali
 		*out = new(PodResources)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Exporter != nil {
+		in, out := &in.Exporter, &out.Exporter
+		*out = new(ContainerResources)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.ReadinessCriteria != nil {
 		in, out := &in.ReadinessCriteria, &out.ReadinessCriteria
 		*out = new(MemcachedReplicaReadinessCriteria)

@@ -26812,6 +26812,9 @@
       "description": "MemcachedVerticalScalingSpec is the spec for Memcached vertical scaling",
       "type": "object",
       "properties": {
+        "exporter": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
+        },
         "memcached": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },

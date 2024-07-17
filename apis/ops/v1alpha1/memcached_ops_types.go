@@ -98,6 +98,7 @@ type MemcachedHorizontalScalingSpec struct {
 // MemcachedVerticalScalingSpec is the spec for Memcached vertical scaling
 type MemcachedVerticalScalingSpec struct {
 	Memcached         *PodResources                      `json:"memcached,omitempty"`
+	Exporter          *ContainerResources                `json:"exporter,omitempty"`
 	ReadinessCriteria *MemcachedReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`
 }
 
