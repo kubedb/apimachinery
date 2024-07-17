@@ -933,6 +933,7 @@ const (
 	ProxySecretName     = "proxy-env"
 	ProxyPortNumber     = 80
 	ProxyContainerName  = "proxy"
+	ProxyLabelsApp      = "app"
 )
 
 // =========================== Druid Constants ============================
