@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: memcachedautoscalers.autoscaling.kubedb.com
+  name: clickhouseautoscalers.autoscaling.kubedb.com
 spec:
   group: autoscaling.kubedb.com
   names:
@@ -12,12 +12,12 @@ spec:
     - datastore
     - kubedb
     - appscode
-    kind: MemcachedAutoscaler
-    listKind: MemcachedAutoscalerList
-    plural: memcachedautoscalers
+    kind: ClickHouseAutoscaler
+    listKind: ClickHouseAutoscalerList
+    plural: clickhouseautoscalers
     shortNames:
-    - mcscaler
-    singular: memcachedautoscaler
+    - chscaler
+    singular: clickhouseautoscaler
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -34,7 +34,7 @@ spec:
             properties:
               compute:
                 properties:
-                  memcached:
+                  clickhouse:
                     properties:
                       containerControlledValues:
                         enum:
@@ -107,14 +107,12 @@ spec:
                     - IfReady
                     - Always
                     type: string
-                  readinessCriteria:
-                    type: object
                   timeout:
                     type: string
                 type: object
               storage:
                 properties:
-                  memcached:
+                  clickhouse:
                     properties:
                       expansionMode:
                         enum:

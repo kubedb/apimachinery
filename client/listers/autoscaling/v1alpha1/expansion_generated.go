@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// ClickHouseAutoscalerListerExpansion allows custom methods to be added to
+// ClickHouseAutoscalerLister.
+type ClickHouseAutoscalerListerExpansion interface{}
+
+// ClickHouseAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// ClickHouseAutoscalerNamespaceLister.
+type ClickHouseAutoscalerNamespaceListerExpansion interface{}
+
 // DruidAutoscalerListerExpansion allows custom methods to be added to
 // DruidAutoscalerLister.
 type DruidAutoscalerListerExpansion interface{}
@@ -42,6 +50,14 @@ type EtcdAutoscalerListerExpansion interface{}
 // EtcdAutoscalerNamespaceLister.
 type EtcdAutoscalerNamespaceListerExpansion interface{}
 
+// FerretDBAutoscalerListerExpansion allows custom methods to be added to
+// FerretDBAutoscalerLister.
+type FerretDBAutoscalerListerExpansion interface{}
+
+// FerretDBAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// FerretDBAutoscalerNamespaceLister.
+type FerretDBAutoscalerNamespaceListerExpansion interface{}
+
 // KafkaAutoscalerListerExpansion allows custom methods to be added to
 // KafkaAutoscalerLister.
 type KafkaAutoscalerListerExpansion interface{}
@@ -49,6 +65,14 @@ type KafkaAutoscalerListerExpansion interface{}
 // KafkaAutoscalerNamespaceListerExpansion allows custom methods to be added to
 // KafkaAutoscalerNamespaceLister.
 type KafkaAutoscalerNamespaceListerExpansion interface{}
+
+// MSSQLServerAutoscalerListerExpansion allows custom methods to be added to
+// MSSQLServerAutoscalerLister.
+type MSSQLServerAutoscalerListerExpansion interface{}
+
+// MSSQLServerAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// MSSQLServerAutoscalerNamespaceLister.
+type MSSQLServerAutoscalerNamespaceListerExpansion interface{}
 
 // MariaDBAutoscalerListerExpansion allows custom methods to be added to
 // MariaDBAutoscalerLister.
@@ -153,3 +177,19 @@ type SinglestoreAutoscalerListerExpansion interface{}
 // SinglestoreAutoscalerNamespaceListerExpansion allows custom methods to be added to
 // SinglestoreAutoscalerNamespaceLister.
 type SinglestoreAutoscalerNamespaceListerExpansion interface{}
+
+// SolrAutoscalerListerExpansion allows custom methods to be added to
+// SolrAutoscalerLister.
+type SolrAutoscalerListerExpansion interface{}
+
+// SolrAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// SolrAutoscalerNamespaceLister.
+type SolrAutoscalerNamespaceListerExpansion interface{}
+
+// ZooKeeperAutoscalerListerExpansion allows custom methods to be added to
+// ZooKeeperAutoscalerLister.
+type ZooKeeperAutoscalerListerExpansion interface{}
+
+// ZooKeeperAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// ZooKeeperAutoscalerNamespaceLister.
+type ZooKeeperAutoscalerNamespaceListerExpansion interface{}
