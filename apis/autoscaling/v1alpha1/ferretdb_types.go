@@ -24,13 +24,13 @@ import (
 )
 
 const (
-	ResourceCodeMemcachedAutoscaler     = "mcscaler"
-	ResourceKindMemcachedAutoscaler     = "MemcachedAutoscaler"
-	ResourceSingularMemcachedAutoscaler = "memcachedautoscaler"
-	ResourcePluralMemcachedAutoscaler   = "memcachedautoscalers"
+	ResourceCodeFerretDBAutoscaler     = "frscaler"
+	ResourceKindFerretDBAutoscaler     = "FerretDBAutoscaler"
+	ResourceSingularFerretDBAutoscaler = "ferretdbautoscaler"
+	ResourcePluralFerretDBAutoscaler   = "ferretdbautoscalers"
 )
 
-// MemcachedAutoscaler is the configuration for a memcached database
+// FerretDBAutoscaler is the configuration for a ferretdb database
 // autoscaler, which automatically manages pod resources based on historical and
 // real time resource utilization.
 
@@ -39,9 +39,9 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=memcachedautoscalers,singular=memcachedautoscaler,shortName=mcscaler,categories={datastore,kubedb,appscode}
+// +kubebuilder:resource:path=ferretdbautoscalers,singular=ferretdbautoscaler,shortName=frscaler,categories={datastore,kubedb,appscode}
 // +kubebuilder:subresource:status
-type MemcachedAutoscaler struct {
+type FerretDBAutoscaler struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
 	// +optional
@@ -49,39 +49,36 @@ type MemcachedAutoscaler struct {
 
 	// Specification of the behavior of the autoscaler.
 	// More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status.
-	Spec MemcachedAutoscalerSpec `json:"spec"`
+	Spec FerretDBAutoscalerSpec `json:"spec"`
 
 	// Current information about the autoscaler.
 	// +optional
 	Status AutoscalerStatus `json:"status,omitempty"`
 }
 
-// MemcachedAutoscalerSpec is the specification of the behavior of the autoscaler.
-type MemcachedAutoscalerSpec struct {
+// FerretDBAutoscalerSpec is the specification of the behavior of the autoscaler.
+type FerretDBAutoscalerSpec struct {
 	DatabaseRef *core.LocalObjectReference `json:"databaseRef"`
 
 	// This field will be used to control the behaviour of ops-manager
-	OpsRequestOptions *MemcachedOpsRequestOptions `json:"opsRequestOptions,omitempty"`
+	OpsRequestOptions *FerretDBOpsRequestOptions `json:"opsRequestOptions,omitempty"`
 
-	Compute *MemcachedComputeAutoscalerSpec `json:"compute,omitempty"`
-	Storage *MemcachedStorageAutoscalerSpec `json:"storage,omitempty"`
+	Compute *FerretDBComputeAutoscalerSpec `json:"compute,omitempty"`
+	Storage *FerretDBStorageAutoscalerSpec `json:"storage,omitempty"`
 }
 
-type MemcachedComputeAutoscalerSpec struct {
+type FerretDBComputeAutoscalerSpec struct {
 	// +optional
 	NodeTopology *NodeTopology `json:"nodeTopology,omitempty"`
 
-	Memcached *ComputeAutoscalerSpec `json:"memcached,omitempty"`
+	FerretDB *ComputeAutoscalerSpec `json:"ferretdb,omitempty"`
 }
 
-type MemcachedStorageAutoscalerSpec struct {
-	Memcached *StorageAutoscalerSpec `json:"memcached,omitempty"`
+type FerretDBStorageAutoscalerSpec struct {
+	FerretDB *StorageAutoscalerSpec `json:"ferretdb,omitempty"`
 }
 
-type MemcachedOpsRequestOptions struct {
-	// Specifies the Readiness Criteria
-	ReadinessCriteria *opsapi.MemcachedReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`
-
+type FerretDBOpsRequestOptions struct {
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
@@ -91,13 +88,13 @@ type MemcachedOpsRequestOptions struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// MemcachedAutoscalerList is a list of MemcachedAutoscaler objects.
-type MemcachedAutoscalerList struct {
+// FerretDBAutoscalerList is a list of FerretDBAutoscaler objects.
+type FerretDBAutoscalerList struct {
 	metav1.TypeMeta `json:",inline"`
 	// metadata is the standard list metadata.
 	// +optional
 	metav1.ListMeta `json:"metadata"`
 
-	// items is the list of memcached database autoscaler objects.
-	Items []MemcachedAutoscaler `json:"items"`
+	// items is the list of ferretdb database autoscaler objects.
+	Items []FerretDBAutoscaler `json:"items"`
 }

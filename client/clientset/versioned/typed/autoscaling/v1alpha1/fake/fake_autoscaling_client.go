@@ -29,6 +29,10 @@ type FakeAutoscalingV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeAutoscalingV1alpha1) ClickHouseAutoscalers(namespace string) v1alpha1.ClickHouseAutoscalerInterface {
+	return &FakeClickHouseAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) DruidAutoscalers(namespace string) v1alpha1.DruidAutoscalerInterface {
 	return &FakeDruidAutoscalers{c, namespace}
 }
@@ -41,8 +45,16 @@ func (c *FakeAutoscalingV1alpha1) EtcdAutoscalers(namespace string) v1alpha1.Etc
 	return &FakeEtcdAutoscalers{c, namespace}
 }
 
+func (c *FakeAutoscalingV1alpha1) FerretDBAutoscalers(namespace string) v1alpha1.FerretDBAutoscalerInterface {
+	return &FakeFerretDBAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) KafkaAutoscalers(namespace string) v1alpha1.KafkaAutoscalerInterface {
 	return &FakeKafkaAutoscalers{c, namespace}
+}
+
+func (c *FakeAutoscalingV1alpha1) MSSQLServerAutoscalers(namespace string) v1alpha1.MSSQLServerAutoscalerInterface {
+	return &FakeMSSQLServerAutoscalers{c, namespace}
 }
 
 func (c *FakeAutoscalingV1alpha1) MariaDBAutoscalers(namespace string) v1alpha1.MariaDBAutoscalerInterface {
@@ -95,6 +107,14 @@ func (c *FakeAutoscalingV1alpha1) RedisSentinelAutoscalers(namespace string) v1a
 
 func (c *FakeAutoscalingV1alpha1) SinglestoreAutoscalers(namespace string) v1alpha1.SinglestoreAutoscalerInterface {
 	return &FakeSinglestoreAutoscalers{c, namespace}
+}
+
+func (c *FakeAutoscalingV1alpha1) SolrAutoscalers(namespace string) v1alpha1.SolrAutoscalerInterface {
+	return &FakeSolrAutoscalers{c, namespace}
+}
+
+func (c *FakeAutoscalingV1alpha1) ZooKeeperAutoscalers(namespace string) v1alpha1.ZooKeeperAutoscalerInterface {
+	return &FakeZooKeeperAutoscalers{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

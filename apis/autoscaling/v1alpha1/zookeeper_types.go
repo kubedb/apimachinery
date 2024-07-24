@@ -24,13 +24,13 @@ import (
 )
 
 const (
-	ResourceCodeMemcachedAutoscaler     = "mcscaler"
-	ResourceKindMemcachedAutoscaler     = "MemcachedAutoscaler"
-	ResourceSingularMemcachedAutoscaler = "memcachedautoscaler"
-	ResourcePluralMemcachedAutoscaler   = "memcachedautoscalers"
+	ResourceCodeZooKeeperAutoscaler     = "zkscaler"
+	ResourceKindZooKeeperAutoscaler     = "ZooKeeperAutoscaler"
+	ResourceSingularZooKeeperAutoscaler = "zookeeperautoscaler"
+	ResourcePluralZooKeeperAutoscaler   = "zookeeperautoscalers"
 )
 
-// MemcachedAutoscaler is the configuration for a memcached database
+// ZooKeeperAutoscaler is the configuration for a zookeeper database
 // autoscaler, which automatically manages pod resources based on historical and
 // real time resource utilization.
 
@@ -39,9 +39,9 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=memcachedautoscalers,singular=memcachedautoscaler,shortName=mcscaler,categories={datastore,kubedb,appscode}
+// +kubebuilder:resource:path=zookeeperautoscalers,singular=zookeeperautoscaler,shortName=zkscaler,categories={datastore,kubedb,appscode}
 // +kubebuilder:subresource:status
-type MemcachedAutoscaler struct {
+type ZooKeeperAutoscaler struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
 	// +optional
@@ -49,39 +49,36 @@ type MemcachedAutoscaler struct {
 
 	// Specification of the behavior of the autoscaler.
 	// More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status.
-	Spec MemcachedAutoscalerSpec `json:"spec"`
+	Spec ZooKeeperAutoscalerSpec `json:"spec"`
 
 	// Current information about the autoscaler.
 	// +optional
 	Status AutoscalerStatus `json:"status,omitempty"`
 }
 
-// MemcachedAutoscalerSpec is the specification of the behavior of the autoscaler.
-type MemcachedAutoscalerSpec struct {
+// ZooKeeperAutoscalerSpec is the specification of the behavior of the autoscaler.
+type ZooKeeperAutoscalerSpec struct {
 	DatabaseRef *core.LocalObjectReference `json:"databaseRef"`
 
 	// This field will be used to control the behaviour of ops-manager
-	OpsRequestOptions *MemcachedOpsRequestOptions `json:"opsRequestOptions,omitempty"`
+	OpsRequestOptions *ZooKeeperOpsRequestOptions `json:"opsRequestOptions,omitempty"`
 
-	Compute *MemcachedComputeAutoscalerSpec `json:"compute,omitempty"`
-	Storage *MemcachedStorageAutoscalerSpec `json:"storage,omitempty"`
+	Compute *ZooKeeperComputeAutoscalerSpec `json:"compute,omitempty"`
+	Storage *ZooKeeperStorageAutoscalerSpec `json:"storage,omitempty"`
 }
 
-type MemcachedComputeAutoscalerSpec struct {
+type ZooKeeperComputeAutoscalerSpec struct {
 	// +optional
 	NodeTopology *NodeTopology `json:"nodeTopology,omitempty"`
 
-	Memcached *ComputeAutoscalerSpec `json:"memcached,omitempty"`
+	ZooKeeper *ComputeAutoscalerSpec `json:"zookeeper,omitempty"`
 }
 
-type MemcachedStorageAutoscalerSpec struct {
-	Memcached *StorageAutoscalerSpec `json:"memcached,omitempty"`
+type ZooKeeperStorageAutoscalerSpec struct {
+	ZooKeeper *StorageAutoscalerSpec `json:"zookeeper,omitempty"`
 }
 
-type MemcachedOpsRequestOptions struct {
-	// Specifies the Readiness Criteria
-	ReadinessCriteria *opsapi.MemcachedReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`
-
+type ZooKeeperOpsRequestOptions struct {
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
@@ -91,13 +88,13 @@ type MemcachedOpsRequestOptions struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// MemcachedAutoscalerList is a list of MemcachedAutoscaler objects.
-type MemcachedAutoscalerList struct {
+// ZooKeeperAutoscalerList is a list of ZooKeeperAutoscaler objects.
+type ZooKeeperAutoscalerList struct {
 	metav1.TypeMeta `json:",inline"`
 	// metadata is the standard list metadata.
 	// +optional
 	metav1.ListMeta `json:"metadata"`
 
-	// items is the list of memcached database autoscaler objects.
-	Items []MemcachedAutoscaler `json:"items"`
+	// items is the list of zookeeper database autoscaler objects.
+	Items []ZooKeeperAutoscaler `json:"items"`
 }
