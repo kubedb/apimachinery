@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"context"
+	"fmt"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
@@ -85,9 +86,9 @@ func (k *RestProxy) ValidateDelete() (admission.Warnings, error) {
 
 	var allErr field.ErrorList
 	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyDoNotTerminate {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
 			k.Name,
-			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
+			"Can not delete as deletionPolicy is set to \"DoNotTerminate\""))
 		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "RestProxy"}, k.Name, allErr)
 	}
 	return nil, nil
@@ -96,8 +97,16 @@ func (k *RestProxy) ValidateDelete() (admission.Warnings, error) {
 func (k *RestProxy) ValidateCreateOrUpdate() field.ErrorList {
 	var allErr field.ErrorList
 
+	err := k.validateVersion()
+	if err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
+			k.Name,
+			err.Error()))
+		return allErr
+	}
+
 	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
 			k.Name,
 			"DeletionPolicyHalt is not supported for RestProxy"))
 	}
@@ -107,13 +116,6 @@ func (k *RestProxy) ValidateCreateOrUpdate() field.ErrorList {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 			k.Name,
 			"number of replicas can not be 0 or less"))
-	}
-
-	err := k.validateVersion()
-	if err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			k.Name,
-			err.Error()))
 	}
 
 	err = k.validateVolumes()
@@ -130,21 +132,10 @@ func (k *RestProxy) ValidateCreateOrUpdate() field.ErrorList {
 			err.Error()))
 	}
 
-	err = k.validateEnvVars()
-	if err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers").Child("envs"),
-			k.Name,
-			err.Error()))
-	}
-
 	if len(allErr) == 0 {
 		return nil
 	}
 	return allErr
-}
-
-func (k *RestProxy) validateEnvVars() error {
-	return nil
 }
 
 func (k *RestProxy) validateVersion() error {
@@ -153,14 +144,15 @@ func (k *RestProxy) validateVersion() error {
 	if err != nil {
 		return errors.New("version not supported")
 	}
-	if ksrVersion.Spec.Distribution == catalog.SchemaRegistryDistroApicurio {
-		return errors.New("Distribution Apicurio is not supported")
+	if ksrVersion.Spec.Distribution != catalog.SchemaRegistryDistroAiven {
+		return errors.New(fmt.Sprintf("Distribution %s is not supported, only supported distribution is Aiven", ksrVersion.Spec.Distribution))
 	}
 	return nil
 }
 
 var restProxyReservedVolumes = []string{
 	KafkaClientCertVolumeName,
+	RestProxyOperatorVolumeConfig,
 }
 
 func (k *RestProxy) validateVolumes() error {
@@ -182,6 +174,7 @@ func (k *RestProxy) validateVolumes() error {
 
 var restProxyReservedVolumeMountPaths = []string{
 	KafkaClientCertDir,
+	RestProxyOperatorVolumeConfig,
 }
 
 func (k *RestProxy) validateContainerVolumeMountPaths() error {
