@@ -12,7 +12,7 @@ spec:
     listKind: RestProxyList
     plural: restproxies
     shortNames:
-    - ksr
+    - krp
     singular: restproxy
   scope: Namespaced
   versions:

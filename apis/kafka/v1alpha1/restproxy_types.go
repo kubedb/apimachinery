@@ -39,7 +39,7 @@ const (
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:shortName=ksr,scope=Namespaced
+// +kubebuilder:resource:shortName=krp,scope=Namespaced
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Kafka",type="string",JSONPath=".spec.kafkaRef.name"
