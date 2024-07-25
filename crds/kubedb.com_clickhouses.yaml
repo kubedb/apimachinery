@@ -3232,8 +3232,6 @@ spec:
                             - Ephemeral
                             type: string
                         type: object
-                    required:
-                    - externallyManaged
                     type: object
                   cluster:
                     items:

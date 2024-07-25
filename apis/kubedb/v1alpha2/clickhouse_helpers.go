@@ -75,6 +75,10 @@ func (c *ClickHouse) OffshootName() string {
 	return c.Name
 }
 
+func (c *ClickHouse) OffshootKeeperName() string {
+	return meta_util.NameWithSuffix(c.Name, "keeper")
+}
+
 func (c *ClickHouse) OffshootClusterName(value string) string {
 	return meta_util.NameWithSuffix(c.OffshootName(), value)
 }
@@ -88,6 +92,7 @@ func (c *ClickHouse) OffshootClusterPetSetName(clusterName string, shardNo int) 
 func (c *ClickHouse) OffshootLabels() map[string]string {
 	return c.offshootLabels(c.OffshootSelectors(), nil)
 }
+
 func (c *ClickHouse) OffshootKeeperLabels() map[string]string {
 	return c.offshootKeeperLabels(c.OffshootKeeperSelectors(), nil)
 }
@@ -100,10 +105,11 @@ func (c *ClickHouse) offshootLabels(selector, override map[string]string) map[st
 	selector[meta_util.ComponentLabelKey] = kubedb.ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, c.Labels, override))
 }
+
 func (c *ClickHouse) offshootKeeperLabels(selector, override map[string]string) map[string]string {
-	selector[meta_util.ComponentLabelKey] = ComponentCoOrdinator
+	selector[meta_util.ComponentLabelKey] = kubedb.ComponentCoOrdinator
 	return meta_util.OverwriteKeys(selector, override)
-	//return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, c.Labels, override))
+	// return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, c.Labels, override))
 }
 
 func (c *ClickHouse) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
@@ -145,6 +151,7 @@ func (c *ClickHouse) ResourcePlural() string {
 func (c *ClickHouse) ServiceName() string {
 	return c.OffshootName()
 }
+
 func (c *ClickHouse) KeeperServiceName() string {
 	return meta_util.NameWithSuffix(c.OffshootName(), "keeper")
 }
@@ -152,6 +159,7 @@ func (c *ClickHouse) KeeperServiceName() string {
 func (c *ClickHouse) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", c.ServiceName(), c.Namespace)
 }
+
 func (c *ClickHouse) KeeperPrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", c.KeeperServiceName(), c.Namespace)
 }
@@ -288,7 +296,7 @@ func (c *ClickHouse) SetDefaults() {
 		}
 		c.Spec.ClusterTopology.Cluster = clusters
 
-		if c.Spec.ClusterTopology.ClickHouseKeeper != nil && c.Spec.ClusterTopology.ClickHouseKeeper.Spec != nil {
+		if c.Spec.ClusterTopology.ClickHouseKeeper != nil && !c.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged && c.Spec.ClusterTopology.ClickHouseKeeper.Spec != nil {
 			if c.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas == nil {
 				c.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas = pointer.Int32P(1)
 			}
@@ -301,9 +309,9 @@ func (c *ClickHouse) SetDefaults() {
 				c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate = &ofst.PodTemplateSpec{}
 			}
 			//c.setKeeperDefaultContainerSecurityContext(&chVersion, c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate)
-			//dbContainer := coreutil.GetContainerByName(c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate.Spec.Containers, ClickHouseKeeperContainerName)
+			//dbContainer := coreutil.GetContainerByName(c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate.Spec.Containers, kubedb.ClickHouseKeeperContainerName)
 			//if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-			//	apis.SetDefaultResourceLimits(&dbContainer.Resources, DefaultResources)
+			//	apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 			//}
 			//c.SetHealthCheckerDefaults()
 		}
@@ -367,41 +375,41 @@ func (c *ClickHouse) setDefaultContainerSecurityContext(chVersion *catalog.Click
 	c.assignDefaultContainerSecurityContext(chVersion, initContainer.SecurityContext)
 }
 
-func (r *ClickHouse) setKeeperDefaultContainerSecurityContext(chVersion *catalog.ClickHouseVersion, podTemplate *ofst.PodTemplateSpec) {
-	if podTemplate == nil {
-		return
-	}
-	if podTemplate.Spec.SecurityContext == nil {
-		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
-	}
-	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = chVersion.Spec.SecurityContext.RunAsUser
-	}
-
-	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, ClickHouseKeeperContainerName)
-	if container == nil {
-		container = &core.Container{
-			Name: ClickHouseKeeperContainerName,
-		}
-		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
-	}
-	if container.SecurityContext == nil {
-		container.SecurityContext = &core.SecurityContext{}
-	}
-	r.assignDefaultContainerSecurityContext(chVersion, container.SecurityContext)
-
-	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, ClickHouseInitContainerName)
-	if initContainer == nil {
-		initContainer = &core.Container{
-			Name: ClickHouseInitContainerName,
-		}
-		podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
-	}
-	if initContainer.SecurityContext == nil {
-		initContainer.SecurityContext = &core.SecurityContext{}
-	}
-	r.assignDefaultContainerSecurityContext(chVersion, initContainer.SecurityContext)
-}
+//func (r *ClickHouse) setKeeperDefaultContainerSecurityContext(chVersion *catalog.ClickHouseVersion, podTemplate *ofst.PodTemplateSpec) {
+//	if podTemplate == nil {
+//		return
+//	}
+//	if podTemplate.Spec.SecurityContext == nil {
+//		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
+//	}
+//	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+//		podTemplate.Spec.SecurityContext.FSGroup = chVersion.Spec.SecurityContext.RunAsUser
+//	}
+//
+//	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.ClickHouseKeeperContainerName)
+//	if container == nil {
+//		container = &core.Container{
+//			Name: kubedb.ClickHouseKeeperContainerName,
+//		}
+//		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
+//	}
+//	if container.SecurityContext == nil {
+//		container.SecurityContext = &core.SecurityContext{}
+//	}
+//	r.assignDefaultContainerSecurityContext(chVersion, container.SecurityContext)
+//
+//	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.ClickHouseInitContainerName)
+//	if initContainer == nil {
+//		initContainer = &core.Container{
+//			Name: kubedb.ClickHouseInitContainerName,
+//		}
+//		podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
+//	}
+//	if initContainer.SecurityContext == nil {
+//		initContainer.SecurityContext = &core.SecurityContext{}
+//	}
+//	r.assignDefaultContainerSecurityContext(chVersion, initContainer.SecurityContext)
+//}
 
 func (c *ClickHouse) assignDefaultContainerSecurityContext(chVersion *catalog.ClickHouseVersion, rc *core.SecurityContext) {
 	if rc.AllowPrivilegeEscalation == nil {

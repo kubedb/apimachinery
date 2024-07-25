@@ -126,7 +126,7 @@ type ClusterSpec struct {
 }
 
 type ClickHouseKeeper struct {
-	ExternallyManaged bool `json:"externallyManaged"`
+	ExternallyManaged bool `json:"externallyManaged,omitempty"`
 
 	Node *ClickHouseKeeperNode `json:"node,omitempty"`
 

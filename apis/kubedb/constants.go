@@ -1365,7 +1365,7 @@ const (
 	ClickHouseServerConfigFile = "server-config.yaml"
 	ClickHouseKeeperFileConfig = "keeper_config.yaml"
 
-	//keeper
+	// keeper
 	ClickHouseKeeperContainerName        = "clickhouse-keeper"
 	ClickHouseKeeeprConfigFileName       = "keeper_config.xml"
 	ClickHOuseKeeeprConfigFileVolumeName = "keeper-config"
