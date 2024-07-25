@@ -662,6 +662,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrOpsRequest":                                   schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrOpsRequestList":                               schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrOpsRequestSpec":                               schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrUpdateVersionSpec":                            schema_apimachinery_apis_ops_v1alpha1_SolrUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVerticalScalingSpec":                          schema_apimachinery_apis_ops_v1alpha1_SolrVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVolumeExpansionSpec":                          schema_apimachinery_apis_ops_v1alpha1_SolrVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec":                                          schema_apimachinery_apis_ops_v1alpha1_TLSSpec(ref),
@@ -32101,6 +32102,12 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestSpec(ref common.Referen
 							Format:      "",
 						},
 					},
+					"updateVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for upgrading Solr",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrUpdateVersionSpec"),
+						},
+					},
 					"verticalScaling": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for vertical scaling",
@@ -32137,7 +32144,26 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVolumeExpansionSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVolumeExpansionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_SolrUpdateVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the target version name from catalog",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

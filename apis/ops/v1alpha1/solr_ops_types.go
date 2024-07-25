@@ -49,8 +49,8 @@ type SolrOpsRequest struct {
 	Status            OpsRequestStatus   `json:"status,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart
-// ENUM(VerticalScaling, VolumeExpansion, Restart)
+// +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;VolumeExpansion;Restart
+// ENUM(UpdateVersion, VerticalScaling, VolumeExpansion, Restart)
 type SolrOpsRequestType string
 
 // DruidOpsRequestSpec is the spec for DruidOpsRequest
@@ -59,6 +59,8 @@ type SolrOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type SolrOpsRequestType `json:"type"`
+	// Specifies information necessary for upgrading Solr
+	UpdateVersion *SolrUpdateVersionSpec `json:"updateVersion,omitempty"`
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *SolrVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for volume expansion
@@ -93,6 +95,11 @@ type SolrVolumeExpansionSpec struct {
 	Overseer *resource.Quantity `json:"overseer,omitempty"`
 	// volume specification for overseer nodes
 	Coordinator *resource.Quantity `json:"coordinator,omitempty"`
+}
+
+type SolrUpdateVersionSpec struct {
+	// Specifies the target version name from catalog
+	TargetVersion string `json:"targetVersion,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

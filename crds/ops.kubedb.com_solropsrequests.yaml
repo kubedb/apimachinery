@@ -61,10 +61,16 @@ spec:
                 type: string
               type:
                 enum:
+                - UpdateVersion
                 - VerticalScaling
                 - VolumeExpansion
                 - Restart
                 type: string
+              updateVersion:
+                properties:
+                  targetVersion:
+                    type: string
+                type: object
               verticalScaling:
                 properties:
                   coordinator:

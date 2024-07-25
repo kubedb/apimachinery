@@ -12,6 +12,8 @@ import (
 )
 
 const (
+	// SolrOpsRequestTypeUpdateVersion is a SolrOpsRequestType of type UpdateVersion.
+	SolrOpsRequestTypeUpdateVersion SolrOpsRequestType = "UpdateVersion"
 	// SolrOpsRequestTypeVerticalScaling is a SolrOpsRequestType of type VerticalScaling.
 	SolrOpsRequestTypeVerticalScaling SolrOpsRequestType = "VerticalScaling"
 	// SolrOpsRequestTypeVolumeExpansion is a SolrOpsRequestType of type VolumeExpansion.
@@ -23,6 +25,7 @@ const (
 var ErrInvalidSolrOpsRequestType = fmt.Errorf("not a valid SolrOpsRequestType, try [%s]", strings.Join(_SolrOpsRequestTypeNames, ", "))
 
 var _SolrOpsRequestTypeNames = []string{
+	string(SolrOpsRequestTypeUpdateVersion),
 	string(SolrOpsRequestTypeVerticalScaling),
 	string(SolrOpsRequestTypeVolumeExpansion),
 	string(SolrOpsRequestTypeRestart),
@@ -38,6 +41,7 @@ func SolrOpsRequestTypeNames() []string {
 // SolrOpsRequestTypeValues returns a list of the values for SolrOpsRequestType
 func SolrOpsRequestTypeValues() []SolrOpsRequestType {
 	return []SolrOpsRequestType{
+		SolrOpsRequestTypeUpdateVersion,
 		SolrOpsRequestTypeVerticalScaling,
 		SolrOpsRequestTypeVolumeExpansion,
 		SolrOpsRequestTypeRestart,
@@ -57,6 +61,7 @@ func (x SolrOpsRequestType) IsValid() bool {
 }
 
 var _SolrOpsRequestTypeValue = map[string]SolrOpsRequestType{
+	"UpdateVersion":   SolrOpsRequestTypeUpdateVersion,
 	"VerticalScaling": SolrOpsRequestTypeVerticalScaling,
 	"VolumeExpansion": SolrOpsRequestTypeVolumeExpansion,
 	"Restart":         SolrOpsRequestTypeRestart,
