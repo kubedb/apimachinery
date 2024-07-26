@@ -101,17 +101,7 @@ func PhaseFromCondition(conditions []kmapi.Condition) olddbapi.DatabasePhase {
 	// 2. if condition["DataRestored"] = false, the phase should be "NotReady".
 	//		if the status is "true", the phase should depend on the rest of checks.
 	if cutil.IsConditionTrue(conditions, kubedb.DatabaseDataRestoreStarted) {
-		// TODO:
-		// 		- remove these conditions.
-		//		- It is here for backward compatibility.
-		//		- Just return "Restoring" in future.
-		if cutil.HasCondition(conditions, kubedb.DatabaseDataRestored) {
-			if cutil.IsConditionFalse(conditions, kubedb.DatabaseDataRestored) {
-				return olddbapi.DatabasePhaseNotReady
-			}
-		} else {
-			return olddbapi.DatabasePhaseDataRestoring
-		}
+		return olddbapi.DatabasePhaseDataRestoring
 	}
 	if cutil.IsConditionFalse(conditions, kubedb.DatabaseDataRestored) {
 		return olddbapi.DatabasePhaseNotReady
@@ -192,17 +182,7 @@ func PhaseFromConditionV1(conditions []kmapi.Condition) dbapi.DatabasePhase {
 	// 2. if condition["DataRestored"] = false, the phase should be "NotReady".
 	//		if the status is "true", the phase should depend on the rest of checks.
 	if cutil.IsConditionTrue(conditions, kubedb.DatabaseDataRestoreStarted) {
-		// TODO:
-		// 		- remove these conditions.
-		//		- It is here for backward compatibility.
-		//		- Just return "Restoring" in future.
-		if cutil.HasCondition(conditions, kubedb.DatabaseDataRestored) {
-			if cutil.IsConditionFalse(conditions, kubedb.DatabaseDataRestored) {
-				return dbapi.DatabasePhaseNotReady
-			}
-		} else {
-			return dbapi.DatabasePhaseDataRestoring
-		}
+		return dbapi.DatabasePhaseDataRestoring
 	}
 	if cutil.IsConditionFalse(conditions, kubedb.DatabaseDataRestored) {
 		return dbapi.DatabasePhaseNotReady
