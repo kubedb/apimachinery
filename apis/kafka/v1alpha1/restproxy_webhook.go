@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"context"
+	"fmt"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
@@ -35,71 +36,70 @@ import (
 )
 
 // log is for logging in this package.
-var schemaregistrylog = logf.Log.WithName("schemaregistry-resource")
+var restproxylog = logf.Log.WithName("restproxy-resource")
 
-var _ webhook.Defaulter = &SchemaRegistry{}
+var _ webhook.Defaulter = &RestProxy{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (k *SchemaRegistry) Default() {
+func (k *RestProxy) Default() {
 	if k == nil {
 		return
 	}
-	schemaregistrylog.Info("default", "name", k.Name)
+	restproxylog.Info("default", "name", k.Name)
 	k.SetDefaults()
 }
 
-var _ webhook.Validator = &SchemaRegistry{}
+var _ webhook.Validator = &RestProxy{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *SchemaRegistry) ValidateCreate() (admission.Warnings, error) {
-	schemaregistrylog.Info("validate create", "name", k.Name)
+func (k *RestProxy) ValidateCreate() (admission.Warnings, error) {
+	restproxylog.Info("validate create", "name", k.Name)
 	allErr := k.ValidateCreateOrUpdate()
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "SchemaRegistry"}, k.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "RestProxy"}, k.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *SchemaRegistry) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
-	schemaregistrylog.Info("validate update", "name", k.Name)
-
-	oldRegistry := old.(*SchemaRegistry)
+func (k *RestProxy) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+	restproxylog.Info("validate update", "name", k.Name)
 	allErr := k.ValidateCreateOrUpdate()
-
-	if *oldRegistry.Spec.Replicas == 1 && *k.Spec.Replicas > 1 {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			k.Name,
-			"Cannot scale up from 1 to more than 1 in standalone mode"))
-	}
-
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "SchemaRegistry"}, k.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "RestProxy"}, k.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (k *SchemaRegistry) ValidateDelete() (admission.Warnings, error) {
-	schemaregistrylog.Info("validate delete", "name", k.Name)
+func (k *RestProxy) ValidateDelete() (admission.Warnings, error) {
+	restproxylog.Info("validate delete", "name", k.Name)
 
 	var allErr field.ErrorList
 	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
 			k.Name,
 			"Can not delete as deletionPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "SchemaRegistry"}, k.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "RestProxy"}, k.Name, allErr)
 	}
 	return nil, nil
 }
 
-func (k *SchemaRegistry) ValidateCreateOrUpdate() field.ErrorList {
+func (k *RestProxy) ValidateCreateOrUpdate() field.ErrorList {
 	var allErr field.ErrorList
+
+	err := k.validateVersion()
+	if err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
+			k.Name,
+			err.Error()))
+		return allErr
+	}
 
 	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
 			k.Name,
-			"DeletionPolicyHalt is not supported for SchemaRegistry"))
+			"DeletionPolicyHalt is not supported for RestProxy"))
 	}
 
 	// number of replicas can not be 0 or less
@@ -107,13 +107,6 @@ func (k *SchemaRegistry) ValidateCreateOrUpdate() field.ErrorList {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 			k.Name,
 			"number of replicas can not be 0 or less"))
-	}
-
-	err := k.validateVersion()
-	if err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			k.Name,
-			err.Error()))
 	}
 
 	err = k.validateVolumes()
@@ -130,42 +123,35 @@ func (k *SchemaRegistry) ValidateCreateOrUpdate() field.ErrorList {
 			err.Error()))
 	}
 
-	err = k.validateEnvVars()
-	if err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers").Child("envs"),
-			k.Name,
-			err.Error()))
-	}
-
 	if len(allErr) == 0 {
 		return nil
 	}
 	return allErr
 }
 
-func (k *SchemaRegistry) validateEnvVars() error {
-	return nil
-}
-
-func (k *SchemaRegistry) validateVersion() error {
+func (k *RestProxy) validateVersion() error {
 	ksrVersion := &catalog.SchemaRegistryVersion{}
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: k.Spec.Version}, ksrVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
+	if ksrVersion.Spec.Distribution != catalog.SchemaRegistryDistroAiven {
+		return errors.New(fmt.Sprintf("Distribution %s is not supported, only supported distribution is Aiven", ksrVersion.Spec.Distribution))
+	}
 	return nil
 }
 
-var schemaRegistryReservedVolumes = []string{
+var restProxyReservedVolumes = []string{
 	KafkaClientCertVolumeName,
+	RestProxyOperatorVolumeConfig,
 }
 
-func (k *SchemaRegistry) validateVolumes() error {
+func (k *RestProxy) validateVolumes() error {
 	if k.Spec.PodTemplate.Spec.Volumes == nil {
 		return nil
 	}
-	rsv := make([]string, len(schemaRegistryReservedVolumes))
-	copy(rsv, schemaRegistryReservedVolumes)
+	rsv := make([]string, len(restProxyReservedVolumes))
+	copy(rsv, restProxyReservedVolumes)
 	volumes := k.Spec.PodTemplate.Spec.Volumes
 	for _, rv := range rsv {
 		for _, ugv := range volumes {
@@ -177,16 +163,17 @@ func (k *SchemaRegistry) validateVolumes() error {
 	return nil
 }
 
-var schemaRegistryReservedVolumeMountPaths = []string{
+var restProxyReservedVolumeMountPaths = []string{
 	KafkaClientCertDir,
+	RestProxyOperatorVolumeConfig,
 }
 
-func (k *SchemaRegistry) validateContainerVolumeMountPaths() error {
-	container := coreutil.GetContainerByName(k.Spec.PodTemplate.Spec.Containers, SchemaRegistryContainerName)
+func (k *RestProxy) validateContainerVolumeMountPaths() error {
+	container := coreutil.GetContainerByName(k.Spec.PodTemplate.Spec.Containers, RestProxyContainerName)
 	if container == nil {
 		return errors.New("container not found")
 	}
-	rPaths := schemaRegistryReservedVolumeMountPaths
+	rPaths := restProxyReservedVolumeMountPaths
 	volumeMountPaths := container.VolumeMounts
 	for _, rvm := range rPaths {
 		for _, ugv := range volumeMountPaths {

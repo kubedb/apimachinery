@@ -34,6 +34,14 @@ type ConnectorListerExpansion interface{}
 // ConnectorNamespaceLister.
 type ConnectorNamespaceListerExpansion interface{}
 
+// RestProxyListerExpansion allows custom methods to be added to
+// RestProxyLister.
+type RestProxyListerExpansion interface{}
+
+// RestProxyNamespaceListerExpansion allows custom methods to be added to
+// RestProxyNamespaceLister.
+type RestProxyNamespaceListerExpansion interface{}
+
 // SchemaRegistryListerExpansion allows custom methods to be added to
 // SchemaRegistryLister.
 type SchemaRegistryListerExpansion interface{}

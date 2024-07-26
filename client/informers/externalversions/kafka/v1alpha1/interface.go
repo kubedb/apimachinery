@@ -28,6 +28,8 @@ type Interface interface {
 	ConnectClusters() ConnectClusterInformer
 	// Connectors returns a ConnectorInformer.
 	Connectors() ConnectorInformer
+	// RestProxies returns a RestProxyInformer.
+	RestProxies() RestProxyInformer
 	// SchemaRegistries returns a SchemaRegistryInformer.
 	SchemaRegistries() SchemaRegistryInformer
 }
@@ -51,6 +53,11 @@ func (v *version) ConnectClusters() ConnectClusterInformer {
 // Connectors returns a ConnectorInformer.
 func (v *version) Connectors() ConnectorInformer {
 	return &connectorInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// RestProxies returns a RestProxyInformer.
+func (v *version) RestProxies() RestProxyInformer {
+	return &restProxyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // SchemaRegistries returns a SchemaRegistryInformer.
