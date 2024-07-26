@@ -64,16 +64,7 @@ func (k *RestProxy) ValidateCreate() (admission.Warnings, error) {
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (k *RestProxy) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 	restproxylog.Info("validate update", "name", k.Name)
-
-	oldRegistry := old.(*RestProxy)
 	allErr := k.ValidateCreateOrUpdate()
-
-	if *oldRegistry.Spec.Replicas == 1 && *k.Spec.Replicas > 1 {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			k.Name,
-			"Cannot scale up from 1 to more than 1 in standalone mode"))
-	}
-
 	if len(allErr) == 0 {
 		return nil, nil
 	}
