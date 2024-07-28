@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+package v1
 
 import (
 	"fmt"
@@ -30,17 +30,17 @@ import (
 func init() {
 	api.Register(schema.GroupVersionKind{
 		Group:   "kubedb.com",
-		Version: "v1alpha2",
-		Kind:    "Solr",
-	}, Solr{}.ResourceCalculator())
+		Version: "v1",
+		Kind:    "Kafka",
+	}, Kafka{}.ResourceCalculator())
 }
 
-type Solr struct{}
+type Kafka struct{}
 
-func (r Solr) ResourceCalculator() api.ResourceCalculator {
+func (r Kafka) ResourceCalculator() api.ResourceCalculator {
 	return &api.ResourceCalculatorFuncs{
-		AppRoles:               []api.PodRole{api.PodRoleDefault, api.PodRoleCoordinator, api.PodRoleOverseer, api.PodRoleData},
-		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleCoordinator, api.PodRoleOverseer, api.PodRoleData, api.PodRoleExporter},
+		AppRoles:               []api.PodRole{api.PodRoleDefault, api.PodRoleBroker, api.PodRoleController, api.PodRoleCombined},
+		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleBroker, api.PodRoleController, api.PodRoleCombined, api.PodRoleExporter},
 		RoleReplicasFn:         r.roleReplicasFn,
 		ModeFn:                 r.modeFn,
 		UsesTLSFn:              r.usesTLSFn,
@@ -49,15 +49,15 @@ func (r Solr) ResourceCalculator() api.ResourceCalculator {
 	}
 }
 
-func (r Solr) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
+func (r Kafka) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
 	result := api.ReplicaList{}
 
 	topology, found, err := unstructured.NestedMap(obj, "spec", "topology")
 	if err != nil {
 		return nil, err
 	}
-
 	if found && topology != nil {
+		// dedicated topology mode
 		for role, roleSpec := range topology {
 			roleReplicas, found, err := unstructured.NestedInt64(roleSpec.(map[string]interface{}), "replicas")
 			if err != nil {
@@ -79,11 +79,10 @@ func (r Solr) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error
 			result[api.PodRoleDefault] = replicas
 		}
 	}
-
 	return result, nil
 }
 
-func (r Solr) modeFn(obj map[string]interface{}) (string, error) {
+func (r Kafka) modeFn(obj map[string]interface{}) (string, error) {
 	topology, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "topology")
 	if err != nil {
 		return "", err
@@ -94,12 +93,12 @@ func (r Solr) modeFn(obj map[string]interface{}) (string, error) {
 	return DBModeCombined, nil
 }
 
-func (r Solr) usesTLSFn(obj map[string]interface{}) (bool, error) {
+func (r Kafka) usesTLSFn(obj map[string]interface{}) (bool, error) {
 	_, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "enableSSL")
 	return found, err
 }
 
-func (r Solr) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
+func (r Kafka) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
 	return func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
 		exporter, err := api.ContainerResources(obj, fn, "spec", "monitor", "prometheus", "exporter")
 		if err != nil {
@@ -114,8 +113,8 @@ func (r Solr) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resource
 			var replicas int64 = 0
 			result := map[api.PodRole]api.PodInfo{}
 
-			for role, roleSpec := range topology {
-				rolePerReplicaResources, roleReplicas, err := api.AppNodeResourcesV2(roleSpec.(map[string]interface{}), fn, SolrContainerName)
+			for role := range topology {
+				rolePerReplicaResources, roleReplicas, err := api.AppNodeResourcesV2(topology, fn, KafkaContainerName, role)
 				if err != nil {
 					return nil, err
 				}
@@ -127,8 +126,8 @@ func (r Solr) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resource
 			return result, nil
 		}
 
-		// Solr Combined
-		container, replicas, err := api.AppNodeResourcesV2(obj, fn, SolrContainerName, "spec")
+		// Kafka Combined
+		container, replicas, err := api.AppNodeResourcesV2(obj, fn, KafkaContainerName, "spec")
 		if err != nil {
 			return nil, err
 		}

@@ -656,10 +656,10 @@ kmodules.xyz/offshoot-api v0.30.0 h1:dq9F93pu4Q8rL9oTcCk+vGGy8vpS7RNt0GSwx7Bvhec
 kmodules.xyz/offshoot-api v0.30.0/go.mod h1:o9VoA3ImZMDBp3lpLb8+kc2d/KBxioRwCpaKDfLIyDw=
 kmodules.xyz/prober v0.29.0 h1:Ex7m4F9rH7uWNNJlLgP63ROOM+nUATJkC2L5OQ7nwMg=
 kmodules.xyz/prober v0.29.0/go.mod h1:UtK+HKyI1lFLEKX+HFLyOCVju6TO93zv3kwGpzqmKOo=
-kmodules.xyz/resource-metadata v0.18.10 h1:B0DAMsJJBuSOGCKzptZvB8AWcbxzDdUm+3CIE7g9ftE=
-kmodules.xyz/resource-metadata v0.18.10/go.mod h1:PXyZXif1b1QRpe0Pwr92OeOveptZricB0jLssCjsYTc=
-kmodules.xyz/resource-metrics v0.30.1 h1:o7mVY8ZwSe5iEILy1eMG4EPZCli7mXZCkgQONjoY9uU=
-kmodules.xyz/resource-metrics v0.30.1/go.mod h1:UYcQQLN+3o8rNPQJwJa2D9bt5ihJCeo5bCDuQ4O3MPY=
+kmodules.xyz/resource-metadata v0.18.11-0.20240801195527-995886d0c0e5 h1:9RQEeMpYabFmWTRdeLwHl/ZnlcyR+WKLnIWdg6eiCTA=
+kmodules.xyz/resource-metadata v0.18.11-0.20240801195527-995886d0c0e5/go.mod h1:1mOc2/WgOsn+f4tBKbHw8JgjWAEF52I6gOsVpyUE10M=
+kmodules.xyz/resource-metrics v0.30.2-0.20240711131537-5e9d22977a2c h1:lh7s0AXSRezZx0YnKSmB5GqGpTk3PQ9xCYxhqdbNFjU=
+kmodules.xyz/resource-metrics v0.30.2-0.20240711131537-5e9d22977a2c/go.mod h1:UYcQQLN+3o8rNPQJwJa2D9bt5ihJCeo5bCDuQ4O3MPY=
 kmodules.xyz/webhook-runtime v0.29.1 h1:SQ8NvwJpxv5CUuXIubSg9g0Bk8BBnj4dhCWEk6Ou8g8=
 kmodules.xyz/webhook-runtime v0.29.1/go.mod h1:WVgNO4NqFdYwYZ82L6QIycN1Ax47y+yXi7XIHekYylo=
 kubeops.dev/petset v0.0.6 h1:0IbvxD9fadZfH+3iMZWzN6ZHsO0vX458JlioamwyPKQ=

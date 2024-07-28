@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+package v1
 
 import (
 	"fmt"
@@ -29,7 +29,7 @@ import (
 func init() {
 	api.Register(schema.GroupVersionKind{
 		Group:   "kubedb.com",
-		Version: "v1alpha2",
+		Version: "v1",
 		Kind:    "MySQL",
 	}, MySQL{}.ResourceCalculator())
 }
@@ -100,7 +100,7 @@ func (r MySQL) usesTLSFn(obj map[string]interface{}) (bool, error) {
 
 func (r MySQL) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
 	return func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
-		container, replicas, err := api.AppNodeResources(obj, fn, "spec")
+		container, replicas, err := api.AppNodeResourcesV2(obj, fn, MySQLContainerName, "spec")
 		if err != nil {
 			return nil, err
 		}
@@ -121,7 +121,7 @@ func (r MySQL) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resourc
 			return nil, err
 		}
 		if found && mode == "InnoDBCluster" {
-			router, replicas, err := api.AppNodeResources(obj, fn, "spec", "topology", "innoDBCluster", "router")
+			router, replicas, err := api.AppNodeResourcesV2(obj, fn, MySQLRouterContainerName, "spec", "topology", "innoDBCluster", "router")
 			if err != nil {
 				return nil, err
 			}
