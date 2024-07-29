@@ -1,10 +1,27 @@
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 //go:generate go-enum --mustparse --names --values
 package v1alpha1
 
 import (
+	"kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	apis "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 )
 
 const (
@@ -13,6 +30,8 @@ const (
 	ResourceSingularFerretDBOpsRequest = "ferretdbopsrequest"
 	ResourcePluralFerretDBOpsRequest   = "ferretdbopsrequests"
 )
+
+// FerretDBDBOpsRequest defines a FerretDB DBA operation.
 
 // +genclient
 // +k8s:openapi-gen=true
@@ -57,9 +76,13 @@ type FerretDBOpsRequestSpec struct {
 type FerretDBTLSSpec struct {
 	TLSSpec `json:",inline,omitempty"`
 
-	// SSLMode for both standalone and clusters. [disabled;requireSSL]
+	// SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]
 	// +optional
-	SSLMode apis.SSLMode `json:"sslMode,omitempty"`
+	SSLMode v1alpha2.SSLMode `json:"sslMode,omitempty"`
+
+	// ClientAuthMode for both standalone and clusters. (default will be md5. [md5;scram;cert])
+	// +optional
+	ClientAuthMode v1alpha2.ClusterAuthMode `json:"clientAuthMode,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;Restart;HorizontalScaling;ReconfigureTLS
@@ -72,13 +95,13 @@ type FerretDBUpdateVersionSpec struct {
 	TargetVersion string `json:"targetVersion,omitempty"`
 }
 
-// FerretDBHorizontalScalingSpec contains the horizontal scaling information of a ferretdb cluster
+// FerretDBHorizontalScalingSpec contains the horizontal scaling information of a FerretDB cluster
 type FerretDBHorizontalScalingSpec struct {
 	// Number of node
 	Node *int32 `json:"node,omitempty"`
 }
 
-// FerretDBVerticalScalingSpec contains the vertical scaling information of a ferretdb cluster
+// FerretDBVerticalScalingSpec contains the vertical scaling information of a FerretDB cluster
 type FerretDBVerticalScalingSpec struct {
 	// Resource spec for nodes
 	Node *PodResources `json:"node,omitempty"`

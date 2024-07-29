@@ -26470,7 +26470,7 @@ func schema_apimachinery_apis_ops_v1alpha1_FerretDBHorizontalScalingSpec(ref com
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "FerretDBHorizontalScalingSpec contains the horizontal scaling information of a ferretdb cluster",
+				Description: "FerretDBHorizontalScalingSpec contains the horizontal scaling information of a FerretDB cluster",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"node": {
@@ -26697,7 +26697,14 @@ func schema_apimachinery_apis_ops_v1alpha1_FerretDBTLSSpec(ref common.ReferenceC
 					},
 					"sslMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SSLMode for both standalone and clusters. [disabled;requireSSL]",
+							Description: "SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clientAuthMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientAuthMode for both standalone and clusters. (default will be md5. [md5;scram;cert])",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26734,7 +26741,7 @@ func schema_apimachinery_apis_ops_v1alpha1_FerretDBVerticalScalingSpec(ref commo
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "FerretDBVerticalScalingSpec contains the vertical scaling information of a ferretdb cluster",
+				Description: "FerretDBVerticalScalingSpec contains the vertical scaling information of a FerretDB cluster",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"node": {

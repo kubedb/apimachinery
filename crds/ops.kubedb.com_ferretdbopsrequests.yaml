@@ -152,6 +152,13 @@ spec:
                       - alias
                       type: object
                     type: array
+                  clientAuthMode:
+                    enum:
+                    - keyFile
+                    - sendKeyFile
+                    - sendX509
+                    - x509
+                    type: string
                   issuerRef:
                     properties:
                       apiGroup:
