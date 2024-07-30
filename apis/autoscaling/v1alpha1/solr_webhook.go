@@ -85,7 +85,7 @@ func (r *SolrAutoscaler) ValidateCreate() (admission.Warnings, error) {
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *SolrAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
-	sllog.Info("validate create", "name", r.Name)
+	sllog.Info("validate update", "name", r.Name)
 	return nil, r.validate()
 }
 
