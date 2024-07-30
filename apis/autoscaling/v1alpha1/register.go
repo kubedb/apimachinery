@@ -54,12 +54,16 @@ func Resource(resource string) schema.GroupResource {
 // Adds the list of known types to api.Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
+		&ClickHouseAutoscaler{},
+		&ClickHouseAutoscalerList{},
 		&DruidAutoscaler{},
 		&DruidAutoscalerList{},
 		&ElasticsearchAutoscaler{},
 		&ElasticsearchAutoscalerList{},
 		&EtcdAutoscaler{},
 		&EtcdAutoscalerList{},
+		&FerretDBAutoscaler{},
+		&FerretDBAutoscalerList{},
 		&KafkaAutoscaler{},
 		&KafkaAutoscalerList{},
 		&MariaDBAutoscaler{},
@@ -68,6 +72,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MemcachedAutoscalerList{},
 		&MongoDBAutoscaler{},
 		&MongoDBAutoscalerList{},
+		&MSSQLServerAutoscaler{},
+		&MSSQLServerAutoscalerList{},
 		&MySQLAutoscaler{},
 		&MySQLAutoscalerList{},
 		&PerconaXtraDBAutoscaler{},
@@ -88,6 +94,10 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&RedisSentinelAutoscalerList{},
 		&SinglestoreAutoscaler{},
 		&SinglestoreAutoscalerList{},
+		&SolrAutoscaler{},
+		&SolrAutoscalerList{},
+		&ZooKeeperAutoscaler{},
+		&ZooKeeperAutoscalerList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,
