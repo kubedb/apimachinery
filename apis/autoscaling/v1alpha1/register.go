@@ -76,6 +76,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PgpoolAutoscalerList{},
 		&PostgresAutoscaler{},
 		&PostgresAutoscalerList{},
+		&PgBouncerAutoscaler{},
+		&PgBouncerAutoscalerList{},
 		&ProxySQLAutoscaler{},
 		&ProxySQLAutoscalerList{},
 		&RabbitMQAutoscaler{},
