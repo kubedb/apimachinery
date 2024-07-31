@@ -12,6 +12,8 @@ import (
 )
 
 const (
+	// SinglestoreOpsRequestTypeUpdateVersion is a SinglestoreOpsRequestType of type UpdateVersion.
+	SinglestoreOpsRequestTypeUpdateVersion SinglestoreOpsRequestType = "UpdateVersion"
 	// SinglestoreOpsRequestTypeHorizontalScaling is a SinglestoreOpsRequestType of type HorizontalScaling.
 	SinglestoreOpsRequestTypeHorizontalScaling SinglestoreOpsRequestType = "HorizontalScaling"
 	// SinglestoreOpsRequestTypeVerticalScaling is a SinglestoreOpsRequestType of type VerticalScaling.
@@ -22,16 +24,20 @@ const (
 	SinglestoreOpsRequestTypeRestart SinglestoreOpsRequestType = "Restart"
 	// SinglestoreOpsRequestTypeConfiguration is a SinglestoreOpsRequestType of type Configuration.
 	SinglestoreOpsRequestTypeConfiguration SinglestoreOpsRequestType = "Configuration"
+	// SinglestoreOpsRequestTypeReconfigureTLS is a SinglestoreOpsRequestType of type ReconfigureTLS.
+	SinglestoreOpsRequestTypeReconfigureTLS SinglestoreOpsRequestType = "ReconfigureTLS"
 )
 
 var ErrInvalidSinglestoreOpsRequestType = fmt.Errorf("not a valid SinglestoreOpsRequestType, try [%s]", strings.Join(_SinglestoreOpsRequestTypeNames, ", "))
 
 var _SinglestoreOpsRequestTypeNames = []string{
+	string(SinglestoreOpsRequestTypeUpdateVersion),
 	string(SinglestoreOpsRequestTypeHorizontalScaling),
 	string(SinglestoreOpsRequestTypeVerticalScaling),
 	string(SinglestoreOpsRequestTypeVolumeExpansion),
 	string(SinglestoreOpsRequestTypeRestart),
 	string(SinglestoreOpsRequestTypeConfiguration),
+	string(SinglestoreOpsRequestTypeReconfigureTLS),
 }
 
 // SinglestoreOpsRequestTypeNames returns a list of possible string values of SinglestoreOpsRequestType.
@@ -44,11 +50,13 @@ func SinglestoreOpsRequestTypeNames() []string {
 // SinglestoreOpsRequestTypeValues returns a list of the values for SinglestoreOpsRequestType
 func SinglestoreOpsRequestTypeValues() []SinglestoreOpsRequestType {
 	return []SinglestoreOpsRequestType{
+		SinglestoreOpsRequestTypeUpdateVersion,
 		SinglestoreOpsRequestTypeHorizontalScaling,
 		SinglestoreOpsRequestTypeVerticalScaling,
 		SinglestoreOpsRequestTypeVolumeExpansion,
 		SinglestoreOpsRequestTypeRestart,
 		SinglestoreOpsRequestTypeConfiguration,
+		SinglestoreOpsRequestTypeReconfigureTLS,
 	}
 }
 
@@ -65,11 +73,13 @@ func (x SinglestoreOpsRequestType) IsValid() bool {
 }
 
 var _SinglestoreOpsRequestTypeValue = map[string]SinglestoreOpsRequestType{
+	"UpdateVersion":     SinglestoreOpsRequestTypeUpdateVersion,
 	"HorizontalScaling": SinglestoreOpsRequestTypeHorizontalScaling,
 	"VerticalScaling":   SinglestoreOpsRequestTypeVerticalScaling,
 	"VolumeExpansion":   SinglestoreOpsRequestTypeVolumeExpansion,
 	"Restart":           SinglestoreOpsRequestTypeRestart,
 	"Configuration":     SinglestoreOpsRequestTypeConfiguration,
+	"ReconfigureTLS":    SinglestoreOpsRequestTypeReconfigureTLS,
 }
 
 // ParseSinglestoreOpsRequestType attempts to convert a string to a SinglestoreOpsRequestType.

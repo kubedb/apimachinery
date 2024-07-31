@@ -55,6 +55,8 @@ type SinglestoreOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type SinglestoreOpsRequestType `json:"type"`
+	// Specifies information necessary for upgrading SingleStore Version
+	UpdateVersion *SinglestoreUpdateVersionSpec `json:"updateVersion,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *SinglestoreHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
@@ -65,6 +67,8 @@ type SinglestoreOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for custom configuration of Singlestore
 	Configuration *SinglestoreCustomConfigurationSpec `json:"configuration,omitempty"`
+	// Specifies information necessary for configuring TLS
+	TLS *TLSSpec `json:"tls,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -72,9 +76,15 @@ type SinglestoreOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Configuration
-// ENUM(HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Configuration)
+// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Configuration;ReconfigureTLS
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Configuration, ReconfigureTLS)
 type SinglestoreOpsRequestType string
+
+// SinglestoreUpdateVersionSpec contains the update version information of a kafka cluster
+type SinglestoreUpdateVersionSpec struct {
+	// Specifies the target version name from catalog
+	TargetVersion string `json:"targetVersion,omitempty"`
+}
 
 // SinglestoreHorizontalScalingSpec contains the horizontal scaling information of a Singlestore cluster
 type SinglestoreHorizontalScalingSpec struct {
