@@ -538,6 +538,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerDatabase":                          schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerInitContainer":                     schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersion":                           schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionExporter":                   schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionExporter(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionList":                       schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionSpec":                       schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestBackup":                               schema_apimachinery_apis_catalog_v1alpha1_ManifestBackup(ref),
@@ -27104,6 +27105,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersion(ref common.Ref
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLServerVersionExporter is the image for the MSSQL Server exporter",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27182,6 +27204,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionSpec(ref common
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerCoordinator"),
 						},
 					},
+					"exporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Exporter Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionExporter"),
+						},
+					},
 					"initContainer": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init container Image",
@@ -27231,11 +27260,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionSpec(ref common
 						},
 					},
 				},
-				Required: []string{"version", "db", "initContainer"},
+				Required: []string{"version", "db", "exporter", "initContainer"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

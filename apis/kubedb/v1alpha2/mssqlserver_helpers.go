@@ -138,7 +138,7 @@ func (m mssqlserverStatsService) ServiceMonitorAdditionalLabels() map[string]str
 }
 
 func (m mssqlserverStatsService) Path() string {
-	return DefaultStatsPath
+	return kubedb.DefaultStatsPath
 }
 
 func (m mssqlserverStatsService) Scheme() string {
@@ -154,7 +154,7 @@ func (m MSSQLServer) StatsService() mona.StatsAccessor {
 }
 
 func (m MSSQLServer) StatsServiceLabels() map[string]string {
-	return m.ServiceLabels(StatsServiceAlias, map[string]string{LabelRole: RoleStats})
+	return m.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
 
 func (m *MSSQLServer) IsAvailabilityGroup() bool {
