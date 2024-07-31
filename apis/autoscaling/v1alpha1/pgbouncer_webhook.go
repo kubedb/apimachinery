@@ -115,9 +115,5 @@ func (r *PgBouncerAutoscaler) validate() error {
 		return err
 	}
 
-	if r.Spec.Compute == nil || r.Spec.Compute.PgBouncer == nil {
-		return fmt.Errorf("mutator in not working for PgBouncerAutoscaler %s/%s", r.Namespace, r.Spec.DatabaseRef.Name)
-	}
-
 	return nil
 }
