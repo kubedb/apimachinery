@@ -511,18 +511,25 @@ func (d *Druid) SetDefaults() {
 		}
 	}
 
+	d.SetDefaultsToMetadataStorage()
+	d.SetDefaultsToZooKeeperRef()
+
+	if d.Spec.Monitor != nil {
+		if d.Spec.Monitor.Prometheus == nil {
+			d.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+		}
+		if d.Spec.Monitor.Prometheus != nil && d.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+			d.Spec.Monitor.Prometheus.Exporter.Port = kubedb.DruidExporterPort
+		}
+		d.Spec.Monitor.SetDefaults()
+	}
+}
+
+func (d *Druid) SetDefaultsToMetadataStorage() {
 	if d.Spec.MetadataStorage == nil {
 		d.Spec.MetadataStorage = &MetadataStorage{}
 	}
-	if !d.Spec.MetadataStorage.ExternallyManaged {
-		if d.Spec.MetadataStorage.ObjectReference == nil {
-			d.Spec.MetadataStorage.ObjectReference = &kmapi.ObjectReference{}
-		}
-		d.Spec.MetadataStorage.Name = d.GetMetadataStorageName()
-	}
-	if d.Spec.MetadataStorage.Namespace == "" {
-		d.Spec.MetadataStorage.Namespace = d.Namespace
-	}
+	d.Spec.MetadataStorage.ObjectReference = d.GetMetadataStorageObjectRef()
 	if d.Spec.MetadataStorage.LinkedDB == "" {
 		d.Spec.MetadataStorage.LinkedDB = "druid"
 	}
@@ -541,12 +548,6 @@ func (d *Druid) SetDefaults() {
 			d.Spec.MetadataStorage.Type = DruidMetadataStorageMySQL
 		}
 	}
-	if !d.Spec.MetadataStorage.ExternallyManaged {
-		if d.Spec.MetadataStorage.ObjectReference == nil {
-			d.Spec.MetadataStorage.ObjectReference = &kmapi.ObjectReference{}
-		}
-		d.Spec.MetadataStorage.Name = d.GetMetadataStorageName()
-	}
 
 	if d.Spec.MetadataStorage.Version == nil {
 		var defaultVersion string
@@ -557,32 +558,16 @@ func (d *Druid) SetDefaults() {
 		}
 		d.Spec.MetadataStorage.Version = &defaultVersion
 	}
+}
 
+func (d *Druid) SetDefaultsToZooKeeperRef() {
 	if d.Spec.ZookeeperRef == nil {
 		d.Spec.ZookeeperRef = &ZookeeperRef{}
 	}
-	if !d.Spec.ZookeeperRef.ExternallyManaged {
-		if d.Spec.ZookeeperRef.ObjectReference == nil {
-			d.Spec.ZookeeperRef.ObjectReference = &kmapi.ObjectReference{}
-		}
-		if d.Spec.ZookeeperRef.Name == "" {
-			d.Spec.ZookeeperRef.Name = d.GetZooKeeperName()
-		}
-		if d.Spec.ZookeeperRef.Namespace == "" {
-			d.Spec.ZookeeperRef.Namespace = d.Namespace
-		}
+	d.Spec.ZookeeperRef.ObjectReference = d.GetZooKeeperObjectRef()
+	if d.Spec.ZookeeperRef.Version == nil {
 		defaultVersion := "3.7.2"
 		d.Spec.ZookeeperRef.Version = &defaultVersion
-	}
-
-	if d.Spec.Monitor != nil {
-		if d.Spec.Monitor.Prometheus == nil {
-			d.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
-		}
-		if d.Spec.Monitor.Prometheus != nil && d.Spec.Monitor.Prometheus.Exporter.Port == 0 {
-			d.Spec.Monitor.Prometheus.Exporter.Port = kubedb.DruidExporterPort
-		}
-		d.Spec.Monitor.SetDefaults()
 	}
 }
 
@@ -700,11 +685,37 @@ func (d *Druid) GetAppBinding(name string, namespace string) (*appcat.AppBinding
 	return appbinding, nil
 }
 
+func (d *Druid) GetMetadataStorageObjectRef() *kmapi.ObjectReference {
+	if d.Spec.MetadataStorage == nil {
+		d.Spec.MetadataStorage.ObjectReference = &kmapi.ObjectReference{}
+	}
+	if d.Spec.MetadataStorage.Name == "" {
+		d.Spec.MetadataStorage.Name = d.GetMetadataStorageName()
+	}
+	if d.Spec.MetadataStorage.Namespace == "" {
+		d.Spec.MetadataStorage.Namespace = d.Namespace
+	}
+	return d.Spec.MetadataStorage.ObjectReference
+}
+
 func (d *Druid) GetMetadataStorageName() string {
 	if d.Spec.MetadataStorage.Type == DruidMetadataStoragePostgreSQL {
 		return d.OffShootName() + "-pg-metadata"
 	}
 	return d.OffShootName() + "-mysql-metadata"
+}
+
+func (d *Druid) GetZooKeeperObjectRef() *kmapi.ObjectReference {
+	if d.Spec.ZookeeperRef == nil {
+		d.Spec.ZookeeperRef.ObjectReference = &kmapi.ObjectReference{}
+	}
+	if d.Spec.ZookeeperRef.Name == "" {
+		d.Spec.ZookeeperRef.Name = d.GetZooKeeperName()
+	}
+	if d.Spec.ZookeeperRef.Namespace == "" {
+		d.Spec.ZookeeperRef.Namespace = d.Namespace
+	}
+	return d.Spec.ZookeeperRef.ObjectReference
 }
 
 func (d *Druid) GetZooKeeperName() string {
