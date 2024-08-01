@@ -689,10 +689,8 @@ func (d *Druid) SetMetadataStorageObjectRef() {
 	if d.Spec.MetadataStorage.ObjectReference == nil {
 		d.Spec.MetadataStorage.ObjectReference = &kmapi.ObjectReference{}
 	}
-	if d.Spec.MetadataStorage.Name == "" || d.Spec.MetadataStorage.Namespace == "" {
-		d.Spec.MetadataStorage.ExternallyManaged = false
-	}
 	if d.Spec.MetadataStorage.Name == "" {
+		d.Spec.MetadataStorage.ExternallyManaged = false
 		d.Spec.MetadataStorage.Name = d.GetMetadataStorageName()
 	}
 	if d.Spec.MetadataStorage.Namespace == "" {
@@ -711,10 +709,8 @@ func (d *Druid) SetZooKeeperObjectRef() {
 	if d.Spec.ZookeeperRef.ObjectReference == nil {
 		d.Spec.ZookeeperRef.ObjectReference = &kmapi.ObjectReference{}
 	}
-	if d.Spec.ZookeeperRef.Name == "" || d.Spec.ZookeeperRef.Namespace == "" {
-		d.Spec.ZookeeperRef.ExternallyManaged = false
-	}
 	if d.Spec.ZookeeperRef.Name == "" {
+		d.Spec.ZookeeperRef.ExternallyManaged = false
 		d.Spec.ZookeeperRef.Name = d.GetZooKeeperName()
 	}
 	if d.Spec.ZookeeperRef.Namespace == "" {
