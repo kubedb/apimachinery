@@ -74,14 +74,20 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().PostgresArchivers().Informer()}, nil
 
 		// Group=autoscaling.kubedb.com, Version=v1alpha1
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("clickhouseautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().ClickHouseAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("druidautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().DruidAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("elasticsearchautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().ElasticsearchAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("etcdautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().EtcdAutoscalers().Informer()}, nil
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("ferretdbautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().FerretDBAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("kafkaautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().KafkaAutoscalers().Informer()}, nil
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("mssqlserverautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MSSQLServerAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("mariadbautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MariaDBAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("memcachedautoscalers"):
@@ -108,6 +114,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().RedisSentinelAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("singlestoreautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().SinglestoreAutoscalers().Informer()}, nil
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("solrautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().SolrAutoscalers().Informer()}, nil
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("zookeeperautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().ZooKeeperAutoscalers().Informer()}, nil
 
 		// Group=catalog.kubedb.com, Version=v1alpha1
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("clickhouseversions"):
@@ -166,6 +176,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kafka().V1alpha1().ConnectClusters().Informer()}, nil
 	case kafkav1alpha1.SchemeGroupVersion.WithResource("connectors"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kafka().V1alpha1().Connectors().Informer()}, nil
+	case kafkav1alpha1.SchemeGroupVersion.WithResource("restproxies"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kafka().V1alpha1().RestProxies().Informer()}, nil
 	case kafkav1alpha1.SchemeGroupVersion.WithResource("schemaregistries"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kafka().V1alpha1().SchemaRegistries().Informer()}, nil
 

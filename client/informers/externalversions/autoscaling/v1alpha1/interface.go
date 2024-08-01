@@ -24,14 +24,20 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// ClickHouseAutoscalers returns a ClickHouseAutoscalerInformer.
+	ClickHouseAutoscalers() ClickHouseAutoscalerInformer
 	// DruidAutoscalers returns a DruidAutoscalerInformer.
 	DruidAutoscalers() DruidAutoscalerInformer
 	// ElasticsearchAutoscalers returns a ElasticsearchAutoscalerInformer.
 	ElasticsearchAutoscalers() ElasticsearchAutoscalerInformer
 	// EtcdAutoscalers returns a EtcdAutoscalerInformer.
 	EtcdAutoscalers() EtcdAutoscalerInformer
+	// FerretDBAutoscalers returns a FerretDBAutoscalerInformer.
+	FerretDBAutoscalers() FerretDBAutoscalerInformer
 	// KafkaAutoscalers returns a KafkaAutoscalerInformer.
 	KafkaAutoscalers() KafkaAutoscalerInformer
+	// MSSQLServerAutoscalers returns a MSSQLServerAutoscalerInformer.
+	MSSQLServerAutoscalers() MSSQLServerAutoscalerInformer
 	// MariaDBAutoscalers returns a MariaDBAutoscalerInformer.
 	MariaDBAutoscalers() MariaDBAutoscalerInformer
 	// MemcachedAutoscalers returns a MemcachedAutoscalerInformer.
@@ -58,6 +64,10 @@ type Interface interface {
 	RedisSentinelAutoscalers() RedisSentinelAutoscalerInformer
 	// SinglestoreAutoscalers returns a SinglestoreAutoscalerInformer.
 	SinglestoreAutoscalers() SinglestoreAutoscalerInformer
+	// SolrAutoscalers returns a SolrAutoscalerInformer.
+	SolrAutoscalers() SolrAutoscalerInformer
+	// ZooKeeperAutoscalers returns a ZooKeeperAutoscalerInformer.
+	ZooKeeperAutoscalers() ZooKeeperAutoscalerInformer
 }
 
 type version struct {
@@ -69,6 +79,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// ClickHouseAutoscalers returns a ClickHouseAutoscalerInformer.
+func (v *version) ClickHouseAutoscalers() ClickHouseAutoscalerInformer {
+	return &clickHouseAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // DruidAutoscalers returns a DruidAutoscalerInformer.
@@ -86,9 +101,19 @@ func (v *version) EtcdAutoscalers() EtcdAutoscalerInformer {
 	return &etcdAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// FerretDBAutoscalers returns a FerretDBAutoscalerInformer.
+func (v *version) FerretDBAutoscalers() FerretDBAutoscalerInformer {
+	return &ferretDBAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // KafkaAutoscalers returns a KafkaAutoscalerInformer.
 func (v *version) KafkaAutoscalers() KafkaAutoscalerInformer {
 	return &kafkaAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MSSQLServerAutoscalers returns a MSSQLServerAutoscalerInformer.
+func (v *version) MSSQLServerAutoscalers() MSSQLServerAutoscalerInformer {
+	return &mSSQLServerAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MariaDBAutoscalers returns a MariaDBAutoscalerInformer.
@@ -154,4 +179,14 @@ func (v *version) RedisSentinelAutoscalers() RedisSentinelAutoscalerInformer {
 // SinglestoreAutoscalers returns a SinglestoreAutoscalerInformer.
 func (v *version) SinglestoreAutoscalers() SinglestoreAutoscalerInformer {
 	return &singlestoreAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// SolrAutoscalers returns a SolrAutoscalerInformer.
+func (v *version) SolrAutoscalers() SolrAutoscalerInformer {
+	return &solrAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// ZooKeeperAutoscalers returns a ZooKeeperAutoscalerInformer.
+func (v *version) ZooKeeperAutoscalers() ZooKeeperAutoscalerInformer {
+	return &zooKeeperAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
