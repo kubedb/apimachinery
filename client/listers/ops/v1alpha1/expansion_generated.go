@@ -42,6 +42,14 @@ type EtcdOpsRequestListerExpansion interface{}
 // EtcdOpsRequestNamespaceLister.
 type EtcdOpsRequestNamespaceListerExpansion interface{}
 
+// FerretDBOpsRequestListerExpansion allows custom methods to be added to
+// FerretDBOpsRequestLister.
+type FerretDBOpsRequestListerExpansion interface{}
+
+// FerretDBOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// FerretDBOpsRequestNamespaceLister.
+type FerretDBOpsRequestNamespaceListerExpansion interface{}
+
 // KafkaOpsRequestListerExpansion allows custom methods to be added to
 // KafkaOpsRequestLister.
 type KafkaOpsRequestListerExpansion interface{}
