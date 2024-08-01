@@ -28568,7 +28568,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscalerSpec(ref c
 					},
 					"opsRequestOptions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "This field will be used to control the behaviour of ops-manager",
+							Description: "OpsRequestOptions will be used to control the behaviour of ops-manager",
 							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerOpsRequestOptions"),
 						},
 					},
@@ -28577,17 +28577,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerAutoscalerSpec(ref c
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerComputeAutoscalerSpec"),
 						},
 					},
-					"storage": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerStorageAutoscalerSpec"),
-						},
-					},
 				},
 				Required: []string{"databaseRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerOpsRequestOptions", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerStorageAutoscalerSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgBouncerOpsRequestOptions"},
 	}
 }
 
@@ -28621,12 +28616,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerOpsRequestOptions(re
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"readinessCriteria": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the Readiness Criteria",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerReplicaReadinessCriteria"),
-						},
-					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -28635,7 +28624,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerOpsRequestOptions(re
 					},
 					"apply": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+							Description: "Apply is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -28644,7 +28633,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerOpsRequestOptions(re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerReplicaReadinessCriteria"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -28782,7 +28771,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PgpoolAutoscalerSpec(ref comm
 					},
 					"opsRequestOptions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "This field will be used to control the behaviour of ops-manager",
+							Description: "OpsRequestOptions will be used to control the behaviour of ops-manager",
 							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PgpoolOpsRequestOptions"),
 						},
 					},
@@ -29027,7 +29016,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PostgresAutoscalerSpec(ref co
 					},
 					"opsRequestOptions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "This field will be used to control the behaviour of ops-manager",
+							Description: "OpsRequestOptions will be used to control the behaviour of ops-manager",
 							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.PostgresOpsRequestOptions"),
 						},
 					},

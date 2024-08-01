@@ -85,7 +85,7 @@ func (r *ZooKeeperAutoscaler) ValidateCreate() (admission.Warnings, error) {
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *ZooKeeperAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
-	zkLog.Info("validate create", "name", r.Name)
+	zkLog.Info("validate update", "name", r.Name)
 	return nil, r.validate()
 }
 
