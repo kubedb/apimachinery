@@ -64,6 +64,17 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 	}
 	switch owner.Kind {
 
+	case olddbapi.ResourceKindClickHouse:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralClickHouse
+		ch, err := c.DBClient.KubedbV1alpha2().ClickHouses(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
+		dbInfo.replicasReady, dbInfo.msg, err = ch.ReplicasAreReady(c.PSLister)
+		if err != nil {
+			return nil, err
+		}
+
 	case olddbapi.ResourceKindDruid:
 		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralDruid
 		dr, err := c.DBClient.KubedbV1alpha2().Druids(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})

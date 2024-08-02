@@ -60,11 +60,10 @@ type PgBouncerAutoscaler struct {
 type PgBouncerAutoscalerSpec struct {
 	DatabaseRef *core.LocalObjectReference `json:"databaseRef"`
 
-	// This field will be used to control the behaviour of ops-manager
+	// OpsRequestOptions will be used to control the behaviour of ops-manager
 	OpsRequestOptions *PgBouncerOpsRequestOptions `json:"opsRequestOptions,omitempty"`
 
 	Compute *PgBouncerComputeAutoscalerSpec `json:"compute,omitempty"`
-	Storage *PgBouncerStorageAutoscalerSpec `json:"storage,omitempty"`
 }
 
 type PgBouncerComputeAutoscalerSpec struct {
@@ -79,13 +78,10 @@ type PgBouncerStorageAutoscalerSpec struct {
 }
 
 type PgBouncerOpsRequestOptions struct {
-	// Specifies the Readiness Criteria
-	ReadinessCriteria *opsapi.PgBouncerReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`
-
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
-	// ApplyOption is to control the execution of OpsRequest depending on the database state.
+	// Apply is to control the execution of OpsRequest depending on the database state.
 	// +kubebuilder:default="IfReady"
 	Apply opsapi.ApplyOption `json:"apply,omitempty"`
 }

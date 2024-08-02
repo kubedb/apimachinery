@@ -55,6 +55,8 @@ type MSSQLServerVersionSpec struct {
 	// Coordinator Image
 	// +optional
 	Coordinator MSSQLServerCoordinator `json:"coordinator,omitempty"`
+	// Exporter Image
+	Exporter MSSQLServerVersionExporter `json:"exporter"`
 	// Init container Image
 	InitContainer MSSQLServerInitContainer `json:"initContainer"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
@@ -81,6 +83,11 @@ type MSSQLServerDatabase struct {
 
 // MSSQLServerCoordinator is the MSSQLServer coordinator Container image
 type MSSQLServerCoordinator struct {
+	Image string `json:"image"`
+}
+
+// MSSQLServerVersionExporter is the image for the MSSQL Server exporter
+type MSSQLServerVersionExporter struct {
 	Image string `json:"image"`
 }
 
