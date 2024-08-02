@@ -271,7 +271,7 @@ func (s *Solr) SetDefaults() {
 		Name: s.Spec.Version,
 	}, &slVersion)
 	if err != nil {
-		klog.Errorf("can't get the rabbitmq version object %s for %s \n", err.Error(), s.Spec.Version)
+		klog.Errorf("can't get the solr version object %s for %s \n", err.Error(), s.Spec.Version)
 		return
 	}
 
