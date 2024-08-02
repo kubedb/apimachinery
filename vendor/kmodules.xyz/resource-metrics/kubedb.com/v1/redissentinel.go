@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+package v1
 
 import (
 	"fmt"
@@ -29,26 +29,25 @@ import (
 func init() {
 	api.Register(schema.GroupVersionKind{
 		Group:   "kubedb.com",
-		Version: "v1alpha2",
-		Kind:    "PgBouncer",
-	}, PgBouncer{}.ResourceCalculator())
+		Version: "v1",
+		Kind:    "RedisSentinel",
+	}, RedisSentinel{}.ResourceCalculator())
 }
 
-type PgBouncer struct{}
+type RedisSentinel struct{}
 
-func (r PgBouncer) ResourceCalculator() api.ResourceCalculator {
+func (r RedisSentinel) ResourceCalculator() api.ResourceCalculator {
 	return &api.ResourceCalculatorFuncs{
 		AppRoles:               []api.PodRole{api.PodRoleDefault},
 		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleExporter},
 		RoleReplicasFn:         r.roleReplicasFn,
 		ModeFn:                 r.modeFn,
-		UsesTLSFn:              r.usesTLSFn,
 		RoleResourceLimitsFn:   r.roleResourceFn(api.ResourceLimits),
 		RoleResourceRequestsFn: r.roleResourceFn(api.ResourceRequests),
 	}
 }
 
-func (r PgBouncer) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
+func (r RedisSentinel) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
 	replicas, found, err := unstructured.NestedInt64(obj, "spec", "replicas")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read spec.replicas %v: %w", obj, err)
@@ -59,33 +58,22 @@ func (r PgBouncer) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, 
 	return api.ReplicaList{api.PodRoleDefault: replicas}, nil
 }
 
-func (r PgBouncer) modeFn(obj map[string]interface{}) (string, error) {
-	replicas, _, err := unstructured.NestedInt64(obj, "spec", "replicas")
-	if err != nil {
-		return "", err
-	}
-	if replicas > 1 {
-		return DBModeCluster, nil
-	}
-	return DBModeStandalone, nil
+func (r RedisSentinel) modeFn(obj map[string]interface{}) (string, error) {
+	return DBModeCluster, nil
 }
 
-func (r PgBouncer) usesTLSFn(obj map[string]interface{}) (bool, error) {
-	_, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "tls")
-	return found, err
-}
-
-func (r PgBouncer) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
+func (r RedisSentinel) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
 	return func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
-		container, replicas, err := api.AppNodeResources(obj, fn, "spec")
-		if err != nil {
-			return nil, err
-		}
-
 		exporter, err := api.ContainerResources(obj, fn, "spec", "monitor", "prometheus", "exporter")
 		if err != nil {
 			return nil, err
 		}
+
+		container, replicas, err := api.AppNodeResourcesV2(obj, fn, RedisSentinelContainerName, "spec")
+		if err != nil {
+			return nil, err
+		}
+
 		return map[api.PodRole]api.PodInfo{
 			api.PodRoleDefault:  {Resource: container, Replicas: replicas},
 			api.PodRoleExporter: {Resource: exporter, Replicas: replicas},
