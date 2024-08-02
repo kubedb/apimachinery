@@ -18,10 +18,10 @@ const (
 	SolrOpsRequestTypeVerticalScaling SolrOpsRequestType = "VerticalScaling"
 	// SolrOpsRequestTypeVolumeExpansion is a SolrOpsRequestType of type VolumeExpansion.
 	SolrOpsRequestTypeVolumeExpansion SolrOpsRequestType = "VolumeExpansion"
-	// SolrOpsRequestTypeRestart is a SolrOpsRequestType of type Restart.
-	SolrOpsRequestTypeRestart SolrOpsRequestType = "Restart"
 	// SolrOpsRequestTypeReconfigure is a SolrOpsRequestType of type Reconfigure.
 	SolrOpsRequestTypeReconfigure SolrOpsRequestType = "Reconfigure"
+	// SolrOpsRequestTypeRestart is a SolrOpsRequestType of type Restart.
+	SolrOpsRequestTypeRestart SolrOpsRequestType = "Restart"
 )
 
 var ErrInvalidSolrOpsRequestType = fmt.Errorf("not a valid SolrOpsRequestType, try [%s]", strings.Join(_SolrOpsRequestTypeNames, ", "))
@@ -30,8 +30,8 @@ var _SolrOpsRequestTypeNames = []string{
 	string(SolrOpsRequestTypeUpdateVersion),
 	string(SolrOpsRequestTypeVerticalScaling),
 	string(SolrOpsRequestTypeVolumeExpansion),
-	string(SolrOpsRequestTypeRestart),
 	string(SolrOpsRequestTypeReconfigure),
+	string(SolrOpsRequestTypeRestart),
 }
 
 // SolrOpsRequestTypeNames returns a list of possible string values of SolrOpsRequestType.
@@ -47,8 +47,8 @@ func SolrOpsRequestTypeValues() []SolrOpsRequestType {
 		SolrOpsRequestTypeUpdateVersion,
 		SolrOpsRequestTypeVerticalScaling,
 		SolrOpsRequestTypeVolumeExpansion,
-		SolrOpsRequestTypeRestart,
 		SolrOpsRequestTypeReconfigure,
+		SolrOpsRequestTypeRestart,
 	}
 }
 
@@ -68,8 +68,8 @@ var _SolrOpsRequestTypeValue = map[string]SolrOpsRequestType{
 	"UpdateVersion":   SolrOpsRequestTypeUpdateVersion,
 	"VerticalScaling": SolrOpsRequestTypeVerticalScaling,
 	"VolumeExpansion": SolrOpsRequestTypeVolumeExpansion,
-	"Restart":         SolrOpsRequestTypeRestart,
 	"Reconfigure":     SolrOpsRequestTypeReconfigure,
+	"Restart":         SolrOpsRequestTypeRestart,
 }
 
 // ParseSolrOpsRequestType attempts to convert a string to a SolrOpsRequestType.
