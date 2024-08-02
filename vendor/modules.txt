@@ -1713,7 +1713,7 @@ kmodules.xyz/offshoot-api/util
 # kmodules.xyz/prober v0.29.0
 ## explicit; go 1.21.5
 kmodules.xyz/prober/api/v1
-# kmodules.xyz/resource-metadata v0.18.10
+# kmodules.xyz/resource-metadata v0.18.11-0.20240801195527-995886d0c0e5
 ## explicit; go 1.22.1
 kmodules.xyz/resource-metadata/apis/core/v1alpha1
 kmodules.xyz/resource-metadata/apis/identity/v1alpha1
@@ -1722,7 +1722,7 @@ kmodules.xyz/resource-metadata/apis/node/v1alpha1
 kmodules.xyz/resource-metadata/apis/shared
 kmodules.xyz/resource-metadata/crds
 kmodules.xyz/resource-metadata/pkg/identity
-# kmodules.xyz/resource-metrics v0.30.1
+# kmodules.xyz/resource-metrics v0.30.2-0.20240711131537-5e9d22977a2c
 ## explicit; go 1.22.1
 kmodules.xyz/resource-metrics
 kmodules.xyz/resource-metrics/api
@@ -1731,6 +1731,7 @@ kmodules.xyz/resource-metrics/batch/v1
 kmodules.xyz/resource-metrics/batch/v1beta1
 kmodules.xyz/resource-metrics/core/v1
 kmodules.xyz/resource-metrics/kafka.kubedb.com/v1alpha1
+kmodules.xyz/resource-metrics/kubedb.com/v1
 kmodules.xyz/resource-metrics/kubedb.com/v1alpha2
 kmodules.xyz/resource-metrics/kubevault.com/v1alpha2
 kmodules.xyz/resource-metrics/ops.kubedb.com/v1alpha1

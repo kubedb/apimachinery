@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+package v1
 
 import (
 	"fmt"
@@ -22,25 +22,27 @@ import (
 
 	"kmodules.xyz/resource-metrics/api"
 
+	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 func init() {
 	api.Register(schema.GroupVersionKind{
 		Group:   "kubedb.com",
-		Version: "v1alpha2",
-		Kind:    "Solr",
-	}, Solr{}.ResourceCalculator())
+		Version: "v1",
+		Kind:    "Elasticsearch",
+	}, Elasticsearch{}.ResourceCalculator())
 }
 
-type Solr struct{}
+type Elasticsearch struct{}
 
-func (r Solr) ResourceCalculator() api.ResourceCalculator {
+func (r Elasticsearch) ResourceCalculator() api.ResourceCalculator {
 	return &api.ResourceCalculatorFuncs{
-		AppRoles:               []api.PodRole{api.PodRoleDefault, api.PodRoleCoordinator, api.PodRoleOverseer, api.PodRoleData},
-		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleCoordinator, api.PodRoleOverseer, api.PodRoleData, api.PodRoleExporter},
+		AppRoles:               []api.PodRole{api.PodRoleDefault, api.PodRoleMaster, api.PodRoleIngest, api.PodRoleData, api.PodRoleDataContent, api.PodRoleDataCold, api.PodRoleDataHot, api.PodRoleDataWarm, api.PodRoleDataFrozen, api.PodRoleML, api.PodRoleTransform, api.PodRoleCoordinating},
+		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleMaster, api.PodRoleIngest, api.PodRoleData, api.PodRoleDataContent, api.PodRoleDataCold, api.PodRoleDataHot, api.PodRoleDataWarm, api.PodRoleDataFrozen, api.PodRoleML, api.PodRoleTransform, api.PodRoleCoordinating, api.PodRoleExporter},
 		RoleReplicasFn:         r.roleReplicasFn,
 		ModeFn:                 r.modeFn,
 		UsesTLSFn:              r.usesTLSFn,
@@ -49,14 +51,13 @@ func (r Solr) ResourceCalculator() api.ResourceCalculator {
 	}
 }
 
-func (r Solr) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
+func (r Elasticsearch) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
 	result := api.ReplicaList{}
 
 	topology, found, err := unstructured.NestedMap(obj, "spec", "topology")
 	if err != nil {
 		return nil, err
 	}
-
 	if found && topology != nil {
 		for role, roleSpec := range topology {
 			roleReplicas, found, err := unstructured.NestedInt64(roleSpec.(map[string]interface{}), "replicas")
@@ -79,11 +80,10 @@ func (r Solr) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error
 			result[api.PodRoleDefault] = replicas
 		}
 	}
-
 	return result, nil
 }
 
-func (r Solr) modeFn(obj map[string]interface{}) (string, error) {
+func (r Elasticsearch) modeFn(obj map[string]interface{}) (string, error) {
 	topology, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "topology")
 	if err != nil {
 		return "", err
@@ -94,12 +94,12 @@ func (r Solr) modeFn(obj map[string]interface{}) (string, error) {
 	return DBModeCombined, nil
 }
 
-func (r Solr) usesTLSFn(obj map[string]interface{}) (bool, error) {
+func (r Elasticsearch) usesTLSFn(obj map[string]interface{}) (bool, error) {
 	_, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "enableSSL")
 	return found, err
 }
 
-func (r Solr) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
+func (r Elasticsearch) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
 	return func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
 		exporter, err := api.ContainerResources(obj, fn, "spec", "monitor", "prometheus", "exporter")
 		if err != nil {
@@ -115,7 +115,7 @@ func (r Solr) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resource
 			result := map[api.PodRole]api.PodInfo{}
 
 			for role, roleSpec := range topology {
-				rolePerReplicaResources, roleReplicas, err := api.AppNodeResourcesV2(roleSpec.(map[string]interface{}), fn, SolrContainerName)
+				rolePerReplicaResources, roleReplicas, err := ElasticsearchNodeResources(roleSpec.(map[string]interface{}), fn)
 				if err != nil {
 					return nil, err
 				}
@@ -127,8 +127,8 @@ func (r Solr) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resource
 			return result, nil
 		}
 
-		// Solr Combined
-		container, replicas, err := api.AppNodeResourcesV2(obj, fn, SolrContainerName, "spec")
+		// Elasticsearch Combined
+		container, replicas, err := api.AppNodeResourcesV2(obj, fn, ElasticsearchContainerName, "spec")
 		if err != nil {
 			return nil, err
 		}
@@ -138,4 +138,36 @@ func (r Solr) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resource
 			api.PodRoleExporter: {Resource: exporter, Replicas: replicas},
 		}, nil
 	}
+}
+
+type ElasticsearchNode struct {
+	Replicas  *int64                         `json:"replicas,omitempty"`
+	Resources core.ResourceRequirements      `json:"resources,omitempty"`
+	Storage   core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+}
+
+func ElasticsearchNodeResources(
+	obj map[string]interface{},
+	fn func(rr core.ResourceRequirements) core.ResourceList,
+	fields ...string,
+) (core.ResourceList, int64, error) {
+	val, found, err := unstructured.NestedFieldNoCopy(obj, fields...)
+	if !found || err != nil {
+		return nil, 0, err
+	}
+
+	var node ElasticsearchNode
+	err = runtime.DefaultUnstructuredConverter.FromUnstructured(val.(map[string]interface{}), &node)
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to parse node %#v: %w", node, err)
+	}
+
+	if node.Replicas == nil {
+		node.Replicas = pointer.Int64P(1)
+	}
+	rr := fn(node.Resources)
+	sr := fn(api.ToResourceRequirements(node.Storage.Resources))
+	rr[core.ResourceStorage] = *sr.Storage()
+
+	return rr, *node.Replicas, nil
 }

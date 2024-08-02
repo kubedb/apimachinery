@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+package v1
 
 import (
 	"fmt"
@@ -29,7 +29,7 @@ import (
 func init() {
 	api.Register(schema.GroupVersionKind{
 		Group:   "kubedb.com",
-		Version: "v1alpha2",
+		Version: "v1",
 		Kind:    "MongoDB",
 	}, MongoDB{}.ResourceCalculator())
 }
@@ -132,19 +132,19 @@ func (r MongoDB) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resou
 			if err != nil {
 				return nil, err
 			}
-			shard, shardReplicas, err := api.AppNodeResources(shardTopology, fn, "shard")
+			shard, shardReplicas, err := api.AppNodeResourcesV2(shardTopology, fn, MongoDBContainerName, "shard")
 			if err != nil {
 				return nil, err
 			}
 
 			// ConfigServer nodes resources
-			configServer, configServerReplicas, err := api.AppNodeResources(shardTopology, fn, "configServer")
+			configServer, configServerReplicas, err := api.AppNodeResourcesV2(shardTopology, fn, MongoDBContainerName, "configServer")
 			if err != nil {
 				return nil, err
 			}
 
 			// Mongos node resources
-			mongos, mongosReplicas, err := api.AppNodeResources(shardTopology, fn, "mongos")
+			mongos, mongosReplicas, err := api.AppNodeResourcesV2(shardTopology, fn, MongoDBContainerName, "mongos")
 			if err != nil {
 				return nil, err
 			}
@@ -158,7 +158,7 @@ func (r MongoDB) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resou
 		}
 
 		// MongoDB ReplicaSet or Standalone
-		container, replicas, err := api.AppNodeResources(obj, fn, "spec")
+		container, replicas, err := api.AppNodeResourcesV2(obj, fn, MongoDBContainerName, "spec")
 		if err != nil {
 			return nil, err
 		}

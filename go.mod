@@ -41,7 +41,7 @@ require (
 	kmodules.xyz/monitoring-agent-api v0.29.0
 	kmodules.xyz/objectstore-api v0.29.1
 	kmodules.xyz/offshoot-api v0.30.0
-	kmodules.xyz/resource-metadata v0.18.10
+	kmodules.xyz/resource-metadata v0.18.11-0.20240801195527-995886d0c0e5
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/petset v0.0.6
 	kubeops.dev/sidekick v0.0.7
@@ -189,7 +189,7 @@ require (
 	kmodules.xyz/apiversion v0.2.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.12 // indirect
 	kmodules.xyz/prober v0.29.0 // indirect
-	kmodules.xyz/resource-metrics v0.30.1 // indirect
+	kmodules.xyz/resource-metrics v0.30.2-0.20240711131537-5e9d22977a2c // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.30.3 // indirect
 	sigs.k8s.io/cli-utils v0.34.0 // indirect
 	sigs.k8s.io/gateway-api v1.1.0 // indirect
