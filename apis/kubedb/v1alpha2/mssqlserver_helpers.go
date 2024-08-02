@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"regexp"
+	"strings"
 	"time"
 
 	"kubedb.dev/apimachinery/apis"
@@ -92,6 +93,10 @@ func (m *MSSQLServer) SecondaryServiceName() string {
 
 func (m *MSSQLServer) GoverningServiceName() string {
 	return metautil.NameWithSuffix(m.ServiceName(), "pods")
+}
+
+func (m *MSSQLServer) DefaultUserCredSecretName(username string) string {
+	return metautil.NameWithSuffix(m.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", username), "_", "-"))
 }
 
 func (m *MSSQLServer) offshootLabels(selector, override map[string]string) map[string]string {
