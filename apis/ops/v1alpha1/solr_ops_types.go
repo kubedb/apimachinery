@@ -50,7 +50,7 @@ type SolrOpsRequest struct {
 }
 
 // +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;VolumeExpansion;Reconfigure;Restart
-// ENUM(UpdateVersion, VerticalScaling, VolumeExpansion, Restart, Reconfigure)
+// ENUM(UpdateVersion, VerticalScaling, VolumeExpansion, Reconfigure, Restart)
 type SolrOpsRequestType string
 
 // DruidOpsRequestSpec is the spec for DruidOpsRequest
