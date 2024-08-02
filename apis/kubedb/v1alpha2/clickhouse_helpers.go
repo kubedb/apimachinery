@@ -19,8 +19,6 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
-	"k8s.io/apimachinery/pkg/labels"
-	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"strconv"
 	"strings"
 
@@ -32,6 +30,7 @@ import (
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
@@ -40,6 +39,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
 type ClickhouseApp struct {
