@@ -2187,11 +2187,6 @@ func (in *MSSQLServerSpec) DeepCopyInto(out *MSSQLServerSpec) {
 		*out = new(monitoringagentapiapiv1.AgentSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.PodPlacementPolicy != nil {
-		in, out := &in.PodPlacementPolicy, &out.PodPlacementPolicy
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
 	return
 }
 

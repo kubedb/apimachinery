@@ -1522,15 +1522,6 @@ spec:
                         type: object
                     type: object
                 type: object
-              podPlacementPolicy:
-                default:
-                  name: default
-                properties:
-                  name:
-                    default: ""
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
               podTemplate:
                 properties:
                   controller:
