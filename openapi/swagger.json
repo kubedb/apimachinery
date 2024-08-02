@@ -20953,6 +20953,14 @@
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonTasks": {
       "type": "object",
       "properties": {
+        "fullBackup": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.FullBackup"
+        },
+        "fullBackupRestore": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.FullBackupRestore"
+        },
         "manifestBackup": {
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestBackup"
@@ -21378,6 +21386,30 @@
         },
         "version": {
           "description": "Version",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.FullBackup": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.FullBackupRestore": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
           "type": "string",
           "default": ""
         }

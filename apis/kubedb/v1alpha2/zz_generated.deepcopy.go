@@ -2187,6 +2187,11 @@ func (in *MSSQLServerSpec) DeepCopyInto(out *MSSQLServerSpec) {
 		*out = new(monitoringagentapiapiv1.AgentSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Archiver != nil {
+		in, out := &in.Archiver, &out.Archiver
+		*out = new(Archiver)
+		**out = **in
+	}
 	return
 }
 

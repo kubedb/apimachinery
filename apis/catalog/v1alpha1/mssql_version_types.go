@@ -70,6 +70,8 @@ type MSSQLServerVersionSpec struct {
 	SecurityContext SecurityContext `json:"securityContext"`
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
+	// Archiver defines the walg & kube-stash-addon related specifications
+	Archiver ArchiverSpec `json:"archiver,omitempty"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
 }

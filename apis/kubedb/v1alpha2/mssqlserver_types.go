@@ -134,6 +134,10 @@ type MSSQLServerSpec struct {
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
+
+	// Archiver controls database backup using Archiver CR
+	// +optional
+	Archiver *Archiver `json:"archiver,omitempty"`
 }
 
 // InternalAuthentication provides different way of endpoint authentication
