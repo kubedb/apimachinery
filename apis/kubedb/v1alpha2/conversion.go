@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"k8s.io/klog/v2"
 	"reflect"
 	"strings"
 	"unsafe"
@@ -1119,6 +1120,7 @@ func Convert_v1_RedisSentinelSpec_To_v1alpha2_RedisSentinelSpec(in *v1.RedisSent
 }
 
 func (src *Elasticsearch) ConvertTo(dstRaw rtconv.Hub) error {
+	klog.Infof("es v1alpha2 -> v1")
 	dst := dstRaw.(*v1.Elasticsearch)
 	err := Convert_v1alpha2_Elasticsearch_To_v1_Elasticsearch(src, dst, nil)
 	if err != nil {
@@ -1128,10 +1130,12 @@ func (src *Elasticsearch) ConvertTo(dstRaw rtconv.Hub) error {
 }
 
 func (dst *Elasticsearch) ConvertFrom(srcRaw rtconv.Hub) error {
+	klog.Infof("es v1 -> v1alpha2")
 	return Convert_v1_Elasticsearch_To_v1alpha2_Elasticsearch(srcRaw.(*v1.Elasticsearch), dst, nil)
 }
 
 func (src *MariaDB) ConvertTo(dstRaw rtconv.Hub) error {
+	klog.Infof("md v1alpha2 -> v1")
 	dst := dstRaw.(*v1.MariaDB)
 	err := Convert_v1alpha2_MariaDB_To_v1_MariaDB(src, dst, nil)
 	if err != nil {
@@ -1141,42 +1145,52 @@ func (src *MariaDB) ConvertTo(dstRaw rtconv.Hub) error {
 }
 
 func (dst *MariaDB) ConvertFrom(srcRaw rtconv.Hub) error {
+	klog.Infof("md v1 -> v1alpha2")
 	return Convert_v1_MariaDB_To_v1alpha2_MariaDB(srcRaw.(*v1.MariaDB), dst, nil)
 }
 
 func (src *MongoDB) ConvertTo(dstRaw rtconv.Hub) error {
+	klog.Infof("mg v1alpha2 -> v1")
 	return Convert_v1alpha2_MongoDB_To_v1_MongoDB(src, dstRaw.(*v1.MongoDB), nil)
 }
 
 func (dst *MongoDB) ConvertFrom(srcRaw rtconv.Hub) error {
+	klog.Infof("mg v1 -> v1alpha2")
 	return Convert_v1_MongoDB_To_v1alpha2_MongoDB(srcRaw.(*v1.MongoDB), dst, nil)
 }
 
 func (src *Memcached) ConvertTo(dstRaw rtconv.Hub) error {
+	klog.Infof("mem v1alpha2 -> v1")
 	return Convert_v1alpha2_Memcached_To_v1_Memcached(src, dstRaw.(*v1.Memcached), nil)
 }
 
 func (dst *Memcached) ConvertFrom(srcRaw rtconv.Hub) error {
+	klog.Infof("mem v1 -> v1alpha2")
 	return Convert_v1_Memcached_To_v1alpha2_Memcached(srcRaw.(*v1.Memcached), dst, nil)
 }
 
 func (src *MySQL) ConvertTo(dstRaw rtconv.Hub) error {
+	klog.Infof("my v1alpha2 -> v1")
 	return Convert_v1alpha2_MySQL_To_v1_MySQL(src, dstRaw.(*v1.MySQL), nil)
 }
 
 func (dst *MySQL) ConvertFrom(srcRaw rtconv.Hub) error {
+	klog.Infof("my v1 -> v1alpha2")
 	return Convert_v1_MySQL_To_v1alpha2_MySQL(srcRaw.(*v1.MySQL), dst, nil)
 }
 
 func (src *PerconaXtraDB) ConvertTo(dstRaw rtconv.Hub) error {
+	klog.Infof("per v1alpha2 -> v1")
 	return Convert_v1alpha2_PerconaXtraDB_To_v1_PerconaXtraDB(src, dstRaw.(*v1.PerconaXtraDB), nil)
 }
 
 func (dst *PerconaXtraDB) ConvertFrom(srcRaw rtconv.Hub) error {
+	klog.Infof("per v1 -> v1alpha2")
 	return Convert_v1_PerconaXtraDB_To_v1alpha2_PerconaXtraDB(srcRaw.(*v1.PerconaXtraDB), dst, nil)
 }
 
 func (src *PgBouncer) ConvertTo(dstRaw rtconv.Hub) error {
+	klog.Infof("pb v1alpha2 -> v1")
 	dst := dstRaw.(*v1.PgBouncer)
 	if err := Convert_v1alpha2_PgBouncer_To_v1_PgBouncer(src, dst, nil); err != nil {
 		return err
@@ -1188,10 +1202,12 @@ func (src *PgBouncer) ConvertTo(dstRaw rtconv.Hub) error {
 }
 
 func (dst *PgBouncer) ConvertFrom(srcRaw rtconv.Hub) error {
+	klog.Infof("pb v1 -> v1alpha2")
 	return Convert_v1_PgBouncer_To_v1alpha2_PgBouncer(srcRaw.(*v1.PgBouncer), dst, nil)
 }
 
 func (src *Postgres) ConvertTo(dstRaw rtconv.Hub) error {
+	klog.Infof("pg v1alpha2 -> v1")
 	// return Convert_v1alpha2_Postgres_To_v1_Postgres(src, dstRaw.(*v1.Postgres), nil)
 	dst := dstRaw.(*v1.Postgres)
 	err := Convert_v1alpha2_Postgres_To_v1_Postgres(src, dst, nil)
@@ -1202,10 +1218,12 @@ func (src *Postgres) ConvertTo(dstRaw rtconv.Hub) error {
 }
 
 func (dst *Postgres) ConvertFrom(srcRaw rtconv.Hub) error {
+	klog.Infof("pg v1 -> v1alpha2")
 	return Convert_v1_Postgres_To_v1alpha2_Postgres(srcRaw.(*v1.Postgres), dst, nil)
 }
 
 func (src *ProxySQL) ConvertTo(dstRaw rtconv.Hub) error {
+	klog.Infof("proxy v1alpha2 -> v1")
 	dst := dstRaw.(*v1.ProxySQL)
 	if err := Convert_v1alpha2_ProxySQL_To_v1_ProxySQL(src, dst, nil); err != nil {
 		return err
@@ -1217,10 +1235,12 @@ func (src *ProxySQL) ConvertTo(dstRaw rtconv.Hub) error {
 }
 
 func (dst *ProxySQL) ConvertFrom(srcRaw rtconv.Hub) error {
+	klog.Infof("proxy v1 -> v1alpha2")
 	return Convert_v1_ProxySQL_To_v1alpha2_ProxySQL(srcRaw.(*v1.ProxySQL), dst, nil)
 }
 
 func (src *RedisSentinel) ConvertTo(dstRaw rtconv.Hub) error {
+	klog.Infof("rs v1alpha2 -> v1")
 	dst := dstRaw.(*v1.RedisSentinel)
 	if err := Convert_v1alpha2_RedisSentinel_To_v1_RedisSentinel(src, dst, nil); err != nil {
 		return err
@@ -1232,21 +1252,26 @@ func (src *RedisSentinel) ConvertTo(dstRaw rtconv.Hub) error {
 }
 
 func (dst *RedisSentinel) ConvertFrom(srcRaw rtconv.Hub) error {
+	klog.Infof("rs v1 -> v1alpha2")
 	return Convert_v1_RedisSentinel_To_v1alpha2_RedisSentinel(srcRaw.(*v1.RedisSentinel), dst, nil)
 }
 
 func (src *Redis) ConvertTo(dstRaw rtconv.Hub) error {
+	klog.Infof("redis v1alpha2 -> v1")
 	return Convert_v1alpha2_Redis_To_v1_Redis(src, dstRaw.(*v1.Redis), nil)
 }
 
 func (dst *Redis) ConvertFrom(srcRaw rtconv.Hub) error {
+	klog.Infof("redis v1 -> v1alpha2")
 	return Convert_v1_Redis_To_v1alpha2_Redis(srcRaw.(*v1.Redis), dst, nil)
 }
 
 func (src *Kafka) ConvertTo(dstRaw rtconv.Hub) error {
+	klog.Infof("kf v1alpha2 -> v1")
 	return Convert_v1alpha2_Kafka_To_v1_Kafka(src, dstRaw.(*v1.Kafka), nil)
 }
 
 func (dst *Kafka) ConvertFrom(srcRaw rtconv.Hub) error {
+	klog.Infof("kf v1 -> v1alpha2")
 	return Convert_v1_Kafka_To_v1alpha2_Kafka(srcRaw.(*v1.Kafka), dst, nil)
 }
