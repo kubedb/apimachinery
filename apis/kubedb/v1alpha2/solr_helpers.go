@@ -113,13 +113,17 @@ func (s *Solr) Merge(opt map[string]string) map[string]string {
 }
 
 func (s *Solr) Append(opt map[string]string) string {
+	key := make([]string, 0)
+	for _, y := range opt {
+		key = append(key, y)
+	}
 	fl := 0
 	as := ""
-	for x, y := range opt {
+	for _, x := range key {
 		if fl == 1 {
 			as += " "
 		}
-		as += fmt.Sprintf("%s=%s", x, y)
+		as += fmt.Sprintf("%s=%s", x, opt[x])
 		fl = 1
 
 	}
