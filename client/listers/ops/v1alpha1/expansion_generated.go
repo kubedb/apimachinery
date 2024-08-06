@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// ClickHouseOpsRequestListerExpansion allows custom methods to be added to
+// ClickHouseOpsRequestLister.
+type ClickHouseOpsRequestListerExpansion interface{}
+
+// ClickHouseOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// ClickHouseOpsRequestNamespaceLister.
+type ClickHouseOpsRequestNamespaceListerExpansion interface{}
+
 // DruidOpsRequestListerExpansion allows custom methods to be added to
 // DruidOpsRequestLister.
 type DruidOpsRequestListerExpansion interface{}
@@ -57,6 +65,14 @@ type KafkaOpsRequestListerExpansion interface{}
 // KafkaOpsRequestNamespaceListerExpansion allows custom methods to be added to
 // KafkaOpsRequestNamespaceLister.
 type KafkaOpsRequestNamespaceListerExpansion interface{}
+
+// MSSQLServerOpsRequestListerExpansion allows custom methods to be added to
+// MSSQLServerOpsRequestLister.
+type MSSQLServerOpsRequestListerExpansion interface{}
+
+// MSSQLServerOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// MSSQLServerOpsRequestNamespaceLister.
+type MSSQLServerOpsRequestNamespaceListerExpansion interface{}
 
 // MariaDBOpsRequestListerExpansion allows custom methods to be added to
 // MariaDBOpsRequestLister.
@@ -169,3 +185,11 @@ type SolrOpsRequestListerExpansion interface{}
 // SolrOpsRequestNamespaceListerExpansion allows custom methods to be added to
 // SolrOpsRequestNamespaceLister.
 type SolrOpsRequestNamespaceListerExpansion interface{}
+
+// ZooKeeperOpsRequestListerExpansion allows custom methods to be added to
+// ZooKeeperOpsRequestLister.
+type ZooKeeperOpsRequestListerExpansion interface{}
+
+// ZooKeeperOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// ZooKeeperOpsRequestNamespaceLister.
+type ZooKeeperOpsRequestNamespaceListerExpansion interface{}

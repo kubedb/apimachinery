@@ -24,6 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// ClickHouseOpsRequests returns a ClickHouseOpsRequestInformer.
+	ClickHouseOpsRequests() ClickHouseOpsRequestInformer
 	// DruidOpsRequests returns a DruidOpsRequestInformer.
 	DruidOpsRequests() DruidOpsRequestInformer
 	// ElasticsearchOpsRequests returns a ElasticsearchOpsRequestInformer.
@@ -34,6 +36,8 @@ type Interface interface {
 	FerretDBOpsRequests() FerretDBOpsRequestInformer
 	// KafkaOpsRequests returns a KafkaOpsRequestInformer.
 	KafkaOpsRequests() KafkaOpsRequestInformer
+	// MSSQLServerOpsRequests returns a MSSQLServerOpsRequestInformer.
+	MSSQLServerOpsRequests() MSSQLServerOpsRequestInformer
 	// MariaDBOpsRequests returns a MariaDBOpsRequestInformer.
 	MariaDBOpsRequests() MariaDBOpsRequestInformer
 	// MemcachedOpsRequests returns a MemcachedOpsRequestInformer.
@@ -62,6 +66,8 @@ type Interface interface {
 	SinglestoreOpsRequests() SinglestoreOpsRequestInformer
 	// SolrOpsRequests returns a SolrOpsRequestInformer.
 	SolrOpsRequests() SolrOpsRequestInformer
+	// ZooKeeperOpsRequests returns a ZooKeeperOpsRequestInformer.
+	ZooKeeperOpsRequests() ZooKeeperOpsRequestInformer
 }
 
 type version struct {
@@ -73,6 +79,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// ClickHouseOpsRequests returns a ClickHouseOpsRequestInformer.
+func (v *version) ClickHouseOpsRequests() ClickHouseOpsRequestInformer {
+	return &clickHouseOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // DruidOpsRequests returns a DruidOpsRequestInformer.
@@ -98,6 +109,11 @@ func (v *version) FerretDBOpsRequests() FerretDBOpsRequestInformer {
 // KafkaOpsRequests returns a KafkaOpsRequestInformer.
 func (v *version) KafkaOpsRequests() KafkaOpsRequestInformer {
 	return &kafkaOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MSSQLServerOpsRequests returns a MSSQLServerOpsRequestInformer.
+func (v *version) MSSQLServerOpsRequests() MSSQLServerOpsRequestInformer {
+	return &mSSQLServerOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MariaDBOpsRequests returns a MariaDBOpsRequestInformer.
@@ -168,4 +184,9 @@ func (v *version) SinglestoreOpsRequests() SinglestoreOpsRequestInformer {
 // SolrOpsRequests returns a SolrOpsRequestInformer.
 func (v *version) SolrOpsRequests() SolrOpsRequestInformer {
 	return &solrOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// ZooKeeperOpsRequests returns a ZooKeeperOpsRequestInformer.
+func (v *version) ZooKeeperOpsRequests() ZooKeeperOpsRequestInformer {
+	return &zooKeeperOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
