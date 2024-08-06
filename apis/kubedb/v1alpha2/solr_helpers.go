@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"sort"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis"
@@ -117,6 +118,7 @@ func (s *Solr) Append(opt map[string]string) string {
 	for _, y := range opt {
 		key = append(key, y)
 	}
+	sort.Strings(key)
 	fl := 0
 	as := ""
 	for _, x := range key {
