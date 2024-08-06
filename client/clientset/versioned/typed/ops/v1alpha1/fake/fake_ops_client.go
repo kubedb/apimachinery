@@ -29,6 +29,10 @@ type FakeOpsV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeOpsV1alpha1) ClickHouseOpsRequests(namespace string) v1alpha1.ClickHouseOpsRequestInterface {
+	return &FakeClickHouseOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) DruidOpsRequests(namespace string) v1alpha1.DruidOpsRequestInterface {
 	return &FakeDruidOpsRequests{c, namespace}
 }
@@ -47,6 +51,10 @@ func (c *FakeOpsV1alpha1) FerretDBOpsRequests(namespace string) v1alpha1.FerretD
 
 func (c *FakeOpsV1alpha1) KafkaOpsRequests(namespace string) v1alpha1.KafkaOpsRequestInterface {
 	return &FakeKafkaOpsRequests{c, namespace}
+}
+
+func (c *FakeOpsV1alpha1) MSSQLServerOpsRequests(namespace string) v1alpha1.MSSQLServerOpsRequestInterface {
+	return &FakeMSSQLServerOpsRequests{c, namespace}
 }
 
 func (c *FakeOpsV1alpha1) MariaDBOpsRequests(namespace string) v1alpha1.MariaDBOpsRequestInterface {
@@ -103,6 +111,10 @@ func (c *FakeOpsV1alpha1) SinglestoreOpsRequests(namespace string) v1alpha1.Sing
 
 func (c *FakeOpsV1alpha1) SolrOpsRequests(namespace string) v1alpha1.SolrOpsRequestInterface {
 	return &FakeSolrOpsRequests{c, namespace}
+}
+
+func (c *FakeOpsV1alpha1) ZooKeeperOpsRequests(namespace string) v1alpha1.ZooKeeperOpsRequestInterface {
+	return &FakeZooKeeperOpsRequests{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

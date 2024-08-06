@@ -255,6 +255,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ZooKeepers().Informer()}, nil
 
 		// Group=ops.kubedb.com, Version=v1alpha1
+	case opsv1alpha1.SchemeGroupVersion.WithResource("clickhouseopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().ClickHouseOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("druidopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().DruidOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("elasticsearchopsrequests"):
@@ -265,6 +267,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().FerretDBOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("kafkaopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().KafkaOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("mssqlserveropsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MSSQLServerOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("mariadbopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MariaDBOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("memcachedopsrequests"):
@@ -293,6 +297,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().SinglestoreOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("solropsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().SolrOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("zookeeperopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().ZooKeeperOpsRequests().Informer()}, nil
 
 		// Group=postgres.kubedb.com, Version=v1alpha1
 	case postgresv1alpha1.SchemeGroupVersion.WithResource("publishers"):
