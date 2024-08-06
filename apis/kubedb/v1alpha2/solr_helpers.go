@@ -115,8 +115,8 @@ func (s *Solr) Merge(opt map[string]string) map[string]string {
 
 func (s *Solr) Append(opt map[string]string) string {
 	key := make([]string, 0)
-	for _, y := range opt {
-		key = append(key, y)
+	for x, _ := range opt {
+		key = append(key, x)
 	}
 	sort.Strings(key)
 	fl := 0
