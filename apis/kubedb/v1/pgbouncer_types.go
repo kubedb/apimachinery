@@ -39,7 +39,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=pgbouncers,singular=pgbouncer,shortName=pb,categories={proxy,kubedb,appscode,all}
+// +kubebuilder:resource:path=pgbouncers,singular=pgbouncer,shortName=pb,categories={datastore,kubedb,appscode,all}
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
