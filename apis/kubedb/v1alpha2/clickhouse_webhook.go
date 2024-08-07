@@ -99,6 +99,28 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 	if r.Spec.ClusterTopology != nil {
 		clusterName := map[string]bool{}
 		clusters := r.Spec.ClusterTopology.Cluster
+		if r.Spec.ClusterTopology.ClickHouseKeeper != nil {
+			if !r.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged {
+				if r.Spec.ClusterTopology.ClickHouseKeeper.Spec == nil {
+					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("spec"),
+						r.Name,
+						"spec can't be nil when externally managed is false"))
+				} else {
+					if *r.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas < 1 {
+						allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("spec").Child("replica"),
+							r.Name,
+							"number of replica can not be 0 or less"))
+					}
+					allErr = r.validateStandaloneStorageType(r.Spec.ClusterTopology.ClickHouseKeeper.Spec.StorageType, r.Spec.ClusterTopology.ClickHouseKeeper.Spec.Storage, allErr)
+				}
+			} else {
+				if r.Spec.ClusterTopology.ClickHouseKeeper.Node.Host == "" {
+					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("node").Child("host"),
+						r.Name,
+						"ClickHouse Keeper Host Can't be empty"))
+				}
+			}
+		}
 		for _, cluster := range clusters {
 			if cluster.Shards != nil && *cluster.Shards <= 0 {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("shards"),
@@ -231,6 +253,32 @@ func (c *ClickHouse) validateClusterStorageType(cluster ClusterSpec, allErr fiel
 			c.Name,
 			"Storage can't be empty when StorageType is durable"))
 	}
+	return allErr
+}
+
+func (c *ClickHouse) validateClickHouseKeeperStorageType(storageType StorageType, storage *core.PersistentVolumeClaimSpec, allErr field.ErrorList) field.ErrorList {
+	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("spec").Child("storageType"),
+		c.Name,
+		"number of replica can not be 0 or less"))
+
+	if storageType == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("spec").Child("storageType"),
+			c.Name,
+			"StorageType can not be empty"))
+	} else {
+		if storageType != StorageTypeDurable && c.Spec.StorageType != StorageTypeEphemeral {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("spec").Child("storageType"),
+				c.Name,
+				"StorageType should be either durable or ephemeral"))
+		}
+	}
+
+	if storage == nil && c.Spec.StorageType == StorageTypeDurable {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("spec").Child("storage"),
+			c.Name,
+			"Storage can't be empty when StorageType is durable"))
+	}
+
 	return allErr
 }
 
