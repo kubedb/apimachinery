@@ -124,7 +124,7 @@ func (c *ClickHouse) OffshootSelectors(extraSelectors ...map[string]string) map[
 func (c *ClickHouse) OffshootKeeperSelectors(extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
 		meta_util.NameLabelKey:      c.ResourceFQN(),
-		meta_util.InstanceLabelKey:  c.OffshootKeeperName(),
+		meta_util.InstanceLabelKey:  c.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
 	return meta_util.OverwriteKeys(selector, extraSelectors...)
@@ -314,7 +314,6 @@ func (c *ClickHouse) SetDefaults() {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 			}
 		}
-
 	} else {
 		if c.Spec.Replicas == nil {
 			c.Spec.Replicas = pointer.Int32P(1)
@@ -334,8 +333,8 @@ func (c *ClickHouse) SetDefaults() {
 		if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 		}
-		c.SetHealthCheckerDefaults()
 	}
+	c.SetHealthCheckerDefaults()
 }
 
 func (c *ClickHouse) setDefaultContainerSecurityContext(chVersion *catalog.ClickHouseVersion, podTemplate *ofst.PodTemplateSpec) {
@@ -439,7 +438,7 @@ func (c *ClickHouse) ReplicasAreReady(lister pslister.PetSetLister) (bool, strin
 		}
 		if !c.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged {
 			if c.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas != nil {
-				expectedItems += int(*c.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas)
+				expectedItems += 1
 			}
 		}
 	} else {

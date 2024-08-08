@@ -111,7 +111,7 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 							r.Name,
 							"number of replica can not be 0 or less"))
 					}
-					allErr = r.validateStandaloneStorageType(r.Spec.ClusterTopology.ClickHouseKeeper.Spec.StorageType, r.Spec.ClusterTopology.ClickHouseKeeper.Spec.Storage, allErr)
+					allErr = r.validateClickHouseKeeperStorageType(r.Spec.ClusterTopology.ClickHouseKeeper.Spec.StorageType, r.Spec.ClusterTopology.ClickHouseKeeper.Spec.Storage, allErr)
 				}
 			} else {
 				if r.Spec.ClusterTopology.ClickHouseKeeper.Node.Host == "" {
@@ -257,10 +257,6 @@ func (c *ClickHouse) validateClusterStorageType(cluster ClusterSpec, allErr fiel
 }
 
 func (c *ClickHouse) validateClickHouseKeeperStorageType(storageType StorageType, storage *core.PersistentVolumeClaimSpec, allErr field.ErrorList) field.ErrorList {
-	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("spec").Child("storageType"),
-		c.Name,
-		"number of replica can not be 0 or less"))
-
 	if storageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("spec").Child("storageType"),
 			c.Name,
@@ -272,7 +268,6 @@ func (c *ClickHouse) validateClickHouseKeeperStorageType(storageType StorageType
 				"StorageType should be either durable or ephemeral"))
 		}
 	}
-
 	if storage == nil && c.Spec.StorageType == StorageTypeDurable {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("spec").Child("storage"),
 			c.Name,
