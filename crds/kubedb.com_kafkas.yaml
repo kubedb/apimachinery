@@ -3192,6 +3192,8 @@ spec:
                 type: boolean
               enableSSL:
                 type: boolean
+              halted:
+                type: boolean
               healthChecker:
                 default:
                   failureThreshold: 3
@@ -16298,6 +16300,8 @@ spec:
               disableSecurity:
                 type: boolean
               enableSSL:
+                type: boolean
+              halted:
                 type: boolean
               healthChecker:
                 default:
