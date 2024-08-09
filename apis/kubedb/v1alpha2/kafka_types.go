@@ -92,6 +92,10 @@ type KafkaSpec struct {
 	// +optional
 	KeystoreCredSecret *SecretReference `json:"keystoreCredSecret,omitempty"`
 
+	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
+	// +optional
+	Halted bool `json:"halted,omitempty"`
+
 	// TLS contains tls configurations
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
