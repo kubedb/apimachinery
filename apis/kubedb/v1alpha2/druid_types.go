@@ -75,9 +75,9 @@ type DruidSpec struct {
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
-	//// TLS contains tls configurations
-	//// +optional
-	//TLS *kmapi.TLSConfig `json:"tls,omitempty"`
+	// TLS contains tls configurations
+	// +optional
+	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 
 	// MetadataStorage contains information for Druid to connect to external dependency metadata storage
 	// +optional
