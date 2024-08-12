@@ -1009,6 +1009,16 @@ func (in *DruidSpec) DeepCopyInto(out *DruidSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.KeystoreCredSecret != nil {
+		in, out := &in.KeystoreCredSecret, &out.KeystoreCredSecret
+		*out = new(SecretReference)
+		**out = **in
+	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(apiv1.TLSConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.MetadataStorage != nil {
 		in, out := &in.MetadataStorage, &out.MetadataStorage
 		*out = new(MetadataStorage)

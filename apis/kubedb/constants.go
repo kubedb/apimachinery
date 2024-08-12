@@ -1032,14 +1032,23 @@ const (
 	EnvDruidCoordinatorAsOverlord  = "DRUID_COORDINATOR_AS_OVERLORD"
 	EnvDruidMetadataTLSEnable      = "DRUID_METADATA_TLS_ENABLE"
 	EnvDruidMetadataStorageType    = "DRUID_METADATA_STORAGE_TYPE"
+	EnvDruidKeyStorePassword       = "DRUID_KEY_STORE_PASSWORD"
 
-	DruidPortCoordinators   = 8081
-	DruidPortOverlords      = 8090
-	DruidPortHistoricals    = 8083
-	DruidPortMiddleManagers = 8091
-	DruidPortBrokers        = 8082
-	DruidPortRouters        = 8888
-	DruidExporterPort       = 9104
+	DruidPlainTextPortCoordinators   = 8081
+	DruidPlainTextPortOverlords      = 8090
+	DruidPlainTextPortHistoricals    = 8083
+	DruidPlainTextPortMiddleManagers = 8091
+	DruidPlainTextPortBrokers        = 8082
+	DruidPlainTextPortRouters        = 8888
+
+	DruidTLSPortCoordinators   = 8281
+	DruidTLSPortOverlords      = 8290
+	DruidTLSPortHistoricals    = 8283
+	DruidTLSPortMiddleManagers = 8291
+	DruidTLSPortBrokers        = 8282
+	DruidTLSPortRouters        = 9088
+
+	DruidExporterPort = 9104
 
 	DruidMetadataStorageTypePostgres = "Postgres"
 
@@ -1061,6 +1070,33 @@ const (
 	DruidMetadataStorageConnectorPassword          = "druid.metadata.storage.connector.password"
 	DruidMetadataStorageConnectorPasswordEnvConfig = "{\"type\": \"environment\", \"variable\": \"DRUID_METADATA_STORAGE_PASSWORD\"}"
 	DruidMetadataStorageCreateTables               = "druid.metadata.storage.connector.createTables"
+
+	// Druid TLS
+	DruidKeystorePasswordKey   = "keystore_password"
+	DruidTrustStorePasswordKey = "truststore_password"
+	DruidKeystoreSecretKey     = "keystore-cred"
+
+	DruidEnablePlaintextPort      = "druid.enablePlaintextPort"
+	DruidEnableTLSPort            = "druid.enableTlsPort"
+	DruidKeyStorePath             = "druid.server.https.keyStorePath"
+	DruidKeyStoreType             = "druid.server.https.keyStoreType"
+	DruidCertAlias                = "druid.server.https.certAlias"
+	DruidKeyStorePassword         = "druid.server.https.keyStorePassword"
+	DruidRequireClientCertificate = "druid.server.https.requireClientCertificate"
+	DruidTrustStoreType           = "druid.server.https.trustStoreType"
+
+	DruidTrustStorePassword      = "druid.client.https.trustStorePassword"
+	DruidTrustStorePath          = "druid.client.https.trustStorePath"
+	DruidClientTrustStoreType    = "druid.client.https.trustStoreType"
+	DruidClientValidateHostNames = "druid.client.https.validateHostnames"
+
+	DruidKeyStoreTypeJKS           = "jks"
+	DruidKeyStorePasswordEnvConfig = "{\"type\": \"environment\", \"variable\": \"DRUID_KEY_STORE_PASSWORD\"}"
+
+	DruidValueTrue  = "true"
+	DruidValueFalse = "false"
+
+	DruidCertDir = "/opt/druid/ssl"
 
 	// MySQL TLS
 	DruidMetadataMySQLUseSSL                          = "druid.metadata.mysql.ssl.useSSL"
@@ -1134,6 +1170,7 @@ const (
 	DruidExtensionBasicSecurity             = "druid-basic-security"
 	DruidExtensionMultiStageQuery           = "druid-multi-stage-query"
 	DruidExtensionPrometheusEmitter         = "prometheus-emitter"
+	DruidExtensionSSLContext                = "simple-client-sslcontext"
 	DruidService                            = "druid.service"
 
 	// Monitoring Configurations
@@ -1153,6 +1190,9 @@ const (
 	DruidMonitoringQueryCountStatsMonitor       = "org.apache.druid.server.metrics.QueryCountStatsMonitor"
 	DruidMonitoringTaskCountStatsMonitor        = "org.apache.druid.server.metrics.TaskCountStatsMonitor"
 	DruidMonitoringSysMonitor                   = "org.apache.druid.java.util.metrics.SysMonitor"
+
+	DruidDimensionMapDir                = "/opt/druid/conf/metrics.json"
+	DruidEmitterPrometheusStrategyValue = "exporter"
 
 	/// Coordinators Configurations
 	DruidCoordinatorStartDelay                = "druid.coordinator.startDelay"
