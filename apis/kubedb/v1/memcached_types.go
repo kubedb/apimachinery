@@ -66,24 +66,6 @@ type MemcachedSpec struct {
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
-	// DataVolume is an optional field to add one volume to each
-	// memcached pod.  The volume will be made available under
-	// /data and owned by the memcached user.
-	//
-	// While not mandated by the API and not configured
-	// automatically, the intended purpose is to use that volume
-	// for memcached's persistent memory support
-	// (https://memcached.org/blog/persistent-memory/) by adding
-	// the memory-file and memory-limit options to the config
-	// (https://github.com/memcached/memcached/wiki/WarmRestart).
-	//
-	// For that purpose, a CSI inline volume provided by PMEM-CSI
-	// can be used, in which case each pod will get its own, empty
-	// volume. Warm restarts are not supported.
-	//
-	// For testing, an empty dir can be used instead.
-	DataVolume *core.VolumeSource `json:"dataVolume,omitempty"`
-
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`

@@ -2337,7 +2337,7 @@ func autoConvert_v1alpha2_MemcachedSpec_To_v1_MemcachedSpec(in *MemcachedSpec, o
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.DataVolume = (*corev1.VolumeSource)(unsafe.Pointer(in.DataVolume))
+	// WARNING: in.DataVolume requires manual conversion: does not exist in peer-type
 	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
 		return err
 	}
@@ -2354,7 +2354,6 @@ func autoConvert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec(in *v1.MemcachedSpec
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	out.DataVolume = (*corev1.VolumeSource)(unsafe.Pointer(in.DataVolume))
 	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
 		return err
 	}

@@ -1251,11 +1251,6 @@ func (in *MemcachedSpec) DeepCopyInto(out *MemcachedSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
-	if in.DataVolume != nil {
-		in, out := &in.DataVolume, &out.DataVolume
-		*out = new(corev1.VolumeSource)
-		(*in).DeepCopyInto(*out)
-	}
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	if in.ServiceTemplates != nil {
 		in, out := &in.ServiceTemplates, &out.ServiceTemplates

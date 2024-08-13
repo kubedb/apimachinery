@@ -27251,12 +27251,6 @@ func schema_apimachinery_apis_kubedb_v1_MemcachedSpec(ref common.ReferenceCallba
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"dataVolume": {
-						SchemaProps: spec.SchemaProps{
-							Description: "DataVolume is an optional field to add one volume to each memcached pod.  The volume will be made available under /data and owned by the memcached user.\n\nWhile not mandated by the API and not configured automatically, the intended purpose is to use that volume for memcached's persistent memory support (https://memcached.org/blog/persistent-memory/) by adding the memory-file and memory-limit options to the config (https://github.com/memcached/memcached/wiki/WarmRestart).\n\nFor that purpose, a CSI inline volume provided by PMEM-CSI can be used, in which case each pod will get its own, empty volume. Warm restarts are not supported.\n\nFor testing, an empty dir can be used instead.",
-							Ref:         ref("k8s.io/api/core/v1.VolumeSource"),
-						},
-					},
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
@@ -27310,7 +27304,7 @@ func schema_apimachinery_apis_kubedb_v1_MemcachedSpec(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec"},
 	}
 }
 
