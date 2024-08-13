@@ -32475,6 +32475,21 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQSpec(ref common.ReferenceC
 							Format:      "",
 						},
 					},
+					"disabledProtocols": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Indicates that the RabbitMQ Protocols that are required to be disabled on bootstrap.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 					"monitor": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Monitor is used monitor database instance",

@@ -100,6 +100,10 @@ type RabbitMQSpec struct {
 	// +optional
 	Halted bool `json:"halted,omitempty"`
 
+	// Indicates that the RabbitMQ Protocols that are required to be disabled on bootstrap.
+	// +optional
+	DisabledProtocols []RabbitMQProtocol `json:"disabledProtocols,omitempty"`
+
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
@@ -145,6 +149,18 @@ const (
 	RabbitmqCACert     RabbitMQCertificateAlias = "ca"
 	RabbitmqClientCert RabbitMQCertificateAlias = "client"
 	RabbitmqServerCert RabbitMQCertificateAlias = "server"
+)
+
+// +kubebuilder:validation:Enum=http;amqp;mqtt;stomp;web_mqtt;web_stomp
+type RabbitMQProtocol string
+
+const (
+	RabbitmqProtocolHTTP     RabbitMQProtocol = "http"
+	RabbitmqProtocolAMQP     RabbitMQProtocol = "amqp"
+	RabbitmqProtocolMQTT     RabbitMQProtocol = "mqtt"
+	RabbitmqProtocolSTOMP    RabbitMQProtocol = "stomp"
+	RabbitmqProtocolWEBMQTT  RabbitMQProtocol = "web_mqtt"
+	RabbitmqProtocolWEBSTOMP RabbitMQProtocol = "web_stomp"
 )
 
 // RabbitMQList contains a list of RabbitMQ
