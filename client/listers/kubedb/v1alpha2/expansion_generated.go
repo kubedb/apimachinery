@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha2
 
+// CassandraListerExpansion allows custom methods to be added to
+// CassandraLister.
+type CassandraListerExpansion interface{}
+
+// CassandraNamespaceListerExpansion allows custom methods to be added to
+// CassandraNamespaceLister.
+type CassandraNamespaceListerExpansion interface{}
+
 // ClickHouseListerExpansion allows custom methods to be added to
 // ClickHouseLister.
 type ClickHouseListerExpansion interface{}

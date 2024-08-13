@@ -21,17 +21,14 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
-	apiv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 )
 
 const (
-	ResourceCodeCassandra     = "cs"
 	ResourceKindCassandra     = "Cassandra"
 	ResourceSingularCassandra = "cassandra"
 	ResourcePluralCassandra   = "cassandras"
+	ResourceCodeCassandra     = "cs"
 )
-
-// Cassandra is the Schema for the cassandras API
 
 // +genclient
 // +k8s:openapi-gen=true
@@ -39,12 +36,11 @@ const (
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:path=cassandras,singular=cassandra,shortName=cs,categories={catalog,kubedb,appscode,all}
+// +kubebuilder:resource:path=cassandras,singular=cassandra,shortName=cs,categories={datastore,kubedb,appscode,all}
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-
 type Cassandra struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -67,7 +63,7 @@ type CassandraSpec struct {
 	Topology *Topology `json:"topology,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
-	StorageType apiv1alpha2.StorageType `json:"storageType,omitempty"`
+	StorageType StorageType `json:"storageType,omitempty"`
 
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
@@ -79,7 +75,7 @@ type CassandraSpec struct {
 
 	// Database authentication secret
 	// +optional
-	AuthSecret *apiv1alpha2.SecretReference `json:"authSecret,omitempty"`
+	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
 	// ConfigSecret is an optional field to provide custom configuration file for database (i.e. config.properties).
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
@@ -92,15 +88,15 @@ type CassandraSpec struct {
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
-	ServiceTemplates []apiv1alpha2.NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
+	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
 
 	// DeletionPolicy controls the delete operation for database
 	// +optional
-	DeletionPolicy apiv1alpha2.TerminationPolicy `json:"deletionPolicy,omitempty"`
+	DeletionPolicy TerminationPolicy `json:"deletionPolicy,omitempty"`
 
 	// HealthChecker defines attributes of the health checker
 	// +optional
-	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 3}
+	// +kubebuilder:default={periodSeconds: 20, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 }
 
@@ -124,14 +120,14 @@ type RackSpec struct {
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
-	StorageType apiv1alpha2.StorageType `json:"storageType,omitempty"`
+	StorageType StorageType `json:"storageType,omitempty"`
 }
 
 // CassandraStatus defines the observed state of Cassandra
 type CassandraStatus struct {
 	// Specifies the current phase of the database
 	// +optional
-	Phase CassandraPhase `json:"phase,omitempty"`
+	Phase DatabasePhase `json:"phase,omitempty"`
 	// observedGeneration is the most recent generation observed for this resource. It corresponds to the
 	// resource's generation, which is updated on mutation by the API Server.
 	// +optional
@@ -139,29 +135,13 @@ type CassandraStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
-	// +optional
-	//Gateway *apiv1alpha2.Gateway `json:"gateway,omitempty"` // todo uncomment later
 }
 
-// +kubebuilder:validation:Enum=Provisioning;Ready;NotReady;Critical
-type CassandraPhase string
-
-const (
-	CassandraProvisioning CassandraPhase = "Provisioning"
-	CassandraReady        CassandraPhase = "Ready"
-	CassandraNotReady     CassandraPhase = "NotReady"
-	CassandraCritical     CassandraPhase = "Critical"
-)
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // CassandraList contains a list of Cassandra
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type CassandraList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []Cassandra `json:"items"`
-}
-
-func init() {
-	SchemeBuilder.Register(&Cassandra{}, &CassandraList{})
 }

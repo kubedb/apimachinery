@@ -1345,6 +1345,19 @@ const (
 	ClickHouseKeeperFileConfig = "keeper-config.yaml"
 )
 
+// =========================== Cassandra Constants ============================
+
+const (
+	CassandraNativeTCP         = 9042
+	CassandraVolumeData        = "data"
+	CassandraDataDir           = "/var/lib/cassandra"
+	CassandraContainerName     = "cassandra"
+	CassandraInitContainerName = "cassandra-init"
+	CassandraRackConfigFile    = "rack-config.yaml"
+	CassandraStandalone        = "standalone"
+	CassandraServerConfigFile  = "server-config.yaml"
+)
+
 // Resource kind related constants
 const (
 	ResourceKindStatefulSet = "StatefulSet"

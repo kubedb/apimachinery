@@ -3,8 +3,17 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
+
+	"kubedb.dev/apimachinery/apis"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
+	"kubedb.dev/apimachinery/crds"
+
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
+	"k8s.io/api/resource/v1alpha2"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
@@ -14,14 +23,6 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
-	"kubedb.dev/apimachinery/apis"
-	"kubedb.dev/apimachinery/apis/kubedb"
-	"kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	"kubedb.dev/apimachinery/crds"
-	catalog "kubedb.dev/cassandra/api/catalog/v1alpha1"
-	kubedb_local "kubedb.dev/cassandra/api/kubedb"
-	"strconv"
-	"strings"
 )
 
 type CassandraApp struct {
@@ -29,7 +30,7 @@ type CassandraApp struct {
 }
 
 func (r *Cassandra) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(v1alpha2.SchemeGroupVersion.WithResource(ResourcePluralCassandra))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralCassandra))
 }
 
 func (r *Cassandra) AppBindingMeta() appcat.AppBindingMeta {
@@ -183,10 +184,10 @@ func (r *Cassandra) ResourceSingular() string {
 }
 
 func (r *Cassandra) SetDefaults() {
-	var chVersion catalog.CassandraVersion
-	err := v1alpha2.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	var csVersion catalog.CassandraVersion
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: r.Spec.Version,
-	}, &chVersion)
+	}, &csVersion)
 	if err != nil {
 		klog.Errorf("can't get the cassandra version object %s for %s \n", err.Error(), r.Spec.Version)
 		return
@@ -210,18 +211,18 @@ func (r *Cassandra) SetDefaults() {
 				rackName[rack.Name] = true
 			}
 			if rack.StorageType == "" {
-				rack.StorageType = v1alpha2.StorageTypeDurable
+				rack.StorageType = StorageTypeDurable
 			}
 
 			if rack.PodTemplate == nil {
 				rack.PodTemplate = &ofst.PodTemplateSpec{}
 			}
 
-			dbContainer := coreutil.GetContainerByName(rack.PodTemplate.Spec.Containers, kubedb_local.CassandraContainerName)
+			dbContainer := coreutil.GetContainerByName(rack.PodTemplate.Spec.Containers, kubedb.CassandraContainerName)
 			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 			}
-			r.setDefaultContainerSecurityContext(&chVersion, rack.PodTemplate)
+			r.setDefaultContainerSecurityContext(&csVersion, rack.PodTemplate)
 			racks[index] = rack
 		}
 		r.Spec.Topology.Rack = racks
@@ -230,17 +231,17 @@ func (r *Cassandra) SetDefaults() {
 			r.Spec.Replicas = pointer.Int32P(1)
 		}
 		if r.Spec.DeletionPolicy == "" {
-			r.Spec.DeletionPolicy = v1alpha2.TerminationPolicyDelete
+			r.Spec.DeletionPolicy = TerminationPolicyDelete
 		}
 		if r.Spec.StorageType == "" {
-			r.Spec.StorageType = v1alpha2.StorageTypeDurable
+			r.Spec.StorageType = StorageTypeDurable
 		}
 
 		if r.Spec.PodTemplate == nil {
 			r.Spec.PodTemplate = &ofst.PodTemplateSpec{}
 		}
-		r.setDefaultContainerSecurityContext(&chVersion, r.Spec.PodTemplate)
-		dbContainer := coreutil.GetContainerByName(r.Spec.PodTemplate.Spec.Containers, kubedb_local.CassandraContainerName)
+		r.setDefaultContainerSecurityContext(&csVersion, r.Spec.PodTemplate)
+		dbContainer := coreutil.GetContainerByName(r.Spec.PodTemplate.Spec.Containers, kubedb.CassandraContainerName)
 		if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 		}
@@ -248,7 +249,7 @@ func (r *Cassandra) SetDefaults() {
 	}
 }
 
-func (r *Cassandra) setDefaultContainerSecurityContext(chVersion *catalog.CassandraVersion, podTemplate *ofst.PodTemplateSpec) {
+func (r *Cassandra) setDefaultContainerSecurityContext(csVersion *catalog.CassandraVersion, podTemplate *ofst.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -256,35 +257,35 @@ func (r *Cassandra) setDefaultContainerSecurityContext(chVersion *catalog.Cassan
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = chVersion.Spec.SecurityContext.RunAsUser
+		podTemplate.Spec.SecurityContext.FSGroup = csVersion.Spec.SecurityContext.RunAsUser
 	}
 
-	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb_local.CassandraContainerName)
+	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.CassandraContainerName)
 	if container == nil {
 		container = &core.Container{
-			Name: kubedb_local.CassandraContainerName,
+			Name: kubedb.CassandraContainerName,
 		}
 		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 	}
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
-	r.assignDefaultContainerSecurityContext(chVersion, container.SecurityContext)
+	r.assignDefaultContainerSecurityContext(csVersion, container.SecurityContext)
 
-	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, kubedb_local.CassandraInitContainerName)
+	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.CassandraInitContainerName)
 	if initContainer == nil {
 		initContainer = &core.Container{
-			Name: kubedb_local.CassandraInitContainerName,
+			Name: kubedb.CassandraInitContainerName,
 		}
 		podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 	}
 	if initContainer.SecurityContext == nil {
 		initContainer.SecurityContext = &core.SecurityContext{}
 	}
-	r.assignDefaultContainerSecurityContext(chVersion, initContainer.SecurityContext)
+	r.assignDefaultContainerSecurityContext(csVersion, initContainer.SecurityContext)
 }
 
-func (r *Cassandra) assignDefaultContainerSecurityContext(chVersion *catalog.CassandraVersion, rc *core.SecurityContext) {
+func (r *Cassandra) assignDefaultContainerSecurityContext(csVersion *catalog.CassandraVersion, rc *core.SecurityContext) {
 	if rc.AllowPrivilegeEscalation == nil {
 		rc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
@@ -297,7 +298,7 @@ func (r *Cassandra) assignDefaultContainerSecurityContext(chVersion *catalog.Cas
 		rc.RunAsNonRoot = pointer.BoolP(true)
 	}
 	if rc.RunAsUser == nil {
-		rc.RunAsUser = chVersion.Spec.SecurityContext.RunAsUser
+		rc.RunAsUser = csVersion.Spec.SecurityContext.RunAsUser
 	}
 	if rc.SeccompProfile == nil {
 		rc.SeccompProfile = secomp.DefaultSeccompProfile()

@@ -121,6 +121,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().ZooKeeperAutoscalers().Informer()}, nil
 
 		// Group=catalog.kubedb.com, Version=v1alpha1
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("cassandraversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().CassandraVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("clickhouseversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().ClickHouseVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("druidversions"):
@@ -209,6 +211,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1().RedisSentinels().Informer()}, nil
 
 		// Group=kubedb.com, Version=v1alpha2
+	case v1alpha2.SchemeGroupVersion.WithResource("cassandras"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Cassandras().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("clickhouses"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ClickHouses().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("druids"):
