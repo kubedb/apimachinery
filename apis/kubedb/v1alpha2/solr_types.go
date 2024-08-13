@@ -57,6 +57,10 @@ type SolrSpec struct {
 	// Version of Solr to be deployed
 	Version string `json:"version"`
 
+	// Java memory for solr
+	// +optional
+	JavaMem string `json:"javaMem,omitempty"`
+
 	// Number of instances to deploy for a Solr database
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
@@ -94,6 +98,9 @@ type SolrSpec struct {
 
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
+
+	// +optional
+	KeystoreSecret *core.LocalObjectReference `json:"keystoreSecret,omitempty"`
 
 	// +optional
 	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty"`

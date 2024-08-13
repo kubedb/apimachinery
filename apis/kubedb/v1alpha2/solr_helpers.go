@@ -244,6 +244,10 @@ func (s *Solr) SetDefaults() {
 		s.Spec.DeletionPolicy = TerminationPolicyDelete
 	}
 
+	if s.Spec.JavaMem == "" {
+		s.Spec.JavaMem = kubedb.SolrJavaMem
+	}
+
 	if s.Spec.StorageType == "" {
 		s.Spec.StorageType = StorageTypeDurable
 	}
@@ -251,6 +255,12 @@ func (s *Solr) SetDefaults() {
 	if s.Spec.AuthSecret == nil {
 		s.Spec.AuthSecret = &v1.LocalObjectReference{
 			Name: s.SolrSecretName("admin-cred"),
+		}
+	}
+
+	if s.Spec.KeystoreSecret == nil {
+		s.Spec.AuthSecret = &v1.LocalObjectReference{
+			Name: s.SolrSecretName("keystore-cred"),
 		}
 	}
 

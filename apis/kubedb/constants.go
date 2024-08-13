@@ -940,6 +940,7 @@ const (
 	SolrConfAllowPathsValue        = ""
 	SolrConfSolrCloudKey           = "solrcloud"
 	SolrConfShardHandlerFactoryKey = "shardHandlerFactory"
+	SolrJavaMem                    = "-Xms3g -Xmx3g"
 
 	ProxyDeploymentName = "s3proxy"
 	ProxyServiceName    = "proxy-svc"

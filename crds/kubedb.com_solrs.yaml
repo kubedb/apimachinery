@@ -99,6 +99,15 @@ spec:
                     format: int32
                     type: integer
                 type: object
+              javaMem:
+                type: string
+              keystoreSecret:
+                properties:
+                  name:
+                    default: ""
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               monitor:
                 properties:
                   agent:

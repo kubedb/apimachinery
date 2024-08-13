@@ -34536,6 +34536,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
+					"javaMem": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Java memory for solr",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Number of instances to deploy for a Solr database",
@@ -34617,6 +34624,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 						},
 					},
 					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"keystoreSecret": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
