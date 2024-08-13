@@ -942,6 +942,7 @@ const (
 	SolrConfShardHandlerFactoryKey = "shardHandlerFactory"
 	SolrJavaMem                    = "-Xms3g -Xmx3g"
 	SolrKeystorePasskey            = "keystore-secret"
+	SolrServerKeystoreKey          = "solr-ssl.keystore.p12"
 
 	ProxyDeploymentName = "s3proxy"
 	ProxyServiceName    = "proxy-svc"
