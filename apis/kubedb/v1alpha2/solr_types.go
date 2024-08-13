@@ -184,6 +184,17 @@ const (
 	SolrNodeRoleSet                          = "set"
 )
 
+// +kubebuilder:validation:Enum=ca;transport;http;client;server
+type SolrCertificateAlias string
+
+const (
+	SolrCACert        SolrCertificateAlias = "ca"
+	SolrTransportCert SolrCertificateAlias = "transport"
+	SolrHTTPCert      SolrCertificateAlias = "http"
+	SolrClientCert    SolrCertificateAlias = "client"
+	SolrServerCert    SolrCertificateAlias = "server"
+)
+
 //+kubebuilder:object:root=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

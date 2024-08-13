@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"sort"
 	"strings"
 
@@ -34,6 +35,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -462,4 +464,39 @@ func (s *Solr) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, err
 		expectedItems = 3
 	}
 	return checkReplicasOfPetSet(lister.PetSets(s.Namespace), labels.SelectorFromSet(s.OffshootLabels()), expectedItems)
+}
+
+// CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
+func (s *Solr) CertificateName(alias SolrCertificateAlias) string {
+	return meta_util.NameWithSuffix(s.Name, fmt.Sprintf("%s-cert", string(alias)))
+}
+
+// ClientCertificateCN returns the CN for a client certificate
+func (s *Solr) ClientCertificateCN(alias SolrCertificateAlias) string {
+	return fmt.Sprintf("%s-%s", s.Name, string(alias))
+}
+
+// GetCertSecretName returns the secret name for a certificate alias if any,
+// otherwise returns default certificate secret name for the given alias.
+func (s *Solr) GetCertSecretName(alias SolrCertificateAlias) string {
+	if s.Spec.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(s.Spec.TLS.Certificates, string(alias))
+		if ok {
+			return name
+		}
+	}
+	return s.CertificateName(alias)
+}
+
+// CertSecretVolumeName returns the CertSecretVolumeName
+// Values will be like: client-certs, server-certs etc.
+func (s *Solr) CertSecretVolumeName(alias SolrCertificateAlias) string {
+	return string(alias) + "-certs"
+}
+
+// CertSecretVolumeMountPath returns the CertSecretVolumeMountPath
+// if configDir is "/opt/kafka/config",
+// mountPath will be, "/opt/kafka/config/<alias>".
+func (s *Solr) CertSecretVolumeMountPath(configDir string, cert string) string {
+	return filepath.Join(configDir, cert)
 }
