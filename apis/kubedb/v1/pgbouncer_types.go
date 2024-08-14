@@ -100,7 +100,7 @@ type PgBouncerSpec struct {
 
 	// DeletionPolicy controls the delete operation for database
 	// +optional
-	DeletionPolicy PgBouncerDeletionPolicy `json:"deletionPolicy,omitempty"`
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 
 	// HealthChecker defines attributes of the health checker
 	// +optional
@@ -265,18 +265,4 @@ const (
 	// When server is config with this auth method. Client can't connect with pgbouncer server with password. They need
 	// to Send the client cert and client key certificate for authentication.
 	PgBouncerClientAuthModeCert PgBouncerClientAuthMode = "cert"
-)
-
-// +kubebuilder:validation:Enum=Halt;Delete;WipeOut;DoNotTerminate
-type PgBouncerDeletionPolicy string
-
-const (
-	// Deletes database pods, service but leave the PVCs and stash backup data intact.
-	PgBouncerDeletionPolicyHalt PgBouncerDeletionPolicy = "Halt"
-	// Deletes database pods, service, pvcs but leave the stash backup data intact.
-	PgBouncerDeletionPolicyDelete PgBouncerDeletionPolicy = "Delete"
-	// Deletes database pods, service, pvcs and stash backup data.
-	PgBouncerDeletionPolicyWipeOut PgBouncerDeletionPolicy = "WipeOut"
-	// Rejects attempt to delete database using ValidationWebhook.
-	PgBouncerDeletionPolicyDoNotTerminate PgBouncerDeletionPolicy = "DoNotTerminate"
 )
