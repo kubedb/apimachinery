@@ -261,7 +261,7 @@ func (s *Solr) SetDefaults() {
 	}
 
 	if s.Spec.KeystoreSecret == nil {
-		s.Spec.AuthSecret = &v1.LocalObjectReference{
+		s.Spec.KeystoreSecret = &v1.LocalObjectReference{
 			Name: s.SolrSecretName("keystore-cred"),
 		}
 	}
