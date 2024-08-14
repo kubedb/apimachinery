@@ -25185,6 +25185,10 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Database"
         },
+        "halted": {
+          "description": "Indicates that the database is halted and all offshoot Kubernetes resources are deleted.",
+          "type": "boolean"
+        },
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",
           "default": {},
@@ -25655,6 +25659,10 @@
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for proxysql (i.e custom-proxysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "halted": {
+          "description": "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+          "type": "boolean"
         },
         "healthChecker": {
           "description": "HealthChecker defines attributes of the health checker",

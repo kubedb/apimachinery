@@ -31169,6 +31169,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgBouncerSpec(ref common.Reference
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
+					"halted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Indicates that the database is halted and all offshoot Kubernetes resources are deleted.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
@@ -32228,6 +32235,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref common.ReferenceC
 							Description: "HealthChecker defines attributes of the health checker",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
+						},
+					},
+					"halted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+							Type:        []string{"boolean"},
+							Format:      "",
 						},
 					},
 				},
