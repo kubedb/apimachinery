@@ -2358,6 +2358,8 @@ func autoConvert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec(in *v1.MemcachedSpec
 		return err
 	}
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	// WARNING: in.StorageType requires manual conversion: does not exist in peer-type
+	// WARNING: in.Storage requires manual conversion: does not exist in peer-type
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
 	out.Halted = in.Halted
 	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type

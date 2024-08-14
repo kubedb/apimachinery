@@ -1259,6 +1259,11 @@ func (in *MemcachedSpec) DeepCopyInto(out *MemcachedSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.Storage != nil {
+		in, out := &in.Storage, &out.Storage
+		*out = new(corev1.PersistentVolumeClaimSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.TLS != nil {
 		in, out := &in.TLS, &out.TLS
 		*out = new(apiv1.TLSConfig)

@@ -27272,6 +27272,19 @@ func schema_apimachinery_apis_kubedb_v1_MemcachedSpec(ref common.ReferenceCallba
 							},
 						},
 					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType can be durable (default) or ephemeral",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage spec to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations",
@@ -27304,7 +27317,7 @@ func schema_apimachinery_apis_kubedb_v1_MemcachedSpec(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec"},
 	}
 }
 
