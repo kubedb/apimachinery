@@ -429,6 +429,10 @@ func (c *ClickHouse) assignDefaultContainerSecurityContext(chVersion *catalog.Cl
 	}
 }
 
+func (c *ClickHouse) OffshootClickHouseKeeperHostPort() (string, int32) {
+	return c.KeeperPrimaryServiceDNS(), kubedb.ClickHouseKeeperPort
+}
+
 func (c *ClickHouse) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
 	// Desire number of petSets
 	expectedItems := 0

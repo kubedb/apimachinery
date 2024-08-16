@@ -154,7 +154,7 @@ type ClickHouseKeeperNode struct {
 	Host string `json:"host,omitempty"`
 
 	// +optional
-	Port int32 `json:"port,omitempty"`
+	Port *int32 `json:"port,omitempty"`
 }
 
 // ClickHouseStatus defines the observed state of ClickHouse

@@ -113,11 +113,27 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 					}
 					allErr = r.validateClickHouseKeeperStorageType(r.Spec.ClusterTopology.ClickHouseKeeper.Spec.StorageType, r.Spec.ClusterTopology.ClickHouseKeeper.Spec.Storage, allErr)
 				}
-			} else {
-				if r.Spec.ClusterTopology.ClickHouseKeeper.Node.Host == "" {
-					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("node").Child("host"),
+				if r.Spec.ClusterTopology.ClickHouseKeeper.Node != nil {
+					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("node"),
 						r.Name,
-						"ClickHouse Keeper Host Can't be empty"))
+						"ClickHouse Keeper node should be empty when externally managed is false"))
+				}
+			} else {
+				if r.Spec.ClusterTopology.ClickHouseKeeper.Node == nil {
+					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("node"),
+						r.Name,
+						"ClickHouse Keeper node can't be empty when externally managed is true"))
+				} else {
+					if r.Spec.ClusterTopology.ClickHouseKeeper.Node.Host == "" {
+						allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("node").Child("host"),
+							r.Name,
+							"ClickHouse Keeper host can't be empty"))
+					}
+					if r.Spec.ClusterTopology.ClickHouseKeeper.Node.Port == nil {
+						allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("node").Child("port"),
+							r.Name,
+							"ClickHouse Keeper port can't be empty"))
+					}
 				}
 			}
 		}
@@ -135,7 +151,7 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 			if clusterName[cluster.Name] {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child(cluster.Name),
 					r.Name,
-					"cluster name is duplicated, use different cluster name"))
+					"cluster name is already exists, use different cluster name"))
 			}
 			clusterName[cluster.Name] = true
 
