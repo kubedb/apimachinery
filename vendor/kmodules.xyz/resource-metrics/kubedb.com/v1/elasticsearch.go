@@ -22,10 +22,8 @@ import (
 
 	"kmodules.xyz/resource-metrics/api"
 
-	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
@@ -114,8 +112,8 @@ func (r Elasticsearch) roleResourceFn(fn func(rr core.ResourceRequirements) core
 			var replicas int64 = 0
 			result := map[api.PodRole]api.PodInfo{}
 
-			for role, roleSpec := range topology {
-				rolePerReplicaResources, roleReplicas, err := ElasticsearchNodeResources(roleSpec.(map[string]interface{}), fn)
+			for role := range topology {
+				rolePerReplicaResources, roleReplicas, err := api.AppNodeResourcesV2(topology, fn, ElasticsearchContainerName, role)
 				if err != nil {
 					return nil, err
 				}
@@ -144,30 +142,4 @@ type ElasticsearchNode struct {
 	Replicas  *int64                         `json:"replicas,omitempty"`
 	Resources core.ResourceRequirements      `json:"resources,omitempty"`
 	Storage   core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
-}
-
-func ElasticsearchNodeResources(
-	obj map[string]interface{},
-	fn func(rr core.ResourceRequirements) core.ResourceList,
-	fields ...string,
-) (core.ResourceList, int64, error) {
-	val, found, err := unstructured.NestedFieldNoCopy(obj, fields...)
-	if !found || err != nil {
-		return nil, 0, err
-	}
-
-	var node ElasticsearchNode
-	err = runtime.DefaultUnstructuredConverter.FromUnstructured(val.(map[string]interface{}), &node)
-	if err != nil {
-		return nil, 0, fmt.Errorf("failed to parse node %#v: %w", node, err)
-	}
-
-	if node.Replicas == nil {
-		node.Replicas = pointer.Int64P(1)
-	}
-	rr := fn(node.Resources)
-	sr := fn(api.ToResourceRequirements(node.Storage.Resources))
-	rr[core.ResourceStorage] = *sr.Storage()
-
-	return rr, *node.Replicas, nil
 }
