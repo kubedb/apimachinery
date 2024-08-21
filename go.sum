@@ -640,8 +640,8 @@ k8s.io/utils v0.0.0-20240502163921-fe8a2dddb1d0 h1:jgGTlFYnhF1PM1Ax/lAlxUPE+KfCI
 k8s.io/utils v0.0.0-20240502163921-fe8a2dddb1d0/go.mod h1:OLgZIPagt7ERELqWJFomSt595RzquPNLL48iOWgYOg0=
 kmodules.xyz/apiversion v0.2.0 h1:vAQYqZFm4xu4pbB1cAdHbFEPES6EQkcR4wc06xdTOWk=
 kmodules.xyz/apiversion v0.2.0/go.mod h1:oPX8g8LvlPdPX3Yc5YvCzJHQnw3YF/X4/jdW0b1am80=
-kmodules.xyz/client-go v0.30.12 h1:YpwAkaTlIFy1wB3LvuOcmlWY1yHO9sh0AzCMXe2vcjE=
-kmodules.xyz/client-go v0.30.12/go.mod h1:XL3PDQIXG4s3xNRL2SSxIvi8b2WyMGpn26dFnOBz0j4=
+kmodules.xyz/client-go v0.30.13 h1:Tpvg7ZlSNlzjB0NZT9hUe9JrO7FN4PjUUF1hNUXSku0=
+kmodules.xyz/client-go v0.30.13/go.mod h1:XL3PDQIXG4s3xNRL2SSxIvi8b2WyMGpn26dFnOBz0j4=
 kmodules.xyz/crd-schema-fuzz v0.29.1 h1:zJTlWYOrT5dsVVHW8HGcnR/vaWfxQfNh11QwTtkYpcs=
 kmodules.xyz/crd-schema-fuzz v0.29.1/go.mod h1:n708z9YQqLMP2KNLQVgBcRJw1QpSWLvpNCEi+KJDOYE=
 kmodules.xyz/custom-resources v0.30.0 h1:vR3CbseHMLwR4GvtcJJuRuwIV8voKqFqNii27rMcm1o=
@@ -656,8 +656,8 @@ kmodules.xyz/offshoot-api v0.30.0 h1:dq9F93pu4Q8rL9oTcCk+vGGy8vpS7RNt0GSwx7Bvhec
 kmodules.xyz/offshoot-api v0.30.0/go.mod h1:o9VoA3ImZMDBp3lpLb8+kc2d/KBxioRwCpaKDfLIyDw=
 kmodules.xyz/prober v0.29.0 h1:Ex7m4F9rH7uWNNJlLgP63ROOM+nUATJkC2L5OQ7nwMg=
 kmodules.xyz/prober v0.29.0/go.mod h1:UtK+HKyI1lFLEKX+HFLyOCVju6TO93zv3kwGpzqmKOo=
-kmodules.xyz/resource-metadata v0.18.11 h1:5hLUfB2P7irq5erawXxH9Vrir+2OGRmWZjXrhBJr614=
-kmodules.xyz/resource-metadata v0.18.11/go.mod h1:/Q0zumHsVTXgS+zKyoN6+CND8M3kNUMYIAhoVrUoCAw=
+kmodules.xyz/resource-metadata v0.18.12 h1:wHRYsvUXrX/620K0xXZlxnXJunZtHMuJbqDFZxSUs5E=
+kmodules.xyz/resource-metadata v0.18.12/go.mod h1:VvUjfIzmM08SZ9ssZKhduzSrggKjY93ES2Bk+/m04hs=
 kmodules.xyz/resource-metrics v0.30.2 h1:EGJapJa7Sh2ePc/WyHziLVh9xtuh4vWPBoSGxVZ8uC8=
 kmodules.xyz/resource-metrics v0.30.2/go.mod h1:UYcQQLN+3o8rNPQJwJa2D9bt5ihJCeo5bCDuQ4O3MPY=
 kmodules.xyz/webhook-runtime v0.29.1 h1:SQ8NvwJpxv5CUuXIubSg9g0Bk8BBnj4dhCWEk6Ou8g8=
