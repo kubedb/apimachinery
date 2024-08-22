@@ -1330,14 +1330,15 @@ const (
 
 	ComponentCoOrdinator = "co-ordinator"
 
-	ClickHouseVolumeData             = "data"
-	ClickHouseDataDir                = "/var/lib/clickhouse"
-	ClickHouseKeeperDataDir          = "/var/lib/clickhouse_keeper"
-	ClickHouseConfigVolumeName       = "clickhouse-config"
-	ClickHouseKeeperConfigVolumeName = "clickhouse-keeper-config"
-	ClickHouseConfigDir              = "/etc/clickhouse-server/config.d"
-	ClickHouseKeeperConfigDir        = "/etc/clickhouse-keeper"
-	ClickHouseDefaultStorageSize     = "2Gi"
+	ClickHouseVolumeData                     = "data"
+	ClickHouseDataDir                        = "/var/lib/clickhouse"
+	ClickHouseKeeperDataDir                  = "/var/lib/clickhouse_keeper"
+	ClickHouseConfigVolumeName               = "clickhouse-config"
+	ClickHouseKeeperConfigVolumeName         = "clickhouse-keeper-config"
+	ClickHouseInternalKeeperConfigVolumeName = "clickhouse-internal-keeper-config"
+	ClickHouseConfigDir                      = "/etc/clickhouse-server/config.d"
+	ClickHouseKeeperConfigDir                = "/etc/clickhouse-keeper"
+	ClickHouseDefaultStorageSize             = "2Gi"
 
 	ClickHouseClusterConfigVolName = "cluster-config"
 	ClickHouseClusterConfigDir     = "/etc/clickhouse-server/conf.d"
@@ -1348,10 +1349,11 @@ const (
 
 	ClickHouseInitContainerName = "clickhouse-init"
 
-	ClickHouseClusterConfigFile = "cluster-config.yaml"
-	ClickHouseTempConfigDir     = "/ch-tmp/config"
-	ClickHouseTempDir           = "/ch-tmp"
-	ClickHouseKeeperTempDir     = "/ch-tmp"
+	ClickHouseClusterConfigFile           = "cluster-config.yaml"
+	ClickHouseTempConfigDir               = "/ch-tmp/config"
+	ClickHouseInternalKeeperTempConfigDir = "/ch-tmp/keeper"
+	ClickHouseTempDir                     = "/ch-tmp"
+	ClickHouseKeeperTempDir               = "/ch-tmp"
 
 	ClickHouseUserConfigDir  = "/etc/clickhouse-server/user.d"
 	ClickHouseMacrosFileName = "macros.yaml"
@@ -1359,8 +1361,8 @@ const (
 	ClickHouseStandalone = "standalone"
 	ClickHouseCluster    = "cluster"
 
-	ClickHouseHealthCheckerDatabase = "kubedb_system_db"
-	ClickHouseHealthCheckerTable    = "kubedb_system_table"
+	ClickHouseHealthCheckerDatabase = "kubedb_system"
+	ClickHouseHealthCheckerTable    = "kubedb_write_check"
 
 	ClickHouseServerConfigFile = "server-config.yaml"
 	ClickHouseKeeperFileConfig = "keeper_config.yaml"
@@ -1370,6 +1372,9 @@ const (
 	ClickHouseKeeeprConfigFileName       = "keeper_config.xml"
 	ClickHOuseKeeeprConfigFileVolumeName = "keeper-config"
 	ClickHouseKeeperInitContainerName    = "clickhouse-keeper-init"
+
+	ClickHouseKeeperConfig     = "etc-clickhouse-keeper"
+	ClickHouseKeeperConfigPath = "/etc/clickhouse-keeper"
 )
 
 // =========================== Cassandra Constants ============================

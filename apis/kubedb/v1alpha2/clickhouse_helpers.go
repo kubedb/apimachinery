@@ -74,6 +74,9 @@ func (c *ClickHouse) ResourceKind() string {
 func (c *ClickHouse) OffshootName() string {
 	return c.Name
 }
+func (c *ClickHouse) OffshootInternalKeeperSecretName() string {
+	return meta_util.NameWithSuffix(c.Name, "internal-keeper")
+}
 
 func (c *ClickHouse) OffshootKeeperName() string {
 	return meta_util.NameWithSuffix(c.Name, "keeper")
