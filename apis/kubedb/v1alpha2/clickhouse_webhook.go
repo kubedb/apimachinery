@@ -135,6 +135,11 @@ func (r *ClickHouse) ValidateCreateOrUpdate() error {
 							"ClickHouse Keeper port can't be empty"))
 					}
 				}
+				if r.Spec.ClusterTopology.ClickHouseKeeper.Spec != nil {
+					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("spec"),
+						r.Name,
+						"ClickHouse Keeper spec should be empty when externally managed is true"))
+				}
 			}
 		}
 		for _, cluster := range clusters {
