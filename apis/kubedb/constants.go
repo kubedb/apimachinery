@@ -1348,9 +1348,14 @@ const (
 // =========================== Cassandra Constants ============================
 
 const (
-	CassandraNativeTCP         = 9042
+	CassandraNativeTcpPort = 9042
+	CassandraInterNodePort = 7000
+	CassandraJmxPort       = 7199
+
 	CassandraVolumeData        = "data"
 	CassandraDataDir           = "/var/lib/cassandra"
+	cassandraServerLogDir      = "var/log/cassandra-server/cassandra-server.log"
+	cassandraServerErrorLogDir = "var/log/cassandra-server/cassandra-server.err.log"
 	CassandraContainerName     = "cassandra"
 	CassandraInitContainerName = "cassandra-init"
 	CassandraRackConfigFile    = "rack-config.yaml"

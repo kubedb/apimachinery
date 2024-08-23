@@ -16,7 +16,7 @@ spec:
     listKind: CassandraVersionList
     plural: cassandraversions
     shortNames:
-    - csversion
+    - casversion
     singular: cassandraversion
   scope: Cluster
   versions:

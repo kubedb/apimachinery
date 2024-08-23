@@ -17,7 +17,7 @@ spec:
     listKind: CassandraList
     plural: cassandras
     shortNames:
-    - cs
+    - cas
     singular: cassandra
   scope: Namespaced
   versions:

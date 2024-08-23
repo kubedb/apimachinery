@@ -27,7 +27,7 @@ const (
 	ResourceKindCassandra     = "Cassandra"
 	ResourceSingularCassandra = "cassandra"
 	ResourcePluralCassandra   = "cassandras"
-	ResourceCodeCassandra     = "cs"
+	ResourceCodeCassandra     = "cas"
 )
 
 // +genclient
@@ -36,7 +36,7 @@ const (
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:path=cassandras,singular=cassandra,shortName=cs,categories={datastore,kubedb,appscode,all}
+// +kubebuilder:resource:path=cassandras,singular=cassandra,shortName=cas,categories={datastore,kubedb,appscode,all}
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
