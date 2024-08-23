@@ -29,7 +29,6 @@ import (
 
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
-	"k8s.io/api/resource/v1alpha2"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
@@ -63,7 +62,7 @@ func (r CassandraApp) Type() appcat.AppType {
 
 // Owner returns owner reference to resources
 func (r *Cassandra) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(r, v1alpha2.SchemeGroupVersion.WithKind(r.ResourceKind()))
+	return meta.NewControllerRef(r, SchemeGroupVersion.WithKind(r.ResourceKind()))
 }
 
 func (r *Cassandra) ResourceKind() string {

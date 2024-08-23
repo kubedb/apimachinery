@@ -70,7 +70,7 @@ func (r *Cassandra) ValidateDelete() (admission.Warnings, error) {
 
 	var allErr field.ErrorList
 	if r.Spec.DeletionPolicy == TerminationPolicyDoNotTerminate {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("teminationPolicy"),
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
 			r.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
 		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "Cassandra.kubedb.com", Kind: "Cassandra"}, r.Name, allErr)
