@@ -74,6 +74,7 @@ func (c *ClickHouse) ResourceKind() string {
 func (c *ClickHouse) OffshootName() string {
 	return c.Name
 }
+
 func (c *ClickHouse) OffshootInternalKeeperSecretName() string {
 	return meta_util.NameWithSuffix(c.Name, "internal-keeper")
 }
@@ -292,7 +293,7 @@ func (c *ClickHouse) SetDefaults() {
 
 			dbContainer := coreutil.GetContainerByName(cluster.PodTemplate.Spec.Containers, kubedb.ClickHouseContainerName)
 			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.ClickHouseDefaultResources)
 			}
 			c.setDefaultContainerSecurityContext(&chVersion, cluster.PodTemplate)
 			clusters[index] = cluster
@@ -334,7 +335,7 @@ func (c *ClickHouse) SetDefaults() {
 		c.setDefaultContainerSecurityContext(&chVersion, c.Spec.PodTemplate)
 		dbContainer := coreutil.GetContainerByName(c.Spec.PodTemplate.Spec.Containers, kubedb.ClickHouseContainerName)
 		if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.ClickHouseDefaultResources)
 		}
 	}
 	c.SetHealthCheckerDefaults()
