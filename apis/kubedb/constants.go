@@ -1354,8 +1354,8 @@ const (
 
 	CassandraVolumeData        = "data"
 	CassandraDataDir           = "/var/lib/cassandra"
-	cassandraServerLogDir      = "var/log/cassandra-server/cassandra-server.log"
-	cassandraServerErrorLogDir = "var/log/cassandra-server/cassandra-server.err.log"
+	CassandraServerLogDir      = "var/log/cassandra-server/cassandra-server.log"
+	CassandraServerErrorLogDir = "var/log/cassandra-server/cassandra-server.err.log"
 	CassandraContainerName     = "cassandra"
 	CassandraInitContainerName = "cassandra-init"
 	CassandraRackConfigFile    = "rack-config.yaml"
