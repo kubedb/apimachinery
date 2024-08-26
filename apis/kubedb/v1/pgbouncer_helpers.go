@@ -17,18 +17,15 @@ limitations under the License.
 package v1
 
 import (
+	"context"
 	"fmt"
-
-	"kubedb.dev/apimachinery/apis"
-	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
-	"kubedb.dev/apimachinery/crds"
-
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/tools/cache"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
@@ -37,7 +34,13 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ofst_util "kmodules.xyz/offshoot-api/util"
+	"kubedb.dev/apimachinery/apis"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
+	"kubedb.dev/apimachinery/crds"
+	psapi "kubeops.dev/petset/apis/apps/v1"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func (*PgBouncer) Hub() {}
@@ -127,7 +130,24 @@ func (p PgBouncer) GetBackendSecretName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), "backend")
 }
 
+func (p PgBouncer) IsConfigSecretExitst(client client.Client) bool {
+	secret, err := p.ConfigSecret(client)
+	return (secret != nil && err == nil)
+}
+
+func (p PgBouncer) ConfigSecret(client client.Client) (*core.Secret, error) {
+	var secret core.Secret
+	err := client.Get(context.TODO(), types.NamespacedName{Name: p.ConfigSecretName(), Namespace: p.GetNamespace()}, &secret)
+	if err != nil {
+		return nil, err
+	}
+	return &secret, nil
+}
+
 func (p PgBouncer) ConfigSecretName() string {
+	if p.Spec.ConfigSecret != nil && p.Spec.ConfigSecret.Name != "" {
+		return p.Spec.ConfigSecret.Name
+	}
 	return meta_util.NameWithSuffix(p.ServiceName(), "config")
 }
 
@@ -350,6 +370,22 @@ func (p *PgBouncer) setConnectionPoolConfigDefaults() {
 	}
 }
 
+func (p *PgBouncer) GetPetSet(client client.Client) (*psapi.PetSet, error) {
+	var petset psapi.PetSet
+	err := client.Get(context.TODO(), types.NamespacedName{Name: p.OffshootName(), Namespace: p.GetNamespace()}, &petset)
+	if err != nil {
+		return nil, err
+	}
+
+	if !metav1.IsControlledBy(&petset, p) {
+		return nil, fmt.Errorf("petset owned by pgbouncer %v not found", func() string {
+			key, _ := cache.MetaNamespaceKeyFunc(p)
+			return key
+		})
+	}
+	return &petset, nil
+}
+
 func (p *PgBouncer) SetSecurityContext(pgBouncerVersion *catalog.PgBouncerVersion) {
 	container := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, kubedb.PgBouncerContainerName)
 	if container == nil {
@@ -404,4 +440,9 @@ func (p *PgBouncer) SetSecurityContext(pgBouncerVersion *catalog.PgBouncerVersio
 	if isPgbouncerContainerPresent == nil {
 		core_util.UpsertContainer(p.Spec.PodTemplate.Spec.Containers, *container)
 	}
+}
+
+func PgBouncerConfigSections() *[]string {
+	sections := []string{"databases", "peers", "pgbouncer", "users"}
+	return &sections
 }

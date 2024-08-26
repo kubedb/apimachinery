@@ -83,6 +83,11 @@ const (
 	ReconfigureFailed    = "ReconfigureFailed"
 )
 
+// Configure Secret
+const (
+	ConfigSecretDelete = "ConfigSecretDeleted"
+)
+
 // ReconfigureTLS
 const (
 	ReconfigureTLS          = "ReconfigureTLS"
@@ -110,6 +115,14 @@ const (
 	RestartPodsFailed    = "RestartPodsFailed"
 )
 
+// Reload
+const (
+	Reload              = "Reload"
+	ReloadPods          = "ReloadPods"
+	ReloadPodsSucceeded = "ReloadPodsSucceeded"
+	ReloadPodsFailed    = "ReloadPodsFailed"
+)
+
 // StatefulSets
 const (
 	UpdateStatefulSets          = "UpdateStatefulSets"
@@ -128,6 +141,15 @@ const (
 	ReadyPetSets           = "ReadyPetSets"
 	DeletePetSets          = "DeletePetSets"
 	OrphanPetSetPods       = "OrphanPetSetPods"
+)
+
+// PetSet
+const (
+	UpdateSinglePetSet          = "UpdatePetSet"
+	UpdateSinglePetSetSucceeded = "UpdatePetSetSucceeded"
+	UpdateSinglePetSetFailed    = "UpdatePetSetFailed"
+	ReadySinglePetSet           = "ReadyPetSet"
+	DeleteSinglePetSet          = "DeletePetSet"
 )
 
 // Stash
