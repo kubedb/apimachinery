@@ -180,7 +180,7 @@ func (r *Cassandra) GetConnectionScheme() string {
 
 func (r *Cassandra) SetHealthCheckerDefaults() {
 	if r.Spec.HealthChecker.PeriodSeconds == nil {
-		r.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(50)
+		r.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(20)
 	}
 	if r.Spec.HealthChecker.TimeoutSeconds == nil {
 		r.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)

@@ -1352,6 +1352,10 @@ const (
 	CassandraInterNodePort = 7000
 	CassandraJmxPort       = 7199
 
+	CassandraOperatorConfigDir = "/tmp/config/operator-config"
+	CassandraMainConfigDir     = "/etc/cassandra"
+	CassandraCustomConfigDir   = "/tmp/config/custom-config"
+
 	CassandraVolumeData        = "data"
 	CassandraDataDir           = "/var/lib/cassandra"
 	CassandraServerLogDir      = "var/log/cassandra-server/cassandra-server.log"
