@@ -1477,7 +1477,7 @@ var (
 			core.ResourceMemory: resource.MustParse("3Gi"),
 		},
 		Limits: core.ResourceList{
-			core.ResourceMemory: resource.MustParse("3Gi"),
+			core.ResourceMemory: resource.MustParse("6Gi"),
 		},
 	}
 	// CoordinatorDefaultResources must be used for raft backed coordinators to avoid unintended leader switches
