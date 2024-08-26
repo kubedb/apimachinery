@@ -19,6 +19,12 @@ package v1
 import (
 	"context"
 	"fmt"
+
+	"kubedb.dev/apimachinery/apis"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
+	"kubedb.dev/apimachinery/crds"
+
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
@@ -34,10 +40,6 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ofst_util "kmodules.xyz/offshoot-api/util"
-	"kubedb.dev/apimachinery/apis"
-	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
-	"kubedb.dev/apimachinery/crds"
 	psapi "kubeops.dev/petset/apis/apps/v1"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
