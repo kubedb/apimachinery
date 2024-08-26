@@ -1356,6 +1356,10 @@ const (
 	CassandraMainConfigDir     = "/etc/cassandra"
 	CassandraCustomConfigDir   = "/tmp/config/custom-config"
 
+	CassandraVolumeOperatorConfig = "operator-config-volume"
+	CassandraVolumeMainConfig     = "main-config-volume"
+	CassandraVolumeCustomConfig   = "custom-config"
+
 	CassandraVolumeData        = "data"
 	CassandraDataDir           = "/var/lib/cassandra"
 	CassandraServerLogDir      = "var/log/cassandra-server/cassandra-server.log"
