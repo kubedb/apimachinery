@@ -1366,6 +1366,7 @@ const (
 	CassandraServerErrorLogDir = "var/log/cassandra-server/cassandra-server.err.log"
 	CassandraContainerName     = "cassandra"
 	CassandraInitContainerName = "cassandra-init"
+	CassandraMainConfigFile    = "cassandra.yaml"
 	CassandraRackConfigFile    = "rack-config.yaml"
 	CassandraStandalone        = "standalone"
 	CassandraServerConfigFile  = "server-config.yaml"
