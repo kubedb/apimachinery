@@ -19,7 +19,6 @@ package v1
 import (
 	"context"
 	"fmt"
-
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -31,7 +30,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/tools/cache"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
@@ -222,7 +220,9 @@ func (p *PgBouncer) SetDefaults(pgBouncerVersion *catalog.PgBouncerVersion, uses
 		p.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
 
-	p.setConnectionPoolConfigDefaults()
+	if p.Spec.ConfigSecret == nil {
+		p.setConnectionPoolConfigDefaults()
+	}
 
 	if p.Spec.TLS != nil {
 		if p.Spec.SSLMode == "" {
@@ -295,7 +295,9 @@ func (p *PgBouncer) GetPersistentSecrets() []string {
 	var secrets []string
 	secrets = append(secrets, p.GetAuthSecretName())
 	secrets = append(secrets, p.GetBackendSecretName())
-	secrets = append(secrets, p.ConfigSecretName())
+	if p.Spec.ConfigSecret == nil {
+		secrets = append(secrets, p.ConfigSecretName())
+	}
 
 	return secrets
 }
@@ -377,13 +379,6 @@ func (p *PgBouncer) GetPetSet(client client.Client) (*psapi.PetSet, error) {
 	err := client.Get(context.TODO(), types.NamespacedName{Name: p.OffshootName(), Namespace: p.GetNamespace()}, &petset)
 	if err != nil {
 		return nil, err
-	}
-
-	if !metav1.IsControlledBy(&petset, p) {
-		return nil, fmt.Errorf("petset owned by pgbouncer %v not found", func() string {
-			key, _ := cache.MetaNamespaceKeyFunc(p)
-			return key
-		})
 	}
 	return &petset, nil
 }
