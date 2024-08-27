@@ -19,6 +19,8 @@ package v1
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -442,4 +444,85 @@ func (p *PgBouncer) SetSecurityContext(pgBouncerVersion *catalog.PgBouncerVersio
 func PgBouncerConfigSections() *[]string {
 	sections := []string{"databases", "peers", "pgbouncer", "users"}
 	return &sections
+}
+
+func (p *PgBouncer) GetConfigFieldValue(section, field string, client client.Client) string {
+	configSecret, err := p.ConfigSecret(client)
+	if err != nil || configSecret.Data == nil {
+		return ""
+	}
+	configData, present := configSecret.Data[kubedb.PgBouncerConfigFile]
+	if !present {
+		return ""
+	}
+	configDataList := strings.Split(string(configData), "\n")
+	configDataList = *RemoveEmptyString(&configDataList)
+	dividedDataInSections := *DivideDataInSections(&configDataList, PgBouncerConfigSections())
+
+	for _, fieldValue := range dividedDataInSections[section] {
+		key, value := DivideIntoKeyValue(fieldValue)
+		if key == field {
+			for len(value) > 0 && value[0] == ' ' {
+				value = value[1:]
+			}
+			for len(value) > 0 && value[len(value)-1] == ' ' {
+				value = value[:(len(value) - 1)]
+			}
+			return value
+		}
+	}
+	return ""
+}
+
+func DivideDataInSections(dataReceive, sectionsReceive *[]string) *map[string][]string {
+	data := *dataReceive
+	sections := *sectionsReceive
+
+	sectionData := make([]string, 0)
+	sectionName := ""
+	result := make(map[string][]string)
+
+	for i := 0; i < len(data); i++ {
+		newSectionName := ""
+		for j := 0; j < len(sections); j++ {
+			sectionTitle := fmt.Sprintf("%s%s%s", "[", sections[j], "]")
+			if data[i] == sectionTitle {
+				newSectionName = sections[j]
+			}
+		}
+		if newSectionName != "" {
+			if sectionName != "" {
+				result[sectionName] = sectionData
+			}
+			sectionName = newSectionName
+			sectionData = make([]string, 0)
+			continue
+		}
+		sectionData = append(sectionData, data[i])
+	}
+	if sectionName != "" {
+		result[sectionName] = sectionData
+	}
+	return &result
+}
+
+func RemoveEmptyString(strListadr *[]string) *[]string {
+	strList := *strListadr
+	for i := 0; i < len(strList); {
+		if strList[i] == "" {
+			strList = append(strList[:i], strList[i+1:]...)
+		} else {
+			i++
+		}
+	}
+	return &strList
+}
+
+func DivideIntoKeyValue(str string) (string, string) {
+	for i, ch := range str {
+		if ch == '=' || ch == ' ' {
+			return str[:i], str[i:]
+		}
+	}
+	return str, ""
 }
