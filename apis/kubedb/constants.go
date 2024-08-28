@@ -1383,6 +1383,13 @@ const (
 	EnvValCassandraHeapNewSize       = "100M"
 	EnvNameCassandraListenAddress    = "CASSANDRA_LISTEN_ADDRESS"
 	EnvNameCassandraBroadcastAddress = "CASSANDRA_BROADCAST_ADDRESS"
+	EnvNameCassandraRpcAddress       = "CASSANDRA_RPC_ADDRESS"
+	EnvValCassandraRpcAddress        = "0.0.0.0"
+	EnvNameCassandraNumTokens        = "CASSANDRA_NUM_TOKENS"
+	EnvValCassandraNumTokens         = "256"
+	EnvNameCassandraStartRpc         = "CASSANDRA_START_RPC"
+	EnvNameCassandraSeeds            = "CASSANDRA_SEEDS"
+	EnvNameCassandraPodName          = "CASSANDRA_POD_NAME"
 )
 
 // Resource kind related constants
