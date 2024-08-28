@@ -48,7 +48,7 @@ require (
 	kubestash.dev/apimachinery v0.11.0
 	sigs.k8s.io/controller-runtime v0.18.4
 	sigs.k8s.io/yaml v1.4.0
-	stash.appscode.dev/apimachinery v0.34.0
+	stash.appscode.dev/apimachinery v0.35.0
 )
 
 require (
