@@ -1370,6 +1370,19 @@ const (
 	CassandraRackConfigFile    = "rack-config.yaml"
 	CassandraStandalone        = "standalone"
 	CassandraServerConfigFile  = "server-config.yaml"
+
+	EnvNameCassandraEndpointSnitch = "CASSANDRA_ENDPOINT_SNITCH"
+	EnvValCassandraEndpointSnitch  = "GossipingPropertyFileSnitch"
+
+	EnvNameCassandraRack             = "CASSANDRA_RACK"
+	EnvNameCassandraPodNamespace     = "CASSANDRA_POD_NAMESPACE"
+	EnvNameCassandraService          = "CASSANDRA_SERVICE"
+	EnvNameCassandraMaxHeapSize      = "MAX_HEAP_SIZE"
+	EnvValCassandraMaxHeapSize       = "512M"
+	EnvNameCassandraHeapNewSize      = "HEAP_NEWSIZE"
+	EnvValCassandraHeapNewSize       = "100M"
+	EnvNameCassandraListenAddress    = "CASSANDRA_LISTEN_ADDRESS"
+	EnvNameCassandraBroadcastAddress = "CASSANDRA_BROADCAST_ADDRESS"
 )
 
 // Resource kind related constants
