@@ -129,27 +129,6 @@ func (p *Pgpool) ValidateCreateOrUpdate() field.ErrorList {
 			"use either `spec.configSecret` or `spec.initConfig`"))
 	}
 
-	if p.Spec.ConfigSecret != nil {
-		secret := core.Secret{}
-		err := DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      p.Spec.ConfigSecret.Name,
-			Namespace: p.Namespace,
-		}, &secret)
-		if err != nil {
-			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configSecret"),
-				p.Name,
-				err.Error(),
-			))
-		}
-		_, ok := secret.Data[kubedb.PgpoolCustomConfigFile]
-		if !ok {
-			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configSecret"),
-				p.Name,
-				fmt.Sprintf("`%v` is missing", kubedb.PgpoolCustomConfigFile),
-			))
-		}
-	}
-
 	if p.ObjectMeta.DeletionTimestamp == nil {
 		apb := appcat.AppBinding{}
 		err := DefaultClient.Get(context.TODO(), types.NamespacedName{
