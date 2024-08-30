@@ -19,6 +19,7 @@ package v1
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -131,22 +132,22 @@ func (p PgBouncer) GetBackendSecretName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), "backend")
 }
 
-func (p PgBouncer) IsConfigSecretExitst(client client.Client) bool {
-	secret, err := p.ConfigSecret(client)
+func (p PgBouncer) IsPgBouncerFinalConfigSecretExitst(client client.Client) bool {
+	secret, err := p.GetPgBouncerFinalConfigSecret(client)
 	return (secret != nil && err == nil)
 }
 
-func (p PgBouncer) ConfigSecret(client client.Client) (*core.Secret, error) {
+func (p PgBouncer) GetPgBouncerFinalConfigSecret(client client.Client) (*core.Secret, error) {
 	var secret core.Secret
-	err := client.Get(context.TODO(), types.NamespacedName{Name: p.ConfigSecretName(), Namespace: p.GetNamespace()}, &secret)
+	err := client.Get(context.TODO(), types.NamespacedName{Name: p.PgBouncerFinalConfigSecretName(), Namespace: p.GetNamespace()}, &secret)
 	if err != nil {
 		return nil, err
 	}
 	return &secret, nil
 }
 
-func (p PgBouncer) ConfigSecretName() string {
-	return meta_util.NameWithSuffix(p.ServiceName(), "config")
+func (p PgBouncer) PgBouncerFinalConfigSecretName() string {
+	return meta_util.NameWithSuffix(p.ServiceName(), "final-config")
 }
 
 type pgbouncerApp struct {
@@ -289,7 +290,7 @@ func (p *PgBouncer) GetPersistentSecrets() []string {
 	var secrets []string
 	secrets = append(secrets, p.GetAuthSecretName())
 	secrets = append(secrets, p.GetBackendSecretName())
-	secrets = append(secrets, p.ConfigSecretName())
+	secrets = append(secrets, p.PgBouncerFinalConfigSecretName())
 
 	return secrets
 }
@@ -323,49 +324,6 @@ func (p *PgBouncer) SetHealthCheckerDefaults() {
 		p.Spec.HealthChecker.FailureThreshold = pointer.Int32P(1)
 	}
 }
-
-//
-//func (p *PgBouncer) setConnectionPoolConfigDefaults() {
-//	if p.Spec.ConnectionPool == nil {
-//		p.Spec.ConnectionPool = &ConnectionPoolConfig{}
-//	}
-//	if p.Spec.ConnectionPool.Port == nil {
-//		p.Spec.ConnectionPool.Port = pointer.Int32P(5432)
-//	}
-//	if p.Spec.ConnectionPool.PoolMode == "" {
-//		p.Spec.ConnectionPool.PoolMode = kubedb.PgBouncerDefaultPoolMode
-//	}
-//	if p.Spec.ConnectionPool.MaxClientConnections == nil {
-//		p.Spec.ConnectionPool.MaxClientConnections = pointer.Int64P(100)
-//	}
-//	if p.Spec.ConnectionPool.DefaultPoolSize == nil {
-//		p.Spec.ConnectionPool.DefaultPoolSize = pointer.Int64P(20)
-//	}
-//	if p.Spec.ConnectionPool.MinPoolSize == nil {
-//		p.Spec.ConnectionPool.MinPoolSize = pointer.Int64P(0)
-//	}
-//	if p.Spec.ConnectionPool.ReservePoolSize == nil {
-//		p.Spec.ConnectionPool.ReservePoolSize = pointer.Int64P(0)
-//	}
-//	if p.Spec.ConnectionPool.ReservePoolTimeoutSeconds == nil {
-//		p.Spec.ConnectionPool.ReservePoolTimeoutSeconds = pointer.Int64P(5)
-//	}
-//	if p.Spec.ConnectionPool.MaxDBConnections == nil {
-//		p.Spec.ConnectionPool.MaxDBConnections = pointer.Int64P(0)
-//	}
-//	if p.Spec.ConnectionPool.MaxUserConnections == nil {
-//		p.Spec.ConnectionPool.MaxUserConnections = pointer.Int64P(0)
-//	}
-//	if p.Spec.ConnectionPool.StatsPeriodSeconds == nil {
-//		p.Spec.ConnectionPool.StatsPeriodSeconds = pointer.Int64P(60)
-//	}
-//	if p.Spec.ConnectionPool.AuthType == "" {
-//		p.Spec.ConnectionPool.AuthType = PgBouncerClientAuthModeMD5
-//	}
-//	if p.Spec.ConnectionPool.IgnoreStartupParameters == "" {
-//		p.Spec.ConnectionPool.IgnoreStartupParameters = kubedb.PgBouncerDefaultIgnoreStartupParameters
-//	}
-//}
 
 func (p *PgBouncer) GetPetSet(client client.Client) (*psapi.PetSet, error) {
 	var petset psapi.PetSet
@@ -438,4 +396,22 @@ func PgBouncerConfigSections() *[]string {
 		kubedb.PgBouncerConfigSectionPgbouncer, kubedb.PgBouncerConfigSectionUsers,
 	}
 	return &sections
+}
+
+func PgBouncerDefaultConfig() string {
+	defaultConfig := "[pgbouncer]\n" +
+		"\n" +
+		"listen_port = " + strconv.Itoa(kubedb.PgBouncerDatabasePort) + "\n" +
+		"pool_mode = " + kubedb.PgBouncerDefaultPoolMode + "\n" +
+		"max_client_conn = 100\n" +
+		"default_pool_size = 20\n" +
+		"min_pool_size = 0\n" +
+		"reserve_pool_size = 0\n" +
+		"reserve_pool_timeout = 5\n" +
+		"max_db_connections = 0\n" +
+		"max_user_connections = 0\n" +
+		"stats_period = 60\n" +
+		"auth_type = " + string(PgBouncerClientAuthModeMD5) + "\n" +
+		"ignore_startup_parameters = " + kubedb.PgBouncerDefaultIgnoreStartupParameters + "\n"
+	return defaultConfig
 }
