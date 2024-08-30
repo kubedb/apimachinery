@@ -941,8 +941,9 @@ const (
 	SolrConfSolrCloudKey           = "solrcloud"
 	SolrConfShardHandlerFactoryKey = "shardHandlerFactory"
 	SolrJavaMem                    = "-Xms3g -Xmx3g"
-	SolrKeystorePasskey            = "keystore-secret"
-	SolrServerKeystoreKey          = "solr-ssl.keystore.p12"
+	SolrKeystorePassKey            = "keystore-secret"
+	SolrServerKeystorePath         = "/var/solr/etc/keystore.p12"
+	SolrServerTruststorePath       = "/var/solr/etc/truststore.p12"
 
 	ProxyDeploymentName = "s3proxy"
 	ProxyServiceName    = "proxy-svc"
