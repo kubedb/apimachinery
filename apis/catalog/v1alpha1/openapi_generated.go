@@ -29473,6 +29473,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionSpec(ref common.Refe
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionExporter"),
 						},
 					},
+					"updateConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "update constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
+						},
+					},
 					"securityContext": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional config for pgpool DB container",
@@ -29498,7 +29505,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionPgpool"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionPgpool", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

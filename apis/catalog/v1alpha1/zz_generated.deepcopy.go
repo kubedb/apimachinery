@@ -2511,6 +2511,7 @@ func (in *PgpoolVersionSpec) DeepCopyInto(out *PgpoolVersionSpec) {
 	*out = *in
 	out.Pgpool = in.Pgpool
 	out.Exporter = in.Exporter
+	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	if in.UI != nil {
 		in, out := &in.UI, &out.UI
