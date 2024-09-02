@@ -28,6 +28,9 @@ API rule violation: list_type_missing,kmodules.xyz/monitoring-agent-api/api/v1,P
 API rule violation: list_type_missing,kmodules.xyz/monitoring-agent-api/api/v1,PrometheusExporterSpec,Env
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ContainerRuntimeSettings,Env
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ContainerRuntimeSettings,EnvFrom
+API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,Gateway,Services
+API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,Gateway,UI
+API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,NamedServiceStatus,Ports
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PartialObjectMeta,OwnerReferences
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodRuntimeSettings,ImagePullSecrets
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodRuntimeSettings,ReadinessGates
@@ -42,6 +45,8 @@ API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,V
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,ExternalIPs
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,LoadBalancerSourceRanges
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,Ports
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseConnectionSpec,Private
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseConnectionSpec,Public
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchNodesStatSpec,Roles
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchNodesStatsSpec,Nodes
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchSchemaOverviewSpec,Indices

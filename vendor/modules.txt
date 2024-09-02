@@ -1705,7 +1705,7 @@ kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/objectstore-api v0.29.1
 ## explicit; go 1.21
 kmodules.xyz/objectstore-api/api/v1
-# kmodules.xyz/offshoot-api v0.30.0
+# kmodules.xyz/offshoot-api v0.30.1-0.20240912095128-a95bf66dae96
 ## explicit; go 1.22.0
 kmodules.xyz/offshoot-api/api/v1
 kmodules.xyz/offshoot-api/api/v1/conversion
