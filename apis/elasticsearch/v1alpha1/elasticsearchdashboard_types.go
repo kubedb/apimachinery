@@ -64,6 +64,11 @@ type ElasticsearchDashboardSpec struct {
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 
+	// HealthChecker defines attributes of the health checker
+	// +optional
+	// +kubebuilder:default={periodSeconds: 20, timeoutSeconds: 10, failureThreshold: 3}
+	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+
 	// TerminationPolicy controls the delete operation for Dashboard
 	// +optional
 	TerminationPolicy dbapi.DeletionPolicy `json:"terminationPolicy,omitempty"`

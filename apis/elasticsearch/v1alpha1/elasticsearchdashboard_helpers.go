@@ -26,6 +26,7 @@ import (
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	"kubedb.dev/apimachinery/crds"
 
+	"gomodules.xyz/pointer"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
@@ -231,4 +232,16 @@ func (ed *ElasticsearchDashboard) CertSecretExists(alias ElasticsearchDashboardC
 		}
 	}
 	return false
+}
+
+func (ed *ElasticsearchDashboard) SetHealthCheckerDefaults() {
+	if ed.Spec.HealthChecker.PeriodSeconds == nil {
+		ed.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(20)
+	}
+	if ed.Spec.HealthChecker.TimeoutSeconds == nil {
+		ed.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)
+	}
+	if ed.Spec.HealthChecker.FailureThreshold == nil {
+		ed.Spec.HealthChecker.FailureThreshold = pointer.Int32P(3)
+	}
 }
