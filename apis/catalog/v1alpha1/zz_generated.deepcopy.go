@@ -1567,6 +1567,7 @@ func (in *MemcachedVersionSpec) DeepCopyInto(out *MemcachedVersionSpec) {
 	out.DB = in.DB
 	out.Exporter = in.Exporter
 	out.PodSecurityPolicies = in.PodSecurityPolicies
+	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	if in.UI != nil {
 		in, out := &in.UI, &out.UI

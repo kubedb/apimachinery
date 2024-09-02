@@ -21593,6 +21593,11 @@
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ChartInfo"
           }
         },
+        "updateConstraints": {
+          "description": "update constraints",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpdateConstraints"
+        },
         "version": {
           "description": "Version",
           "type": "string",
