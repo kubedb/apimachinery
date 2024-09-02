@@ -3614,6 +3614,7 @@ spec:
               version:
                 type: string
             required:
+            - database
             - version
             type: object
           status:

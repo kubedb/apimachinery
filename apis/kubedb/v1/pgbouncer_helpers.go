@@ -412,6 +412,9 @@ func PgBouncerDefaultConfig() string {
 		"max_user_connections = 0\n" +
 		"stats_period = 60\n" +
 		"auth_type = " + string(PgBouncerClientAuthModeMD5) + "\n" +
-		"ignore_startup_parameters = " + kubedb.PgBouncerDefaultIgnoreStartupParameters + "\n"
+		"ignore_startup_parameters = " + "extra_float_digits, " + kubedb.PgBouncerDefaultIgnoreStartupParameters + "\n" +
+		"logfile = /tmp/pgbouncer.log\n" +
+		"pidfile = /tmp/pgbouncer.pid\n" +
+		"listen_addr = *"
 	return defaultConfig
 }

@@ -73,7 +73,7 @@ type PgBouncerSpec struct {
 	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// Database to proxy by connection pooling.
-	Database Database `json:"database,omitempty"`
+	Database Database `json:"database"`
 
 	// ConnectionPoolConfig defines Connection pool configuration.
 	// +optional
