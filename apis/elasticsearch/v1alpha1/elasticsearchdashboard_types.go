@@ -22,7 +22,7 @@ import (
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
 const (
@@ -71,7 +71,7 @@ type ElasticsearchDashboardSpec struct {
 
 	// TerminationPolicy controls the delete operation for Dashboard
 	// +optional
-	TerminationPolicy dbapi.DeletionPolicy `json:"terminationPolicy,omitempty"`
+	DeletionPolicy dbapi.DeletionPolicy `json:"terminationPolicy,omitempty"`
 }
 
 // ElasticsearchDashboardStatus defines the observed state of ElasticsearchDashboard

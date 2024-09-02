@@ -25227,7 +25227,7 @@ func schema_apimachinery_apis_elasticsearch_v1alpha1_ElasticsearchDashboardSpec(
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose Dashboard",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -25268,7 +25268,7 @@ func schema_apimachinery_apis_elasticsearch_v1alpha1_ElasticsearchDashboardSpec(
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec"},
 	}
 }
 
