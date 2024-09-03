@@ -1350,8 +1350,8 @@ const (
 	ClickHouseInitContainerName = "clickhouse-init"
 
 	ClickHouseClusterConfigFile           = "cluster-config.yaml"
-	ClickHouseTempConfigDir               = "/ch-tmp/config"
-	ClickHouseInternalKeeperTempConfigDir = "/ch-tmp/keeper"
+	ClickHouseTempConfigDir               = "/ch-tmp"
+	ClickHouseInternalKeeperTempConfigDir = "/keeper"
 	ClickHouseTempDir                     = "/ch-tmp"
 	ClickHouseKeeperTempDir               = "/ch-tmp"
 
