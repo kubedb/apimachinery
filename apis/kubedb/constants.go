@@ -1355,10 +1355,12 @@ const (
 	CassandraOperatorConfigDir = "/tmp/config/operator-config"
 	CassandraMainConfigDir     = "/etc/cassandra"
 	CassandraCustomConfigDir   = "/tmp/config/custom-config"
+	CassandraScriptDir         = "/tmp/sc"
 
 	CassandraVolumeOperatorConfig = "operator-config-volume"
 	CassandraVolumeMainConfig     = "main-config-volume"
 	CassandraVolumeCustomConfig   = "custom-config"
+	CassandraVolumeScript         = "script-volume"
 
 	CassandraVolumeData        = "data"
 	CassandraDataDir           = "/var/lib/cassandra"
