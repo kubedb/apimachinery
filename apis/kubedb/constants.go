@@ -1390,6 +1390,8 @@ const (
 	EnvNameCassandraStartRpc         = "CASSANDRA_START_RPC"
 	EnvNameCassandraSeeds            = "CASSANDRA_SEEDS"
 	EnvNameCassandraPodName          = "CASSANDRA_POD_NAME"
+	EnvNameCassandraUser             = "CASSANDRA_USER"
+	EnvNameCassandraPassword         = "CASSANDRA_PASSWORD"
 )
 
 // Resource kind related constants
