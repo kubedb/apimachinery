@@ -56,15 +56,15 @@ type MSSQLServerOpsRequestSpec struct {
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type MSSQLServerOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading MSSQL
-	UpdateVersion *MSSQLUpdateVersionSpec `json:"updateVersion,omitempty"`
+	UpdateVersion *MSSQLServerUpdateVersionSpec `json:"updateVersion,omitempty"`
 	// Specifies information necessary for horizontal scaling
-	HorizontalScaling *MSSQLHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
+	HorizontalScaling *MSSQLServerHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *MSSQLServerVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for volume expansion
 	VolumeExpansion *MSSQLServerVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for custom configuration of MSSQL
-	Configuration *MSSQLCustomConfigurationSpec `json:"configuration,omitempty"`
+	Configuration *MSSQLServerCustomConfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for configuring TLS
 	TLS *TLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for restarting database
@@ -80,35 +80,35 @@ type MSSQLServerOpsRequestSpec struct {
 // ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
 type MSSQLServerOpsRequestType string
 
-// MSSQLReplicaReadinessCriteria is the criteria for checking readiness of a MSSQL pod
+// MSSQLServerReplicaReadinessCriteria is the criteria for checking readiness of a MSSQLServer pod
 // after updating, horizontal scaling etc.
-type MSSQLReplicaReadinessCriteria struct{}
+type MSSQLServerReplicaReadinessCriteria struct{}
 
-// MSSQLUpdateVersionSpec contains the update version information of a MSSQL cluster
-type MSSQLUpdateVersionSpec struct {
+// MSSQLServerUpdateVersionSpec contains the update version information of a MSSQLServer cluster
+type MSSQLServerUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty"`
 }
 
-// MSSQLHorizontalScalingSpec contains the horizontal scaling information of a MSSQL cluster
-type MSSQLHorizontalScalingSpec struct{}
+// MSSQLServerHorizontalScalingSpec contains the horizontal scaling information of a MSSQLServer cluster
+type MSSQLServerHorizontalScalingSpec struct{}
 
-// MSSQLServerVerticalScalingSpec contains the vertical scaling information of a MSSQL cluster
+// MSSQLServerVerticalScalingSpec contains the vertical scaling information of a MSSQLServer cluster
 type MSSQLServerVerticalScalingSpec struct {
 	MSSQLServer *PodResources       `json:"mssqlserver,omitempty"`
 	Exporter    *ContainerResources `json:"exporter,omitempty"`
 	Coordinator *ContainerResources `json:"coordinator,omitempty"`
 }
 
-// MSSQLServerVolumeExpansionSpec is the spec for MSSQL volume expansion
+// MSSQLServerVolumeExpansionSpec is the spec for MSSQLServer volume expansion
 type MSSQLServerVolumeExpansionSpec struct {
 	// volume specification for Postgres
 	MSSQLServer *resource.Quantity  `json:"mssqlserver,omitempty"`
 	Mode        VolumeExpansionMode `json:"mode"`
 }
 
-// MSSQLCustomConfigurationSpec is the spec for Reconfiguring the MSSQL Settings
-type MSSQLCustomConfigurationSpec struct{}
+// MSSQLServerCustomConfigurationSpec is the spec for Reconfiguring the MSSQLServer Settings
+type MSSQLServerCustomConfigurationSpec struct{}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

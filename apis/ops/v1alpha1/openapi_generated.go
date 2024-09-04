@@ -537,15 +537,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaUpdateVersionSpec":                           schema_apimachinery_apis_ops_v1alpha1_KafkaUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaVerticalScalingSpec":                         schema_apimachinery_apis_ops_v1alpha1_KafkaVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaVolumeExpansionSpec":                         schema_apimachinery_apis_ops_v1alpha1_KafkaVolumeExpansionSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLCustomConfigurationSpec":                     schema_apimachinery_apis_ops_v1alpha1_MSSQLCustomConfigurationSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLHorizontalScalingSpec":                       schema_apimachinery_apis_ops_v1alpha1_MSSQLHorizontalScalingSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLReplicaReadinessCriteria":                    schema_apimachinery_apis_ops_v1alpha1_MSSQLReplicaReadinessCriteria(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerCustomConfigurationSpec":               schema_apimachinery_apis_ops_v1alpha1_MSSQLServerCustomConfigurationSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerHorizontalScalingSpec":                 schema_apimachinery_apis_ops_v1alpha1_MSSQLServerHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequest":                            schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequestList":                        schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerOpsRequestSpec":                        schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerReplicaReadinessCriteria":              schema_apimachinery_apis_ops_v1alpha1_MSSQLServerReplicaReadinessCriteria(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerUpdateVersionSpec":                     schema_apimachinery_apis_ops_v1alpha1_MSSQLServerUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVerticalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVolumeExpansionSpec":                   schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVolumeExpansionSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLUpdateVersionSpec":                           schema_apimachinery_apis_ops_v1alpha1_MSSQLUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBCustomConfiguration":                       schema_apimachinery_apis_ops_v1alpha1_MariaDBCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBCustomConfigurationSpec":                   schema_apimachinery_apis_ops_v1alpha1_MariaDBCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBHorizontalScalingSpec":                     schema_apimachinery_apis_ops_v1alpha1_MariaDBHorizontalScalingSpec(ref),
@@ -27326,33 +27326,22 @@ func schema_apimachinery_apis_ops_v1alpha1_KafkaVolumeExpansionSpec(ref common.R
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_MSSQLCustomConfigurationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerCustomConfigurationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLCustomConfigurationSpec is the spec for Reconfiguring the MSSQL Settings",
+				Description: "MSSQLServerCustomConfigurationSpec is the spec for Reconfiguring the MSSQLServer Settings",
 				Type:        []string{"object"},
 			},
 		},
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_MSSQLHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLHorizontalScalingSpec contains the horizontal scaling information of a MSSQL cluster",
-				Type:        []string{"object"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_ops_v1alpha1_MSSQLReplicaReadinessCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLReplicaReadinessCriteria is the criteria for checking readiness of a MSSQL pod after updating, horizontal scaling etc.",
+				Description: "MSSQLServerHorizontalScalingSpec contains the horizontal scaling information of a MSSQLServer cluster",
 				Type:        []string{"object"},
 			},
 		},
@@ -27479,13 +27468,13 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestSpec(ref common.
 					"updateVersion": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for upgrading MSSQL",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLUpdateVersionSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerUpdateVersionSpec"),
 						},
 					},
 					"horizontalScaling": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for horizontal scaling",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLHorizontalScalingSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerHorizontalScalingSpec"),
 						},
 					},
 					"verticalScaling": {
@@ -27503,7 +27492,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestSpec(ref common.
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for custom configuration of MSSQL",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLCustomConfigurationSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerCustomConfigurationSpec"),
 						},
 					},
 					"tls": {
@@ -27536,7 +27525,38 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerReplicaReadinessCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLServerReplicaReadinessCriteria is the criteria for checking readiness of a MSSQLServer pod after updating, horizontal scaling etc.",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerUpdateVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLServerUpdateVersionSpec contains the update version information of a MSSQLServer cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the target version name from catalog",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -27544,7 +27564,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVerticalScalingSpec(ref co
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLServerVerticalScalingSpec contains the vertical scaling information of a MSSQL cluster",
+				Description: "MSSQLServerVerticalScalingSpec contains the vertical scaling information of a MSSQLServer cluster",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"mssqlserver": {
@@ -27574,7 +27594,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVolumeExpansionSpec(ref co
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLServerVolumeExpansionSpec is the spec for MSSQL volume expansion",
+				Description: "MSSQLServerVolumeExpansionSpec is the spec for MSSQLServer volume expansion",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"mssqlserver": {
@@ -27596,26 +27616,6 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVolumeExpansionSpec(ref co
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
-	}
-}
-
-func schema_apimachinery_apis_ops_v1alpha1_MSSQLUpdateVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLUpdateVersionSpec contains the update version information of a MSSQL cluster",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"targetVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the target version name from catalog",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
 	}
 }
 
