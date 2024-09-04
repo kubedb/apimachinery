@@ -27343,6 +27343,15 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerHorizontalScalingSpec(ref 
 			SchemaProps: spec.SchemaProps{
 				Description: "MSSQLServerHorizontalScalingSpec contains the horizontal scaling information of a MSSQLServer cluster",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of Replicas of MSSQLServer Availability Group",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
 			},
 		},
 	}

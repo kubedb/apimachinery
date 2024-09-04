@@ -91,7 +91,10 @@ type MSSQLServerUpdateVersionSpec struct {
 }
 
 // MSSQLServerHorizontalScalingSpec contains the horizontal scaling information of a MSSQLServer cluster
-type MSSQLServerHorizontalScalingSpec struct{}
+type MSSQLServerHorizontalScalingSpec struct {
+	// Number of Replicas of MSSQLServer Availability Group
+	Replicas *int32 `json:"replicas,omitempty"`
+}
 
 // MSSQLServerVerticalScalingSpec contains the vertical scaling information of a MSSQLServer cluster
 type MSSQLServerVerticalScalingSpec struct {
