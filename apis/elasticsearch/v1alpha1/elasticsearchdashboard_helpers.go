@@ -17,17 +17,23 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"path/filepath"
 
 	"kubedb.dev/apimachinery/apis"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/crds"
 
 	"gomodules.xyz/pointer"
+	v1 "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -243,5 +249,61 @@ func (ed *ElasticsearchDashboard) SetHealthCheckerDefaults() {
 	}
 	if ed.Spec.HealthChecker.FailureThreshold == nil {
 		ed.Spec.HealthChecker.FailureThreshold = pointer.Int32P(3)
+	}
+}
+
+func (ed *ElasticsearchDashboard) SetDefaults() {
+	if ed.Spec.DeletionPolicy == "" {
+		ed.Spec.DeletionPolicy = dbapi.DeletionPolicyDelete
+	}
+
+	if ed.Spec.AuthSecret == nil {
+		ed.Spec.AuthSecret = &v1.LocalObjectReference{
+			Name: ed.AuthSecretName(),
+		}
+	}
+	var db *dbapi.Elasticsearch
+	var esVersion catalog.ElasticsearchVersion
+	err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      ed.Spec.DatabaseRef.Name,
+		Namespace: ed.Namespace,
+	}, db)
+	if err != nil {
+		klog.Errorf("can't get the elasticsearch: %v\n", err.Error())
+		return
+	}
+
+	err = olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: db.Spec.Version,
+	}, &esVersion)
+	if err != nil {
+		klog.Errorf("can't get the elasticsearch version: %v\n", err.Error())
+		return
+	}
+
+	if ed.Spec.Replicas == nil {
+		ed.Spec.Replicas = pointer.Int32P(1)
+	}
+	if ed.Spec.PodTemplate.Spec.SecurityContext == nil {
+		ed.Spec.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{}
+	}
+	ed.Spec.PodTemplate.Spec.SecurityContext.FSGroup = esVersion.Spec.SecurityContext.RunAsUser
+	ed.setDefaultContainerSecurityContext(esVersion, &ed.Spec.PodTemplate)
+	ed.setDefaultContainerResourceLimits(&ed.Spec.PodTemplate)
+
+	if ed.Spec.EnableSSL {
+		if ed.Spec.TLS == nil {
+			ed.Spec.TLS = &kmapi.TLSConfig{}
+		}
+		if ed.Spec.TLS.IssuerRef == nil {
+			ed.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(ed.Spec.TLS.Certificates, kmapi.CertificateSpec{
+				Alias:      string(ElasticsearchDashboardCACert),
+				SecretName: ed.DefaultCertificateSecretName(ElasticsearchDashboardCACert),
+			})
+		}
+		ed.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(ed.Spec.TLS.Certificates, kmapi.CertificateSpec{
+			Alias:      string(ElasticsearchDashboardServerCert),
+			SecretName: ed.DefaultCertificateSecretName(ElasticsearchDashboardServerCert),
+		})
 	}
 }
