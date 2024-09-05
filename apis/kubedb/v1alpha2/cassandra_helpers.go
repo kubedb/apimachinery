@@ -199,10 +199,20 @@ func (r *Cassandra) ResourceSingular() string {
 }
 
 func (r *Cassandra) SetDefaults() {
-	var csVersion catalog.CassandraVersion
+	if r.Spec.DeletionPolicy == "" {
+		r.Spec.DeletionPolicy = TerminationPolicyDelete
+	}
+
+	if !r.Spec.DisableSecurity {
+		if r.Spec.AuthSecret == nil {
+			r.Spec.AuthSecret = &SecretReference{}
+		}
+	}
+
+	var casVersion catalog.CassandraVersion
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: r.Spec.Version,
-	}, &csVersion)
+	}, &casVersion)
 	if err != nil {
 		klog.Errorf("can't get the cassandra version object %s for %s \n", err.Error(), r.Spec.Version)
 		return
@@ -237,16 +247,13 @@ func (r *Cassandra) SetDefaults() {
 			if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 			}
-			r.setDefaultContainerSecurityContext(&csVersion, rack.PodTemplate)
+			r.setDefaultContainerSecurityContext(&casVersion, rack.PodTemplate)
 			racks[index] = rack
 		}
 		r.Spec.Topology.Rack = racks
 	} else {
 		if r.Spec.Replicas == nil {
 			r.Spec.Replicas = pointer.Int32P(1)
-		}
-		if r.Spec.DeletionPolicy == "" {
-			r.Spec.DeletionPolicy = TerminationPolicyDelete
 		}
 		if r.Spec.StorageType == "" {
 			r.Spec.StorageType = StorageTypeDurable
@@ -255,7 +262,7 @@ func (r *Cassandra) SetDefaults() {
 		if r.Spec.PodTemplate == nil {
 			r.Spec.PodTemplate = &ofst.PodTemplateSpec{}
 		}
-		r.setDefaultContainerSecurityContext(&csVersion, r.Spec.PodTemplate)
+		r.setDefaultContainerSecurityContext(&casVersion, r.Spec.PodTemplate)
 		dbContainer := coreutil.GetContainerByName(r.Spec.PodTemplate.Spec.Containers, kubedb.CassandraContainerName)
 		if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)

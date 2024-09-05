@@ -25612,14 +25612,14 @@ func schema_apimachinery_apis_kubedb_v1alpha2_CassandraSpec(ref common.Reference
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for a Cassandra database.",
+							Description: "Number of replicas for  Cassandra database.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
-							Description: "rack",
+							Description: "Cassandra Topology for Racks",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Topology"),
 						},
 					},
@@ -34690,7 +34690,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Topology(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"rack": {
 						SchemaProps: spec.SchemaProps{
-							Description: "cassandra rack Structure",
+							Description: "cassandra rack structure",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
