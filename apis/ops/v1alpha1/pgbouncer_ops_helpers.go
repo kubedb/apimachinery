@@ -29,6 +29,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"kmodules.xyz/client-go/apiextensions"
+	"kmodules.xyz/client-go/meta"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -122,8 +123,39 @@ func (p *PgBouncerOpsRequest) GetTargetVersion(client client.Client) (*v1alpha1.
 
 func (p *PgBouncerOpsRequest) GetPgBouncer(client client.Client) (*dbapi.PgBouncer, error) {
 	bouncer := &dbapi.PgBouncer{}
-	if err := client.Get(context.TODO(), types.NamespacedName{Name: p.Spec.ServerRef.Name, Namespace: p.Namespace}, bouncer); err != nil {
+	if err := client.Get(context.TODO(), types.NamespacedName{Name: p.GetDBRefName(), Namespace: p.Namespace}, bouncer); err != nil {
 		return nil, err
 	}
 	return bouncer, nil
+}
+
+func (p *PgBouncerOpsRequest) GetApplyConfigName(client client.Client) string {
+	bouncer, err := p.GetPgBouncer(client)
+	if err != nil {
+		return ""
+	}
+
+	if p.Spec.Configuration == nil || p.Spec.Configuration.PgBouncer == nil {
+		if bouncer.Spec.ConfigSecret == nil {
+			return ""
+		}
+		return bouncer.Spec.ConfigSecret.Name
+	}
+
+	req := p.Spec.Configuration.PgBouncer
+	if req.RemoveCustomConfig {
+		if req.ConfigSecret != nil && req.ConfigSecret.Name != "" {
+			return req.ConfigSecret.Name
+		}
+		return meta.NameWithSuffix(p.Name, "apply-config")
+	}
+
+	if req.ConfigSecret != nil && req.ConfigSecret.Name != "" {
+		return req.ConfigSecret.Name
+	} else {
+		if bouncer.Spec.ConfigSecret != nil && bouncer.Spec.ConfigSecret.Name != "" {
+			return bouncer.Spec.ConfigSecret.Name
+		}
+		return meta.NameWithSuffix(p.Name, "apply-config")
+	}
 }
