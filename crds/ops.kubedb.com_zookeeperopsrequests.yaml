@@ -73,7 +73,7 @@ spec:
                 x-kubernetes-map-type: atomic
               horizontalScaling:
                 properties:
-                  node:
+                  replicas:
                     format: int32
                     type: integer
                 type: object

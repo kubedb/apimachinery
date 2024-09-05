@@ -33081,9 +33081,9 @@ func schema_apimachinery_apis_ops_v1alpha1_ZooKeeperHorizontalScalingSpec(ref co
 				Description: "ZooKeeperHorizontalScalingSpec contains the horizontal scaling information of a ZooKeeper cluster",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"node": {
+					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of node",
+							Description: "Number of replicas",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
