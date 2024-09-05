@@ -64,6 +64,6 @@ spec.exporter.image.`, p.Name)
 	return nil
 }
 
-func (p PgBouncerVersion) IsDepricated() bool {
+func (p PgBouncerVersion) IsDeprecated() bool {
 	return p.Spec.Deprecated
 }
