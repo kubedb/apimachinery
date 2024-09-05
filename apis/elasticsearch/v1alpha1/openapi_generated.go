@@ -25257,7 +25257,7 @@ func schema_apimachinery_apis_elasticsearch_v1alpha1_ElasticsearchDashboardSpec(
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
-					"terminationPolicy": {
+					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TerminationPolicy controls the delete operation for Dashboard",
 							Type:        []string{"string"},

@@ -66,6 +66,13 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              deletionPolicy:
+                enum:
+                - Halt
+                - Delete
+                - WipeOut
+                - DoNotTerminate
+                type: string
               enableSSL:
                 type: boolean
               healthChecker:
@@ -3226,13 +3233,6 @@ spec:
                   - alias
                   type: object
                 type: array
-              terminationPolicy:
-                enum:
-                - Halt
-                - Delete
-                - WipeOut
-                - DoNotTerminate
-                type: string
               tls:
                 properties:
                   certificates:

@@ -26,7 +26,6 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/crds"
 
 	"gomodules.xyz/pointer"
@@ -259,17 +258,16 @@ func (ed *ElasticsearchDashboard) SetDefaults() {
 
 	db := dbapi.Elasticsearch{}
 	esVersion := catalog.ElasticsearchVersion{}
-	err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := dbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      ed.Spec.DatabaseRef.Name,
 		Namespace: ed.Namespace,
 	}, &db)
-
 	if err != nil {
 		klog.Errorf("can't get the elasticsearch: %v\n", err.Error())
 		return
 	}
 
-	err = olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err = dbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
 	}, &esVersion)
 	if err != nil {
