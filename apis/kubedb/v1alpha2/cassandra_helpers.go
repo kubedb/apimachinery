@@ -205,8 +205,14 @@ func (r *Cassandra) SetDefaults() {
 
 	if !r.Spec.DisableSecurity {
 		if r.Spec.AuthSecret == nil {
-			r.Spec.AuthSecret = &SecretReference{}
+			r.Spec.AuthSecret = &SecretReference{
+				LocalObjectReference: core.LocalObjectReference{
+					Name: r.DefaultUserCredSecretName(kubedb.CassandraUserAdmin),
+				},
+				ExternallyManaged: false,
+			}
 		}
+
 	}
 
 	var casVersion catalog.CassandraVersion
