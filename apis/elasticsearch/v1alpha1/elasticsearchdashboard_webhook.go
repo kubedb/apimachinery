@@ -197,14 +197,14 @@ func (ed *ElasticsearchDashboard) Validate() error {
 	// and credential env may not be overwritten
 	container := coreutil.GetContainerByName(ed.Spec.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 	if err := amv.ValidateEnvVar(container.Env, forbiddenEnvVars, ResourceKindElasticsearchDashboard); err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podtemplate").Child("spec").Child("env"), ed.Name,
-			"Invalid spec.podtemplate.spec.env , avoid using the forbidden env variables"))
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podtemplate").Child("spec").Child("containers").Child("env"), ed.Name,
+			"Invalid spec.podtemplate.spec.containers[i].env , avoid using the forbidden env variables"))
 	}
 
 	initContainer := coreutil.GetContainerByName(ed.Spec.PodTemplate.Spec.InitContainers, kubedb.ElasticsearchInitConfigMergerContainerName)
 	if err := amv.ValidateEnvVar(initContainer.Env, forbiddenEnvVars, ResourceKindElasticsearchDashboard); err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podtemplate").Child("spec").Child("env"), ed.Name,
-			"Invalid spec.podtemplate.spec.env , avoid using the forbidden env variables"))
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podtemplate").Child("spec").Child("initContainers").Child("env"), ed.Name,
+			"Invalid spec.podtemplate.spec.initContainers[i].env , avoid using the forbidden env variables"))
 	}
 
 	if len(allErr) == 0 {

@@ -257,11 +257,6 @@ func (ed *ElasticsearchDashboard) SetDefaults() {
 		ed.Spec.DeletionPolicy = dbapi.DeletionPolicyDelete
 	}
 
-	if ed.Spec.AuthSecret == nil {
-		ed.Spec.AuthSecret = &v1.LocalObjectReference{
-			Name: ed.AuthSecretName(),
-		}
-	}
 	var db *dbapi.Elasticsearch
 	var esVersion catalog.ElasticsearchVersion
 	err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
