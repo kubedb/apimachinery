@@ -257,12 +257,13 @@ func (ed *ElasticsearchDashboard) SetDefaults() {
 		ed.Spec.DeletionPolicy = dbapi.DeletionPolicyDelete
 	}
 
-	var db *dbapi.Elasticsearch
-	var esVersion catalog.ElasticsearchVersion
+	db := dbapi.Elasticsearch{}
+	esVersion := catalog.ElasticsearchVersion{}
 	err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      ed.Spec.DatabaseRef.Name,
 		Namespace: ed.Namespace,
-	}, db)
+	}, &db)
+
 	if err != nil {
 		klog.Errorf("can't get the elasticsearch: %v\n", err.Error())
 		return
