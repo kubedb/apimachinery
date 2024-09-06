@@ -1352,7 +1352,8 @@ const (
 	CassandraInterNodePort = 7000
 	CassandraJmxPort       = 7199
 
-	CassandraUserAdmin = "admin"
+	CassandraUserAdmin      = "admin"
+	CassandraStandaloneSeed = "cassandra-sample-0.cassandra-sample-pods.default.svc.cluster.local"
 
 	CassandraOperatorConfigDir = "/tmp/config/operator-config"
 	CassandraMainConfigDir     = "/etc/cassandra"
