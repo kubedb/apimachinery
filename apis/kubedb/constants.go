@@ -1348,9 +1348,15 @@ const (
 // =========================== Cassandra Constants ============================
 
 const (
-	CassandraNativeTcpPort = 9042
-	CassandraInterNodePort = 7000
-	CassandraJmxPort       = 7199
+	CassandraNativeTcpPort    = 9042
+	CassandraInterNodePort    = 7000
+	CassandraInterNodeSslPort = 7001
+	CassandraJmxPort          = 7199
+
+	CassandraNativeTcpPortName    = "cql"
+	CassandraInterNodePortName    = "internode"
+	CassandraInterNodeSslPortName = "internode-ssl"
+	CassandraJmxPortName          = "jmx"
 
 	CassandraUserAdmin      = "admin"
 	CassandraStandaloneSeed = "cassandra-sample-0.cassandra-sample-pods.default.svc.cluster.local"

@@ -74,7 +74,7 @@ spec:
               healthChecker:
                 default:
                   failureThreshold: 3
-                  periodSeconds: 30
+                  periodSeconds: 20
                   timeoutSeconds: 10
                 properties:
                   disableWriteCheck:

@@ -96,7 +96,7 @@ type CassandraSpec struct {
 
 	// HealthChecker defines attributes of the health checker
 	// +optional
-	// +kubebuilder:default={periodSeconds: 30, timeoutSeconds: 10, failureThreshold: 3}
+	// +kubebuilder:default={periodSeconds: 20, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 }
 
