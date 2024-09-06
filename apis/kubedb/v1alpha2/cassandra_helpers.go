@@ -212,7 +212,6 @@ func (r *Cassandra) SetDefaults() {
 				ExternallyManaged: false,
 			}
 		}
-
 	}
 
 	var casVersion catalog.CassandraVersion
