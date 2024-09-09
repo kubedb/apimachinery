@@ -1484,6 +1484,18 @@ var (
 		},
 	}
 
+	// DefaultResourcesMemoryIntensiveMSSQLServer must be used for Microsoft SQL Server
+	DefaultResourcesMemoryIntensiveMSSQLServer = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".500"),
+			core.ResourceMemory: resource.MustParse("1.5Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("2000m"),
+			core.ResourceMemory: resource.MustParse("4Gi"),
+		},
+	}
+
 	// DefaultResourcesCoreAndMemoryIntensive must be used for Solr
 	DefaultResourcesCoreAndMemoryIntensiveSolr = core.ResourceRequirements{
 		Requests: core.ResourceList{
