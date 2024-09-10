@@ -1368,6 +1368,8 @@ const (
 	CassandraPasswordAuthenticator = "PasswordAuthenticator"
 	CassandraAllowAllAuthenticator = "AllowAllAuthenticator"
 
+	CassandraTopology = "CASSANDRA_TOPOLOGY"
+
 	CassandraOperatorConfigDir = "/tmp/config/operator-config"
 	CassandraMainConfigDir     = "/etc/cassandra"
 	CassandraCustomConfigDir   = "/tmp/config/custom-config"
