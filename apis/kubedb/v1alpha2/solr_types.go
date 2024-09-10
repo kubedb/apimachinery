@@ -87,6 +87,15 @@ type SolrSpec struct {
 	// To enable ssl for http layer
 	EnableSSL bool `json:"enableSSL,omitempty"`
 
+	// Client auth need
+	NeedClientAuth bool `json:"needClientAuth,omitempty"`
+
+	// Client auth want
+	WantClientAuth bool `json:"wantClientAuth,omitempty"`
+
+	// Check peer name
+	CheckPeerName bool `json:"checkPeerName,omitempty"`
+
 	// TLS contains tls configurations for client and server.
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
