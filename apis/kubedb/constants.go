@@ -1365,7 +1365,8 @@ const (
 	CassandraMetadataNamespace = "metadata.namespace"
 	CassandraStatusPodIP       = "status.podIP"
 
-	CassandraAdmin = "admin"
+	CassandraPasswordAuthenticator = "PasswordAuthenticator"
+	CassandraAllowAllAuthenticator = "AllowAllAuthenticator"
 
 	CassandraOperatorConfigDir = "/tmp/config/operator-config"
 	CassandraMainConfigDir     = "/etc/cassandra"
