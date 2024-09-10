@@ -1358,8 +1358,14 @@ const (
 	CassandraInterNodeSslPortName = "internode-ssl"
 	CassandraJmxPortName          = "jmx"
 
-	CassandraUserAdmin      = "admin"
-	CassandraStandaloneSeed = "cassandra-sample-0.cassandra-sample-pods.default.svc.cluster.local"
+	CassandraUserAdmin         = "admin"
+	CassandraStandaloneSeed    = "cassandra-sample-0.cassandra-sample-pods.default.svc.cluster.local"
+	CassandraAuthCommand       = "/usr/local/bin/docker-entrypoint.sh cassandra  -f & /tmp/sc/cassandra-auth.sh"
+	CassandraMetadataName      = "metadata.name"
+	CassandraMetadataNamespace = "metadata.namespace"
+	CassandraStatusPodIP       = "status.podIP"
+
+	CassandraAdmin = "admin"
 
 	CassandraOperatorConfigDir = "/tmp/config/operator-config"
 	CassandraMainConfigDir     = "/etc/cassandra"
