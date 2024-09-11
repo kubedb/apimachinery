@@ -373,18 +373,19 @@ const (
 	SinglestoreTLSConfigPreferred  = "preferred"
 
 	// =========================== MSSQLServer Constants ============================
-	MSSQLSAUser = "sa"
+	MSSQLSAUser    = "sa"
+	MSSQLConfigKey = "mssql.conf"
 
 	AGPrimaryReplicaReadyCondition = "AGPrimaryReplicaReady"
 
-	MSSQLDatabasePodPrimary       = "primary"
-	MSSQLDatabasePodSecondary     = "secondary"
-	MSSQLSecondaryServiceAlias    = "secondary"
-	MSSQLSecondaryServicePortName = "secondary"
+	MSSQLDatabasePodPrimary    = "primary"
+	MSSQLDatabasePodSecondary  = "secondary"
+	MSSQLSecondaryServiceAlias = "secondary"
 
 	// port related
 	MSSQLDatabasePortName              = "db"
 	MSSQLPrimaryServicePortName        = "primary"
+	MSSQLSecondaryServicePortName      = "secondary"
 	MSSQLDatabasePort                  = 1433
 	MSSQLDatabaseMirroringEndpointPort = 5022
 	MSSQLCoordinatorPort               = 2381
@@ -404,6 +405,8 @@ const (
 	// volume related
 	MSSQLVolumeNameData                        = "data"
 	MSSQLVolumeMountPathData                   = "/var/opt/mssql"
+	MSSQLVolumeNameConfig                      = "config"
+	MSSQLVolumeMountPathConfig                 = "/var/opt/mssql/mssql.conf"
 	MSSQLVolumeNameInitScript                  = "init-scripts"
 	MSSQLVolumeMountPathInitScript             = "/scripts"
 	MSSQLVolumeNameEndpointCert                = "endpoint-cert"
