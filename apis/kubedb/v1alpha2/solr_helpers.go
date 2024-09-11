@@ -229,6 +229,14 @@ func (s solrStatsService) TLSConfig() *promapi.TLSConfig {
 	return nil
 }
 
+func (s *Solr) SetTLSDefaults() {
+	if s.Spec.TLS == nil || s.Spec.TLS.IssuerRef == nil {
+		return
+	}
+	s.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(s.Spec.TLS.Certificates, string(SolrServerCert), s.CertificateName(SolrServerCert))
+	s.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(s.Spec.TLS.Certificates, string(SolrClientCert), s.CertificateName(SolrClientCert))
+}
+
 func (s *Solr) StatsService() mona.StatsAccessor {
 	return &solrStatsService{s}
 }
@@ -360,6 +368,8 @@ func (s *Solr) SetDefaults() {
 		}
 		s.Spec.Monitor.SetDefaults()
 	}
+
+	s.SetTLSDefaults()
 }
 
 func (s *Solr) setDefaultContainerSecurityContext(slVersion *catalog.SolrVersion, podTemplate *ofst.PodTemplateSpec) {
