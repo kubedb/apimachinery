@@ -5696,6 +5696,11 @@ func (in *SolrOpsRequestSpec) DeepCopyInto(out *SolrOpsRequestSpec) {
 		*out = new(SolrCustomConfigurationSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(TLSSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Timeout != nil {
 		in, out := &in.Timeout, &out.Timeout
 		*out = new(v1.Duration)

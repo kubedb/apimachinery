@@ -22,6 +22,8 @@ const (
 	SolrOpsRequestTypeReconfigure SolrOpsRequestType = "Reconfigure"
 	// SolrOpsRequestTypeRestart is a SolrOpsRequestType of type Restart.
 	SolrOpsRequestTypeRestart SolrOpsRequestType = "Restart"
+	// SolrOpsRequestTypeReconfigureTLS is a SolrOpsRequestType of type ReconfigureTLS.
+	SolrOpsRequestTypeReconfigureTLS SolrOpsRequestType = "ReconfigureTLS"
 )
 
 var ErrInvalidSolrOpsRequestType = fmt.Errorf("not a valid SolrOpsRequestType, try [%s]", strings.Join(_SolrOpsRequestTypeNames, ", "))
@@ -32,6 +34,7 @@ var _SolrOpsRequestTypeNames = []string{
 	string(SolrOpsRequestTypeVolumeExpansion),
 	string(SolrOpsRequestTypeReconfigure),
 	string(SolrOpsRequestTypeRestart),
+	string(SolrOpsRequestTypeReconfigureTLS),
 }
 
 // SolrOpsRequestTypeNames returns a list of possible string values of SolrOpsRequestType.
@@ -49,6 +52,7 @@ func SolrOpsRequestTypeValues() []SolrOpsRequestType {
 		SolrOpsRequestTypeVolumeExpansion,
 		SolrOpsRequestTypeReconfigure,
 		SolrOpsRequestTypeRestart,
+		SolrOpsRequestTypeReconfigureTLS,
 	}
 }
 
@@ -70,6 +74,7 @@ var _SolrOpsRequestTypeValue = map[string]SolrOpsRequestType{
 	"VolumeExpansion": SolrOpsRequestTypeVolumeExpansion,
 	"Reconfigure":     SolrOpsRequestTypeReconfigure,
 	"Restart":         SolrOpsRequestTypeRestart,
+	"ReconfigureTLS":  SolrOpsRequestTypeReconfigureTLS,
 }
 
 // ParseSolrOpsRequestType attempts to convert a string to a SolrOpsRequestType.

@@ -49,11 +49,11 @@ type SolrOpsRequest struct {
 	Status            OpsRequestStatus   `json:"status,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;VolumeExpansion;Reconfigure;Restart
-// ENUM(UpdateVersion, VerticalScaling, VolumeExpansion, Reconfigure, Restart)
+// +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;VolumeExpansion;Reconfigure;Restart;ReconfigureTLS
+// ENUM(UpdateVersion, VerticalScaling, VolumeExpansion, Reconfigure, Restart, ReconfigureTLS)
 type SolrOpsRequestType string
 
-// DruidOpsRequestSpec is the spec for DruidOpsRequest
+// SolrOpsRequestSpec is the spec for SolrOpsRequest
 type SolrOpsRequestSpec struct {
 	// Specifies the Druid reference
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
@@ -69,6 +69,8 @@ type SolrOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for custom configuration of solr
 	Configuration *SolrCustomConfigurationSpec `json:"configuration,omitempty"`
+	// Specifies information necessary for configuring TLS
+	TLS *TLSSpec `json:"tls,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
