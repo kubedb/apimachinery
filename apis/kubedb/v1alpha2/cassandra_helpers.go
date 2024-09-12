@@ -338,15 +338,12 @@ func (r *Cassandra) GetSeed() string {
 		seed = kubedb.CassandraStandaloneSeed + " , "
 		return seed
 	}
-
 	for _, rack := range r.Spec.Topology.Rack {
-		current_seed := fmt.Sprintf("cassandra-sample-rack-%s-0.cassandra-sample-rack-%s-pods.default.svc.cluster.local", rack.Name, rack.Name)
-		seed += current_seed + " , "
+		rackCount := min(*rack.Replicas, 3)
+		for i := int32(0); i < rackCount; i++ {
+			current_seed := fmt.Sprintf("cassandra-sample-rack-%s-%d.cassandra-sample-rack-%s-pods.default.svc.cluster.local", rack.Name, i, rack.Name)
+			seed += current_seed + " , "
+		}
 	}
-	for _, rack := range r.Spec.Topology.Rack {
-		current_seed := fmt.Sprintf("cassandra-sample-rack-%s-1.cassandra-sample-rack-%s-pods.default.svc.cluster.local", rack.Name, rack.Name)
-		seed += current_seed + " , "
-	}
-
 	return seed
 }
