@@ -27330,10 +27330,40 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerCustomConfigurationSpec(re
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLServerCustomConfigurationSpec is the spec for Reconfiguring the MSSQLServer Settings",
+				Description: "MSSQLServerCustomConfigurationSpec is the spec for Reconfiguring the MSSQLServer",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"applyConfig": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"removeCustomConfig": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -27500,7 +27530,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestSpec(ref common.
 					},
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies information necessary for custom configuration of MSSQL",
+							Description: "Specifies information necessary for custom configuration of MSSQLServer",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerCustomConfigurationSpec"),
 						},
 					},

@@ -63,7 +63,7 @@ type MSSQLServerOpsRequestSpec struct {
 	VerticalScaling *MSSQLServerVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for volume expansion
 	VolumeExpansion *MSSQLServerVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
-	// Specifies information necessary for custom configuration of MSSQL
+	// Specifies information necessary for custom configuration of MSSQLServer
 	Configuration *MSSQLServerCustomConfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for configuring TLS
 	TLS *TLSSpec `json:"tls,omitempty"`
@@ -110,8 +110,12 @@ type MSSQLServerVolumeExpansionSpec struct {
 	Mode        VolumeExpansionMode `json:"mode"`
 }
 
-// MSSQLServerCustomConfigurationSpec is the spec for Reconfiguring the MSSQLServer Settings
-type MSSQLServerCustomConfigurationSpec struct{}
+// MSSQLServerCustomConfigurationSpec is the spec for Reconfiguring the MSSQLServer
+type MSSQLServerCustomConfigurationSpec struct {
+	ConfigSecret       *core.LocalObjectReference `json:"configSecret,omitempty"`
+	ApplyConfig        map[string]string          `json:"applyConfig,omitempty"`
+	RemoveCustomConfig bool                       `json:"removeCustomConfig,omitempty"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
