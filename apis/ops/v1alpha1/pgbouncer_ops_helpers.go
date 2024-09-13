@@ -17,20 +17,14 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis"
-	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	"kubedb.dev/apimachinery/apis/ops"
 	"kubedb.dev/apimachinery/crds"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
 	"kmodules.xyz/client-go/apiextensions"
-	"kmodules.xyz/client-go/meta"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func (p PgBouncerOpsRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -83,79 +77,4 @@ func (p *PgBouncerOpsRequest) GetStatus() OpsRequestStatus {
 
 func (p *PgBouncerOpsRequest) SetStatus(s OpsRequestStatus) {
 	p.Status = s
-}
-
-func (p *PgBouncerOpsRequest) GetCurrentVersionName(client client.Client) (string, error) {
-	version, err := p.GetCurrentVersion(client)
-	if err != nil {
-		return "", err
-	}
-	return version.Name, nil
-}
-
-func (p *PgBouncerOpsRequest) GetCurrentVersion(client client.Client) (*v1alpha1.PgBouncerVersion, error) {
-	if bouncer, err := p.GetPgBouncer(client); err != nil {
-		return nil, err
-	} else {
-		version := v1alpha1.PgBouncerVersion{}
-		err = client.Get(context.TODO(), types.NamespacedName{Namespace: bouncer.Namespace, Name: bouncer.Spec.Version}, &version)
-		if err != nil {
-			return nil, err
-		}
-		return &version, nil
-	}
-}
-
-func (p *PgBouncerOpsRequest) GetTargetVersion(client client.Client) (*v1alpha1.PgBouncerVersion, error) {
-	if p.Spec.Type != PgBouncerOpsRequestTypeUpdateVersion {
-		return nil, fmt.Errorf("pgbouncer version will not be updated with this ops-request")
-	}
-	if p.Spec.UpdateVersion.TargetVersion == "" {
-		return nil, fmt.Errorf("targeted pgbouncer version name is invalid")
-	}
-	version := v1alpha1.PgBouncerVersion{}
-	err := client.Get(context.TODO(), types.NamespacedName{Namespace: p.Namespace, Name: p.Spec.UpdateVersion.TargetVersion}, &version)
-	if err != nil {
-		return nil, err
-	}
-	return &version, nil
-}
-
-func (p *PgBouncerOpsRequest) GetPgBouncer(client client.Client) (*dbapi.PgBouncer, error) {
-	bouncer := &dbapi.PgBouncer{}
-	if err := client.Get(context.TODO(), types.NamespacedName{Name: p.GetDBRefName(), Namespace: p.Namespace}, bouncer); err != nil {
-		return nil, err
-	}
-	return bouncer, nil
-}
-
-func (p *PgBouncerOpsRequest) GetApplyConfigName(client client.Client) string {
-	bouncer, err := p.GetPgBouncer(client)
-	if err != nil {
-		return ""
-	}
-
-	if p.Spec.Configuration == nil || p.Spec.Configuration.PgBouncer == nil {
-		if bouncer.Spec.ConfigSecret == nil {
-			return ""
-		}
-		return bouncer.Spec.ConfigSecret.Name
-	}
-
-	req := p.Spec.Configuration.PgBouncer
-	if req.RemoveCustomConfig {
-		if req.ConfigSecret != nil && req.ConfigSecret.Name != "" {
-			return req.ConfigSecret.Name
-		}
-		return meta.NameWithSuffix(p.Name, "apply-config")
-	}
-
-	if req.ConfigSecret != nil && req.ConfigSecret.Name != "" {
-		return req.ConfigSecret.Name
-	} else {
-		if bouncer.Spec.ConfigSecret != nil && bouncer.Spec.ConfigSecret.Name != "" {
-			return bouncer.Spec.ConfigSecret.Name
-		}
-		return meta.NameWithSuffix(p.Name, "apply-config")
-	}
 }

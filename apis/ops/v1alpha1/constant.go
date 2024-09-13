@@ -331,3 +331,8 @@ const (
 	UpdateAggregatorNodePVCs = "UpdateAggregatorNodePVCs"
 	UpdateLeafNodePVCs       = "UpdateLeafNodePVCs"
 )
+
+// PgBouncer Constants
+const (
+	UpdatePgBouncerBackendSecret = "UpdateBackendSecret"
+)

@@ -405,11 +405,11 @@ func PgBouncerDefaultConfig() string {
 		"pool_mode = " + kubedb.PgBouncerDefaultPoolMode + "\n" +
 		"max_client_conn = 100\n" +
 		"default_pool_size = 20\n" +
-		"min_pool_size = 0\n" +
-		"reserve_pool_size = 0\n" +
+		"min_pool_size = 1\n" +
+		"reserve_pool_size = 1\n" +
 		"reserve_pool_timeout = 5\n" +
-		"max_db_connections = 0\n" +
-		"max_user_connections = 0\n" +
+		"max_db_connections = 1\n" +
+		"max_user_connections = 2\n" +
 		"stats_period = 60\n" +
 		"auth_type = " + string(PgBouncerClientAuthModeMD5) + "\n" +
 		"ignore_startup_parameters = " + "extra_float_digits, " + kubedb.PgBouncerDefaultIgnoreStartupParameters + "\n" +
