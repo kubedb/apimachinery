@@ -1738,7 +1738,7 @@ kmodules.xyz/resource-metrics/ops.kubedb.com/v1alpha1
 # kmodules.xyz/webhook-runtime v0.29.1
 ## explicit; go 1.21.5
 kmodules.xyz/webhook-runtime/admission/v1
-# kubeops.dev/petset v0.0.6
+# kubeops.dev/petset v0.0.5-0.20240603165102-e2d9decb8abe
 ## explicit; go 1.22.0
 kubeops.dev/petset/apis/apps/v1
 kubeops.dev/petset/client/clientset/versioned

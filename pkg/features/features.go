@@ -32,7 +32,7 @@ const (
 	// across the file.
 
 	// Enables Cassandra operator.
-	// Cassandra featuregate.Feature = "Cassandra"
+	Cassandra featuregate.Feature = "Cassandra"
 
 	// Enables ClickHouse operator.
 	ClickHouse featuregate.Feature = "ClickHouse"
@@ -132,7 +132,7 @@ func init() {
 // To add a new feature, define a key for it above and add it here. The features will be
 // available throughout KubeDB binaries.
 var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
-	// Cassandra:          {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
+	Cassandra:     {Default: false, PreRelease: featuregate.Alpha},
 	ClickHouse:    {Default: false, PreRelease: featuregate.Alpha},
 	Druid:         {Default: false, PreRelease: featuregate.Alpha},
 	Elasticsearch: {Default: true, PreRelease: featuregate.GA},

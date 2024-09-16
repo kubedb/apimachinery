@@ -18,6 +18,10 @@ limitations under the License.
 
 package v1alpha1
 
+// CassandraVersionListerExpansion allows custom methods to be added to
+// CassandraVersionLister.
+type CassandraVersionListerExpansion interface{}
+
 // ClickHouseVersionListerExpansion allows custom methods to be added to
 // ClickHouseVersionLister.
 type ClickHouseVersionListerExpansion interface{}
