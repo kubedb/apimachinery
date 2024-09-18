@@ -42,7 +42,6 @@ import (
 	ofst_util "kmodules.xyz/offshoot-api/util"
 	psapi "kubeops.dev/petset/apis/apps/v1"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func (*PgBouncer) Hub() {}
@@ -132,14 +131,14 @@ func (p PgBouncer) GetBackendSecretName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), "backend")
 }
 
-func (p PgBouncer) IsPgBouncerFinalConfigSecretExitst(client client.Client) bool {
-	secret, err := p.GetPgBouncerFinalConfigSecret(client)
+func (p PgBouncer) IsPgBouncerFinalConfigSecretExitst() bool {
+	secret, err := p.GetPgBouncerFinalConfigSecret()
 	return (secret != nil && err == nil)
 }
 
-func (p PgBouncer) GetPgBouncerFinalConfigSecret(client client.Client) (*core.Secret, error) {
+func (p PgBouncer) GetPgBouncerFinalConfigSecret() (*core.Secret, error) {
 	var secret core.Secret
-	err := client.Get(context.TODO(), types.NamespacedName{Name: p.PgBouncerFinalConfigSecretName(), Namespace: p.GetNamespace()}, &secret)
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: p.PgBouncerFinalConfigSecretName(), Namespace: p.GetNamespace()}, &secret)
 	if err != nil {
 		return nil, err
 	}
@@ -325,9 +324,9 @@ func (p *PgBouncer) SetHealthCheckerDefaults() {
 	}
 }
 
-func (p *PgBouncer) GetPetSet(client client.Client) (*psapi.PetSet, error) {
+func (p *PgBouncer) GetPetSet() (*psapi.PetSet, error) {
 	var petset psapi.PetSet
-	err := client.Get(context.TODO(), types.NamespacedName{Name: p.OffshootName(), Namespace: p.GetNamespace()}, &petset)
+	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: p.OffshootName(), Namespace: p.GetNamespace()}, &petset)
 	if err != nil {
 		return nil, err
 	}
