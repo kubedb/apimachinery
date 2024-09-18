@@ -29,6 +29,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 )
 
+const (
+	manifestRestore = "manifest-restore"
+)
+
 // RestoreSessionReconciler reconciles a RestoreSession object
 type RestoreSessionReconciler struct {
 	ctrl *Controller
@@ -44,8 +48,7 @@ func (r *RestoreSessionReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
-	// Ignore nil target restore sessions. e.g: manifest
-	if rs.Spec.Target == nil {
+	if shouldIgnoreReconcile(rs) {
 		return ctrl.Result{}, nil
 	}
 
@@ -59,6 +62,18 @@ func (r *RestoreSessionReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	}
 
 	return ctrl.Result{}, r.ctrl.handleRestoreInvokerEvent(ri)
+}
+
+func shouldIgnoreReconcile(rs *coreapi.RestoreSession) bool {
+	if rs.Spec.Target == nil {
+		for _, task := range rs.Spec.Addon.Tasks {
+			if task.Name != manifestRestore {
+				return false
+			}
+		}
+		return true
+	}
+	return false
 }
 
 // SetupWithManager sets up the controller with the Manager.

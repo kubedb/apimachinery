@@ -64,10 +64,10 @@ type RestoreSessionSpec struct {
 	// +optional
 	Hooks *RestoreHooks `json:"hooks,omitempty"`
 
-	// Timeout specifies a duration that KubeStash should wait for the session execution to be completed.
-	// If the session execution does not finish within this time period, KubeStash will consider this session as a failure.
+	// RestoreTimeout specifies a duration that KubeStash should wait for the restore to be completed.
+	// If the restore tasks do not finish within this time period, KubeStash will consider this restore as a failure.
 	// +optional
-	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	RestoreTimeout *metav1.Duration `json:"restoreTimeout,omitempty"`
 
 	// ManifestOptions provide options to select particular manifest object to restore
 	// +optional
@@ -98,6 +98,18 @@ type ManifestRestoreOptions struct {
 	// MSSQLServer specifies the options for selecting particular MSSQLServer components to restore in manifest restore
 	// +optional
 	MSSQLServer *MSSQLServerManifestOptions `json:"msSQLServer,omitempty"`
+
+	// Druid specifies the options for selecting particular Druid components to restore in manifest restore
+	// +optional
+	Druid *DruidManifestOptions `json:"druid,omitempty"`
+
+	// ZooKeeper specifies the options for selecting particular ZooKeeper components to restore in manifest restore
+	// +optional
+	ZooKeeper *KubeDBManifestOptions `json:"zooKeeper,omitempty"`
+
+	// Redis specifies the options for selecting particular Redis components to restore in manifest restore
+	// +optional
+	Redis *KubeDBManifestOptions `json:"redis,omitempty"`
 }
 
 type MSSQLServerManifestOptions struct {
@@ -126,6 +138,50 @@ type MSSQLServerManifestOptions struct {
 	TLSIssuerRef *core.TypedLocalObjectReference `json:"tlsIssuerRef,omitempty"`
 }
 
+type DruidManifestOptions struct {
+	// DB specifies whether to restore the DB manifest or not
+	// +optional
+	DB bool `json:"db,omitempty"`
+
+	// DBName specifies the new name of the DB yaml after restore
+	// +optional
+	DBName string `json:"dbName,omitempty"`
+
+	// AuthSecret specifies whether to restore the AuthSecret manifest or not
+	// +optional
+	AuthSecret bool `json:"authSecret,omitempty"`
+
+	// AuthSecretName specifies new name of the AuthSecret yaml after restore
+	// +optional
+	AuthSecretName string `json:"authSecretName,omitempty"`
+
+	// ConfigSecret specifies whether to restore the ConfigSecret manifest or not
+	// +optional
+	ConfigSecret bool `json:"configSecret,omitempty"`
+
+	// ConfigSecretName specifies new name of the ConfigSecret yaml after restore
+	// +optional
+	ConfigSecretName string `json:"configSecretName,omitempty"`
+
+	// DeepStorageSecret specifies whether to restore the DeepStorageSecret manifest or not
+	// +optional
+	DeepStorageSecret bool `json:"deepStorageSecret,omitempty"`
+
+	// MetadataStorage specifies new configuration of the Metadata Storage after restore
+	// +optional
+	MetadataStorage bool `json:"metadataStorage,omitempty"`
+
+	// +optional
+	MetadataStorageRef *kmapi.ObjectReference `json:"metadataStorageRef,omitempty"`
+
+	// ZooKeeper specifies new configuration of the Metadata Storage after restore
+	// +optional
+	Zookeeper bool `json:"zookeeper,omitempty"`
+
+	// +optional
+	ZookeeperRef *kmapi.ObjectReference `json:"zookeeperRef,omitempty"`
+}
+
 type KubeDBManifestOptions struct {
 	// DB specifies whether to restore the DB manifest or not
 	// +optional
@@ -150,6 +206,10 @@ type KubeDBManifestOptions struct {
 	// ConfigSecretName specifies new name of the ConfigSecret yaml after restore
 	// +optional
 	ConfigSecretName string `json:"configSecretName,omitempty"`
+
+	// InitScript specifies whether to restore the InitScript manifest or not
+	// +optional
+	InitScript bool `json:"initScript,omitempty"`
 
 	// TLSIssuerRef specifies the name of the IssuerRef used for TLS configurations for both client and server
 	// +optional
@@ -222,10 +282,10 @@ type RestoreSessionStatus struct {
 	// +optional
 	Duration string `json:"duration,omitempty"`
 
-	// Deadline specifies a timestamp till this session is valid. If the session does not complete within this deadline,
-	// it will be considered as failed.
+	// RestoreDeadline specifies the deadline of restore. Restore will be
+	// considered Failed if it does not complete within this deadline
 	// +optional
-	Deadline *metav1.Time `json:"deadline,omitempty"`
+	RestoreDeadline *metav1.Time `json:"restoreDeadline,omitempty"`
 
 	// TotalComponents represents the number of total components for this RestoreSession
 	// +optional

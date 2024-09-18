@@ -24044,6 +24044,73 @@ spec:
                 description: ManifestOptions provide options to select particular
                   manifest object to restore
                 properties:
+                  druid:
+                    description: Druid specifies the options for selecting particular
+                      Druid components to restore in manifest restore
+                    properties:
+                      authSecret:
+                        description: AuthSecret specifies whether to restore the AuthSecret
+                          manifest or not
+                        type: boolean
+                      authSecretName:
+                        description: AuthSecretName specifies new name of the AuthSecret
+                          yaml after restore
+                        type: string
+                      configSecret:
+                        description: ConfigSecret specifies whether to restore the
+                          ConfigSecret manifest or not
+                        type: boolean
+                      configSecretName:
+                        description: ConfigSecretName specifies new name of the ConfigSecret
+                          yaml after restore
+                        type: string
+                      db:
+                        description: DB specifies whether to restore the DB manifest
+                          or not
+                        type: boolean
+                      dbName:
+                        description: DBName specifies the new name of the DB yaml
+                          after restore
+                        type: string
+                      deepStorageSecret:
+                        description: DeepStorageSecret specifies whether to restore
+                          the DeepStorageSecret manifest or not
+                        type: boolean
+                      metadataStorage:
+                        description: MetadataStorage specifies new configuration of
+                          the Metadata Storage after restore
+                        type: boolean
+                      metadataStorageRef:
+                        description: ObjectReference contains enough information to
+                          let you inspect or modify the referred object.
+                        properties:
+                          name:
+                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                            type: string
+                          namespace:
+                            description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      zookeeper:
+                        description: ZooKeeper specifies new configuration of the
+                          Metadata Storage after restore
+                        type: boolean
+                      zookeeperRef:
+                        description: ObjectReference contains enough information to
+                          let you inspect or modify the referred object.
+                        properties:
+                          name:
+                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                            type: string
+                          namespace:
+                            description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                            type: string
+                        required:
+                        - name
+                        type: object
+                    type: object
                   mariaDB:
                     description: MariaDB specifies the options for selecting particular
                       MariaDB components to restore in manifest restore
@@ -24072,6 +24139,10 @@ spec:
                         description: DBName specifies the new name of the DB yaml
                           after restore
                         type: string
+                      initScript:
+                        description: InitScript specifies whether to restore the InitScript
+                          manifest or not
+                        type: boolean
                       tlsIssuerRef:
                         description: TLSIssuerRef specifies the name of the IssuerRef
                           used for TLS configurations for both client and server
@@ -24122,6 +24193,10 @@ spec:
                         description: DBName specifies the new name of the DB yaml
                           after restore
                         type: string
+                      initScript:
+                        description: InitScript specifies whether to restore the InitScript
+                          manifest or not
+                        type: boolean
                       tlsIssuerRef:
                         description: TLSIssuerRef specifies the name of the IssuerRef
                           used for TLS configurations for both client and server
@@ -24235,6 +24310,10 @@ spec:
                         description: DBName specifies the new name of the DB yaml
                           after restore
                         type: string
+                      initScript:
+                        description: InitScript specifies whether to restore the InitScript
+                          manifest or not
+                        type: boolean
                       tlsIssuerRef:
                         description: TLSIssuerRef specifies the name of the IssuerRef
                           used for TLS configurations for both client and server
@@ -24285,6 +24364,64 @@ spec:
                         description: DBName specifies the new name of the DB yaml
                           after restore
                         type: string
+                      initScript:
+                        description: InitScript specifies whether to restore the InitScript
+                          manifest or not
+                        type: boolean
+                      tlsIssuerRef:
+                        description: TLSIssuerRef specifies the name of the IssuerRef
+                          used for TLS configurations for both client and server
+                        properties:
+                          apiGroup:
+                            description: APIGroup is the group for the resource being
+                              referenced. If APIGroup is not specified, the specified
+                              Kind must be in the core API group. For any other third-party
+                              types, APIGroup is required.
+                            type: string
+                          kind:
+                            description: Kind is the type of resource being referenced
+                            type: string
+                          name:
+                            description: Name is the name of resource being referenced
+                            type: string
+                        required:
+                        - kind
+                        - name
+                        type: object
+                        x-kubernetes-map-type: atomic
+                    type: object
+                  redis:
+                    description: Redis specifies the options for selecting particular
+                      Redis components to restore in manifest restore
+                    properties:
+                      authSecret:
+                        description: AuthSecret specifies whether to restore the AuthSecret
+                          manifest or not
+                        type: boolean
+                      authSecretName:
+                        description: AuthSecretName specifies new name of the AuthSecret
+                          yaml after restore
+                        type: string
+                      configSecret:
+                        description: ConfigSecret specifies whether to restore the
+                          ConfigSecret manifest or not
+                        type: boolean
+                      configSecretName:
+                        description: ConfigSecretName specifies new name of the ConfigSecret
+                          yaml after restore
+                        type: string
+                      db:
+                        description: DB specifies whether to restore the DB manifest
+                          or not
+                        type: boolean
+                      dbName:
+                        description: DBName specifies the new name of the DB yaml
+                          after restore
+                        type: string
+                      initScript:
+                        description: InitScript specifies whether to restore the InitScript
+                          manifest or not
+                        type: boolean
                       tlsIssuerRef:
                         description: TLSIssuerRef specifies the name of the IssuerRef
                           used for TLS configurations for both client and server
@@ -24311,7 +24448,67 @@ spec:
                     description: RestoreNamespace specifies the Namespace where the
                       restored files will be applied
                     type: string
+                  zooKeeper:
+                    description: ZooKeeper specifies the options for selecting particular
+                      ZooKeeper components to restore in manifest restore
+                    properties:
+                      authSecret:
+                        description: AuthSecret specifies whether to restore the AuthSecret
+                          manifest or not
+                        type: boolean
+                      authSecretName:
+                        description: AuthSecretName specifies new name of the AuthSecret
+                          yaml after restore
+                        type: string
+                      configSecret:
+                        description: ConfigSecret specifies whether to restore the
+                          ConfigSecret manifest or not
+                        type: boolean
+                      configSecretName:
+                        description: ConfigSecretName specifies new name of the ConfigSecret
+                          yaml after restore
+                        type: string
+                      db:
+                        description: DB specifies whether to restore the DB manifest
+                          or not
+                        type: boolean
+                      dbName:
+                        description: DBName specifies the new name of the DB yaml
+                          after restore
+                        type: string
+                      initScript:
+                        description: InitScript specifies whether to restore the InitScript
+                          manifest or not
+                        type: boolean
+                      tlsIssuerRef:
+                        description: TLSIssuerRef specifies the name of the IssuerRef
+                          used for TLS configurations for both client and server
+                        properties:
+                          apiGroup:
+                            description: APIGroup is the group for the resource being
+                              referenced. If APIGroup is not specified, the specified
+                              Kind must be in the core API group. For any other third-party
+                              types, APIGroup is required.
+                            type: string
+                          kind:
+                            description: Kind is the type of resource being referenced
+                            type: string
+                          name:
+                            description: Name is the name of resource being referenced
+                            type: string
+                        required:
+                        - kind
+                        - name
+                        type: object
+                        x-kubernetes-map-type: atomic
+                    type: object
                 type: object
+              restoreTimeout:
+                description: RestoreTimeout specifies a duration that KubeStash should
+                  wait for the restore to be completed. If the restore tasks do not
+                  finish within this time period, KubeStash will consider this restore
+                  as a failure.
+                type: string
               target:
                 description: Target indicates the target application where the data
                   will be restored. The target must be in the same namespace as the
@@ -24330,12 +24527,6 @@ spec:
                 required:
                 - name
                 type: object
-              timeout:
-                description: Timeout specifies a duration that KubeStash should wait
-                  for the session execution to be completed. If the session execution
-                  does not finish within this time period, KubeStash will consider
-                  this session as a failure.
-                type: string
             type: object
           status:
             description: RestoreSessionStatus defines the observed state of RestoreSession
@@ -24420,12 +24611,6 @@ spec:
                   - type
                   type: object
                 type: array
-              deadline:
-                description: Deadline specifies a timestamp till this session is valid.
-                  If the session does not complete within this deadline, it will be
-                  considered as failed.
-                format: date-time
-                type: string
               dependencies:
                 description: Dependencies specifies whether the objects required by
                   this RestoreSession exist or not
@@ -24529,6 +24714,11 @@ spec:
                 - Succeeded
                 - Invalid
                 - Unknown
+                type: string
+              restoreDeadline:
+                description: RestoreDeadline specifies the deadline of restore. Restore
+                  will be considered Failed if it does not complete within this deadline
+                format: date-time
                 type: string
               targetFound:
                 description: TargetFound specifies whether the restore target exist

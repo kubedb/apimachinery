@@ -152,3 +152,9 @@ const (
 	SnapshotVersionV1 = "v1"
 	DirRepository     = "repository"
 )
+
+// Annotations
+const (
+	AnnKubeDBAppVersion          = "kubedb.com/db-version"
+	AnnRestoreSessionBeneficiary = "restoresession.kubestash.com/beneficiary"
+)

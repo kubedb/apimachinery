@@ -243,3 +243,14 @@ func (b *BackupSession) checkFailureInRetentionPolicy() (bool, string) {
 	}
 	return false, ""
 }
+
+func (b *BackupSession) GetRemainingTimeoutDuration() (*metav1.Duration, error) {
+	if b.Spec.BackupTimeout == nil || b.Status.BackupDeadline == nil {
+		return nil, nil
+	}
+	currentTime := metav1.Now()
+	if b.Status.BackupDeadline.Before(&currentTime) {
+		return nil, fmt.Errorf("deadline exceeded")
+	}
+	return &metav1.Duration{Duration: b.Status.BackupDeadline.Sub(currentTime.Time)}, nil
+}
