@@ -214,7 +214,8 @@ func (rs *RestoreSession) GetTargetObjectRef(snap *v1alpha1.Snapshot) *kmapi.Obj
 }
 
 func (rs *RestoreSession) getTargetName(snap *v1alpha1.Snapshot) string {
-	opt, name := rs.Spec.ManifestOptions, snap.Spec.AppRef.Name
+	var name string
+	opt := rs.Spec.ManifestOptions
 	switch {
 	case opt.MySQL != nil:
 		name = opt.MySQL.DBName
@@ -233,6 +234,17 @@ func (rs *RestoreSession) getTargetName(snap *v1alpha1.Snapshot) string {
 	case opt.ZooKeeper != nil:
 		name = opt.ZooKeeper.DBName
 	}
-
+	if name == "" {
+		name = snap.Spec.AppRef.Name
+	}
 	return name
+}
+
+func (rs *RestoreSession) IsApplicationLevelRestore() bool {
+	tasks := map[string]bool{}
+	for _, task := range rs.Spec.Addon.Tasks {
+		tasks[task.Name] = true
+	}
+
+	return tasks[apis.ManifestRestore] && tasks[apis.LogicalBackupRestore]
 }

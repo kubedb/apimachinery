@@ -158,3 +158,17 @@ const (
 	AnnKubeDBAppVersion          = "kubedb.com/db-version"
 	AnnRestoreSessionBeneficiary = "restoresession.kubestash.com/beneficiary"
 )
+
+// Tasks name related constants
+const (
+	LogicalBackup        = "logical-backup"
+	LogicalBackupRestore = "logical-backup-restore"
+
+	ManifestBackup  = "manifest-backup"
+	ManifestRestore = "manifest-restore"
+
+	VolumeSnapshot        = "volume-snapshot"
+	VolumeSnapshotRestore = "volume-snapshot-restore"
+
+	VolumeClone = "volume-clone"
+)

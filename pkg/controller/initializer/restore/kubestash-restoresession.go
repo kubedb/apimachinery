@@ -18,19 +18,15 @@ package restore
 
 import (
 	"context"
+	"k8s.io/klog/v2"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/klog/v2"
 	coreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
-)
-
-const (
-	manifestRestore = "manifest-restore"
 )
 
 // RestoreSessionReconciler reconciles a RestoreSession object
@@ -65,15 +61,11 @@ func (r *RestoreSessionReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 }
 
 func shouldIgnoreReconcile(rs *coreapi.RestoreSession) bool {
-	if rs.Spec.Target == nil {
-		for _, task := range rs.Spec.Addon.Tasks {
-			if task.Name != manifestRestore {
-				return false
-			}
-		}
-		return true
+	if rs.Spec.Target != nil {
+		return false
 	}
-	return false
+
+	return !rs.IsApplicationLevelRestore()
 }
 
 // SetupWithManager sets up the controller with the Manager.
