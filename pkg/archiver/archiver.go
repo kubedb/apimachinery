@@ -24,14 +24,10 @@ import (
 	archiverapi "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 	"kubedb.dev/apimachinery/pkg/double_optin"
 
-	authv1 "k8s.io/api/authorization/v1"
 	core "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"kmodules.xyz/client-go/cluster"
-	identityapi "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -77,40 +73,18 @@ func GetCorrespondingArchiver(kbClient client.Client, dbMeta metav1.ObjectMeta, 
 }
 
 func GetSameProjectNamespaces(kbClient client.Client, dbNs string) ([]string, error) {
-	if isUIServerAndRancher(kbClient.RESTMapper()) {
-		nsReview := identityapi.SelfSubjectNamespaceAccessReview{
-			Spec: identityapi.SelfSubjectNamespaceAccessReviewSpec{
-				ResourceAttributes: []authv1.ResourceAttributes{
-					{
-						Namespace: "",
-						Verb:      "get",
-						Group:     archiverapi.SchemeGroupVersion.Group,
-						Version:   archiverapi.SchemeGroupVersion.Version,
-						Resource:  "*",
-					},
-				},
-				NonResourceAttributes: nil,
-			},
-		}
-		err := kbClient.Create(context.TODO(), &nsReview)
+	if cluster.IsRancherManaged(kbClient.RESTMapper()) {
+		namespaces, err := cluster.ListSiblingNamespaces(kbClient, dbNs)
 		if err != nil {
 			return nil, err
 		}
-		for _, nsList := range nsReview.Status.Projects {
-			if slices.Contains(nsList, dbNs) {
-				return nsList, nil
-			}
+		ret := make([]string, 0, len(namespaces))
+		for i, namespace := range namespaces {
+			ret[i] = namespace.Name
 		}
+		return ret, nil
 	}
 	return nil, nil
-}
-
-func isUIServerAndRancher(mapper meta.RESTMapper) bool {
-	_, err := mapper.RESTMapping(schema.GroupKind{
-		Group: identityapi.GroupName,
-		Kind:  identityapi.ResourceKindSelfSubjectNamespaceAccessReview,
-	})
-	return err == nil && cluster.IsRancherManaged(mapper)
 }
 
 type priority struct {
