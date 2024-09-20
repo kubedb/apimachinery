@@ -49,8 +49,8 @@ type SolrOpsRequest struct {
 	Status            OpsRequestStatus   `json:"status,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;VolumeExpansion;Reconfigure;Restart;ReconfigureTLS
-// ENUM(UpdateVersion, VerticalScaling, VolumeExpansion, Reconfigure, Restart, ReconfigureTLS)
+// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Reconfigure;Restart;ReconfigureTLS
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Reconfigure, Restart, ReconfigureTLS)
 type SolrOpsRequestType string
 
 // SolrOpsRequestSpec is the spec for SolrOpsRequest
@@ -61,6 +61,8 @@ type SolrOpsRequestSpec struct {
 	Type SolrOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading Solr
 	UpdateVersion *SolrUpdateVersionSpec `json:"updateVersion,omitempty"`
+	// Specifies information necessary for horizontal scaling
+	HorizontalScaling *SolrHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *SolrVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for volume expansion
@@ -104,6 +106,17 @@ type SolrVolumeExpansionSpec struct {
 type SolrUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty"`
+}
+
+type SolrHorizontalScalingSpec struct {
+	// Number of combined (i.e. overseer, data, coordinator) node
+	Node *int32 `json:"node,omitempty"`
+	// Number of master nodes
+	Overseer *int32 `json:"overseer,omitempty"`
+	// Number of ingest nodes
+	Coordinator *int32 `json:"coordinator,omitempty"`
+	// Number of data nodes
+	Data *int32 `json:"data,omitempty"`
 }
 
 // SolrCustomConfigurationSpec is the spec for Reconfiguring the solr Settings

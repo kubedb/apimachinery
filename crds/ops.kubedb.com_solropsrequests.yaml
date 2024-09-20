@@ -71,6 +71,21 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              horizontalScaling:
+                properties:
+                  coordinator:
+                    format: int32
+                    type: integer
+                  data:
+                    format: int32
+                    type: integer
+                  node:
+                    format: int32
+                    type: integer
+                  overseer:
+                    format: int32
+                    type: integer
+                type: object
               restart:
                 type: object
               timeout:
@@ -183,6 +198,7 @@ spec:
               type:
                 enum:
                 - UpdateVersion
+                - HorizontalScaling
                 - VerticalScaling
                 - VolumeExpansion
                 - Reconfigure
