@@ -24049,6 +24049,7 @@ spec:
                       Druid components to restore in manifest restore
                     properties:
                       authSecret:
+                        default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
                           manifest or not
                         type: boolean
@@ -24057,6 +24058,7 @@ spec:
                           yaml after restore
                         type: string
                       configSecret:
+                        default: true
                         description: ConfigSecret specifies whether to restore the
                           ConfigSecret manifest or not
                         type: boolean
@@ -24065,6 +24067,7 @@ spec:
                           yaml after restore
                         type: string
                       db:
+                        default: true
                         description: DB specifies whether to restore the DB manifest
                           or not
                         type: boolean
@@ -24073,49 +24076,21 @@ spec:
                           after restore
                         type: string
                       deepStorageSecret:
+                        default: true
                         description: DeepStorageSecret specifies whether to restore
                           the DeepStorageSecret manifest or not
                         type: boolean
-                      metadataStorage:
-                        description: MetadataStorage specifies new configuration of
-                          the Metadata Storage after restore
-                        type: boolean
-                      metadataStorageRef:
-                        description: ObjectReference contains enough information to
-                          let you inspect or modify the referred object.
-                        properties:
-                          name:
-                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
-                            type: string
-                          namespace:
-                            description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
-                            type: string
-                        required:
-                        - name
-                        type: object
-                      zookeeper:
-                        description: ZooKeeper specifies new configuration of the
-                          Metadata Storage after restore
-                        type: boolean
-                      zookeeperRef:
-                        description: ObjectReference contains enough information to
-                          let you inspect or modify the referred object.
-                        properties:
-                          name:
-                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
-                            type: string
-                          namespace:
-                            description: 'Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
-                            type: string
-                        required:
-                        - name
-                        type: object
+                      restoreNamespace:
+                        description: RestoreNamespace specifies the Namespace where
+                          the restored files will be applied
+                        type: string
                     type: object
                   mariaDB:
                     description: MariaDB specifies the options for selecting particular
                       MariaDB components to restore in manifest restore
                     properties:
                       authSecret:
+                        default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
                           manifest or not
                         type: boolean
@@ -24124,6 +24099,7 @@ spec:
                           yaml after restore
                         type: string
                       configSecret:
+                        default: true
                         description: ConfigSecret specifies whether to restore the
                           ConfigSecret manifest or not
                         type: boolean
@@ -24132,6 +24108,7 @@ spec:
                           yaml after restore
                         type: string
                       db:
+                        default: true
                         description: DB specifies whether to restore the DB manifest
                           or not
                         type: boolean
@@ -24140,9 +24117,14 @@ spec:
                           after restore
                         type: string
                       initScript:
+                        default: true
                         description: InitScript specifies whether to restore the InitScript
                           manifest or not
                         type: boolean
+                      restoreNamespace:
+                        description: RestoreNamespace specifies the Namespace where
+                          the restored files will be applied
+                        type: string
                       tlsIssuerRef:
                         description: TLSIssuerRef specifies the name of the IssuerRef
                           used for TLS configurations for both client and server
@@ -24170,6 +24152,7 @@ spec:
                       MongoDB components to restore in manifest restore
                     properties:
                       authSecret:
+                        default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
                           manifest or not
                         type: boolean
@@ -24178,6 +24161,7 @@ spec:
                           yaml after restore
                         type: string
                       configSecret:
+                        default: true
                         description: ConfigSecret specifies whether to restore the
                           ConfigSecret manifest or not
                         type: boolean
@@ -24186,6 +24170,7 @@ spec:
                           yaml after restore
                         type: string
                       db:
+                        default: true
                         description: DB specifies whether to restore the DB manifest
                           or not
                         type: boolean
@@ -24194,9 +24179,14 @@ spec:
                           after restore
                         type: string
                       initScript:
+                        default: true
                         description: InitScript specifies whether to restore the InitScript
                           manifest or not
                         type: boolean
+                      restoreNamespace:
+                        description: RestoreNamespace specifies the Namespace where
+                          the restored files will be applied
+                        type: string
                       tlsIssuerRef:
                         description: TLSIssuerRef specifies the name of the IssuerRef
                           used for TLS configurations for both client and server
@@ -24224,6 +24214,7 @@ spec:
                       MSSQLServer components to restore in manifest restore
                     properties:
                       authSecret:
+                        default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
                           manifest or not
                         type: boolean
@@ -24232,6 +24223,7 @@ spec:
                           yaml after restore
                         type: string
                       db:
+                        default: true
                         description: DB specifies whether to restore the DB manifest
                           or not
                         type: boolean
@@ -24260,6 +24252,10 @@ spec:
                         - name
                         type: object
                         x-kubernetes-map-type: atomic
+                      restoreNamespace:
+                        description: RestoreNamespace specifies the Namespace where
+                          the restored files will be applied
+                        type: string
                       tlsIssuerRef:
                         description: TLSIssuerRef specifies the name of the IssuerRef
                           used for TLS configurations for both client and server.
@@ -24287,6 +24283,7 @@ spec:
                       MySQL components to restore in manifest restore
                     properties:
                       authSecret:
+                        default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
                           manifest or not
                         type: boolean
@@ -24295,6 +24292,7 @@ spec:
                           yaml after restore
                         type: string
                       configSecret:
+                        default: true
                         description: ConfigSecret specifies whether to restore the
                           ConfigSecret manifest or not
                         type: boolean
@@ -24303,6 +24301,7 @@ spec:
                           yaml after restore
                         type: string
                       db:
+                        default: true
                         description: DB specifies whether to restore the DB manifest
                           or not
                         type: boolean
@@ -24311,9 +24310,14 @@ spec:
                           after restore
                         type: string
                       initScript:
+                        default: true
                         description: InitScript specifies whether to restore the InitScript
                           manifest or not
                         type: boolean
+                      restoreNamespace:
+                        description: RestoreNamespace specifies the Namespace where
+                          the restored files will be applied
+                        type: string
                       tlsIssuerRef:
                         description: TLSIssuerRef specifies the name of the IssuerRef
                           used for TLS configurations for both client and server
@@ -24341,6 +24345,7 @@ spec:
                       Postgres components to restore in manifest restore
                     properties:
                       authSecret:
+                        default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
                           manifest or not
                         type: boolean
@@ -24349,6 +24354,7 @@ spec:
                           yaml after restore
                         type: string
                       configSecret:
+                        default: true
                         description: ConfigSecret specifies whether to restore the
                           ConfigSecret manifest or not
                         type: boolean
@@ -24357,6 +24363,7 @@ spec:
                           yaml after restore
                         type: string
                       db:
+                        default: true
                         description: DB specifies whether to restore the DB manifest
                           or not
                         type: boolean
@@ -24365,9 +24372,14 @@ spec:
                           after restore
                         type: string
                       initScript:
+                        default: true
                         description: InitScript specifies whether to restore the InitScript
                           manifest or not
                         type: boolean
+                      restoreNamespace:
+                        description: RestoreNamespace specifies the Namespace where
+                          the restored files will be applied
+                        type: string
                       tlsIssuerRef:
                         description: TLSIssuerRef specifies the name of the IssuerRef
                           used for TLS configurations for both client and server
@@ -24395,6 +24407,7 @@ spec:
                       Redis components to restore in manifest restore
                     properties:
                       authSecret:
+                        default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
                           manifest or not
                         type: boolean
@@ -24403,6 +24416,7 @@ spec:
                           yaml after restore
                         type: string
                       configSecret:
+                        default: true
                         description: ConfigSecret specifies whether to restore the
                           ConfigSecret manifest or not
                         type: boolean
@@ -24411,6 +24425,7 @@ spec:
                           yaml after restore
                         type: string
                       db:
+                        default: true
                         description: DB specifies whether to restore the DB manifest
                           or not
                         type: boolean
@@ -24419,9 +24434,14 @@ spec:
                           after restore
                         type: string
                       initScript:
+                        default: true
                         description: InitScript specifies whether to restore the InitScript
                           manifest or not
                         type: boolean
+                      restoreNamespace:
+                        description: RestoreNamespace specifies the Namespace where
+                          the restored files will be applied
+                        type: string
                       tlsIssuerRef:
                         description: TLSIssuerRef specifies the name of the IssuerRef
                           used for TLS configurations for both client and server
@@ -24444,15 +24464,21 @@ spec:
                         type: object
                         x-kubernetes-map-type: atomic
                     type: object
-                  restoreNamespace:
-                    description: RestoreNamespace specifies the Namespace where the
-                      restored files will be applied
-                    type: string
+                  workload:
+                    description: Workload specifies the options for Workload components
+                      to restore in manifest restore
+                    properties:
+                      restoreNamespace:
+                        description: RestoreNamespace specifies the Namespace where
+                          the restored files will be applied
+                        type: string
+                    type: object
                   zooKeeper:
                     description: ZooKeeper specifies the options for selecting particular
                       ZooKeeper components to restore in manifest restore
                     properties:
                       authSecret:
+                        default: true
                         description: AuthSecret specifies whether to restore the AuthSecret
                           manifest or not
                         type: boolean
@@ -24461,6 +24487,7 @@ spec:
                           yaml after restore
                         type: string
                       configSecret:
+                        default: true
                         description: ConfigSecret specifies whether to restore the
                           ConfigSecret manifest or not
                         type: boolean
@@ -24469,6 +24496,7 @@ spec:
                           yaml after restore
                         type: string
                       db:
+                        default: true
                         description: DB specifies whether to restore the DB manifest
                           or not
                         type: boolean
@@ -24477,9 +24505,14 @@ spec:
                           after restore
                         type: string
                       initScript:
+                        default: true
                         description: InitScript specifies whether to restore the InitScript
                           manifest or not
                         type: boolean
+                      restoreNamespace:
+                        description: RestoreNamespace specifies the Namespace where
+                          the restored files will be applied
+                        type: string
                       tlsIssuerRef:
                         description: TLSIssuerRef specifies the name of the IssuerRef
                           used for TLS configurations for both client and server

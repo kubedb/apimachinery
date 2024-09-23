@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"fmt"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	cutil "kmodules.xyz/client-go/conditions"
@@ -201,43 +202,19 @@ func (rs *RestoreSession) GetTargetObjectRef(snap *v1alpha1.Snapshot) *kmapi.Obj
 		}
 	}
 
-	var ref kmapi.ObjectReference
-	if rs.Spec.ManifestOptions != nil {
-		ref.Namespace = rs.Spec.ManifestOptions.RestoreNamespace
-		ref.Name = rs.getTargetName(snap)
+	objRef := kmapi.ObjectReference{
+		Name:      snap.Spec.AppRef.Name,
+		Namespace: snap.Spec.AppRef.Namespace,
 	}
-	if ref.Namespace == "" {
-		ref.Namespace = snap.Spec.AppRef.Namespace
+	targetRef := rs.getRestoreNamespacedName(snap.Spec.AppRef.Kind)
+	if targetRef.Namespace != "" {
+		objRef.Namespace = targetRef.Namespace
+	}
+	if targetRef.Name != "" {
+		objRef.Name = targetRef.Name
 	}
 
-	return &ref
-}
-
-func (rs *RestoreSession) getTargetName(snap *v1alpha1.Snapshot) string {
-	var name string
-	opt := rs.Spec.ManifestOptions
-	switch {
-	case opt.MySQL != nil:
-		name = opt.MySQL.DBName
-	case opt.Postgres != nil:
-		name = opt.Postgres.DBName
-	case opt.MongoDB != nil:
-		name = opt.MongoDB.DBName
-	case opt.MariaDB != nil:
-		name = opt.MariaDB.DBName
-	case opt.Redis != nil:
-		name = opt.Redis.DBName
-	case opt.MSSQLServer != nil:
-		name = opt.MSSQLServer.DBName
-	case opt.Druid != nil:
-		name = opt.Druid.DBName
-	case opt.ZooKeeper != nil:
-		name = opt.ZooKeeper.DBName
-	}
-	if name == "" {
-		name = snap.Spec.AppRef.Name
-	}
-	return name
+	return &objRef
 }
 
 func (rs *RestoreSession) IsApplicationLevelRestore() bool {
@@ -247,4 +224,60 @@ func (rs *RestoreSession) IsApplicationLevelRestore() bool {
 	}
 
 	return tasks[apis.ManifestRestore] && tasks[apis.LogicalBackupRestore]
+}
+
+func (rs *RestoreSession) getRestoreNamespacedName(targetKind string) *types.NamespacedName {
+	var ref types.NamespacedName
+	if rs.Spec.ManifestOptions != nil {
+		opt := rs.Spec.ManifestOptions
+		switch {
+		case targetKind == apis.KindMySQL:
+			ref = types.NamespacedName{
+				Name:      opt.MySQL.DBName,
+				Namespace: opt.MySQL.RestoreNamespace,
+			}
+		case targetKind == apis.KindPostgres:
+			ref = types.NamespacedName{
+				Namespace: opt.Postgres.RestoreNamespace,
+				Name:      opt.Postgres.DBName,
+			}
+		case targetKind == apis.KindMongoDB:
+			ref = types.NamespacedName{
+				Namespace: opt.MongoDB.RestoreNamespace,
+				Name:      opt.MongoDB.DBName,
+			}
+		case targetKind == apis.KindMariaDB:
+			ref = types.NamespacedName{
+				Namespace: opt.MariaDB.RestoreNamespace,
+				Name:      opt.MariaDB.DBName,
+			}
+		case targetKind == apis.KindRedis:
+			ref = types.NamespacedName{
+				Namespace: opt.Redis.RestoreNamespace,
+				Name:      opt.Redis.DBName,
+			}
+		case targetKind == apis.KindMSSQLServer:
+			ref = types.NamespacedName{
+				Namespace: opt.MSSQLServer.RestoreNamespace,
+				Name:      opt.MSSQLServer.DBName,
+			}
+		case targetKind == apis.KindDruid:
+			ref = types.NamespacedName{
+				Namespace: opt.Druid.RestoreNamespace,
+				Name:      opt.Druid.DBName,
+			}
+		case targetKind == apis.KindZooKeeper:
+			ref = types.NamespacedName{
+				Namespace: opt.ZooKeeper.RestoreNamespace,
+				Name:      opt.ZooKeeper.DBName,
+			}
+		case targetKind == apis.KindSinglestore:
+			ref = types.NamespacedName{
+				Namespace: opt.Singlestore.RestoreNamespace,
+				Name:      opt.Singlestore.DBName,
+			}
+		}
+	}
+
+	return &ref
 }

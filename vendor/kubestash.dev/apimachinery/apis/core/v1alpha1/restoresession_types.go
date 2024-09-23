@@ -75,9 +75,9 @@ type RestoreSessionSpec struct {
 }
 
 type ManifestRestoreOptions struct {
-	// RestoreNamespace specifies the Namespace where the restored files will be applied
-	//+optional
-	RestoreNamespace string `json:"restoreNamespace,omitempty"`
+	// Workload specifies the options for Workload components to restore in manifest restore
+	// +optional
+	Workload *WorkloadManifestOptions `json:"workload,omitempty"`
 
 	// MongoDB specifies the options for selecting particular MongoDB components to restore in manifest restore
 	// +optional
@@ -107,13 +107,28 @@ type ManifestRestoreOptions struct {
 	// +optional
 	ZooKeeper *KubeDBManifestOptions `json:"zooKeeper,omitempty"`
 
+	// Singlestore specifies the options for selecting particular Singlestore components to restore in manifest restore
+	// +optional
+	Singlestore *KubeDBManifestOptions `json:"singlestore,omitempty"`
+
 	// Redis specifies the options for selecting particular Redis components to restore in manifest restore
 	// +optional
 	Redis *KubeDBManifestOptions `json:"redis,omitempty"`
 }
 
+type WorkloadManifestOptions struct {
+	// RestoreNamespace specifies the Namespace where the restored files will be applied
+	// +optional
+	RestoreNamespace string `json:"restoreNamespace,omitempty"`
+}
+
 type MSSQLServerManifestOptions struct {
+	// RestoreNamespace specifies the Namespace where the restored files will be applied
+	// +optional
+	RestoreNamespace string `json:"restoreNamespace,omitempty"`
+
 	// DB specifies whether to restore the DB manifest or not
+	// +kubebuilder:default=true
 	// +optional
 	DB bool `json:"db,omitempty"`
 
@@ -122,6 +137,7 @@ type MSSQLServerManifestOptions struct {
 	DBName string `json:"dbName,omitempty"`
 
 	// AuthSecret specifies whether to restore the AuthSecret manifest or not
+	// +kubebuilder:default=true
 	// +optional
 	AuthSecret bool `json:"authSecret,omitempty"`
 
@@ -139,7 +155,12 @@ type MSSQLServerManifestOptions struct {
 }
 
 type DruidManifestOptions struct {
+	// RestoreNamespace specifies the Namespace where the restored files will be applied
+	// +optional
+	RestoreNamespace string `json:"restoreNamespace,omitempty"`
+
 	// DB specifies whether to restore the DB manifest or not
+	// +kubebuilder:default=true
 	// +optional
 	DB bool `json:"db,omitempty"`
 
@@ -148,6 +169,7 @@ type DruidManifestOptions struct {
 	DBName string `json:"dbName,omitempty"`
 
 	// AuthSecret specifies whether to restore the AuthSecret manifest or not
+	// +kubebuilder:default=true
 	// +optional
 	AuthSecret bool `json:"authSecret,omitempty"`
 
@@ -156,6 +178,7 @@ type DruidManifestOptions struct {
 	AuthSecretName string `json:"authSecretName,omitempty"`
 
 	// ConfigSecret specifies whether to restore the ConfigSecret manifest or not
+	// +kubebuilder:default=true
 	// +optional
 	ConfigSecret bool `json:"configSecret,omitempty"`
 
@@ -164,26 +187,18 @@ type DruidManifestOptions struct {
 	ConfigSecretName string `json:"configSecretName,omitempty"`
 
 	// DeepStorageSecret specifies whether to restore the DeepStorageSecret manifest or not
+	// +kubebuilder:default=true
 	// +optional
 	DeepStorageSecret bool `json:"deepStorageSecret,omitempty"`
-
-	// MetadataStorage specifies new configuration of the Metadata Storage after restore
-	// +optional
-	MetadataStorage bool `json:"metadataStorage,omitempty"`
-
-	// +optional
-	MetadataStorageRef *kmapi.ObjectReference `json:"metadataStorageRef,omitempty"`
-
-	// ZooKeeper specifies new configuration of the Metadata Storage after restore
-	// +optional
-	Zookeeper bool `json:"zookeeper,omitempty"`
-
-	// +optional
-	ZookeeperRef *kmapi.ObjectReference `json:"zookeeperRef,omitempty"`
 }
 
 type KubeDBManifestOptions struct {
+	// RestoreNamespace specifies the Namespace where the restored files will be applied
+	// +optional
+	RestoreNamespace string `json:"restoreNamespace,omitempty"`
+
 	// DB specifies whether to restore the DB manifest or not
+	// +kubebuilder:default=true
 	// +optional
 	DB bool `json:"db,omitempty"`
 
@@ -192,6 +207,7 @@ type KubeDBManifestOptions struct {
 	DBName string `json:"dbName,omitempty"`
 
 	// AuthSecret specifies whether to restore the AuthSecret manifest or not
+	// +kubebuilder:default=true
 	// +optional
 	AuthSecret bool `json:"authSecret,omitempty"`
 
@@ -200,6 +216,7 @@ type KubeDBManifestOptions struct {
 	AuthSecretName string `json:"authSecretName,omitempty"`
 
 	// ConfigSecret specifies whether to restore the ConfigSecret manifest or not
+	// +kubebuilder:default=true
 	// +optional
 	ConfigSecret bool `json:"configSecret,omitempty"`
 
@@ -208,6 +225,7 @@ type KubeDBManifestOptions struct {
 	ConfigSecretName string `json:"configSecretName,omitempty"`
 
 	// InitScript specifies whether to restore the InitScript manifest or not
+	// +kubebuilder:default=true
 	// +optional
 	InitScript bool `json:"initScript,omitempty"`
 
