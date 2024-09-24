@@ -1352,6 +1352,7 @@ const (
 	CassandraInterNodePort    = 7000
 	CassandraInterNodeSslPort = 7001
 	CassandraJmxPort          = 7199
+	CassandraExporterPort     = 8080
 
 	CassandraNativeTcpPortName    = "cql"
 	CassandraInterNodePortName    = "internode"
@@ -1360,7 +1361,7 @@ const (
 
 	CassandraUserAdmin         = "admin"
 	CassandraStandaloneSeed    = "cassandra-sample-0.cassandra-sample-pods.default.svc.cluster.local"
-	CassandraAuthCommand       = "/usr/local/bin/docker-entrypoint.sh cassandra  -f & /tmp/sc/cassandra-auth.sh"
+	CassandraAuthCommand       = "/tmp/sc/cassandra-auth.sh"
 	CassandraMetadataName      = "metadata.name"
 	CassandraMetadataNamespace = "metadata.namespace"
 	CassandraStatusPodIP       = "status.podIP"
