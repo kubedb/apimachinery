@@ -6404,6 +6404,13 @@ spec:
                       type: object
                     type: array
                 type: object
+              configSecret:
+                properties:
+                  name:
+                    default: ""
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               deletionPolicy:
                 enum:
                 - Halt
@@ -6412,6 +6419,8 @@ spec:
                 - DoNotTerminate
                 type: string
               disableSecurity:
+                type: boolean
+              halted:
                 type: boolean
               healthChecker:
                 default:

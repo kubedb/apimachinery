@@ -1341,7 +1341,7 @@ const (
 	ClickHouseDefaultStorageSize             = "2Gi"
 
 	ClickHouseClusterConfigVolName = "cluster-config"
-	ClickHouseClusterConfigDir     = "/etc/clickhouse-server/conf.d"
+	ClickHouseCommonConfigDir      = "/etc/clickhouse-server/conf.d"
 
 	ClickHouseClusterTempConfigVolName = "temp-cluster-config"
 
@@ -1364,17 +1364,19 @@ const (
 	ClickHouseHealthCheckerDatabase = "kubedb_system"
 	ClickHouseHealthCheckerTable    = "kubedb_write_check"
 
-	ClickHouseServerConfigFile = "server-config.yaml"
-	ClickHouseKeeperFileConfig = "keeper_config.yaml"
+	ClickHouseServerConfigFile   = "server-config.yaml"
+	ClickHouseKeeperFileConfig   = "keeper_config.yaml"
+	ClickHouseVolumeCustomConfig = "custom-config"
 
 	// keeper
 	ClickHouseKeeperContainerName        = "clickhouse-keeper"
 	ClickHouseKeeeprConfigFileName       = "keeper_config.xml"
 	ClickHOuseKeeeprConfigFileVolumeName = "keeper-config"
 	ClickHouseKeeperInitContainerName    = "clickhouse-keeper-init"
-
-	ClickHouseKeeperConfig     = "etc-clickhouse-keeper"
-	ClickHouseKeeperConfigPath = "/etc/clickhouse-keeper"
+	ClickHouseKeeperConfig               = "etc-clickhouse-keeper"
+	ClickHouseInternalServerListFile     = "server_list.yaml"
+	ClickHouseKeeperServerIdNo           = "serverid"
+	ClickHouseKeeperServerID             = "KEEPERID"
 )
 
 // =========================== Cassandra Constants ============================

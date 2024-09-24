@@ -208,7 +208,7 @@ func (c *ClickHouse) GetInternalAuthTokenName() string {
 }
 
 func (c *ClickHouse) PVCName(alias string) string {
-	return meta_util.NameWithSuffix(c.Name, alias)
+	return alias
 }
 
 func (c *ClickHouse) PetSetName() string {
@@ -299,7 +299,6 @@ func (c *ClickHouse) SetDefaults() {
 			clusters[index] = cluster
 		}
 		c.Spec.ClusterTopology.Cluster = clusters
-
 		if c.Spec.ClusterTopology.ClickHouseKeeper != nil && !c.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged && c.Spec.ClusterTopology.ClickHouseKeeper.Spec != nil {
 			if c.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas == nil {
 				c.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas = pointer.Int32P(1)
@@ -318,6 +317,7 @@ func (c *ClickHouse) SetDefaults() {
 				apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 			}
 		}
+
 	} else {
 		if c.Spec.Replicas == nil {
 			c.Spec.Replicas = pointer.Int32P(1)
