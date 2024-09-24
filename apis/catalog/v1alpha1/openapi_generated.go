@@ -499,6 +499,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionStatus":                       schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionStatus(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo":                                    schema_apimachinery_apis_catalog_v1alpha1_ChartInfo(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseInitContainer":                      schema_apimachinery_apis_catalog_v1alpha1_ClickHouseInitContainer(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseKeeperContainer":                    schema_apimachinery_apis_catalog_v1alpha1_ClickHouseKeeperContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersion":                            schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionDatabase":                    schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionList":                        schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionList(ref),
@@ -25651,6 +25652,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseInitContainer(ref commo
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseKeeperContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClickHouseKeeperContainer is the ClickHouse keeper Container image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -25796,6 +25818,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionSpec(ref common.
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseInitContainer"),
 						},
 					},
+					"clickHouseKeeper": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClickHouse Keeper Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseKeeperContainer"),
+						},
+					},
 					"securityContext": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional config for the DB container",
@@ -25817,11 +25846,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionSpec(ref common.
 						},
 					},
 				},
-				Required: []string{"version", "db", "initContainer"},
+				Required: []string{"version", "db", "initContainer", "clickHouseKeeper"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseKeeperContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
 	}
 }
 

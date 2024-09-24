@@ -1326,24 +1326,34 @@ const (
 	ClickHouseNativeTCP   = 9000
 	ClickHouseNativeTLS   = 9440
 	ClickhousePromethues  = 9363
+	ClickHouseRaftPort    = 9234
 
-	ClickHouseVolumeData         = "data"
-	ClickHouseDataDir            = "/var/lib/clickhouse"
-	ClickHouseConfigVolName      = "clickhouse-config"
-	ClickHouseConfigDir          = "/etc/clickhouse-server/config.d"
-	ClickHouseDefaultStorageSize = "2Gi"
+	ComponentCoOrdinator = "co-ordinator"
+
+	ClickHouseVolumeData                     = "data"
+	ClickHouseDataDir                        = "/var/lib/clickhouse"
+	ClickHouseKeeperDataDir                  = "/var/lib/clickhouse_keeper"
+	ClickHouseConfigVolumeName               = "clickhouse-config"
+	ClickHouseKeeperConfigVolumeName         = "clickhouse-keeper-config"
+	ClickHouseInternalKeeperConfigVolumeName = "clickhouse-internal-keeper-config"
+	ClickHouseConfigDir                      = "/etc/clickhouse-server/config.d"
+	ClickHouseKeeperConfigDir                = "/etc/clickhouse-keeper"
+	ClickHouseDefaultStorageSize             = "2Gi"
 
 	ClickHouseClusterConfigVolName = "cluster-config"
 	ClickHouseClusterConfigDir     = "/etc/clickhouse-server/conf.d"
 
-	ClickHouseTempClusterConfigVolName = "temp-cluster-config"
+	ClickHouseClusterTempConfigVolName = "temp-cluster-config"
 
-	ClickHouseContainerName     = "clickhouse"
+	ClickHouseContainerName = "clickhouse"
+
 	ClickHouseInitContainerName = "clickhouse-init"
 
-	ClickHouseClusterConfigFile = "cluster-config.yaml"
-	ClickHouseTempConfigDir     = "/ch-tmp/config"
-	ClickHouseTempDir           = "/ch-tmp"
+	ClickHouseClusterConfigFile           = "cluster-config.yaml"
+	ClickHouseTempConfigDir               = "/ch-tmp"
+	ClickHouseInternalKeeperTempConfigDir = "/keeper"
+	ClickHouseTempDir                     = "/ch-tmp"
+	ClickHouseKeeperTempDir               = "/ch-tmp"
 
 	ClickHouseUserConfigDir  = "/etc/clickhouse-server/user.d"
 	ClickHouseMacrosFileName = "macros.yaml"
@@ -1351,11 +1361,20 @@ const (
 	ClickHouseStandalone = "standalone"
 	ClickHouseCluster    = "cluster"
 
-	ClickHouseHealthCheckerDatabase = "kubedb_system_db"
-	ClickHouseHealthCheckerTable    = "kubedb_system_table"
+	ClickHouseHealthCheckerDatabase = "kubedb_system"
+	ClickHouseHealthCheckerTable    = "kubedb_write_check"
 
 	ClickHouseServerConfigFile = "server-config.yaml"
-	ClickHouseKeeperFileConfig = "keeper-config.yaml"
+	ClickHouseKeeperFileConfig = "keeper_config.yaml"
+
+	// keeper
+	ClickHouseKeeperContainerName        = "clickhouse-keeper"
+	ClickHouseKeeeprConfigFileName       = "keeper_config.xml"
+	ClickHOuseKeeeprConfigFileVolumeName = "keeper-config"
+	ClickHouseKeeperInitContainerName    = "clickhouse-keeper-init"
+
+	ClickHouseKeeperConfig     = "etc-clickhouse-keeper"
+	ClickHouseKeeperConfigPath = "/etc/clickhouse-keeper"
 )
 
 // =========================== Cassandra Constants ============================
@@ -1450,6 +1469,16 @@ var (
 		},
 		Limits: core.ResourceList{
 			core.ResourceMemory: resource.MustParse("1024Mi"),
+		},
+	}
+	// ref: https://clickhouse.com/docs/en/guides/sizing-and-hardware-recommendations#what-should-cpu-utilization-be
+	ClickHouseDefaultResources = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("1"),
+			core.ResourceMemory: resource.MustParse("4Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("4Gi"),
 		},
 	}
 	// CoordinatorDefaultResources must be used for raft backed coordinators to avoid unintended leader switches
