@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: mssqlserverautoscalers.autoscaling.kubedb.com
+  name: cassandraautoscalers.autoscaling.kubedb.com
 spec:
   group: autoscaling.kubedb.com
   names:
@@ -12,12 +12,12 @@ spec:
     - autoscaler
     - kubedb
     - appscode
-    kind: MSSQLServerAutoscaler
-    listKind: MSSQLServerAutoscalerList
-    plural: mssqlserverautoscalers
+    kind: CassandraAutoscaler
+    listKind: CassandraAutoscalerList
+    plural: cassandraautoscalers
     shortNames:
-    - msscaler
-    singular: mssqlserverautoscaler
+    - casscaler
+    singular: cassandraautoscaler
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -34,7 +34,7 @@ spec:
             properties:
               compute:
                 properties:
-                  mssqlserver:
+                  cassandra:
                     properties:
                       containerControlledValues:
                         enum:
@@ -107,14 +107,12 @@ spec:
                     - IfReady
                     - Always
                     type: string
-                  readinessCriteria:
-                    type: object
                   timeout:
                     type: string
                 type: object
               storage:
                 properties:
-                  mssqlserver:
+                  cassandra:
                     properties:
                       expansionMode:
                         enum:

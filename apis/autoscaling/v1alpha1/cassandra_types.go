@@ -24,13 +24,13 @@ import (
 )
 
 const (
-	ResourceCodeMSSQLServerAutoscaler     = "msscaler"
-	ResourceKindMSSQLServerAutoscaler     = "MSSQLServerAutoscaler"
-	ResourceSingularMSSQLServerAutoscaler = "mssqlserverautoscaler"
-	ResourcePluralMSSQLServerAutoscaler   = "mssqlserverautoscalers"
+	ResourceCodeCassandraAutoscaler     = "casscaler"
+	ResourceKindCassandraAutoscaler     = "CassandraAutoscaler"
+	ResourceSingularCassandraAutoscaler = "cassandraautoscaler"
+	ResourcePluralCassandraAutoscaler   = "cassandraautoscalers"
 )
 
-// MSSQLServerAutoscaler is the configuration for a mssqlserver database
+// CassandraAutoscaler is the configuration for a cassandra database
 // autoscaler, which automatically manages pod resources based on historical and
 // real time resource utilization.
 
@@ -39,9 +39,9 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=mssqlserverautoscalers,singular=mssqlserverautoscaler,shortName=msscaler,categories={autoscaler,kubedb,appscode}
+// +kubebuilder:resource:path=cassandraautoscalers,singular=cassandraautoscaler,shortName=casscaler,categories={autoscaler,kubedb,appscode}
 // +kubebuilder:subresource:status
-type MSSQLServerAutoscaler struct {
+type CassandraAutoscaler struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
 	// +optional
@@ -49,39 +49,36 @@ type MSSQLServerAutoscaler struct {
 
 	// Specification of the behavior of the autoscaler.
 	// More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status.
-	Spec MSSQLServerAutoscalerSpec `json:"spec"`
+	Spec CassandraAutoscalerSpec `json:"spec"`
 
 	// Current information about the autoscaler.
 	// +optional
 	Status AutoscalerStatus `json:"status,omitempty"`
 }
 
-// MSSQLServerAutoscalerSpec is the specification of the behavior of the autoscaler.
-type MSSQLServerAutoscalerSpec struct {
+// CassandraAutoscalerSpec is the specification of the behavior of the autoscaler.
+type CassandraAutoscalerSpec struct {
 	DatabaseRef *core.LocalObjectReference `json:"databaseRef"`
 
 	// This field will be used to control the behaviour of ops-manager
-	OpsRequestOptions *MSSQLServerOpsRequestOptions `json:"opsRequestOptions,omitempty"`
+	OpsRequestOptions *CassandraOpsRequestOptions `json:"opsRequestOptions,omitempty"`
 
-	Compute *MSSQLServerComputeAutoscalerSpec `json:"compute,omitempty"`
-	Storage *MSSQLServerStorageAutoscalerSpec `json:"storage,omitempty"`
+	Compute *CassandraComputeAutoscalerSpec `json:"compute,omitempty"`
+	Storage *CassandraStorageAutoscalerSpec `json:"storage,omitempty"`
 }
 
-type MSSQLServerComputeAutoscalerSpec struct {
+type CassandraComputeAutoscalerSpec struct {
 	// +optional
 	NodeTopology *NodeTopology `json:"nodeTopology,omitempty"`
 
-	MSSQLServer *ComputeAutoscalerSpec `json:"mssqlserver,omitempty"`
+	Cassandra *ComputeAutoscalerSpec `json:"cassandra,omitempty"`
 }
 
-type MSSQLServerStorageAutoscalerSpec struct {
-	MSSQLServer *StorageAutoscalerSpec `json:"mssqlserver,omitempty"`
+type CassandraStorageAutoscalerSpec struct {
+	Cassandra *StorageAutoscalerSpec `json:"cassandra,omitempty"`
 }
 
-type MSSQLServerOpsRequestOptions struct {
-	// Specifies the Readiness Criteria
-	ReadinessCriteria *opsapi.MSSQLServerReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`
-
+type CassandraOpsRequestOptions struct {
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
@@ -91,13 +88,13 @@ type MSSQLServerOpsRequestOptions struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// MSSQLServerAutoscalerList is a list of MSSQLServerAutoscaler objects.
-type MSSQLServerAutoscalerList struct {
+// CassandraAutoscalerList is a list of CassandraAutoscaler objects.
+type CassandraAutoscalerList struct {
 	metav1.TypeMeta `json:",inline"`
 	// metadata is the standard list metadata.
 	// +optional
 	metav1.ListMeta `json:"metadata"`
 
-	// items is the list of mssqlserver database autoscaler objects.
-	Items []MSSQLServerAutoscaler `json:"items"`
+	// items is the list of cassandra database autoscaler objects.
+	Items []CassandraAutoscaler `json:"items"`
 }
