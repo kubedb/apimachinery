@@ -2312,6 +2312,11 @@ func (in *MSSQLServerSpec) DeepCopyInto(out *MSSQLServerSpec) {
 		*out = new(SecretReference)
 		**out = **in
 	}
+	if in.ConfigSecret != nil {
+		in, out := &in.ConfigSecret, &out.ConfigSecret
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	if in.InternalAuth != nil {
 		in, out := &in.InternalAuth, &out.InternalAuth
 		*out = new(InternalAuthentication)
