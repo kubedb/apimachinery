@@ -92,6 +92,7 @@ type Config struct {
 	ReadinessProbeInterval time.Duration
 	MaxNumRequeues         int
 	NumThreads             int
+	NetworkPolicyEnabled   bool
 }
 
 type Initializers struct {
