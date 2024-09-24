@@ -576,6 +576,10 @@ const (
 	PgBouncerConfigMountPath                = "/etc/config"
 	PgBouncerSecretMountPath                = "/var/run/pgbouncer/secret"
 	PgBouncerServingCertMountPath           = "/var/run/pgbouncer/tls/serving"
+	PgBouncerConfigSectionDatabases         = "databases"
+	PgBouncerConfigSectionPeers             = "peers"
+	PgBouncerConfigSectionPgbouncer         = "pgbouncer"
+	PgBouncerConfigSectionUsers             = "users"
 
 	// =========================== Pgpool Constants ============================
 	EnvPostgresUsername                = "POSTGRES_USERNAME"

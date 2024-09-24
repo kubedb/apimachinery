@@ -29700,12 +29700,12 @@ func schema_apimachinery_apis_ops_v1alpha1_PgBouncerCustomConfiguration(ref comm
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"configMap": {
+					"configSecret": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"data": {
+					"applyConfig": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
@@ -29720,7 +29720,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PgBouncerCustomConfiguration(ref comm
 							},
 						},
 					},
-					"remove": {
+					"removeCustomConfig": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"boolean"},
 							Format: "",
@@ -29739,8 +29739,18 @@ func schema_apimachinery_apis_ops_v1alpha1_PgBouncerCustomConfigurationSpec(ref 
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"pgbouncer": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerCustomConfiguration"),
+						},
+					},
+				},
+				Required: []string{"pgbouncer"},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerCustomConfiguration"},
 	}
 }
 
