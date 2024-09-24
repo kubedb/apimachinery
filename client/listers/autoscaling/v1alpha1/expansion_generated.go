@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// CassandraAutoscalerListerExpansion allows custom methods to be added to
+// CassandraAutoscalerLister.
+type CassandraAutoscalerListerExpansion interface{}
+
+// CassandraAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// CassandraAutoscalerNamespaceLister.
+type CassandraAutoscalerNamespaceListerExpansion interface{}
+
 // ClickHouseAutoscalerListerExpansion allows custom methods to be added to
 // ClickHouseAutoscalerLister.
 type ClickHouseAutoscalerListerExpansion interface{}

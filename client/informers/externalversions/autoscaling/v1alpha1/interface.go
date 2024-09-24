@@ -24,6 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// CassandraAutoscalers returns a CassandraAutoscalerInformer.
+	CassandraAutoscalers() CassandraAutoscalerInformer
 	// ClickHouseAutoscalers returns a ClickHouseAutoscalerInformer.
 	ClickHouseAutoscalers() ClickHouseAutoscalerInformer
 	// DruidAutoscalers returns a DruidAutoscalerInformer.
@@ -79,6 +81,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// CassandraAutoscalers returns a CassandraAutoscalerInformer.
+func (v *version) CassandraAutoscalers() CassandraAutoscalerInformer {
+	return &cassandraAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ClickHouseAutoscalers returns a ClickHouseAutoscalerInformer.
