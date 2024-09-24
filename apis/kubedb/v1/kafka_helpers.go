@@ -540,10 +540,10 @@ func (k *Kafka) GenerateClusterID() string {
 	return generatedUUID[:len(generatedUUID)-1] + "w"
 }
 
-func KafkaSaslListenerProtocolConfigKey(protocol string, mechanism string) string {
+func (k *Kafka) KafkaSaslListenerProtocolConfigKey(protocol string, mechanism string) string {
 	return fmt.Sprintf("listener.name.%s.%s.sasl.jaas.config", strings.ToLower(protocol), strings.ToLower(mechanism))
 }
 
-func KafkaEnabledSASLMechanismsKey(protocol string) string {
+func (k *Kafka) KafkaEnabledSASLMechanismsKey(protocol string) string {
 	return fmt.Sprintf("listener.name.%s.sasl.enabled.mechanisms", strings.ToLower(protocol))
 }
