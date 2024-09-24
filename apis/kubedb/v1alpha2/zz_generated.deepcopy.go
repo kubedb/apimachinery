@@ -923,6 +923,11 @@ func (in *DruidSpec) DeepCopyInto(out *DruidSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.Init != nil {
+		in, out := &in.Init, &out.Init
+		*out = new(InitSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.ConfigSecret != nil {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
 		*out = new(corev1.LocalObjectReference)
