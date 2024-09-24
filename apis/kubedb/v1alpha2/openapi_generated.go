@@ -499,8 +499,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CassandraSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_CassandraSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CassandraStatus":                               schema_apimachinery_apis_kubedb_v1alpha2_CassandraStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouse":                                    schema_apimachinery_apis_kubedb_v1alpha2_ClickHouse(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeperConfig":                        schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseKeeperConfig(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeper":                              schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseKeeper(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeperNode":                          schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseKeeperNode(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeperSpec":                          schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseKeeperSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseList":                                schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseSpec":                                schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseStatus":                              schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseStatus(ref),
@@ -25787,23 +25788,33 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouse(ref common.ReferenceCal
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseKeeperConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseKeeper(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"externallyManaged": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
 					"node": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeperNode"),
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeperNode"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeperSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeperNode"},
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeperNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeperSpec"},
 	}
 }
 
@@ -25829,6 +25840,46 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseKeeperNode(ref common.Re
 				},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseKeeperSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of replica for each shard to deploy for a cluster.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType can be durable (default) or ephemeral",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -26118,14 +26169,14 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClusterTopology(ref common.Referen
 					"clickHouseKeeper": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ClickHouse Keeper server name",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeperConfig"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeper"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeperConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClusterSpec"},
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeper", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClusterSpec"},
 	}
 }
 
