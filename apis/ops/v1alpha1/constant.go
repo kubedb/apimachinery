@@ -83,11 +83,6 @@ const (
 	ReconfigureFailed    = "ReconfigureFailed"
 )
 
-// Configure Secret
-const (
-	ConfigSecretDelete = "ConfigSecretDeleted"
-)
-
 // ReconfigureTLS
 const (
 	ReconfigureTLS          = "ReconfigureTLS"
@@ -117,7 +112,6 @@ const (
 
 // Reload
 const (
-	Reload              = "Reload"
 	ReloadPods          = "ReloadPods"
 	ReloadPodsSucceeded = "ReloadPodsSucceeded"
 	ReloadPodsFailed    = "ReloadPodsFailed"
@@ -141,15 +135,6 @@ const (
 	ReadyPetSets           = "ReadyPetSets"
 	DeletePetSets          = "DeletePetSets"
 	OrphanPetSetPods       = "OrphanPetSetPods"
-)
-
-// PetSet
-const (
-	UpdateSinglePetSet          = "UpdatePetSet"
-	UpdateSinglePetSetSucceeded = "UpdatePetSetSucceeded"
-	UpdateSinglePetSetFailed    = "UpdatePetSetFailed"
-	ReadySinglePetSet           = "ReadyPetSet"
-	DeleteSinglePetSet          = "DeletePetSet"
 )
 
 // Stash
@@ -335,4 +320,5 @@ const (
 // PgBouncer Constants
 const (
 	UpdatePgBouncerBackendSecret = "UpdateBackendSecret"
+	ConfigSecretDelete           = "ConfigSecretDeleted"
 )

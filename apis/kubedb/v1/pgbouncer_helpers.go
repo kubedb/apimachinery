@@ -40,7 +40,6 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ofst_util "kmodules.xyz/offshoot-api/util"
-	psapi "kubeops.dev/petset/apis/apps/v1"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
 
@@ -131,7 +130,7 @@ func (p PgBouncer) GetBackendSecretName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), "backend")
 }
 
-func (p PgBouncer) IsPgBouncerFinalConfigSecretExitst() bool {
+func (p PgBouncer) IsPgBouncerFinalConfigSecretExist() bool {
 	secret, err := p.GetPgBouncerFinalConfigSecret()
 	return (secret != nil && err == nil)
 }
@@ -139,10 +138,7 @@ func (p PgBouncer) IsPgBouncerFinalConfigSecretExitst() bool {
 func (p PgBouncer) GetPgBouncerFinalConfigSecret() (*core.Secret, error) {
 	var secret core.Secret
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: p.PgBouncerFinalConfigSecretName(), Namespace: p.GetNamespace()}, &secret)
-	if err != nil {
-		return nil, err
-	}
-	return &secret, nil
+	return &secret, err
 }
 
 func (p PgBouncer) PgBouncerFinalConfigSecretName() string {
@@ -322,15 +318,6 @@ func (p *PgBouncer) SetHealthCheckerDefaults() {
 	if p.Spec.HealthChecker.FailureThreshold == nil {
 		p.Spec.HealthChecker.FailureThreshold = pointer.Int32P(1)
 	}
-}
-
-func (p *PgBouncer) GetPetSet() (*psapi.PetSet, error) {
-	var petset psapi.PetSet
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: p.OffshootName(), Namespace: p.GetNamespace()}, &petset)
-	if err != nil {
-		return nil, err
-	}
-	return &petset, nil
 }
 
 func (p *PgBouncer) SetSecurityContext(pgBouncerVersion *catalog.PgBouncerVersion) {
