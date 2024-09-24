@@ -26629,6 +26629,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"init": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Init is used to initialize database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec"),
+						},
+					},
 					"configSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ConfigSecret is an optional field to provide custom configuration file for database (i.e. config.properties). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
@@ -26699,7 +26705,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetadataStorage", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZookeeperRef"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetadataStorage", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZookeeperRef"},
 	}
 }
 

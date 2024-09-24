@@ -110,6 +110,13 @@ const (
 	RestartPodsFailed    = "RestartPodsFailed"
 )
 
+// Reload
+const (
+	ReloadPods          = "ReloadPods"
+	ReloadPodsSucceeded = "ReloadPodsSucceeded"
+	ReloadPodsFailed    = "ReloadPodsFailed"
+)
+
 // StatefulSets
 const (
 	UpdateStatefulSets          = "UpdateStatefulSets"
@@ -308,4 +315,10 @@ const (
 const (
 	UpdateAggregatorNodePVCs = "UpdateAggregatorNodePVCs"
 	UpdateLeafNodePVCs       = "UpdateLeafNodePVCs"
+)
+
+// PgBouncer Constants
+const (
+	UpdatePgBouncerBackendSecret = "UpdateBackendSecret"
+	ConfigSecretDelete           = "ConfigSecretDeleted"
 )
