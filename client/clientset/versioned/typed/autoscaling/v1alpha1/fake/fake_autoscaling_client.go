@@ -29,6 +29,10 @@ type FakeAutoscalingV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeAutoscalingV1alpha1) CassandraAutoscalers(namespace string) v1alpha1.CassandraAutoscalerInterface {
+	return &FakeCassandraAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) ClickHouseAutoscalers(namespace string) v1alpha1.ClickHouseAutoscalerInterface {
 	return &FakeClickHouseAutoscalers{c, namespace}
 }

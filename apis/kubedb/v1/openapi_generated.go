@@ -29056,7 +29056,7 @@ func schema_apimachinery_apis_kubedb_v1_PgBouncerSpec(ref common.ReferenceCallba
 						},
 					},
 				},
-				Required: []string{"version"},
+				Required: []string{"version", "database"},
 			},
 		},
 		Dependencies: []string{
