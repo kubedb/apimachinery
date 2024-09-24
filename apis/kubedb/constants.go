@@ -1471,13 +1471,14 @@ var (
 			core.ResourceMemory: resource.MustParse("1024Mi"),
 		},
 	}
+	// ref: https://clickhouse.com/docs/en/guides/sizing-and-hardware-recommendations#what-should-cpu-utilization-be
 	ClickHouseDefaultResources = core.ResourceRequirements{
 		Requests: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse("1"),
-			core.ResourceMemory: resource.MustParse("3Gi"),
+			core.ResourceMemory: resource.MustParse("4Gi"),
 		},
 		Limits: core.ResourceList{
-			core.ResourceMemory: resource.MustParse("6Gi"),
+			core.ResourceMemory: resource.MustParse("4Gi"),
 		},
 	}
 	// CoordinatorDefaultResources must be used for raft backed coordinators to avoid unintended leader switches
