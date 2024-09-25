@@ -18,7 +18,6 @@ package v1alpha2
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"path/filepath"
 	"sort"
@@ -510,21 +509,4 @@ func (s *Solr) CertSecretVolumeName(alias SolrCertificateAlias) string {
 // mountPath will be, "/opt/kafka/config/<alias>".
 func (s *Solr) CertSecretVolumeMountPath(configDir string, cert string) string {
 	return filepath.Join(configDir, cert)
-}
-
-func (s *Solr) GetLiveNodes(responseBody map[string]interface{}, suffix string) ([]string, error) {
-	clusterInfo, ok := responseBody["cluster"].(map[string]interface{})
-	if !ok {
-		return nil, errors.New(fmt.Sprintf("did not find cluster %v\n", responseBody))
-	}
-	nodes, ok := clusterInfo["live_nodes"].([]interface{})
-	nodeList := make([]string, 0)
-	for _, x := range nodes {
-		node := x.(string)
-		ps := s.PetSetName(suffix)
-		if strings.Contains(node, ps) {
-			nodeList = append(nodeList, node)
-		}
-	}
-	return nodeList, nil
 }
