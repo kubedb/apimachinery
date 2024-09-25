@@ -27,6 +27,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -38,6 +39,7 @@ import (
 	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 )
@@ -46,7 +48,7 @@ type ClickhouseApp struct {
 	*ClickHouse
 }
 
-func (r *ClickHouse) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (c *ClickHouse) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralClickHouse))
 }
 
@@ -54,11 +56,11 @@ func (c *ClickHouse) AppBindingMeta() appcat.AppBindingMeta {
 	return &ClickhouseApp{c}
 }
 
-func (r ClickhouseApp) Name() string {
-	return r.ClickHouse.Name
+func (c ClickhouseApp) Name() string {
+	return c.ClickHouse.Name
 }
 
-func (r ClickhouseApp) Type() appcat.AppType {
+func (c ClickhouseApp) Type() appcat.AppType {
 	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularClickHouse))
 }
 
@@ -95,6 +97,11 @@ func (c *ClickHouse) OffshootClusterPetSetName(clusterName string, shardNo int) 
 
 func (c *ClickHouse) OffshootLabels() map[string]string {
 	return c.offshootLabels(c.OffshootSelectors(), nil)
+}
+
+func (c *ClickHouse) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(c.Spec.ServiceTemplates, alias)
+	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 func (c *ClickHouse) OffshootKeeperLabels() map[string]string {
@@ -208,7 +215,7 @@ func (c *ClickHouse) GetInternalAuthTokenName() string {
 }
 
 func (c *ClickHouse) PVCName(alias string) string {
-	return meta_util.NameWithSuffix(c.Name, alias)
+	return alias
 }
 
 func (c *ClickHouse) PetSetName() string {
@@ -250,6 +257,46 @@ func (c *ClickHouse) Finalizer() string {
 
 func (c *ClickHouse) ResourceSingular() string {
 	return ResourceSingularClickHouse
+}
+
+type ClickHouseStatsService struct {
+	*ClickHouse
+}
+
+func (cs ClickHouseStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
+}
+
+func (cs ClickHouseStatsService) GetNamespace() string {
+	return cs.ClickHouse.GetNamespace()
+}
+
+func (cs ClickHouseStatsService) ServiceName() string {
+	return cs.OffshootName() + "-stats"
+}
+
+func (cs ClickHouseStatsService) ServiceMonitorName() string {
+	return cs.ServiceName()
+}
+
+func (cs ClickHouseStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return cs.OffshootLabels()
+}
+
+func (cs ClickHouseStatsService) Path() string {
+	return kubedb.DefaultStatsPath
+}
+
+func (cs ClickHouseStatsService) Scheme() string {
+	return ""
+}
+
+func (c *ClickHouse) StatsService() mona.StatsAccessor {
+	return &ClickHouseStatsService{c}
+}
+
+func (c *ClickHouse) StatsServiceLabels() map[string]string {
+	return c.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
 
 func (c *ClickHouse) SetDefaults() {
@@ -377,7 +424,7 @@ func (c *ClickHouse) setDefaultContainerSecurityContext(chVersion *catalog.Click
 	c.assignDefaultContainerSecurityContext(chVersion, initContainer.SecurityContext)
 }
 
-func (r *ClickHouse) setKeeperDefaultContainerSecurityContext(chVersion *catalog.ClickHouseVersion, podTemplate *ofst.PodTemplateSpec) {
+func (c *ClickHouse) setKeeperDefaultContainerSecurityContext(chVersion *catalog.ClickHouseVersion, podTemplate *ofst.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -398,7 +445,7 @@ func (r *ClickHouse) setKeeperDefaultContainerSecurityContext(chVersion *catalog
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
-	r.assignDefaultContainerSecurityContext(chVersion, container.SecurityContext)
+	c.assignDefaultContainerSecurityContext(chVersion, container.SecurityContext)
 
 	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.ClickHouseInitContainerName)
 	if initContainer == nil {
@@ -410,7 +457,7 @@ func (r *ClickHouse) setKeeperDefaultContainerSecurityContext(chVersion *catalog
 	if initContainer.SecurityContext == nil {
 		initContainer.SecurityContext = &core.SecurityContext{}
 	}
-	r.assignDefaultContainerSecurityContext(chVersion, initContainer.SecurityContext)
+	c.assignDefaultContainerSecurityContext(chVersion, initContainer.SecurityContext)
 }
 
 func (c *ClickHouse) assignDefaultContainerSecurityContext(chVersion *catalog.ClickHouseVersion, rc *core.SecurityContext) {
