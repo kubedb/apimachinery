@@ -1330,32 +1330,48 @@ const (
 
 	ComponentCoOrdinator = "co-ordinator"
 
-	ClickHouseVolumeData                     = "data"
-	ClickHouseDataDir                        = "/var/lib/clickhouse"
-	ClickHouseKeeperDataDir                  = "/var/lib/clickhouse_keeper"
-	ClickHouseConfigVolumeName               = "clickhouse-config"
-	ClickHouseKeeperConfigVolumeName         = "clickhouse-keeper-config"
-	ClickHouseInternalKeeperConfigVolumeName = "clickhouse-internal-keeper-config"
-	ClickHouseConfigDir                      = "/etc/clickhouse-server/config.d"
-	ClickHouseKeeperConfigDir                = "/etc/clickhouse-keeper"
-	ClickHouseDefaultStorageSize             = "2Gi"
-
-	ClickHouseClusterConfigVolName = "cluster-config"
-	ClickHouseCommonConfigDir      = "/etc/clickhouse-server/conf.d"
-
-	ClickHouseClusterTempConfigVolName = "temp-cluster-config"
-
-	ClickHouseContainerName = "clickhouse"
-
-	ClickHouseInitContainerName = "clickhouse-init"
-
-	ClickHouseClusterConfigFile           = "cluster-config.yaml"
+	ClickHousePromethusEndpoint           = "/metrics"
+	ClickHouseDataDir                     = "/var/lib/clickhouse"
+	ClickHouseKeeperDataDir               = "/var/lib/clickhouse_keeper"
+	ClickHouseConfigDir                   = "/etc/clickhouse-server/config.d"
+	ClickHouseKeeperConfigDir             = "/etc/clickhouse-keeper"
+	ClickHouseCommonConfigDir             = "/etc/clickhouse-server/conf.d"
 	ClickHouseTempConfigDir               = "/ch-tmp"
 	ClickHouseInternalKeeperTempConfigDir = "/keeper"
 	ClickHouseTempDir                     = "/ch-tmp"
 	ClickHouseKeeperTempDir               = "/ch-tmp"
+	ClickHouseKeeperConfigPath            = "/etc/clickhouse-keeper"
+	ClickHouseUserConfigDir               = "/etc/clickhouse-server/user.d"
+	ClickHouseLogPath                     = "/var/log/clickhouse-server/clickhouse-server.log"
+	ClickHouseErrorLogPath                = "/var/log/clickhouse-server/clickhouse-server.err.log"
 
-	ClickHouseUserConfigDir  = "/etc/clickhouse-server/user.d"
+	// keeper
+	ClickHouseKeeperDataPath     = "/var/lib/clickhouse_keeper"
+	ClickHouseKeeperLogPath      = "/var/lib/clickhouse_keeper/coordination/logs"
+	ClickHouseKeeperSnapshotPath = "/var/lib/clickhouse_keeper/coordination/snapshots"
+
+	ClickHouseInternalKeeperDataPath     = "/var/lib/clickhouse/coordination/log"
+	ClickHouseInternalKeeperSnapshotPath = "/var/lib/clickhouse/coordination/snapshots"
+	ClickHOuseKeeeprConfigFileVolumeDir  = "/tmp/clickhouse-keeper"
+
+	ClickHouseVolumeData  = "data"
+	ClickHouseDefaultUser = "default"
+
+	ClickHouseConfigVolumeName               = "clickhouse-config"
+	ClickHouseKeeperConfigVolumeName         = "clickhouse-keeper-config"
+	ClickHouseInternalKeeperConfigVolumeName = "clickhouse-internal-keeper-config"
+
+	ClickHouseDefaultStorageSize = "2Gi"
+
+	ClickHouseClusterConfigVolName = "cluster-config"
+
+	ClickHouseClusterTempConfigVolName = "temp-cluster-config"
+
+	ClickHouseContainerName     = "clickhouse"
+	ClickHouseInitContainerName = "clickhouse-init"
+
+	ClickHouseClusterConfigFile = "cluster-config.yaml"
+
 	ClickHouseMacrosFileName = "macros.yaml"
 
 	ClickHouseStandalone = "standalone"
