@@ -146,15 +146,17 @@ func (c *Controller) getSnapshot(inv *coreapi.RestoreSession) (*storageapi.Snaps
 	// Look for the snapshot dependency in the RestoreSession status
 	var snapRef *kmapi.ObjectReference
 	for _, dep := range inv.Status.Dependencies {
-		if dep.Kind == storageapi.ResourceKindSnapshot {
+		if dep.Found == pointer.TrueP() &&
+			dep.Kind == storageapi.ResourceKindSnapshot {
 			snapRef = &kmapi.ObjectReference{
 				Name:      dep.Name,
 				Namespace: dep.Namespace,
 			}
+			break
 		}
 	}
 	if snapRef == nil {
-		return nil, fmt.Errorf("snapshot dependency not found int restoreSession")
+		return nil, fmt.Errorf("snapshot dependency not found in restoreSession")
 	}
 
 	snapshot := &storageapi.Snapshot{}
