@@ -666,8 +666,8 @@ kubeops.dev/petset v0.0.5-0.20240603165102-e2d9decb8abe h1:uWyps3VIDFwGuL0yQa0eM
 kubeops.dev/petset v0.0.5-0.20240603165102-e2d9decb8abe/go.mod h1:A15vh0r979NsvL65DTIZKWsa/NoX9VapHBAEw1ZsdYI=
 kubeops.dev/sidekick v0.0.7 h1:+rs9AXPsiHjq5pJpzmj+Cen7frPfdi5dK1A57eNh7GM=
 kubeops.dev/sidekick v0.0.7/go.mod h1:bYS5Q6DksOzqzQPwiRbFRbV1uXuYmzY+0QYSqNFq4/M=
-kubestash.dev/apimachinery v0.12.1-0.20240923091545-017c1fd9d794 h1:MkrPZkJQGpOn6LJGIyBYCOA5vnQgfJ4vjrXukflctcU=
-kubestash.dev/apimachinery v0.12.1-0.20240923091545-017c1fd9d794/go.mod h1:gtVSpHtK8LvS26+rKyLTnZvijvSSCdfG83n6GL6+Kwc=
+kubestash.dev/apimachinery v0.12.1-0.20240925060924-86c612468cd9 h1:VlbC5FNIk5V0dyYvqVv+Jof5ewZgfglgMnMmRshNiB8=
+kubestash.dev/apimachinery v0.12.1-0.20240925060924-86c612468cd9/go.mod h1:gtVSpHtK8LvS26+rKyLTnZvijvSSCdfG83n6GL6+Kwc=
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.30.3 h1:2770sDpzrjjsAtVhSeUFseziht227YAWYHLGNM8QPwY=
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.30.3/go.mod h1:Ve9uj1L+deCXFrPOk1LpFXqTg7LCFzFso6PA48q/XZw=
 sigs.k8s.io/cli-utils v0.34.0 h1:zCUitt54f0/MYj/ajVFnG6XSXMhpZ72O/3RewIchW8w=

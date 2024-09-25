@@ -231,47 +231,47 @@ func (rs *RestoreSession) getRestoreNamespacedName(targetKind string) *types.Nam
 	if rs.Spec.ManifestOptions != nil {
 		opt := rs.Spec.ManifestOptions
 		switch {
-		case targetKind == apis.KindMySQL:
+		case targetKind == apis.KindMySQL && opt.MySQL != nil:
 			ref = types.NamespacedName{
 				Name:      opt.MySQL.DBName,
 				Namespace: opt.MySQL.RestoreNamespace,
 			}
-		case targetKind == apis.KindPostgres:
+		case targetKind == apis.KindPostgres && opt.Postgres != nil:
 			ref = types.NamespacedName{
 				Namespace: opt.Postgres.RestoreNamespace,
 				Name:      opt.Postgres.DBName,
 			}
-		case targetKind == apis.KindMongoDB:
+		case targetKind == apis.KindMongoDB && opt.MongoDB != nil:
 			ref = types.NamespacedName{
 				Namespace: opt.MongoDB.RestoreNamespace,
 				Name:      opt.MongoDB.DBName,
 			}
-		case targetKind == apis.KindMariaDB:
+		case targetKind == apis.KindMariaDB && opt.MariaDB != nil:
 			ref = types.NamespacedName{
 				Namespace: opt.MariaDB.RestoreNamespace,
 				Name:      opt.MariaDB.DBName,
 			}
-		case targetKind == apis.KindRedis:
+		case targetKind == apis.KindRedis && opt.Redis != nil:
 			ref = types.NamespacedName{
 				Namespace: opt.Redis.RestoreNamespace,
 				Name:      opt.Redis.DBName,
 			}
-		case targetKind == apis.KindMSSQLServer:
+		case targetKind == apis.KindMSSQLServer && opt.MSSQLServer != nil:
 			ref = types.NamespacedName{
 				Namespace: opt.MSSQLServer.RestoreNamespace,
 				Name:      opt.MSSQLServer.DBName,
 			}
-		case targetKind == apis.KindDruid:
+		case targetKind == apis.KindDruid && opt.Druid != nil:
 			ref = types.NamespacedName{
 				Namespace: opt.Druid.RestoreNamespace,
 				Name:      opt.Druid.DBName,
 			}
-		case targetKind == apis.KindZooKeeper:
+		case targetKind == apis.KindZooKeeper && opt.ZooKeeper != nil:
 			ref = types.NamespacedName{
 				Namespace: opt.ZooKeeper.RestoreNamespace,
 				Name:      opt.ZooKeeper.DBName,
 			}
-		case targetKind == apis.KindSinglestore:
+		case targetKind == apis.KindSinglestore && opt.Singlestore != nil:
 			ref = types.NamespacedName{
 				Namespace: opt.Singlestore.RestoreNamespace,
 				Name:      opt.Singlestore.DBName,
