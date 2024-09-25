@@ -17,14 +17,16 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	"kubestash.dev/apimachinery/apis"
-	"kubestash.dev/apimachinery/crds"
-
 	"kmodules.xyz/client-go/apiextensions"
 	cutil "kmodules.xyz/client-go/conditions"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kubestash.dev/apimachinery/apis"
+	"kubestash.dev/apimachinery/apis/storage/v1alpha1"
+	"kubestash.dev/apimachinery/crds"
 )
 
 func (_ RestoreSession) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -41,8 +43,7 @@ func (rs *RestoreSession) CalculatePhase() RestorePhase {
 	}
 
 	if cutil.IsConditionTrue(rs.Status.Conditions, TypeMetricsPushed) &&
-		(cutil.IsConditionTrue(rs.Status.Conditions, TypeDeadlineExceeded) ||
-			cutil.IsConditionFalse(rs.Status.Conditions, TypePreRestoreHooksExecutionSucceeded) ||
+		(cutil.IsConditionFalse(rs.Status.Conditions, TypePreRestoreHooksExecutionSucceeded) ||
 			cutil.IsConditionFalse(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded) ||
 			cutil.IsConditionFalse(rs.Status.Conditions, TypeRestoreExecutorEnsured)) {
 		return RestoreFailed
@@ -180,4 +181,103 @@ func (rs *RestoreSession) GetDataSourceNamespace() string {
 		return rs.Namespace
 	}
 	return rs.Spec.DataSource.Namespace
+}
+
+func (rs *RestoreSession) GetRemainingTimeoutDuration() (*metav1.Duration, error) {
+	if rs.Spec.RestoreTimeout == nil || rs.Status.RestoreDeadline == nil {
+		return nil, nil
+	}
+	currentTime := metav1.Now()
+	if rs.Status.RestoreDeadline.Before(&currentTime) {
+		return nil, fmt.Errorf("deadline exceeded")
+	}
+	return &metav1.Duration{Duration: rs.Status.RestoreDeadline.Sub(currentTime.Time)}, nil
+}
+
+func (rs *RestoreSession) GetTargetObjectRef(snap *v1alpha1.Snapshot) *kmapi.ObjectReference {
+	if rs.Spec.Target != nil {
+		return &kmapi.ObjectReference{
+			Namespace: rs.Spec.Target.Namespace,
+			Name:      rs.Spec.Target.Name,
+		}
+	}
+
+	objRef := kmapi.ObjectReference{
+		Name:      snap.Spec.AppRef.Name,
+		Namespace: snap.Spec.AppRef.Namespace,
+	}
+	targetRef := rs.getRestoreNamespacedName(snap.Spec.AppRef.Kind)
+	if targetRef.Namespace != "" {
+		objRef.Namespace = targetRef.Namespace
+	}
+	if targetRef.Name != "" {
+		objRef.Name = targetRef.Name
+	}
+
+	return &objRef
+}
+
+func (rs *RestoreSession) IsApplicationLevelRestore() bool {
+	tasks := map[string]bool{}
+	for _, task := range rs.Spec.Addon.Tasks {
+		tasks[task.Name] = true
+	}
+
+	return tasks[apis.ManifestRestore] && tasks[apis.LogicalBackupRestore]
+}
+
+func (rs *RestoreSession) getRestoreNamespacedName(targetKind string) *types.NamespacedName {
+	var ref types.NamespacedName
+	if rs.Spec.ManifestOptions != nil {
+		opt := rs.Spec.ManifestOptions
+		switch {
+		case targetKind == apis.KindMySQL:
+			ref = types.NamespacedName{
+				Name:      opt.MySQL.DBName,
+				Namespace: opt.MySQL.RestoreNamespace,
+			}
+		case targetKind == apis.KindPostgres:
+			ref = types.NamespacedName{
+				Namespace: opt.Postgres.RestoreNamespace,
+				Name:      opt.Postgres.DBName,
+			}
+		case targetKind == apis.KindMongoDB:
+			ref = types.NamespacedName{
+				Namespace: opt.MongoDB.RestoreNamespace,
+				Name:      opt.MongoDB.DBName,
+			}
+		case targetKind == apis.KindMariaDB:
+			ref = types.NamespacedName{
+				Namespace: opt.MariaDB.RestoreNamespace,
+				Name:      opt.MariaDB.DBName,
+			}
+		case targetKind == apis.KindRedis:
+			ref = types.NamespacedName{
+				Namespace: opt.Redis.RestoreNamespace,
+				Name:      opt.Redis.DBName,
+			}
+		case targetKind == apis.KindMSSQLServer:
+			ref = types.NamespacedName{
+				Namespace: opt.MSSQLServer.RestoreNamespace,
+				Name:      opt.MSSQLServer.DBName,
+			}
+		case targetKind == apis.KindDruid:
+			ref = types.NamespacedName{
+				Namespace: opt.Druid.RestoreNamespace,
+				Name:      opt.Druid.DBName,
+			}
+		case targetKind == apis.KindZooKeeper:
+			ref = types.NamespacedName{
+				Namespace: opt.ZooKeeper.RestoreNamespace,
+				Name:      opt.ZooKeeper.DBName,
+			}
+		case targetKind == apis.KindSinglestore:
+			ref = types.NamespacedName{
+				Namespace: opt.Singlestore.RestoreNamespace,
+				Name:      opt.Singlestore.DBName,
+			}
+		}
+	}
+
+	return &ref
 }

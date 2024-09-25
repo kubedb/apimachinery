@@ -44,8 +44,7 @@ func (r *RestoreSessionReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
-	// Ignore nil target restore sessions. e.g: manifest
-	if rs.Spec.Target == nil {
+	if shouldIgnoreReconcile(rs) {
 		return ctrl.Result{}, nil
 	}
 
@@ -59,6 +58,14 @@ func (r *RestoreSessionReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	}
 
 	return ctrl.Result{}, r.ctrl.handleRestoreInvokerEvent(ri)
+}
+
+func shouldIgnoreReconcile(rs *coreapi.RestoreSession) bool {
+	if rs.Spec.Target != nil {
+		return false
+	}
+
+	return !rs.IsApplicationLevelRestore()
 }
 
 // SetupWithManager sets up the controller with the Manager.
