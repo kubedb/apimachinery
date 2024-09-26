@@ -60,9 +60,7 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
-              checkPeerName:
-                type: boolean
-              clientAuth:
+              clientAuthSSL:
                 type: string
               configSecret:
                 properties:

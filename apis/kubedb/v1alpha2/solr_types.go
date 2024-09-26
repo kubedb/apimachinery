@@ -84,10 +84,7 @@ type SolrSpec struct {
 	EnableSSL bool `json:"enableSSL,omitempty"`
 
 	// Client auth need or want
-	ClientAuth string `json:"clientAuth,omitempty"`
-
-	// Check peer name
-	CheckPeerName bool `json:"checkPeerName,omitempty"`
+	ClientAuthSSL string `json:"clientAuthSSL,omitempty"`
 
 	// TLS contains tls configurations for client and server.
 	// +optional

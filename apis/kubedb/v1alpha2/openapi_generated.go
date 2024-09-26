@@ -34603,17 +34603,10 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
-					"clientAuth": {
+					"clientAuthSSL": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Client auth need or want",
 							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"checkPeerName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Check peer name",
-							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},

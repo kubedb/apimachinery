@@ -254,8 +254,8 @@ func (s *Solr) SetDefaults() {
 		s.Spec.DeletionPolicy = TerminationPolicyDelete
 	}
 
-	if s.Spec.ClientAuth != "need" && s.Spec.ClientAuth != "want" {
-		s.Spec.ClientAuth = ""
+	if s.Spec.ClientAuthSSL != "need" && s.Spec.ClientAuthSSL != "want" {
+		s.Spec.ClientAuthSSL = ""
 	}
 
 	if s.Spec.StorageType == "" {
@@ -505,8 +505,6 @@ func (s *Solr) CertSecretVolumeName(alias SolrCertificateAlias) string {
 }
 
 // CertSecretVolumeMountPath returns the CertSecretVolumeMountPath
-// if configDir is "/opt/kafka/config",
-// mountPath will be, "/opt/kafka/config/<alias>".
 func (s *Solr) CertSecretVolumeMountPath(configDir string, cert string) string {
 	return filepath.Join(configDir, cert)
 }
