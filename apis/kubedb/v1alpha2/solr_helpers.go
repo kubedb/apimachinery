@@ -254,8 +254,8 @@ func (s *Solr) SetDefaults() {
 		s.Spec.DeletionPolicy = TerminationPolicyDelete
 	}
 
-	if s.Spec.JavaMem == "" {
-		s.Spec.JavaMem = kubedb.SolrJavaMem
+	if s.Spec.ClientAuth != "need" && s.Spec.ClientAuth != "want" {
+		s.Spec.ClientAuth = ""
 	}
 
 	if s.Spec.StorageType == "" {

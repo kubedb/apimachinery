@@ -34536,13 +34536,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
-					"javaMem": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Java memory for solr",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Number of instances to deploy for a Solr database",
@@ -34610,17 +34603,10 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
-					"needClientAuth": {
+					"clientAuth": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Client auth need",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"wantClientAuth": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Client auth want",
-							Type:        []string{"boolean"},
+							Description: "Client auth need or want",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},

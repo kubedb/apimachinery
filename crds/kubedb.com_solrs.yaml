@@ -62,6 +62,8 @@ spec:
                 x-kubernetes-map-type: atomic
               checkPeerName:
                 type: boolean
+              clientAuth:
+                type: string
               configSecret:
                 properties:
                   name:
@@ -101,8 +103,6 @@ spec:
                     format: int32
                     type: integer
                 type: object
-              javaMem:
-                type: string
               keystoreSecret:
                 properties:
                   name:
@@ -311,8 +311,6 @@ spec:
                         type: object
                     type: object
                 type: object
-              needClientAuth:
-                type: boolean
               podTemplate:
                 properties:
                   controller:
@@ -13138,8 +13136,6 @@ spec:
                 type: object
               version:
                 type: string
-              wantClientAuth:
-                type: boolean
               zookeeperDigestReadonlySecret:
                 properties:
                   name:

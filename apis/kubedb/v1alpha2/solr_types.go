@@ -57,10 +57,6 @@ type SolrSpec struct {
 	// Version of Solr to be deployed
 	Version string `json:"version"`
 
-	// Java memory for solr
-	// +optional
-	JavaMem string `json:"javaMem,omitempty"`
-
 	// Number of instances to deploy for a Solr database
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
@@ -87,11 +83,8 @@ type SolrSpec struct {
 	// To enable ssl for http layer
 	EnableSSL bool `json:"enableSSL,omitempty"`
 
-	// Client auth need
-	NeedClientAuth bool `json:"needClientAuth,omitempty"`
-
-	// Client auth want
-	WantClientAuth bool `json:"wantClientAuth,omitempty"`
+	// Client auth need or want
+	ClientAuth string `json:"clientAuth,omitempty"`
 
 	// Check peer name
 	CheckPeerName bool `json:"checkPeerName,omitempty"`
