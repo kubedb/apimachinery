@@ -680,6 +680,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreVerticalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_SinglestoreVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreVolumeExpansionSpec":                   schema_apimachinery_apis_ops_v1alpha1_SinglestoreVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrCustomConfigurationSpec":                      schema_apimachinery_apis_ops_v1alpha1_SolrCustomConfigurationSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrHorizontalScalingSpec":                        schema_apimachinery_apis_ops_v1alpha1_SolrHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrOpsRequest":                                   schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrOpsRequestList":                               schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrOpsRequestSpec":                               schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestSpec(ref),
@@ -32885,6 +32886,46 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrCustomConfigurationSpec(ref commo
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_SolrHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of combined (i.e. overseer, data, coordinator) node",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"overseer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of master nodes",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"coordinator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of ingest nodes",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"data": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of data nodes",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -32984,7 +33025,7 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestSpec(ref common.Referen
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DruidOpsRequestSpec is the spec for DruidOpsRequest",
+				Description: "SolrOpsRequestSpec is the spec for SolrOpsRequest",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"databaseRef": {
@@ -33006,6 +33047,12 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestSpec(ref common.Referen
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for upgrading Solr",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrUpdateVersionSpec"),
+						},
+					},
+					"horizontalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for horizontal scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrHorizontalScalingSpec"),
 						},
 					},
 					"verticalScaling": {
@@ -33032,6 +33079,12 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestSpec(ref common.Referen
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrCustomConfigurationSpec"),
 						},
 					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring TLS",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -33050,7 +33103,7 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVolumeExpansionSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 

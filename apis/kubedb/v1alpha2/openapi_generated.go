@@ -34603,6 +34603,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
+					"clientAuthSSL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Client auth need or want",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations for client and server.",
@@ -34617,6 +34624,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 						},
 					},
 					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"keystoreSecret": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},

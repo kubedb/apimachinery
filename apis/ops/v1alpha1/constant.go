@@ -163,6 +163,8 @@ const (
 	HorizontalScaleCoordinatingNode = "HorizontalScaleCoordinatingNode"
 	HorizontalScaleIngestNode       = "HorizontalScaleIngestNode"
 	HorizontalScaleCombinedNode     = "HorizontalScaleCombinedNode"
+	HorizontalScaleOverseerNode     = "HorizontalScaleOverseerNode"
+	HorizontalScaleCoordinatorNode  = "HorizontalScaleCoordinatorNode"
 
 	VolumeExpansionCombinedNode     = "VolumeExpansionCombinedNode"
 	VolumeExpansionMasterNode       = "VolumeExpansionMasterNode"

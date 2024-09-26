@@ -7,6 +7,7 @@ toolchain go1.22.5
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/cert-manager/cert-manager v1.15.1
+	github.com/coreos/go-semver v0.3.1
 	github.com/evanphx/json-patch v5.9.0+incompatible
 	github.com/fatih/structs v1.1.0
 	github.com/google/go-cmp v0.6.0
@@ -45,7 +46,7 @@ require (
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/petset v0.0.5-0.20240603165102-e2d9decb8abe
 	kubeops.dev/sidekick v0.0.7
-	kubestash.dev/apimachinery v0.12.1-0.20240923091545-017c1fd9d794
+	kubestash.dev/apimachinery v0.12.1-0.20240925060924-86c612468cd9
 	sigs.k8s.io/controller-runtime v0.18.4
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.35.0
@@ -76,7 +77,6 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cloudevents/sdk-go/v2 v2.15.2 // indirect
 	github.com/containerd/stargz-snapshotter/estargz v0.14.3 // indirect
-	github.com/coreos/go-semver v0.3.1 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
