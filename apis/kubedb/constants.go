@@ -1484,6 +1484,7 @@ const (
 	CassandraInterNodePortName    = "internode"
 	CassandraInterNodeSslPortName = "internode-ssl"
 	CassandraJmxPortName          = "jmx"
+	CassandraExporterPortName     = "exporter"
 
 	CassandraUserAdmin = "admin"
 
