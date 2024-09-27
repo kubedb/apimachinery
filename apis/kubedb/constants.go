@@ -1358,6 +1358,7 @@ const (
 	CassandraInterNodePortName    = "internode"
 	CassandraInterNodeSslPortName = "internode-ssl"
 	CassandraJmxPortName          = "jmx"
+	CassandraExporterPortName     = "exporter"
 
 	CassandraUserAdmin         = "admin"
 	CassandraStandaloneSeed    = "cassandra-sample-0.cassandra-sample-pods.default.svc.cluster.local"
