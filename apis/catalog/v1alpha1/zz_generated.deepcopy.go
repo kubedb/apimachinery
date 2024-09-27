@@ -3713,6 +3713,7 @@ func (in *SolrVersionSpec) DeepCopyInto(out *SolrVersionSpec) {
 	*out = *in
 	out.DB = in.DB
 	out.InitContainer = in.InitContainer
+	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	return
 }
