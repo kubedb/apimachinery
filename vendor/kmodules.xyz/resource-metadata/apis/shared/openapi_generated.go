@@ -737,6 +737,14 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_RegistryProxies(ref common
 							Format:      "",
 						},
 					},
+					"microsoft": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mcr.microsoft.com",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"appscode": {
 						SchemaProps: spec.SchemaProps{
 							Description: "r.appscode.com",

@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	"fmt"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	cutil "kmodules.xyz/client-go/conditions"
@@ -45,7 +44,8 @@ func (rs *RestoreSession) CalculatePhase() RestorePhase {
 	if cutil.IsConditionTrue(rs.Status.Conditions, TypeMetricsPushed) &&
 		(cutil.IsConditionFalse(rs.Status.Conditions, TypePreRestoreHooksExecutionSucceeded) ||
 			cutil.IsConditionFalse(rs.Status.Conditions, TypePostRestoreHooksExecutionSucceeded) ||
-			cutil.IsConditionFalse(rs.Status.Conditions, TypeRestoreExecutorEnsured)) {
+			cutil.IsConditionFalse(rs.Status.Conditions, TypeRestoreExecutorEnsured) ||
+			cutil.IsConditionTrue(rs.Status.Conditions, TypeRestoreIncomplete)) {
 		return RestoreFailed
 	}
 
@@ -202,19 +202,7 @@ func (rs *RestoreSession) GetTargetObjectRef(snap *v1alpha1.Snapshot) *kmapi.Obj
 		}
 	}
 
-	objRef := kmapi.ObjectReference{
-		Name:      snap.Spec.AppRef.Name,
-		Namespace: snap.Spec.AppRef.Namespace,
-	}
-	targetRef := rs.getRestoreNamespacedName(snap.Spec.AppRef.Kind)
-	if targetRef.Namespace != "" {
-		objRef.Namespace = targetRef.Namespace
-	}
-	if targetRef.Name != "" {
-		objRef.Name = targetRef.Name
-	}
-
-	return &objRef
+	return rs.getTargetRef(snap.Spec.AppRef)
 }
 
 func (rs *RestoreSession) IsApplicationLevelRestore() bool {
@@ -226,58 +214,64 @@ func (rs *RestoreSession) IsApplicationLevelRestore() bool {
 	return tasks[apis.ManifestRestore] && tasks[apis.LogicalBackupRestore]
 }
 
-func (rs *RestoreSession) getRestoreNamespacedName(targetKind string) *types.NamespacedName {
-	var ref types.NamespacedName
-	if rs.Spec.ManifestOptions != nil {
-		opt := rs.Spec.ManifestOptions
-		switch {
-		case targetKind == apis.KindMySQL && opt.MySQL != nil:
-			ref = types.NamespacedName{
-				Name:      opt.MySQL.DBName,
-				Namespace: opt.MySQL.RestoreNamespace,
-			}
-		case targetKind == apis.KindPostgres && opt.Postgres != nil:
-			ref = types.NamespacedName{
-				Namespace: opt.Postgres.RestoreNamespace,
-				Name:      opt.Postgres.DBName,
-			}
-		case targetKind == apis.KindMongoDB && opt.MongoDB != nil:
-			ref = types.NamespacedName{
-				Namespace: opt.MongoDB.RestoreNamespace,
-				Name:      opt.MongoDB.DBName,
-			}
-		case targetKind == apis.KindMariaDB && opt.MariaDB != nil:
-			ref = types.NamespacedName{
-				Namespace: opt.MariaDB.RestoreNamespace,
-				Name:      opt.MariaDB.DBName,
-			}
-		case targetKind == apis.KindRedis && opt.Redis != nil:
-			ref = types.NamespacedName{
-				Namespace: opt.Redis.RestoreNamespace,
-				Name:      opt.Redis.DBName,
-			}
-		case targetKind == apis.KindMSSQLServer && opt.MSSQLServer != nil:
-			ref = types.NamespacedName{
-				Namespace: opt.MSSQLServer.RestoreNamespace,
-				Name:      opt.MSSQLServer.DBName,
-			}
-		case targetKind == apis.KindDruid && opt.Druid != nil:
-			ref = types.NamespacedName{
-				Namespace: opt.Druid.RestoreNamespace,
-				Name:      opt.Druid.DBName,
-			}
-		case targetKind == apis.KindZooKeeper && opt.ZooKeeper != nil:
-			ref = types.NamespacedName{
-				Namespace: opt.ZooKeeper.RestoreNamespace,
-				Name:      opt.ZooKeeper.DBName,
-			}
-		case targetKind == apis.KindSinglestore && opt.Singlestore != nil:
-			ref = types.NamespacedName{
-				Namespace: opt.Singlestore.RestoreNamespace,
-				Name:      opt.Singlestore.DBName,
-			}
+func (rs *RestoreSession) getTargetRef(appRef kmapi.TypedObjectReference) *kmapi.ObjectReference {
+	targetRef := &kmapi.ObjectReference{
+		Name:      appRef.Name,
+		Namespace: appRef.Namespace,
+	}
+
+	if rs.Spec.ManifestOptions == nil {
+		return targetRef
+	}
+
+	overrideTargetRef := func(dbName, namespace string) {
+		if dbName != "" {
+			targetRef.Name = dbName
+		}
+		if namespace != "" {
+			targetRef.Namespace = namespace
 		}
 	}
 
-	return &ref
+	opt := rs.Spec.ManifestOptions
+	switch appRef.Kind {
+	case apis.KindMySQL:
+		if opt.MySQL != nil {
+			overrideTargetRef(opt.MySQL.DBName, opt.MySQL.RestoreNamespace)
+		}
+	case apis.KindPostgres:
+		if opt.Postgres != nil {
+			overrideTargetRef(opt.Postgres.DBName, opt.Postgres.RestoreNamespace)
+		}
+	case apis.KindMongoDB:
+		if opt.MongoDB != nil {
+			overrideTargetRef(opt.MongoDB.DBName, opt.MongoDB.RestoreNamespace)
+		}
+	case apis.KindMariaDB:
+		if opt.MariaDB != nil {
+			overrideTargetRef(opt.MariaDB.DBName, opt.MariaDB.RestoreNamespace)
+		}
+	case apis.KindRedis:
+		if opt.Redis != nil {
+			overrideTargetRef(opt.Redis.DBName, opt.Redis.RestoreNamespace)
+		}
+	case apis.KindMSSQLServer:
+		if opt.MSSQLServer != nil {
+			overrideTargetRef(opt.MSSQLServer.DBName, opt.MSSQLServer.RestoreNamespace)
+		}
+	case apis.KindDruid:
+		if opt.Druid != nil {
+			overrideTargetRef(opt.Druid.DBName, opt.Druid.RestoreNamespace)
+		}
+	case apis.KindZooKeeper:
+		if opt.ZooKeeper != nil {
+			overrideTargetRef(opt.ZooKeeper.DBName, opt.ZooKeeper.RestoreNamespace)
+		}
+	case apis.KindSinglestore:
+		if opt.Singlestore != nil {
+			overrideTargetRef(opt.Singlestore.DBName, opt.Singlestore.RestoreNamespace)
+		}
+	}
+
+	return targetRef
 }

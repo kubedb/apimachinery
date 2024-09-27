@@ -18,7 +18,7 @@ require (
 	github.com/kubernetes-csi/external-snapshotter/client/v7 v7.0.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.75.2
-	github.com/prometheus-operator/prometheus-operator/pkg/client v0.75.1
+	github.com/prometheus-operator/prometheus-operator/pkg/client v0.75.2
 	go.bytebuilders.dev/audit v0.0.38
 	gomodules.xyz/encoding v0.0.8
 	gomodules.xyz/pointer v0.1.0
@@ -36,20 +36,20 @@ require (
 	k8s.io/kube-openapi v0.0.0-20240703190633-0aa61b46e8c2
 	k8s.io/metrics v0.30.2
 	k8s.io/utils v0.0.0-20240502163921-fe8a2dddb1d0
-	kmodules.xyz/client-go v0.30.14
+	kmodules.xyz/client-go v0.30.17
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.30.0
-	kmodules.xyz/monitoring-agent-api v0.29.0
+	kmodules.xyz/monitoring-agent-api v0.30.1
 	kmodules.xyz/objectstore-api v0.29.1
-	kmodules.xyz/offshoot-api v0.30.1-0.20240912095128-a95bf66dae96
-	kmodules.xyz/resource-metadata v0.18.12
+	kmodules.xyz/offshoot-api v0.30.1
+	kmodules.xyz/resource-metadata v0.18.15
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/petset v0.0.7
-	kubeops.dev/sidekick v0.0.7
-	kubestash.dev/apimachinery v0.12.1-0.20240925060924-86c612468cd9
+	kubeops.dev/sidekick v0.0.8
+	kubestash.dev/apimachinery v0.13.0
 	sigs.k8s.io/controller-runtime v0.18.4
 	sigs.k8s.io/yaml v1.4.0
-	stash.appscode.dev/apimachinery v0.35.0
+	stash.appscode.dev/apimachinery v0.36.0
 )
 
 require (
@@ -88,6 +88,7 @@ require (
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
+	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
@@ -105,9 +106,10 @@ require (
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.4 // indirect
+	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0 // indirect
-	github.com/huandu/xstrings v1.4.0 // indirect
+	github.com/huandu/xstrings v1.5.0 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.1-0.20220621161143-b0104c826a24 // indirect
@@ -133,10 +135,13 @@ require (
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.46.0 // indirect
 	github.com/prometheus/procfs v0.15.0 // indirect
+	github.com/rancher/norman v0.0.0-20240708202514-a0127673d1b9 // indirect
+	github.com/rancher/rancher/pkg/client v0.0.0-20240710123941-93e332156bbe // indirect
+	github.com/rancher/wrangler/v3 v3.0.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
-	github.com/shopspring/decimal v1.3.1 // indirect
+	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
-	github.com/spf13/cast v1.5.0 // indirect
+	github.com/spf13/cast v1.7.0 // indirect
 	github.com/spf13/cobra v1.8.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
@@ -145,7 +150,7 @@ require (
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
 	go.bytebuilders.dev/license-proxyserver v0.0.11 // indirect
-	go.bytebuilders.dev/license-verifier v0.14.1 // indirect
+	go.bytebuilders.dev/license-verifier v0.14.2 // indirect
 	go.bytebuilders.dev/license-verifier/kubernetes v0.14.1 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.14 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.14 // indirect
@@ -164,8 +169,8 @@ require (
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/crypto v0.27.0 // indirect
 	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
-	golang.org/x/net v0.27.0 // indirect
-	golang.org/x/oauth2 v0.21.0 // indirect
+	golang.org/x/net v0.29.0 // indirect
+	golang.org/x/oauth2 v0.22.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect
 	golang.org/x/term v0.24.0 // indirect
@@ -189,9 +194,10 @@ require (
 	kmodules.xyz/apiversion v0.2.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.12 // indirect
 	kmodules.xyz/prober v0.29.0 // indirect
-	kmodules.xyz/resource-metrics v0.30.2 // indirect
+	kmodules.xyz/resource-metrics v0.30.4 // indirect
+	moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.30.3 // indirect
-	sigs.k8s.io/cli-utils v0.34.0 // indirect
+	sigs.k8s.io/cli-utils v0.35.0 // indirect
 	sigs.k8s.io/gateway-api v1.1.0 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect

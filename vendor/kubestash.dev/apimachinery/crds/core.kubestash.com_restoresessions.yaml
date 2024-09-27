@@ -24464,6 +24464,68 @@ spec:
                         type: object
                         x-kubernetes-map-type: atomic
                     type: object
+                  singlestore:
+                    description: Singlestore specifies the options for selecting particular
+                      Singlestore components to restore in manifest restore
+                    properties:
+                      authSecret:
+                        default: true
+                        description: AuthSecret specifies whether to restore the AuthSecret
+                          manifest or not
+                        type: boolean
+                      authSecretName:
+                        description: AuthSecretName specifies new name of the AuthSecret
+                          yaml after restore
+                        type: string
+                      configSecret:
+                        default: true
+                        description: ConfigSecret specifies whether to restore the
+                          ConfigSecret manifest or not
+                        type: boolean
+                      configSecretName:
+                        description: ConfigSecretName specifies new name of the ConfigSecret
+                          yaml after restore
+                        type: string
+                      db:
+                        default: true
+                        description: DB specifies whether to restore the DB manifest
+                          or not
+                        type: boolean
+                      dbName:
+                        description: DBName specifies the new name of the DB yaml
+                          after restore
+                        type: string
+                      initScript:
+                        default: true
+                        description: InitScript specifies whether to restore the InitScript
+                          manifest or not
+                        type: boolean
+                      restoreNamespace:
+                        description: RestoreNamespace specifies the Namespace where
+                          the restored files will be applied
+                        type: string
+                      tlsIssuerRef:
+                        description: TLSIssuerRef specifies the name of the IssuerRef
+                          used for TLS configurations for both client and server
+                        properties:
+                          apiGroup:
+                            description: APIGroup is the group for the resource being
+                              referenced. If APIGroup is not specified, the specified
+                              Kind must be in the core API group. For any other third-party
+                              types, APIGroup is required.
+                            type: string
+                          kind:
+                            description: Kind is the type of resource being referenced
+                            type: string
+                          name:
+                            description: Name is the name of resource being referenced
+                            type: string
+                        required:
+                        - kind
+                        - name
+                        type: object
+                        x-kubernetes-map-type: atomic
+                    type: object
                   workload:
                     description: Workload specifies the options for Workload components
                       to restore in manifest restore

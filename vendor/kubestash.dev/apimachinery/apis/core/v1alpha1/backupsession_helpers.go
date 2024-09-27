@@ -64,7 +64,8 @@ func (b *BackupSession) CalculatePhase() BackupSessionPhase {
 			b.failedToExecutePostBackupHooks() ||
 			b.failedToApplyRetentionPolicy() ||
 			b.verificationsFailed() ||
-			b.sessionHistoryCleanupFailed()) {
+			b.sessionHistoryCleanupFailed() ||
+			b.snapshotCleanupIncomplete()) {
 		return BackupSessionFailed
 	}
 
@@ -74,6 +75,10 @@ func (b *BackupSession) CalculatePhase() BackupSessionPhase {
 	}
 
 	return BackupSessionRunning
+}
+
+func (b *BackupSession) snapshotCleanupIncomplete() bool {
+	return cutil.IsConditionTrue(b.Status.Conditions, TypeSnapshotCleanupIncomplete)
 }
 
 func (b *BackupSession) sessionHistoryCleanupFailed() bool {

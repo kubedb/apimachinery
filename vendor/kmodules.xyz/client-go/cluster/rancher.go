@@ -18,12 +18,19 @@ package cluster
 
 import (
 	"context"
+	"net/url"
 	"sort"
 
+	"github.com/rancher/norman/clientbase"
+	rancher "github.com/rancher/rancher/pkg/client/generated/management/v3"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/discovery/cached/memory"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/restmapper"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -34,8 +41,9 @@ const (
 
 	FakeRancherProjectId = "p-fake"
 
-	NamespaceRancherMonitoring  = "cattle-monitoring-system"
-	PrometheusRancherMonitoring = "rancher-monitoring-prometheus"
+	RancherMonitoringNamespace    = "cattle-monitoring-system"
+	RancherMonitoringPrometheus   = "rancher-monitoring-prometheus"
+	RancherMonitoringAlertmanager = "rancher-monitoring-alertmanager"
 )
 
 func IsRancherManaged(mapper meta.RESTMapper) bool {
@@ -46,6 +54,37 @@ func IsRancherManaged(mapper meta.RESTMapper) bool {
 		return true
 	}
 	return false
+}
+
+func DetectRancherProxy(cfg *rest.Config) (*clientbase.ClientOpts, bool, error) {
+	err := rest.LoadTLSFiles(cfg)
+	if err != nil {
+		return nil, false, err
+	}
+
+	kc, err := kubernetes.NewForConfig(cfg)
+	if err != nil {
+		return nil, false, err
+	}
+
+	mapper := restmapper.NewDeferredDiscoveryRESTMapper(memory.NewMemCacheClient(kc))
+	if IsRancherManaged(mapper) {
+		u, err := url.Parse(cfg.Host)
+		if err != nil {
+			return nil, false, err
+		}
+		u.Path = "/v3"
+
+		opts := clientbase.ClientOpts{
+			URL:      u.String(),
+			TokenKey: cfg.BearerToken,
+			CACerts:  string(cfg.CAData),
+			// Insecure:   true,
+		}
+		_, err = rancher.NewClient(&opts)
+		return &opts, err == nil, err
+	}
+	return nil, false, nil
 }
 
 func IsInDefaultProject(kc client.Client, nsName string) (bool, error) {

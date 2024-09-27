@@ -223,6 +223,9 @@ github.com/felixge/httpsnoop
 # github.com/fsnotify/fsnotify v1.7.0
 ## explicit; go 1.17
 github.com/fsnotify/fsnotify
+# github.com/ghodss/yaml v1.0.0
+## explicit
+github.com/ghodss/yaml
 # github.com/go-logr/logr v1.4.2
 ## explicit; go 1.18
 github.com/go-logr/logr
@@ -374,6 +377,9 @@ github.com/googleapis/gax-go/v2/apierror
 github.com/googleapis/gax-go/v2/apierror/internal/proto
 github.com/googleapis/gax-go/v2/callctx
 github.com/googleapis/gax-go/v2/internal
+# github.com/gorilla/websocket v1.5.1
+## explicit; go 1.20
+github.com/gorilla/websocket
 # github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 ## explicit
 github.com/grpc-ecosystem/go-grpc-prometheus
@@ -382,7 +388,7 @@ github.com/grpc-ecosystem/go-grpc-prometheus
 github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule
 github.com/grpc-ecosystem/grpc-gateway/v2/runtime
 github.com/grpc-ecosystem/grpc-gateway/v2/utilities
-# github.com/huandu/xstrings v1.4.0
+# github.com/huandu/xstrings v1.5.0
 ## explicit; go 1.12
 github.com/huandu/xstrings
 # github.com/iancoleman/orderedmap v0.3.0
@@ -488,7 +494,7 @@ github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring
 github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1
 github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1alpha1
 github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1beta1
-# github.com/prometheus-operator/prometheus-operator/pkg/client v0.75.1
+# github.com/prometheus-operator/prometheus-operator/pkg/client v0.75.2
 ## explicit; go 1.22.0
 github.com/prometheus-operator/prometheus-operator/pkg/client/versioned/scheme
 # github.com/prometheus/client_golang v1.18.0
@@ -513,17 +519,32 @@ github.com/prometheus/common/model
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
+# github.com/rancher/norman v0.0.0-20240708202514-a0127673d1b9
+## explicit; go 1.22.0
+github.com/rancher/norman/clientbase
+github.com/rancher/norman/httperror
+github.com/rancher/norman/types
+github.com/rancher/norman/types/convert
+github.com/rancher/norman/types/definition
+github.com/rancher/norman/types/slice
+github.com/rancher/norman/types/values
+# github.com/rancher/rancher/pkg/client v0.0.0-20240710123941-93e332156bbe
+## explicit; go 1.22.0
+github.com/rancher/rancher/pkg/client/generated/management/v3
+# github.com/rancher/wrangler/v3 v3.0.0
+## explicit; go 1.22.0
+github.com/rancher/wrangler/v3/pkg/name
 # github.com/sergi/go-diff v1.2.0
 ## explicit; go 1.12
 github.com/sergi/go-diff/diffmatchpatch
-# github.com/shopspring/decimal v1.3.1
-## explicit; go 1.13
+# github.com/shopspring/decimal v1.4.0
+## explicit; go 1.10
 github.com/shopspring/decimal
 # github.com/sirupsen/logrus v1.9.3
 ## explicit; go 1.13
 github.com/sirupsen/logrus
-# github.com/spf13/cast v1.5.0
-## explicit; go 1.18
+# github.com/spf13/cast v1.7.0
+## explicit; go 1.19
 github.com/spf13/cast
 # github.com/spf13/cobra v1.8.1
 ## explicit; go 1.15
@@ -558,7 +579,7 @@ go.bytebuilders.dev/license-proxyserver/apis/proxyserver/v1alpha1
 go.bytebuilders.dev/license-proxyserver/client/clientset/versioned
 go.bytebuilders.dev/license-proxyserver/client/clientset/versioned/scheme
 go.bytebuilders.dev/license-proxyserver/client/clientset/versioned/typed/proxyserver/v1alpha1
-# go.bytebuilders.dev/license-verifier v0.14.1
+# go.bytebuilders.dev/license-verifier v0.14.2
 ## explicit; go 1.21
 go.bytebuilders.dev/license-verifier
 go.bytebuilders.dev/license-verifier/apis/licenses
@@ -709,7 +730,7 @@ golang.org/x/crypto/scrypt
 golang.org/x/exp/constraints
 golang.org/x/exp/maps
 golang.org/x/exp/slices
-# golang.org/x/net v0.27.0
+# golang.org/x/net v0.29.0
 ## explicit; go 1.18
 golang.org/x/net/context
 golang.org/x/net/html
@@ -719,10 +740,12 @@ golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
 golang.org/x/net/idna
+golang.org/x/net/internal/socks
 golang.org/x/net/internal/timeseries
+golang.org/x/net/proxy
 golang.org/x/net/trace
 golang.org/x/net/websocket
-# golang.org/x/oauth2 v0.21.0
+# golang.org/x/oauth2 v0.22.0
 ## explicit; go 1.18
 golang.org/x/oauth2
 golang.org/x/oauth2/authhandler
@@ -751,6 +774,7 @@ golang.org/x/sys/windows/registry
 golang.org/x/term
 # golang.org/x/text v0.18.0
 ## explicit; go 1.18
+golang.org/x/text/cases
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/htmlindex
@@ -1651,7 +1675,7 @@ k8s.io/utils/trace
 # kmodules.xyz/apiversion v0.2.0
 ## explicit; go 1.14
 kmodules.xyz/apiversion
-# kmodules.xyz/client-go v0.30.14
+# kmodules.xyz/client-go v0.30.17
 ## explicit; go 1.22.0
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -1699,13 +1723,13 @@ kmodules.xyz/custom-resources/crds
 # kmodules.xyz/go-containerregistry v0.0.12
 ## explicit; go 1.21.5
 kmodules.xyz/go-containerregistry/name
-# kmodules.xyz/monitoring-agent-api v0.29.0
-## explicit; go 1.21.5
+# kmodules.xyz/monitoring-agent-api v0.30.1
+## explicit; go 1.22.0
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/objectstore-api v0.29.1
 ## explicit; go 1.21
 kmodules.xyz/objectstore-api/api/v1
-# kmodules.xyz/offshoot-api v0.30.1-0.20240912095128-a95bf66dae96
+# kmodules.xyz/offshoot-api v0.30.1
 ## explicit; go 1.22.0
 kmodules.xyz/offshoot-api/api/v1
 kmodules.xyz/offshoot-api/api/v1/conversion
@@ -1714,7 +1738,7 @@ kmodules.xyz/offshoot-api/util
 # kmodules.xyz/prober v0.29.0
 ## explicit; go 1.21.5
 kmodules.xyz/prober/api/v1
-# kmodules.xyz/resource-metadata v0.18.12
+# kmodules.xyz/resource-metadata v0.18.15
 ## explicit; go 1.22.1
 kmodules.xyz/resource-metadata/apis/core/v1alpha1
 kmodules.xyz/resource-metadata/apis/identity/v1alpha1
@@ -1723,7 +1747,7 @@ kmodules.xyz/resource-metadata/apis/node/v1alpha1
 kmodules.xyz/resource-metadata/apis/shared
 kmodules.xyz/resource-metadata/crds
 kmodules.xyz/resource-metadata/pkg/identity
-# kmodules.xyz/resource-metrics v0.30.2
+# kmodules.xyz/resource-metrics v0.30.4
 ## explicit; go 1.22.1
 kmodules.xyz/resource-metrics
 kmodules.xyz/resource-metrics/api
@@ -1752,25 +1776,28 @@ kubeops.dev/petset/client/informers/externalversions/internalinterfaces
 kubeops.dev/petset/client/listers/apps/v1
 kubeops.dev/petset/crds
 kubeops.dev/petset/pkg/features
-# kubeops.dev/sidekick v0.0.7
-## explicit; go 1.21.5
+# kubeops.dev/sidekick v0.0.8
+## explicit; go 1.22.1
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
 kubeops.dev/sidekick/crds
-# kubestash.dev/apimachinery v0.12.1-0.20240925060924-86c612468cd9
+# kubestash.dev/apimachinery v0.13.0
 ## explicit; go 1.22.0
 kubestash.dev/apimachinery/apis
 kubestash.dev/apimachinery/apis/addons/v1alpha1
 kubestash.dev/apimachinery/apis/core/v1alpha1
 kubestash.dev/apimachinery/apis/storage/v1alpha1
 kubestash.dev/apimachinery/crds
+# moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7
+## explicit; go 1.13
+moul.io/http2curl/v2
 # sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.30.3
 ## explicit; go 1.21
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client/pkg/client
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client/pkg/client/metrics
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client/pkg/common/metrics
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client/proto/client
-# sigs.k8s.io/cli-utils v0.34.0
+# sigs.k8s.io/cli-utils v0.35.0
 ## explicit; go 1.18
 sigs.k8s.io/cli-utils/pkg/kstatus/status
 # sigs.k8s.io/controller-runtime v0.18.4
@@ -1834,7 +1861,7 @@ sigs.k8s.io/structured-merge-diff/v4/value
 ## explicit; go 1.12
 sigs.k8s.io/yaml
 sigs.k8s.io/yaml/goyaml.v2
-# stash.appscode.dev/apimachinery v0.35.0
+# stash.appscode.dev/apimachinery v0.36.0
 ## explicit; go 1.22.0
 stash.appscode.dev/apimachinery/apis
 stash.appscode.dev/apimachinery/apis/repositories

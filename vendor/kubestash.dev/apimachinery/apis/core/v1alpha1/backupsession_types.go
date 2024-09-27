@@ -231,6 +231,10 @@ const (
 	TypeSnapshotsEnsured               = "SnapshotsEnsured"
 	ReasonSuccessfullyEnsuredSnapshots = "SuccessfullyEnsuredSnapshots"
 	ReasonFailedToEnsureSnapshots      = "FailedToEnsureSnapshots"
+
+	// TypeSnapshotCleanupIncomplete indicates whether Snapshot cleanup incomplete or not
+	TypeSnapshotCleanupIncomplete                   = "SnapshotCleanupIncomplete"
+	ReasonSnapshotCleanupTerminatedBeforeCompletion = "SnapshotCleanupTerminatedBeforeCompletion"
 )
 
 //+kubebuilder:object:root=true

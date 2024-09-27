@@ -8,6 +8,7 @@ API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,CertificateS
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,CertificateSpec,EmailAddresses
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,CertificateSpec,IPAddresses
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,CertificateSpec,URIs
+API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,ClusterInfo,ClusterManagers
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,ImageInfo,Lineages
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,Lineage,Chain
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,Lineage,Containers

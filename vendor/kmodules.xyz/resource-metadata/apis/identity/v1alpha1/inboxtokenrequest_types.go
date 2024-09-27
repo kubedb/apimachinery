@@ -45,8 +45,7 @@ type InboxTokenRequest struct {
 type InboxTokenRequestRequest struct{}
 
 type InboxTokenRequestResponse struct {
-	JmapJWTToken  string `json:"jmapJWTToken"`
-	AdminJWTToken string `json:"adminJWTToken"`
+	AgentJWTToken string `json:"agentJwtToken"`
 }
 
 func init() {
