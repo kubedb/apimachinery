@@ -78,7 +78,7 @@ func GetSameProjectNamespaces(kbClient client.Client, dbNs string) ([]string, er
 		if err != nil {
 			return nil, err
 		}
-		ret := make([]string, 0, len(namespaces))
+		ret := make([]string, len(namespaces))
 		for i, namespace := range namespaces {
 			ret[i] = namespace.Name
 		}
