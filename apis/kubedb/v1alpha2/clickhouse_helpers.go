@@ -491,7 +491,7 @@ func (c *ClickHouse) ReplicasAreReady(lister pslister.PetSetLister) (bool, strin
 		for _, cluster := range c.Spec.ClusterTopology.Cluster {
 			expectedItems += int(*cluster.Shards)
 		}
-		if !c.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged {
+		if c.Spec.ClusterTopology.ClickHouseKeeper != nil && !c.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged {
 			if c.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas != nil {
 				expectedItems += 1
 			}
