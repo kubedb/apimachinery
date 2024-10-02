@@ -998,15 +998,16 @@ const (
 	DruidConfigDirRouters             = "/opt/druid/conf/druid/cluster/query/router"
 	DruidCConfigDirMySQLMetadata      = "/opt/druid/extensions/mysql-metadata-storage"
 
-	DruidVolumeOperatorConfig = "operator-config-volume"
-	DruidVolumeMainConfig     = "main-config-volume"
-	DruidVolumeCustomConfig   = "custom-config"
-	DruidMetadataTLSVolume    = "metadata-tls-volume"
+	DruidVolumeOperatorConfig  = "operator-config-volume"
+	DruidVolumeMainConfig      = "main-config-volume"
+	DruidVolumeCustomConfig    = "custom-config"
+	DruidMetadataTLSVolume     = "metadata-tls-volume"
+	DruidMetadataTLSTempVolume = "metadata-tls-volume-temp"
 
-	DruidOperatorConfigDir    = "/tmp/config/operator-config"
-	DruidMainConfigDir        = "/opt/druid/conf"
-	DruidCustomConfigDir      = "/tmp/config/custom-config"
-	DruidMetadataTLSConfigDir = "/tmp/metadata-tls"
+	DruidOperatorConfigDir        = "/tmp/config/operator-config"
+	DruidMainConfigDir            = "/opt/druid/conf"
+	DruidCustomConfigDir          = "/tmp/config/custom-config"
+	DruidMetadataTLSTempConfigDir = "/tmp/metadata-tls"
 
 	DruidVolumeCommonConfig          = "common-config-volume"
 	DruidCommonConfigFile            = "common.runtime.properties"
@@ -1096,26 +1097,24 @@ const (
 	DruidValueTrue  = "true"
 	DruidValueFalse = "false"
 
-	DruidCertDir = "/opt/druid/ssl"
+	DruidCertDir            = "/opt/druid/ssl"
+	DruidCertMetadataSubDir = "metadata"
 
 	// MySQL TLS
 	DruidMetadataMySQLUseSSL                          = "druid.metadata.mysql.ssl.useSSL"
 	DruidMetadataMySQLClientCertKeyStoreURL           = "druid.metadata.mysql.ssl.clientCertificateKeyStoreUrl"
-	DruidMetadataMySQLClientCertKeyStorePath          = "/opt/druid/conf/tls/metadatakeystore.jks"
 	DruidMetadataMySQLClientCertKeyStoreType          = "druid.metadata.mysql.ssl.clientCertificateKeyStoreType"
 	DruidMetadataMySQLClientCertKeyStoreTypeJKS       = "JKS"
 	DruidMetadataMySQLClientCertKeyStorePassword      = "druid.metadata.mysql.ssl.clientCertificateKeyStorePassword"
 	DruidMetadataMySQLClientCertKeyStorePasswordValue = "password"
 
 	// Postgres TLS
-	DruidMetadataPostgresUseSSL    = "druid.metadata.postgres.ssl.useSSL"
-	DruidMetadataPGUseSSLMode      = "druid.metadata.postgres.ssl.sslMode"
-	DruidMetadataPGSSLCert         = "druid.metadata.postgres.ssl.sslCert"
-	DruidMetadataPGSSLCertPath     = "/opt/druid/conf/tls/tls.crt"
-	DruidMetadataPGSSLKey          = "druid.metadata.postgres.ssl.sslKey"
-	DruidMetadataPGSSLKeyPath      = "/opt/druid/conf/tls/tls.key"
-	DruidMetadataPGSSLRootCert     = "druid.metadata.postgres.ssl.sslRootCert"
-	DruidMetadataPGSSLRootCertPath = "/opt/druid/conf/tls/ca.cert"
+	DruidMetadataPostgresUseSSL         = "druid.metadata.postgres.ssl.useSSL"
+	DruidMetadataPGUseSSLMode           = "druid.metadata.postgres.ssl.sslMode"
+	DruidMetadataPGUseSSLModeVerifyFull = "verify-full"
+	DruidMetadataPGSSLCert              = "druid.metadata.postgres.ssl.sslCert"
+	DruidMetadataPGSSLKey               = "druid.metadata.postgres.ssl.sslKey"
+	DruidMetadataPGSSLRootCert          = "druid.metadata.postgres.ssl.sslRootCert"
 
 	// Deep Storage
 	DruidDeepStorageTypeKey      = "druid.storage.type"

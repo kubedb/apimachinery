@@ -989,11 +989,6 @@ func (in *DruidSpec) DeepCopyInto(out *DruidSpec) {
 		*out = new(DruidClusterTopology)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.DisableSecurity != nil {
-		in, out := &in.DisableSecurity, &out.DisableSecurity
-		*out = new(bool)
-		**out = **in
-	}
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(corev1.LocalObjectReference)
