@@ -64,7 +64,7 @@ type DruidSpec struct {
 	// disable security. It disables authentication security of user.
 	// If unset, default is false
 	// +optional
-	DisableSecurity *bool `json:"disableSecurity,omitempty"`
+	DisableSecurity bool `json:"disableSecurity,omitempty"`
 
 	// Database authentication secret
 	// +optional
@@ -282,7 +282,7 @@ const (
 	DruidDeepStorageHDFS   DruidDeepStorageType = "hdfs"
 )
 
-// +kubebuilder:validation:Enum=server;client;metrics-exporter
+// +kubebuilder:validation:Enum=server;client
 type DruidCertificateAlias string
 
 const (
