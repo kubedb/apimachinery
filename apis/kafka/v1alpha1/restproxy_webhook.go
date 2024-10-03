@@ -96,6 +96,14 @@ func (k *RestProxy) ValidateCreateOrUpdate() field.ErrorList {
 		return allErr
 	}
 
+	if !k.Spec.EnableSchemaRegistry {
+		if k.Spec.SchemaRegistryRef != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSchemaRegistry"),
+				k.Name,
+				"SchemaRegistryRef can only be set when EnableSchemaRegistry is true"))
+		}
+	}
+
 	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
 			k.Name,

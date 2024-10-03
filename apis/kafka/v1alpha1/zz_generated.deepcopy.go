@@ -406,6 +406,11 @@ func (in *RestProxySpec) DeepCopyInto(out *RestProxySpec) {
 		**out = **in
 	}
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
+	if in.SchemaRegistryRef != nil {
+		in, out := &in.SchemaRegistryRef, &out.SchemaRegistryRef
+		*out = new(v1.ObjectReference)
+		**out = **in
+	}
 	if in.ServiceTemplates != nil {
 		in, out := &in.ServiceTemplates, &out.ServiceTemplates
 		*out = make([]kubedbv1.NamedServiceTemplateSpec, len(*in))

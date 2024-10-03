@@ -26043,6 +26043,19 @@ func schema_apimachinery_apis_kafka_v1alpha1_RestProxySpec(ref common.ReferenceC
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
+					"enableSchemaRegistry": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EnableSchemaRegistry indicates whether the REST Proxy should connect to a Schema Registry. If set to true, the REST Proxy will establish a connection to the Schema Registry before communicating with Kafka. This is necessary when producing or consuming messages that use Avro or other schema-based formats.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"schemaRegistryRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SchemaRegistryRef provides a reference to the Schema Registry configuration. If EnableSchemaRegistry and SchemaRegistryRef are both set, the REST Proxy will connect to the external Schema Registry. Otherwise, the REST Proxy will use the internal Schema Registry.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
 					"serviceTemplates": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ServiceTemplates is an optional configuration for services used to expose database",
