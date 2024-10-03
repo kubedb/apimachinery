@@ -70,6 +70,18 @@ type RestProxySpec struct {
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
+	// EnableSchemaRegistry indicates whether the REST Proxy should connect to a Schema Registry.
+	// If set to true, the REST Proxy will establish a connection to the Schema Registry before communicating with Kafka.
+	// This is necessary when producing or consuming messages that use Avro or other schema-based formats.
+	// +optional
+	EnableSchemaRegistry bool `json:"enableSchemaRegistry,omitempty"`
+
+	// SchemaRegistryRef provides a reference to the Schema Registry configuration.
+	// If EnableSchemaRegistry and SchemaRegistryRef are both set, the REST Proxy will connect to the external Schema Registry.
+	// Otherwise, the REST Proxy will use the internal Schema Registry.
+	// +optional
+	SchemaRegistryRef *kmapi.ObjectReference `json:"schemaRegistryRef,omitempty"`
+
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []dbapi.NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
