@@ -50,6 +50,8 @@ spec:
             properties:
               authSecret:
                 properties:
+                  externallyManaged:
+                    type: boolean
                   name:
                     default: ""
                     type: string
