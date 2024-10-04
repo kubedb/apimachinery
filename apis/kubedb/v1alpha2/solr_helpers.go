@@ -268,12 +268,6 @@ func (s *Solr) SetDefaults() {
 		}
 	}
 
-	if s.Spec.KeystoreSecret == nil {
-		s.Spec.KeystoreSecret = &v1.LocalObjectReference{
-			Name: s.SolrSecretName("keystore-cred"),
-		}
-	}
-
 	if s.Spec.ZookeeperDigestSecret == nil {
 		s.Spec.ZookeeperDigestSecret = &v1.LocalObjectReference{
 			Name: s.SolrSecretName("zk-digest"),
