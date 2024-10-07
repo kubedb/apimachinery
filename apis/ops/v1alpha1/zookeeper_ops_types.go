@@ -49,8 +49,8 @@ type ZooKeeperOpsRequest struct {
 	Status            OpsRequestStatus        `json:"status,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure)
+// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
 type ZooKeeperOpsRequestType string
 
 // ZooKeeperOpsRequestSpec is the spec for ZooKeeperOpsRequest
@@ -69,6 +69,8 @@ type ZooKeeperOpsRequestSpec struct {
 	VolumeExpansion *ZooKeeperVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for custom configuration of zookeeper
 	Configuration *ZooKeeperCustomConfigurationSpec `json:"configuration,omitempty"`
+	// Specifies information necessary for configuring TLS
+	TLS *TLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
@@ -90,8 +92,8 @@ type ZooKeeperReplicaReadinessCriteria struct{}
 
 // ZooKeeperHorizontalScalingSpec contains the horizontal scaling information of a ZooKeeper cluster
 type ZooKeeperHorizontalScalingSpec struct {
-	// Number of replicas
-	Replicas *int32 `json:"replicas,omitempty"`
+	// Number of node
+	Node *int32 `json:"node,omitempty"`
 }
 
 // ZooKeeperVerticalScalingSpec contains the vertical scaling information of a ZooKeeper cluster

@@ -621,6 +621,9 @@ const (
 	KubeDBZooKeeperRoleName         = "kubedb:zookeeper-version-reader"
 	KubeDBZooKeeperRoleBindingName  = "kubedb:zookeeper-version-reader"
 	ZooKeeperClientPortName         = "client"
+	ZooKeeperNodeRolesCombined      = "controller,broker"
+	ZooKeeperNodeRolesBrokers       = "broker"
+	ZooKeeperNodeRolesController    = "controller"
 	ZooKeeperClientPort             = 2181
 	ZooKeeperQuorumPortName         = "quorum"
 	ZooKeeperQuorumPort             = 2888
@@ -629,21 +632,45 @@ const (
 	ZooKeeperMetricsPortName        = "metrics"
 	ZooKeeperMetricsPort            = 7000
 	ZooKeeperAdminServerPortName    = "admin-server"
+	ZooKeeperSecureClientPortName   = "secure-client"
 	ZooKeeperAdminServerPort        = 8080
+	ZooKeeperSecureClientPort       = 2182
 	ZooKeeperNode                   = "/kubedb_health_checker_node"
 	ZooKeeperData                   = "kubedb_health_checker_data"
 	ZooKeeperConfigVolumeName       = "zookeeper-config"
 	ZooKeeperConfigVolumePath       = "/conf"
+	ZooKeeperVolumeTempConfig       = "temp-config"
+	ZooKeeperVolumeCustomConfig     = "custom-config"
 	ZooKeeperDataVolumeName         = "data"
 	ZooKeeperDataVolumePath         = "/data"
 	ZooKeeperScriptVolumeName       = "script-vol"
 	ZooKeeperScriptVolumePath       = "/scripts"
 	ZooKeeperContainerName          = "zookeeper"
+	ZooKeeperUserAdmin              = "admin"
 	ZooKeeperInitContainerName      = "zookeeper" + "-init"
 
 	ZooKeeperConfigFileName               = "zoo.cfg"
 	ZooKeeperLog4jPropertiesFileName      = "log4j.properties"
 	ZooKeeperLog4jQuietPropertiesFileName = "log4j-quiet.properties"
+
+	ZooKeeperCertDir       = "/var/private/ssl"
+	ZooKeeperKeyStoreDir   = "/var/private/ssl/server.keystore.jks"
+	ZooKeeperTrustStoreDir = "/var/private/ssl/server.truststore.jks"
+
+	ZooKeeperKeystoreKey           = "keystore.jks"
+	ZooKeeperTruststoreKey         = "truststore.jks"
+	ZooKeeperServerKeystoreKey     = "server.keystore.jks"
+	ZooKeeperServerTruststoreKey   = "server.truststore.jks"
+	ZooKeeperKeyPassword           = "ssl.key.password"
+	ZooKeeperKeystorePasswordKey   = "ssl.quorum.keyStore.password"
+	ZooKeeperTruststorePasswordKey = "ssl.quorum.trustStore.password"
+	ZooKeeperKeystoreLocationKey   = "ssl.quorum.keyStore.location"
+	ZooKeeperTruststoreLocationKey = "ssl.quorum.trustStore.location"
+
+	ZooKeeperSSLPropertiesFileName          = "ssl.properties"
+	ZooKeeperBrokerCustomConfigFileName     = "broker.properties"
+	ZooKeeperControllerCustomConfigFileName = "controller.properties"
+	ZooKeeperClientAuthConfigFileName       = "clientauth.properties"
 
 	EnvZooKeeperDomain          = "DOMAIN"
 	EnvZooKeeperQuorumPort      = "QUORUM_PORT"

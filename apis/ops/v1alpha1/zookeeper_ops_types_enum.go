@@ -24,6 +24,11 @@ const (
 	ZooKeeperOpsRequestTypeRestart ZooKeeperOpsRequestType = "Restart"
 	// ZooKeeperOpsRequestTypeReconfigure is a ZooKeeperOpsRequestType of type Reconfigure.
 	ZooKeeperOpsRequestTypeReconfigure ZooKeeperOpsRequestType = "Reconfigure"
+<<<<<<< HEAD
+=======
+	// ZooKeeperOpsRequestTypeReconfigureTLS is a ZooKeeperOpsRequestType of type ReconfigureTLS.
+	ZooKeeperOpsRequestTypeReconfigureTLS ZooKeeperOpsRequestType = "ReconfigureTLS"
+>>>>>>> 2cfa91945 (Add reconfigure tls for zookeeper)
 )
 
 var ErrInvalidZooKeeperOpsRequestType = fmt.Errorf("not a valid ZooKeeperOpsRequestType, try [%s]", strings.Join(_ZooKeeperOpsRequestTypeNames, ", "))
@@ -35,6 +40,10 @@ var _ZooKeeperOpsRequestTypeNames = []string{
 	string(ZooKeeperOpsRequestTypeVolumeExpansion),
 	string(ZooKeeperOpsRequestTypeRestart),
 	string(ZooKeeperOpsRequestTypeReconfigure),
+<<<<<<< HEAD
+=======
+	string(ZooKeeperOpsRequestTypeReconfigureTLS),
+>>>>>>> 2cfa91945 (Add reconfigure tls for zookeeper)
 }
 
 // ZooKeeperOpsRequestTypeNames returns a list of possible string values of ZooKeeperOpsRequestType.
@@ -53,6 +62,10 @@ func ZooKeeperOpsRequestTypeValues() []ZooKeeperOpsRequestType {
 		ZooKeeperOpsRequestTypeVolumeExpansion,
 		ZooKeeperOpsRequestTypeRestart,
 		ZooKeeperOpsRequestTypeReconfigure,
+<<<<<<< HEAD
+=======
+		ZooKeeperOpsRequestTypeReconfigureTLS,
+>>>>>>> 2cfa91945 (Add reconfigure tls for zookeeper)
 	}
 }
 
@@ -75,6 +88,10 @@ var _ZooKeeperOpsRequestTypeValue = map[string]ZooKeeperOpsRequestType{
 	"VolumeExpansion":   ZooKeeperOpsRequestTypeVolumeExpansion,
 	"Restart":           ZooKeeperOpsRequestTypeRestart,
 	"Reconfigure":       ZooKeeperOpsRequestTypeReconfigure,
+<<<<<<< HEAD
+=======
+	"ReconfigureTLS":    ZooKeeperOpsRequestTypeReconfigureTLS,
+>>>>>>> 2cfa91945 (Add reconfigure tls for zookeeper)
 }
 
 // ParseZooKeeperOpsRequestType attempts to convert a string to a ZooKeeperOpsRequestType.
