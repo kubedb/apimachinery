@@ -92,8 +92,8 @@ type ZooKeeperReplicaReadinessCriteria struct{}
 
 // ZooKeeperHorizontalScalingSpec contains the horizontal scaling information of a ZooKeeper cluster
 type ZooKeeperHorizontalScalingSpec struct {
-	// Number of node
-	Node *int32 `json:"node,omitempty"`
+	// Number of replicas
+	Replicas *int32 `json:"replicas,omitempty"`
 }
 
 // ZooKeeperVerticalScalingSpec contains the vertical scaling information of a ZooKeeper cluster

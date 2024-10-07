@@ -33549,15 +33549,9 @@ func schema_apimachinery_apis_ops_v1alpha1_ZooKeeperHorizontalScalingSpec(ref co
 				Description: "ZooKeeperHorizontalScalingSpec contains the horizontal scaling information of a ZooKeeper cluster",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-<<<<<<< HEAD
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Number of replicas",
-=======
-					"node": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Number of node",
->>>>>>> 2cfa91945 (Add reconfigure tls for zookeeper)
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -33715,15 +33709,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ZooKeeperOpsRequestSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperCustomConfigurationSpec"),
 						},
 					},
-<<<<<<< HEAD
-=======
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for configuring TLS",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
->>>>>>> 2cfa91945 (Add reconfigure tls for zookeeper)
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -33748,11 +33739,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ZooKeeperOpsRequestSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-<<<<<<< HEAD
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperVolumeExpansionSpec"},
-=======
 			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperVolumeExpansionSpec"},
->>>>>>> 2cfa91945 (Add reconfigure tls for zookeeper)
 	}
 }
 

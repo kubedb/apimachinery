@@ -73,11 +73,7 @@ spec:
                 x-kubernetes-map-type: atomic
               horizontalScaling:
                 properties:
-<<<<<<< HEAD
                   replicas:
-=======
-                  node:
->>>>>>> 2cfa91945 (Add reconfigure tls for zookeeper)
                     format: int32
                     type: integer
                 type: object
@@ -198,10 +194,7 @@ spec:
                 - VolumeExpansion
                 - Restart
                 - Reconfigure
-<<<<<<< HEAD
-=======
                 - ReconfigureTLS
->>>>>>> 2cfa91945 (Add reconfigure tls for zookeeper)
                 type: string
               updateVersion:
                 properties:
