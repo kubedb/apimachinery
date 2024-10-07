@@ -848,6 +848,8 @@ spec:
                 - WipeOut
                 - DoNotTerminate
                 type: string
+              disableAuth:
+                type: boolean
               halted:
                 type: boolean
               healthChecker:

@@ -71,6 +71,10 @@ type MemcachedSpec struct {
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
+	// If disable Auth true then don't create any auth secret
+	// +optional
+	DisableAuth bool `json:"disableAuth,omitempty"`
+
 	// DataVolume is an optional field to add one volume to each
 	// memcached pod.  The volume will be made available under
 	// /data and owned by the memcached user.
