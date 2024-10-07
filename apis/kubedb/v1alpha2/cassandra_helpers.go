@@ -334,14 +334,17 @@ func (r *Cassandra) assignDefaultContainerSecurityContext(csVersion *catalog.Cas
 
 func (r *Cassandra) GetSeed() string {
 	seed := " "
+	namespace := r.Namespace
+	name := r.Name
 	if r.Spec.Topology == nil {
-		seed = kubedb.CassandraStandaloneSeed + " , "
+		seed = fmt.Sprintf("%s-0.%s-pods.%s.svc.cluster.local", name, name, namespace)
+		seed = seed + " , "
 		return seed
 	}
 	for _, rack := range r.Spec.Topology.Rack {
 		rackCount := min(*rack.Replicas, 3)
 		for i := int32(0); i < rackCount; i++ {
-			current_seed := fmt.Sprintf("cassandra-sample-rack-%s-%d.cassandra-sample-rack-%s-pods.default.svc.cluster.local", rack.Name, i, rack.Name)
+			current_seed := fmt.Sprintf("%s-rack-%s-%d.%s-rack-%s-pods.%s.svc.cluster.local", name, rack.Name, i, name, rack.Name, namespace)
 			seed += current_seed + " , "
 		}
 	}
