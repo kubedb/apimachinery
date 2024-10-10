@@ -245,6 +245,7 @@ func (m *MSSQLServer) GetPersistentSecrets() []string {
 	secrets = append(secrets, m.EndpointCertSecretName())
 	secrets = append(secrets, m.DbmLoginSecretName())
 	secrets = append(secrets, m.MasterKeySecretName())
+	secrets = append(secrets, m.ConfigSecretName())
 
 	return secrets
 }
