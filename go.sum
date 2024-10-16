@@ -669,8 +669,8 @@ kmodules.xyz/offshoot-api v0.30.1 h1:TrulAYO+oBsXe9sZZGTmNWIuI8qD2izMpgcTSPvgAmI
 kmodules.xyz/offshoot-api v0.30.1/go.mod h1:T3mpjR6fui0QzOcmQvIuANytW48fe9ytmy/1cgx6D4g=
 kmodules.xyz/prober v0.29.0 h1:Ex7m4F9rH7uWNNJlLgP63ROOM+nUATJkC2L5OQ7nwMg=
 kmodules.xyz/prober v0.29.0/go.mod h1:UtK+HKyI1lFLEKX+HFLyOCVju6TO93zv3kwGpzqmKOo=
-kmodules.xyz/resource-metadata v0.18.15 h1:EUPN26+tBa8rD2n6lpCMqytla24TOgPoNvx782WbKSw=
-kmodules.xyz/resource-metadata v0.18.15/go.mod h1:Q02Xh75qc9MB2rdeo1wbpBn4WCXwoDBxLtonxz57Dng=
+kmodules.xyz/resource-metadata v0.20.0 h1:3nb/K0F6N2s0BOMrHC6+moK60q0Jqvac8UjWI3kW0kY=
+kmodules.xyz/resource-metadata v0.20.0/go.mod h1:yPqwR6xSTXuIgOjR6kNPDDJUe++sS+h7gtCmevJR60g=
 kmodules.xyz/resource-metrics v0.30.4 h1:8HBPtYmo9ETY91gsc55JE8Z986+3ZuRq57M0wZ9npqI=
 kmodules.xyz/resource-metrics v0.30.4/go.mod h1:w9+rz7/s/kGP1GWzYSuRdCn+l7EwpesmESSEHkLBnIQ=
 kmodules.xyz/webhook-runtime v0.29.1 h1:SQ8NvwJpxv5CUuXIubSg9g0Bk8BBnj4dhCWEk6Ou8g8=

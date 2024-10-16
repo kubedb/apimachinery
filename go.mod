@@ -42,7 +42,7 @@ require (
 	kmodules.xyz/monitoring-agent-api v0.30.2
 	kmodules.xyz/objectstore-api v0.29.1
 	kmodules.xyz/offshoot-api v0.30.1
-	kmodules.xyz/resource-metadata v0.18.15
+	kmodules.xyz/resource-metadata v0.20.0
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/petset v0.0.7
 	kubeops.dev/sidekick v0.0.8
