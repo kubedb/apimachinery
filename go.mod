@@ -36,10 +36,10 @@ require (
 	k8s.io/kube-openapi v0.0.0-20240703190633-0aa61b46e8c2
 	k8s.io/metrics v0.30.2
 	k8s.io/utils v0.0.0-20240502163921-fe8a2dddb1d0
-	kmodules.xyz/client-go v0.30.17
+	kmodules.xyz/client-go v0.30.28
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.30.0
-	kmodules.xyz/monitoring-agent-api v0.30.1
+	kmodules.xyz/monitoring-agent-api v0.30.2
 	kmodules.xyz/objectstore-api v0.29.1
 	kmodules.xyz/offshoot-api v0.30.1
 	kmodules.xyz/resource-metadata v0.18.15
@@ -149,9 +149,9 @@ require (
 	github.com/yudai/gojsondiff v1.0.0 // indirect
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
-	go.bytebuilders.dev/license-proxyserver v0.0.11 // indirect
-	go.bytebuilders.dev/license-verifier v0.14.2 // indirect
-	go.bytebuilders.dev/license-verifier/kubernetes v0.14.1 // indirect
+	go.bytebuilders.dev/license-proxyserver v0.0.18 // indirect
+	go.bytebuilders.dev/license-verifier v0.14.3 // indirect
+	go.bytebuilders.dev/license-verifier/kubernetes v0.14.3 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.14 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.14 // indirect
 	go.etcd.io/etcd/client/v3 v3.5.14 // indirect
