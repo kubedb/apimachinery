@@ -282,6 +282,13 @@ spec:
                       recoveryTimestamp:
                         format: date-time
                         type: string
+                      replicationStrategy:
+                        enum:
+                        - copy
+                        - clone
+                        - sync
+                        - none
+                        type: string
                     required:
                     - recoveryTimestamp
                     type: object
