@@ -137,10 +137,16 @@ const (
 type PITRReplicationStrategy string
 
 const (
-	ReplicationStrategySync  PITRReplicationStrategy = "sync"
-	ReplicationStrategyCopy  PITRReplicationStrategy = "copy"
+	// ReplicationStrategySync means data will be synced from primary to secondary
+	ReplicationStrategySync PITRReplicationStrategy = "sync"
+	// ReplicationStrategyFSCopy means data will be copied from primary filesystem to secondary filesystem
+	ReplicationStrategyFSCopy PITRReplicationStrategy = "fscopy"
+	// ReplicationStrategyClone means volumesnapshot will be used to create pvc's of both primary and secondary
+	// cluster should have the pvc cloning property
 	ReplicationStrategyClone PITRReplicationStrategy = "clone"
-	ReplicationStrategyNone  PITRReplicationStrategy = "none"
+	// ReplicationStrategyNone means no replication will be used
+	// data will be restored instead of replication
+	ReplicationStrategyNone PITRReplicationStrategy = "none"
 )
 
 // +kubebuilder:validation:Enum=DNS;IP;IPv4;IPv6
